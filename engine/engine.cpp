@@ -19,6 +19,7 @@ unique_ptr<output_backend> backend_driver;
 unique_ptr<base_mode> current_mode;
 stack<unique_ptr<base_mode>> mode_stack;
 bool quitting = false;
+const bool fixed_time_step = true;
 
 }
 
@@ -77,6 +78,13 @@ void main_loop ( unique_ptr<base_mode> starting_mode )
           }
 
           backend_driver->draw ( vterm::get_virtual_screen() );
+	  
+	  duration_ms = ((clock() - start_time)*1000.0) / CLOCKS_PER_SEC;
+	  if (fixed_time_step && duration_ms < 33) {
+	    const int sleepy_time = 33 - duration_ms;
+	    std::this_thread::sleep_for(std::chrono::milliseconds(sleepy_time));
+            duration_ms = 33;
+	  }
      }
      backend_driver->stop();
 }

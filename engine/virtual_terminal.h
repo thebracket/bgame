@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <utility>
 
 using std::vector;
 using std::string;
+using std::tuple;
 
 namespace engine {
 
@@ -12,13 +14,15 @@ namespace vterm {
 /* Represents a character on the virtual terminal */
 struct screen_character {
     unsigned char character;
+    tuple<unsigned char, unsigned char, unsigned char> foreground_color;
+    tuple<unsigned char, unsigned char, unsigned char> background_color;
 };
 
 /* Clears the screen to black, traditional CLS */
 void clear_screen();
 
 /* Adds a simple string to the terminal. No wrapping or other niceties! */
-void print(int x, int y, string text);
+void print(int x, int y, string text, tuple<unsigned char, unsigned char, unsigned char> fg, tuple<unsigned char, unsigned char, unsigned char> bg);
 
 /* Adjusts the buffer size; should be called when a back-end detects a
  * new window size.
