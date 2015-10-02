@@ -10,41 +10,69 @@ namespace engine {
 
 namespace vterm {
 
-const screen_character blank_character {' '};
+const screen_character blank_character
+{' '
+};
 
 int screen_width;
 int screen_height;
 int n_chars;
 unique_ptr<vector<screen_character>> terminal_buffer;
 
-inline int screen_idx(const int x, const int y) {
-  return (y*screen_width)+x;
-}
-
-void clear_screen() {
-    fill(terminal_buffer->begin(), terminal_buffer->end(), blank_character);
-}
-
-void print(int x, int y, string text, tuple<unsigned char, unsigned char, unsigned char> fg, tuple<unsigned char, unsigned char, unsigned char> bg)
+inline int screen_idx ( const int x, const int y )
 {
-  int idx = screen_idx(x,y);
-  for (int i=0; i<text.size(); ++i) {
-    terminal_buffer->operator[](idx+i).character = text[i];
-    terminal_buffer->operator[](idx+i).foreground_color = fg;
-    terminal_buffer->operator[](idx+i).background_color = bg;
-  }
+     return ( y*screen_width ) +x;
 }
 
-
-void resize(const int new_width, const int new_height) {
-    screen_width = new_width;
-    screen_height = new_height;
-    n_chars = screen_width * screen_height;
-    terminal_buffer->resize(n_chars);
+inline void set_char ( const int idx, const screen_character &c )
+{
+     terminal_buffer->operator[] ( idx ) = c;
 }
 
-vector<screen_character> * get_virtual_screen() {
-    return terminal_buffer.get();
+inline void set_char_xy ( const int x, const int y, const screen_character &c) {
+  set_char(screen_idx(x,y),c);
+}
+
+void clear_screen()
+{
+     fill ( terminal_buffer->begin(), terminal_buffer->end(), blank_character );
+}
+
+void print ( const int x, const int y, const string text, const tuple<unsigned char, unsigned char, unsigned char> fg, const tuple<unsigned char, unsigned char, unsigned char> bg )
+{
+     int idx = screen_idx ( x,y );
+     for ( int i=0; i<text.size(); ++i ) {
+          set_char ( idx+i, {static_cast<const unsigned char>(text[i]), fg, bg} );
+     }
+}
+
+void draw_dbl_box ( const int &x, const int &y, const int &w, const int &h, const tuple<unsigned char, unsigned char, unsigned char> fg, const tuple<unsigned char, unsigned char, unsigned char> bg )
+{
+    set_char_xy(x,y,{201,fg,bg});
+    set_char_xy(x+w,y,{187,fg,bg});
+    set_char_xy(x,y+h,{200,fg,bg});
+    set_char_xy(x+w,y+h,{188,fg,bg});
+    for (int i=y+1; i<(y+h); ++i) {
+        set_char_xy(x,i,{186,fg,bg});
+        set_char_xy(x+w,i,{186,fg,bg});
+    }
+    for (int i=x+1; i<(x+w); ++i) {
+        set_char_xy(i,y,{205,fg,bg});
+        set_char_xy(i,y+h,{205,fg,bg});
+    }
+}
+
+void resize ( const int new_width, const int new_height )
+{
+     screen_width = new_width;
+     screen_height = new_height;
+     n_chars = screen_width * screen_height;
+     terminal_buffer->resize ( n_chars );
+}
+
+vector<screen_character> * get_virtual_screen()
+{
+     return terminal_buffer.get();
 }
 } // end vterm namespace
 
@@ -52,10 +80,10 @@ using namespace vterm;
 
 void init_virtual_terminal()
 {
-    // Temporary
-    terminal_buffer = make_unique<vector<screen_character>>();
-    resize(80,25);
-    clear_screen();
+     // Temporary
+     terminal_buffer = make_unique<vector<screen_character>>();
+     resize ( 80,25 );
+     clear_screen();
 }
 
 
