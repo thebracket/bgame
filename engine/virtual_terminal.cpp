@@ -46,6 +46,22 @@ void print ( const int x, const int y, const string text, const color_t fg, colo
      }
 }
 
+void draw_box ( const int &x, const int &y, const int &w, const int &h, const color_t fg, const color_t bg )
+{
+    set_char_xy(x,y,{218,fg,bg});
+    set_char_xy(x+w,y,{191,fg,bg});
+    set_char_xy(x,y+h,{192,fg,bg});
+    set_char_xy(x+w,y+h,{217,fg,bg});
+    for (int i=y+1; i<(y+h); ++i) {
+        set_char_xy(x,i,{179,fg,bg});
+        set_char_xy(x+w,i,{179,fg,bg});
+    }
+    for (int i=x+1; i<(x+w); ++i) {
+        set_char_xy(i,y,{196,fg,bg});
+        set_char_xy(i,y+h,{196,fg,bg});
+    }
+}
+
 void draw_dbl_box ( const int &x, const int &y, const int &w, const int &h, const color_t fg, const color_t bg )
 {
     set_char_xy(x,y,{201,fg,bg});

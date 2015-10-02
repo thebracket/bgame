@@ -27,6 +27,9 @@ void clear_screen();
 /* Adds a simple string to the terminal. No wrapping or other niceties! */
 void print(const int x, const int y, const string text, const color_t fg, color_t bg);
 
+/* Draws a single-line box */
+void draw_box ( const int &x, const int &y, const int &w, const int &h, const color_t fg, const color_t bg );
+
 /* Draws a double-line box */
 void draw_dbl_box ( const int &x, const int &y, const int &w, const int &h, const color_t fg, const color_t bg );
 
