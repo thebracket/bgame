@@ -23,7 +23,10 @@ struct screen_character {
 void clear_screen();
 
 /* Adds a simple string to the terminal. No wrapping or other niceties! */
-void print(int x, int y, string text, tuple<unsigned char, unsigned char, unsigned char> fg, tuple<unsigned char, unsigned char, unsigned char> bg);
+void print(const int x, const int y, const string text, const tuple<unsigned char, unsigned char, unsigned char> fg, const tuple<unsigned char, unsigned char, unsigned char> bg);
+
+/* Draws a double-line box */
+void draw_dbl_box ( const int &x, const int &y, const int &w, const int &h, const tuple<unsigned char, unsigned char, unsigned char> fg, const tuple<unsigned char, unsigned char, unsigned char> bg );
 
 /* Adjusts the buffer size; should be called when a back-end detects a
  * new window size.

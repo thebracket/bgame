@@ -13,7 +13,10 @@ public:
           tmp << "Hello World, Iteration " << count;
 	  tuple<unsigned char,unsigned char,unsigned char> fg{255,0,roll_dice(1,255)};
 	  tuple<unsigned char,unsigned char,unsigned char> bg{0,0,count*2};
-          vterm::print ( 0, y, tmp.str(), fg, bg );
+	  tuple<unsigned char,unsigned char,unsigned char> white{255,255,255};
+	  tuple<unsigned char,unsigned char,unsigned char> black{0,0,0};
+	  vterm::draw_dbl_box(0,0,80,22,white,black);
+          vterm::print ( 1, y+1, tmp.str(), fg, bg );
           ++y;
           if ( y > 20 ) y = 0;
           ++count;
