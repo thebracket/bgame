@@ -7,6 +7,7 @@
 using std::vector;
 using std::string;
 using std::tuple;
+using std::pair;
 
 namespace engine {
 
@@ -20,6 +21,9 @@ struct screen_character {
     color_t foreground_color;
     color_t background_color;
 };
+
+/* Returns the screen size, width/height format */
+pair<int,int> get_screen_size();
 
 /* Clears the screen to black, traditional CLS */
 void clear_screen();
