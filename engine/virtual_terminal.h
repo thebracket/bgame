@@ -11,7 +11,7 @@ namespace vterm {
 
 /* Represents a character on the virtual terminal */
 struct screen_character {
-    char character;
+    unsigned char character;
 };
 
 /* Clears the screen to black, traditional CLS */

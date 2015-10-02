@@ -1,6 +1,7 @@
 #include "engine.h"
 #include "output_backend.h"
 #include "ncurses_backend.h"
+#include "sdl2_backend.h"
 #include <memory>
 #include <thread>
 #include <chrono>
@@ -23,7 +24,8 @@ void init() {
     init_virtual_terminal();
 
     // TODO: This should be determined by configuration at some point
-    backend_driver = make_unique<ncurses_backend>();
+    //backend_driver = make_unique<ncurses_backend>();
+    backend_driver = make_unique<sdl2_backend>();
     backend_driver->init();
     pair<int,int> size = backend_driver->get_console_size();
     vterm::resize(size.first, size.second);
