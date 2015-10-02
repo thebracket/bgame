@@ -66,12 +66,35 @@ void ncurses_backend::draw(vector< vterm::screen_character >* screen)
 	    
 	      attron(COLOR_PAIR(pair_idx));
 	    }
-            mvaddch(y, x, screen->operator[]((y*screen_width)+x).character);
+	    int base_ascii = screen->operator[]((y*screen_width)+x).character;
+	    if (base_ascii > 127) base_ascii = extended_map(base_ascii);
+	    mvaddch(y, x, base_ascii );
 	    if (supports_color) attroff(COLOR_PAIR(pair_idx));
         }
     }
     refresh();
 }
+
+int ncurses_backend::extended_map(const int ascii)
+{
+  switch (ascii) {
+    case 96  : return ACS_DIAMOND;
+    case 97  : return ACS_CKBOARD;
+    case 102 : return ACS_DEGREE;
+    case 104 : return ACS_BLOCK;
+    case 125 : return ACS_STERLING;
+    case 126 : return ACS_BULLET;
+    case 177 : return ACS_PLMINUS;
+    case 179 : return ACS_VLINE;
+    case 191 : return ACS_URCORNER;
+    case 192 : return ACS_LLCORNER;
+    case 196 : return ACS_HLINE;
+    case 217 : return ACS_LRCORNER;
+    case 218 : return ACS_ULCORNER;
+  }
+  return NCURSES_ACS(ascii);
+}
+
 
 void ncurses_backend::setup_colors()
 {
