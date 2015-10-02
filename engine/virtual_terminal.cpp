@@ -38,7 +38,7 @@ void clear_screen()
      fill ( terminal_buffer->begin(), terminal_buffer->end(), blank_character );
 }
 
-void print ( const int x, const int y, const string text, const tuple<unsigned char, unsigned char, unsigned char> fg, const tuple<unsigned char, unsigned char, unsigned char> bg )
+void print ( const int x, const int y, const string text, const color_t fg, color_t bg )
 {
      int idx = screen_idx ( x,y );
      for ( int i=0; i<text.size(); ++i ) {
@@ -46,7 +46,7 @@ void print ( const int x, const int y, const string text, const tuple<unsigned c
      }
 }
 
-void draw_dbl_box ( const int &x, const int &y, const int &w, const int &h, const tuple<unsigned char, unsigned char, unsigned char> fg, const tuple<unsigned char, unsigned char, unsigned char> bg )
+void draw_dbl_box ( const int &x, const int &y, const int &w, const int &h, const color_t fg, const color_t bg )
 {
     set_char_xy(x,y,{201,fg,bg});
     set_char_xy(x+w,y,{187,fg,bg});
