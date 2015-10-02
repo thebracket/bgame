@@ -25,11 +25,13 @@ void clear_screen() {
     fill(terminal_buffer->begin(), terminal_buffer->end(), blank_character);
 }
 
-void print(int x, int y, string text)
-{  
+void print(int x, int y, string text, tuple<unsigned char, unsigned char, unsigned char> fg, tuple<unsigned char, unsigned char, unsigned char> bg)
+{
   int idx = screen_idx(x,y);
   for (int i=0; i<text.size(); ++i) {
     terminal_buffer->operator[](idx+i).character = text[i];
+    terminal_buffer->operator[](idx+i).foreground_color = fg;
+    terminal_buffer->operator[](idx+i).background_color = bg;
   }
 }
 
