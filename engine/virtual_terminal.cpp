@@ -33,6 +33,10 @@ inline void set_char_xy ( const int x, const int y, const screen_character &c) {
   set_char(screen_idx(x,y),c);
 }
 
+pair<int,int> get_screen_size() {
+  return std::make_pair(screen_width, screen_height);
+}
+
 void clear_screen()
 {
      fill ( terminal_buffer->begin(), terminal_buffer->end(), blank_character );

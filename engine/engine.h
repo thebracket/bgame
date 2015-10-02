@@ -5,6 +5,7 @@
 #include "rng.h"
 #include "virtual_terminal.h"
 #include "base_mode.h"
+#include "gui/gui.h"
 
 namespace engine {
 
