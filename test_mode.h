@@ -11,7 +11,8 @@ public:
      virtual pair<return_mode, unique_ptr<base_mode>> tick ( const double time_elapsed ) {
           std::stringstream tmp;
           tmp << "Hello World, Iteration " << count;
-          vterm::print ( 0, y, tmp.str(), {255, 0, roll_dice ( 1,255 ) }, {0,0,count*2} );
+	  vterm::draw_dbl_box(0,0,80,22,{255,255,255},{0,0,0});
+          vterm::print ( 1, y+1, tmp.str(), {255, 0, roll_dice ( 1,255 ) }, {0,0,count*2} );
           ++y;
           if ( y > 20 ) y = 0;
           ++count;

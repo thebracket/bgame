@@ -8,7 +8,7 @@ using std::make_unique;
 
 int main()
 {
-     engine::init(engine::NCURSES);
+     engine::init(engine::SDL2);
      engine::main_loop ( make_unique<test_mode>() );
 }
 
