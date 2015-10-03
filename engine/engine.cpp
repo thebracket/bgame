@@ -74,6 +74,7 @@ void main_loop ( unique_ptr<base_mode> starting_mode )
           pair<return_mode, unique_ptr<base_mode>> continuation_mode = current_mode->tick ( duration_ms );
           if ( continuation_mode.first == POP ) pop_mode();
           if ( continuation_mode.first == PUSH ) {
+	       continuation_mode.second->init();
                push_mode ( std::move ( continuation_mode.second ) );
           }
 

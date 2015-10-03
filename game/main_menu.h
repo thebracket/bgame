@@ -14,4 +14,6 @@ public:
 private:
     bool loaded_assets;
     bool displayed;
+    int count;
+    gui menu_interface;
 };

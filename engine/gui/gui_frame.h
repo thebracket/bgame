@@ -4,7 +4,8 @@
 #include <vector>
 #include <memory>
 #include "gui_element_base.h"
-#include </home/herbert/Development/github/bgame/engine/virtual_terminal.h>
+#include "../virtual_terminal.h"
+#include <iostream>
 
 using std::vector;
 using std::unique_ptr;
@@ -25,7 +26,7 @@ public:
       for (const auto &child : children)
 	child->render(inner_viewport);
       
-    }    
+    }
   };
 private:
   const GUI_FRAME_MODE mode;
