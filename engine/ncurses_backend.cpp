@@ -168,4 +168,10 @@ short int ncurses_backend::map_color ( const tuple< unsigned char, unsigned char
     return nearest;
 }
 
+void ncurses_backend::poll_inputs()
+{
+
+}
+
+
 }
