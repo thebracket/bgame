@@ -42,6 +42,7 @@ private:
   int screen_width;
   
   vector<ncurses::color_mapping> color_map;
+  int extended_map(const int ascii);
 };
   
 }

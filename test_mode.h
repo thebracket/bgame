@@ -16,10 +16,10 @@ public:
 	  color_t bg{0,0,count*2};
 	  color_t white{255,255,255};
 	  color_t black{0,0,0};
-	  vterm::draw_box(0,0,80,22,white,black);
+	  vterm::draw_box(0,0,79,20,white,black);
           vterm::print ( 1, y+1, tmp.str(), fg, bg );
           ++y;
-          if ( y > 20 ) y = 0;
+          if ( y > 18 ) y = 0;
           ++count;
 
           if ( count < 100 ) {
