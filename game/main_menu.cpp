@@ -6,9 +6,9 @@ void main_menu::init()
 {
   unique_ptr<gui_frame> frame = make_unique<gui_frame>("Outer", FILL_REGION);
   frame->add_child(make_unique<gui_static_text>("Title", "Black Future", 1, 1, red, black, true));
-  frame->add_child(make_unique<gui_static_text>("PlayGame", "Play the Game", 1, 4, black, white, true));
-  frame->add_child(make_unique<gui_static_text>("SomethingElse", "Do something else", 1, 5, grey, black, true));
-  frame->add_child(make_unique<gui_static_text>("Quit", "Quit Program", 1, 6, grey, black, true));
+  frame->add_child(make_unique<gui_static_text>("PlayGame",      "    Play the Game   ", 1, 4, black, white, true));
+  frame->add_child(make_unique<gui_static_text>("SomethingElse", "  Do something else ", 1, 5, grey, black, true));
+  frame->add_child(make_unique<gui_static_text>("Quit",          "     Quit Program   ", 1, 6, grey, black, true));
   
   menu_interface.add_child(std::move(frame));
   selected_item = 0;
