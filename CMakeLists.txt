@@ -6,8 +6,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O2 -g -I/opt/local/include")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -lSDL2 -lSDL2_image")
 
 add_subdirectory(engine)
-add_executable(bgame main.cpp)
-target_link_libraries(bgame engine)
+add_subdirectory(game)
+add_executable(bgame game main.cpp)
+target_link_libraries(bgame engine game gui)
 
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIRS})
