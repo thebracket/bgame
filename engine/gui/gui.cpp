@@ -12,8 +12,9 @@ gui::gui()
 
 void gui::render()
 {
+  const std::pair<int,int> screen_size = get_screen_size();
   for (const auto &element : children)
-    element->render();
+    element->render(screen_size);
 }
 
 

@@ -43,6 +43,8 @@ private:
   
   vector<ncurses::color_mapping> color_map;
   int extended_map(const int ascii);
+  void populate_color_map();
+  void setup_default_colors();
 };
   
 }

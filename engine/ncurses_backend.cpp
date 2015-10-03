@@ -104,10 +104,26 @@ int ncurses_backend::extended_map(const int ascii)
   return NCURSES_ACS(ascii);
 }
 
+void ncurses_backend::setup_default_colors() {
+  for (short i=0; i<8; ++i) {
+      for (short j=0; j<8; ++j) {
+	init_pair((i*8)+j, j, i);
+      }
+    }
+}
+
+void ncurses_backend::populate_color_map() {
+    for (short i=0; i<number_of_colors; ++i) {
+      short r,g,b;
+      color_content(i, &r, &g, &b); // gets the current color
+      //std::cout << i << " : " << r << ", " << g << ", " << b << "\n";
+      color_map.push_back({i,r,g,b});
+    }
+}
 
 void ncurses_backend::setup_colors()
 {
-  if (!supports_color) return;
+  if (!supports_color or number_of_colors<8) return;
   if (number_of_color_pairs == 64 && number_of_colors == 8) {
     //std::cout << "Number of colors: " << number_of_colors << ", in " << number_of_color_pairs << " pairs.\n";
 
@@ -115,21 +131,14 @@ void ncurses_backend::setup_colors()
     //use_default_colors();
     
     // Actually setup the pairs
-    for (short i=0; i<8; ++i) {
-      for (short j=0; j<8; ++j) {
-	init_pair((i*8)+j, j, i);
-      }
-    }
-    
-    for (short i=0; i<8; ++i) {
-      short r,g,b;
-      color_content(i, &r, &g, &b); // gets the current color
-      //std::cout << i << " : " << r << ", " << g << ", " << b << "\n";
-      color_map.push_back({i,r,g,b});
-    }
+    setup_default_colors();
+    populate_color_map();
 
   } else {
-    // TODO: Add support for higher color terminals!
+    // Set the first 8 as normal
+    setup_default_colors();
+    // We'll do something clever here later!
+    populate_color_map();
   }
 }
 

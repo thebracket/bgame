@@ -8,16 +8,31 @@ using std::string;
 namespace engine {
 class gui_static_text : public gui_element_base {
 public:
-     gui_static_text ( const string &txt, const int &nx, const int &ny, const vterm::color_t &fg, const vterm::color_t &bg ) :
-	text(txt), x(nx), y(ny), foreground(fg), background(bg) {};
+     gui_static_text ( const string &txt, 
+		       const int &nx, const int &ny, const vterm::color_t &fg, 
+		       const vterm::color_t &bg,
+		       bool center=false
+ 		    ) :
+	text(txt), x(nx), y(ny), foreground(fg), background(bg),
+	centered(center)
+	{};
 	
-     virtual void render() {
-       vterm::print(x,y,text,foreground,background);
+     virtual void render(const std::pair<int,int> &screen_size) {
+       if (!centered) {
+	  vterm::print(x,y,text,foreground,background);
+       } else {
+	  int text_width = text.size();
+	  vterm::print((screen_size.first/2)-(text_width/2),y,text,foreground,background);
+       }
      }
+     
+     void update_text(const string s) { text = s; }
+     void move(const int &nx, const int &ny) { x=nx; y=ny; }
 private:
-     const string text;
-     const int x;
-     const int y;
+     const bool centered;
+     string text;
+     int x;
+     int y;
      const vterm::color_t foreground;
      const vterm::color_t background;
 };
