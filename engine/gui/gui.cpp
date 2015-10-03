@@ -13,8 +13,9 @@ gui::gui()
 void gui::render()
 {
   const std::pair<int,int> screen_size = get_screen_size();
+  const screen_region viewport{0,0,screen_size.first-1, screen_size.second-1};
   for (const auto &element : children)
-    element->render(screen_size);
+    element->render(viewport);
 }
 
 
