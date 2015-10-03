@@ -66,11 +66,19 @@ void ncurses_backend::draw(vector< vterm::screen_character >* screen)
 	      pair_idx = (background_color_idx * 8) + foreground_color_idx;
 	    
 	      attron(COLOR_PAIR(pair_idx));
+	      if (std::get<0>(fg)>128 or std::get<1>(fg)>128 or std::get<2>(fg)>128) {
+		attron(A_BOLD);
+	      }
 	    }
 	    int base_ascii = screen->operator[]((y*screen_width)+x).character;
 	    if (base_ascii > 127) base_ascii = extended_map(base_ascii);
 	    mvaddch(y, x, base_ascii );
-	    if (supports_color) attroff(COLOR_PAIR(pair_idx));
+	    if (supports_color) {
+	      attroff(COLOR_PAIR(pair_idx));
+	      if (std::get<0>(fg)>128 or std::get<1>(fg)>128 or std::get<2>(fg)>128) {
+		attroff(A_BOLD);
+	      }
+	    }
         }
     }
     refresh();
