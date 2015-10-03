@@ -4,8 +4,10 @@ namespace engine {
 namespace command {
 
 enum command_type {MOUSE_MOVE, MOUSE_LEFT_CLICK, MOUSE_RIGHT_CLICK, KEYDOWN};
+enum keys { NONE, UP, DOWN, LEFT, RIGHT, ENTER };
   
 struct input_data {
+  keys key;
   int x;
   int y;
   command_type type;
@@ -28,6 +30,11 @@ void on_command(const input_data &command);
  * tick process receives input.
  */
 void process_commands();
+
+/*
+ * Is a key pressed?
+ */
+bool is_key_down(const keys key);
 
 }
  
