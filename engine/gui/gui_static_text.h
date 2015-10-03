@@ -17,12 +17,12 @@ public:
 	centered(center)
 	{};
 	
-     virtual void render(const std::pair<int,int> &screen_size) {
+     virtual void render(const screen_region viewport) {
        if (!centered) {
 	  vterm::print(x,y,text,foreground,background);
        } else {
 	  int text_width = text.size();
-	  vterm::print((screen_size.first/2)-(text_width/2),y,text,foreground,background);
+	  vterm::print(viewport.x + (viewport.w/2)-(text_width/2),y,text,foreground,background);
        }
      }
      

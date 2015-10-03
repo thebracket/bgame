@@ -3,6 +3,7 @@
 #include "../virtual_terminal.h"
 #include "gui_element_base.h"
 #include "gui_static_text.h"
+#include "gui_frame.h"
 #include <vector>
 #include <memory>
 
