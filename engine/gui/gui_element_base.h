@@ -11,7 +11,7 @@ namespace engine {
   
 class gui_element_base {
 public:
-  virtual void render()=0;
+  virtual void render(const std::pair<int,int> &screen_size)=0;
   
   virtual void add_child(unique_ptr<gui_element_base> child) {
     children.push_back(std::move(child));

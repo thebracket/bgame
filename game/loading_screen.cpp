@@ -12,9 +12,9 @@ void loading_screen::init()
      color_t white{255,255,255};
      color_t grey{128,128,128};
      color_t black{0,0,0};
-     splash_interface.add_child(make_unique<gui_static_text>("Black Future", 1, 1, red, black));
-     splash_interface.add_child(make_unique<gui_static_text>("Pre-Alpha Not Even A Version Number Yet!", 1, 2, white, black));
-     splash_interface.add_child(make_unique<gui_static_text>("Loading assets... please wait", 1, 4, grey, black));
+     splash_interface.add_child(make_unique<gui_static_text>("Black Future", 1, 1, red, black, true));
+     splash_interface.add_child(make_unique<gui_static_text>("Pre-Alpha Not Even A Version Number Yet!", 1, 2, white, black, true));
+     splash_interface.add_child(make_unique<gui_static_text>("Loading assets... please wait", 1, 4, grey, black, true));
      count  = 0;
 }
 
