@@ -68,7 +68,7 @@ void main_loop ( unique_ptr<base_mode> starting_mode )
      double duration_ms = 0;
      while ( !quitting ) {
           clock_t start_time = clock();
-          // Poll inputs
+         backend_driver->poll_inputs();
           vterm::clear_screen();
 
           pair<return_mode, unique_ptr<base_mode>> continuation_mode = current_mode->tick ( duration_ms );

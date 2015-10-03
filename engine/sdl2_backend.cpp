@@ -97,5 +97,10 @@ void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
   SDL_RenderPresent(renderer);
 }
 
+void sdl2_backend::poll_inputs()
+{
+
+}
+
 
 }

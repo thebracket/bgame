@@ -15,6 +15,7 @@ public:
   virtual void stop();
   virtual pair<int,int> get_console_size();
   virtual void draw(vector<vterm::screen_character>* screen);
+  virtual void poll_inputs();
 private:
   bool initialized;
   SDL_Window * window;
