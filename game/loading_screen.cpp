@@ -9,10 +9,10 @@ void loading_screen::init()
      loaded_assets = false;
      displayed = false; // Next time we are here we exit
      
-     unique_ptr<gui_frame> frame = make_unique<gui_frame>(FILL_REGION);
-     frame->add_child(make_unique<gui_static_text>("Black Future", 1, 1, red, black, true));
-     frame->add_child(make_unique<gui_static_text>("Pre-Alpha Not Even A Version Number Yet!", 1, 2, white, black, true));
-     frame->add_child(make_unique<gui_static_text>("Loading assets... please wait", 1, 4, grey, black, true));
+     unique_ptr<gui_frame> frame = make_unique<gui_frame>("Outer", FILL_REGION);
+     frame->add_child(make_unique<gui_static_text>("Title","Black Future", 1, 1, red, black, true));
+     frame->add_child(make_unique<gui_static_text>("Version","Pre-Alpha Not Even A Version Number Yet!", 1, 2, white, black, true));
+     frame->add_child(make_unique<gui_static_text>("Action","Loading assets... please wait", 1, 4, grey, black, true));
      splash_interface.add_child(std::move(frame));
      count  = 0;
 }

@@ -1,5 +1,6 @@
 #include "sdl2_backend.h"
 #include <SDL2/SDL_image.h>
+#include "command_manager.h"
 
 using std::make_pair;
 
@@ -97,9 +98,25 @@ void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
   SDL_RenderPresent(renderer);
 }
 
+command::keys translate_keycode(const SDL_Event &e) {
+  switch (e.key.keysym.sym) {
+    case SDLK_UP : return command::UP;
+    case SDLK_DOWN : return command::DOWN;
+    case SDLK_LEFT : return command::LEFT;
+    case SDLK_RIGHT : return command::RIGHT;
+    case SDLK_RETURN : return command::ENTER;
+  }
+  return command::NONE;
+}
+
 void sdl2_backend::poll_inputs()
 {
-
+    SDL_Event e;
+    while (SDL_PollEvent(&e) != 0) {
+      if (e.type == SDL_KEYDOWN) {
+	command::on_command({ translate_keycode(e), 0, 0, command::KEYDOWN });
+      }
+    }
 }
 
 

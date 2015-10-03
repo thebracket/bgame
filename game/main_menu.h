@@ -12,8 +12,8 @@ public:
      virtual void done();
      virtual pair<return_mode, unique_ptr<base_mode>> tick ( const double time_elapsed );
 private:
+    int selected_item;
     bool loaded_assets;
     bool displayed;
-    int count;
     gui menu_interface;
 };
