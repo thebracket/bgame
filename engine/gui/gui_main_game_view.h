@@ -25,7 +25,13 @@ public:
                int screen_x = viewport.x;
                for ( int x=left_x; x<=right_x; ++x ) {
                     tile t = world::current_region.tiles[world::current_region.idx ( x,y )];
-                    vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
+                    if ( t.revealed ) {
+                         if ( t.visible ) {
+                              vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
+                         } else {
+                              vterm::set_char_xy ( screen_x, screen_y, { t.display, {64,64,64}, t.background } );
+                         }
+                    }
                     if ( x == world::player_x && y == world::player_y ) {
                          vterm::set_char_xy ( screen_x, screen_y, { '@', {255,255,255}, {0,0,0} } );
                     }

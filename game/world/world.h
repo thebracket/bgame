@@ -5,6 +5,9 @@
 
 namespace world {
 
+void make_radius_visible(const int x, const int y, const int radius);
+void reset_visibility();
+  
 // Temporary globals to get going...
 extern int player_x;
 extern int player_y;
