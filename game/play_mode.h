@@ -13,7 +13,7 @@ public:
      virtual pair<return_mode, unique_ptr<base_mode>> tick ( const double time_elapsed );
 private:
     gui ui;
-    int count;
+    bool quitting;
     
     void init_gui();
 };

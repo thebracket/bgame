@@ -193,6 +193,8 @@ command::keys ncurses_backend::translate_keycode(const int &key) {
     case KEY_RIGHT : return command::RIGHT;
     case KEY_ENTER : return command::ENTER;
     case 13 : return command::ENTER;
+    case 'Q' : return command::Q;
+    case 'q' : return command::Q;
   }
   return command::NONE;
 }
