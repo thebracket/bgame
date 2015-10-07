@@ -1,1 +1,1 @@
-add_library(world world.cpp tile.cpp landblock.cpp)
+add_library(world world.cpp tile.cpp landblock.cpp console.cpp)

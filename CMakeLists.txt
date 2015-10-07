@@ -8,7 +8,7 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -lSDL2 -
 add_subdirectory(engine)
 add_subdirectory(game)
 add_executable(bgame game main.cpp)
-target_link_libraries(bgame engine game gui)
+target_link_libraries(bgame engine game gui world)
 
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIRS})
