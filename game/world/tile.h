@@ -1,9 +1,14 @@
 #pragma once
 
+#include "../../engine/virtual_terminal.h"
+
+using engine::vterm::color_t;
+
 class tile {
 public:
   tile();
 
-  int landblock_index;
-  int index;
+  unsigned char display = '.';
+  color_t foreground{0,255,0};
+  color_t background{0,0,0};
 };
