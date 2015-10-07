@@ -14,4 +14,6 @@ public:
 private:
     gui ui;
     int count;
+    
+    void init_gui();
 };
