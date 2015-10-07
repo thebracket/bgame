@@ -9,7 +9,7 @@ void play_mode::init()
      init_gui();
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
-     world::log.write ( "Bert's attempt at writing a rogue-like." );
+     world::log.write ( "Use the @B_WHITE@arrow keys@WHITE@ to move, or press @B_RED@Q@WHITE@ to quit." );
 }
 
 void play_mode::init_gui()
