@@ -1,4 +1,5 @@
 #include "play_mode.h"
+#include "world/world.h"
 
 using namespace engine;
 using std::make_unique;
@@ -7,6 +8,8 @@ void play_mode::init()
 {
      init_gui();
      count = 0;
+     world::log.write("Welcome to @B_YELLOW@Black Future");
+     world::log.write("Bert's attempt at writing a rogue-like.");
 }
 
 void play_mode::init_gui()

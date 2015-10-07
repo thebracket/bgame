@@ -29,7 +29,7 @@ inline void set_char ( const int idx, const screen_character &c )
      terminal_buffer->operator[] ( idx ) = c;
 }
 
-inline void set_char_xy ( const int x, const int y, const screen_character &c) {
+void set_char_xy ( const int x, const int y, const screen_character &c) {
   set_char(screen_idx(x,y),c);
 }
 
