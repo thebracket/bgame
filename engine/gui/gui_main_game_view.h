@@ -29,11 +29,11 @@ public:
                          if ( t.visible ) {
                               vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
                          } else {
-                              vterm::set_char_xy ( screen_x, screen_y, { t.display, {64,64,64}, t.background } );
+                              vterm::set_char_xy ( screen_x, screen_y, { t.display, dark_grey, t.background } );
                          }
                     }
                     if ( x == world::player_x && y == world::player_y ) {
-                         vterm::set_char_xy ( screen_x, screen_y, { '@', {255,255,255}, {0,0,0} } );
+                         vterm::set_char_xy ( screen_x, screen_y, { 1, white, black } );
                     }
                     ++screen_x;
                }

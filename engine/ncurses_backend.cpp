@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <iostream>
 #include <cmath>
+#include "curses_charmap.h"
 
 namespace engine {
 
@@ -17,6 +18,7 @@ ncurses_backend::~ncurses_backend()
 
 void ncurses_backend::init()
 {
+    setlocale(LC_ALL, "");
     initialized = true;
     initscr();
     supports_color = has_colors();
@@ -25,7 +27,6 @@ void ncurses_backend::init()
         number_of_colors = COLORS;
         number_of_color_pairs = COLOR_PAIRS;
         setup_colors();
-        std::cout << "NCurses mode: " << COLORS << "x" << COLOR_PAIRS << "\n";
     } else {
         number_of_colors = 0;
     }
@@ -74,50 +75,16 @@ void ncurses_backend::draw(vector< vterm::screen_character >* screen)
                 }
             }
             int base_ascii = screen->operator[]((y*screen_width)+x).character;
-            if (base_ascii > 127) base_ascii = extended_map(base_ascii);
-            mvaddch(y, x, base_ascii );
-            if (supports_color) {
-                attroff(COLOR_PAIR(pair_idx));
-                if (std::get<0>(fg)>128 or std::get<1>(fg)>128 or std::get<2>(fg)>128) {
-                    attroff(A_BOLD);
-                }
-            }
+	    mvprintw(y, x, curses::charmap[base_ascii].c_str());
+	    if (supports_color) {
+		attroff(COLOR_PAIR(pair_idx));
+		if (std::get<0>(fg)>128 or std::get<1>(fg)>128 or std::get<2>(fg)>128) {
+		    attroff(A_BOLD);
+		}
+	    }
         }
     }
     refresh();
-}
-
-int ncurses_backend::extended_map(const int ascii)
-{
-    switch (ascii) {
-    case 96  :
-        return ACS_DIAMOND;
-    case 97  :
-        return ACS_CKBOARD;
-    case 102 :
-        return ACS_DEGREE;
-    case 104 :
-        return ACS_BLOCK;
-    case 125 :
-        return ACS_STERLING;
-    case 126 :
-        return ACS_BULLET;
-    case 177 :
-        return ACS_PLMINUS;
-    case 179 :
-        return ACS_VLINE;
-    case 191 :
-        return ACS_URCORNER;
-    case 192 :
-        return ACS_LLCORNER;
-    case 196 :
-        return ACS_HLINE;
-    case 217 :
-        return ACS_LRCORNER;
-    case 218 :
-        return ACS_ULCORNER;
-    }
-    return NCURSES_ACS(ascii);
 }
 
 void ncurses_backend::setup_default_colors() {
@@ -185,18 +152,26 @@ short int ncurses_backend::map_color ( const tuple< unsigned char, unsigned char
 }
 
 command::keys ncurses_backend::translate_keycode(const int &key) {
-  //std::cout << key << "\n";
-  switch (key) {
-    case KEY_UP : return command::UP;
-    case KEY_DOWN : return command::DOWN;
-    case KEY_LEFT : return command::LEFT;
-    case KEY_RIGHT : return command::RIGHT;
-    case KEY_ENTER : return command::ENTER;
-    case 13 : return command::ENTER;
-    case 'Q' : return command::Q;
-    case 'q' : return command::Q;
-  }
-  return command::NONE;
+    //std::cout << key << "\n";
+    switch (key) {
+    case KEY_UP :
+        return command::UP;
+    case KEY_DOWN :
+        return command::DOWN;
+    case KEY_LEFT :
+        return command::LEFT;
+    case KEY_RIGHT :
+        return command::RIGHT;
+    case KEY_ENTER :
+        return command::ENTER;
+    case 13 :
+        return command::ENTER;
+    case 'Q' :
+        return command::Q;
+    case 'q' :
+        return command::Q;
+    }
+    return command::NONE;
 }
 
 void ncurses_backend::poll_inputs()
