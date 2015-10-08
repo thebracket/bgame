@@ -19,7 +19,7 @@ unique_ptr<output_backend> backend_driver;
 unique_ptr<base_mode> current_mode;
 stack<unique_ptr<base_mode>> mode_stack;
 bool quitting = false;
-const bool fixed_time_step = true;
+const bool fixed_time_step = false;
 
 }
 

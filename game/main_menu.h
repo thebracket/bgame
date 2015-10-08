@@ -15,5 +15,6 @@ private:
     int selected_item;
     bool loaded_assets;
     bool displayed;
+    bool world_available;
     gui menu_interface;
 };
