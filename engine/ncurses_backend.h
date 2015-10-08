@@ -44,7 +44,6 @@ private:
     int screen_width;
 
     vector<ncurses::color_mapping> color_map;
-    int extended_map(const int ascii);
     void populate_color_map();
     void setup_default_colors();
     command::keys translate_keycode(const int &key);

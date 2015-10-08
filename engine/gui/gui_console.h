@@ -8,7 +8,7 @@ using std::string;
 
 namespace engine {
 class gui_console : public gui_element_base {
-public:
+public:  
      gui_console ( const string name ) {
           tag = name;
      };;
@@ -22,7 +22,7 @@ public:
                int x = viewport.x;
                for ( console_character chr : entry.line ) {
                     const vterm::screen_character schr {
-                         chr.character,chr.color, {0,0,0}
+                         chr.character,chr.color, black
                     };
                     vterm::set_char_xy ( x,y,schr );
                     ++x;
