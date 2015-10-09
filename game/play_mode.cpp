@@ -10,7 +10,7 @@ void play_mode::init()
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
      world::log.write ( "Use the @B_WHITE@arrow keys@WHITE@ to move, or press @B_RED@Q@WHITE@ to quit." );
-     world::make_radius_visible(world::player_x, world::player_y, 8);
+     //world::current_region.make_radius_visible(world::player_x, world::player_y, 8);
 }
 
 void play_mode::init_gui()
@@ -37,7 +37,7 @@ void play_mode::done()
 
 pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time_elapsed )
 {
-     if ( command::is_key_down ( command::Q ) ) quitting = true;
+     /*if ( command::is_key_down ( command::Q ) ) quitting = true;
      bool moved = false;
      
      if ( command::is_key_down ( command::UP ) ) {
@@ -67,7 +67,7 @@ pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time
      if (moved) {
        world::reset_visibility();
        world::make_radius_visible(world::player_x, world::player_y, 8);
-     }
+     }*/
 
      ui.render();
 
