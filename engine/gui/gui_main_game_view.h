@@ -15,6 +15,7 @@ public:
      };;
 
      virtual void render ( const screen_region viewport ) {
+       /*
           const int left_x = std::max ( 0, world::player_x - viewport.w/2 );
           const int top_y = std::max ( 0, world::player_y - viewport.h/2 );
           const int right_x = std::min ( landblock_width-1, world::player_x + viewport.w/2 );
@@ -39,6 +40,7 @@ public:
                }
                ++screen_y;
           }
+	*/
      }
 
 private:
