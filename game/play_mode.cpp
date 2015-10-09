@@ -37,10 +37,10 @@ void play_mode::done()
 
 pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time_elapsed )
 {
-     /*if ( command::is_key_down ( command::Q ) ) quitting = true;
+     if ( command::is_key_down ( command::Q ) ) quitting = true;
      bool moved = false;
      
-     if ( command::is_key_down ( command::UP ) ) {
+     /*if ( command::is_key_down ( command::UP ) ) {
        --world::player_y;
        moved = true;
      }

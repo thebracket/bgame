@@ -1,5 +1,6 @@
 #include "main_menu.h"
 #include "play_mode.h"
+#include "world/worldgen.h"
 
 using std::make_unique;
 
@@ -75,7 +76,9 @@ pair< return_mode, unique_ptr< base_mode > > main_menu::tick ( const double time
         return make_pair ( PUSH, make_unique<play_mode>() ); // Play the game
     }
     if (selected_item == 1 and command::is_key_down(command::ENTER)) {
-	// TODO: Go to world-builder mode
+	// TODO: Go to world-builder mode and do this properly
+	build_flat_world();
+	world_available = true;
     }
     return make_pair ( CONTINUE, NO_PUSHED_MODE );
 }
