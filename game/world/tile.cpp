@@ -6,6 +6,7 @@ tile::tile()
      display = 0;
      visible = false;
      base_tile_type = flat;
+     altitude = 0;
 }
 
 void tile::calculate_display_properties()
@@ -34,5 +35,6 @@ void tile::save ( fstream& lbfile )
      
      lbfile.write(buffer, 3);
      lbfile.write(reinterpret_cast<const char *>(&base_tile_type), sizeof(base_tile_type));
+     lbfile.write(reinterpret_cast<const char *>(&altitude), sizeof(altitude));
 }
 
