@@ -77,8 +77,9 @@ pair< return_mode, unique_ptr< base_mode > > main_menu::tick ( const double time
     }
     if (selected_item == 1 and command::is_key_down(command::ENTER)) {
 	// TODO: Go to world-builder mode and do this properly
-	build_flat_world();
+	worldgen::build_world();
 	world_available = true;
+	play_game->update_text("             Play the Game               ");
     }
     return make_pair ( CONTINUE, NO_PUSHED_MODE );
 }

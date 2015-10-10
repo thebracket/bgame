@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "tile.h"
 
 using std::vector;
@@ -19,4 +20,8 @@ public:
 
   int index;
   vector<tile> tiles;
+  
+  void save();
+  
+  std::string get_filename() const;
 };

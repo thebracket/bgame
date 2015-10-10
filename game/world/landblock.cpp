@@ -1,35 +1,31 @@
 #include "landblock.h"
-#include "../../engine/rng.h"
 #include "geometry.h"
+#include <sstream>
+#include <string>
+#include <fstream>
 
 using geometry::project_angle;
 using geometry::line_func;
 using geometry::DEGRAD;
+using std::stringstream;
+using std::string;
+using std::fstream;
 
 land_block::land_block()
 {
-  tiles.resize(tiles_per_landblock);
-  for (tile &t : tiles) {
-    int symbol = engine::roll_dice(1,6);
-    switch (symbol) {
-      case 1 : t.display = '.'; break;
-      case 2 : t.display = '#'; break;
-      case 3 : t.display = '`'; break;
-      case 4 : t.display = '\''; break;
-      case 5 : t.display = '"'; break;
-      case 6 : t.display = '%'; break;
-    }
-  }
+     tiles.resize ( tiles_per_landblock );
 }
 
 void land_block::make_radius_visible ( const int x, const int y, const int radius )
 {
+     constexpr double sweep_degrees_radians = 1 * DEGRAD;
+     constexpr double three_sixy_degrees_radians = 360 * DEGRAD;
+
      tiles[idx ( x,y )].visible = true;
      tiles[idx ( x,y )].revealed = true;
-     for ( int angle=0; angle<360; angle+=1 ) {
-          const double radians = angle * DEGRAD;
-          pair<int,int> destination = project_angle ( x,y,radius,angle );
-          line_func ( x,y,destination.first,destination.second,[this] ( int tx, int ty ) {
+     for ( int angle=0; angle<three_sixy_degrees_radians; angle+=sweep_degrees_radians ) {
+          pair<int,int> destination = project_angle ( x, y, radius, angle );
+          line_func ( x,y,destination.first,destination.second, [this] ( int tx, int ty ) {
                if ( tx >= 0 and tx <= landblock_width and ty >=0 and ty <= landblock_height ) {
                     tiles[idx ( tx,ty )].visible = true;
                     tiles[idx ( tx,ty )].revealed = true;
@@ -40,6 +36,23 @@ void land_block::make_radius_visible ( const int x, const int y, const int radiu
 
 void land_block::reset_visibility()
 {
-  for (tile &t : tiles)
-    t.visible = false;
+     for ( tile &t : tiles )
+          t.visible = false;
+}
+
+string land_block::get_filename() const
+{
+    stringstream filename_stream;
+    filename_stream << "world/LB" << index << ".dat";
+    return filename_stream.str();
+}
+
+void land_block::save()
+{
+    const string filename = get_filename();
+    fstream lbfile(filename, std::ios::out | std::ios::binary);
+    for (tile &t : tiles) {
+	t.save(lbfile);
+    }
+    lbfile.close();
 }
