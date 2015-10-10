@@ -1,1 +1,1 @@
-add_library(world geometry.cpp world.cpp tile.cpp landblock.cpp console.cpp worldgen.cpp)
+add_library(world geometry.cpp world.cpp tile.cpp landblock.cpp console.cpp worldgen.cpp serialization_utils.cpp)
