@@ -13,8 +13,10 @@ class tile {
 public:
      tile();
 
+     // About the tile itself
      tile_type base_tile_type;
      tile_material base_tile_material;
+     short altitude;
 
      void calculate_display_properties();
 
