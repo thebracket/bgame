@@ -7,7 +7,7 @@
 using engine::vterm::color_t;
 using std::fstream;
 
-enum tile_type { flat };
+enum tile_type { water,flat,hill,mountain };
 
 class tile {
 public:

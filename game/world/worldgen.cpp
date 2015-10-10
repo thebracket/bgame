@@ -6,9 +6,12 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <map>
+#include <tuple>
 #include "../../engine/rng.h"
 
 using std::vector;
+using std::map;
 
 namespace worldgen {
 
@@ -64,26 +67,99 @@ void apply_fault_line_to_altitude_map ( height_map_t &altitude_map, const int st
      } );
 }
 
+std::tuple<short,short,map<short,int>> min_max_heights ( const height_map_t & altitude_map )
+{
+     short min_height = 32767;
+     short max_height = -32768;
+     map<short,int> frequency_map;
+     for ( const short &h : altitude_map ) {
+          if ( h > min_height ) min_height = h;
+          if ( h < max_height ) max_height = h;
+          auto finder = frequency_map.find ( h );
+          if ( finder == frequency_map.end() ) {
+               frequency_map[h] = 1;
+          } else {
+               finder->second = finder->second+1;
+          }
+     }
+
+     return std::make_tuple ( min_height, max_height, frequency_map );
+}
+
+struct altitude_map_levels {
+     short water_level;
+     short plains_level;
+     short hills_level;
+     short mountains_level;
+};
+
+short find_layer_level ( const map<short,int> &levels, const int &target, const short &min_layer )
+{
+     int total = 0;
+     short level = min_layer;
+     while ( total < target ) {
+	  auto finder = levels.find(level);
+	  if (finder != levels.end()) {
+	      total += finder->second;
+	  }
+          ++level;
+     }
+     return level;
+}
+
+altitude_map_levels determine_levels ( const std::tuple<short,short,map<short,int>> &min_max_freq )
+{
+     altitude_map_levels result;
+
+     // The goal is to have 1/3rd of the map be water.
+     const int one_third_total = worldgen_size / 3;
+     result.water_level = find_layer_level ( std::get<2> ( min_max_freq ), one_third_total, std::get<0> ( min_max_freq ) );
+
+     // The second third should be flat terrain
+     const int two_third_total = one_third_total*2;
+     result.plains_level = find_layer_level ( std::get<2> ( min_max_freq ), two_third_total, std::get<0> ( min_max_freq ) );
+
+     // The next third is half hills, half mountains
+     const int one_sixth_total = worldgen_size / 6;
+     const int hills_target = two_third_total + one_sixth_total;
+     result.hills_level = find_layer_level ( std::get<2> ( min_max_freq ), hills_target, std::get<0> ( min_max_freq ) );
+     result.mountains_level = std::get<1> ( min_max_freq ) +1;
+
+     return result;
+}
+
 void convert_altitudes_to_tiles ( height_map_t &altitude_map )
 {
+     const std::tuple<short,short,map<short,int>> min_max_freq = min_max_heights ( altitude_map );
+     const altitude_map_levels levels = determine_levels ( min_max_freq );
+
+
      for ( int wy=0; wy<world::world_height; ++wy ) {
           for ( int wx=0; wx<world::world_width; ++wx ) {
                // Create the world tile object
-	       land_block region;
-	       region.index = world::world_idx(wx,wy);
-	       const int region_x = wx*landblock_width;
-	       const int region_y = wy*landblock_height;
-	    
+               land_block region;
+               region.index = world::world_idx ( wx,wy );
+               const int region_x = wx*landblock_width;
+               const int region_y = wy*landblock_height;
+
                // Populate it from the height map
-	       for (int y=0; y<landblock_height; ++y) {
-		for (int x=0; x<landblock_width; ++x) {
-		  const int amp_x = region_x + x;
-		  const int amp_y = region_y + y;
-		  // TODO: Do something with altitude_map[idx(amp_x, amp_y)]
-		  region.tiles[region.idx(x,y)].base_tile_type = flat;
-		}
-	       }
-	       
+               for ( int y=0; y<landblock_height; ++y ) {
+                    for ( int x=0; x<landblock_width; ++x ) {
+                         const int amp_x = region_x + x;
+                         const int amp_y = region_y + y;
+                         const short altitude = altitude_map[idx ( amp_x, amp_y )];
+                         if ( altitude < levels.water_level ) {
+                              region.tiles[region.idx ( x,y )].base_tile_type = water;
+                         } else if ( altitude < levels.plains_level ) {
+                              region.tiles[region.idx ( x,y )].base_tile_type = flat;
+                         } else if ( altitude < levels.hills_level ) {
+                              region.tiles[region.idx ( x,y )].base_tile_type = hill;
+                         } else {
+                              region.tiles[region.idx ( x,y )].base_tile_type = mountain;
+                         }
+                    }
+               }
+
                // Serialize it to disk
                region.save();
           }
