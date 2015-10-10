@@ -20,11 +20,16 @@ constexpr int worldgen_height = world::world_height*landblock_height;
 constexpr int worldgen_size = worldgen_height * worldgen_width;
 typedef vector<short> height_map_t;
 
+/* Index of the world grid. Constexpr shouldn't help here, but for some reason in
+ * measured performance, it did. */
 constexpr int idx ( const int x, const int y )
 {
      return ( y * worldgen_width ) + x;
 }
 
+/*
+ * Creates a height-map vector, sized to hold the world, and initialized with 1.
+ */ 
 height_map_t make_altitude_map()
 {
      height_map_t altitude_map;
@@ -33,6 +38,12 @@ height_map_t make_altitude_map()
      return altitude_map;
 }
 
+/*
+ * Performs a smoothing run on altitude_map. Each cell becomes
+ * the average of its neighbors height. To avoid bias, the
+ * smoothing copies into a new vector, which is then copied
+ * back.
+ */
 void smooth_altitude_map ( height_map_t &altitude_map )
 {
      height_map_t new_map;
@@ -58,6 +69,11 @@ void smooth_altitude_map ( height_map_t &altitude_map )
      std::copy(new_map.begin(), new_map.end(), std::back_inserter(altitude_map));
 }
 
+/*
+ * Simulates a fault-line (more realistic than just adding blobs). Given a
+ * starting and ending point, it iterates a line between the two and adds
+ * (adjustment) to the point's height.
+ */
 void apply_fault_line_to_altitude_map ( height_map_t &altitude_map, const int start_x,
                                         const int start_y, const int end_x, const int end_y,
                                         const int adjustment )
@@ -70,6 +86,11 @@ void apply_fault_line_to_altitude_map ( height_map_t &altitude_map, const int st
      } );
 }
 
+/*
+ * Iterates the whole height map, and returns the minimum and maximum heights. A
+ * frequency map is populated, containing how frequently each height occurs.
+ * Returned as a tuple.
+ */
 std::tuple<short,short,map<short,int>> min_max_heights ( const height_map_t & altitude_map )
 {
      short min_height = 32767;
@@ -92,6 +113,10 @@ std::tuple<short,short,map<short,int>> min_max_heights ( const height_map_t & al
      return std::make_tuple ( min_height, max_height, frequency_map );
 }
 
+/*
+ * Used to store the height levels at which each type of terrain
+ * occurs.
+ */
 struct altitude_map_levels {
      short water_level;
      short plains_level;
@@ -99,6 +124,12 @@ struct altitude_map_levels {
      short mountains_level;
 };
 
+/*
+ * Utility function; iterates through a frequency map until it has reached a level in which
+ * the sum of previous levels equals (or exceeds) target. This is used to specify, e.g. "1/3
+ * of the map should be water" - send in worldgen_size/3 as the target, and it will find
+ * the altitude that satisfies this.
+ */
 short find_layer_level ( const map<short,int> &levels, const int &target, const short &min_layer )
 {
      int total = 0;
@@ -113,6 +144,9 @@ short find_layer_level ( const map<short,int> &levels, const int &target, const 
      return level;
 }
 
+/*
+ * Determine the altitudes at which water, plains, hills and mountains are found.
+ */
 altitude_map_levels determine_levels ( const std::tuple<short,short,map<short,int>> &min_max_freq )
 {
      altitude_map_levels result;
@@ -134,6 +168,10 @@ altitude_map_levels determine_levels ( const std::tuple<short,short,map<short,in
      return result;
 }
 
+/*
+ * Convert the basic height map into tile types on a simple altitude basis.
+ * Performed per landblock.
+ */
 void create_base_tile_types(const int region_x, const int region_y, land_block &region,
       const height_map_t &altitude_map, const altitude_map_levels &levels) {
       for ( int y=0; y<landblock_height; ++y ) {
@@ -156,6 +194,10 @@ void create_base_tile_types(const int region_x, const int region_y, land_block &
     }
 }
 
+/*
+ * Converts the entire world altitude map into landblocks, and
+ * saves them to disk.
+ */
 void convert_altitudes_to_tiles ( height_map_t &altitude_map )
 {
      const std::tuple<short,short,map<short,int>> min_max_freq = min_max_heights ( altitude_map );
@@ -172,11 +214,15 @@ void convert_altitudes_to_tiles ( height_map_t &altitude_map )
 	       create_base_tile_types(region_x, region_y, region, altitude_map, levels);
 	       
                // Serialize it to disk
-               //region.save();
+               region.save();
           }
      }
 }
 
+/*
+ * Basic heightmap generation algorithm. Calls the previously
+ * defined functions.
+ */
 void create_heightmap_world()
 {
      height_map_t altitude_map = make_altitude_map();
@@ -202,9 +248,18 @@ void create_heightmap_world()
      convert_altitudes_to_tiles ( altitude_map );
 }
 
+/*
+ * External interface to world creation. Eventually, this needs to
+ * be extended to provide some feedback fo the user.
+ */
 void build_world()
 {
      create_heightmap_world();
+     // TODO: Walk the map creating boundary regions (e.g. beaches, cliffs)
+     // TODO: Walk each world block with marching squares to create fake hills
+     // TODO: For the far future, biomes, history and goodies.
+     
+     // TODO: Find a place to crash the ship to let us start having something playable
 }
 
 }
