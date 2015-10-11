@@ -15,7 +15,7 @@ public:
      };;
 
      virtual void render ( const screen_region viewport ) {
-       /*
+       
           const int left_x = std::max ( 0, world::player_x - viewport.w/2 );
           const int top_y = std::max ( 0, world::player_y - viewport.h/2 );
           const int right_x = std::min ( landblock_width-1, world::player_x + viewport.w/2 );
@@ -25,7 +25,7 @@ public:
           for ( int y=top_y; y<=bottom_y; ++y ) {
                int screen_x = viewport.x;
                for ( int x=left_x; x<=right_x; ++x ) {
-                    tile t = world::current_region.tiles[world::current_region.idx ( x,y )];
+                    tile t = world::current_region->tiles[world::current_region->idx ( x,y )];
                     if ( t.revealed ) {
                          if ( t.visible ) {
                               vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
@@ -40,7 +40,7 @@ public:
                }
                ++screen_y;
           }
-	*/
+	
      }
 
 private:

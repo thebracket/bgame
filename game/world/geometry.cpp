@@ -8,7 +8,7 @@ namespace geometry {
  * From a given point x/y, project forward radius units (generally tiles) at an angle of degrees_radians degrees
  * (in radians).
  */
-pair<int,int> project_angle ( const int x, const int y, const double radius, const int degrees_radians )
+pair<int,int> project_angle ( const int x, const int y, const double radius, const double degrees_radians )
 {
      return std::make_pair ( x + radius*std::cos ( degrees_radians ), y + radius*std::sin ( degrees_radians ) );
 }

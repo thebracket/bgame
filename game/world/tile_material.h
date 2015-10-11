@@ -12,6 +12,7 @@ public:
      color_t background {0,0,0};
      color_t foreground {255,0,0};
      unsigned char glyph = '.';
+     
      void save (fstream &lbfile ) {
 	save_color(background, lbfile);
 	save_color(foreground, lbfile);
@@ -19,6 +20,14 @@ public:
 	lbfile.write(&tmp, 1);
      }
 
+     void load(fstream &lbfile) {
+	load_color(background, lbfile);
+	load_color(foreground, lbfile);
+	char tmp;
+	lbfile.read(&tmp, 1);
+	glyph = static_cast<unsigned char>(tmp);
+     }
+     
      // TODO: Insert some actual material properties
          
 };

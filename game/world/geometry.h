@@ -13,7 +13,7 @@ constexpr double DEGRAD = 3.14159/180;
  * From a given point x/y, project forward radius units (generally tiles) at an angle of degrees_radians degrees
  * (in radians).
  */
-pair<int,int> project_angle ( const int x, const int y, const double radius, const int degrees_radians );
+pair<int,int> project_angle ( const int x, const int y, const double radius, const double degrees_radians );
 
 /*
  * Perform a function for each line element between x1/y1 and x2/y2. Uses Bresenham's

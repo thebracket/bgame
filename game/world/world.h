@@ -20,4 +20,7 @@ inline int world_idx(const int x, const int y) { return (world_height * y) + x; 
 extern console log;
 extern land_block * current_region; // Non-owning pointer to the area in which play is currently taking place
 
+extern int player_x;
+extern int player_y;
+
 }

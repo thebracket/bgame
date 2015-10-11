@@ -6,7 +6,7 @@ using std::make_unique;
 
 void main_menu::init()
 {
-    world_available = false; // TODO: When a world IS available, this should be true!
+    world_available = true; // TODO: When a world IS available, this should be true!
     unique_ptr<gui_frame> frame = make_unique<gui_frame>("Outer", FILL_REGION);
     frame->add_child(make_unique<gui_static_text>("Title", "Black Future", 1, 1, red, black, true));
     if (world_available) {

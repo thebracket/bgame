@@ -3,6 +3,8 @@
 
 using namespace engine;
 using std::make_unique;
+using world::player_x;
+using world::player_y;
 
 void play_mode::init()
 {
@@ -10,7 +12,11 @@ void play_mode::init()
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
      world::log.write ( "Use the @B_WHITE@arrow keys@WHITE@ to move, or press @B_RED@Q@WHITE@ to quit." );
-     //world::current_region.make_radius_visible(world::player_x, world::player_y, 8);
+     int widx = world::world_idx(5,5);
+     world::current_region = new land_block(widx);
+     player_x = 128;
+     player_y = 128;
+     world::current_region->make_radius_visible(player_x, player_y, 8);
 }
 
 void play_mode::init_gui()
@@ -32,7 +38,7 @@ void play_mode::init_gui()
 
 void play_mode::done()
 {
-
+    delete world::current_region;
 }
 
 pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time_elapsed )
@@ -40,34 +46,34 @@ pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time
      if ( command::is_key_down ( command::Q ) ) quitting = true;
      bool moved = false;
      
-     /*if ( command::is_key_down ( command::UP ) ) {
-       --world::player_y;
+     if ( command::is_key_down ( command::UP ) ) {
+       --player_y;
        moved = true;
      }
      if ( command::is_key_down ( command::DOWN ) ) {
-       ++world::player_y;
+       ++player_y;
        moved = true;
      }
      if ( command::is_key_down ( command::LEFT ) ) {
-       --world::player_x;
+       --player_x;
        moved = true;
      }
      if ( command::is_key_down ( command::RIGHT ) ) {       
-       ++world::player_x;
+       ++player_x;
        moved = true;
      }
      
      // Clamping
-     if ( world::player_x < 0 ) world::player_x = 0;
-     if ( world::player_x > landblock_width ) world::player_x = landblock_width;
-     if ( world::player_y < 0 ) world::player_y = 0;
-     if ( world::player_y > landblock_height ) world::player_y = landblock_height;
+     if ( player_x < 0 ) player_x = 0;
+     if ( player_x > landblock_width ) player_x = landblock_width;
+     if ( player_y < 0 ) player_y = 0;
+     if ( player_y > landblock_height ) player_y = landblock_height;
 
      // Visibility
      if (moved) {
-       world::reset_visibility();
-       world::make_radius_visible(world::player_x, world::player_y, 8);
-     }*/
+       world::current_region->reset_visibility();
+       world::current_region->make_radius_visible(player_x, player_y, 8);
+     }
 
      ui.render();
 
