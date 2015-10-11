@@ -1,16 +1,25 @@
 #include "main_menu.h"
 #include "play_mode.h"
+#include <fstream>
 #include "world/worldgen.h"
 
 using std::make_unique;
+using std::ifstream;
+
+bool fexists(const char *filename)
+{
+  ifstream ifile(filename);
+  if (ifile) return true;
+  return false;
+}
 
 void main_menu::init()
 {
-    world_available = true; // TODO: When a world IS available, this should be true!
+    world_available = fexists("world/LB1.dat");
     unique_ptr<gui_frame> frame = make_unique<gui_frame>("Outer", FILL_REGION);
     frame->add_child(make_unique<gui_static_text>("Title", "Black Future", 1, 1, red, black, true));
     if (world_available) {
-	frame->add_child(make_unique<gui_static_text>("PlayGame",      	"        Play the Game                    ", 1, 4, black, white, true));
+	frame->add_child(make_unique<gui_static_text>("PlayGame",      	"              Play the Game              ", 1, 4, black, white, true));
     } else {
 	frame->add_child(make_unique<gui_static_text>("PlayGame",      	" You Must Create World to Play the Game  ", 1, 4, black, dark_grey, true));      
     }
