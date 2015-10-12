@@ -8,6 +8,8 @@ using engine::vterm::color_t;
 using std::fstream;
 
 enum tile_type { water,flat,hill,mountain };
+const unsigned char TILE_REVEALED = 1;
+const unsigned char TILE_VISIBLE = 2;
 
 class tile {
 public:
@@ -17,12 +19,9 @@ public:
     tile_type base_tile_type;
     tile_material base_tile_material;
     short altitude;
+    unsigned char flags;
 
     void calculate_display_properties();
-
-    // Visibility
-    bool revealed;
-    bool visible;
 
     // Cached: not persistent
     unsigned char display;

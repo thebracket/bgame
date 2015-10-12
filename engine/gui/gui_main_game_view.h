@@ -26,8 +26,8 @@ public:
                int screen_x = viewport.x;
                for ( int x=left_x; x<=right_x; ++x ) {
                     tile t = world::current_region->tiles[world::current_region->idx ( x,y )];
-                    if ( t.revealed ) {
-                         if ( t.visible ) {
+                    if ( t.flags & TILE_REVEALED ) {
+                         if ( t.flags & TILE_VISIBLE ) {
                               vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
                          } else {
                               vterm::set_char_xy ( screen_x, screen_y, { t.display, dark_grey, t.background } );
