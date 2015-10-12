@@ -93,7 +93,7 @@ void world_gen_mode::render_tiles()
      const int lx = 4;
      const int ty = 4;
      for ( int y=0; y<size.second-8; ++y ) {
-          for ( int x=0; x<size.second-8; ++x ) {
+          for ( int x=0; x<size.first-8; ++x ) {
                const int index = worldgen::current_landblock->idx ( x,y );
                tile_type block_type = worldgen::current_landblock->tiles[index].base_tile_type;
                const int screen_x = lx + x;
