@@ -1,7 +1,6 @@
 #include "worldgen.h"
 
 #include "world.h"
-#include "landblock.h"
 #include "geometry.h"
 #include <vector>
 #include <algorithm>
@@ -20,11 +19,14 @@ constexpr int worldgen_height = world::world_height*landblock_height;
 constexpr int worldgen_size = worldgen_height * worldgen_width;
 typedef vector<short> height_map_t;
 
+// Forward Declarations
+void update_gui_heightmap ( height_map_t &altitude_map );
+
 /* Index of the world grid. Constexpr shouldn't help here, but for some reason in
  * measured performance, it did. */
 constexpr int idx ( const int x, const int y )
 {
-    return ( y * worldgen_width ) + x;
+     return ( y * worldgen_width ) + x;
 }
 
 /*
@@ -32,10 +34,10 @@ constexpr int idx ( const int x, const int y )
  */
 height_map_t make_altitude_map()
 {
-    height_map_t altitude_map;
-    altitude_map.resize ( worldgen_size );
-    std::fill ( altitude_map.begin(), altitude_map.end(), 1 );
-    return altitude_map;
+     height_map_t altitude_map;
+     altitude_map.resize ( worldgen_size );
+     std::fill ( altitude_map.begin(), altitude_map.end(), 1 );
+     return altitude_map;
 }
 
 /*
@@ -46,27 +48,27 @@ height_map_t make_altitude_map()
  */
 void smooth_altitude_map ( height_map_t &altitude_map )
 {
-    height_map_t new_map;
-    new_map.resize(worldgen_size);
+     height_map_t new_map;
+     new_map.resize ( worldgen_size );
 
-    for ( int y=1; y<worldgen_height-1; ++y ) {
-        for ( int x=1; x<worldgen_width-1; ++x ) {
-            const int sum = altitude_map[idx ( x-1, y-1 )] +
-                            altitude_map[idx ( x, y-1 )] +
-                            altitude_map[idx ( x+1, y-1 )] +
-                            altitude_map[idx ( x-1, y )] +
-                            altitude_map[idx ( x, y )] +
-                            altitude_map[idx ( x+1, y )] +
-                            altitude_map[idx ( x-1, y+1 )] +
-                            altitude_map[idx ( x, y+1 )] +
-                            altitude_map[idx ( x+1, y+1 )];
-            const short average = sum / 9;
-            new_map[idx ( x,y )] = average;
-        }
-    }
+     for ( int y=1; y<worldgen_height-1; ++y ) {
+          for ( int x=1; x<worldgen_width-1; ++x ) {
+               const int sum = altitude_map[idx ( x-1, y-1 )] +
+                               altitude_map[idx ( x, y-1 )] +
+                               altitude_map[idx ( x+1, y-1 )] +
+                               altitude_map[idx ( x-1, y )] +
+                               altitude_map[idx ( x, y )] +
+                               altitude_map[idx ( x+1, y )] +
+                               altitude_map[idx ( x-1, y+1 )] +
+                               altitude_map[idx ( x, y+1 )] +
+                               altitude_map[idx ( x+1, y+1 )];
+               const short average = sum / 9;
+               new_map[idx ( x,y )] = average;
+          }
+     }
 
-    altitude_map.clear();
-    std::copy(new_map.begin(), new_map.end(), std::back_inserter(altitude_map));
+     altitude_map.clear();
+     std::copy ( new_map.begin(), new_map.end(), std::back_inserter ( altitude_map ) );
 }
 
 /*
@@ -78,12 +80,12 @@ void apply_fault_line_to_altitude_map ( height_map_t &altitude_map, const int st
                                         const int start_y, const int end_x, const int end_y,
                                         const int adjustment )
 {
-    geometry::line_func ( start_x, start_y, end_x, end_y, [&altitude_map,adjustment] ( int tx, int ty ) {
-        const int index = idx ( tx,ty );
-        const int old_altitude = altitude_map[index];
-        if ((old_altitude + adjustment) < 32000 and (old_altitude + adjustment) > -32000)
-            altitude_map[index] += adjustment;
-    } );
+     geometry::line_func ( start_x, start_y, end_x, end_y, [&altitude_map,adjustment] ( int tx, int ty ) {
+          const int index = idx ( tx,ty );
+          const int old_altitude = altitude_map[index];
+          if ( ( old_altitude + adjustment ) < 32000 and ( old_altitude + adjustment ) > -32000 )
+               altitude_map[index] += adjustment;
+     } );
 }
 
 /*
@@ -93,24 +95,24 @@ void apply_fault_line_to_altitude_map ( height_map_t &altitude_map, const int st
  */
 std::tuple<short,short,map<short,int>> min_max_heights ( const height_map_t & altitude_map )
 {
-    short min_height = 32767;
-    short max_height = -32768;
-    map<short,int> frequency_map;
-    for ( const short &h : altitude_map ) {
-        if ( h < min_height ) min_height = h;
-        if ( h > max_height ) max_height = h;
+     short min_height = 32767;
+     short max_height = -32768;
+     map<short,int> frequency_map;
+     for ( const short &h : altitude_map ) {
+          if ( h < min_height ) min_height = h;
+          if ( h > max_height ) max_height = h;
 
-        auto finder = frequency_map.find ( h );
-        if ( finder == frequency_map.end() ) {
-            frequency_map[h] = 1;
-        } else {
-            int n = finder->second;
-            ++n;
-            frequency_map[h] = n;
-        }
-    }
+          auto finder = frequency_map.find ( h );
+          if ( finder == frequency_map.end() ) {
+               frequency_map[h] = 1;
+          } else {
+               int n = finder->second;
+               ++n;
+               frequency_map[h] = n;
+          }
+     }
 
-    return std::make_tuple ( min_height, max_height, frequency_map );
+     return std::make_tuple ( min_height, max_height, frequency_map );
 }
 
 /*
@@ -118,10 +120,10 @@ std::tuple<short,short,map<short,int>> min_max_heights ( const height_map_t & al
  * occurs.
  */
 struct altitude_map_levels {
-    short water_level;
-    short plains_level;
-    short hills_level;
-    short mountains_level;
+     short water_level;
+     short plains_level;
+     short hills_level;
+     short mountains_level;
 };
 
 /*
@@ -132,16 +134,16 @@ struct altitude_map_levels {
  */
 short find_layer_level ( const map<short,int> &levels, const int &target, const short &min_layer )
 {
-    int total = 0;
-    short level = min_layer;
-    while ( total < target ) {
-        auto finder = levels.find(level);
-        if (finder != levels.end()) {
-            total += finder->second;
-        }
-        ++level;
-    }
-    return level;
+     int total = 0;
+     short level = min_layer;
+     while ( total < target ) {
+          auto finder = levels.find ( level );
+          if ( finder != levels.end() ) {
+               total += finder->second;
+          }
+          ++level;
+     }
+     return level;
 }
 
 /*
@@ -149,49 +151,51 @@ short find_layer_level ( const map<short,int> &levels, const int &target, const 
  */
 altitude_map_levels determine_levels ( const std::tuple<short,short,map<short,int>> &min_max_freq )
 {
-    altitude_map_levels result;
+     altitude_map_levels result;
 
-    // The goal is to have 1/3rd of the map be water.
-    const int one_third_total = worldgen_size / 3;
-    result.water_level = find_layer_level ( std::get<2> ( min_max_freq ), one_third_total, std::get<0> ( min_max_freq ) );
+     // The goal is to have 1/3rd of the map be water.
+     const int one_third_total = worldgen_size / 3;
+     result.water_level = find_layer_level ( std::get<2> ( min_max_freq ), one_third_total, std::get<0> ( min_max_freq ) );
 
-    // The second third should be flat terrain
-    const int two_third_total = one_third_total*2;
-    result.plains_level = find_layer_level ( std::get<2> ( min_max_freq ), two_third_total, std::get<0> ( min_max_freq ) );
+     // The second third should be flat terrain
+     const int two_third_total = one_third_total*2;
+     result.plains_level = find_layer_level ( std::get<2> ( min_max_freq ), two_third_total, std::get<0> ( min_max_freq ) );
 
-    // The next third is half hills, half mountains
-    const int one_sixth_total = worldgen_size / 6;
-    const int hills_target = two_third_total + one_sixth_total;
-    result.hills_level = find_layer_level ( std::get<2> ( min_max_freq ), hills_target, std::get<0> ( min_max_freq ) );
-    result.mountains_level = std::get<1> ( min_max_freq ) +1;
+     // The next third is half hills, half mountains
+     const int one_sixth_total = worldgen_size / 6;
+     const int hills_target = two_third_total + one_sixth_total;
+     result.hills_level = find_layer_level ( std::get<2> ( min_max_freq ), hills_target, std::get<0> ( min_max_freq ) );
+     result.mountains_level = std::get<1> ( min_max_freq ) +1;
 
-    return result;
+     return result;
 }
 
 /*
  * Convert the basic height map into tile types on a simple altitude basis.
  * Performed per landblock.
  */
-void create_base_tile_types(const int region_x, const int region_y, land_block &region,
-                            const height_map_t &altitude_map, const altitude_map_levels &levels) {
-    for ( int y=0; y<landblock_height; ++y ) {
-        for ( int x=0; x<landblock_width; ++x ) {
-            const int amp_x = region_x + x;
-            const int amp_y = region_y + y;
-            const short altitude = altitude_map[idx ( amp_x, amp_y )];
-            const int tile_idx = region.idx(x,y);
-            if ( altitude < levels.water_level ) {
-                region.tiles[tile_idx].base_tile_type = water;
-            } else if ( altitude < levels.plains_level ) {
-                region.tiles[tile_idx].base_tile_type = flat;
-            } else if ( altitude < levels.hills_level ) {
-                region.tiles[tile_idx].base_tile_type = hill;
-            } else {
-                region.tiles[tile_idx].base_tile_type = mountain;
-            }
-            region.tiles[tile_idx].altitude = altitude;
-        }
-    }
+void create_base_tile_types ( const int region_x, const int region_y, land_block &region,
+                              const height_map_t &altitude_map, const altitude_map_levels &levels )
+{
+     for ( int y=0; y<landblock_height; ++y ) {
+          for ( int x=0; x<landblock_width; ++x ) {
+               std::lock_guard<std::mutex> lock ( worldgen_mutex );
+               const int amp_x = region_x + x;
+               const int amp_y = region_y + y;
+               const short altitude = altitude_map[idx ( amp_x, amp_y )];
+               const int tile_idx = region.idx ( x,y );
+               if ( altitude < levels.water_level ) {
+                    region.tiles[tile_idx].base_tile_type = water;
+               } else if ( altitude < levels.plains_level ) {
+                    region.tiles[tile_idx].base_tile_type = flat;
+               } else if ( altitude < levels.hills_level ) {
+                    region.tiles[tile_idx].base_tile_type = hill;
+               } else {
+                    region.tiles[tile_idx].base_tile_type = mountain;
+               }
+               region.tiles[tile_idx].altitude = altitude;
+          }
+     }
 }
 
 /*
@@ -200,23 +204,37 @@ void create_base_tile_types(const int region_x, const int region_y, land_block &
  */
 void convert_altitudes_to_tiles ( height_map_t &altitude_map )
 {
-    const std::tuple<short,short,map<short,int>> min_max_freq = min_max_heights ( altitude_map );
-    const altitude_map_levels levels = determine_levels ( min_max_freq );
+     const std::tuple<short,short,map<short,int>> min_max_freq = min_max_heights ( altitude_map );
+     const altitude_map_levels levels = determine_levels ( min_max_freq );
 
-    for ( int wy=0; wy<world::world_height; ++wy ) {
-        for ( int wx=0; wx<world::world_width; ++wx ) {
-            // Create the world tile object
-            land_block region;
-            region.index = world::world_idx ( wx,wy );
-            const int region_x = wx*landblock_width;
-            const int region_y = wy*landblock_height;
+     {
+          std::lock_guard<std::mutex> lock ( worldgen_mutex );
+          current_landblock = nullptr;
+     }
 
-            create_base_tile_types(region_x, region_y, region, altitude_map, levels);
+     for ( int wy=0; wy<world::world_height; ++wy ) {
+          for ( int wx=0; wx<world::world_width; ++wx ) {
+               // Create the world tile object
+               land_block region;
+               {
+                    std::lock_guard<std::mutex> lock ( worldgen_mutex );
+                    for ( tile &t : region.tiles ) t.base_tile_type = flat;
+                    current_landblock = &region;
+               }
+               region.index = world::world_idx ( wx,wy );
+               const int region_x = wx*landblock_width;
+               const int region_y = wy*landblock_height;
 
-            // Serialize it to disk
-            region.save();
-        }
-    }
+               create_base_tile_types ( region_x, region_y, region, altitude_map, levels );
+
+               // Serialize it to disk
+               {
+                    std::lock_guard<std::mutex> lock ( worldgen_mutex );
+                    region.save();
+                    current_landblock = nullptr;
+               }
+          }
+     }
 }
 
 /*
@@ -225,28 +243,48 @@ void convert_altitudes_to_tiles ( height_map_t &altitude_map )
  */
 void create_heightmap_world()
 {
-    height_map_t altitude_map = make_altitude_map();
-    const int num_fault_lines = worldgen_size/10000;
+     height_map_t altitude_map = make_altitude_map();
+     const int num_fault_lines = worldgen_size/10000;
 
-    for ( int i=0; i<num_fault_lines; ++i ) {
-        int sx = engine::roll_dice(1, worldgen_width-1 );
-        int sy = engine::roll_dice(1, worldgen_height-1 );
-        int ex = engine::roll_dice(1, worldgen_width-1 );
-        int ey = engine::roll_dice(1, worldgen_height-1 );
+     {
+          std::lock_guard<std::mutex> lock ( worldgen_mutex );
+          progress = FAULTLINES;
+          heightmap_progress = new vector<short>();
+          heightmap_progress->resize ( world::world_size );
+     }
+     update_gui_heightmap ( altitude_map ); // Handles its own locking
 
-        apply_fault_line_to_altitude_map ( altitude_map,
-                                           sx,
-                                           sy,
-                                           ex,
-                                           ey,
-                                           1000
-                                         );
-    }
-    for ( int i=0; i<32; ++i ) {
-        smooth_altitude_map ( altitude_map );
-    }
-    convert_altitudes_to_tiles ( altitude_map );
+     for ( int i=0; i<num_fault_lines; ++i ) {
+          int sx = engine::roll_dice ( 1, worldgen_width-1 );
+          int sy = engine::roll_dice ( 1, worldgen_height-1 );
+          int ex = engine::roll_dice ( 1, worldgen_width-1 );
+          int ey = engine::roll_dice ( 1, worldgen_height-1 );
+
+          apply_fault_line_to_altitude_map ( altitude_map,
+                                             sx,
+                                             sy,
+                                             ex,
+                                             ey,
+                                             1000
+                                           );
+          if ( i % 300 == 0 ) update_gui_heightmap ( altitude_map );
+     }
+     for ( int i=0; i<64; ++i ) {
+          smooth_altitude_map ( altitude_map );
+          if ( i % 16 == 0 ) update_gui_heightmap ( altitude_map );
+     }
+     {
+          std::lock_guard<std::mutex> lock ( worldgen_mutex );
+          progress = MAKETILES;
+     }
+     convert_altitudes_to_tiles ( altitude_map );
+     {
+          std::lock_guard<std::mutex> lock ( worldgen_mutex );
+          progress = DONE;
+     }
 }
+
+/********* GUI Releated Functionality */
 
 /*
  * External interface to world creation. Eventually, this needs to
@@ -254,12 +292,58 @@ void create_heightmap_world()
  */
 void build_world()
 {
-    create_heightmap_world();
-    // TODO: Walk the map creating boundary regions (e.g. beaches, cliffs)
-    // TODO: Walk each world block with marching squares to create fake hills
-    // TODO: For the far future, biomes, history and goodies.
+     create_heightmap_world();
+     // TODO: Walk the map creating boundary regions (e.g. beaches, cliffs)
+     // TODO: Walk each world block with marching squares to create fake hills
+     // TODO: For the far future, biomes, history and goodies.
 
-    // TODO: Find a place to crash the ship to let us start having something playable
+     // TODO: Find a place to crash the ship to let us start having something playable
 }
+
+// For communication with the GUI
+std::mutex worldgen_mutex;
+worldgen_progress progress = INIT;
+vector<short> * heightmap_progress; // Used for sharing height-map progress with the GUI
+land_block * current_landblock; // Also used for GUI communication
+
+/*
+ * Creates a summary map of a height map, for the world-gen gui.
+ */
+void update_gui_heightmap ( height_map_t &altitude_map )
+{
+     std::lock_guard<std::mutex> lock ( worldgen_mutex );
+
+     // Determine minimum and maximum overall height
+     short min_height = 32767;
+     short max_height = -32768;
+     for ( const short &h : altitude_map ) {
+          if ( h < min_height ) min_height = h;
+          if ( h > max_height ) max_height = h;
+     }
+
+     int range = ( max_height - min_height );
+     if ( range == 0 ) range = 1;
+
+     for ( int y=0; y<world::world_height; ++y ) {
+          for ( int x=0; x<world::world_width; ++x ) {
+               int accumulator = min_height;
+               for ( int wy=0; wy<landblock_height; ++wy ) {
+                    for ( int wx=0; wx<landblock_width; ++wx ) {
+                         const int tx = ( x * landblock_width ) + wx;
+                         const int ty = ( y * landblock_height ) + wy;
+                         const int index = idx ( tx,ty );
+                         if ( altitude_map[index] > accumulator ) accumulator = altitude_map[index];
+                    }
+               }
+               const double average_height = accumulator;
+               const double percent = ( average_height / range );
+               const short col = 127 * percent;
+               heightmap_progress->operator[] ( world::world_idx ( x,y ) ) = col;
+
+          }
+     }
+
+}
+
 
 }
