@@ -40,6 +40,15 @@ void main_menu::done()
 
 }
 
+void main_menu::on_pop()
+{
+     world_available = fexists("world/LB1.dat");
+     if (world_available) {
+        gui_static_text * play_game = static_cast<gui_static_text *>(menu_interface.find_child("PlayGame"));     
+	play_game->update_text("             Play the Game               ");
+     }
+}
+
 pair< return_mode, unique_ptr< base_mode > > main_menu::tick ( const double time_elapsed )
 {
     if (command::is_key_down(command::UP)) --selected_item;

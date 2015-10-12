@@ -11,6 +11,7 @@ public:
      virtual void init();
      virtual void done();
      virtual pair<return_mode, unique_ptr<base_mode>> tick ( const double time_elapsed );
+     virtual void on_pop();
 private:
     int selected_item;
     bool loaded_assets;
