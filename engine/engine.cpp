@@ -2,6 +2,7 @@
 #include "output_backend.h"
 #include "ncurses_backend.h"
 #include "sdl2_backend.h"
+#include "ecs/ecs.h"
 #include <memory>
 #include <thread>
 #include <chrono>
@@ -71,7 +72,10 @@ void main_loop ( unique_ptr<base_mode> starting_mode )
 	  command::clear_commands();
           backend_driver->poll_inputs();
 	  command::process_commands();
-          vterm::clear_screen();
+	  ecs::tick(duration_ms);
+
+	  // Render Control
+	  vterm::clear_screen();
 
           pair<return_mode, unique_ptr<base_mode>> continuation_mode = current_mode->tick ( duration_ms );
           if ( continuation_mode.first == POP ) pop_mode();
