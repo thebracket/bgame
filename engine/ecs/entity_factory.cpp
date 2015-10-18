@@ -3,6 +3,7 @@
 #include "position_component.h"
 #include "debug_name_component.h"
 #include "renderable_component.h"
+#include "../../game/world/world.h"
 
 using std::make_unique;
 
@@ -29,6 +30,16 @@ entity make_test_entity()
     add_component(test, make_unique<renderable_component>('@', yellow, black));
     return test;
 }
+
+entity make_camera_entity()
+{
+    entity camera;
+    camera.handle = next_entity_handle();
+    world::camera_handle = camera.handle;
+    add_component(camera, make_unique<position_component>(128,128));
+    return camera;
+}
+
 
   
 }
