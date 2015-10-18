@@ -4,6 +4,7 @@
 
 #include "rng.h"
 #include "virtual_terminal.h"
+#include "colors.h"
 #include "base_mode.h"
 #include "gui/gui.h"
 #include "command_manager.h"
