@@ -4,6 +4,7 @@
 #include "debug_name_component.h"
 #include "renderable_component.h"
 #include "../../game/world/world.h"
+#include "../colors.h"
 
 using std::make_unique;
 
@@ -17,10 +18,7 @@ inline int next_entity_handle() {
     ++entity_handle;
     return result;
 }
- 
-const vterm::color_t black{0,0,0};
-const vterm::color_t yellow{255,255,0};
- 
+  
 entity make_test_entity()
 {
     entity test;
