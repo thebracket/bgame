@@ -155,6 +155,7 @@ inline void empty_all() {
 void init() {
     empty_all();
     add_system(make_test_system());
+    add_system(make_camera_system());
 }
 
 void done() {
