@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <bitset>
+#include <utility>
 #include "base_component.h"
 
 using std::vector;
@@ -21,7 +22,7 @@ inline int component_flag(const component_type &t) {
 class entity {
 public:
     int handle;
-    vector<int> component_handles;
+    vector<std::pair<component_type,int>> component_handles;
     bitset<64> component_types;
 };
 

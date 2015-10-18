@@ -13,7 +13,7 @@ class camera_system : public base_system {
     virtual void tick(const double &duration_ms) {
         const entity * camera = get_entity_by_handle(world::camera_handle);
         position_component * camera_pos = static_cast<position_component *>(
-                get_component_by_handle(camera->component_handles[0])
+                get_component_by_handle(camera->component_handles[0].second)
                                                 );
 
         if ( command::is_key_down ( command::UP ) ) {

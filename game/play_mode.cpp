@@ -8,8 +8,10 @@ using std::make_unique;
 void play_mode::init()
 {
      engine::ecs::init();
+     engine::ecs::entity test = engine::ecs::make_test_entity();
      engine::ecs::entity camera = engine::ecs::make_camera_entity();
      engine::ecs::add_entity(camera);
+     engine::ecs::add_entity(test);
      init_gui();
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );

@@ -41,7 +41,8 @@ void add_component(entity &target, unique_ptr< base_component > component)
 {
     int handle = next_handle();
     component->handle = handle;
-    target.component_handles.push_back(handle);
+    component->entity_id = target.handle;
+    target.component_handles.push_back(std::make_pair(component->type, handle));
     target.component_types.set(component_flag(component->type));
     components.push_back(std::move(component));
 }
@@ -154,8 +155,8 @@ inline void empty_all() {
 
 void init() {
     empty_all();
-    add_system(make_test_system());
     add_system(make_camera_system());
+    add_system(make_renderable_system());
 }
 
 void done() {

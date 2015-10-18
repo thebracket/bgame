@@ -24,7 +24,7 @@ public:
 
 	  const entity * camera = get_entity_by_handle(world::camera_handle);
 	  const position_component * camera_pos = static_cast<position_component *>(
-	      get_component_by_handle(camera->component_handles[0])
+	      get_component_by_handle(camera->component_handles[0].second)
 	  );
        
           const int left_x = std::max ( 0, camera_pos->x - viewport.w/2 );
