@@ -36,10 +36,16 @@ public:
           for ( int y=top_y; y<=bottom_y; ++y ) {
                int screen_x = viewport.x;
                for ( int x=left_x; x<=right_x; ++x ) {
-                    tile t = world::current_region->tiles[world::current_region->idx ( x,y )];
+		    const int region_idx = world::current_region->idx ( x,y );
+                    tile t = world::current_region->tiles[ region_idx ];
                     if ( t.flags & TILE_REVEALED ) {
                          if ( t.flags & TILE_VISIBLE ) {
-                              vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
+			      auto finder = world::entity_render_list.find(region_idx);
+			      if (finder == world::entity_render_list.end()) {
+				  vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
+			      } else {
+				  vterm::set_char_xy ( screen_x, screen_y, finder->second );
+			      }
                          } else {
                               vterm::set_char_xy ( screen_x, screen_y, { t.display, dark_grey, t.background } );
                          }
