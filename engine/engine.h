@@ -7,6 +7,7 @@
 #include "base_mode.h"
 #include "gui/gui.h"
 #include "command_manager.h"
+#include "ecs/ecs.h"
 
 namespace engine {
 
