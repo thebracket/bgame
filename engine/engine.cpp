@@ -84,6 +84,7 @@ void main_loop ( unique_ptr<base_mode> starting_mode )
                push_mode ( std::move ( continuation_mode.second ) );
           }
 
+          
           backend_driver->draw ( vterm::get_virtual_screen() );
 	  
 	  duration_ms = ((clock() - start_time)*1000.0) / CLOCKS_PER_SEC;

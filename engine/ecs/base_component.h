@@ -7,9 +7,10 @@ using std::vector;
 namespace engine {
 namespace ecs {
 
-enum component_type{position,name};
+enum component_type{position,name,renderable};
 
-struct base_component {
+class base_component {
+public:
     int entity_id;
     int handle;
     component_type type;

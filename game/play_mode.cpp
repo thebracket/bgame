@@ -1,5 +1,6 @@
 #include "play_mode.h"
 #include "world/world.h"
+#include "../engine/ecs/entity_factory.h"
 
 using namespace engine;
 using std::make_unique;
@@ -8,6 +9,9 @@ using world::player_y;
 
 void play_mode::init()
 {
+     engine::ecs::init();
+     engine::ecs::entity test = engine::ecs::make_test_entity();
+     engine::ecs::add_entity(test);
      init_gui();
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
@@ -39,6 +43,7 @@ void play_mode::init_gui()
 void play_mode::done()
 {
     delete world::current_region;
+    engine::ecs::done();
 }
 
 pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time_elapsed )
