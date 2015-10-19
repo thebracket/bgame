@@ -19,12 +19,12 @@ inline int next_entity_handle() {
     return result;
 }
   
-entity make_test_entity()
+entity make_test_entity(const int &x, const int &y)
 {
     entity test;
     test.handle = next_entity_handle();
     add_component(test, make_unique<debug_name_component>("Test"));
-    add_component(test, make_unique<position_component>(129,129));
+    add_component(test, make_unique<position_component>(x,y));
     add_component(test, make_unique<renderable_component>('@', yellow, black));
     return test;
 }
