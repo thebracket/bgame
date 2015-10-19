@@ -7,7 +7,7 @@ using std::vector;
 namespace engine {
 namespace ecs {
 
-enum component_type{position,name,renderable,viewshed,calendar};
+enum component_type{position,name,renderable,viewshed,calendar,settler_ai};
 
 class base_component {
 public:

@@ -5,6 +5,7 @@
 #include "renderable_component.h"
 #include "viewshed_component.h"
 #include "calendar_component.h"
+#include "settler_ai_component.h"
 #include "../../game/world/world.h"
 #include "../colors.h"
 
@@ -29,6 +30,7 @@ entity make_test_entity(const int &x, const int &y)
     add_component(test, make_unique<position_component>(x,y));
     add_component(test, make_unique<renderable_component>('@', yellow, black));
     add_component(test, make_unique<viewshed_component>(visibility,8));
+    add_component(test, make_unique<settler_ai_component>());
     return test;
 }
 
