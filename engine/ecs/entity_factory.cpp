@@ -50,7 +50,7 @@ entity make_cordex ( const int& x, const int& y, const long &system_time )
     world::cordex_handle = cordex.handle;
     add_component(cordex, make_unique<debug_name_component>("Cordex"));
     add_component(cordex, make_unique<position_component>(x,y));
-    add_component(cordex, unique_ptr<renderable_component>(new renderable_component(white, black, 3, 3, {177,30,177,17,15,16,177,31,177})));
+    add_component(cordex, unique_ptr<renderable_component>(new renderable_component(cyan, black, 3, 3, {177,30,177,17,15,16,177,31,177})));
     add_component(cordex, make_unique<viewshed_component>(penetrating,16));
     add_component(cordex, make_unique<calendar_component>(system_time));
     return cordex;

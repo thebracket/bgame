@@ -8,7 +8,7 @@
 namespace engine {
 namespace ecs {
 
-const double TICK_LENGTH = 300.0;
+const double TICK_LENGTH = 100.0;
 
 class calendar_system : public base_system {
      virtual void tick ( const double &duration_ms ) {
