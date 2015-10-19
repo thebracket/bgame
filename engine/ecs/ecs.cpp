@@ -1,8 +1,6 @@
 #include "ecs.h"
 #include "base_message.h"
 #include "system_factory.h"
-#include <vector>
-#include <unordered_map>
 #include <memory>
 #include <queue>
 
@@ -48,20 +46,6 @@ void add_component(entity &target, unique_ptr< base_component > component)
 }
 
 /*
- * Find a component by handle, and return a non-owning pointer to it; otherwise,
- * return nullptr.
- */
-base_component * get_component_by_handle(const int &handle) {
-    auto finder = component_handle_index.find(handle);
-    if (finder == component_handle_index.end()) {
-        return nullptr;
-    } else {
-        const int index = finder->second;
-        return components[index].get();
-    }
-}
-
-/*
  * Adds an entity to the entity map
  */
 void add_entity(const entity &target) {
@@ -97,27 +81,6 @@ vector<int> find_entities_by_bitset(const int &bit_to_check) {
     return find_entities_by_func([bit_to_check] (const entity &e) { 
 	return e.component_types.test(bit_to_check);
     } );
-}
-
-/*
- * Returns a vector of non-owning pointers to components that match a passed in
- * matcher-function.
- */
-vector<base_component *> find_components_by_func(function<bool(const base_component &c)> matcher) {
-    vector<base_component *> result;
-    for (const unique_ptr<base_component> &c : components) {
-	if (matcher(*c)) result.push_back(c.get());
-    }
-    return result;
-}
-
-/*
- * Obtains a list of components matching a type specification
- */
-vector<base_component *> find_components_by_type(const component_type &t) {
-    return find_components_by_func([t] (const base_component &c) { 
-	return (c.type == t);
-    });
 }
 
 /*

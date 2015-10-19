@@ -12,6 +12,7 @@ using engine::ecs::position_component;
 using engine::ecs::entity;
 using engine::ecs::get_entity_by_handle;
 using engine::ecs::get_component_by_handle;
+using engine::ecs::component_type;
 
 namespace engine {
 class gui_main_game_view : public gui_element_base {
@@ -23,9 +24,8 @@ public:
      virtual void render ( const screen_region viewport ) {
 
 	  const entity * camera = get_entity_by_handle(world::camera_handle);
-	  const position_component * camera_pos = static_cast<position_component *>(
-	      get_component_by_handle(camera->component_handles[0].second)
-	  );
+	  const position_component * camera_pos = get_component_by_handle<position_component>(camera->find_component_by_type(ecs::position));
+	  
        
           const int left_x = std::max ( 0, camera_pos->x - viewport.w/2 );
           const int top_y = std::max ( 0, camera_pos->y - viewport.h/2 );
