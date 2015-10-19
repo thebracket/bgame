@@ -3,6 +3,7 @@
 #include "position_component.h"
 #include "debug_name_component.h"
 #include "renderable_component.h"
+#include "viewshed_component.h"
 #include "../../game/world/world.h"
 #include "../colors.h"
 
@@ -26,6 +27,7 @@ entity make_test_entity(const int &x, const int &y)
     add_component(test, make_unique<debug_name_component>("Test"));
     add_component(test, make_unique<position_component>(x,y));
     add_component(test, make_unique<renderable_component>('@', yellow, black));
+    add_component(test, make_unique<viewshed_component>(visibility,8));
     return test;
 }
 
