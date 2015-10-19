@@ -4,6 +4,7 @@
 #include "debug_name_component.h"
 #include "renderable_component.h"
 #include "viewshed_component.h"
+#include "calendar_component.h"
 #include "../../game/world/world.h"
 #include "../colors.h"
 
@@ -40,14 +41,16 @@ entity make_camera_entity()
     return camera;
 }
 
-entity make_cordex ( const int& x, const int& y )
+entity make_cordex ( const int& x, const int& y, const long &system_time )
 {
     entity cordex;
     cordex.handle = next_entity_handle();
+    world::cordex_handle = cordex.handle;
     add_component(cordex, make_unique<debug_name_component>("Cordex"));
     add_component(cordex, make_unique<position_component>(x,y));
     add_component(cordex, unique_ptr<renderable_component>(new renderable_component(white, black, 3, 3, {177,30,177,17,15,16,177,31,177})));
     add_component(cordex, make_unique<viewshed_component>(penetrating,16));
+    add_component(cordex, make_unique<calendar_component>(system_time));
     return cordex;
 }
 
