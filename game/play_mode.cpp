@@ -11,7 +11,7 @@ void play_mode::init()
      engine::ecs::entity test = engine::ecs::make_test_entity(130,130);
      engine::ecs::entity test2 = engine::ecs::make_test_entity(126,126);
      engine::ecs::entity test3 = engine::ecs::make_test_entity(120,127);
-     engine::ecs::entity cordex = engine::ecs::make_cordex(128,128);
+     engine::ecs::entity cordex = engine::ecs::make_cordex(128,128,0L);
      engine::ecs::entity camera = engine::ecs::make_camera_entity();
      engine::ecs::add_entity(camera);
      engine::ecs::add_entity(cordex);
