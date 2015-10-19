@@ -24,6 +24,8 @@ make
 ### To build after that
 cd build
 
+mkdir world
+
 make
 
 ./bgame
