@@ -6,10 +6,12 @@
 #include "position_component.h"
 #include "viewshed_component.h"
 #include "../../game/world/geometry.h"
+#include <unordered_set>
 
 using geometry::DEGRAD;
 using geometry::line_func;
 using geometry::project_angle;
+using std::unordered_set;
 
 namespace engine {
 namespace ecs {
@@ -55,9 +57,7 @@ private:
 	
 	view->last_visibility.clear();
 	
-	vector<bool> visited;
-	visited.resize(tiles_per_landblock);
-	std::fill(visited.begin(), visited.end(), false);
+	unordered_set<int> visited(view->scanner_range * view->scanner_range);
 	
 	// You can always see yourself
 	const int x = pos->x;
@@ -70,9 +70,10 @@ private:
 	    pair<int,int> destination = project_angle ( x, y, radius, angle );
 	    line_func ( x, y, destination.first, destination.second, [&visited,view] (int tx, int ty) {
 		const int index = world::current_region->idx(tx,ty);
-		if (!visited[index] and tx >=0 and tx <= landblock_width and ty>=0 and ty<=landblock_height) {
+		auto finder = visited.find(index);
+		if (finder==visited.end() and tx >=0 and tx <= landblock_width and ty>=0 and ty<=landblock_height) {
 		    view->last_visibility.push_back(index);
-		    visited[index] = true;
+		    visited.insert(index);
 		}
 	    });
 	}
