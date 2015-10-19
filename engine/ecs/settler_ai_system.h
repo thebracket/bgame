@@ -32,7 +32,7 @@ class settler_ai_system : public base_system {
 		  int y = pos->y;
 		  bool moved = true;
 		  
-		  int direction = engine::roll_dice(1,6);
+		  int direction = engine::roll_dice(1,5);
 		  switch (direction) {
 		    case 1 : --x; break;
 		    case 2 : ++x; break;
@@ -53,7 +53,7 @@ class settler_ai_system : public base_system {
 		  }
 		
 		  // Random pause
-		  settler->next_tick = calendar->system_time + engine::roll_dice(1,6);
+		  settler->next_tick = calendar->system_time + 1;
 	      }
 	  }
      }
