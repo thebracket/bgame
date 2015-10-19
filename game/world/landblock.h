@@ -18,9 +18,6 @@ public:
         return (y*landblock_width)+x;
     };
 
-    void make_radius_visible ( const int x, const int y, const int radius );
-    void reset_visibility();
-
     int index;
     vector<tile> tiles;
 

@@ -120,6 +120,7 @@ void init() {
     empty_all();
     add_system(make_camera_system());
     add_system(make_renderable_system());
+    add_system(make_viewshed_system());
 }
 
 void done() {

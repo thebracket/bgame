@@ -10,17 +10,18 @@ void play_mode::init()
      engine::ecs::init();
      engine::ecs::entity test = engine::ecs::make_test_entity(129,129);
      engine::ecs::entity test2 = engine::ecs::make_test_entity(127,127);
+     engine::ecs::entity test3 = engine::ecs::make_test_entity(120,127);
      engine::ecs::entity camera = engine::ecs::make_camera_entity();
      engine::ecs::add_entity(camera);
      engine::ecs::add_entity(test);
      engine::ecs::add_entity(test2);
+     engine::ecs::add_entity(test3);
      init_gui();
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
      world::log.write ( "Use the @B_WHITE@arrow keys@WHITE@ to move, or press @B_RED@Q@WHITE@ to quit." );
      int widx = world::world_idx(5,5);
      world::current_region = new land_block(widx);
-     world::current_region->make_radius_visible(128, 128, 8);
 }
 
 void play_mode::init_gui()

@@ -7,10 +7,11 @@ namespace ecs {
  
 class position_component : public base_component {
 public:
-    position_component() { type = position; };
-    position_component(const int &X, const int &Y) : x(X), y(Y) { type=position; };
+    position_component() { type = position; moved=false; };
+    position_component(const int &X, const int &Y) : x(X), y(Y) { type=position; moved=false; };
     int x;
     int y;
+    bool moved;
 };
 
 }

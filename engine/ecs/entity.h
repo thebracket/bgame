@@ -16,6 +16,7 @@ inline int component_flag(const component_type &t) {
       case position 	: return 0;
       case name 	: return 1;
       case renderable	: return 2;
+      case viewshed	: return 3;
     }
 }
   
