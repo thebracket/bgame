@@ -19,7 +19,6 @@ public:
     tile_type base_tile_type;
     tile_material base_tile_material;
     short altitude;
-    unsigned char flags;
 
     void calculate_display_properties();
 
