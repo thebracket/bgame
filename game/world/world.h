@@ -26,6 +26,7 @@ extern land_block * current_region; // Non-owning pointer to the area in which p
 // Convenience: storing the camera's handle globally is messy,
 // but makes it quick and easy for systems that want to find it.
 extern int camera_handle;
+extern int cordex_handle;
 
 // For handing data between gui_game_view and the render controller
 extern map<int, engine::vterm::screen_character> entity_render_list;

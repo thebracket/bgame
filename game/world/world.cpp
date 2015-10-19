@@ -10,4 +10,5 @@ land_block * current_region;
 map<int, engine::vterm::screen_character> entity_render_list;
 
 int camera_handle;
+int cordex_handle;
 }
