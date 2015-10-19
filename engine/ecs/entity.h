@@ -24,6 +24,15 @@ public:
     int handle;
     vector<std::pair<component_type,int>> component_handles;
     bitset<64> component_types;
+    
+    int find_component_by_type(const component_type &type) const {
+	int flag = component_flag(type);
+	if (!component_types.test(flag)) return -1;
+	for (const auto &c : component_handles) {
+	    if (c.first == type) return c.second;
+	}
+	return -1;
+    }
 };
 
 }

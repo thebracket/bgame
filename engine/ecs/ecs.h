@@ -5,13 +5,20 @@
 #include "base_system.h"
 #include <memory>
 #include <functional>
+#include <unordered_map>
+#include <vector>
 
 using std::unique_ptr;
 using std::function;
+using std::unordered_map;
+using std::vector;
 
 namespace engine {
 namespace ecs {
 
+extern unordered_map<int, int> component_handle_index;
+extern vector<unique_ptr<base_component>> components;
+  
 void init();
 void done();
   
@@ -28,10 +35,20 @@ void add_system(unique_ptr<base_system> system);
  */
 void add_component(engine::ecs::entity& entity, unique_ptr< engine::ecs::base_component > component);
 
-/* Find a component by handle, return a (weak - non-owning) pointer to the
- * component, or nullptr if the handle is not found.
+/*
+ * Find a component by handle, and return a non-owning pointer to it; otherwise,
+ * return nullptr.
  */
-base_component * get_component_by_handle(const int &handle);
+template<typename T> 
+T * get_component_by_handle(const int &handle) {
+    auto finder = component_handle_index.find(handle);
+    if (finder == component_handle_index.end()) {
+        return nullptr;
+    } else {
+        const int index = finder->second;
+        return static_cast<T*>(components[index].get());
+    }
+}
 
 /*
  * Adds an entity to the entity map
@@ -53,17 +70,31 @@ vector<int> find_entities_by_func(function<bool(const entity &e)> matcher);
  * Returns a vector of non-owning pointers to components that match a passed in
  * matcher-function.
  */
-vector<base_component *> find_components_by_func(function<bool(const base_component &c)> matcher);
+template<typename T>
+vector<T *> find_components_by_func(function<bool(const T &c)> matcher) {
+    vector<T *> result;
+    for (const unique_ptr<base_component> &c : components) {
+	base_component * bc_ptr = c.get();
+	T * bc_typed = static_cast<T *>(bc_ptr);
+	if (matcher(*bc_typed)) result.push_back(bc_typed);
+    }
+    return result;
+}
+
+/*
+ * Obtains a list of components matching a type specification
+ */
+template <typename T>
+vector<T *> find_components_by_type(const component_type &t) {
+    return find_components_by_func<T>([t] (const T &c) { 
+	return (c.type == t);
+    });
+}
 
 /**
  * Return a list of entities with a bit set (i.e. entities with a type of component)
  */
 vector<int> find_entities_by_bitset(const int &bit_to_check);
-
-/*
- * Obtains a list of components matching a type specification
- */
-vector<base_component *> find_components_by_type(const component_type &t);
 
 /* The tick routine run every frame. Calls each system. */
 void tick(const double duration_ms);
