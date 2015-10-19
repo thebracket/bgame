@@ -20,6 +20,8 @@ public:
 
     int index;
     vector<tile> tiles;
+    vector<bool> visible;
+    vector<bool> revealed;
 
     void save();
 

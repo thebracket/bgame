@@ -36,15 +36,14 @@ class viewshed_system : public base_system {
 	      
 	      // Apply the cached viewshed
 	      for (const int &idx : viewshed->last_visibility) {
-		  world::current_region->tiles[idx].flags = world::current_region->tiles[idx].flags | TILE_REVEALED | TILE_VISIBLE;
+		  world::current_region->visible[idx] = true;
 	      }
 	}
      }
      
 private:
     void reset_visibility() {
-	for ( tile &t : world::current_region->tiles )
-          t.flags = t.flags & ~TILE_VISIBLE;
+	std::fill(world::current_region->visible.begin(), world::current_region->visible.end(), false);
     }
     
     void scan_radius_for_visibility(viewshed_component * view, const position_component * pos) {
@@ -73,6 +72,7 @@ private:
 		auto finder = visited.find(index);
 		if (finder==visited.end() and tx >=0 and tx <= landblock_width and ty>=0 and ty<=landblock_height) {
 		    view->last_visibility.push_back(index);
+		    world::current_region->revealed[index] = true;
 		    visited.insert(index);
 		}
 	    });

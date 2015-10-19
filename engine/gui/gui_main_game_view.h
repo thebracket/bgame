@@ -38,8 +38,8 @@ public:
                for ( int x=left_x; x<=right_x; ++x ) {
 		    const int region_idx = world::current_region->idx ( x,y );
                     tile t = world::current_region->tiles[ region_idx ];
-                    if ( t.flags & TILE_REVEALED ) {
-                         if ( t.flags & TILE_VISIBLE ) {
+                    if ( world::current_region->revealed[ region_idx ] ) {
+                         if ( world::current_region->visible[ region_idx ] ) {
 			      auto finder = world::entity_render_list.find(region_idx);
 			      if (finder == world::entity_render_list.end()) {
 				  vterm::set_char_xy ( screen_x, screen_y, { t.display, t.foreground, t.background } );
