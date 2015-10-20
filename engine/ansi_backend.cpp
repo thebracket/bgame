@@ -92,14 +92,23 @@ void ansi_backend::draw ( vector< vterm::screen_character >* screen )
     stringstream output;
     ansi::hide_cursor(output);
   
+    std::tuple<unsigned char,unsigned char,unsigned char> current_fg{255,255,255};
+    std::tuple<unsigned char,unsigned char,unsigned char> current_bg{0,0,0};
+    
     for (int y=0; y<screen_height; ++y) {
+	ansi::curpos(output, 0, y);
         for (int x=0; x<screen_width; ++x) {
 	    auto fg = screen->operator[]((y*screen_width)+x).foreground_color;
             auto bg = screen->operator[]((y*screen_width)+x).background_color;
 	    
-	    ansi::curpos(output, x, y);
-	    ansi::foreground(output, fg);
-	    ansi::background(output, bg);
+	    if (fg != current_fg) {
+		ansi::foreground(output, fg);
+		current_fg = fg;
+	    }
+	    if (bg != current_bg) {
+		ansi::background(output, bg);
+		current_bg = bg;
+	    }
 	    
 	    int base_ascii = screen->operator[]((y*screen_width)+x).character;
 	    output << curses::charmap[base_ascii];
