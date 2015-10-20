@@ -2,6 +2,7 @@
 #include "output_backend.h"
 #include "ncurses_backend.h"
 #include "sdl2_backend.h"
+#include "ansi_backend.h"
 #include "ecs/ecs.h"
 #include <memory>
 #include <thread>
@@ -11,6 +12,7 @@
 using std::unique_ptr;
 using std::make_unique;
 using std::stack;
+
 
 namespace engine {
 
@@ -54,6 +56,7 @@ void init(backend_mode mode)
      switch (mode) {
        case NCURSES : backend_driver = make_unique<ncurses_backend>(); break;
        case SDL2 : backend_driver = make_unique<sdl2_backend>(); break;
+       case ANSI : backend_driver = make_unique<ansi_backend>(); break;
      }
      
      backend_driver->init();

@@ -12,7 +12,7 @@
 
 namespace engine {
 
-enum backend_mode { NCURSES, SDL2 };
+enum backend_mode { NCURSES, SDL2, ANSI };
   
 /* Initialize engine components; call at startup */
 void init(backend_mode mode);
