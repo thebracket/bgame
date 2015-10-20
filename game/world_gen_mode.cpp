@@ -105,11 +105,8 @@ void world_gen_mode::render_tiles()
                case flat :
                     engine::vterm::set_char_xy ( screen_x, screen_y, {'`', green, black} );
                     break;
-               case hill :
-                    engine::vterm::set_char_xy ( screen_x, screen_y, {'^', grey, black} );
-                    break;
-               case mountain :
-                    engine::vterm::set_char_xy ( screen_x, screen_y, {'^', white, black} );
+	       case ramp :
+		    engine::vterm::set_char_xy ( screen_x, screen_y, {30, green, black} );
                     break;
                }
           }
