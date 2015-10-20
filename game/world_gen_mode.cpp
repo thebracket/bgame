@@ -108,6 +108,9 @@ void world_gen_mode::render_tiles()
 	       case ramp :
 		    engine::vterm::set_char_xy ( screen_x, screen_y, {30, green, black} );
                     break;
+               case beach :
+		    engine::vterm::set_char_xy ( screen_x, screen_y, {'#', yellow, black} );
+                    break;
                }
           }
      }

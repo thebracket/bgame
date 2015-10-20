@@ -256,6 +256,64 @@ void walk_contours ( const int region_x, const int region_y, land_block &region,
 }
 
 /*
+ * Traverses the edge of the water, and adds beach tiles to the transition area
+ */
+void walk_waters_edge ( const int region_x, const int region_y, land_block &region,
+                     const height_map_t &altitude_map, const altitude_map_levels &levels)
+{
+    const short min_height = levels.water_level;
+    const short max_height = levels.mountains_level;
+    const short contour_distance = (max_height - min_height)/10;
+
+    // Threshold: true for above contour, false for below
+    vector<bool> threshold(tiles_per_landblock);
+
+    // Populate the thresholds
+    for ( int y=0; y<landblock_height; ++y ) {
+	for ( int x=0; x<landblock_width; ++x ) {
+	    const int amp_x = region_x + x;
+	    const int amp_y = region_y + y;
+	    const short altitude = altitude_map[idx ( amp_x, amp_y )];
+	    const int tile_idx = region.idx ( x,y );
+
+	    if (region.tiles[tile_idx].base_tile_type == water) {
+		threshold[tile_idx] = 0;
+	    } else {
+		threshold[tile_idx] = 1;
+	    }
+	}
+    }
+
+    // Walk the threshold map
+    for (int contour=min_height; contour<max_height; contour += contour_distance) {
+	// Populate the thresholds
+	for ( int y=0; y<landblock_height-1; ++y ) {
+	    for ( int x=0; x<landblock_width-1; ++x ) {
+		const int amp_x = region_x + x;
+		const int amp_y = region_y + y;
+		const int tile_idx = region.idx ( x,y );
+
+		int TL = region.idx ( x, y );
+		int TR = region.idx ( x+1, y );
+		int BR = region.idx ( x+1, y+1 );
+		int BL = region.idx ( x, y+1 );
+
+		unsigned char value = 0;
+		if (threshold[TL]) value += 1;
+		if (threshold[TR]) value += 2;
+		if (threshold[BR]) value += 4;
+		if (threshold[BL]) value += 8;
+
+		if (value != 0 && value != 15) {
+		    std::lock_guard<std::mutex> lock ( worldgen_mutex );
+		    region.tiles[tile_idx].base_tile_type = beach;
+		}
+	    }
+	}
+    }
+}
+
+/*
  * Converts the entire world altitude map into landblocks, and
  * saves them to disk.
  */
@@ -284,6 +342,7 @@ void convert_altitudes_to_tiles ( height_map_t &altitude_map )
 
             create_base_tile_types ( region_x, region_y, region, altitude_map, levels );
             walk_contours( region_x, region_y, region, altitude_map, levels );
+            walk_waters_edge( region_x, region_y, region, altitude_map, levels );	    
 
             // Serialize it to disk
             {
