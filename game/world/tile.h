@@ -7,7 +7,7 @@
 using engine::vterm::color_t;
 using std::fstream;
 
-enum tile_type { water,flat,ramp };
+enum tile_type { water,flat,ramp,beach };
 const unsigned char TILE_REVEALED = 1;
 const unsigned char TILE_VISIBLE = 2;
 

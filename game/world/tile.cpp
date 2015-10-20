@@ -18,6 +18,10 @@ void tile::calculate_display_properties()
         foreground = color_t {0,255,0};
         background = color_t {0,0,0};
         display = '.';
+    } else if (base_tile_type == beach) {
+	foreground = color_t {255,255,0};
+        background = color_t {0,0,0};
+        display = '#';
     } else {
         foreground = color_t {0,255,0};
         background = color_t {0,0,0};
