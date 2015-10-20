@@ -79,7 +79,7 @@ void world_gen_mode::render_faultlines()
                const int screen_x = lx + x;
                const int screen_y = ty + y;
                color_t tile_color {0, 128+worldgen::heightmap_progress->operator[] ( world::world_idx ( x,y ) ), 0};
-               engine::vterm::screen_character sc { 219, tile_color, black };
+               engine::vterm::screen_character sc { 219, tile_color, tile_color };
                vterm::set_char_xy ( screen_x, screen_y, sc );
           }
      }
@@ -95,20 +95,20 @@ void world_gen_mode::render_tiles()
      for ( int y=0; y<size.second-8; ++y ) {
           for ( int x=0; x<size.first-8; ++x ) {
                const int index = worldgen::current_landblock->idx ( x,y );
-               tile_type block_type = worldgen::current_landblock->tiles[index].base_tile_type;
+               unsigned char block_type = worldgen::current_landblock->tiles[index].base_tile_type;
                const int screen_x = lx + x;
                const int screen_y = ty + y;
                switch ( block_type ) {
-               case water :
+	       case tile_type::WATER :
                     engine::vterm::set_char_xy ( screen_x, screen_y, {'~', blue, black} );
                     break;
-               case flat :
+	       case tile_type::FLAT :
                     engine::vterm::set_char_xy ( screen_x, screen_y, {'`', green, black} );
                     break;
-	       case ramp :
+	       case tile_type::RAMP :
 		    engine::vterm::set_char_xy ( screen_x, screen_y, {30, green, black} );
                     break;
-               case beach :
+	       case tile_type::BEACH :
 		    engine::vterm::set_char_xy ( screen_x, screen_y, {'#', yellow, black} );
                     break;
                }

@@ -41,6 +41,27 @@ height_map_t make_altitude_map()
 }
 
 /*
+ * Creates a temperature-map vector, sized to hold the world, and initialized with a
+ * y-based gradient
+ */
+height_map_t make_temperature_map( height_map_t &altitude_map )
+{
+    height_map_t temperature_map;
+    temperature_map.resize ( worldgen_size );
+    std::fill ( temperature_map.begin(), temperature_map.end(), 0 );
+    constexpr short normal_temperature = 57;
+    constexpr short total_variance = 100;
+    constexpr short y_variance = total_variance / world::world_height;
+    for (int y=0; y<worldgen_height; ++y) {
+      for (int x=0; x<worldgen_width; ++x) {
+	const double temperature = normal_temperature + (y_variance*(y-worldgen_height/2)) + engine::roll_dice(1,40) - engine::roll_dice(1,40);
+	temperature_map[idx(x,y)] = temperature;
+      }
+    }
+    return temperature_map;
+}
+
+/*
  * Performs a smoothing run on altitude_map. Each cell becomes
  * the average of its neighbors height. To avoid bias, the
  * smoothing copies into a new vector, which is then copied
@@ -175,7 +196,9 @@ altitude_map_levels determine_levels ( const std::tuple<short,short,map<short,in
  * Performed per landblock.
  */
 void create_base_tile_types ( const int region_x, const int region_y, land_block &region,
-                              const height_map_t &altitude_map, const altitude_map_levels &levels )
+                              const height_map_t &altitude_map, const altitude_map_levels &levels,
+			      const height_map_t &temperature_map
+			    )
 {
     for ( int y=0; y<landblock_height; ++y ) {
         for ( int x=0; x<landblock_width; ++x ) {
@@ -185,11 +208,12 @@ void create_base_tile_types ( const int region_x, const int region_y, land_block
             const short altitude = altitude_map[idx ( amp_x, amp_y )];
             const int tile_idx = region.idx ( x,y );
             if ( altitude < levels.water_level ) {
-                region.tiles[tile_idx].base_tile_type = water;
+                region.tiles[tile_idx].base_tile_type = tile_type::WATER;
             } else {
-                region.tiles[tile_idx].base_tile_type = flat;
+                region.tiles[tile_idx].base_tile_type = tile_type::FLAT;
             }
             region.tiles[tile_idx].altitude = altitude;
+	    region.tiles[tile_idx].temperature = temperature_map[tile_idx];
         }
     }
 }
@@ -208,6 +232,7 @@ void walk_contours ( const int region_x, const int region_y, land_block &region,
     // Threshold: true for above contour, false for below
     vector<bool> threshold(tiles_per_landblock);
 
+    unsigned char level_band = 0;
     for (int contour=min_height; contour<max_height; contour += contour_distance) {
         // Populate the thresholds
         for ( int y=0; y<landblock_height; ++y ) {
@@ -221,9 +246,11 @@ void walk_contours ( const int region_x, const int region_y, land_block &region,
                     threshold[tile_idx] = 0;
                 } else {
                     threshold[tile_idx] = 1;
+		    region.tiles[tile_idx].level_band = level_band;
                 }
             }
         }
+        ++level_band;
 
         // Walk the threshold map
         for (int contour=min_height; contour<max_height; contour += contour_distance) {
@@ -247,7 +274,7 @@ void walk_contours ( const int region_x, const int region_y, land_block &region,
 
                     if (value != 0 && value != 15) {
                         std::lock_guard<std::mutex> lock ( worldgen_mutex );
-                        region.tiles[tile_idx].base_tile_type = ramp;
+                        region.tiles[tile_idx].base_tile_type = tile_type::RAMP;
                     }
                 }
             }
@@ -276,7 +303,7 @@ void walk_waters_edge ( const int region_x, const int region_y, land_block &regi
 	    const short altitude = altitude_map[idx ( amp_x, amp_y )];
 	    const int tile_idx = region.idx ( x,y );
 
-	    if (region.tiles[tile_idx].base_tile_type == water) {
+	    if (region.tiles[tile_idx].base_tile_type == tile_type::WATER) {
 		threshold[tile_idx] = 0;
 	    } else {
 		threshold[tile_idx] = 1;
@@ -306,18 +333,30 @@ void walk_waters_edge ( const int region_x, const int region_y, land_block &regi
 
 		if (value != 0 && value != 15) {
 		    std::lock_guard<std::mutex> lock ( worldgen_mutex );
-		    region.tiles[tile_idx].base_tile_type = beach;
+		    region.tiles[tile_idx].base_tile_type = tile_type::BEACH;
 		}
 	    }
 	}
     }
 }
 
+void adjust_temperature_by_altitude(land_block &region) {
+  for (tile &t : region.tiles) {
+    t.temperature -= (t.level_band);
+  }
+}
+
+void tile_calc(land_block &region) {
+  for (tile &t : region.tiles) {
+    t.worldgen_tile_calc();
+  }
+}
+
 /*
  * Converts the entire world altitude map into landblocks, and
  * saves them to disk.
  */
-void convert_altitudes_to_tiles ( height_map_t &altitude_map )
+void convert_altitudes_to_tiles ( height_map_t &altitude_map, height_map_t &temperature_map )
 {
     const std::tuple<short,short,map<short,int>> min_max_freq = min_max_heights ( altitude_map );
     const altitude_map_levels levels = determine_levels ( min_max_freq );
@@ -333,16 +372,18 @@ void convert_altitudes_to_tiles ( height_map_t &altitude_map )
             land_block region;
             {
                 std::lock_guard<std::mutex> lock ( worldgen_mutex );
-                for ( tile &t : region.tiles ) t.base_tile_type = flat;
+                for ( tile &t : region.tiles ) t.base_tile_type = tile_type::FLAT;
                 current_landblock = &region;
             }
             region.index = world::world_idx ( wx,wy );
             const int region_x = wx*landblock_width;
             const int region_y = wy*landblock_height;
 
-            create_base_tile_types ( region_x, region_y, region, altitude_map, levels );
+            create_base_tile_types ( region_x, region_y, region, altitude_map, levels, temperature_map );
             walk_contours( region_x, region_y, region, altitude_map, levels );
             walk_waters_edge( region_x, region_y, region, altitude_map, levels );	    
+	    adjust_temperature_by_altitude(region);
+	    tile_calc(region);
 
             // Serialize it to disk
             {
@@ -394,7 +435,13 @@ void create_heightmap_world()
         std::lock_guard<std::mutex> lock ( worldgen_mutex );
         progress = MAKETILES;
     }
-    convert_altitudes_to_tiles ( altitude_map );
+    
+    // Make a rainfall map
+    // Make a temperature map
+    height_map_t temperature_map = make_temperature_map( altitude_map );
+    smooth_altitude_map( temperature_map );
+    
+    convert_altitudes_to_tiles ( altitude_map, temperature_map );
     {
         std::lock_guard<std::mutex> lock ( worldgen_mutex );
         progress = DONE;
