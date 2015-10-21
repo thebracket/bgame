@@ -20,6 +20,8 @@ class calendar_system : public base_system {
           if ( calendar->duration_buffer > TICK_LENGTH ) {
                calendar->duration_buffer = 0.0;
                ++calendar->system_time;
+	       world::sun_angle += 1.0F;
+	       if (world::sun_angle > 180.0F) world::sun_angle = 0.0F;
           }
      }
 

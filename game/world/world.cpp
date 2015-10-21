@@ -11,4 +11,6 @@ map<int, engine::vterm::screen_character> entity_render_list;
 
 int camera_handle;
 int cordex_handle;
+
+float sun_angle = 0.0F;
 }
