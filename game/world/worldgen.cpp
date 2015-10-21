@@ -7,7 +7,9 @@
 #include <memory>
 #include <map>
 #include <tuple>
+#include <cmath>
 #include "../../engine/rng.h"
+#include <iostream>
 
 using std::vector;
 using std::map;
@@ -218,6 +220,21 @@ void create_base_tile_types ( const int region_x, const int region_y, land_block
             }
             region.tiles[tile_idx].altitude = altitude;
 	    region.tiles[tile_idx].temperature = temperature_map[idx ( amp_x, amp_y )];
+	    if (x==0 or x==(landblock_width-1)) {
+	      region.tiles[tile_idx].surface_normal = 0;
+	    } else {
+	      const int left_altitude = region.tiles[tile_idx-1].altitude;
+	      const int right_altitude = altitude_map[idx ( amp_x+1, amp_y )];
+	      const int difference = left_altitude - right_altitude;
+	      // If the opposite is the altitude difference, and the adjacent is 10
+	      // Tan(angle) = Opposite * Adjacent
+	      if (difference > 0) {
+		region.tiles[tile_idx].surface_normal = std::atan(difference) * (180.0 / M_PI);
+	      } else {
+		region.tiles[tile_idx].surface_normal = 90.0 + (90-(std::atan(0-difference) * (180.0 / M_PI)));
+	      }
+	      //std::cout << left_altitude << "-" << right_altitude << " --> " << region.tiles[tile_idx].surface_normal << "\n";
+	    }
         }
     }
 }

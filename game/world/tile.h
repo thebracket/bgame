@@ -59,6 +59,7 @@ public:
     unsigned char climate;
     unsigned char ground;
     unsigned char covering;
+    float surface_normal; // Angle to vertical
 
     void worldgen_tile_calc();
     void calculate_display_properties();
