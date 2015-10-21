@@ -98,20 +98,10 @@ void world_gen_mode::render_tiles()
                unsigned char block_type = worldgen::current_landblock->tiles[index].base_tile_type;
                const int screen_x = lx + x;
                const int screen_y = ty + y;
-               switch ( block_type ) {
-	       case tile_type::WATER :
-                    engine::vterm::set_char_xy ( screen_x, screen_y, {'~', blue, black} );
-                    break;
-	       case tile_type::FLAT :
-                    engine::vterm::set_char_xy ( screen_x, screen_y, {'`', green, black} );
-                    break;
-	       case tile_type::RAMP :
-		    engine::vterm::set_char_xy ( screen_x, screen_y, {30, green, black} );
-                    break;
-	       case tile_type::BEACH :
-		    engine::vterm::set_char_xy ( screen_x, screen_y, {'#', yellow, black} );
-                    break;
-               }
+	       const unsigned char glyph = worldgen::current_landblock->tiles[index].display;
+	       const color_t fg = worldgen::current_landblock->tiles[index].foreground;
+	       const color_t bg = worldgen::current_landblock->tiles[index].background;
+	       engine::vterm::set_char_xy ( screen_x, screen_y, {glyph, fg, bg} );
           }
      }
 }

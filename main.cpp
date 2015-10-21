@@ -9,7 +9,7 @@ using std::make_unique;
 
 int main()
 {
-     engine::init(engine::ANSI);
+     engine::init(engine::SDL2);
      engine::main_loop ( make_unique<loading_screen>() );
 }
 
