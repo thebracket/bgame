@@ -7,6 +7,11 @@
 #include "settler_ai_component.h"
 #include "position_component.h"
 #include "../rng.h"
+#include <sstream>
+#include <string>
+
+using std::string;
+using std::stringstream;
 
 namespace engine {
 namespace ecs {
@@ -48,6 +53,13 @@ class settler_ai_system : public base_system {
 		    pos->x = x;
 		    pos->y = y;
 		    pos->moved = true;
+		    
+		    stringstream ss;
+		    const int tile_idx = world::current_region->idx(x,y);
+		    const string climate = world::current_region->tiles[tile_idx].get_climate();
+		    const string type = world::current_region->tiles[tile_idx].get_description();
+		    ss << "Settler enters tile, climate: " << climate << ", type: " << type;
+		    world::log.write(ss.str());
 		  } else {
 		    pos->moved = false;
 		  }

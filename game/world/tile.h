@@ -30,6 +30,7 @@ constexpr unsigned char SEDIMENTARY = 2;
 constexpr unsigned char GRAVEL = 3;
 constexpr unsigned char WHITE_SAND = 4;
 constexpr unsigned char YELLOW_SAND = 5;
+constexpr unsigned char RED_SAND = 6;
 }
 
 namespace tile_covering {
@@ -69,5 +70,20 @@ public:
 
     void save(fstream &lbfile);
     void load(fstream &lbfile);
+    
+    std::string get_climate();
+    std::string get_description();
+    
+private:
+  void worldgen_determine_climate();
+  void worldgen_determine_base_ground();
+  void worldgen_arctic_covering();
+  void worldgen_subarctic_covering();
+  void worldgen_cold_covering();
+  void worldgen_cool_covering();
+  void worldgen_temperate_covering();
+  void worldgen_warm_covering();
+  void worldgen_hot_covering();
+  void worldgen_very_hot_covering();
 };
 

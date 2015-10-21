@@ -49,13 +49,17 @@ height_map_t make_temperature_map( height_map_t &altitude_map )
     height_map_t temperature_map;
     temperature_map.resize ( worldgen_size );
     std::fill ( temperature_map.begin(), temperature_map.end(), 0 );
-    constexpr short normal_temperature = 57;
-    constexpr short total_variance = 100;
-    constexpr short y_variance = total_variance / world::world_height;
+    constexpr double normal_temperature = 57.0;
+    constexpr double total_variance = 120.0;
+    constexpr double variance_half = 60.0;
+    const double worldgen_h_double = worldgen_height;
     for (int y=0; y<worldgen_height; ++y) {
+      const double y_double = y;
+      const double y_extent = y_double/worldgen_h_double;
       for (int x=0; x<worldgen_width; ++x) {
-	const double temperature = normal_temperature + (y_variance*(y-worldgen_height/2)) + engine::roll_dice(1,40) - engine::roll_dice(1,40);
-	temperature_map[idx(x,y)] = temperature;
+	const int random_factor = engine::roll_dice(1,40) - 20;
+	const double y_variance = (y_extent * total_variance) - variance_half;
+	temperature_map[idx(x,y)] = normal_temperature + random_factor + y_variance;
       }
     }
     return temperature_map;
@@ -213,7 +217,7 @@ void create_base_tile_types ( const int region_x, const int region_y, land_block
                 region.tiles[tile_idx].base_tile_type = tile_type::FLAT;
             }
             region.tiles[tile_idx].altitude = altitude;
-	    region.tiles[tile_idx].temperature = temperature_map[tile_idx];
+	    region.tiles[tile_idx].temperature = temperature_map[idx ( amp_x, amp_y )];
         }
     }
 }
@@ -342,7 +346,7 @@ void walk_waters_edge ( const int region_x, const int region_y, land_block &regi
 
 void adjust_temperature_by_altitude(land_block &region) {
   for (tile &t : region.tiles) {
-    t.temperature -= (t.level_band);
+    t.temperature -= (t.level_band-3);
   }
 }
 
