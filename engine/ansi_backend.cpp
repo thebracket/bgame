@@ -73,8 +73,8 @@ void ansi_backend::init()
 void ansi_backend::stop()
 {
     stringstream out;
-    ansi::foreground(out, {255,255,255});
-    ansi::background(out, {0,0,0});
+    ansi::foreground(out, engine::vterm::color_t{255,255,255});
+    ansi::background(out, engine::vterm::color_t{0,0,0});
     std::cout << out.str();
     endwin();
 }
