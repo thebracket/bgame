@@ -26,7 +26,7 @@ void sdl2_backend::init()
      if ( error_code < 0 ) throw 101; // TODO: Real exception
 
      // TODO: Configuration driven window title
-     window = SDL_CreateWindow ( "Bert's Silly Game",
+     window = SDL_CreateWindow ( "Black Future",
                                  SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                  SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
                                );
