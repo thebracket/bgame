@@ -58,7 +58,7 @@ class settler_ai_system : public base_system {
 		    const int tile_idx = world::current_region->idx(x,y);
 		    const string climate = world::current_region->tiles[tile_idx].get_climate();
 		    const string type = world::current_region->tiles[tile_idx].get_description();
-		    ss << "Settler enters tile, climate: " << climate << ", type: " << type;
+		    ss << "Settler enters tile: @CYAN@" << climate << " @GREEN@" << type;
 		    world::log.write(ss.str());
 		  } else {
 		    pos->moved = false;
