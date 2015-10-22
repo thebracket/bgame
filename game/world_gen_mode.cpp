@@ -13,7 +13,7 @@ void world_gen_mode::init()
 {
      unique_ptr<gui_frame> frame = make_unique<gui_frame> ( "Outer", FILL_REGION );
      frame->add_child ( make_unique<gui_static_text> ( "Title", "Terragenesis", 1, 1, red, black, true ) );
-     frame->add_child ( make_unique<gui_static_text> ( "Quote", "In the beginning, God created the Heavens and the Earth", 1, 2, grey, black, true ) );
+     frame->add_child ( make_unique<gui_static_text> ( "Quote", "Please wait while the Magratheans assemble your planet...", 1, 2, grey, black, true ) );
      ui.add_child ( std::move ( frame ) );
 
      lock_guard<mutex> lock ( worldgen::worldgen_mutex );
