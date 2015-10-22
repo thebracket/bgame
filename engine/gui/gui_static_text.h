@@ -20,26 +20,11 @@ public:
       tag = name;
     };
 
-    virtual void render(const screen_region viewport) {
-        if (!centered) {
-            vterm::print(x,y,text,foreground,background);
-        } else {
-            int text_width = text.size();
-            vterm::print(viewport.x + (viewport.w/2)-(text_width/2),y,text,foreground,background);
-        }
-    }
-
-    void update_text(const string s) {
-        text = s;
-    }
-    void move(const int &nx, const int &ny) {
-        x=nx;
-        y=ny;
-    }
-    void change_color(const vterm::color_t fg, const vterm::color_t bg) {
-        foreground = fg;
-        background = bg;
-    }
+    virtual void render(const screen_region viewport);
+    void update_text(const string s);
+    void move(const int &nx, const int &ny);
+    void change_color(const vterm::color_t fg, const vterm::color_t bg);
+    
 private:
     const bool centered;
     string text;
