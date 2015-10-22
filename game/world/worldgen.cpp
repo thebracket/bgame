@@ -215,10 +215,11 @@ void create_base_tile_types ( const int region_x, const int region_y, land_block
             const int tile_idx = region.idx ( x,y );
             if ( altitude < levels.water_level ) {
                 region.tiles[tile_idx].base_tile_type = tile_type::WATER;
+		region.tiles[tile_idx].altitude = 1;
             } else {
                 region.tiles[tile_idx].base_tile_type = tile_type::FLAT;
+		region.tiles[tile_idx].altitude = altitude;	    
             }
-            region.tiles[tile_idx].altitude = altitude;
 	    region.tiles[tile_idx].temperature = temperature_map[idx ( amp_x, amp_y )];
 	    if (x==0 or x==(landblock_width-1)) {
 	      region.tiles[tile_idx].surface_normal = 0;
