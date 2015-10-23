@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <fstream>
 
 using std::vector;
+using std::fstream;
 
 namespace engine {
 namespace ecs {
@@ -14,6 +16,9 @@ public:
     int entity_id;
     int handle;
     component_type type;
+    
+    virtual void save(fstream &lbfile);
+    virtual void load(fstream &lbfile);
 };
 
 }

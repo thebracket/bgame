@@ -21,7 +21,33 @@ inline int next_entity_handle() {
     ++entity_handle;
     return result;
 }
-  
+
+
+unique_ptr< base_component > construct_component_from_file ( fstream& lbfile )
+{
+    // Read the component type
+    component_type ct;
+    lbfile.read ( reinterpret_cast<char *> ( &ct ), sizeof ( ct ) );
+    
+    // Factory
+    unique_ptr<base_component> component;
+    
+    switch (ct) {
+      case position: component=make_unique<position_component>(); break;
+      case name: component=make_unique<debug_name_component>(); break;
+      case renderable: component=make_unique<renderable_component>(); break;
+      case viewshed: component=make_unique<viewshed_component>(); break;
+      case calendar: component=make_unique<calendar_component>(); break;
+      case settler_ai: component=make_unique<settler_ai_component>(); break;
+      default : {
+	  throw 101;
+      }
+    }
+    
+    component->load(lbfile);
+    return component; // Not std::move since we like return value optimization!
+}
+
 entity make_test_entity(const int &x, const int &y)
 {
     entity test;
@@ -55,8 +81,6 @@ entity make_cordex ( const int& x, const int& y, const long &system_time )
     add_component(cordex, make_unique<calendar_component>(system_time));
     return cordex;
 }
-
-
   
 }
 }

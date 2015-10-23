@@ -1,14 +1,17 @@
 #include "ecs.h"
 #include "base_message.h"
 #include "system_factory.h"
+#include "entity_factory.h"
 #include <memory>
 #include <queue>
+#include <string>
 
 using std::vector;
 using std::unordered_map;
 using std::unique_ptr;
 using std::queue;
 using std::bitset;
+using std::string;
 
 namespace engine {
 namespace ecs {
@@ -127,6 +130,52 @@ void init() {
 
 void done() {
     empty_all();
+}
+
+inline string get_filename() {
+    return "world/saved_game.dat";
+}
+
+void load_game()
+{
+    empty_all();
+    const string filename = get_filename();
+    fstream lbfile(filename, std::ios::in | std::ios::binary);  
+    
+    int number_of_entities = 0;
+    lbfile.read ( reinterpret_cast<char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
+    for (int i=0; i<number_of_entities; ++i) {
+	entity e = construct_entity_from_file(lbfile);
+	add_entity(e);
+    }
+    
+    int number_of_components = 0;
+    lbfile.read ( reinterpret_cast<char *> ( &number_of_components ), sizeof ( number_of_components ) );
+    for (int i=0; i<number_of_components; ++i) {
+	unique_ptr<base_component> component = construct_component_from_file(lbfile);
+	const int entity_handle = component->entity_id;
+	entity * entity_ptr = get_entity_by_handle(entity_handle);
+	add_component(*entity_ptr, std::move(component));
+    }
+}
+
+void save_game()
+{
+    const string filename = get_filename();
+    fstream lbfile(filename, std::ios::out | std::ios::binary);
+    
+    int number_of_entities = entities.size();
+    lbfile.write ( reinterpret_cast<const char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
+    for (auto it = entities.begin(); it != entities.end(); ++it) {
+	entity e = it->second;
+	e.save(lbfile);
+    }
+    
+    int number_of_components = components.size();
+    lbfile.write ( reinterpret_cast<const char *> ( &number_of_components ), sizeof ( number_of_components ) );
+    for (const unique_ptr<base_component> &c : components) {
+	c->save(lbfile);
+    }
 }
 
 

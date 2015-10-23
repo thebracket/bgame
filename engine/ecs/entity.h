@@ -3,10 +3,12 @@
 #include <vector>
 #include <bitset>
 #include <utility>
+#include <fstream>
 #include "base_component.h"
 
 using std::vector;
 using std::bitset;
+using std::fstream;
 
 namespace engine {
 namespace ecs {
@@ -29,7 +31,11 @@ public:
     bitset<64> component_types;
     
     int find_component_by_type(const component_type &type) const;
+    void save(fstream &lbfile);
+    void load(fstream &lbfile);
 };
+
+entity construct_entity_from_file(fstream &lbfile);
 
 }
 }

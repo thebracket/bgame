@@ -20,6 +20,18 @@ public:
     viewshed_type scanner_type;
     int scanner_range;
     vector<int> last_visibility;
+    
+    virtual void save(fstream &lbfile) {
+	base_component::save(lbfile);
+	lbfile.write ( reinterpret_cast<const char *> ( &scanner_type ), sizeof ( scanner_type ) );
+	lbfile.write ( reinterpret_cast<const char *> ( &scanner_range ), sizeof ( scanner_range ) );
+    };
+    
+    virtual void load(fstream &lbfile) {
+	base_component::load(lbfile);
+	lbfile.read ( reinterpret_cast<char *> ( &scanner_type ), sizeof ( scanner_type ) );
+	lbfile.read ( reinterpret_cast<char *> ( &scanner_range ), sizeof ( scanner_range ) );
+    };
 };
 
 }
