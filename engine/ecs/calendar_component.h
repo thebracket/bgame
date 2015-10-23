@@ -22,6 +22,18 @@ public:
     
     long system_time;
     double duration_buffer;
+    
+    virtual void save(fstream &lbfile) {
+	base_component::save(lbfile);
+	lbfile.write ( reinterpret_cast<const char *> ( &system_time ), sizeof ( system_time ) );
+	lbfile.write ( reinterpret_cast<const char *> ( &duration_buffer ), sizeof ( duration_buffer ) );
+    };
+    
+    virtual void load(fstream &lbfile) {
+	base_component::load(lbfile);
+	lbfile.read ( reinterpret_cast<char *> ( &system_time ), sizeof ( system_time ) );
+	lbfile.read ( reinterpret_cast<char *> ( &duration_buffer ), sizeof ( duration_buffer ) );
+    };
 };
 
 }

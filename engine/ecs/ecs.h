@@ -99,5 +99,9 @@ vector<int> find_entities_by_bitset(const int &bit_to_check);
 /* The tick routine run every frame. Calls each system. */
 void tick(const double duration_ms);
 
+/* Serialization */
+void load_game();
+void save_game();
+
 }
 }

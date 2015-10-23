@@ -13,6 +13,16 @@ public:
     };
     
     int next_tick;
+    
+    virtual void save(fstream &lbfile) {
+	base_component::save(lbfile);
+	lbfile.write ( reinterpret_cast<const char *> ( &next_tick ), sizeof ( next_tick ) );
+    };
+    
+    virtual void load(fstream &lbfile) {
+	base_component::load(lbfile);
+	lbfile.read ( reinterpret_cast<char *> ( &next_tick ), sizeof ( next_tick ) );
+    };
 };
 
 }
