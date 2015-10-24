@@ -21,6 +21,7 @@ inline int component_flag(const component_type &t) {
       case viewshed	: return 3;
       case calendar	: return 4;
       case settler_ai	: return 5;
+      case obstruction  : return 6;
     }
 }
   
