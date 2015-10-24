@@ -9,6 +9,7 @@
 #include "viewshed_component.h"
 #include "calendar_component.h"
 #include "settler_ai_component.h"
+#include "obstruction_component.h"
 
 using std::unique_ptr;
 

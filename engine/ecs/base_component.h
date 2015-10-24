@@ -9,7 +9,7 @@ using std::fstream;
 namespace engine {
 namespace ecs {
 
-enum component_type{position,name,renderable,viewshed,calendar,settler_ai};
+enum component_type{position,name,renderable,viewshed,calendar,settler_ai,obstruction};
 
 class base_component {
 public:

@@ -33,6 +33,7 @@ unique_ptr< base_component > construct_component_from_file ( fstream& lbfile )
       case viewshed: component=make_unique<viewshed_component>(); break;
       case calendar: component=make_unique<calendar_component>(); break;
       case settler_ai: component=make_unique<settler_ai_component>(); break;
+      case obstruction: component=make_unique<obstruction_component>(); break;
       default : {
 	  throw 101;
       }

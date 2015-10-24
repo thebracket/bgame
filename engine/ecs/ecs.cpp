@@ -124,6 +124,7 @@ void init() {
     empty_all();
     add_system(make_camera_system());
     add_system(make_calendar_system());
+    add_system(make_obstruction_system());
     add_system(make_settler_ai_system());
     add_system(make_renderable_system());
     add_system(make_viewshed_system());

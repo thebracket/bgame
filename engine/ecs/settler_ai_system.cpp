@@ -40,6 +40,16 @@ void settler_ai_system::tick ( const double &duration_ms ) {
                 moved = false;
             }
             if (moved) {
+		// Cancel movement if it collides
+		const int idx = world::current_region->idx(x,y);
+		auto finder = world::walk_blocked.find(idx);
+		if (finder != world::walk_blocked.end()) {
+		    moved = false;
+		    x = pos->x;
+		    y = pos->y;
+		}
+	    }
+            if (moved) {
                 if (x < 1) x = 1;
                 if (x > 255 ) x = 255;
                 if (y < 1 ) y = 1;
@@ -48,12 +58,13 @@ void settler_ai_system::tick ( const double &duration_ms ) {
                 pos->y = y;
                 pos->moved = true;
 
-                stringstream ss;
+
+		/*stringstream ss;
                 const int tile_idx = world::current_region->idx(x,y);
                 const string climate = world::current_region->tiles[tile_idx].get_climate();
                 const string type = world::current_region->tiles[tile_idx].get_description();
                 ss << "Settler enters tile: @CYAN@" << climate << " @GREEN@" << type;
-                world::log.write(ss.str());
+                world::log.write(ss.str());*/
             } else {
                 pos->moved = false;
             }

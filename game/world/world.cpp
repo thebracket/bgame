@@ -7,7 +7,8 @@ namespace world {
 array<unique_ptr<land_block>, world_size> world;
 console log;
 land_block * current_region;
-map<int, engine::vterm::screen_character> entity_render_list;
+unordered_map<int, engine::vterm::screen_character> entity_render_list;
+unordered_map<int, bool> walk_blocked;
 
 int camera_handle;
 int cordex_handle;

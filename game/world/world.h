@@ -2,7 +2,7 @@
 
 #include <array>
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <fstream>
 #include "console.h"
 #include "landblock.h"
@@ -10,7 +10,7 @@
 
 using std::array;
 using std::unique_ptr;
-using std::map;
+using std::unordered_map;
 using std::fstream;
 
 namespace world {
@@ -32,7 +32,8 @@ extern int cordex_handle;
 extern float sun_angle;
 
 // For handing data between gui_game_view and the render controller
-extern map<int, engine::vterm::screen_character> entity_render_list;
+extern unordered_map<int, engine::vterm::screen_character> entity_render_list;
+extern unordered_map<int, bool> walk_blocked;
 
 void load_world_constants(fstream &lbfile);
 void save_world_constants(fstream &lbfile);
