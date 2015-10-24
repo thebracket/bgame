@@ -46,6 +46,8 @@ void play_mode::init_gui()
 
 void play_mode::done()
 {
+    world::current_region->save();
+    ecs::save_game();
     delete world::current_region;
     engine::ecs::done();
 }
