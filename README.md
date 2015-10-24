@@ -8,7 +8,6 @@ __Black Future__ will, hopefully, one day be a fun game to play. For now, it's l
 * A __world generator__, which produces (and saves) a large world. The generator starts with a height-map, and then divides the world into water/not-water. Marching squares then adds contours, and marks beach areas. Tiles are then generated according to a temperature map/altitude system.
 * A __lighting system__, which shades ground tiles based upon time of day. The demo right now quickly runs through day/night to show this off.
 
-![Screenshot](https://raw.githubusercontent.com/thebracket/bgame/master/assets/screenshot-15-10-21.png "Screenshot Oct 21, 2015")
 ![Screenshot](https://raw.githubusercontent.com/thebracket/bgame/master/assets/hyper-game-demo.gif "Demo of lighting and random movement")
 
 ## To build this:
