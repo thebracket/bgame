@@ -5,6 +5,7 @@
 #include <memory>
 #include <queue>
 #include <string>
+#include <iostream>
 
 using std::vector;
 using std::unordered_map;
@@ -138,9 +139,10 @@ inline string get_filename() {
 
 void load_game()
 {
-    empty_all();
     const string filename = get_filename();
     fstream lbfile(filename, std::ios::in | std::ios::binary);  
+    
+    world::load_world_constants(lbfile);
     
     int number_of_entities = 0;
     lbfile.read ( reinterpret_cast<char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
@@ -163,6 +165,8 @@ void save_game()
 {
     const string filename = get_filename();
     fstream lbfile(filename, std::ios::out | std::ios::binary);
+    
+    world::save_world_constants(lbfile);
     
     int number_of_entities = entities.size();
     lbfile.write ( reinterpret_cast<const char *> ( &number_of_entities ), sizeof ( number_of_entities ) );

@@ -31,6 +31,7 @@ public:
 	base_component::load(lbfile);
 	lbfile.read ( reinterpret_cast<char *> ( &scanner_type ), sizeof ( scanner_type ) );
 	lbfile.read ( reinterpret_cast<char *> ( &scanner_range ), sizeof ( scanner_range ) );
+	last_visibility.clear();
     };
 };
 

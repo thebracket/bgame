@@ -11,9 +11,14 @@
 #include "../../engine/rng.h"
 #include <iostream>
 #include "../../engine/ecs/ecs.h"
+#include "../../engine/ecs/entity_factory.h"
+#include "../../engine/colors.h"
 
 using std::vector;
 using std::map;
+using std::make_unique;
+using namespace engine::ecs;
+using namespace engine;
 
 namespace worldgen {
 
@@ -473,12 +478,12 @@ void create_heightmap_world()
 
 std::pair<int,int> get_starting_location() {
     // TODO: Something that actually takes into account the location!
-    return std::make_pair(world::world_width/2, world::world_height/2);
+    return std::make_pair(landblock_width/2, landblock_height/2);
 }
 
 void crash_trail(const std::pair<int,int> &starting_location) {
     for (int x=0; x<starting_location.first+4; ++x) {
-	for (int y=(starting_location.second-4); y<(starting_location.second)+4; ++y) {
+	for (int y=(starting_location.second-3); y<(starting_location.second)+4; ++y) {
 	    const int tile_idx = world::current_region->idx(x,y);
 	    if (world::current_region->tiles[tile_idx].base_tile_type != tile_type::WATER) {
 		world::current_region->tiles[tile_idx].covering = tile_covering::BARE;
@@ -487,6 +492,66 @@ void crash_trail(const std::pair<int,int> &starting_location) {
 	}
 	// TODO: Ramp on either side?
     }
+    world::current_region->save();
+}
+
+void add_cordex(const int &x, const int &y) {
+    entity cordex;
+    cordex.handle = next_entity_handle();
+    world::cordex_handle = cordex.handle;
+    add_entity(cordex);
+    add_component(cordex, make_unique<debug_name_component>("Cordex"));
+    add_component(cordex, make_unique<position_component>(x,y));
+    add_component(cordex, make_unique<viewshed_component>(penetrating,16));
+    add_component(cordex, make_unique<calendar_component>(0L));
+    add_component(cordex, make_unique<renderable_component>(15, cyan, black));
+}
+
+void add_solar_collector(const int x, const int y) {
+    entity collector;
+    collector.handle = next_entity_handle();
+    add_entity(collector);
+    add_component(collector, make_unique<debug_name_component>("Solar Collector"));
+    add_component(collector, make_unique<position_component>(x,y));
+    add_component(collector, make_unique<renderable_component>(177, dark_cyan, black));
+    // TODO: Power generation component!
+}
+
+void add_cordex_console(const int x, const int y, const unsigned char symbol) {
+    entity console;
+    console.handle = next_entity_handle();
+    add_entity(console);
+    add_component(console, make_unique<debug_name_component>("Cordex Console"));
+    add_component(console, make_unique<position_component>(x,y));
+    add_component(console, make_unique<renderable_component>(symbol, dark_cyan, black));
+}
+
+void add_food_replicator(const int x, const int y) {
+    entity replicator;
+    replicator.handle = next_entity_handle();
+    add_entity(replicator);
+    add_component(replicator, make_unique<debug_name_component>("Food Replicator"));
+    add_component(replicator, make_unique<position_component>(x,y));
+    add_component(replicator, make_unique<renderable_component>(127, white, black));
+    // TODO: Functionality!
+}
+
+void add_storage_unit(const int x, const int y) {
+    entity storage_unit;
+    storage_unit.handle = next_entity_handle();
+    add_entity(storage_unit);
+    add_component(storage_unit, make_unique<debug_name_component>("Storage Unit"));
+    add_component(storage_unit, make_unique<position_component>(x,y));
+    add_component(storage_unit, make_unique<renderable_component>(240, cyan, black));
+    // TODO: Functionality!
+}
+
+void add_structural_element(const int x, const int y, unsigned char glyph) {
+    entity structure;
+    structure.handle = next_entity_handle();
+    add_entity(structure);
+    add_component(structure, make_unique<position_component>(x,y));
+    add_component(structure, make_unique<renderable_component>(glyph, white, black));
 }
 
 void add_ship_hull(const std::pair<int,int> &starting_location) {
@@ -494,10 +559,62 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
     const int y = starting_location.second;
     
     // Cordex at (x,y)
+    add_cordex(x,y);
+    
     // Solar collector at (x-1,y-1), (x+1,y-1), (x-1,y+1), (x+1,y+1)
+    add_solar_collector(x-1, y-1);
+    add_solar_collector(x+1, y-1);
+    add_solar_collector(x-1, y+1);
+    add_solar_collector(x+1, y+1);
+    
     // Console constructions at (x-1,y), (x+1,y), (x,y-1), (x,y+1)
-    // Refridgerator at (x+4,y)
+    add_cordex_console(x-1, y, 16);
+    add_cordex_console(x+1, y, 17);
+    add_cordex_console(x, y-1, 30);
+    add_cordex_console(x, y+1, 31);
+    
+    // Refridgerator/Food Replicator at (x+4,y)
+    add_food_replicator(x+4, y);
+    
     // Storage unit at (x+4,y-1) and (x+4,y+1)
+    add_storage_unit(x+4, y-1);
+    add_storage_unit(x+4, y+1);
+    
+    // Escape pod structure
+    add_structural_element(x-4, y-3, 201); // TL Corner
+    add_structural_element(x-4, y+3, 200); // BL Corner
+    for (int i=0; i<6; ++i) {
+	add_structural_element(x-3+i, y-3, 205); // Upper hull wall
+	add_structural_element(x-3+i, y+3, 205); // Lower hull wall
+    }
+    for (int i=0; i<5; ++i) {
+      if (i != 2) {
+	add_structural_element(x-4, y-2+i, 186); // Add left wall
+      } else {
+	// TODO: Door goes here!
+      }
+    }
+    add_structural_element(x+3, y-3, 16); // Front
+    add_structural_element(x+4, y-2, 16); // Front
+    add_structural_element(x+5, y-1, 16); // Front
+    add_structural_element(x+6, y, 16); // Front
+    add_structural_element(x+5, y+1, 16); // Front
+    add_structural_element(x+4, y+2, 16); // Front
+    add_structural_element(x+3, y+3, 16); // Front
+    
+    for (int i=0; i<5; ++i) {
+      add_structural_element(x-3, y-2+i, '.');
+      add_structural_element(x-2, y-2+i, '.');
+      add_structural_element(x+2, y-2+i, '.');
+      add_structural_element(x+3, y-2+i, '.');
+    }
+    add_structural_element(x-1, y-2, '.');
+    add_structural_element(x, y-2, '.');
+    add_structural_element(x+1, y-2, '.');
+    add_structural_element(x-1, y+2, '.');
+    add_structural_element(x, y+2, '.');
+    add_structural_element(x+1, y+2, '.');
+    add_structural_element(x+5, y, 219);
 /*
 -------|
 |@ @ @  \
@@ -511,7 +628,7 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
 
 void setup_initial_game() {
     // Get the engine ready
-    engine::ecs::init();
+    //engine::ecs::init();
     int widx = world::world_idx(16,16);
     world::current_region = new land_block(widx);
     
@@ -525,6 +642,12 @@ void setup_initial_game() {
     add_ship_hull(starting_location);
     
     // Create some settlers and put them in the ship
+    entity settler = make_test_entity(120,120);
+    add_entity(settler);
+    
+    // Add the camera
+    engine::ecs::entity camera = engine::ecs::make_camera_entity();
+    add_entity(camera);
     
     // Persist and quit
     engine::ecs::save_game();
