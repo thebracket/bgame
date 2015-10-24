@@ -1,11 +1,5 @@
 #include "entity_factory.h"
 #include "ecs.h"
-#include "position_component.h"
-#include "debug_name_component.h"
-#include "renderable_component.h"
-#include "viewshed_component.h"
-#include "calendar_component.h"
-#include "settler_ai_component.h"
 #include "../../game/world/world.h"
 #include "../colors.h"
 
@@ -16,7 +10,7 @@ namespace ecs {
 
 int entity_handle=0;
 
-inline int next_entity_handle() {
+int next_entity_handle() {
     int result = entity_handle;
     ++entity_handle;
     return result;

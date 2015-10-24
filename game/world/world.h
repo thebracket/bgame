@@ -3,6 +3,7 @@
 #include <array>
 #include <memory>
 #include <map>
+#include <fstream>
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
@@ -10,6 +11,7 @@
 using std::array;
 using std::unique_ptr;
 using std::map;
+using std::fstream;
 
 namespace world {
 
@@ -31,4 +33,7 @@ extern float sun_angle;
 
 // For handing data between gui_game_view and the render controller
 extern map<int, engine::vterm::screen_character> entity_render_list;
+
+void load_world_constants(fstream &lbfile);
+void save_world_constants(fstream &lbfile);
 }
