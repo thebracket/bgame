@@ -10,6 +10,7 @@
 #include <cmath>
 #include "../../engine/rng.h"
 #include <iostream>
+#include "../../engine/ecs/ecs.h"
 
 using std::vector;
 using std::map;
@@ -470,6 +471,66 @@ void create_heightmap_world()
     }
 }
 
+std::pair<int,int> get_starting_location() {
+    // TODO: Something that actually takes into account the location!
+    return std::make_pair(world::world_width/2, world::world_height/2);
+}
+
+void crash_trail(const std::pair<int,int> &starting_location) {
+    for (int x=0; x<starting_location.first+4; ++x) {
+	for (int y=(starting_location.second-4); y<(starting_location.second)+4; ++y) {
+	    const int tile_idx = world::current_region->idx(x,y);
+	    if (world::current_region->tiles[tile_idx].base_tile_type != tile_type::WATER) {
+		world::current_region->tiles[tile_idx].covering = tile_covering::BARE;
+		// TODO: Chance of being on fire!
+	    }
+	}
+	// TODO: Ramp on either side?
+    }
+}
+
+void add_ship_hull(const std::pair<int,int> &starting_location) {
+    const int x = starting_location.first;
+    const int y = starting_location.second;
+    
+    // Cordex at (x,y)
+    // Solar collector at (x-1,y-1), (x+1,y-1), (x-1,y+1), (x+1,y+1)
+    // Console constructions at (x-1,y), (x+1,y), (x,y-1), (x,y+1)
+    // Refridgerator at (x+4,y)
+    // Storage unit at (x+4,y-1) and (x+4,y+1)
+/*
+-------|
+|@ @ @  \
+|  ###  S\
+%  #*#  F |
+|  ###  S/
+|@ @ @  /
+-------|
+*/
+}
+
+void setup_initial_game() {
+    // Get the engine ready
+    engine::ecs::init();
+    int widx = world::world_idx(16,16);
+    world::current_region = new land_block(widx);
+    
+    // Locate a spot for the crash
+    std::pair<int,int> starting_location = get_starting_location();
+    
+    // Add bare/scorched ground in a line up to the crash so it looks like a hard landing
+    crash_trail(starting_location);
+    
+    // Add the ship superstructure, doors, power, sensors, cordex
+    add_ship_hull(starting_location);
+    
+    // Create some settlers and put them in the ship
+    
+    // Persist and quit
+    engine::ecs::save_game();
+    engine::ecs::done();
+}
+
 /********* GUI Releated Functionality */
 
 /*
@@ -483,6 +544,7 @@ void build_world()
     // TODO: For the far future, biomes, history and goodies.
 
     // TODO: Find a place to crash the ship to let us start having something playable
+    setup_initial_game();
 }
 
 // For communication with the GUI
