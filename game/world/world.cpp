@@ -13,6 +13,9 @@ unordered_map<int, bool> walk_blocked;
 int camera_handle;
 int cordex_handle;
 
+string display_day_month;
+string display_time;
+string display_season;
 float sun_angle = 0.0F;
 
 void load_world_constants(fstream& lbfile)
