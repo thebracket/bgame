@@ -1,4 +1,5 @@
 #include "renderable_system.h"
+#include <iostream>
 
 namespace engine {
 namespace ecs {

@@ -29,7 +29,7 @@ pair<int,int> get_screen_size();
 void clear_screen();
 
 /* Set a single character on the screen */
-void set_char_xy ( const int x, const int y, const screen_character &c);
+void set_char_xy ( const int x, const int y, const engine::vterm::screen_character &c );
 
 /* Adds a simple string to the terminal. No wrapping or other niceties! */
 void print(const int x, const int y, const string text, const color_t fg, color_t bg);

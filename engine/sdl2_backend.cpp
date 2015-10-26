@@ -1,6 +1,7 @@
 #include "sdl2_backend.h"
 #include <SDL2/SDL_image.h>
 #include "command_manager.h"
+#include <iostream>
 
 using std::make_pair;
 

@@ -1,6 +1,7 @@
 #include "loading_screen.h"
 #include "main_menu.h"
 #include <memory>
+#include "../engine/raws/raws.h"
 
 using std::make_unique;
 
@@ -27,6 +28,10 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
      // Display the loading screen
      splash_interface.render();
 
+     if (count == 1) {
+	engine::raws::read_raws();
+     }
+     
      // Exit conditions
      ++count;
      if (count > 10) loaded_assets = true;

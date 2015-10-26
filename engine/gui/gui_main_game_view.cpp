@@ -1,4 +1,5 @@
 #include "gui_main_game_view.h"
+#include <iostream>
 
 namespace engine {
 
@@ -45,7 +46,7 @@ void gui_main_game_view::render(const screen_region viewport)
 
                         vterm::set_char_xy ( screen_x, screen_y, { t.display, fg, background } );
                     } else {
-                        vterm::set_char_xy ( screen_x, screen_y, finder->second );
+			vterm::set_char_xy ( screen_x, screen_y, finder->second );
                     }
                 } else {
                     vterm::set_char_xy ( screen_x, screen_y, { t.display, dark_grey, t.background } );
