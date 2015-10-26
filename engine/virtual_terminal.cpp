@@ -1,6 +1,7 @@
 #include "virtual_terminal.h"
 #include <algorithm>
 #include <memory>
+#include <iostream>
 
 using std::unique_ptr;
 using std::make_unique;
@@ -29,7 +30,7 @@ inline void set_char ( const int idx, const screen_character &c )
      terminal_buffer->operator[] ( idx ) = c;
 }
 
-void set_char_xy ( const int x, const int y, const screen_character &c) {
+void set_char_xy ( const int x, const int y, const engine::vterm::screen_character& c ) {
   set_char(screen_idx(x,y),c);
 }
 

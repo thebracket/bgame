@@ -13,6 +13,7 @@
 #include "../../engine/ecs/ecs.h"
 #include "../../engine/ecs/entity_factory.h"
 #include "../../engine/colors.h"
+#include "../../engine/raws/raws.h"
 
 using std::vector;
 using std::map;
@@ -509,14 +510,7 @@ void add_cordex(const int &x, const int &y) {
 }
 
 void add_solar_collector(const int x, const int y) {
-    entity collector;
-    collector.handle = next_entity_handle();
-    add_entity(collector);
-    add_component(collector, make_unique<debug_name_component>("Solar Collector"));
-    add_component(collector, make_unique<position_component>(x,y));
-    add_component(collector, make_unique<renderable_component>(177, dark_cyan, black));
-    add_component(collector, make_unique<obstruction_component>());
-    // TODO: Power generation component!
+    engine::raws::create_structure_from_raws("Solar Collector", x, y);
 }
 
 void add_cordex_console(const int x, const int y, const unsigned char symbol) {
@@ -530,25 +524,11 @@ void add_cordex_console(const int x, const int y, const unsigned char symbol) {
 }
 
 void add_food_replicator(const int x, const int y) {
-    entity replicator;
-    replicator.handle = next_entity_handle();
-    add_entity(replicator);
-    add_component(replicator, make_unique<debug_name_component>("Food Replicator"));
-    add_component(replicator, make_unique<position_component>(x,y));
-    add_component(replicator, make_unique<renderable_component>(127, white, black));
-    add_component(replicator, make_unique<obstruction_component>());
-    // TODO: Functionality!
+    engine::raws::create_structure_from_raws("Small Replicator", x, y);
 }
 
 void add_storage_unit(const int x, const int y) {
-    entity storage_unit;
-    storage_unit.handle = next_entity_handle();
-    add_entity(storage_unit);
-    add_component(storage_unit, make_unique<debug_name_component>("Storage Unit"));
-    add_component(storage_unit, make_unique<position_component>(x,y));
-    add_component(storage_unit, make_unique<renderable_component>(240, cyan, black));
-    add_component(storage_unit, make_unique<obstruction_component>());
-    // TODO: Functionality!
+    engine::raws::create_structure_from_raws("Storage Unit", x, y);
 }
 
 void add_structural_element(const int x, const int y, unsigned char glyph, bool block=true) {

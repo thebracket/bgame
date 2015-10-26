@@ -3,6 +3,7 @@
 #include "base_component.h"
 #include "../virtual_terminal.h"
 #include <vector>
+#include <iostream>
 
 using std::vector;
 
@@ -16,7 +17,7 @@ public:
 	multi_tile = false;
     };
     
-    renderable_component(const unsigned char &GLYPH, const engine::vterm::color_t &FOREGROUND, const engine::vterm::color_t &BACKGROUND) :
+    renderable_component(const unsigned char GLYPH, const engine::vterm::color_t &FOREGROUND, const engine::vterm::color_t &BACKGROUND) :
         glyph(GLYPH), foreground(FOREGROUND), background(BACKGROUND)
     {
         type = renderable;

@@ -2,6 +2,7 @@
 
 #include "base_component.h"
 #include <string>
+#include <iostream>
 
 using std::string;
 
@@ -25,8 +26,9 @@ public:
 	base_component::load(lbfile);
 	int name_size = 0;
 	lbfile.read ( reinterpret_cast<char *> ( &name_size ), sizeof ( name_size ) );
-	char buf[name_size];
+	char buf[name_size+1];
 	lbfile.read ( buf, name_size );
+	buf[name_size] = '\0';
 	debug_name = string(buf);
     };
 };
