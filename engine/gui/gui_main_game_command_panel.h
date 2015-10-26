@@ -1,5 +1,6 @@
 #include "gui_element_base.h"
 #include "../virtual_terminal.h"
+#include "../../game/world/world.h"
 #include <string>
 #include <iostream>
 
@@ -13,6 +14,12 @@ public:
      };;
 
      virtual void render ( const screen_region viewport ) {
+	  int x = viewport.x+1;
+	  int y = viewport.y+1;
+	  
+	  vterm::print(x,y,world::display_day_month,white,black);
+	  vterm::print(x,y+1,world::display_time,white,black);
+	  vterm::print(x,y+2,world::display_season,white,black);
      }
 
 private:

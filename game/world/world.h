@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 #include <fstream>
+#include <string>
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
@@ -12,6 +13,7 @@ using std::array;
 using std::unique_ptr;
 using std::unordered_map;
 using std::fstream;
+using std::string;
 
 namespace world {
 
@@ -29,6 +31,9 @@ extern land_block * current_region; // Non-owning pointer to the area in which p
 // but makes it quick and easy for systems that want to find it.
 extern int camera_handle;
 extern int cordex_handle;
+extern string display_day_month;
+extern string display_time;
+extern string display_season;
 extern float sun_angle;
 
 // For handing data between gui_game_view and the render controller
