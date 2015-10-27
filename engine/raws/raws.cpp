@@ -67,19 +67,26 @@ bool nested;
 
 unsigned char find_glyph_by_name(const string &name) {
     auto finder = detail::glyphs.find(name);
-    if (finder == detail::glyphs.end()) throw 104;
+    if (finder == detail::glyphs.end()) {
+      std::cout << "Error; could not find glyph; [" << name << "]\n";
+      throw 104;
+    }
     return finder->second;
 }
 
 engine::vterm::color_t find_color_by_name(const string &name) {
     auto finder = detail::colors.find(name);
-    if (finder == detail::colors.end()) throw 105;
+    if (finder == detail::colors.end()) {
+      std::cout << "Error; could not find color; [" << name << "]\n";
+      throw 105;
+    }
     return finder->second;
 }
 
 /* Raw Factory Functions */
 
 void parse_raw_name(const vector<string> &chunks) {
+    std::cout << "Parsing name: " << chunks[1] << "\n";
     current_name = chunks[1];
     unique_ptr<raw_name> name = make_unique<raw_name>(chunks[1]);
     current->children.push_back(std::move(name));
@@ -245,6 +252,12 @@ void parse_chunks ( const vector<string> &chunks )
      }
 }
 
+inline bool ignore_char(const char &c) {
+  if (c == ' ') return false;
+  if (c>40 and c<122 and c != '[' and c != ']') return false;
+  return true;
+}
+
 void parse_line ( const string &line )
 {
      if ( line.empty() ) return; // No parsing of empty lines
@@ -254,7 +267,7 @@ void parse_line ( const string &line )
      vector<string> chunks;
      string current_line;
      for ( unsigned int i=0; i<line.size(); ++i ) {
-          if ( line[i] != '[' and line[i] != ']' and line[i] != '\r' and line[i] != '\n' and line[i] != '\t' ) {
+          if ( !ignore_char(line[i]) ) {
                if ( line[i] != ':' ) {
                     current_line += line[i];
                } else {
@@ -304,7 +317,10 @@ void read_raws()
 
 int create_structure_from_raws(const string &name, const int &x, const int &y) {
     auto finder = detail::structures.find(name);
-    if (finder == detail::structures.end()) throw 105;
+    if (finder == detail::structures.end()) {
+      std::cout << "ERROR: Cannot create structure of type [" << name << "]\n";
+      throw 105;
+    }
   
     int entity_id = engine::ecs::next_entity_handle();
     engine::ecs::entity e;

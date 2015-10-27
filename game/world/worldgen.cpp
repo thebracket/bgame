@@ -525,12 +525,23 @@ void add_storage_unit(const int x, const int y) {
 }
 
 void add_structural_element(const int x, const int y, unsigned char glyph, bool block=true) {
+  switch (glyph) {
+    case 16 : engine::raws::create_structure_from_raws("Ship Front", x, y); break;
+    case 186 : engine::raws::create_structure_from_raws("Ship Wall NS", x, y); break;
+    case 200 : engine::raws::create_structure_from_raws("Ship Wall NE", x, y); break;
+    case 201 : engine::raws::create_structure_from_raws("Ship Wall SE", x, y); break;
+    case 219 : engine::raws::create_structure_from_raws("Ship Superstructure", x, y); break;
+    case 46 : engine::raws::create_structure_from_raws("Ship Floor", x, y); break;
+    case 205 : engine::raws::create_structure_from_raws("Ship Wall EW", x, y); break;
+    default : std::cout << "Oops - missed a structure, code " << +glyph << "\n";
+  }
+  /*
     entity structure;
     structure.handle = next_entity_handle();
     add_entity(structure);
     add_component(structure, position_component(x,y));
     add_component(structure, renderable_component(glyph, white, black));
-    if (block) add_component(structure, obstruction_component());
+    if (block) add_component(structure, obstruction_component());*/
 }
 
 void add_ship_hull(const std::pair<int,int> &starting_location) {
@@ -547,10 +558,10 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
     add_solar_collector(x+1, y+1);
     
     // Console constructions at (x-1,y), (x+1,y), (x,y-1), (x,y+1)
-    add_cordex_console(x-1, y, 16);
-    add_cordex_console(x+1, y, 17);
-    add_cordex_console(x, y-1, 30);
-    add_cordex_console(x, y+1, 31);
+    engine::raws::create_structure_from_raws("Education Console", x-1, y);
+    engine::raws::create_structure_from_raws("Scanner Console", x+1, y);
+    engine::raws::create_structure_from_raws("Defense Console", x, y-1);
+    engine::raws::create_structure_from_raws("Communications Console", x, y+1);
     
     // Refridgerator/Food Replicator at (x+4,y)
     add_food_replicator(x+4, y);
@@ -573,6 +584,7 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
 	// TODO: Door goes here!
       }
     }
+    
     add_structural_element(x+3, y-3, 16); // Front
     add_structural_element(x+4, y-2, 16); // Front
     add_structural_element(x+5, y-1, 16); // Front
