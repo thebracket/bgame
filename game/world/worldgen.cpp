@@ -636,6 +636,7 @@ void setup_initial_game() {
     add_entity(camera);
     
     // Persist and quit
+    world::stored_power = 25;
     engine::ecs::save_game();
     engine::ecs::done();
 }
