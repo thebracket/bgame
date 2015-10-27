@@ -1,11 +1,11 @@
 #pragma once
 
 #include "base_system.h"
-#include "../../game/world/world.h"
-#include "ecs.h"
-#include "position_component.h"
-#include "viewshed_component.h"
-#include "../../game/world/geometry.h"
+#include "../../../game/world/world.h"
+#include "../ecs.h"
+#include "../position_component.h"
+#include "../viewshed_component.h"
+#include "../../../game/world/geometry.h"
 #include <unordered_set>
 
 using geometry::DEGRAD;

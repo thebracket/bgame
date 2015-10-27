@@ -1,9 +1,9 @@
 #pragma once
 
 #include "base_system.h"
-#include "../../game/world/world.h"
-#include "ecs.h"
-#include "calendar_component.h"
+#include "../../../game/world/world.h"
+#include "../ecs.h"
+#include "../calendar_component.h"
 
 namespace engine {
 namespace ecs {

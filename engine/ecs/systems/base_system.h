@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base_message.h"
+#include "../base_message.h"
 #include <queue>
 
 using std::queue;
