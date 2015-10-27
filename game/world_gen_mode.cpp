@@ -70,7 +70,6 @@ void world_gen_mode::render_init()
 
 void world_gen_mode::render_faultlines()
 {
-     const std::pair<int,int> size = engine::vterm::get_screen_size();
      const int lx = 4;
      const int ty = 4;
 
@@ -95,7 +94,6 @@ void world_gen_mode::render_tiles()
      for ( int y=0; y<size.second-8; ++y ) {
           for ( int x=0; x<size.first-8; ++x ) {
                const int index = worldgen::current_landblock->idx ( x,y );
-               unsigned char block_type = worldgen::current_landblock->tiles[index].base_tile_type;
                const int screen_x = lx + x;
                const int screen_y = ty + y;
 	       const unsigned char glyph = worldgen::current_landblock->tiles[index].display;

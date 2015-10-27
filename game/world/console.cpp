@@ -30,7 +30,7 @@ void console::write ( const string line )
      bool in_control_code = false;
      string current_control_code = "";
 
-     for ( int i=0; i<line.size(); ++i ) {
+     for ( unsigned int i=0; i<line.size(); ++i ) {
           const unsigned char current_char = line[i];
           if ( in_control_code ) {
                if ( current_char != '@' ) {

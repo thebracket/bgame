@@ -46,7 +46,7 @@ void clear_screen()
 void print ( const int x, const int y, const string text, const color_t fg, color_t bg )
 {
      int idx = screen_idx ( x,y );
-     for ( int i=0; i<text.size(); ++i ) {
+     for ( unsigned int i=0; i<text.size(); ++i ) {
           set_char ( idx+i, {static_cast<const unsigned char>(text[i]), fg, bg} );
      }
 }
