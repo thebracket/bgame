@@ -1,26 +1,28 @@
 #pragma once
 
-#include "base_component.h"
+#include "component_types.h"
 
 namespace engine {
 namespace ecs {
 
-class calendar_component : public base_component {
+struct calendar_component {
 public:
-    calendar_component();
-    calendar_component(const long &t);
+    int entity_id;
+    int handle;
+    component_type type = calendar;
     
-    long system_time;
-    short year;
-    char month;
-    char day;
-    char hour;
-    char minute;
+    calendar_component() {}
+    calendar_component(const long &t) : system_time(t) {}
+      
+    long system_time = 0;
+    short year = 0;
+    char month = 0;
+    char day = 0;
+    char hour = 0;
+    char minute = 0;
     
-    double duration_buffer;
+    double duration_buffer = 0.0;
     
-    virtual void save(fstream &lbfile);
-    virtual void load(fstream &lbfile);
 };
 
 }

@@ -1,3 +1,0 @@
-add_library(components base_component.cpp calendar_component.cpp debug_name_component.cpp 
-obstruction_component.cpp position_component.cpp power_battery_component.cpp power_generator_component.cpp
-renderable_component.cpp settler_ai_component.cpp viewshed_component.cpp)

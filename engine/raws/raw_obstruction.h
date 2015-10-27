@@ -3,11 +3,8 @@
 #include <string>
 #include "base_raw.h"
 #include "../ecs/components/obstruction_component.h"
-#include <memory>
 
 using std::string;
-using std::unique_ptr;
-using std::make_unique;
 
 namespace engine {
 namespace raws {
@@ -19,9 +16,9 @@ struct raw_obstruction : public base_raw {
     bool blocks_walk;
     
     virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-	unique_ptr<ecs::obstruction_component> obs = make_unique<ecs::obstruction_component>();
-	obs->blocks_entry = blocks_walk;
-	obs->blocks_visibility = blocks_view;
+	ecs::obstruction_component obs = ecs::obstruction_component();
+	obs.blocks_entry = blocks_walk;
+	obs.blocks_visibility = blocks_view;
 	engine::ecs::add_component(parent, std::move(obs));
     }
 };

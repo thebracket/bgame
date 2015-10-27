@@ -1,16 +1,11 @@
 #pragma once
 
 #include "base_raw.h"
-#include <memory>
-
-using std::unique_ptr;
-using std::make_unique;
+#include "raw_power_generator_condition.h"
 
 namespace engine {
 namespace raws {
 
-enum power_generator_condition { DAYLIGHT };
-  
 struct raw_power_generator : public base_raw {
     raw_power_generator() { type = POWER_GENERATOR; };
     raw_power_generator(const power_generator_condition &cond, const int &makes) : condition(cond),amount(makes) { type=POWER_GENERATOR; };

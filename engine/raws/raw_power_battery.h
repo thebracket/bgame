@@ -16,8 +16,7 @@ struct raw_power_battery : public base_raw {
     int storage_capacity;
 
     void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-        unique_ptr<ecs::power_battery_component> battery = make_unique<ecs::power_battery_component>(storage_capacity);
-        engine::ecs::add_component(parent, std::move(battery));
+        engine::ecs::add_component(parent, ecs::power_battery_component(storage_capacity));
     }
 };
 

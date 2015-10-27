@@ -4,13 +4,10 @@
 #include "../ecs/components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
-#include <memory>
 #include <iostream>
 
 using std::vector;
-using std::unique_ptr;
-using std::unique_ptr;
-using std::make_unique;
+using engine::ecs::renderable_component;
 
 namespace engine {
 namespace raws {
@@ -36,8 +33,7 @@ struct raw_renderable : public base_raw {
                     bg = tmp->background;
                }
           }
-          unique_ptr<engine::ecs::renderable_component> rc = make_unique<engine::ecs::renderable_component> ( glyph_to_use, fg, bg );
-          engine::ecs::add_component ( parent, std::move ( rc ) );
+          engine::ecs::add_component ( parent, renderable_component( glyph_to_use, fg, bg ) );
      }
 };
 
