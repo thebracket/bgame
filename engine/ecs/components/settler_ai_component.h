@@ -1,18 +1,16 @@
 #pragma once
 
-#include "base_component.h"
+#include "component_types.h"
 
 namespace engine {
 namespace ecs {
 
-class settler_ai_component : public base_component {
-public:
-    settler_ai_component();
+struct settler_ai_component {
+    int entity_id;
+    int handle;
+    component_type type = settler_ai; 
     
-    int next_tick;
-    
-    virtual void save(fstream &lbfile);
-    virtual void load(fstream &lbfile);
+    int next_tick = 0;    
 };
 
 }

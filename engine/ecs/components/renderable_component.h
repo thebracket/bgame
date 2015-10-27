@@ -1,36 +1,27 @@
 #pragma once
 
-#include "base_component.h"
+#include "component_types.h"
 #include "../../virtual_terminal.h"
 #include <vector>
 #include <iostream>
 
 using std::vector;
+using engine::vterm::color_t;
 
 namespace engine {
 namespace ecs {
 
-class renderable_component : public base_component {
-public:
-    renderable_component();    
-    renderable_component(const unsigned char GLYPH, const engine::vterm::color_t &FOREGROUND, const engine::vterm::color_t &BACKGROUND);
+struct renderable_component {
+    int entity_id;
+    int handle;
+    component_type type = renderable;    
     
-    renderable_component(const engine::vterm::color_t &FOREGROUND, const engine::vterm::color_t &BACKGROUND,
-	  const char &nwidth, const char &nheight, const vector<unsigned char> &nglyphs
-    );
+    renderable_component() {}
+    renderable_component(const unsigned char &g, const color_t &f, const color_t &b) : glyph(g), foreground(f), background(b) {}
     
     unsigned char glyph;
     engine::vterm::color_t foreground;
-    engine::vterm::color_t background;
-    
-    // Multi-tile support
-    bool multi_tile;
-    char width;
-    char height;
-    vector<unsigned char> glyphs;
-    
-     virtual void save(fstream &lbfile);    
-    virtual void load(fstream &lbfile);
+    engine::vterm::color_t background;    
 };
 
 }

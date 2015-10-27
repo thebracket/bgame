@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base_component.h"
+#include "component_types.h"
 #include <vector>
 
 using std::vector;
@@ -10,17 +10,17 @@ namespace ecs {
 
 enum viewshed_type {visibility,penetrating};
   
-class viewshed_component : public base_component {
-public:
-    viewshed_component();
-    viewshed_component(const viewshed_type &T, const int &R);
-
+struct viewshed_component {
+    int entity_id;
+    int handle;
+    component_type type = viewshed; 
+    
+    viewshed_component() {}
+    viewshed_component(const viewshed_type &t, const int &r) : scanner_type(t), scanner_range(r) {}
+    
     viewshed_type scanner_type;
     int scanner_range;
     vector<int> last_visibility;
-    
-    virtual void save(fstream &lbfile);
-    virtual void load(fstream &lbfile);
 };
 
 }

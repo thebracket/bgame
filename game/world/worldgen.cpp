@@ -494,12 +494,12 @@ void add_cordex(const int &x, const int &y) {
     cordex.handle = next_entity_handle();
     world::cordex_handle = cordex.handle;
     add_entity(cordex);
-    add_component(cordex, make_unique<debug_name_component>("Cordex"));
-    add_component(cordex, make_unique<position_component>(x,y));
-    add_component(cordex, make_unique<viewshed_component>(penetrating,16));
-    add_component(cordex, make_unique<calendar_component>(0L));
-    add_component(cordex, make_unique<renderable_component>(15, cyan, black));
-    add_component(cordex, make_unique<obstruction_component>());
+    add_component(cordex, debug_name_component("Cordex"));
+    add_component(cordex, position_component(x,y));
+    add_component(cordex, viewshed_component(penetrating,16));
+    add_component(cordex, calendar_component(0L));
+    add_component(cordex, renderable_component(15, cyan, black));
+    add_component(cordex, obstruction_component());
 }
 
 void add_solar_collector(const int x, const int y) {
@@ -510,10 +510,10 @@ void add_cordex_console(const int x, const int y, const unsigned char symbol) {
     entity console;
     console.handle = next_entity_handle();
     add_entity(console);
-    add_component(console, make_unique<debug_name_component>("Cordex Console"));
-    add_component(console, make_unique<position_component>(x,y));
-    add_component(console, make_unique<renderable_component>(symbol, dark_cyan, black));
-    add_component(console, make_unique<obstruction_component>());
+    add_component(console, debug_name_component("Cordex Console"));
+    add_component(console, position_component(x,y));
+    add_component(console, renderable_component(symbol, dark_cyan, black));
+    add_component(console, obstruction_component());
 }
 
 void add_food_replicator(const int x, const int y) {
@@ -528,9 +528,9 @@ void add_structural_element(const int x, const int y, unsigned char glyph, bool 
     entity structure;
     structure.handle = next_entity_handle();
     add_entity(structure);
-    add_component(structure, make_unique<position_component>(x,y));
-    add_component(structure, make_unique<renderable_component>(glyph, white, black));
-    if (block) add_component(structure, make_unique<obstruction_component>());
+    add_component(structure, position_component(x,y));
+    add_component(structure, renderable_component(glyph, white, black));
+    if (block) add_component(structure, obstruction_component());
 }
 
 void add_ship_hull(const std::pair<int,int> &starting_location) {

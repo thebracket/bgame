@@ -1,19 +1,17 @@
 #pragma once
 
-#include "base_component.h"
+#include "component_types.h"
 
 namespace engine {
 namespace ecs {
 
-class obstruction_component : public base_component {
-public:
-    obstruction_component();
-
+struct obstruction_component {
+    int entity_id;
+    int handle;
+    component_type type = obstruction;
+    
     bool blocks_entry;
     bool blocks_visibility;
-
-    virtual void save(fstream &lbfile);
-    virtual void load(fstream &lbfile);
 };
 
 }

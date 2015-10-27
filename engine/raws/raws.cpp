@@ -311,8 +311,7 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     e.handle = entity_id;
     engine::ecs::add_entity(e);
     
-    unique_ptr<ecs::position_component> pos = make_unique<ecs::position_component>(x,y);
-    ecs::add_component(e, std::move(pos));
+    ecs::add_component(e, ecs::position_component(x,y));
     
     finder->second->build_components(e, x, y);
     

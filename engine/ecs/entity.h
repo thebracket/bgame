@@ -4,7 +4,7 @@
 #include <bitset>
 #include <utility>
 #include <fstream>
-#include "components/base_component.h"
+#include "components/component_types.h"
 
 using std::vector;
 using std::bitset;
@@ -13,21 +13,6 @@ using std::fstream;
 namespace engine {
 namespace ecs {
 
-inline int component_flag(const component_type &t) {
-    switch (t) {
-      case position 	: return 0;
-      case name 	: return 1;
-      case renderable	: return 2;
-      case viewshed	: return 3;
-      case calendar	: return 4;
-      case settler_ai	: return 5;
-      case obstruction  : return 6;
-      case power_generator : return 7;
-      case power_battery : return 8;
-      default : throw 101;
-    }
-}
-  
 class entity {
 public:
     int handle;

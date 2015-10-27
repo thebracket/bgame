@@ -6,6 +6,26 @@
 #include "../../../game/world/world.h"
 #include <iostream>
 
+namespace power_system_detail {
+
+int calculate_power_gain(const engine::ecs::power_generator_component* gen)
+{
+    if (gen->generator_mode == engine::raws::DAYLIGHT) {
+        float efficiency = 0.0F;
+        if (world::sun_angle <= 90.0F) {
+            efficiency = 1 - (90.0F - world::sun_angle);
+        } else {
+            efficiency = 1 - (world::sun_angle-90.0F);
+        }
+        if (efficiency < 0.1) efficiency = 0.1F;
+        float generated = gen->amount * efficiency;
+        return generated;
+    }
+    return 0;
+}
+
+}
+
 void engine::ecs::power_system::tick(const double& duration_ms)
 {
     entity * cordex = get_entity_by_handle ( world::cordex_handle );
@@ -17,7 +37,7 @@ void engine::ecs::power_system::tick(const double& duration_ms)
 
         const vector<power_generator_component *> producers = find_components_by_type<power_generator_component> ( power_generator );
         for (const power_generator_component * gen : producers) {
-            const int generated_power = calculate_power_gain(gen);
+            const int generated_power = power_system_detail::calculate_power_gain(gen);
             power += generated_power;
         }
 
@@ -35,21 +55,5 @@ void engine::ecs::power_system::tick(const double& duration_ms)
         // TODO: If power < 0 - dead!
 	last_tick = calendar->system_time;
     }
-}
-
-int engine::ecs::power_system::calculate_power_gain(const engine::ecs::power_generator_component* gen)
-{
-    if (gen->generator_mode == raws::DAYLIGHT) {
-        float efficiency = 0.0F;
-        if (world::sun_angle <= 90.0F) {
-            efficiency = 1 - (90.0F - world::sun_angle);
-        } else {
-            efficiency = 1 - (world::sun_angle-90.0F);
-        }
-        if (efficiency < 0.1) efficiency = 0.1F;
-        float generated = gen->amount * efficiency;
-        return generated;
-    }
-    return 0;
 }
 

@@ -1,21 +1,21 @@
 #pragma once
 
-#include "base_component.h"
+#include "component_types.h"
 
 namespace engine {
 namespace ecs {
 
-class position_component : public base_component {
-public:
-    position_component();
-    position_component(const int &X, const int &Y);
-
+struct position_component {
+    int entity_id;
+    int handle;
+    component_type type = position;
+    
+    position_component() {}
+    position_component(const int &nx, const int &ny) : x(nx), y(ny) {}
+    
     int x;
     int y;
     bool moved;
-
-    virtual void save(fstream &lbfile);
-    virtual void load(fstream &lbfile);
 };
 
 }

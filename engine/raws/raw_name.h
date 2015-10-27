@@ -15,7 +15,7 @@ struct raw_name : public base_raw {
     string name;
     
     virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-	engine::ecs::add_component(parent, make_unique<ecs::debug_name_component>(name));
+	engine::ecs::add_component(parent, ecs::debug_name_component(name));
     }
 };
   

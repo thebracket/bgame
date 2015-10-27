@@ -1,22 +1,22 @@
 #pragma once
 
-#include "base_component.h"
 #include <string>
-#include <iostream>
+#include "component_types.h"
 
 using std::string;
 
 namespace engine {
 namespace ecs {
 
-class debug_name_component : public base_component {
-public:
-    debug_name_component();
-    debug_name_component(const string &NAME);
-    string debug_name;
+struct debug_name_component {
+    debug_name_component() {}
+    debug_name_component(const string s) : debug_name(s) {}
+  
+    int entity_id;
+    int handle;
+    component_type type = name;
     
-    virtual void save(fstream &lbfile);
-    virtual void load(fstream &lbfile);
+    string debug_name;
 };
   
 }
