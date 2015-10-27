@@ -253,7 +253,7 @@ void parse_line ( const string &line )
      // Break the line into : separated chunks, ignoring [ and ]
      vector<string> chunks;
      string current_line;
-     for ( auto i=0; i<line.size(); ++i ) {
+     for ( unsigned int i=0; i<line.size(); ++i ) {
           if ( line[i] != '[' and line[i] != ']' and line[i] != '\r' and line[i] != '\n' and line[i] != '\t' ) {
                if ( line[i] != ':' ) {
                     current_line += line[i];

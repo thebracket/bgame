@@ -4,7 +4,6 @@ namespace engine {
 
 void gui_console::render ( const screen_region viewport ) {
     const int n_lines = viewport.h;
-    const int width = viewport.w - viewport.x;
     int y = viewport.y;
     for ( auto it = world::log.last_n ( n_lines ); it != world::log.end(); ++it ) {
         log_entry entry = *it;

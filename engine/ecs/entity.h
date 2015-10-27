@@ -24,6 +24,7 @@ inline int component_flag(const component_type &t) {
       case obstruction  : return 6;
       case power_generator : return 7;
       case power_battery : return 8;
+      default : throw 101;
     }
 }
   

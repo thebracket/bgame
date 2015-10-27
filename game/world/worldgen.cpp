@@ -286,8 +286,6 @@ void walk_contours ( const int region_x, const int region_y, land_block &region,
             // Populate the thresholds
             for ( int y=0; y<landblock_height-1; ++y ) {
                 for ( int x=0; x<landblock_width-1; ++x ) {
-                    const int amp_x = region_x + x;
-                    const int amp_y = region_y + y;
                     const int tile_idx = region.idx ( x,y );
 
                     int TL = region.idx ( x, y );
@@ -327,9 +325,6 @@ void walk_waters_edge ( const int region_x, const int region_y, land_block &regi
     // Populate the thresholds
     for ( int y=0; y<landblock_height; ++y ) {
 	for ( int x=0; x<landblock_width; ++x ) {
-	    const int amp_x = region_x + x;
-	    const int amp_y = region_y + y;
-	    const short altitude = altitude_map[idx ( amp_x, amp_y )];
 	    const int tile_idx = region.idx ( x,y );
 
 	    if (region.tiles[tile_idx].base_tile_type == tile_type::WATER) {
@@ -345,8 +340,6 @@ void walk_waters_edge ( const int region_x, const int region_y, land_block &regi
 	// Populate the thresholds
 	for ( int y=0; y<landblock_height-1; ++y ) {
 	    for ( int x=0; x<landblock_width-1; ++x ) {
-		const int amp_x = region_x + x;
-		const int amp_y = region_y + y;
 		const int tile_idx = region.idx ( x,y );
 
 		int TL = region.idx ( x, y );

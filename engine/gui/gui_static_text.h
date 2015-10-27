@@ -14,8 +14,8 @@ public:
                       const vterm::color_t &bg,
                       bool center=false
                     ) :
-        text(txt), x(nx), y(ny), foreground(fg), background(bg),
-        centered(center)
+        centered(center),text(txt), x(nx), y(ny), foreground(fg), background(bg)
+        
     {
       tag = name;
     };

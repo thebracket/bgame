@@ -93,7 +93,7 @@ vector<int> find_entities_by_bitset(const int &bit_to_check) {
  */
 void update_component_handle_index() {
     component_handle_index.clear();
-    for (auto i=0; i<components.size(); ++i) {
+    for (unsigned int i=0; i<components.size(); ++i) {
         component_handle_index[components[i]->handle] = i;
     }
 }

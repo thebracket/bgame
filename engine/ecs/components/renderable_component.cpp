@@ -6,14 +6,14 @@ namespace ecs {
 renderable_component::renderable_component() {
     type = renderable;
     multi_tile = false;
-};
+}
 
 renderable_component::renderable_component(const unsigned char GLYPH, const engine::vterm::color_t &FOREGROUND, const engine::vterm::color_t &BACKGROUND) :
     glyph(GLYPH), foreground(FOREGROUND), background(BACKGROUND)
 {
     type = renderable;
     multi_tile = false;
-};
+}
 
 renderable_component::renderable_component(const engine::vterm::color_t &FOREGROUND, const engine::vterm::color_t &BACKGROUND,
         const char &nwidth, const char &nheight, const vector<unsigned char> &nglyphs
@@ -23,7 +23,7 @@ renderable_component::renderable_component(const engine::vterm::color_t &FOREGRO
     type = renderable;
     multi_tile = true;
     for (const unsigned char &c : nglyphs) glyphs.push_back(c);
-};
+}
 
 void renderable_component::save(fstream &lbfile) {
     base_component::save(lbfile);
@@ -48,7 +48,7 @@ void renderable_component::save(fstream &lbfile) {
     for (const unsigned char &g : glyphs) {
         lbfile.write ( reinterpret_cast<const char *> ( &g ), sizeof ( g ) );
     }
-};
+}
 
 void renderable_component::load(fstream &lbfile) {
     base_component::load(lbfile);

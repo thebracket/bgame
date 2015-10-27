@@ -11,7 +11,7 @@ class gui_console : public gui_element_base {
 public:  
      gui_console ( const string name ) {
           tag = name;
-     };;
+     }
 
      virtual void render ( const screen_region viewport );
 

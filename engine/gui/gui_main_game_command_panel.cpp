@@ -4,7 +4,7 @@ namespace engine {
 
 gui_main_game_command_panel::gui_main_game_command_panel ( const string name ) {
     tag = name;
-};
+}
 
 void gui_main_game_command_panel::render ( const screen_region viewport ) {
     int x = viewport.x+1;
@@ -35,6 +35,6 @@ void gui_main_game_command_panel::render ( const screen_region viewport ) {
             vterm::set_char_xy(x+i, y+5, display_bad);
         }
     }
-
 }
+
 }

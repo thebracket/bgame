@@ -35,7 +35,7 @@ void land_block::save()
 {
     const string filename = get_filename();
     fstream lbfile(filename, std::ios::out | std::ios::binary);
-    for (int i=0; i<revealed.size(); ++i) {
+    for (unsigned int i=0; i<revealed.size(); ++i) {
 	char state = 0;
 	if (revealed[i]) state = 1;
 	lbfile.write(&state,1);
@@ -50,7 +50,7 @@ void land_block::load()
 {
     const string filename = get_filename();
     fstream lbfile(filename, std::ios::in | std::ios::binary);
-    for (int i=0; i<revealed.size(); ++i) {
+    for (unsigned int i=0; i<revealed.size(); ++i) {
       char state = 0;
       lbfile.read(&state,1);
       if (state == 1) {
