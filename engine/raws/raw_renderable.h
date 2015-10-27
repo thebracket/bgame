@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base_raw.h"
-#include "../ecs/renderable_component.h"
+#include "../ecs/components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
 #include <memory>

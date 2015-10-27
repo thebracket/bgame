@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base_raw.h"
-#include "../ecs/power_battery_component.h"
+#include "../ecs/components/power_battery_component.h"
 
 namespace engine {
 namespace raws {

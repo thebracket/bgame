@@ -2,7 +2,7 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../ecs/debug_name_component.h"
+#include "../ecs/components/debug_name_component.h"
 
 using std::string;
 

@@ -4,7 +4,7 @@
 #include <bitset>
 #include <utility>
 #include <fstream>
-#include "base_component.h"
+#include "components/base_component.h"
 
 using std::vector;
 using std::bitset;

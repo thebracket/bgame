@@ -3,15 +3,15 @@
 #include "entity.h"
 #include <memory>
 
-#include "position_component.h"
-#include "debug_name_component.h"
-#include "renderable_component.h"
-#include "viewshed_component.h"
-#include "calendar_component.h"
-#include "settler_ai_component.h"
-#include "obstruction_component.h"
-#include "power_battery_component.h"
-#include "power_generator_component.h"
+#include "components/position_component.h"
+#include "components/debug_name_component.h"
+#include "components/renderable_component.h"
+#include "components/viewshed_component.h"
+#include "components/calendar_component.h"
+#include "components/settler_ai_component.h"
+#include "components/obstruction_component.h"
+#include "components/power_battery_component.h"
+#include "components/power_generator_component.h"
 
 using std::unique_ptr;
 

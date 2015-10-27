@@ -1,6 +1,6 @@
 #include "obstruction_system.h"
-#include "../obstruction_component.h"
-#include "../position_component.h"
+#include "../components/obstruction_component.h"
+#include "../components/position_component.h"
 #include "../../../game/world/world.h"
 #include "../ecs.h"
 

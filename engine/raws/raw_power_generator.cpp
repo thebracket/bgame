@@ -1,5 +1,5 @@
 #include "raw_power_generator.h"
-#include "../ecs/power_generator_component.h"
+#include "../ecs/components/power_generator_component.h"
 
 namespace engine {
 namespace raws {

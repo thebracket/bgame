@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entity.h"
-#include "base_component.h"
+#include "components/base_component.h"
 #include "systems/base_system.h"
 #include <memory>
 #include <functional>

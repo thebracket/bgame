@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base_system.h"
-#include "../power_generator_component.h"
+#include "../components/power_generator_component.h"
 
 namespace engine {
 namespace ecs {
