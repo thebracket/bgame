@@ -61,7 +61,9 @@ void calendar_system::update_display_time ( const calendar_component* t )
     day << calendar_detail::months[t->month] << " " << (t->day+1) << ", " << t->year;
     stringstream time;
     if (t->hour < 8) time << "0";
-    time << (t->hour+1) << ":" << (t->minute+2);
+    time << (t->hour+1) << ":";
+    if (t->minute < 8) time << "0";
+    time << (t->minute+2);
   
     const string season = calendar_detail::season_names[calendar_detail::season_months[t->month]];
     world::display_day_month = day.str();
