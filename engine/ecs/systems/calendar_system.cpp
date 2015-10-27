@@ -3,7 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include "../../game/world/world.h"
+#include "../../../game/world/world.h"
 
 using std::string;
 using std::vector;

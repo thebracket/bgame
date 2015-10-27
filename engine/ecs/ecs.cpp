@@ -1,7 +1,8 @@
 #include "ecs.h"
 #include "base_message.h"
-#include "system_factory.h"
+#include "systems/system_factory.h"
 #include "entity_factory.h"
+#include "../../game/world/world.h"
 #include <memory>
 #include <queue>
 #include <string>
