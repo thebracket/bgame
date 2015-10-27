@@ -8,15 +8,16 @@ gui_main_game_command_panel::gui_main_game_command_panel ( const string name ) {
 
 void gui_main_game_command_panel::render ( const screen_region viewport ) {
     int x = viewport.x+1;
-    int y = viewport.y+1;
+    int y = viewport.y+3;
 
-    vterm::print(x,y,world::display_day_month,white,black);
-    vterm::print(x,y+1,world::display_time,white,black);
-    vterm::print(x,y+2,world::display_season,white,black);
+    vterm::print(x,y-2,"Cordex 0.9 Beta",white,black);
+    vterm::print(x,y,world::display_day_month,red,black);
+    vterm::print(x,y+1,world::display_time,red,black);
+    vterm::print(x,y+2,world::display_season,red,black);
 
     stringstream ss;
-    ss << "Power: " << world::stored_power << " / " << world::max_power;
-    vterm::print(x,y+4,ss.str(),white,black);
+    ss << "Power: " << world::stored_power;
+    vterm::print(x,y+4,ss.str(),yellow,black);
     ss.clear();
 
     int max_width = viewport.w-1;
