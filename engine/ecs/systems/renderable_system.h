@@ -3,8 +3,8 @@
 #include "base_system.h"
 #include "../../../game/world/world.h"
 #include "../ecs.h"
-#include "../position_component.h"
-#include "../renderable_component.h"
+#include "../components/position_component.h"
+#include "../components/renderable_component.h"
 
 namespace engine {
 namespace ecs {

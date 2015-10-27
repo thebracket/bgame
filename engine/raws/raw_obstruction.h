@@ -2,7 +2,7 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../ecs/obstruction_component.h"
+#include "../ecs/components/obstruction_component.h"
 #include <memory>
 
 using std::string;

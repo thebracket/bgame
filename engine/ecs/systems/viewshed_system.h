@@ -3,8 +3,8 @@
 #include "base_system.h"
 #include "../../../game/world/world.h"
 #include "../ecs.h"
-#include "../position_component.h"
-#include "../viewshed_component.h"
+#include "../components/position_component.h"
+#include "../components/viewshed_component.h"
 #include "../../../game/world/geometry.h"
 #include <unordered_set>
 

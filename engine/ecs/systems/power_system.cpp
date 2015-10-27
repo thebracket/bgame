@@ -1,8 +1,8 @@
 #include "power_system.h"
 #include "../ecs.h"
-#include "../power_battery_component.h"
-#include "../power_generator_component.h"
-#include "../calendar_component.h"
+#include "../components/power_battery_component.h"
+#include "../components/power_generator_component.h"
+#include "../components/calendar_component.h"
 #include "../../../game/world/world.h"
 #include <iostream>
 
