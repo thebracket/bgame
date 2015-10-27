@@ -34,6 +34,8 @@ extern int cordex_handle;
 extern string display_day_month;
 extern string display_time;
 extern string display_season;
+extern int stored_power;
+extern int max_power;
 extern float sun_angle;
 
 // For handing data between gui_game_view and the render controller

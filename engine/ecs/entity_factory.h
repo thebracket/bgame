@@ -10,6 +10,8 @@
 #include "calendar_component.h"
 #include "settler_ai_component.h"
 #include "obstruction_component.h"
+#include "power_battery_component.h"
+#include "power_generator_component.h"
 
 using std::unique_ptr;
 
