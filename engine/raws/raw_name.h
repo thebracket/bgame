@@ -3,6 +3,7 @@
 #include <string>
 #include "base_raw.h"
 #include "../ecs/components/debug_name_component.h"
+#include "../globals.h"
 
 using std::string;
 
@@ -15,7 +16,7 @@ struct raw_name : public base_raw {
     string name;
     
     virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-	engine::ecs::add_component(parent, ecs::debug_name_component(name));
+	engine::globals::ecs->add_component(parent, ecs::debug_name_component(name));
     }
 };
   

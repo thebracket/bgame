@@ -2,6 +2,7 @@
 
 #include "base_raw.h"
 #include "../ecs/components/power_battery_component.h"
+#include "../globals.h"
 
 namespace engine {
 namespace raws {
@@ -16,7 +17,7 @@ struct raw_power_battery : public base_raw {
     int storage_capacity;
 
     void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-        engine::ecs::add_component(parent, ecs::power_battery_component(storage_capacity));
+        engine::globals::ecs->add_component(parent, ecs::power_battery_component(storage_capacity));
     }
 };
 

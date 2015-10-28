@@ -2,36 +2,33 @@
 
 /* Convenience header - includes the rest of the engine */
 
+#include <stack>
+#include <memory>
+#include <thread>
+
 #include "rng.h"
 #include "virtual_terminal.h"
 #include "colors.h"
 #include "base_mode.h"
 #include "gui/gui.h"
 #include "backends/command_manager.h"
-#include "ecs/ecs.h"
 #include "backends/ansi_backend.h"
 #include "backends/ncurses_backend.h"
 #include "backends/sdl2_backend.h"
-#include <stack>
-#include <memory>
-#include <thread>
-
-using std::stack;
-using std::unique_ptr;
+#include "globals.h"
 
 namespace engine {
 
 template <typename backend_t>
 class bracket_engine {
 private:
-
      backend_t backend_driver;
-     unique_ptr<base_mode> current_mode;
-     stack<unique_ptr<base_mode>> mode_stack;
+     std::unique_ptr<base_mode> current_mode;
+     std::stack<std::unique_ptr<base_mode>> mode_stack;
      bool quitting = false;
      const bool fixed_time_step = false;
 
-     void push_mode ( unique_ptr< base_mode > new_mode ) {
+     void push_mode ( std::unique_ptr< base_mode > new_mode ) {
           current_mode->on_push();
           mode_stack.push ( std::move ( current_mode ) );
           current_mode = std::move ( new_mode );
@@ -53,7 +50,7 @@ public:
           init_rng();
           init_virtual_terminal();
           backend_driver.init();
-          pair<int,int> size = backend_driver.get_console_size();
+          std::pair<int,int> size = backend_driver.get_console_size();
           vterm::resize ( size.first, size.second );
      }
 
@@ -67,7 +64,7 @@ public:
                command::clear_commands();
                backend_driver.poll_inputs();
                command::process_commands();
-               ecs::tick ( duration_ms );
+               engine::globals::ecs->tick ( duration_ms );
 
                // Render Control
                vterm::clear_screen();

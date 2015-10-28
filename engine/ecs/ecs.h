@@ -3,7 +3,6 @@
 #include "entity.h"
 #include "systems/base_system.h"
 #include "components/component_types.h"
-#include "component_bag.h"
 #include "components/calendar_component.h"
 #include "components/debug_name_component.h"
 #include "components/obstruction_component.h"
@@ -17,174 +16,188 @@
 #include <functional>
 #include <unordered_map>
 #include <vector>
+#include <fstream>
+#include <iostream>
+
+#include "entity_storage.h"
+#include "component_storage.h"
+#include "systems/system_factory.h"
+#include "serialization.h"
+#include "../../game/world/world.h"
 
 using std::unique_ptr;
 using std::function;
 using std::unordered_map;
 using std::vector;
+using std::fstream;
+using engine::ecs::base_system;
 
 namespace engine {
-namespace ecs {
 
-namespace storage {
+using ecs::entity;
+  
+template <typename... component_list>
+class entity_component_system {
+private:
+  ecs_detail::component_storage<component_list...> components;
+  ecs_detail::entity_storage entities;
+  vector<unique_ptr<base_system>> systems;
+public:
+  template<typename T>
+  void add_component ( entity &target, T component ) {
+    const int handle = components.store_component(component);
+    component.entity_id = target.handle;
+    target.component_handles.push_back ( std::make_pair ( component.type, handle ) );
+    target.component_types.set ( component.type );
+  }
+  
+  template<typename T2>
+  T2 * get_component_by_handle ( const int &handle ) {
+    T2 ignore;
+    T2 * result = components.find_component_by_handle(handle, ignore);
+    return result;
+  }
+  
+  template<typename T>
+  vector<T *> find_components_by_func ( function<bool ( const T &c ) > matcher ) {
+    return components.find_components_by_func(matcher);
+  }
+  
+  template<typename T>
+  vector<T> * find_components_by_type() {
+    T tmp;
+    return components.find_components_by_type(tmp);
+  }
+  
+  int add_entity( entity &e ) {
+      e.handle = entities.get_next_handle();
+      entities.add_entity(e);
+      return e.handle;
+  }
+  
+  ecs::entity * get_entity_by_handle(const int &handle) {
+    return entities.find_by_handle(handle);
+  }
+  
+  vector<int> find_entities_by_func ( function<bool ( const entity &e ) > matcher ) {
+    return entities.find_by_func(matcher);
+  }
+  
+  vector<int> find_entities_by_bitset ( const int &bit_to_check ) {
+    return entities.find_entities_by_bitset(bit_to_check);
+  }
+  
+  void add_system ( unique_ptr<base_system> system ) {
+    systems.push_back ( std::move ( system ) );
+  }
+  
+  bool running = false;
+  
+  void tick ( const double duration_ms )
+  {
+      if (!running) return;
+      // TODO: Temporary for compatibility
+      for ( unique_ptr<base_system> &system : systems ) {
+	  system->tick ( duration_ms );
+      }
+  }
+  
+  void init() {
+     // TODO: Temporary for compatibility during transition
+     add_system ( engine::ecs::make_camera_system() );
+     add_system ( engine::ecs::make_calendar_system() );
+     add_system ( engine::ecs::make_obstruction_system() );
+     add_system ( engine::ecs::make_power_system() );
+     add_system ( engine::ecs::make_settler_ai_system() );
+     add_system ( engine::ecs::make_renderable_system() );
+     add_system ( engine::ecs::make_viewshed_system() );
+     running = true;
+  }
+  
+  void done() {    
+    running = false;
+  }
+  
+  inline string get_filename()
+  {
+      return "world/saved_game.dat";
+  }
+  
+  template<typename T>
+  void load_component_factory ( fstream &lbfile )
+  {
+      T component = engine::ecs::serialization::load_component<T> ( lbfile );
+      const int entity_handle = component.entity_id;
+      entity * parent = get_entity_by_handle ( entity_handle );
+      add_component<T> ( *parent, component );
+  }
+  
+  void load_game() {
+    const string filename = get_filename();
+    fstream lbfile ( filename, std::ios::in | std::ios::binary );
+    world::load_world_constants ( lbfile );
+    
+    int number_of_entities = 0;
+    lbfile.read ( reinterpret_cast<char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
+    for ( int i=0; i<number_of_entities; ++i ) {
+	entity e = engine::ecs::construct_entity_from_file ( lbfile );
+	add_entity ( e );
+    }
+    
+    int number_of_components = 0;
+    lbfile.read ( reinterpret_cast<char *> ( &number_of_components ), sizeof ( number_of_components ) );
+    for ( int i=0; i<number_of_components; ++i ) {
+      engine::ecs::component_type ct;
+      lbfile.read ( reinterpret_cast<char *> ( &ct ), sizeof ( ct ) );
+      
+      switch ( ct ) {
+      case engine::ecs::component_type::position :
+	    load_component_factory<engine::ecs::position_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::name :
+	    load_component_factory<engine::ecs::debug_name_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::renderable :
+	    load_component_factory<engine::ecs::renderable_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::viewshed :
+	    load_component_factory<engine::ecs::viewshed_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::calendar : 
+	    load_component_factory<engine::ecs::calendar_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::settler_ai :
+	    load_component_factory<engine::ecs::settler_ai_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::obstruction :
+	    load_component_factory<engine::ecs::obstruction_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::power_generator :
+	    load_component_factory<engine::ecs::power_generator_component> ( lbfile );
+	    break;
+      case engine::ecs::component_type::power_battery :
+	    load_component_factory<engine::ecs::power_battery_component> ( lbfile );
+	    break;
+      default :
+	    throw 102;
+      }
+    }
+  }
+  
+  void save_game() {
+    const string filename = get_filename();
+     fstream lbfile ( filename, std::ios::out | std::ios::binary );
 
-extern int handle_count;
-extern component_bag<calendar_component> calendars;
-extern component_bag<debug_name_component> names;
-extern component_bag<obstruction_component> obstructions;
-extern component_bag<position_component> positions;
-extern component_bag<power_battery_component> batteries;
-extern component_bag<power_generator_component> generators;
-extern component_bag<renderable_component> renderables;
-extern component_bag<settler_ai_component> settler_ais;
-extern component_bag<viewshed_component> viewsheds;
+     world::save_world_constants ( lbfile );
 
-inline int next_handle()
-{
-     int result = handle_count;
-     ++handle_count;
-     return result;
-}
+     int number_of_entities = entities.size();
+     lbfile.write ( reinterpret_cast<const char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
+     entities.for_each([&lbfile] (entity * e) { e->save(lbfile); });
 
-}
+     int number_of_components = components.size();
+     lbfile.write ( reinterpret_cast<const char *> ( &number_of_components ), sizeof ( number_of_components ) );
+     components.save(lbfile);
+  }
+};
 
-/* COMPONENT HANDLERS */
-
-namespace detail {
-template<typename T>
-void setup_component_with_entity ( entity &target, T &component )
-{
-     const int handle = storage::next_handle();
-     component.handle = handle;
-     component.entity_id = target.handle;
-     target.component_handles.push_back ( std::make_pair ( component.type, handle ) );
-     target.component_types.set ( component.type );
-}
-
-template<typename T>
-component_bag<T> * find_appropriate_bag()
-{
-     throw 101;
-}
-template<> inline component_bag<calendar_component> * find_appropriate_bag()
-{
-     return &storage::calendars;
-}
-template<> inline component_bag<debug_name_component> * find_appropriate_bag()
-{
-     return &storage::names;
-}
-template<> inline component_bag<obstruction_component> * find_appropriate_bag()
-{
-     return &storage::obstructions;
-}
-template<> inline component_bag<position_component> * find_appropriate_bag()
-{
-     return &storage::positions;
-}
-template<> inline component_bag<power_battery_component> * find_appropriate_bag()
-{
-     return &storage::batteries;
-}
-template<> inline component_bag<power_generator_component> * find_appropriate_bag()
-{
-     return &storage::generators;
-}
-template<> inline component_bag<renderable_component> * find_appropriate_bag()
-{
-     return &storage::renderables;
-}
-template<> inline component_bag<settler_ai_component> * find_appropriate_bag()
-{
-     return &storage::settler_ais;
-}
-template<> inline component_bag<viewshed_component> * find_appropriate_bag()
-{
-     return &storage::viewsheds;
-}
-
-}
-
-/*
- * Public interface to add a component to the Entity-Component-System. Links the component to the entity,
- * notifies the entity of its presence, and adds it to the appropriate storage bag.
- */
-template<typename T>
-void add_component ( entity &target, T component )
-{
-     detail::setup_component_with_entity<T> ( target, component );
-     component_bag<T> * bag = detail::find_appropriate_bag<T>();
-     bag->add ( component );
-}
-
-/*
- * Public interface to find a component by handle number.
- */
-template<typename T>
-T * get_component_by_handle ( const int &handle )
-{
-     component_bag<T> * bag = detail::find_appropriate_bag<T>();
-     return bag->find_by_handle ( handle );
-}
-
-/*
- * Public interface to match components by lambda/function.
- */
-template<typename T>
-vector<T *> find_components_by_func ( function<bool ( const T &c ) > matcher )
-{
-     component_bag<T> * bag = detail::find_appropriate_bag<T>();
-     return bag->find_by_func ( matcher );
-}
-
-/*
- * Public interface to find components by type
- */
-template <typename T>
-vector<T *> find_components_by_type ( const component_type &t )
-{
-     component_bag<T> * bag = detail::find_appropriate_bag<T>();
-     return bag->find_by_type ( t );
-}
-
-/* Global Initialization */
-
-void init();
-void done();
-
-
-/*
- * Add a system to the processing list.
- */
-void add_system ( unique_ptr<base_system> system );
-
-/*
- * Adds an entity to the entity map
- */
-void add_entity ( const entity &target );
-
-/*
- * Returns a non-owning pointer (or nullptr) to an entity
- * with a matching entity handle.
- */
-entity * get_entity_by_handle ( const int &handle );
-
-/**
- * Returns a list of entity handles that match a given function.
- */
-vector<int> find_entities_by_func ( function<bool ( const entity &e ) > matcher );
-
-/**
- * Return a list of entities with a bit set (i.e. entities with a type of component)
- */
-vector<int> find_entities_by_bitset ( const int &bit_to_check );
-
-/* The tick routine run every frame. Calls each system. */
-void tick ( const double duration_ms );
-
-/* Serialization */
-void load_game();
-void save_game();
-
-}
 }

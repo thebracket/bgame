@@ -8,6 +8,7 @@ using std::thread;
 using std::lock_guard;
 using std::mutex;
 using std::string;
+using namespace engine;
 
 void world_gen_mode::init()
 {

@@ -5,6 +5,7 @@
 #include "../components/calendar_component.h"
 #include "../../../game/world/world.h"
 #include <iostream>
+#include "../../globals.h"
 
 namespace power_system_detail {
 
@@ -28,23 +29,24 @@ int calculate_power_gain(const engine::ecs::power_generator_component* gen)
 
 void engine::ecs::power_system::tick(const double& duration_ms)
 {
-    entity * cordex = get_entity_by_handle ( world::cordex_handle );
+    entity * cordex = engine::globals::ecs->get_entity_by_handle ( world::cordex_handle );
+    
     int calendar_handle = cordex->find_component_by_type ( calendar );
-    calendar_component * calendar = get_component_by_handle<calendar_component> ( calendar_handle );
+    calendar_component * calendar = engine::globals::ecs->get_component_by_handle<calendar_component> ( calendar_handle );
 
     if (last_tick+5 < calendar->system_time or last_tick == 0) {
         int power = world::stored_power;
 
-        const vector<power_generator_component *> producers = find_components_by_type<power_generator_component> ( power_generator );
-        for (const power_generator_component * gen : producers) {
-            const int generated_power = power_system_detail::calculate_power_gain(gen);
+        const vector<power_generator_component> * producers = engine::globals::ecs->find_components_by_type<power_generator_component> ();
+        for (const power_generator_component &gen : *producers) {
+            const int generated_power = power_system_detail::calculate_power_gain(&gen);
             power += generated_power;
         }
 
-        const vector<power_battery_component *> storage = find_components_by_type<power_battery_component> ( power_battery );
+        const vector<power_battery_component> * storage = engine::globals::ecs->find_components_by_type<power_battery_component> ();
         int storage_capacity = 0;
-        for (const power_battery_component * bat : storage) {
-            storage_capacity += bat->storage_capacity;
+        for (const power_battery_component &bat : *storage) {
+            storage_capacity += bat.storage_capacity;
         }
 
         // TODO: Power consumption!

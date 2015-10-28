@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "component_bag.h"
 #include "../virtual_terminal.h"
 #include "components/calendar_component.h"
 #include "components/debug_name_component.h"
@@ -26,12 +25,12 @@ namespace serialization {
 /* Primitive save/load handler */
 
 template<typename T>
-void save_primitive ( fstream &lbfile, const T &target )
+inline void save_primitive ( fstream &lbfile, const T &target )
 {
      lbfile.write ( reinterpret_cast<const char *> ( &target ), sizeof ( target ) );
 }
 template<>
-void save_primitive ( fstream &lbfile, const string &s )
+inline void save_primitive ( fstream &lbfile, const string &s )
 {
      unsigned int size = s.size();
      save_primitive<unsigned int> ( lbfile, size );
@@ -40,7 +39,7 @@ void save_primitive ( fstream &lbfile, const string &s )
      }
 }
 template<>
-void save_primitive ( fstream &lbfile, const color_t &c )
+inline void save_primitive ( fstream &lbfile, const color_t &c )
 {
      unsigned char red = std::get<0> ( c );
      unsigned char green = std::get<1> ( c );
@@ -50,26 +49,26 @@ void save_primitive ( fstream &lbfile, const color_t &c )
      save_primitive<unsigned char> ( lbfile, blue );
 }
 template<>
-void save_primitive ( fstream &lbfile, const bool &b )
+inline void save_primitive ( fstream &lbfile, const bool &b )
 {
      int n = 0;
      if ( b ) n=1;
      save_primitive<int> ( lbfile,n );
 }
 template<>
-void save_primitive ( fstream &lbfile, const component_type &t )
+inline void save_primitive ( fstream &lbfile, const component_type &t )
 {
      int n = t;
      save_primitive<int> ( lbfile, n );
 }
 
 template <typename T>
-void load_primitive ( fstream &lbfile, T &target )
+inline void load_primitive ( fstream &lbfile, T &target )
 {
      lbfile.read ( reinterpret_cast<char *> ( &target ), sizeof ( target ) );
 }
 template<>
-void load_primitive ( fstream &lbfile, string &target )
+inline void load_primitive ( fstream &lbfile, string &target )
 {
      string result;
      unsigned int size = 0;
@@ -82,7 +81,7 @@ void load_primitive ( fstream &lbfile, string &target )
      target = result;
 }
 template<>
-void load_primitive ( fstream &lbfile, color_t &c )
+inline void load_primitive ( fstream &lbfile, color_t &c )
 {
      unsigned char red;
      unsigned char green;
@@ -93,7 +92,7 @@ void load_primitive ( fstream &lbfile, color_t &c )
      c = {red, green, blue};
 }
 template<>
-void load_primitive ( fstream &lbfile, bool &b )
+inline void load_primitive ( fstream &lbfile, bool &b )
 {
      int n=0;
      load_primitive<int> ( lbfile, n );
@@ -104,7 +103,7 @@ void load_primitive ( fstream &lbfile, bool &b )
      }
 }
 template<>
-void load_primitive ( fstream &lbfile, component_type &t )
+inline void load_primitive ( fstream &lbfile, component_type &t )
 {
      int n = 0;
      load_primitive<int> ( lbfile, n );
@@ -114,14 +113,14 @@ void load_primitive ( fstream &lbfile, component_type &t )
 /* Common Properties */
 
 template<typename T>
-void save_common_component_properties ( fstream &lbfile, const T &target )
+inline void save_common_component_properties ( fstream &lbfile, const T &target )
 {
      save_primitive<component_type> ( lbfile, target.type );
      save_primitive<int> ( lbfile, target.entity_id );
 }
 
 template<typename T>
-T load_common_component_properties ( fstream &lbfile )
+inline T load_common_component_properties ( fstream &lbfile )
 {
      T target;
      load_primitive<int> ( lbfile, target.entity_id );
@@ -133,7 +132,7 @@ T load_common_component_properties ( fstream &lbfile )
 ////// SAVING
 
 template<typename T>
-void save_component ( fstream &lbfile, const T &target )
+inline void save_component ( fstream &lbfile, const T &target )
 {
      save_common_component_properties<T> ( lbfile, target );
      std::cout << "ERROR: Called the generic type of component save.\n";
@@ -141,7 +140,7 @@ void save_component ( fstream &lbfile, const T &target )
 }
 
 template<>
-void save_component ( fstream &lbfile, const calendar_component &target )
+inline void save_component ( fstream &lbfile, const calendar_component &target )
 {
      save_common_component_properties<calendar_component> ( lbfile, target );
      save_primitive<long> ( lbfile, target.system_time );
@@ -153,14 +152,14 @@ void save_component ( fstream &lbfile, const calendar_component &target )
 }
 
 template<>
-void save_component ( fstream &lbfile, const debug_name_component &target )
+inline void save_component ( fstream &lbfile, const debug_name_component &target )
 {
      save_common_component_properties<debug_name_component> ( lbfile, target );
      save_primitive<string> ( lbfile, target.debug_name );
 }
 
 template<>
-void save_component ( fstream &lbfile, const obstruction_component &target )
+inline void save_component ( fstream &lbfile, const obstruction_component &target )
 {
      save_common_component_properties<obstruction_component> ( lbfile, target );
      save_primitive<bool> ( lbfile, target.blocks_entry );
@@ -168,7 +167,7 @@ void save_component ( fstream &lbfile, const obstruction_component &target )
 }
 
 template<>
-void save_component ( fstream &lbfile, const position_component &target )
+inline void save_component ( fstream &lbfile, const position_component &target )
 {
      save_common_component_properties<position_component> ( lbfile, target );
      save_primitive<int> ( lbfile, target.x );
@@ -176,14 +175,14 @@ void save_component ( fstream &lbfile, const position_component &target )
 }
 
 template<>
-void save_component ( fstream &lbfile, const power_battery_component &target )
+inline void save_component ( fstream &lbfile, const power_battery_component &target )
 {
      save_common_component_properties<power_battery_component> ( lbfile, target );
      save_primitive<int> ( lbfile, target.storage_capacity );
 }
 
 template<>
-void save_component ( fstream &lbfile, const power_generator_component &target )
+inline void save_component ( fstream &lbfile, const power_generator_component &target )
 {
      save_common_component_properties<power_generator_component> ( lbfile, target );
      save_primitive<int> ( lbfile, target.amount );
@@ -191,7 +190,7 @@ void save_component ( fstream &lbfile, const power_generator_component &target )
 }
 
 template<>
-void save_component ( fstream &lbfile, const renderable_component &target )
+inline void save_component ( fstream &lbfile, const renderable_component &target )
 {
      save_common_component_properties<renderable_component> ( lbfile, target );
      save_primitive<unsigned char> ( lbfile, target.glyph );
@@ -200,14 +199,14 @@ void save_component ( fstream &lbfile, const renderable_component &target )
 }
 
 template<>
-void save_component ( fstream &lbfile, const settler_ai_component &target )
+inline void save_component ( fstream &lbfile, const settler_ai_component &target )
 {
      save_common_component_properties<settler_ai_component> ( lbfile, target );
      save_primitive<int> ( lbfile, target.next_tick );
 }
 
 template<>
-void save_component ( fstream &lbfile, const viewshed_component &target )
+inline void save_component ( fstream &lbfile, const viewshed_component &target )
 {
      save_common_component_properties<viewshed_component> ( lbfile, target );
      save_primitive<int> ( lbfile, target.scanner_range );
@@ -217,7 +216,7 @@ void save_component ( fstream &lbfile, const viewshed_component &target )
 ////// LOADING
 
 template<typename T>
-T load_component ( fstream &lbfile )
+inline T load_component ( fstream &lbfile )
 {
      T target = load_common_component_properties<T> ( lbfile );
      std::cout << "ERROR: Called the generic type of component load.\n";
@@ -225,7 +224,7 @@ T load_component ( fstream &lbfile )
 }
 
 template<>
-calendar_component load_component ( fstream &lbfile )
+inline calendar_component load_component ( fstream &lbfile )
 {
      calendar_component target = load_common_component_properties<calendar_component> ( lbfile );
      load_primitive<long> ( lbfile, target.system_time );
@@ -238,7 +237,7 @@ calendar_component load_component ( fstream &lbfile )
 }
 
 template<>
-debug_name_component load_component ( fstream &lbfile )
+inline debug_name_component load_component ( fstream &lbfile )
 {
      debug_name_component target = load_common_component_properties<debug_name_component> ( lbfile );
      load_primitive<string> ( lbfile, target.debug_name );
@@ -246,7 +245,7 @@ debug_name_component load_component ( fstream &lbfile )
 }
 
 template<>
-obstruction_component load_component ( fstream &lbfile )
+inline obstruction_component load_component ( fstream &lbfile )
 {
      obstruction_component target = load_common_component_properties<obstruction_component> ( lbfile );
      load_primitive<bool> ( lbfile, target.blocks_entry );
@@ -255,7 +254,7 @@ obstruction_component load_component ( fstream &lbfile )
 }
 
 template<>
-position_component load_component ( fstream &lbfile )
+inline position_component load_component ( fstream &lbfile )
 {
      position_component target = load_common_component_properties<position_component> ( lbfile );
      load_primitive<int> ( lbfile, target.x );
@@ -264,7 +263,7 @@ position_component load_component ( fstream &lbfile )
 }
 
 template<>
-power_battery_component load_component ( fstream &lbfile )
+inline power_battery_component load_component ( fstream &lbfile )
 {
      power_battery_component target = load_common_component_properties<power_battery_component> ( lbfile );
      load_primitive<int> ( lbfile, target.storage_capacity );
@@ -272,7 +271,7 @@ power_battery_component load_component ( fstream &lbfile )
 }
 
 template<>
-power_generator_component load_component ( fstream &lbfile )
+inline power_generator_component load_component ( fstream &lbfile )
 {
      power_generator_component target = load_common_component_properties<power_generator_component> ( lbfile );
      load_primitive<int> ( lbfile, target.amount );
@@ -281,7 +280,7 @@ power_generator_component load_component ( fstream &lbfile )
 }
 
 template<>
-renderable_component load_component ( fstream &lbfile )
+inline renderable_component load_component ( fstream &lbfile )
 {
      renderable_component target = load_common_component_properties<renderable_component> ( lbfile );
      load_primitive<unsigned char> ( lbfile, target.glyph );
@@ -291,7 +290,7 @@ renderable_component load_component ( fstream &lbfile )
 }
 
 template<>
-settler_ai_component load_component ( fstream &lbfile )
+inline settler_ai_component load_component ( fstream &lbfile )
 {
      settler_ai_component target = load_common_component_properties<settler_ai_component> ( lbfile );
      load_primitive<int> ( lbfile, target.next_tick );
@@ -299,7 +298,7 @@ settler_ai_component load_component ( fstream &lbfile )
 }
 
 template<>
-viewshed_component load_component ( fstream &lbfile )
+inline viewshed_component load_component ( fstream &lbfile )
 {
      viewshed_component target = load_common_component_properties<viewshed_component> ( lbfile );
      load_primitive<int> ( lbfile, target.scanner_range );

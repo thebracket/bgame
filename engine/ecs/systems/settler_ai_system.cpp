@@ -1,21 +1,22 @@
 #include "settler_ai_system.h"
+#include "../../globals.h"
 
 namespace engine {
 namespace ecs {
 
 void settler_ai_system::tick ( const double &duration_ms ) {
     // Obtain a link to the calendar
-    entity * cordex = get_entity_by_handle ( world::cordex_handle );
+    entity * cordex = engine::globals::ecs->get_entity_by_handle ( world::cordex_handle );
     int calendar_handle = cordex->find_component_by_type ( calendar );
-    calendar_component * calendar = get_component_by_handle<calendar_component> ( calendar_handle );
+    calendar_component * calendar = engine::globals::ecs->get_component_by_handle<calendar_component> ( calendar_handle );
 
-    vector<settler_ai_component *> settlers = find_components_by_type<settler_ai_component>(settler_ai);
-    for (settler_ai_component * settler : settlers) {
-        if (settler->next_tick <= calendar->system_time) {
+    vector<settler_ai_component> * settlers = engine::globals::ecs->find_components_by_type<settler_ai_component>();
+    for (settler_ai_component &settler : *settlers) {
+        if (settler.next_tick <= calendar->system_time) {
             // Time for the settler to do something!
-            entity * parent = get_entity_by_handle( settler->entity_id );
+            entity * parent = engine::globals::ecs->get_entity_by_handle( settler.entity_id );
             const int position_handle = parent->find_component_by_type(position);
-            position_component * pos = get_component_by_handle<position_component>(position_handle);
+            position_component * pos = engine::globals::ecs->get_component_by_handle<position_component>(position_handle);
 
             // For now, they will wander around aimlessly with no purpose or collision-detection.
             int x = pos->x;
@@ -70,7 +71,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
             }
 
             // Random pause
-            settler->next_tick = calendar->system_time + 1;
+            settler.next_tick = calendar->system_time + 1;
         }
     }
 }

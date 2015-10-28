@@ -2,6 +2,7 @@
 #include "ecs.h"
 #include "../../game/world/world.h"
 #include "../colors.h"
+#include "../globals.h"
 
 using std::make_unique;
 
@@ -20,11 +21,11 @@ entity make_test_entity(const int &x, const int &y)
 {
     entity test;
     test.handle = next_entity_handle();
-    add_component(test, debug_name_component("Test"));
-    add_component(test, position_component(x,y));
-    add_component(test, renderable_component('@', yellow, black));
-    add_component(test, viewshed_component(visibility,8));
-    add_component(test, settler_ai_component());
+    engine::globals::ecs->add_component(test, debug_name_component("Test"));
+    engine::globals::ecs->add_component(test, position_component(x,y));
+    engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
+    engine::globals::ecs->add_component(test, viewshed_component(visibility,8));
+    engine::globals::ecs->add_component(test, settler_ai_component());
     return test;
 }
 
@@ -33,7 +34,7 @@ entity make_camera_entity()
     entity camera;
     camera.handle = next_entity_handle();
     world::camera_handle = camera.handle;
-    add_component(camera, position_component(128,128));
+    engine::globals::ecs->add_component(camera, position_component(128,128));
     return camera;
 }
 

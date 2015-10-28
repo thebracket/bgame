@@ -1,13 +1,13 @@
 #pragma once
 
+#include <iostream>
 #include "base_raw.h"
 #include "../ecs/components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
-#include <iostream>
+#include "../globals.h"
 
 using std::vector;
-using engine::ecs::renderable_component;
 
 namespace engine {
 namespace raws {
@@ -17,10 +17,10 @@ struct raw_renderable : public base_raw {
           type = RENDERABLE;
      };
 
-     virtual void build_components ( engine::ecs::entity &parent, const int &x, const int &y ) const {
+     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
           unsigned char glyph_to_use = '!';
-          engine::vterm::color_t fg {255,255,255};
-          engine::vterm::color_t bg {0,0,0};
+          color_t fg {255,255,255};
+          color_t bg {0,0,0};
 
           for ( const unique_ptr<base_raw> &child : children ) {
                if ( child->type == GLYPH ) {
@@ -33,7 +33,7 @@ struct raw_renderable : public base_raw {
                     bg = tmp->background;
                }
           }
-          engine::ecs::add_component ( parent, renderable_component( glyph_to_use, fg, bg ) );
+          engine::globals::ecs->add_component ( parent, engine::ecs::renderable_component( glyph_to_use, fg, bg ) );
      }
 };
 

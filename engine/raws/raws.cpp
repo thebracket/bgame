@@ -1,13 +1,12 @@
-#include "raws.h"
 #include <fstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <memory>
 #include <iostream>
+#include "raws.h"
+
 #include "../virtual_terminal.h"
-#include "../ecs/ecs.h"
-#include "../ecs/entity_factory.h"
 #include "raw_renderable.h"
 #include "raw_name.h"
 #include "raw_glyph.h"
@@ -16,6 +15,8 @@
 #include "raw_power_generator.h"
 #include "raw_power_battery.h"
 #include "raw_description.h"
+
+#include "../globals.h"
 
 using std::ifstream;
 using std::string;
@@ -322,16 +323,14 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
       throw 105;
     }
   
-    int entity_id = engine::ecs::next_entity_handle();
     engine::ecs::entity e;
-    e.handle = entity_id;
-    engine::ecs::add_entity(e);
+    engine::globals::ecs->add_entity(e);
     
-    ecs::add_component(e, ecs::position_component(x,y));
+    engine::globals::ecs->add_component(e, engine::ecs::position_component(x,y));
     
     finder->second->build_components(e, x, y);
     
-    return entity_id;
+    return e.handle;
 }
 
 }

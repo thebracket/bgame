@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include "../ecs/entity.h"
 #include "../ecs/ecs.h"
 
 using std::vector;
@@ -16,7 +17,7 @@ struct base_raw {
     tag_type type;
     vector<unique_ptr<base_raw>> children;
     
-    virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
+    virtual void build_components(entity &parent, const int &x, const int &y) const {
 	for (const unique_ptr<base_raw> &child : children) {
 	    child->build_components(parent, x, y);
 	}

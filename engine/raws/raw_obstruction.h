@@ -3,6 +3,7 @@
 #include <string>
 #include "base_raw.h"
 #include "../ecs/components/obstruction_component.h"
+#include "../globals.h"
 
 using std::string;
 
@@ -19,7 +20,7 @@ struct raw_obstruction : public base_raw {
 	ecs::obstruction_component obs = ecs::obstruction_component();
 	obs.blocks_entry = blocks_walk;
 	obs.blocks_visibility = blocks_view;
-	engine::ecs::add_component(parent, std::move(obs));
+	engine::globals::ecs->add_component(parent, std::move(obs));
     }
 };
   
