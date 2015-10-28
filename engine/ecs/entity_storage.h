@@ -41,23 +41,7 @@ public:
       return &finder->second;
     }
     return nullptr;
-  }
-  
-  vector<int> find_by_func ( function<bool ( const entity &e ) > matcher ) {
-    vector<int> result;
-     for ( auto it = entities.begin(); it != entities.end(); ++it ) {
-          const bool match = matcher ( it->second );
-          if ( match ) result.push_back ( it->second.handle );
-     }
-     return result;
-  }
-  
-  vector<int> find_entities_by_bitset ( const int &bit_to_check )
-  {
-      return find_by_func ( [bit_to_check] ( const entity &e ) {
-	    return e.component_types.test ( bit_to_check );
-      } );
-  }
+  }  
 };
   
 }

@@ -29,10 +29,7 @@ int calculate_power_gain(const engine::ecs::power_generator_component* gen)
 
 void engine::ecs::power_system::tick(const double& duration_ms)
 {
-    entity * cordex = engine::globals::ecs->get_entity_by_handle ( world::cordex_handle );
-    
-    int calendar_handle = cordex->find_component_by_type ( calendar );
-    calendar_component * calendar = engine::globals::ecs->get_component_by_handle<calendar_component> ( calendar_handle );
+    calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component>(world::cordex_handle);
 
     if (last_tick+5 < calendar->system_time or last_tick == 0) {
         int power = world::stored_power;

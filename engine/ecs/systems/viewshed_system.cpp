@@ -10,9 +10,7 @@ void viewshed_system::tick ( const double &duration_ms ) {
     // Run a viewshed for every system that has one
     vector<viewshed_component> * viewsheds = engine::globals::ecs->find_components_by_type<viewshed_component> ();
     for (viewshed_component &viewshed : *viewsheds) {
-        const entity * parent = engine::globals::ecs->get_entity_by_handle ( viewshed.entity_id );
-        const int entity_handle = parent->find_component_by_type ( ecs::position );
-        position_component * pos = engine::globals::ecs->get_component_by_handle<position_component> ( entity_handle );
+        position_component * pos = engine::globals::ecs->find_entity_component<position_component>(viewshed.entity_id);
 
         if (pos->moved or viewshed.last_visibility.empty()) {
             switch (viewshed.scanner_type) {

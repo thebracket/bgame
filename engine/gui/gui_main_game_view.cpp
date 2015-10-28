@@ -8,8 +8,7 @@ namespace engine {
 
 void gui_main_game_view::render(const screen_region viewport)
 {
-    const entity * camera = engine::globals::ecs->get_entity_by_handle(world::camera_handle);
-    const position_component * camera_pos = engine::globals::ecs->get_component_by_handle<position_component>(camera->find_component_by_type(ecs::position));
+    const position_component * camera_pos = engine::globals::ecs->find_entity_component<position_component>(world::camera_handle);
 
     const int left_x = std::max ( 0, camera_pos->x - viewport.w/2 );
     const int top_y = std::max ( 0, camera_pos->y - viewport.h/2 );

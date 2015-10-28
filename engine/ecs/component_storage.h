@@ -99,6 +99,15 @@ public:
           vector<T> * storage_bag = find_appropriate_bag<T>();
           return storage_bag;
      }
+     
+     template<typename T>
+     T * find_entity_component(const int &entity_handle, T ignore) {
+	  vector<T> * storage_bag = find_appropriate_bag<T>();
+	  for (T &c : *storage_bag) {
+	      if (c.entity_id == entity_handle) return &c;
+	  }
+	  return nullptr;
+     }
 
      void save ( fstream &lbfile ) {
           for_each ( component_container, [&lbfile] ( auto x ) {
