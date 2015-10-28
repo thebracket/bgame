@@ -4,7 +4,7 @@
 #include "../../../game/world/world.h"
 #include "../ecs.h"
 #include "../components/position_component.h"
-#include "../../command_manager.h"
+#include "../../backends/command_manager.h"
 
 namespace engine {
 namespace ecs {
