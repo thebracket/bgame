@@ -1,14 +1,18 @@
 #pragma once
 
-#include "virtual_terminal.h"
+#include "../virtual_terminal.h"
 #include <utility>
 #include <vector>
+#include <memory>
 
 using std::pair;
 using std::vector;
+using std::unique_ptr;
 
 namespace engine {
 
+enum backend_mode { NCURSES, SDL2, ANSI };
+  
 /* Abstract class that provides a starting-point for actual
  * back-end implementations, such as SDL and Curses.
  */
@@ -20,5 +24,8 @@ public:
     virtual void poll_inputs()=0;
     virtual void draw(vector<vterm::screen_character>* screen)=0;
 };
+
+unique_ptr<output_backend> init_backend(const backend_mode &mode);
+
 
 }

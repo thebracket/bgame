@@ -1,8 +1,4 @@
 #include "engine.h"
-#include "output_backend.h"
-#include "ncurses_backend.h"
-#include "sdl2_backend.h"
-#include "ansi_backend.h"
 #include "ecs/ecs.h"
 #include <memory>
 #include <thread>
@@ -48,16 +44,11 @@ void pop_mode()
      }
 }
 
-void init(backend_mode mode)
+void init(const backend_mode mode)
 {
      init_rng();
      init_virtual_terminal();
-
-     switch (mode) {
-       case NCURSES : backend_driver = make_unique<ncurses_backend>(); break;
-       case SDL2 : backend_driver = make_unique<sdl2_backend>(); break;
-       case ANSI : backend_driver = make_unique<ansi_backend>(); break;
-     }
+     backend_driver = init_backend(mode);
      
      backend_driver->init();
      pair<int,int> size = backend_driver->get_console_size();
