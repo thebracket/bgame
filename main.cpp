@@ -9,7 +9,8 @@ using std::make_unique;
 
 int main()
 {
-     engine::init(engine::SDL2);
-     engine::main_loop ( make_unique<loading_screen>() );
+     engine::bracket_engine<engine::sdl2_backend> engine;
+     engine.init();
+     engine.main_loop( make_unique<loading_screen>() );
 }
 
