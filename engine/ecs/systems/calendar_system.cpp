@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include "../../../game/world/world.h"
+#include "../../globals.h"
 
 using std::string;
 using std::vector;
@@ -98,9 +99,9 @@ float calendar_system::calculate_sun_angle ( const calendar_component* t ) const
 
 void calendar_system::tick ( const double &duration_ms )
 {
-     entity * cordex = get_entity_by_handle ( world::cordex_handle );
+     entity * cordex = engine::globals::ecs->get_entity_by_handle ( world::cordex_handle );
      int calendar_handle = cordex->find_component_by_type ( calendar );
-     calendar_component * calendar = get_component_by_handle<calendar_component> ( calendar_handle );
+     calendar_component * calendar = engine::globals::ecs->get_component_by_handle<calendar_component> ( calendar_handle );
 
      calendar->duration_buffer += duration_ms;
      if ( calendar->duration_buffer > TICK_LENGTH ) {

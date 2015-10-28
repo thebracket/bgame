@@ -97,14 +97,12 @@ vector<screen_character> * get_virtual_screen()
 }
 } // end vterm namespace
 
-using namespace vterm;
-
 void init_virtual_terminal()
 {
      // Temporary
-     terminal_buffer = make_unique<vector<screen_character>>();
-     resize ( 80,25 );
-     clear_screen();
+     engine::vterm::terminal_buffer = make_unique<vector<engine::vterm::screen_character>>();
+     engine::vterm::resize ( 80,25 );
+     engine::vterm::clear_screen();
 }
 
 

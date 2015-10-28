@@ -6,6 +6,7 @@
 
 using std::make_unique;
 using std::ifstream;
+using namespace engine;
 
 bool fexists(const char *filename)
 {
@@ -49,7 +50,7 @@ void main_menu::on_pop()
      }
 }
 
-pair< return_mode, unique_ptr< base_mode > > main_menu::tick ( const double time_elapsed )
+pair< engine::return_mode, unique_ptr< engine::base_mode > > main_menu::tick ( const double time_elapsed )
 {
     if (command::is_key_down(command::UP)) --selected_item;
     if (command::is_key_down(command::DOWN)) ++selected_item;

@@ -1,4 +1,5 @@
 #include "viewshed_system.h"
+#include "../../globals.h"
 
 namespace engine {
 namespace ecs {
@@ -7,25 +8,25 @@ void viewshed_system::tick ( const double &duration_ms ) {
     reset_visibility();
 
     // Run a viewshed for every system that has one
-    const vector<viewshed_component *> viewsheds = find_components_by_type<viewshed_component> ( viewshed );
-    for (viewshed_component * viewshed : viewsheds) {
-        const entity * parent = get_entity_by_handle ( viewshed->entity_id );
+    vector<viewshed_component> * viewsheds = engine::globals::ecs->find_components_by_type<viewshed_component> ();
+    for (viewshed_component &viewshed : *viewsheds) {
+        const entity * parent = engine::globals::ecs->get_entity_by_handle ( viewshed.entity_id );
         const int entity_handle = parent->find_component_by_type ( ecs::position );
-        position_component * pos = get_component_by_handle<position_component> ( entity_handle );
+        position_component * pos = engine::globals::ecs->get_component_by_handle<position_component> ( entity_handle );
 
-        if (pos->moved or viewshed->last_visibility.empty()) {
-            switch (viewshed->scanner_type) {
+        if (pos->moved or viewshed.last_visibility.empty()) {
+            switch (viewshed.scanner_type) {
             case ecs::visibility :
-                scan_radius_for_visibility(viewshed, pos);
+                scan_radius_for_visibility(&viewshed, pos);
                 break;
             case ecs::penetrating :
-                scan_radius_penetrating(viewshed, pos);
+                scan_radius_penetrating(&viewshed, pos);
                 break;
             }
         }
 
         // Apply the cached viewshed
-        for (const int &idx : viewshed->last_visibility) {
+        for (const int &idx : viewshed.last_visibility) {
             world::current_region->visible[idx] = true;
         }
     }

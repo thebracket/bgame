@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+#include <string>
 #include "../virtual_terminal.h"
 #include "gui_element_base.h"
 #include "gui_static_text.h"
@@ -7,9 +10,6 @@
 #include "gui_console.h"
 #include "gui_main_game_view.h"
 #include "gui_main_game_command_panel.h"
-#include <vector>
-#include <memory>
-#include <string>
 
 using std::vector;
 using std::unique_ptr;

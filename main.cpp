@@ -3,13 +3,17 @@
 #include "engine/engine.h"
 #include "test_mode.h"
 #include "game/loading_screen.h"
+#include "config.h"
+#include "engine/globals.h"
 
 using std::cout;
 using std::make_unique;
 
 int main()
 {
-     engine::bracket_engine<engine::sdl2_backend> engine;
+     GAME engine;
+     GAME_ECS ecs;
+     engine::globals::ecs = &ecs;
      engine.init();
      engine.main_loop( make_unique<loading_screen>() );
 }

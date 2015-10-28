@@ -1,4 +1,5 @@
 #include "entity.h"
+#include <iostream>
 
 namespace engine {
 namespace ecs {

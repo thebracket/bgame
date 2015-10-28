@@ -1,14 +1,16 @@
 #include "play_mode.h"
 #include "world/world.h"
 #include "../engine/ecs/entity_factory.h"
+#include "../engine/globals.h"
 
 using namespace engine;
 using std::make_unique;
 
 void play_mode::init()
 {
-     engine::ecs::init();
-     ecs::load_game();
+     engine::globals::ecs->init();
+     engine::globals::ecs->load_game();
+     
      init_gui();
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
@@ -37,9 +39,9 @@ void play_mode::init_gui()
 void play_mode::done()
 {
     world::current_region->save();
-    ecs::save_game();
+    engine::globals::ecs->save_game();
     delete world::current_region;
-    engine::ecs::done();
+    engine::globals::ecs->done();
 }
 
 pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time_elapsed )

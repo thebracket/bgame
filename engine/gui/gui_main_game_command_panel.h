@@ -1,9 +1,9 @@
-#include "gui_element_base.h"
-#include "../virtual_terminal.h"
-#include "../../game/world/world.h"
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "gui_element_base.h"
+#include "../virtual_terminal.h"
+#include "../../game/world/world.h"
 
 using std::string;
 using std::stringstream;

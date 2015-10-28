@@ -14,12 +14,13 @@
 #include "../../engine/ecs/entity_factory.h"
 #include "../../engine/colors.h"
 #include "../../engine/raws/raws.h"
+#include "../../engine/globals.h"
 
 using std::vector;
 using std::map;
 using std::make_unique;
-using namespace engine::ecs;
 using namespace engine;
+using namespace engine::ecs;
 
 namespace worldgen {
 
@@ -491,15 +492,14 @@ void crash_trail(const std::pair<int,int> &starting_location) {
 
 void add_cordex(const int &x, const int &y) {
     entity cordex;
-    cordex.handle = next_entity_handle();
+    engine::globals::ecs->add_entity(cordex);
     world::cordex_handle = cordex.handle;
-    add_entity(cordex);
-    add_component(cordex, debug_name_component("Cordex"));
-    add_component(cordex, position_component(x,y));
-    add_component(cordex, viewshed_component(penetrating,16));
-    add_component(cordex, calendar_component(0L));
-    add_component(cordex, renderable_component(15, cyan, black));
-    add_component(cordex, obstruction_component());
+    engine::globals::ecs->add_component(cordex, debug_name_component("Cordex"));
+    engine::globals::ecs->add_component(cordex, position_component(x,y));
+    engine::globals::ecs->add_component(cordex, viewshed_component(penetrating,16));
+    engine::globals::ecs->add_component(cordex, calendar_component(0L));
+    engine::globals::ecs->add_component(cordex, renderable_component(15, cyan, black));
+    engine::globals::ecs->add_component(cordex, obstruction_component());
 }
 
 void add_solar_collector(const int x, const int y) {
@@ -508,12 +508,11 @@ void add_solar_collector(const int x, const int y) {
 
 void add_cordex_console(const int x, const int y, const unsigned char symbol) {
     entity console;
-    console.handle = next_entity_handle();
-    add_entity(console);
-    add_component(console, debug_name_component("Cordex Console"));
-    add_component(console, position_component(x,y));
-    add_component(console, renderable_component(symbol, dark_cyan, black));
-    add_component(console, obstruction_component());
+    engine::globals::ecs->add_entity(console);
+    engine::globals::ecs->add_component(console, debug_name_component("Cordex Console"));
+    engine::globals::ecs->add_component(console, position_component(x,y));
+    engine::globals::ecs->add_component(console, renderable_component(symbol, dark_cyan, black));
+    engine::globals::ecs->add_component(console, obstruction_component());
 }
 
 void add_food_replicator(const int x, const int y) {
@@ -634,16 +633,16 @@ void setup_initial_game() {
     
     // Create some settlers and put them in the ship
     entity settler = make_test_entity(starting_location.first, starting_location.second-2);
-    add_entity(settler);
+    engine::globals::ecs->add_entity(settler);
     
     // Add the camera
     engine::ecs::entity camera = engine::ecs::make_camera_entity();
-    add_entity(camera);
+    engine::globals::ecs->add_entity(camera);
     
     // Persist and quit
     world::stored_power = 25;
-    engine::ecs::save_game();
-    engine::ecs::done();
+    engine::globals::ecs->save_game();
+    engine::globals::ecs->done();
 }
 
 /********* GUI Releated Functionality */

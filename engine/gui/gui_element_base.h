@@ -10,7 +10,6 @@
 using std::vector;
 using std::unique_ptr;
 using std::string;
-using engine::vterm::color_t;
 
 namespace engine {
 
