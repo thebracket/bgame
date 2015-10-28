@@ -99,9 +99,7 @@ float calendar_system::calculate_sun_angle ( const calendar_component* t ) const
 
 void calendar_system::tick ( const double &duration_ms )
 {
-     entity * cordex = engine::globals::ecs->get_entity_by_handle ( world::cordex_handle );
-     int calendar_handle = cordex->find_component_by_type ( calendar );
-     calendar_component * calendar = engine::globals::ecs->get_component_by_handle<calendar_component> ( calendar_handle );
+     calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component> ( world::cordex_handle );
 
      calendar->duration_buffer += duration_ms;
      if ( calendar->duration_buffer > TICK_LENGTH ) {

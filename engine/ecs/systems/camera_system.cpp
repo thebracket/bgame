@@ -5,8 +5,7 @@ namespace engine {
 namespace ecs {
 
 void camera_system::tick(const double &duration_ms) {
-    const entity * camera = engine::globals::ecs->get_entity_by_handle(world::camera_handle);
-    position_component * camera_pos = engine::globals::ecs->get_component_by_handle<position_component>(camera->find_component_by_type(ecs::position));
+    position_component * camera_pos = engine::globals::ecs->find_entity_component<position_component>(world::camera_handle);
 
     if ( command::is_key_down ( command::UP ) ) {
         camera_pos->y--;

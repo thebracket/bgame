@@ -6,17 +6,13 @@ namespace ecs {
 
 void settler_ai_system::tick ( const double &duration_ms ) {
     // Obtain a link to the calendar
-    entity * cordex = engine::globals::ecs->get_entity_by_handle ( world::cordex_handle );
-    int calendar_handle = cordex->find_component_by_type ( calendar );
-    calendar_component * calendar = engine::globals::ecs->get_component_by_handle<calendar_component> ( calendar_handle );
+    calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component> ( world::cordex_handle );
 
     vector<settler_ai_component> * settlers = engine::globals::ecs->find_components_by_type<settler_ai_component>();
     for (settler_ai_component &settler : *settlers) {
         if (settler.next_tick <= calendar->system_time) {
             // Time for the settler to do something!
-            entity * parent = engine::globals::ecs->get_entity_by_handle( settler.entity_id );
-            const int position_handle = parent->find_component_by_type(position);
-            position_component * pos = engine::globals::ecs->get_component_by_handle<position_component>(position_handle);
+            position_component * pos = engine::globals::ecs->find_entity_component<position_component>(settler.entity_id);
 
             // For now, they will wander around aimlessly with no purpose or collision-detection.
             int x = pos->x;

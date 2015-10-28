@@ -45,10 +45,8 @@ private:
 public:
   template<typename T>
   void add_component ( entity &target, T component ) {
-    const int handle = components.store_component(component);
     component.entity_id = target.handle;
-    target.component_handles.push_back ( std::make_pair ( component.type, handle ) );
-    target.component_types.set ( component.type );
+    components.store_component(component);
   }
   
   template<typename T2>
@@ -79,12 +77,10 @@ public:
     return entities.find_by_handle(handle);
   }
   
-  vector<int> find_entities_by_func ( function<bool ( const entity &e ) > matcher ) {
-    return entities.find_by_func(matcher);
-  }
-  
-  vector<int> find_entities_by_bitset ( const int &bit_to_check ) {
-    return entities.find_entities_by_bitset(bit_to_check);
+  template<typename T>
+  T * find_entity_component(const int &entity_handle) {
+    T ignore;
+    return components.find_entity_component(entity_handle, ignore);
   }
   
   void add_system ( unique_ptr<base_system> system ) {
