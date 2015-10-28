@@ -1,7 +1,7 @@
 #pragma once
 
-#include "output_backend.h"
 #include "command_manager.h"
+#include "../virtual_terminal.h"
 #include <vector>
 #include <utility>
 
@@ -22,15 +22,15 @@ struct color_mapping {
 
 }
 
-class ncurses_backend : public output_backend {
+class ncurses_backend {
 public:
     ncurses_backend();
     ~ncurses_backend();
-    virtual void init();
-    virtual void stop();
-    virtual pair<int,int> get_console_size();
-    virtual void draw(vector<vterm::screen_character>* screen);
-    virtual void poll_inputs();
+    void init();
+    void stop();
+    pair<int,int> get_console_size();
+    void draw(vector<vterm::screen_character>* screen);
+    void poll_inputs();
 
 private:
     void setup_colors();
