@@ -8,7 +8,6 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include "serialization.h"
 
 using std::tuple;
 using std::vector;
@@ -111,8 +110,8 @@ public:
 
      void save ( fstream &lbfile ) {
           for_each ( component_container, [&lbfile] ( auto x ) {
-               for ( const auto &c : x ) {
-                    engine::ecs::serialization::save_component ( lbfile, c );
+               for ( auto &c : x ) {
+                    c.save ( lbfile );
                }
           } );
      }

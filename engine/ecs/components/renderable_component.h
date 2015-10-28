@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 
+using namespace engine::ecs::serialization_generic;
+
 using std::vector;
 using engine::vterm::color_t;
 
@@ -21,7 +23,21 @@ struct renderable_component {
     
     unsigned char glyph;
     engine::vterm::color_t foreground;
-    engine::vterm::color_t background;    
+    engine::vterm::color_t background; 
+    
+    void save(fstream &lbfile) {
+      save_common_component_properties<renderable_component>(lbfile, *this);
+      save_primitive<unsigned char>(lbfile, glyph);
+      save_primitive<engine::vterm::color_t>(lbfile, foreground);
+      save_primitive<engine::vterm::color_t>(lbfile, background);
+    }
+    
+    void load(fstream &lbfile) {
+      load_common_component_properties<renderable_component>(lbfile, *this);
+      load_primitive<unsigned char>(lbfile, glyph);
+      load_primitive<engine::vterm::color_t>(lbfile, foreground);
+      load_primitive<engine::vterm::color_t>(lbfile, background);
+    }
 };
 
 }

@@ -2,16 +2,6 @@
 
 #include "entity.h"
 #include "systems/base_system.h"
-#include "components/component_types.h"
-#include "components/calendar_component.h"
-#include "components/debug_name_component.h"
-#include "components/obstruction_component.h"
-#include "components/position_component.h"
-#include "components/power_battery_component.h"
-#include "components/power_generator_component.h"
-#include "components/renderable_component.h"
-#include "components/settler_ai_component.h"
-#include "components/viewshed_component.h"
 #include <memory>
 #include <functional>
 #include <unordered_map>
@@ -22,7 +12,6 @@
 #include "entity_storage.h"
 #include "component_storage.h"
 #include "systems/system_factory.h"
-#include "serialization.h"
 #include "../../game/world/world.h"
 
 using std::unique_ptr;
@@ -117,16 +106,9 @@ public:
   inline string get_filename()
   {
       return "world/saved_game.dat";
-  }
+  }  
   
-  template<typename T>
-  void load_component_factory ( fstream &lbfile )
-  {
-      T component = engine::ecs::serialization::load_component<T> ( lbfile );
-      const int entity_handle = component.entity_id;
-      entity * parent = get_entity_by_handle ( entity_handle );
-      add_component<T> ( *parent, component );
-  }
+  function<void(fstream &, const int &)> loader_callback;
   
   void load_game() {
     const string filename = get_filename();
@@ -143,40 +125,9 @@ public:
     int number_of_components = 0;
     lbfile.read ( reinterpret_cast<char *> ( &number_of_components ), sizeof ( number_of_components ) );
     for ( int i=0; i<number_of_components; ++i ) {
-      engine::ecs::component_type ct;
+      int ct;
       lbfile.read ( reinterpret_cast<char *> ( &ct ), sizeof ( ct ) );
-      
-      switch ( ct ) {
-      case engine::ecs::component_type::position :
-	    load_component_factory<engine::ecs::position_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::name :
-	    load_component_factory<engine::ecs::debug_name_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::renderable :
-	    load_component_factory<engine::ecs::renderable_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::viewshed :
-	    load_component_factory<engine::ecs::viewshed_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::calendar : 
-	    load_component_factory<engine::ecs::calendar_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::settler_ai :
-	    load_component_factory<engine::ecs::settler_ai_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::obstruction :
-	    load_component_factory<engine::ecs::obstruction_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::power_generator :
-	    load_component_factory<engine::ecs::power_generator_component> ( lbfile );
-	    break;
-      case engine::ecs::component_type::power_battery :
-	    load_component_factory<engine::ecs::power_battery_component> ( lbfile );
-	    break;
-      default :
-	    throw 102;
-      }
+      loader_callback(lbfile, ct);
     }
   }
   
