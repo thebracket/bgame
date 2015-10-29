@@ -48,9 +48,8 @@ void component_factory(fstream &lbfile, const int ct) {
 int main()
 {
      GAME engine;
-     GAME_ECS ecs;
+     GAME_ECS ecs(component_factory);
      engine::globals::ecs = &ecs;
-     ecs.loader_callback = component_factory;
      engine.init();
      engine.main_loop( make_unique<loading_screen>() );
 }
