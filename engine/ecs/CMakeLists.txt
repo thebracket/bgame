@@ -1,1 +1,1 @@
-add_library(ecs entity_factory.cpp entity.cpp)
+add_library(ecs entity.cpp)

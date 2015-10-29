@@ -87,7 +87,7 @@ engine::vterm::color_t find_color_by_name(const string &name) {
 /* Raw Factory Functions */
 
 void parse_raw_name(const vector<string> &chunks) {
-    std::cout << "Parsing name: " << chunks[1] << "\n";
+    //std::cout << "Parsing name: " << chunks[1] << "\n";
     current_name = chunks[1];
     unique_ptr<raw_name> name = make_unique<raw_name>(chunks[1]);
     current->children.push_back(std::move(name));
@@ -324,6 +324,7 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     }
   
     engine::ecs::entity e;
+    e.handle = engine::globals::ecs->get_next_entity_handle();
     engine::globals::ecs->add_entity(e);
     
     engine::globals::ecs->add_component(e, engine::ecs::position_component(x,y));

@@ -26,7 +26,11 @@ void component_loader(fstream &lbfile) {
   component.load(lbfile);
   const int entity_handle = component.entity_id;
   entity * parent = engine::globals::ecs->get_entity_by_handle ( entity_handle );
-  engine::globals::ecs->add_component<T>(*parent, component);
+  if (parent == nullptr) {
+    std::cout << "Error! Entity " << component.entity_id << " is null.\n";
+  } else {
+    engine::globals::ecs->add_component<T>(*parent, component);
+  }
 }
 
 void component_factory(fstream &lbfile, const int ct) {

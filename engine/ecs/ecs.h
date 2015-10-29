@@ -70,6 +70,11 @@ public:
    * serialization. */
   entity_component_system(const function<void(fstream &, const int &)> loader) noexcept : loader_callback(loader) {}
   
+  /* Retrieves the next available entity handle. */
+  int get_next_entity_handle() {
+    return entities.get_next_handle();
+  }
+  
   /* Add a component to the system. The system is linked to the entity provided. */
   template<typename T>
   void add_component ( const entity &target, T component ) {
@@ -103,12 +108,10 @@ public:
   }  
   
   /*
-   * Adds an entity to the ECS, and returns the entity's newly assigned handle.
+   * Adds an entity to the ECS.
    */
-  int add_entity( entity &e ) {
-      e.handle = entities.get_next_handle();
+  void add_entity( entity &e ) {
       entities.add_entity(e);
-      return e.handle;
   }
   
   /*

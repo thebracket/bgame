@@ -1,6 +1,5 @@
 #include "play_mode.h"
 #include "world/world.h"
-#include "../engine/ecs/entity_factory.h"
 #include "../engine/globals.h"
 #include "systems/system_factory.h"
 #include "../engine/gui/gui_frame.h"
@@ -19,14 +18,15 @@ void play_mode::init_systems()
      engine::globals::ecs->add_system ( engine::ecs::make_obstruction_system() );
      engine::globals::ecs->add_system ( engine::ecs::make_power_system() );
      engine::globals::ecs->add_system ( engine::ecs::make_settler_ai_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_renderable_system() );
      engine::globals::ecs->add_system ( engine::ecs::make_viewshed_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_renderable_system() );
 }
 
 void play_mode::init()
 {
      engine::globals::ecs->init();
      engine::globals::ecs->load_game();
+     init_systems();
      
      init_gui();
      quitting = false;

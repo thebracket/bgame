@@ -11,7 +11,6 @@
 #include "../../engine/rng.h"
 #include <iostream>
 #include "../../engine/ecs/ecs.h"
-#include "../../engine/ecs/entity_factory.h"
 #include "../../engine/colors.h"
 #include "../raws/raws.h"
 #include "../../engine/globals.h"
@@ -492,6 +491,7 @@ void crash_trail(const std::pair<int,int> &starting_location) {
 
 void add_cordex(const int &x, const int &y) {
     entity cordex;
+    cordex.handle = engine::globals::ecs->get_next_entity_handle();
     engine::globals::ecs->add_entity(cordex);
     world::cordex_handle = cordex.handle;
     engine::globals::ecs->add_component(cordex, debug_name_component("Cordex"));
@@ -508,6 +508,7 @@ void add_solar_collector(const int x, const int y) {
 
 void add_cordex_console(const int x, const int y, const unsigned char symbol) {
     entity console;
+    console.handle = engine::globals::ecs->get_next_entity_handle();
     engine::globals::ecs->add_entity(console);
     engine::globals::ecs->add_component(console, debug_name_component("Cordex Console"));
     engine::globals::ecs->add_component(console, position_component(x,y));
@@ -534,13 +535,6 @@ void add_structural_element(const int x, const int y, unsigned char glyph, bool 
     case 205 : engine::raws::create_structure_from_raws("Ship Wall EW", x, y); break;
     default : std::cout << "Oops - missed a structure, code " << +glyph << "\n";
   }
-  /*
-    entity structure;
-    structure.handle = next_entity_handle();
-    add_entity(structure);
-    add_component(structure, position_component(x,y));
-    add_component(structure, renderable_component(glyph, white, black));
-    if (block) add_component(structure, obstruction_component());*/
 }
 
 void add_ship_hull(const std::pair<int,int> &starting_location) {
@@ -616,6 +610,29 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
 */
 }
 
+entity make_test_entity(const int &x, const int &y)
+{
+    entity test;
+    test.handle = engine::globals::ecs->get_next_entity_handle();
+    engine::globals::ecs->add_entity(test);
+
+    engine::globals::ecs->add_component(test, debug_name_component("Test"));
+    engine::globals::ecs->add_component(test, position_component(x,y));
+    engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
+    engine::globals::ecs->add_component(test, viewshed_component(visibility,8));
+    engine::globals::ecs->add_component(test, settler_ai_component());
+    return test;
+}
+
+entity make_camera_entity()
+{
+    entity camera;
+    camera.handle = engine::globals::ecs->get_next_entity_handle();
+    engine::globals::ecs->add_entity(camera);
+    engine::globals::ecs->add_component(camera, position_component(128,128));
+    return camera;
+}
+
 void setup_initial_game() {
     // Get the engine ready
     //engine::ecs::init();
@@ -633,11 +650,12 @@ void setup_initial_game() {
     
     // Create some settlers and put them in the ship
     entity settler = make_test_entity(starting_location.first, starting_location.second-2);
-    engine::globals::ecs->add_entity(settler);
+    std::cout << "Settler handle: " << settler.handle << "\n";
     
     // Add the camera
-    engine::ecs::entity camera = engine::ecs::make_camera_entity();
-    engine::globals::ecs->add_entity(camera);
+    engine::ecs::entity camera = make_camera_entity();    
+    world::camera_handle = camera.handle;
+    std::cout << "Camera handle: " << camera.handle << "\n";
     
     // Persist and quit
     world::stored_power = 25;

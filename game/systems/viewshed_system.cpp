@@ -20,7 +20,9 @@ void viewshed_system::tick ( const double &duration_ms ) {
             case ecs::penetrating :
                 scan_radius_penetrating(&viewshed, pos);
                 break;
-            }
+	    default :
+		std::cout << "No scanner type found!\n";
+	    }
         }
 
         // Apply the cached viewshed
