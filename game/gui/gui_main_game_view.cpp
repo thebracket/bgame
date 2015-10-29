@@ -1,6 +1,6 @@
 #include "gui_main_game_view.h"
 #include <iostream>
-#include "../globals.h"
+#include "../../engine/globals.h"
 
 using engine::ecs::position_component;
 

@@ -3,6 +3,11 @@
 #include "../engine/ecs/entity_factory.h"
 #include "../engine/globals.h"
 #include "systems/system_factory.h"
+#include "../engine/gui/gui_frame.h"
+#include "../engine/gui/gui_static_text.h"
+#include "gui/gui_console.h"
+#include "gui/gui_main_game_view.h"
+#include "gui/gui_main_game_command_panel.h"
 
 using namespace engine;
 using std::make_unique;

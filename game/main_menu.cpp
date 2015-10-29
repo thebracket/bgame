@@ -3,6 +3,8 @@
 #include "world_gen_mode.h"
 #include <fstream>
 #include "world/worldgen.h"
+#include "../engine/gui/gui_frame.h"
+#include "../engine/gui/gui_static_text.h"
 
 using std::make_unique;
 using std::ifstream;

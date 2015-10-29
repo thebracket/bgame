@@ -1,5 +1,4 @@
-#include "gui_element_base.h"
-#include "../virtual_terminal.h"
+#include "../../engine/gui/gui_element_base.h"
 #include "../../game/world/world.h"
 #include <string>
 #include <iostream>
