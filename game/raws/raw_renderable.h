@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include "base_raw.h"
-#include "../../game/components/renderable_component.h"
+#include "../components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
-#include "../globals.h"
+#include "../../engine/globals.h"
 
 using std::vector;
 

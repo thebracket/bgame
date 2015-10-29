@@ -6,7 +6,7 @@
 #include <iostream>
 #include "raws.h"
 
-#include "../virtual_terminal.h"
+#include "../../engine/virtual_terminal.h"
 #include "raw_renderable.h"
 #include "raw_name.h"
 #include "raw_glyph.h"
@@ -16,7 +16,7 @@
 #include "raw_power_battery.h"
 #include "raw_description.h"
 
-#include "../globals.h"
+#include "../../engine/globals.h"
 
 using std::ifstream;
 using std::string;
