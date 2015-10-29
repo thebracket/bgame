@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base_raw.h"
-#include "../ecs/components/power_battery_component.h"
+#include "../../game/components/power_battery_component.h"
 #include "../globals.h"
 
 namespace engine {

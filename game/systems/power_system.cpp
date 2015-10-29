@@ -1,11 +1,10 @@
 #include "power_system.h"
-#include "../ecs.h"
 #include "../components/power_battery_component.h"
 #include "../components/power_generator_component.h"
 #include "../components/calendar_component.h"
-#include "../../../game/world/world.h"
+#include "../world/world.h"
 #include <iostream>
-#include "../../globals.h"
+#include "../../engine/globals.h"
 
 namespace power_system_detail {
 

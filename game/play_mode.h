@@ -16,4 +16,5 @@ private:
     engine::gui ui;
     bool quitting;            
     void init_gui();
+    void init_systems();
 };

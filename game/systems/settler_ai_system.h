@@ -1,12 +1,11 @@
 #pragma once
 
-#include "base_system.h"
-#include "../../../game/world/world.h"
-#include "../ecs.h"
+#include "../world/world.h"
+#include "../../engine/ecs/ecs.h"
 #include "../components/calendar_component.h"
 #include "../components/settler_ai_component.h"
 #include "../components/position_component.h"
-#include "../../rng.h"
+#include "../../engine/rng.h"
 #include <sstream>
 #include <string>
 

@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <string>
-#include "../../virtual_terminal.h"
+#include "../../engine/virtual_terminal.h"
 
 using std::fstream;
 using std::string;

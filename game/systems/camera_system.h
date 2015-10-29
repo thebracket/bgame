@@ -1,10 +1,9 @@
 #pragma once
 
-#include "base_system.h"
-#include "../../../game/world/world.h"
-#include "../ecs.h"
+#include "../world/world.h"
+#include "../../engine/ecs/ecs.h"
 #include "../components/position_component.h"
-#include "../../backends/command_manager.h"
+#include "../../engine/backends/command_manager.h"
 
 namespace engine {
 namespace ecs {

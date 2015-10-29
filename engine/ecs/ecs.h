@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entity.h"
-#include "systems/base_system.h"
+#include "base_system.h"
 #include <memory>
 #include <functional>
 #include <unordered_map>
@@ -11,7 +11,6 @@
 
 #include "entity_storage.h"
 #include "component_storage.h"
-#include "systems/system_factory.h"
 #include "../../game/world/world.h"
 
 using std::unique_ptr;
@@ -88,14 +87,6 @@ public:
   }
   
   void init() {
-     // TODO: Temporary for compatibility during transition
-     add_system ( engine::ecs::make_camera_system() );
-     add_system ( engine::ecs::make_calendar_system() );
-     add_system ( engine::ecs::make_obstruction_system() );
-     add_system ( engine::ecs::make_power_system() );
-     add_system ( engine::ecs::make_settler_ai_system() );
-     add_system ( engine::ecs::make_renderable_system() );
-     add_system ( engine::ecs::make_viewshed_system() );
      running = true;
   }
   

@@ -2,9 +2,21 @@
 #include "world/world.h"
 #include "../engine/ecs/entity_factory.h"
 #include "../engine/globals.h"
+#include "systems/system_factory.h"
 
 using namespace engine;
 using std::make_unique;
+
+void play_mode::init_systems()
+{
+     engine::globals::ecs->add_system ( engine::ecs::make_camera_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_calendar_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_obstruction_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_power_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_settler_ai_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_renderable_system() );
+     engine::globals::ecs->add_system ( engine::ecs::make_viewshed_system() );
+}
 
 void play_mode::init()
 {

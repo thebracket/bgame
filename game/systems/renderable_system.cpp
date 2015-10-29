@@ -1,6 +1,6 @@
 #include "renderable_system.h"
 #include <iostream>
-#include "../../globals.h"
+#include "../../engine/globals.h"
 
 namespace engine {
 namespace ecs {

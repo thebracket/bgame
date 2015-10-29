@@ -1,9 +1,8 @@
 #include "obstruction_system.h"
 #include "../components/obstruction_component.h"
 #include "../components/position_component.h"
-#include "../../../game/world/world.h"
-#include "../ecs.h"
-#include "../../globals.h"
+#include "../world/world.h"
+#include "../../engine/globals.h"
 
 void engine::ecs::obstruction_system::tick(const double& duration_ms)
 {

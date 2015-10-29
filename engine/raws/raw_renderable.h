@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "base_raw.h"
-#include "../ecs/components/renderable_component.h"
+#include "../../game/components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
 #include "../globals.h"

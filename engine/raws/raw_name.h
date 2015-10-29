@@ -2,7 +2,7 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../ecs/components/debug_name_component.h"
+#include "../../game/components/debug_name_component.h"
 #include "../globals.h"
 
 using std::string;

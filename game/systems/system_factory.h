@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base_system.h"
+#include "../../engine/ecs/ecs.h"
 #include <memory>
 
 using std::unique_ptr;

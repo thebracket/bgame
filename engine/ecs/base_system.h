@@ -1,10 +1,5 @@
 #pragma once
 
-#include "../base_message.h"
-#include <queue>
-
-using std::queue;
-
 namespace engine {
 
 namespace ecs {
