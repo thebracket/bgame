@@ -15,7 +15,7 @@ namespace ecs_detail {
 class entity_storage {
 private:
   unordered_map<int, entity> entities;
-  int next_handle = 0;
+  int next_handle = 1;
 public:
   std::size_t size() { return entities.size(); }
   

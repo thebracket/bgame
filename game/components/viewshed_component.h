@@ -2,6 +2,7 @@
 
 #include "component_types.h"
 #include <vector>
+#include <iostream>
 
 using std::vector;
 using namespace engine::ecs::serialization_generic;

@@ -52,6 +52,8 @@ void gui_main_game_view::render(const screen_region viewport)
                 } else {
                     vterm::set_char_xy ( screen_x, screen_y, { t.display, color_t{16,16,64}, t.background } );
                 }
+            } else {
+	      vterm::set_char_xy ( screen_x, screen_y, { '.', color_t{8,8,8}, t.background } );
             }
             ++screen_x;
         }
