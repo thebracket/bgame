@@ -23,20 +23,61 @@ using engine::ecs::base_system;
 namespace engine {
 
 using ecs::entity;
-  
+
+/*
+ * Entity-Component-System class. It should be defined in config.h, since it takes template
+ * parameters for the defined components. Each component is automatically given its own vector,
+ * for contiguous storage (and fast traversal!).
+ * 
+ * Example:
+ * #define GAME_ECS entity_component_system<engine::ecs::calendar_component, engine::ecs::debug_name_component>
+ * 
+ * Parameters: it requires a component factory function, of the form 
+ * void component_factory(fstream &lbfile, const int ct)
+ * (This allows for serialization without the ECS knowing about concrete component types)
+ * 
+ * Known issues: 
+ * 1. Currently it gets passed around as a global in globals.h. I hope to resolve this.
+ * 2. Systems don't really belong in here, there should be a more generic game logic callback
+ * 	to give the game more control over logical execution flow.
+ */
 template <typename... component_list>
 class entity_component_system {
 private:
+  /* Component storage, delegated to the component_storage template class. */
   ecs_detail::component_storage<component_list...> components;
+  
+  /* Entity storage, delegated to the entity_storage template class. */
   ecs_detail::entity_storage entities;
+  
+  /* A list of systems, derived from base_system, that run on each tick. */
   vector<unique_ptr<base_system>> systems;
+  
+  /* Is the system running? Enabled by init() and disabled by done(). */
+  bool running = false;
+  
+  /* Callback for loading entities via the save system. */
+  const function<void(fstream &, const int &)> loader_callback;
+  
+  /* Gets the save-game filename. */
+  inline string get_filename()
+  {
+      return "world/saved_game.dat";
+  }  
 public:
+  
+  /* General constructor. Takes a callback of the form void component_factory(fstream &lbfile, const int ct) to handle
+   * serialization. */
+  entity_component_system(const function<void(fstream &, const int &)> loader) noexcept : loader_callback(loader) {}
+  
+  /* Add a component to the system. The system is linked to the entity provided. */
   template<typename T>
-  void add_component ( entity &target, T component ) {
+  void add_component ( const entity &target, T component ) {
     component.entity_id = target.handle;
     components.store_component(component);
   }
   
+  /* Retrieves a component by its handle ID. */
   template<typename T2>
   T2 * get_component_by_handle ( const int &handle ) {
     T2 ignore;
@@ -44,39 +85,60 @@ public:
     return result;
   }
   
+  /* Searches components (of a type specified by the template parameter), using a callback
+   * function of the form bool (T component).
+   */
   template<typename T>
   vector<T *> find_components_by_func ( function<bool ( const T &c ) > matcher ) {
     return components.find_components_by_func(matcher);
   }
   
+  /*
+   * Retrieves a pointer to the vector of a given component type.
+   */
   template<typename T>
   vector<T> * find_components_by_type() {
     T tmp;
     return components.find_components_by_type(tmp);
-  }
+  }  
   
+  /*
+   * Adds an entity to the ECS, and returns the entity's newly assigned handle.
+   */
   int add_entity( entity &e ) {
       e.handle = entities.get_next_handle();
       entities.add_entity(e);
       return e.handle;
   }
   
+  /*
+   * Retrieves an entity by handle. Given that entities don't hold much information,
+   * this is rarely used.
+   */
   ecs::entity * get_entity_by_handle(const int &handle) {
     return entities.find_by_handle(handle);
   }
   
+  /*
+   * Finds an entity with a given entity handle, and a known component type. If there
+   * are multiple components of a given type, it returns the first one.
+   */
   template<typename T>
   T * find_entity_component(const int &entity_handle) {
     T ignore;
     return components.find_entity_component(entity_handle, ignore);
   }
   
+  /*
+   * Adds a system to the systems vector. All systems are executed on tick().
+   */
   void add_system ( unique_ptr<base_system> system ) {
     systems.push_back ( std::move ( system ) );
-  }
+  }    
   
-  bool running = false;
-  
+  /*
+   * If running, executes all systems in the order in which they were added.
+   */
   void tick ( const double duration_ms )
   {
       if (!running) return;
@@ -86,21 +148,23 @@ public:
       }
   }
   
+  /*
+   * Marks the entity-component system as running.
+   */
   void init() {
      running = true;
   }
   
+  /*
+   * Marks the entity-component system as stopped.
+   */
   void done() {    
     running = false;
-  }
+  }     
   
-  inline string get_filename()
-  {
-      return "world/saved_game.dat";
-  }  
-  
-  function<void(fstream &, const int &)> loader_callback;
-  
+  /*
+   * Loads all entities and components from the save-game file.
+   */
   void load_game() {
     const string filename = get_filename();
     fstream lbfile ( filename, std::ios::in | std::ios::binary );
@@ -122,6 +186,9 @@ public:
     }
   }
   
+  /*
+   * Serializes all entities and components to the save-game file.
+   */
   void save_game() {
     const string filename = get_filename();
      fstream lbfile ( filename, std::ios::out | std::ios::binary );
