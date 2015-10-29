@@ -6,16 +6,16 @@
 #include "config.h"
 #include "engine/globals.h"
 
-#include "engine/ecs/components/component_types.h"
-#include "engine/ecs/components/calendar_component.h"
-#include "engine/ecs/components/debug_name_component.h"
-#include "engine/ecs/components/obstruction_component.h"
-#include "engine/ecs/components/position_component.h"
-#include "engine/ecs/components/power_battery_component.h"
-#include "engine/ecs/components/power_generator_component.h"
-#include "engine/ecs/components/renderable_component.h"
-#include "engine/ecs/components/settler_ai_component.h"
-#include "engine/ecs/components/viewshed_component.h"
+#include "game/components/component_types.h"
+#include "game/components/calendar_component.h"
+#include "game/components/debug_name_component.h"
+#include "game/components/obstruction_component.h"
+#include "game/components/position_component.h"
+#include "game/components/power_battery_component.h"
+#include "game/components/power_generator_component.h"
+#include "game/components/renderable_component.h"
+#include "game/components/settler_ai_component.h"
+#include "game/components/viewshed_component.h"
 
 using std::cout;
 using std::make_unique;

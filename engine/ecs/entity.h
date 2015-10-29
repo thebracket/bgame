@@ -1,10 +1,7 @@
 #pragma once
 
 #include <fstream>
-#include "components/component_types.h"
 
-using std::vector;
-using std::bitset;
 using std::fstream;
 
 namespace engine {

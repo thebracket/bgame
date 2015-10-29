@@ -2,7 +2,7 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../ecs/components/obstruction_component.h"
+#include "../../game/components/obstruction_component.h"
 #include "../globals.h"
 
 using std::string;

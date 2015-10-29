@@ -3,8 +3,8 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include "../../../game/world/world.h"
-#include "../../globals.h"
+#include "../world/world.h"
+#include "../../engine/globals.h"
 
 using std::string;
 using std::vector;

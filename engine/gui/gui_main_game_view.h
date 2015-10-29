@@ -5,7 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include "../../engine/ecs/ecs.h"
-#include "../ecs/components/position_component.h"
+#include "../../game/components/position_component.h"
 #include <cmath>
 
 using std::string;

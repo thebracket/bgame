@@ -1,5 +1,5 @@
 #include "viewshed_system.h"
-#include "../../globals.h"
+#include "../../engine/globals.h"
 
 namespace engine {
 namespace ecs {
