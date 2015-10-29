@@ -10,7 +10,7 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/usr/l
 add_subdirectory(engine)
 add_subdirectory(game)
 add_executable(bgame game main.cpp)
-target_link_libraries(bgame engine game gui world ecs raws systems backends)
+target_link_libraries(bgame engine game world ecs raws systems backends)
 
 # Packages:
 # CURSES, SDL2, SDL2Image

@@ -1,8 +1,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include "gui_element_base.h"
-#include "../virtual_terminal.h"
+#include "../../engine/gui/gui_element_base.h"
 #include "../../game/world/world.h"
 
 using std::string;

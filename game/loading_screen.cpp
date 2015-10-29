@@ -2,6 +2,8 @@
 #include "main_menu.h"
 #include <memory>
 #include "../engine/raws/raws.h"
+#include "../engine/gui/gui_frame.h"
+#include "../engine/gui/gui_static_text.h"
 
 using std::make_unique;
 using namespace engine;
