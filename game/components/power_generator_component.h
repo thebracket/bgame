@@ -1,7 +1,7 @@
 #pragma once
 
 #include "component_types.h"
-#include "../../engine/raws/raw_power_generator_condition.h"
+#include "../raws/raw_power_generator_condition.h"
 
 using namespace engine::ecs::serialization_generic;
 

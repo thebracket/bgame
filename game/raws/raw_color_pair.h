@@ -2,7 +2,7 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../virtual_terminal.h"
+#include "../../engine/virtual_terminal.h"
 
 using std::string;
 using engine::vterm::color_t;

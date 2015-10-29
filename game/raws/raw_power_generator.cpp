@@ -1,7 +1,6 @@
 #include "raw_power_generator.h"
-#include "../ecs/ecs.h"
-#include "../../game/components/power_generator_component.h"
-#include "../globals.h"
+#include "../components/power_generator_component.h"
+#include "../../engine/globals.h"
 
 namespace engine {
 namespace raws {

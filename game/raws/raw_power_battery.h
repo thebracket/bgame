@@ -2,7 +2,7 @@
 
 #include "base_raw.h"
 #include "../../game/components/power_battery_component.h"
-#include "../globals.h"
+#include "../../engine/globals.h"
 
 namespace engine {
 namespace raws {

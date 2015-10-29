@@ -2,8 +2,8 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../../game/components/obstruction_component.h"
-#include "../globals.h"
+#include "../components/obstruction_component.h"
+#include "../../engine/globals.h"
 
 using std::string;
 

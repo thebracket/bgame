@@ -2,8 +2,8 @@
 
 #include <string>
 #include "base_raw.h"
-#include "../../game/components/debug_name_component.h"
-#include "../globals.h"
+#include "../components/debug_name_component.h"
+#include "../../engine/globals.h"
 
 using std::string;
 
