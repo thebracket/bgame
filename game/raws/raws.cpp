@@ -34,6 +34,7 @@ namespace detail {
 unordered_map<string, engine::vterm::color_t> colors;
 unordered_map<string, unsigned char> glyphs;
 unordered_map<string, unique_ptr<base_raw>> structures;
+unordered_map<string, unique_ptr<base_raw>> starting_professions;
   
 }
 
@@ -60,7 +61,7 @@ vector<string> get_files_to_read()
 unique_ptr<base_raw> current;
 unique_ptr<base_raw> current_render;
 string current_name;
-enum nested_enum {NONE,STRUCTURE};
+enum nested_enum {NONE,STRUCTURE,STARTING_PROFESSION};
 nested_enum nested_type;
 bool nested;
 
@@ -196,12 +197,27 @@ void parse_structure(const vector<string> &chunks) {
     std::cout << "WARNING: GOT TO END OF STRUCTURE CHUNK READER WITH NO MATCH FOR [" << chunks[0] << "]\n";
 }
 
+void parse_starting_profession(const vector<string> &chunks) {
+    if (chunks[0] == "/STARTING_PROFESSION") {
+	nested = false;
+	nested_type = NONE;
+	detail::starting_professions[current_name] = std::move(current);
+	current.reset();
+	return;
+    }
+    if (chunks[0] == "NAME") {
+	parse_raw_name(chunks);
+	return;
+    }
+}
+
 /* Chunk Parsing */
 
 void parse_nested_chunk ( const vector<string> &chunks )
 {
     switch (nested_type) {
       case STRUCTURE : parse_structure(chunks); break;
+      case STARTING_PROFESSION : parse_starting_profession(chunks); break;
       case NONE : throw 103;
     }
 }
@@ -236,6 +252,12 @@ void parse_whole_chunk ( const vector<string> &chunks )
      if (chunks[0] == "STRUCTURE") {
 	nested = true;
 	nested_type = STRUCTURE;
+	current = make_unique<base_raw>();
+	return;
+     }
+     if (chunks[0] == "STARTING_PROFESSION") {
+	nested = true;
+	nested_type = STARTING_PROFESSION;
 	current = make_unique<base_raw>();
 	return;
      }

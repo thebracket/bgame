@@ -13,6 +13,7 @@
 #include "../game/components/renderable_component.h"
 #include "../game/components/settler_ai_component.h"
 #include "../game/components/viewshed_component.h"
+#include "../game/components/game_stats_component.h"
 
 using engine::entity_component_system;
 
