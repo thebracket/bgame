@@ -1,7 +1,5 @@
 #pragma once
 
-/* Convenience header - includes the rest of the engine */
-
 #include <stack>
 #include <memory>
 #include <thread>

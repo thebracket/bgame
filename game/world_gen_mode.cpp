@@ -4,6 +4,7 @@
 #include <string>
 #include "../engine/gui/gui_frame.h"
 #include "../engine/gui/gui_static_text.h"
+#include "world/world.h"
 
 using std::make_unique;
 using std::thread;

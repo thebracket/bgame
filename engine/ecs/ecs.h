@@ -1,23 +1,23 @@
 #pragma once
 
-#include "entity.h"
-#include "base_system.h"
 #include <memory>
 #include <functional>
 #include <unordered_map>
 #include <vector>
 #include <fstream>
 #include <iostream>
-
+#include<string>
+#include "entity.h"
+#include "base_system.h"
 #include "entity_storage.h"
 #include "component_storage.h"
-#include "../../game/world/world.h"
 
 using std::unique_ptr;
 using std::function;
 using std::unordered_map;
 using std::vector;
 using std::fstream;
+using std::string;
 using engine::ecs::base_system;
 
 namespace engine {
@@ -59,6 +59,12 @@ private:
   /* Callback for loading entities via the save system. */
   const function<void(fstream &, const int &)> loader_callback;
   
+  /* Callback for loading world constants during save-game */
+  const function<void(fstream &)> load_constants;
+  
+  /* Callback for saving world constants during save-game */
+  const function<void(fstream &)> save_constants;
+  
   /* Gets the save-game filename. */
   inline string get_filename()
   {
@@ -68,7 +74,8 @@ public:
   
   /* General constructor. Takes a callback of the form void component_factory(fstream &lbfile, const int ct) to handle
    * serialization. */
-  entity_component_system(const function<void(fstream &, const int &)> loader) noexcept : loader_callback(loader) {}
+  entity_component_system(const function<void(fstream &, const int &)> loader, function<void(fstream &)> world_loader, function<void(fstream &)> world_saver) noexcept 
+    : loader_callback(loader), load_constants(world_loader), save_constants(world_saver) {}
   
   /* Retrieves the next available entity handle. */
   int get_next_entity_handle() {
@@ -171,7 +178,7 @@ public:
   void load_game() {
     const string filename = get_filename();
     fstream lbfile ( filename, std::ios::in | std::ios::binary );
-    world::load_world_constants ( lbfile );
+    load_constants ( lbfile );
     
     int number_of_entities = 0;
     lbfile.read ( reinterpret_cast<char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
@@ -196,7 +203,7 @@ public:
     const string filename = get_filename();
      fstream lbfile ( filename, std::ios::out | std::ios::binary );
 
-     world::save_world_constants ( lbfile );
+     save_constants ( lbfile );
 
      int number_of_entities = entities.size();
      lbfile.write ( reinterpret_cast<const char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
