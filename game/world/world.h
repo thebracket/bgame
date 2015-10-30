@@ -37,6 +37,7 @@ extern string display_season;
 extern int stored_power;
 extern int max_power;
 extern float sun_angle;
+extern bool paused;
 
 // For handing data between gui_game_view and the render controller
 extern unordered_map<int, engine::vterm::screen_character> entity_render_list;

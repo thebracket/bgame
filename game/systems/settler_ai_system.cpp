@@ -6,6 +6,8 @@ namespace engine {
 namespace ecs {
 
 void settler_ai_system::tick ( const double &duration_ms ) {
+    if (world::paused) return;
+    
     // Obtain a link to the calendar
     calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component> ( world::cordex_handle );
 

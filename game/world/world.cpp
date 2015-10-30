@@ -20,6 +20,7 @@ string display_season;
 float sun_angle = 0.0F;
 int stored_power;
 int max_power=100;
+bool paused = true;
 
 void load_world_constants(fstream& lbfile)
 {

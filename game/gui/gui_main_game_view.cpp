@@ -34,6 +34,7 @@ void gui_main_game_view::render(const screen_region viewport)
                         float intensity_pct = 1.0 - (std::abs(angle_difference)/90.0F);
                         if (intensity_pct < 0.25) intensity_pct = 0.25;
                         if (intensity_pct > 1.0) intensity_pct = 1.0;
+			if (world::current_region->tiles[region_idx].base_tile_type == tile_type::WATER) intensity_pct = 1.0;
 
                         const float red = std::get<0>(foreground) * intensity_pct;
                         const float green = std::get<1>(foreground) * intensity_pct;

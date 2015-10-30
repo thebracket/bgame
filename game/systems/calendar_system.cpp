@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../world/world.h"
 #include "../../engine/globals.h"
+#include "../../engine/backends/command_manager.h"
 
 using std::string;
 using std::vector;
@@ -59,7 +60,7 @@ void calendar_system::advance_calendar ( calendar_component * time )
 void calendar_system::update_display_time ( const calendar_component* t )
 {
     stringstream day;
-    day << calendar_detail::months[t->month] << " " << (t->day+1) << ", " << t->year;
+    day << calendar_detail::months[t->month] << " " << (t->day+1) << ", " << (t->year + 2525);
     stringstream time;
     if (t->hour < 8) time << "0";
     time << (t->hour+1) << ":";
@@ -100,7 +101,14 @@ float calendar_system::calculate_sun_angle ( const calendar_component* t ) const
 void calendar_system::tick ( const double &duration_ms )
 {
      calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component> ( world::cordex_handle );
-
+     if (engine::command::is_key_down( engine::command::SPACE )) {
+	world::paused = !world::paused;
+     }
+     if (world::paused) {
+       update_display_time(calendar);
+       return;
+     }
+          
      calendar->duration_buffer += duration_ms;
      if ( calendar->duration_buffer > TICK_LENGTH ) {
           calendar->duration_buffer = 0.0;
