@@ -9,6 +9,7 @@ console log;
 land_block * current_region;
 unordered_map<int, engine::vterm::screen_character> entity_render_list;
 unordered_map<int, bool> walk_blocked;
+unordered_map<int, bool> view_blocked;
 
 int camera_handle;
 int cordex_handle;

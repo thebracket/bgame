@@ -1,3 +1,5 @@
+#pragma once
+
 #include "gui_element_base.h"
 #include "../virtual_terminal.h"
 #include <string>
@@ -18,7 +20,7 @@ public:
         
     {
       tag = name;
-    };
+    }
 
     virtual void render(const screen_region viewport);
     void update_text(const string s);

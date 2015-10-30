@@ -1,1 +1,0 @@
-add_library(systems system_factory.cpp calendar_system.cpp camera_system.cpp obstruction_system.cpp power_system.cpp renderable_system.cpp settler_ai_system.cpp viewshed_system.cpp)
