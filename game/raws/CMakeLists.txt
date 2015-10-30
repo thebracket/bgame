@@ -1,1 +1,0 @@
-add_library(raws raws.cpp raw_power_generator.cpp)

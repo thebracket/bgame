@@ -38,7 +38,41 @@ void viewshed_system::reset_visibility() {
 }
 
 void viewshed_system::scan_radius_for_visibility(viewshed_component * view, const position_component * pos) {
-    scan_radius_penetrating(view,pos); // FIXME: This needs to be different once obstacles exist!
+    constexpr double sweep_degrees_radians = 1 * DEGRAD;
+    constexpr double three_sixy_degrees_radians = 360 * DEGRAD;
+
+    view->last_visibility.clear();
+
+    unordered_set<int> visited(view->scanner_range * view->scanner_range);
+
+    // You can always see yourself
+    const int x = pos->x;
+    const int y = pos->y;
+    const int radius = view->scanner_range;
+    view->last_visibility.push_back(world::current_region->idx(x, y));
+
+    // Sweep around
+    for ( double angle=0; angle<three_sixy_degrees_radians; angle+=sweep_degrees_radians ) {
+        pair<int,int> destination = project_angle ( x, y, radius, angle );
+	bool blocked = false;
+        line_func ( x, y, destination.first, destination.second, [&visited,&blocked,view] (int tx, int ty) {
+            const int index = world::current_region->idx(tx,ty);
+	    
+	    if (!blocked) {
+		auto finder = visited.find(index);
+		if (finder==visited.end() and tx >=0 and tx <= landblock_width and ty>=0 and ty<=landblock_height) {
+		    view->last_visibility.push_back(index);
+		    world::current_region->revealed[index] = true;
+		    visited.insert(index);
+		}
+		
+		if (world::view_blocked[index] or world::current_region->tiles[index].base_tile_type == tile_type::RAMP) {		
+		    blocked = true;
+		}
+	    }
+        });
+    }
+  
 }
 
 void viewshed_system::scan_radius_penetrating(viewshed_component * view, const position_component * pos) {

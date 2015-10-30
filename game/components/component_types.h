@@ -65,7 +65,7 @@ inline void load_primitive ( fstream &lbfile, string &target )
      string result;
      unsigned int size = 0;
      load_primitive<unsigned int> ( lbfile, size );
-     for ( int i=0; i<size; ++i ) {
+     for ( std::size_t i=0; i<size; ++i ) {
           char c;
           load_primitive<char> ( lbfile, c );
           result += c;
@@ -81,7 +81,7 @@ inline void load_primitive ( fstream &lbfile, color_t &c )
      load_primitive<unsigned char> ( lbfile, red );
      load_primitive<unsigned char> ( lbfile, green );
      load_primitive<unsigned char> ( lbfile, blue );
-     c = {red, green, blue};
+     c = color_t{red, green, blue};
 }
 template<>
 inline void load_primitive ( fstream &lbfile, bool &b )
