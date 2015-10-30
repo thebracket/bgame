@@ -17,6 +17,7 @@
 #include "raw_description.h"
 
 #include "../../engine/globals.h"
+#include "../../engine/rng.h"
 
 using std::ifstream;
 using std::string;
@@ -355,6 +356,50 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     
     return e.handle;
 }
+
+string get_random_starting_profession()
+{
+    const int max = detail::starting_professions.size();
+    const int die_roll = engine::roll_dice(1,max) - 1;
+    int i = 0;
+    for (auto it = detail::starting_professions.begin(); it != detail::starting_professions.end(); ++it) {
+	if (i == die_roll) return it->first;
+	++i;
+    }
+    return "Peasant";
+}
+
+constexpr int NUMBER_OF_MALE_FIRST_NAMES = 1218;
+constexpr int NUMBER_OF_FEMALE_FIRST_NAMES = 4274;
+constexpr int NUMBER_OF_LAST_NAMES = 4759;
+
+string line_from_text_file(const string &filename, const int &line_number) {
+    ifstream file ( filename );
+    if ( !file.is_open() ) throw 102;
+    string line;
+    int i = 0;
+     while ( getline ( file,line ) ) {
+       if (i == line_number) return line;
+       ++i;
+    }
+    return "Peasant";
+}
+
+string get_random_first_name ( const short int& gender )
+{
+    if (gender == 1) {
+	return line_from_text_file("../raw/first_names_female.txt", engine::roll_dice(1,NUMBER_OF_FEMALE_FIRST_NAMES)-1);
+    } else {
+	return line_from_text_file("../raw/first_names_male.txt", engine::roll_dice(1,NUMBER_OF_MALE_FIRST_NAMES)-1);      
+    }
+}
+
+string get_random_last_name ()
+{
+    const int die_roll = engine::roll_dice(1, NUMBER_OF_LAST_NAMES)-1;
+    return line_from_text_file("../raw/last_names.txt", die_roll);
+}
+
 
 }
 }
