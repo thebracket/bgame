@@ -11,7 +11,7 @@ using engine::vterm::color_t;
 namespace engine {
 namespace ecs {
 
-enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,obstruction,power_generator,power_battery,gamestats};
+enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,obstruction,power_generator,power_battery,gamestats,gamespecies,gamehealth};
 
 namespace serialization_generic {
 /* Primitive save/load handler */

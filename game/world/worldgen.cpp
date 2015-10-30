@@ -15,6 +15,7 @@
 #include "../raws/raws.h"
 #include "../../engine/globals.h"
 #include "../components/components.h"
+#include "tables.h"
 
 using std::vector;
 using std::map;
@@ -632,7 +633,51 @@ entity make_settler(const int &x, const int &y)
     stats.wisdom = engine::roll_dice(3,6);
     stats.charisma = engine::roll_dice(3,6);
     stats.comeliness = engine::roll_dice(3,6);
-    stats.age = 18;
+    stats.age = 18;   
+    
+    game_species_component species;
+    species.species = "Human";
+    
+    int gender_roll = engine::roll_dice(1,101);
+    if (gender_roll <=50) {
+      species.gender = gender_t::MALE;
+    } else if (gender_roll <=100) {
+      species.gender = gender_t::FEMALE;
+    } else {
+      species.gender = gender_t::HERMAPHRODITE;
+    }
+    
+    int preference_roll = engine::roll_dice(1,100);
+    if (preference_roll < 92) {
+      species.sexual_preference = preference_t::HETEROSEXUAL;
+    } else if (preference_roll < 94) {
+      species.sexual_preference = preference_t::BISEXUAL;
+    } else if (preference_roll < 99) {
+      species.sexual_preference = preference_t::HOMOSEXUAL;
+    } else {
+      species.sexual_preference = preference_t::ASEXUAL;
+    }
+    
+    float height_cm, weight_kg;
+    
+    if (species.gender == gender_t::MALE or species.gender == gender_t::HERMAPHRODITE) {
+      height_cm = 147.0F + (engine::roll_dice(2,10)*2.5F);
+      weight_kg = 54.0F + (engine::roll_dice(2,4)*0.45);
+    } else {
+      height_cm = 134.0F + (engine::roll_dice(2,10)*2.5F);
+      weight_kg = 38.0F + (engine::roll_dice(2,4)*0.45);
+    }
+    species.height_cm = height_cm;
+    species.weight_kg = weight_kg;
+    
+    game_health_component health;
+    health.max_hit_points = engine::roll_dice(1,8) + stat_modifier(stats.constitution);
+    if (health.max_hit_points < 1) health.max_hit_points = 1;
+    health.current_hit_points = health.max_hit_points;
+    
+    engine::globals::ecs->add_component(test, stats);
+    engine::globals::ecs->add_component(test, health);
+    engine::globals::ecs->add_component(test, species);
     
     return test;
 }
