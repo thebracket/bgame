@@ -11,6 +11,8 @@
 #include "settler_ai_component.h"
 #include "viewshed_component.h"
 #include "game_stats_component.h"
+#include "game_species_component.h"
+#include "game_health_component.h"
 
 template<typename T>
 void component_loader(fstream &lbfile) {
@@ -37,6 +39,8 @@ inline void component_factory(fstream &lbfile, const int ct) {
       case engine::ecs::component_type::power_generator : component_loader<engine::ecs::power_generator_component>(lbfile); break;
       case engine::ecs::component_type::power_battery : component_loader<engine::ecs::power_battery_component>(lbfile); break;
       case engine::ecs::component_type::gamestats : component_loader<engine::ecs::game_stats_component>(lbfile); break;
+      case engine::ecs::component_type::gamespecies : component_loader<engine::ecs::game_species_component>(lbfile); break;
+      case engine::ecs::component_type::gamehealth : component_loader<engine::ecs::game_health_component>(lbfile); break;
       default :
 	    throw 102;
   }
