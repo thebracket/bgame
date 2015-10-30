@@ -622,8 +622,8 @@ entity make_settler(const int &x, const int &y)
     engine::globals::ecs->add_component(test, position_component(x,y));
     engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
     engine::globals::ecs->add_component(test, viewshed_component(visibility,12));
-    engine::globals::ecs->add_component(test, settler_ai_component());
-    
+    settler_ai_component ai;
+        
     // Create some basic attributes
     game_stats_component stats;
     stats.strength = engine::roll_dice(3,6);
@@ -670,11 +670,16 @@ entity make_settler(const int &x, const int &y)
     species.height_cm = height_cm;
     species.weight_kg = weight_kg;
     
+    ai.first_name = engine::raws::get_random_first_name(species.gender);
+    ai.last_name = engine::raws::get_random_last_name();
+    ai.profession_tag = engine::raws::get_random_starting_profession();
+    
     game_health_component health;
     health.max_hit_points = engine::roll_dice(1,8) + stat_modifier(stats.constitution);
     if (health.max_hit_points < 1) health.max_hit_points = 1;
     health.current_hit_points = health.max_hit_points;
     
+    engine::globals::ecs->add_component(test, ai);
     engine::globals::ecs->add_component(test, stats);
     engine::globals::ecs->add_component(test, health);
     engine::globals::ecs->add_component(test, species);

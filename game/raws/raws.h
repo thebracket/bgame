@@ -19,5 +19,9 @@ void read_raws();
  */
 int create_structure_from_raws( const string& name, const int& x, const int& y );
 
+string get_random_starting_profession();
+string get_random_first_name(const short &gender);
+string get_random_last_name();
+
 }
 }
