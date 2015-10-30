@@ -662,7 +662,7 @@ void setup_initial_game() {
     
     // Persist and quit
     world::stored_power = 25;
-    engine::globals::ecs->save_game();
+    engine::globals::ecs->save_game("world/saved_game.dat");
     engine::globals::ecs->done();
 }
 

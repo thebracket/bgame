@@ -65,11 +65,6 @@ private:
   /* Callback for saving world constants during save-game */
   const function<void(fstream &)> save_constants;
   
-  /* Gets the save-game filename. */
-  inline string get_filename()
-  {
-      return "world/saved_game.dat";
-  }  
 public:
   
   /* General constructor. Takes a callback of the form void component_factory(fstream &lbfile, const int ct) to handle
@@ -175,8 +170,7 @@ public:
   /*
    * Loads all entities and components from the save-game file.
    */
-  void load_game() {
-    const string filename = get_filename();
+  void load_game(const string filename) {
     fstream lbfile ( filename, std::ios::in | std::ios::binary );
     load_constants ( lbfile );
     
@@ -199,8 +193,7 @@ public:
   /*
    * Serializes all entities and components to the save-game file.
    */
-  void save_game() {
-    const string filename = get_filename();
+  void save_game(const string filename) {
      fstream lbfile ( filename, std::ios::out | std::ios::binary );
 
      save_constants ( lbfile );

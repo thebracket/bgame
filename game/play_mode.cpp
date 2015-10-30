@@ -25,7 +25,7 @@ void play_mode::init_systems()
 void play_mode::init()
 {
      engine::globals::ecs->init();
-     engine::globals::ecs->load_game();
+     engine::globals::ecs->load_game("world/saved_game.dat");
      init_systems();
      
      init_gui();
@@ -56,7 +56,7 @@ void play_mode::init_gui()
 void play_mode::done()
 {
     world::current_region->save();
-    engine::globals::ecs->save_game();
+    engine::globals::ecs->save_game("world/saved_game.dat");
     delete world::current_region;
     engine::globals::ecs->done();
 }
