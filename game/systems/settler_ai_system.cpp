@@ -1,5 +1,6 @@
 #include "settler_ai_system.h"
 #include "../../engine/globals.h"
+#include "../world/landblock.h"
 
 namespace engine {
 namespace ecs {
@@ -48,9 +49,9 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    }
             if (moved) {
                 if (x < 1) x = 1;
-                if (x > 255 ) x = 255;
+                if (x > landblock_width-1 ) x = landblock_width-1;
                 if (y < 1 ) y = 1;
-                if (y > 255) y = 255;
+                if (y > landblock_height-1) y = landblock_height-1;
                 pos->x = x;
                 pos->y = y;
                 pos->moved = true;
