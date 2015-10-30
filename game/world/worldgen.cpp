@@ -636,7 +636,7 @@ entity make_camera_entity()
 void setup_initial_game() {
     // Get the engine ready
     //engine::ecs::init();
-    int widx = world::world_idx(16,16);
+    int widx = world::world_idx(2,2);
     world::current_region = new land_block(widx);
     
     // Locate a spot for the crash

@@ -252,7 +252,7 @@ void tile::calculate_display_properties()
 	    background = color_t {0,0,0};
 	    display = '~';
 	  } else {
-	    foreground = color_t {0,0,255};
+	    foreground = color_t {64,64,255};
 	    background = color_t {0,0,0};
 	    display = '~';
 	  }

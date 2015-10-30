@@ -164,6 +164,7 @@ command::keys ncurses_backend::translate_keycode(const int &key) {
         return command::RIGHT;
     case KEY_ENTER :
         return command::ENTER;
+    case ' ' : return command::SPACE;
     case 13 :
         return command::ENTER;
     case 'Q' :

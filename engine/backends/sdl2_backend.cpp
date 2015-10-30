@@ -107,6 +107,7 @@ command::keys translate_keycode(const SDL_Event &e) {
     case SDLK_RIGHT : return command::RIGHT;
     case SDLK_RETURN : return command::ENTER;
     case SDLK_q : return command::Q;
+    case SDLK_SPACE : return command::SPACE;
   }
   return command::NONE;
 }

@@ -4,7 +4,7 @@ namespace engine {
 namespace command {
 
 enum command_type {MOUSE_MOVE, MOUSE_LEFT_CLICK, MOUSE_RIGHT_CLICK, KEYDOWN};
-enum keys { NONE, UP, DOWN, LEFT, RIGHT, ENTER, Q };
+enum keys { NONE, SPACE, UP, DOWN, LEFT, RIGHT, ENTER, Q };
   
 struct input_data {
   keys key;
