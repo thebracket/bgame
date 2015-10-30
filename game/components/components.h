@@ -10,6 +10,7 @@
 #include "renderable_component.h"
 #include "settler_ai_component.h"
 #include "viewshed_component.h"
+#include "game_stats_component.h"
 
 template<typename T>
 void component_loader(fstream &lbfile) {
@@ -24,7 +25,7 @@ void component_loader(fstream &lbfile) {
   }
 }
 
-void component_factory(fstream &lbfile, const int ct) {
+inline void component_factory(fstream &lbfile, const int ct) {
   switch ( ct ) {
     case engine::ecs::component_type::position : component_loader<engine::ecs::position_component>(lbfile); break;
       case engine::ecs::component_type::name : component_loader<engine::ecs::debug_name_component>(lbfile); break;
@@ -35,6 +36,7 @@ void component_factory(fstream &lbfile, const int ct) {
       case engine::ecs::component_type::obstruction : component_loader<engine::ecs::obstruction_component>(lbfile); break;
       case engine::ecs::component_type::power_generator : component_loader<engine::ecs::power_generator_component>(lbfile); break;
       case engine::ecs::component_type::power_battery : component_loader<engine::ecs::power_battery_component>(lbfile); break;
+      case engine::ecs::component_type::gamestats : component_loader<engine::ecs::game_stats_component>(lbfile); break;
       default :
 	    throw 102;
   }

@@ -14,6 +14,7 @@
 #include "../../engine/colors.h"
 #include "../raws/raws.h"
 #include "../../engine/globals.h"
+#include "../components/components.h"
 
 using std::vector;
 using std::map;
@@ -610,7 +611,7 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
 */
 }
 
-entity make_test_entity(const int &x, const int &y)
+entity make_settler(const int &x, const int &y)
 {
     entity test;
     test.handle = engine::globals::ecs->get_next_entity_handle();
@@ -621,6 +622,18 @@ entity make_test_entity(const int &x, const int &y)
     engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
     engine::globals::ecs->add_component(test, viewshed_component(visibility,12));
     engine::globals::ecs->add_component(test, settler_ai_component());
+    
+    // Create some basic attributes
+    game_stats_component stats;
+    stats.strength = engine::roll_dice(3,6);
+    stats.dexterity = engine::roll_dice(3,6);
+    stats.constitution = engine::roll_dice(3,6);
+    stats.intelligence = engine::roll_dice(3,6);
+    stats.wisdom = engine::roll_dice(3,6);
+    stats.charisma = engine::roll_dice(3,6);
+    stats.comeliness = engine::roll_dice(3,6);
+    stats.age = 18;
+    
     return test;
 }
 
@@ -649,12 +662,12 @@ void setup_initial_game() {
     add_ship_hull(starting_location);
     
     // Create some settlers and put them in the ship
-    make_test_entity(starting_location.first, starting_location.second-2);
-    make_test_entity(starting_location.first+1, starting_location.second-2);
-    make_test_entity(starting_location.first+2, starting_location.second-2);
-    make_test_entity(starting_location.first, starting_location.second+2);
-    make_test_entity(starting_location.first+1, starting_location.second+2);
-    make_test_entity(starting_location.first+2, starting_location.second+2);
+    make_settler(starting_location.first, starting_location.second-2);
+    make_settler(starting_location.first+1, starting_location.second-2);
+    make_settler(starting_location.first+2, starting_location.second-2);
+    make_settler(starting_location.first, starting_location.second+2);
+    make_settler(starting_location.first+1, starting_location.second+2);
+    make_settler(starting_location.first+2, starting_location.second+2);
     
     // Add the camera
     engine::ecs::entity camera = make_camera_entity();    
