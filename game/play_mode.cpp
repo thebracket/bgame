@@ -32,7 +32,7 @@ void play_mode::init()
      quitting = false;
      world::log.write ( "Welcome to @B_YELLOW@Black Future" );
      world::log.write ( "Use the @B_WHITE@arrow keys@WHITE@ to move, or press @B_RED@Q@WHITE@ to quit." );
-     int widx = world::world_idx(16,16);
+     int widx = world::world_idx(2,2);
      world::current_region = new land_block(widx);
 }
 

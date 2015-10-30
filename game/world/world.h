@@ -17,8 +17,8 @@ using std::string;
 
 namespace world {
 
-const int world_width = 32;
-const int world_height = 32;
+const int world_width = 4;
+const int world_height = 4;
 const int world_size = world_height * world_width;
 
 inline int world_idx(const int x, const int y) { return (world_height * y) + x; }
