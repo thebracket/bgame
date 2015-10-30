@@ -4,7 +4,7 @@ project("Berts Game")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -march=native -funroll-loops -ffast-math -Wall -Wpedantic -g -I/opt/local/include")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -march=native -funroll-loops -ffast-math -Wall -Wpedantic -g -I/opt/local/include")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/usr/lib/i386-linux-gnu -lSDL2 -lSDL2_image -lncursesw")
 
 add_subdirectory(engine)
