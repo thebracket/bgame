@@ -7,7 +7,7 @@
 namespace engine {
 namespace ecs {
 
-const double TICK_LENGTH = 100.0;
+const double TICK_LENGTH = 1.0;
 
 class calendar_system : public base_system {
 public:

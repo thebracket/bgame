@@ -619,7 +619,7 @@ entity make_test_entity(const int &x, const int &y)
     engine::globals::ecs->add_component(test, debug_name_component("Test"));
     engine::globals::ecs->add_component(test, position_component(x,y));
     engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
-    engine::globals::ecs->add_component(test, viewshed_component(visibility,8));
+    engine::globals::ecs->add_component(test, viewshed_component(visibility,12));
     engine::globals::ecs->add_component(test, settler_ai_component());
     return test;
 }
@@ -649,13 +649,16 @@ void setup_initial_game() {
     add_ship_hull(starting_location);
     
     // Create some settlers and put them in the ship
-    entity settler = make_test_entity(starting_location.first, starting_location.second-2);
-    std::cout << "Settler handle: " << settler.handle << "\n";
+    make_test_entity(starting_location.first, starting_location.second-2);
+    make_test_entity(starting_location.first+1, starting_location.second-2);
+    make_test_entity(starting_location.first+2, starting_location.second-2);
+    make_test_entity(starting_location.first, starting_location.second+2);
+    make_test_entity(starting_location.first+1, starting_location.second+2);
+    make_test_entity(starting_location.first+2, starting_location.second+2);
     
     // Add the camera
     engine::ecs::entity camera = make_camera_entity();    
     world::camera_handle = camera.handle;
-    std::cout << "Camera handle: " << camera.handle << "\n";
     
     // Persist and quit
     world::stored_power = 25;
