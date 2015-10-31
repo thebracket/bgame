@@ -5,10 +5,7 @@
 
 using std::string;
 
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 struct game_health_component {
      game_health_component() {}
@@ -32,6 +29,3 @@ struct game_health_component {
 	  load_primitive<int>(lbfile, current_hit_points);
      }
 };
-
-}
-}

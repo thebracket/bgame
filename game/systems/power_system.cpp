@@ -8,7 +8,7 @@
 
 namespace power_system_detail {
 
-int calculate_power_gain(const engine::ecs::power_generator_component* gen)
+int calculate_power_gain(const power_generator_component* gen)
 {
     if (gen->generator_mode == engine::raws::DAYLIGHT) {
         float efficiency = 0.0F;

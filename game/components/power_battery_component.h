@@ -2,10 +2,7 @@
 
 #include "component_types.h"
 
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 struct power_battery_component {
     int entity_id;
@@ -27,6 +24,3 @@ struct power_battery_component {
       load_primitive<int>(lbfile, storage_capacity);
     }
 };
-
-}
-}

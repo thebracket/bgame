@@ -8,9 +8,6 @@ using std::fstream;
 using std::string;
 using engine::vterm::color_t;
 
-namespace engine {
-namespace ecs {
-
 enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,obstruction,power_generator,power_battery,gamestats,gamespecies,gamehealth};
 
 namespace serialization_generic {
@@ -117,6 +114,4 @@ inline void load_common_component_properties ( fstream &lbfile, T &target )
      load_primitive<int> ( lbfile, target.entity_id );
 }
 
-}
-}
 }

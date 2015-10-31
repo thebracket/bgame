@@ -3,10 +3,7 @@
 #include "component_types.h"
 #include "../raws/raw_power_generator_condition.h"
 
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 struct power_generator_component {
      int entity_id;
@@ -33,6 +30,3 @@ struct power_generator_component {
           generator_mode = static_cast<engine::raws::power_generator_condition> ( n );
      }
 };
-
-}
-}

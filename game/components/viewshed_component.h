@@ -5,10 +5,7 @@
 #include <iostream>
 
 using std::vector;
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 enum viewshed_type {visibility,penetrating};
 
@@ -36,6 +33,3 @@ struct viewshed_component {
           save_primitive<viewshed_type> ( lbfile, scanner_type );
      }
 };
-
-}
-}

@@ -17,7 +17,7 @@ struct raw_obstruction : public base_raw {
     bool blocks_walk;
     
     virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-	ecs::obstruction_component obs = ecs::obstruction_component();
+	obstruction_component obs = obstruction_component();
 	obs.blocks_entry = blocks_walk;
 	obs.blocks_visibility = blocks_view;
 	engine::globals::ecs->add_component(parent, std::move(obs));
