@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../world/world.h"
-#include "../../engine/ecs/ecs.h"
+#include "../../engine/ecs.h"
 #include "../components/position_component.h"
 #include "../../engine/backends/command_manager.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../engine/ecs/ecs.h"
+#include "../../engine/ecs.h"
 
 
 class power_system : public base_system {

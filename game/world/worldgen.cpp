@@ -10,7 +10,7 @@
 #include <cmath>
 #include "../../engine/rng.h"
 #include <iostream>
-#include "../../engine/ecs/ecs.h"
+#include "../../engine/ecs.h"
 #include "../../engine/colors.h"
 #include "../raws/raws.h"
 #include "../../engine/globals.h"
@@ -21,7 +21,6 @@ using std::vector;
 using std::map;
 using std::make_unique;
 using namespace engine;
-using namespace engine::ecs;
 
 namespace worldgen {
 
@@ -720,7 +719,7 @@ void setup_initial_game() {
     make_settler(starting_location.first+2, starting_location.second+2);
     
     // Add the camera
-    engine::ecs::entity camera = make_camera_entity();    
+    entity camera = make_camera_entity();    
     world::camera_handle = camera.handle;
     
     // Persist and quit

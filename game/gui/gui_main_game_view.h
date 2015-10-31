@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include "../../engine/ecs/ecs.h"
+#include "../../engine/ecs.h"
 #include "../../game/components/position_component.h"
 #include <cmath>
 

@@ -345,7 +345,7 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
       throw 105;
     }
   
-    engine::ecs::entity e;
+    entity e;
     e.handle = engine::globals::ecs->get_next_entity_handle();
     engine::globals::ecs->add_entity(e);
     

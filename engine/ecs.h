@@ -18,11 +18,9 @@ using std::unordered_map;
 using std::vector;
 using std::fstream;
 using std::string;
-using engine::ecs::base_system;
+using engine::base_system;
 
 namespace engine {
-
-using ecs::entity;
 
 /*
  * Entity-Component-System class. It should be defined in config.h, since it takes template
@@ -120,7 +118,7 @@ public:
    * Retrieves an entity by handle. Given that entities don't hold much information,
    * this is rarely used.
    */
-  ecs::entity * get_entity_by_handle(const int &handle) {
+  entity * get_entity_by_handle(const int &handle) {
     return entities.find_by_handle(handle);
   }
   
@@ -180,7 +178,7 @@ public:
     int number_of_entities = 0;
     lbfile.read ( reinterpret_cast<char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
     for ( int i=0; i<number_of_entities; ++i ) {
-	entity e = engine::ecs::construct_entity_from_file ( lbfile );
+	entity e = construct_entity_from_file ( lbfile );
 	add_entity ( e );
     }
     
