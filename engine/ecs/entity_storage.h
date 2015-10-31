@@ -25,6 +25,10 @@ public:
     }
   }
   
+  void clear_all() {
+      entities.clear();
+  }
+  
   int get_next_handle() {
     int result = next_handle;
     ++next_handle;

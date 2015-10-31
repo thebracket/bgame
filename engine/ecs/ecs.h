@@ -171,6 +171,9 @@ public:
    * Loads all entities and components from the save-game file.
    */
   void load_game(const string filename) {
+    entities.clear_all();
+    components.clear_all();
+    
     fstream lbfile ( filename, std::ios::in | std::ios::binary );
     load_constants ( lbfile );
     
