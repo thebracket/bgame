@@ -8,8 +8,8 @@ using std::make_pair;
 namespace engine {
 
 // TODO: Configuration driven height
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+constexpr int SCREEN_WIDTH = 800;
+constexpr int SCREEN_HEIGHT = 600;
 
 sdl2_backend::sdl2_backend()
 {
