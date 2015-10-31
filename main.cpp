@@ -1,7 +1,6 @@
 #include <iostream>
 #include <memory>
 #include "engine/engine.h"
-#include "test_mode.h"
 #include "game/loading_screen.h"
 #include "config.h"
 #include "engine/globals.h"
