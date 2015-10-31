@@ -5,10 +5,7 @@
 
 using std::string;
 
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 struct debug_name_component {
      debug_name_component() {}
@@ -30,6 +27,3 @@ struct debug_name_component {
           load_primitive<string> ( lbfile, debug_name );
      }
 };
-
-}
-}

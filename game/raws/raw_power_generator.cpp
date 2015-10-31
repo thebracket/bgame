@@ -6,7 +6,7 @@ namespace engine {
 namespace raws {
 
 void raw_power_generator::build_components(engine::ecs::entity &parent, const int &x, const int &y) const {
-    engine::globals::ecs->add_component(parent, engine::ecs::power_generator_component(amount, condition));
+    engine::globals::ecs->add_component(parent, power_generator_component(amount, condition));
 }
 
 }

@@ -350,7 +350,7 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     e.handle = engine::globals::ecs->get_next_entity_handle();
     engine::globals::ecs->add_entity(e);
     
-    engine::globals::ecs->add_component(e, engine::ecs::position_component(x,y));
+    engine::globals::ecs->add_component(e, position_component(x,y));
     
     finder->second->build_components(e, x, y);
     

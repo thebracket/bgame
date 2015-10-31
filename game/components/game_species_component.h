@@ -5,10 +5,7 @@
 
 using std::string;
 
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 namespace gender_t {
 const short MALE = 1;
@@ -55,6 +52,3 @@ struct game_species_component {
           load_primitive<short> ( lbfile, weight_kg );
      }
 };
-
-}
-}

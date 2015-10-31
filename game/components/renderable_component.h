@@ -5,13 +5,10 @@
 #include <vector>
 #include <iostream>
 
-using namespace engine::ecs::serialization_generic;
+using namespace serialization_generic;
 
 using std::vector;
 using engine::vterm::color_t;
-
-namespace engine {
-namespace ecs {
 
 struct renderable_component {
     int entity_id;
@@ -39,6 +36,3 @@ struct renderable_component {
       load_primitive<engine::vterm::color_t>(lbfile, background);
     }
 };
-
-}
-}

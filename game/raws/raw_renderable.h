@@ -33,7 +33,7 @@ struct raw_renderable : public base_raw {
                     bg = tmp->background;
                }
           }
-          engine::globals::ecs->add_component ( parent, engine::ecs::renderable_component( glyph_to_use, fg, bg ) );
+          engine::globals::ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg ) );
      }
 };
 

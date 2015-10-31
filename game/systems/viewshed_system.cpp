@@ -14,10 +14,10 @@ void viewshed_system::tick ( const double &duration_ms ) {
 
         if (pos->moved or viewshed.last_visibility.empty()) {
             switch (viewshed.scanner_type) {
-            case ecs::visibility :
+            case visibility :
                 scan_radius_for_visibility(&viewshed, pos);
                 break;
-            case ecs::penetrating :
+            case penetrating :
                 scan_radius_penetrating(&viewshed, pos);
                 break;
             default :

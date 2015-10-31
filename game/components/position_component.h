@@ -2,10 +2,7 @@
 
 #include "component_types.h"
 
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 struct position_component {
      int entity_id;
@@ -31,6 +28,3 @@ struct position_component {
           save_primitive<int> ( lbfile, y );
      }
 };
-
-}
-}

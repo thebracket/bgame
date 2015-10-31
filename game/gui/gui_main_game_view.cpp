@@ -2,8 +2,6 @@
 #include <iostream>
 #include "../../engine/globals.h"
 
-using engine::ecs::position_component;
-
 namespace engine {
 
 void gui_main_game_view::render(const screen_region viewport)

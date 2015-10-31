@@ -3,10 +3,7 @@
 #include "component_types.h"
 
 using std::fstream;
-using namespace engine::ecs::serialization_generic;
-
-namespace engine {
-namespace ecs {
+using namespace serialization_generic;
 
 struct calendar_component {
 public:
@@ -46,6 +43,3 @@ public:
           load_primitive<char> ( lbfile, minute );
      }
 };
-
-}
-}

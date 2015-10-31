@@ -3,11 +3,8 @@
 #include "component_types.h"
 #include <string>
 
-using namespace engine::ecs::serialization_generic;
+using namespace serialization_generic;
 using std::string;
-
-namespace engine {
-namespace ecs {
 
 struct settler_ai_component {
      int entity_id;
@@ -35,6 +32,3 @@ struct settler_ai_component {
 	  save_primitive<string>( lbfile, profession_tag );
      }
 };
-
-}
-}

@@ -13,6 +13,9 @@
 #include "game_stats_component.h"
 #include "game_species_component.h"
 #include "game_health_component.h"
+#include "../../engine/globals.h"
+
+using engine::globals::ecs;
 
 template<typename T>
 void component_loader(fstream &lbfile) {
@@ -29,18 +32,18 @@ void component_loader(fstream &lbfile) {
 
 inline void component_factory(fstream &lbfile, const int ct) {
   switch ( ct ) {
-    case engine::ecs::component_type::position : component_loader<engine::ecs::position_component>(lbfile); break;
-      case engine::ecs::component_type::name : component_loader<engine::ecs::debug_name_component>(lbfile); break;
-      case engine::ecs::component_type::renderable : component_loader<engine::ecs::renderable_component>(lbfile); break;
-      case engine::ecs::component_type::viewshed :  component_loader<engine::ecs::viewshed_component>(lbfile); break;
-      case engine::ecs::component_type::calendar : component_loader<engine::ecs::calendar_component>(lbfile); break;
-      case engine::ecs::component_type::settler_ai : component_loader<engine::ecs::settler_ai_component>(lbfile); break;
-      case engine::ecs::component_type::obstruction : component_loader<engine::ecs::obstruction_component>(lbfile); break;
-      case engine::ecs::component_type::power_generator : component_loader<engine::ecs::power_generator_component>(lbfile); break;
-      case engine::ecs::component_type::power_battery : component_loader<engine::ecs::power_battery_component>(lbfile); break;
-      case engine::ecs::component_type::gamestats : component_loader<engine::ecs::game_stats_component>(lbfile); break;
-      case engine::ecs::component_type::gamespecies : component_loader<engine::ecs::game_species_component>(lbfile); break;
-      case engine::ecs::component_type::gamehealth : component_loader<engine::ecs::game_health_component>(lbfile); break;
+    case position : component_loader<position_component>(lbfile); break;
+      case name : component_loader<debug_name_component>(lbfile); break;
+      case renderable : component_loader<renderable_component>(lbfile); break;
+      case viewshed :  component_loader<viewshed_component>(lbfile); break;
+      case calendar : component_loader<calendar_component>(lbfile); break;
+      case settler_ai : component_loader<settler_ai_component>(lbfile); break;
+      case obstruction : component_loader<obstruction_component>(lbfile); break;
+      case power_generator : component_loader<power_generator_component>(lbfile); break;
+      case power_battery : component_loader<power_battery_component>(lbfile); break;
+      case gamestats : component_loader<game_stats_component>(lbfile); break;
+      case gamespecies : component_loader<game_species_component>(lbfile); break;
+      case gamehealth : component_loader<game_health_component>(lbfile); break;
       default :
 	    throw 102;
   }
