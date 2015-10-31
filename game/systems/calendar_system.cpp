@@ -36,7 +36,7 @@ void calendar_system::advance_calendar ( calendar_component * time )
      time->system_time++;
      time->minute++;
      
-     if (time->minute >= calendar_detail::MINUTES_PER_HOUR) {
+     if (time->minute >= calendar_detail::MINUTES_PER_HOUR-1) {
 	time->minute = 0;
 	++time->hour;
 	
@@ -62,8 +62,8 @@ void calendar_system::update_display_time ( const calendar_component* t )
     stringstream day;
     day << calendar_detail::months[t->month] << " " << (t->day+1) << ", " << (t->year + 2525);
     stringstream time;
-    if (t->hour < 8) time << "0";
-    time << (t->hour+1) << ":";
+    if (t->hour < 10) time << "0";
+    time << +(t->hour) << ":";
     if (t->minute < 8) time << "0";
     time << (t->minute+2);
   
