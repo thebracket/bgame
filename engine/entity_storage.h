@@ -5,9 +5,9 @@
 #include <memory>
 #include "entity.h"
 
-using engine::ecs::entity;
 using std::unordered_map;
 using std::function;
+using engine::entity;
 
 namespace engine {  
 namespace ecs_detail {
@@ -35,11 +35,11 @@ public:
     return result;
   }
   
-  void add_entity(const ecs::entity &target) {
+  void add_entity(const entity &target) {
     entities[target.handle] = target;
   }
   
-  ecs::entity * find_by_handle(const int &handle) {
+  entity * find_by_handle(const int &handle) {
     auto finder = entities.find(handle);
     if (finder != entities.end()) {
       return &finder->second;

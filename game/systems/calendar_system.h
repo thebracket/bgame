@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../world/world.h"
-#include "../../engine/ecs/ecs.h"
+#include "../../engine/ecs.h"
 #include "../components/calendar_component.h"
 
 constexpr double TICK_LENGTH = 1.0;

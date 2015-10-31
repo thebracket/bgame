@@ -11,7 +11,7 @@ struct raw_power_generator : public base_raw {
     power_generator_condition condition;
     int amount;
     
-    virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const;
+    virtual void build_components(entity &parent, const int &x, const int &y) const;
 };
   
 }

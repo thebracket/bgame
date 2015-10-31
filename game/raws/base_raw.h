@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <memory>
-#include "../../engine/ecs/entity.h"
-#include "../../engine/ecs/ecs.h"
+#include "../../engine/entity.h"
+#include "../../engine/ecs.h"
 
 using std::vector;
 using std::unique_ptr;

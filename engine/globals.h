@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../config.h"
-#include "ecs/ecs.h"
+#include "ecs.h"
 
 #include "../game/components/component_types.h"
 #include "../game/components/calendar_component.h"

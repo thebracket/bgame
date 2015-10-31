@@ -5,7 +5,6 @@
 using std::fstream;
 
 namespace engine {
-namespace ecs {
 
 class entity {
 public:
@@ -16,5 +15,4 @@ public:
 
 entity construct_entity_from_file(fstream &lbfile);
 
-}
 }

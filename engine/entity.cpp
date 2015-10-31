@@ -2,7 +2,6 @@
 #include <iostream>
 
 namespace engine {
-namespace ecs {
 
 void entity::load ( fstream& lbfile )
 {
@@ -21,5 +20,4 @@ entity construct_entity_from_file ( fstream& lbfile )
     return e;
 }
 
-}
 }

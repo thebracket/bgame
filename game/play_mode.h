@@ -5,8 +5,6 @@
 using std::make_pair;
 using engine::vterm::color_t;
 
-using namespace engine::ecs;
-
 class play_mode : public engine::base_mode {
 public:
      virtual void init();
