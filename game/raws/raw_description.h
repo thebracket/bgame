@@ -5,7 +5,6 @@
 
 using std::string;
 
-namespace engine {
 namespace raws {
 
 struct raw_description : public base_raw {
@@ -14,5 +13,4 @@ struct raw_description : public base_raw {
     string description;
 };
   
-}
 }

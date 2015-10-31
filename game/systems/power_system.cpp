@@ -10,7 +10,7 @@ namespace power_system_detail {
 
 int calculate_power_gain(const power_generator_component* gen)
 {
-    if (gen->generator_mode == engine::raws::DAYLIGHT) {
+    if (gen->generator_mode == raws::DAYLIGHT) {
         float efficiency = 0.0F;
         if (world::sun_angle <= 90.0F) {
             efficiency = 1 - (90.0F - world::sun_angle);

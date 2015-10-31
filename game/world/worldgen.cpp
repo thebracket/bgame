@@ -505,7 +505,7 @@ void add_cordex(const int &x, const int &y) {
 }
 
 void add_solar_collector(const int x, const int y) {
-    engine::raws::create_structure_from_raws("Solar Collector", x, y);
+    raws::create_structure_from_raws("Solar Collector", x, y);
 }
 
 void add_cordex_console(const int x, const int y, const unsigned char symbol) {
@@ -519,22 +519,22 @@ void add_cordex_console(const int x, const int y, const unsigned char symbol) {
 }
 
 void add_food_replicator(const int x, const int y) {
-    engine::raws::create_structure_from_raws("Small Replicator", x, y);
+    raws::create_structure_from_raws("Small Replicator", x, y);
 }
 
 void add_storage_unit(const int x, const int y) {
-    engine::raws::create_structure_from_raws("Storage Unit", x, y);
+    raws::create_structure_from_raws("Storage Unit", x, y);
 }
 
 void add_structural_element(const int x, const int y, unsigned char glyph, bool block=true) {
   switch (glyph) {
-    case 16 : engine::raws::create_structure_from_raws("Ship Front", x, y); break;
-    case 186 : engine::raws::create_structure_from_raws("Ship Wall NS", x, y); break;
-    case 200 : engine::raws::create_structure_from_raws("Ship Wall NE", x, y); break;
-    case 201 : engine::raws::create_structure_from_raws("Ship Wall SE", x, y); break;
-    case 219 : engine::raws::create_structure_from_raws("Ship Superstructure", x, y); break;
-    case 46 : engine::raws::create_structure_from_raws("Ship Floor", x, y); break;
-    case 205 : engine::raws::create_structure_from_raws("Ship Wall EW", x, y); break;
+    case 16 : raws::create_structure_from_raws("Ship Front", x, y); break;
+    case 186 : raws::create_structure_from_raws("Ship Wall NS", x, y); break;
+    case 200 : raws::create_structure_from_raws("Ship Wall NE", x, y); break;
+    case 201 : raws::create_structure_from_raws("Ship Wall SE", x, y); break;
+    case 219 : raws::create_structure_from_raws("Ship Superstructure", x, y); break;
+    case 46 : raws::create_structure_from_raws("Ship Floor", x, y); break;
+    case 205 : raws::create_structure_from_raws("Ship Wall EW", x, y); break;
     default : std::cout << "Oops - missed a structure, code " << +glyph << "\n";
   }
 }
@@ -553,10 +553,10 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
     add_solar_collector(x+1, y+1);
     
     // Console constructions at (x-1,y), (x+1,y), (x,y-1), (x,y+1)
-    engine::raws::create_structure_from_raws("Education Console", x-1, y);
-    engine::raws::create_structure_from_raws("Scanner Console", x+1, y);
-    engine::raws::create_structure_from_raws("Defense Console", x, y-1);
-    engine::raws::create_structure_from_raws("Communications Console", x, y+1);
+    raws::create_structure_from_raws("Education Console", x-1, y);
+    raws::create_structure_from_raws("Scanner Console", x+1, y);
+    raws::create_structure_from_raws("Defense Console", x, y-1);
+    raws::create_structure_from_raws("Communications Console", x, y+1);
     
     // Refridgerator/Food Replicator at (x+4,y)
     add_food_replicator(x+4, y);
@@ -670,9 +670,9 @@ entity make_settler(const int &x, const int &y)
     species.height_cm = height_cm;
     species.weight_kg = weight_kg;
     
-    ai.first_name = engine::raws::get_random_first_name(species.gender);
-    ai.last_name = engine::raws::get_random_last_name();
-    ai.profession_tag = engine::raws::get_random_starting_profession();
+    ai.first_name = raws::get_random_first_name(species.gender);
+    ai.last_name = raws::get_random_last_name();
+    ai.profession_tag = raws::get_random_starting_profession();
     
     game_health_component health;
     health.max_hit_points = engine::roll_dice(1,8) + stat_modifier(stats.constitution);

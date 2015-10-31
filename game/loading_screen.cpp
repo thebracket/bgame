@@ -32,7 +32,7 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
      splash_interface.render();
 
      if (count == 1) {
-	engine::raws::read_raws();
+	raws::read_raws();
      }
      
      // Exit conditions

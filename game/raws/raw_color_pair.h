@@ -7,7 +7,6 @@
 using std::string;
 using engine::vterm::color_t;
 
-namespace engine {
 namespace raws {
 
 struct raw_color_pair : public base_raw {
@@ -17,5 +16,4 @@ struct raw_color_pair : public base_raw {
     color_t background;
 };
   
-}
 }
