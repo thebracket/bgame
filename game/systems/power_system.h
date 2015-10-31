@@ -2,8 +2,6 @@
 
 #include "../../engine/ecs/ecs.h"
 
-namespace engine {
-namespace ecs {
 
 class power_system : public base_system {
 public:
@@ -11,6 +9,3 @@ public:
 private:
      long last_tick=0;
 };
-  
-}
-}

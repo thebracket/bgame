@@ -4,7 +4,7 @@
 #include "../world/world.h"
 #include "../../engine/globals.h"
 
-void engine::ecs::obstruction_system::tick(const double& duration_ms)
+void obstruction_system::tick(const double& duration_ms)
 {
     world::walk_blocked.clear();
     world::view_blocked.clear();

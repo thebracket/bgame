@@ -1,9 +1,6 @@
 #include "viewshed_system.h"
 #include "../../engine/globals.h"
 
-namespace engine {
-namespace ecs {
-
 void viewshed_system::tick ( const double &duration_ms ) {
     reset_visibility();
 
@@ -100,8 +97,4 @@ void viewshed_system::scan_radius_penetrating(viewshed_component * view, const p
             }
         });
     }
-}
-
-
-}
 }

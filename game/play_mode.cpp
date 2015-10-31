@@ -13,13 +13,13 @@ using std::make_unique;
 
 void play_mode::init_systems()
 {
-     engine::globals::ecs->add_system ( engine::ecs::make_camera_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_calendar_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_obstruction_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_power_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_settler_ai_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_viewshed_system() );
-     engine::globals::ecs->add_system ( engine::ecs::make_renderable_system() );
+     engine::globals::ecs->add_system ( make_camera_system() );
+     engine::globals::ecs->add_system ( make_calendar_system() );
+     engine::globals::ecs->add_system ( make_obstruction_system() );
+     engine::globals::ecs->add_system ( make_power_system() );
+     engine::globals::ecs->add_system ( make_settler_ai_system() );
+     engine::globals::ecs->add_system ( make_viewshed_system() );
+     engine::globals::ecs->add_system ( make_renderable_system() );
 }
 
 void play_mode::init()

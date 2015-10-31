@@ -2,9 +2,6 @@
 #include <iostream>
 #include "../../engine/globals.h"
 
-namespace engine {
-namespace ecs {
-
 void renderable_system::tick ( const double &duration_ms ) {
     // Clear the visible entity system
     world::entity_render_list.clear();
@@ -18,7 +15,4 @@ void renderable_system::tick ( const double &duration_ms ) {
 	const int idx = world::current_region->idx ( pos->x, pos->y );
 	world::entity_render_list[idx] = {render_info.glyph, render_info.foreground, render_info.background};
     }
-}
-
-}
 }

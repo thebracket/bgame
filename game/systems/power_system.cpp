@@ -26,7 +26,7 @@ int calculate_power_gain(const power_generator_component* gen)
 
 }
 
-void engine::ecs::power_system::tick(const double& duration_ms)
+void power_system::tick(const double& duration_ms)
 {
     if (world::paused) return;
     
