@@ -57,6 +57,10 @@ public:
           } );
           return size;
      }
+     
+     void clear_all() {
+	  for_each( component_container, [] ( auto &x) { x.clear(); } );
+     }
 
      int get_next_handle() {
           const int result = next_handle;
