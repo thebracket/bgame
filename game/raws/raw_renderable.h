@@ -9,7 +9,6 @@
 
 using std::vector;
 
-namespace engine {
 namespace raws {
 
 struct raw_renderable : public base_raw {
@@ -37,5 +36,4 @@ struct raw_renderable : public base_raw {
      }
 };
 
-}
 }

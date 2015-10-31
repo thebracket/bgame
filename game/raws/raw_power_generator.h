@@ -3,7 +3,6 @@
 #include "base_raw.h"
 #include "raw_power_generator_condition.h"
 
-namespace engine {
 namespace raws {
 
 struct raw_power_generator : public base_raw {
@@ -15,5 +14,4 @@ struct raw_power_generator : public base_raw {
     virtual void build_components(engine::ecs::entity &parent, const int &x, const int &y) const;
 };
   
-}
 }

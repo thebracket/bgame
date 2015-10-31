@@ -4,7 +4,6 @@
 #include "../../game/components/power_battery_component.h"
 #include "../../engine/globals.h"
 
-namespace engine {
 namespace raws {
 
 struct raw_power_battery : public base_raw {
@@ -21,5 +20,4 @@ struct raw_power_battery : public base_raw {
     }
 };
 
-}
 }

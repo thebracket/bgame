@@ -8,7 +8,6 @@
 using std::vector;
 using std::unique_ptr;
 
-namespace engine {
 namespace raws {
 
 enum tag_type { RENDERABLE, NAME, DESCRIPTION, GLYPH, COLOR_PAIR, OBSTRUCTION, POWER_GENERATOR, POWER_BATTERY };
@@ -24,5 +23,4 @@ struct base_raw {
     }
 };
   
-}
 }

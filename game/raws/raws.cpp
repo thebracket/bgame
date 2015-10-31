@@ -26,7 +26,6 @@ using std::unordered_map;
 using std::unique_ptr;
 using std::make_unique;
 
-namespace engine {
 namespace raws {
 
 namespace detail {
@@ -401,5 +400,4 @@ string get_random_last_name ()
 }
 
 
-}
 }

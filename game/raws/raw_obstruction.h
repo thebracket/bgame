@@ -7,7 +7,6 @@
 
 using std::string;
 
-namespace engine {
 namespace raws {
 
 struct raw_obstruction : public base_raw {
@@ -24,5 +23,4 @@ struct raw_obstruction : public base_raw {
     }
 };
   
-}
 }

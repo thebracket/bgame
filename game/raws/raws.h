@@ -4,7 +4,6 @@
 
 using std::string;
 
-namespace engine {
 namespace raws {
 
 /*
@@ -23,5 +22,4 @@ string get_random_starting_profession();
 string get_random_first_name(const short &gender);
 string get_random_last_name();
 
-}
 }
