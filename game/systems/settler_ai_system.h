@@ -12,13 +12,6 @@
 using std::string;
 using std::stringstream;
 
-namespace engine {
-namespace ecs {
-
-
 class settler_ai_system : public base_system {
      virtual void tick ( const double &duration_ms );
 };
-
-}
-}

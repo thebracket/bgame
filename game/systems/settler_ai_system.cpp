@@ -2,9 +2,6 @@
 #include "../../engine/globals.h"
 #include "../world/landblock.h"
 
-namespace engine {
-namespace ecs {
-
 void settler_ai_system::tick ( const double &duration_ms ) {
     if (world::paused) return;
     
@@ -66,7 +63,4 @@ void settler_ai_system::tick ( const double &duration_ms ) {
             settler.next_tick = calendar->system_time + 1;
         }
     }
-}
-
-}
 }

@@ -11,9 +11,6 @@ using std::string;
 using std::vector;
 using std::stringstream;
 
-namespace engine {
-namespace ecs {
-
 namespace calendar_detail {
 
 enum season_t {WINTER=0, SPRING=1, SUMMER=2, AUTUMN=3};
@@ -117,7 +114,4 @@ void calendar_system::tick ( const double &duration_ms )
           world::sun_angle = calculate_sun_angle(calendar);
           if ( world::sun_angle > 180.0F ) world::sun_angle = 0.0F;
      }
-}
-
-}
 }
