@@ -43,7 +43,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		// Cancel movement if it collides
 		const int idx = world::current_region->idx(x,y);
 		auto finder = world::walk_blocked.find(idx);
-		if (finder != world::walk_blocked.end()) {
+		if (finder != world::walk_blocked.end() or world::current_region->tiles[idx].base_tile_type == tile_type::WATER) {
 		    moved = false;
 		    x = pos->x;
 		    y = pos->y;
