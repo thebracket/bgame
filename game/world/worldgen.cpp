@@ -619,6 +619,7 @@ entity make_settler(const int &x, const int &y)
 
     engine::globals::ecs->add_component(test, debug_name_component("Test"));
     engine::globals::ecs->add_component(test, position_component(x,y));
+    engine::globals::ecs->add_component(test, obstruction_component(true,false));
     engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
     engine::globals::ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
