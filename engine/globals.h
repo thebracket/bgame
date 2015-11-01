@@ -16,6 +16,7 @@
 #include "../game/components/game_stats_component.h"
 #include "../game/components/game_species_component.h"
 #include "../game/components/game_health_component.h"
+#include "../game/components/provisions_component.h"
 
 using engine::entity_component_system;
 

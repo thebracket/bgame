@@ -13,6 +13,7 @@
 #include "game_stats_component.h"
 #include "game_species_component.h"
 #include "game_health_component.h"
+#include "provisions_component.h"
 #include "../../engine/globals.h"
 
 using engine::globals::ecs;
@@ -32,7 +33,7 @@ void component_loader(fstream &lbfile) {
 
 inline void component_factory(fstream &lbfile, const int ct) {
   switch ( ct ) {
-    case position : component_loader<position_component>(lbfile); break;
+      case position : component_loader<position_component>(lbfile); break;
       case name : component_loader<debug_name_component>(lbfile); break;
       case renderable : component_loader<renderable_component>(lbfile); break;
       case viewshed :  component_loader<viewshed_component>(lbfile); break;
@@ -44,6 +45,7 @@ inline void component_factory(fstream &lbfile, const int ct) {
       case gamestats : component_loader<game_stats_component>(lbfile); break;
       case gamespecies : component_loader<game_species_component>(lbfile); break;
       case gamehealth : component_loader<game_health_component>(lbfile); break;
+      case provision : component_loader<provisions_component>(lbfile); break;
       default :
 	    throw 102;
   }
