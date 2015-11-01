@@ -16,6 +16,7 @@ struct settler_ai_component {
      string last_name;
      string profession_tag;
      short calories;
+     short calorie_burn_at_rest;
      short wakefulness;
      short thirst;
 
@@ -26,6 +27,7 @@ struct settler_ai_component {
 	  load_primitive<string>(lbfile, last_name);
 	  load_primitive<string>(lbfile, profession_tag);
 	  load_primitive<short>(lbfile, calories);
+	  load_primitive<short>(lbfile, calorie_burn_at_rest);
 	  load_primitive<short>(lbfile, wakefulness);
 	  load_primitive<short>(lbfile, thirst);
      }
@@ -37,6 +39,7 @@ struct settler_ai_component {
 	  save_primitive<string>( lbfile, last_name );
 	  save_primitive<string>( lbfile, profession_tag );
 	  save_primitive<short>( lbfile, calories );
+	  save_primitive<short>( lbfile, calorie_burn_at_rest );
 	  save_primitive<short>( lbfile, wakefulness );
 	  save_primitive<short>( lbfile, thirst );
      }
