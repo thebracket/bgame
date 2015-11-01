@@ -106,6 +106,8 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
     if (settler.state_timer < 1 or settler.wakefulness > 2000) {
 	  world::log.write(settler_ai_detail::announce("wakes up with a yawn.", settler));
 	  settler.state_major = IDLE;
+	  viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
+	  vision->scanner_range = 12;
     }
 }
 
@@ -127,6 +129,8 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    settler.state_major = SLEEPING;
 	    settler.state_timer = 360;
 	    world::log.write(settler_ai_detail::announce("falls asleep.", settler));
+	    viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
+	    vision->scanner_range = 2;
 	}
 	
 	// Perform actions
