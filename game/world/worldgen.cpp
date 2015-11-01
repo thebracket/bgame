@@ -556,6 +556,8 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
     raws::create_structure_from_raws("Scanner Console", x+1, y);
     raws::create_structure_from_raws("Defense Console", x, y-1);
     raws::create_structure_from_raws("Communications Console", x, y+1);
+    raws::create_structure_from_raws("Water Purifier", x+3, y-2 );
+    raws::create_structure_from_raws("Food Dispenser", x+3, y+2 );
     
     // Refridgerator/Food Replicator at (x+4,y)
     add_food_replicator(x+4, y);
@@ -591,7 +593,7 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
       add_structural_element(x-3, y-2+i, '.', false);
       add_structural_element(x-2, y-2+i, '.', false);
       add_structural_element(x+2, y-2+i, '.', false);
-      add_structural_element(x+3, y-2+i, '.', false);
+      if (i>0 and i<4) add_structural_element(x+3, y-2+i, '.', false);
     }
     add_structural_element(x-1, y-2, '.', false);
     add_structural_element(x, y-2, '.', false);
