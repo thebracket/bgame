@@ -108,6 +108,7 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
 	  settler.state_major = IDLE;
 	  viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	  vision->scanner_range = 12;
+	  vision->last_visibility.clear();
     }
 }
 
@@ -131,6 +132,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    world::log.write(settler_ai_detail::announce("falls asleep.", settler));
 	    viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	    vision->scanner_range = 2;
+	    vision->last_visibility.clear();
 	}
 	
 	// Perform actions
