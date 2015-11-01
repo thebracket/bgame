@@ -675,7 +675,7 @@ entity make_settler(const int &x, const int &y)
     }
     species.height_cm = height_cm;
     species.weight_kg = weight_kg;
-    ai.wakefulness = 1800 + engine::roll_dice(1,20);
+    ai.wakefulness = 1800 + engine::roll_dice(1,100) + (stat_modifier(stats.constitution)*3);
     ai.thirst = 960 + engine::roll_dice(1,20);
     
     ai.first_name = raws::get_random_first_name(species.gender);
@@ -686,6 +686,9 @@ entity make_settler(const int &x, const int &y)
     health.max_hit_points = engine::roll_dice(1,8) + stat_modifier(stats.constitution);
     if (health.max_hit_points < 1) health.max_hit_points = 1;
     health.current_hit_points = health.max_hit_points;
+    
+    ai.state_major = IDLE;
+    ai.state_timer = 0;
     
     engine::globals::ecs->add_component(test, ai);
     engine::globals::ecs->add_component(test, stats);
