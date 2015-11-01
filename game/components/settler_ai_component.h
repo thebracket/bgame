@@ -15,6 +15,9 @@ struct settler_ai_component {
      string first_name;
      string last_name;
      string profession_tag;
+     short calories;
+     short wakefulness;
+     short thirst;
 
      void load ( fstream &lbfile ) {
           load_common_component_properties<settler_ai_component> ( lbfile, *this );
@@ -22,6 +25,9 @@ struct settler_ai_component {
 	  load_primitive<string>(lbfile, first_name);
 	  load_primitive<string>(lbfile, last_name);
 	  load_primitive<string>(lbfile, profession_tag);
+	  load_primitive<short>(lbfile, calories);
+	  load_primitive<short>(lbfile, wakefulness);
+	  load_primitive<short>(lbfile, thirst);
      }
 
      void save ( fstream &lbfile ) {
@@ -30,5 +36,8 @@ struct settler_ai_component {
 	  save_primitive<string> ( lbfile, first_name );
 	  save_primitive<string>( lbfile, last_name );
 	  save_primitive<string>( lbfile, profession_tag );
+	  save_primitive<short>( lbfile, calories );
+	  save_primitive<short>( lbfile, wakefulness );
+	  save_primitive<short>( lbfile, thirst );
      }
 };

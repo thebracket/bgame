@@ -662,12 +662,16 @@ entity make_settler(const int &x, const int &y)
     if (species.gender == gender_t::MALE or species.gender == gender_t::HERMAPHRODITE) {
       height_cm = 147.0F + (engine::roll_dice(2,10)*2.5F);
       weight_kg = 54.0F + (engine::roll_dice(2,4)*0.45);
+      ai.calories = 2200;
     } else {
       height_cm = 134.0F + (engine::roll_dice(2,10)*2.5F);
       weight_kg = 38.0F + (engine::roll_dice(2,4)*0.45);
+      ai.calories = 1800;
     }
     species.height_cm = height_cm;
     species.weight_kg = weight_kg;
+    ai.wakefulness = 100;
+    ai.thirst = 100;
     
     ai.first_name = raws::get_random_first_name(species.gender);
     ai.last_name = raws::get_random_last_name();
