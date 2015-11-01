@@ -4,7 +4,7 @@
 #include "../../engine/ecs.h"
 #include "../components/calendar_component.h"
 
-constexpr double TICK_LENGTH = 50.0;
+constexpr double TICK_LENGTH = 10.0;
 
 class calendar_system : public base_system {
 public:
