@@ -10,7 +10,7 @@ using std::unique_ptr;
 
 namespace raws {
 
-enum tag_type { RENDERABLE, NAME, DESCRIPTION, GLYPH, COLOR_PAIR, OBSTRUCTION, POWER_GENERATOR, POWER_BATTERY };
+enum tag_type { RENDERABLE, NAME, DESCRIPTION, GLYPH, COLOR_PAIR, OBSTRUCTION, POWER_GENERATOR, POWER_BATTERY, SETTLER_ACTION };
   
 struct base_raw {
     tag_type type;
