@@ -356,13 +356,22 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     return e.handle;
 }
 
+string to_proper_noun_case(const std::string &original) {
+    string result;
+    result += std::toupper(original[0]);
+    for (std::size_t i = 1; i<original.size(); ++i) {
+	result += std::tolower(original[i]);
+    }
+    return result;
+}
+
 string get_random_starting_profession()
 {
     const int max = detail::starting_professions.size();
     const int die_roll = engine::roll_dice(1,max) - 1;
     int i = 0;
     for (auto it = detail::starting_professions.begin(); it != detail::starting_professions.end(); ++it) {
-	if (i == die_roll) return it->first;
+	if (i == die_roll) return to_proper_noun_case(it->first);
 	++i;
     }
     return "Peasant";
@@ -378,7 +387,7 @@ string line_from_text_file(const string &filename, const int &line_number) {
     string line;
     int i = 0;
      while ( getline ( file,line ) ) {
-       if (i == line_number) return line;
+       if (i == line_number) return to_proper_noun_case(line);
        ++i;
     }
     return "Peasant";

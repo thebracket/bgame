@@ -1,6 +1,38 @@
 #include "settler_ai_system.h"
 #include "../../engine/globals.h"
 #include "../world/landblock.h"
+#include "../world/tables.h"
+
+namespace settler_ai_detail {
+  
+void append_name(stringstream &ss, const settler_ai_component &settler) {
+    ss << "@CYAN@" << settler.first_name << "@WHITE@ (" << settler.profession_tag << ") ";
+}
+
+string announce(const string &state, const settler_ai_component &settler) {
+    stringstream announce;
+    append_name(announce, settler);
+    announce << state;
+    return announce.str();
+}
+
+void needs_clocks(settler_ai_component &settler) {
+	settler.calories -= settler.calorie_burn_at_rest;
+	settler.thirst--;
+	settler.wakefulness--;
+	
+	if (settler.calories < 300) {
+	    world::log.write(settler_ai_detail::announce("is hungry.", settler));
+	}
+	if (settler.thirst < 10) {
+	    world::log.write(settler_ai_detail::announce("is thirsty.", settler));
+	}
+	if (settler.wakefulness < 10) {
+	    world::log.write(settler_ai_detail::announce("is sleepy.", settler));
+	}
+}
+
+}
 
 void settler_ai_system::tick ( const double &duration_ms ) {
     if (world::paused) return;
@@ -10,6 +42,8 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 
     vector<settler_ai_component> * settlers = engine::globals::ecs->find_components_by_type<settler_ai_component>();
     for (settler_ai_component &settler : *settlers) {
+	settler_ai_detail::needs_clocks(settler);
+	
         if (settler.next_tick <= calendar->system_time) {
             // Time for the settler to do something!
             position_component * pos = engine::globals::ecs->find_entity_component<position_component>(settler.entity_id);
@@ -60,7 +94,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
             }
 
             // Random pause
-            settler.next_tick = calendar->system_time + 1;
+            settler.next_tick = calendar->system_time + 2;
         }
     }
 }
