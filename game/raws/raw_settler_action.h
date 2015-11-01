@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "base_raw.h"
-#include "../components/renderable_component.h"
+#include "../components/provisions_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
 #include "../../engine/globals.h"
@@ -22,6 +22,14 @@ struct raw_settler_action : public base_raw {
      int power_drain;
 
      virtual void build_components ( entity &parent, const int &x, const int &y ) const {
+	provisions_component p;
+	p.entity_id = parent.handle;
+	p.power_drain = power_drain;
+	p.provides_quantity = provides_qty;
+	p.provided_resource = 0;
+	if (provides == "THIRST") p.provided_resource = 1;
+	if (provides == "CALORIES") p.provided_resource = 2;
+	p.action_name = action_name;
      }
 };
 
