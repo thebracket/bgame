@@ -16,6 +16,7 @@ void play_mode::init_systems()
      engine::globals::ecs->add_system ( make_camera_system() );
      engine::globals::ecs->add_system ( make_calendar_system() );
      engine::globals::ecs->add_system ( make_obstruction_system() );
+     engine::globals::ecs->add_system ( make_flowmap_system() );
      engine::globals::ecs->add_system ( make_power_system() );
      engine::globals::ecs->add_system ( make_settler_ai_system() );
      engine::globals::ecs->add_system ( make_viewshed_system() );
