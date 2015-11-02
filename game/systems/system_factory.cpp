@@ -6,6 +6,7 @@
 #include "settler_ai_system.h"
 #include "obstruction_system.h"
 #include "power_system.h"
+#include "flowmap_system.h"
 #include <memory>
 
 using std::make_unique;
@@ -19,3 +20,4 @@ unique_ptr<base_system> make_calendar_system() { return make_unique<calendar_sys
 unique_ptr<base_system> make_settler_ai_system() { return make_unique<settler_ai_system>(); }
 unique_ptr<base_system> make_obstruction_system() { return make_unique<obstruction_system>(); }
 unique_ptr<base_system> make_power_system() { return make_unique<power_system>(); }
+unique_ptr< base_system > make_flowmap_system() { return make_unique<flowmap_system>(); }

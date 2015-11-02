@@ -6,7 +6,7 @@
 using namespace serialization_generic;
 using std::string;
 
-enum settler_state_t { IDLE, SLEEPING };
+enum settler_state_t { IDLE, SLEEPING, DRINKING, EATING };
 
 struct settler_ai_component {
      int entity_id;

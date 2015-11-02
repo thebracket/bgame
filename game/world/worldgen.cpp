@@ -570,8 +570,10 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
     add_structural_element(x-4, y-3, 201); // TL Corner
     add_structural_element(x-4, y+3, 200); // BL Corner
     for (int i=0; i<6; ++i) {
+	if (i != 3) {
 	add_structural_element(x-3+i, y-3, 205); // Upper hull wall
 	add_structural_element(x-3+i, y+3, 205); // Lower hull wall
+	}
     }
     for (int i=0; i<5; ++i) {
       if (i != 2) {
@@ -621,7 +623,7 @@ entity make_settler(const int &x, const int &y)
 
     engine::globals::ecs->add_component(test, debug_name_component("Test"));
     engine::globals::ecs->add_component(test, position_component(x,y));
-    engine::globals::ecs->add_component(test, obstruction_component(true,false));
+    //engine::globals::ecs->add_component(test, obstruction_component(true,false));
     engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
     engine::globals::ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;

@@ -30,6 +30,8 @@ struct raw_settler_action : public base_raw {
 	if (provides == "THIRST") p.provided_resource = 1;
 	if (provides == "CALORIES") p.provided_resource = 2;
 	p.action_name = action_name;
+	
+	engine::globals::ecs->add_component<provisions_component>(parent, p);
      }
 };
 
