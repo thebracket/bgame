@@ -100,6 +100,41 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
     }
 }
 
+void follow_flow_map(position_component * pos, const vector<short> &flow_map) {
+    // Make a sorted list of options
+    // Check each option for viability & move that way if it is good
+    std::map<short,char> candidates;
+    if (settler_ai_detail::is_move_possible(pos, -1, 0)) {
+	const int idx = world::current_region->idx( pos->x-1, pos->y );
+	candidates[flow_map[idx]] = 1;
+    }
+    if (settler_ai_detail::is_move_possible(pos, 1, 0)) {
+	const int idx = world::current_region->idx( pos->x+1, pos->y );
+	candidates[flow_map[idx]] = 2;
+    }
+    if (settler_ai_detail::is_move_possible(pos, 0, -1)) {
+	const int idx = world::current_region->idx( pos->x, pos->y-1 );
+	candidates[flow_map[idx]] = 3;
+    }
+    if (settler_ai_detail::is_move_possible(pos, 0, 1)) {
+	const int idx = world::current_region->idx( pos->x, pos->y+1 );
+	candidates[flow_map[idx]] = 4;
+    }
+    
+    //std::cout << "Potential drink candidates: " << candidates.size() << "\n";
+    
+    if (!candidates.empty()) {
+	auto it = candidates.begin();
+	char direction = it->second;
+	switch (direction) {
+	  case 1 : settler_ai_detail::move_to(pos, pos->x-1, pos->y); break;
+	  case 2 : settler_ai_detail::move_to(pos, pos->x+1, pos->y); break;
+	  case 3 : settler_ai_detail::move_to(pos, pos->x, pos->y-1); break;
+	  case 4 : settler_ai_detail::move_to(pos, pos->x, pos->y+1); break;
+	}
+    }
+}
+
 }
 
 void settler_ai_system::tick ( const double &duration_ms ) {
@@ -125,6 +160,9 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	} else if (needs.needs_drink and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
 	    settler.state_major = DRINKING;
 	    world::log.write(settler_ai_detail::announce("wants a drink.", settler));
+	} else if (needs.needs_food and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
+	    settler.state_major = EATING;
+	    world::log.write(settler_ai_detail::announce("wants some food.", settler));
 	}
 	
 	// Perform actions
@@ -143,43 +181,25 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		const int idx = world::current_region->idx( pos->x, pos->y );
 		const short distance_to_drink = flowmaps::water_flow_map [ idx ];
 		//std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
+		renderable->foreground = color_t{0,255,255};
 		if (distance_to_drink < 2) {
 		    settler.thirst = 1000;
 		    settler.state_major = IDLE;
 		    world::log.write(settler_ai_detail::announce("enjoys a drink.", settler));
 		} else {
-		    // Make a sorted list of options
-		    // Check each option for viability & move that way if it is good
-		    std::map<short,char> candidates;
-		    if (settler_ai_detail::is_move_possible(pos, -1, 0)) {
-			const int idx = world::current_region->idx( pos->x-1, pos->y );
-			candidates[flowmaps::water_flow_map[idx]] = 1;
-		    }
-		    if (settler_ai_detail::is_move_possible(pos, 1, 0)) {
-			const int idx = world::current_region->idx( pos->x+1, pos->y );
-			candidates[flowmaps::water_flow_map[idx]] = 2;
-		    }
-		    if (settler_ai_detail::is_move_possible(pos, 0, -1)) {
-			const int idx = world::current_region->idx( pos->x, pos->y-1 );
-			candidates[flowmaps::water_flow_map[idx]] = 3;
-		    }
-		    if (settler_ai_detail::is_move_possible(pos, 0, 1)) {
-			const int idx = world::current_region->idx( pos->x, pos->y+1 );
-			candidates[flowmaps::water_flow_map[idx]] = 4;
-		    }
-		    
-		    //std::cout << "Potential drink candidates: " << candidates.size() << "\n";
-		    
-		    if (!candidates.empty()) {
-			auto it = candidates.begin();
-			char direction = it->second;
-			switch (direction) {
-			  case 1 : settler_ai_detail::move_to(pos, pos->x-1, pos->y); break;
-			  case 2 : settler_ai_detail::move_to(pos, pos->x+1, pos->y); break;
-			  case 3 : settler_ai_detail::move_to(pos, pos->x, pos->y-1); break;
-			  case 4 : settler_ai_detail::move_to(pos, pos->x, pos->y+1); break;
-			}
-		    }
+		    settler_ai_detail::follow_flow_map(pos, flowmaps::water_flow_map);
+		}
+	    } else if (settler.state_major == EATING) {
+		const int idx = world::current_region->idx( pos->x, pos->y );
+		const short distance_to_food = flowmaps::food_flow_map [ idx ];
+		renderable->foreground = color_t{255,0,255};
+		//std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
+		if (distance_to_food < 2) {
+		    settler.calories += 2000;
+		    settler.state_major = IDLE;
+		    world::log.write(settler_ai_detail::announce("enjoys some food.", settler));
+		} else {
+		    settler_ai_detail::follow_flow_map(pos, flowmaps::food_flow_map);
 		}
 	    }
 	    
