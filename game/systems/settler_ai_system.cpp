@@ -3,6 +3,7 @@
 #include "../world/landblock.h"
 #include "../world/tables.h"
 #include "flowmap_system.h"
+#include "power_system.h"
 #include <map>
 
 namespace settler_ai_detail {
@@ -186,6 +187,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		    settler.thirst = 1000;
 		    settler.state_major = IDLE;
 		    world::log.write(settler_ai_detail::announce("enjoys a drink.", settler));
+		    power_system_detail::power_drain_this_round += 10;
 		} else {
 		    settler_ai_detail::follow_flow_map(pos, flowmaps::water_flow_map);
 		}
@@ -198,6 +200,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		    settler.calories += 2000;
 		    settler.state_major = IDLE;
 		    world::log.write(settler_ai_detail::announce("enjoys some food.", settler));
+		    power_system_detail::power_drain_this_round += 10;
 		} else {
 		    settler_ai_detail::follow_flow_map(pos, flowmaps::food_flow_map);
 		}
