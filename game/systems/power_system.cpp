@@ -13,16 +13,18 @@ int calculate_power_gain(const power_generator_component* gen)
     if (gen->generator_mode == raws::DAYLIGHT) {
         float efficiency = 0.0F;
         if (world::sun_angle <= 90.0F) {
-            efficiency = 1 - (90.0F - world::sun_angle);
+            efficiency = 1.0 - ((90.0F - world::sun_angle)/90.0F);
         } else {
-            efficiency = 1 - (world::sun_angle-90.0F);
+            efficiency = 1.0 - ((world::sun_angle-90.0F)/90.0F);
         }
         if (efficiency < 0.1) efficiency = 0.1F;
         float generated = gen->amount * efficiency;
-        return generated;
+	return generated;
     }
     return 0;
 }
+
+int power_drain_this_round = 0;
 
 }
 
@@ -48,6 +50,8 @@ void power_system::tick(const double& duration_ms)
         }
 
         // TODO: Power consumption!
+        power -= power_system_detail::power_drain_this_round;
+        power_system_detail::power_drain_this_round = 0;
 
         if (power > storage_capacity) power = storage_capacity;
         world::stored_power = power;
