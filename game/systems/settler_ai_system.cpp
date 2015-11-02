@@ -82,10 +82,10 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
     // No movement
     if (engine::roll_dice(1,6)<4) {
 	renderable->glyph = 'Z';
-	renderable->foreground = color_t{64,64,64};
+	renderable->foreground = color_t{128,128,255};
     } else {
 	renderable->glyph = '@';
-	renderable->foreground = color_t{64,64,64};
+	renderable->foreground = color_t{128,128,255};
     }
     const int wakeful_gain = stat_modifier(stats->constitution) + 2 + engine::roll_dice(1,6);
     settler.wakefulness += wakeful_gain;
