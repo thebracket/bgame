@@ -17,7 +17,7 @@ int calculate_power_gain(const power_generator_component* gen)
         } else {
             efficiency = 1.0 - ((world::sun_angle-90.0F)/90.0F);
         }
-        if (efficiency < 0.1) efficiency = 0.1F;
+        if (efficiency < 0.05) efficiency = 0.05F;
         float generated = gen->amount * efficiency;
 	return generated;
     }
