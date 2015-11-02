@@ -34,7 +34,7 @@ void power_system::tick(const double& duration_ms)
     
     calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component>(world::cordex_handle);
 
-    if (last_tick+5 < calendar->system_time or last_tick == 0) {
+    if (last_tick+10 < calendar->system_time or last_tick == 0) {
         int power = world::stored_power;
 
         const vector<power_generator_component> * producers = engine::globals::ecs->find_components_by_type<power_generator_component> ();
