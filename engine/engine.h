@@ -59,6 +59,7 @@ public:
           double duration_ms = 0;
           while ( !quitting ) {
                clock_t start_time = clock();
+	       engine::globals::messages->clear();
                command::clear_commands();
                backend_driver.poll_inputs();
                command::process_commands();
@@ -73,7 +74,6 @@ public:
                     continuation_mode.second->init();
                     push_mode ( std::move ( continuation_mode.second ) );
                }
-
 
                backend_driver.draw ( vterm::get_virtual_screen() );
 

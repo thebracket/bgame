@@ -5,6 +5,7 @@
 #include "../world/world.h"
 #include <iostream>
 #include "../../engine/globals.h"
+#include "../messages/power_consumed_message.h"
 
 namespace power_system_detail {
 
@@ -24,8 +25,7 @@ int calculate_power_gain(const power_generator_component* gen)
     return 0;
 }
 
-int power_drain_this_round = 0;
-
+  
 }
 
 void power_system::tick(const double& duration_ms)
@@ -49,9 +49,12 @@ void power_system::tick(const double& duration_ms)
             storage_capacity += bat.storage_capacity;
         }
 
-        // TODO: Power consumption!
-        power -= power_system_detail::power_drain_this_round;
-        power_system_detail::power_drain_this_round = 0;
+        // Power consumption from messages
+        vector<power_consumed_message> * consumption_ptr = engine::globals::messages->get_messages_by_type<power_consumed_message>();
+	for (power_consumed_message &usage : *consumption_ptr) {
+	    power -= usage.quantity;
+	    usage.deleted = true;
+	}
 
         if (power > storage_capacity) power = storage_capacity;
         world::stored_power = power;

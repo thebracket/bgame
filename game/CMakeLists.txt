@@ -5,4 +5,3 @@ add_library(game loading_screen.cpp main_menu.cpp play_mode.cpp world_gen_mode.c
 	    systems/flowmap_system.cpp
 	    world/geometry.cpp world/world.cpp world/tile.cpp world/landblock.cpp world/console.cpp world/worldgen.cpp world/serialization_utils.cpp
 )
-

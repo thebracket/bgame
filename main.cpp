@@ -16,6 +16,8 @@ int main()
      GAME engine;
      GAME_ECS ecs(component_factory, world::load_world_constants, world::save_world_constants);
      engine::globals::ecs = &ecs;
+     GAME_MSG msg;
+     engine::globals::messages = &msg;
      engine.init();
      engine.main_loop( make_unique<loading_screen>() );
 }
