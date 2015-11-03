@@ -68,18 +68,24 @@ bool is_move_possible(const position_component * pos, const int &delta_x, const 
 }
 
 inline void move_to(position_component * pos, const int &nx, const int &ny) {
+    facing_t new_facing = OMNI;
+    if (pos->x < nx) new_facing = EAST;
+    if (pos->x > nx) new_facing = WEST;
+    if (pos->y < ny) new_facing = NORTH;
+    if (pos->y > ny) new_facing = SOUTH;
+  
     pos->moved=true;
     pos->x = nx;
     pos->y = ny;
+    pos->facing = new_facing;
 }
 
 void wander_randomly(settler_ai_component &settler, position_component * pos) {    
     // For now, they will wander around aimlessly with no purpose or collision-detection.
     int x = pos->x;
     int y = pos->y;
-
-    int direction = engine::roll_dice(1,5);
     
+    int direction = engine::roll_dice(1,5);
     switch (direction) {
       case 1 : if (is_move_possible(pos, -1, 0)) move_to(pos, x-1, y); break;
       case 2 : if (is_move_possible(pos, 1, 0)) move_to(pos, x+1, y); break;

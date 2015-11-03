@@ -19,4 +19,5 @@ private:
     void reset_visibility();
     void scan_radius_for_visibility(viewshed_component * view, const position_component * pos);
     void scan_radius_penetrating(viewshed_component * view, const position_component * pos);
+    bool is_facing_this_way(const position_component * pos, const double &angle);
 };

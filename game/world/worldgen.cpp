@@ -496,7 +496,7 @@ void add_cordex(const int &x, const int &y) {
     engine::globals::ecs->add_entity(cordex);
     world::cordex_handle = cordex.handle;
     engine::globals::ecs->add_component(cordex, debug_name_component("Cordex"));
-    engine::globals::ecs->add_component(cordex, position_component(x,y));
+    engine::globals::ecs->add_component(cordex, position_component(x, y, OMNI));
     engine::globals::ecs->add_component(cordex, viewshed_component(penetrating,16));
     engine::globals::ecs->add_component(cordex, calendar_component(0L));
     engine::globals::ecs->add_component(cordex, renderable_component(15, cyan, black));
