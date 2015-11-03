@@ -27,8 +27,8 @@ struct raw_settler_action : public base_raw {
 	p.power_drain = power_drain;
 	p.provides_quantity = provides_qty;
 	p.provided_resource = 0;
-	if (provides == "THIRST") p.provided_resource = 1;
-	if (provides == "CALORIES") p.provided_resource = 2;
+	if (provides == "THIRST") p.provided_resource = 2;
+	if (provides == "CALORIES") p.provided_resource = 1;
 	p.action_name = action_name;
 	
 	engine::globals::ecs->add_component<provisions_component>(parent, p);

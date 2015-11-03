@@ -19,5 +19,6 @@ public:
      virtual void render ( const screen_region viewport );
 
 private:
+     void render_heading( const engine::screen_region& viewport, const int& vp_left, const int& vp_right, const int& vp_top, const int& vp_bottom );
 };
 }

@@ -40,18 +40,7 @@ void play_mode::init()
 
 void play_mode::init_gui()
 {
-     std::unique_ptr<gui_element_base> console = make_unique<gui_frame> ( "ConsolePanel", TRI_CONSOLE );
-     console->add_child ( make_unique<gui_console> ( "Console" ) );
-
-     std::unique_ptr<gui_element_base> main_panel = make_unique<gui_frame> ( "MainPanel", TRI_MAIN );
-     main_panel->add_child ( make_unique<gui_main_game_view> ( "GameView" ) );
-
-     std::unique_ptr<gui_element_base> command_panel = make_unique<gui_frame> ( "CommandPanel", TRI_PANEL );
-     command_panel->add_child ( make_unique<gui_main_game_command_panel> ( "GamePanel" ) );
-
-     ui.add_child ( std::move ( main_panel ) );
-     ui.add_child ( std::move ( console ) );
-     ui.add_child ( std::move ( command_panel ) );
+     ui.add_child( make_unique<gui_main_game_view> ( "GameView" ) );
 }
 
 
