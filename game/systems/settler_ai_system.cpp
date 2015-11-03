@@ -4,9 +4,18 @@
 #include "../world/tables.h"
 #include "flowmap_system.h"
 #include "../messages/power_consumed_message.h"
+#include "../messages/chat_emote_message.h"
 #include <map>
 
 namespace settler_ai_detail {
+
+void consume_power(const int &quantity) {
+    engine::globals::messages->add_message<power_consumed_message>(power_consumed_message(quantity));
+}
+
+void emote(const string &message, const position_component * pos) {
+    engine::globals::messages->add_message<chat_emote_message>(chat_emote_message(string(" ")+message, pos->x+2, pos->y));
+}
   
 void append_name(stringstream &ss, const settler_ai_component &settler) {
     ss << "@CYAN@" << settler.first_name << " " << settler.last_name << "@WHITE@ (" << settler.profession_tag << ") ";
@@ -79,7 +88,7 @@ void wander_randomly(settler_ai_component &settler, position_component * pos) {
     }
 }
 
-void sleepy_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable) {
+void sleepy_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
     // No movement
     if (engine::roll_dice(1,6)<4) {
 	renderable->glyph = 'Z';
@@ -94,6 +103,7 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
     //std::cout << settler.first_name << " sleep time: " << settler.state_timer << ", wakefulness: " << settler.wakefulness << "\n";
     if (settler.state_timer < 1 or settler.wakefulness > 2000) {
 	  world::log.write(settler_ai_detail::announce("wakes up with a yawn.", settler));
+	  settler_ai_detail::emote("YAWN", pos);
 	  settler.state_major = IDLE;
 	  viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	  vision->scanner_range = 12;
@@ -136,10 +146,6 @@ void follow_flow_map(position_component * pos, const vector<short> &flow_map) {
     }
 }
 
-void consume_power(const int &quantity) {
-    engine::globals::messages->add_message<power_consumed_message>(power_consumed_message(quantity));
-}
-
 }
 
 void settler_ai_system::tick ( const double &duration_ms ) {
@@ -159,6 +165,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    settler.state_major = SLEEPING;
 	    settler.state_timer = 360;
 	    world::log.write(settler_ai_detail::announce("falls asleep.", settler));
+	    settler_ai_detail::emote("Zzzz", pos);
 	    viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	    vision->scanner_range = 2;
 	    vision->last_visibility.clear();
@@ -181,7 +188,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		renderable->foreground = color_t{255,255,0};
 		settler_ai_detail::wander_randomly(settler, pos);		
 	    } else if (settler.state_major == SLEEPING) {
-		settler_ai_detail::sleepy_time(settler, stats, renderable);
+		settler_ai_detail::sleepy_time(settler, stats, renderable, pos);
 	    } else if (settler.state_major == DRINKING) {
 		const int idx = world::current_region->idx( pos->x, pos->y );
 		const short distance_to_drink = flowmaps::water_flow_map [ idx ];
@@ -191,6 +198,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		    settler.thirst = 1000;
 		    settler.state_major = IDLE;
 		    world::log.write(settler_ai_detail::announce("enjoys a drink.", settler));
+		    settler_ai_detail::emote("Slurp", pos);
 		    settler_ai_detail::consume_power(10);
 		} else {
 		    settler_ai_detail::follow_flow_map(pos, flowmaps::water_flow_map);
@@ -204,6 +212,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 		    settler.calories += 2000;
 		    settler.state_major = IDLE;
 		    world::log.write(settler_ai_detail::announce("enjoys some food.", settler));
+		    settler_ai_detail::emote("Yummy!", pos);
 		    settler_ai_detail::consume_power(10);
 		} else {
 		    settler_ai_detail::follow_flow_map(pos, flowmaps::food_flow_map);

@@ -12,8 +12,6 @@ using engine::ecs_detail::for_each;
 
 namespace engine {
 
-constexpr int MAX_TTL = 5;
-  
 template<typename... messages_list>
 class message_bus {
 private:
@@ -31,7 +29,7 @@ public:
      void clear() {
           for_each ( storage, [] ( auto &x ) {
 	       if (!x.empty()) {
-		  std::for_each(x.begin(), x.end(), [] (auto &n) { ++n.ttl; if (n.ttl > MAX_TTL) n.deleted = true; });
+		  std::for_each(x.begin(), x.end(), [] (auto &n) { --n.ttl; if (n.ttl <= 0) n.deleted = true; });
 		  auto new_end = std::remove_if(x.begin(), x.end(), [] (auto &n) { return n.deleted; });
 		  x.erase(new_end, x.end());
 	       }
