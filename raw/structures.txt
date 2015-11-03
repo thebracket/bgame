@@ -7,7 +7,7 @@
 [RENDER_COLOR:CYAN:BLACK]
 [/RENDER]
 [OBSTRUCTS:Y:Y]
-[GENERATOR:daylight:10]
+[GENERATOR:daylight:5]
 [BATTERY:25]
 [DESCRIPTION:A bank of solar panels, atop an array of super-capacitor power storage. It provides power during daylight, and stores it at night.]
 [/STRUCTURE]

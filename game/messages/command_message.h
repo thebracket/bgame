@@ -7,7 +7,7 @@ struct command_message {
     command_message(const command_t cmd) : command(cmd) {}
   
     bool deleted = false;
-    int ttl = 0;
+    int ttl = 1;
     
     command_t command;
 };

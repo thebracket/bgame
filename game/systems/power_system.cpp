@@ -18,7 +18,8 @@ int calculate_power_gain(const power_generator_component* gen)
         } else {
             efficiency = 1.0 - ((world::sun_angle-90.0F)/90.0F);
         }
-        if (efficiency < 0.05) efficiency = 0.05F;
+        if (efficiency > 0.9) efficiency = 0.9F;
+        if (efficiency < 0.01) efficiency = 0.01F;
         float generated = gen->amount * efficiency;
 	return generated;
     }
@@ -54,9 +55,11 @@ void power_system::tick(const double& duration_ms)
 	for (power_consumed_message &usage : *consumption_ptr) {
 	    power -= usage.quantity;
 	    usage.deleted = true;
+	    //std::cout << "Power consumption occurred: " << usage.quantity << "\n";
 	}
 
         if (power > storage_capacity) power = storage_capacity;
+	if (power < 0) power = 0; // TODO: Dead!
         world::stored_power = power;
 	world::max_power = storage_capacity;
         // TODO: If power < 0 - dead!
