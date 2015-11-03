@@ -13,6 +13,7 @@ using std::make_unique;
 
 void play_mode::init_systems()
 {
+     engine::globals::ecs->add_system ( make_input_system() );
      engine::globals::ecs->add_system ( make_camera_system() );
      engine::globals::ecs->add_system ( make_calendar_system() );
      engine::globals::ecs->add_system ( make_obstruction_system() );

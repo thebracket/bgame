@@ -13,3 +13,4 @@ unique_ptr<base_system> make_settler_ai_system();
 unique_ptr<base_system> make_obstruction_system();
 unique_ptr<base_system> make_power_system();
 unique_ptr<base_system> make_flowmap_system();
+unique_ptr<base_system> make_input_system();
