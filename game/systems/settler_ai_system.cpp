@@ -71,8 +71,8 @@ inline void move_to(position_component * pos, const int &nx, const int &ny) {
     facing_t new_facing = OMNI;
     if (pos->x < nx) new_facing = EAST;
     if (pos->x > nx) new_facing = WEST;
-    if (pos->y < ny) new_facing = NORTH;
-    if (pos->y > ny) new_facing = SOUTH;
+    if (pos->y < ny) new_facing = SOUTH;
+    if (pos->y > ny) new_facing = NORTH;
   
     pos->moved=true;
     pos->x = nx;
