@@ -1,0 +1,13 @@
+#pragma once
+
+enum command_t { NONE, TOGGLE_PAUSE, CAMERA_UP, CAMERA_DOWN, CAMERA_LEFT, CAMERA_RIGHT };
+
+struct command_message {
+    command_message() { command = NONE;  }
+    command_message(const command_t cmd) : command(cmd) {}
+  
+    bool deleted = false;
+    int ttl = 0;
+    
+    command_t command;
+};

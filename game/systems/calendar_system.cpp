@@ -98,9 +98,13 @@ float calendar_system::calculate_sun_angle ( const calendar_component* t ) const
 void calendar_system::tick ( const double &duration_ms )
 {
      calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component> ( world::cordex_handle );
-     if (engine::command::is_key_down( engine::command::SPACE )) {
-	world::paused = !world::paused;
+     for (command_message &cmd : *engine::globals::messages->get_messages_by_type<command_message>() ) {
+	  if (!cmd.deleted and cmd.command == TOGGLE_PAUSE) {
+	      world::paused = !world::paused;
+	      cmd.deleted = true;
+	  }
      }
+     
      if (world::paused) {
        update_display_time(calendar);
        return;
