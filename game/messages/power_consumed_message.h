@@ -5,7 +5,7 @@ struct power_consumed_message {
     power_consumed_message(const int &qty) : quantity(qty) {}
   
     bool deleted = false;
-    int ttl = 0;
+    int ttl = 128;
   
     int quantity;
 };

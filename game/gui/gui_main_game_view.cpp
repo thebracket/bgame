@@ -54,7 +54,7 @@ void gui_main_game_view::render_heading( const screen_region &viewport, const in
     
     // Display power levels
     stringstream ss;
-    ss << "Power: " << world::stored_power << " / " << world::max_power;
+    ss << "<Power: " << world::stored_power << " / " << world::max_power << ">";
     const string power_str = ss.str();
     const int length = power_str.size();
     const int power_x = (viewport.w/2) - (length/2);
@@ -85,7 +85,7 @@ void gui_main_game_view::render_heading( const screen_region &viewport, const in
 	    const int emote_y = emote.y - vp_top+2;
 	    if (emote.x + size > vp_right) emote.x -= (vp_right - size);
 	    
-	    const color_t emote_back{0, emote.ttl*8, emote.ttl*8};
+	    const color_t emote_back{emote.ttl*8, emote.ttl*8, 0};
 	    vterm::set_char_xy(emote_x, emote_y, {16, black, emote_back});
 	    vterm::print(emote_x+1, emote_y, emote.message, black, emote_back);
 	    //std::cout << "Printing emote [" << emote.message << "] at " << emote_x << "," << emote_y << "; TTL: " << emote.ttl << "\n";
