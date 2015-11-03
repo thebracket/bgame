@@ -3,7 +3,7 @@
 #include <map>
 
 // To keep gcc happy, these are defined outside of the map.
-
+constexpr int LOG_SIZE = 100;
 
 std::map<string,color_t> decode_console_color {
      {"@BLACK@", engine::black},
@@ -52,6 +52,6 @@ void console::write ( const string line )
           }
      }
 
-     if ( log.size() > 100 ) log.erase ( log.begin() );
+     if ( log.size() > LOG_SIZE ) log.erase ( log.begin() );
      log.push_back ( {parsed} );
 }
