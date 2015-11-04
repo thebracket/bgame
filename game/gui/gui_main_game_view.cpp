@@ -115,7 +115,7 @@ void gui_main_game_view::render_emotes ( const screen_region& viewport, const in
 	    const color_t emote_back = emote_background(emote.color, emote.ttl);
 	    const color_t emote_fore = emote_foreground(emote.color, emote.ttl);
 	    
-	    vterm::set_char_xy(emote_x, emote_y, {17, emote_back, emote_fore});
+	    vterm::set_char_xy(emote_x, emote_y, {27, emote_back, emote_fore});
 	    vterm::print(emote_x+1, emote_y, emote.message, emote_fore, emote_back);
 	    emote.deleted = false;
 	}
@@ -184,7 +184,7 @@ void gui_main_game_view::render_tooltip ( const screen_region& viewport, const i
     for (const pair<string,color_t> &line : lines) if (tip_length < line.first.size()) tip_length = line.first.size();
     
     if (go_left) {
-	vterm::set_char_xy(mouse_vx-1, mouse_vy, { 16, dark_green, black });
+	vterm::set_char_xy(mouse_vx-1, mouse_vy, { 26, dark_green, black });
 	// Draw box
 	int render_y = mouse_vy - (lines.size()/2);
 	vterm::draw_box(mouse_vx - (tip_length + 3), render_y-1, tip_length+1, lines.size()+1, dark_green, black);
@@ -193,7 +193,7 @@ void gui_main_game_view::render_tooltip ( const screen_region& viewport, const i
 	    ++render_y;
 	}
     } else {
-	vterm::set_char_xy(mouse_vx+1, mouse_vy, { 17, dark_green, black });    
+	vterm::set_char_xy(mouse_vx+1, mouse_vy, { 27, dark_green, black });    
 	int render_y = mouse_vy - (lines.size()/2);
 	vterm::draw_box(mouse_vx+2, render_y-1, tip_length+1, lines.size()+1, dark_green, black);
 	for (const pair<string,color_t> &line : lines) {
