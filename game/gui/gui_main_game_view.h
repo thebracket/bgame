@@ -22,6 +22,17 @@ public:
 
 private:
      void render_heading( const engine::screen_region& viewport, const int& vp_left, const int& vp_right, const int& vp_top, const int& vp_bottom );
+     void render_power_bar( const engine::screen_region& viewport, const int& vp_left, const int& vp_right, const int& vp_top, const int& vp_bottom );
+     void render_emotes( const engine::screen_region& viewport, const int& vp_left, const int& vp_right, const int& vp_top, const int& vp_bottom );
+     void render_tooltip( const screen_region& viewport, const int& region_x, const int& region_y );
      color_t emote_background(const chat_emote_color_t &col, const int &ttl);
      color_t emote_foreground(const chat_emote_color_t &col, const int &ttl);
+     
+     void process_mouse_events();
+     
+     int mouse_x = 0;
+     int mouse_y = 0;
+     int mouse_vx = 0;
+     int mouse_vy = 0;
+     int mouse_hover_time = 0;
 };

@@ -21,6 +21,7 @@
 #include "../game/messages/power_consumed_message.h"
 #include "../game/messages/command_message.h"
 #include "../game/messages/chat_emote_message.h"
+#include "../game/messages/mouse_motion_message.h"
 
 using engine::entity_component_system;
 using engine::message_bus;
