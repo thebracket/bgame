@@ -15,7 +15,8 @@ namespace flowmaps {
 
 vector<short> food_flow_map;
 vector<short> water_flow_map;
-vector<int> flow_map_entity_id;
+vector<int> food_flow_map_entity_id;
+vector<int> water_flow_map_entity_id;
 
 inline void erase_flow_map ( vector<short> &flow_map )
 {
@@ -36,7 +37,7 @@ void spread( vector< pair< tuple<int,int,int>, short > > &new_cells, set<int> &v
     new_cells.push_back( { make_tuple( x, y, entity_id ), distance } );
 }
 
-void build_flow_map ( vector<short> &map, vector<tuple<int,int,int>> &sources )
+void build_flow_map ( vector<short> &map, vector<tuple<int,int,int>> &sources, vector<int> &flow_map_entity_id )
 {
      erase_flow_map(map);
      set<int> visited;
@@ -82,6 +83,6 @@ void flowmap_system::tick ( const double& duration_ms )
           if ( provision.provided_resource == 2 ) water_sources.push_back ( make_tuple( pos->x, pos->y, provision.entity_id ) );
      }
 
-     flowmaps::build_flow_map ( flowmaps::food_flow_map, food_sources );
-     flowmaps::build_flow_map ( flowmaps::water_flow_map, water_sources );
+     flowmaps::build_flow_map ( flowmaps::food_flow_map, food_sources, flowmaps::food_flow_map_entity_id );
+     flowmaps::build_flow_map ( flowmaps::water_flow_map, water_sources, flowmaps::water_flow_map_entity_id );
 }
