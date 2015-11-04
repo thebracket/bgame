@@ -2,12 +2,21 @@
 #include <iostream>
 #include "../../engine/globals.h"
 #include <sstream>
-#include "../messages/chat_emote_message.h"
 
 using std::stringstream;
 
 namespace engine {
 
+color_t gui_main_game_view::emote_background ( const emote_color_t& col, const int& ttl )
+{
+
+}
+
+color_t gui_main_game_view::emote_foreground ( const emote_color_t& col, const int& ttl )
+{
+    return color_t{0,0,0};
+}
+  
 void gui_main_game_view::render_heading( const screen_region &viewport, const int &vp_left, const int &vp_right, const int &vp_top, const int &vp_bottom )
 {
     // Heading
@@ -85,7 +94,9 @@ void gui_main_game_view::render_heading( const screen_region &viewport, const in
 	    const int emote_y = emote.y - vp_top+2;
 	    if (emote.x + size > vp_right) emote.x -= (vp_right - size);
 	    
-	    const color_t emote_back{emote.ttl*8, emote.ttl*8, 0};
+	    const color_t emote_back = emote_background(emote.color, emote.ttl);
+	    const colol_t emote_fore = emote_foreground(emote.color, emote.ttl);
+	    
 	    vterm::set_char_xy(emote_x, emote_y, {16, black, emote_back});
 	    vterm::print(emote_x+1, emote_y, emote.message, black, emote_back);
 	    //std::cout << "Printing emote [" << emote.message << "] at " << emote_x << "," << emote_y << "; TTL: " << emote.ttl << "\n";
