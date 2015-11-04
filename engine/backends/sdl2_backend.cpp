@@ -8,8 +8,8 @@ using std::make_pair;
 namespace engine {
 
 // TODO: Configuration driven height
-constexpr int SCREEN_WIDTH = 800;
-constexpr int SCREEN_HEIGHT = 600;
+constexpr int SCREEN_WIDTH = 1024;
+constexpr int SCREEN_HEIGHT = 768;
 
 sdl2_backend::sdl2_backend()
 {
@@ -118,6 +118,13 @@ void sdl2_backend::poll_inputs()
     while (SDL_PollEvent(&e) != 0) {
       if (e.type == SDL_KEYDOWN) {
 	command::on_command({ translate_keycode(e), 0, 0, command::KEYDOWN });
+      }
+      if (e.type == SDL_MOUSEMOTION) {
+	command::on_command({ command::keys::NONE, e.motion.x, e.motion.y, command::MOUSE_MOVE });
+      }
+      if (e.type == SDL_MOUSEBUTTONDOWN) {
+	if (e.button.button == SDL_BUTTON_LEFT)	command::on_command({ command::keys::NONE, 0, 0, command::MOUSE_LEFT_CLICK } );
+	if (e.button.button == SDL_BUTTON_RIGHT) command::on_command({ command::keys::NONE, 0, 0, command::MOUSE_RIGHT_CLICK } );
       }
     }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-enum command_t { NONE, TOGGLE_PAUSE, CAMERA_UP, CAMERA_DOWN, CAMERA_LEFT, CAMERA_RIGHT };
+enum command_t { NONE, TOGGLE_PAUSE, CAMERA_UP, CAMERA_DOWN, CAMERA_LEFT, CAMERA_RIGHT, LEFT_CLICK, RIGHT_CLICK };
 
 struct command_message {
     command_message() { command = NONE;  }

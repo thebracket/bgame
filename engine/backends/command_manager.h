@@ -13,6 +13,11 @@ struct input_data {
   command_type type;
 };
 
+extern int mouse_x;
+extern int mouse_y;
+extern bool left_click;
+extern bool right_click;
+
 /*
  * Clear the command queue; you want to do this before you
  * poll inputs.
