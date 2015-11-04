@@ -151,6 +151,16 @@ string pad_to(const string &str, const int &num, const char paddingChar = ' ')
     return result;
 }
 
+unsigned char gender_icon(const short &gender) {
+  switch (gender) {
+    case gender_t::ASEXUAL : return 205;
+    case gender_t::FEMALE : return 12;
+    case gender_t::HERMAPHRODITE : return 236;
+    case gender_t::MALE : return 11;
+  }
+  return ' ';
+}
+
 void gui_main_game_view::render_tooltip ( const screen_region& viewport, const int &region_x, const int &region_y ) {
     const int idx = world::current_region->idx( region_x, region_y );
     if (world::current_region->revealed[idx] != true) return;
@@ -160,6 +170,7 @@ void gui_main_game_view::render_tooltip ( const screen_region& viewport, const i
     
     vector<pair<string,color_t>> lines;
     
+    lines.push_back(make_pair("Right-Click For Options", magenta));
     lines.push_back(make_pair(world::current_region->tiles[idx].get_description(), green));
     lines.push_back(make_pair(world::current_region->tiles[idx].get_climate(), cyan));
     
@@ -170,8 +181,9 @@ void gui_main_game_view::render_tooltip ( const screen_region& viewport, const i
 	    
 	    settler_ai_component * settler = engine::globals::ecs->find_entity_component<settler_ai_component>(entity_id);
 	    if (settler != nullptr) {
+		game_species_component * species = engine::globals::ecs->find_entity_component<game_species_component>(entity_id);
 		stringstream ss;
-		ss << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
+		ss << gender_icon(species->gender) << " " << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
 		lines.push_back(make_pair(ss.str(), yellow));
 	    } else {	    
 		debug_name_component * debug_name = engine::globals::ecs->find_entity_component<debug_name_component>(entity_id);
