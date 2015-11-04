@@ -14,13 +14,13 @@ color_t gui_main_game_view::emote_background ( const chat_emote_color_t &col, co
     const unsigned char full = multiplier * time_to_live;
   
     switch (col) {
-      case WHITE : return color_t{full, full, full}; break;
-      case YELLOW : return color_t{full, full, 0}; break;
-      case CYAN : return color_t{0, full, full}; break;
-      case GREEN : return color_t{0, full, 0}; break;
-      case MAGENTA : return color_t{full, 0, full}; break;
-      case RED : return color_t{full, 0, 0}; break;
-      case BLUE : return color_t{0, 0, full}; break;
+      case chat_emote_color_t::YELLOW : return color_t{full, full, 0};
+      case chat_emote_color_t::CYAN : return color_t{0, full, full};
+      case chat_emote_color_t::GREEN : return color_t{0, full, 0};
+      case chat_emote_color_t::MAGENTA : return color_t{full, 0, full};
+      case chat_emote_color_t::RED : return color_t{full, 0, 0};
+      case chat_emote_color_t::BLUE : return color_t{0, 0, full};
+      case chat_emote_color_t::WHITE : return color_t{full, full, full};
     }
 }
 
@@ -116,7 +116,7 @@ void gui_main_game_view::render_emotes ( const screen_region& viewport, const in
 	    const color_t emote_fore = emote_foreground(emote.color, emote.ttl);
 	    
 	    vterm::set_char_xy(emote_x, emote_y, {27, emote_back, emote_fore});
-	    vterm::print(emote_x+1, emote_y, emote.message, emote_fore, emote_back);
+	    vterm::print(emote_x+1, emote_y, emote.message + " ", emote_fore, emote_back);
 	    emote.deleted = false;
 	}
     }
