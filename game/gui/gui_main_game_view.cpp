@@ -4,16 +4,27 @@
 #include <sstream>
 
 using std::stringstream;
+using namespace engine;
 
-namespace engine {
-
-color_t gui_main_game_view::emote_background ( const emote_color_t& col, const int& ttl )
+color_t gui_main_game_view::emote_background ( const chat_emote_color_t &col, const int& time_to_live )
 {
-
+    constexpr int multiplier = 8;
+    const unsigned char full = multiplier * time_to_live;
+  
+    switch (col) {
+      case WHITE : return color_t{full, full, full}; break;
+      case YELLOW : return color_t{full, full, 0}; break;
+      case CYAN : return color_t{0, full, full}; break;
+      case GREEN : return color_t{0, full, 0}; break;
+      case MAGENTA : return color_t{full, 0, full}; break;
+      case RED : return color_t{full, 0, 0}; break;
+      case BLUE : return color_t{0, 0, full}; break;
+    }
 }
 
-color_t gui_main_game_view::emote_foreground ( const emote_color_t& col, const int& ttl )
+color_t gui_main_game_view::emote_foreground ( const chat_emote_color_t &col, const int& ttl )
 {
+    if (col == BLUE) return color_t{0,255,255};
     return color_t{0,0,0};
 }
   
@@ -95,11 +106,10 @@ void gui_main_game_view::render_heading( const screen_region &viewport, const in
 	    if (emote.x + size > vp_right) emote.x -= (vp_right - size);
 	    
 	    const color_t emote_back = emote_background(emote.color, emote.ttl);
-	    const colol_t emote_fore = emote_foreground(emote.color, emote.ttl);
+	    const color_t emote_fore = emote_foreground(emote.color, emote.ttl);
 	    
-	    vterm::set_char_xy(emote_x, emote_y, {16, black, emote_back});
-	    vterm::print(emote_x+1, emote_y, emote.message, black, emote_back);
-	    //std::cout << "Printing emote [" << emote.message << "] at " << emote_x << "," << emote_y << "; TTL: " << emote.ttl << "\n";
+	    vterm::set_char_xy(emote_x, emote_y, {17, emote_back, emote_fore});
+	    vterm::print(emote_x+1, emote_y, emote.message, emote_fore, emote_back);
 	    emote.deleted = false;
 	}
     }
@@ -161,6 +171,4 @@ void gui_main_game_view::render(const screen_region viewport)
     }
     
     render_heading(viewport, left_x, right_x, top_y, bottom_y);
-}
-
 }
