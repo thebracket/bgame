@@ -214,9 +214,11 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	} else if (needs.needs_drink and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
 	    settler.state_major = DRINKING;
 	    world::log.write(settler_ai_detail::announce("wants a drink.", settler));
+	    //settler_ai_detail::emote("Thirsty", pos, BLUE);
 	} else if (needs.needs_food and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
 	    settler.state_major = EATING;
 	    world::log.write(settler_ai_detail::announce("wants some food.", settler));
+	    //settler_ai_detail::emote("Hungry", pos, BLUE);
 	}
 	
 	// Perform actions

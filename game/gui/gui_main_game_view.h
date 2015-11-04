@@ -12,6 +12,8 @@ using std::string;
 using engine::screen_region;
 using engine::gui_element_base;
 
+enum gui_mode_t { PLAYING };
+
 class gui_main_game_view : public gui_element_base {
 public:
      gui_main_game_view ( const string name ) {
@@ -35,4 +37,5 @@ private:
      int mouse_vx = 0;
      int mouse_vy = 0;
      int mouse_hover_time = 0;
+     gui_mode_t current_mode = PLAYING;
 };
