@@ -10,6 +10,7 @@ namespace flowmaps {
   
 extern vector<short> food_flow_map;
 extern vector<short> water_flow_map;
+extern vector<int> flow_map_entity_id;
   
 }
 
@@ -18,6 +19,7 @@ public:
      flowmap_system() {
 	  flowmaps::food_flow_map.resize( landblock_height * landblock_width );
 	  flowmaps::water_flow_map.resize( landblock_height * landblock_width );
+	  flowmaps::flow_map_entity_id.resize( landblock_height * landblock_width );
      }
      
      virtual void tick ( const double &duration_ms );

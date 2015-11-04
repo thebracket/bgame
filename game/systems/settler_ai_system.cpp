@@ -152,6 +152,42 @@ void follow_flow_map(position_component * pos, const vector<short> &flow_map) {
     }
 }
 
+void drinking_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
+    const int idx = world::current_region->idx( pos->x, pos->y );
+    const short distance_to_drink = flowmaps::water_flow_map [ idx ];
+    //std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
+    renderable->foreground = color_t{0,255,255};
+    if (distance_to_drink < 2) {
+	const int drink_source_id = flowmaps::flow_map_entity_id[idx];
+	provisions_component * drink_source = engine::globals::ecs->find_entity_component<provisions_component>(drink_source_id);
+	settler.thirst = drink_source->provides_quantity;
+	settler.state_major = IDLE;
+	world::log.write(settler_ai_detail::announce(drink_source->action_name, settler));
+	settler_ai_detail::emote("Slurp", pos, CYAN);
+	settler_ai_detail::consume_power(drink_source->power_drain);
+    } else {
+	settler_ai_detail::follow_flow_map(pos, flowmaps::water_flow_map);
+    }
+}
+
+void eating_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
+    const int idx = world::current_region->idx( pos->x, pos->y );
+    const short distance_to_food = flowmaps::food_flow_map [ idx ];
+    renderable->foreground = color_t{255,0,255};
+    //std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
+    if (distance_to_food < 2) {
+	const int food_source_id = flowmaps::flow_map_entity_id[idx];
+	provisions_component * food_source = engine::globals::ecs->find_entity_component<provisions_component>( food_source_id );
+	settler.calories += food_source->provides_quantity;
+	settler.state_major = IDLE;
+	world::log.write(settler_ai_detail::announce(food_source->action_name, settler));
+	settler_ai_detail::emote("Yummy!", pos, MAGENTA);
+	settler_ai_detail::consume_power(food_source->power_drain);
+    } else {
+	settler_ai_detail::follow_flow_map(pos, flowmaps::food_flow_map);
+    }
+}
+
 }
 
 void settler_ai_system::tick ( const double &duration_ms ) {
@@ -196,33 +232,9 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    } else if (settler.state_major == SLEEPING) {
 		settler_ai_detail::sleepy_time(settler, stats, renderable, pos);
 	    } else if (settler.state_major == DRINKING) {
-		const int idx = world::current_region->idx( pos->x, pos->y );
-		const short distance_to_drink = flowmaps::water_flow_map [ idx ];
-		//std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
-		renderable->foreground = color_t{0,255,255};
-		if (distance_to_drink < 2) {
-		    settler.thirst = 1000;
-		    settler.state_major = IDLE;
-		    world::log.write(settler_ai_detail::announce("enjoys a drink.", settler));
-		    settler_ai_detail::emote("Slurp", pos, CYAN);
-		    settler_ai_detail::consume_power(10);
-		} else {
-		    settler_ai_detail::follow_flow_map(pos, flowmaps::water_flow_map);
-		}
+		settler_ai_detail::drinking_time(settler, stats, renderable, pos);
 	    } else if (settler.state_major == EATING) {
-		const int idx = world::current_region->idx( pos->x, pos->y );
-		const short distance_to_food = flowmaps::food_flow_map [ idx ];
-		renderable->foreground = color_t{255,0,255};
-		//std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
-		if (distance_to_food < 2) {
-		    settler.calories += 2000;
-		    settler.state_major = IDLE;
-		    world::log.write(settler_ai_detail::announce("enjoys some food.", settler));
-		    settler_ai_detail::emote("Yummy!", pos, MAGENTA);
-		    settler_ai_detail::consume_power(10);
-		} else {
-		    settler_ai_detail::follow_flow_map(pos, flowmaps::food_flow_map);
-		}
+		settler_ai_detail::eating_time(settler, stats, renderable, pos);
 	    }
 	    
             // Random pause
