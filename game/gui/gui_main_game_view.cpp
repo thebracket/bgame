@@ -170,7 +170,7 @@ void gui_main_game_view::render_tooltip ( const screen_region& viewport, const i
     
     vector<pair<string,color_t>> lines;
     
-    lines.push_back(make_pair("Right-Click For Options", magenta));
+    //lines.push_back(make_pair("Right-Click For Options", magenta));
     lines.push_back(make_pair(world::current_region->tiles[idx].get_description(), green));
     lines.push_back(make_pair(world::current_region->tiles[idx].get_climate(), cyan));
     

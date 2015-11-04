@@ -301,7 +301,7 @@ void parse_chunks ( const vector<string> &chunks )
 
 inline bool ignore_char(const char &c) {
   if (c == ' ') return false;
-  if (c>40 and c<122 and c != '[' and c != ']') return false;
+  if (c>40 and c<123 and c != '[' and c != ']') return false;
   return true;
 }
 
