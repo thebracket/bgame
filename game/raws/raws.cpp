@@ -419,7 +419,7 @@ string line_from_text_file(const string &filename, const int &line_number) {
 
 string get_random_first_name ( const short int& gender )
 {
-    if (gender == 1) {
+    if (gender == gender_t::FEMALE) {
 	return line_from_text_file("../raw/first_names_female.txt", engine::roll_dice(1,NUMBER_OF_FEMALE_FIRST_NAMES)-1);
     } else {
 	return line_from_text_file("../raw/first_names_male.txt", engine::roll_dice(1,NUMBER_OF_MALE_FIRST_NAMES)-1);      
