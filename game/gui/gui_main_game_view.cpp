@@ -141,6 +141,17 @@ void gui_main_game_view::process_mouse_events()
 	}
 	m.deleted = true;
     }
+    
+    vector<command_message> * actions = engine::globals::messages->get_messages_by_type<command_message>();
+    for (command_message &m : *actions) {
+      if (m.command == RIGHT_CLICK) {
+	  m.deleted = true;
+	  if (mouse_vy > 3) {
+	      world::paused = true;
+	      // Change to options mode
+	  }
+      }
+    }
 }
 
 string pad_to(const string &str, const int &num, const char paddingChar = ' ')
@@ -284,5 +295,5 @@ void gui_main_game_view::render(const screen_region viewport)
     render_power_bar(viewport, left_x, right_x, top_y, bottom_y);
     render_emotes(viewport, left_x, right_x, top_y, bottom_y);
     
-    if (mouse_vy > 2 and mouse_hover_time > 10) render_tooltip(viewport, selected_region_x, selected_region_y);
+    if ( current_mode == PLAYING and mouse_vy > 2 and mouse_hover_time > 10) render_tooltip(viewport, selected_region_x, selected_region_y);
 }

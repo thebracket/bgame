@@ -1,3 +1,4 @@
 display.txt
 structures.txt
 starting_professions.txt
+items_starting.txt

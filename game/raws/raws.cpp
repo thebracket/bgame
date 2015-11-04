@@ -16,6 +16,10 @@
 #include "raw_power_battery.h"
 #include "raw_description.h"
 #include "raw_settler_action.h"
+#include "raw_buildable.h"
+#include "raw_skill_required.h"
+#include "raw_component.h"
+#include "raw_sleepable.h"
 
 #include "../../engine/globals.h"
 #include "../../engine/rng.h"
@@ -36,6 +40,7 @@ unordered_map<string, engine::vterm::color_t> colors;
 unordered_map<string, unsigned char> glyphs;
 unordered_map<string, unique_ptr<base_raw>> structures;
 unordered_map<string, unique_ptr<base_raw>> starting_professions;
+unordered_map<string, unique_ptr<base_raw>> items;
   
 }
 
@@ -61,9 +66,9 @@ vector<string> get_files_to_read()
 
 unique_ptr<base_raw> current;
 unique_ptr<base_raw> current_render;
-unique_ptr<raw_settler_action> current_settler_action;
+unique_ptr<base_raw> current_sub_chunk;
 string current_name;
-enum nested_enum {NONE,STRUCTURE,STARTING_PROFESSION};
+enum nested_enum {NONE,STRUCTURE,STARTING_PROFESSION,ITEM};
 nested_enum nested_type;
 bool nested;
 
@@ -164,8 +169,13 @@ void parse_structure(const vector<string> &chunks) {
 	return;
     }
     if (chunks[0] == "/SETTLER-ACTION") {
-	current->children.push_back(std::move(current_settler_action));
-	current_settler_action.reset();
+	current->children.push_back(std::move(current_sub_chunk));
+	     current_sub_chunk.reset();
+	return;
+    }
+    if (chunks[0] == "/BUILDABLE") {
+	current->children.push_back(std::move(current_sub_chunk));
+	     current_sub_chunk.reset();
 	return;
     }
     if (chunks[0] == "RENDER") {
@@ -173,7 +183,11 @@ void parse_structure(const vector<string> &chunks) {
 	return;
     }
     if (chunks[0] == "SETTLER-ACTION") {
-	current_settler_action = make_unique<raw_settler_action>();
+	     current_sub_chunk = make_unique<raw_settler_action>();
+	return;
+    }
+    if (chunks[0] == "BUILDABLE") {
+	     current_sub_chunk = make_unique<raw_buildable>();
 	return;
     }
     if (chunks[0] == "NAME") {
@@ -205,16 +219,31 @@ void parse_structure(const vector<string> &chunks) {
 	return;
     }
     if (chunks[0] == "SA-NAME") {
-	current_settler_action->action_name = chunks[1];
+	raw_settler_action * tmp = static_cast<raw_settler_action *>(current_sub_chunk.get());
+	tmp->action_name = chunks[1];
 	return;
     }
     if (chunks[0] == "SA-PROVIDES") {
-	current_settler_action->provides = chunks[1];
-	current_settler_action->provides_qty = std::stoi(chunks[2]);
+	raw_settler_action * tmp = static_cast<raw_settler_action *>(current_sub_chunk.get());
+	tmp->provides = chunks[1];
+	tmp->provides_qty = std::stoi(chunks[2]);
 	return;
     }
     if (chunks[0] == "SA-POWER_USE") {
-	current_settler_action->power_drain = std::stoi(chunks[1]);
+	raw_settler_action * tmp = static_cast<raw_settler_action *>(current_sub_chunk.get());
+	tmp->power_drain = std::stoi(chunks[1]);
+	return;
+    }
+    if (chunks[0] == "BUILDABLE_COMPONENT") {
+	current_sub_chunk->children.push_back( make_unique<raw_component>(chunks[1], std::stoi(chunks[2])));
+	return;
+    }
+    if (chunks[0] == "BUILDABLE_SKILL") {
+	current_sub_chunk->children.push_back( make_unique<raw_skill_required>(chunks[1], std::stoi(chunks[2]), std::stoi(chunks[3])));
+    	return;
+    }
+    if (chunks[0] == "SLEEP_HERE") {
+	current->children.push_back( make_unique<raw_sleepable>() );
 	return;
     }
     
@@ -228,9 +257,44 @@ void parse_starting_profession(const vector<string> &chunks) {
 	detail::starting_professions[current_name] = std::move(current);
 	current.reset();
 	return;
+    }    
+    if (chunks[0] == "NAME") {
+	parse_raw_name(chunks);
+	return;
+    }
+}
+
+void parse_item(const vector<string> &chunks) {
+    if (chunks[0] == "/ITEM") {
+	nested = false;
+	nested_type = NONE;
+	detail::items[current_name] = std::move(current);
+	current.reset();
+	return;
+    }
+    if (chunks[0] == "/RENDER") {
+	current->children.push_back(std::move(current_render));
+	current_render.reset();
+	return;
+    }
+    if (chunks[0] == "RENDER") {
+	current_render = make_unique<raw_renderable>();
+	return;
     }
     if (chunks[0] == "NAME") {
 	parse_raw_name(chunks);
+	return;
+    }
+    if (chunks[0] == "DESCRIPTION") {
+	parse_raw_description(chunks);
+	return;
+    }
+    if (chunks[0] == "RENDER_GLYPH") {
+	parse_raw_glyph(chunks);
+	return;
+    }
+    if (chunks[0] == "RENDER_COLOR") {
+	parse_raw_color_pair(chunks);
 	return;
     }
 }
@@ -242,6 +306,7 @@ void parse_nested_chunk ( const vector<string> &chunks )
     switch (nested_type) {
       case STRUCTURE : parse_structure(chunks); break;
       case STARTING_PROFESSION : parse_starting_profession(chunks); break;
+      case ITEM : parse_item(chunks); break;
       case NONE : throw 103;
     }
 }
@@ -282,6 +347,12 @@ void parse_whole_chunk ( const vector<string> &chunks )
      if (chunks[0] == "STARTING_PROFESSION") {
 	nested = true;
 	nested_type = STARTING_PROFESSION;
+	current = make_unique<base_raw>();
+	return;
+     }
+     if (chunks[0] == "ITEM") {
+	nested = true;
+	nested_type = ITEM;
 	current = make_unique<base_raw>();
 	return;
      }

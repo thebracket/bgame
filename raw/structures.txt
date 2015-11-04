@@ -171,3 +171,20 @@
 [DESCRIPTION:A segment of ship floor.]
 [/STRUCTURE]
 
+[STRUCTURE]
+[NAME:Personal Survival Shelter]
+[DESCRIPTION:A one-person tent.]
+[RENDER]
+[RENDER_GLYPH:TENT]
+[RENDER_COLOR:LIGHT_GREEN:BLACK]
+[/RENDER]
+[OBSTRUCTS:Y:N]
+[BUILDABLE]
+* Components are names from item lists. You can have multiple components.
+[BUILDABLE_COMPONENT:Personal Survival Shelter Kit:1]
+* Skills take the form skill name ; difficulty ; time
+* You can have multiple skills required in order.
+[BUILDABLE_SKILL:Construction:10:10]
+[/BUILDABLE]
+[SLEEP_HERE]
+[/STRUCTURE]
