@@ -9,8 +9,9 @@
 #include "../messages/chat_emote_message.h"
 
 using std::string;
+using engine::screen_region;
+using engine::gui_element_base;
 
-namespace engine {
 class gui_main_game_view : public gui_element_base {
 public:
      gui_main_game_view ( const string name ) {
@@ -21,7 +22,6 @@ public:
 
 private:
      void render_heading( const engine::screen_region& viewport, const int& vp_left, const int& vp_right, const int& vp_top, const int& vp_bottom );
-     color_t emote_background(const emote_color_t &col, const int &ttl);
-     color_t emote_foreground(const emote_color_t &col, const int &ttl);
+     color_t emote_background(const chat_emote_color_t &col, const int &ttl);
+     color_t emote_foreground(const chat_emote_color_t &col, const int &ttl);
 };
-}
