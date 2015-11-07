@@ -59,7 +59,6 @@ public:
 	       engine::globals::messages->clear();
                command::clear_commands();
                backend_driver.poll_inputs();
-               command::process_commands();
                engine::globals::ecs->tick ( duration_ms );
 
                // Render Control
