@@ -14,6 +14,8 @@
 #include "game_species_component.h"
 #include "game_health_component.h"
 #include "provisions_component.h"
+#include "item_storage_component.h"
+#include "item_carried_component.h"
 #include "../../engine/globals.h"
 
 using engine::globals::ecs;
@@ -46,6 +48,8 @@ inline void component_factory(fstream &lbfile, const int ct) {
       case gamespecies : component_loader<game_species_component>(lbfile); break;
       case gamehealth : component_loader<game_health_component>(lbfile); break;
       case provision : component_loader<provisions_component>(lbfile); break;
+      case item_storage : component_loader<item_storage_component>(lbfile); break;
+      case item_carried : component_loader<item_carried_component>(lbfile); break;
       default :
 	    throw 102;
   }
