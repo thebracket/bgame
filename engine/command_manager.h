@@ -29,13 +29,6 @@ void clear_commands();
  */
 void on_command(const input_data &command);
 
-
-/*
- * Perform any command processing required before the
- * tick process receives input.
- */
-void process_commands();
-
 /*
  * Is a key pressed?
  */

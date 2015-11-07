@@ -38,11 +38,6 @@ void on_command(const input_data &command)
   }
 }
 
-void process_commands()
-{
-
-}
-
 bool is_key_down(const keys key) {
     auto finder = key_down.find(key);
     if (finder == key_down.end()) return false;
