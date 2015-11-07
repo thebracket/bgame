@@ -1,8 +1,6 @@
 #include "camera_system.h"
 #include "../../engine/globals.h"
 
-using namespace engine::command;
-
 void camera_system::tick(const double &duration_ms) {
     position_component * camera_pos = engine::globals::ecs->find_entity_component<position_component>(world::camera_handle);
 

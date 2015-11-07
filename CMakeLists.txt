@@ -13,12 +13,7 @@ add_executable(bgame main.cpp)
 target_link_libraries(bgame game engine)
 
 # Packages:
-# CURSES, SDL2, SDL2Image
-
-set(CURSES_NEED_WIDE TRUE)
-find_package(Curses REQUIRED)
-include_directories(${CURSES_INCLUDE_DIRS})
-target_link_libraries (bgame ${CURSES_LIBRARIES})
+# SDL2, SDL2Image
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
