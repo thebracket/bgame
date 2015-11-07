@@ -8,7 +8,10 @@ using std::fstream;
 using std::string;
 using engine::vterm::color_t;
 
-enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,obstruction,power_generator,power_battery,gamestats,gamespecies,gamehealth,provision};
+enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,
+  obstruction,power_generator,power_battery,gamestats,gamespecies,gamehealth,provision,
+  item_storage, item_carried
+};
 
 namespace serialization_generic {
 /* Primitive save/load handler */

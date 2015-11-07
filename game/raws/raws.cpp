@@ -442,13 +442,14 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
   
     entity e;
     e.handle = engine::globals::ecs->get_next_entity_handle();
-    engine::globals::ecs->add_entity(e);
-    
-    engine::globals::ecs->add_component(e, position_component(x,y));
-    
+    engine::globals::ecs->add_entity(e);    
+    engine::globals::ecs->add_component(e, position_component(x,y));    
     finder->second->build_components(e, x, y);
     
     return e.handle;
+}
+
+int create_item_from_raws(const string &name) {
 }
 
 string to_proper_noun_case(const std::string &original) {

@@ -18,6 +18,8 @@
 #include "../game/components/game_species_component.h"
 #include "../game/components/game_health_component.h"
 #include "../game/components/provisions_component.h"
+#include "../game/components/item_storage_component.h"
+#include "../game/components/item_carried_component.h"
 #include "../game/messages/power_consumed_message.h"
 #include "../game/messages/command_message.h"
 #include "../game/messages/chat_emote_message.h"
