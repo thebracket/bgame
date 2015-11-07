@@ -9,18 +9,15 @@
 #include "colors.h"
 #include "base_mode.h"
 #include "gui/gui.h"
-#include "backends/command_manager.h"
-#include "backends/ansi_backend.h"
-#include "backends/ncurses_backend.h"
-#include "backends/sdl2_backend.h"
+#include "command_manager.h"
+#include "sdl2_backend.h"
 #include "globals.h"
 
 namespace engine {
 
-template <typename backend_t>
 class bracket_engine {
 private:
-     backend_t backend_driver;
+     sdl2_backend backend_driver;
      std::unique_ptr<base_mode> current_mode;
      std::stack<std::unique_ptr<base_mode>> mode_stack;
      bool quitting = false;

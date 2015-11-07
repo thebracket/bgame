@@ -13,7 +13,7 @@ using std::make_unique;
 
 int main()
 {
-     GAME engine;
+     engine::bracket_engine engine;
      GAME_ECS ecs(component_factory, world::load_world_constants, world::save_world_constants);
      engine::globals::ecs = &ecs;
      GAME_MSG msg;
