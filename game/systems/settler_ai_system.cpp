@@ -1,5 +1,5 @@
 #include "settler_ai_system.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 #include "../world/landblock.h"
 #include "../world/tables.h"
 #include "flowmap_system.h"
@@ -10,11 +10,11 @@
 namespace settler_ai_detail {
 
 void consume_power(const int &quantity) {
-    engine::globals::messages->add_message<power_consumed_message>(power_consumed_message(quantity));
+    game_engine->messaging->add_message<power_consumed_message>(power_consumed_message(quantity));
 }
 
 void emote(const string &message, const position_component * pos, const chat_emote_color_t &color) {
-    engine::globals::messages->add_message<chat_emote_message>(chat_emote_message(string(" ")+message, pos->x+2, pos->y, color));
+    game_engine->messaging->add_message<chat_emote_message>(chat_emote_message(string(" ")+message, pos->x+2, pos->y, color));
 }
   
 void append_name(stringstream &ss, const settler_ai_component &settler) {
@@ -111,7 +111,7 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
 	  world::log.write(settler_ai_detail::announce("wakes up with a yawn.", settler));
 	  settler_ai_detail::emote("YAWN", pos, YELLOW);
 	  settler.state_major = IDLE;
-	  viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
+	  viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	  vision->scanner_range = 12;
 	  vision->last_visibility.clear();
     }
@@ -159,7 +159,7 @@ void drinking_time(settler_ai_component &settler, game_stats_component * stats, 
     renderable->foreground = color_t{0,255,255};
     if (distance_to_drink < 2) {
 	const int drink_source_id = flowmaps::water_flow_map_entity_id[idx];
-	provisions_component * drink_source = engine::globals::ecs->find_entity_component<provisions_component>(drink_source_id);
+	provisions_component * drink_source = game_engine->ecs->find_entity_component<provisions_component>(drink_source_id);
 	settler.thirst = drink_source->provides_quantity;
 	settler.state_major = IDLE;
 	world::log.write(settler_ai_detail::announce(drink_source->action_name, settler));
@@ -177,7 +177,7 @@ void eating_time(settler_ai_component &settler, game_stats_component * stats, re
     //std::cout << "Distance to drink from [" << pos->x << "," << pos->y << "]: " << distance_to_drink << "\n";
     if (distance_to_food < 2) {
 	const int food_source_id = flowmaps::food_flow_map_entity_id[idx];
-	provisions_component * food_source = engine::globals::ecs->find_entity_component<provisions_component>( food_source_id );
+	provisions_component * food_source = game_engine->ecs->find_entity_component<provisions_component>( food_source_id );
 	settler.calories += food_source->provides_quantity;
 	settler.state_major = IDLE;
 	world::log.write(settler_ai_detail::announce(food_source->action_name, settler));
@@ -194,12 +194,12 @@ void settler_ai_system::tick ( const double &duration_ms ) {
     if (world::paused) return;
     
     // Obtain a link to the calendar
-    calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component> ( world::cordex_handle );
+    calendar_component * calendar = game_engine->ecs->find_entity_component<calendar_component> ( world::cordex_handle );
 
-    vector<settler_ai_component> * settlers = engine::globals::ecs->find_components_by_type<settler_ai_component>();
+    vector<settler_ai_component> * settlers = game_engine->ecs->find_components_by_type<settler_ai_component>();
     for (settler_ai_component &settler : *settlers) {
 	settler_ai_detail::settler_needs needs = settler_ai_detail::needs_clocks(settler);
-	position_component * pos = engine::globals::ecs->find_entity_component<position_component>(settler.entity_id);
+	position_component * pos = game_engine->ecs->find_entity_component<position_component>(settler.entity_id);
 	
 	// Needs will override current action!
 	if (needs.needs_sleep and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
@@ -208,7 +208,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    settler.state_timer = 360;
 	    world::log.write(settler_ai_detail::announce("falls asleep.", settler));
 	    settler_ai_detail::emote("Zzzz", pos, BLUE);
-	    viewshed_component * vision = engine::globals::ecs->find_entity_component<viewshed_component>(settler.entity_id);
+	    viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	    vision->scanner_range = 2;
 	    vision->last_visibility.clear();
 	} else if (needs.needs_drink and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
@@ -222,8 +222,8 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	}
 	
 	// Perform actions
-	renderable_component * renderable = engine::globals::ecs->find_entity_component<renderable_component>(settler.entity_id);
-	game_stats_component * stats = engine::globals::ecs->find_entity_component<game_stats_component>(settler.entity_id); 
+	renderable_component * renderable = game_engine->ecs->find_entity_component<renderable_component>(settler.entity_id);
+	game_stats_component * stats = game_engine->ecs->find_entity_component<game_stats_component>(settler.entity_id); 
 
 	if (settler.next_tick <= calendar->system_time) {
             // Time for the settler to do something!

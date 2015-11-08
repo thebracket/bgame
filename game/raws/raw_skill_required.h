@@ -5,7 +5,6 @@
 #include "../components/provisions_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
-#include "../../engine/globals.h"
 
 using std::vector;
 

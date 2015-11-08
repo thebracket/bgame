@@ -5,7 +5,7 @@
 #include "../components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 
 using std::vector;
 
@@ -32,7 +32,7 @@ struct raw_renderable : public base_raw {
                     bg = tmp->background;
                }
           }
-          engine::globals::ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg ) );
+          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg ) );
      }
 };
 

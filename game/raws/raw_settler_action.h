@@ -5,7 +5,7 @@
 #include "../components/provisions_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 
 using std::vector;
 
@@ -31,7 +31,7 @@ struct raw_settler_action : public base_raw {
 	if (provides == "CALORIES") p.provided_resource = 1;
 	p.action_name = action_name;
 	
-	engine::globals::ecs->add_component<provisions_component>(parent, p);
+	game_engine->ecs->add_component<provisions_component>(parent, p);
      }
 };
 

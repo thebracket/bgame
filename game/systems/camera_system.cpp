@@ -1,10 +1,10 @@
 #include "camera_system.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 
 void camera_system::tick(const double &duration_ms) {
-    position_component * camera_pos = engine::globals::ecs->find_entity_component<position_component>(world::camera_handle);
+    position_component * camera_pos = game_engine->ecs->find_entity_component<position_component>(world::camera_handle);
 
-    for (command_message &cmd : *engine::globals::messages->get_messages_by_type<command_message>() ) {
+    for (command_message &cmd : *game_engine->messaging->get_messages_by_type<command_message>() ) {
 	  if (!cmd.deleted and cmd.command == CAMERA_UP) {
 	      cmd.deleted = true;
 	      camera_pos->y--;

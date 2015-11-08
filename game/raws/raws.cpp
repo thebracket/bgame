@@ -21,8 +21,8 @@
 #include "raw_component.h"
 #include "raw_sleepable.h"
 
-#include "../../engine/globals.h"
 #include "../../engine/rng.h"
+#include "../game.h"
 
 using std::ifstream;
 using std::string;
@@ -441,9 +441,9 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     }
   
     entity e;
-    e.handle = engine::globals::ecs->get_next_entity_handle();
-    engine::globals::ecs->add_entity(e);    
-    engine::globals::ecs->add_component(e, position_component(x,y));    
+    e.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(e);    
+    game_engine->ecs->add_component(e, position_component(x,y));    
     finder->second->build_components(e, x, y);
     
     return e.handle;

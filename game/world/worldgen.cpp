@@ -13,9 +13,9 @@
 #include "../../engine/ecs.h"
 #include "../../engine/colors.h"
 #include "../raws/raws.h"
-#include "../../engine/globals.h"
 #include "../components/components.h"
 #include "tables.h"
+#include "../game.h"
 
 using std::vector;
 using std::map;
@@ -492,15 +492,15 @@ void crash_trail(const std::pair<int,int> &starting_location) {
 
 void add_cordex(const int &x, const int &y) {
     entity cordex;
-    cordex.handle = engine::globals::ecs->get_next_entity_handle();
-    engine::globals::ecs->add_entity(cordex);
+    cordex.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(cordex);
     world::cordex_handle = cordex.handle;
-    engine::globals::ecs->add_component(cordex, debug_name_component("Cordex"));
-    engine::globals::ecs->add_component(cordex, position_component(x, y, OMNI));
-    engine::globals::ecs->add_component(cordex, viewshed_component(penetrating,16));
-    engine::globals::ecs->add_component(cordex, calendar_component(0L));
-    engine::globals::ecs->add_component(cordex, renderable_component(15, cyan, black));
-    engine::globals::ecs->add_component(cordex, obstruction_component());
+    game_engine->ecs->add_component(cordex, debug_name_component("Cordex"));
+    game_engine->ecs->add_component(cordex, position_component(x, y, OMNI));
+    game_engine->ecs->add_component(cordex, viewshed_component(penetrating,16));
+    game_engine->ecs->add_component(cordex, calendar_component(0L));
+    game_engine->ecs->add_component(cordex, renderable_component(15, cyan, black));
+    game_engine->ecs->add_component(cordex, obstruction_component());
 }
 
 void add_solar_collector(const int x, const int y) {
@@ -509,12 +509,12 @@ void add_solar_collector(const int x, const int y) {
 
 void add_cordex_console(const int x, const int y, const unsigned char symbol) {
     entity console;
-    console.handle = engine::globals::ecs->get_next_entity_handle();
-    engine::globals::ecs->add_entity(console);
-    engine::globals::ecs->add_component(console, debug_name_component("Cordex Console"));
-    engine::globals::ecs->add_component(console, position_component(x,y));
-    engine::globals::ecs->add_component(console, renderable_component(symbol, dark_cyan, black));
-    engine::globals::ecs->add_component(console, obstruction_component());
+    console.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(console);
+    game_engine->ecs->add_component(console, debug_name_component("Cordex Console"));
+    game_engine->ecs->add_component(console, position_component(x,y));
+    game_engine->ecs->add_component(console, renderable_component(symbol, dark_cyan, black));
+    game_engine->ecs->add_component(console, obstruction_component());
 }
 
 void add_food_replicator(const int x, const int y) {
@@ -618,14 +618,14 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
 entity make_settler(const int &x, const int &y)
 {
     entity test;
-    test.handle = engine::globals::ecs->get_next_entity_handle();
-    engine::globals::ecs->add_entity(test);
+    test.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(test);
 
-    engine::globals::ecs->add_component(test, debug_name_component("Test"));
-    engine::globals::ecs->add_component(test, position_component(x,y));
+    game_engine->ecs->add_component(test, debug_name_component("Test"));
+    game_engine->ecs->add_component(test, position_component(x,y));
     //engine::globals::ecs->add_component(test, obstruction_component(true,false));
-    engine::globals::ecs->add_component(test, renderable_component('@', yellow, black));
-    engine::globals::ecs->add_component(test, viewshed_component(visibility,12));
+    game_engine->ecs->add_component(test, renderable_component('@', yellow, black));
+    game_engine->ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
         
     // Create some basic attributes
@@ -692,10 +692,10 @@ entity make_settler(const int &x, const int &y)
     ai.state_major = IDLE;
     ai.state_timer = 0;
     
-    engine::globals::ecs->add_component(test, ai);
-    engine::globals::ecs->add_component(test, stats);
-    engine::globals::ecs->add_component(test, health);
-    engine::globals::ecs->add_component(test, species);
+    game_engine->ecs->add_component(test, ai);
+    game_engine->ecs->add_component(test, stats);
+    game_engine->ecs->add_component(test, health);
+    game_engine->ecs->add_component(test, species);
     
     return test;
 }
@@ -703,9 +703,9 @@ entity make_settler(const int &x, const int &y)
 entity make_camera_entity()
 {
     entity camera;
-    camera.handle = engine::globals::ecs->get_next_entity_handle();
-    engine::globals::ecs->add_entity(camera);
-    engine::globals::ecs->add_component(camera, position_component(128,128));
+    camera.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(camera);
+    game_engine->ecs->add_component(camera, position_component(128,128));
     return camera;
 }
 
@@ -738,8 +738,8 @@ void setup_initial_game() {
     
     // Persist and quit
     world::stored_power = 25;
-    engine::globals::ecs->save_game("world/saved_game.dat");
-    engine::globals::ecs->done();
+    game_engine->ecs->save_game("world/saved_game.dat");
+    game_engine->ecs->done();
 }
 
 /********* GUI Releated Functionality */

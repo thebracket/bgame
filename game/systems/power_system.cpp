@@ -4,7 +4,7 @@
 #include "../components/calendar_component.h"
 #include "../world/world.h"
 #include <iostream>
-#include "../../engine/globals.h"
+#include "../game.h"
 #include "../messages/power_consumed_message.h"
 
 namespace power_system_detail {
@@ -33,25 +33,25 @@ void power_system::tick(const double& duration_ms)
 {
     if (world::paused) return;
     
-    calendar_component * calendar = engine::globals::ecs->find_entity_component<calendar_component>(world::cordex_handle);
+    calendar_component * calendar = game_engine->ecs->find_entity_component<calendar_component>(world::cordex_handle);
 
     if (last_tick+10 < calendar->system_time or last_tick == 0) {
         int power = world::stored_power;
 
-        const vector<power_generator_component> * producers = engine::globals::ecs->find_components_by_type<power_generator_component> ();
+        const vector<power_generator_component> * producers = game_engine->ecs->find_components_by_type<power_generator_component> ();
         for (const power_generator_component &gen : *producers) {
             const int generated_power = power_system_detail::calculate_power_gain(&gen);
             power += generated_power;
         }
 
-        const vector<power_battery_component> * storage = engine::globals::ecs->find_components_by_type<power_battery_component> ();
+        const vector<power_battery_component> * storage = game_engine->ecs->find_components_by_type<power_battery_component> ();
         int storage_capacity = 0;
         for (const power_battery_component &bat : *storage) {
             storage_capacity += bat.storage_capacity;
         }
 
         // Power consumption from messages
-        vector<power_consumed_message> * consumption_ptr = engine::globals::messages->get_messages_by_type<power_consumed_message>();
+        vector<power_consumed_message> * consumption_ptr = game_engine->messaging->get_messages_by_type<power_consumed_message>();
 	for (power_consumed_message &usage : *consumption_ptr) {
 	    power -= usage.quantity;
 	    usage.deleted = true;
