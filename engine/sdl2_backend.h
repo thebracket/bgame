@@ -22,8 +22,8 @@ private:
   bool initialized;
   SDL_Window * window;
   SDL_Renderer * renderer;
-  SDL_Texture * font_image;
   
+  sdl_resource_manager resources;  
 };
   
 }

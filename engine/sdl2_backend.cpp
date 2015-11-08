@@ -36,14 +36,7 @@ void sdl2_backend::init(const std::string &window_title, const int width=1024, c
      renderer = SDL_CreateRenderer ( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
      if ( renderer == NULL ) throw 103;
 
-     int image_flags = IMG_INIT_PNG;
-     if ( ! ( IMG_Init ( image_flags ) & image_flags ) ) throw 104;
-
-     SDL_Surface * font_surface = IMG_Load ( "../assets/terminal8x8_palette2.png" );
-     if ( font_surface == NULL ) throw 104;
-     font_image = SDL_CreateTextureFromSurface ( renderer, font_surface );
-     SDL_FreeSurface ( font_surface );
-
+     resources.load_image( renderer, "../assets/terminal8x8_palette2.png", "font" );
 
      initialized = true;
 }
@@ -51,7 +44,8 @@ void sdl2_backend::init(const std::string &window_title, const int width=1024, c
 void sdl2_backend::stop()
 {
      if ( initialized ) {
-          SDL_DestroyTexture ( font_image );
+	  resources.clear();
+          //SDL_DestroyTexture ( font_image );
           SDL_DestroyRenderer ( renderer );
           SDL_DestroyWindow ( window );
           SDL_Quit();
@@ -67,6 +61,7 @@ void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
+  SDL_Texture * font_image = resources.get_texture_by_id(0);
   
   const int ascii_height = SCREEN_HEIGHT/8;
   const int ascii_width = SCREEN_WIDTH/8;
