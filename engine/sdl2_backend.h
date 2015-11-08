@@ -12,7 +12,7 @@ class sdl2_backend {
 public:
   sdl2_backend();
   ~sdl2_backend();
-  void init(const string& window_title, const int height, const int width);
+  void init(const string& window_title, const int width, const int height);
   void stop();
   pair<int,int> get_console_size();
   void draw(vector<vterm::screen_character>* screen);
