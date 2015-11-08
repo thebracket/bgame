@@ -1,7 +1,7 @@
 #include "flowmap_system.h"
 #include "../components/provisions_component.h"
 #include "../components/position_component.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 #include <set>
 #include <tuple>
 
@@ -74,11 +74,11 @@ void flowmap_system::tick ( const double& duration_ms )
 {
     if (world::paused) return;
   
-     vector<provisions_component> * provisions = engine::globals::ecs->find_components_by_type<provisions_component>();
+     vector<provisions_component> * provisions = game_engine->ecs->find_components_by_type<provisions_component>();
      vector<tuple<int,int,int>> food_sources;
      vector<tuple<int,int,int>> water_sources;
      for ( const provisions_component provision : *provisions ) {
-          position_component * pos = engine::globals::ecs->find_entity_component<position_component> ( provision.entity_id );
+          position_component * pos = game_engine->ecs->find_entity_component<position_component> ( provision.entity_id );
           if ( provision.provided_resource == 1 ) food_sources.push_back ( make_tuple( pos->x, pos->y, provision.entity_id ) );
           if ( provision.provided_resource == 2 ) water_sources.push_back ( make_tuple( pos->x, pos->y, provision.entity_id ) );
      }

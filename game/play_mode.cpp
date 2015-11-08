@@ -1,31 +1,31 @@
 #include "play_mode.h"
 #include "world/world.h"
-#include "../engine/globals.h"
 #include "systems/system_factory.h"
 #include "../engine/gui/gui_frame.h"
 #include "../engine/gui/gui_static_text.h"
 #include "gui/gui_main_game_view.h"
+#include "game.h"
 
 using namespace engine;
 using std::make_unique;
 
 void play_mode::init_systems()
 {
-     engine::globals::ecs->add_system ( make_input_system() );
-     engine::globals::ecs->add_system ( make_camera_system() );
-     engine::globals::ecs->add_system ( make_calendar_system() );
-     engine::globals::ecs->add_system ( make_obstruction_system() );
-     engine::globals::ecs->add_system ( make_flowmap_system() );
-     engine::globals::ecs->add_system ( make_power_system() );
-     engine::globals::ecs->add_system ( make_settler_ai_system() );
-     engine::globals::ecs->add_system ( make_viewshed_system() );
-     engine::globals::ecs->add_system ( make_renderable_system() );
+     game_engine->ecs->add_system ( make_input_system() );
+     game_engine->ecs->add_system ( make_camera_system() );
+     game_engine->ecs->add_system ( make_calendar_system() );
+     game_engine->ecs->add_system ( make_obstruction_system() );
+     game_engine->ecs->add_system ( make_flowmap_system() );
+     game_engine->ecs->add_system ( make_power_system() );
+     game_engine->ecs->add_system ( make_settler_ai_system() );
+     game_engine->ecs->add_system ( make_viewshed_system() );
+     game_engine->ecs->add_system ( make_renderable_system() );
 }
 
 void play_mode::init()
 {
-     engine::globals::ecs->init();
-     engine::globals::ecs->load_game("world/saved_game.dat");
+     game_engine->ecs->init();
+     game_engine->ecs->load_game("world/saved_game.dat");
      init_systems();
      
      init_gui();
@@ -45,9 +45,9 @@ void play_mode::init_gui()
 void play_mode::done()
 {
     world::current_region->save();
-    engine::globals::ecs->save_game("world/saved_game.dat");
+    game_engine->ecs->save_game("world/saved_game.dat");
     delete world::current_region;
-    engine::globals::ecs->done();
+    game_engine->ecs->done();
 }
 
 pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time_elapsed )

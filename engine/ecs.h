@@ -6,7 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include<string>
+#include <string>
 #include "entity.h"
 #include "base_system.h"
 #include "entity_storage.h"
@@ -35,15 +35,14 @@ namespace engine {
  * (This allows for serialization without the ECS knowing about concrete component types)
  * 
  * Known issues: 
- * 1. Currently it gets passed around as a global in globals.h. I hope to resolve this.
  * 2. Systems don't really belong in here, there should be a more generic game logic callback
  * 	to give the game more control over logical execution flow.
  */
-template <typename... component_list>
+template <typename component_list>
 class entity_component_system {
 private:
   /* Component storage, delegated to the component_storage template class. */
-  ecs_detail::component_storage<component_list...> components;
+  ecs_detail::component_storage<component_list> components;
   
   /* Entity storage, delegated to the entity_storage template class. */
   ecs_detail::entity_storage entities;
@@ -67,7 +66,7 @@ public:
   
   /* General constructor. Takes a callback of the form void component_factory(fstream &lbfile, const int ct) to handle
    * serialization. */
-  entity_component_system(const function<void(fstream &, const int &)> loader, function<void(fstream &)> world_loader, function<void(fstream &)> world_saver) noexcept 
+  entity_component_system(const function<void(fstream &, const int &)> loader, function<void(fstream &)> world_loader, function<void(fstream &)> world_saver) 
     : loader_callback(loader), load_constants(world_loader), save_constants(world_saver) {}
   
   /* Retrieves the next available entity handle. */

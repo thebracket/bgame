@@ -1,13 +1,13 @@
 #include "viewshed_system.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 
 void viewshed_system::tick ( const double &duration_ms ) {
     reset_visibility();
 
     // Run a viewshed for every system that has one
-    vector<viewshed_component> * viewsheds = engine::globals::ecs->find_components_by_type<viewshed_component> ();
+    vector<viewshed_component> * viewsheds = game_engine->ecs->find_components_by_type<viewshed_component> ();
     for (viewshed_component &viewshed : *viewsheds) {
-        position_component * pos = engine::globals::ecs->find_entity_component<position_component>(viewshed.entity_id);
+        position_component * pos = game_engine->ecs->find_entity_component<position_component>(viewshed.entity_id);
 
         if (pos->moved or viewshed.last_visibility.empty()) {
             switch (viewshed.scanner_type) {

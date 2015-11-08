@@ -3,6 +3,7 @@
 #include <stack>
 #include <memory>
 #include <thread>
+#include <functional>
 
 #include "rng.h"
 #include "virtual_terminal.h"
@@ -11,12 +12,35 @@
 #include "gui/gui.h"
 #include "command_manager.h"
 #include "sdl2_backend.h"
-#include "globals.h"
+#include "ecs.h"
+#include "messagebus.h"
+#include "mpl_typelist.h"
 
 namespace engine {
 
+template <typename ...Ts> using component_list_t = ecs_detail::type_list<Ts...>;
+template <typename ...Ts> using message_list_t = ecs_detail::type_list<Ts...>;
+
+template <typename component_list, typename message_list> 
 class bracket_engine {
-private:
+public:
+     bracket_engine(const function<void(fstream &, const int &)> loader, function<void(fstream &)> world_loader, function<void(fstream &)> world_saver) noexcept
+     {
+	ecs = new entity_component_system<typename component_list::type_list>(loader, world_loader, world_saver);
+	messaging = new message_bus<typename message_list::type_list>();
+     }
+     
+     ~bracket_engine() {
+	delete ecs;
+	delete messaging;
+     }
+  
+//   entity_component_system(const function<void(fstream &, const int &)> loader, function<void(fstream &)> world_loader, function<void(fstream &)> world_saver) 
+
+  
+     entity_component_system<typename component_list::type_list> * ecs;
+     message_bus<typename message_list::type_list> * messaging;
+private:     
      sdl2_backend backend_driver;
      std::unique_ptr<base_mode> current_mode;
      std::stack<std::unique_ptr<base_mode>> mode_stack;
@@ -40,7 +64,7 @@ private:
                current_mode->on_pop();
           }
      }
-public:
+public:  
      void init() {
           init_rng();
           init_virtual_terminal();
@@ -56,10 +80,10 @@ public:
           double duration_ms = 0;
           while ( !quitting ) {
                clock_t start_time = clock();
-	       engine::globals::messages->clear();
+	       messaging->clear();
                command::clear_commands();
                backend_driver.poll_inputs();
-               engine::globals::ecs->tick ( duration_ms );
+               ecs->tick ( duration_ms );
 
                // Render Control
                vterm::clear_screen();

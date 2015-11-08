@@ -4,18 +4,24 @@
 #include <vector>
 #include <algorithm>
 #include "mpl_foreach.h"
+#include "mpl_typelist.h"
 
 using std::tuple;
 using std::vector;
 
 using engine::ecs_detail::for_each;
+using engine::ecs_detail::type_list;
 
 namespace engine {
 
-template<typename... messages_list>
+template<typename message_list>
 class message_bus {
 private:
-     tuple<vector<messages_list>...> storage;
+    template<typename ... Ts>
+    using tuple_of_vectors = std::tuple<std::vector<Ts>...>;
+    ecs_detail::rename<tuple_of_vectors, typename message_list::type_list> storage;
+  
+//     tuple<vector<messages_list>...> storage;
 
      template <typename T>
      vector<T> * find_appropriate_bag() {

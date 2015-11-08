@@ -1,8 +1,8 @@
 #include "gui_main_game_view.h"
 #include <iostream>
-#include "../../engine/globals.h"
 #include <sstream>
 #include "../messages/mouse_motion_message.h"
+#include "../game.h"
 
 using std::stringstream;
 using namespace engine;
@@ -104,7 +104,7 @@ void gui_main_game_view::render_power_bar ( const screen_region& viewport, const
 
 void gui_main_game_view::render_emotes ( const screen_region& viewport, const int& vp_left, const int& vp_right, const int& vp_top, const int& vp_bottom )
 {
-    vector<chat_emote_message> * emote_ptr = engine::globals::messages->get_messages_by_type<chat_emote_message>();
+    vector<chat_emote_message> * emote_ptr = game_engine->messaging->get_messages_by_type<chat_emote_message>();
     for (chat_emote_message &emote : *emote_ptr) {
 	if (emote.x > vp_left and emote.x < vp_right and emote.y > vp_top and emote.y < vp_bottom) {
 	    const int size = emote.message.size();
@@ -125,7 +125,7 @@ void gui_main_game_view::render_emotes ( const screen_region& viewport, const in
 
 void gui_main_game_view::process_mouse_events()
 {
-    vector<mouse_motion_message> * mouse_movement = engine::globals::messages->get_messages_by_type<mouse_motion_message>();
+    vector<mouse_motion_message> * mouse_movement = game_engine->messaging->get_messages_by_type<mouse_motion_message>();
     for (mouse_motion_message &m : *mouse_movement) {
 	mouse_x = m.x;
 	mouse_y = m.y;
@@ -142,7 +142,7 @@ void gui_main_game_view::process_mouse_events()
 	m.deleted = true;
     }
     
-    vector<command_message> * actions = engine::globals::messages->get_messages_by_type<command_message>();
+    vector<command_message> * actions = game_engine->messaging->get_messages_by_type<command_message>();
     for (command_message &m : *actions) {
       if (m.command == RIGHT_CLICK) {
 	  m.deleted = true;
@@ -185,19 +185,19 @@ void gui_main_game_view::render_tooltip ( const screen_region& viewport, const i
     lines.push_back(make_pair(world::current_region->tiles[idx].get_description(), green));
     lines.push_back(make_pair(world::current_region->tiles[idx].get_climate(), cyan));
     
-    vector<position_component> * positions = engine::globals::ecs->find_components_by_type<position_component>();
+    vector<position_component> * positions = game_engine->ecs->find_components_by_type<position_component>();
     for (const position_component &pos : *positions) {
 	if (pos.x == region_x and pos.y == region_y) {
 	    const int entity_id = pos.entity_id;
 	    
-	    settler_ai_component * settler = engine::globals::ecs->find_entity_component<settler_ai_component>(entity_id);
+	    settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component>(entity_id);
 	    if (settler != nullptr) {
-		game_species_component * species = engine::globals::ecs->find_entity_component<game_species_component>(entity_id);
+		game_species_component * species = game_engine->ecs->find_entity_component<game_species_component>(entity_id);
 		stringstream ss;
 		ss << gender_icon(species->gender) << " " << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
 		lines.push_back(make_pair(ss.str(), yellow));
 	    } else {	    
-		debug_name_component * debug_name = engine::globals::ecs->find_entity_component<debug_name_component>(entity_id);
+		debug_name_component * debug_name = game_engine->ecs->find_entity_component<debug_name_component>(entity_id);
 		if (debug_name != nullptr) lines.push_back(make_pair(debug_name->debug_name, white));
 	    }
 	}
@@ -230,7 +230,7 @@ void gui_main_game_view::render(const screen_region viewport)
 {
     process_mouse_events();
   
-    const position_component * camera_pos = engine::globals::ecs->find_entity_component<position_component>(world::camera_handle);
+    const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component>(world::camera_handle);
 
     const int left_x = std::max ( 0, camera_pos->x - viewport.w/2 );
     const int top_y = std::max ( 0, camera_pos->y - viewport.h/2 );

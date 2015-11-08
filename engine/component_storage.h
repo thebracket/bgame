@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include "mpl_foreach.h"
+#include "mpl_typelist.h"
 
 using std::tuple;
 using std::vector;
@@ -18,15 +19,18 @@ using std::fstream;
 namespace engine {
 namespace ecs_detail {
 
-template<typename... Ts>
+template<typename component_list>
 class component_storage {
 private:
      int next_handle = 1;
 
      static constexpr size_t number_of_component_types() {
-          return sizeof... ( Ts );
+          return component_list::type_list::size();
      }
-     tuple<vector<Ts>...> component_container;
+     //tuple<vector<Ts>...> component_container;
+     template<typename ... Ts>
+    using tuple_of_vectors = std::tuple<std::vector<Ts>...>;
+    ecs_detail::rename<tuple_of_vectors, typename component_list::type_list> component_container;
 
      template <typename T>
      vector<T> * find_appropriate_bag() {

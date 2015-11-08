@@ -3,7 +3,7 @@
 #include <string>
 #include "base_raw.h"
 #include "../components/obstruction_component.h"
-#include "../../engine/globals.h"
+#include "../game.h"
 
 using std::string;
 
@@ -19,7 +19,7 @@ struct raw_obstruction : public base_raw {
 	obstruction_component obs = obstruction_component();
 	obs.blocks_entry = blocks_walk;
 	obs.blocks_visibility = blocks_view;
-	engine::globals::ecs->add_component(parent, std::move(obs));
+	game_engine->ecs->add_component(parent, std::move(obs));
     }
 };
   
