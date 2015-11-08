@@ -1,6 +1,6 @@
 #include "tile.h"
-#include "../../engine/rng.h"
 #include <sstream>
+#include "../game.h"
 
 using std::stringstream;
 
@@ -30,14 +30,14 @@ void tile::worldgen_determine_climate()
      } else if ( temperature < 110 ) {
           climate = tile_climate::HOT;
 	  if (base_tile_type != tile_type::RAMP and base_tile_type != tile_type::WATER) {
-	    int roll = engine:: roll_dice(1,10);
+	    int roll = game_engine->rng.roll_dice(1,10);
 	    if (roll > 5) base_tile_type = tile_type::BEACH;
 	  }
      }
      else {
           climate = tile_climate::VERY_HOT;
 	  if (base_tile_type != tile_type::RAMP and base_tile_type != tile_type::WATER) {
-	    int roll = engine:: roll_dice(1,10);
+	    int roll = game_engine->rng.roll_dice(1,10);
 	    if (roll > 2) base_tile_type = tile_type::BEACH;
 	  }
      }
@@ -49,7 +49,7 @@ void tile::worldgen_determine_base_ground()
      if ( base_tile_type == tile_type::WATER ) {
           ground = tile_ground::GRAVEL;
      } else if ( base_tile_type == tile_type::BEACH ) {
-          int dice_roll = engine::roll_dice ( 1,10 );
+          int dice_roll = game_engine->rng.roll_dice ( 1,10 );
           if ( dice_roll <= 9 ) {
                ground = tile_ground::WHITE_SAND;
           } else if ( dice_roll <= 6 ) {
@@ -61,10 +61,10 @@ void tile::worldgen_determine_base_ground()
           }
      } else {
           // Ramp or flat: lower ground is more sedimentary, high is more igneous
-          int dice_roll = engine::roll_dice ( 1,10 ) + level_band;
+          int dice_roll = game_engine->rng.roll_dice ( 1,10 ) + level_band;
           if ( dice_roll < 8 ) {
                // sedimentary!
-               int dice2 = engine::roll_dice ( 1,6 );
+               int dice2 = game_engine->rng.roll_dice ( 1,6 );
                if ( dice2 == 1 ) {
                     ground = tile_ground::YELLOW_SAND;
                } else if ( dice2 == 2 or dice2 == 3 ) {
@@ -74,7 +74,7 @@ void tile::worldgen_determine_base_ground()
                }
           } else {
                // igneous
-               int dice2 = engine::roll_dice ( 1,6 );
+               int dice2 = game_engine->rng.roll_dice ( 1,6 );
                if ( dice2 < 3 ) {
                     ground = tile_ground::GRAVEL;
                } else {
@@ -88,9 +88,9 @@ void tile::worldgen_determine_base_ground()
 void tile::worldgen_arctic_covering()
 {
     constexpr int chance_of_vegetation = 5;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,3);
+	int table_roll = game_engine->rng.roll_dice(1,3);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::MOSS; break;
 	  case 2 : covering = tile_covering::LYCHEN; break;
@@ -102,9 +102,9 @@ void tile::worldgen_arctic_covering()
 void tile::worldgen_subarctic_covering()
 {
     constexpr int chance_of_vegetation = 10;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,5);
+	int table_roll = game_engine->rng.roll_dice(1,5);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::MOSS; break;
 	  case 2 : covering = tile_covering::LYCHEN; break;
@@ -118,9 +118,9 @@ void tile::worldgen_subarctic_covering()
 void tile::worldgen_cold_covering()
 {
     constexpr int chance_of_vegetation = 60;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,8);
+	int table_roll = game_engine->rng.roll_dice(1,8);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::MOSS; break;
 	  case 2 : covering = tile_covering::LYCHEN; break;
@@ -137,9 +137,9 @@ void tile::worldgen_cold_covering()
 void tile::worldgen_cool_covering()
 {
     constexpr int chance_of_vegetation = 70;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,9);
+	int table_roll = game_engine->rng.roll_dice(1,9);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::MOSS; break;
 	  case 2 : covering = tile_covering::GORSE; break;
@@ -157,9 +157,9 @@ void tile::worldgen_cool_covering()
 void tile::worldgen_temperate_covering()
 {
     constexpr int chance_of_vegetation = 95;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,9);
+	int table_roll = game_engine->rng.roll_dice(1,9);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::MOSS; break;
 	  case 2 : covering = tile_covering::GRASS; break;
@@ -177,9 +177,9 @@ void tile::worldgen_temperate_covering()
 void tile::worldgen_warm_covering()
 {
     constexpr int chance_of_vegetation = 98;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,9);
+	int table_roll = game_engine->rng.roll_dice(1,9);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::GRASS; break;
 	  case 2 : covering = tile_covering::GRASS; break;
@@ -197,9 +197,9 @@ void tile::worldgen_warm_covering()
 void tile::worldgen_hot_covering()
 {
     constexpr int chance_of_vegetation = 30;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,3);
+	int table_roll = game_engine->rng.roll_dice(1,3);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::GRASS; break;
 	  case 2 : covering = tile_covering::GRASS; break;
@@ -211,9 +211,9 @@ void tile::worldgen_hot_covering()
 void tile::worldgen_very_hot_covering()
 {
     constexpr int chance_of_vegetation = 10;
-    const int vegetation_roll = engine::roll_dice(1,100);
+    const int vegetation_roll = game_engine->rng.roll_dice(1,100);
     if (vegetation_roll < chance_of_vegetation) {
-	int table_roll = engine::roll_dice(1,3);
+	int table_roll = game_engine->rng.roll_dice(1,3);
 	switch (table_roll) {
 	  case 1 : covering = tile_covering::GRASS; break;
 	  case 2 : covering = tile_covering::CACTUS; break;

@@ -85,7 +85,7 @@ void wander_randomly(settler_ai_component &settler, position_component * pos) {
     int x = pos->x;
     int y = pos->y;
     
-    int direction = engine::roll_dice(1,5);
+    int direction = game_engine->rng.roll_dice(1,5);
     switch (direction) {
       case 1 : if (is_move_possible(pos, -1, 0)) move_to(pos, x-1, y); break;
       case 2 : if (is_move_possible(pos, 1, 0)) move_to(pos, x+1, y); break;
@@ -96,14 +96,14 @@ void wander_randomly(settler_ai_component &settler, position_component * pos) {
 
 void sleepy_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
     // No movement
-    if (engine::roll_dice(1,6)<4) {
+    if (game_engine->rng.roll_dice(1,6)<4) {
 	renderable->glyph = 'Z';
 	renderable->foreground = color_t{128,128,255};
     } else {
 	renderable->glyph = '@';
 	renderable->foreground = color_t{128,128,255};
     }
-    const int wakeful_gain = stat_modifier(stats->constitution) + 2 + engine::roll_dice(1,6);
+    const int wakeful_gain = stat_modifier(stats->constitution) + 2 + game_engine->rng.roll_dice(1,6);
     settler.wakefulness += wakeful_gain;
     --settler.state_timer;
     //std::cout << settler.first_name << " sleep time: " << settler.state_timer << ", wakefulness: " << settler.wakefulness << "\n";
@@ -240,7 +240,7 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	    }
 	    
             // Random pause
-            settler.next_tick = calendar->system_time + engine::roll_dice(1,6) - stat_modifier(stats->dexterity);
+            settler.next_tick = calendar->system_time + game_engine->rng.roll_dice(1,6) - stat_modifier(stats->dexterity);
         }
     }
 }

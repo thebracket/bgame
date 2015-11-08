@@ -34,12 +34,10 @@ public:
 	delete ecs;
 	delete messaging;
      }
-  
-//   entity_component_system(const function<void(fstream &, const int &)> loader, function<void(fstream &)> world_loader, function<void(fstream &)> world_saver) 
-
-  
+    
      entity_component_system<typename component_list::type_list> * ecs;
      message_bus<typename message_list::type_list> * messaging;
+     random_number_generator rng;
 private:     
      sdl2_backend backend_driver;
      std::unique_ptr<base_mode> current_mode;
@@ -66,7 +64,6 @@ private:
      }
 public:  
      void init() {
-          init_rng();
           init_virtual_terminal();
           backend_driver.init();
           std::pair<int,int> size = backend_driver.get_console_size();
