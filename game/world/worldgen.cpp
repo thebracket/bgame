@@ -67,7 +67,7 @@ height_map_t make_temperature_map( height_map_t &altitude_map )
       const double y_double = y;
       const double y_extent = y_double/worldgen_h_double;
       for (int x=0; x<worldgen_width; ++x) {
-	const int random_factor = engine::roll_dice(1,40) - 20;
+	const int random_factor = game_engine->rng.roll_dice(1,40) - 20;
 	const double y_variance = (y_extent * total_variance) - variance_half;
 	temperature_map[idx(x,y)] = normal_temperature + random_factor + y_variance;
       }
@@ -436,10 +436,10 @@ void create_heightmap_world()
     update_gui_heightmap ( altitude_map ); // Handles its own locking
 
     for ( int i=0; i<num_fault_lines; ++i ) {
-        int sx = engine::roll_dice ( 1, worldgen_width-1 );
-        int sy = engine::roll_dice ( 1, worldgen_height-1 );
-        int ex = engine::roll_dice ( 1, worldgen_width-1 );
-        int ey = engine::roll_dice ( 1, worldgen_height-1 );
+        int sx = game_engine->rng.roll_dice ( 1, worldgen_width-1 );
+        int sy = game_engine->rng.roll_dice ( 1, worldgen_height-1 );
+        int ex = game_engine->rng.roll_dice ( 1, worldgen_width-1 );
+        int ey = game_engine->rng.roll_dice ( 1, worldgen_height-1 );
 
         apply_fault_line_to_altitude_map ( altitude_map,
                                            sx,
@@ -630,19 +630,19 @@ entity make_settler(const int &x, const int &y)
         
     // Create some basic attributes
     game_stats_component stats;
-    stats.strength = engine::roll_dice(3,6);
-    stats.dexterity = engine::roll_dice(3,6);
-    stats.constitution = engine::roll_dice(3,6);
-    stats.intelligence = engine::roll_dice(3,6);
-    stats.wisdom = engine::roll_dice(3,6);
-    stats.charisma = engine::roll_dice(3,6);
-    stats.comeliness = engine::roll_dice(3,6);
+    stats.strength = game_engine->rng.roll_dice(3,6);
+    stats.dexterity = game_engine->rng.roll_dice(3,6);
+    stats.constitution = game_engine->rng.roll_dice(3,6);
+    stats.intelligence = game_engine->rng.roll_dice(3,6);
+    stats.wisdom = game_engine->rng.roll_dice(3,6);
+    stats.charisma = game_engine->rng.roll_dice(3,6);
+    stats.comeliness = game_engine->rng.roll_dice(3,6);
     stats.age = 18;   
     
     game_species_component species;
     species.species = "Human";
     
-    int gender_roll = engine::roll_dice(1,101);
+    int gender_roll = game_engine->rng.roll_dice(1,101);
     if (gender_roll <=50) {
       species.gender = gender_t::MALE;
     } else if (gender_roll <=100) {
@@ -651,7 +651,7 @@ entity make_settler(const int &x, const int &y)
       species.gender = gender_t::HERMAPHRODITE;
     }
     
-    int preference_roll = engine::roll_dice(1,100);
+    int preference_roll = game_engine->rng.roll_dice(1,100);
     if (preference_roll < 92) {
       species.sexual_preference = preference_t::HETEROSEXUAL;
     } else if (preference_roll < 94) {
@@ -665,27 +665,27 @@ entity make_settler(const int &x, const int &y)
     float height_cm, weight_kg;
     
     if (species.gender == gender_t::MALE or species.gender == gender_t::HERMAPHRODITE) {
-      height_cm = 147.0F + (engine::roll_dice(2,10)*2.5F);
-      weight_kg = 54.0F + (engine::roll_dice(2,4)*0.45);
-      ai.calories = 4400 + engine::roll_dice(1,200);
-      ai.calorie_burn_at_rest = 1 + engine::roll_dice(1,2);
+      height_cm = 147.0F + (game_engine->rng.roll_dice(2,10)*2.5F);
+      weight_kg = 54.0F + (game_engine->rng.roll_dice(2,4)*0.45);
+      ai.calories = 4400 + game_engine->rng.roll_dice(1,200);
+      ai.calorie_burn_at_rest = 1 + game_engine->rng.roll_dice(1,2);
     } else {
-      height_cm = 134.0F + (engine::roll_dice(2,10)*2.5F);
-      weight_kg = 38.0F + (engine::roll_dice(2,4)*0.45);
-      ai.calories = 3600 + engine::roll_dice(1,200);
-      ai.calorie_burn_at_rest =  engine::roll_dice(1,2);
+      height_cm = 134.0F + (game_engine->rng.roll_dice(2,10)*2.5F);
+      weight_kg = 38.0F + (game_engine->rng.roll_dice(2,4)*0.45);
+      ai.calories = 3600 + game_engine->rng.roll_dice(1,200);
+      ai.calorie_burn_at_rest =  game_engine->rng.roll_dice(1,2);
     }
     species.height_cm = height_cm;
     species.weight_kg = weight_kg;
-    ai.wakefulness = 1800 + engine::roll_dice(1,100) + (stat_modifier(stats.constitution)*3);
-    ai.thirst = 960 + engine::roll_dice(1,20);
+    ai.wakefulness = 1800 + game_engine->rng.roll_dice(1,100) + (stat_modifier(stats.constitution)*3);
+    ai.thirst = 960 + game_engine->rng.roll_dice(1,20);
     
     ai.first_name = raws::get_random_first_name(species.gender);
     ai.last_name = raws::get_random_last_name();
     ai.profession_tag = raws::get_random_starting_profession();
     
     game_health_component health;
-    health.max_hit_points = engine::roll_dice(1,8) + stat_modifier(stats.constitution);
+    health.max_hit_points = game_engine->rng.roll_dice(1,8) + stat_modifier(stats.constitution);
     if (health.max_hit_points < 1) health.max_hit_points = 1;
     health.current_hit_points = health.max_hit_points;
     

@@ -21,7 +21,6 @@
 #include "raw_component.h"
 #include "raw_sleepable.h"
 
-#include "../../engine/rng.h"
 #include "../game.h"
 
 using std::ifstream;
@@ -464,7 +463,7 @@ string to_proper_noun_case(const std::string &original) {
 string get_random_starting_profession()
 {
     const int max = detail::starting_professions.size();
-    const int die_roll = engine::roll_dice(1,max) - 1;
+    const int die_roll = game_engine->rng.roll_dice(1,max) - 1;
     int i = 0;
     for (auto it = detail::starting_professions.begin(); it != detail::starting_professions.end(); ++it) {
 	if (i == die_roll) return to_proper_noun_case(it->first);
@@ -492,15 +491,15 @@ string line_from_text_file(const string &filename, const int &line_number) {
 string get_random_first_name ( const short int& gender )
 {
     if (gender == gender_t::FEMALE) {
-	return line_from_text_file("../raw/first_names_female.txt", engine::roll_dice(1,NUMBER_OF_FEMALE_FIRST_NAMES)-1);
+	return line_from_text_file("../raw/first_names_female.txt", game_engine->rng.roll_dice(1,NUMBER_OF_FEMALE_FIRST_NAMES)-1);
     } else {
-	return line_from_text_file("../raw/first_names_male.txt", engine::roll_dice(1,NUMBER_OF_MALE_FIRST_NAMES)-1);      
+	return line_from_text_file("../raw/first_names_male.txt", game_engine->rng.roll_dice(1,NUMBER_OF_MALE_FIRST_NAMES)-1);      
     }
 }
 
 string get_random_last_name ()
 {
-    const int die_roll = engine::roll_dice(1, NUMBER_OF_LAST_NAMES)-1;
+    const int die_roll = game_engine->rng.roll_dice(1, NUMBER_OF_LAST_NAMES)-1;
     return line_from_text_file("../raw/last_names.txt", die_roll);
 }
 
