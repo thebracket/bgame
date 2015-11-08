@@ -7,9 +7,8 @@ using std::make_pair;
 
 namespace engine {
 
-// TODO: Configuration driven height
-constexpr int SCREEN_WIDTH = 1024;
-constexpr int SCREEN_HEIGHT = 768;
+int SCREEN_WIDTH = 1024;
+int SCREEN_HEIGHT = 768;
 
 sdl2_backend::sdl2_backend()
 {
@@ -21,13 +20,14 @@ sdl2_backend::~sdl2_backend()
      stop();
 }
 
-void sdl2_backend::init()
+void sdl2_backend::init(const std::string &window_title, const int width=1024, const int height=768)
 {
+     SCREEN_HEIGHT = height;
+     SCREEN_WIDTH = width;
      const int error_code = SDL_Init ( SDL_INIT_VIDEO );
      if ( error_code < 0 ) throw 101; // TODO: Real exception
 
-     // TODO: Configuration driven window title
-     window = SDL_CreateWindow ( "Black Future",
+     window = SDL_CreateWindow ( window_title.c_str(),
                                  SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                  SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
                                );

@@ -63,9 +63,9 @@ private:
           }
      }
 public:  
-     void init() {
+     void init(const std::string &window_title, const int width=1024, const int height=768) {
           init_virtual_terminal();
-          backend_driver.init();
+          backend_driver.init(window_title, width, height);
           std::pair<int,int> size = backend_driver.get_console_size();
           vterm::resize ( size.first, size.second );
      }
