@@ -1,6 +1,7 @@
 #pragma once
 
 #include "virtual_terminal.h"
+#include "sdl2_resources.h"
 #include <SDL2/SDL.h>
 #include <string>
 
@@ -22,6 +23,7 @@ private:
   SDL_Window * window;
   SDL_Renderer * renderer;
   SDL_Texture * font_image;
+  
 };
   
 }
