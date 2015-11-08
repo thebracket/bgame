@@ -18,6 +18,8 @@ public:
   pair<int,int> get_console_size();
   void draw(vector<vterm::screen_character>* screen);
   void poll_inputs();
+  
+  int load_image_resource(const std::string &filename, const std::string &tag);
 private:
   bool initialized;
   SDL_Window * window;

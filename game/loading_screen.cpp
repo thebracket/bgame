@@ -4,6 +4,7 @@
 #include "raws/raws.h"
 #include "../engine/gui/gui_frame.h"
 #include "../engine/gui/gui_static_text.h"
+#include "game.h"
 
 using std::make_unique;
 using namespace engine;
@@ -33,6 +34,7 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
 
      if (count == 1) {
 	raws::read_raws();
+	game_engine->load_image_resource("../art_original/spritesheet.png", "spritesheet");
      }
      
      // Exit conditions

@@ -38,6 +38,7 @@ public:
      entity_component_system<typename component_list::type_list> * ecs;
      message_bus<typename message_list::type_list> * messaging;
      random_number_generator rng;
+          
 private:     
      sdl2_backend backend_driver;
      std::unique_ptr<base_mode> current_mode;
@@ -103,6 +104,11 @@ public:
           }
           backend_driver.stop();
      }
+     
+     int load_image_resource(const std::string &filename, const std::string &tag) {
+	  return backend_driver.load_image_resource(filename, tag);
+     }
+
 };
 
 }
