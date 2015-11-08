@@ -1,5 +1,5 @@
 #!/bin/bash
-MAX_LAYER=4
+MAX_LAYER=9
 MIN_LAYER=0
 INFILE="32x32.xcf"
 
