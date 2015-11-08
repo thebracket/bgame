@@ -129,8 +129,8 @@ void gui_main_game_view::process_mouse_events()
     for (mouse_motion_message &m : *mouse_movement) {
 	mouse_x = m.x;
 	mouse_y = m.y;
-	const int new_mouse_vx = mouse_x / 8;
-	const int new_mouse_vy = mouse_y / 8;
+	const int new_mouse_vx = mouse_x / 16;
+	const int new_mouse_vy = mouse_y / 16;
 	
 	if (mouse_vx != new_mouse_vx or mouse_vy != new_mouse_vy) {	
 	    mouse_vx = new_mouse_vx;

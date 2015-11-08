@@ -9,6 +9,7 @@ namespace engine {
 
 int SCREEN_WIDTH = 1024;
 int SCREEN_HEIGHT = 768;
+const int TERMINAL_SIZE = 16;
 
 sdl2_backend::sdl2_backend()
 {
@@ -18,6 +19,11 @@ sdl2_backend::sdl2_backend()
 sdl2_backend::~sdl2_backend()
 {
      stop();
+}
+
+int sdl2_backend::load_image_resource(const std::string &filename, const std::string &tag)
+{
+    return resources.load_image(renderer, filename, tag);
 }
 
 void sdl2_backend::init(const std::string &window_title, const int width=1024, const int height=768)
@@ -36,7 +42,7 @@ void sdl2_backend::init(const std::string &window_title, const int width=1024, c
      renderer = SDL_CreateRenderer ( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
      if ( renderer == NULL ) throw 103;
 
-     resources.load_image( renderer, "../assets/terminal8x8_palette2.png", "font" );
+     resources.load_image( renderer, "../assets/terminal16x16.png", "font" );
 
      initialized = true;
 }
@@ -54,7 +60,7 @@ void sdl2_backend::stop()
 
 pair< int, int > sdl2_backend::get_console_size()
 {
-     return make_pair ( SCREEN_WIDTH/8,SCREEN_HEIGHT/8 );
+     return make_pair ( SCREEN_WIDTH/TERMINAL_SIZE,SCREEN_HEIGHT/TERMINAL_SIZE );
 }
 
 void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
@@ -63,22 +69,22 @@ void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
   SDL_RenderClear(renderer);
   SDL_Texture * font_image = resources.get_texture_by_id(0);
   
-  const int ascii_height = SCREEN_HEIGHT/8;
-  const int ascii_width = SCREEN_WIDTH/8;
-  const SDL_Rect background_source{88, 104, 8, 8};
+  const int ascii_height = SCREEN_HEIGHT/TERMINAL_SIZE;
+  const int ascii_width = SCREEN_WIDTH/TERMINAL_SIZE;
+  const SDL_Rect background_source{88, 104, TERMINAL_SIZE, TERMINAL_SIZE};
   
   for (int y=0; y<ascii_height; ++y) {
     for (int x=0; x<ascii_width; ++x) {
-      const int screen_x = x * 8;
-      const int screen_y = y * 8;
+      const int screen_x = x * TERMINAL_SIZE;
+      const int screen_y = y * TERMINAL_SIZE;
       const unsigned char target_char = screen->operator[]((y*ascii_width)+x).character;
       const tuple<unsigned char, unsigned char, unsigned char> foreground = screen->operator[]((y*ascii_width)+x).foreground_color;
       const tuple<unsigned char, unsigned char, unsigned char> background = screen->operator[]((y*ascii_width)+x).background_color;
-      const int texture_x = (target_char % 16) * 8;
-      const int texture_y = (target_char / 16) * 8;
+      const int texture_x = (target_char % 16) * TERMINAL_SIZE;
+      const int texture_y = (target_char / 16) * TERMINAL_SIZE;
 
       // Where it goes
-      SDL_Rect dst_rect{screen_x, screen_y, 8, 8};
+      SDL_Rect dst_rect{screen_x, screen_y, TERMINAL_SIZE, TERMINAL_SIZE};
       
       // Blit the background
       SDL_SetTextureColorMod(font_image, std::get<0>(background), std::get<1>(background), std::get<2>(background));
@@ -86,7 +92,7 @@ void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
       
       // Blit the foreground
       SDL_SetTextureColorMod(font_image, std::get<0>(foreground), std::get<1>(foreground), std::get<2>(foreground));
-      SDL_Rect src_rect{texture_x, texture_y, 8, 8};
+      SDL_Rect src_rect{texture_x, texture_y, TERMINAL_SIZE, TERMINAL_SIZE};
       SDL_RenderCopy(renderer, font_image, &src_rect, &dst_rect);
     }
   }
