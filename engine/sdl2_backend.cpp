@@ -110,6 +110,17 @@ void sdl2_backend::render_bitmap_simple(const string& tag, const int& x, const i
     SDL_RenderCopy(renderer, bmp, &src, &target );
 }
 
+void sdl2_backend::render_bitmap_centered ( const string& tag, const int& x, const int& y )
+{
+    SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+    int image_width, image_height;
+    SDL_QueryTexture(bmp, NULL, NULL, &image_width, &image_height);
+    SDL_Rect target { x - (image_width / 2), y, image_width, image_height };
+    SDL_Rect src { 0, 0, image_width, image_height };
+    //std::cout << image_width << " x " << image_height << "\n";
+    SDL_RenderCopy(renderer, bmp, &src, &target );
+}
+
 void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

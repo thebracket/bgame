@@ -86,7 +86,7 @@ struct sdl_resource_manager {
 	for (font_resource &f : fonts) f.clear();
 	fonts.clear();
     }
-    
+        
     SDL_Texture * get_texture_by_id(const int &id) { return textures[id].image; }
     SDL_Texture * get_texture_by_tag(const std::string &tag) {
 	auto finder = texture_index.find(tag);

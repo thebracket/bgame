@@ -19,26 +19,26 @@ class main_menu_sg : public engine::base_node {
       
 	if (mx >309 and mx < 715 and my > 250 and my < 329) {
 	    SDL->render_bitmap("big_button_2", {0, 0, 406, 79}, {309, 250, 406, 79});
-	    SDL->render_bitmap_simple("btn_playgame_a", 400, 260);
+	    SDL->render_bitmap_centered("btn_playgame_a", 512, 260);
 	} else {
 	    SDL->render_bitmap("big_button_1", {0, 0, 406, 79}, {309, 250, 406, 79});
-	    SDL->render_bitmap_simple("btn_playgame", 400, 260);
+	    SDL->render_bitmap_centered("btn_playgame", 512, 260);
 	}
 
 	if (mx >309 and mx < 715 and my > 350 and my < 429) {
 	    SDL->render_bitmap("big_button_2", {0, 0, 406, 79}, {309, 350, 406, 79});
-	    SDL->render_bitmap_simple("btn_worldgen_a", 400, 360);
+	    SDL->render_bitmap_centered("btn_worldgen_a", 512, 360);
 	} else {
 	    SDL->render_bitmap("big_button_1", {0, 0, 406, 79}, {309, 350, 406, 79});
-	    SDL->render_bitmap_simple("btn_worldgen", 400, 360);
+	    SDL->render_bitmap_centered("btn_worldgen", 512, 360);
 	}
 	
 	if (mx >309 and mx < 715 and my > 450 and my < 529) {
 	    SDL->render_bitmap("big_button_2", {0, 0, 406, 79}, {309, 450, 406, 79});
-	    SDL->render_bitmap_simple("btn_quit_a", 400, 460);
+	    SDL->render_bitmap_centered("btn_quit_a", 512, 460);
 	} else {
 	    SDL->render_bitmap("big_button_1", {0, 0, 406, 79}, {309, 450, 406, 79});
-	    SDL->render_bitmap_simple("btn_quit", 400, 460);
+	    SDL->render_bitmap_centered("btn_quit", 512, 460);
 	}
     }
 };

@@ -59,4 +59,16 @@ public:
     }
 };
 
+class scene_blit_centered : public base_node {
+public:
+    scene_blit_centered(const std::string &tag, const int &X, const int &Y) : image_tag(tag),
+	x(X), y(Y) {}
+    std::string image_tag;
+    int x, y;
+    
+    virtual void render(sdl2_backend * SDL) {
+	SDL->render_bitmap_centered(image_tag, x, y);
+    }
+};
+
 }
