@@ -24,15 +24,15 @@ public:
     
     inline void set_base_source(SDL_Rect &source, const int &idx) {
 	if (world::current_region->tiles[ idx ].base_tile_type == tile_type::WATER ) {
-	    source = { 48, 32, 16, 16 }; // Water
+	    source = { 32, 32, 16, 16 }; // Water
 	} else {
 	    switch (world::current_region->tiles [ idx ].ground ) {
-	      case tile_ground::IGNEOUS : source = { 16, 0, 16, 16 }; break;
-	      case tile_ground::SEDIMENTARY : source = { 0, 32, 16, 16 }; break;
+	      case tile_ground::IGNEOUS : source = { 64, 16, 16, 16 }; break;
+	      case tile_ground::SEDIMENTARY : source = { 16, 0, 16, 16 }; break;
 	      case tile_ground::GRAVEL : source = { 0, 0, 16, 16 }; break;
-	      case tile_ground::WHITE_SAND : source = { 32, 32, 16, 16 }; break;
-	      case tile_ground::YELLOW_SAND : source = { 16, 32, 16, 16 }; break;
-	      case tile_ground::RED_SAND : source = { 32, 32, 16, 16 }; break;
+	      case tile_ground::WHITE_SAND : source = { 16, 32, 16, 16 }; break;
+	      case tile_ground::YELLOW_SAND : source = { 0, 32, 16, 16 }; break;
+	      case tile_ground::RED_SAND : source = { 0, 32, 16, 16 }; break;
 	    }
 	}	
     }
@@ -40,16 +40,16 @@ public:
     inline bool set_covering_source(SDL_Rect &source, const int &idx) {
 	  bool render_cover = false;
 	  
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::CACTUS) { source = { 48, 16, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::CACTUS) { source = { 32, 16, 16, 16 }; render_cover = true; }
 	  if (world::current_region->tiles [ idx ].covering == tile_covering::GORSE) { source = { 0, 16, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::GRASS) { source = { 48, 48, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::HEATHER) { source = { 32, 48, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::LYCHEN) { source = { 16, 48, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::MOSS) { source = { 0, 48, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::GRASS) { source = { 16, 48, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::HEATHER) { source = { 0, 64, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::LYCHEN) { source = { 48, 32, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::MOSS) { source = { 48, 32, 16, 16 }; render_cover = true; }
 	  if (world::current_region->tiles [ idx ].covering == tile_covering::REEDS) { source = { 48, 0, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::SHRUB) { source = { 32, 0, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::THISTLE) { source = { 0, 16, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::WILDFLOWER) { source = { 32, 16, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::SHRUB) { source = { 0, 32, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::THISTLE) { source = { 48, 0, 16, 16 }; render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::WILDFLOWER) { source = { 16, 16, 16, 16 }; render_cover = true; }
 	  
 	  return render_cover;
     }
@@ -81,6 +81,12 @@ public:
 		// Render any renderable items for this tile
 		
 		// Render darkness
+		
+		// Render not visible
+		if (world::current_region->visible[idx] == false) {
+		    source = { 48, 16, 16, 16 };
+		    SDL->render_bitmap("spritesheet", source, dest);
+		}
 	    }
 	    ++region_x;
 	}
