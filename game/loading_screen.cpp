@@ -30,6 +30,7 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
 	game_engine->load_image_resource("spritesheet.png", "spritesheet");
 	game_engine->load_image_resource("button1.png", "big_button_1");
 	game_engine->load_image_resource("button2.png", "big_button_2");
+	game_engine->load_image_resource("header.png", "header");
      }
      
      // Exit conditions

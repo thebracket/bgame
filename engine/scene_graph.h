@@ -40,7 +40,22 @@ public:
     
     virtual void render(sdl2_backend * SDL) {
 	const SDL_Rect big_rect{0,0,1024,768};
-	SDL->render_bitmap(image_tag, big_rect, big_rect);
+	const auto screen_size = SDL->get_screen_size();
+	const SDL_Rect full_screen{0,0, screen_size.first, screen_size.second};
+	SDL->render_bitmap(image_tag, big_rect, full_screen);
+    }
+};
+
+class scene_blit : public base_node {
+public:
+    scene_blit(const std::string &tag, const SDL_Rect &source, const SDL_Rect &dest) : image_tag(tag),
+	src(source), dst(dest) {}
+    std::string image_tag;
+    SDL_Rect src;
+    SDL_Rect dst;
+    
+    virtual void render(sdl2_backend * SDL) {
+	SDL->render_bitmap(image_tag, src, dst);
     }
 };
 
