@@ -11,10 +11,11 @@ public:
      virtual void done();
      virtual pair<engine::return_mode, unique_ptr<base_mode>> tick ( const double time_elapsed );
      virtual void on_pop();
+     virtual engine::scene_graph * get_render_target() { return &sg; }
 private:
     int selected_item;
     bool loaded_assets;
     bool displayed;
     bool world_available;
-    engine::gui menu_interface;
+    engine::scene_graph sg;
 };

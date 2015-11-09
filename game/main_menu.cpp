@@ -10,6 +10,39 @@ using std::make_unique;
 using std::ifstream;
 using namespace engine;
 
+// the buttons are 406 x 79
+// Therefore, left is 309
+class main_menu_sg : public engine::base_node {
+    virtual void render(sdl2_backend * SDL) {
+	const int mx = engine::command::mouse_x;
+	const int my = engine::command::mouse_y;
+      
+	if (mx >309 and mx < 715 and my > 250 and my < 329) {
+	    SDL->render_bitmap("big_button_2", {0, 0, 406, 79}, {309, 250, 406, 79});
+	    SDL->render_bitmap_simple("btn_playgame_a", 400, 260);
+	} else {
+	    SDL->render_bitmap("big_button_1", {0, 0, 406, 79}, {309, 250, 406, 79});
+	    SDL->render_bitmap_simple("btn_playgame", 400, 260);
+	}
+
+	if (mx >309 and mx < 715 and my > 350 and my < 429) {
+	    SDL->render_bitmap("big_button_2", {0, 0, 406, 79}, {309, 350, 406, 79});
+	    SDL->render_bitmap_simple("btn_worldgen_a", 400, 360);
+	} else {
+	    SDL->render_bitmap("big_button_1", {0, 0, 406, 79}, {309, 350, 406, 79});
+	    SDL->render_bitmap_simple("btn_worldgen", 400, 360);
+	}
+	
+	if (mx >309 and mx < 715 and my > 450 and my < 529) {
+	    SDL->render_bitmap("big_button_2", {0, 0, 406, 79}, {309, 450, 406, 79});
+	    SDL->render_bitmap_simple("btn_quit_a", 400, 460);
+	} else {
+	    SDL->render_bitmap("big_button_1", {0, 0, 406, 79}, {309, 450, 406, 79});
+	    SDL->render_bitmap_simple("btn_quit", 400, 460);
+	}
+    }
+};
+
 bool fexists(const char *filename)
 {
   ifstream ifile(filename);
@@ -20,22 +53,8 @@ bool fexists(const char *filename)
 void main_menu::init()
 {
     world_available = fexists("world/LB1.dat");
-    unique_ptr<gui_frame> frame = make_unique<gui_frame>("Outer", FILL_REGION);
-    frame->add_child(make_unique<gui_static_text>("Title", "Black Future", 1, 1, red, black, true));
-    if (world_available) {
-	frame->add_child(make_unique<gui_static_text>("PlayGame",      	"              Play the Game              ", 1, 4, black, white, true));
-    } else {
-	frame->add_child(make_unique<gui_static_text>("PlayGame",      	" You Must Create World to Play the Game  ", 1, 4, black, dark_grey, true));      
-    }
-    frame->add_child(make_unique<gui_static_text>("BuildWorld",    	"            Create the World             ", 1, 5, grey, black, true));
-    frame->add_child(make_unique<gui_static_text>("Quit",          	"              Quit Program               ", 1, 6, grey, black, true));
-
-    menu_interface.add_child(std::move(frame));
-    if (world_available) {
-      selected_item = 0;
-    } else {
-      selected_item = 1;
-    }
+    sg.children.push_back( make_unique<engine::scene_background>( "menuscreen" ) );
+    sg.children.push_back( make_unique<main_menu_sg>() );
 }
 
 void main_menu::done()
@@ -47,63 +66,24 @@ void main_menu::on_pop()
 {
      world_available = fexists("world/LB1.dat");
      if (world_available) {
-        gui_static_text * play_game = static_cast<gui_static_text *>(menu_interface.find_child("PlayGame"));     
-	play_game->update_text("             Play the Game               ");
      }
 }
 
 pair< engine::return_mode, unique_ptr< engine::base_mode > > main_menu::tick ( const double time_elapsed )
 {
-    if (command::is_key_down(command::UP)) --selected_item;
-    if (command::is_key_down(command::DOWN)) ++selected_item;
-    if (selected_item < 0) selected_item = 0;
-    if (selected_item > 2) selected_item = 2;
-
-    gui_static_text * play_game = static_cast<gui_static_text *>(menu_interface.find_child("PlayGame"));
-    gui_static_text * build_world = static_cast<gui_static_text *>(menu_interface.find_child("BuildWorld"));
-    gui_static_text * quit = static_cast<gui_static_text *>(menu_interface.find_child("Quit"));
-
-    if (selected_item == 0) {
-	if (world_available) {
-	    play_game->change_color(black,white);
-	} else {
-	    play_game->change_color(dark_grey,white);
-	}
-    } else {
-	if (world_available) {
-	    play_game->change_color(white,black);
-	} else {
-	    play_game->change_color(dark_grey,black);
-	}
-    }
-    if (selected_item == 1) {
-        build_world->change_color(black,white);
-    } else {
-        build_world->change_color(white,black);
-    }
-    if (selected_item == 2) {
-        quit->change_color(black,white);
-    } else {
-        quit->change_color(white,black);
-    }
-
-    // Draw it
-    menu_interface.render();
-
-    // Menu branching
-    if (selected_item == 2 and command::is_key_down(command::ENTER)) {
-        return make_pair ( POP, NO_PUSHED_MODE ); // Quit
-    }
-    if (selected_item == 0 and world_available and command::is_key_down(command::ENTER)) {
-        return make_pair ( PUSH, make_unique<play_mode>() ); // Play the game
-    }
-    if (selected_item == 1 and command::is_key_down(command::ENTER)) {
-	return make_pair ( PUSH, make_unique<world_gen_mode>() ); // Create the world!
+    if (engine::command::left_click) {
+	const int mx = engine::command::mouse_x;
+	const int my = engine::command::mouse_y;
+      
+	selected_item = 0;
+	if (mx >309 and mx < 715 and my > 250 and my < 329) selected_item = 1;
+	if (mx >309 and mx < 715 and my > 350 and my < 429) selected_item = 2;
+	if (mx >309 and mx < 715 and my > 450 and my < 529) selected_item = 3;
 	
-	// TODO: Go to world-builder mode and do this properly
-	//worldgen::build_world();
-	//world_available = true;
-	//play_game->update_text("             Play the Game               ");
+	if (selected_item == 1 and world_available) return make_pair ( PUSH, make_unique<play_mode>() ); // Play the game
+	if (selected_item == 2) return make_pair ( PUSH, make_unique<world_gen_mode>() ); // Create the world!
+	if (selected_item == 3) return make_pair ( POP, NO_PUSHED_MODE ); // Quit
     }
+    
     return make_pair ( CONTINUE, NO_PUSHED_MODE );
 }
