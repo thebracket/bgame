@@ -63,7 +63,29 @@ pair< int, int > sdl2_backend::get_console_size()
      return make_pair ( SCREEN_WIDTH/TERMINAL_SIZE,SCREEN_HEIGHT/TERMINAL_SIZE );
 }
 
-void sdl2_backend::draw ( vector< vterm::screen_character >* screen )
+void sdl2_backend::clear_screen()
+{
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+}
+
+void sdl2_backend::present()
+{
+    SDL_RenderPresent(renderer);
+}
+
+pair< int, int > sdl2_backend::get_screen_size()
+{
+    return make_pair ( SCREEN_WIDTH, SCREEN_HEIGHT );
+}
+
+void sdl2_backend::render_bitmap(const string& tag, const SDL_Rect& source, const SDL_Rect& dest)
+{
+    SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+    SDL_RenderCopy(renderer, bmp, &source, &dest);
+}
+
+void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
