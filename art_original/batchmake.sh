@@ -17,3 +17,5 @@ rmdir tmp
 convert Titles.xcf[1] ../build/loading_screen.png
 convert Menu\ Buttons.xcf[0] ../build/button1.png
 convert Menu\ Buttons.xcf[1] ../build/button2.png
+convert In\ Game.xcf[0] ../build/header.png
+
