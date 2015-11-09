@@ -1,7 +1,8 @@
 #!/bin/bash
 MAX_LAYER=9
 MIN_LAYER=0
-INFILE="32x32.xcf"
+INFILE="16x16.xcf"
+RESULT="../build/spritesheet.png"
 
 mkdir tmp
 for (( i=MIN_LAYER; i<=MAX_LAYER; i++ ))
@@ -10,7 +11,9 @@ do
 	CONVERSION="convert $INFILE[$i] $OUTFILE"
 	$CONVERSION
 done
-montage -background transparent -geometry 32x32\>+0+0  tmp/*.png spritesheet.png
+montage -background transparent -geometry 16x16\>+0+0 tmp/*.png $RESULT
 rm tmp/*.png
 rmdir tmp
-
+convert Titles.xcf[1] ../build/loading_screen.png
+convert Menu\ Buttons.xcf[0] ../build/button1.png
+convert Menu\ Buttons.xcf[1] ../build/button2.png
