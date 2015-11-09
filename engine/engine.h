@@ -15,6 +15,7 @@
 #include "ecs.h"
 #include "messagebus.h"
 #include "mpl_typelist.h"
+#include "scene_graph.h"
 
 namespace engine {
 
@@ -92,8 +93,13 @@ public:
                     continuation_mode.second->init();
                     push_mode ( std::move ( continuation_mode.second ) );
                }
-
-               backend_driver.draw ( vterm::get_virtual_screen() );
+  
+	       scene_graph * render_target = current_mode->get_render_target();
+	       if (render_target == nullptr) {
+		  backend_driver.draw_vterm ( vterm::get_virtual_screen() );
+	       } else {
+		  render_target->render(&backend_driver);
+	       }
 
                duration_ms = ( ( clock() - start_time ) *1000.0 ) / CLOCKS_PER_SEC;
                if ( fixed_time_step && duration_ms < 33 ) {
@@ -108,7 +114,7 @@ public:
      int load_image_resource(const std::string &filename, const std::string &tag) {
 	  return backend_driver.load_image_resource(filename, tag);
      }
-
+     
 };
 
 }

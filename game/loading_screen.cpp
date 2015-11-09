@@ -11,15 +11,11 @@ using namespace engine;
 
 void loading_screen::init()
 {
+     game_engine->load_image_resource("loading_screen.png", "splashscreen");
      loaded_assets = false;
      displayed = false; // Next time we are here we exit
-     
-     unique_ptr<gui_frame> frame = make_unique<gui_frame>("Outer", engine::FILL_REGION);
-     frame->add_child(make_unique<gui_static_text>("Title","Black Future", 1, 1, engine::red, black, true));
-     frame->add_child(make_unique<gui_static_text>("Version","Pre-Alpha Not Even A Version Number Yet!", 1, 2, white, black, true));
-     frame->add_child(make_unique<gui_static_text>("Action","Loading assets... please wait", 1, 4, grey, black, true));
-     splash_interface.add_child(std::move(frame));
      count  = 0;
+     sg.children.push_back( make_unique<engine::scene_background>( "splashscreen" ) );
 }
 
 void loading_screen::done()
@@ -29,13 +25,9 @@ void loading_screen::done()
 
 pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double time_elapsed )
 {
-     // Display the loading screen
-     splash_interface.render();
-
      if (count == 1) {
 	raws::read_raws();
 	game_engine->load_image_resource("spritesheet.png", "spritesheet");
-	game_engine->load_image_resource("loading_screen.png", "splashscreen");
 	game_engine->load_image_resource("button1.png", "big_button_1");
 	game_engine->load_image_resource("button2.png", "big_button_2");
      }

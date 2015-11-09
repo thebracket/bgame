@@ -16,8 +16,13 @@ public:
   void init(const string& window_title, const int width, const int height);
   void stop();
   pair<int,int> get_console_size();
-  void draw(vector<vterm::screen_character>* screen);
+  void draw_vterm(vector<vterm::screen_character>* screen);
   void poll_inputs();
+  
+  void clear_screen();
+  void present();
+  pair<int,int> get_screen_size();
+  void render_bitmap(const std::string &tag, const SDL_Rect &source, const SDL_Rect &dest);
   
   int load_image_resource(const std::string &filename, const std::string &tag);
 private:
