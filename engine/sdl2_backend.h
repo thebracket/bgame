@@ -24,6 +24,7 @@ public:
   pair<int,int> get_screen_size();
   void render_bitmap(const std::string &tag, const SDL_Rect &source, const SDL_Rect &dest);
   void render_bitmap_simple(const std::string &tag, const int &x, const int &y);
+  void render_bitmap_centered(const std::string &tag, const int &x, const int &y);
   
   int load_image_resource(const std::string &filename, const std::string &tag);
   int load_font_resource(const std::string &filename, const std::string &tag, const int &size);

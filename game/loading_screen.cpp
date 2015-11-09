@@ -33,6 +33,8 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
 	game_engine->load_image_resource("header.png", "header");
 	game_engine->load_image_resource("main_menu.png", "menuscreen");
 	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco36", 36);
+	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco12", 12);
+	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco10", 10);
 	SDL_Color sdl_white = {255,255,255,255};
 	SDL_Color sdl_yelllow = {255,255,0,255};
 	game_engine->render_text_to_image( "disco36", "Play The Game", "btn_playgame", sdl_white );

@@ -1,5 +1,5 @@
 #!/bin/bash
-MAX_LAYER=9
+MAX_LAYER=15
 MIN_LAYER=0
 INFILE="16x16.xcf"
 RESULT="../build/spritesheet.png"
