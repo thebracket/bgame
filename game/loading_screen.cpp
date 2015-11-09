@@ -34,7 +34,10 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
 
      if (count == 1) {
 	raws::read_raws();
-	game_engine->load_image_resource("../art_original/spritesheet.png", "spritesheet");
+	game_engine->load_image_resource("spritesheet.png", "spritesheet");
+	game_engine->load_image_resource("loading_screen.png", "splashscreen");
+	game_engine->load_image_resource("button1.png", "big_button_1");
+	game_engine->load_image_resource("button2.png", "big_button_2");
      }
      
      // Exit conditions
