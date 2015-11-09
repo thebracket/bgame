@@ -1,5 +1,6 @@
 #include "sdl2_backend.h"
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "command_manager.h"
 #include <iostream>
 
@@ -26,6 +27,16 @@ int sdl2_backend::load_image_resource(const std::string &filename, const std::st
     return resources.load_image(renderer, filename, tag);
 }
 
+int sdl2_backend::load_font_resource(const string& filename, const string& tag, const int& size)
+{
+    return resources.load_font(filename, tag, size);
+}
+
+int sdl2_backend::render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color)
+{
+    return resources.render_text_to_texture( renderer, font_tag, text, new_tag, color );
+}
+
 void sdl2_backend::init(const std::string &window_title, const int width=1024, const int height=768)
 {
      SCREEN_HEIGHT = height;
@@ -41,6 +52,8 @@ void sdl2_backend::init(const std::string &window_title, const int width=1024, c
 
      renderer = SDL_CreateRenderer ( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
      if ( renderer == NULL ) throw 103;
+     
+     if ( TTF_Init() == -1 ) throw 104;
 
      resources.load_image( renderer, "../assets/terminal16x16.png", "font" );
 
@@ -83,6 +96,18 @@ void sdl2_backend::render_bitmap(const string& tag, const SDL_Rect& source, cons
 {
     SDL_Texture * bmp = resources.get_texture_by_tag(tag);
     SDL_RenderCopy(renderer, bmp, &source, &dest);
+}
+
+void sdl2_backend::render_bitmap_simple(const string& tag, const int& x, const int& y)
+{
+    SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+    if (bmp == nullptr) throw 101;
+    int image_width, image_height;
+    SDL_QueryTexture(bmp, NULL, NULL, &image_width, &image_height);
+    SDL_Rect target { x, y, image_width, image_height };
+    SDL_Rect src { 0, 0, image_width, image_height };
+    //std::cout << image_width << " x " << image_height << "\n";
+    SDL_RenderCopy(renderer, bmp, &src, &target );
 }
 
 void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
