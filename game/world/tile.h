@@ -62,6 +62,14 @@ constexpr unsigned char CACTUS = 10;
 class tile {
 public:
     tile();
+    
+    inline bool is_ramp() {
+	if (base_tile_type == tile_type::RAMP or base_tile_type > 4) {
+	  return true;
+	} else {
+	  return false;
+	}
+    }
 
     // About the tile itself
     unsigned char base_tile_type;
