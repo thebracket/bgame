@@ -111,6 +111,19 @@ public:
 		}
 		
 		// Render darkness
+		bool render_darkness = true;
+		const float terrain_angle = world::current_region->tiles[idx].surface_normal;
+		const float angle_difference = std::abs(terrain_angle - world::sun_angle);
+		float intensity_pct = 1.0 - (std::abs(angle_difference)/90.0F);
+		if (intensity_pct < 0.25) intensity_pct = 0.25;
+		if (intensity_pct > 1.0) intensity_pct = 1.0;
+		if (world::current_region->tiles[idx].base_tile_type == tile_type::WATER) intensity_pct = 1.0;
+		// TODO: Use this to select an appropriate mask.
+		if (intensity_pct <= 0.25) { source = raws::get_tile_source_by_name("DARK75"); }
+		else if (intensity_pct <= 0.5) { source = raws::get_tile_source_by_name("DARK50"); }
+		else if (intensity_pct <= 0.75) { source = raws::get_tile_source_by_name("DARK25"); }
+		else { render_darkness = false; }
+		if (render_darkness) SDL->render_bitmap("spritesheet", source, dest);
 		
 		// Render not visible
 		if (world::current_region->visible[idx] == false) {
