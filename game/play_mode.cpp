@@ -5,6 +5,7 @@
 #include "../engine/gui/gui_static_text.h"
 #include "gui/gui_main_game_view.h"
 #include "game.h"
+#include "raws/raws.h"
 
 using namespace engine;
 using std::make_unique;
@@ -24,15 +25,18 @@ public:
     
     inline void set_base_source(SDL_Rect &source, const int &idx) {
 	if (world::current_region->tiles[ idx ].base_tile_type == tile_type::WATER ) {
-	    source = { 32, 32, 16, 16 }; // Water
+	    source = raws::get_tile_source_by_name("WATER"); // Water
+	} else if ( world::current_region->tiles[ idx ].base_tile_type == tile_type::RAMP  ) {
+	    source = raws::get_tile_source_by_name("IGNEOUS");
 	} else {
 	    switch (world::current_region->tiles [ idx ].ground ) {
-	      case tile_ground::IGNEOUS : source = { 64, 16, 16, 16 }; break;
-	      case tile_ground::SEDIMENTARY : source = { 16, 0, 16, 16 }; break;
-	      case tile_ground::GRAVEL : source = { 0, 0, 16, 16 }; break;
-	      case tile_ground::WHITE_SAND : source = { 16, 32, 16, 16 }; break;
-	      case tile_ground::YELLOW_SAND : source = { 0, 32, 16, 16 }; break;
-	      case tile_ground::RED_SAND : source = { 0, 32, 16, 16 }; break;
+	      case tile_ground::IGNEOUS : source = raws::get_tile_source_by_name("IGNEOUS"); break;
+	      case tile_ground::SEDIMENTARY : raws::get_tile_source_by_name("SEDIMENTARY"); break;
+	      case tile_ground::GRAVEL : source = raws::get_tile_source_by_name("GRAVEL"); break;
+	      case tile_ground::WHITE_SAND : source = raws::get_tile_source_by_name("WHITE_SAND"); break;
+	      case tile_ground::YELLOW_SAND : source = raws::get_tile_source_by_name("YELLOW_SAND"); break;
+	      case tile_ground::RED_SAND : source = raws::get_tile_source_by_name("YELLOW_SAND"); break;
+	      default : std::cout << "Oops: unknown ground type : " << world::current_region->tiles [ idx ].ground << "\n";
 	    }
 	}	
     }
@@ -40,17 +44,16 @@ public:
     inline bool set_covering_source(SDL_Rect &source, const int &idx) {
 	  bool render_cover = false;
 	  
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::CACTUS) { source = { 32, 16, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::GORSE) { source = { 0, 16, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::GRASS) { source = { 16, 48, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::HEATHER) { source = { 0, 64, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::LYCHEN) { source = { 48, 32, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::MOSS) { source = { 48, 32, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::REEDS) { source = { 48, 0, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::SHRUB) { source = { 0, 32, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::THISTLE) { source = { 48, 0, 16, 16 }; render_cover = true; }
-	  if (world::current_region->tiles [ idx ].covering == tile_covering::WILDFLOWER) { source = { 16, 16, 16, 16 }; render_cover = true; }
-	  
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::CACTUS) { source = raws::get_tile_source_by_name("CACTUS"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::GORSE) { source = raws::get_tile_source_by_name("GORSE"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::GRASS) { source = raws::get_tile_source_by_name("GRASS"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::HEATHER) { source = raws::get_tile_source_by_name("HEATHER"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::LYCHEN) { source = raws::get_tile_source_by_name("LYCHEN"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::MOSS) { source = raws::get_tile_source_by_name("MOSS"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::REEDS) { source = raws::get_tile_source_by_name("REEDS"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::SHRUB) { source = raws::get_tile_source_by_name("SHRUB"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::THISTLE) { source = raws::get_tile_source_by_name("THISTLE"); render_cover = true; }
+	  if (world::current_region->tiles [ idx ].covering == tile_covering::WILDFLOWER) { source = raws::get_tile_source_by_name("WILDFLOWER"); render_cover = true; }	  
 	  return render_cover;
     }
     
@@ -79,12 +82,18 @@ public:
 		}
 		
 		// Render any renderable items for this tile
+		auto finder = world::entity_render_list.find( idx );
+		if ( finder != world::entity_render_list.end() ) {
+		    const int sprite_idx = finder->second;
+		    source = raws::get_tile_source( sprite_idx );
+		    SDL->render_bitmap("spritesheet", source, dest);
+		}
 		
 		// Render darkness
 		
 		// Render not visible
 		if (world::current_region->visible[idx] == false) {
-		    source = { 48, 16, 16, 16 };
+		    source = raws::get_tile_source_by_name("HIDEMASK");
 		    SDL->render_bitmap("spritesheet", source, dest);
 		}
 	    }

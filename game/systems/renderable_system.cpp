@@ -13,6 +13,6 @@ void renderable_system::tick ( const double &duration_ms ) {
         position_component * pos = game_engine->ecs->find_entity_component<position_component>(render_info.entity_id);
 
 	const int idx = world::current_region->idx ( pos->x, pos->y );
-	world::entity_render_list[idx] = {render_info.glyph, render_info.foreground, render_info.background};
+	world::entity_render_list[idx] = render_info.tile_idx;
     }
 }

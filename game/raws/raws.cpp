@@ -20,6 +20,7 @@
 #include "raw_skill_required.h"
 #include "raw_component.h"
 #include "raw_sleepable.h"
+#include "raw_tile.h"
 
 #include "../game.h"
 
@@ -40,7 +41,8 @@ unordered_map<string, unsigned char> glyphs;
 unordered_map<string, unique_ptr<base_raw>> structures;
 unordered_map<string, unique_ptr<base_raw>> starting_professions;
 unordered_map<string, unique_ptr<base_raw>> items;
-  
+unordered_map<string, int> tiles;
+
 }
 
 const string get_index_filename()
@@ -91,6 +93,30 @@ engine::vterm::color_t find_color_by_name(const string &name) {
     return finder->second;
 }
 
+int find_tile_by_name(const string &name) {
+    auto finder = detail::tiles.find(name);
+    if (finder == detail::tiles.end()) {
+      std::cout << "Error; could not find tile; [" << name << "]\n";
+      throw 106;
+    }
+    return finder->second;
+}
+
+SDL_Rect get_tile_source(const int idx) {
+    const int width = 112;
+    const int width_t = 7;
+    
+    const int x = idx % width_t;
+    const int y = idx / width_t;
+    
+    return SDL_Rect { x*16, y*16, 16, 16 };
+}
+
+SDL_Rect get_tile_source_by_name(const string &name) {
+    const int idx = find_tile_by_name( name );
+    return get_tile_source( idx );
+}
+
 /* Raw Factory Functions */
 
 void parse_raw_name(const vector<string> &chunks) {
@@ -123,6 +149,13 @@ void parse_raw_glyph(const vector<string> &chunks) {
     const unsigned char glyph = find_glyph_by_name(glyph_name);
     unique_ptr<raw_glpyh> g = make_unique<raw_glpyh>(glyph);
     current_render->children.push_back(std::move(g));
+}
+
+void parse_raw_tile(const vector<string> &chunks) {
+    const string tile_name = chunks[1];
+    const int tile_idx = find_tile_by_name(tile_name);
+    unique_ptr<raw_tile> t = make_unique<raw_tile>(tile_idx);
+    current_render->children.push_back(std::move(t));
 }
 
 void parse_raw_color_pair(const vector<string> &chunks) {
@@ -203,6 +236,10 @@ void parse_structure(const vector<string> &chunks) {
     }
     if (chunks[0] == "RENDER_COLOR") {
 	parse_raw_color_pair(chunks);
+	return;
+    }
+    if (chunks[0] == "RENDER_TILE") {
+	parse_raw_tile(chunks);
 	return;
     }
     if (chunks[0] == "OBSTRUCTS") {
@@ -334,6 +371,13 @@ void parse_whole_chunk ( const vector<string> &chunks )
           const int blue_i = std::stoi ( blue_string );
           detail::colors[color_name] = engine::vterm::color_t {red_i, green_i, blue_i};
           return;
+     }
+     if ( chunks[0] == "TILE" ) {
+	  const string tile_name = chunks[1];
+	  const string tile_idx_s = chunks[2];
+	  const int tile_idx = std::stoi( tile_idx_s );
+	  detail::tiles [ tile_name ] = tile_idx;
+	  return;
      }
      
      // Tags that start a nested structure

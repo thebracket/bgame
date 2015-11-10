@@ -1,3 +1,4 @@
+tilemap.txt
 display.txt
 structures.txt
 starting_professions.txt
