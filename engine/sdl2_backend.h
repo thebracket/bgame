@@ -26,9 +26,11 @@ public:
   void render_bitmap_simple(const std::string &tag, const int &x, const int &y);
   void render_bitmap_centered(const std::string &tag, const int &x, const int &y);
   
-  int load_image_resource(const std::string &filename, const std::string &tag);
-  int load_font_resource(const std::string &filename, const std::string &tag, const int &size);
-  int render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color);
+  void load_image_resource(const std::string &filename, const std::string &tag);
+  void load_font_resource(const std::string &filename, const std::string &tag, const int &size);
+  std::string render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color);
+  
+  void resource_cleanup_tick();
 private:
   bool initialized;
   SDL_Window * window;

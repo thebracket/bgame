@@ -6,10 +6,13 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <sstream>
 
 namespace engine {
 
 struct texture_resource {
+    texture_resource() {}
+  
     texture_resource(SDL_Renderer * renderer, const std::string &fn, const std::string &tag) : filename(fn), name(tag) 
     {
 	SDL_Surface * tmp_surface = IMG_Load ( fn.c_str() );
@@ -29,12 +32,15 @@ struct texture_resource {
     }
   
     bool initialized = false;
+    bool deleted = false;
     std::string filename;
     std::string name;
     SDL_Texture * image;
 };
 
 struct font_resource {
+    font_resource() {}
+  
     font_resource(const std::string &fn, const std::string &tag, const int &size) : filename(fn), name(tag), point_size(size)
     {
 	font = TTF_OpenFont( fn.c_str(), size );
@@ -58,56 +64,61 @@ struct font_resource {
 
 struct sdl_resource_manager {
   
-    int load_image(SDL_Renderer * renderer, const std::string &filename, const std::string &tag) {
+    void load_image(SDL_Renderer * renderer, const std::string &filename, const std::string &tag) {
 	int image_flags = IMG_INIT_PNG;
 	if ( ! ( IMG_Init ( image_flags ) & image_flags ) ) throw 104;
       
-	const int index = textures.size();
 	texture_resource res = texture_resource( renderer, filename, tag );
-	textures.push_back( std::move( res ) );
-	texture_index[tag] = index;
-	return index;
+	texture_index[tag] = res;
     }
     
-    int load_font(const std::string &filename, const std::string &tag, const int &size) {
-	const int index = fonts.size();
+    void load_font(const std::string &filename, const std::string &tag, const int &size) {
 	font_resource fon = font_resource( filename, tag, size );
-	fonts.push_back( fon );
-	font_index[tag] = index;
-	return index;
+	font_index[tag] = fon;
     }
     
     void clear() {
+	for (auto it = texture_index.begin(); it != texture_index.end(); ++it) {
+	    it->second.clear();
+	}	
 	texture_index.clear();
-	for (texture_resource &t : textures) t.clear();
-	textures.clear();
 	
+	for (auto it = font_index.begin(); it != font_index.end(); ++it) {
+	    it->second.clear();
+	}	
 	font_index.clear();
-	for (font_resource &f : fonts) f.clear();
-	fonts.clear();
+    }
+    
+    void mark_and_sweep() {
+	for ( auto it = texture_index.begin(); it != texture_index.end() ; ) {
+	    if (it->second.deleted) {
+		it->second.clear();
+		texture_index.erase( it++ );
+	    } else {
+		++it;
+	    }
+	}
     }
         
-    SDL_Texture * get_texture_by_id(const int &id) { return textures[id].image; }
     SDL_Texture * get_texture_by_tag(const std::string &tag) {
 	auto finder = texture_index.find(tag);
 	if (finder != texture_index.end()) {
-	    return get_texture_by_id( finder->second );
+	    return finder->second.image;
 	} else {
 	    return nullptr;
 	}
     }
     
-    TTF_Font * get_font_by_id(const int &id) { return fonts[id].font; }
     TTF_Font * get_font_by_tag(const std::string &tag) {
 	auto finder = font_index.find(tag);
 	if (finder != font_index.end()) {
-	    return get_font_by_id( finder->second );
+	    return finder->second.font;
 	} else {
 	    return nullptr;
 	}
     }
     
-    int render_text_to_texture(SDL_Renderer * renderer, const std::string &font_tag, const std::string text, const std::string &new_tag, SDL_Color color) {
+    std::string render_text_to_texture(SDL_Renderer * renderer, const std::string &font_tag, const std::string text, const std::string &new_tag, SDL_Color color) {
 	TTF_Font * font = get_font_by_tag( font_tag );
 	if (font == nullptr) {
 	  std::cout << "Null font!\n";
@@ -115,23 +126,27 @@ struct sdl_resource_manager {
 	}
 	SDL_Surface * surf = TTF_RenderText_Blended( font, text.c_str(), color );
 	if (surf == nullptr) {
-	  std::cout << "Null surface!\n";
+	  std::cout << "Null surface when rendering [" << text << "]:" << TTF_GetError() << "\n";
 	  throw 101;
 	}
 	SDL_Texture * texture = SDL_CreateTextureFromSurface( renderer, surf );
 	SDL_FreeSurface( surf );
 
-	const int index = textures.size();
-	textures.push_back( texture_resource( texture ) );
-	texture_index[new_tag] = index;
-	return index;
+	std::stringstream ss;
+	ss << "transient_" << transient_id;
+	const std::string text_name = ss.str();
+	++transient_id;
+
+	texture_resource res = texture_resource( texture );
+	res.deleted = true;
+	texture_index [ text_name ] = res;
+	return text_name;
     }
   
 private:
-    std::vector<texture_resource> textures;
-    std::unordered_map<std::string,int> texture_index;
-    std::vector<font_resource> fonts;
-    std::unordered_map<std::string,int> font_index;
+    std::unordered_map<std::string, texture_resource> texture_index;
+    std::unordered_map<std::string, font_resource> font_index;
+    int transient_id = 0;
 };
 
 }

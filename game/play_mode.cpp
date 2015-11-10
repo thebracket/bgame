@@ -16,11 +16,22 @@ public:
 
       render_map( SDL );
       // Render the power bar
-      // Render date/time
+      render_date_time ( SDL );
       render_paused ( SDL );
       // Render any emote pop-ups
       // Render any tool-tips
       
+    }
+    
+    inline void render_date_time( sdl2_backend * SDL ) {
+	SDL_Color sdl_white = {255,255,255,255};
+	
+	if (world::display_day_month.empty()) world::display_day_month = " ";
+	if (world::display_time.empty()) world::display_time = " ";
+	const std::string the_date = game_engine->render_text_to_image( "disco14", world::display_day_month, "btn_playgame", sdl_white );
+	const std::string the_time = game_engine->render_text_to_image( "disco14", world::display_time, "btn_playgame", sdl_white );
+	SDL->render_bitmap_simple(the_date, 0, 0);
+	SDL->render_bitmap_simple(the_time, 100, 0);
     }
     
     inline void render_paused ( sdl2_backend * SDL ) {
