@@ -499,7 +499,7 @@ void add_cordex(const int &x, const int &y) {
     game_engine->ecs->add_component(cordex, position_component(x, y, OMNI));
     game_engine->ecs->add_component(cordex, viewshed_component(penetrating,16));
     game_engine->ecs->add_component(cordex, calendar_component(0L));
-    game_engine->ecs->add_component(cordex, renderable_component(15, cyan, black));
+    game_engine->ecs->add_component(cordex, renderable_component(15, cyan, black,17));
     game_engine->ecs->add_component(cordex, obstruction_component());
 }
 
@@ -513,7 +513,7 @@ void add_cordex_console(const int x, const int y, const unsigned char symbol) {
     game_engine->ecs->add_entity(console);
     game_engine->ecs->add_component(console, debug_name_component("Cordex Console"));
     game_engine->ecs->add_component(console, position_component(x,y));
-    game_engine->ecs->add_component(console, renderable_component(symbol, dark_cyan, black));
+    //game_engine->ecs->add_component(console, renderable_component(symbol, dark_cyan, black));
     game_engine->ecs->add_component(console, obstruction_component());
 }
 
@@ -624,7 +624,7 @@ entity make_settler(const int &x, const int &y)
     game_engine->ecs->add_component(test, debug_name_component("Test"));
     game_engine->ecs->add_component(test, position_component(x,y));
     //engine::globals::ecs->add_component(test, obstruction_component(true,false));
-    game_engine->ecs->add_component(test, renderable_component('@', yellow, black));
+    game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34));
     game_engine->ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
         

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <SDL2/SDL.h>
 
 using std::string;
 
@@ -21,5 +22,8 @@ int create_structure_from_raws( const string& name, const int& x, const int& y )
 string get_random_starting_profession();
 string get_random_first_name(const short &gender);
 string get_random_last_name();
+
+SDL_Rect get_tile_source(const int idx);
+SDL_Rect get_tile_source_by_name(const string &name);
 
 }

@@ -5,6 +5,7 @@
 #include "../components/renderable_component.h"
 #include "raw_glyph.h"
 #include "raw_color_pair.h"
+#include "raw_tile.h"
 #include "../game.h"
 
 using std::vector;
@@ -20,6 +21,7 @@ struct raw_renderable : public base_raw {
           unsigned char glyph_to_use = '!';
           color_t fg {255,255,255};
           color_t bg {0,0,0};
+	  int tile_idx = 0;
 
           for ( const unique_ptr<base_raw> &child : children ) {
                if ( child->type == GLYPH ) {
@@ -30,9 +32,12 @@ struct raw_renderable : public base_raw {
                     raw_color_pair * tmp = static_cast<raw_color_pair *> ( child.get() );
                     fg = tmp->foreground;
                     bg = tmp->background;
-               }
+               } else if ( child->type == TILE ) {
+		    raw_tile * tmp = static_cast<raw_tile *>( child.get() );
+		    tile_idx = tmp->tile_idx;
+	       }
           }
-          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg ) );
+          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg, tile_idx ) );
      }
 };
 
