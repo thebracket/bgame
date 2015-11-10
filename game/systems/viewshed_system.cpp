@@ -89,7 +89,7 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
                 }
 
                 if (world::view_blocked[index] or
-                        (world::current_region->tiles[index].base_tile_type == tile_type::RAMP and
+                        (world::current_region->tiles[index].is_ramp() and
                          level_band < world::current_region->tiles[index].level_band
                 )) {
                     blocked = true;

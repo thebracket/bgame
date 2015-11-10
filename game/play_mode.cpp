@@ -15,12 +15,12 @@ public:
     virtual void render(sdl2_backend * SDL) {
 
       render_map( SDL );
+      // Render lighting!
       // Render the power bar
       render_date_time ( SDL );
       render_paused ( SDL );
       // Render any emote pop-ups
       // Render any tool-tips
-      
     }
     
     inline void render_date_time( sdl2_backend * SDL ) {
