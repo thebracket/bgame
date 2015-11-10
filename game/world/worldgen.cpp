@@ -300,9 +300,26 @@ void walk_contours ( const int region_x, const int region_y, land_block &region,
                     if (threshold[BR]) value += 4;
                     if (threshold[BL]) value += 8;
 
-                    if (value != 0 && value != 15) {
+                    if (value!=0 and value!=15) {
                         std::lock_guard<std::mutex> lock ( worldgen_mutex );
-                        region.tiles[tile_idx].base_tile_type = tile_type::RAMP;
+			//std::cout << "Ramp value: " << +value << "\n";
+			switch (value) {
+			  
+ 			  case 1 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_WU_NU; break;
+			  case 2 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_EU_NU; break;
+			  case 3 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_NU_SD; break;
+			  case 4 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_EU_SU; break;
+			  case 6 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_EU_WD; break;
+			  case 7 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_WD_SD; break;
+			  case 8 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_WU_SU; break;
+			  case 9 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_ED_WU; break;
+			  case 11 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_ED_SD; break;
+			  case 12 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_ND_SU; break;
+			  case 13 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_ED_ND; break;
+			  case 14 : region.tiles[tile_idx].base_tile_type = tile_type::RAMP_WD_ND; break;
+			  
+			  default: region.tiles[tile_idx].base_tile_type = tile_type::RAMP;
+			}
                     }
                 }
             }
