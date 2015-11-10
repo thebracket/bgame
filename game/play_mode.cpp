@@ -26,8 +26,24 @@ public:
     inline void set_base_source(SDL_Rect &source, const int &idx) {
 	if (world::current_region->tiles[ idx ].base_tile_type == tile_type::WATER ) {
 	    source = raws::get_tile_source_by_name("WATER"); // Water
-	} else if ( world::current_region->tiles[ idx ].base_tile_type == tile_type::RAMP  ) {
-	    source = raws::get_tile_source_by_name("IGNEOUS");
+	} else if ( world::current_region->tiles[ idx ].base_tile_type == tile_type::RAMP or
+	  world::current_region->tiles[ idx ].base_tile_type > 4
+	) {
+	    switch (world::current_region->tiles[ idx ].base_tile_type) {
+	      case tile_type::RAMP_NU_SD : source = raws::get_tile_source_by_name("RAMP_NU_SD"); break;
+	      case tile_type::RAMP_ED_WU : source = raws::get_tile_source_by_name("RAMP_ED_WU"); break;
+	      case tile_type::RAMP_EU_WD : source = raws::get_tile_source_by_name("RAMP_EU_WD"); break;
+	      case tile_type::RAMP_ND_SU : source = raws::get_tile_source_by_name("RAMP_ND_SU"); break;
+	      case tile_type::RAMP_EU_SU : source = raws::get_tile_source_by_name("RAMP_EU_SU"); break;
+	      case tile_type::RAMP_WU_SU : source = raws::get_tile_source_by_name("RAMP_WU_SU"); break;
+	      case tile_type::RAMP_EU_NU : source = raws::get_tile_source_by_name("RAMP_EU_NU"); break;
+	      case tile_type::RAMP_WU_NU : source = raws::get_tile_source_by_name("RAMP_WU_NU"); break;
+	      case tile_type::RAMP_WD_ND : source = raws::get_tile_source_by_name("RAMP_WD_ND"); break;
+	      case tile_type::RAMP_ED_ND : source = raws::get_tile_source_by_name("RAMP_ED_ND"); break;
+	      case tile_type::RAMP_WD_SD : source = raws::get_tile_source_by_name("RAMP_WD_SD"); break;
+	      case tile_type::RAMP_ED_SD : source = raws::get_tile_source_by_name("RAMP_ED_SD"); break;
+	      default: source = raws::get_tile_source_by_name("DOOD");
+	    }
 	} else {
 	    switch (world::current_region->tiles [ idx ].ground ) {
 	      case tile_ground::IGNEOUS : source = raws::get_tile_source_by_name("IGNEOUS"); break;
@@ -35,14 +51,18 @@ public:
 	      case tile_ground::GRAVEL : source = raws::get_tile_source_by_name("GRAVEL"); break;
 	      case tile_ground::WHITE_SAND : source = raws::get_tile_source_by_name("WHITE_SAND"); break;
 	      case tile_ground::YELLOW_SAND : source = raws::get_tile_source_by_name("YELLOW_SAND"); break;
-	      case tile_ground::RED_SAND : source = raws::get_tile_source_by_name("YELLOW_SAND"); break;
+	      case tile_ground::RED_SAND : source = raws::get_tile_source_by_name("RED_SAND"); break;
 	      default : std::cout << "Oops: unknown ground type : " << world::current_region->tiles [ idx ].ground << "\n";
 	    }
+	    source = raws::get_tile_source_by_name("SEDIMENTARY");
 	}	
     }
     
     inline bool set_covering_source(SDL_Rect &source, const int &idx) {
 	  bool render_cover = false;
+	  if ( world::current_region->tiles[ idx ].base_tile_type == tile_type::RAMP or
+	    world::current_region->tiles[ idx ].base_tile_type > 4
+	  ) return false;
 	  
 	  if (world::current_region->tiles [ idx ].covering == tile_covering::CACTUS) { source = raws::get_tile_source_by_name("CACTUS"); render_cover = true; }
 	  if (world::current_region->tiles [ idx ].covering == tile_covering::GORSE) { source = raws::get_tile_source_by_name("GORSE"); render_cover = true; }
@@ -69,7 +89,8 @@ public:
 	int region_x = left_x;
 	for (int x=0; x<64; ++x) {
 	    const int idx = world::current_region->idx(region_x, region_y);
-	    if (region_x >= 0 and region_x < landblock_width and region_y > 0 and region_y <= landblock_height-1 and world::current_region->revealed[idx] ) {
+ 	    if (region_x >= 0 and region_x < landblock_width and region_y > 0 and region_y <= landblock_height-1 and world::current_region->revealed[idx] ) {
+//	    if (region_x >= 0 and region_x < landblock_width and region_y > 0 and region_y <= landblock_height-1 ) {
 		// Render the base ground
 		set_base_source(source, idx);
 		SDL_Rect dest = {x*16, (y*16) + 48, 16, 16};

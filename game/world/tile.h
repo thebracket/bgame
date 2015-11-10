@@ -11,6 +11,18 @@ constexpr unsigned char WATER = 1;
 constexpr unsigned char FLAT = 2;
 constexpr unsigned char RAMP = 3;
 constexpr unsigned char BEACH = 4;
+constexpr unsigned char RAMP_NU_SD = 5;
+constexpr unsigned char RAMP_ND_SU = 6;
+constexpr unsigned char RAMP_EU_WD = 7;
+constexpr unsigned char RAMP_ED_WU = 8;
+constexpr unsigned char RAMP_WU_SU = 9;
+constexpr unsigned char RAMP_EU_SU = 10;
+constexpr unsigned char RAMP_EU_NU = 11;
+constexpr unsigned char RAMP_WU_NU = 12;
+constexpr unsigned char RAMP_WD_ND = 13;
+constexpr unsigned char RAMP_ED_ND = 14;
+constexpr unsigned char RAMP_ED_SD = 15;
+constexpr unsigned char RAMP_WD_SD = 16;
 }
 
 namespace tile_climate {

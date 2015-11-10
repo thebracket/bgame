@@ -63,6 +63,20 @@ convert Structures.xcf[16] tmp/034.png
 
 convert PersonTemplate.xcf[0] tmp/035.png
 
+convert 16x16.xcf[17] tmp/036.png
+convert 16x16.xcf[18] tmp/037.png
+convert 16x16.xcf[19] tmp/038.png
+convert 16x16.xcf[20] tmp/039.png
+convert 16x16.xcf[21] tmp/040.png
+convert 16x16.xcf[22] tmp/041.png
+convert 16x16.xcf[23] tmp/042.png
+convert 16x16.xcf[24] tmp/043.png
+convert 16x16.xcf[25] tmp/044.png
+convert 16x16.xcf[26] tmp/045.png
+convert 16x16.xcf[27] tmp/046.png
+convert 16x16.xcf[28] tmp/047.png
+convert 16x16.xcf[29] tmp/048.png
+
 montage -background transparent -geometry 16x16\>+0+0 tmp/*.png $RESULT
 rm tmp/*
 rmdir tmp

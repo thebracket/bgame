@@ -59,7 +59,7 @@ bool viewshed_system::is_facing_this_way ( const position_component* pos, const 
 }
 
 void viewshed_system::scan_radius_for_visibility(viewshed_component * view, const position_component * pos) {
-    constexpr double sweep_degrees_radians = 1 * DEGRAD;
+    constexpr double sweep_degrees_radians = 0.5 * DEGRAD;
     constexpr double three_sixy_degrees_radians = 360 * DEGRAD;
 
     view->last_visibility.clear();
