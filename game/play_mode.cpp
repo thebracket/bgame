@@ -15,6 +15,7 @@ public:
     virtual void render(sdl2_backend * SDL) {
 
       render_map( SDL );
+      // Render particles
       // Render lighting!
       // Render the power bar
       render_date_time ( SDL );
