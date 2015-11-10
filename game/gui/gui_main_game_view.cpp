@@ -259,7 +259,7 @@ void gui_main_game_view::render(const screen_region viewport)
                     if (finder == world::entity_render_list.end()) {
                         const color_t foreground = t.foreground;
                         const color_t background = t.background;
-                        const float terrain_angle = t.surface_normal;
+                        const float terrain_angle = 0.0;
                         const float angle_difference = std::abs(terrain_angle - sun_angle);
                         float intensity_pct = 1.0 - (std::abs(angle_difference)/90.0F);
                         if (intensity_pct < 0.25) intensity_pct = 0.25;

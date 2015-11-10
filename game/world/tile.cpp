@@ -11,7 +11,6 @@ tile::tile()
      altitude = 0;
      level_band = 0;
      temperature = 1;
-     surface_normal = 0.0;
 }
 
 void tile::worldgen_determine_climate()
@@ -350,7 +349,6 @@ void tile::save ( fstream& lbfile )
      lbfile.write ( reinterpret_cast<const char *> ( &climate ), sizeof ( climate ) );
      lbfile.write ( reinterpret_cast<const char *> ( &ground ), sizeof ( ground ) );
      lbfile.write ( reinterpret_cast<const char *> ( &covering ), sizeof ( covering ) );
-     lbfile.write ( reinterpret_cast<const char *> ( &surface_normal ), sizeof ( surface_normal ) );
 }
 
 void tile::load ( fstream &lbfile )
@@ -360,6 +358,5 @@ void tile::load ( fstream &lbfile )
      lbfile.read ( reinterpret_cast<char *> ( &climate ), sizeof ( climate ) );
      lbfile.read ( reinterpret_cast<char *> ( &ground ), sizeof ( ground ) );
      lbfile.read ( reinterpret_cast<char *> ( &covering ), sizeof ( covering ) );
-     lbfile.read ( reinterpret_cast<char *> ( &surface_normal ), sizeof ( surface_normal ) );
      calculate_display_properties();
 }
