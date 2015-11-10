@@ -80,6 +80,7 @@ public:
           while ( !quitting ) {
                clock_t start_time = clock();
 	       messaging->clear();
+	       backend_driver.resource_cleanup_tick();
                command::clear_commands();
                backend_driver.poll_inputs();
                ecs->tick ( duration_ms );
@@ -111,15 +112,15 @@ public:
           backend_driver.stop();
      }
      
-     int load_image_resource(const std::string &filename, const std::string &tag) {
-	  return backend_driver.load_image_resource(filename, tag);
+     void load_image_resource(const std::string &filename, const std::string &tag) {
+	  backend_driver.load_image_resource(filename, tag);
      }
 
-     int load_font_resource(const std::string &filename, const std::string &tag, const int &size) {
-	  return backend_driver.load_font_resource(filename, tag, size);
+     void load_font_resource(const std::string &filename, const std::string &tag, const int &size) {
+	  backend_driver.load_font_resource(filename, tag, size);
      }
      
-     int render_text_to_image(const std::string &font_tag, const std::string text, const std::string &new_tag, SDL_Color color) {
+     std::string render_text_to_image(const std::string &font_tag, const std::string text, const std::string &new_tag, SDL_Color color) {
 	  return backend_driver.render_text_to_image(font_tag, text, new_tag, color);
      }
 };

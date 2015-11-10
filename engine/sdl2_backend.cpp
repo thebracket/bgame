@@ -22,17 +22,17 @@ sdl2_backend::~sdl2_backend()
      stop();
 }
 
-int sdl2_backend::load_image_resource(const std::string &filename, const std::string &tag)
+void sdl2_backend::load_image_resource(const std::string &filename, const std::string &tag)
 {
-    return resources.load_image(renderer, filename, tag);
+    resources.load_image(renderer, filename, tag);
 }
 
-int sdl2_backend::load_font_resource(const string& filename, const string& tag, const int& size)
+void sdl2_backend::load_font_resource(const string& filename, const string& tag, const int& size)
 {
-    return resources.load_font(filename, tag, size);
+    resources.load_font(filename, tag, size);
 }
 
-int sdl2_backend::render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color)
+string sdl2_backend::render_text_to_image( const string& font_tag, const string text, const string& new_tag, SDL_Color color )
 {
     return resources.render_text_to_texture( renderer, font_tag, text, new_tag, color );
 }
@@ -125,7 +125,7 @@ void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
-  SDL_Texture * font_image = resources.get_texture_by_id(0);
+  SDL_Texture * font_image = resources.get_texture_by_tag( "font" );
   
   const int ascii_height = SCREEN_HEIGHT/TERMINAL_SIZE;
   const int ascii_width = SCREEN_WIDTH/TERMINAL_SIZE;
@@ -188,5 +188,9 @@ void sdl2_backend::poll_inputs()
     }
 }
 
+void sdl2_backend::resource_cleanup_tick()
+{
+    resources.mark_and_sweep();
+}
 
 }
