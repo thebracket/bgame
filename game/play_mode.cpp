@@ -19,8 +19,27 @@ public:
       // Render the power bar
       render_date_time ( SDL );
       render_paused ( SDL );
-      // Render any emote pop-ups
+      render_emotes( SDL );
       // Render any tool-tips
+    }
+    
+    inline void render_emotes( sdl2_backend * SDL ) {
+      vector<chat_emote_message> * emote_ptr = game_engine->messaging->get_messages_by_type<chat_emote_message>();
+      if ( !emote_ptr->empty() ) {
+	
+	// Calculate the "home" position - top left.
+	const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component>(world::camera_handle);      
+	const int region_x = camera_pos->x - 32;
+	const int region_y = camera_pos->y - 23;
+	
+	
+	for (chat_emote_message &emote : *emote_ptr) {
+	    const unsigned char fade = 8 * emote.ttl;
+	    const SDL_Color sdl_black {0,fade,fade,fade};
+	    string emote_text = SDL->render_text_to_image( "disco12", emote.message, "tmp", sdl_black );
+	    SDL->render_bitmap_simple( emote_text, ( emote.x - region_x ) * 16, ( emote.y - region_y )*16 + 48 );
+	}
+      }
     }
     
     inline void render_date_time( sdl2_backend * SDL ) {
