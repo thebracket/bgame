@@ -13,15 +13,117 @@ using std::make_unique;
 
 class game_render : public engine::base_node {
 public:
-    virtual void render(sdl2_backend * SDL) {
+    int mouse_x = 0;
+    int mouse_y = 0;
+    int mouse_vx = 0;
+    int mouse_vy = 0;
+    int mouse_hover_time = 0;
 
+    void process_mouse_events() {
+    vector<mouse_motion_message> * mouse_movement = game_engine->messaging->get_messages_by_type<mouse_motion_message>();
+    for (mouse_motion_message &m : *mouse_movement) {
+	mouse_x = m.x;
+	mouse_y = m.y;
+	const int new_mouse_vx = mouse_x / 16;
+	const int new_mouse_vy = (mouse_y-48) / 16;
+	
+	if (mouse_vx != new_mouse_vx or mouse_vy != new_mouse_vy) {	
+	    mouse_vx = new_mouse_vx;
+	    mouse_vy = new_mouse_vy;
+	    mouse_hover_time = 0;
+	} else {
+	    ++mouse_hover_time;
+	}
+	m.deleted = true;
+    }
+    
+    vector<command_message> * actions = game_engine->messaging->get_messages_by_type<command_message>();
+    for (command_message &m : *actions) {
+      if (m.command == RIGHT_CLICK) {
+	  m.deleted = true;
+	  if (mouse_vy > 3) {
+	      world::paused = true;
+	      // Change to options mode
+	  }
+      }
+    }
+}
+  
+    virtual void render(sdl2_backend * SDL) {
+      process_mouse_events();
       render_map( SDL );
       // Render particles
       render_power_bar( SDL );
       render_date_time ( SDL );
       render_paused ( SDL );
       render_emotes( SDL );
-      // Render any tool-tips
+      render_tool_tips( SDL );
+    }
+    
+    inline void render_tool_tips ( sdl2_backend * SDL ) {
+	if (mouse_hover_time < 10) return;
+	//if (mouse_vx < 0 or mouse_vx > 1024/16) return;
+	//if (mouse_vy < 0 or mouse_vy > 768-48/16) return;
+	
+	const SDL_Color sdl_green {64,255,64,0};
+	const SDL_Color sdl_cyan {0,255,255,0};
+	const SDL_Color sdl_white {255,255,255,0};
+	const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component>(world::camera_handle);
+      
+	int region_x = camera_pos->x - 32 + mouse_vx;
+	int region_y = camera_pos->y - 23 + mouse_vy;
+	//std::cout << "(" << region_x << "," << region_y << ")\n";
+	
+	const int idx = world::current_region->idx( region_x, region_y );
+	if ( world::current_region->visible[ idx ] == false ) return;
+	
+	const int screen_x = mouse_vx*16 + 16;
+	const int screen_y = mouse_vy*16 + 48;
+	
+	std::vector<std::pair<std::string,SDL_Color>> lines;
+	
+	lines.push_back( make_pair( world::current_region->tiles[idx].get_description(), sdl_green ) );
+	lines.push_back( make_pair( world::current_region->tiles[idx].get_climate(), sdl_cyan ) );
+		
+	vector<position_component> * positions = game_engine->ecs->find_components_by_type<position_component>();
+	for (const position_component &pos : *positions) {
+	    if (pos.x == region_x and pos.y == region_y) {
+		const int entity_id = pos.entity_id;
+		std::stringstream desc;
+		settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component>(entity_id);
+		if (settler != nullptr) {
+		    game_species_component * species = game_engine->ecs->find_entity_component<game_species_component>(entity_id);
+		    desc << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
+		    lines.push_back( make_pair( desc.str(), sdl_white ));
+		} else {	    
+		    debug_name_component * debug_name = game_engine->ecs->find_entity_component<debug_name_component>(entity_id);
+		    if (debug_name != nullptr) {
+			desc << debug_name->debug_name;
+			lines.push_back( make_pair( desc.str(), sdl_white ));
+		    }
+		}
+	    }
+	}
+	
+	int width = 0;
+	for ( const std::pair<std::string,SDL_Color> &tooltip_line : lines ) {
+	    if (width < tooltip_line.first.size() * 7) width = tooltip_line.first.size() * 7;	    
+	}
+	
+	int y = screen_y - ((lines.size()/2) * 16);
+	
+	SDL->set_alpha_mod( "spritesheet", 128 );
+	SDL_Rect source = raws::get_tile_source_by_name("BLACKMASK");
+	const unsigned char height = lines.size()*16;
+	SDL_Rect dest = { screen_x, y-4, width, height+8 };
+	SDL->render_bitmap( "spritesheet", source, dest );
+	SDL->set_alpha_mod( "spritesheet", 255 );
+	
+	for ( const std::pair<std::string,SDL_Color> &tooltip_line : lines ) {
+	    std::string line_s = SDL->render_text_to_image( "disco14", tooltip_line.first, "tmp", tooltip_line.second );
+	    SDL->render_bitmap_simple( line_s, screen_x + 16, y );
+	    y += 16;
+	}
     }
     
     inline void render_power_bar ( sdl2_backend * SDL ) {
@@ -37,7 +139,7 @@ public:
       std::stringstream ss;
       ss << "<Power: " << world::stored_power << " / " << world::max_power << ">";
       const SDL_Color sdl_yellow {255,255,0,0};
-      string emote_text = SDL->render_text_to_image( "disco12", ss.str(), "tmp", sdl_yellow );
+      string emote_text = SDL->render_text_to_image( "disco14", ss.str(), "tmp", sdl_yellow );
       SDL->render_bitmap_centered( emote_text, 506, 16 );
     }
     
