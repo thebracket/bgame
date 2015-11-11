@@ -6,6 +6,7 @@
 #include "gui/gui_main_game_view.h"
 #include "game.h"
 #include "raws/raws.h"
+#include <sstream>
 
 using namespace engine;
 using std::make_unique;
@@ -16,7 +17,6 @@ public:
 
       render_map( SDL );
       // Render particles
-      // Render lighting!
       render_power_bar( SDL );
       render_date_time ( SDL );
       render_paused ( SDL );
@@ -25,7 +25,20 @@ public:
     }
     
     inline void render_power_bar ( sdl2_backend * SDL ) {
+      SDL_Rect src { 0, 0, 1024, 16 };
+      SDL_Rect dest { 0 , 16 , 1024, 16 };
+      SDL->render_bitmap( "power_bar_red", src, dest );
       
+      const float power_percent = float(world::stored_power) / float(world::max_power);
+      const int ticks = 1024 * power_percent;
+      dest = { 0 , 16 , ticks, 16 };
+      SDL->render_bitmap( "power_bar_green", src, dest );
+      
+      std::stringstream ss;
+      ss << "<Power: " << world::stored_power << " / " << world::max_power << ">";
+      const SDL_Color sdl_yellow {255,255,0,0};
+      string emote_text = SDL->render_text_to_image( "disco12", ss.str(), "tmp", sdl_yellow );
+      SDL->render_bitmap_centered( emote_text, 506, 16 );
     }
     
     inline void render_emotes( sdl2_backend * SDL ) {
