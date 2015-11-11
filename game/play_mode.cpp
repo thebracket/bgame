@@ -17,11 +17,15 @@ public:
       render_map( SDL );
       // Render particles
       // Render lighting!
-      // Render the power bar
+      render_power_bar( SDL );
       render_date_time ( SDL );
       render_paused ( SDL );
       render_emotes( SDL );
       // Render any tool-tips
+    }
+    
+    inline void render_power_bar ( sdl2_backend * SDL ) {
+      
     }
     
     inline void render_emotes( sdl2_backend * SDL ) {
@@ -171,6 +175,16 @@ public:
 		    source = raws::get_tile_source( sprite_idx );
 		    SDL->render_bitmap("spritesheet", source, dest);
 		}
+		
+		// Altitude-based mask; lighter for higher elevations
+		// Add in time-of-day
+		const float angle_difference = std::abs( 90.0F - world::sun_angle );
+		const float intensity_pct = angle_difference/90.0F;
+		const unsigned char alpha_mask = (64.0F * intensity_pct) + ( world::current_region->tiles[idx].level_band * 16 );
+		SDL->set_alpha_mod( "spritesheet", alpha_mask );
+		source = raws::get_tile_source_by_name("BLACKMASK");
+		SDL->render_bitmap("spritesheet", source, dest);
+		SDL->set_alpha_mod( "spritesheet", 255 );
 		
 		// TODO: Lighting goes here
 		

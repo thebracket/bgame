@@ -14,7 +14,7 @@ void consume_power(const int &quantity) {
 }
 
 void emote(const string &message, const position_component * pos, const chat_emote_color_t &color) {
-    game_engine->messaging->add_message<chat_emote_message>(chat_emote_message(string(" ")+message, pos->x+2, pos->y, color));
+    game_engine->messaging->add_message<chat_emote_message>(chat_emote_message(string(" ")+message, pos->x+1, pos->y, color));
 }
   
 void append_name(stringstream &ss, const settler_ai_component &settler) {
