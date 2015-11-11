@@ -29,6 +29,8 @@ public:
   void load_image_resource(const std::string &filename, const std::string &tag);
   void load_font_resource(const std::string &filename, const std::string &tag, const int &size);
   std::string render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color);
+  std::pair<int,int> query_bitmap_size ( const string &tag );
+  void set_alpha_mod( const std::string &tag, unsigned char mod );
   
   void resource_cleanup_tick();
 private:
