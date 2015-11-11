@@ -25,6 +25,8 @@ convert Menu\ Buttons.xcf[1] ../build/button2.png
 convert In\ Game.xcf[0] ../build/header.png
 convert Paused.xcf[0] ../build/paused.png
 convert EmoteBubble.xcf[0] ../build/emote_bubble.png
+convert PowerBar.xcf[0] ../build/power_bar_red.png
+convert PowerBar.xcf[1] ../build/power_bar_green.png
 
 mkdir tmp
 convert 16x16.xcf[0]  tmp/001.png
