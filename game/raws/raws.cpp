@@ -103,8 +103,8 @@ int find_tile_by_name(const string &name) {
 }
 
 SDL_Rect get_tile_source(const int idx) {
-    const int width = 112;
-    const int width_t = 8;
+    //const int width = 112;
+    const int width_t = 7;
     
     const int x = idx % width_t;
     const int y = idx / width_t;
