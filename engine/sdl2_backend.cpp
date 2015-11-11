@@ -121,6 +121,19 @@ void sdl2_backend::render_bitmap_centered ( const string& tag, const int& x, con
     SDL_RenderCopy(renderer, bmp, &src, &target );
 }
 
+std::pair<int,int> sdl2_backend::query_bitmap_size ( const string &tag ) {
+    SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+    int image_width, image_height;
+    SDL_QueryTexture(bmp, NULL, NULL, &image_width, &image_height);
+    return make_pair( image_width, image_height );
+}
+
+void sdl2_backend::set_alpha_mod ( const string& tag, unsigned char mod )
+{
+    SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+    SDL_SetTextureAlphaMod( bmp, mod );
+}
+
 void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

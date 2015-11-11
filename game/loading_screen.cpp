@@ -33,6 +33,7 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
 	game_engine->load_image_resource("header.png", "header");
 	game_engine->load_image_resource("main_menu.png", "menuscreen");
 	game_engine->load_image_resource("paused.png", "paused");
+	game_engine->load_image_resource("emote_bubble.png", "emote_bubble");
 	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco36", 36);
 	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco14", 14);
 	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco12", 12);

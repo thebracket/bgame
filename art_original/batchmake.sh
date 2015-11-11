@@ -24,6 +24,7 @@ convert Menu\ Buttons.xcf[0] ../build/button1.png
 convert Menu\ Buttons.xcf[1] ../build/button2.png
 convert In\ Game.xcf[0] ../build/header.png
 convert Paused.xcf[0] ../build/paused.png
+convert EmoteBubble.xcf[0] ../build/emote_bubble.png
 
 mkdir tmp
 convert 16x16.xcf[0]  tmp/001.png

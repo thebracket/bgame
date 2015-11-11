@@ -36,9 +36,34 @@ public:
 	
 	for (chat_emote_message &emote : *emote_ptr) {
 	    const unsigned char fade = 8 * emote.ttl;
-	    const SDL_Color sdl_black {0,fade,fade,fade};
+	    const SDL_Color sdl_black {0,0,0,0};
 	    string emote_text = SDL->render_text_to_image( "disco12", emote.message, "tmp", sdl_black );
-	    SDL->render_bitmap_simple( emote_text, ( emote.x - region_x ) * 16, ( emote.y - region_y )*16 + 48 );
+	    SDL->set_alpha_mod( emote_text, fade );
+	    SDL->set_alpha_mod( "emote_bubble", fade );
+	    std::pair<int,int> emote_size = SDL->query_bitmap_size( emote_text );
+	    
+	    // Left part of bubble
+	    const int x = ( emote.x - region_x ) * 16;
+	    const int y = ( emote.y - region_y )*16 + 48;
+	    const int height = emote_size.second;
+
+	    SDL_Rect src { 0, 0, 4, 8 };
+	    SDL_Rect dest { x , y , 4, height };
+	    SDL->render_bitmap( "emote_bubble", src, dest );
+	    
+	    // Center of bubble
+	    src = { 5, 0, 4, 8 };
+	    dest = { x + 4, y, emote_size.first, height };
+	    SDL->render_bitmap( "emote_bubble", src, dest );
+	    
+	    // Right part of bubble
+	    src = { 27, 0, 4, 8 };
+	    dest = { x + 4+emote_size.first, y, 4, height };
+	    SDL->render_bitmap( "emote_bubble", src, dest );
+	    
+	    // The text itself
+	    SDL->render_bitmap_simple( emote_text, x+4, y );
+	    SDL->set_alpha_mod( "emote_bubble", 0 );
 	}
       }
     }
