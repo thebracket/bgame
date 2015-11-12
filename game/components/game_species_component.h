@@ -27,6 +27,7 @@ struct game_species_component {
      int entity_id;
      int handle;
      component_type type = gamespecies;
+     bool deleted = false;
 
      string species;
      short gender;

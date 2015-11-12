@@ -13,6 +13,7 @@ struct viewshed_component {
      int entity_id;
      int handle;
      component_type type = viewshed;
+     bool deleted = false;
 
      viewshed_component() {}
      viewshed_component ( const viewshed_type &t, const int &r ) : scanner_type ( t ), scanner_range ( r ) {}

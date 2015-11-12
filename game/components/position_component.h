@@ -10,6 +10,7 @@ struct position_component {
      int entity_id;
      int handle;
      component_type type = position;
+     bool deleted = false;
 
      position_component() {}
      position_component ( const int &nx, const int &ny ) : x ( nx ), y ( ny ) { facing = NORTH; }

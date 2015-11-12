@@ -13,6 +13,7 @@ struct game_health_component {
      int entity_id;
      int handle;
      component_type type = gamehealth;
+     bool deleted = false;
      
      int max_hit_points;
      int current_hit_points;

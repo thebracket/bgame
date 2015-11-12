@@ -13,6 +13,7 @@ struct game_stats_component {
      int entity_id;
      int handle;
      component_type type = gamestats;
+     bool deleted = false;
 
      short strength;
      short dexterity;

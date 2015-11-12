@@ -14,6 +14,7 @@ struct debug_name_component {
      int entity_id;
      int handle;
      component_type type = name;
+     bool deleted = false;
 
      string debug_name;
 

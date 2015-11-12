@@ -10,6 +10,7 @@ struct power_generator_component {
      int entity_id;
      int handle;
      component_type type = power_generator;
+     bool deleted = false;
 
      power_generator_component() {}
      power_generator_component ( const int &n, const power_generator_condition &c ) : amount ( n ), generator_mode ( c ) {}

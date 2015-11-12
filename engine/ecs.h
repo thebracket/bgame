@@ -28,7 +28,7 @@ namespace engine {
  * for contiguous storage (and fast traversal!).
  * 
  * Example:
- * #define GAME_ECS entity_component_system<engine::ecs::calendar_component, engine::ecs::debug_name_component>
+ * using GAME_ECS = entity_component_system<engine::ecs::calendar_component, engine::ecs::debug_name_component>
  * 
  * Parameters: it requires a component factory function, of the form 
  * void component_factory(fstream &lbfile, const int ct)
@@ -148,6 +148,7 @@ public:
       for ( unique_ptr<base_system> &system : systems ) {
 	  system->tick ( duration_ms );
       }
+      components.clear_deleted();
   }
   
   /*
