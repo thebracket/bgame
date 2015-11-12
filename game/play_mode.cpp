@@ -296,7 +296,8 @@ public:
 		const float angle_difference = std::abs( 90.0F - world::sun_angle );
 		float intensity_pct = angle_difference/90.0F;
 		if (world::current_region->visible[idx]) intensity_pct /= 2.0;
-		const unsigned char alpha_mask = (64.0F * intensity_pct) + ( world::current_region->tiles[idx].level_band * 16 );
+		intensity_pct = 0.0;
+		const unsigned char alpha_mask = (64.0F * intensity_pct) + ( world::current_region->tiles[idx].level_band * 32 );
 		SDL->set_alpha_mod( "spritesheet", alpha_mask );
 		source = raws::get_tile_source_by_name("BLACKMASK");
 		SDL->render_bitmap("spritesheet", source, dest);
