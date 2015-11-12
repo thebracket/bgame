@@ -7,6 +7,7 @@ struct obstruction_component {
      int entity_id;
      int handle;
      component_type type = obstruction;
+     bool deleted = false;
      
      obstruction_component() {}
      obstruction_component(const bool &entry, const bool &visibility) : blocks_entry(entry), blocks_visibility(visibility) {}

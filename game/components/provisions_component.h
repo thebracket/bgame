@@ -12,6 +12,7 @@ struct provisions_component {
      int entity_id;
      int handle;
      component_type type = provision;
+     bool deleted = false;
 
      int provided_resource; // 1 = food, 2 = water
      int provides_quantity;

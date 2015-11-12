@@ -8,6 +8,7 @@ struct power_battery_component {
     int entity_id;
     int handle;
     component_type type = power_battery;
+    bool deleted = false;
     
     power_battery_component() {}
     power_battery_component(const int &n) : storage_capacity(n) {}

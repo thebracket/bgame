@@ -46,6 +46,15 @@ public:
           return size;
      }
      
+     void clear_deleted() {
+          for_each ( component_container, [] ( auto &x ) {
+	       if (!x.empty()) {
+		  auto new_end = std::remove_if(x.begin(), x.end(), [] (auto &n) { return n.deleted; });
+		  x.erase(new_end, x.end());
+	       }
+          } );
+     }
+     
      void clear_all() {
 	  for_each( component_container, [] ( auto &x) { x.clear(); } );
      }

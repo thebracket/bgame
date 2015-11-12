@@ -10,6 +10,7 @@ struct item_storage_component {
      int entity_id;
      int handle;
      component_type type = item_storage;
+     bool deleted = false;
 
      int container_id;
 

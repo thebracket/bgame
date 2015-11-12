@@ -10,6 +10,7 @@ public:
      int entity_id;
      int handle;
      component_type type = calendar;
+     bool deleted = false;
 
      calendar_component() {}
      calendar_component ( const long &t ) : system_time ( t ) {}

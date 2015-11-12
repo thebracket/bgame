@@ -14,6 +14,7 @@ struct renderable_component {
     int entity_id;
     int handle;
     component_type type = renderable;    
+    bool deleted = false;
     
     renderable_component() {}
     renderable_component(const unsigned char &g, const color_t &f, const color_t &b, const int &tile) : glyph(g), foreground(f), background(b), tile_idx(tile) {}

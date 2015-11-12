@@ -12,6 +12,7 @@ struct settler_ai_component {
      int entity_id;
      int handle;
      component_type type = settler_ai;
+     bool deleted = false;
 
      int next_tick = 0;
      string first_name;

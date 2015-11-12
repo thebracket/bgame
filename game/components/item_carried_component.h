@@ -14,6 +14,7 @@ struct item_carried_component {
      int carried_by_id;
      int carried_position;
      bool equipped = false;
+     bool deleted = false;
 
      void save ( fstream &lbfile ) {
           save_common_component_properties<item_carried_component> ( lbfile, *this );
