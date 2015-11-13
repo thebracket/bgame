@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 #include "../../game/components/position_component.h"
 #include <cmath>
 #include "../messages/chat_emote_message.h"

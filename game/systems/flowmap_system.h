@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../world/world.h"
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 #include <vector>
 
 using std::vector;
+using engine::base_system;
 
 namespace flowmaps {
   

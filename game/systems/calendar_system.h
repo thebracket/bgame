@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../world/world.h"
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 #include "../components/calendar_component.h"
+
+using engine::base_system;
 
 constexpr double TICK_LENGTH = 10.0;
 

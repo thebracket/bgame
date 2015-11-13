@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../world/world.h"
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 #include "../components/position_component.h"
 #include "../components/viewshed_component.h"
 #include "../world/geometry.h"
@@ -11,6 +11,7 @@ using geometry::DEGRAD;
 using geometry::line_func;
 using geometry::project_angle;
 using std::unordered_set;
+using engine::base_system;
 
 class viewshed_system : public base_system {
     virtual void tick ( const double &duration_ms );

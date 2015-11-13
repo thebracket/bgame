@@ -10,7 +10,7 @@
 #include <cmath>
 #include "../../engine/rng.h"
 #include <iostream>
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 #include "../../engine/colors.h"
 #include "../raws/raws.h"
 #include "../components/components.h"

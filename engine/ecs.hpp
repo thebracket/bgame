@@ -7,10 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "entity.h"
-#include "base_system.h"
-#include "entity_storage.h"
-#include "component_storage.h"
+#include <algorithm>
 
 using std::unique_ptr;
 using std::function;
@@ -18,10 +15,258 @@ using std::unordered_map;
 using std::vector;
 using std::fstream;
 using std::string;
-using engine::base_system;
 
 namespace engine {
 
+/*
+ * Base class for a system that is called on each tick.
+ */
+class base_system {
+public:
+  virtual void tick(const double &duration_ms)=0;
+};
+
+/*
+ * Represents an entity. Entities in the Bracket ECS are very small indeed,
+ * holding only an ID number and a reference count (number of components
+ * that reference it).
+ * 
+ * Serialization is also included.
+ */
+class entity {
+public:
+    /* The unique ID number representing the entity. */
+    int handle;
+    
+    /* Reads the entity ID from a file stream. */
+    void load ( fstream& lbfile )
+    {
+	lbfile.read ( reinterpret_cast<char *> ( &handle ), sizeof ( handle ) );
+    }
+
+    /* Writes the entity ID number to a file stream. */
+    void save ( fstream& lbfile )
+    {
+	lbfile.write ( reinterpret_cast<const char *> ( &handle ), sizeof ( handle ) );
+    }
+
+  int component_count = 0;
+};
+
+/*
+ * Helper function that constructs an entity, loads its ID number,
+ * and returns it.
+ */
+inline entity construct_entity_from_file ( fstream& lbfile )
+{
+    entity e;
+    e.load(lbfile);
+    return e;
+}
+
+  
+namespace ecs_detail {
+ 
+template <typename Tuple, typename F, std::size_t ...Indices>
+void for_each_impl ( Tuple&& tuple, F&& f, std::index_sequence<Indices...> )
+{
+     using swallow = int[];
+     ( void ) swallow {1,
+                       ( f ( std::get<Indices> ( std::forward<Tuple> ( tuple ) ) ), void(), int{} )...
+                      };
+}
+
+template <typename Tuple, typename F>
+void for_each ( Tuple&& tuple, F&& f )
+{
+     constexpr std::size_t N = std::tuple_size<std::remove_reference_t<Tuple>>::value;
+     for_each_impl ( std::forward<Tuple> ( tuple ), std::forward<F> ( f ),
+                     std::make_index_sequence<N> {} );
+}
+
+template <typename... Ts>
+struct type_list {
+    static constexpr std::size_t size{sizeof...(Ts)};
+};
+
+// Renamer:
+  
+template <template <typename...> class TNewName, typename T>
+struct rename_helper;
+
+// "Renames" `TOldName<Ts...>` to `TNewName<Ts...>`.
+template <template <typename...> class TNewName,
+    template <typename...> class TOldName, typename... Ts>
+struct rename_helper<TNewName, TOldName<Ts...>>
+{
+    using type = TNewName<Ts...>;
+};
+
+template <template <typename...> class TNewName, typename T>
+using rename = typename rename_helper<TNewName, T>::type;
+  
+/*
+ * Storage of entities. They are in a map, because
+ * most of the time they are referenced by handle (when
+ * they are referenced at all - most of the time you
+ * don't need to).
+ */
+class entity_storage {
+private:
+  unordered_map<int, entity> entities;
+  int next_handle = 1;
+public:
+  std::size_t size() { return entities.size(); }
+  
+  void for_each(std::function<void(entity *)> func) {
+    for (auto it=entities.begin(); it != entities.end(); ++it) {
+      func(&it->second);
+    }
+  }
+  
+  void clear_all() {
+      entities.clear();
+  }
+  
+  int get_next_handle() {
+    int result = next_handle;
+    ++next_handle;
+    return result;
+  }
+  
+  void add_entity(const entity &target) {
+    entities[target.handle] = target;
+  }
+  
+  entity * find_by_handle(const int &handle) {
+    auto finder = entities.find(handle);
+    if (finder != entities.end()) {
+      return &finder->second;
+    }
+    return nullptr;
+  }  
+  
+  void delete_empty_entities() {
+    auto iter = entities.begin();
+    while ( iter != entities.end() ) {
+	if ( iter->second.component_count < 1) {
+	  entities.erase ( iter++ );
+	} else {
+	  ++iter;
+	}
+    }
+  }
+};
+
+/*
+ * Component storage.
+ */
+template<typename component_list>
+class component_storage {
+private:
+     int next_handle = 1;
+
+     static constexpr size_t number_of_component_types() {
+          return component_list::type_list::size();
+     }
+     //tuple<vector<Ts>...> component_container;
+     template<typename ... Ts>
+    using tuple_of_vectors = std::tuple<std::vector<Ts>...>;
+    ecs_detail::rename<tuple_of_vectors, typename component_list::type_list> component_container;
+
+     template <typename T>
+     vector<T> * find_appropriate_bag() {
+          return &std::get< vector<T> > ( component_container );
+     }
+
+public:
+     std::size_t size() {
+          std::size_t size = 0;
+          for_each ( component_container, [&size] ( auto &x ) {
+               size += x.size();
+          } );
+          return size;
+     }
+     
+     void clear_deleted( entity_storage &entities ) {
+          for_each ( component_container, [&entities] ( auto &x ) {
+	       if (!x.empty()) {
+		  auto new_end = std::remove_if(x.begin(), x.end(), [&entities] (auto &n) {
+		    if (n.deleted) {
+		      entity * e = entities.find_by_handle( n.entity_id );
+		      --e->component_count;
+		    }
+		    return n.deleted;		    
+		  });
+		  x.erase(new_end, x.end());
+	       }
+          } );
+     }
+     
+     void clear_all() {
+	  for_each( component_container, [] ( auto &x) { x.clear(); } );
+     }
+
+     int get_next_handle() {
+          const int result = next_handle;
+          ++next_handle;
+          return result;
+     }
+
+     template <typename T>
+     int store_component ( T &component ) {
+	  component.handle = get_next_handle();
+          find_appropriate_bag<T>()->push_back ( component );
+	  return component.handle;
+     }
+
+     template <typename T>
+     T * find_component_by_handle ( const int &handle_to_find, T ignore ) {
+          vector<T> * storage_bag = find_appropriate_bag<T>();
+          for ( T &component : *storage_bag ) {
+               if ( component.handle == handle_to_find ) {
+                    return &component;
+               }
+          }
+          return nullptr;
+     }
+
+     template<typename T>
+     vector<T *> find_components_by_func ( function<bool ( const T * ) > matcher ) {
+          vector<T *> result;
+          vector<T> * storage_bag = find_appropriate_bag<T>();
+          for ( const T &component : *storage_bag ) {
+               if ( matcher ( &component ) ) result.push_back ( &component );
+          }
+          return result;
+     }
+
+     template<typename T>
+     vector<T> * find_components_by_type(T ignore) {
+          vector<T> * storage_bag = find_appropriate_bag<T>();
+          return storage_bag;
+     }
+     
+     template<typename T>
+     T * find_entity_component(const int &entity_handle, T ignore) {
+	  vector<T> * storage_bag = find_appropriate_bag<T>();
+	  for (T &c : *storage_bag) {
+	      if (c.entity_id == entity_handle) return &c;
+	  }
+	  return nullptr;
+     }
+
+     void save ( fstream &lbfile ) {
+          for_each ( component_container, [&lbfile] ( auto x ) {
+               for ( auto &c : x ) {
+                    c.save ( lbfile );
+               }
+          } );
+     }
+};
+
+}
+    
 /*
  * Entity-Component-System class. It should be defined in config.h, since it takes template
  * parameters for the defined components. Each component is automatically given its own vector,

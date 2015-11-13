@@ -12,9 +12,8 @@
 #include "gui/gui.h"
 #include "command_manager.h"
 #include "sdl2_backend.h"
-#include "ecs.h"
+#include "ecs.hpp"
 #include "messagebus.h"
-#include "mpl_typelist.h"
 #include "scene_graph.h"
 
 namespace engine {
