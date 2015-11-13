@@ -236,22 +236,39 @@ public:
 template<typename component_list>
 class component_storage {
 private:
+     /* The next entity_id handle; this should be mad into an atomic if you
+      * need multi-threading support (as well as lock_guards around insertion/deletion)
+      */
      int next_handle = 1;
 
+     /*
+      * The number of component types supported by this instantiation.
+      */
      static constexpr size_t number_of_component_types() {
           return component_list::type_list::size();
      }
-     //tuple<vector<Ts>...> component_container;
+
+     /* 
+      * A tuple of vectors, each specialized to th types described in the component
+      * list specification.
+      */
      template<typename ... Ts>
      using tuple_of_vectors = std::tuple<std::vector<Ts>...>;
      ecs_detail::rename<tuple_of_vectors, typename component_list::type_list> component_container;
 
+     /*
+      * Helper function that maps type T to a vector<T>, uses std::get to find the find_appropriate
+      * container, and returns a pointer to it.
+      */
      template <typename T>
      vector<T> * find_appropriate_bag() {
           return &std::get< vector<T> > ( component_container );
      }
 
 public:
+     /* 
+      * The total number of stored components.
+      */
      std::size_t size() {
           std::size_t size = 0;
           for_each ( component_container, [&size] ( auto &x ) {
@@ -260,6 +277,10 @@ public:
           return size;
      }
 
+     /*
+      * Iterate all component vectors, and delete any marked as "deleted==true".
+      * Uses the remove/erase idiom.
+      */
      void clear_deleted ( entity_storage &entities ) {
           for_each ( component_container, [&entities] ( auto &x ) {
                if ( !x.empty() ) {
@@ -275,18 +296,27 @@ public:
           } );
      }
 
+     /*
+      * Clears all component vectors.
+      */
      void clear_all() {
           for_each ( component_container, [] ( auto &x ) {
                x.clear();
           } );
      }
 
+     /*
+      * Gets the next available component handle.
+      */
      int get_next_handle() {
           const int result = next_handle;
           ++next_handle;
           return result;
      }
 
+     /*
+      * Adds a component to its appropriate container.
+      */
      template <typename T>
      int store_component ( T &component ) {
           component.handle = get_next_handle();
@@ -294,6 +324,11 @@ public:
           return component.handle;
      }
 
+     /*
+      * Finds a component by handle. Search space is reduced by
+      * specifying the type (so it only has to look in that vector),
+      * the search is then linear.
+      */
      template <typename T>
      T * find_component_by_handle ( const int &handle_to_find, T ignore ) {
           vector<T> * storage_bag = find_appropriate_bag<T>();
@@ -305,6 +340,11 @@ public:
           return nullptr;
      }
 
+     /*
+      * Iterate the vector of components of type T, calling the matcher function
+      * on each. If matcher returns true, a pointer to the component is added to
+      * the result vector, which is then returned.
+      */ 
      template<typename T>
      vector<T *> find_components_by_func ( function<bool ( const T * ) > matcher ) {
           vector<T *> result;
@@ -315,12 +355,19 @@ public:
           return result;
      }
 
+     /*
+      * Returns a pointer to the vector of components of type T.
+      */
      template<typename T>
      vector<T> * find_components_by_type ( T ignore ) {
           vector<T> * storage_bag = find_appropriate_bag<T>();
           return storage_bag;
      }
 
+     /*
+      * Find a single component of type T, belong to the entity whose
+      * handle is provided.
+      */
      template<typename T>
      T * find_entity_component ( const int &entity_handle, T ignore ) {
           vector<T> * storage_bag = find_appropriate_bag<T>();
@@ -330,6 +377,9 @@ public:
           return nullptr;
      }
 
+     /*
+      * Iterates over every component, calling it's save function.
+      */
      void save ( fstream &lbfile ) {
           for_each ( component_container, [&lbfile] ( auto x ) {
                for ( auto &c : x ) {
