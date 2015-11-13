@@ -19,6 +19,8 @@ public:
     {
 	lbfile.write ( reinterpret_cast<const char *> ( &handle ), sizeof ( handle ) );
     }
+
+  int component_count = 0;
 };
 
 inline entity construct_entity_from_file ( fstream& lbfile )

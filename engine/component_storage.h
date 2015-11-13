@@ -10,6 +10,7 @@
 #include <iostream>
 #include "mpl_foreach.h"
 #include "mpl_typelist.h"
+#include "entity_storage.h"
 
 using std::tuple;
 using std::vector;
@@ -46,10 +47,16 @@ public:
           return size;
      }
      
-     void clear_deleted() {
-          for_each ( component_container, [] ( auto &x ) {
+     void clear_deleted( entity_storage &entities ) {
+          for_each ( component_container, [&entities] ( auto &x ) {
 	       if (!x.empty()) {
-		  auto new_end = std::remove_if(x.begin(), x.end(), [] (auto &n) { return n.deleted; });
+		  auto new_end = std::remove_if(x.begin(), x.end(), [&entities] (auto &n) {
+		    if (n.deleted) {
+		      entity * e = entities.find_by_handle( n.entity_id );
+		      --e->component_count;
+		    }
+		    return n.deleted;		    
+		  });
 		  x.erase(new_end, x.end());
 	       }
           } );
@@ -69,7 +76,6 @@ public:
      int store_component ( T &component ) {
 	  component.handle = get_next_handle();
           find_appropriate_bag<T>()->push_back ( component );
-	  //std::cout << "Stored a component of type " << component.type << ", with handle " << component.handle << ".\n";
 	  return component.handle;
      }
 

@@ -74,10 +74,12 @@ public:
     return entities.get_next_handle();
   }
   
-  /* Add a component to the system. The system is linked to the entity provided. */
+  /* Add a component to the system. The system is linked to the entity provided,
+   * and the entity's component count is incremented. */
   template<typename T>
-  void add_component ( const entity &target, T component ) {
+  void add_component ( entity &target, T component ) {
     component.entity_id = target.handle;
+    ++target.component_count;
     components.store_component(component);
   }
   
@@ -148,7 +150,8 @@ public:
       for ( unique_ptr<base_system> &system : systems ) {
 	  system->tick ( duration_ms );
       }
-      components.clear_deleted();
+      components.clear_deleted( entities );
+      entities.delete_empty_entities();
   }
   
   /*

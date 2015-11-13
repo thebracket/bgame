@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <functional>
 #include <memory>
+#include <algorithm>
 #include "entity.h"
 
 using std::unordered_map;
@@ -46,6 +47,17 @@ public:
     }
     return nullptr;
   }  
+  
+  void delete_empty_entities() {
+    auto iter = entities.begin();
+    while ( iter != entities.end() ) {
+	if ( iter->second.component_count < 1) {
+	  entities.erase ( iter++ );
+	} else {
+	  ++iter;
+	}
+    }
+  }
 };
   
 }
