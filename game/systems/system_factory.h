@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 #include <memory>
 
 using std::unique_ptr;
+using engine::base_system;
 
 unique_ptr<base_system> make_camera_system();
 unique_ptr<base_system> make_renderable_system();

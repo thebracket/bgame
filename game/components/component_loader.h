@@ -3,6 +3,8 @@
 #include "components.h"
 #include "../game.h"
 
+using engine::entity;
+
 template<typename T>
 void component_loader(fstream &lbfile) {
   T component;

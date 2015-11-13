@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
+
+using engine::base_system;
 
 class power_system : public base_system {
 public:

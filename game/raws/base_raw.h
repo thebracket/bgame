@@ -2,11 +2,11 @@
 
 #include <vector>
 #include <memory>
-#include "../../engine/entity.h"
-#include "../../engine/ecs.h"
+#include "../../engine/ecs.hpp"
 
 using std::vector;
 using std::unique_ptr;
+using engine::entity;
 
 namespace raws {
 

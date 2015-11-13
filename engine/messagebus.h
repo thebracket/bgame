@@ -3,8 +3,7 @@
 #include <tuple>
 #include <vector>
 #include <algorithm>
-#include "mpl_foreach.h"
-#include "mpl_typelist.h"
+#include "ecs.hpp"
 
 using std::tuple;
 using std::vector;
