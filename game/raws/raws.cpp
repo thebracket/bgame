@@ -333,6 +333,10 @@ void parse_item(const vector<string> &chunks) {
 	parse_raw_color_pair(chunks);
 	return;
     }
+    if (chunks[0] == "RENDER_TILE") {
+	parse_raw_tile(chunks);
+	return;
+    }
 }
 
 /* Chunk Parsing */

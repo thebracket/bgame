@@ -524,7 +524,11 @@ void add_food_replicator(const int x, const int y) {
 }
 
 void add_storage_unit(const int x, const int y) {
-    raws::create_structure_from_raws("Storage Unit", x, y);
+    int container_id = raws::create_structure_from_raws("Storage Unit", x, y);
+    int tent_kit = raws::create_item_from_raws("Personal Survival Shelter Kit");
+    game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( tent_kit ), item_storage_component(container_id) );
+    game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( tent_kit ), item_storage_component(container_id) );
+    game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( tent_kit ), item_storage_component(container_id) );
 }
 
 void add_structural_element(const int x, const int y, unsigned char glyph, bool block=true) {

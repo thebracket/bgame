@@ -12,7 +12,9 @@ void renderable_system::tick ( const double &duration_ms ) {
 
         position_component * pos = game_engine->ecs->find_entity_component<position_component>(render_info.entity_id);
 
-	const int idx = world::current_region->idx ( pos->x, pos->y );
-	world::entity_render_list[idx] = render_info.tile_idx;
+	if ( pos != nullptr) {
+	    const int idx = world::current_region->idx ( pos->x, pos->y );
+	    world::entity_render_list[idx] = render_info.tile_idx;
+	}
     }
 }

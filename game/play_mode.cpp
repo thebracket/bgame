@@ -101,6 +101,18 @@ public:
 			desc << debug_name->debug_name;
 			lines.push_back( make_pair( desc.str(), sdl_white ));
 		    }
+		    
+		    // Stored items
+		    vector<item_storage_component *> stored_items = game_engine->ecs->find_components_by_func<item_storage_component>(
+		      [entity_id] ( const item_storage_component &e) {
+			  if (e.container_id == entity_id) return true;
+			  return false;
+		      }
+		    );
+		    for (item_storage_component * item : stored_items) {
+			debug_name_component * nc = game_engine->ecs->find_entity_component<debug_name_component>( item->entity_id );
+			lines.push_back( make_pair( string("   ") + nc->debug_name, sdl_green ) );
+		    }
 		}
 	    }
 	}
@@ -297,7 +309,7 @@ public:
 		float intensity_pct = angle_difference/90.0F;
 		if (world::current_region->visible[idx]) intensity_pct /= 2.0;
 		intensity_pct = 0.0;
-		unsigned char alpha_mask = (64.0F * intensity_pct) + ( ( 10 - world::current_region->tiles[idx].level_band) * 8 );
+		unsigned char alpha_mask = (64.0F * intensity_pct) + ( ( 10 - world::current_region->tiles[idx].level_band) * 16 );
 		if (alpha_mask < 0) alpha_mask = 0;
 		SDL->set_alpha_mod( "spritesheet", alpha_mask );
 		source = raws::get_tile_source_by_name("BLACKMASK");
