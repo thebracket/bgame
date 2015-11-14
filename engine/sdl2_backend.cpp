@@ -134,6 +134,12 @@ void sdl2_backend::set_alpha_mod ( const string& tag, unsigned char mod )
     SDL_SetTextureAlphaMod( bmp, mod );
 }
 
+void sdl2_backend::set_color_mod ( const string& tag, unsigned char r, unsigned char g, unsigned char b )
+{
+    SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+    SDL_SetTextureColorMod( bmp, r, g, b );
+}
+
 void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -180,6 +186,7 @@ command::keys translate_keycode(const SDL_Event &e) {
     case SDLK_RETURN : return command::ENTER;
     case SDLK_q : return command::Q;
     case SDLK_SPACE : return command::SPACE;
+    case SDLK_BACKQUOTE : return command::TILDE;
   }
   return command::NONE;
 }

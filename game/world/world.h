@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <string>
+#include <tuple>
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
@@ -14,6 +15,7 @@ using std::unique_ptr;
 using std::unordered_map;
 using std::fstream;
 using std::string;
+using std::tuple;
 
 namespace world {
 
@@ -38,9 +40,10 @@ extern int stored_power;
 extern int max_power;
 extern float sun_angle;
 extern bool paused;
+extern bool render_graphics;
 
 // For handing data between gui_game_view and the render controller
-extern unordered_map<int, int> entity_render_list;
+extern unordered_map<int, tuple<int,unsigned char,color_t, color_t>> entity_render_list;
 extern unordered_map<int, bool> walk_blocked;
 extern unordered_map<int, bool> view_blocked;
 

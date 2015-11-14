@@ -46,12 +46,19 @@ public:
 	      // Change to options mode
 	  }
       }
+      if (m.command == TOGGLE_RENDER_MODE) {
+	  world::render_graphics = !world::render_graphics;
+      }
     }
 }
   
     virtual void render(sdl2_backend * SDL) {
       process_mouse_events();
-      render_map( SDL );
+      if ( world::render_graphics) {
+	  render_map( SDL );
+      } else {
+	  render_map_ascii( SDL );
+      }
       // Render particles
       render_power_bar( SDL );
       render_date_time ( SDL );
@@ -270,6 +277,71 @@ public:
 	  return render_cover;
     }
     
+    inline void render_map_ascii(sdl2_backend * SDL) {
+      const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component>(world::camera_handle);
+      
+      int region_y = camera_pos->y - 23;
+      int left_x = camera_pos->x - 32;
+      const SDL_Rect background_source{176, 208, 16, 16};
+      
+      // map goes from 0,48 to 1024,768
+      SDL_Rect source = {16,32,16,16};
+      for (int y=0; y<45; ++y) {
+	int region_x = left_x;
+	for (int x=0; x<64; ++x) {
+	    const int idx = world::current_region->idx(region_x, region_y);
+	    SDL_Rect dest = {x*16, (y*16) + 48, 16, 16};
+ 	    if (region_x >= 0 and region_x < landblock_width and region_y > 0 and region_y <= landblock_height-1 and world::current_region->revealed[idx] ) {
+		// Tile type to render
+		unsigned char target_char = world::current_region->tiles[idx].display;
+		int texture_x = (target_char % 16) * 16;
+		int texture_y = (target_char / 16) * 16;
+		source = {texture_x, texture_y, 16,16 };
+		color_t foreground = world::current_region->tiles[idx].foreground;
+		SDL->set_color_mod("font", std::get<0>(foreground), std::get<1>(foreground), std::get<2>(foreground));
+		SDL->render_bitmap("font", source, dest);
+
+		// Render any renderable items for this tile
+		auto finder = world::entity_render_list.find( idx );
+		if ( finder != world::entity_render_list.end() ) {
+		    target_char = std::get<1>(finder->second);
+		    texture_x = (target_char % 16) * 16;
+		    texture_y = (target_char / 16) * 16;
+		    source = {texture_x, texture_y, 16,16 };
+		    color_t foreground = std::get<2>(finder->second);
+		    color_t background = std::get<3>(finder->second);
+		    SDL->set_color_mod("font", std::get<0>(background), std::get<1>(background), std::get<2>(background));
+		    SDL->render_bitmap("font", background_source, dest);
+		    SDL->set_color_mod("font", std::get<0>(foreground), std::get<1>(foreground), std::get<2>(foreground));
+		    SDL->render_bitmap("font", source, dest);
+		}
+		
+		// Altitude-based mask; lighter for higher elevations
+		// Add in time-of-day
+		const float angle_difference = std::abs( 90.0F - world::sun_angle );
+		float intensity_pct = angle_difference/90.0F;
+		if (world::current_region->visible[idx]) intensity_pct /= 2.0;
+		intensity_pct = 0.0;
+		unsigned char alpha_mask = (64.0F * intensity_pct) + ( ( 10 - world::current_region->tiles[idx].level_band) * 16 );
+		if (alpha_mask < 0) alpha_mask = 0;
+		SDL->set_alpha_mod( "spritesheet", alpha_mask );
+		source = raws::get_tile_source_by_name("BLACKMASK");
+		SDL->render_bitmap("spritesheet", source, dest);
+		SDL->set_alpha_mod( "spritesheet", 255 );
+		
+		// Render not visible
+		if (world::current_region->visible[idx] == false) {
+		    source = raws::get_tile_source_by_name("HIDEMASK");
+		    SDL->render_bitmap("spritesheet", source, dest);
+		}
+
+	    }
+	    ++region_x;
+	}
+	++region_y;
+      }
+    }
+    
     inline void render_map(sdl2_backend * SDL) {
       const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component>(world::camera_handle);
       
@@ -298,7 +370,7 @@ public:
 		// Render any renderable items for this tile
 		auto finder = world::entity_render_list.find( idx );
 		if ( finder != world::entity_render_list.end() ) {
-		    const int sprite_idx = finder->second;
+		    const int sprite_idx = std::get<0>(finder->second);
 		    source = raws::get_tile_source( sprite_idx );
 		    SDL->render_bitmap("spritesheet", source, dest);
 		}
@@ -315,8 +387,6 @@ public:
 		source = raws::get_tile_source_by_name("BLACKMASK");
 		SDL->render_bitmap("spritesheet", source, dest);
 		SDL->set_alpha_mod( "spritesheet", 255 );
-		
-		// TODO: Lighting goes here
 		
 		// Render not visible
 		if (world::current_region->visible[idx] == false) {

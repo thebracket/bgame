@@ -1,5 +1,6 @@
 #include "renderable_system.h"
 #include <iostream>
+#include <tuple>
 #include "../game.h"
 
 void renderable_system::tick ( const double &duration_ms ) {
@@ -14,7 +15,7 @@ void renderable_system::tick ( const double &duration_ms ) {
 
 	if ( pos != nullptr) {
 	    const int idx = world::current_region->idx ( pos->x, pos->y );
-	    world::entity_render_list[idx] = render_info.tile_idx;
+	    world::entity_render_list[idx] = std::make_tuple(render_info.tile_idx, render_info.glyph, render_info.foreground, render_info.background);
 	}
     }
 }
