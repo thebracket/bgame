@@ -346,11 +346,11 @@ public:
       * the result vector, which is then returned.
       */ 
      template<typename T>
-     vector<T *> find_components_by_func ( function<bool ( const T * ) > matcher ) {
+     vector<T *> find_components_by_func ( function<bool ( const T & ) > matcher ) {
           vector<T *> result;
           vector<T> * storage_bag = find_appropriate_bag<T>();
-          for ( const T &component : *storage_bag ) {
-               if ( matcher ( &component ) ) result.push_back ( &component );
+          for ( T &component : *storage_bag ) {
+               if ( matcher ( component ) ) result.push_back ( &component );
           }
           return result;
      }
@@ -464,8 +464,8 @@ public:
       * function of the form bool (T component).
       */
      template<typename T>
-     vector<T *> find_components_by_func ( function<bool ( const T &c ) > matcher ) {
-          return components.find_components_by_func ( matcher );
+     vector<T *> find_components_by_func ( function<bool ( const T & ) > matcher ) {
+          return components.find_components_by_func<T> ( matcher );
      }
 
      /*
@@ -500,6 +500,11 @@ public:
      T * find_entity_component ( const int &entity_handle ) {
           T ignore;
           return components.find_entity_component ( entity_handle, ignore );
+     }
+     
+     template<typename T>
+     vector<T *> find_entity_components ( const int &entity_handle ) {
+	  return find_components_by_func<T>( [entity_handle] (const T &e) { return e.entity_id == entity_handle; } );
      }
 
      /*

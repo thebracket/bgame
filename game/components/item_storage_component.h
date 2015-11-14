@@ -6,6 +6,7 @@ using namespace serialization_generic;
 
 struct item_storage_component {
      item_storage_component() {}
+     item_storage_component(const int &container) : container_id(container) {}
 
      int entity_id;
      int handle;
