@@ -4,7 +4,6 @@ add_library(game
 	    main_menu.cpp 
 	    play_mode.cpp 
 	    world_gen_mode.cpp 
-	    gui/gui_main_game_view.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
