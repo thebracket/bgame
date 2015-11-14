@@ -3,7 +3,8 @@ add_library(game
 	    loading_screen.cpp 
 	    main_menu.cpp 
 	    play_mode.cpp 
-	    world_gen_mode.cpp 
+	    world_gen_mode.cpp
+	    game_render.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
