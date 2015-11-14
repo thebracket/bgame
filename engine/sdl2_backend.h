@@ -31,6 +31,7 @@ public:
   std::string render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color);
   std::pair<int,int> query_bitmap_size ( const string &tag );
   void set_alpha_mod( const std::string &tag, unsigned char mod );
+  void set_color_mod ( const string& tag, unsigned char r, unsigned char g, unsigned char b );
   
   void resource_cleanup_tick();
 private:

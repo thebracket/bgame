@@ -281,7 +281,7 @@ void tile::calculate_display_properties()
 	  }
      }
      
-     if (base_tile_type == tile_type::RAMP) {
+     if (is_ramp()) {
 	display = 30;
      }
 }
@@ -308,12 +308,13 @@ string tile::get_description()
     switch (base_tile_type) {
       case tile_type::WATER : ss << "Water"; break;
       case tile_type::FLAT : ss << "Flat"; break;
-      case tile_type::RAMP : ss << "Upwards Slope"; break;
+      //case tile_type::RAMP : ss << "Upwards Slope"; break;
       case tile_type::BEACH : ss << "Clear"; break;
     }
+    if (is_ramp()) ss << "Upwards Slope";
     
     if (base_tile_type != tile_type::WATER) {
-      ss << " ";    
+      ss << ", ";    
       switch (ground) {
 	case tile_ground::GRAVEL : ss << "Gravel"; break;
 	case tile_ground::IGNEOUS : ss << "Granite"; break;
@@ -322,7 +323,7 @@ string tile::get_description()
 	case tile_ground::YELLOW_SAND : ss << "Yellow Sand"; break;
       }
       
-      ss << " ";
+      ss << ", ";
       switch (covering) {
 	case tile_covering::BARE : ss << "Bare"; break;
 	case tile_covering::CACTUS : ss << "Cactus"; break;
