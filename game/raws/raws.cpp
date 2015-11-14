@@ -493,6 +493,20 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
 }
 
 int create_item_from_raws(const string &name) {
+    auto finder = detail::items.find(name);
+    if (finder == detail::items.end()) {
+      std::cout << "ERROR: Cannot create item of type [" << name << "]\n";
+      throw 105;
+    }
+  
+    entity e;
+    e.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(e); 
+    // Note: no position is created, that's the caller's responsibility. Since it could be worn/held, in a container
+    // or on the landscape, this would become an enormous factory if we try and offer an interface to everything!
+    finder->second->build_components(e, x, y);
+    
+    return e.handle;
 }
 
 string to_proper_noun_case(const std::string &original) {
