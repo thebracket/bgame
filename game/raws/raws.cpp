@@ -104,7 +104,7 @@ int find_tile_by_name(const string &name) {
 
 SDL_Rect get_tile_source(const int idx) {
     //const int width = 112;
-    const int width_t = 7;
+    const int width_t = 8;
     
     const int x = idx % width_t;
     const int y = idx / width_t;
@@ -504,7 +504,7 @@ int create_item_from_raws(const string &name) {
     game_engine->ecs->add_entity(e); 
     // Note: no position is created, that's the caller's responsibility. Since it could be worn/held, in a container
     // or on the landscape, this would become an enormous factory if we try and offer an interface to everything!
-    finder->second->build_components(e, x, y);
+    finder->second->build_components(e, 0, 0 );
     
     return e.handle;
 }
