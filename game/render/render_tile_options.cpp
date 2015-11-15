@@ -29,10 +29,13 @@ public:
      tile_menu ( const int &world_idx, const std::pair<int,int> mouse_loc ) : idx ( world_idx ) {
           std::tie ( mouse_x, mouse_y ) = mouse_loc;
 	  build_layer_options();
+	  // Build heading
+	  // Build options
      }
 
      void build_layer_options() {
        build_ground_layer();
+       // Layer for objects present including in containers
      }
      
      inline void build_ground_layer() {
