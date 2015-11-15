@@ -19,7 +19,16 @@ void game_render::render ( sdl2_backend * SDL )
      render_date_time ( SDL );
      render_paused ( SDL );
      render_emotes ( SDL );
-     render_tool_tips ( SDL );
+
+     if ( mode == NORMAL ) {
+          render_tool_tips ( SDL );
+     } else if ( mode == TILE_SELECT ) {
+          if ( !world::paused ) {
+               mode = NORMAL;
+          } else {
+               // TODO: Render the pop-up menu
+          }
+     }
 }
 
 void game_render::process_mouse_events()
@@ -47,7 +56,8 @@ void game_render::process_mouse_events()
                m.deleted = true;
                if ( mouse_vy > 3 ) {
                     world::paused = true;
-                    // Change to options mode
+                    mode = TILE_SELECT;
+                    std::tie ( selected_tile_x, selected_tile_y ) = get_region_coordinates();
                }
           }
           if ( m.command == TOGGLE_RENDER_MODE ) {
@@ -59,7 +69,7 @@ void game_render::process_mouse_events()
 void game_render::render_tool_tips ( sdl2_backend * SDL )
 {
      if ( mouse_hover_time < 10 ) return;
-     render::tooltip( SDL, get_region_coordinates(), make_pair( mouse_vx, mouse_vy ) );
+     render::tooltip ( SDL, get_region_coordinates(), make_pair ( mouse_vx, mouse_vy ) );
 }
 
 void game_render::render_power_bar ( sdl2_backend * SDL )
@@ -88,10 +98,10 @@ void game_render::render_emotes ( sdl2_backend * SDL )
      if ( !emote_ptr->empty() ) {
 
           // Calculate the "home" position - top left.
-	  int region_x, region_y;
-	  std::tie( region_x, region_y ) = get_region_coordinates();
-	  region_x -= mouse_vx;
-	  region_y -= mouse_vy;
+          int region_x, region_y;
+          std::tie ( region_x, region_y ) = get_region_coordinates();
+          region_x -= mouse_vx;
+          region_y -= mouse_vy;
 
           for ( chat_emote_message &emote : *emote_ptr ) {
                const unsigned char fade = 8 * emote.ttl;
@@ -283,8 +293,10 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
      const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
      int region_y = camera_pos->y - 23;
      int left_x = camera_pos->x - 32;
-     
-     const SDL_Rect background_source { 176, 208, 16, 16 };
+
+     const SDL_Rect background_source {
+          176, 208, 16, 16
+     };
 
      // map goes from 0,48 to 1024,768
      SDL_Rect source = {16,32,16,16};
