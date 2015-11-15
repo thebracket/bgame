@@ -90,7 +90,8 @@ void game_render::render_emotes ( sdl2_backend * SDL )
           // Calculate the "home" position - top left.
 	  int region_x, region_y;
 	  std::tie( region_x, region_y ) = get_region_coordinates();
-
+	  region_x -= mouse_vx;
+	  region_y -= mouse_vy;
 
           for ( chat_emote_message &emote : *emote_ptr ) {
                const unsigned char fade = 8 * emote.ttl;
