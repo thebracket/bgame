@@ -31,6 +31,7 @@ private:
     bool set_covering_source ( SDL_Rect &source, const int &idx );
     void render_map_ascii ( sdl2_backend * SDL );
     void render_map ( sdl2_backend * SDL );
+    void render_lighting_visibility_mask ( sdl2_backend* SDL, const int& idx, SDL_Rect& source, SDL_Rect& dest );
     
     int mouse_x = 0;
     int mouse_y = 0;
