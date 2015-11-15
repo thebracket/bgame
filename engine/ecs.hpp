@@ -227,7 +227,7 @@ public:
  * type you want to use, and makes a tuple of vectors for each type. This
  * maintains contiguous storage for fast iteration, and avoids the need for an
  * inheritance hierarchy.
- * 
+ *
  * Components MUST include:
  * int entity_id, handle
  * bool deleted
@@ -248,7 +248,7 @@ private:
           return component_list::type_list::size();
      }
 
-     /* 
+     /*
       * A tuple of vectors, each specialized to th types described in the component
       * list specification.
       */
@@ -266,7 +266,7 @@ private:
      }
 
 public:
-     /* 
+     /*
       * The total number of stored components.
       */
      std::size_t size() {
@@ -344,7 +344,7 @@ public:
       * Iterate the vector of components of type T, calling the matcher function
       * on each. If matcher returns true, a pointer to the component is added to
       * the result vector, which is then returned.
-      */ 
+      */
      template<typename T>
      vector<T *> find_components_by_func ( function<bool ( const T & ) > matcher ) {
           vector<T *> result;
@@ -501,10 +501,12 @@ public:
           T ignore;
           return components.find_entity_component ( entity_handle, ignore );
      }
-     
+
      template<typename T>
      vector<T *> find_entity_components ( const int &entity_handle ) {
-	  return find_components_by_func<T>( [entity_handle] (const T &e) { return e.entity_id == entity_handle; } );
+          return find_components_by_func<T> ( [entity_handle] ( const T &e ) {
+               return e.entity_id == entity_handle;
+          } );
      }
 
      /*
@@ -584,6 +586,76 @@ public:
           int number_of_components = components.size();
           lbfile.write ( reinterpret_cast<const char *> ( &number_of_components ), sizeof ( number_of_components ) );
           components.save ( lbfile );
+     }
+};
+
+using engine::ecs_detail::for_each;
+using engine::ecs_detail::type_list;
+
+/*
+ * Similar to the ECS, the message_bus is instantiated with a list of classes.
+ * It is assumed that messages are short lived, and will not be serialized.
+ * Any class that acts as a message must implement: bool deleted = false; int ttl = 32;
+ */
+template<typename message_list>
+class message_bus {
+private:
+     /*
+      * Tuple of vectors, just like the ECS above.
+      */
+     template<typename ... Ts>
+     using tuple_of_vectors = std::tuple<std::vector<Ts>...>;
+     ecs_detail::rename<tuple_of_vectors, typename message_list::type_list> storage;
+
+     /*
+      * Helper function to select the right vector.
+      */
+     template <typename T>
+     vector<T> * find_appropriate_bag() {
+          return &std::get< vector<T> > ( storage );
+     }
+
+public:
+     /*
+      * Default constructor
+      */
+     message_bus() {
+     }
+
+     /*
+      * Iterate through all message containers, and remove any message marked as 'deleted'.
+      * TTL is reduced by one, and the message deleted if it as reached zero.
+      */
+     void clear() {
+          for_each ( storage, [] ( auto &x ) {
+               if ( !x.empty() ) {
+                    std::for_each ( x.begin(), x.end(), [] ( auto &n ) {
+                         --n.ttl;
+                         if ( n.ttl <= 0 ) n.deleted = true;
+                    } );
+                    auto new_end = std::remove_if ( x.begin(), x.end(), [] ( auto &n ) {
+                         return n.deleted;
+                    } );
+                    x.erase ( new_end, x.end() );
+               }
+          } );
+     }
+
+     /*
+      * Adds a message to the message bus.
+      */
+     template<typename T>
+     void add_message ( T new_message ) {
+          vector<T> * bag = find_appropriate_bag<T>();
+          bag->push_back ( new_message );
+     }
+
+     /*
+      * Retrieves a pointer to the vector of messages of type T.
+      */
+     template<typename T>
+     vector<T> * get_messages_by_type() {
+          return find_appropriate_bag<T>();
      }
 };
 

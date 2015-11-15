@@ -13,7 +13,6 @@
 #include "command_manager.h"
 #include "sdl2_backend.h"
 #include "ecs.hpp"
-#include "messagebus.h"
 #include "scene_graph.h"
 
 namespace engine {
