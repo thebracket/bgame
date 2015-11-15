@@ -4,8 +4,9 @@ add_library(game
 	    main_menu.cpp 
 	    play_mode.cpp 
 	    world_gen_mode.cpp
-	    game_render.cpp
-	    render_tooltips.cpp
+	    
+	    render/game_render.cpp
+	    render/render_tooltips.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    

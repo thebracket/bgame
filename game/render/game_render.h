@@ -1,9 +1,9 @@
 #pragma once
 
-#include "world/world.h"
-#include "systems/system_factory.h"
-#include "game.h"
-#include "raws/raws.h"
+#include "../world/world.h"
+#include "../systems/system_factory.h"
+#include "../game.h"
+#include "../raws/raws.h"
 #include <sstream>
 
 using namespace engine;
