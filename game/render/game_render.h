@@ -14,6 +14,11 @@ public:
     virtual void render ( sdl2_backend * SDL ) override;
 
 private:
+    enum RENDER_MODE_T { NORMAL, TILE_SELECT };
+    RENDER_MODE_T mode = NORMAL;
+    int selected_tile_x;
+    int selected_tile_y;
+  
     void process_mouse_events();
     
     void render_tool_tips ( sdl2_backend * SDL );
