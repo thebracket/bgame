@@ -4,6 +4,24 @@
 
 using std::make_pair;
 
+void game_render::render ( sdl2_backend * SDL )
+{
+     process_mouse_events();
+
+     if ( world::render_graphics ) {
+          render_map ( SDL );
+     } else {
+          render_map_ascii ( SDL );
+     }
+
+     // TODO: Render particles
+     render_power_bar ( SDL );
+     render_date_time ( SDL );
+     render_paused ( SDL );
+     render_emotes ( SDL );
+     render_tool_tips ( SDL );
+}
+
 void game_render::process_mouse_events()
 {
      vector<mouse_motion_message> * mouse_movement = game_engine->messaging->get_messages_by_type<mouse_motion_message>();
@@ -36,24 +54,6 @@ void game_render::process_mouse_events()
                world::render_graphics = !world::render_graphics;
           }
      }
-}
-
-void game_render::render ( sdl2_backend * SDL )
-{
-     process_mouse_events();
-
-     if ( world::render_graphics ) {
-          render_map ( SDL );
-     } else {
-          render_map_ascii ( SDL );
-     }
-
-     // TODO: Render particles
-     render_power_bar ( SDL );
-     render_date_time ( SDL );
-     render_paused ( SDL );
-     render_emotes ( SDL );
-     render_tool_tips ( SDL );
 }
 
 void game_render::render_tool_tips ( sdl2_backend * SDL )
