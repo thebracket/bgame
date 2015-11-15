@@ -21,6 +21,7 @@ private:
   
     void process_mouse_events();
     
+    void render_tile_options ( sdl2_backend * SDL );
     void render_tool_tips ( sdl2_backend * SDL );
     void render_power_bar ( sdl2_backend * SDL );
     void render_emotes ( sdl2_backend * SDL );
