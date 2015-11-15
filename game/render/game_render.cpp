@@ -1,5 +1,6 @@
 #include "game_render.h"
 #include "render_tooltips.h"
+#include "render_tile_options.h"
 #include <utility>
 
 using std::make_pair;
@@ -64,6 +65,13 @@ void game_render::process_mouse_events()
                world::render_graphics = !world::render_graphics;
           }
      }
+}
+
+void game_render::render_tile_options ( sdl2_backend* SDL )
+{
+    render::tile_options( SDL, 
+			  make_pair( selected_tile_x, selected_tile_y ), 
+			  make_pair ( mouse_x, mouse_y ) );
 }
 
 void game_render::render_tool_tips ( sdl2_backend * SDL )

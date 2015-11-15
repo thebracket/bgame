@@ -117,7 +117,7 @@ void render::tooltip ( sdl2_backend * SDL, const std::pair<int,int> region_loc, 
      const int screen_y = mouse_vy*16 + 48;
 
      tooltip_detail::tip tt ( screen_x, screen_y );
-     tt.add_line( " (Right Click for Options) ", sdl_red );
+     tt.add_line( "Right Click for Options", sdl_red );
      tt.add_line ( world::current_region->tiles[idx].get_description(), sdl_green );
      tt.add_line ( world::current_region->tiles[idx].get_climate(), sdl_cyan );
      tt.add_tile_contents ( region_x, region_y );
