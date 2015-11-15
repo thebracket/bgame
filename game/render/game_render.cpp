@@ -346,7 +346,7 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
                          intensity_pct /= 2.0;
                     }
                     intensity_pct = 0.0;
-                    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 16 );
+                    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 24 );
                     if ( alpha_mask < 0 ) {
                          alpha_mask = 0;
                     }
@@ -410,7 +410,7 @@ void game_render::render_map ( sdl2_backend * SDL )
                          intensity_pct /= 2.0;
                     }
                     intensity_pct = 0.0;
-                    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 16 );
+                    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 24 );
                     if ( alpha_mask < 0 ) {
                          alpha_mask = 0;
                     }
