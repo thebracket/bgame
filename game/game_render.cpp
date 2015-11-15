@@ -1,4 +1,8 @@
 #include "game_render.h"
+#include "render_tooltips.h"
+#include <utility>
+
+using std::make_pair;
 
 void game_render::process_mouse_events()
 {
@@ -37,12 +41,14 @@ void game_render::process_mouse_events()
 void game_render::render ( sdl2_backend * SDL )
 {
      process_mouse_events();
+
      if ( world::render_graphics ) {
           render_map ( SDL );
      } else {
           render_map_ascii ( SDL );
      }
-     // Render particles
+
+     // TODO: Render particles
      render_power_bar ( SDL );
      render_date_time ( SDL );
      render_paused ( SDL );
@@ -52,95 +58,8 @@ void game_render::render ( sdl2_backend * SDL )
 
 void game_render::render_tool_tips ( sdl2_backend * SDL )
 {
-     if ( mouse_hover_time < 10 ) {
-          return;
-     }
-     //if (mouse_vx < 0 or mouse_vx > 1024/16) return;
-     //if (mouse_vy < 0 or mouse_vy > 768-48/16) return;
-
-     const SDL_Color sdl_green {
-          64,255,64,0
-     };
-     const SDL_Color sdl_cyan {
-          0,255,255,0
-     };
-     const SDL_Color sdl_white {
-          255,255,255,0
-     };
-     const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
-
-     int region_x = camera_pos->x - 32 + mouse_vx;
-     int region_y = camera_pos->y - 23 + mouse_vy;
-     //std::cout << "(" << region_x << "," << region_y << ")\n";
-
-     const int idx = world::current_region->idx ( region_x, region_y );
-     if ( world::current_region->visible[ idx ] == false ) {
-          return;
-     }
-
-     const int screen_x = mouse_vx*16 + 16;
-     const int screen_y = mouse_vy*16 + 48;
-
-     std::vector<std::pair<std::string,SDL_Color>> lines;
-
-     lines.push_back ( make_pair ( world::current_region->tiles[idx].get_description(), sdl_green ) );
-     lines.push_back ( make_pair ( world::current_region->tiles[idx].get_climate(), sdl_cyan ) );
-
-     vector<position_component> * positions = game_engine->ecs->find_components_by_type<position_component>();
-     for ( const position_component &pos : *positions ) {
-          if ( pos.x == region_x and pos.y == region_y ) {
-               const int entity_id = pos.entity_id;
-               std::stringstream desc;
-               settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component> ( entity_id );
-               if ( settler != nullptr ) {
-                    //game_species_component * species = game_engine->ecs->find_entity_component<game_species_component> ( entity_id );
-                    desc << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
-                    lines.push_back ( make_pair ( desc.str(), sdl_white ) );
-               } else {
-                    debug_name_component * debug_name = game_engine->ecs->find_entity_component<debug_name_component> ( entity_id );
-                    if ( debug_name != nullptr ) {
-                         desc << debug_name->debug_name;
-                         lines.push_back ( make_pair ( desc.str(), sdl_white ) );
-                    }
-
-                    // Stored items
-                    vector<item_storage_component *> stored_items = game_engine->ecs->find_components_by_func<item_storage_component> (
-                    [entity_id] ( const item_storage_component &e ) {
-                         if ( e.container_id == entity_id ) {
-                              return true;
-                         }
-                         return false;
-                    }
-                              );
-                    for ( item_storage_component * item : stored_items ) {
-                         debug_name_component * nc = game_engine->ecs->find_entity_component<debug_name_component> ( item->entity_id );
-                         lines.push_back ( make_pair ( string ( "   " ) + nc->debug_name, sdl_green ) );
-                    }
-               }
-          }
-     }
-
-     std::size_t width = 0;
-     for ( const std::pair<std::string,SDL_Color> &tooltip_line : lines ) {
-          if ( width < tooltip_line.first.size() * 7 ) {
-               width = tooltip_line.first.size() * 7;
-          }
-     }
-
-     int y = screen_y - ( ( lines.size() /2 ) * 16 );
-
-     SDL->set_alpha_mod ( "spritesheet", 128 );
-     SDL_Rect source = raws::get_tile_source_by_name ( "BLACKMASK" );
-     const unsigned char height = lines.size() *16;
-     SDL_Rect dest = { screen_x, y-4, width, height+8 };
-     SDL->render_bitmap ( "spritesheet", source, dest );
-     SDL->set_alpha_mod ( "spritesheet", 255 );
-
-     for ( const std::pair<std::string,SDL_Color> &tooltip_line : lines ) {
-          std::string line_s = SDL->render_text_to_image ( "disco14", tooltip_line.first, "tmp", tooltip_line.second );
-          SDL->render_bitmap_simple ( line_s, screen_x + 16, y );
-          y += 16;
-     }
+     if ( mouse_hover_time < 10 ) return;
+     render::tooltip( SDL, get_region_coordinates(), make_pair( mouse_vx, mouse_vy ) );
 }
 
 void game_render::render_power_bar ( sdl2_backend * SDL )
@@ -169,9 +88,8 @@ void game_render::render_emotes ( sdl2_backend * SDL )
      if ( !emote_ptr->empty() ) {
 
           // Calculate the "home" position - top left.
-          const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
-          const int region_x = camera_pos->x - 32;
-          const int region_y = camera_pos->y - 23;
+	  int region_x, region_y;
+	  std::tie( region_x, region_y ) = get_region_coordinates();
 
 
           for ( chat_emote_message &emote : *emote_ptr ) {
@@ -362,12 +280,10 @@ bool game_render::set_covering_source ( SDL_Rect &source, const int &idx )
 void game_render::render_map_ascii ( sdl2_backend * SDL )
 {
      const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
-
      int region_y = camera_pos->y - 23;
      int left_x = camera_pos->x - 32;
-     const SDL_Rect background_source {
-          176, 208, 16, 16
-     };
+     
+     const SDL_Rect background_source { 176, 208, 16, 16 };
 
      // map goes from 0,48 to 1024,768
      SDL_Rect source = {16,32,16,16};
@@ -492,4 +408,12 @@ void game_render::render_map ( sdl2_backend * SDL )
           }
           ++region_y;
      }
+}
+
+pair< int, int > game_render::get_region_coordinates() const
+{
+     const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+     const int region_x = camera_pos->x - 32 + mouse_vx;
+     const int region_y = camera_pos->y - 23 + mouse_vy;
+     return make_pair ( region_x, region_y );
 }
