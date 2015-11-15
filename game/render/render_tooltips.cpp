@@ -1,8 +1,8 @@
 #include "render_tooltips.h"
-#include "world/world.h"
-#include "game.h"
-#include "raws/raws.h"
-#include "colors.h"
+#include "../world/world.h"
+#include "../game.h"
+#include "../raws/raws.h"
+#include "../colors.h"
 #include <tuple>
 #include <sstream>
 
