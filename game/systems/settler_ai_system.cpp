@@ -198,6 +198,8 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 
     vector<settler_ai_component> * settlers = game_engine->ecs->find_components_by_type<settler_ai_component>();
     for (settler_ai_component &settler : *settlers) {
+	if (settler.next_tick > calendar->system_time) break;
+      
 	settler_ai_detail::settler_needs needs = settler_ai_detail::needs_clocks(settler);
 	position_component * pos = game_engine->ecs->find_entity_component<position_component>(settler.entity_id);
 	
