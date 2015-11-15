@@ -296,6 +296,32 @@ bool game_render::set_covering_source ( SDL_Rect &source, const int &idx )
      return render_cover;
 }
 
+void game_render::render_lighting_visibility_mask ( sdl2_backend * SDL, const int &idx, SDL_Rect &source, SDL_Rect &dest ) 
+{
+    const float angle_difference = std::abs ( 90.0F - world::sun_angle );
+    float intensity_pct = angle_difference/90.0F;
+    if ( world::current_region->visible[idx] ) {
+	  intensity_pct /= 2.0;
+    }
+    intensity_pct = 0.0;
+    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 16 );
+    if ( alpha_mask < 0 ) {
+	  alpha_mask = 0;
+    }
+    if (alpha_mask > 0) {
+	SDL->set_alpha_mod ( "spritesheet", alpha_mask );
+	source = raws::get_tile_source_by_name ( "BLACKMASK" );
+	SDL->render_bitmap ( "spritesheet", source, dest );
+	SDL->set_alpha_mod ( "spritesheet", 255 );
+    }
+
+    // Render not visible
+    if ( world::current_region->visible[idx] == false ) {
+	  source = raws::get_tile_source_by_name ( "HIDEMASK" );
+	  SDL->render_bitmap ( "spritesheet", source, dest );
+    }
+}
+
 void game_render::render_map_ascii ( sdl2_backend * SDL )
 {
      const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
@@ -338,29 +364,7 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
                          SDL->render_bitmap ( "font", source, dest );
                     }
 
-                    // Altitude-based mask; lighter for higher elevations
-                    // Add in time-of-day
-                    const float angle_difference = std::abs ( 90.0F - world::sun_angle );
-                    float intensity_pct = angle_difference/90.0F;
-                    if ( world::current_region->visible[idx] ) {
-                         intensity_pct /= 2.0;
-                    }
-                    intensity_pct = 0.0;
-                    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 24 );
-                    if ( alpha_mask < 0 ) {
-                         alpha_mask = 0;
-                    }
-                    SDL->set_alpha_mod ( "spritesheet", alpha_mask );
-                    source = raws::get_tile_source_by_name ( "BLACKMASK" );
-                    SDL->render_bitmap ( "spritesheet", source, dest );
-                    SDL->set_alpha_mod ( "spritesheet", 255 );
-
-                    // Render not visible
-                    if ( world::current_region->visible[idx] == false ) {
-                         source = raws::get_tile_source_by_name ( "HIDEMASK" );
-                         SDL->render_bitmap ( "spritesheet", source, dest );
-                    }
-
+                    render_lighting_visibility_mask( SDL, idx, source, dest );
                }
                ++region_x;
           }
@@ -402,28 +406,7 @@ void game_render::render_map ( sdl2_backend * SDL )
                          SDL->render_bitmap ( "spritesheet", source, dest );
                     }
 
-                    // Altitude-based mask; lighter for higher elevations
-                    // Add in time-of-day
-                    const float angle_difference = std::abs ( 90.0F - world::sun_angle );
-                    float intensity_pct = angle_difference/90.0F;
-                    if ( world::current_region->visible[idx] ) {
-                         intensity_pct /= 2.0;
-                    }
-                    intensity_pct = 0.0;
-                    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 24 );
-                    if ( alpha_mask < 0 ) {
-                         alpha_mask = 0;
-                    }
-                    SDL->set_alpha_mod ( "spritesheet", alpha_mask );
-                    source = raws::get_tile_source_by_name ( "BLACKMASK" );
-                    SDL->render_bitmap ( "spritesheet", source, dest );
-                    SDL->set_alpha_mod ( "spritesheet", 255 );
-
-                    // Render not visible
-                    if ( world::current_region->visible[idx] == false ) {
-                         source = raws::get_tile_source_by_name ( "HIDEMASK" );
-                         SDL->render_bitmap ( "spritesheet", source, dest );
-                    }
+                    render_lighting_visibility_mask( SDL, idx, source, dest );
                }
                ++region_x;
           }
