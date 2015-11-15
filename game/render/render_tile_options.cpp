@@ -35,7 +35,7 @@ public:
 
      void build_layer_options() {
        build_ground_layer();
-       // Layer for objects present including in containers
+       // Layer for settlers, objects present including in containers
      }
      
      inline void build_ground_layer() {
