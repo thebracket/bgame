@@ -31,5 +31,7 @@ private:
     int mouse_vx = 0;
     int mouse_vy = 0;
     int mouse_hover_time = 0;
+    
+    std::pair<int,int> get_region_coordinates() const;
 
 };
