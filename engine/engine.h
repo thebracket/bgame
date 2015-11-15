@@ -43,7 +43,7 @@ private:
      std::unique_ptr<base_mode> current_mode;
      std::stack<std::unique_ptr<base_mode>> mode_stack;
      bool quitting = false;
-     const bool fixed_time_step = true;
+     const bool fixed_time_step = false;
 
      void push_mode ( std::unique_ptr< base_mode > new_mode ) {
           current_mode->on_push();
