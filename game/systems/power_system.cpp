@@ -40,7 +40,7 @@ void power_system::tick(const double& duration_ms)
 
         const vector<power_generator_component> * producers = game_engine->ecs->find_components_by_type<power_generator_component> ();
         for (const power_generator_component &gen : *producers) {
-            const int generated_power = power_system_detail::calculate_power_gain(&gen);
+            const int generated_power = std::max(1,power_system_detail::calculate_power_gain(&gen));
             power += generated_power;
         }
 
