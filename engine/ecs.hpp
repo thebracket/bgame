@@ -465,7 +465,7 @@ public:
       */
      template<typename T>
      vector<T *> find_components_by_func ( function<bool ( const T & ) > matcher ) {
-          return components.find_components_by_func<T> ( matcher );
+          return components.find_components_by_func ( matcher );
      }
 
      /*
