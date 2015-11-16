@@ -645,7 +645,7 @@ public:
       * Adds a message to the message bus.
       */
      template<typename T>
-     void add_message ( T new_message ) {
+     void add_message ( T &&new_message ) {
           vector<T> * bag = find_appropriate_bag<T>();
           bag->push_back ( new_message );
      }

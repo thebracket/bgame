@@ -4,6 +4,7 @@
 #include "../systems/system_factory.h"
 #include "../game.h"
 #include "../raws/raws.h"
+#include "panel_tooltip.h"
 #include <sstream>
 
 using namespace engine;
@@ -40,5 +41,7 @@ private:
     int mouse_hover_time = 0;
     
     std::pair<int,int> get_region_coordinates() const;
+    
+    std::unique_ptr<render::panel_tooltip> current_tooltip;
 
 };
