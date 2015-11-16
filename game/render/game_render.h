@@ -5,6 +5,7 @@
 #include "../game.h"
 #include "../raws/raws.h"
 #include "panel_tooltip.h"
+#include "panel_tile_info.h"
 #include <sstream>
 
 using namespace engine;
@@ -43,5 +44,6 @@ private:
     std::pair<int,int> get_region_coordinates() const;
     
     std::unique_ptr<render::panel_tooltip> current_tooltip;
+    std::unique_ptr<render::panel_tile_info> current_info;
 
 };

@@ -25,7 +25,7 @@ void game_render::render ( sdl2_backend * SDL )
           if ( !world::paused ) {
                mode = NORMAL;
           } else {
-               // TODO: Render the pop-up menu
+	      render_tile_options( SDL );
           }
      }
 }
@@ -57,6 +57,11 @@ void game_render::process_mouse_events()
                     world::paused = true;
                     mode = TILE_SELECT;
                     std::tie ( selected_tile_x, selected_tile_y ) = get_region_coordinates();
+		    
+		    // Center on the clicked area.
+		    position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+		    camera_pos->x = selected_tile_x;
+		    camera_pos->y = selected_tile_y;
                }
           }
           if ( m.command == TOGGLE_RENDER_MODE ) {
@@ -67,6 +72,12 @@ void game_render::process_mouse_events()
 
 void game_render::render_tile_options ( sdl2_backend* SDL )
 {
+    if ( current_info == nullptr ) {
+	current_info = std::make_unique<render::panel_tile_info>( SDL, get_region_coordinates(), make_pair (mouse_vx, mouse_vy ) );
+    }
+    current_info->render();
+    
+    // We need options to escape from the info menu here!
 }
 
 void game_render::render_tool_tips ( sdl2_backend * SDL )
