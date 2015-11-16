@@ -140,6 +140,31 @@ void sdl2_backend::set_color_mod ( const string& tag, unsigned char r, unsigned 
     SDL_SetTextureColorMod( bmp, r, g, b );
 }
 
+string sdl2_backend::create_temporary_texture ( const int& width, const int& height )
+{
+    return resources.create_temporary_texture( renderer, width, height );
+}
+
+void sdl2_backend::texture_target ( const string& target )
+{
+  SDL_SetRenderTarget( renderer, resources.get_texture_by_tag( target ) );
+}
+
+void sdl2_backend::reset_texture_target()
+{
+  SDL_SetRenderTarget( renderer, nullptr );
+}
+
+void sdl2_backend::mark_texture_for_deletion ( const string& target )
+{
+  resources.mark_texture_for_deletion( target );
+}
+
+pair< int, int > sdl2_backend::text_size ( const string& font, const string& text )
+{
+  return resources.text_size( font, text );
+}
+
 void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

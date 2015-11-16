@@ -142,6 +142,30 @@ struct sdl_resource_manager {
 	texture_index [ text_name ] = res;
 	return text_name;
     }
+    
+    std::string create_temporary_texture(SDL_Renderer * renderer, const int &width, const int &height) {
+	std::stringstream ss;
+	ss << "transient_" << transient_id;
+	const std::string text_name = ss.str();
+	++transient_id;
+      
+	SDL_Texture * texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height );
+	texture_resource t(texture);
+	texture_index[text_name] = t;
+	return text_name;
+    }
+    
+    void mark_texture_for_deletion( const std::string &target ) {
+	auto finder = texture_index.find( target );
+	if (finder != texture_index.end() ) finder->second.deleted = true;
+    }
+    
+    pair<int,int> text_size( const std::string &font, const string &text ) {
+	int w,h;
+	TTF_Font * sdl_font = get_font_by_tag( font );
+	TTF_SizeText( sdl_font, text.c_str(), &w, &h );
+	return std::make_pair(w,h);
+    }
   
 private:
     std::unordered_map<std::string, texture_resource> texture_index;

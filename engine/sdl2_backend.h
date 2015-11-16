@@ -33,6 +33,12 @@ public:
   void set_alpha_mod( const std::string &tag, unsigned char mod );
   void set_color_mod ( const string& tag, unsigned char r, unsigned char g, unsigned char b );
   
+  std::string create_temporary_texture(const int &width, const int &height);
+  void texture_target ( const std::string &target );
+  void reset_texture_target ( );
+  void mark_texture_for_deletion ( const std::string &target);
+  pair<int,int> text_size( const std::string &font, const string &text );
+  
   void resource_cleanup_tick();
 private:
   bool initialized;

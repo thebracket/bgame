@@ -6,7 +6,6 @@ add_library(game
 	    world_gen_mode.cpp
 	    
 	    render/game_render.cpp
-	    render/render_tooltips.cpp
 	    render/render_tile_options.cpp
 	    
 	    raws/raws.cpp 

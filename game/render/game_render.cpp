@@ -1,5 +1,5 @@
 #include "game_render.h"
-#include "render_tooltips.h"
+//#include "render_tooltips.h"
 #include "render_tile_options.h"
 #include <utility>
 
@@ -76,8 +76,14 @@ void game_render::render_tile_options ( sdl2_backend* SDL )
 
 void game_render::render_tool_tips ( sdl2_backend * SDL )
 {
-     if ( mouse_hover_time < 10 ) return;
-     render::tooltip ( SDL, get_region_coordinates(), make_pair ( mouse_vx, mouse_vy ) );
+     if ( mouse_hover_time < 10 ) {
+       if ( current_tooltip != nullptr ) current_tooltip.reset();
+       return;
+     }
+     if ( current_tooltip == nullptr) {
+	current_tooltip = std::make_unique<render::panel_tooltip>( SDL, get_region_coordinates(), make_pair ( mouse_vx, mouse_vy ) );
+     }
+     if (current_tooltip->render_me) current_tooltip->render();     
 }
 
 void game_render::render_power_bar ( sdl2_backend * SDL )
