@@ -40,12 +40,10 @@ public:
      }
      
      void render() {
-	  SDL->set_alpha_mod ( "spritesheet", 128 );
 	  SDL_Rect source { 0, 0, panel_holder->width, panel_holder->height };
 	  int line_size = static_cast<int> ( (lines.size() /2 ) * 16 );
 	  SDL_Rect dest { screen_x, screen_y - line_size, panel_holder->width, panel_holder->height };
 	  SDL->render_bitmap( panel_holder->texture_id, source, dest );
-	  SDL->set_alpha_mod ( "spritesheet", 255 );
      }
      
      void render_buffer() {

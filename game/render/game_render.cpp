@@ -306,14 +306,12 @@ void game_render::render_lighting_visibility_mask ( sdl2_backend * SDL, const in
 {
     const float angle_difference = std::abs ( 90.0F - world::sun_angle );
     float intensity_pct = angle_difference/90.0F;
-    if ( world::current_region->visible[idx] ) {
-	  intensity_pct /= 2.0;
-    }
-    intensity_pct = 0.0;
-    unsigned char alpha_mask = ( 64.0F * intensity_pct ) + ( ( 10 - world::current_region->tiles[idx].level_band ) * 16 );
-    if ( alpha_mask < 0 ) {
-	  alpha_mask = 0;
-    }
+    if ( world::current_region->visible[idx] ) intensity_pct /= 2.0;
+    const float alpha_mask_lighting_f = ( 64.0F * intensity_pct );
+    const float alpha_mask_elevation_f = ( 10.0 - world::current_region->tiles[idx].level_band ) * 8.0;
+    unsigned char alpha_mask = alpha_mask_elevation_f + alpha_mask_lighting_f ;
+    if ( alpha_mask < 0 ) alpha_mask = 0;
+    
     if (alpha_mask > 0) {
 	SDL->set_alpha_mod ( "spritesheet", alpha_mask );
 	source = raws::get_tile_source_by_name ( "BLACKMASK" );
