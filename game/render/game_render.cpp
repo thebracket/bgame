@@ -51,9 +51,12 @@ void game_render::process_mouse_events()
      }
 
      vector<command_message> * actions = game_engine->messaging->get_messages_by_type<command_message>();
+     left_click = false;
+     right_click = false;
      for ( command_message &m : *actions ) {
           if ( m.command == RIGHT_CLICK ) {
                m.deleted = true;
+	       right_click = true;
                if ( mouse_vy > 3 ) {
                     world::paused = true;
                     mode = TILE_SELECT;
@@ -64,6 +67,10 @@ void game_render::process_mouse_events()
 		    //camera_pos->x = selected_tile_x;
 		    //camera_pos->y = selected_tile_y;
                }
+          }
+          if ( m.command == LEFT_CLICK ) {
+	      m.deleted = true;
+	      left_click = true;
           }
           if ( m.command == TOGGLE_RENDER_MODE ) {
                world::render_graphics = !world::render_graphics;
@@ -76,7 +83,11 @@ void game_render::render_tile_options ( sdl2_backend* SDL )
     if ( current_info == nullptr ) {
 	current_info = std::make_unique<render::panel_tile_info>( SDL, get_region_coordinates(), make_pair (mouse_vx, mouse_vy ) );
     }
-    current_info->render();
+    const bool destroy = current_info->render( make_pair( mouse_x, mouse_y ), left_click, right_click );
+    if (destroy) {
+      mode = NORMAL;
+      current_info.reset();
+    }
     
     // We need options to escape from the info menu here!
 }

@@ -41,24 +41,61 @@ public:
       add_build_options_panel();
   }
   
-  void render() {
+  bool in_window_area(const int &mouse_x, const int &mouse_y) const {
+    bool hit = false;
+    for (const SDL_Rect &window : window_areas) {
+	if (mouse_x >= window.x and mouse_x <= (window.x+window.w) and mouse_y>=window.y and mouse_y<=(window.y+window.h)) {
+	  hit = true;
+	}
+    }
+    return hit;
+  }
+  
+  bool render(const std::pair<int,int> mouse_loc, bool left_click, bool right_click) {
+    ++count;
     int y = 90;
+    int mouse_x, mouse_y;
+    std::tie(mouse_x, mouse_y) = mouse_loc;
+    
+    if (count < 10) {
+      left_click = false;
+      right_click = false;
+    }
     
     for (const stored_panel &p : panels) {
       
       SDL_Rect src { 0, 0, p.panel_info->width, p.panel_info->height };
       SDL_Rect dst { 100, y, p.panel_info->width, p.panel_info->height };
       SDL->render_bitmap( p.panel_info->texture_id, src, dst );
+      window_areas.push_back( dst );
       
       y += p.panel_info->height + 10;
     }
+    
+    if (left_click) {
+	if (in_window_area(mouse_x, mouse_y)) {
+	  // TODO: Check hotspots and act
+	} else {
+	  // Clicked elsewhere - get out of the popup
+	  return true;
+	}
+    }
+    
+    if (right_click && !in_window_area(mouse_x, mouse_y)) {
+      return true;
+    }
+    
+    return false;
   }
   
 private:
   sdl2_backend * SDL;
   vector<stored_panel> panels;
+  vector<SDL_Rect> window_areas;
+  vector<SDL_Rect> hotspots;
   int screen_x, screen_y, region_x, region_y;
   int idx;
+  int count = 0;
   
   void create_panel_from_lines(line_buffer &lines) {
     const int width = lines.get_width() + 32;
