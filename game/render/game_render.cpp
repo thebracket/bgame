@@ -24,6 +24,7 @@ void game_render::render ( sdl2_backend * SDL )
      } else if ( mode == TILE_SELECT ) {
           if ( !world::paused ) {
                mode = NORMAL;
+	       current_info.reset();
           } else {
 	      render_tile_options( SDL );
           }
@@ -59,9 +60,9 @@ void game_render::process_mouse_events()
                     std::tie ( selected_tile_x, selected_tile_y ) = get_region_coordinates();
 		    
 		    // Center on the clicked area.
-		    position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
-		    camera_pos->x = selected_tile_x;
-		    camera_pos->y = selected_tile_y;
+		    //position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+		    //camera_pos->x = selected_tile_x;
+		    //camera_pos->y = selected_tile_y;
                }
           }
           if ( m.command == TOGGLE_RENDER_MODE ) {

@@ -2,20 +2,24 @@
 
 #include <vector>
 #include <utility>
+#include <sstream>
+#include <memory>
 #include "panel.h"
 #include "../world/world.h"
 #include "../../engine/sdl2_backend.h"
 #include "line_buffer.h"
 #include "colors.h"
 #include "../game.h"
+#include "../raws/raws.h"
 
 using std::vector;
+using std::stringstream;
 
 namespace render {
   
 struct stored_panel {
     int x, y;
-    panel panel_info;
+    std::unique_ptr<panel> panel_info;
 };
   
 class panel_tile_info {
@@ -33,12 +37,22 @@ public:
     
       // We are going to make a panel for each major option group
       add_terrain_panel();
-      add_structure_panels();
-      add_settler_panels();
+      add_structure_panels(); // Settler panels are called from here
       add_build_options_panel();
   }
   
-  void render() {}
+  void render() {
+    int y = 90;
+    
+    for (const stored_panel &p : panels) {
+      
+      SDL_Rect src { 0, 0, p.panel_info->width, p.panel_info->height };
+      SDL_Rect dst { 100, y, p.panel_info->width, p.panel_info->height };
+      SDL->render_bitmap( p.panel_info->texture_id, src, dst );
+      
+      y += p.panel_info->height + 10;
+    }
+  }
   
 private:
   sdl2_backend * SDL;
@@ -47,10 +61,17 @@ private:
   int idx;
   
   void create_panel_from_lines(line_buffer &lines) {
-    const int height = lines.size()+16;
-    const int width = lines.get_width()+32;
-    panel p(SDL, height, width);
-    SDL->texture_target( p.texture_id );
+    const int width = lines.get_width() + 32;
+    const int height = ( lines.size() * 16 ) + 16;
+    std::unique_ptr<panel> p = std::make_unique<panel>(SDL, width, height);
+    
+    SDL->texture_target( p->texture_id );
+    SDL->clear_screen();
+    
+    SDL_Rect source = raws::get_tile_source_by_name ( "BLACKMASK" );
+    SDL_Rect dest { 0, 0, width, height };
+    SDL->render_bitmap ( "spritesheet", source, dest );
+    
     const int x = 16;
     int y = 8;
     for ( const std::pair<std::string,SDL_Color> &panel_line : lines.lines ) {
@@ -60,8 +81,7 @@ private:
     }
     SDL->reset_texture_target();
     
-    stored_panel storage { 0, 0, p };
-    panels.push_back( storage );
+    panels.push_back( stored_panel{0,0,std::move(p)} );
   }
   
   void add_terrain_panel() {
@@ -83,11 +103,17 @@ private:
      });
     
     for (const position_component * pos : positions) {
-	if ( game_engine->ecs->find_entity_component<settler_ai_component>( pos->entity_id ) == nullptr ) {
+	settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component>( pos->entity_id );
+	if ( settler == nullptr ) {
 	    // It's not a settler, so we can describe it here
 	    debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component>( pos->entity_id );
 	    if (name != nullptr) {
-		lines.add_line( SDL, name->debug_name, sdl_red );
+		lines.add_line( SDL, name->debug_name, sdl_yellow );
+		
+		description_component * desc = game_engine->ecs->find_entity_component<description_component>( pos->entity_id );
+		if (desc != nullptr) {
+		  lines.add_line( SDL, desc->desc, sdl_white );
+		}
 		
 		// Does it hold anything? If so - add that as well
 		const int entity_id = pos->entity_id;
@@ -102,20 +128,98 @@ private:
 		for ( item_storage_component * item : stored_items ) {
 		      debug_name_component * nc = game_engine->ecs->find_entity_component<debug_name_component> ( item->entity_id );
 		      lines.add_line ( SDL, string ( " " ) + nc->debug_name, sdl_green );
+		      desc = game_engine->ecs->find_entity_component<description_component>( item->entity_id );
+		      if ( desc != nullptr ) {
+			lines.add_line( SDL, string ("  ") + desc->desc, sdl_white );
+		      }
 		}
 	    }
+	    create_panel_from_lines( lines );
+	} else {
+	    add_settler_panel( pos, settler );
 	}
     }
     
+  }
+  
+  void add_settler_panel( const position_component * pos, const settler_ai_component * settler ) {
+    line_buffer lines;
+    game_health_component * health = game_engine->ecs->find_entity_component<game_health_component>( pos->entity_id );
+    game_species_component * species = game_engine->ecs->find_entity_component<game_species_component>( pos->entity_id );
+    game_stats_component * stats = game_engine->ecs->find_entity_component<game_stats_component>( pos->entity_id );
+    
+    {
+    stringstream ss;
+    ss << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
+    lines.add_line ( SDL, ss.str(), sdl_yellow );
+    ss.clear();
+    }
+    
+    {
+    stringstream ss;
+    ss << "Hit points: " << health->current_hit_points << " / " << health->max_hit_points;
+    lines.add_line( SDL, ss.str(), sdl_red );
+    }
+    
+    switch (species->gender) {
+      case gender_t::MALE : lines.add_line ( SDL, "Male", sdl_white ); break;
+      case gender_t::FEMALE : lines.add_line ( SDL, "Female", sdl_white ); break;
+      case gender_t::HERMAPHRODITE : lines.add_line ( SDL, "Hermaphrodite", sdl_white ); break;
+      case gender_t::ASEXUAL : lines.add_line ( SDL, "Asexual", sdl_white ); break;
+    }
+    
+    switch (species->sexual_preference) {
+      case preference_t::HETEROSEXUAL : lines.add_line ( SDL, "Heterosexual", sdl_white ); break;
+      case preference_t::HOMOSEXUAL : lines.add_line ( SDL, "Homosexual", sdl_white ); break;
+      case preference_t::BISEXUAL : lines.add_line ( SDL, "Bisexual", sdl_white ); break;
+      case preference_t::ASEXUAL : lines.add_line ( SDL, "Asexual", sdl_white ); break;
+    }
+    
+    {
+    stringstream ss;
+    ss << "Strength: " << stats->strength;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+    {
+    stringstream ss;
+    ss << "Dexterity: " << stats->dexterity;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+    {
+    stringstream ss;
+    ss << "Constitution: " << stats->constitution;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+    {
+    stringstream ss;
+    ss << "Intelligence: " << stats->intelligence;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+    {
+    stringstream ss;
+    ss << "Wisdom: " << stats->wisdom;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+    {
+    stringstream ss;
+    ss << "Charisma: " << stats->charisma;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+    {
+    stringstream ss;
+    ss << "Comeliness: " << stats->comeliness;
+    lines.add_line( SDL, ss.str(), sdl_green );
+    }
+        
     create_panel_from_lines( lines );
   }
   
-  void add_settler_panels() {
-    // Iterate components and find settlers that are here
-  }
-  
   void add_build_options_panel() {
-    // TODO: Build options!
+    line_buffer lines;
+    
+    lines.add_line( SDL, "Build options go here", sdl_white );
+    
+    create_panel_from_lines( lines );
   }
 };
   

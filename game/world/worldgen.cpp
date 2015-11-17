@@ -503,6 +503,7 @@ void add_cordex(const int &x, const int &y) {
     game_engine->ecs->add_component(cordex, calendar_component(0L));
     game_engine->ecs->add_component(cordex, renderable_component(15, cyan, black,17));
     game_engine->ecs->add_component(cordex, obstruction_component());
+    game_engine->ecs->add_component(cordex, description_component( "You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendents alive."));
 }
 
 void add_solar_collector(const int x, const int y) {

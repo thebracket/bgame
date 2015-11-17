@@ -16,4 +16,4 @@
 #include "provisions_component.h"
 #include "item_storage_component.h"
 #include "item_carried_component.h"
-
+#include "description_component.h"
