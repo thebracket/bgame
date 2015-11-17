@@ -21,7 +21,7 @@ private:
     int selected_tile_x;
     int selected_tile_y;
   
-    void process_mouse_events();
+     void process_mouse_events(  );
     
     void render_tile_options ( sdl2_backend * SDL );
     void render_tool_tips ( sdl2_backend * SDL );
@@ -40,6 +40,8 @@ private:
     int mouse_vx = 0;
     int mouse_vy = 0;
     int mouse_hover_time = 0;
+    bool left_click;
+    bool right_click;
     
     std::pair<int,int> get_region_coordinates() const;
     
