@@ -47,6 +47,12 @@ extern unordered_map<int, tuple<int,unsigned char,color_t, color_t>> entity_rend
 extern unordered_map<int, bool> walk_blocked;
 extern unordered_map<int, bool> view_blocked;
 
+struct available_item {
+     string name;
+     std::pair<int,int> location;
+};
+extern unordered_map<string, vector<available_item>> inventory;
+
 void load_world_constants(fstream &lbfile);
 void save_world_constants(fstream &lbfile);
 }

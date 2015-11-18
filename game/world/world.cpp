@@ -10,6 +10,7 @@ land_block * current_region;
 unordered_map<int, tuple<int,unsigned char,color_t,color_t>> entity_render_list;
 unordered_map<int, bool> walk_blocked;
 unordered_map<int, bool> view_blocked;
+unordered_map<string, vector<available_item>> inventory;
 
 int camera_handle;
 int cordex_handle;

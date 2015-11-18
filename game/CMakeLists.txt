@@ -21,6 +21,7 @@ add_library(game
 	    systems/viewshed_system.cpp
 	    systems/flowmap_system.cpp 
 	    systems/input_system.cpp
+	    systems/inventory_system.cpp
 	    world/geometry.cpp 
 	    world/world.cpp 
 	    world/tile.cpp 

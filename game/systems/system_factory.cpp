@@ -8,6 +8,7 @@
 #include "power_system.h"
 #include "flowmap_system.h"
 #include "input_system.h"
+#include "inventory_system.h"
 #include <memory>
 
 using std::make_unique;
@@ -23,3 +24,4 @@ unique_ptr<base_system> make_obstruction_system() { return make_unique<obstructi
 unique_ptr<base_system> make_power_system() { return make_unique<power_system>(); }
 unique_ptr< base_system > make_flowmap_system() { return make_unique<flowmap_system>(); }
 unique_ptr< base_system > make_input_system() { return make_unique<input_system>(); }
+unique_ptr< base_system > make_inventory_system() {return make_unique<inventory_system>(); }

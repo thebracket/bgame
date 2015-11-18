@@ -565,5 +565,21 @@ string get_random_last_name ()
     return line_from_text_file("../raw/last_names.txt", die_roll);
 }
 
+vector< pair<string,vector<string>>> get_buildables()
+{
+    vector< pair<string,vector<string>>> result;
+    
+    for (auto it = detail::structures.begin(); it != detail::structures.end(); ++it) {
+	string name;
+	const bool is_buildable = it->second->get_buildable( name );
+	
+	if (is_buildable) {
+	    vector<string> tmp = it->second->get_buildable_requirements();
+	    result.push_back ( std::make_pair( name, tmp ) );
+	}
+    }
+    
+    return result;
+}
 
 }
