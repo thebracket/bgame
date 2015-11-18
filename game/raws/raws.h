@@ -2,8 +2,12 @@
 
 #include <string>
 #include <SDL2/SDL.h>
+#include <vector>
+#include <utility>
 
 using std::string;
+using std::vector;
+using std::pair;
 
 namespace raws {
 
@@ -26,5 +30,7 @@ string get_random_last_name();
 
 SDL_Rect get_tile_source(const int idx);
 SDL_Rect get_tile_source_by_name(const string &name);
+
+vector< pair<string,vector<string>>> get_buildables();
 
 }

@@ -24,6 +24,16 @@ struct raw_component : public base_raw {
 
      virtual void build_components ( entity &parent, const int &x, const int &y ) const {
      }
+     
+     virtual void get_buildable_requirements_recurse ( vector<string> &result ) override {
+	  for (int i=0; i<quantity; ++i) {
+	      result.push_back( required_item );
+	  }
+       
+          for ( const unique_ptr<base_raw> &child : children ) {
+               child->get_buildable_requirements_recurse ( result );
+          }
+     }
 };
 
 }

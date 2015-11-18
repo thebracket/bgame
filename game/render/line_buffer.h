@@ -17,7 +17,8 @@ public:
   line_buffer () : font("disco14") {}
   line_buffer ( const string &font_name ) : font(font_name) {}
   
-  void add_line ( sdl2_backend * SDL, const string &text, SDL_Color color ) {
+  void add_line ( sdl2_backend * SDL, string text, SDL_Color color ) {
+    if (text.empty()) text = "BUG - EMPTY LINE";
     pair<int,int> size = SDL->text_size( font, text );
     if (size.first > width) width = size.first;
     lines.push_back( std::make_pair( text, color ) );
