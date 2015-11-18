@@ -7,6 +7,7 @@ add_library(game
 	    
 	    render/game_render.cpp
 	    render/panel_tooltip.cpp
+	    render/window.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
