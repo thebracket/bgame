@@ -46,7 +46,7 @@ public:
           for ( unique_ptr<window> &sw : info_windows ) {
                sw->location.x = 100;
                sw->location.y = y;
-               sw->render();
+               if (sw->render( mouse_x, mouse_y, left_click )) escaping = true;
                y += sw->location.h + 10;
                if ( sw->in_window ( mouse_x, mouse_y ) ) {
                     in_any_window = true;
