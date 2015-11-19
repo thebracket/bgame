@@ -9,6 +9,7 @@
 #include "flowmap_system.h"
 #include "input_system.h"
 #include "inventory_system.h"
+#include "cordex_ai_system.h"
 #include <memory>
 
 using std::make_unique;
@@ -25,3 +26,4 @@ unique_ptr<base_system> make_power_system() { return make_unique<power_system>()
 unique_ptr< base_system > make_flowmap_system() { return make_unique<flowmap_system>(); }
 unique_ptr< base_system > make_input_system() { return make_unique<input_system>(); }
 unique_ptr< base_system > make_inventory_system() {return make_unique<inventory_system>(); }
+unique_ptr< base_system > make_cordex_ai_system() { return make_unique<cordex_ai_system>(); }

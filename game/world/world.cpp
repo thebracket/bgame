@@ -1,4 +1,5 @@
 #include "world.h"
+#include "../tasks/help_wanted.h"
 
 using std::pair;
 
@@ -29,7 +30,9 @@ void load_world_constants(fstream& lbfile)
     lbfile.read ( reinterpret_cast<char *> ( &camera_handle ), sizeof ( camera_handle ) );
     lbfile.read ( reinterpret_cast<char *> ( &cordex_handle ), sizeof ( cordex_handle ) );    
     lbfile.read ( reinterpret_cast<char *> ( &stored_power ), sizeof ( stored_power ) );    
-    lbfile.read ( reinterpret_cast<char *> ( &render_graphics ), sizeof ( render_graphics ) );    
+    lbfile.read ( reinterpret_cast<char *> ( &render_graphics ), sizeof ( render_graphics ) );  
+    
+    ai::load_help_wanted( lbfile );
 }
 
 void save_world_constants(fstream& lbfile)
@@ -38,6 +41,8 @@ void save_world_constants(fstream& lbfile)
     lbfile.write ( reinterpret_cast<const char *> ( &cordex_handle ), sizeof ( cordex_handle ) );
     lbfile.write ( reinterpret_cast<const char *> ( &stored_power ), sizeof ( stored_power ) );
     lbfile.write ( reinterpret_cast<const char *> ( &render_graphics ), sizeof ( render_graphics ) );
+    
+    ai::save_help_wanted( lbfile );
 }
 
 

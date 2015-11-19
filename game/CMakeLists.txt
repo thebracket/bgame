@@ -22,6 +22,7 @@ add_library(game
 	    systems/flowmap_system.cpp 
 	    systems/input_system.cpp
 	    systems/inventory_system.cpp
+	    systems/cordex_ai_system.cpp
 	    world/geometry.cpp 
 	    world/world.cpp 
 	    world/tile.cpp 
