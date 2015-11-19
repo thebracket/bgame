@@ -2,24 +2,53 @@
 
 #include "window.h"
 #include "../world/world.h"
-#include "line_buffer.h"
 #include "colors.h"
 #include "../raws/raws.h"
 #include <sstream>
+#include <vector>
+#include "../game.h"
+#include "../messages/build_order_message.h"
+
+using std::vector;
+using std::string;
 
 namespace render {
 
+struct line_t {
+  string text;
+  SDL_Color color;
+  SDL_Rect icon_source;
+  int calculated_width;
+  bool is_hotspot = false;
+  std::function<bool()> callback;
+  int hotspot_lines = 0;
+};
+  
+inline bool do_nothing() {
+  return false;
+}
+
 class build_options_window : public window {
+private:
+     vector<line_t> lines;
+     int current_width = 0;
+     int current_y = 8;
+     
+     void add_line ( const string &s, const SDL_Color &col, const string &icon_name = "INFOSIGN", const bool &hotspot = false, std::function<bool()> func = do_nothing, const int &fill_lines=0 ) {
+	const pair<int,int> size = SDL->text_size( "disco14", s );
+	line_t line{ s, col, raws::get_tile_source_by_name( icon_name ), size.first, hotspot, func, fill_lines };
+	if (size.first > current_width) current_width = size.first;
+	lines.push_back(line);
+     }
+  
 public:
      build_options_window ( sdl2_backend* sdl, const string& title, const bool& decor, const int rx, const int ry ) : window ( sdl,title,decor ), region_x ( rx ), region_y ( ry ) {
-          line_buffer lines;
-
           const int idx = world::current_region->idx ( region_x, region_y );
 
-          determine_buildables ( idx, lines );
+          determine_buildables ( idx );
 
           const int height = ( lines.size() *16 ) +24;
-          location = { 0, 0, lines.get_width() +32, height };
+          location = { 0, 0, current_width +32, height };
 
           allocate();
           render_decorations();
@@ -28,19 +57,25 @@ public:
 
           const int x = 16;
           int y = 16;
-          for ( const std::pair<std::string,SDL_Color> &panel_line : lines.lines ) {
-               std::string line_s = SDL->render_text_to_image ( "disco14", panel_line.first, "tmp", panel_line.second );
+          for ( const line_t &panel_line : lines ) {
+               std::string line_s = SDL->render_text_to_image ( "disco14", panel_line.text, "tmp", panel_line.color );
                SDL->render_bitmap_simple ( line_s, x, y );
+	       SDL->render_bitmap( "spritesheet", panel_line.icon_source, SDL_Rect{ 0, y, 16, 16 } );
+	       
+	       if (panel_line.is_hotspot) {
+		 hotspots.push_back( { SDL_Rect{ 0, y, current_width+32, 16 + (panel_line.hotspot_lines*16) }, panel_line.callback } );
+	       }
+	       
                y += 16;
           }
 
           SDL->reset_texture_target();
      }
 
-     void determine_buildables ( const int &idx, line_buffer &lines ) {
+     void determine_buildables ( const int &idx ) {
           // Bail out if not flat
           if ( world::current_region->tiles[idx].base_tile_type != tile_type::FLAT ) {
-               lines.add_line ( SDL, "You can only build on flat terrain.", sdl_red );
+               add_line ( "You can only build on flat terrain.", sdl_white );
                return;
           }
 
@@ -58,7 +93,7 @@ public:
                }
           }
           if ( occupied ) {
-               lines.add_line ( SDL, "There is already a structure here: demolish it before building a new one.", sdl_red );
+               add_line ( "There is already a structure here: demolish it before building a new one.", sdl_white );
                return;
           }
 
@@ -78,24 +113,33 @@ public:
 	       }
 	       
 	       if (have_components) {
-		  lines.add_line ( SDL, buildable.first, sdl_yellow );
+		  int rx = region_x;
+		  int ry = region_y;
+		  string name = buildable.first;
+		  add_line ( buildable.first, sdl_yellow, "TENT", true, [=]
+			{ 
+			  game_engine->messaging->add_message<build_order_message>( build_order_message( rx, ry, name ) );  
+			  return true; 			  
+			}, buildable.second.size() );
 		  
 		  for ( const string &component : buildable.second ) {
 			std::stringstream ss;
 			ss << "  Requires: " << component << " (" << available << " available)";
-			lines.add_line ( SDL, ss.str(), sdl_white );
+			add_line ( ss.str(), sdl_white );
 		  }
+		  
 	       }
           }
           if ( buildables.empty() ) {
                // Default
-               lines.add_line ( SDL, "Nothing can be built here.", sdl_red );
+               add_line ( "Nothing can be built here.", sdl_white );
           }
      }
 
 private:
      const int region_x;
      const int region_y;
+    
 };
 
 }

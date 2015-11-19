@@ -11,10 +11,31 @@ window::~window()
      }
 }
 
-void window::render()
+bool window::render ( const int& mouse_x, const int& mouse_y, const bool clicked )
 {
+     bool escaping = false;
      SDL_Rect src { 0, 0, location.w, location.w };
      SDL->render_bitmap ( texture_id, src, location );
+     
+     for ( const hotspot &hs : hotspots) {
+	const int hx = hs.area.x + location.x;
+	const int hy = hs.area.y + location.y;
+	if (mouse_x>=hx and mouse_x<(hx + hs.area.w) and mouse_y>=hy and mouse_y<(hy + hs.area.h)) {
+	    // Highlight
+	    SDL_Rect dest {hx, hy, hs.area.w, hs.area.h};
+	    src = raws::get_tile_source_by_name ( "WINDOWMASK" );
+	    SDL->set_alpha_mod("spritesheet", 128);
+	    SDL->set_color_mod("spritesheet", 128,0,0);
+	    SDL->render_bitmap( "spritesheet", src, dest );
+	    SDL->set_alpha_mod("spritesheet", 255);
+	    SDL->set_color_mod("spritesheet", 255,255,255);
+	    
+	    // Click handler
+	    if (clicked) escaping = hs.on_click();
+	}
+     }
+     
+     return escaping;
 }
 
 void window::allocate()
