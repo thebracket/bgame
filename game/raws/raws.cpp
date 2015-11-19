@@ -21,6 +21,7 @@
 #include "raw_component.h"
 #include "raw_sleepable.h"
 #include "raw_tile.h"
+#include "raw_render_layer.h"
 
 #include "../game.h"
 
@@ -158,6 +159,17 @@ void parse_raw_tile(const vector<string> &chunks) {
     current_render->children.push_back(std::move(t));
 }
 
+void parse_raw_render_layer(const vector<string> &chunks) {
+    const string tile_name = chunks[1];
+    const string layer_s = chunks[2];
+    
+    int layer_idx = 2;
+    if (layer_s == "BUILDING") layer_idx = 1;
+    if (layer_s == "FLOOR") layer_idx = 0;
+    unique_ptr<raw_render_layer> t = make_unique<raw_render_layer>(layer_idx);
+    current_render->children.push_back(std::move(t));
+}
+
 void parse_raw_color_pair(const vector<string> &chunks) {
     const string fg = chunks[1];
     const string bg = chunks[2];
@@ -240,6 +252,10 @@ void parse_structure(const vector<string> &chunks) {
     }
     if (chunks[0] == "RENDER_TILE") {
 	parse_raw_tile(chunks);
+	return;
+    }
+    if (chunks[0] == "RENDER_LAYER") {
+	parse_raw_render_layer(chunks);
 	return;
     }
     if (chunks[0] == "OBSTRUCTS") {
@@ -335,6 +351,10 @@ void parse_item(const vector<string> &chunks) {
     }
     if (chunks[0] == "RENDER_TILE") {
 	parse_raw_tile(chunks);
+	return;
+    }
+    if (chunks[0] == "RENDER_LAYER") {
+	parse_raw_render_layer(chunks);
 	return;
     }
 }

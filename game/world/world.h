@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <tuple>
+#include <array>
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
@@ -43,7 +44,9 @@ extern bool paused;
 extern bool render_graphics;
 
 // For handing data between gui_game_view and the render controller
-extern unordered_map<int, tuple<int,unsigned char,color_t, color_t>> entity_render_list;
+typedef tuple<int,unsigned char,color_t, color_t> layers_t;
+
+extern unordered_map<int, layers_t> entity_render_list;
 extern unordered_map<int, bool> walk_blocked;
 extern unordered_map<int, bool> view_blocked;
 
