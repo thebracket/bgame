@@ -18,7 +18,7 @@ struct raw_renderable : public base_raw {
           type = RENDERABLE;
      };
 
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
+     virtual void build_components ( entity &parent, const int &x, const int &y, const bool placeholder=false ) const {
           unsigned char glyph_to_use = '!';
           color_t fg {255,255,255};
           color_t bg {0,0,0};
@@ -42,7 +42,9 @@ struct raw_renderable : public base_raw {
 		    layer = tmp->layer;
 	       }
           }
-          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg, tile_idx, layer ) );
+          bool translucent = false;
+	  if (placeholder) translucent = true;
+          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg, tile_idx, layer, translucent ) );
      }
 };
 

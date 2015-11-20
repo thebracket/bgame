@@ -4,8 +4,8 @@
 
 namespace raws {
 
-void raw_power_generator::build_components(entity &parent, const int &x, const int &y) const {
-    game_engine->ecs->add_component(parent, power_generator_component(amount, condition));
+void raw_power_generator::build_components(entity &parent, const int &x, const int &y, const bool placeholder) const {
+    if (!placeholder) game_engine->ecs->add_component(parent, power_generator_component(amount, condition));
 }
 
 }

@@ -22,6 +22,7 @@ void read_raws();
  * Returns the entity handle.
  */
 int create_structure_from_raws( const string& name, const int& x, const int& y );
+int create_placeholder_structure_from_raws( const string& name, const int& x, const int& y );
 int create_item_from_raws(const string &name);
 
 string get_random_starting_profession();

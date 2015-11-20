@@ -14,9 +14,6 @@ struct raw_sleepable : public base_raw {
      raw_sleepable() {
           type = SLEEPABLE;
      };
-
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
-     }
 };
 
 }

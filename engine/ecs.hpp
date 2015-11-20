@@ -143,15 +143,15 @@ private:
       */
      unordered_map<int, entity> entities;
 
+public:
      /*
       * Counter for selecting the next entity ID #. This could
       * be replaced with an <atomic> if you require thread safety,
       * but there would also need to be a lock_guard placed around
       * the map.
       */
-     int next_handle = 1;
-
-public:
+     int next_handle = 1;  
+  
      /*
       * How many entities are present?
       */
@@ -191,6 +191,7 @@ public:
       * required that the entity already have an ID #.
       */
      void add_entity ( const entity &target ) {
+	  //std::cout << "Stored entity " << target.handle << " in map.\n";
           entities[target.handle] = target;
      }
 
@@ -214,6 +215,7 @@ public:
           auto iter = entities.begin();
           while ( iter != entities.end() ) {
                if ( iter->second.component_count < 1 ) {
+		    //std::cout << "Deleted an entity!\n";
                     entities.erase ( iter++ );
                } else {
                     ++iter;
@@ -448,7 +450,8 @@ public:
      template<typename T>
      void add_component ( entity &target, T component ) {
           component.entity_id = target.handle;
-          ++target.component_count;
+	  entity * e = get_entity_by_handle( target.handle );
+          ++e->component_count;
           components.store_component ( component );
      }
 
@@ -558,6 +561,8 @@ public:
           for ( int i=0; i<number_of_entities; ++i ) {
                entity e = construct_entity_from_file ( lbfile );
                add_entity ( e );
+	       //std::cout << "Loaded entity #" << e.handle << "\n";
+	       if ( entities.next_handle <= e.handle ) entities.next_handle = e.handle+1;
           }
 
           int number_of_components = 0;
@@ -573,7 +578,7 @@ public:
       * Serializes all entities and components to the save-game file.
       */
      void save_game ( const string filename ) {
-          fstream lbfile ( filename, std::ios::out | std::ios::binary );
+          fstream lbfile ( filename, std::ios::out | std::ios::binary | std::ios::trunc );
 
           save_constants ( lbfile );
 
@@ -581,6 +586,7 @@ public:
           lbfile.write ( reinterpret_cast<const char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
           entities.for_each ( [&lbfile] ( entity * e ) {
                e->save ( lbfile );
+	       //std::cout << "Saved entity #" << e->handle << "\n";
           } );
 
           int number_of_components = components.size();

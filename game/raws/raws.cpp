@@ -515,6 +515,22 @@ int create_structure_from_raws(const string &name, const int &x, const int &y) {
     return e.handle;
 }
 
+int create_placeholder_structure_from_raws(const string &name, const int &x, const int &y) {
+    auto finder = detail::structures.find(name);
+    if (finder == detail::structures.end()) {
+      std::cout << "ERROR: Cannot create structure of type [" << name << "]\n";
+      throw 105;
+    }
+  
+    entity e;
+    e.handle = game_engine->ecs->get_next_entity_handle();
+    game_engine->ecs->add_entity(e);    
+    game_engine->ecs->add_component(e, position_component(x,y));    
+    finder->second->build_components(e, x, y, true);
+    
+    return e.handle;
+}
+
 int create_item_from_raws(const string &name) {
     auto finder = detail::items.find(name);
     if (finder == detail::items.end()) {

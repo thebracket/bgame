@@ -15,7 +15,8 @@ struct raw_obstruction : public base_raw {
     bool blocks_view;
     bool blocks_walk;
     
-    virtual void build_components(entity &parent, const int &x, const int &y) const {
+    virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
+	if (placeholder) return;
 	obstruction_component obs = obstruction_component();
 	obs.blocks_entry = blocks_walk;
 	obs.blocks_visibility = blocks_view;
