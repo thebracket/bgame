@@ -322,6 +322,7 @@ public:
      template <typename T>
      int store_component ( T &component ) {
           component.handle = get_next_handle();
+	  component.deleted = false;
           find_appropriate_bag<T>()->push_back ( component );
           return component.handle;
      }
@@ -388,6 +389,17 @@ public:
                     c.save ( lbfile );
                }
           } );
+     }
+     
+     /*
+      * Delete all components belonging to an entity.
+      */
+     void delete_entity ( const int &entity_id) {
+	for_each ( component_container, [entity_id] ( auto &x) {
+	    for ( auto &c : x) {
+		if (c.entity_id == entity_id) c.deleted = true;
+	    }
+	});
      }
 };
 
@@ -485,6 +497,14 @@ public:
       */
      void add_entity ( entity &e ) {
           entities.add_entity ( e );
+     }
+     
+     /*
+      * Deletes an entity by marking all of its components deleted,
+      * and then letting the entity-culling do the rest.
+      */
+     void delete_entity ( const int &entity_id) {	
+	components.delete_entity( entity_id );
      }
 
      /*
