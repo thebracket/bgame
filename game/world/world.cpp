@@ -8,7 +8,7 @@ namespace world {
 array<unique_ptr<land_block>, world_size> world;
 console log;
 land_block * current_region;
-unordered_map<int, layers_t> entity_render_list;
+unordered_map<int, render_layers_t> entity_render_list;
 unordered_map<int, bool> walk_blocked;
 unordered_map<int, bool> view_blocked;
 unordered_map<string, vector<available_item>> inventory;

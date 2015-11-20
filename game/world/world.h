@@ -7,6 +7,7 @@
 #include <string>
 #include <tuple>
 #include <array>
+#include <experimental/optional>
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
@@ -17,6 +18,7 @@ using std::unordered_map;
 using std::fstream;
 using std::string;
 using std::tuple;
+using std::experimental::optional;
 
 namespace world {
 
@@ -44,9 +46,20 @@ extern bool paused;
 extern bool render_graphics;
 
 // For handing data between gui_game_view and the render controller
-typedef tuple<int,unsigned char,color_t, color_t> layers_t;
+struct render_info_t {
+  int tile_id;
+  unsigned char glyph;
+  color_t foreground;
+  color_t background;
+};
 
-extern unordered_map<int, layers_t> entity_render_list;
+struct render_layers_t {
+  optional<render_info_t> floor;
+  optional<render_info_t> building;
+  optional<render_info_t> top;
+};
+
+extern unordered_map<int, render_layers_t> entity_render_list;
 extern unordered_map<int, bool> walk_blocked;
 extern unordered_map<int, bool> view_blocked;
 

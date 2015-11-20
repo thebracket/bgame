@@ -42,7 +42,7 @@ struct raw_renderable : public base_raw {
 		    layer = tmp->layer;
 	       }
           }
-          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg, tile_idx ) );
+          game_engine->ecs->add_component ( parent, renderable_component( glyph_to_use, fg, bg, tile_idx, layer ) );
      }
 };
 
