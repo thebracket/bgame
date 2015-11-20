@@ -6,6 +6,7 @@ using namespace serialization_generic;
 
 struct item_carried_component {
      item_carried_component() {}
+     item_carried_component(const int &carried_by, const int &pos) : carried_by_id(carried_by), carried_position(pos) {}
 
      int entity_id;
      int handle;
