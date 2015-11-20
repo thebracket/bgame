@@ -351,10 +351,12 @@ inline void render_ascii_char( const world::render_info_t &layer, SDL_Rect &sour
       source = {texture_x, texture_y, 16,16 };
       color_t foreground = layer.foreground;
       color_t background = layer.background;
+      if (layer.translucent) SDL->set_alpha_mod( "spritesheet", 128 );
       SDL->set_color_mod ( "font", std::get<0> ( background ), std::get<1	> ( background ), std::get<2> ( background ) );
       SDL->render_bitmap ( "font", background_source, dest );
       SDL->set_color_mod ( "font", std::get<0> ( foreground ), std::get<1> ( foreground ), std::get<2> ( foreground ) );
       SDL->render_bitmap ( "font", source, dest );
+      if (layer.translucent) SDL->set_alpha_mod( "spritesheet", 255 );
 }
 
 void game_render::render_map_ascii ( sdl2_backend * SDL )
@@ -420,9 +422,11 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
 }
 
 inline void render_map_tile( const world::render_info_t &layer, SDL_Rect &source, SDL_Rect &dest, sdl2_backend * SDL ) {
+      if (layer.translucent) SDL->set_alpha_mod( "spritesheet", 96 );
       const int sprite_idx = layer.tile_id;
       source = raws::get_tile_source ( sprite_idx );
       SDL->render_bitmap ( "spritesheet", source, dest );
+      if (layer.translucent) SDL->set_alpha_mod( "spritesheet", 255 );
 }
 
 void game_render::render_map ( sdl2_backend * SDL )

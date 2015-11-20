@@ -21,7 +21,8 @@ struct raw_settler_action : public base_raw {
      int provides_qty;
      int power_drain;
 
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
+     virtual void build_components ( entity &parent, const int &x, const int &y, const bool placeholder=false ) const {
+        if (placeholder) return;
 	provisions_component p;
 	p.entity_id = parent.handle;
 	p.power_drain = power_drain;

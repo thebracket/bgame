@@ -13,11 +13,7 @@ namespace raws {
 struct raw_buildable : public base_raw {
      raw_buildable() {
           type = BUILDABLE;
-     };
-     
-
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
-     }
+     };     
 };
 
 }

@@ -20,9 +20,9 @@ struct base_raw {
      tag_type type;
      vector<unique_ptr<base_raw>> children;
 
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
+     virtual void build_components ( entity &parent, const int &x, const int &y, const bool placeholder=false ) const {
           for ( const unique_ptr<base_raw> &child : children ) {
-               child->build_components ( parent, x, y );
+               child->build_components ( parent, x, y, placeholder );
           }
      }
      

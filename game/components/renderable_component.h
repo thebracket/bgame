@@ -17,13 +17,14 @@ struct renderable_component {
     bool deleted = false;
     
     renderable_component() {}
-    renderable_component(const unsigned char &g, const color_t &f, const color_t &b, const int &tile, const int &render_layer=2) : glyph(g), foreground(f), background(b), tile_idx(tile), layer(render_layer) {}
+    renderable_component(const unsigned char &g, const color_t &f, const color_t &b, const int &tile, const int &render_layer=2, const bool &placeholder=false) : glyph(g), foreground(f), background(b), tile_idx(tile), layer(render_layer), translucent(placeholder) {}
     
     unsigned char glyph;
     engine::vterm::color_t foreground;
     engine::vterm::color_t background; 
     int tile_idx;
     int layer;
+    bool translucent = false;
     
     void save(fstream &lbfile) {
       save_common_component_properties<renderable_component>(lbfile, *this);
@@ -32,6 +33,7 @@ struct renderable_component {
       save_primitive<engine::vterm::color_t>(lbfile, background);
       save_primitive<int>( lbfile, tile_idx );
       save_primitive<int>( lbfile, layer );
+      save_primitive<bool>( lbfile, translucent );
     }
     
     void load(fstream &lbfile) {
@@ -41,5 +43,6 @@ struct renderable_component {
       load_primitive<engine::vterm::color_t>(lbfile, background);
       load_primitive<int>( lbfile, tile_idx );
       load_primitive<int>( lbfile, layer );
+      load_primitive<bool>( lbfile, translucent );
     }
 };

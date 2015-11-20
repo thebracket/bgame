@@ -51,6 +51,7 @@ struct render_info_t {
   unsigned char glyph;
   color_t foreground;
   color_t background;
+  bool translucent;
 };
 
 struct render_layers_t {

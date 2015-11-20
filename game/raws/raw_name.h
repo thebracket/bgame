@@ -14,7 +14,7 @@ struct raw_name : public base_raw {
     raw_name(const string &new_name) : name(new_name) { type=NAME; }
     string name;
     
-    virtual void build_components(entity &parent, const int &x, const int &y) const {
+    virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
 	game_engine->ecs->add_component(parent, debug_name_component(name));
     }
     

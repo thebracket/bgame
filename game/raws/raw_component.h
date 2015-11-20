@@ -21,9 +21,6 @@ struct raw_component : public base_raw {
      
      string required_item;
      int quantity;
-
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
-     }
      
      virtual void get_buildable_requirements_recurse ( vector<string> &result ) override {
 	  for (int i=0; i<quantity; ++i) {

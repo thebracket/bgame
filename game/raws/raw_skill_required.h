@@ -22,9 +22,6 @@ struct raw_skill_required : public base_raw {
      string skill_name;
      int difficulty;
      int time;
-
-     virtual void build_components ( entity &parent, const int &x, const int &y ) const {
-     }
 };
 
 }
