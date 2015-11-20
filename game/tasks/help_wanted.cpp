@@ -12,7 +12,7 @@ int get_next_job_id()
      return ai_detail::next_job_id;
 }
 
-unordered_map<int, job> jobs_board;
+unordered_map<int, job_t> jobs_board;
 
 void save_help_wanted ( fstream& lbfile ) {};
 void load_help_wanted ( fstream& lbfile ) {};

@@ -33,5 +33,6 @@ SDL_Rect get_tile_source(const int idx);
 SDL_Rect get_tile_source_by_name(const string &name);
 
 vector< pair<string,vector<string>>> get_buildables();
+vector<string> get_buildable_requirements( const string &name );
 
 }

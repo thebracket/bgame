@@ -617,4 +617,14 @@ vector< pair<string,vector<string>>> get_buildables()
     return result;
 }
 
+vector<string> get_buildable_requirements( const string &name ) {
+    const vector< pair<string,vector<string>>> buildables = get_buildables();
+    for ( const pair<string,vector<string>> &buildable : buildables ) {
+      if (buildable.first == name) {
+	return buildable.second;
+      }
+    }
+    return {};
+}
+
 }
