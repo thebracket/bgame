@@ -194,7 +194,6 @@ void idle(settler_ai_component &settler, game_stats_component * stats, renderabl
     bool claimed_job = false;
     for (auto it = ai::jobs_board.begin(); it != ai::jobs_board.end(); ++it) {
 	if (it->second.assigned_to == 0 and !claimed_job) {
-	    std::cout << settler.first_name << " is interested in helping with job " << it->second.job_id << "\n";
 	    settler.state_major = JOB;
 	    it->second.assigned_to = settler.entity_id;
 	    settler.job_id = it->second.job_id;
@@ -211,6 +210,10 @@ void idle(settler_ai_component &settler, game_stats_component * stats, renderabl
 
 void do_your_job(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
     auto job = ai::jobs_board.find( settler.job_id );
+    if ( job == ai::jobs_board.end()) {
+	settler.state_major = IDLE;
+	return;
+    }
     if ( job->second.current_step > job->second.steps.size()-1 ) {
 	// Job complete
 	ai::jobs_board.erase ( settler.job_id );
@@ -222,13 +225,10 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats, re
     ai::job_step_t step = job->second.steps[ job->second.current_step ];
     switch (step.type) {
       case ai::MOVE_TO : {
-	  std::cout << "Are we there yet? At: (" << pos->x << "," << pos->y << ") To: (" << step.target_x << ", " << step.target_y << ")\n";
 	  // Are we there yet?
 	  const int distance = std::sqrt((std::abs(pos->x - step.target_x)*std::abs(pos->x - step.target_x)) + ( std::abs(pos->y - step.target_y)*( std::abs(pos->y - step.target_y))));
-	  std::cout << "Distance: " << distance << "\n";
-	  if ( distance <= 2 ) {
+	  if ( distance <= 1 ) {
 	      // We've reached our destination
-	      std::cout << "We are at our destination!\n";
 	      ++job->second.current_step;
 	      settler.current_path.reset();
 	      return;
@@ -237,21 +237,17 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats, re
 	  // No - so we better consult the map
 	  if (settler.current_path == nullptr ) {
 	      // If there is no path - request one to the destination and exit (no moving and pathing!)
-	      std::cout << "No path - ask for one\n";
 	      settler.current_path = world::current_region->find_path( std::make_pair( pos->x, pos->y ), std::make_pair( step.target_x, step.target_y ), world::walk_blocked );
 	      return;
 	  } else {
 	      // There is a path...
 	      if (settler.current_path->destination.first != step.target_x or settler.current_path->destination.second != step.target_y) {
-		  std::cout << "Path wrong!\n";
 		  // Does it go to the right place? If not, then make a new one and exit
 		  settler.current_path.reset();
 		  return;
 	      }
 	      // ... and it goes to the right place!
-	      std::cout << "Path right! We are " << settler.current_path->steps.size() << " steps away.\n";
 	      if (settler.current_path->steps.empty()) {
-		  std::cout << "Panic: we're out of steps but not there yet!\n";
 		  settler.current_path.reset();
 		  return;
 	      }
@@ -264,14 +260,12 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats, re
 		  return;
 	      } else {
 		  // Reset the path - something went wrong
-		  std::cout << "Path gave me an impossible move - trying again!\n";
 		  settler.current_path.reset();
 		  return;
 	      }
 	  }
       } break;
       case ai::PICK_UP_COMPONENT : {
-	  std::cout << "Pick up\n";
 	  // We've reached the component, so we pick it up
 	  engine::entity * item = game_engine->ecs->get_entity_by_handle( step.component_id );
 	  item_storage_component * storage = game_engine->ecs->find_entity_component<item_storage_component>( step.component_id );
@@ -280,7 +274,6 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats, re
 	  ++job->second.current_step;
       } break;
       case ai::DROP_OFF_COMPONENT : {
-	  std::cout << "Drop off\n";
 	  engine::entity * item = game_engine->ecs->get_entity_by_handle( step.component_id );
 	  item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component>( step.component_id );
 	  carried->deleted = true; // It's not carried anymore, so delete the component
@@ -288,19 +281,16 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats, re
 	  ++job->second.current_step;
       } break;
       case ai::CONSTRUCT_WITH_SKILL : {
-	  std::cout << "Construct\n";
 	  // TODO: Skills aren't implemented yet, so move on.
 	  ++job->second.current_step;
       } break;
       case ai::CONVERT_PLACEHOLDER_STRUCTURE : { 
-	  std::cout << "Convert\n";
 	  debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component>( step.placeholder_structure_id );
 	  game_engine->ecs->delete_entity( step.placeholder_structure_id );
 	  raws::create_structure_from_raws( name->debug_name, step.target_x, step.target_y );	  
 	  ++job->second.current_step;
       } break;
       case ai::DESTROY_COMPONENT : { 
-	  std::cout << "Destroy\n";
 	  game_engine->ecs->delete_entity( step.component_id );
 	  ++job->second.current_step;
       } break;

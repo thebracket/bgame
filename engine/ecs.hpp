@@ -150,8 +150,8 @@ public:
       * but there would also need to be a lock_guard placed around
       * the map.
       */
-     int next_handle = 1;  
-  
+     int next_handle = 1;
+
      /*
       * How many entities are present?
       */
@@ -170,7 +170,7 @@ public:
      }
 
      /*
-      * Remove all entities. Components are untouched, which an
+      * Remove all entities. Components are untouched, which can
       * lead to orphans if you aren't careful.
       */
      void clear_all() {
@@ -191,7 +191,7 @@ public:
       * required that the entity already have an ID #.
       */
      void add_entity ( const entity &target ) {
-	  //std::cout << "Stored entity " << target.handle << " in map.\n";
+          //std::cout << "Stored entity " << target.handle << " in map.\n";
           entities[target.handle] = target;
      }
 
@@ -215,7 +215,7 @@ public:
           auto iter = entities.begin();
           while ( iter != entities.end() ) {
                if ( iter->second.component_count < 1 ) {
-		    //std::cout << "Deleted an entity!\n";
+                    //std::cout << "Deleted an entity!\n";
                     entities.erase ( iter++ );
                } else {
                     ++iter;
@@ -251,7 +251,7 @@ private:
      }
 
      /*
-      * A tuple of vectors, each specialized to th types described in the component
+      * A tuple of vectors, each specialized to the types described in the component
       * list specification.
       */
      template<typename ... Ts>
@@ -322,7 +322,7 @@ public:
      template <typename T>
      int store_component ( T &component ) {
           component.handle = get_next_handle();
-	  component.deleted = false;
+          component.deleted = false;
           find_appropriate_bag<T>()->push_back ( component );
           return component.handle;
      }
@@ -390,16 +390,18 @@ public:
                }
           } );
      }
-     
+
      /*
       * Delete all components belonging to an entity.
       */
-     void delete_entity ( const int &entity_id) {
-	for_each ( component_container, [entity_id] ( auto &x) {
-	    for ( auto &c : x) {
-		if (c.entity_id == entity_id) c.deleted = true;
-	    }
-	});
+     void delete_entity ( const int &entity_id ) {
+          for_each ( component_container, [entity_id] ( auto &x ) {
+               for ( auto &c : x ) {
+                    if ( c.entity_id == entity_id ) {
+                         c.deleted = true;
+                    }
+               }
+          } );
      }
 };
 
@@ -462,7 +464,7 @@ public:
      template<typename T>
      void add_component ( entity &target, T component ) {
           component.entity_id = target.handle;
-	  entity * e = get_entity_by_handle( target.handle );
+          entity * e = get_entity_by_handle ( target.handle );
           ++e->component_count;
           components.store_component ( component );
      }
@@ -498,13 +500,13 @@ public:
      void add_entity ( entity &e ) {
           entities.add_entity ( e );
      }
-     
+
      /*
       * Deletes an entity by marking all of its components deleted,
       * and then letting the entity-culling do the rest.
       */
-     void delete_entity ( const int &entity_id) {	
-	components.delete_entity( entity_id );
+     void delete_entity ( const int &entity_id ) {
+          components.delete_entity ( entity_id );
      }
 
      /*
@@ -563,6 +565,8 @@ public:
       * Marks the entity-component system as stopped.
       */
      void done() {
+          entities.clear_all();
+          components.clear_all();
           running = false;
      }
 
@@ -581,8 +585,8 @@ public:
           for ( int i=0; i<number_of_entities; ++i ) {
                entity e = construct_entity_from_file ( lbfile );
                add_entity ( e );
-	       //std::cout << "Loaded entity #" << e.handle << "\n";
-	       if ( entities.next_handle <= e.handle ) entities.next_handle = e.handle+1;
+               //std::cout << "Loaded entity #" << e.handle << "\n";
+               if ( entities.next_handle <= e.handle ) entities.next_handle = e.handle+1;
           }
 
           int number_of_components = 0;
@@ -606,7 +610,7 @@ public:
           lbfile.write ( reinterpret_cast<const char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
           entities.for_each ( [&lbfile] ( entity * e ) {
                e->save ( lbfile );
-	       //std::cout << "Saved entity #" << e->handle << "\n";
+               //std::cout << "Saved entity #" << e->handle << "\n";
           } );
 
           int number_of_components = components.size();

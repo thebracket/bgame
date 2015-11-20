@@ -86,7 +86,6 @@ void land_block::spread_flow( vector<std::tuple<short,int,int>> &new_cells, unor
 
 std::shared_ptr< navigation_path > land_block::find_path ( pair< int, int > start, pair< int, int > end, unordered_map<int, bool> &walkable )
 {
-    std::cout << "PATH REQUEST FROM [" << start.first << "," << start.second << "] to [" << end.first << "," << end.second << "]\n";
     // For now, we're just using a really inefficient brute-force approach just to get going; this will be optimized later!
     
     // If we start at the end, then return null - nothign to do!
@@ -119,7 +118,6 @@ std::shared_ptr< navigation_path > land_block::find_path ( pair< int, int > star
     }
   
     if (!found_it) {
-	std::cout << "Destination not found!\n";
 	return nullptr;
     }
     
@@ -130,7 +128,6 @@ std::shared_ptr< navigation_path > land_block::find_path ( pair< int, int > star
     int n = 0;
     char last_direction = -1;
     while (current.first != end.first or current.second != end.second) {
-	std::cout << "Step " << n << "... at [" << current.first << "," << current.second << "]... ";
 	std::map<short,char> options;
 	if (last_direction!= 2) options[ flow_map[ idx ( current.first-1, current.second ) ] ] = 1;
 	if (last_direction!= 1) options[ flow_map[ idx ( current.first+1, current.second ) ] ] = 2;
@@ -147,12 +144,10 @@ std::shared_ptr< navigation_path > land_block::find_path ( pair< int, int > star
 	  case 4: ++next_y ;break;
 	}
 	last_direction = it->second;
-	std::cout << "to [" << next_x << "," << next_y << "]\n";
 	result->steps.push ( std::make_pair( next_x, next_y ));
 	current.first = next_x;
 	current.second = next_y;
 	++n;
-	std::cout << "Steps created: " << n << "\n";
     }
     
     return result;
