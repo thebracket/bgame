@@ -26,6 +26,5 @@ void inventory_system::tick ( const double& duration_ms )
                }
           }
      }
-
 }
 
