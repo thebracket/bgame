@@ -160,8 +160,7 @@ void parse_raw_tile(const vector<string> &chunks) {
 }
 
 void parse_raw_render_layer(const vector<string> &chunks) {
-    const string tile_name = chunks[1];
-    const string layer_s = chunks[2];
+    const string layer_s = chunks[1];
     
     int layer_idx = 2;
     if (layer_s == "BUILDING") layer_idx = 1;

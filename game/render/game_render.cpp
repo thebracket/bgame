@@ -344,6 +344,19 @@ void game_render::render_lighting_visibility_mask ( sdl2_backend * SDL, const in
     }
 }
 
+inline void render_ascii_char( const world::render_info_t &layer, SDL_Rect &source, SDL_Rect &dest, const SDL_Rect &background_source, sdl2_backend * SDL ) {
+      unsigned char target_char = layer.glyph;
+      int texture_x = ( target_char % 16 ) * 16;
+      int texture_y = ( target_char / 16 ) * 16;
+      source = {texture_x, texture_y, 16,16 };
+      color_t foreground = layer.foreground;
+      color_t background = layer.background;
+      SDL->set_color_mod ( "font", std::get<0> ( background ), std::get<1	> ( background ), std::get<2> ( background ) );
+      SDL->render_bitmap ( "font", background_source, dest );
+      SDL->set_color_mod ( "font", std::get<0> ( foreground ), std::get<1> ( foreground ), std::get<2> ( foreground ) );
+      SDL->render_bitmap ( "font", source, dest );
+}
+
 void game_render::render_map_ascii ( sdl2_backend * SDL )
 {
      const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
@@ -374,6 +387,17 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
                     // Render any renderable items for this tile
                     auto finder = world::entity_render_list.find ( idx );
                     if ( finder != world::entity_render_list.end() ) {
+			 if (finder->second.floor) {
+			    render_ascii_char( finder->second.floor.value(), source, dest, background_source, SDL );
+			 }
+			 if (finder->second.building) {
+			    render_ascii_char( finder->second.building.value(), source, dest, background_source, SDL );
+			 }
+			 if (finder->second.top) {
+			    render_ascii_char( finder->second.top.value(), source, dest, background_source, SDL );
+			 }
+		      
+			 /*
                          target_char = std::get<1> ( finder->second );
                          texture_x = ( target_char % 16 ) * 16;
                          texture_y = ( target_char / 16 ) * 16;
@@ -384,6 +408,7 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
                          SDL->render_bitmap ( "font", background_source, dest );
                          SDL->set_color_mod ( "font", std::get<0> ( foreground ), std::get<1> ( foreground ), std::get<2> ( foreground ) );
                          SDL->render_bitmap ( "font", source, dest );
+                         */
                     }
 
                     render_lighting_visibility_mask( SDL, idx, source, dest );
@@ -392,6 +417,12 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
           }
           ++region_y;
      }
+}
+
+inline void render_map_tile( const world::render_info_t &layer, SDL_Rect &source, SDL_Rect &dest, sdl2_backend * SDL ) {
+      const int sprite_idx = layer.tile_id;
+      source = raws::get_tile_source ( sprite_idx );
+      SDL->render_bitmap ( "spritesheet", source, dest );
 }
 
 void game_render::render_map ( sdl2_backend * SDL )
@@ -419,7 +450,21 @@ void game_render::render_map ( sdl2_backend * SDL )
                     if ( render_cover ) {
                          SDL->render_bitmap ( "spritesheet", source, dest );
                     }
+                    
+                    auto finder = world::entity_render_list.find ( idx );
+                    if ( finder != world::entity_render_list.end() ) {
+			if (finder->second.floor) {
+			    render_map_tile( finder->second.floor.value(), source, dest, SDL );
+			}
+			if (finder->second.building) {
+			    render_map_tile( finder->second.building.value(), source, dest, SDL );
+			}
+			if (finder->second.top) {
+			    render_map_tile( finder->second.top.value(), source, dest, SDL );
+			}
+                    }
 
+                    /*
                     // Render any renderable items for this tile
                     auto finder = world::entity_render_list.find ( idx );
                     if ( finder != world::entity_render_list.end() ) {
@@ -427,6 +472,7 @@ void game_render::render_map ( sdl2_backend * SDL )
                          source = raws::get_tile_source ( sprite_idx );
                          SDL->render_bitmap ( "spritesheet", source, dest );
                     }
+                    */
 
                     render_lighting_visibility_mask( SDL, idx, source, dest );
                }
