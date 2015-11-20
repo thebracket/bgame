@@ -99,6 +99,7 @@ public:
 
           // Iterate the raws and look for something buildable!
           vector< pair<string,vector<string>>> buildables = raws::get_buildables();
+	  bool can_build_something = false;
           for ( const pair<string,vector<string>> &buildable : buildables ) {
 	       bool have_components = true;
 	       int available = 0;
@@ -116,6 +117,7 @@ public:
 		  int rx = region_x;
 		  int ry = region_y;
 		  string name = buildable.first;
+		  can_build_something = true;
 		  add_line ( buildable.first, sdl_yellow, "TENT", true, [=]
 			{ 
 			  game_engine->messaging->add_message<build_order_message>( build_order_message( rx, ry, name ) );  
@@ -130,7 +132,7 @@ public:
 		  
 	       }
           }
-          if ( buildables.empty() ) {
+          if ( !can_build_something ) {
                // Default
                add_line ( "Nothing can be built here.", sdl_white );
           }

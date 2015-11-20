@@ -67,6 +67,7 @@ extern unordered_map<int, bool> view_blocked;
 struct available_item {
      string name;
      std::pair<int,int> location;
+     int entity_id;
 };
 extern unordered_map<string, vector<available_item>> inventory;
 

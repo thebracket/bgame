@@ -18,10 +18,10 @@ void inventory_system::tick ( const double& duration_ms )
 
                auto finder = inventory.find ( name->debug_name );
                if ( finder == inventory.end() ) {
-                    available_item item { name->debug_name, { pos->x, pos->y } };
+                    available_item item { name->debug_name, { pos->x, pos->y }, store.entity_id };
                     inventory[name->debug_name] = vector<available_item> {item};
                } else {
-                    available_item item { name->debug_name, { pos->x, pos->y } };
+                    available_item item { name->debug_name, { pos->x, pos->y }, store.entity_id };
                     finder->second.push_back ( item );
                }
           }

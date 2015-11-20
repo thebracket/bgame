@@ -5,6 +5,7 @@
 #include "flowmap_system.h"
 #include "../messages/power_consumed_message.h"
 #include "../messages/chat_emote_message.h"
+#include "../tasks/help_wanted.h"
 #include <map>
 
 namespace settler_ai_detail {
@@ -188,6 +189,46 @@ void eating_time(settler_ai_component &settler, game_stats_component * stats, re
     }
 }
 
+void idle(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
+    bool claimed_job = false;
+    for (auto it = ai::jobs_board.begin(); it != ai::jobs_board.end(); ++it) {
+	if (it->second.assigned_to == 0 and !claimed_job) {
+	    std::cout << settler.first_name << " is interested in helping with job " << it->second.job_id << "\n";
+	    settler.state_major = JOB;
+	    it->second.assigned_to = settler.entity_id;
+	    settler.job_id = it->second.job_id;
+	    claimed_job = true;
+	}
+    }
+  
+    if (settler.state_major == IDLE) {
+	renderable->glyph = '@';
+	renderable->foreground = color_t{255,255,0};
+	settler_ai_detail::wander_randomly(settler, pos);  
+    }
+}
+
+void do_your_job(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
+    auto job = ai::jobs_board.find( settler.job_id )->second;
+    if ( job.current_step > job.steps.size()-1 ) {
+	// Job complete
+	ai::jobs_board.erase ( settler.job_id );
+	settler.job_id = 0;
+	settler.state_major = IDLE;
+	return;
+    }
+    
+    ai::job_step_t step = job.steps[job.current_step];
+    switch (step.type) {
+      case ai::MOVE_TO : { } break;
+      case ai::PICK_UP_COMPONENT : { } break;
+      case ai::DROP_OFF_COMPONENT : { } break;
+      case ai::CONSTRUCT_WITH_SKILL : { } break;
+      case ai::CONVERT_PLACEHOLDER_STRUCTURE : { } break;
+      case ai::DESTROY_COMPONENT : { } break;
+    }
+}
+
 }
 
 void settler_ai_system::tick ( const double &duration_ms ) {
@@ -230,15 +271,15 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	if (settler.next_tick <= calendar->system_time) {
             // Time for the settler to do something!
 	    if (settler.state_major == IDLE) {
-		renderable->glyph = '@';
-		renderable->foreground = color_t{255,255,0};
-		settler_ai_detail::wander_randomly(settler, pos);		
+		settler_ai_detail::idle(settler, stats, renderable, pos);	
 	    } else if (settler.state_major == SLEEPING) {
 		settler_ai_detail::sleepy_time(settler, stats, renderable, pos);
 	    } else if (settler.state_major == DRINKING) {
 		settler_ai_detail::drinking_time(settler, stats, renderable, pos);
 	    } else if (settler.state_major == EATING) {
 		settler_ai_detail::eating_time(settler, stats, renderable, pos);
+	    } else if (settler.state_major == JOB) {
+		settler_ai_detail::do_your_job(settler, stats, renderable, pos);
 	    }
 	    
             // Random pause

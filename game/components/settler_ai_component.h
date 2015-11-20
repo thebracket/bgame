@@ -6,7 +6,7 @@
 using namespace serialization_generic;
 using std::string;
 
-enum settler_state_t { IDLE, SLEEPING, DRINKING, EATING };
+enum settler_state_t { IDLE, SLEEPING, DRINKING, EATING, JOB };
 
 struct settler_ai_component {
      int entity_id;
@@ -24,6 +24,7 @@ struct settler_ai_component {
      int thirst;
      settler_state_t state_major;
      int state_timer;
+     int job_id = 0;
 
      void load ( fstream &lbfile ) {
           load_common_component_properties<settler_ai_component> ( lbfile, *this );
@@ -39,6 +40,7 @@ struct settler_ai_component {
 	  load_primitive<int>(lbfile, state);
 	  state_major = static_cast<settler_state_t>(state);
 	  load_primitive<int>(lbfile, state_timer);
+	  load_primitive<int>(lbfile, job_id);
      }
 
      void save ( fstream &lbfile ) {
@@ -53,5 +55,6 @@ struct settler_ai_component {
 	  save_primitive<int>( lbfile, thirst );
 	  save_primitive<int>( lbfile, state_major );
 	  save_primitive<int>( lbfile, state_timer );
+	  save_primitive<int>( lbfile, job_id );
      }
 };
