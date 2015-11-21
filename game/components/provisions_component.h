@@ -14,7 +14,7 @@ struct provisions_component {
      component_type type = provision;
      bool deleted = false;
 
-     int provided_resource; // 1 = food, 2 = water
+     int provided_resource; // 1 = food, 2 = water, 3 = sleep
      int provides_quantity;
      int power_drain;
      string action_name;

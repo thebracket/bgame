@@ -39,7 +39,7 @@ struct settler_needs {
 settler_needs needs_clocks(settler_ai_component &settler) {
 	if (settler.state_major != SLEEPING) settler.calories -= settler.calorie_burn_at_rest;
 	if (settler.state_major != SLEEPING) settler.thirst--;
-	if (settler.state_major != SLEEPING) settler.wakefulness--;
+	if (settler.state_major != SLEEPING) settler.wakefulness-=3;
 	
 	settler_needs result{false,false,false};
 	
@@ -96,29 +96,6 @@ void wander_randomly(settler_ai_component &settler, position_component * pos) {
     }
 }
 
-void sleepy_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
-    // No movement
-    if (game_engine->rng.roll_dice(1,6)<4) {
-	renderable->glyph = 'Z';
-	renderable->foreground = color_t{128,128,255};
-    } else {
-	renderable->glyph = '@';
-	renderable->foreground = color_t{128,128,255};
-    }
-    const int wakeful_gain = stat_modifier(stats->constitution) + 2 + game_engine->rng.roll_dice(1,6);
-    settler.wakefulness += wakeful_gain;
-    --settler.state_timer;
-    //std::cout << settler.first_name << " sleep time: " << settler.state_timer << ", wakefulness: " << settler.wakefulness << "\n";
-    if (settler.state_timer < 1 or settler.wakefulness > 2000) {
-	  world::log.write(settler_ai_detail::announce("wakes up with a yawn.", settler));
-	  settler_ai_detail::emote("YAWN", pos, YELLOW);
-	  settler.state_major = IDLE;
-	  viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
-	  vision->scanner_range = 12;
-	  vision->last_visibility.clear();
-    }
-}
-
 void follow_flow_map(position_component * pos, const vector<short> &flow_map) {
     // Make a sorted list of options
     // Check each option for viability & move that way if it is good
@@ -151,6 +128,54 @@ void follow_flow_map(position_component * pos, const vector<short> &flow_map) {
 	  case 3 : settler_ai_detail::move_to(pos, pos->x, pos->y-1); break;
 	  case 4 : settler_ai_detail::move_to(pos, pos->x, pos->y+1); break;
 	}
+    }
+}
+
+void sleepy_time(settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos) {
+    const int idx = world::current_region->idx ( pos->x, pos->y );
+    const short distance_to_bed = flowmaps::sleep_flow_map [ idx ];
+  
+    if (distance_to_bed < 3 or distance_to_bed > 20000) {
+	if (distance_to_bed < 3) {
+	    position_component * bed_pos = game_engine->ecs->find_entity_component<position_component>( flowmaps::sleep_flow_map_entity_id[idx] );
+	    pos->x = bed_pos->x;
+	    pos->y = bed_pos->y;
+	    provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( bed_pos->entity_id );
+	    bed->provides_quantity = 1;
+	    settler.job_id = bed->entity_id;
+	}      
+      
+	// Reduced visibility while asleep
+	viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
+	vision->scanner_range = 2;
+	vision->last_visibility.clear();
+
+	// No movement
+	if (game_engine->rng.roll_dice(1,6)<4) {
+	    renderable->glyph = 'Z';
+	    renderable->foreground = color_t{128,128,255};
+	} else {
+	    renderable->glyph = '@';
+	    renderable->foreground = color_t{128,128,255};
+	}
+	const int wakeful_gain = stat_modifier(stats->constitution) + 2 + game_engine->rng.roll_dice(1,6);
+	settler.wakefulness += wakeful_gain;
+	--settler.state_timer;
+	//std::cout << settler.first_name << " sleep time: " << settler.state_timer << ", wakefulness: " << settler.wakefulness << "\n";
+	if (settler.state_timer < 1 or settler.wakefulness > 2000) {
+	      world::log.write(settler_ai_detail::announce("wakes up with a yawn.", settler));
+	      settler_ai_detail::emote("YAWN", pos, YELLOW);
+	      settler.state_major = IDLE;
+	      viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
+	      vision->scanner_range = 12;
+	      vision->last_visibility.clear();
+	      if (settler.job_id > 0) {
+		  provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( settler.job_id );
+		  bed->provides_quantity = 0;
+	      }
+	}
+    } else {
+	settler_ai_detail::follow_flow_map(pos, flowmaps::sleep_flow_map);
     }
 }
 
@@ -314,14 +339,9 @@ void settler_ai_system::tick ( const double &duration_ms ) {
 	
 	// Needs will override current action!
 	if (needs.needs_sleep and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
-	    // TODO: Look for a bed, when we support such things!
 	    settler.state_major = SLEEPING;
 	    settler.state_timer = 360;
 	    world::log.write(settler_ai_detail::announce("falls asleep.", settler));
-	    settler_ai_detail::emote("Zzzz", pos, BLUE);
-	    viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
-	    vision->scanner_range = 2;
-	    vision->last_visibility.clear();
 	} else if (needs.needs_drink and settler.state_major != SLEEPING and settler.state_major != DRINKING and settler.state_major != EATING ) {
 	    settler.state_major = DRINKING;
 	    world::log.write(settler_ai_detail::announce("wants a drink.", settler));
