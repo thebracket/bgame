@@ -541,6 +541,7 @@ int create_item_from_raws(const string &name) {
     entity e;
     e.handle = game_engine->ecs->get_next_entity_handle();
     game_engine->ecs->add_entity(e); 
+    game_engine->ecs->add_component(e, item_component() );    
     // Note: no position is created, that's the caller's responsibility. Since it could be worn/held, in a container
     // or on the landscape, this would become an enormous factory if we try and offer an interface to everything!
     finder->second->build_components(e, 0, 0 );
