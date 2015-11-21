@@ -47,6 +47,7 @@ void cordex_ai_system::tick ( const double& duration_ms )
 	    chosen_components.push_back( distance_components.begin()->second );
 	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
 	    item_comp->claimed = true;
+	    game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
 	}
 	
 	
