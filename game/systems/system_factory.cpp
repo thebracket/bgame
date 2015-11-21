@@ -6,7 +6,6 @@
 #include "settler_ai_system.h"
 #include "obstruction_system.h"
 #include "power_system.h"
-#include "flowmap_system.h"
 #include "input_system.h"
 #include "inventory_system.h"
 #include "cordex_ai_system.h"
@@ -23,7 +22,6 @@ unique_ptr<base_system> make_calendar_system() { return make_unique<calendar_sys
 unique_ptr<base_system> make_settler_ai_system() { return make_unique<settler_ai_system>(); }
 unique_ptr<base_system> make_obstruction_system() { return make_unique<obstruction_system>(); }
 unique_ptr<base_system> make_power_system() { return make_unique<power_system>(); }
-unique_ptr< base_system > make_flowmap_system() { return make_unique<flowmap_system>(); }
 unique_ptr< base_system > make_input_system() { return make_unique<input_system>(); }
 unique_ptr< base_system > make_inventory_system() {return make_unique<inventory_system>(); }
 unique_ptr< base_system > make_cordex_ai_system() { return make_unique<cordex_ai_system>(); }
