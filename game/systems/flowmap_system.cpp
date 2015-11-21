@@ -15,8 +15,10 @@ namespace flowmaps {
 
 vector<short> food_flow_map;
 vector<short> water_flow_map;
+vector<short> sleep_flow_map;
 vector<int> food_flow_map_entity_id;
 vector<int> water_flow_map_entity_id;
+vector<int> sleep_flow_map_entity_id;
 
 inline void erase_flow_map ( vector<short> &flow_map )
 {
@@ -28,6 +30,7 @@ void spread( vector< pair< tuple<int,int,int>, short > > &new_cells, set<int> &v
     if (world::current_region->revealed[idx] == false) return;
     if (visited.find(idx) != visited.end() ) return;
     if (world::walk_blocked.find(idx) != world::walk_blocked.end()) return;
+    if (world::current_region->tiles[idx].base_tile_type == tile_type::WATER ) return;
     if (x < 0) return;
     if (x > landblock_width-1) return;
     if (y < 0) return;
@@ -77,12 +80,15 @@ void flowmap_system::tick ( const double& duration_ms )
      vector<provisions_component> * provisions = game_engine->ecs->find_components_by_type<provisions_component>();
      vector<tuple<int,int,int>> food_sources;
      vector<tuple<int,int,int>> water_sources;
+     vector<tuple<int,int,int>> sleep_sources;
      for ( const provisions_component provision : *provisions ) {
           position_component * pos = game_engine->ecs->find_entity_component<position_component> ( provision.entity_id );
           if ( provision.provided_resource == 1 ) food_sources.push_back ( make_tuple( pos->x, pos->y, provision.entity_id ) );
           if ( provision.provided_resource == 2 ) water_sources.push_back ( make_tuple( pos->x, pos->y, provision.entity_id ) );
+          if ( provision.provided_resource == 3 and provision.provides_quantity==0 ) sleep_sources.push_back ( make_tuple( pos->x, pos->y, provision.entity_id ) );
      }
 
      flowmaps::build_flow_map ( flowmaps::food_flow_map, food_sources, flowmaps::food_flow_map_entity_id );
      flowmaps::build_flow_map ( flowmaps::water_flow_map, water_sources, flowmaps::water_flow_map_entity_id );
+     flowmaps::build_flow_map ( flowmaps::sleep_flow_map, sleep_sources, flowmaps::sleep_flow_map_entity_id );
 }

@@ -75,6 +75,7 @@ void land_block::spread_flow( vector<std::tuple<short,int,int>> &new_cells, unor
     if (revealed[index]==false) return;
     if (visited.find( index ) != visited.end()) return;
     if (walkable.find( index ) != walkable.end()) return;
+    if (tiles[ index].base_tile_type == tile_type::WATER ) return;
     if (x < 0) return;
     if (x > landblock_width-1) return;
     if (y < 0) return;
