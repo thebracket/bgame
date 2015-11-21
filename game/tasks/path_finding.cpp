@@ -95,7 +95,7 @@ shared_ptr< navigation_path > find_path ( pair< int, int > start, pair< int, int
      pair<int,int> current = start;
      int n = 0;
      char last_direction = -1;
-     while ( current.first != end.first or current.second != end.second ) {
+     while ( (current.first != end.first or current.second != end.second) and result->steps.size()<100 ) {
           map<short,char> options;
           if ( last_direction!= 2 ) {
                options[ flow_map[ world::current_region->idx ( current.first-1, current.second ) ] ] = 1;
