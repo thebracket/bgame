@@ -79,7 +79,7 @@ public:
 
     void determine_buildables ( const int &idx ) {
         // Bail out if not flat
-        if ( world::current_region->tiles[idx].base_tile_type != tile_type::FLAT ) {
+        if ( world::current_region->tiles[idx].base_tile_type != tile_type::FLAT and world::current_region->tiles[idx].base_tile_type != tile_type::BEACH ) {
             add_line ( "You can only build on flat terrain.", sdl_white );
             return;
         }

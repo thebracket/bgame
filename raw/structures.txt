@@ -222,3 +222,27 @@
 [/BUILDABLE]
 [SLEEP_HERE]
 [/STRUCTURE]
+
+[STRUCTURE]
+[NAME:Fake Camp Fire]
+[DESCRIPTION:A roaring campfire, powered by a tiny internal nuclear reactor. It includes a tiny marshmallow dispenser.]
+[RENDER]
+[RENDER_GLYPH:OMEGA]
+[RENDER_COLOR:RED:BLACK]
+[RENDER_TILE:CAMPFIRE]
+[RENDER_LAYER:BUILDING]
+[/RENDER]
+[OBSTRUCTS:Y:Y]
+[BUILDABLE]
+* Components are names from item lists. You can have multiple components.
+[BUILDABLE_COMPONENT:Camping Fire Kit:1]
+* Skills take the form skill name ; difficulty ; time
+* You can have multiple skills required in order.
+[BUILDABLE_SKILL:Construction:10:10]
+[/BUILDABLE]
+[SETTLER-ACTION]
+[SA-NAME:Eats a tiny marshmallow]
+[SA-PROVIDES:CALORIES:100]
+[SA-POWER_USE:1]
+[/SETTLER-ACTION]
+[/STRUCTURE]
