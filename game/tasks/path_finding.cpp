@@ -76,12 +76,10 @@ shared_ptr< navigation_path > find_path ( pair< int, int > start, pair< int, int
                }
                flow_map[ world::current_region->idx ( x, y ) ] = distance;
 
-               if ( !found_it ) {
-                    spread_flow ( new_cells, visited, x-1, y, distance+1, walkable );
-                    spread_flow ( new_cells, visited, x+1, y, distance+1, walkable );
-                    spread_flow ( new_cells, visited, x, y-1, distance+1, walkable );
-                    spread_flow ( new_cells, visited, x, y+1, distance+1, walkable );
-               }
+               spread_flow ( new_cells, visited, x-1, y, distance+1, walkable );
+               spread_flow ( new_cells, visited, x+1, y, distance+1, walkable );
+               spread_flow ( new_cells, visited, x, y-1, distance+1, walkable );
+               spread_flow ( new_cells, visited, x, y+1, distance+1, walkable );
           }
           swap ( active_cells, new_cells );
           new_cells.clear();
