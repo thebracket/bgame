@@ -14,17 +14,14 @@ struct item_storage_component {
      bool deleted = false;
 
      int container_id;
-     bool claimed = false;
 
      void save ( fstream &lbfile ) {
           save_common_component_properties<item_storage_component> ( lbfile, *this );
 	  save_primitive<int>( lbfile, container_id );
-	  save_primitive<bool>( lbfile, claimed );
      }
 
      void load  ( fstream &lbfile ) {
           load_common_component_properties<item_storage_component> ( lbfile, *this );
 	  load_primitive<int>( lbfile, container_id );
-	  load_primitive<bool>( lbfile, claimed );
      }
 };
