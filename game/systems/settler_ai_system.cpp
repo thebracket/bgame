@@ -161,6 +161,12 @@ int create_needs_fulfillment_job ( const int &need, settler_ai_component * settl
 	return -1;
      }
      
+     if (need == 3) {
+	// Claim the tent!
+       provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( chosen_source_id );
+       bed->provides_quantity = 1;
+     }
+     
      ai::job_t job;
      job.assigned_to = settler->entity_id;
      job.current_step = 0;
@@ -298,6 +304,9 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                settler.wakefulness += wakeful_gain;
                if ( settler.wakefulness > 1000 ) {
                     emote ( "YAWN!", pos, YELLOW );
+		    // We need to free the bed
+		    provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( step.component_id );
+		    bed->provides_quantity = 0;
                     ++job->second.current_step;
                }
           } else {
