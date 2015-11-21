@@ -37,16 +37,16 @@ void cordex_ai_system::tick ( const double& duration_ms )
 	    // Find the closest candidate
 	    std::map<int,world::available_item *> distance_components;
 	    for (world::available_item item : finder->second) {
-		item_storage_component * isc = game_engine->ecs->find_entity_component<item_storage_component>( item.entity_id );
-		if (!isc->claimed) {
+		item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
+		if (!item_comp->claimed) {
 		    float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
 		    int distance_i = distance;
 		    distance_components[distance_i] = &item;
 		}
 	    }
 	    chosen_components.push_back( distance_components.begin()->second );
-	    item_storage_component * isc = game_engine->ecs->find_entity_component<item_storage_component>( distance_components.begin()->second->entity_id );
-	    isc->claimed = true;
+	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
+	    item_comp->claimed = true;
 	}
 	
 	

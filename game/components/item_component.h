@@ -15,13 +15,15 @@ struct item_component {
      component_type type = item;
      bool deleted = false;
 
-     string debug_name;
+     bool claimed = false;
 
      void save ( fstream &lbfile ) {
           save_common_component_properties<item_component> ( lbfile, *this );
+	  save_primitive<bool>( lbfile, claimed );
      }
 
      void load  ( fstream &lbfile ) {
           load_common_component_properties<item_component> ( lbfile, *this );
+	  load_primitive<bool>( lbfile, claimed );
      }
 };
