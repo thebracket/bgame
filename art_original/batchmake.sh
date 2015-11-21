@@ -86,6 +86,8 @@ convert 16x16.xcf[32] tmp/051.png
 convert 16x16.xcf[33] tmp/052.png
 convert 16x16.xcf[34] tmp/053.png
 convert 16x16.xcf[35] tmp/054.png
+convert 16x16.xcf[36] tmp/055.png
+convert 16x16.xcf[37] tmp/056.png
 
 montage -background transparent -geometry 16x16\>+0+0 tmp/*.png $RESULT
 rm tmp/*
