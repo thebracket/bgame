@@ -6,6 +6,7 @@
 #include "../messages/power_consumed_message.h"
 #include "../messages/chat_emote_message.h"
 #include "../tasks/help_wanted.h"
+#include "../tasks/path_finding.h"
 #include "../raws/raws.h"
 #include <map>
 
@@ -285,7 +286,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           // No - so we better consult the map
           if ( settler.current_path == nullptr ) {
                // If there is no path - request one to the destination and exit (no moving and pathing!)
-               settler.current_path = world::current_region->find_path ( std::make_pair ( pos->x, pos->y ), std::make_pair ( step.target_x, step.target_y ), world::walk_blocked );
+               settler.current_path = ai::find_path ( std::make_pair ( pos->x, pos->y ), std::make_pair ( step.target_x, step.target_y ), world::walk_blocked );
                return;
           } else {
                // There is a path...

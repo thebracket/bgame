@@ -3,6 +3,7 @@
 #include "component_types.h"
 #include <string>
 #include "../world/world.h"
+#include "../tasks/path_finding.h"
 
 using namespace serialization_generic;
 using std::string;
@@ -26,7 +27,7 @@ struct settler_ai_component {
      settler_state_t state_major;
      int state_timer;
      int job_id = 0;
-     std::shared_ptr<navigation_path> current_path; // Not persisted
+     std::shared_ptr<ai::navigation_path> current_path; // Not persisted
 
      void load ( fstream &lbfile ) {
           load_common_component_properties<settler_ai_component> ( lbfile, *this );

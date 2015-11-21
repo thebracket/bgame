@@ -24,6 +24,7 @@ add_library(game
 	    systems/inventory_system.cpp
 	    systems/cordex_ai_system.cpp
 	    tasks/help_wanted.cpp
+	    tasks/path_finding.cpp
 	    world/geometry.cpp 
 	    world/world.cpp 
 	    world/tile.cpp 
