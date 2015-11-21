@@ -533,6 +533,8 @@ void add_storage_unit(const int x, const int y) {
     }
     int fire_kit = raws::create_item_from_raws("Camping Fire Kit");
     game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( fire_kit ), item_storage_component(container_id) );
+    int fire_axe = raws::create_item_from_raws("Fire Axe");
+    game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( fire_axe ), item_storage_component(container_id) );
 }
 
 void add_structural_element(const int x, const int y, unsigned char glyph, bool block=true) {

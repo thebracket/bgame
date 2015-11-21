@@ -22,6 +22,7 @@
 #include "raw_sleepable.h"
 #include "raw_tile.h"
 #include "raw_render_layer.h"
+#include "raw_item_type.h"
 
 #include "../game.h"
 
@@ -111,7 +112,7 @@ int find_tile_by_name ( const string &name )
 SDL_Rect get_tile_source ( const int idx )
 {
      //const int width = 112;
-     const int width_t = 8;
+     const int width_t = 9;
 
      const int x = idx % width_t;
      const int y = idx / width_t;
@@ -219,6 +220,13 @@ void parse_raw_power_battery ( const vector<string> &chunks )
      const int capacity = std::stoi ( capacity_s );
      unique_ptr<raw_power_battery> batt = make_unique<raw_power_battery> ( capacity );
      current->children.push_back ( std::move ( batt ) );
+}
+
+void parse_raw_item_type ( const vector<string> &chunks )
+{
+     const string type = chunks[1];
+     unique_ptr<raw_item_type> rtype = make_unique<raw_item_type> ( type );
+     current->children.push_back ( std::move ( rtype ) );
 }
 
 /* Specific parser functions */
@@ -355,6 +363,10 @@ void parse_item ( const vector<string> &chunks )
      if ( chunks[0] == "/RENDER" ) {
           current->children.push_back ( std::move ( current_render ) );
           current_render.reset();
+          return;
+     }
+     if ( chunks[0] == "ITEM_TYPE" ) {
+          parse_raw_item_type ( chunks );
           return;
      }
      if ( chunks[0] == "RENDER" ) {
@@ -589,11 +601,14 @@ int create_item_from_raws ( const string &name )
           std::cout << "ERROR: Cannot create item of type [" << name << "]\n";
           throw 105;
      }
+     
+     string item_type = "";
+     
 
      entity e;
      e.handle = game_engine->ecs->get_next_entity_handle();
      game_engine->ecs->add_entity ( e );
-     game_engine->ecs->add_component ( e, item_component() );
+     game_engine->ecs->add_component ( e, item_component( item_type ) );
      // Note: no position is created, that's the caller's responsibility. Since it could be worn/held, in a container
      // or on the landscape, this would become an enormous factory if we try and offer an interface to everything!
      finder->second->build_components ( e, 0, 0 );

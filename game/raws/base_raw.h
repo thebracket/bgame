@@ -15,12 +15,25 @@ using std::pair;
 namespace raws
 {
 
-enum tag_type { RENDERABLE, NAME, DESCRIPTION, GLYPH, COLOR_PAIR, OBSTRUCTION, POWER_GENERATOR, POWER_BATTERY, SETTLER_ACTION, BUILDABLE, SKILL_REQUIRED, COMPONENT, SLEEPABLE, TILE, LAYER };
+enum tag_type { RENDERABLE, NAME, DESCRIPTION, GLYPH, COLOR_PAIR, OBSTRUCTION,
+                POWER_GENERATOR, POWER_BATTERY, SETTLER_ACTION, BUILDABLE, SKILL_REQUIRED, COMPONENT, SLEEPABLE, TILE,
+                LAYER, ITEM_TYPE
+              };
 
 struct base_raw {
     tag_type type;
     vector<unique_ptr<base_raw>> children;
 
+    string get_item_type () {
+	string result = "";
+	for ( const unique_ptr<base_raw> &child : children) {
+	    if (child->type == ITEM_TYPE) {
+	      result = child->get_name_override();
+	    }
+	}
+	return result;
+    }
+    
     virtual void build_components ( entity &parent, const int &x, const int &y, const bool placeholder=false ) const {
         for ( const unique_ptr<base_raw> &child : children ) {
             child->build_components ( parent, x, y, placeholder );
