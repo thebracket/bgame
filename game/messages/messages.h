@@ -5,3 +5,4 @@
 #include "mouse_motion_message.h"
 #include "power_consumed_message.h"
 #include "build_order_message.h"
+#include "item_changed_message.h"

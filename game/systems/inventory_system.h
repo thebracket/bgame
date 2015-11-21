@@ -2,6 +2,7 @@
 
 #include "../world/world.h"
 #include "../../engine/ecs.hpp"
+#include "../game.h"
 #include <vector>
 #include <unordered_map>
 #include <string>
@@ -17,4 +18,10 @@ public:
      }
 
      virtual void tick ( const double &duration_ms );
+     
+private:
+      void store_inventory ( debug_name_component * name, position_component * pos );
+      void register_inventory_stored( item_storage_component * store );
+      void register_inventory_carried ( item_carried_component * carried );
+      void register_inventory_ground ( position_component * pos );
 };

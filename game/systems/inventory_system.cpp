@@ -5,7 +5,7 @@
 using world::inventory;
 using world::available_item;
 
-void store_inventory ( debug_name_component * name, position_component * pos ) {
+void inventory_system::store_inventory ( debug_name_component * name, position_component * pos ) {
     auto finder = inventory.find ( name->debug_name );
     if ( finder == inventory.end() ) {
 	available_item item { name->debug_name, { pos->x, pos->y }, name->entity_id };
@@ -16,25 +16,35 @@ void store_inventory ( debug_name_component * name, position_component * pos ) {
     }
 }
 
-void register_inventory_stored( item_storage_component * store ) {
+void inventory_system::register_inventory_stored( item_storage_component * store ) {
     debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( store->entity_id );
     position_component * pos = game_engine->ecs->find_entity_component<position_component> ( store->container_id );
     store_inventory( name, pos );
 }
 
-void register_inventory_carried ( item_carried_component * carried ) {
+void inventory_system::register_inventory_carried ( item_carried_component * carried ) {
     debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( carried->entity_id );
     position_component * pos = game_engine->ecs->find_entity_component<position_component> ( carried->carried_by_id );
     store_inventory( name, pos );
 }
 
-void register_inventory_ground ( position_component * pos ) {
+void inventory_system::register_inventory_ground ( position_component * pos ) {
     debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( pos->entity_id );
     store_inventory( name, pos );
 }
 
 void inventory_system::tick ( const double& duration_ms )
 {
+     bool need_inventory_refresh = false;
+     if ( inventory.empty() ) need_inventory_refresh = true;
+     vector<item_changed_message> * item_changes = game_engine->messaging->get_messages_by_type<item_changed_message>();
+     for (item_changed_message &msg : *item_changes) {
+	msg.deleted = true;
+	need_inventory_refresh = true;
+     }
+     
+     if (!need_inventory_refresh) return;
+     
      inventory.clear();
      vector<item_component> * items = game_engine->ecs->find_components_by_type<item_component>();
      for (const item_component &item : *items) {
