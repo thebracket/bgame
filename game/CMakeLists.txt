@@ -18,13 +18,13 @@ add_library(game
 	    systems/power_system.cpp 
 	    systems/renderable_system.cpp 
 	    systems/settler_ai_system.cpp 
-	    systems/viewshed_system.cpp
-	    systems/flowmap_system.cpp 
+	    systems/viewshed_system.cpp 
 	    systems/input_system.cpp
 	    systems/inventory_system.cpp
 	    systems/cordex_ai_system.cpp
 	    tasks/help_wanted.cpp
 	    tasks/path_finding.cpp
+	    tasks/find_nearest_provision.cpp
 	    world/geometry.cpp 
 	    world/world.cpp 
 	    world/tile.cpp 
