@@ -140,9 +140,6 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
 	    position_component * bed_pos = game_engine->ecs->find_entity_component<position_component>( flowmaps::sleep_flow_map_entity_id[idx] );
 	    pos->x = bed_pos->x;
 	    pos->y = bed_pos->y;
-	    provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( bed_pos->entity_id );
-	    bed->provides_quantity = 1;
-	    settler.job_id = bed->entity_id;
 	}      
       
 	// Reduced visibility while asleep
@@ -169,10 +166,6 @@ void sleepy_time(settler_ai_component &settler, game_stats_component * stats, re
 	      viewshed_component * vision = game_engine->ecs->find_entity_component<viewshed_component>(settler.entity_id);
 	      vision->scanner_range = 12;
 	      vision->last_visibility.clear();
-	      if (settler.job_id > 0) {
-		  provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( settler.job_id );
-		  bed->provides_quantity = 0;
-	      }
 	}
     } else {
 	settler_ai_detail::follow_flow_map(pos, flowmaps::sleep_flow_map);
