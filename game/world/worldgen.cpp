@@ -704,6 +704,12 @@ entity make_settler(const int &x, const int &y)
     ai.state_major = IDLE;
     ai.state_timer = 0;
     
+    // Hair/etc. - placeholders
+    species.bearded = false;
+    species.hair_color = hair_color_t::BROWN;
+    species.hair_style = hair_style_t::BALD;
+    species.skin_color = skin_color_t::CAUCASIAN;
+    
     game_engine->ecs->add_component(test, ai);
     game_engine->ecs->add_component(test, stats);
     game_engine->ecs->add_component(test, health);
@@ -711,6 +717,7 @@ entity make_settler(const int &x, const int &y)
     
     return test;
 }
+
 
 entity make_camera_entity()
 {
