@@ -5,6 +5,7 @@
 #include "line_buffer.h"
 #include "colors.h"
 #include "../game.h"
+#include "settler_compositor.h"
 
 namespace render {
 
@@ -111,6 +112,8 @@ public:
                SDL->render_bitmap_simple ( line_s, x, y );
                y += 16;
           }
+          
+          render_settler_composite ( SDL, stats->entity_id, 10, 10 );
 
           SDL->reset_texture_target();
      }
