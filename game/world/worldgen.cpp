@@ -704,11 +704,53 @@ entity make_settler(const int &x, const int &y)
     ai.state_major = IDLE;
     ai.state_timer = 0;
     
-    // Hair/etc. - placeholders
+    // Hair/etc. this should be made more realistic one day!
+    const int ethnic_roll = game_engine->rng.roll_dice(1,4);
+    switch (ethnic_roll) {
+      case 1 : species.skin_color = skin_color_t::CAUCASIAN; break;
+      case 2 : species.skin_color = skin_color_t::ASIAN; break;
+      case 3 : species.skin_color = skin_color_t::INDIAN; break;
+      case 4 : species.skin_color = skin_color_t::AFRICAN; break;
+    }
+    
     species.bearded = false;
-    species.hair_color = hair_color_t::BROWN;
+    if (species.gender == gender_t::MALE) {
+	const int beard_roll = game_engine->rng.roll_dice(1,20);
+	if (beard_roll < 7) {
+	    species.bearded = true;
+	} else {
+	    species.bearded = false;
+	}
+    }
+    
+    const int hair_color_roll = game_engine->rng.roll_dice(1,4);
+    switch (hair_color_roll) {
+      case 1 : species.hair_color = hair_color_t::BLACK; break;
+      case 2 : species.hair_color = hair_color_t::BLONDE; break;
+      case 3 : species.hair_color = hair_color_t::BROWN; break;
+      case 4 : species.hair_color = hair_color_t::WHITE; break;      
+    }
+    
     species.hair_style = hair_style_t::BALD;
-    species.skin_color = skin_color_t::CAUCASIAN;
+    if (species.gender == gender_t::MALE) {
+	const int style_roll = game_engine->rng.roll_dice(1,5);
+	switch (style_roll) {
+	  case 1 : species.hair_style = hair_style_t::BALD; break;
+	  case 2 : species.hair_style = hair_style_t::BALDING; break;
+	  case 3 : species.hair_style = hair_style_t::MOHAWK; break;
+	  case 4 : species.hair_style = hair_style_t::SHORT; break;
+	  case 5 : species.hair_style = hair_style_t::LONG; break;
+	}
+    } else {
+	const int style_roll = game_engine->rng.roll_dice(1,5);
+	switch (style_roll) {
+	  case 1 : species.hair_style = hair_style_t::BALD; break;
+	  case 2 : species.hair_style = hair_style_t::SHORT; break;
+	  case 3 : species.hair_style = hair_style_t::LONG; break;
+	  case 4 : species.hair_style = hair_style_t::PIGTAILS; break;
+	  case 5 : species.hair_style = hair_style_t::TRIANGLE; break;
+	}
+    }
     
     game_engine->ecs->add_component(test, ai);
     game_engine->ecs->add_component(test, stats);
