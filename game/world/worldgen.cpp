@@ -649,6 +649,7 @@ entity make_settler(const int &x, const int &y)
     stats.wisdom = game_engine->rng.roll_dice(3,6);
     stats.charisma = game_engine->rng.roll_dice(3,6);
     stats.comeliness = game_engine->rng.roll_dice(3,6);
+    stats.ethics = game_engine->rng.roll_dice(3,6);
     stats.age = 18;   
     
     game_species_component species;

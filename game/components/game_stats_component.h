@@ -22,7 +22,9 @@ struct game_stats_component {
      short wisdom;
      short charisma;
      short comeliness;
+     short ethics;
      int age;
+     
      
      void save ( fstream &lbfile ) {
           save_common_component_properties<game_stats_component> ( lbfile, *this );
@@ -33,6 +35,7 @@ struct game_stats_component {
           save_primitive<short> ( lbfile, wisdom );
           save_primitive<short> ( lbfile, charisma );
           save_primitive<short> ( lbfile, comeliness );
+	  save_primitive<short> ( lbfile, ethics );
 	  save_primitive<int> ( lbfile, age );
      }
 
@@ -45,6 +48,7 @@ struct game_stats_component {
           load_primitive<short> ( lbfile, wisdom );
           load_primitive<short> ( lbfile, charisma );
           load_primitive<short> ( lbfile, comeliness );
+	  load_primitive<short> ( lbfile, ethics );
 	  load_primitive<int>( lbfile, age );
      }
 };
