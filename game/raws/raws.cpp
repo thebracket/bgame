@@ -23,6 +23,7 @@
 #include "raw_tile.h"
 #include "raw_render_layer.h"
 #include "raw_item_type.h"
+#include "raw_modifier.h"
 
 #include "../game.h"
 
@@ -229,6 +230,15 @@ void parse_raw_item_type ( const vector<string> &chunks )
      current->children.push_back ( std::move ( rtype ) );
 }
 
+void parse_raw_modifier ( const vector<string> &chunks )
+{
+     //std::cout << "Parsing name: " << chunks[1] << "\n";
+     string stat_name = chunks[1];
+     int stat_mod = std::stoi(chunks[2]);
+     unique_ptr<raw_modifier> name = make_unique<raw_modifier> ( chunks[1], stat_mod );
+     current->children.push_back ( std::move ( name ) );
+}
+
 /* Specific parser functions */
 
 void parse_structure ( const vector<string> &chunks )
@@ -347,6 +357,10 @@ void parse_starting_profession ( const vector<string> &chunks )
      }
      if ( chunks[0] == "NAME" ) {
           parse_raw_name ( chunks );
+          return;
+     }
+     if ( chunks[0] == "MODIFIER" ) {
+          parse_raw_modifier ( chunks );
           return;
      }
 }
@@ -626,18 +640,18 @@ string to_proper_noun_case ( const std::string &original )
      return result;
 }
 
-string get_random_starting_profession()
+pair< string, base_raw * > get_random_starting_profession()
 {
      const int max = detail::starting_professions.size();
      const int die_roll = game_engine->rng.roll_dice ( 1,max ) - 1;
      int i = 0;
      for ( auto it = detail::starting_professions.begin(); it != detail::starting_professions.end(); ++it ) {
           if ( i == die_roll ) {
-               return to_proper_noun_case ( it->first );
+               return std::make_pair( to_proper_noun_case ( it->first ), it->second.get() );
           }
           ++i;
      }
-     return "Peasant";
+     return std::make_pair("Peasant", nullptr);
 }
 
 constexpr int NUMBER_OF_MALE_FIRST_NAMES = 1218;

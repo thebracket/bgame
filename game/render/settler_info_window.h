@@ -6,6 +6,7 @@
 #include "colors.h"
 #include "../game.h"
 #include "settler_compositor.h"
+#include "../world/tables.h"
 
 namespace render {
 
@@ -63,42 +64,47 @@ public:
 
           {
                stringstream ss;
-               ss << "Strength: " << stats->strength;
+               ss << "Strength: " << stats->strength << " (" << stat_modifier( stats->strength ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
           {
                stringstream ss;
-               ss << "Dexterity: " << stats->dexterity;
+               ss << "Dexterity: " << stats->dexterity << " (" << stat_modifier( stats->dexterity ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
           {
                stringstream ss;
-               ss << "Constitution: " << stats->constitution;
+               ss << "Constitution: " << stats->constitution <<" (" << stat_modifier( stats->constitution ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
           {
                stringstream ss;
-               ss << "Intelligence: " << stats->intelligence;
+               ss << "Intelligence: " << stats->intelligence <<" (" << stat_modifier( stats->intelligence ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
           {
                stringstream ss;
-               ss << "Wisdom: " << stats->wisdom;
+               ss << "Wisdom: " << stats->wisdom <<" (" << stat_modifier( stats->wisdom ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
           {
                stringstream ss;
-               ss << "Charisma: " << stats->charisma;
+               ss << "Charisma: " << stats->charisma <<" (" << stat_modifier( stats->charisma ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
           {
                stringstream ss;
-               ss << "Comeliness: " << stats->comeliness;
+               ss << "Comeliness: " << stats->comeliness <<" (" << stat_modifier( stats->comeliness ) << ")";
+               lines.add_line ( SDL, ss.str(), sdl_green );
+          }
+          {
+               stringstream ss;
+               ss << "Ethics: " << stats->ethics <<" (" << stat_modifier( stats->ethics ) << ")";
                lines.add_line ( SDL, ss.str(), sdl_green );
           }
 
-          const int height = ( lines.size() *16 ) +24;
-          location = { 0, 0, std::min ( lines.get_width() +32, 400 ), height };
+          const int height = ( lines.size() *16 ) +32;
+          location = { 0, 0, lines.get_width() +32, height };
 
           allocate();
           render_decorations();

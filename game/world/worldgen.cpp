@@ -639,17 +639,19 @@ entity make_settler(const int &x, const int &y)
     game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34,2,false,true));
     game_engine->ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
+    
+    std::pair<string, raws::base_raw *> profession = raws::get_random_starting_profession();    
         
     // Create some basic attributes
     game_stats_component stats;
-    stats.strength = game_engine->rng.roll_dice(3,6);
-    stats.dexterity = game_engine->rng.roll_dice(3,6);
-    stats.constitution = game_engine->rng.roll_dice(3,6);
-    stats.intelligence = game_engine->rng.roll_dice(3,6);
-    stats.wisdom = game_engine->rng.roll_dice(3,6);
-    stats.charisma = game_engine->rng.roll_dice(3,6);
-    stats.comeliness = game_engine->rng.roll_dice(3,6);
-    stats.ethics = game_engine->rng.roll_dice(3,6);
+    stats.strength = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Strength");
+    stats.dexterity = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Dexterity");
+    stats.constitution = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Constitution");
+    stats.intelligence = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Intelligence");
+    stats.wisdom = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Wisdom");
+    stats.charisma = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Charisma");
+    stats.comeliness = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Comeliness");
+    stats.ethics = game_engine->rng.roll_dice(3,6) + profession.second->get_modifier("Ethics");
     stats.age = 18;   
     
     game_species_component species;
@@ -695,10 +697,10 @@ entity make_settler(const int &x, const int &y)
     
     ai.first_name = raws::get_random_first_name(species.gender);
     ai.last_name = raws::get_random_last_name();
-    ai.profession_tag = raws::get_random_starting_profession();
+    ai.profession_tag = profession.first;
     
     game_health_component health;
-    health.max_hit_points = game_engine->rng.roll_dice(1,8) + stat_modifier(stats.constitution);
+    health.max_hit_points = 8 + stat_modifier(stats.constitution); // First level, they get max!
     if (health.max_hit_points < 1) health.max_hit_points = 1;
     health.current_hit_points = health.max_hit_points;
     
