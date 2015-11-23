@@ -21,7 +21,11 @@ void render_settler_composite ( sdl2_backend* SDL, const int& entity_id, const i
      } else {
           src = raws::get_tile_source_by_name ( "MALE_BARE" );
      }
-     // TODO: Skin tone tintint
+     switch ( species->skin_color ) {
+       case skin_color_t::AFRICAN : SDL->set_color_mod ( "spritesheet", 128, 58, 45 ); break;
+       case skin_color_t::ASIAN : SDL->set_color_mod ( "spritesheet", 199, 151, 120 ); break;
+       case skin_color_t::INDIAN : SDL->set_color_mod ( "spritesheet", 179, 121, 100 ); break;
+     }
      SDL->render_bitmap ( "spritesheet", src, dest );
 
      // Hair
