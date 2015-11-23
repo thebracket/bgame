@@ -52,6 +52,8 @@ struct render_info_t {
   color_t foreground;
   color_t background;
   bool translucent;
+  bool composite_mode;
+  int composite_entity_id;
 };
 
 struct render_layers_t {
