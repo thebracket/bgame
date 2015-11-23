@@ -17,7 +17,7 @@ namespace raws
 
 enum tag_type { RENDERABLE, NAME, DESCRIPTION, GLYPH, COLOR_PAIR, OBSTRUCTION,
                 POWER_GENERATOR, POWER_BATTERY, SETTLER_ACTION, BUILDABLE, SKILL_REQUIRED, COMPONENT, SLEEPABLE, TILE,
-                LAYER, ITEM_TYPE
+                LAYER, ITEM_TYPE, MODIFIER
               };
 
 struct base_raw {
@@ -80,6 +80,13 @@ struct base_raw {
         return 0;
     }
 
+    virtual int get_modifier(const string &stat) {
+	int modifier = 0;
+	for ( const unique_ptr<base_raw> &child : children ) {
+            modifier += child->get_modifier ( stat );
+        }
+        return modifier;
+    }
 };
 
 }

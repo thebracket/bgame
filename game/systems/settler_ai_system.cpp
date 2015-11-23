@@ -370,7 +370,10 @@ void settler_ai_system::tick ( const double &duration_ms )
                }
 
                // Random pause
-               settler.next_tick = calendar->system_time + game_engine->rng.roll_dice ( 1,6 ) - stat_modifier ( stats->dexterity );
+               int initiative_roll = 10 - ( game_engine->rng.roll_dice( 1, 6 ) + stat_modifier( stats->dexterity ) );
+	       if (initiative_roll < 1) initiative_roll = 1;
+	       if (initiative_roll > 10) initiative_roll = 10;
+               settler.next_tick = calendar->system_time + initiative_roll;
           }
      }
 }

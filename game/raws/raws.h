@@ -5,6 +5,7 @@
 #include <vector>
 #include <utility>
 #include <tuple>
+#include "base_raw.h"
 
 using std::string;
 using std::vector;
@@ -29,7 +30,7 @@ int create_structure_from_raws ( const string& name, const int& x, const int& y 
 int create_placeholder_structure_from_raws ( const string& name, const int& x, const int& y );
 int create_item_from_raws ( const string &name );
 
-string get_random_starting_profession();
+pair< string, raws::base_raw* > get_random_starting_profession();
 string get_random_first_name ( const short &gender );
 string get_random_last_name();
 
