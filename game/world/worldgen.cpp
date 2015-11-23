@@ -636,7 +636,7 @@ entity make_settler(const int &x, const int &y)
     game_engine->ecs->add_component(test, debug_name_component("Test"));
     game_engine->ecs->add_component(test, position_component(x,y));
     //engine::globals::ecs->add_component(test, obstruction_component(true,false));
-    game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34,2));
+    game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34,2,false,true));
     game_engine->ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
         
@@ -742,13 +742,12 @@ entity make_settler(const int &x, const int &y)
 	  case 5 : species.hair_style = hair_style_t::LONG; break;
 	}
     } else {
-	const int style_roll = game_engine->rng.roll_dice(1,5);
+	const int style_roll = game_engine->rng.roll_dice(1,4);
 	switch (style_roll) {
-	  case 1 : species.hair_style = hair_style_t::BALD; break;
-	  case 2 : species.hair_style = hair_style_t::SHORT; break;
-	  case 3 : species.hair_style = hair_style_t::LONG; break;
-	  case 4 : species.hair_style = hair_style_t::PIGTAILS; break;
-	  case 5 : species.hair_style = hair_style_t::TRIANGLE; break;
+	  case 1 : species.hair_style = hair_style_t::SHORT; break;
+	  case 2 : species.hair_style = hair_style_t::LONG; break;
+	  case 3 : species.hair_style = hair_style_t::PIGTAILS; break;
+	  case 4 : species.hair_style = hair_style_t::TRIANGLE; break;
 	}
     }
     
