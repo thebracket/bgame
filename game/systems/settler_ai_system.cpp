@@ -300,7 +300,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                // Sleep mode
 	       pos->x = step.target_x;
 	       pos->y = step.target_y;
-               const int wakeful_gain = stat_modifier ( stats->constitution ) + 2 + game_engine->rng.roll_dice ( 1,6 );
+               const int wakeful_gain = stat_modifier ( stats->constitution ) + 8 + game_engine->rng.roll_dice ( 1,6 );
                settler.wakefulness += wakeful_gain;
                if ( settler.wakefulness > 1000 ) {
                     emote ( "YAWN!", pos, YELLOW );
