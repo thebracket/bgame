@@ -259,7 +259,7 @@ public:
 		case -2 : comment << settler->first_name << " sometimes lies and cheats. "; break;
 		case -1 : comment << settler->first_name << " sees only gray areas. "; break;	      
 		case 1 : comment << settler->first_name << " tends to follow the rules. "; break;
-		case 2 : comment << settler->first_name << " things everyone should follow the rules. "; break;
+		case 2 : comment << settler->first_name << " thinks everyone should follow the rules. "; break;
 		case 3 : comment << settler->first_name << " is unbending in applying the rules. "; break;
 		case 4 : comment << settler->first_name << " has a true belief in order. "; break;
 		case 5 : comment << settler->first_name << " wouldn't break the rules, even if the entire planet depended upon it. "; break;
