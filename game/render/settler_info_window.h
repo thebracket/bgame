@@ -264,6 +264,7 @@ public:
 		case 4 : comment << settler->first_name << " has a true belief in order. "; break;
 		case 5 : comment << settler->first_name << " wouldn't break the rules, even if the entire planet depended upon it. "; break;
 	      }
+	      lines.add_line ( SDL, comment.str(), sdl_yellow );
 	  }
 
           const int height = ( lines.size() *16 ) +32;
