@@ -680,7 +680,7 @@ entity make_settler(const int &x, const int &y)
     float height_cm, weight_kg;
     
     if (species.gender == gender_t::MALE or species.gender == gender_t::HERMAPHRODITE) {
-      height_cm = 147.0F + (game_engine->rng.roll_dice(2,12)*2.5F);
+      height_cm = 147.0F + (game_engine->rng.roll_dice(2,10)*2.5F);
       weight_kg = 54.0F + (game_engine->rng.roll_dice(2,8)*0.45);
       ai.calories = 4400 + game_engine->rng.roll_dice(1,200);
       ai.calorie_burn_at_rest = 1 + game_engine->rng.roll_dice(1,2);
