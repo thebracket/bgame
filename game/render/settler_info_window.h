@@ -143,6 +143,7 @@ public:
 		case hair_style_t::SHORT : ss << " cropped short."; break;
 		case hair_style_t::TRIANGLE : ss << " carefully teased into a perfect triangle."; break;
 	      }
+	      if (species->bearded) ss << " " << gender_pronoun << " sports a beard.";
 	      
 	      lines.add_line ( SDL, ss.str(), sdl_yellow );
           }
