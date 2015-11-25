@@ -11,7 +11,7 @@ namespace raws {
 
 struct raw_clothing_slot : public base_raw {
     raw_clothing_slot() { type = CLOTHING_SLOT; };
-    raw_clothing_slot(const string &new_name) : slot (new_name) { type=NAME; }
+    raw_clothing_slot(const string &new_name) : slot (new_name) { type=CLOTHING_SLOT; }
     string slot;    
 };
   
