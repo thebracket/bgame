@@ -26,6 +26,7 @@
 #include "raw_modifier.h"
 #include "raw_clothing_color.h"
 #include "raw_clothing_slot.h"
+#include "raw_clothing.h"
 
 #include "../game.h"
 
@@ -257,6 +258,13 @@ void parse_raw_clothing_color ( const vector<string> &chunks )
     current->children.push_back ( std::move ( color ) );
 }
 
+void parse_raw_clothing ( const vector<string> &chunks )
+{
+    const string clothing_item = chunks[1];
+    unique_ptr< raw_clothing > slot = make_unique< raw_clothing > ( clothing_item );
+    current->children.push_back ( std::move ( slot ) );
+}
+
 /* Specific parser functions */
 
 void parse_structure ( const vector<string> &chunks )
@@ -379,6 +387,18 @@ void parse_starting_profession ( const vector<string> &chunks )
      }
      if ( chunks[0] == "MODIFIER" ) {
           parse_raw_modifier ( chunks );
+          return;
+     }
+     if ( chunks[0] == "CLOTHING" ) {
+          parse_raw_clothing ( chunks );
+          return;
+     }
+     if ( chunks[0] == "CLOTHING_MALE" ) {
+          parse_raw_clothing ( chunks );
+          return;
+     }
+     if ( chunks[0] == "CLOTHING_FEMALE" ) {
+          parse_raw_clothing ( chunks );
           return;
      }
 }
