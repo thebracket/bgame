@@ -24,6 +24,8 @@
 #include "raw_render_layer.h"
 #include "raw_item_type.h"
 #include "raw_modifier.h"
+#include "raw_clothing_color.h"
+#include "raw_clothing_slot.h"
 
 #include "../game.h"
 
@@ -239,6 +241,22 @@ void parse_raw_modifier ( const vector<string> &chunks )
      current->children.push_back ( std::move ( name ) );
 }
 
+void parse_raw_clothing_slot ( const vector<string> &chunks )
+{
+    const string slot_name = chunks[1];
+    unique_ptr< raw_clothing_slot > slot = make_unique< raw_clothing_slot > ( slot_name );
+    current->children.push_back ( std::move ( slot ) );
+}
+
+void parse_raw_clothing_color ( const vector<string> &chunks )
+{
+    unique_ptr< raw_clothing_color > color = make_unique< raw_clothing_color > ( );
+    for (int i=1; i<chunks.size(); ++i) {
+      color->colors.push_back( chunks[i] );
+    }
+    current->children.push_back ( std::move ( color ) );
+}
+
 /* Specific parser functions */
 
 void parse_structure ( const vector<string> &chunks )
@@ -409,6 +427,14 @@ void parse_item ( const vector<string> &chunks )
      }
      if ( chunks[0] == "RENDER_LAYER" ) {
           parse_raw_render_layer ( chunks );
+          return;
+     }
+     if ( chunks[0] == "CLOTHING_SLOT" ) {
+          parse_raw_clothing_slot ( chunks );
+          return;
+     }
+     if ( chunks[0] == "CLOTHING_COLOR" ) {
+          parse_raw_clothing_color ( chunks );
           return;
      }
 }
