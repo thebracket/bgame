@@ -16,6 +16,7 @@
 #include "../components/components.h"
 #include "tables.h"
 #include "../game.h"
+#include "../raws/raw_clothing.h"
 
 using std::vector;
 using std::map;
@@ -758,6 +759,31 @@ entity make_settler(const int &x, const int &y)
     game_engine->ecs->add_component(test, stats);
     game_engine->ecs->add_component(test, health);
     game_engine->ecs->add_component(test, species);
+    
+    // Make clothing for the settler
+    for (const std::unique_ptr<raws::base_raw> &raw : profession.second->children) {
+	if (raw->type == raws::CLOTHING) {
+	    raws::raw_clothing * rawc = static_cast<raws::raw_clothing *>(raw.get());
+	    //std::cout << "Clothing: (" << rawc->slot << "): " << rawc->item << ", gender " << rawc->gender << "\n";
+	    if ( rawc->gender == 0 or ( species.gender == gender_t::FEMALE and rawc->gender==2 ) or ( species.gender != gender_t::FEMALE and rawc->gender != 2 ) ) {
+		const int item_entity_id = raws::create_item_from_raws( rawc->item );
+		int position = 0;
+		
+		if (rawc->slot == "Head") position = 1;
+		if (rawc->slot == "Torso") position = 2;
+		if (rawc->slot == "Legs") position = 3;
+		if (rawc->slot == "Shoes") position = 4;
+		
+		item_carried_component carried( test.handle, position );
+		game_engine->ecs->add_component<item_carried_component>( *game_engine->ecs->get_entity_by_handle( item_entity_id ), carried );
+		
+		item_component * item = game_engine->ecs->find_entity_component<item_component>( item_entity_id );
+		// TODO: We need to populate tinting details
+		item->clothing_slot = position;
+		item->is_tinted = false;
+	    }
+	}
+    }
     
     return test;
 }

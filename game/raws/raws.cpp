@@ -260,8 +260,12 @@ void parse_raw_clothing_color ( const vector<string> &chunks )
 
 void parse_raw_clothing ( const vector<string> &chunks )
 {
-    const string clothing_item = chunks[1];
-    unique_ptr< raw_clothing > slot = make_unique< raw_clothing > ( clothing_item );
+    const string clothing_slot = chunks[1];
+    const string clothing_item = chunks[2];
+    int gender = 0;
+    if (chunks[0] == "CLOTHING_MALE") gender = 1;
+    if (chunks[0] == "CLOTHING_FEMALE") gender = 2;
+    unique_ptr< raw_clothing > slot = make_unique< raw_clothing > ( clothing_slot, clothing_item, gender );
     current->children.push_back ( std::move ( slot ) );
 }
 
