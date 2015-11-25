@@ -668,15 +668,39 @@ int create_item_from_raws ( const string &name )
      
      string item_type = "";
      
+     item_component item( item_type );
+     item.is_tinted = true;
 
      entity e;
      e.handle = game_engine->ecs->get_next_entity_handle();
      game_engine->ecs->add_entity ( e );
-     game_engine->ecs->add_component ( e, item_component( item_type ) );
      // Note: no position is created, that's the caller's responsibility. Since it could be worn/held, in a container
      // or on the landscape, this would become an enormous factory if we try and offer an interface to everything!
      finder->second->build_components ( e, 0, 0 );
 
+     for ( const unique_ptr<base_raw> &i : finder->second->children ) {
+	if (i->type == CLOTHING_COLOR) {
+	    raw_clothing_color * rwc = static_cast<raw_clothing_color *>(i.get());
+	    int color_roll = game_engine->rng.roll_dice(1, rwc->colors.size());
+	    string color = rwc->colors[color_roll-1];
+	    
+	    if (color == "Green") { item.tint_red = 0; item.tint_green = 200; item.tint_blue = 0; }
+	    else if (color == "Black") { item.tint_red = 0; item.tint_green = 0; item.tint_blue = 0; }
+	    else if (color == "White") { item.tint_red = 200; item.tint_green = 200; item.tint_blue = 200; }
+	    else if (color == "Yellow") { item.tint_red = 200; item.tint_green = 200; item.tint_blue = 0; }
+	    else if (color == "Brown") { item.tint_red = 165; item.tint_green = 42; item.tint_blue = 42; }
+	    else if (color == "Blue") { item.tint_red = 0; item.tint_green = 0; item.tint_blue = 200; }
+	    else if (color == "Red") { item.tint_red = 200; item.tint_green = 0; item.tint_blue = 0; }
+	    else if (color == "Grey") { item.tint_red = 128; item.tint_green = 128; item.tint_blue = 128; }
+	    else if (color == "LightGreen") { item.tint_red = 128; item.tint_green = 200; item.tint_blue = 128; }
+	    else if (color == "Khaki") { item.tint_red = 240; item.tint_green = 230; item.tint_blue = 140; }
+	    else if (color == "Navy") { item.tint_red = 0; item.tint_green = 0; item.tint_blue = 128; }
+	    else { std::cout << "Unknown color: " << color << "\n"; }
+	    
+	}
+     }
+     game_engine->ecs->add_component ( e, item );
+     
      return e.handle;
 }
 
