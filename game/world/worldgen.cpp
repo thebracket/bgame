@@ -778,9 +778,7 @@ entity make_settler(const int &x, const int &y)
 		game_engine->ecs->add_component<item_carried_component>( *game_engine->ecs->get_entity_by_handle( item_entity_id ), carried );
 		
 		item_component * item = game_engine->ecs->find_entity_component<item_component>( item_entity_id );
-		// TODO: We need to populate tinting details
 		item->clothing_slot = position;
-		item->is_tinted = false;
 	    }
 	}
     }

@@ -76,7 +76,7 @@ void render_settler_composite ( sdl2_backend* SDL, const int& entity_id, const i
           }
      }
 
-     SDL->set_color_mod ( "spritesheet", 255, 255, 255 );
+     //SDL->set_color_mod ( "spritesheet", 255, 255, 255 );
      vector<item_carried_component> * carried = game_engine->ecs->find_components_by_type<item_carried_component>();
      for (const item_carried_component item_c : *carried) {
 	  if ( item_c.carried_by_id == entity_id ) {
@@ -85,33 +85,16 @@ void render_settler_composite ( sdl2_backend* SDL, const int& entity_id, const i
 	      if (item != nullptr and item->clothing_slot > 0) {
 		  const renderable_component * item_r = game_engine->ecs->find_entity_component<renderable_component>( item_c.entity_id );
 		  src = raws::get_tile_source( item_r->tile_idx );
+		  if ( item->is_tinted ) {
+		    SDL->set_color_mod( "spritesheet", item->tint_red, item->tint_green, item->tint_blue );
+		  } else {
+		    SDL->set_color_mod ( "spritesheet", 255, 255, 255 );
+		  }
 		  SDL->render_bitmap ( "spritesheet", src, dest );
 	      }
 	  }
      }
      
-     /*
-     // Throw some clothing on for now
-     SDL->set_color_mod ( "spritesheet", 32, 128, 32 );
-     if ( species->gender == gender_t::FEMALE ) {
-          src = raws::get_tile_source_by_name ( "SHORT_SKIRT_MASK" );
-     } else {
-          src = raws::get_tile_source_by_name ( "TROUSERS_MASK" );
-     }
-     SDL->render_bitmap ( "spritesheet", src, dest );
-
-     SDL->set_color_mod ( "spritesheet", 192, 128, 128 );
-     if ( species->gender == gender_t::FEMALE ) {
-          src = raws::get_tile_source_by_name ( "SMALL_BLOUSE_MASK" );
-     } else {
-	  src = raws::get_tile_source_by_name ( "SHIRT_MASK" );
-     }
-     SDL->render_bitmap ( "spritesheet", src, dest );
-
-     SDL->set_color_mod ( "spritesheet", 32, 32, 32 );
-     src = raws::get_tile_source_by_name ( "SHOES_MASK" );
-     SDL->render_bitmap ( "spritesheet", src, dest );
-     */
      // Reset color mod
      SDL->set_color_mod ( "spritesheet", 255, 255, 255 );
      
