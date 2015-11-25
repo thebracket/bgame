@@ -5,7 +5,7 @@
 [CLOTHING_SLOT:Head]
 [CLOTHING_COLOR:Black]
 [NAME:Batman Helmet]
-[DESCRIPTION:A black helmet with bat-eat protrusions and a face-mask. Be the hero Cordex needs!]
+[DESCRIPTION:A black helmet with bat-ear protrusions and a face-mask. Be the hero Cordex needs!]
 [RENDER]
 [RENDER_GLYPH:HELMET]
 [RENDER_COLOR:BLUE:BLACK]
