@@ -227,6 +227,17 @@ public:
 	      if (comment.str().size() > 0)
 		  lines.add_line ( SDL, comment.str(), sdl_yellow );
 	  }
+	  
+	  vector<item_carried_component> * carried = game_engine->ecs->find_components_by_type<item_carried_component>();
+	  for (const item_carried_component &item_c : *carried) {
+	      if (item_c.carried_by_id == dood->entity_id) {
+		  debug_name_component * item_name = game_engine->ecs->find_entity_component<debug_name_component>( item_c.entity_id );
+		  description_component * desc = game_engine->ecs->find_entity_component<description_component>( item_c.entity_id );
+		  stringstream ss;
+		  ss << item_name->debug_name << " : " << desc->desc ;
+		  lines.add_line ( SDL, ss.str(), sdl_green );
+	      }
+	  }
 
           const int height = ( lines.size() *16 ) +32;
           location = { 0, 0, lines.get_width() +32, height };
