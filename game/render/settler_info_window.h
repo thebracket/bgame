@@ -62,47 +62,6 @@ public:
                break;
           }
 
-          /*
-          {
-               stringstream ss;
-               ss << "Strength: " << stats->strength << " (" << stat_modifier( stats->strength ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Dexterity: " << stats->dexterity << " (" << stat_modifier( stats->dexterity ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Constitution: " << stats->constitution <<" (" << stat_modifier( stats->constitution ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Intelligence: " << stats->intelligence <<" (" << stat_modifier( stats->intelligence ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Wisdom: " << stats->wisdom <<" (" << stat_modifier( stats->wisdom ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Charisma: " << stats->charisma <<" (" << stat_modifier( stats->charisma ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Comeliness: " << stats->comeliness <<" (" << stat_modifier( stats->comeliness ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }
-          {
-               stringstream ss;
-               ss << "Ethics: " << stats->ethics <<" (" << stat_modifier( stats->ethics ) << ")";
-               lines.add_line ( SDL, ss.str(), sdl_green );
-          }*/
           {
 	      stringstream ss;
 	      ss << "Age: " << stats->age << " years. ";
@@ -285,7 +244,7 @@ public:
                y += 16;
           }
           
-          //render_settler_composite ( SDL, stats->entity_id, 10, 10 );
+          render_settler_composite ( SDL, stats->entity_id, location.w - 32, 32 );
 
           SDL->reset_texture_target();
      }
