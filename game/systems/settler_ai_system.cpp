@@ -8,6 +8,7 @@
 #include "../tasks/path_finding.h"
 #include "../tasks/find_nearest_provision.h"
 #include "../raws/raws.h"
+#include "../world/skill_test.h"
 #include <map>
 
 namespace settler_ai_detail {
@@ -278,8 +279,13 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      }
      break;
      case ai::CONSTRUCT_WITH_SKILL : {
-          // TODO: Skills aren't implemented yet, so move on.
-          ++job->second.current_step;
+	  // TODO: add difficulty
+          if ( game_system::skill_roll( settler.entity_id, step.skill_name, step.required_skill_difficulty ) ) {
+	      ++job->second.current_step;
+	      emote( "Aha!", pos, chat_emote_color_t::BLUE);
+	  } else {
+	      emote( "*working*", pos, chat_emote_color_t::BLUE);
+	  }
      }
      break;
      case ai::CONVERT_PLACEHOLDER_STRUCTURE : {

@@ -45,7 +45,7 @@ inline skill_test_result skill_roll(const int entity_id, const string skill_name
     }
     const int skill_level = get_skill_level( entity_stats, skill_name );
     const int modifiers = 0;
-    return skill_test_result( skill_level, modifiers, difficulty );
+    return skill_roll( skill_level, modifiers, difficulty );
     
 }
 
