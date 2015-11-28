@@ -34,6 +34,7 @@ void save_help_wanted ( fstream& lbfile ) {
 	    save_primitive<bool>( lbfile, steps->requires_skill );
 	    save_primitive<string>( lbfile, steps->skill_name );
 	    save_primitive<int>( lbfile, steps->placeholder_structure_id );
+	    save_primitive<char>( lbfile, steps->required_skill_difficulty );
 	}
      }
 }
@@ -54,6 +55,7 @@ void load_help_wanted ( fstream& lbfile ) {
 	    int step_type, target_x, target_y,component_id, placeholder_structure_id;
 	    bool requires_skill;
 	    std::string skill_name;
+	    char required_skill_difficulty;
 	    load_primitive<int>( lbfile, step_type );
 	    load_primitive<int>( lbfile, target_x );
 	    load_primitive<int>( lbfile, target_y );
@@ -61,7 +63,8 @@ void load_help_wanted ( fstream& lbfile ) {
 	    load_primitive<bool>( lbfile, requires_skill );
 	    load_primitive<string>( lbfile, skill_name );
 	    load_primitive<int>( lbfile, placeholder_structure_id );
-	    job.steps.push_back( job_step_t{ static_cast<job_step_e>(step_type), target_x, target_y, component_id, requires_skill, skill_name, placeholder_structure_id } );
+	    load_primitive<char>( lbfile, required_skill_difficulty );
+	    job.steps.push_back( job_step_t{ static_cast<job_step_e>(step_type), target_x, target_y, component_id, requires_skill, skill_name, placeholder_structure_id, required_skill_difficulty } );
 	}
 	jobs_board [ job_id ] = job;
      }

@@ -26,6 +26,7 @@ struct job_step_t {
      bool requires_skill = false;
      string skill_name = "";
      int placeholder_structure_id;
+     char required_skill_difficulty = 10;
 };
 
 struct job_t {
