@@ -19,6 +19,7 @@
 #include <string>
 #include <algorithm>
 #include <chrono>
+#include <bitset>
 
 using std::unique_ptr;
 using std::function;
@@ -27,6 +28,7 @@ using std::vector;
 using std::fstream;
 using std::string;
 using std::tuple;
+using std::bitset;
 
 namespace engine {
 
@@ -468,11 +470,6 @@ public:
      entity_component_system ( const function<void ( fstream &, const int & ) > loader, function<void ( fstream & ) > world_loader, function<void ( fstream & ) > world_saver )
           : loader_callback ( loader ), load_constants ( world_loader ), save_constants ( world_saver ) {}
 
-     /* Retrieves the next available entity handle. */
-     int get_next_entity_handle() {
-          return entities.get_next_handle();
-     }
-
      /* Add a component to the system. The system is linked to the entity provided,
       * and the entity's component count is incremented. */
      template<typename T>
@@ -509,10 +506,13 @@ public:
      }
 
      /*
-      * Adds an entity to the ECS.
+      * Creates a new entity in the ECS, and returns it.
       */
-     void add_entity ( entity &e ) {
+     entity add_entity () {
+	  entity e;
+	  e.handle = entities.get_next_handle();
           entities.add_entity ( e );
+	  return e;
      }
 
      /*
@@ -612,7 +612,7 @@ public:
           lbfile.read ( reinterpret_cast<char *> ( &number_of_entities ), sizeof ( number_of_entities ) );
           for ( int i=0; i<number_of_entities; ++i ) {
                entity e = construct_entity_from_file ( lbfile );
-               add_entity ( e );
+               entities.add_entity ( e );
                //std::cout << "Loaded entity #" << e.handle << "\n";
                if ( entities.next_handle <= e.handle ) entities.next_handle = e.handle+1;
           }
