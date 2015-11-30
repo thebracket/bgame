@@ -832,6 +832,7 @@ void setup_initial_game() {
 	  game_engine->ecs->add_component<renderable_component>( tree_entity, tree_render );
 	  game_engine->ecs->add_component<obstruction_component>( tree_entity, obstruction_component( true, true ) );
 	  game_engine->ecs->add_component<debug_name_component>( tree_entity, debug_name_component( "Pine Tree" ) );
+	  game_engine->ecs->add_component<description_component>( tree_entity, description_component( "A large pine tree, laden with cones and needles. Chop this down for wood." ) );
 	}
       }
     }
