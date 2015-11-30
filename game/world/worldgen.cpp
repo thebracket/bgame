@@ -494,9 +494,7 @@ void crash_trail(const std::pair<int,int> &starting_location) {
 }
 
 void add_cordex(const int &x, const int &y) {
-    entity cordex;
-    cordex.handle = game_engine->ecs->get_next_entity_handle();
-    game_engine->ecs->add_entity(cordex);
+    entity cordex = game_engine->ecs->add_entity();
     world::cordex_handle = cordex.handle;
     game_engine->ecs->add_component(cordex, debug_name_component("Cordex"));
     game_engine->ecs->add_component(cordex, position_component(x, y, OMNI));
@@ -512,9 +510,7 @@ void add_solar_collector(const int x, const int y) {
 }
 
 void add_cordex_console(const int x, const int y, const unsigned char symbol) {
-    entity console;
-    console.handle = game_engine->ecs->get_next_entity_handle();
-    game_engine->ecs->add_entity(console);
+    entity console = game_engine->ecs->add_entity();
     game_engine->ecs->add_component(console, debug_name_component("Cordex Console"));
     game_engine->ecs->add_component(console, position_component(x,y));
     //game_engine->ecs->add_component(console, renderable_component(symbol, dark_cyan, black));
@@ -630,9 +626,7 @@ void add_ship_hull(const std::pair<int,int> &starting_location) {
 
 entity make_settler(const int &x, const int &y)
 {
-    entity test;
-    test.handle = game_engine->ecs->get_next_entity_handle();
-    game_engine->ecs->add_entity(test);
+    entity test = game_engine->ecs->add_entity();
 
     game_engine->ecs->add_component(test, debug_name_component("Test"));
     game_engine->ecs->add_component(test, position_component(x,y));
@@ -789,9 +783,7 @@ entity make_settler(const int &x, const int &y)
 
 entity make_camera_entity()
 {
-    entity camera;
-    camera.handle = game_engine->ecs->get_next_entity_handle();
-    game_engine->ecs->add_entity(camera);
+    entity camera = game_engine->ecs->add_entity();
     game_engine->ecs->add_component(camera, position_component(128,128));
     return camera;
 }
@@ -833,9 +825,7 @@ void setup_initial_game() {
 	const int tile_idx = world::current_region->idx(x,y);
 	if (world::current_region->tiles[tile_idx].base_tile_type == tile_type::FLAT and game_engine->rng.roll_dice(1,10)<3 and distance>10) {
 	  // Create tree components
-	  entity tree_entity;
-	  tree_entity.handle = game_engine->ecs->get_next_entity_handle();
-	  game_engine->ecs->add_entity( tree_entity );
+	  entity tree_entity= game_engine->ecs->add_entity();
 	  game_engine->ecs->add_component<position_component>( tree_entity, position_component( x, y ) );
 	  renderable_component tree_render(6, color_t{165,42,42},color_t{0,0,0}, 0);
 	  tree_render.extra_tall = true;
