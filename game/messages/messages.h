@@ -6,3 +6,4 @@
 #include "power_consumed_message.h"
 #include "build_order_message.h"
 #include "item_changed_message.h"
+#include "walkability_changed_message.h"
