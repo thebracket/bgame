@@ -799,7 +799,7 @@ entity make_camera_entity()
 void setup_initial_game() {
     // Get the engine ready
     //engine::ecs::init();
-    int widx = world::world_idx(2,2);
+    const int widx = world::world_idx(2,2);
     world::current_region = new land_block(widx);
     
     // Locate a spot for the crash
@@ -822,6 +822,29 @@ void setup_initial_game() {
     // Add the camera
     entity camera = make_camera_entity();    
     world::camera_handle = camera.handle;
+    
+    // Add trees
+    for (int y=0; y<landblock_height; ++y) {
+      for (int x=0; x<landblock_width; ++x) {
+	const int dx = std::abs(starting_location.first - x);
+	const int dy = std::abs(starting_location.second - y);
+	const int distance = std::sqrt( dx*dx + dy*dy  );
+	
+	const int tile_idx = world::current_region->idx(x,y);
+	if (world::current_region->tiles[tile_idx].base_tile_type == tile_type::FLAT and game_engine->rng.roll_dice(1,10)<3 and distance>10) {
+	  // Create tree components
+	  entity tree_entity;
+	  tree_entity.handle = game_engine->ecs->get_next_entity_handle();
+	  game_engine->ecs->add_entity( tree_entity );
+	  game_engine->ecs->add_component<position_component>( tree_entity, position_component( x, y ) );
+	  renderable_component tree_render(6, color_t{165,42,42},color_t{0,0,0}, 0);
+	  tree_render.extra_tall = true;
+	  game_engine->ecs->add_component<renderable_component>( tree_entity, tree_render );
+	  game_engine->ecs->add_component<obstruction_component>( tree_entity, obstruction_component( true, true ) );
+	  game_engine->ecs->add_component<debug_name_component>( tree_entity, debug_name_component( "Pine Tree" ) );
+	}
+      }
+    }
     
     // Persist and quit
     world::stored_power = 25;

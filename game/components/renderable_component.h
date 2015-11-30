@@ -26,6 +26,7 @@ struct renderable_component {
     int layer;
     bool translucent = false;
     bool composite = false;
+    bool extra_tall = false;
     
     void save(fstream &lbfile) {
       save_common_component_properties<renderable_component>(lbfile, *this);
@@ -36,6 +37,7 @@ struct renderable_component {
       save_primitive<int>( lbfile, layer );
       save_primitive<bool>( lbfile, translucent );
       save_primitive<bool>( lbfile, composite );
+      save_primitive<bool>( lbfile, extra_tall );
       
     }
     
@@ -48,5 +50,6 @@ struct renderable_component {
       load_primitive<int>( lbfile, layer );
       load_primitive<bool>( lbfile, translucent );
       load_primitive<bool>( lbfile, composite );
+      load_primitive<bool>( lbfile, extra_tall );
     }
 };
