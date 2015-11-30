@@ -8,5 +8,7 @@
 using engine::base_system;
 
 class renderable_system : public base_system {
+public:
+     renderable_system() { system_name = "Renderable System"; }
      virtual void tick ( const double &duration_ms );
 };

@@ -15,6 +15,7 @@ using engine::base_system;
 class inventory_system : public base_system {
 public:
      inventory_system() {
+	system_name = "Inventory System";
      }
 
      virtual void tick ( const double &duration_ms );
