@@ -16,7 +16,7 @@ using std::make_pair;
 
 namespace ai {
 
-void spread_flow ( vector<tuple<short,int,int>> &new_cells, unordered_set<int> &visited, const int &x, const int &y, const short &distance, unordered_map<int, bool> &walkable )
+void spread_flow ( vector<tuple<short,int,int>> &new_cells, unordered_set<int> &visited, const int &x, const int &y, const short &distance, array<bool, tiles_per_landblock> &walkable )
 {
      const int index = world::current_region->idx ( x,y );
      if ( world::current_region->revealed[index]==false ) {
@@ -25,7 +25,7 @@ void spread_flow ( vector<tuple<short,int,int>> &new_cells, unordered_set<int> &
      if ( visited.find ( index ) != visited.end() ) {
           return;
      }
-     if ( walkable.find ( index ) != walkable.end() ) {
+     if ( walkable[ index ] != true ) {
           return;
      }
      if ( world::current_region->tiles[ index].base_tile_type == tile_type::WATER ) {
@@ -48,7 +48,7 @@ void spread_flow ( vector<tuple<short,int,int>> &new_cells, unordered_set<int> &
      new_cells.push_back ( make_tuple ( distance, x, y ) );
 }
 
-shared_ptr< navigation_path > find_path ( pair< int, int > start, pair< int, int > end, unordered_map<int, bool> &walkable )
+shared_ptr< navigation_path > find_path ( pair< int, int > start, pair< int, int > end, array<bool, tiles_per_landblock> &walkable )
 {
      // For now, we're just using a really inefficient brute-force approach just to get going; this will be optimized later!
 

@@ -86,7 +86,7 @@ bool is_move_possible ( const position_component * pos, const int &delta_x, cons
      if ( ny > landblock_height-1 ) {
           return false;
      }
-     if ( world::walk_blocked.find ( idx ) != world::walk_blocked.end() ) {
+     if ( world::walk_blocked[idx] == true ) {
           return false;
      }
      if ( world::current_region->tiles[idx].base_tile_type == tile_type::WATER ) {

@@ -13,8 +13,8 @@ void obstruction_system::tick ( const double& duration_ms )
           msg.deleted = true;
      }
      if ( world::walk_blocked.size() == 0 or changes ) {
-          world::walk_blocked.clear();
-          world::view_blocked.clear();
+	  std::fill( world::walk_blocked.begin(), world::walk_blocked.end(), false );
+	  std::fill( world::view_blocked.begin(), world::view_blocked.end(), false );
 
           const vector<obstruction_component> * blockages = game_engine->ecs->find_components_by_type<obstruction_component>();
           for ( const obstruction_component &block : *blockages ) {

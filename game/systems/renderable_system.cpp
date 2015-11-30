@@ -5,7 +5,7 @@
 
 void renderable_system::tick ( const double &duration_ms ) {
     // Clear the visible entity system
-    world::entity_render_list.clear();
+    std::fill( world::entity_render_list.begin(), world::entity_render_list.end(), world::render_layers_t() );
 
     // Obtain a list of things that can be rendered
     const vector<renderable_component> * renderables = game_engine->ecs->find_components_by_type<renderable_component> ();

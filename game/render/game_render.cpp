@@ -388,31 +388,16 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
                     SDL->render_bitmap ( "font", source, dest );
 
                     // Render any renderable items for this tile
-                    auto finder = world::entity_render_list.find ( idx );
-                    if ( finder != world::entity_render_list.end() ) {
-			 if (finder->second.floor) {
-			    render_ascii_char( finder->second.floor.value(), source, dest, background_source, SDL );
-			 }
-			 if (finder->second.building) {
-			    render_ascii_char( finder->second.building.value(), source, dest, background_source, SDL );
-			 }
-			 if (finder->second.top) {
-			    render_ascii_char( finder->second.top.value(), source, dest, background_source, SDL );
-			 }
-		      
-			 /*
-                         target_char = std::get<1> ( finder->second );
-                         texture_x = ( target_char % 16 ) * 16;
-                         texture_y = ( target_char / 16 ) * 16;
-                         source = {texture_x, texture_y, 16,16 };
-                         color_t foreground = std::get<2> ( finder->second );
-                         color_t background = std::get<3> ( finder->second );
-                         SDL->set_color_mod ( "font", std::get<0> ( background ), std::get<1	> ( background ), std::get<2> ( background ) );
-                         SDL->render_bitmap ( "font", background_source, dest );
-                         SDL->set_color_mod ( "font", std::get<0> ( foreground ), std::get<1> ( foreground ), std::get<2> ( foreground ) );
-                         SDL->render_bitmap ( "font", source, dest );
-                         */
-                    }
+                    auto finder = world::entity_render_list[idx];
+		    if (finder.floor) {
+		      render_ascii_char( finder.floor.value(), source, dest, background_source, SDL );
+		    }
+		    if (finder.building) {
+		      render_ascii_char( finder.building.value(), source, dest, background_source, SDL );
+		    }
+		    if (finder.top) {
+		      render_ascii_char( finder.top.value(), source, dest, background_source, SDL );
+		    }
 
                     render_lighting_visibility_mask( SDL, idx, source, dest );
                }
@@ -469,18 +454,16 @@ void game_render::render_map ( sdl2_backend * SDL )
                          SDL->render_bitmap ( "spritesheet", source, dest );
                     }
                     
-                    auto finder = world::entity_render_list.find ( idx );
-                    if ( finder != world::entity_render_list.end() ) {
-			if (finder->second.floor) {
-			    render_map_tile( finder->second.floor.value(), source, dest, SDL );
-			}
-			if (finder->second.building) {
-			    render_map_tile( finder->second.building.value(), source, dest, SDL );
-			}
-			if (finder->second.top) {
-			    render_map_tile( finder->second.top.value(), source, dest, SDL );
-			}
-                    }
+                    auto finder = world::entity_render_list [ idx ];
+		    if (finder.floor) {
+			render_map_tile( finder.floor.value(), source, dest, SDL );
+		    }
+		    if (finder.building) {
+			render_map_tile( finder.building.value(), source, dest, SDL );
+		    }
+		    if (finder.top) {
+			render_map_tile( finder.top.value(), source, dest, SDL );
+		    }
                }
                ++region_x;
           }

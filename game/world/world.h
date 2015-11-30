@@ -63,9 +63,9 @@ struct render_layers_t {
   optional<render_info_t> top;
 };
 
-extern unordered_map<int, render_layers_t> entity_render_list;
-extern unordered_map<int, bool> walk_blocked;
-extern unordered_map<int, bool> view_blocked;
+extern std::array<render_layers_t, tiles_per_landblock> entity_render_list;
+extern std::array<bool, tiles_per_landblock> walk_blocked;
+extern std::array<bool, tiles_per_landblock> view_blocked;
 
 struct available_item {
      string name;
