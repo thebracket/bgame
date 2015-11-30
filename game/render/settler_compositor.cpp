@@ -56,7 +56,7 @@ void render_settler_composite ( sdl2_backend* SDL, const int& entity_id, const i
           }
           break;
           case hair_color_t::BLONDE : {
-               SDL->set_color_mod ( "spritesheet", 216, 216, 120 );
+               SDL->set_color_mod ( "spritesheet", 255, 255, 0 );
           }
           break;
           case hair_color_t::BROWN : {
