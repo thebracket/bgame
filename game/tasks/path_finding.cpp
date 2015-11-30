@@ -25,7 +25,7 @@ void spread_flow ( vector<tuple<short,int,int>> &new_cells, unordered_set<int> &
      if ( visited.find ( index ) != visited.end() ) {
           return;
      }
-     if ( walkable[ index ] != true ) {
+     if ( walkable[ index ] != false ) {
           return;
      }
      if ( world::current_region->tiles[ index].base_tile_type == tile_type::WATER ) {

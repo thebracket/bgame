@@ -20,6 +20,7 @@ void cordex_ai_system::tick ( const double& duration_ms )
 	
 	// Create a place-holder entity for the new structure (just a renderable and a position, obtain the entity ID)
 	const int entity_id = raws::create_placeholder_structure_from_raws( msg.structure_name, msg.x, msg.y );
+	game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 	
 	// Create a job
 	ai::job_t job;
