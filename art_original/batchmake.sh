@@ -110,6 +110,7 @@ convert PersonTemplate.xcf[16] tmp/073.png # Long skirt
 convert PersonTemplate.xcf[17] tmp/074.png # Full Blouse
 convert PersonTemplate.xcf[18] tmp/075.png # Small Blouse
 
+convert 16x32.xcf[0] ../build/double-height.png
 
 montage -background transparent -geometry 16x16\>+0+0 tmp/*.png $RESULT
 rm tmp/*

@@ -423,10 +423,17 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
 }
 
 inline void render_map_tile( const world::render_info_t &layer, SDL_Rect &source, SDL_Rect &dest, sdl2_backend * SDL ) {
+  
       if (layer.translucent) SDL->set_alpha_mod( "spritesheet", 96 );
       
       if (layer.composite_mode) {
 	  render::render_settler_composite( SDL, layer.composite_entity_id, dest.x, dest.y );
+      } else if ( layer.oversized ) {
+	  SDL_Rect big_dest = dest;
+	  big_dest.y -= 16;
+	  big_dest.h += 16;
+	  SDL_Rect big_src { 0, 0, 16, 32 };
+	  SDL->render_bitmap( "spritesheet-big", big_src, big_dest );
       } else {
 	  const int sprite_idx = layer.tile_id;
 	  source = raws::get_tile_source ( sprite_idx );
@@ -474,17 +481,21 @@ void game_render::render_map ( sdl2_backend * SDL )
 			    render_map_tile( finder->second.top.value(), source, dest, SDL );
 			}
                     }
+               }
+               ++region_x;
+          }
+          ++region_y;
+     }
 
-                    /*
-                    // Render any renderable items for this tile
-                    auto finder = world::entity_render_list.find ( idx );
-                    if ( finder != world::entity_render_list.end() ) {
-                         const int sprite_idx = std::get<0> ( finder->second );
-                         source = raws::get_tile_source ( sprite_idx );
-                         SDL->render_bitmap ( "spritesheet", source, dest );
-                    }
-                    */
-
+     // Not sure I like this - second pass for lighting!
+     region_y = camera_pos->y - 23;
+     left_x = camera_pos->x - 32;
+     for ( int y=0; y<45; ++y ) {
+          int region_x = left_x;
+          for ( int x=0; x<64; ++x ) {
+               const int idx = world::current_region->idx ( region_x, region_y );
+               if ( region_x >= 0 and region_x < landblock_width and region_y > 0 and region_y <= landblock_height-1 and world::current_region->revealed[idx] ) {
+		    SDL_Rect dest = {x*16, ( y*16 ) + 48, 16, 16};
                     render_lighting_visibility_mask( SDL, idx, source, dest );
                }
                ++region_x;

@@ -54,6 +54,7 @@ struct render_info_t {
   bool translucent;
   bool composite_mode;
   int composite_entity_id;
+  bool oversized;
 };
 
 struct render_layers_t {
