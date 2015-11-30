@@ -12,7 +12,7 @@ void obstruction_system::tick ( const double& duration_ms )
           changes = true;
           msg.deleted = true;
      }
-     if ( world::walk_blocked.size() == 0 or changes ) {
+     if ( changes ) {
 	  std::fill( world::walk_blocked.begin(), world::walk_blocked.end(), false );
 	  std::fill( world::view_blocked.begin(), world::view_blocked.end(), false );
 

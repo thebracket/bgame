@@ -40,6 +40,8 @@ void play_mode::init()
      world::log.write ( "Use the @B_WHITE@arrow keys@WHITE@ to move, or press @B_RED@Q@WHITE@ to quit." );
      int widx = world::world_idx ( 2,2 );
      world::current_region = new land_block ( widx );
+     game_engine->messaging->add_message<walkability_changed_message>(walkability_changed_message());
+     game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 }
 
 void play_mode::done()
