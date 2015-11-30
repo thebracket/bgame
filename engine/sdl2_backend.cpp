@@ -212,6 +212,7 @@ command::keys translate_keycode(const SDL_Event &e) {
     case SDLK_q : return command::Q;
     case SDLK_SPACE : return command::SPACE;
     case SDLK_BACKQUOTE : return command::TILDE;
+    case SDLK_PRINTSCREEN : return command::PRINTSCREEN;
   }
   return command::NONE;
 }

@@ -14,6 +14,8 @@ using std::unordered_set;
 using engine::base_system;
 
 class viewshed_system : public base_system {
+public:
+    viewshed_system() { system_name = "Viewshed System"; }
     virtual void tick ( const double &duration_ms );
 
 private:

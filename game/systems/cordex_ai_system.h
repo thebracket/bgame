@@ -6,5 +6,7 @@
 using engine::base_system;
 
 class cordex_ai_system : public base_system {
+public:
+    cordex_ai_system() { system_name = "Cordex AI System"; }
     virtual void tick(const double &duration_ms);
 };

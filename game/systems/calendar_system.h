@@ -10,6 +10,7 @@ constexpr double TICK_LENGTH = 10.0;
 
 class calendar_system : public base_system {
 public:
+     calendar_system() { system_name = "Calendar System"; }
      virtual void tick ( const double &duration_ms );
 private:
      void advance_calendar( calendar_component* time );

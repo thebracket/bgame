@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <chrono>
 
 using std::unique_ptr;
 using std::function;
@@ -25,6 +26,7 @@ using std::unordered_map;
 using std::vector;
 using std::fstream;
 using std::string;
+using std::tuple;
 
 namespace engine {
 
@@ -35,6 +37,18 @@ class base_system {
 public:
      /* Pure virtual function; every system MUST provide this. */
      virtual void tick ( const double &duration_ms ) =0;
+     
+     /* Used by the profiler to display useful performance stats */
+     std::string system_name;
+     int last_execution_time = 0;
+     int max_execution_time = 0;
+     int min_execution_time = 1000000;
+     
+     inline void profile_timer( const int &t ) {
+	last_execution_time = t;
+	if ( t > max_execution_time ) max_execution_time = t;
+	if ( t < min_execution_time ) min_execution_time = t;
+     }
 };
 
 /*
@@ -545,13 +559,27 @@ public:
       * If running, executes all systems in the order in which they were added.
       */
      void tick ( const double duration_ms ) {
-          if ( !running ) return;
-          // TODO: Temporary for compatibility
+          if ( !running ) return;	  
           for ( unique_ptr<base_system> &system : systems ) {
+	       std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
                system->tick ( duration_ms );
+	       std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+	       auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+	       system->profile_timer ( duration );
           }
           components.clear_deleted ( entities );
           entities.delete_empty_entities();
+     }
+     
+     /*
+      * Get a dump of system execution times
+      */
+     vector<tuple<string,int,int,int>> get_profile_info() {
+	  vector<tuple<string,int,int,int>> result;
+	  for ( unique_ptr<base_system> &system : systems ) {
+	      result.push_back( std::make_tuple( system->system_name, system->last_execution_time, system->min_execution_time, system->max_execution_time ) );
+	  }
+	  return result;
      }
 
      /*

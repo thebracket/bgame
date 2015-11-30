@@ -5,9 +5,11 @@
 #include "raws/raws.h"
 #include "render/game_render.h"
 #include <sstream>
+#include <iomanip>
 
 using namespace engine;
 using std::make_unique;
+using std::setw;
 
 void play_mode::init_systems()
 {
@@ -52,6 +54,16 @@ pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time
 {
      if ( command::is_key_down ( command::Q ) ) {
           quitting = true;
+     }
+     if ( command::is_key_down( command::PRINTSCREEN ) ) {
+	  vector<tuple<string,int,int,int>> profile_data = game_engine->ecs->get_profile_info();
+	  std::cout << "\nPROFILE (ms)\n";
+	  std::cout << setw(20) << "SYSTEM" << setw(10) << "LAST" << setw(10) << "MIN" << setw(10) << "MAX" << "\n";
+	  std::cout << "-----------------------------------------------------\n";
+	  for ( auto sys : profile_data ) {
+	      std::cout << setw(20) << std::get<0>(sys) << setw(10) << std::get<1>(sys) << setw(10) << std::get<2>(sys) << setw(10) << std::get<3>(sys) << "\n";
+	  }
+	  std::cout << "-----------------------------------------------------\n";
      }
 
      if ( quitting ) {
