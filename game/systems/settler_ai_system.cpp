@@ -115,6 +115,7 @@ inline void move_to ( position_component * pos, const int &nx, const int &ny )
      pos->x = nx;
      pos->y = ny;
      pos->facing = new_facing;
+     game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 }
 
 void wander_randomly ( settler_ai_component &settler, position_component * pos )
@@ -266,6 +267,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           storage->deleted = true; // It's not stored anymore, so delete the component
           game_engine->ecs->add_component<item_carried_component> ( *item, item_carried_component ( settler.entity_id, 0 ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
+	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
      }
      break;
@@ -275,6 +277,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           carried->deleted = true; // It's not carried anymore, so delete the component
           game_engine->ecs->add_component<position_component> ( *item, position_component ( step.target_x, step.target_y ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
+	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
      }
      break;
@@ -293,11 +296,13 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           game_engine->ecs->delete_entity ( step.placeholder_structure_id );
           raws::create_structure_from_raws ( name->debug_name, step.target_x, step.target_y );
 	  game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message ( ) );
+	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
      }
      break;
      case ai::DESTROY_COMPONENT : {
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( step.component_id ) );
+	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           game_engine->ecs->delete_entity ( step.component_id );
           ++job->second.current_step;
      }
