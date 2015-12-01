@@ -581,6 +581,13 @@ public:
 	  }
 	  return result;
      }
+     
+     /*
+      * How many components do we have
+      */
+     int get_ecs_size() {
+	return components.size();
+     }
 
      /*
       * Marks the entity-component system as running.
