@@ -833,6 +833,7 @@ void setup_initial_game() {
 	  game_engine->ecs->add_component<position_component>( tree_entity, position_component( x, y ) );
 	  renderable_component tree_render(6, color_t{165,42,42},color_t{0,0,0}, 0);
 	  tree_render.extra_tall = true;
+	  game_engine->ecs->add_component<tree_component>( tree_entity, tree_component() );
 	  game_engine->ecs->add_component<renderable_component>( tree_entity, tree_render );
 	  game_engine->ecs->add_component<obstruction_component>( tree_entity, obstruction_component( true, true ) );
 	  game_engine->ecs->add_component<debug_name_component>( tree_entity, debug_name_component( "Pine Tree" ) );
