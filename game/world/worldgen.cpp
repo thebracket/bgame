@@ -755,11 +755,13 @@ entity make_settler(const int &x, const int &y)
     game_engine->ecs->add_component(test, species);
     
     // Make clothing for the settler
+    //std::cout << "Generating: " << profession.first << "\n";
     for (const std::unique_ptr<raws::base_raw> &raw : profession.second->children) {
 	if (raw->type == raws::CLOTHING) {
 	    raws::raw_clothing * rawc = static_cast<raws::raw_clothing *>(raw.get());
 	    //std::cout << "Clothing: (" << rawc->slot << "): " << rawc->item << ", gender " << rawc->gender << "\n";
 	    if ( rawc->gender == 0 or ( species.gender == gender_t::FEMALE and rawc->gender==2 ) or ( species.gender != gender_t::FEMALE and rawc->gender != 2 ) ) {
+		//std::cout << " ----- " << rawc->item << " - " << rawc->slot << " - " << rawc->type << "\n";
 		const int item_entity_id = raws::create_item_from_raws( rawc->item );
 		int position = 0;
 		
