@@ -8,3 +8,4 @@
 #include "item_changed_message.h"
 #include "walkability_changed_message.h"
 #include "entity_moved_message.h"
+#include "chop_order_message.h"
