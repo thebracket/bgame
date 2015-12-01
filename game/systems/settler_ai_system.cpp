@@ -264,7 +264,13 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           // We've reached the component, so we pick it up
           engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
           item_storage_component * storage = game_engine->ecs->find_entity_component<item_storage_component> ( step.component_id );
-          storage->deleted = true; // It's not stored anymore, so delete the component
+	  if (storage != nullptr) {
+	      storage->deleted = true; // It's not stored anymore, so delete the component
+	  }
+	  position_component * item_pos = game_engine->ecs->find_entity_component<position_component>( step.component_id );
+	  if (item_pos != nullptr) {
+	      item_pos->deleted = true;
+	  }
           game_engine->ecs->add_component<item_carried_component> ( *item, item_carried_component ( settler.entity_id, 0 ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
@@ -276,6 +282,17 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
           game_engine->ecs->add_component<position_component> ( *item, position_component ( step.target_x, step.target_y ) );
+          game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
+	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
+          ++job->second.current_step;
+     }
+     case ai::DROP_OFF_TOOL : {
+          engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
+          item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
+          carried->deleted = true; // It's not carried anymore, so delete the component
+          game_engine->ecs->add_component<position_component> ( *item, position_component ( step.target_x, step.target_y ) );
+	  item_component * item_c = game_engine->ecs->find_entity_component<item_component>( step.component_id );
+	  item_c->claimed = false;
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
