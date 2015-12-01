@@ -825,7 +825,9 @@ void setup_initial_game() {
 	const int distance = std::sqrt( dx*dx + dy*dy  );
 	
 	const int tile_idx = world::current_region->idx(x,y);
-	if (world::current_region->tiles[tile_idx].base_tile_type == tile_type::FLAT and game_engine->rng.roll_dice(1,10)<3 and distance>10) {
+	if (world::current_region->tiles[tile_idx].base_tile_type == tile_type::FLAT and game_engine->rng.roll_dice(1,10)<3 and distance>7
+	    and (y<starting_location.second-3 or y>starting_location.second+3)
+	) {
 	  // Create tree components
 	  entity tree_entity= game_engine->ecs->add_entity();
 	  game_engine->ecs->add_component<position_component>( tree_entity, position_component( x, y ) );
