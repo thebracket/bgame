@@ -37,6 +37,7 @@ inline void component_factory(fstream &lbfile, const int ct) {
       case item_carried : component_loader<item_carried_component>(lbfile); break;
       case description : component_loader<description_component>(lbfile); break;
       case item : component_loader<item_component>(lbfile); break;
+      case tree : component_loader<tree_component>(lbfile); break;
       default :
 	    throw 102;
   }

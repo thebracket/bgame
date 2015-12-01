@@ -18,3 +18,4 @@
 #include "item_carried_component.h"
 #include "description_component.h"
 #include "item_component.h"
+#include "tree_component.h"
