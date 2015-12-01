@@ -111,6 +111,10 @@ convert PersonTemplate.xcf[17] tmp/074.png # Full Blouse
 convert PersonTemplate.xcf[18] tmp/075.png # Small Blouse
 
 convert 16x16.xcf[39] tmp/076.png # Logs
+convert 16x16.xcf[40] tmp/077.png # Sawmill left
+convert 16x16.xcf[41] tmp/078.png # Sawmill right
+convert 16x16.xcf[42] tmp/079.png # Sawblade
+convert 16x16.xcf[43] tmp/080.png # Carbon Fuel
 
 convert 16x32.xcf[0] ../build/double-height.png
 

@@ -4,3 +4,5 @@ structures.txt
 starting_professions.txt
 items_starting.txt
 clothing.txt
+workshops.txt
+reactions.txt
