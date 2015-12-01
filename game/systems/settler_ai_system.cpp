@@ -218,6 +218,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      }
 
      ai::job_step_t step = job->second.steps[ job->second.current_step ];
+     //std::cout << "Job step #" << job->second.current_step << " of type "  << step.type << "\n";
      switch ( step.type ) {
      case ai::MOVE_TO : {
           // Are we there yet?
@@ -286,7 +287,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
-     }
+     } break;
      case ai::DROP_OFF_TOOL : {
           engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
           item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
@@ -303,6 +304,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	  ++settler.state_timer;
 	  if ( settler.state_timer > step.required_skill_difficulty ) {
 	      settler.state_timer = 0;
+	      std::cout << "Skill roll requested: " << step.skill_name << " of difficulty " << +step.required_skill_difficulty << "\n";
 	      auto result = game_system::skill_roll( settler.entity_id, step.skill_name, step.required_skill_difficulty );
 	      if ( result >= game_system::SUCCESS ) {
 		  ++job->second.current_step;
