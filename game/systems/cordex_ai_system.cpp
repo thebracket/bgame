@@ -104,7 +104,10 @@ void cordex_ai_system::handle_tree_chop_orders()
 	// Sub tasks:
 	// Find axe
 	auto finder = world::inventory.find( "Fire Axe" );
-	if (finder == world::inventory.end()) return; // Can't do it!
+	if (finder == world::inventory.end()) {
+	  std::cout << "Unable to locate an axe.\n";
+	  return; // Can't do it!
+	}
 	std::map<int,world::available_item *> distance_components;
 	for (world::available_item item : finder->second) {
 	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
@@ -140,7 +143,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 	job.steps.push_back( ai::job_step_t{ ai::CREATE_WOOD, msg.x, msg.y, msg.tree_id, false, "", 0 } );
 	
 	// Drop axe
-	job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_COMPONENT, msg.x, msg.y, component_id, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_TOOL, msg.x, msg.y, component_id, false, "", 0 } );
 	
 	// Add it to the help-wanted board
 	ai::jobs_board[ job.job_id ] = job;
