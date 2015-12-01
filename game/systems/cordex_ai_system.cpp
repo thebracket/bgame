@@ -5,6 +5,8 @@
 #include "../raws/raws.h"
 #include "../tasks/help_wanted.h"
 
+using world::available_item;
+
 struct selected_component {
   int id;
   int x;
@@ -13,7 +15,12 @@ struct selected_component {
 
 void cordex_ai_system::tick ( const double& duration_ms )
 {
-    // Handle new build orders
+    handle_build_orders();
+    handle_tree_chop_orders();
+}
+
+void cordex_ai_system::handle_build_orders()
+{
     vector<build_order_message> * orders = game_engine->messaging->get_messages_by_type< build_order_message >();
     for (build_order_message &msg : *orders) {
 	msg.deleted = true; // No repeats
@@ -75,6 +82,65 @@ void cordex_ai_system::tick ( const double& duration_ms )
 	}
 	job.steps.push_back( ai::job_step_t{ ai::CONVERT_PLACEHOLDER_STRUCTURE, msg.x, msg.y, 0, false, "", entity_id } );
 
+	
+	// Add it to the help-wanted board
+	ai::jobs_board[ job.job_id ] = job;
+    }
+}
+
+void cordex_ai_system::handle_tree_chop_orders()
+{
+    vector<chop_order_message> * orders = game_engine->messaging->get_messages_by_type< chop_order_message >();
+    for (chop_order_message &msg : *orders) {
+	msg.deleted = true; // No repeats
+	
+	// Create a job
+	ai::job_t job;
+	job.job_id = ai::get_next_job_id();
+	job.current_step = 0;
+	job.assigned_to = 0;
+	job.type = ai::CHOP_TREE;
+	
+	// Sub tasks:
+	// Find axe
+	auto finder = world::inventory.find( "Fire Axe" );
+	if (finder == world::inventory.end()) return; // Can't do it!
+	std::map<int,world::available_item *> distance_components;
+	for (world::available_item item : finder->second) {
+	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
+	    if (!item_comp->claimed) {
+		float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
+		int distance_i = distance;
+		distance_components[distance_i] = &item;
+	    }
+	}
+	available_item * axe = distance_components.begin()->second;
+	item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
+	item_comp->claimed = true;
+	game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
+	
+	// Navigate to axe
+	const int component_x = axe->location.first;
+	const int component_y = axe->location.second;
+	const int component_id = axe->entity_id;
+	  
+	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, 0, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_id, false, "", 0 } );
+	
+	// Navigate to tree
+	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, 0, false, "", 0 } );
+	
+	// Skill roll
+	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Lumberjack", 0 } );
+	
+	// Destroy tree
+	job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, msg.x, msg.y, msg.tree_id, false, "", 0 } );
+	
+	// Add wood
+	job.steps.push_back( ai::job_step_t{ ai::CREATE_WOOD, msg.x, msg.y, msg.tree_id, false, "", 0 } );
+	
+	// Drop axe
+	job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_COMPONENT, msg.x, msg.y, component_id, false, "", 0 } );
 	
 	// Add it to the help-wanted board
 	ai::jobs_board[ job.job_id ] = job;

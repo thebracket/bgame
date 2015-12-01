@@ -40,8 +40,19 @@ public:
                     }
                }
           }
+          
+          int region_x, region_y;
+          bool is_tree = false;
+	  tree_component * tree = game_engine->ecs->find_entity_component<tree_component>( entity_id );
+	  if ( tree != nullptr ) {	      
+	      is_tree = true;
+	      lines.add_line( SDL, "Chop Down Tree (Uses: Axe, Produces: Logs)", sdl_yellow );
+	      position_component * pos = game_engine->ecs->find_entity_component<position_component>( entity_id );
+	      region_x = pos->x;
+	      region_y = pos->y;
+	  }
 
-          const int height = ( lines.size() *16 ) +24;
+          const int height = ( lines.size() *16 ) + 24;
           location = { 0, 0, lines.get_width() +32, height };
 
           allocate();
@@ -55,6 +66,13 @@ public:
                std::string line_s = SDL->render_text_to_image ( "disco14", panel_line.first, "tmp", panel_line.second );
                SDL->render_bitmap_simple ( line_s, x, y );
                y += 16;
+          }
+          
+          if ( is_tree ) {
+	      hotspots.push_back ( { SDL_Rect{ 0, y-16, lines.get_width() +32, 16 }, [=] {
+		    game_engine->messaging->add_message<chop_order_message>( chop_order_message( region_x, region_y, entity_id, "Chop Tree" ) );
+                    return true;
+                } } );
           }
 
           SDL->reset_texture_target();

@@ -334,6 +334,14 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           }
      }
      break;
+     case ai::CREATE_WOOD : {
+	  const int number_of_logs = game_engine->rng.roll_dice(1,6);
+	  for (int i=0; i<number_of_logs; ++i) {
+	      int wood_id = raws::create_item_from_raws("Wood Logs");
+	      game_engine->ecs->add_component<position_component>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component( step.target_x, step.target_y ) );
+	  }
+	  ++job->second.current_step;
+     } break;
      }
 }
 
