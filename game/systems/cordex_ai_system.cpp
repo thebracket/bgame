@@ -72,7 +72,7 @@ void cordex_ai_system::handle_build_orders()
 	}
 	
 	// Add the skill check
-	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Construction", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Construction", 0, 12 } );
 	
 	// Once the skill has been passed
 	//	For each component
@@ -134,7 +134,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, 0, false, "", 0 } );
 	
 	// Skill roll
-	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Lumberjack", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Lumberjack", 0, 15 } );
 	
 	// Destroy tree
 	job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, msg.x, msg.y, msg.tree_id, false, "", 0 } );

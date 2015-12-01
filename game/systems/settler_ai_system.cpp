@@ -191,6 +191,7 @@ void idle ( settler_ai_component &settler, game_stats_component * stats, rendera
                it->second.assigned_to = settler.entity_id;
                settler.job_id = it->second.job_id;
                claimed_job = true;
+	       settler.state_timer = 0;
           }
      }
 
@@ -299,12 +300,29 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      }
      break;
      case ai::CONSTRUCT_WITH_SKILL : {
-	  // TODO: add difficulty
-          if ( game_system::skill_roll( settler.entity_id, step.skill_name, step.required_skill_difficulty ) ) {
-	      ++job->second.current_step;
-	      emote( "Aha!", pos, chat_emote_color_t::BLUE);
-	  } else {
-	      emote( "*working*", pos, chat_emote_color_t::BLUE);
+	  ++settler.state_timer;
+	  if ( settler.state_timer > step.required_skill_difficulty ) {
+	      settler.state_timer = 0;
+	      auto result = game_system::skill_roll( settler.entity_id, step.skill_name, step.required_skill_difficulty );
+	      if ( result >= game_system::SUCCESS ) {
+		  ++job->second.current_step;
+		  emote( "Work Complete!", pos, chat_emote_color_t::BLUE);
+	      } else {
+		  if (result == game_system::CRITICAL_FAIL) {
+		       emote( "OUCH!", pos, chat_emote_color_t::RED );
+		       // TODO: Inflict damage on the hapless settler!
+		  } else {
+		      int random = game_engine->rng.roll_dice(1, 6);
+		      switch (random) {
+			case 1 : emote( "*working*", pos, chat_emote_color_t::BLUE); break;
+			case 2 : emote( "This is harder than it looks!", pos, chat_emote_color_t::BLUE); break;
+			case 3 : emote( "That didn't work, I'll try again.", pos, chat_emote_color_t::BLUE); break;
+			case 4 : emote( "Do I really know what I'm doing?", pos, chat_emote_color_t::BLUE); break;
+			case 5 : emote( "That wasn't what I expected to happen!", pos, chat_emote_color_t::BLUE); break;
+			case 6 : emote( "Oh dear, trying again", pos, chat_emote_color_t::BLUE); break;
+		      }
+		  }
+	      }
 	  }
      }
      break;
