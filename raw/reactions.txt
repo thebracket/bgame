@@ -6,7 +6,7 @@
 [WORKSHOP:Small Replicator]
 [EMOTE:Breaking down molecular structure]
 [INPUT:Wood Logs:1]
-[POWER:10]
+[POWER_DRAIN:10]
 [OUTPUT:Carbon Replicator Fuel:1]
 [/REACTION]
 
@@ -15,6 +15,6 @@
 [WORKSHOP:Small Replicator]
 [EMOTE:*Replicating*]
 [INPUT:Carbon Replicator Fuel:2]
-[POWER:30]
+[POWER_DRAIN:30]
 [OUTPUT:Saw Blade:1]
 [/REACTION]
