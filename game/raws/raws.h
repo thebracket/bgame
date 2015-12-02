@@ -39,5 +39,8 @@ SDL_Rect get_tile_source_by_name ( const string &name );
 
 vector< tuple<string,int,vector<string>>> get_buildables();
 vector<string> get_buildable_requirements ( const string &name );
+vector<base_raw *> get_possible_reactions_for_structure ( const string &structure_name );
+
+int get_tile_idx_by_name( const string &name );
 
 }

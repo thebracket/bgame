@@ -534,7 +534,7 @@ void parse_reaction ( const vector<string> &chunks )
           parse_raw_input ( chunks );
           return;
      }
-     if ( chunks[0] == "POWER-DRAIN" ) {
+     if ( chunks[0] == "POWER_DRAIN" ) {
           parse_raw_power_drain ( chunks );
           return;
      }
@@ -876,5 +876,25 @@ vector<string> get_buildable_requirements ( const string &name )
      }
      return {};
 }
+
+vector<base_raw *> get_possible_reactions_for_structure ( const string &structure_name )
+{
+    vector<base_raw *> result;
+    
+    for ( auto it = detail::reactions.begin(); it != detail::reactions.end(); ++it ) {
+	const bool has_possible_reactions = it->second->has_reactions_for_workshop ( structure_name );
+	if ( has_possible_reactions ) result.push_back( it->second.get() );
+    }
+    
+    return result;
+}
+
+int get_tile_idx_by_name ( const string& name )
+{
+    auto finder = detail::tiles.find ( name );
+    if ( finder == detail::tiles.end() ) return 0;
+    return finder->second;
+}
+
 
 }
