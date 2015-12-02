@@ -9,7 +9,7 @@ using engine::component_list_t;
 
 using my_messages = message_list_t<command_message, power_consumed_message, chat_emote_message, 
   mouse_motion_message, build_order_message, item_changed_message, walkability_changed_message,
-  entity_moved_message, chop_order_message>;
+  entity_moved_message, chop_order_message, reaction_order_message>;
 
 using my_components = component_list_t<calendar_component, debug_name_component, obstruction_component, 
   position_component, power_battery_component, power_generator_component, renderable_component, settler_ai_component, 

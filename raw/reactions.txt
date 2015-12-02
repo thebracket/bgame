@@ -14,7 +14,7 @@
 [NAME:Replicate Carbon-Composite Saw Blade]
 [WORKSHOP:Small Replicator]
 [EMOTE:*Replicating*]
-[INPUT:Carbon Replicator Fuel:2]
+[INPUT:Carbon Replicator Fuel:1]
 [POWER_DRAIN:30]
 [OUTPUT:Saw Blade:1]
 [/REACTION]

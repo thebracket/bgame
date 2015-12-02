@@ -88,6 +88,14 @@ struct base_raw {
         }
         return modifier;
     }
+    
+    virtual bool has_reactions_for_workshop(const string &workshop_name) {
+	bool result = false;
+	for ( const unique_ptr<base_raw> &child : children ) {
+	    if ( child->has_reactions_for_workshop( workshop_name ) ) result = true;
+	}
+	return result;
+    }
 };
 
 }

@@ -5,6 +5,10 @@
 #include "colors.h"
 #include "../game.h"
 #include "build_options_window.h"
+#include "../raws/raw_input.h"
+#include "../raws/raw_output.h"
+#include "../raws/raw_power_drain.h"
+#include "../raws/raw_emote.h"
 
 namespace render {
 
@@ -70,10 +74,76 @@ public:
                          return true;
                     }, 1 );
                }
+               
+               // It might also be a workshop that has reactions - determine this
+               vector<raws::base_raw *> reactions = raws::get_possible_reactions_for_structure( name->debug_name );
+	       for ( raws::base_raw * br : reactions ) {
+		    vector<pair<string,int>> required_components;
+		    vector<pair<string,int>> creates;
+		    int power_drain = 0;
+		    string emote;
+		    string reaction_name;
+		    int output_idx = 0;
+		    
+		    for ( const std::unique_ptr<raws::base_raw> &brc : br->children ) {
+			if ( brc->type == raws::INPUT ) {
+			    raws::raw_input * input = static_cast<raws::raw_input *>( brc.get() );
+			    required_components.push_back( std::make_pair( input->required_item, input->quantity ) );
+			}
+			if ( brc->type == raws::OUTPUT ) {
+			    raws::raw_output * input = static_cast<raws::raw_output *>( brc.get() );
+			    creates.push_back( std::make_pair( input->created_item, input->quantity ) );
+			}
+			if ( brc->type == raws::POWER_DRAIN ) {
+			    raws::raw_power_drain * input = static_cast<raws::raw_power_drain *>( brc.get() );
+			    power_drain = input->quantity;
+			}
+			if ( brc->type == raws::EMOTE ) {
+			    raws::raw_emote * input = static_cast<raws::raw_emote *>( brc.get() );
+			    emote = input->emote;
+			}
+			if ( brc->type == raws::NAME ) {
+			    reaction_name = brc->get_name_override();
+			}
+		    }
+		    
+		    /*
+		    std::cout << "REACTION -- " << reaction_name << ": \n";
+		    for (std::pair<string,int> &tmp : required_components) {
+			std::cout << " <-- " << tmp.first << " x " << tmp.second << "\n";
+		    }
+		    for (std::pair<string,int> &tmp : creates) {
+			std::cout << " --> " << tmp.first << " x " << tmp.second << "\n";
+		    }
+		    std::cout << " <-- " << power_drain << " units of power.\n";
+		    std::cout << " === " << emote << "\n";
+		    std::cout << " Output tile idx: " << output_idx << "\n";
+		    */
+		    
+		    bool possible = true;
+		    for (const std::pair<string,int> &component : required_components ) {
+			auto finder = world::inventory.find ( component.first );
+			if (finder == world::inventory.end()) {
+			    possible = false;
+			} else {
+			    const int available_components = finder->second.size();
+			    if (available_components < component.second) possible = false;
+			}
+		    }
+		    
+		    if (possible) {
+			add_line ( reaction_name, sdl_yellow, output_idx, true, [=] {
+			    game_engine->messaging->add_message<reaction_order_message>( reaction_order_message( reaction_name, entity_id, required_components, creates, emote, power_drain ) );
+			    return true;
+			}, 0 );
+		    } else {
+			std::cout << "Reaction " << reaction_name << " was ruled impossible.\n";
+		    }
+	       }
           }
 
           // Render the extended line-buffer
-          const int height = ( lines.size() *16 ) +24;
+          const int height = ( lines.size() *16 ) +32;
           location = { 0, 0, current_width +32, height };
 
           allocate();
