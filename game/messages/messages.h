@@ -10,3 +10,4 @@
 #include "entity_moved_message.h"
 #include "chop_order_message.h"
 #include "reaction_order_message.h"
+#include "inflict_damage_message.h"

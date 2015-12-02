@@ -21,6 +21,7 @@ void play_mode::init_systems()
      game_engine->ecs->add_system ( make_power_system() );     
      game_engine->ecs->add_system ( make_cordex_ai_system() );          
      game_engine->ecs->add_system ( make_settler_ai_system() );
+     game_engine->ecs->add_system ( make_damage_system() );
      game_engine->ecs->add_system ( make_viewshed_system() );
      game_engine->ecs->add_system ( make_renderable_system() );
 
