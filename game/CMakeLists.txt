@@ -23,6 +23,7 @@ add_library(game
 	    systems/input_system.cpp
 	    systems/inventory_system.cpp
 	    systems/cordex_ai_system.cpp
+	    systems/damage_system.cpp
 	    tasks/help_wanted.cpp
 	    tasks/path_finding.cpp
 	    tasks/find_nearest_provision.cpp

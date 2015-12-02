@@ -312,7 +312,8 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	      } else {
 		  if (result == game_system::CRITICAL_FAIL) {
 		       emote( "OUCH!", pos, chat_emote_color_t::RED );
-		       // TODO: Inflict damage on the hapless settler!
+		       int damage_taken = game_engine->rng.roll_dice(1,6);
+		       game_engine->messaging->add_message<inflict_damage_message>( inflict_damage_message( settler.entity_id, damage_taken, step.skill_name + string(" Mishap" ) ) );
 		  } else {
 		      int random = game_engine->rng.roll_dice(1, 6);
 		      switch (random) {

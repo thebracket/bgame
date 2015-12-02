@@ -1,6 +1,7 @@
 #include "game_render.h"
 #include <utility>
 #include "settler_compositor.h"
+#include "colors.h"
 
 using std::make_pair;
 
@@ -141,6 +142,16 @@ void game_render::render_emotes ( sdl2_backend * SDL )
                const SDL_Color sdl_black {
                     0,0,0,0
                };
+	       SDL_Color text_color = sdl_black;
+	       switch ( emote.color ) {
+		 case WHITE : text_color =  render::sdl_white; break;
+		 case YELLOW : text_color = render::sdl_yellow; break;
+		 case CYAN : text_color = render::sdl_cyan; break;
+		 case GREEN : text_color = render::sdl_green; break;
+		 case MAGENTA : text_color = render::sdl_magenta; break;
+		 case RED : text_color = render::sdl_red; break;
+		 case BLUE : text_color = render::sdl_blue; break;
+	       }
                string emote_text = SDL->render_text_to_image ( "disco12", emote.message, "tmp", sdl_black );
                SDL->set_alpha_mod ( emote_text, fade );
                SDL->set_alpha_mod ( "emote_bubble", fade );
