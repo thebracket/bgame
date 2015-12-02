@@ -18,3 +18,12 @@
 [POWER_DRAIN:30]
 [OUTPUT:Saw Blade:1]
 [/REACTION]
+
+[REACTION]
+[NAME:Cut Wooden Planks]
+[WORKSHOP:Saw Mill]
+[EMOTE:*Sawing*]
+[INPUT:Wood Logs:1]
+[POWER_DRAIN:30]
+[OUTPUT:Wood Planks:4]
+[/REACTION]

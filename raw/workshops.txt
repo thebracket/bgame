@@ -3,15 +3,15 @@
 [NAME:Saw Mill]
 [DESCRIPTION:A conveyer-belt, attached to a large saw. Transforms wood logs into useful planks.]
 [RENDER]
-[RENDER_GLYPH:OMEGA]
-[RENDER_COLOR:RED:BLACK]
-[RENDER_TILE:CAMPFIRE]
+[RENDER_GLYPH:SAWMILL]
+[RENDER_COLOR:CYAN:BLACK]
+[RENDER_TILE:SAWMILL]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
 [OBSTRUCTS:Y:Y]
 [BUILDABLE]
 * Components are names from item lists. You can have multiple components.
-[BUILDABLE_COMPONENT:Wood Logs:2]
+[BUILDABLE_COMPONENT:Wood Logs:1]
 [BUILDABLE_COMPONENT:Saw Blade:1]
 * Skills take the form skill name ; difficulty ; time
 * You can have multiple skills required in order.
