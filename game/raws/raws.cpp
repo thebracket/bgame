@@ -27,6 +27,11 @@
 #include "raw_clothing_color.h"
 #include "raw_clothing_slot.h"
 #include "raw_clothing.h"
+#include "raw_workshop.h"
+#include "raw_emote.h"
+#include "raw_input.h"
+#include "raw_power_drain.h"
+#include "raw_output.h"
 
 #include "../game.h"
 
@@ -47,6 +52,7 @@ unordered_map<string, unsigned char> glyphs;
 unordered_map<string, unique_ptr<base_raw>> structures;
 unordered_map<string, unique_ptr<base_raw>> starting_professions;
 unordered_map<string, unique_ptr<base_raw>> items;
+unordered_map<string, unique_ptr<base_raw>> reactions;
 unordered_map<string, int> tiles;
 
 }
@@ -77,7 +83,7 @@ unique_ptr<base_raw> current;
 unique_ptr<base_raw> current_render;
 unique_ptr<base_raw> current_sub_chunk;
 string current_name;
-enum nested_enum {NONE,STRUCTURE,STARTING_PROFESSION,ITEM};
+enum nested_enum {NONE,STRUCTURE,STARTING_PROFESSION,ITEM,REACTION};
 nested_enum nested_type;
 bool nested;
 
@@ -267,6 +273,46 @@ void parse_raw_clothing ( const vector<string> &chunks )
     if (chunks[0] == "CLOTHING_FEMALE") gender = 2;
     unique_ptr< raw_clothing > slot = make_unique< raw_clothing > ( clothing_slot, clothing_item, gender );
     current->children.push_back ( std::move ( slot ) );
+}
+
+void parse_raw_workshop ( const vector<string> &chunks )
+{
+     const string description = chunks[1];
+     unique_ptr<raw_workshop> desc = make_unique<raw_workshop> ( description );
+     current->children.push_back ( std::move ( desc ) );
+}
+
+void parse_raw_emote ( const vector<string> &chunks )
+{
+     const string description = chunks[1];
+     unique_ptr<raw_emote> desc = make_unique<raw_emote> ( description );
+     current->children.push_back ( std::move ( desc ) );
+}
+
+void parse_raw_input ( const vector<string> &chunks )
+{
+     //std::cout << "Parsing name: " << chunks[1] << "\n";
+     string item = chunks[1];
+     int qty = std::stoi(chunks[2]);
+     unique_ptr<raw_input> name = make_unique<raw_input> ( chunks[1], qty );
+     current->children.push_back ( std::move ( name ) );
+}
+
+void parse_raw_output ( const vector<string> &chunks )
+{
+     //std::cout << "Parsing name: " << chunks[1] << "\n";
+     string item = chunks[1];
+     int qty = std::stoi(chunks[2]);
+     unique_ptr<raw_output> name = make_unique<raw_output> ( chunks[1], qty );
+     current->children.push_back ( std::move ( name ) );
+}
+
+void parse_raw_power_drain ( const vector<string> &chunks )
+{
+     const string drain_text = chunks[1];
+     const int drain_int = std::stoi( drain_text );
+     unique_ptr<raw_power_drain> desc = make_unique<raw_power_drain> ( drain_int );
+     current->children.push_back ( std::move ( desc ) );
 }
 
 /* Specific parser functions */
@@ -463,6 +509,41 @@ void parse_item ( const vector<string> &chunks )
      }
 }
 
+void parse_reaction ( const vector<string> &chunks )
+{
+     if ( chunks[0] == "/REACTION" ) {
+          nested = false;
+          nested_type = NONE;
+          detail::reactions[current_name] = std::move ( current );
+          current.reset();
+          return;
+     }
+     if ( chunks[0] == "NAME" ) {
+          parse_raw_name ( chunks );
+          return;
+     }
+     if ( chunks[0] == "WORKSHOP" ) {
+          parse_raw_workshop ( chunks );
+          return;
+     }
+     if ( chunks[0] == "EMOTE" ) {
+          parse_raw_emote ( chunks );
+          return;
+     }
+     if ( chunks[0] == "INPUT" ) {
+          parse_raw_input ( chunks );
+          return;
+     }
+     if ( chunks[0] == "POWER-DRAIN" ) {
+          parse_raw_power_drain ( chunks );
+          return;
+     }
+     if ( chunks[0] == "OUTPUT" ) {
+          parse_raw_output ( chunks );
+          return;
+     }
+}
+
 /* Chunk Parsing */
 
 void parse_nested_chunk ( const vector<string> &chunks )
@@ -477,6 +558,9 @@ void parse_nested_chunk ( const vector<string> &chunks )
      case ITEM :
           parse_item ( chunks );
           break;
+     case REACTION :
+	  parse_reaction ( chunks );
+	  break;
      case NONE :
           throw 103;
      }
@@ -533,6 +617,12 @@ void parse_whole_chunk ( const vector<string> &chunks )
           nested_type = ITEM;
           current = make_unique<base_raw>();
           return;
+     }
+     if ( chunks[0] == "REACTION" ) {
+	  nested = true;
+	  nested_type = REACTION;
+	  current = make_unique<base_raw>();
+	  return;
      }
 
      std::cout << "WARNING: GOT TO END OF CHUNK READER WITH NO MATCH FOR [" << chunks[0] << "]\n";
