@@ -21,7 +21,7 @@ void renderable_system::tick ( const double &duration_ms )
           const int top_y = camera_pos->y - 23;
           const int left_x = camera_pos->x - 32;
           const int bottom_y = top_y + 45;
-          const int right_x = left_x + 48;
+          const int right_x = left_x + 64;
 
           const vector<position_component> * positions = game_engine->ecs->find_components_by_type<position_component> ();
           for ( const position_component &pos : *positions ) {

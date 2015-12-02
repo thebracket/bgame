@@ -9,21 +9,25 @@ void camera_system::tick(const double &duration_ms) {
 	      cmd.deleted = true;
 	      camera_pos->y--;
 	      if (camera_pos->y < 0) camera_pos->y = 0;
+	      game_engine->messaging->add_message<entity_moved_message>( entity_moved_message() );
 	  }
 	  if (!cmd.deleted and cmd.command == CAMERA_DOWN) {
 	      cmd.deleted = true;
 	      camera_pos->y++;
 	      if (camera_pos->y > landblock_height) camera_pos->y = landblock_height;
+	      game_engine->messaging->add_message<entity_moved_message>( entity_moved_message() );
 	  }
 	  if (!cmd.deleted and cmd.command == CAMERA_LEFT) {
 	      cmd.deleted = true;
 	      camera_pos->x--;
 	      if (camera_pos->x < 0) camera_pos->x = 0;
+	      game_engine->messaging->add_message<entity_moved_message>( entity_moved_message() );
 	  }
 	  if (!cmd.deleted and cmd.command == CAMERA_RIGHT) {
 	      cmd.deleted = true;
 	      camera_pos->x++;
 	      if (camera_pos->x > landblock_width) camera_pos->x = landblock_width;
+	      game_engine->messaging->add_message<entity_moved_message>( entity_moved_message() );
 	  }
      }    
 }
