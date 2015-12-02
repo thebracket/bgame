@@ -386,6 +386,10 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	  game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( wood_id ) );
 	  ++job->second.current_step;
      } break;
+     case ai::CONSUME_POWER : {
+	  consume_power( step.component_id );
+	  ++job->second.current_step;
+     } break;
      }
 }
 

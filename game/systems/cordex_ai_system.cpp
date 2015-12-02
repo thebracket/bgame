@@ -214,6 +214,9 @@ void cordex_ai_system::handle_reaction_orders()
 	// TODO: We need to track a skill here
 	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, workshop_pos->x, workshop_pos->y, 0, true, "Construction", 0, 12 } );
 	
+	// Power drain
+	job.steps.push_back( ai::job_step_t{ ai::CONSUME_POWER, workshop_pos->x, workshop_pos->y, msg.power_drain, true, "Construction", 0, 0 } );
+	
 	// Destroy the components
 	for (world::available_item * component : chosen_components) {
 	    const int component_id = component->entity_id;
