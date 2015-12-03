@@ -45,13 +45,12 @@ struct settler_needs {
 settler_needs needs_clocks ( settler_ai_component &settler )
 {
      if ( settler.state_major != SLEEPING ) {
-          settler.calories -= settler.calorie_burn_at_rest;
-     }
-     if ( settler.state_major != SLEEPING ) {
-          settler.thirst--;
-     }
-     if ( settler.state_major != SLEEPING ) {
-          settler.wakefulness-=3;
+          settler.calories -= (settler.calorie_burn_at_rest * 3);
+	  settler.thirst-=4;
+	  settler.wakefulness-=6;
+	  if (settler.calories < 0) settler.calories = 0;
+	  if (settler.thirst < 0) settler.thirst = 0;
+	  if (settler.wakefulness < 0) settler.wakefulness = 0;
      }
 
      settler_needs result {false,false,false};

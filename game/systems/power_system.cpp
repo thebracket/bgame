@@ -18,8 +18,8 @@ int calculate_power_gain(const power_generator_component* gen)
         } else {
             efficiency = 1.0 - ((world::sun_angle-90.0F)/90.0F);
         }
-        if (efficiency > 0.9) efficiency = 0.9F;
-        if (efficiency < 0.01) efficiency = 0.01F;
+        if (efficiency > 1.0) efficiency = 0.9F;
+        if (efficiency < 0.01) efficiency = 0.0F;
         float generated = gen->amount * efficiency;
 	return generated;
     }
@@ -40,7 +40,7 @@ void power_system::tick(const double& duration_ms)
 
         const vector<power_generator_component> * producers = game_engine->ecs->find_components_by_type<power_generator_component> ();
         for (const power_generator_component &gen : *producers) {
-            const int generated_power = std::max(1,power_system_detail::calculate_power_gain(&gen));
+            const int generated_power = power_system_detail::calculate_power_gain(&gen);
             power += generated_power;
         }
 

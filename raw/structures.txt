@@ -9,7 +9,7 @@
 [RENDER_LAYER:BUILDING]
 [/RENDER]
 [OBSTRUCTS:Y:Y]
-[GENERATOR:daylight:5]
+[GENERATOR:daylight:2]
 [BATTERY:25]
 [DESCRIPTION:A bank of solar panels, atop an array of super-capacitor power storage. It provides power during daylight, and stores it at night.]
 [/STRUCTURE]
@@ -27,7 +27,7 @@
 [SETTLER-ACTION]
 [SA-NAME:Drink Purified Water]
 [SA-PROVIDES:THIRST:1000]
-[SA-POWER_USE:10]
+[SA-POWER_USE:20]
 [/SETTLER-ACTION]
 [/STRUCTURE]
 
@@ -44,7 +44,7 @@
 [SETTLER-ACTION]
 [SA-NAME:Eat NutraGunk]
 [SA-PROVIDES:CALORIES:2000]
-[SA-POWER_USE:20]
+[SA-POWER_USE:30]
 [/SETTLER-ACTION]
 [/STRUCTURE]
 
