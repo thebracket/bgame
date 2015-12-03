@@ -108,22 +108,25 @@ void game_render::render_tool_tips ( sdl2_backend * SDL )
 
 void game_render::render_power_bar ( sdl2_backend * SDL )
 {
-     SDL_Rect src { 0, 0, 1024, 16 };
+     /*SDL_Rect src { 0, 0, 1024, 16 };
      SDL_Rect dest { 0 , 16 , 1024, 16 };
      SDL->render_bitmap ( "power_bar_red", src, dest );
 
      const float power_percent = float ( world::stored_power ) / float ( world::max_power );
      const int ticks = 1024 * power_percent;
      dest = { 0 , 16 , ticks, 16 };
-     SDL->render_bitmap ( "power_bar_green", src, dest );
+     SDL->render_bitmap ( "power_bar_green", src, dest );*/
+     
+     const float power_percent = float ( world::stored_power ) / float ( world::max_power );
+     const int power_tenths = (power_percent * 10.0)-1;
+     SDL_Rect src { power_tenths * 46, 0, 46, 48 };
+     SDL_Rect dest { 4, 0, 48, 48 };
+     SDL->render_bitmap( "cordex", src, dest );
 
      std::stringstream ss;
-     ss << "<Power: " << world::stored_power << " / " << world::max_power << ">";
-     const SDL_Color sdl_yellow {
-          255,255,0,0
-     };
-     string emote_text = SDL->render_text_to_image ( "disco14", ss.str(), "tmp", sdl_yellow );
-     SDL->render_bitmap_centered ( emote_text, 506, 16 );
+     ss << "Power: " << world::stored_power << " I " << world::max_power;
+     string emote_text = SDL->render_text_to_image ( "lcd10", ss.str(), "tmp", render::sdl_dark_grey );
+     SDL->render_bitmap_simple ( emote_text, 68, 22 );
 }
 
 void game_render::render_emotes ( sdl2_backend * SDL )
@@ -193,16 +196,17 @@ void game_render::render_date_time ( sdl2_backend * SDL )
      if ( world::display_time.empty() ) {
           world::display_time = " ";
      }
-     const std::string the_date = game_engine->render_text_to_image ( "disco14", world::display_day_month, "btn_playgame", sdl_white );
-     const std::string the_time = game_engine->render_text_to_image ( "disco14", world::display_time, "btn_playgame", sdl_white );
-     SDL->render_bitmap_simple ( the_date, 0, 0 );
-     SDL->render_bitmap_simple ( the_time, 100, 0 );
+     const std::string the_date = game_engine->render_text_to_image ( "lcd10", world::display_day_month, "btn_playgame", render::sdl_dark_grey );
+     const std::string the_time = game_engine->render_text_to_image ( "lcd10", world::display_time, "btn_playgame", render::sdl_dark_grey );
+     SDL->render_bitmap_simple ( the_date, 68, 8 );
+     SDL->render_bitmap_simple ( the_time, 178, 8 );
 }
 
 void game_render::render_paused ( sdl2_backend * SDL )
 {
      if ( world::paused ) {
-          SDL->render_bitmap_simple ( "paused", 900, 0 );
+        const std::string paused = game_engine->render_text_to_image ( "lcd10", "PAUSED", "btn_playgame", render::sdl_dark_grey );
+	SDL->render_bitmap_simple ( paused, 310, 8 );
      }
 }
 

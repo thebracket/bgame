@@ -119,7 +119,21 @@ convert 16x16.xcf[44] tmp/081.png # Wood Floor
 
 convert 16x32.xcf[0] ../build/double-height.png
 
-montage -background transparent -geometry 16x16\>+0+0 tmp/*.png $RESULT
+montage -background transparent -geometry 16x16\>+0+0 -tile 9x tmp/*.png $RESULT
+rm tmp/*
+
+convert Cordex\ Power.xcf[0] tmp/001.png
+convert Cordex\ Power.xcf[1] tmp/002.png
+convert Cordex\ Power.xcf[2] tmp/003.png
+convert Cordex\ Power.xcf[3] tmp/004.png
+convert Cordex\ Power.xcf[4] tmp/005.png
+convert Cordex\ Power.xcf[5] tmp/006.png
+convert Cordex\ Power.xcf[6] tmp/007.png
+convert Cordex\ Power.xcf[7] tmp/008.png
+convert Cordex\ Power.xcf[8] tmp/009.png
+convert Cordex\ Power.xcf[9] tmp/010.png
+
+montage -background transparent -geometry 46x48\>+0+0 -tile 10x1 tmp/*.png ../build/cordex.png
+
 rm tmp/*
 rmdir tmp
-
