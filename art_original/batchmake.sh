@@ -117,6 +117,13 @@ convert 16x16.xcf[42] tmp/079.png # Carbon Fuel
 convert 16x16.xcf[43] tmp/080.png # Planks
 convert 16x16.xcf[44] tmp/081.png # Wood Floor
 
+convert Structures.xcf[17] tmp/082.png # Pallisade NS
+convert Structures.xcf[18] tmp/083.png # Pallisade EW
+convert Structures.xcf[19] tmp/084.png # Pallisade SE
+convert Structures.xcf[20] tmp/085.png # Pallisade SW
+convert Structures.xcf[21] tmp/086.png # Pallisade NE
+convert Structures.xcf[22] tmp/087.png # Pallisade NW
+
 convert 16x32.xcf[0] ../build/double-height.png
 
 montage -background transparent -geometry 16x16\>+0+0 -tile 9x tmp/*.png $RESULT
