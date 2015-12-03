@@ -287,7 +287,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
           item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
-          game_engine->ecs->add_component<position_component> ( *item, position_component ( step.target_x, step.target_y ) );
+          game_engine->ecs->add_component<position_component> ( *item, position_component ( pos->x, pos->y ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
@@ -296,7 +296,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
           item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
-          game_engine->ecs->add_component<position_component> ( *item, position_component ( step.target_x, step.target_y ) );
+          game_engine->ecs->add_component<position_component> ( *item, position_component ( pos->x, pos->y ) );
 	  item_component * item_c = game_engine->ecs->find_entity_component<item_component>( step.component_id );
 	  item_c->claimed = false;
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
