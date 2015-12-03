@@ -10,6 +10,7 @@
 #include "inventory_system.h"
 #include "cordex_ai_system.h"
 #include "damage_system.h"
+#include "particle_system.h"
 #include <memory>
 
 using std::make_unique;
@@ -27,3 +28,4 @@ unique_ptr< base_system > make_input_system() { return make_unique<input_system>
 unique_ptr< base_system > make_inventory_system() {return make_unique<inventory_system>(); }
 unique_ptr< base_system > make_cordex_ai_system() { return make_unique<cordex_ai_system>(); }
 unique_ptr< base_system > make_damage_system() { return make_unique<damage_system>(); }
+unique_ptr< base_system > make_particle_system() { return make_unique<particle_system>(); }

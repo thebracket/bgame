@@ -15,7 +15,7 @@ inline skill_test_result skill_roll(const int skill_level, const int modifiers, 
     const int natural_roll = game_engine->rng.roll_dice(1, 20);
     const int roll = natural_roll + modifiers;
     
-    std::cout << "Skill roll! Level [" << skill_level << "], Modifiers: [" << modifiers << "], difficulty: [" << difficulty << "]. Natural " << natural_roll << " = " << roll << "\n";
+    //std::cout << "Skill roll! Level [" << skill_level << "], Modifiers: [" << modifiers << "], difficulty: [" << difficulty << "]. Natural " << natural_roll << " = " << roll << "\n";
     
     if (natural_roll == 20) return CRITICAL_SUCCCESS;
     if (natural_roll == 1) return CRITICAL_FAIL;
@@ -37,6 +37,7 @@ inline int get_skill_modifier(const game_stats_component * entity_stats, const s
         
     if (skill_name == "Construction") modifier = stat_modifier( entity_stats->dexterity );
     if (skill_name == "Lumberjack") modifier = stat_modifier( entity_stats->strength );
+    if (skill_name == "Self Heal") modifier = stat_modifier( entity_stats->constitution );
     
     return modifier;
 }

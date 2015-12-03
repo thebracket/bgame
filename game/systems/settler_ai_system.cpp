@@ -23,6 +23,11 @@ void emote ( const string &message, const position_component * pos, const chat_e
      game_engine->messaging->add_message<chat_emote_message> ( chat_emote_message ( string ( " " ) +message, pos->x+1, pos->y, color ) );
 }
 
+void emite_particle ( const string &message, const position_component * pos )
+{
+     game_engine->messaging->add_message<particle_message> ( particle_message ( string ( " " ) +message, pos->x+1, pos->y ) );
+}
+
 void append_name ( stringstream &ss, const settler_ai_component &settler )
 {
      ss << "@CYAN@" << settler.first_name << " " << settler.last_name << "@WHITE@ (" << settler.profession_tag << ") ";
@@ -303,7 +308,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	  ++settler.state_timer;
 	  if ( settler.state_timer > step.required_skill_difficulty ) {
 	      settler.state_timer = 0;
-	      std::cout << "Skill roll requested: " << step.skill_name << " of difficulty " << +step.required_skill_difficulty << "\n";
+	      //std::cout << "Skill roll requested: " << step.skill_name << " of difficulty " << +step.required_skill_difficulty << "\n";
 	      auto result = game_system::skill_roll( settler.entity_id, step.skill_name, step.required_skill_difficulty );
 	      if ( result >= game_system::SUCCESS ) {
 		  ++job->second.current_step;
@@ -312,7 +317,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 		  if (result == game_system::CRITICAL_FAIL) {
 		       emote( "OUCH!", pos, chat_emote_color_t::RED );
 		       int damage_taken = game_engine->rng.roll_dice(1,6);
-		       game_engine->messaging->add_message<inflict_damage_message>( inflict_damage_message( settler.entity_id, damage_taken, step.skill_name + string(" Mishap" ) ) );
+		       game_engine->messaging->add_message<inflict_damage_message>( inflict_damage_message( settler.entity_id, damage_taken, step.skill_name + string(" Mishap" ), pos->x, pos->y ) );
 		  } else {
 		      int random = game_engine->rng.roll_dice(1, 6);
 		      switch (random) {
@@ -351,6 +356,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	       pos->y = step.target_y;
                const int wakeful_gain = stat_modifier ( stats->constitution ) + 8 + game_engine->rng.roll_dice ( 1,6 );
                settler.wakefulness += wakeful_gain;
+	       if ( game_engine->rng.roll_dice(1,3)==1 ) emite_particle( "z", pos );
                if ( settler.wakefulness > 1000 ) {
                     emote ( "YAWN!", pos, YELLOW );
 		    // We need to free the bed

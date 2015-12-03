@@ -14,11 +14,11 @@ void game_render::render ( sdl2_backend * SDL )
      } else {
           render_map_ascii ( SDL );
      }
-
-     // TODO: Render particles
+     
      render_power_bar ( SDL );
      render_date_time ( SDL );
      render_paused ( SDL );
+     render_particles( SDL );
      render_emotes ( SDL );
 
      if ( mode == NORMAL ) {
@@ -184,6 +184,39 @@ void game_render::render_emotes ( sdl2_backend * SDL )
                SDL->set_alpha_mod ( "emote_bubble", 0 );
           }
      }
+}
+
+void game_render::render_particles ( sdl2_backend* SDL )
+{
+    vector<particle_message> * particles = game_engine->messaging->get_messages_by_type<particle_message>();
+    if ( !particles->empty() ) {
+
+          // Calculate the "home" position - top left.
+          int region_x, region_y;
+          std::tie ( region_x, region_y ) = get_region_coordinates();
+          region_x -= mouse_vx;
+          region_y -= mouse_vy;
+	  for (particle_message &particle : *particles) {
+	      SDL_Color text_color = render::sdl_black;
+	       switch ( particle.color ) {
+		 case WHITE : text_color =  render::sdl_light_grey; break;
+		 case YELLOW : text_color = render::sdl_yellow; break;
+		 case CYAN : text_color = render::sdl_cyan; break;
+		 case GREEN : text_color = render::sdl_green; break;
+		 case MAGENTA : text_color = render::sdl_magenta; break;
+		 case RED : text_color = render::sdl_red; break;
+		 case BLUE : text_color = render::sdl_blue; break;
+		 case BLACK : text_color = render::sdl_dark_grey; break;
+	       }
+	      string emote_text = SDL->render_text_to_image ( "disco12", particle.message, "tmp", text_color );
+	      std::pair<int,int> emote_size = SDL->query_bitmap_size ( emote_text );
+	      const int x = ( particle.tile_x - region_x ) * 16;
+	      const int y = ( particle.tile_y - region_y -1 ) * 16 + 48 + 8;
+	      SDL_Rect src{ 0, 0, emote_size.first, emote_size.second};
+	      SDL_Rect dst{ x+particle.offset_x, y+particle.offset_y, particle.ttl/4, particle.ttl/4 };
+	      SDL->render_bitmap( emote_text, src, dst );
+	  }
+    }
 }
 
 void game_render::render_date_time ( sdl2_backend * SDL )
@@ -407,11 +440,11 @@ void game_render::render_map_ascii ( sdl2_backend * SDL )
 		    if (finder.floor) {
 		      render_ascii_char( finder.floor.value(), source, dest, background_source, SDL );
 		    }
-		    if (finder.building) {
-		      render_ascii_char( finder.building.value(), source, dest, background_source, SDL );
-		    }
 		    if (finder.top) {
 		      render_ascii_char( finder.top.value(), source, dest, background_source, SDL );
+		    }
+		    if (finder.building) {
+		      render_ascii_char( finder.building.value(), source, dest, background_source, SDL );
 		    }
 
                     render_lighting_visibility_mask( SDL, idx, source, dest );

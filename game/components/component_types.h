@@ -10,7 +10,7 @@ using engine::vterm::color_t;
 
 enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,
   obstruction,power_generator,power_battery,gamestats,gamespecies,gamehealth,provision,
-  item_storage, item_carried, description, item, tree
+  item_storage, item_carried, description, item, tree, particle_emitter
 };
 
 namespace serialization_generic {
