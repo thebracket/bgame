@@ -13,11 +13,12 @@ public:
      bool deleted = false;
 
      particle_emitter_component() {}
-     particle_emitter_component(const string &msg, const int &time, const int &freq) : message(msg), ttl(time), emits_one_in_x(freq) {}
+     particle_emitter_component(const string &msg, const int &time, const int &freq, const int col=7) : message(msg), ttl(time), emits_one_in_x(freq), color(col) {}
      
      string message;
      int ttl=64;
      int emits_one_in_x;
+     int color;
 
 
      void save ( fstream &lbfile ) {
@@ -25,6 +26,7 @@ public:
 	  save_primitive<int>( lbfile, ttl );
 	  save_primitive<string>( lbfile, message );
 	  save_primitive<int>( lbfile, emits_one_in_x );
+	  save_primitive<int>( lbfile, color );
      }
 
      void load ( fstream &lbfile ) {
@@ -32,5 +34,6 @@ public:
 	  load_primitive<int>( lbfile, ttl );
 	  load_primitive<string>( lbfile, message );
 	  load_primitive<int>( lbfile, emits_one_in_x );
+	  load_primitive<int>( lbfile, color );
      }
 };
