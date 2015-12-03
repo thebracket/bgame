@@ -5,7 +5,7 @@
 
 using std::string;
 
-enum chat_emote_color_t {WHITE, YELLOW, CYAN, GREEN, MAGENTA, RED, BLUE};
+enum chat_emote_color_t {WHITE, YELLOW, CYAN, GREEN, MAGENTA, RED, BLUE, BLACK};
 
 struct chat_emote_message {  
     chat_emote_message() { message = ""; }

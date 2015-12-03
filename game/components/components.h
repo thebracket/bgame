@@ -19,3 +19,4 @@
 #include "description_component.h"
 #include "item_component.h"
 #include "tree_component.h"
+#include "particle_emitter_component.h"

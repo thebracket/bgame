@@ -29,6 +29,7 @@ private:
     void render_emotes ( sdl2_backend * SDL );
     void render_date_time ( sdl2_backend * SDL );
     void render_paused ( sdl2_backend * SDL );
+    void render_particles ( sdl2_backend * SDL );
     void set_base_source ( SDL_Rect &source, const int &idx );
     bool set_covering_source ( SDL_Rect &source, const int &idx );
     void render_map_ascii ( sdl2_backend * SDL );

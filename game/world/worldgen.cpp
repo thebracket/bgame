@@ -631,7 +631,7 @@ entity make_settler(const int &x, const int &y)
     game_engine->ecs->add_component(test, debug_name_component("Test"));
     game_engine->ecs->add_component(test, position_component(x,y));
     //engine::globals::ecs->add_component(test, obstruction_component(true,false));
-    game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34,2,false,true));
+    game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34,1,false,true));
     game_engine->ecs->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
     

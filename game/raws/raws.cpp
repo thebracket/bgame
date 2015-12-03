@@ -32,6 +32,7 @@
 #include "raw_input.h"
 #include "raw_power_drain.h"
 #include "raw_output.h"
+#include "raw_particle_emitter.h"
 
 #include "../game.h"
 
@@ -416,6 +417,22 @@ void parse_structure ( const vector<string> &chunks )
      }
      if ( chunks[0] == "SLEEP_HERE" ) {
           current->children.push_back ( make_unique<raw_sleepable>() );
+          return;
+     }
+     if ( chunks[0] == "PARTICLE" ) {
+	  const string message = chunks[1];
+	  const int frequency = std::stoi( chunks[2] );
+	  const int ttl = std::stoi( chunks[3] );
+	  const string color_s = chunks[4];
+	  chat_emote_color_t color = WHITE;
+	  if (color_s == "YELLOW") color = YELLOW;
+	  if (color_s == "CYAN") color = CYAN;
+	  if (color_s == "GREEN") color = GREEN;
+	  if (color_s == "MAGENTA") color = MAGENTA;
+	  if (color_s == "RED") color = RED;
+	  if (color_s == "BLUE") color = BLUE;
+	  if (color_s == "BLACK") color = BLACK;
+          current->children.push_back ( make_unique<raw_particle_emitter>( message, ttl, frequency, color ) );
           return;
      }
 
