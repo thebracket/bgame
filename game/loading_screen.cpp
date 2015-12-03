@@ -38,9 +38,9 @@ pair< return_mode, unique_ptr< base_mode > > loading_screen::tick ( const double
 	game_engine->load_image_resource("power_bar_green.png", "power_bar_green");
 	game_engine->load_image_resource("double-height.png", "spritesheet-big");
 	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco36", 36);
-	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco14", 14);
-	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco12", 12);
-	game_engine->load_font_resource("../assets/font/disco___.ttf", "disco10", 10);	
+	game_engine->load_font_resource("../assets/font/Roboto-Medium.ttf", "disco14", 14);
+	game_engine->load_font_resource("../assets/font/Roboto-Medium.ttf", "disco12", 12);
+	game_engine->load_font_resource("../assets/font/Roboto-Medium.ttf", "disco10", 10);	
      }
      
      // Exit conditions
