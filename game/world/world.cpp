@@ -8,9 +8,9 @@ namespace world {
 array<unique_ptr<land_block>, world_size> world;
 console log;
 land_block * current_region;
-std::array<render_layers_t, tiles_per_landblock> entity_render_list;
-std::array<bool, tiles_per_landblock> walk_blocked;
-std::array<bool, tiles_per_landblock> view_blocked;
+std::vector<render_layers_t> entity_render_list ( tiles_per_landblock) ;
+std::vector<bool> walk_blocked ( tiles_per_landblock );
+std::vector<bool> view_blocked ( tiles_per_landblock );
 unordered_map<string, vector<available_item>> inventory;
 
 int camera_handle;
@@ -47,3 +47,4 @@ void save_world_constants(fstream& lbfile)
 
 
 }
+

@@ -20,7 +20,7 @@ struct navigation_path {
   queue<std::pair<int,int>> steps;
 };
 
-shared_ptr<navigation_path> find_path(pair<int,int> start, pair<int,int> end, array<bool, tiles_per_landblock> &walkable);
+shared_ptr<navigation_path> find_path(pair<int,int> start, pair<int,int> end, vector<bool> &walkable);
 
   
 }

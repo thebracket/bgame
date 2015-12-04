@@ -63,9 +63,9 @@ struct render_layers_t {
   optional<render_info_t> top;
 };
 
-extern std::array<render_layers_t, tiles_per_landblock> entity_render_list;
-extern std::array<bool, tiles_per_landblock> walk_blocked;
-extern std::array<bool, tiles_per_landblock> view_blocked;
+extern std::vector<render_layers_t> entity_render_list;
+extern std::vector<bool> walk_blocked;
+extern std::vector<bool> view_blocked;
 
 struct available_item {
      string name;
