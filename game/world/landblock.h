@@ -9,7 +9,7 @@ using std::vector;
 
 constexpr int landblock_height = 256;
 constexpr int landblock_width  = 256;
-constexpr int tiles_per_landblock = landblock_height * landblock_width;
+constexpr int tiles_per_landblock = 65536;
 
 class land_block {
 public:
