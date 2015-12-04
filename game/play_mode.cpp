@@ -61,7 +61,7 @@ pair< return_mode, unique_ptr< base_mode > > play_mode::tick ( const double time
      }
      if ( command::is_key_down( command::PRINTSCREEN ) ) {
 	  vector<tuple<string,int,int,int>> profile_data = game_engine->ecs->get_profile_info();
-	  std::cout << "\nPROFILE (ms). There are " << game_engine->ecs->get_ecs_size() << " components.\n";
+	  std::cout << "\nPROFILE (µs). There are " << game_engine->ecs->get_ecs_size() << " components.\n";
 	  std::cout << setw(20) << "SYSTEM" << setw(10) << "LAST" << setw(10) << "MIN" << setw(10) << "MAX" << "\n";
 	  std::cout << "-----------------------------------------------------\n";
 	  for ( auto sys : profile_data ) {
