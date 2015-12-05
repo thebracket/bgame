@@ -36,5 +36,6 @@ add_library(game
 	    world/worldgen.cpp 
 	    world/serialization_utils.cpp
 	    world/universe.cpp
+	    world/solar_system.cpp
 	    )
 	    
