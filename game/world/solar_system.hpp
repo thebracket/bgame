@@ -7,7 +7,8 @@
 #include "solar_system_body.hpp"
 #include "../../engine/sdl2_backend.h"
 
-enum system_class_t { M_CLASS };
+// See: https://en.wikipedia.org/wiki/Stellar_classification
+enum system_class_t { O, B, A, F, G, K, M };
 
 /*
  * Represents a solar system in the universe.
@@ -24,6 +25,7 @@ struct solar_system_t {
     
     /* Type of system */
     system_class_t system_class;
+    bool binary_system;
     
     /* Vector of bodies in the solar system. */
     std::vector<solar_system_body_t> bodies;
