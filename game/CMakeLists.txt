@@ -37,5 +37,6 @@ add_library(game
 	    world/serialization_utils.cpp
 	    world/universe.cpp
 	    world/solar_system.cpp
+	    world/solar_system_body.cpp
 	    )
 	    
