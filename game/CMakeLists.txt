@@ -34,5 +34,7 @@ add_library(game
 	    world/landblock.cpp 
 	    world/console.cpp 
 	    world/worldgen.cpp 
-	    world/serialization_utils.cpp)
+	    world/serialization_utils.cpp
+	    world/universe.cpp
+	    )
 	    

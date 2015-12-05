@@ -11,7 +11,6 @@
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
-#include "location.h"
 
 using std::array;
 using std::unique_ptr;
