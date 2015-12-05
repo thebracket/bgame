@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <fstream>
 #include "solar_system_body.hpp"
 
 /*
@@ -19,4 +20,8 @@ struct solar_system_t {
     
     /* Vector of bodies in the solar system. */
     std::vector<solar_system_body_t> bodies;
+    
+    // Serialization
+    void save( std::fstream &lbfile ) const;
+    void load( std::fstream &lbfile );
 };

@@ -8,7 +8,7 @@
 #include <memory>
 
 /* Maximum height of the universe. */
-constexpr uint8_t UNIVERSE_HEIGHT = 64;
+constexpr uint8_t UNIVERSE_HEIGHT = 48;
 
 /* Maximum width of the universe. */
 constexpr uint8_t UNIVERSE_WIDTH = 64;
@@ -20,10 +20,14 @@ constexpr uint8_t UNIVERSE_WIDTH = 64;
  */ 
 struct universe_t {
     // Defining the universe
-    std::unordered_map<uint16_t, solar_system_t> star_systems;
+    std::unordered_map<uint16_t, solar_system_t> solar_systems;
     
     // Global state
     shared_data_t globals;
+    
+    // Serialization
+    void save() const;
+    void load();
 };
 
 /*
