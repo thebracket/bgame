@@ -32,6 +32,18 @@ void universe_generator::make_universe()
           }
      }
      // Force Eden to be at the center of the universe
+     solar_system_t eden;
+     eden.binary_system = false;
+     eden.system_class = M;
+     solar_system_body_t homeworld;
+     homeworld.body_type = HABITABLE_PLANET;
+     homeworld.system_idx = 0;
+     eden.bodies.push_back( homeworld );
+     eden.universe_x = UNIVERSE_WIDTH / 2;
+     eden.universe_y = UNIVERSE_HEIGHT / 2;
+     eden.universe_idx = universe_idx( eden.universe_x, eden.universe_y );
+     universe->solar_systems [ eden.universe_idx ] = eden;
+     
      universe->save();
 }
 
