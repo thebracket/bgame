@@ -17,6 +17,7 @@
 #include "tables.h"
 #include "../game.h"
 #include "../raws/raw_clothing.h"
+#include "universegen.hpp"
 
 using std::vector;
 using std::map;
@@ -856,6 +857,11 @@ void setup_initial_game() {
  */
 void build_world()
 {
+    // Temporary: calling the universe generator. Eventually, this will replace
+    // the old world-gen system completely.
+    universe_generator unigen;
+    unigen.make_universe();
+  
     create_heightmap_world();
     // TODO: Walk the map creating boundary regions (e.g. beaches, cliffs)
     // TODO: For the far future, biomes, history and goodies.
