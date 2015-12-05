@@ -4,7 +4,7 @@
 #include <memory>
 
 /* Base class for planetary/other body definition. */
-struct base_solar_system_body {
+struct base_solar_system_body_t {
 };
 
 /*
@@ -15,5 +15,5 @@ struct solar_system_body_t {
     uint8_t system_idx;
     
     /* Pointer to the appropriate planetary class. */
-    std::shared_ptr<base_solar_system_body> body_def;
+    std::shared_ptr<base_solar_system_body_t> body_def;
 };
