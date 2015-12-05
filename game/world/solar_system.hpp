@@ -3,7 +3,11 @@
 #include <vector>
 #include <cstdint>
 #include <fstream>
+#include <utility>
 #include "solar_system_body.hpp"
+#include "../../engine/sdl2_backend.h"
+
+enum system_class_t { M_CLASS };
 
 /*
  * Represents a solar system in the universe.
@@ -18,6 +22,9 @@ struct solar_system_t {
     /* Y location in the universe. */
     uint8_t universe_y;
     
+    /* Type of system */
+    system_class_t system_class;
+    
     /* Vector of bodies in the solar system. */
     std::vector<solar_system_body_t> bodies;
     
@@ -25,3 +32,5 @@ struct solar_system_t {
     void save( std::fstream &lbfile ) const;
     void load( std::fstream &lbfile );
 };
+
+std::pair<SDL_Color, unsigned char> solar_system_renderable( const solar_system_t &system);
