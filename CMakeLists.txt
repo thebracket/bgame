@@ -29,3 +29,12 @@ target_link_libraries(bgame ${SDL2IMAGE_LIBRARIES})
 
 include_directories(${SDL2TTF_INCLUDE_DIRS})
 target_link_libraries(bgame ${SDL2TTF_LIBRARIES})
+
+set(Boost_USE_STATIC_LIBS        ON) # only find static libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME     OFF)
+find_package(Boost)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  target_link_libraries(bgame ${Boost_LIBRARIES})
+endif()
