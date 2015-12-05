@@ -38,5 +38,6 @@ add_library(game
 	    world/universe.cpp
 	    world/solar_system.cpp
 	    world/solar_system_body.cpp
+	    world/universegen.cpp
 	    )
 	    
