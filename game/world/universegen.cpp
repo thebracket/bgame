@@ -2,61 +2,9 @@
 #include "../game.h"
 #include <vector>
 #include <utility>
-#include "boost/polygon/voronoi.hpp"
 
 using std::vector;
 using std::pair;
-using boost::polygon::voronoi_builder;
-using boost::polygon::voronoi_diagram;
-
-// Copied from http://www.boost.org/doc/libs/1_55_0/libs/polygon/example/voronoi_basic_tutorial.cpp
-
-struct Point {
-  int a;
-  int b;
-  Point(int x, int y) : a(x), b(y) {}
-};
-
-struct Segment {
-  Point p0;
-  Point p1;
-  Segment(int x1, int y1, int x2, int y2) : p0(x1, y1), p1(x2, y2) {}
-};
-
-namespace boost {
-namespace polygon {
-
-template <>
-struct geometry_concept<Point> {
-  typedef point_concept type;
-};
-
-template <>
-struct point_traits<Point> {
-  typedef int coordinate_type;
-
-  static inline coordinate_type get(
-      const Point& point, orientation_2d orient) {
-    return (orient == HORIZONTAL) ? point.a : point.b;
-  }
-};
-
-template <>
-struct geometry_concept<Segment> {
-  typedef segment_concept type;
-};
-
-template <>
-struct segment_traits<Segment> {
-  typedef int coordinate_type;
-  typedef Point point_type;
-
-  static inline point_type get(const Segment& segment, direction_1d dir) {
-    return dir.to_int() ? segment.p1 : segment.p0;
-  }
-};
-}  // polygon
-}  // boost
 
 universe_generator::universe_generator()
 {
