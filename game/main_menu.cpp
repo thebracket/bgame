@@ -1,6 +1,7 @@
 #include "main_menu.h"
 #include "play_mode.h"
 #include "world_gen_mode.h"
+#include "genesis_mode.h"
 #include <fstream>
 #include "world/worldgen.h"
 #include "../engine/gui/gui_frame.h"
@@ -96,7 +97,9 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > main_menu::tick ( c
 	if (selected_item == 1 and world_available) return make_pair ( PUSH, make_unique<play_mode>() ); // Play the game
 	if (selected_item == 2) return make_pair ( PUSH, make_unique<world_gen_mode>() ); // Create the world!
 	if (selected_item == 3) return make_pair ( POP, NO_PUSHED_MODE ); // Quit
+	
     }
+    if ( engine::command::is_key_down( engine::command::Q ) ) return make_pair ( PUSH, make_unique<genesis_mode>() );
     
     return make_pair ( CONTINUE, NO_PUSHED_MODE );
 }
