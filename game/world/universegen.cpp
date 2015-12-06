@@ -24,7 +24,7 @@ void universe_generator::make_universe()
                system.universe_y = game_engine->rng.roll_dice ( 1, UNIVERSE_HEIGHT-1 );
                system.universe_idx = universe_idx ( system.universe_x,system.universe_y );
                auto finder = universe->solar_systems.find ( system.universe_idx );
-               if ( finder == universe->solar_systems.end() and ( system.universe_x != UNIVERSE_WIDTH/2 ) and ( system.universe_y != UNIVERSE_HEIGHT/2 ) ) {
+               if ( finder == universe->solar_systems.end() and (( system.universe_x != UNIVERSE_WIDTH/2 ) or ( system.universe_y != UNIVERSE_HEIGHT/2 )) ) {
                     good = true;
                     detail_star_system ( system );
                     universe->solar_systems [ system.universe_idx ] = system;

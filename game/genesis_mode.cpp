@@ -52,6 +52,8 @@ void genesis_mode::ugen()
 void genesis_mode::udisplay()
 {
     show_universe_map();
+    const string message = "<- You are here";
+    vterm::print( (UNIVERSE_WIDTH/2), UNIVERSE_HEIGHT/2, message, color_t{0,255,255}, color_t{0,0,0});
 }
 
 void genesis_mode::show_universe_map()
