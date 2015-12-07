@@ -24,6 +24,7 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > genesis_mode::tick 
       case UDISPLAY : udisplay( time_elapsed ); break;
       case UDISPLAY2: udisplay2 ( time_elapsed ); break;
       case TRAVEL : travel ( time_elapsed ); break;
+      case SYSTEM_SCAN : system_scan ( time_elapsed ); break;
     }
   
     
@@ -226,12 +227,135 @@ void genesis_mode::travel ( const double time_elapsed )
 	}
     }
     
+    if ( total_time > 500 and progress > 0.9 ) {
+	mode = SYSTEM_SCAN;
+	const int uidx = universe_idx( starting_x, starting_y );
+	auto finder = universe->solar_systems.find( uidx );
+	solar_system_body_t body;
+	body.system_idx = finder->second.bodies.size();
+	body.body_type = HABITABLE_PLANET;
+	finder->second.bodies.push_back( body );
+    }
+    
     const string message2 = "<- Destination";
     vterm::print( starting_x+1, starting_y, message2, color_t{0,255,255}, color_t{0,0,0});
     
     const string message = "<- You are here";
     vterm::print( current_x+1, current_y, message, color_t{0,255,255}, color_t{0,0,0});
 }
+
+void genesis_mode::system_scan ( const double time_elapsed )
+{
+    total_time += time_elapsed;
+    const string msg1 { "We've dropped into an unknown system. Scanning..." };
+    pair<int,int> size = vterm::get_screen_size();
+    vterm::print( (size.first/2)-msg1.size()/2, 0, msg1, color_t{0,255,255}, color_t{0,0,0});
+    
+    const int uidx = universe_idx( starting_x, starting_y );
+    auto finder = universe->solar_systems.find( uidx );
+    int i = 1;
+    
+    /*
+    std::cout << "System scan reveals:\n";
+    for ( const solar_system_body_t &body : finder->second.bodies ) {
+	std::cout << "Body #" << i << " is";
+	switch (body.body_type) {
+	  case ICE_WORLD : std::cout << " an ice world.\n"; break;
+	  case VOLCANIC_WORLD : std::cout << " a volcanic world.\n"; break;
+	  case GAS_CLOUD : std::cout << " a gas cloud.\n"; break;
+	  case ASTEROIDS : std::cout << " full of asteroids.\n"; break;
+	  case WARP_HUSK : std::cout << " a warp husk.\n"; break;
+	  case HABITABLE_PLANET : std::cout << " is an Eden-type planet.\n"; break;
+	  case SPACE_STATION : std::cout << " a space station.\n"; break;
+	}
+	++i;
+    }*/
+    
+    // Render the sun
+    color_t sun_color{255,255,255};
+    
+    switch ( finder->second.system_class ) {
+	  case O : sun_color = color_t { 64, 64, 255}; break;
+	  case B : sun_color = color_t { 128, 128, 255}; break;
+	  case A : sun_color = color_t  { 192, 192, 255}; break;
+	  case F : sun_color = color_t { 255, 255, 255}; break;
+	  case G : sun_color = color_t { 255, 255, 0}; break;
+	  case K : sun_color = color_t { 128, 128, 0}; break;
+	  case M : sun_color = color_t { 128, 128, 0}; break;
+	  default: sun_color = color_t {255,255,255}; break;
+	}
+    
+    if ( finder->second.binary_system ) {
+      const int mid_y = size.second/2;
+      const int sun_1 = mid_y - 6;
+      const int sun_2 = mid_y + 6;
+      render_sun( sun_color, sun_1 );
+      render_sun( sun_color, sun_2 );
+    } else {
+      const int sun_y = size.second/2;
+      render_sun ( sun_color, sun_y );
+    }
+    
+    i = 1;
+    for ( const solar_system_body_t &body : finder->second.bodies ) {
+      
+      if (body.body_type == ICE_WORLD) {
+	  vterm::screen_character render_char { 219, color_t{0,255,255}, color_t{0,0,0} };
+	  vterm::set_char_xy( 9+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 11+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)-1, render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)+1, render_char );
+      } else if (body.body_type == VOLCANIC_WORLD) {
+	  vterm::screen_character render_char { 219, color_t{255, game_engine->rng.roll_dice(1,255) ,0}, color_t{0,0,0} };
+	  vterm::set_char_xy( 9+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 11+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)-1, render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)+1, render_char );	
+      } else if (body.body_type == GAS_CLOUD) {
+	  vterm::screen_character render_char { 176, color_t{0,255,0}, color_t{0,0,0} };
+	  vterm::set_char_xy( 9+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 11+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)-1, render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)+1, render_char );
+      } else if (body.body_type == ASTEROIDS) {
+	  vterm::screen_character render_char { '*', color_t{255,255,255}, color_t{0,0,0} };
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)-1, render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)+1, render_char );
+      } else if (body.body_type == WARP_HUSK) {
+	  vterm::screen_character render_char { 176, color_t{128,0,128}, color_t{0,0,0} };
+	  vterm::set_char_xy( 9+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 11+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)-1, render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)+1, render_char );
+      } else if (body.body_type == HABITABLE_PLANET) {
+	  vterm::screen_character render_char { 219, color_t{0, 255 ,0}, color_t{0,0,0} };
+	  vterm::screen_character render_char2 { 219, color_t{0, 0 ,255}, color_t{0,0,0} };
+	  vterm::set_char_xy( 9+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2), render_char2 );
+	  vterm::set_char_xy( 11+(i*4), (size.second/2), render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)-1, render_char );
+	  vterm::set_char_xy( 10+(i*4), (size.second/2)+1, render_char );
+      } else {
+	  vterm::screen_character render_char { 216, color_t{0,255,255}, color_t{0,0,0} };
+	  vterm::set_char_xy( 10+(i*4), (size.second/2), render_char );
+      }
+      ++i;
+      
+      /*
+	vterm::screen_character render_char { '*', 
+	  color_t{255,255,255},
+	  color_t{0,0,0}
+	};
+	vterm::set_char_xy( 10+(i*4), size.second/2, render_char );
+	++i;
+	*/
+    }
+}
+
 
 void genesis_mode::show_universe_map(const bool show_warzone, const bool show_truce)
 {
@@ -290,6 +414,20 @@ void genesis_mode::show_static_map()
 	      };
 	      vterm::set_char_xy( x, y, render_char );
 	  }
+    }
+}
+
+void genesis_mode::render_sun ( engine::vterm::color_t color, const int mid_y )
+{
+    for (int i=-3; i<4; ++i) {
+	const int y = mid_y + i;
+	for (int x=0; x<4 - std::abs(i); ++x) {
+	     vterm::screen_character render_char { 219, 
+	      color,
+	      color_t{ 0, 0, 0}
+	     };
+	     vterm::set_char_xy( x, y, render_char );
+	}
     }
 }
 
