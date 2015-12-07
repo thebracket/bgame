@@ -173,7 +173,7 @@ void sdl2_backend::draw_vterm ( vector< vterm::screen_character >* screen )
   
   const int ascii_height = SCREEN_HEIGHT/TERMINAL_SIZE;
   const int ascii_width = SCREEN_WIDTH/TERMINAL_SIZE;
-  const SDL_Rect background_source{88, 104, TERMINAL_SIZE, TERMINAL_SIZE};
+  const SDL_Rect background_source{176, 208, TERMINAL_SIZE, TERMINAL_SIZE};
   
   for (int y=0; y<ascii_height; ++y) {
     for (int x=0; x<ascii_width; ++x) {
