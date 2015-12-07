@@ -24,7 +24,7 @@ struct universe_t {
     
     // Global state
     shared_data_t globals;
-    
+        
     // Serialization
     void save() const;
     void load();

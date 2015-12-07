@@ -42,6 +42,7 @@ void universe_generator::make_universe()
      eden.universe_x = UNIVERSE_WIDTH / 2;
      eden.universe_y = UNIVERSE_HEIGHT / 2;
      eden.universe_idx = universe_idx( eden.universe_x, eden.universe_y );
+     eden.inhabited_by_man = true;
      universe->solar_systems [ eden.universe_idx ] = eden;
      
      universe->save();
@@ -92,5 +93,45 @@ void universe_generator::add_planetary_body ( int i, solar_system_t& system )
      body.system_idx = i;
      body.body_type = HABITABLE_PLANET;
      system.bodies.push_back( body );
+}
+
+void universe_generator::spread_humanity()
+{
+    for (int y=0; y<UNIVERSE_HEIGHT; ++y) {
+	  for (int x=0; x<UNIVERSE_WIDTH; ++x) {
+	      const int uidx = universe_idx(x,y);
+	      auto finder = universe->solar_systems.find ( uidx );
+	      
+	      const int dx = std::abs( x - (UNIVERSE_WIDTH/2) );
+	      const int dy = std::abs( y - (UNIVERSE_HEIGHT/2) );
+	      const int distance = std::sqrt( (dx*dx) + (dy*dy) );	
+	      if (distance < 15 and finder != universe->solar_systems.end()) finder->second.inhabited_by_man = true;
+	  }
+    }
+}
+
+void universe_generator::spread_ownership()
+{
+    for (int y=0; y<UNIVERSE_HEIGHT; ++y) {
+	  for (int x=0; x<UNIVERSE_WIDTH; ++x) {
+	      const int uidx = universe_idx(x,y);
+	      auto finder = universe->solar_systems.find ( uidx );
+	      
+	      const int dx = std::abs( x - (UNIVERSE_WIDTH/2) );
+	      const int dy = std::abs( y - (UNIVERSE_HEIGHT/2) );
+	      const int distance = std::sqrt( (dx*dx) + (dy*dy) );	
+	      if (distance < 15 and finder != universe->solar_systems.end()) {
+		  int ownership = game_engine->rng.roll_dice(1, 6);
+		  switch (ownership) {
+		    case 1 : finder->second.owner = ARSAK; break;
+		    case 2 : finder->second.owner = CARVAZ; break;
+		    case 3 : finder->second.owner = HERITEZ; break;
+		    case 4 : finder->second.owner = LAMINTREZ; break;
+		    case 5 : finder->second.owner = ERENTAR; break;
+		    case 6 : finder->second.owner = SYL; break;
+		  }
+	      }
+	  }
+    }
 }
 
