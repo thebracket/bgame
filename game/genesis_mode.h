@@ -3,7 +3,7 @@
 #include "../engine/engine.h"
 #include "world/universegen.hpp"
 
-enum genesis_stage_t { INIT, UGEN, UDISPLAY, UDISPLAY2, TRAVEL };
+enum genesis_stage_t { INIT, UGEN, UDISPLAY, UDISPLAY2, TRAVEL, SYSTEM_SCAN };
 
 class genesis_mode : public engine::base_mode {
 public:
@@ -27,10 +27,13 @@ private:
     void udisplay( const double time_elapsed );
     void udisplay2( const double time_elapsed );
     void travel( const double time_elapsed );
+    void system_scan ( const double time_elapsed );
     
     void show_universe_map( const bool show_warzone, const bool show_truce=false );
     void show_static_map();
     void intro_quote();
+    
+    void render_sun(engine::vterm::color_t color, const int mid_y);
     
     double total_time;
 };
