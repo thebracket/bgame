@@ -4,7 +4,7 @@
 #include <memory>
 #include <fstream>
 
-enum system_body_t { HABITABLE_PLANET };
+enum system_body_t { ICE_WORLD, VOLCANIC_WORLD, GAS_CLOUD, ASTEROIDS, WARP_HUSK, HABITABLE_PLANET, SPACE_STATION };
 
 /*
  * Represents a planet or other body orbiting a star system.

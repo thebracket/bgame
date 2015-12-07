@@ -78,11 +78,21 @@ void universe_generator::detail_star_system ( solar_system_t& system )
 
 void universe_generator::add_planetary_bodies ( solar_system_t& system )
 {
-     int n_bodies = game_engine->rng.roll_dice(1,20)-6;
-     if (n_bodies < 1) return;
+     int n_bodies = game_engine->rng.roll_dice(1,8)+2;
+     if (n_bodies < 1) n_bodies = 1;
      
      for (int i=0; i<n_bodies; ++i) {
 	add_planetary_body ( i, system );
+     }
+     bool habitable = false;
+     for (int i=0; i<n_bodies; ++i) {
+	if ( system.bodies[i].body_type == HABITABLE_PLANET or system.bodies[i].body_type == SPACE_STATION ) habitable = true;
+     }
+     if (!habitable) {
+	solar_system_body_t body;
+	body.system_idx = n_bodies+1;
+	body.body_type = HABITABLE_PLANET;
+	system.bodies.push_back( body );
      }
 }
 
@@ -92,6 +102,16 @@ void universe_generator::add_planetary_body ( int i, solar_system_t& system )
      solar_system_body_t body;
      body.system_idx = i;
      body.body_type = HABITABLE_PLANET;
+     const int roll = game_engine->rng.roll_dice(1,7);
+     switch (roll) {
+       case 1 : body.body_type = ICE_WORLD; break;
+       case 2 : body.body_type = VOLCANIC_WORLD; break;
+       case 3 : body.body_type = GAS_CLOUD; break;
+       case 4 : body.body_type = ASTEROIDS; break;
+       case 5 : body.body_type = WARP_HUSK; break;
+       case 6 : body.body_type = HABITABLE_PLANET; break;
+       case 7 : body.body_type = SPACE_STATION; break;
+     }
      system.bodies.push_back( body );
 }
 

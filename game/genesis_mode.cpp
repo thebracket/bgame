@@ -1,6 +1,7 @@
 #include "genesis_mode.h"
 #include "world/universegen.hpp"
 #include "../game/game.h"
+#include "world/geometry.h"
 
 using std::make_pair;
 using namespace engine;
@@ -22,6 +23,7 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > genesis_mode::tick 
       case UGEN : ugen( time_elapsed ); break;
       case UDISPLAY : udisplay( time_elapsed ); break;
       case UDISPLAY2: udisplay2 ( time_elapsed ); break;
+      case TRAVEL : travel ( time_elapsed ); break;
     }
   
     
@@ -171,8 +173,50 @@ void genesis_mode::udisplay2 ( const double time_elapsed )
 	const string message2 = "<- Destination";
 	vterm::print( starting_x+1, starting_y, message2, color_t{0,255,255}, color_t{0,0,0});
     }
+    if ( total_time > 3000.0 ) {
+	mode = TRAVEL;
+	total_time = 0;
+	current_x = UNIVERSE_WIDTH/2;
+	current_y = UNIVERSE_HEIGHT/2;
+	flight_path.clear();
+	flight_progress = 0;
+	std::cout << "Destination: " << starting_x << ", " << starting_y << "\n";
+	geometry::line_func( current_x, current_y, starting_x, starting_y, [this] (const int x, const int y) {
+	      this->flight_path.push_back( std::make_pair (x, y) );
+	}
+	);
+    }
 }
 
+void genesis_mode::travel ( const double time_elapsed )
+{
+    total_time += time_elapsed;
+    show_universe_map(true, true);
+    
+    const string msg1 { "Due to 'technical difficulties', the B ark launches first." };
+    const string msg2 { "The crew go to sleep, and Cordex - the ship's AI - flies the ship." };
+    const string msg3 { "At first, it all goes rather well." };
+    pair<int,int> size = vterm::get_screen_size();
+    vterm::print( (size.first/2)-msg1.size()/2, 0, msg1, color_t{0,255,255}, color_t{0,0,0});
+    vterm::print( (size.first/2)-msg2.size()/2, 1, msg2, color_t{0,255,255}, color_t{0,0,0});
+    vterm::print( (size.first/2)-msg3.size()/2, 2, msg3, color_t{0,255,255}, color_t{0,0,0});
+    
+    if ( total_time > 200 ) {
+	total_time = 0;
+	
+	++flight_progress;
+	if (flight_progress < flight_path.size() ) {
+	  current_x = flight_path [ flight_progress ].first;
+	  current_y = flight_path [ flight_progress ].second;
+	}
+    }
+    
+    const string message2 = "<- Destination";
+    vterm::print( starting_x+1, starting_y, message2, color_t{0,255,255}, color_t{0,0,0});
+    
+    const string message = "<- You are here";
+    vterm::print( current_x+1, current_y, message, color_t{0,255,255}, color_t{0,0,0});
+}
 
 void genesis_mode::show_universe_map(const bool show_warzone, const bool show_truce)
 {
