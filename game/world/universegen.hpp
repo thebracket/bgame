@@ -6,6 +6,8 @@ class universe_generator {
 public:
      universe_generator();
      void make_universe();
+     void spread_humanity();
+     void spread_ownership();
 
 private:
      void detail_star_system ( solar_system_t & system );

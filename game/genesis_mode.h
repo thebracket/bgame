@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../engine/engine.h"
+#include "world/universegen.hpp"
 
-enum genesis_stage_t { INIT, UGEN, UDISPLAY };
+enum genesis_stage_t { INIT, UGEN, UDISPLAY, UDISPLAY2 };
 
 class genesis_mode : public engine::base_mode {
 public:
@@ -12,10 +13,18 @@ public:
 private:
     bool finished = false;
     genesis_stage_t mode;
+    universe_generator unigen;
+    bool spread_humanity = false;
+    int starting_x = 0;
+    int starting_y = 0;
     
-    void begin_genesis();
-    void ugen();
-    void udisplay();
+    void begin_genesis( const double time_elapsed );
+    void ugen( const double time_elapsed );
+    void udisplay( const double time_elapsed );
+    void udisplay2( const double time_elapsed );
     
-    void show_universe_map();
+    void show_universe_map( const bool show_warzone, const bool show_truce=false );
+    void intro_quote();
+    
+    double total_time;
 };
