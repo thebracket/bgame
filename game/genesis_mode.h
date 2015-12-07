@@ -29,6 +29,7 @@ private:
     void travel( const double time_elapsed );
     
     void show_universe_map( const bool show_warzone, const bool show_truce=false );
+    void show_static_map();
     void intro_quote();
     
     double total_time;

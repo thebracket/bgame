@@ -152,13 +152,13 @@ void genesis_mode::udisplay2 ( const double time_elapsed )
 	while (!ok) {
 	    starting_x = game_engine->rng.roll_dice(1, UNIVERSE_WIDTH/2);
 	    starting_y = game_engine->rng.roll_dice(1, UNIVERSE_HEIGHT-1);
-	    if (starting_y < 8) starting_y = 8;
+	    if (starting_y < 9) starting_y = 9;
 	    
 	    const int dx = std::abs( starting_x - (UNIVERSE_WIDTH/2) );
 	    const int dy = std::abs( starting_y - (UNIVERSE_HEIGHT/2) );
 	    const int distance = std::sqrt( (dx*dx) + (dy*dy) );
 	    
-	    if (distance > 15) {
+	    if (distance > 20) {
 		const int uidx = universe_idx( starting_x, starting_y );
 		auto finder = universe->solar_systems.find ( uidx );
 		if (finder != universe->solar_systems.end()) {
@@ -191,23 +191,38 @@ void genesis_mode::udisplay2 ( const double time_elapsed )
 void genesis_mode::travel ( const double time_elapsed )
 {
     total_time += time_elapsed;
-    show_universe_map(true, true);
+    float flight_progress_f = flight_progress;
+    float size_f = flight_path.size();
+    float progress = flight_progress_f / size_f;
+    if (progress < 0.5) {
+      show_universe_map(true, true);
+    } else {
+      show_static_map();
+    }
     
     const string msg1 { "Due to 'technical difficulties', the B ark launches first." };
-    const string msg2 { "The crew go to sleep, and Cordex - the ship's AI - flies the ship." };
+    const string msg2 { "The crew go to sleep, and Cordex (the ship's AI) flies the ship." };
     const string msg3 { "At first, it all goes rather well." };
+    const string msg4 { "We've been hit! Sensors wonky, entering emergency mode!" };
+    const string msg5 { "We've made it! Scanning the system..." };
     pair<int,int> size = vterm::get_screen_size();
     vterm::print( (size.first/2)-msg1.size()/2, 0, msg1, color_t{0,255,255}, color_t{0,0,0});
     vterm::print( (size.first/2)-msg2.size()/2, 1, msg2, color_t{0,255,255}, color_t{0,0,0});
     vterm::print( (size.first/2)-msg3.size()/2, 2, msg3, color_t{0,255,255}, color_t{0,0,0});
+    if (progress > 0.5) {
+	vterm::print( (size.first/2)-msg4.size()/2, 3, msg4, color_t{255,0,0}, color_t{0,0,0});
+    }
+    if (progress > 0.9) {
+	vterm::print( (size.first/2)-msg5.size()/2, 4, msg5, color_t{255,255,0}, color_t{0,0,0});
+    }
     
     if ( total_time > 200 ) {
-	total_time = 0;
 	
 	++flight_progress;
 	if (flight_progress < flight_path.size() ) {
 	  current_x = flight_path [ flight_progress ].first;
 	  current_y = flight_path [ flight_progress ].second;
+	  total_time = 0;
 	}
     }
     
@@ -253,4 +268,29 @@ void genesis_mode::show_universe_map(const bool show_warzone, const bool show_tr
 	  }
     }
 }
+
+void genesis_mode::show_static_map()
+{
+    for (int y=0; y<UNIVERSE_HEIGHT; ++y) {
+	  for (int x=0; x<UNIVERSE_WIDTH; ++x) {
+	      color_t background{ 0, 0, 0};
+	      unsigned char s;
+	      int roll = game_engine->rng.roll_dice(1,6);
+	      switch (roll) {
+		case 1 : s = 176; break;
+		case 2 : s = 177; break;
+		case 3 : s = game_engine->rng.roll_dice(1,254); break;
+		default : s = ' '; break;
+	      }
+	      const int color = game_engine->rng.roll_dice(1,254);
+	      
+	      vterm::screen_character render_char { s, 
+		color_t{ color, color , color },
+		background
+	      };
+	      vterm::set_char_xy( x, y, render_char );
+	  }
+    }
+}
+
 
