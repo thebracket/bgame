@@ -163,6 +163,8 @@ void genesis_mode::udisplay2 ( const double time_elapsed )
 		    ok = true;
 		}
 	    }
+	    universe->globals.starting_system_x = starting_x;
+	    universe->globals.starting_system_y = starting_y;
 	}
     }
     if (total_time > 1900.0) {
