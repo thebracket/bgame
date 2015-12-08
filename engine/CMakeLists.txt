@@ -7,4 +7,5 @@ add_library (bengine
 	    gui/gui_static_text.cpp 
 	    sdl2_backend.cpp 
 	    command_manager.cpp
+	    geometry.cpp
 )

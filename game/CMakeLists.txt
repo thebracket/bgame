@@ -29,7 +29,6 @@ add_library(game
 	    tasks/help_wanted.cpp
 	    tasks/path_finding.cpp
 	    tasks/find_nearest_provision.cpp
-	    world/geometry.cpp 
 	    world/world.cpp 
 	    world/tile.cpp 
 	    world/landblock.cpp 
