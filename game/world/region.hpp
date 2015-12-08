@@ -7,7 +7,11 @@
 
 class region_t {
 public:
-  inline uint16_t tile_idx ( const uint8_t x, const uint8_t y ) { return ( y * REGION_WIDTH ) + x; }
+  region_t() { tiles.resize( REGION_TILES ); }
+  inline uint16_t tile_idx ( const uint8_t x, const uint8_t y, const uint8_t z ) const { return (z * REGION_TILES) + ( y * REGION_WIDTH ) + x; }
+  tile_t * get_tile ( const uint8_t x, const uint8_t y, const uint8_t z ) {     
+    return &(tiles[ tile_idx ( x, y, z ) ]);
+  }
 private:
   std::vector< tile_t > tiles;
 };
