@@ -4,7 +4,7 @@
 #include "../../engine/ecs.hpp"
 #include "../components/position_component.h"
 #include "../components/viewshed_component.h"
-#include "../world/geometry.h"
+#include "../../engine/geometry.hpp"
 #include <unordered_set>
 
 using geometry::DEGRAD;

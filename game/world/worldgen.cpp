@@ -1,7 +1,7 @@
 #include "worldgen.h"
 
 #include "world.h"
-#include "geometry.h"
+#include "../../engine/geometry.hpp"
 #include <vector>
 #include <algorithm>
 #include <memory>
