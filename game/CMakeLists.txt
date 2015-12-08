@@ -11,6 +11,11 @@ add_library(game
 	    render/window.cpp
 	    render/settler_compositor.cpp
 	    
+	    world/world_gen.cpp
+	    world/planet.cpp
+	    world/region.cpp
+	    world/tile3d.cpp
+	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
 	    systems/system_factory.cpp 
