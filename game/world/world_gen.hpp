@@ -1,4 +1,3 @@
 #pragma once
 
-#include "world_height_map.hpp"
-
+void world_gen_phase_1();
