@@ -53,3 +53,11 @@ int average_heightmap_height ( heightmap_t * height_map ) {
     int sum = std::accumulate ( height_map->begin(), height_map->end(), 0 );
     return sum / height_map->size();
 }
+
+int min_heightmap_height ( heightmap_t * height_map ) {
+    return *std::min_element ( height_map->begin(), height_map->end() );
+}
+
+int max_heightmap_height ( heightmap_t * height_map ) {
+    return *std::max_element ( height_map->begin(), height_map->end() );
+}

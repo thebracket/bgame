@@ -8,6 +8,17 @@ region_t* planet_t::get_region ( const uint8_t region_index )
     return regions[ region_index ].get();
 }
 
+region_t* planet_t::create_region ( const uint8_t region_index )
+{
+    regions [ region_index ] = std::make_unique < region_t > ();
+    return regions [ region_index ].get();
+}
+
+void planet_t::free_region ( const uint8_t region_index )
+{
+    regions [ region_index ].reset();
+}
+
 tile_t* planet_t::get_tile ( const location_t location )
 {
     region_t * region = get_region( location.region );
