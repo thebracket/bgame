@@ -15,6 +15,7 @@ add_library(game
 	    world/planet.cpp
 	    world/region.cpp
 	    world/tile3d.cpp
+	    world/world_gen_fault_lines.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
