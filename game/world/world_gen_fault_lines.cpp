@@ -1,4 +1,5 @@
 #include "world_gen_fault_lines.hpp"
+#include "world_height_map_marching_squares.hpp"
 #include <utility>
 #include <vector>
 
@@ -38,4 +39,10 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
     }
     
     // Then marching squares to find the edge cells; these are raised as fault lines.
+    for ( int i=0; i<points.size(); ++i ) {
+      std::unique_ptr< marching_squares_map_t > edges = marching_squares( vmap_p.get(), [i] (const int n) { return n==i; } );
+      for ( int j=0; j<NUMBER_OF_TILES_IN_THE_WORLD; ++j ) {
+	  if ( edges->operator[](j)>0 ) map[j] += 1000;
+      }
+    };
 }

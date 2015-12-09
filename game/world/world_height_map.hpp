@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <algorithm>
+#include <numeric>
 #include "world_defs.hpp"
 
 using heightmap_t = std::vector< uint16_t >;
@@ -22,4 +23,33 @@ inline void fill_height_map ( heightmap_t * height_map, const uint16_t value ) {
 
 inline void zero_height_map( heightmap_t * height_map ) {
     fill_height_map ( height_map, 0 );
+}
+
+void smooth_height_map ( heightmap_t * height_map ) {
+    std::unique_ptr < heightmap_t > tmp_p = get_height_map();
+    heightmap_t tmp = *tmp_p.get();
+    heightmap_t altitude_map = *height_map;
+    
+    for (int y = 1; y < (WORLD_HEIGHT * REGION_HEIGHT); ++y) {
+      for (int x = 1; x < (WORLD_WIDTH * REGION_WIDTH); ++x) {
+	const int sum = altitude_map[height_map_idx ( x-1, y-1 )] +
+                            altitude_map[height_map_idx ( x, y-1 )] +
+                            altitude_map[height_map_idx ( x+1, y-1 )] +
+                            altitude_map[height_map_idx ( x-1, y )] +
+                            altitude_map[height_map_idx ( x, y )] +
+                            altitude_map[height_map_idx ( x+1, y )] +
+                            altitude_map[height_map_idx ( x-1, y+1 )] +
+                            altitude_map[height_map_idx ( x, y+1 )] +
+                            altitude_map[height_map_idx ( x+1, y+1 )];
+	const uint16_t average = sum / 9;
+	tmp [ height_map_idx( x, y ) ] = average;
+      }
+    }
+    
+    std::copy ( tmp.begin(), tmp.end(), std::back_inserter ( altitude_map ) );
+}
+
+int average_heightmap_height ( heightmap_t * height_map ) {
+    int sum = std::accumulate ( height_map->begin(), height_map->end(), 0 );
+    return sum / height_map->size();
 }

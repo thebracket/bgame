@@ -16,6 +16,8 @@ add_library(game
 	    world/region.cpp
 	    world/tile3d.cpp
 	    world/world_gen_fault_lines.cpp
+	    world/world_height_map_marching_squares.cpp
+	    world/world_gen_hydrology.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
