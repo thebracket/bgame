@@ -18,6 +18,7 @@ constexpr unsigned char RAMP_ED_ND = 14;
 constexpr unsigned char RAMP_ED_SD = 15;
 constexpr unsigned char RAMP_WD_SD = 16;
 constexpr unsigned char MAGMA = 17;
+constexpr unsigned char EMPTY_SPACE = 18;
 }
 
 namespace tile_climate {

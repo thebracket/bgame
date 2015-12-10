@@ -15,8 +15,8 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
     
     std::cout << "Making points list.\n";
     vector<pair<uint16_t,uint16_t>> points;
-    for (int i=0; i<254; ++i) {
-	points.push_back ( make_pair( rng->roll_dice( 1, WORLD_WIDTH*REGION_WIDTH ), rng->roll_dice( 1, WORLD_HEIGHT*REGION_HEIGHT ) ) );
+    for (int i=0; i<128; ++i) {
+	points.push_back ( make_pair( rng->roll_dice( 1, (WORLD_WIDTH*REGION_WIDTH)-1 )+1, rng->roll_dice( 1, (WORLD_HEIGHT*REGION_HEIGHT)-1 )+1 ) );
     }
     
     std::cout << "Spreading regions.\n";
@@ -50,9 +50,9 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
 	}
       } );
       for ( int j=0; j<NUMBER_OF_TILES_IN_THE_WORLD; ++j ) {
-	  if ( edges->operator[](j)>0 ) {
+	  if ( edges->operator[](j)>0 and edges->operator[](j) < 15 ) {
 	    uint16_t h = heightmap->operator[] ( j );
-	    heightmap->operator[] ( j ) = h + 2000;
+	    heightmap->operator[] ( j ) = h + 1000;
 	  }
       }
     };

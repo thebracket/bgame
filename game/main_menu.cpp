@@ -1,7 +1,8 @@
 #include "main_menu.h"
 #include "play_mode.h"
 #include "world_gen_mode.h"
-#include "genesis_mode.h"
+#include "genesis_mode.hpp"
+#include "game_mode.hpp"
 #include <fstream>
 #include "world/worldgen.h"
 #include "../engine/gui/gui_frame.h"
@@ -100,6 +101,7 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > main_menu::tick ( c
 	
     }
     if ( engine::command::is_key_down( engine::command::Q ) ) return make_pair ( PUSH, make_unique<genesis_mode>() );
+    if ( engine::command::is_key_down( engine::command::P ) ) return make_pair ( PUSH, make_unique<game_mode>() );
     
     return make_pair ( CONTINUE, NO_PUSHED_MODE );
 }
