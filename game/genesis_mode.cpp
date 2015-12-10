@@ -1,4 +1,4 @@
-#include "genesis_mode.h"
+#include "genesis_mode.hpp"
 #include "world/universegen.hpp"
 #include "../game/game.h"
 #include "../engine/geometry.hpp"

@@ -21,3 +21,9 @@ public:
   void save_region ( const uint8_t region_index );
   std::string get_filename ( const uint8_t region_index ) const;
 };
+
+namespace world {
+  
+extern std::unique_ptr < planet_t > planet;
+  
+}

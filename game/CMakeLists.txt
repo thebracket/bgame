@@ -5,6 +5,7 @@ add_library(game
 	    play_mode.cpp 
 	    world_gen_mode.cpp
 	    genesis_mode.cpp
+	    game_mode.cpp
 	    
 	    render/game_render.cpp
 	    render/panel_tooltip.cpp

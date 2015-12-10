@@ -5,6 +5,12 @@
 using std::stringstream;
 using std::fstream;
 
+namespace world {
+  
+std::unique_ptr < planet_t > planet = std::make_unique < planet_t > ();
+  
+}
+
 region_t* planet_t::get_region ( const uint8_t region_index )
 {
     if ( regions[ region_index ].get() == nullptr ) {
