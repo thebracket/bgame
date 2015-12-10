@@ -5,20 +5,6 @@
 
 void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engine::random_number_generator &rng )
 {
-    int average = average_heightmap_height( base_map );
-  
-    // Altitude banding    
-    for (int i=0; i<REGION_WIDTH; ++i) {
-	base_map->operator[]( height_map_idx( i, 0 ) ) = 0;
-	base_map->operator[]( height_map_idx( i, ( REGION_WIDTH * WORLD_WIDTH )-1 ) ) = average;
-    }
-    for (int i=0; i<REGION_HEIGHT; ++i) {
-	base_map->operator[]( height_map_idx( 0, i ) ) = 0;
-	base_map->operator[]( height_map_idx( (REGION_HEIGHT * WORLD_HEIGHT)-1, i ) ) = average;
-    }        
-    
-    for ( uint16_t &tmp : *base_map )
-	if (tmp == 0) tmp = average;
     smooth_height_map( base_map );
     
     const int lowest_ground = min_heightmap_height( base_map );
