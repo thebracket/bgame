@@ -16,9 +16,9 @@ std::unique_ptr< rain_map_t > get_rain_map ( heightmap_t* heightmap )
                result->operator[] ( idx ) = running;
 
                if ( heightmap->operator[] ( idx ) > average_height and running > 11 ) {
-                    running -= 4;
+                    running -= 10;
                }
-               if ( running < 100 ) running += 1;
+               if ( running < 100 ) running += 5;
           }
      }
 
@@ -69,7 +69,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
           // Add rain-fall
           for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
                const uint8_t rain_probability = rainfall->operator[] ( i );
-               water_ptr->operator[] ( i ) += rain_probability / 10;
+               water_ptr->operator[] ( i ) += rain_probability/10;
           }
 
           std::unique_ptr<rain_map_t> water_tmp = std::make_unique<rain_map_t>( );
@@ -120,7 +120,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                               if ( destination != hidx ) {
                                    //std::cout << "<";
                                    // Erode altitude down (water) units
-                                   height_tmp->operator[] ( hidx ) -= water_ptr->operator[] ( hidx ) * 10;
+                                   height_tmp->operator[] ( hidx ) -= water_ptr->operator[] ( hidx ) * 15;
 
                                    // Move water there
                                    water_tmp->operator[] ( destination ) += water_ptr->operator[] ( hidx );
@@ -129,7 +129,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                                    settled = false;
                                    ++changes;
                               } else {
-				   height_tmp->operator[] ( hidx ) -= 10; // Standing water wear
+				   height_tmp->operator[] ( hidx ) -= 5; // Standing water wear
                               }
                          }
                     }
@@ -142,12 +142,12 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                std::copy ( height_tmp->begin(), height_tmp->end(), std::back_inserter ( *heightmap ) );
 
                for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
-                    water_ptr->operator[] ( i ) -= 2; // Evaporation
+                    water_ptr->operator[] ( i ) -= 5; // Evaporation
                     if ( water_ptr->operator[] ( i ) < 1 ) water_ptr->operator[] ( i ) = 0;
 		    if ( water_ptr->operator[] ( i ) > 250 ) water_ptr->operator[] ( i ) = 0;
                }
           }
-          for (int i=0; i<8; ++i)
+          for (int i=0; i<16; ++i)
 	    smooth_height_map ( heightmap );
 
           rainfall.reset();

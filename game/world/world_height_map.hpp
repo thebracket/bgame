@@ -25,6 +25,11 @@ inline void zero_height_map( heightmap_t * height_map ) {
     fill_height_map ( height_map, 0 );
 }
 
+inline int average_heightmap_height ( heightmap_t * height_map ) {
+    int sum = std::accumulate ( height_map->begin(), height_map->end(), 0 );
+    return sum / height_map->size();
+}
+
 inline void smooth_height_map ( heightmap_t * height_map ) {
     std::unique_ptr < heightmap_t > tmp_p = get_height_map();
     
@@ -44,13 +49,18 @@ inline void smooth_height_map ( heightmap_t * height_map ) {
       }
     }
     
+    const int average_height = average_heightmap_height( height_map );
+    for (int x = 0; x < (WORLD_WIDTH * REGION_WIDTH); ++x) {
+	height_map->operator[]( height_map_idx( x, 0) ) = average_height;
+	height_map->operator[]( height_map_idx( x, (WORLD_WIDTH*REGION_WIDTH)-1 ) ) = average_height;
+    }
+    for (int y = 0; y < (WORLD_HEIGHT * REGION_HEIGHT); ++y) {
+	height_map->operator[]( height_map_idx( 0, y) ) = average_height;
+	height_map->operator[]( height_map_idx( (WORLD_HEIGHT * REGION_HEIGHT)-1, y) ) = average_height;
+    }
+    
     height_map->clear();
     std::copy ( tmp_p->begin(), tmp_p->end(), std::back_inserter ( *height_map ) );
-}
-
-inline int average_heightmap_height ( heightmap_t * height_map ) {
-    int sum = std::accumulate ( height_map->begin(), height_map->end(), 0 );
-    return sum / height_map->size();
 }
 
 inline int min_heightmap_height ( heightmap_t * height_map ) {
