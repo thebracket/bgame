@@ -2,6 +2,7 @@
 #include "world/universegen.hpp"
 #include "../game/game.h"
 #include "../engine/geometry.hpp"
+#include "world/world_gen.hpp"
 
 using std::make_pair;
 using namespace engine;
@@ -10,6 +11,7 @@ using namespace engine::command;
 void genesis_mode::init()
 {
      mode = INIT;
+     genesis = std::make_unique<std::thread>( world_gen_phase_1 );
 }
 
 void genesis_mode::done()

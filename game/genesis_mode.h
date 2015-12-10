@@ -2,6 +2,8 @@
 
 #include "../engine/engine.h"
 #include "world/universegen.hpp"
+#include <thread>
+#include <memory>
 
 enum genesis_stage_t { INIT, UGEN, UDISPLAY, UDISPLAY2, TRAVEL, SYSTEM_SCAN };
 
@@ -36,4 +38,6 @@ private:
     void render_sun(engine::vterm::color_t color, const int mid_y);
     
     double total_time;
+    
+    std::unique_ptr<std::thread> genesis;
 };

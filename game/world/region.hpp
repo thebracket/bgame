@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <fstream>
 #include "world_defs.hpp"
 #include "tile3d.hpp"
 
@@ -12,6 +13,8 @@ public:
   tile_t * get_tile ( const uint8_t x, const uint8_t y, const uint8_t z ) {     
     return &(tiles[ tile_idx ( x, y, z ) ]);
   }
+  void save( std::fstream &lbfile );
+  void load( std::fstream &lbfile );
 private:
   std::vector< tile_t > tiles;
 };
