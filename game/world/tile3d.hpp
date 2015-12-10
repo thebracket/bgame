@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tile_types.hpp"
+#include <fstream>
 
 class tile_t {
 public:
@@ -9,4 +10,7 @@ public:
     unsigned char ground;
     unsigned char climate;
     unsigned char covering;
+    
+    void save ( std::fstream &lbfile );
+    void load ( std::fstream &lbfile );
 };

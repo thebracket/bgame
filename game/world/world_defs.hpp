@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-constexpr uint8_t WORLD_WIDTH = 16;
-constexpr uint8_t WORLD_HEIGHT = 16;
+constexpr uint8_t WORLD_WIDTH = 8;
+constexpr uint8_t WORLD_HEIGHT = 8;
 constexpr uint16_t WORLD_TILES = WORLD_HEIGHT * WORLD_WIDTH;
 
 constexpr uint8_t REGION_WIDTH = 254;

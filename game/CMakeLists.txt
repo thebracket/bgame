@@ -18,6 +18,7 @@ add_library(game
 	    world/world_gen_fault_lines.cpp
 	    world/world_height_map_marching_squares.cpp
 	    world/world_gen_hydrology.cpp
+	    world/world_gen_layer_cake.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    

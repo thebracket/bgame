@@ -1,5 +1,6 @@
 #include "world_gen_hydrology.hpp"
 #include <algorithm>
+#include <iostream>
 
 std::unique_ptr< rain_map_t > get_rain_map ( heightmap_t* heightmap )
 {
@@ -56,24 +57,28 @@ std::unique_ptr<temperature_map_t> get_temperature_map ( heightmap_t * heightmap
 }
 
 std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, engine::random_number_generator * rng ) {
-    std::unique_ptr<water_level_map_t> water_ptr = std::make_unique<water_level_map_t>(NUMBER_OF_TILES_IN_THE_WORLD);
+    std::unique_ptr<water_level_map_t> water_ptr = std::make_unique<water_level_map_t>();
+    water_ptr->resize( NUMBER_OF_TILES_IN_THE_WORLD );
     water_level_map_t water = *water_ptr.get();
     std::fill ( water.begin(), water.end(), 10 );
     
     for (int pass = 0; pass < 100; ++pass ) {
+	std::cout << ".. pass " << pass << "\n";
 	std::unique_ptr<rain_map_t> rainfall = get_rain_map( heightmap );
 	std::unique_ptr<temperature_map_t> temperature = get_temperature_map( heightmap );
 	
 	// Add rain-fall
 	for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
+	    if ( water [i] > 9 ) water [i] -= 10; // Evaporation
+	  
 	    const uint8_t rain_probability = rainfall->operator[] ( i );
 	    const int rain_roll = rng->roll_dice(1, 110);
 	    if (rain_roll < rain_probability) water[ i ] += 10;
 	}
 	
-	std::unique_ptr<rain_map_t> water_tmp;
-	std::copy ( water.begin(), water.end(), std::back_inserter ( *water_tmp ) );
-	std::unique_ptr<heightmap_t> height_tmp;
+	std::unique_ptr<rain_map_t> water_tmp = std::make_unique<rain_map_t>( );
+	std::copy ( water.begin(), water.end(), std::back_inserter ( *water_tmp.get() ) );
+	std::unique_ptr<heightmap_t> height_tmp = std::make_unique<heightmap_t>( );
 	std::copy ( heightmap->begin(), heightmap->end(), std::back_inserter( *height_tmp.get() ) );
 	
 	// Move water downhill
@@ -110,8 +115,15 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 	}
 	
 	// Copy the altitude and water maps back
+	water.clear();
 	std::copy ( water_tmp->begin(), water_tmp->end(), std::back_inserter( water ) );
+	heightmap->clear();
 	std::copy ( height_tmp->begin(), height_tmp->end(), std::back_inserter( *heightmap ) );
+	
+	rainfall.reset();
+	temperature.reset();
+	water_tmp.reset();
+	height_tmp.reset();
     }
     
     return std::move ( water_ptr );
