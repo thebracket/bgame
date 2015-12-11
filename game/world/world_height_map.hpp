@@ -5,9 +5,10 @@
 #include <memory>
 #include <algorithm>
 #include <numeric>
+#include <iostream>
 #include "world_defs.hpp"
 
-using heightmap_t = std::vector< uint16_t >;
+using heightmap_t = std::vector< int >;
 
 inline std::unique_ptr<heightmap_t> get_height_map() { 
     std::unique_ptr<heightmap_t> result = std::make_unique<heightmap_t>(); 
@@ -48,17 +49,7 @@ inline void smooth_height_map ( heightmap_t * height_map ) {
 	tmp_p->operator[] ( height_map_idx( x, y ) ) = average;
       }
     }
-    
-    const int average_height = average_heightmap_height( height_map );
-    for (int x = 0; x < (WORLD_WIDTH * REGION_WIDTH); ++x) {
-	height_map->operator[]( height_map_idx( x, 0) ) = average_height;
-	height_map->operator[]( height_map_idx( x, (WORLD_WIDTH*REGION_WIDTH)-1 ) ) = average_height;
-    }
-    for (int y = 0; y < (WORLD_HEIGHT * REGION_HEIGHT); ++y) {
-	height_map->operator[]( height_map_idx( 0, y) ) = average_height;
-	height_map->operator[]( height_map_idx( (WORLD_HEIGHT * REGION_HEIGHT)-1, y) ) = average_height;
-    }
-    
+        
     height_map->clear();
     std::copy ( tmp_p->begin(), tmp_p->end(), std::back_inserter ( *height_map ) );
 }
@@ -69,4 +60,26 @@ inline int min_heightmap_height ( heightmap_t * height_map ) {
 
 inline int max_heightmap_height ( heightmap_t * height_map ) {
     return *std::max_element ( height_map->begin(), height_map->end() );
+}
+
+inline int find_flood_level ( heightmap_t * height_map, float desired_percentage ) {
+    const int n_tiles_required = (desired_percentage * NUMBER_OF_TILES_IN_THE_WORLD);
+    bool found = false;
+    int level = 1;
+    int running_total = 0;
+    while (!found) {
+	for (int y=1; y<(WORLD_HEIGHT*REGION_HEIGHT)-1; ++y) {
+	for (int x=1; x<(WORLD_WIDTH*REGION_WIDTH)-1; ++x) {
+	      const int widx = height_map_idx( x, y );
+	      if ( height_map->operator[] ( widx ) < level) ++running_total;
+	  }
+	}
+	if ( running_total >= n_tiles_required ) {
+	    found = true;
+	} else {
+	    ++level;
+	}
+    }
+    std::cout << "Flood level: " << level << "\n";
+    return level;
 }

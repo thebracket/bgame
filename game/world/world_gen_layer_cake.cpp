@@ -2,20 +2,19 @@
 #include "planet.hpp"
 #include "world_height_map_marching_squares.hpp"
 #include <iostream>
+#include "../../engine/png_writer.h"
 
 void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engine::random_number_generator &rng )
-{
-    smooth_height_map( base_map );
-    
+{    
     const int lowest_ground = min_heightmap_height( base_map );
     const int highest_ground = max_heightmap_height( base_map );
-    const int n_bands = 50;
+    const int n_bands = 20;
     const int range = highest_ground - lowest_ground;
-    const int step = range / n_bands;
+    const float step = range / n_bands;
     
     std::cout << "Lowest: " << lowest_ground << ", highest: " << highest_ground << ", range: " << range << ", step: " << step << "\n";
     
-    std::vector<uint16_t> bands ( NUMBER_OF_TILES_IN_THE_WORLD );
+    std::vector<int> bands ( NUMBER_OF_TILES_IN_THE_WORLD );
     for (int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i) {
 	const int altitude_at_point = base_map->operator[] ( i );
 	bands[i] = ((altitude_at_point - lowest_ground) / step) + 128;
@@ -43,9 +42,15 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
 	}
     }
     
-    // TODO: Determine lowest third of the planet to be water
+    // Find the water line
+    const int water_line = find_flood_level( base_map, 0.3 );
+    const int water_z = ((water_line - lowest_ground) / step) + 128;
+    std::cout << "Water Z:" << water_z << "\n";
     
     std::unique_ptr < planet_t > planet = std::make_unique < planet_t > ();
+    
+    // Save a PNG
+    png_writer png("world/heights.png", (WORLD_WIDTH*REGION_WIDTH)+1, (WORLD_HEIGHT*REGION_HEIGHT)+1);
     
     // Make regions and cells
     for (int wy=0; wy<WORLD_HEIGHT; ++wy) {
@@ -64,7 +69,7 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
 			tile->water_level = 0;
 		    }
 		  
-		    const int hidx = height_map_idx( (WORLD_WIDTH * wx) + x, (WORLD_HEIGHT * wy) + y );
+		    const int hidx = height_map_idx( (REGION_WIDTH * wx) + x, (REGION_HEIGHT * wy) + y );
 		  
 		    // Build upwards. Bottom level has to be solid. Then lava for min 3, biased by altitude. Then rock. Then water, if > 10.
 		    tile_t * bottom = planet->get_tile( location_t{ region_index, x, y, 0 } );
@@ -124,12 +129,30 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
 		    target->ground = tile_ground::SEDIMENTARY;
 		    target->covering = tile_covering::GRASS;
 		    target->climate = tile_climate::TEMPERATE;
+		    if (z >= water_z) png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, 0, (z-128)*10, 0, 255 );
+		    
+		    //if ( water->operator[]( hidx ) > 5 ) target->water_level = 10;
+		    
+		    // Just add water
+		    while ( z < water_z ) {
+			target = planet->get_tile( location_t{region_index, x, y, z} );
+			target->solid = false;
+			if ( target->base_tile_type != tile_type::RAMP ) target->base_tile_type = tile_type::FLAT;
+			target->covering = tile_covering::BARE;
+			target->climate = tile_climate::TEMPERATE;
+			target->water_level = 10;
+			png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, 0, 0, 255, 255 );
+			++z;
+		    }
 		}
 	    }
 	    
+	    std::cout << "Saving region\n";
 	    planet->save_region ( region_index );
 	    planet->free_region ( region_index );
 	}
     }
+    std::cout << "Saving PNG\n";
+    png.save();
 
 }

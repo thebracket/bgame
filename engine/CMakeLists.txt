@@ -8,4 +8,5 @@ add_library (bengine
 	    sdl2_backend.cpp 
 	    command_manager.cpp
 	    geometry.cpp
+	    png_writer.cpp
 )

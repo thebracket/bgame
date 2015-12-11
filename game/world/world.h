@@ -7,10 +7,10 @@
 #include <string>
 #include <tuple>
 #include <array>
-#include <experimental/optional>
 #include "console.h"
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
+#include <boost/optional.hpp>
 
 using std::array;
 using std::unique_ptr;
@@ -18,7 +18,7 @@ using std::unordered_map;
 using std::fstream;
 using std::string;
 using std::tuple;
-using std::experimental::optional;
+using boost::optional;
 
 namespace world {
 

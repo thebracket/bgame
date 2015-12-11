@@ -14,7 +14,7 @@ using engine::vterm::color_t;
 void game_mode::init()
 {
      finished = false;
-     world::planet->load_region ( world::planet->planet_idx ( 0, 0 ) );
+     world::planet->load_region ( world::planet->planet_idx ( 1, 1 ) );
      x = REGION_WIDTH/2;
      y = REGION_HEIGHT/2;
      z = 128;
@@ -62,6 +62,12 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
                     c.foreground_color = color_t {0,255,0};
 		    c.background_color = color_t {0,0,0};
                     c.character = 30;
+               }
+               
+               if (tile->water_level > 0) {
+		    c.character = 126;
+		    c.foreground_color = color_t { 0,0,255 };
+		    c.background_color = color_t { 0,0,64 };
                }
                engine::vterm::set_char_xy ( X, Y, c );
           }
