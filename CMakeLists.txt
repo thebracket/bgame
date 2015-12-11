@@ -38,3 +38,7 @@ if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   target_link_libraries(bgame ${Boost_LIBRARIES})
 endif()
+
+find_package(PNG REQUIRED)
+include_directories(${PNG_INCLUDE_DIRS})
+target_link_libraries(bgame ${PNG_LIBRARIES})

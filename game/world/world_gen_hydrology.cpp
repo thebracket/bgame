@@ -7,7 +7,7 @@ std::unique_ptr< rain_map_t > get_rain_map ( heightmap_t* heightmap )
      std::unique_ptr < rain_map_t > result = std::make_unique < rain_map_t > ( NUMBER_OF_TILES_IN_THE_WORLD );
 
      std::fill ( result->begin(), result->end(), 100 );
-     const int average_height = average_heightmap_height ( heightmap );
+     const int average_height = average_heightmap_height ( heightmap ) + 5;
 
      uint8_t running = 100;
      for ( int y = 0; y < ( WORLD_HEIGHT * REGION_HEIGHT ); ++y ) {
@@ -61,7 +61,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
      water_ptr->resize ( NUMBER_OF_TILES_IN_THE_WORLD );
      std::fill ( water_ptr->begin(), water_ptr->end(), 10 );
 
-     for ( int pass = 0; pass < 50; ++pass ) {
+     for ( int pass = 0; pass < WORLD_WIDTH*WORLD_HEIGHT; ++pass ) {
           // Re-generate height-temperature based upon the new map
           std::unique_ptr<rain_map_t> rainfall = get_rain_map ( heightmap );
           std::unique_ptr<temperature_map_t> temperature = get_temperature_map ( heightmap );
@@ -82,7 +82,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
           int changes = 0;
           while ( !settled ) {
                ++n_passes;
-               //std::cout << " .. sub-pass " << n_passes << " (" << changes << ") \n";
+               //std::cout << "Pass " << pass << " .. sub-pass " << n_passes << " (" << changes << ") \n";
                settled = true;
                changes = 0;
                // Move water downhill
@@ -116,20 +116,21 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                                    destination = west_idx;
                                    alt_buf = heightmap->operator[] ( west_idx );
                               }
-
+			   
                               if ( destination != hidx ) {
                                    //std::cout << "<";
                                    // Erode altitude down (water) units
-                                   height_tmp->operator[] ( hidx ) -= water_ptr->operator[] ( hidx ) * 15;
+				   if ( height_tmp->operator[] ( hidx ) > 1 ) {
+				      height_tmp->operator[] ( hidx ) -= 1;
+				   }
 
                                    // Move water there
-                                   water_tmp->operator[] ( destination ) += water_ptr->operator[] ( hidx );
+                                   if ( water_tmp->operator[] ( destination ) < 200 ) water_tmp->operator[] ( destination ) += 1;
                                    if ( water_tmp->operator[] ( destination ) > 200 ) water_tmp->operator[] ( destination ) = 200;
-                                   water_tmp->operator[] ( hidx ) = 0;
+                                   water_tmp->operator[] ( hidx ) -= 1;
+				   if (water_tmp->operator[] ( hidx ) < 1) water_tmp->operator[] ( hidx ) = 0;
                                    settled = false;
                                    ++changes;
-                              } else {
-				   height_tmp->operator[] ( hidx ) -= 5; // Standing water wear
                               }
                          }
                     }
@@ -142,13 +143,18 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                std::copy ( height_tmp->begin(), height_tmp->end(), std::back_inserter ( *heightmap ) );
 
                for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
-                    water_ptr->operator[] ( i ) -= 5; // Evaporation
+                    if (water_ptr->operator[]( i ) > 1) {
+		      water_ptr->operator[] ( i ) -= 1; // Evaporation
+		    } else {
+		      water_ptr->operator[] ( i ) = 0;
+		    }
                     if ( water_ptr->operator[] ( i ) < 1 ) water_ptr->operator[] ( i ) = 0;
 		    if ( water_ptr->operator[] ( i ) > 250 ) water_ptr->operator[] ( i ) = 0;
                }
           }
-          for (int i=0; i<16; ++i)
+          /*for (int i=0; i<16; ++i)
 	    smooth_height_map ( heightmap );
+	  */
 
           rainfall.reset();
           temperature.reset();
