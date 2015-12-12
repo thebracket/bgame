@@ -4,7 +4,7 @@
 #include <iostream>
 #include "../../engine/png_writer.h"
 
-void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engine::random_number_generator &rng )
+void make_world_layers ( heightmap_t* base_map, engine::random_number_generator &rng )
 {    
     const int lowest_ground = min_heightmap_height( base_map );
     const int highest_ground = max_heightmap_height( base_map );
@@ -17,7 +17,7 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
     std::vector<int> bands ( NUMBER_OF_TILES_IN_THE_WORLD );
     for (int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i) {
 	const int altitude_at_point = base_map->operator[] ( i );
-	bands[i] = ((altitude_at_point - lowest_ground) / step) + 128;
+	bands[i] = ((altitude_at_point - lowest_ground) / step) + 32;
     }
     
     // Ramp detection
@@ -25,7 +25,7 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
     ramps.resize( NUMBER_OF_TILES_IN_THE_WORLD );
     std::fill ( ramps.begin(), ramps.end(), false );
     
-    for (int i=128; i<n_bands+128; ++i) {
+    for (int i=32; i<n_bands+32; ++i) {
 	std::unique_ptr<marching_squares_map_t> ramps_tmp = marching_squares( &bands, [i] (int n) {
 	  bool result = false;
 	  if ( n > i ) result = true;
@@ -43,8 +43,8 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
     }
     
     // Find the water line
-    const int water_line = find_flood_level( base_map, 0.3 );
-    const int water_z = ((water_line - lowest_ground) / step) + 128;
+    const int water_line = find_flood_level( base_map, 0.33 );
+    const int water_z = ((water_line - lowest_ground) / step) + 32;
     std::cout << "Water Z:" << water_z << "\n";
     
     std::unique_ptr < planet_t > planet = std::make_unique < planet_t > ();
@@ -80,7 +80,7 @@ void make_world_layers ( heightmap_t* base_map, water_level_map_t * water, engin
 		    bottom->climate = tile_climate::VERY_HOT;
 		    
 		    // Add magma
-		    const int n_magma = 3 + bands [ hidx ] - 128;
+		    const int n_magma = 3 + bands [ hidx ] - 32;
 		    uint8_t z = 1;
 		    while ( z < n_magma+1) {
 			tile_t * target = planet->get_tile( location_t{region_index, x, y, z} );

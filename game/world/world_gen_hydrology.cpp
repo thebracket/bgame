@@ -7,18 +7,18 @@ std::unique_ptr< rain_map_t > get_rain_map ( heightmap_t* heightmap )
      std::unique_ptr < rain_map_t > result = std::make_unique < rain_map_t > ( NUMBER_OF_TILES_IN_THE_WORLD );
 
      std::fill ( result->begin(), result->end(), 100 );
-     const int average_height = average_heightmap_height ( heightmap ) + 5;
 
-     uint8_t running = 100;
+     int running = 50;
+     int average_height = average_heightmap_height( heightmap );
      for ( int y = 0; y < ( WORLD_HEIGHT * REGION_HEIGHT ); ++y ) {
           for ( int x = 0; x < ( WORLD_WIDTH * REGION_WIDTH ); ++x ) {
                const int idx = height_map_idx ( x, y );
                result->operator[] ( idx ) = running;
 
                if ( heightmap->operator[] ( idx ) > average_height and running > 11 ) {
-                    running -= 10;
+                    running -= 5;
                }
-               if ( running < 100 ) running += 5;
+               if ( running < 50 ) running += 5;
           }
      }
 
@@ -82,7 +82,6 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
           int changes = 0;
           while ( !settled ) {
                ++n_passes;
-               //std::cout << "Pass " << pass << " .. sub-pass " << n_passes << " (" << changes << ") \n";
                settled = true;
                changes = 0;
                // Move water downhill
@@ -120,8 +119,8 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                               if ( destination != hidx ) {
                                    //std::cout << "<";
                                    // Erode altitude down (water) units
-				   if ( height_tmp->operator[] ( hidx ) > 1 ) {
-				      height_tmp->operator[] ( hidx ) -= 1;
+				   if ( height_tmp->operator[] ( hidx ) > 2 ) {
+				      height_tmp->operator[] ( hidx ) -= 2;
 				   }
 
                                    // Move water there
@@ -143,14 +142,17 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
                std::copy ( height_tmp->begin(), height_tmp->end(), std::back_inserter ( *heightmap ) );
 
                for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
-                    if (water_ptr->operator[]( i ) > 1) {
-		      water_ptr->operator[] ( i ) -= 1; // Evaporation
+                    if (water_ptr->operator[]( i ) > 5) {
+		      water_ptr->operator[] ( i ) -= 5; // Evaporation
 		    } else {
 		      water_ptr->operator[] ( i ) = 0;
 		    }
                     if ( water_ptr->operator[] ( i ) < 1 ) water_ptr->operator[] ( i ) = 0;
 		    if ( water_ptr->operator[] ( i ) > 250 ) water_ptr->operator[] ( i ) = 0;
                }
+               
+               std::cout << "Pass " << pass << " .. sub-pass " << n_passes << " (" << changes << ") \n";
+	       if (changes < 17000) settled = true;
           }
           /*for (int i=0; i<16; ++i)
 	    smooth_height_map ( heightmap );

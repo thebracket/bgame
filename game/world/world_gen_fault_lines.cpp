@@ -18,8 +18,11 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
     vector<pair<uint16_t,uint16_t>> points;
     vector<int> point_heights;
     for (int i=0; i<254; ++i) {
-	points.push_back ( make_pair( rng->roll_dice( 1, (WORLD_WIDTH*REGION_WIDTH)-1 ), rng->roll_dice( 1, (WORLD_HEIGHT*REGION_HEIGHT)-1 ) ) );
-	point_heights.push_back( rng->roll_dice(4,64) );
+	const int x = rng->roll_dice( 1, (WORLD_WIDTH*REGION_WIDTH)-1 );
+	const int y = rng->roll_dice( 1, (WORLD_HEIGHT*REGION_HEIGHT)-1 );
+	points.push_back ( make_pair( x, y ) );
+	
+	point_heights.push_back( rng->roll_dice(1,64) );
     }
     
     png_writer png("world/voronoi.png", WORLD_WIDTH*REGION_WIDTH, WORLD_HEIGHT*REGION_HEIGHT);
@@ -66,6 +69,6 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
     
     // Rather than elevating edges, we're going to set altitude by mask entry. This should result in more flatter areas.
     for ( int i=0; i<heightmap->size(); ++i ) {
-	heightmap->operator[]( i ) = point_heights[vmap_p->operator[] ( i )] + rng->roll_dice(3,6);
+	heightmap->operator[]( i ) = point_heights[vmap_p->operator[] ( i )] + rng->roll_dice(2,64) - rng->roll_dice(1,64);
     }
 }
