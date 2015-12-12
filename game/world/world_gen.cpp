@@ -17,12 +17,12 @@ void world_gen_phase_1()
     zero_height_map( base_map.get() );
     std::cout << "Fault Lines\n";
     add_fault_lines( base_map.get(), &rng );
-    std::cout << "Hydrology\n";
-    std::unique_ptr<water_level_map_t> water = perform_hydrology( base_map.get(), &rng );
+    //std::cout << "Hydrology\n";
+    //std::unique_ptr<water_level_map_t> water = perform_hydrology( base_map.get(), &rng );
     std::cout << "Smooth\n";
-    for (int i=0; i<8; ++i)
+    for (int i=0; i<128; ++i)
 	smooth_height_map( base_map.get() );    
     std::cout << "Layercake\n";
-    make_world_layers( base_map.get(), water.get(), rng );
+    make_world_layers( base_map.get(), rng );
     std::cout << "World gen done\n";
 }

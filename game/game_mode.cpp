@@ -17,7 +17,7 @@ void game_mode::init()
      world::planet->load_region ( world::planet->planet_idx ( 1, 1 ) );
      x = REGION_WIDTH/2;
      y = REGION_HEIGHT/2;
-     z = 128;
+     z = 32;
 }
 
 void game_mode::done()
