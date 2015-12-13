@@ -4,7 +4,7 @@
 
 using namespace serialization_generic;
 
-void tile_t::save ( std::fstream& lbfile )
+void tile_t::save ( Poco::DeflatingOutputStream& lbfile )
 {
     save_primitive<bool> ( lbfile, solid );
     save_primitive<uint8_t>( lbfile, water_level );
@@ -14,7 +14,7 @@ void tile_t::save ( std::fstream& lbfile )
     save_primitive<unsigned char>( lbfile, covering );
 }
 
-void tile_t::load ( std::fstream& lbfile )
+void tile_t::load ( Poco::InflatingInputStream& lbfile )
 {
     load_primitive<bool>( lbfile, solid );
     load_primitive<uint8_t>( lbfile, water_level );
