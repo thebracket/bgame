@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "../../engine/virtual_terminal.h"
+#include "../world/location.hpp"
 
 using std::fstream;
 using std::string;
@@ -10,7 +11,7 @@ using engine::vterm::color_t;
 
 enum component_type{dummy,position,name,renderable,viewshed,calendar,settler_ai,
   obstruction,power_generator,power_battery,gamestats,gamespecies,gamehealth,provision,
-  item_storage, item_carried, description, item, tree, particle_emitter
+  item_storage, item_carried, description, item, tree, particle_emitter, position3d
 };
 
 namespace serialization_generic {
@@ -52,6 +53,14 @@ inline void save_primitive ( fstream &lbfile, const component_type &t )
 {
      int n = t;
      save_primitive<int> ( lbfile, n );
+}
+template<>
+inline void save_primitive ( fstream &lbfile, const location_t &t )
+{
+     save_primitive<uint8_t>( lbfile, t.region );
+     save_primitive<uint8_t>( lbfile, t.x );
+     save_primitive<uint8_t>( lbfile, t.y );
+     save_primitive<uint8_t>( lbfile, t.z );
 }
 
 template <typename T>
@@ -100,6 +109,13 @@ inline void load_primitive ( fstream &lbfile, component_type &t )
      int n = 0;
      load_primitive<int> ( lbfile, n );
      t = static_cast<component_type> ( n );
+}
+template<>
+inline void load_primitive( fstream &lbfile, location_t &t ) {
+    load_primitive<uint8_t>( lbfile, t.region );
+    load_primitive<uint8_t>( lbfile, t.x );
+    load_primitive<uint8_t>( lbfile, t.y );
+    load_primitive<uint8_t>( lbfile, t.z );
 }
 
 /* Common Properties */

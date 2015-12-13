@@ -4,7 +4,7 @@
 #include <iostream>
 #include "../../engine/png_writer.h"
 
-void make_world_layers ( heightmap_t* base_map, engine::random_number_generator &rng )
+std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::random_number_generator& rng )
 {    
     const int lowest_ground = min_heightmap_height( base_map );
     const int highest_ground = max_heightmap_height( base_map );
@@ -63,7 +63,8 @@ void make_world_layers ( heightmap_t* base_map, engine::random_number_generator 
 		    for (uint8_t Z=0; Z<REGION_DEPTH; ++Z) {
 			tile_t * tile = planet->get_tile( location_t{ region_index, x, y, Z } );
 			tile->solid = false;
-			tile->ground = tile_type::EMPTY_SPACE;
+			tile->base_tile_type = tile_type::EMPTY_SPACE;
+			tile->ground = tile_ground::IGNEOUS;
 			tile->climate = tile_climate::TEMPERATE;
 			tile->covering = tile_covering::BARE;
 			tile->water_level = 0;
@@ -144,6 +145,8 @@ void make_world_layers ( heightmap_t* base_map, engine::random_number_generator 
 			png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, 0, 0, 255, 255 );
 			++z;
 		    }
+		    
+		    //std::cout << +z << "\n";
 		}
 	    }
 	    
@@ -154,5 +157,5 @@ void make_world_layers ( heightmap_t* base_map, engine::random_number_generator 
     }
     std::cout << "Saving PNG\n";
     png.save();
-
+    return std::move ( planet );
 }

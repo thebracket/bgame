@@ -20,3 +20,4 @@
 #include "item_component.h"
 #include "tree_component.h"
 #include "particle_emitter_component.h"
+#include "position_component3d.hpp"
