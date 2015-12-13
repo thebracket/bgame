@@ -13,4 +13,6 @@ private:
      
      uint8_t x,y,z;
      engine::scene_graph sg;
+     
+     void init_systems();
 };

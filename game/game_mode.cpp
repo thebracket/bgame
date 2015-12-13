@@ -7,6 +7,7 @@
 #include <sstream>
 #include "../game/game.h"
 #include "world/universe.hpp"
+#include "systems/system_factory.h"
 
 using std::make_pair;
 using namespace engine;
@@ -107,15 +108,24 @@ private:
 
 };
 
+void game_mode::init_systems()
+{
+     game_engine->ecs->add_system ( make_input_system() );
+     game_engine->ecs->add_system ( make_camera_system() );
+}
+
 void game_mode::init()
 {
      finished = false;
      world::planet->load_region ( world::planet->planet_idx ( WORLD_WIDTH/2, WORLD_HEIGHT-2 ) );
-     game_engine->ecs->load_game( "world/savegame3d.dat" );
      
      SDL_Rect all {0, 0, 1024, 48};
      sg.children.push_back( make_unique<game3d_render>() );
      sg.children.push_back ( make_unique<scene_blit> ( "header", all, all ) );
+     
+     game_engine->ecs->init();
+     game_engine->ecs->load_game( "world/savegame3d.dat" );
+     init_systems();
 }
 
 void game_mode::done()
