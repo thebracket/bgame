@@ -5,7 +5,8 @@
 #include "../../engine/virtual_terminal.h"
 #include "../world/location.hpp"
 
-using std::fstream;
+using std::ostream;
+using std::istream;
 using std::string;
 using engine::vterm::color_t;
 
@@ -18,12 +19,12 @@ namespace serialization_generic {
 /* Primitive save/load handler */
 
 template<typename T>
-inline void save_primitive ( fstream &lbfile, const T &target )
+inline void save_primitive ( ostream &lbfile, const T &target )
 {
      lbfile.write ( reinterpret_cast<const char *> ( &target ), sizeof ( target ) );
 }
 template<>
-inline void save_primitive ( fstream &lbfile, const string &s )
+inline void save_primitive ( ostream &lbfile, const string &s )
 {
      unsigned int size = s.size();
      save_primitive<unsigned int> ( lbfile, size );
@@ -32,7 +33,7 @@ inline void save_primitive ( fstream &lbfile, const string &s )
      }
 }
 template<>
-inline void save_primitive ( fstream &lbfile, const color_t &c )
+inline void save_primitive ( ostream &lbfile, const color_t &c )
 {
      unsigned char red = std::get<0> ( c );
      unsigned char green = std::get<1> ( c );
@@ -42,20 +43,20 @@ inline void save_primitive ( fstream &lbfile, const color_t &c )
      save_primitive<unsigned char> ( lbfile, blue );
 }
 template<>
-inline void save_primitive ( fstream &lbfile, const bool &b )
+inline void save_primitive ( ostream &lbfile, const bool &b )
 {
      int n = 0;
      if ( b ) n=1;
      save_primitive<int> ( lbfile,n );
 }
 template<>
-inline void save_primitive ( fstream &lbfile, const component_type &t )
+inline void save_primitive ( ostream &lbfile, const component_type &t )
 {
      int n = t;
      save_primitive<int> ( lbfile, n );
 }
 template<>
-inline void save_primitive ( fstream &lbfile, const location_t &t )
+inline void save_primitive ( ostream &lbfile, const location_t &t )
 {
      save_primitive<uint8_t>( lbfile, t.region );
      save_primitive<uint8_t>( lbfile, t.x );
@@ -64,12 +65,12 @@ inline void save_primitive ( fstream &lbfile, const location_t &t )
 }
 
 template <typename T>
-inline void load_primitive ( fstream &lbfile, T &target )
+inline void load_primitive ( istream &lbfile, T &target )
 {
      lbfile.read ( reinterpret_cast<char *> ( &target ), sizeof ( target ) );
 }
 template<>
-inline void load_primitive ( fstream &lbfile, string &target )
+inline void load_primitive ( istream &lbfile, string &target )
 {
      string result;
      unsigned int size = 0;
@@ -82,7 +83,7 @@ inline void load_primitive ( fstream &lbfile, string &target )
      target = result;
 }
 template<>
-inline void load_primitive ( fstream &lbfile, color_t &c )
+inline void load_primitive ( istream &lbfile, color_t &c )
 {
      unsigned char red;
      unsigned char green;
@@ -93,7 +94,7 @@ inline void load_primitive ( fstream &lbfile, color_t &c )
      c = color_t{red, green, blue};
 }
 template<>
-inline void load_primitive ( fstream &lbfile, bool &b )
+inline void load_primitive ( istream &lbfile, bool &b )
 {
      int n=0;
      load_primitive<int> ( lbfile, n );
@@ -104,14 +105,14 @@ inline void load_primitive ( fstream &lbfile, bool &b )
      }
 }
 template<>
-inline void load_primitive ( fstream &lbfile, component_type &t )
+inline void load_primitive ( istream &lbfile, component_type &t )
 {
      int n = 0;
      load_primitive<int> ( lbfile, n );
      t = static_cast<component_type> ( n );
 }
 template<>
-inline void load_primitive( fstream &lbfile, location_t &t ) {
+inline void load_primitive( istream &lbfile, location_t &t ) {
     load_primitive<uint8_t>( lbfile, t.region );
     load_primitive<uint8_t>( lbfile, t.x );
     load_primitive<uint8_t>( lbfile, t.y );
@@ -121,14 +122,14 @@ inline void load_primitive( fstream &lbfile, location_t &t ) {
 /* Common Properties */
 
 template<typename T>
-inline void save_common_component_properties ( fstream &lbfile, const T &target )
+inline void save_common_component_properties ( ostream &lbfile, const T &target )
 {
      save_primitive<component_type> ( lbfile, target.type );
      save_primitive<int> ( lbfile, target.entity_id );
 }
 
 template<typename T>
-inline void load_common_component_properties ( fstream &lbfile, T &target )
+inline void load_common_component_properties ( istream &lbfile, T &target )
 {
      load_primitive<int> ( lbfile, target.entity_id );
 }

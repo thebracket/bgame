@@ -1,6 +1,8 @@
 #include "planet.hpp"
 #include <sstream>
 #include <fstream>
+#include <Poco/InflatingStream.h>
+#include <Poco/DeflatingStream.h>
 
 using std::stringstream;
 using std::fstream;
@@ -48,7 +50,8 @@ void planet_t::load_region ( const uint8_t region_index )
     const std::string filename = get_filename( region_index );
     region_t * region = create_region( region_index );
     fstream lbfile(filename, std::ios::in | std::ios::binary);
-    region->load ( lbfile );
+    Poco::InflatingInputStream inflate(lbfile, Poco::InflatingStreamBuf::STREAM_GZIP);
+    region->load ( inflate );
 }
 
 void planet_t::save_region ( const uint8_t region_index )
@@ -56,5 +59,7 @@ void planet_t::save_region ( const uint8_t region_index )
     const std::string filename = get_filename( region_index );
     region_t * region = get_region( region_index );
     fstream lbfile(filename, std::ios::out | std::ios::binary);
-    region->save( lbfile );
+    Poco::DeflatingOutputStream deflate(lbfile, Poco::DeflatingStreamBuf::STREAM_GZIP);
+    region->save( deflate );
+    deflate.close();
 }

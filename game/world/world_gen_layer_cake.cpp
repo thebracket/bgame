@@ -150,7 +150,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		}
 	    }
 	    
-	    std::cout << "Saving region\n";
+	    std::cout << "Saving region: " << wx << "x" << wy << "\n";
 	    planet->save_region ( region_index );
 	    planet->free_region ( region_index );
 	}

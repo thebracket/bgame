@@ -1,7 +1,8 @@
 #pragma once
 
 #include "tile_types.hpp"
-#include <fstream>
+#include <Poco/DeflatingStream.h>
+#include <Poco/InflatingStream.h>
 
 class tile_t {
 public:
@@ -12,6 +13,6 @@ public:
     unsigned char climate;
     unsigned char covering;
     
-    void save ( std::fstream &lbfile );
-    void load ( std::fstream &lbfile );
+    void save ( Poco::DeflatingOutputStream &lbfile );
+    void load ( Poco::InflatingInputStream &lbfile );
 };
