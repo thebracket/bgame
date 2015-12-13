@@ -67,7 +67,7 @@ bool fexists(const char *filename)
 
 void main_menu::init()
 {
-    world_available = fexists("world/LB1.dat");
+    world_available = fexists("world/REGION_0.dat");
     sg.children.push_back( make_unique<engine::scene_background>( "menuscreen" ) );
     sg.children.push_back( make_unique<main_menu_sg>() );
 }
@@ -80,8 +80,6 @@ void main_menu::done()
 void main_menu::on_pop()
 {
      world_available = fexists("world/LB1.dat");
-     if (world_available) {
-     }
 }
 
 pair< engine::return_mode, unique_ptr< engine::base_mode > > main_menu::tick ( const double time_elapsed )
@@ -95,13 +93,13 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > main_menu::tick ( c
 	if (mx >309 and mx < 715 and my > 350 and my < 429) selected_item = 2;
 	if (mx >309 and mx < 715 and my > 450 and my < 529) selected_item = 3;
 	
-	if (selected_item == 1 and world_available) return make_pair ( PUSH, make_unique<play_mode>() ); // Play the game
-	if (selected_item == 2) return make_pair ( PUSH, make_unique<world_gen_mode>() ); // Create the world!
+	if (selected_item == 1) return make_pair ( PUSH, make_unique<game_mode>() ); // Play the game
+	if (selected_item == 2) return make_pair ( PUSH, make_unique<genesis_mode>() ); // Create the world!
 	if (selected_item == 3) return make_pair ( POP, NO_PUSHED_MODE ); // Quit
 	
     }
-    if ( engine::command::is_key_down( engine::command::Q ) ) return make_pair ( PUSH, make_unique<genesis_mode>() );
-    if ( engine::command::is_key_down( engine::command::P ) ) return make_pair ( PUSH, make_unique<game_mode>() );
+    //if ( engine::command::is_key_down( engine::command::Q ) ) return make_pair ( PUSH, make_unique<genesis_mode>() );
+    //if ( engine::command::is_key_down( engine::command::P ) ) return make_pair ( PUSH, make_unique<game_mode>() );
     
     return make_pair ( CONTINUE, NO_PUSHED_MODE );
 }
