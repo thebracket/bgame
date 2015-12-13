@@ -26,7 +26,7 @@ public:
 	
 	color_t fg = target.foreground_color;
 	if (depth > 0) {
-	    const int darken = depth*20;
+	    const int darken = depth*10;
 	    if (std::get<0>(fg) > darken) std::get<0>(fg) = ( std::get<0>(fg)-darken );
 	    if (std::get<1>(fg) > darken) std::get<1>(fg) = ( std::get<1>(fg)-darken );
 	    if (std::get<2>(fg) > darken) std::get<2>(fg) = ( std::get<2>(fg)-darken );
@@ -59,7 +59,7 @@ public:
 			tile_t * dive_tile = world::planet->get_tile( location_t{ camera_pos->pos.region, viewport.x + x, viewport.y + y, camera_pos->pos.z-depth } );
 			if (!dive_tile->solid and dive_tile->base_tile_type==tile_type::EMPTY_SPACE) {
 			  ++depth;
-			  if (depth > 6) go = true;
+			  if (depth > 10) go = true;
 			} else {
 			  if (dive_tile->solid) {
 			    target.character = 219;
@@ -80,7 +80,7 @@ public:
 		      }
 		    }
 		    //std::cout << "Dive reached depth: " << depth << "\n";
-		    if (depth < 7) render_ascii(dest, target, SDL, depth);
+		    if (depth < 10) render_ascii(dest, target, SDL, depth);
 		} else {
 		    if (tile->solid) {
 		      target.character = 219;
