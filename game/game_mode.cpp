@@ -112,6 +112,7 @@ void game_mode::init_systems()
 {
      game_engine->ecs->add_system ( make_input_system() );
      game_engine->ecs->add_system ( make_camera_system() );
+     //game_engine->ecs->add_system ( make_calendar_system() );
 }
 
 void game_mode::init()
