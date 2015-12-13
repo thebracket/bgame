@@ -137,14 +137,6 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
 {
       // Temporary
      if ( is_key_down ( Q ) ) finished = true;
-     if ( is_key_down( command::PERIOD ) ) {
-	position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>( world::camera_handle );
-	--camera_pos->pos.z;
-     }
-     if ( is_key_down( command::COMMA ) ) {
-	position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>( world::camera_handle );
-	++camera_pos->pos.z;
-     }
 
      if ( finished ) {
           return make_pair ( POP, NO_PUSHED_MODE );
