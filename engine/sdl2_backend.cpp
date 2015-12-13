@@ -56,6 +56,7 @@ void sdl2_backend::init(const std::string &window_title, const int width=1024, c
      if ( TTF_Init() == -1 ) throw 104;
 
      resources.load_image( renderer, "../assets/terminal16x16.png", "font" );
+     resources.load_image( renderer, "../assets/terminal8x8_palette2.png", "font_s" );
 
      initialized = true;
 }

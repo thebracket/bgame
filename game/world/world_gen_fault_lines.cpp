@@ -48,6 +48,7 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
     }
     png.save();
     
+    
     /*
     // Then marching squares to find the edge cells; these are raised as fault lines.
     std::cout << "Elevating edges.\n";
@@ -66,9 +67,11 @@ void add_fault_lines ( heightmap_t* heightmap, engine::random_number_generator *
 	  }
       }
     };*/
+ 
     
     // Rather than elevating edges, we're going to set altitude by mask entry. This should result in more flatter areas.
     for ( int i=0; i<heightmap->size(); ++i ) {
 	heightmap->operator[]( i ) = point_heights[vmap_p->operator[] ( i )] + rng->roll_dice(2,64) - rng->roll_dice(1,64);
     }
+    
 }
