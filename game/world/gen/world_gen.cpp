@@ -1,6 +1,6 @@
 #include "world_gen.hpp"
 #include "world_height_map.hpp"
-#include "world_gen_fault_lines.hpp"
+#include "world_gen_biomes.hpp"
 #include "world_gen_hydrology.hpp"
 #include "../../../engine/rng.h"
 #include "world_gen_layer_cake.hpp"
@@ -27,10 +27,11 @@ void world_gen_phase_1()
     std::cout << "Hydrology\n";
     std::unique_ptr<water_level_map_t> water = perform_hydrology( base_map.get(), &rng );
         
-    //std::cout << "Fault Lines\n";
-    //add_fault_lines( base_map.get(), &rng );
+    std::cout << "Biomes\n";    
+    biome_map_t biomes = make_biome_map( base_map.get(), &rng, water.get() );
+    
     std::cout << "Layercake\n";
-    std::unique_ptr<planet_t> planet = make_world_layers( base_map.get(), rng, water.get() );
+    std::unique_ptr<planet_t> planet = make_world_layers( base_map.get(), rng, water.get(), &biomes );
     
     std::cout << "Making starting entites\n";    
     // Make the camera

@@ -16,7 +16,7 @@ add_library(game
 	    world/planet.cpp
 	    world/region.cpp
 	    world/tile3d.cpp
-	    world/gen/world_gen_fault_lines.cpp
+	    world/gen/world_gen_biomes.cpp
 	    world/gen/world_height_map_marching_squares.cpp
 	    world/gen/world_gen_hydrology.cpp
 	    world/gen/world_gen_layer_cake.cpp
