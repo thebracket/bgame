@@ -16,6 +16,12 @@ inline std::unique_ptr<heightmap_t> get_height_map() {
     return std::move(result);
 }
 
+inline std::unique_ptr<heightmap_t> copy_height_map( heightmap_t * original ) {
+    std::unique_ptr<heightmap_t> result = std::make_unique<heightmap_t>(); 
+    std::copy ( original->begin(), original->end(), std::back_inserter( *result ) );
+    return std::move ( result );
+}
+
 inline int height_map_idx ( const int x, const int y ) { return ( y * WORLD_WIDTH * REGION_WIDTH) + x; }
 
 inline void fill_height_map ( heightmap_t * height_map, const uint16_t value ) {

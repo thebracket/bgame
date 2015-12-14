@@ -4,7 +4,7 @@
 #include <iostream>
 #include "../../../engine/png_writer.h"
 
-std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::random_number_generator& rng )
+std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::random_number_generator& rng, water_level_map_t * water )
 {    
     const int lowest_ground = min_heightmap_height( base_map );
     const int highest_ground = max_heightmap_height( base_map );
@@ -131,9 +131,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    target->covering = tile_covering::GRASS;
 		    target->climate = tile_climate::TEMPERATE;
 		    if (z >= water_z) png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, 0, (z-128)*10, 0, 255 );
-		    
-		    //if ( water->operator[]( hidx ) > 5 ) target->water_level = 10;
-		    
+		    		    
 		    // Just add water
 		    while ( z < water_z ) {
 			target = planet->get_tile( location_t{region_index, x, y, z} );

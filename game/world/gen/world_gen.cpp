@@ -23,15 +23,14 @@ void world_gen_phase_1()
     std::cout << "Making a noise-based height-map\n";
     make_noisy_heightmap( base_map.get(), &rng );
     smooth_height_map( base_map.get() );
+    
+    std::cout << "Hydrology\n";
+    std::unique_ptr<water_level_map_t> water = perform_hydrology( base_map.get(), &rng );
         
     //std::cout << "Fault Lines\n";
     //add_fault_lines( base_map.get(), &rng );
-    //std::cout << "Hydrology\n";
-    //std::unique_ptr<water_level_map_t> water = perform_hydrology( base_map.get(), &rng );
-    //std::cout << "Smooth\n";
-    //for (int i=0; i<128; ++i) smooth_height_map( base_map.get() );    
     std::cout << "Layercake\n";
-    std::unique_ptr<planet_t> planet = make_world_layers( base_map.get(), rng );
+    std::unique_ptr<planet_t> planet = make_world_layers( base_map.get(), rng, water.get() );
     
     std::cout << "Making starting entites\n";    
     // Make the camera
