@@ -1,170 +1,137 @@
 #include "world_gen_hydrology.hpp"
 #include <algorithm>
 #include <iostream>
+#include <map>
 
-std::unique_ptr< rain_map_t > get_rain_map ( heightmap_t* heightmap )
-{
-     std::unique_ptr < rain_map_t > result = std::make_unique < rain_map_t > ( NUMBER_OF_TILES_IN_THE_WORLD );
-
-     std::fill ( result->begin(), result->end(), 100 );
-
-     int running = 50;
-     int average_height = average_heightmap_height( heightmap );
-     for ( int y = 0; y < ( WORLD_HEIGHT * REGION_HEIGHT ); ++y ) {
-          for ( int x = 0; x < ( WORLD_WIDTH * REGION_WIDTH ); ++x ) {
-               const int idx = height_map_idx ( x, y );
-               result->operator[] ( idx ) = running;
-
-               if ( heightmap->operator[] ( idx ) > average_height and running > 11 ) {
-                    running -= 5;
-               }
-               if ( running < 50 ) running += 5;
-          }
+std::unique_ptr<heightmap_t> get_minimum_erosion( heightmap_t * heightmap ) {
+    std::unique_ptr<heightmap_t> erosion_minimum = get_height_map();
+     int i=0;
+     for (const int &h : *heightmap) {
+	erosion_minimum->operator[] ( i ) = h/2;
+	++i;
      }
-
-     return std::move ( result );
+     return std::move ( erosion_minimum );
 }
 
-std::unique_ptr<temperature_map_t> get_temperature_map ( heightmap_t * heightmap )
-{
-     std::unique_ptr < temperature_map_t > result = std::make_unique < temperature_map_t > ( NUMBER_OF_TILES_IN_THE_WORLD );
+class water_sorter {
+public:
+  //water_sorter() { std::cout <<  "------ Start Sort\n"; }
+  //~water_sorter() { std::cout << "------ End Sort\n"; }
+  void add_destination(const int &dest, const int &level) {
+      //std::cout << level << " .. " << dest << "\n";
+      if (level < current_lowest) {
+	  current_lowest = level;
+	  current_lowest_direction = dest;
+      }
+  }
+  int get() { 
+    //std::cout << " = " << current_lowest_direction << "\n";
+    return current_lowest_direction;     
+  }
+private:
+  int current_lowest_direction = -1;
+  int current_lowest = 60000;
+};
 
-     constexpr float AVERAGE_EARTH_TEMPERATURE = 15;
-     constexpr float MAX_EARTH_TEMPERATURE = 58;
-     constexpr float MIN_EARTH_TEMPERATURE = -89;
-     constexpr float TEMPERATURE_RANGE = MAX_EARTH_TEMPERATURE - MIN_EARTH_TEMPERATURE;
-     constexpr float TEMPERATURE_GRADIENT = TEMPERATURE_RANGE / ( WORLD_HEIGHT * REGION_HEIGHT );
-
-     // Average earth temperature
-     std::fill ( result->begin(), result->end(), AVERAGE_EARTH_TEMPERATURE );
-     uint16_t average_height = average_heightmap_height ( heightmap );
-
-
-     float temperature = MIN_EARTH_TEMPERATURE;
-     for ( int y = 0; y < ( WORLD_HEIGHT * REGION_HEIGHT ); ++y ) {
-          for ( int x = 0; x < ( WORLD_WIDTH * REGION_WIDTH ); ++x ) {
-               const int idx = height_map_idx ( x, y );
-               const uint16_t altitude = heightmap->operator[] ( idx );
-               if ( altitude > average_height ) {
-                    result->operator[] ( idx ) = temperature - ( ( altitude - average_height ) /100 );
-               }
-          }
-          temperature += TEMPERATURE_GRADIENT;
-     }
-
-     return std::move ( result );
+int downhill_target ( const int &x, const int &y, const int &hidx, heightmap_t * heightmap, water_level_map_t * water ) {    
+    const int north_idx = height_map_idx( x, y-1 );
+    const int east_idx = height_map_idx( x+1, y );
+    const int south_idx = height_map_idx( x, y+1 );
+    const int west_idx = height_map_idx( x-1, y );
+    
+    const int northwest_idx = height_map_idx( x-1, y-1 );
+    const int southwest_idx = height_map_idx( x-1, y+1 );
+    const int northeast_idx = height_map_idx( x+1, y-1 );
+    const int southeast_idx = height_map_idx( x+1, y+1 );
+    
+    water_sorter sorter;
+    sorter.add_destination( hidx, heightmap->operator[]( hidx ) );
+    sorter.add_destination( north_idx, heightmap->operator[]( north_idx ) );
+    sorter.add_destination( east_idx, heightmap->operator[]( east_idx ) );
+    sorter.add_destination( south_idx, heightmap->operator[]( south_idx ) );
+    sorter.add_destination( west_idx, heightmap->operator[]( west_idx ) );
+    sorter.add_destination( northwest_idx, heightmap->operator[]( northwest_idx ) );
+    sorter.add_destination( southwest_idx, heightmap->operator[]( southwest_idx ) );
+    sorter.add_destination( northeast_idx, heightmap->operator[]( northeast_idx ) );
+    sorter.add_destination( southeast_idx, heightmap->operator[]( southeast_idx ) );
+        
+    const int result = sorter.get();
+    return result;
 }
 
 std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, engine::random_number_generator * rng )
 {
+    constexpr int width = WORLD_WIDTH * REGION_WIDTH;
+    constexpr int height = WORLD_HEIGHT * REGION_HEIGHT;
+  
+     // We never erode below half original height
+     auto min_heights = get_minimum_erosion( heightmap );
      std::unique_ptr<water_level_map_t> water_ptr = std::make_unique<water_level_map_t>();
      water_ptr->resize ( NUMBER_OF_TILES_IN_THE_WORLD );
-     std::fill ( water_ptr->begin(), water_ptr->end(), 10 );
-
-     for ( int pass = 0; pass < WORLD_WIDTH*WORLD_HEIGHT; ++pass ) {
-          // Re-generate height-temperature based upon the new map
-          std::unique_ptr<rain_map_t> rainfall = get_rain_map ( heightmap );
-          std::unique_ptr<temperature_map_t> temperature = get_temperature_map ( heightmap );
-
-          // Add rain-fall
-          for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
-               const uint8_t rain_probability = rainfall->operator[] ( i );
-               water_ptr->operator[] ( i ) += rain_probability/10;
-          }
-
-          std::unique_ptr<rain_map_t> water_tmp = std::make_unique<rain_map_t>( );
-          std::copy ( water_ptr->begin(), water_ptr->end(), std::back_inserter ( *water_tmp.get() ) );
-          std::unique_ptr<heightmap_t> height_tmp = std::make_unique<heightmap_t>( );
-          std::copy ( heightmap->begin(), heightmap->end(), std::back_inserter ( *height_tmp.get() ) );
-
-          bool settled = false;
-          int n_passes = 0;
-          int changes = 0;
-          while ( !settled ) {
-               ++n_passes;
-               settled = true;
-               changes = 0;
-               // Move water downhill
-               for ( int y = 1; y < ( WORLD_HEIGHT * REGION_HEIGHT )-1; ++y ) {
-                    for ( int x = 1; x < ( WORLD_WIDTH * REGION_WIDTH )-1; ++x ) {
-                         const int hidx = height_map_idx ( x, y );
-                         if ( water_ptr->operator[] ( hidx ) >0 ) {
-                              const uint16_t altitude = heightmap->operator[] ( hidx );
-
-                              // Determine lowest neighbouring
-                              const int north_idx = height_map_idx ( x, y-1 );
-                              const int south_idx = height_map_idx ( x, y+1 );
-                              const int east_idx = height_map_idx ( x+1, y );
-                              const int west_idx = height_map_idx ( x-1, y );
-
-                              int destination = hidx;
-                              int alt_buf = altitude;
-                              if ( heightmap->operator[] ( north_idx ) < alt_buf ) {
-                                   destination = north_idx;
-                                   alt_buf = heightmap->operator[] ( north_idx );
-                              }
-                              if ( heightmap->operator[] ( south_idx ) < alt_buf ) {
-                                   destination = south_idx;
-                                   alt_buf = heightmap->operator[] ( south_idx );
-                              }
-                              if ( heightmap->operator[] ( east_idx ) < alt_buf ) {
-                                   destination = east_idx;
-                                   alt_buf = heightmap->operator[] ( east_idx );
-                              }
-                              if ( heightmap->operator[] ( west_idx ) < alt_buf ) {
-                                   destination = west_idx;
-                                   alt_buf = heightmap->operator[] ( west_idx );
-                              }
-			   
-                              if ( destination != hidx ) {
-                                   //std::cout << "<";
-                                   // Erode altitude down (water) units
-				   if ( height_tmp->operator[] ( hidx ) > 2 ) {
-				      height_tmp->operator[] ( hidx ) -= 2;
-				   }
-
-                                   // Move water there
-                                   if ( water_tmp->operator[] ( destination ) < 200 ) water_tmp->operator[] ( destination ) += 1;
-                                   if ( water_tmp->operator[] ( destination ) > 200 ) water_tmp->operator[] ( destination ) = 200;
-                                   water_tmp->operator[] ( hidx ) -= 1;
-				   if (water_tmp->operator[] ( hidx ) < 1) water_tmp->operator[] ( hidx ) = 0;
-                                   settled = false;
-                                   ++changes;
-                              }
-                         }
-                    }
-               }
-
-               // Copy the altitude and water maps back
-               water_ptr->clear();
-               std::copy ( water_tmp->begin(), water_tmp->end(), std::back_inserter ( *water_ptr ) );
-               heightmap->clear();
-               std::copy ( height_tmp->begin(), height_tmp->end(), std::back_inserter ( *heightmap ) );
-
-               for ( int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i ) {
-                    if (water_ptr->operator[]( i ) > 5) {
-		      water_ptr->operator[] ( i ) -= 5; // Evaporation
-		    } else {
-		      water_ptr->operator[] ( i ) = 0;
+     
+     for (int pass=0; pass<1; ++pass) {
+	std::fill ( water_ptr->begin(), water_ptr->end(), 200 ); // TODO: Replace with a rainfall map
+	
+	bool stable = false;
+	
+	int pass_count = 0;
+	int changes = 0;
+	int dry = 0;
+	int stuck = 0;
+	while (!stable) {
+	    stable = true;
+	    auto heightmap_copy = copy_height_map( heightmap );
+	    auto water_copy = std::make_unique<water_level_map_t>();
+	    for (const uint8_t &w : *water_ptr) water_copy->push_back ( w );
+	    for (int y=1; y<height-1; ++y) {
+	      for (int x=1; x<width-1; ++x) {
+		
+		const int hidx = height_map_idx( x, y );
+		if ( water_ptr->operator[](hidx) > 0 ) {
+		  // Tile is wet - can the water move?
+		  const int destination_idx = downhill_target( x, y, hidx, heightmap, water_ptr.get() );
+		  if (destination_idx == hidx or destination_idx==-1) {
+		      // There's nowhere to go from here.
+		      if ( heightmap_copy->operator[] ( hidx ) > min_heights->operator[] ( hidx ) ) {
+			heightmap_copy->operator[] ( hidx ) = heightmap_copy->operator[] ( hidx ) - 1;
+		      }
+		      ++stuck;
+		  } else {
+		    // Erode downwards
+		    if ( heightmap_copy->operator[] ( hidx ) > min_heights->operator[] ( hidx )+1 ) {
+			heightmap_copy->operator[] ( hidx ) = heightmap_copy->operator[] ( hidx )-1;
+			stable = false;
+			++changes;
 		    }
-                    if ( water_ptr->operator[] ( i ) < 1 ) water_ptr->operator[] ( i ) = 0;
-		    if ( water_ptr->operator[] ( i ) > 250 ) water_ptr->operator[] ( i ) = 0;
-               }
-               
-               std::cout << "Pass " << pass << " .. sub-pass " << n_passes << " (" << changes << ") \n";
-	       if (changes < 17000) settled = true;
-          }
-          /*for (int i=0; i<16; ++i)
-	    smooth_height_map ( heightmap );
-	  */
+		    
+		    if (water_copy->operator[] ( destination_idx ) < 253)
+			water_copy->operator[] ( destination_idx ) = water_copy->operator[] ( destination_idx ) + 1;
+		    
+		    if ( water_copy->operator[] ( hidx ) > 1 )
+			water_copy->operator[] ( hidx ) = water_copy->operator[] ( hidx ) -1;					
 
-          rainfall.reset();
-          temperature.reset();
-          water_tmp.reset();
-          height_tmp.reset();
 
-          //smooth_height_map( heightmap );
-     }
-
+		  }
+		} else { ++dry; } // if
+	      } // x
+	    } // y
+	    
+	    heightmap->clear();
+	    water_ptr->clear();
+		    
+	    heightmap->clear();
+	    std::copy ( heightmap_copy->begin(), heightmap_copy->end(), std::back_inserter ( *heightmap ) );
+	    water_ptr->clear();
+	    for ( uint8_t w : *water_copy) {
+	      if (w > 0) --w;
+	      water_ptr->push_back(w);
+	    }
+	    
+	    ++pass_count;
+	    std::cout << "Pass " << pass << "~" << pass_count << " (changes: " << changes << ", dry: " << dry << ", unmoving: " << stuck << ") \n";
+	    changes = 0;
+	    dry = 0;
+	}
+     }     
      return std::move ( water_ptr );
 }
