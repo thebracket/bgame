@@ -100,8 +100,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 		    // Erode downwards
 		    if ( heightmap_copy->operator[] ( hidx ) > min_heights->operator[] ( hidx )+1 ) {
 			heightmap_copy->operator[] ( hidx ) = heightmap_copy->operator[] ( hidx )-1;
-			stable = false;
-			++changes;
+			
 		    }
 		    
 		    if (water_copy->operator[] ( destination_idx ) < 253)
@@ -110,7 +109,8 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 		    if ( water_copy->operator[] ( hidx ) > 1 )
 			water_copy->operator[] ( hidx ) = water_copy->operator[] ( hidx ) -1;					
 
-
+		    stable = false;
+		    ++changes;
 		  }
 		} else { ++dry; } // if
 	      } // x
