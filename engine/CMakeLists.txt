@@ -9,4 +9,5 @@ add_library (bengine
 	    command_manager.cpp
 	    geometry.cpp
 	    png_writer.cpp
+	    perlin_noise.cpp
 )
