@@ -13,7 +13,7 @@ using std::unique_ptr;
 biome_map_t make_biome_map ( heightmap_t* heightmap, engine::random_number_generator* rng, water_level_map_t* water )
 {
     unique_ptr<heightmap_t> vmap_p = get_height_map();
-    const int number_of_biomes = WORLD_HEIGHT*WORLD_WIDTH*4;
+    const int number_of_biomes = WORLD_HEIGHT*WORLD_WIDTH*8;
     biome_map_t result;
 
     
@@ -55,7 +55,7 @@ biome_map_t make_biome_map ( heightmap_t* heightmap, engine::random_number_gener
     const int min_altitude = min_heightmap_height( heightmap );
     const int average_altitude = average_heightmap_height( heightmap );
     const int start_x = ( WORLD_WIDTH * REGION_WIDTH ) / 2;
-    const int start_y = ( WORLD_HEIGHT * REGION_HEIGHT ) - REGION_HEIGHT - (REGION_HEIGHT/2);
+    const int start_y = ( WORLD_HEIGHT * REGION_HEIGHT ) - REGION_HEIGHT/2;
     
     for (int i=0; i<number_of_biomes; ++i) {
 	int TOTAL_ALT = 0;
