@@ -2,7 +2,7 @@
 #include "world/universegen.hpp"
 #include "../game/game.h"
 #include "../engine/geometry.hpp"
-#include "world/world_gen.hpp"
+#include "world/gen/world_gen.hpp"
 
 using std::make_pair;
 using namespace engine;

@@ -12,14 +12,14 @@ add_library(game
 	    render/window.cpp
 	    render/settler_compositor.cpp
 	    
-	    world/world_gen.cpp
+	    world/gen/world_gen.cpp
 	    world/planet.cpp
 	    world/region.cpp
 	    world/tile3d.cpp
-	    world/world_gen_fault_lines.cpp
-	    world/world_height_map_marching_squares.cpp
-	    world/world_gen_hydrology.cpp
-	    world/world_gen_layer_cake.cpp
+	    world/gen/world_gen_fault_lines.cpp
+	    world/gen/world_height_map_marching_squares.cpp
+	    world/gen/world_gen_hydrology.cpp
+	    world/gen/world_gen_layer_cake.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    

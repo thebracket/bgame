@@ -49,14 +49,14 @@ public:
 	    for (int x = 0; x<viewport.w; ++x) {
 		SDL_Rect dest{x*8,y*8,8,8};
 		vterm::screen_character target;
-		const location_t world_loc{ camera_pos->pos.region, viewport.x + x, viewport.y + y, camera_pos->pos.z };
+		const location_t world_loc{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x), static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
 		tile_t * tile = world::planet->get_tile( world_loc );
 		if (!tile->solid and tile->base_tile_type==tile_type::EMPTY_SPACE) {
 		    // 3d dive
 		    int depth = 1;
 		    bool go = false;
 		    while (!go) {
-			tile_t * dive_tile = world::planet->get_tile( location_t{ camera_pos->pos.region, viewport.x + x, viewport.y + y, camera_pos->pos.z-depth } );
+			tile_t * dive_tile = world::planet->get_tile( location_t{ camera_pos->pos.region, world_loc.x, world_loc.y, static_cast<uint8_t>(camera_pos->pos.z-depth) } );
 			if (!dive_tile->solid and dive_tile->base_tile_type==tile_type::EMPTY_SPACE) {
 			  ++depth;
 			  if (depth > 10) go = true;
