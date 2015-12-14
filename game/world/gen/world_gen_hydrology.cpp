@@ -128,7 +128,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 	    }
 	    
 	    ++pass_count;
-	    std::cout << "Pass " << pass << "~" << pass_count << " (changes: " << changes << ", dry: " << dry << ", unmoving: " << stuck << ") \n";
+	    //std::cout << "Pass " << pass << "~" << pass_count << " (changes: " << changes << ", dry: " << dry << ", unmoving: " << stuck << ") \n";
 	    changes = 0;
 	    dry = 0;
 	}
