@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <numeric>
 #include <iostream>
-#include "world_defs.hpp"
+#include "../world_defs.hpp"
 
 using heightmap_t = std::vector< int >;
 

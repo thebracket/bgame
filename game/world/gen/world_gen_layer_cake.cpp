@@ -1,8 +1,8 @@
 #include "world_gen_layer_cake.hpp"
-#include "planet.hpp"
+#include "../planet.hpp"
 #include "world_height_map_marching_squares.hpp"
 #include <iostream>
-#include "../../engine/png_writer.h"
+#include "../../../engine/png_writer.h"
 
 std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::random_number_generator& rng )
 {    

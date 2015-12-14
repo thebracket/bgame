@@ -2,11 +2,11 @@
 #include "world_height_map.hpp"
 #include "world_gen_fault_lines.hpp"
 #include "world_gen_hydrology.hpp"
-#include "../../engine/rng.h"
+#include "../../../engine/rng.h"
 #include "world_gen_layer_cake.hpp"
 #include <iostream>
-#include "../game.h"
-#include "universe.hpp"
+#include "../../game.h"
+#include "../universe.hpp"
 
 using engine::entity;
 
