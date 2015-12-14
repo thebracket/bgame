@@ -20,6 +20,7 @@ add_library(game
 	    world/gen/world_height_map_marching_squares.cpp
 	    world/gen/world_gen_hydrology.cpp
 	    world/gen/world_gen_layer_cake.cpp
+	    world/gen/world_gen_noise.cpp
 	    
 	    raws/raws.cpp 
 	    raws/raw_power_generator.cpp	    
