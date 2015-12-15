@@ -1,5 +1,6 @@
 #include "world.h"
 #include "../tasks/help_wanted.h"
+#include "world_defs.hpp"
 
 using std::pair;
 
@@ -12,6 +13,8 @@ std::vector<render_layers_t> entity_render_list ( tiles_per_landblock) ;
 std::vector<bool> walk_blocked ( tiles_per_landblock );
 std::vector<bool> view_blocked ( tiles_per_landblock );
 unordered_map<string, vector<available_item>> inventory;
+
+std::vector<optional<engine::vterm::screen_character>> render_list_3d ( REGION_TILES );
 
 int camera_handle;
 int cordex_handle;

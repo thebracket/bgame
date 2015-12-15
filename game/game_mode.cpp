@@ -102,6 +102,11 @@ public:
 		    } else {
 		      target = tile->render_as;		      
 		    }
+		    const int tile_idx = (camera_pos->pos.z * REGION_HEIGHT*REGION_WIDTH) + ( (viewport.y + y) * REGION_WIDTH ) + (viewport.x + x);
+		    if ( world::render_list_3d[tile_idx] ) {
+		      target = world::render_list_3d[tile_idx].value();
+		      //std::cout << "Hit!\n";
+		    }
 		    render_ascii(dest, target, SDL, 0);
 
 		}
@@ -171,7 +176,7 @@ void game_mode::init_systems()
      //game_engine->ecs->add_system ( make_damage_system() );
      //game_engine->ecs->add_system ( make_particle_system() );
      //game_engine->ecs->add_system ( make_viewshed_system() );
-     //game_engine->ecs->add_system ( make_renderable_system() );
+     game_engine->ecs->add_system ( make_renderable_system() );
 }
 
 void game_mode::init()
