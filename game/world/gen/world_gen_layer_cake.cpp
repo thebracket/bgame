@@ -132,9 +132,12 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    target->covering = tile_covering::GRASS;
 		    target->climate = tile_climate::TEMPERATE;
 		    if (z >= water_z) png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, 0, (z-128)*10, 0, 255 );
-		    biome_t biome = biomes->biomes[biomes->biome_map->operator[]( hidx )];
-		    build_tile( biome, target );
-		    		    
+		    
+		    if ( z >= water_z) {
+			biome_t biome = biomes->biomes[biomes->biome_map->operator[]( hidx )];
+			build_tile( biome, target );
+		    }
+		    
 		    // Just add water
 		    while ( z < water_z ) {
 			target = planet->get_tile( location_t{region_index, x, y, z} );
