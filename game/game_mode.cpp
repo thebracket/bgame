@@ -15,6 +15,20 @@ using namespace engine::command;
 using engine::vterm::color_t;
 using std::make_unique;
 
+inline void darken(const int &amount, color_t &col) {
+    unsigned char red = std::get<0>(col);
+    unsigned char green = std::get<1>(col);
+    unsigned char blue = std::get<2>(col);
+    
+    if (red > amount) { red -= amount; } else { red = 0; }
+    if (green > amount) { green -= amount; } else { green = 0; }
+    if (blue > amount) { blue -= amount; } else { blue = 0; }
+    
+    std::get<0>(col) = red;
+    std::get<1>(col) = green;
+    std::get<2>(col) = blue;
+}
+
 class game3d_render : public engine::base_node
 {
 public:
@@ -23,15 +37,14 @@ public:
 	int texture_x = ( target_char % 16 ) * 8;
 	int texture_y = ( target_char / 16 ) * 8;
 	SDL_Rect source = {texture_x, texture_y, 8, 8 };
+	const SDL_Rect bg_source = { 88, 104, 8, 8 };
 	
 	color_t fg = target.foreground_color;
 	if (depth > 0) {
-	    const int darken = depth*10;
-	    if (std::get<0>(fg) > darken) std::get<0>(fg) = ( std::get<0>(fg)-darken );
-	    if (std::get<1>(fg) > darken) std::get<1>(fg) = ( std::get<1>(fg)-darken );
-	    if (std::get<2>(fg) > darken) std::get<2>(fg) = ( std::get<2>(fg)-darken );
+	    const int darken_amount = depth*25;
+	    darken ( darken_amount, fg );
 	}
-	
+		
 	SDL->set_color_mod( "font_s", std::get<0>(fg), std::get<1>(fg), std::get<2>(fg) );
 	SDL->render_bitmap( "font_s", source, dest);
     }
@@ -66,15 +79,7 @@ public:
 			    target.foreground_color = color_t{128,128,128};
 			    target.background_color = color_t{0,0,0};
 			  } else {
-			    if (dive_tile->water_level > 0) {
-			      target.character = 126;
-			      target.foreground_color = color_t{0,0,128};
-			      target.background_color = color_t{0,0,0};
-			    } else {
-			      target.character = 177;
-			      target.foreground_color = color_t{0,128,0};
-			      target.background_color = color_t{0,0,0};
-			    }
+			    target = dive_tile->render_as;
 			    go = true;
 			}
 		      }
@@ -87,16 +92,7 @@ public:
 		      target.foreground_color = color_t{128,128,128};
 		      target.background_color = color_t{0,0,0};
 		    } else {
-		      if (tile->water_level > 0) {
-			target.character = 126;
-			target.foreground_color = color_t{0,0,128};
-			target.background_color = color_t{0,0,0};
-		      } else {
-			target.character = 177;
-			target.foreground_color = color_t{0,128,0};
-			target.background_color = color_t{0,0,0};
-		      }
-		      
+		      target = tile->render_as;		      
 		    }
 		    render_ascii(dest, target, SDL, 0);
 

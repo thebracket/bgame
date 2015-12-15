@@ -133,12 +133,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    target->ground = tile_ground::SEDIMENTARY;
 		    target->covering = tile_covering::GRASS;
 		    target->climate = tile_climate::TEMPERATE;
-		    if (z >= water_z) png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, 0, (z-128)*10, 0, 255 );
 		    
-		    if ( z >= water_z) {
-			biome_t biome = biomes->biomes[biomes->biome_map->operator[]( hidx )];
-			build_tile( biome, target );
-		    }
 		    
 		    // Just add water
 		    while ( z < water_z ) {
@@ -152,7 +147,20 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 			++z;
 		    }
 		    
+		    biome_t biome = biomes->biomes[biomes->biome_map->operator[]( hidx )];
+		    build_tile( biome, target, rng );
 		    //std::cout << +z << "\n";
+		    if (z >= water_z) {
+		      tile_render_calculation( target );
+		      engine::vterm::screen_character render_target = target->render_as;
+		      unsigned char r = std::get<0>(render_target.background_color);
+		      unsigned char g = std::get<1>(render_target.background_color);
+		      unsigned char b = std::get<2>(render_target.background_color);
+		      if ( r > z) { r -= z; } else { r = 0; }
+		      if ( g > z) { g -= z; } else { g = 0; }
+		      if ( b > z) { b -= z; } else { b = 0; }
+		      png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, r, g, b, 255 );
+		    }
 		}
 	    }
 	    
