@@ -186,6 +186,10 @@ void game_mode::init()
      game_engine->ecs->init();
      game_engine->ecs->load_game( "world/savegame3d.dat" );
      init_systems();
+     
+     // Tell the rendering and movement systems to fire
+     game_engine->messaging->add_message<walkability_changed_message>(walkability_changed_message());
+     game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 }
 
 void game_mode::done()
