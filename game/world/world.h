@@ -67,6 +67,8 @@ extern std::vector<render_layers_t> entity_render_list;
 extern std::vector<bool> walk_blocked;
 extern std::vector<bool> view_blocked;
 
+extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
+
 struct available_item {
      string name;
      std::pair<int,int> location;

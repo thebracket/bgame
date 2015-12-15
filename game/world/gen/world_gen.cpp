@@ -90,7 +90,6 @@ void make_entities( planet_t * planet ) {
 	  ++start_z;
 	} else {
 	  found = true;
-	  ++start_z;
 	}
     }
     std::cout << "Starting at: " << +start_x << "/" << +start_y << "/" << +start_z << "\n";
@@ -101,10 +100,10 @@ void make_entities( planet_t * planet ) {
     // Add ship hull, superstructure, doors, power, sensors, cordex
     add_cordex ( start_x, start_y, start_z, planet_idx );
     // Solar collector at (x-1,y-1), (x+1,y-1), (x-1,y+1), (x+1,y+1)
-    add_solar_collector(static_cast<uint8_t>(start_x-1), static_cast<uint8_t>(start_y-1), static_cast<uint8_t>(start_z-1), planet_idx);
-    add_solar_collector(static_cast<uint8_t>(start_x+1), static_cast<uint8_t>(start_y-1), static_cast<uint8_t>(start_z-1), planet_idx);
-    add_solar_collector(static_cast<uint8_t>(start_x-1), static_cast<uint8_t>(start_y+1), static_cast<uint8_t>(start_z-1), planet_idx);
-    add_solar_collector(static_cast<uint8_t>(start_x+1), static_cast<uint8_t>(start_y+1), static_cast<uint8_t>(start_z-1), planet_idx);
+    add_solar_collector(static_cast<uint8_t>(start_x-1), static_cast<uint8_t>(start_y-1), static_cast<uint8_t>(start_z+1), planet_idx);
+    add_solar_collector(static_cast<uint8_t>(start_x+1), static_cast<uint8_t>(start_y-1), static_cast<uint8_t>(start_z+1), planet_idx);
+    add_solar_collector(static_cast<uint8_t>(start_x-1), static_cast<uint8_t>(start_y+1), static_cast<uint8_t>(start_z+1), planet_idx);
+    add_solar_collector(static_cast<uint8_t>(start_x+1), static_cast<uint8_t>(start_y+1), static_cast<uint8_t>(start_z+1), planet_idx);
     
     // Console constructions at (x-1,y), (x+1,y), (x,y-1), (x,y+1)
     raws::create_structure_from_raws("Education Console", location_t {static_cast<uint8_t>(start_x-1), start_y, start_z});
