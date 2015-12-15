@@ -153,12 +153,13 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    if (z >= water_z) {
 		      tile_render_calculation( target );
 		      engine::vterm::screen_character render_target = target->render_as;
-		      unsigned char r = std::get<0>(render_target.background_color);
-		      unsigned char g = std::get<1>(render_target.background_color);
-		      unsigned char b = std::get<2>(render_target.background_color);
-		      if ( r > z) { r -= z; } else { r = 0; }
-		      if ( g > z) { g -= z; } else { g = 0; }
-		      if ( b > z) { b -= z; } else { b = 0; }
+		      unsigned char r = std::get<0>(render_target.foreground_color);
+		      unsigned char g = std::get<1>(render_target.foreground_color);
+		      unsigned char b = std::get<2>(render_target.foreground_color);
+		      const int darken = 255 - (z*2);
+		      if ( r > darken) { r -= darken; } else { r = 0; }
+		      if ( g > darken) { g -= darken; } else { g = 0; }
+		      if ( b > darken) { b -= darken; } else { b = 0; }
 		      png.setPixel( (wx*REGION_WIDTH)+x, (wy*REGION_HEIGHT)+y, r, g, b, 255 );
 		    }
 		}
