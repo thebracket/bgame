@@ -8,6 +8,7 @@
 #include "../game/game.h"
 #include "world/universe.hpp"
 #include "systems/system_factory.h"
+#include "render/colors.h"
 
 using std::make_pair;
 using namespace engine;
@@ -50,8 +51,13 @@ public:
     }
   
     virtual void render ( sdl2_backend * SDL ) override {
+	render_power_bar( SDL );
+	render_date_time( SDL );
+	render_paused( SDL );
+	
 	position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>( world::camera_handle );
 	pair<int,int> screen_size = SDL->get_screen_size();
+	screen_size.second -= 48;	
 	const int ascii_width = screen_size.first / 8;
 	const int ascii_height = screen_size.second / 8;
 	if ( camera_pos->pos.x < ascii_width/2 ) camera_pos->pos.x = ascii_width/2;
@@ -62,7 +68,7 @@ public:
 	
 	for (int y = 0; y<viewport.h; ++y) {
 	    for (int x = 0; x<viewport.w; ++x) {
-		SDL_Rect dest{x*8,y*8,8,8};
+		SDL_Rect dest{x*8,(y*8)+48,8,8};
 		vterm::screen_character target;
 		const location_t world_loc{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x), static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
 		tile_t * tile = world::planet->get_tile( world_loc );
@@ -87,7 +93,7 @@ public:
 		      }
 		    }
 		    //std::cout << "Dive reached depth: " << depth << "\n";
-		    if (depth < 10) render_ascii(dest, target, SDL, depth);
+		    if (depth < 11) render_ascii(dest, target, SDL, depth);
 		} else {
 		    if (tile->solid) {
 		      target.character = 219;
@@ -100,17 +106,72 @@ public:
 
 		}
 	    }
-	}
+	}		
     }
 private:
+    void render_power_bar ( sdl2_backend * SDL )
+    {
+	/*SDL_Rect src { 0, 0, 1024, 16 };
+	SDL_Rect dest { 0 , 16 , 1024, 16 };
+	SDL->render_bitmap ( "power_bar_red", src, dest );
 
+	const float power_percent = float ( world::stored_power ) / float ( world::max_power );
+	const int ticks = 1024 * power_percent;
+	dest = { 0 , 16 , ticks, 16 };
+	SDL->render_bitmap ( "power_bar_green", src, dest );*/
+	
+	const float power_percent = float ( world::stored_power ) / float ( world::max_power );
+	const int power_tenths = (power_percent * 10.0)-1;
+	SDL_Rect src { power_tenths * 46, 0, 46, 48 };
+	SDL_Rect dest { 4, 0, 48, 48 };
+	SDL->render_bitmap( "cordex", src, dest );
+
+	std::stringstream ss;
+	ss << "Power: " << world::stored_power << " I " << world::max_power;
+	string emote_text = SDL->render_text_to_image ( "lcd10", ss.str(), "tmp", render::sdl_dark_grey );
+	SDL->render_bitmap_simple ( emote_text, 68, 22 );
+    }
+
+    void render_date_time ( sdl2_backend * SDL )
+    {
+	SDL_Color sdl_white = {255,255,255,255};
+
+	if ( world::display_day_month.empty() ) {
+	      world::display_day_month = " ";
+	}
+	if ( world::display_time.empty() ) {
+	      world::display_time = " ";
+	}
+	const std::string the_date = game_engine->render_text_to_image ( "lcd10", world::display_day_month, "btn_playgame", render::sdl_dark_grey );
+	const std::string the_time = game_engine->render_text_to_image ( "lcd10", world::display_time, "btn_playgame", render::sdl_dark_grey );
+	SDL->render_bitmap_simple ( the_date, 68, 8 );
+	SDL->render_bitmap_simple ( the_time, 178, 8 );
+    }
+
+    void render_paused ( sdl2_backend * SDL )
+    {
+	if ( world::paused ) {
+	    const std::string paused = game_engine->render_text_to_image ( "lcd10", "PAUSED", "btn_playgame", render::sdl_dark_grey );
+	    SDL->render_bitmap_simple ( paused, 310, 8 );
+	}
+    }    
+    
 };
 
 void game_mode::init_systems()
 {
      game_engine->ecs->add_system ( make_input_system() );
      game_engine->ecs->add_system ( make_camera_system() );
-     //game_engine->ecs->add_system ( make_calendar_system() );
+     game_engine->ecs->add_system ( make_calendar_system() );
+     //game_engine->ecs->add_system ( make_obstruction_system() );
+     //game_engine->ecs->add_system ( make_inventory_system() );
+     game_engine->ecs->add_system ( make_power_system() );     
+     //game_engine->ecs->add_system ( make_cordex_ai_system() );          
+     //game_engine->ecs->add_system ( make_settler_ai_system() );
+     //game_engine->ecs->add_system ( make_damage_system() );
+     //game_engine->ecs->add_system ( make_particle_system() );
+     //game_engine->ecs->add_system ( make_viewshed_system() );
+     //game_engine->ecs->add_system ( make_renderable_system() );
 }
 
 void game_mode::init()
@@ -119,8 +180,8 @@ void game_mode::init()
      world::planet->load_region ( world::planet->planet_idx ( WORLD_WIDTH/2, WORLD_HEIGHT-2 ) );
      
      SDL_Rect all {0, 0, 1024, 48};
-     sg.children.push_back( make_unique<game3d_render>() );
      sg.children.push_back ( make_unique<scene_blit> ( "header", all, all ) );
+     sg.children.push_back( make_unique<game3d_render>() );
      
      game_engine->ecs->init();
      game_engine->ecs->load_game( "world/savegame3d.dat" );
