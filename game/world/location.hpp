@@ -10,10 +10,10 @@ struct location_t {
     uint8_t region;
     
     /* X coordinate. */
-    uint8_t x;
+    int16_t x;
     
     /* Y coordinate. */
-    uint8_t y;
+    int16_t y;
     
     /* Z coordinate. */
     uint8_t z;
