@@ -6,6 +6,7 @@
 #include <utility>
 #include <tuple>
 #include "base_raw.h"
+#include "../world/location.hpp"
 
 using std::string;
 using std::vector;
@@ -27,6 +28,7 @@ void read_raws();
  * Returns the entity handle.
  */
 int create_structure_from_raws ( const string& name, const int& x, const int& y );
+int create_structure_from_raws ( const string& name, const location_t loc );
 int create_placeholder_structure_from_raws ( const string& name, const int& x, const int& y );
 int create_item_from_raws ( const string &name );
 

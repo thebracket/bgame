@@ -13,7 +13,7 @@ struct position_component3d {
      bool deleted = false;
 
      position_component3d() {}
-     position_component3d(const location_t &loc) { pos = loc; }
+     position_component3d(const location_t &loc, const facing_t &fac) : facing(fac) { pos = loc; }
 
      facing_t facing;
      location_t pos;

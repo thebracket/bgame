@@ -95,7 +95,7 @@ float calendar_system::calculate_sun_angle ( const calendar_component* t ) const
 
 
 void calendar_system::tick ( const double &duration_ms )
-{
+{	
      calendar_component * calendar = game_engine->ecs->find_entity_component<calendar_component> ( world::cordex_handle );
      for (command_message &cmd : *game_engine->messaging->get_messages_by_type<command_message>() ) {
 	  if (!cmd.deleted and cmd.command == TOGGLE_PAUSE) {
