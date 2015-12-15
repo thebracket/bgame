@@ -21,6 +21,7 @@ constexpr unsigned char RAMP_ED_SD = 15;
 constexpr unsigned char RAMP_WD_SD = 16;
 constexpr unsigned char MAGMA = 17;
 constexpr unsigned char EMPTY_SPACE = 18;
+constexpr unsigned char PERMANENT_ICE = 19;
 }
 
 namespace tile_climate {
@@ -43,6 +44,15 @@ constexpr unsigned char GRAVEL = 3;
 constexpr unsigned char WHITE_SAND = 4;
 constexpr unsigned char YELLOW_SAND = 5;
 constexpr unsigned char RED_SAND = 6;
+constexpr unsigned char PERMAFROST_WHITE = 7;
+constexpr unsigned char PERMAFROST_BLUE = 8;
+constexpr unsigned char PERMAFROST_CRACKED = 9;
+constexpr unsigned char PERMAFROST_DIRTY = 10;
+constexpr unsigned char YELLOW_SAND_RIPPLE = 11;
+constexpr unsigned char RED_SAND_RIPPLE = 12;
+constexpr unsigned char YELLOW_SAND_DIRTY = 13;
+constexpr unsigned char RED_SAND_ROUGH = 14;
+constexpr unsigned char MUD = 15;
 }
 
 namespace tile_covering {
@@ -57,6 +67,8 @@ constexpr unsigned char GORSE = 7;
 constexpr unsigned char REEDS = 8;
 constexpr unsigned char WILDFLOWER = 9;
 constexpr unsigned char CACTUS = 10;
+constexpr unsigned char PEBBLES = 11;
+constexpr unsigned char GRASS_SPARSE = 12;
 }
 
 namespace biome_types {
