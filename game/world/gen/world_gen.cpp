@@ -36,7 +36,7 @@ void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_
 
 void add_camera( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx ) {
     entity camera = game_engine->ecs->add_entity();
-    game_engine->ecs->add_component(camera, position_component3d({ planet_idx, start_x, start_y, 32 }, OMNI));
+    game_engine->ecs->add_component(camera, position_component3d({ planet_idx, start_x, start_y, start_z }, OMNI));
     universe->globals.camera_handle = camera.handle;
     world::camera_handle = camera.handle;
 }
