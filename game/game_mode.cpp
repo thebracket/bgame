@@ -53,10 +53,12 @@ public:
 	position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>( world::camera_handle );
 	pair<int,int> screen_size = SDL->get_screen_size();
 	const int ascii_width = screen_size.first / 8;
-	const int ascii_height = screen_size.first / 8;
+	const int ascii_height = screen_size.second / 8;
+	if ( camera_pos->pos.x < ascii_width/2 ) camera_pos->pos.x = ascii_width/2;
+	if ( camera_pos->pos.x > REGION_WIDTH - (ascii_width/2) ) camera_pos->pos.x = REGION_WIDTH - (ascii_width/2);
+	if ( camera_pos->pos.y < ascii_height/2 ) camera_pos->pos.y = ascii_height/2;
+	if ( camera_pos->pos.y > REGION_HEIGHT-(ascii_height/2) ) camera_pos->pos.y = REGION_HEIGHT - (ascii_height/2);
 	SDL_Rect viewport { camera_pos->pos.x - (ascii_width/2), camera_pos->pos.y - (ascii_height/2), ascii_width, ascii_height };
-	if (camera_pos->pos.x < 0) camera_pos->pos.x = 0;
-	if (camera_pos->pos.y < 0) camera_pos->pos.y = 0;
 	
 	for (int y = 0; y<viewport.h; ++y) {
 	    for (int x = 0; x<viewport.w; ++x) {
