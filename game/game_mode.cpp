@@ -78,7 +78,9 @@ public:
 		    bool go = false;
 		    while (!go) {
 			tile_t * dive_tile = world::planet->get_tile( location_t{ camera_pos->pos.region, world_loc.x, world_loc.y, static_cast<uint8_t>(camera_pos->pos.z-depth) } );
-			if (!dive_tile->solid and dive_tile->base_tile_type==tile_type::EMPTY_SPACE) {
+			const int tile_idx = ((camera_pos->pos.z-depth) * REGION_HEIGHT*REGION_WIDTH) + ( (viewport.y + y) * REGION_WIDTH ) + (viewport.x + x);
+			
+			if (!dive_tile->solid and dive_tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[tile_idx]) {
 			  ++depth;
 			  if (depth > 10) go = true;
 			} else {
@@ -89,8 +91,13 @@ public:
 			  } else {
 			    target = dive_tile->render_as;
 			    go = true;
+			  }
+			  
+			  if (world::render_list_3d[tile_idx]) {
+			      target = world::render_list_3d[tile_idx].value();
+			  }
 			}
-		      }
+			
 		    }
 		    //std::cout << "Dive reached depth: " << depth << "\n";
 		    if (depth < 11) render_ascii(dest, target, SDL, depth);
