@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace tile_type {
 constexpr unsigned char WATER = 1;
 constexpr unsigned char FLAT = 2;
@@ -55,4 +57,16 @@ constexpr unsigned char GORSE = 7;
 constexpr unsigned char REEDS = 8;
 constexpr unsigned char WILDFLOWER = 9;
 constexpr unsigned char CACTUS = 10;
+}
+
+namespace biome_types {
+constexpr uint8_t TUNDRA = 1;
+constexpr uint8_t DESERT = 2;
+constexpr uint8_t JUNGLE = 3;
+constexpr uint8_t BADLANDS = 4;
+constexpr uint8_t SWAMP = 5;
+constexpr uint8_t FLATLAND = 6;
+constexpr uint8_t WOODS = 7;
+constexpr uint8_t FOREST = 8;
+constexpr uint8_t HILLS = 9;
 }
