@@ -53,7 +53,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
     // Save a PNG
     png_writer png("world/heights.png", (WORLD_WIDTH*REGION_WIDTH)+1, (WORLD_HEIGHT*REGION_HEIGHT)+1);
     
-    // TODO: Beach detection
+    // TODO: Beach detection with marching squares.
     
     // Make regions and cells
     for (int wy=0; wy<WORLD_HEIGHT; ++wy) {
