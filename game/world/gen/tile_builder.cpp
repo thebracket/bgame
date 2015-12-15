@@ -32,7 +32,7 @@ void build_tile_desert ( const biome_t &biome, tile_t *tile, engine::random_numb
       default : tile->ground = tile_ground::YELLOW_SAND; break;
     }
     
-    int covering_roll = rng.roll_dice(1,8);
+    int covering_roll = rng.roll_dice(1,40);
     switch (covering_roll) {
       case 1 : tile->covering = tile_covering::CACTUS; break;
       case 2 : tile->covering = tile_covering::PEBBLES; break;
@@ -48,7 +48,7 @@ void build_tile_badlands ( const biome_t &biome, tile_t *tile, engine::random_nu
       default : tile->ground = tile_ground::RED_SAND; break;
     }
     
-    int covering_roll = rng.roll_dice(1,8);
+    int covering_roll = rng.roll_dice(1,20);
     switch (covering_roll) {
       case 1 : tile->covering = tile_covering::CACTUS; break;
       case 2 : tile->covering = tile_covering::GRASS_SPARSE; break;
