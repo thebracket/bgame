@@ -11,7 +11,9 @@
 class region_t {
 public:
   region_t() { tiles.resize( REGION_TILES ); revealed.resize( REGION_TILES ); visible.resize( REGION_TILES ); }
+  
   inline uint32_t tile_idx ( const uint8_t x, const uint8_t y, const uint8_t z ) const { return (z * REGION_HEIGHT*REGION_WIDTH) + ( y * REGION_WIDTH ) + x; }
+
   tile_t * get_tile ( const uint8_t x, const uint8_t y, const uint8_t z ) {     
     return &(tiles[ tile_idx ( x, y, z ) ]);
   }
