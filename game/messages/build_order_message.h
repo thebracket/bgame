@@ -13,5 +13,6 @@ struct build_order_message {
     
     int x;
     int y;
+    int z;
     string structure_name;
 };

@@ -11,6 +11,7 @@
 #include "landblock.h"
 #include "../../engine/virtual_terminal.h"
 #include <boost/optional.hpp>
+#include "location.hpp"
 
 using std::array;
 using std::unique_ptr;
@@ -73,7 +74,7 @@ extern std::vector<bool> view_blocked_3d;
 
 struct available_item {
      string name;
-     std::pair<int,int> location;
+     location_t location;
      int entity_id;
 };
 extern unordered_map<string, vector<available_item>> inventory;

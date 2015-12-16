@@ -13,6 +13,7 @@ struct chop_order_message {
     
     int x;
     int y;
+    int z;
     int tree_id;
     string structure_name;
 };
