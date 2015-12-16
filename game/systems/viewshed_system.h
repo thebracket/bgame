@@ -2,14 +2,12 @@
 
 #include "../world/world.h"
 #include "../../engine/ecs.hpp"
-#include "../components/position_component.h"
+#include "../components/position_component3d.hpp"
 #include "../components/viewshed_component.h"
 #include "../../engine/geometry.hpp"
 #include <unordered_set>
 
 using geometry::DEGRAD;
-using geometry::line_func;
-using geometry::project_angle;
 using std::unordered_set;
 using engine::base_system;
 
@@ -20,7 +18,7 @@ public:
 
 private:
     void reset_visibility();
-    void scan_radius_for_visibility(viewshed_component * view, const position_component * pos);
-    void scan_radius_penetrating(viewshed_component * view, const position_component * pos);
-    bool is_facing_this_way(const position_component * pos, const double &angle);
+    void scan_radius_for_visibility(viewshed_component * view, const position_component3d * pos);
+    void scan_radius_penetrating(viewshed_component * view, const position_component3d * pos);
+    bool is_facing_this_way(const position_component3d * pos, const double &angle);
 };
