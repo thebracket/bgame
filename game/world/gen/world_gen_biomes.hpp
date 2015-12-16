@@ -42,7 +42,7 @@ struct biome_t {
 	  case biome_types::HILLS : std::cout << "Hills"; break;
 	}
 	
-	std::cout << ", Difficulty: " << difficulty;
+	std::cout << ", Difficulty: " << +difficulty;
 	std::cout << "\n";
     }
 };
