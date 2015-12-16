@@ -11,18 +11,18 @@ panel_tooltip::panel_tooltip ( sdl2_backend * sdl, const location_t &loc, const 
      region_z = loc.z;
      std::tie ( mouse_vx, mouse_vy ) = mouse_loc;
 
-     const int idx = world::current_region->idx ( region_x, region_y );
+     /*const int idx = world::current_region->idx ( region_x, region_y );
      if ( world::current_region->visible[ idx ] == false ) {
           render_me = false;
           return;
-     }
+     }*/
 
      screen_x = mouse_vx*16 + 16;
      screen_y = mouse_vy*16 + 48;
 
      lines.add_line ( SDL, "Right Click for Options", sdl_red );
-     lines.add_line ( SDL, world::current_region->tiles[idx].get_description(), sdl_green );
-     lines.add_line ( SDL, world::current_region->tiles[idx].get_climate(), sdl_cyan );
+     //lines.add_line ( SDL, world::current_region->tiles[idx].get_description(), sdl_green );
+     //lines.add_line ( SDL, world::current_region->tiles[idx].get_climate(), sdl_cyan );
      add_tile_contents ( loc.x, loc.y, loc.z );
 
      render_buffer();

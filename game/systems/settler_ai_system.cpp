@@ -1,6 +1,5 @@
 #include "settler_ai_system.h"
 #include "../game.h"
-#include "../world/landblock.h"
 #include "../world/tables.h"
 #include "../messages/power_consumed_message.h"
 #include "../messages/chat_emote_message.h"

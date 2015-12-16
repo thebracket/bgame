@@ -13,6 +13,9 @@ void viewshed_system::tick ( const double &duration_ms ) {
     for (viewshed_component &viewshed : *viewsheds) {
         position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d>(viewshed.entity_id);
 	region_t * region = world::planet->get_region( pos->pos.region );
+	if ( region == nullptr ) {
+	    std::cout << "Danger! Region null for a viewshed component!\n";
+	}
 
         if (pos->moved or viewshed.last_visibility.empty()) {
             switch (viewshed.scanner_type) {
@@ -91,7 +94,7 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
 	    bool blocked = false;
 	    line_func_3d ( x, y, z, destination.first, destination.second, lz, [&blocked,view,current_region] (int tx, int ty, int tz) {
 		if (tx < 0 or tx > REGION_WIDTH or ty < 0 or ty > REGION_HEIGHT or tz<0 or tz>REGION_DEPTH) return;
-		const int index = get_tile_index(tx,ty,tx);
+		const int index = get_tile_index(tx,ty,tz);
 
 		if (!blocked) {
 		    if (tx >=0 and tx < REGION_WIDTH and ty>=0 and ty<REGION_HEIGHT and tz>0 and tz<REGION_DEPTH) {
@@ -99,6 +102,7 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
 			current_region->revealed[index] = true;
 		    }
 
+		    // FIXME: More block reasons
 		    if (world::view_blocked_3d[index]) {
 			blocked = true;
 		    }

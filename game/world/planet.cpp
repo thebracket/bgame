@@ -3,6 +3,7 @@
 #include <fstream>
 #include <Poco/InflatingStream.h>
 #include <Poco/DeflatingStream.h>
+#include <iostream>
 
 using std::stringstream;
 using std::fstream;

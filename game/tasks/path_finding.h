@@ -6,7 +6,7 @@
 #include <queue>
 #include <array>
 #include <tuple>
-#include "../world/landblock.h"
+#include <vector>
 
 using std::unordered_map;
 using std::tuple;
@@ -21,7 +21,7 @@ struct navigation_path {
   queue<std::tuple<int,int,int>> steps;
 };
 
-shared_ptr<navigation_path> find_path(tuple<int,int,int> start, tuple<int,int,int> end, vector<bool> &walkable);
+shared_ptr<navigation_path> find_path(tuple<int,int,int> start, tuple<int,int,int> end, std::vector<bool> &walkable);
 
   
 }
