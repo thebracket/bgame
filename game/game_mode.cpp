@@ -87,15 +87,16 @@ public:
                     };
                     tile_t * tile = world::planet->get_tile ( world_loc );
 		    
-		    const int tile_idx = ( camera_pos->pos.z * REGION_HEIGHT*REGION_WIDTH ) + ( ( viewport.y + y ) * REGION_WIDTH ) + ( viewport.x + x );
+		    const int tile_idx = get_tile_index( world_loc.x, world_loc.y, world_loc.z );
+		    
                     if ( !tile->solid and tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[tile_idx] ) {
                          // 3d dive
                          int depth = 1;
                          bool go = false;
                          while ( !go ) {
                               tile_t * dive_tile = world::planet->get_tile ( location_t { camera_pos->pos.region, world_loc.x, world_loc.y, static_cast<uint8_t> ( camera_pos->pos.z-depth ) } );
-                              const int dive_tile_idx = ( ( camera_pos->pos.z-depth ) * REGION_HEIGHT*REGION_WIDTH ) + ( ( viewport.y + y ) * REGION_WIDTH ) + ( viewport.x + x );
-
+			      const int dive_tile_idx = get_tile_index( world_loc.x, world_loc.y, world_loc.z - depth );
+			      
                               if ( !dive_tile->solid and dive_tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[dive_tile_idx] ) {
                                    ++depth;
                                    if ( depth > 10 ) go = true;
@@ -125,16 +126,15 @@ public:
                          } else {
                               target = tile->render_as;
                          }
-                         //const int tile_idx = ( camera_pos->pos.z * REGION_HEIGHT*REGION_WIDTH ) + ( ( viewport.y + y ) * REGION_WIDTH ) + ( viewport.x + x );
+                         
                          if ( world::render_list_3d[tile_idx] ) {
                               target = world::render_list_3d[tile_idx].value();
-                              //std::cout << "Hit!\n";
                          }
                          render_ascii ( dest, target, SDL, 0 );
 
                     }
-               }
-          }
+               } // x
+          } // y
      }
 private:
      void render_power_bar ( sdl2_backend * SDL ) {
@@ -179,7 +179,7 @@ void game_mode::init_systems()
      game_engine->ecs->add_system ( make_input_system() );
      game_engine->ecs->add_system ( make_camera_system() );
      game_engine->ecs->add_system ( make_calendar_system() );
-     //game_engine->ecs->add_system ( make_obstruction_system() );
+     game_engine->ecs->add_system ( make_obstruction_system() );
      //game_engine->ecs->add_system ( make_inventory_system() );
      game_engine->ecs->add_system ( make_power_system() );
      //game_engine->ecs->add_system ( make_cordex_ai_system() );
