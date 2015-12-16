@@ -28,9 +28,9 @@ void save_help_wanted ( fstream& lbfile ) {
 	save_primitive<int>( lbfile, it->second.steps.size() );
 	for (auto steps = it->second.steps.begin(); steps != it->second.steps.end(); ++steps) {
 	    save_primitive<int>( lbfile, steps->type );
-	    save_primitive<int>( lbfile, steps->target_x );
-	    save_primitive<int>( lbfile, steps->target_y );
-	    save_primitive<int>( lbfile, steps->target_z );
+	    save_primitive<int16_t>( lbfile, steps->target_x );
+	    save_primitive<int16_t>( lbfile, steps->target_y );
+	    save_primitive<uint8_t>( lbfile, steps->target_z );
 	    save_primitive<int>( lbfile, steps->component_id );
 	    save_primitive<bool>( lbfile, steps->requires_skill );
 	    save_primitive<string>( lbfile, steps->skill_name );
@@ -53,14 +53,16 @@ void load_help_wanted ( fstream& lbfile ) {
 	load_primitive <int> ( lbfile, number_of_steps );
 	job_t job{ static_cast<job_type_e>(job_type), job_id, {}, current_step, assigned_to };
 	for (int j=0; j<number_of_steps; ++j) {
-	    int step_type, target_x, target_y,target_z,component_id, placeholder_structure_id;
+	    int step_type, component_id, placeholder_structure_id;
 	    bool requires_skill;
 	    std::string skill_name;
 	    char required_skill_difficulty;
+	    int16_t target_x, target_y;
+	    uint8_t target_z;
 	    load_primitive<int>( lbfile, step_type );
-	    load_primitive<int>( lbfile, target_x );
-	    load_primitive<int>( lbfile, target_y );
-	    load_primitive<int>( lbfile, target_z );
+	    load_primitive<int16_t>( lbfile, target_x );
+	    load_primitive<int16_t>( lbfile, target_y );
+	    load_primitive<uint8_t>( lbfile, target_z );
 	    load_primitive<int>( lbfile, component_id );
 	    load_primitive<bool>( lbfile, requires_skill );
 	    load_primitive<string>( lbfile, skill_name );

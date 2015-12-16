@@ -9,6 +9,7 @@
 #include "../tasks/find_nearest_provision.h"
 #include "../raws/raws.h"
 #include "../world/skill_test.h"
+#include "../../engine/geometry.hpp"
 #include <map>
 
 namespace settler_ai_detail {
@@ -18,14 +19,14 @@ void consume_power ( const int &quantity )
      game_engine->messaging->add_message<power_consumed_message> ( power_consumed_message ( quantity ) );
 }
 
-void emote ( const string &message, const position_component * pos, const chat_emote_color_t &color )
+void emote ( const string &message, const position_component3d * pos, const chat_emote_color_t &color )
 {
-     game_engine->messaging->add_message<chat_emote_message> ( chat_emote_message ( string ( " " ) +message, pos->x+1, pos->y, color ) );
+     game_engine->messaging->add_message<chat_emote_message> ( chat_emote_message ( string ( " " ) +message, pos->pos.x+1, pos->pos.y, pos->pos.z, color ) );
 }
 
-void emite_particle ( const string &message, const position_component * pos )
+void emite_particle ( const string &message, const position_component3d * pos )
 {
-     game_engine->messaging->add_message<particle_message> ( particle_message ( string ( " " ) +message, pos->x+1, pos->y ) );
+     game_engine->messaging->add_message<particle_message> ( particle_message ( string ( " " ) +message, pos->pos.x+1, pos->pos.y, pos->pos.z ) );
 }
 
 void append_name ( stringstream &ss, const settler_ai_component &settler )
@@ -72,90 +73,101 @@ settler_needs needs_clocks ( settler_ai_component &settler )
      return result;
 }
 
-bool is_move_possible ( const position_component * pos, const int &delta_x, const int &delta_y )
+bool is_move_possible ( const position_component3d * pos, const int &delta_x, const int &delta_y, const int &delta_z )
 {
-     const int nx = pos->x + delta_x;
-     const int ny = pos->y + delta_y;
-     const int idx = world::current_region->idx ( nx,ny );
+     const int nx = pos->pos.x + delta_x;
+     const int ny = pos->pos.y + delta_y;
+     const int nz = pos->pos.z + delta_z;
+     const int idx = get_tile_index ( nx,ny,nz );
 
      if ( nx < 0 ) {
           return false;
      }
-     if ( nx > landblock_width-1 ) {
+     if ( nx > REGION_WIDTH-1 ) {
           return false;
      }
      if ( ny < 0 ) {
           return false;
      }
-     if ( ny > landblock_height-1 ) {
+     if ( ny > REGION_HEIGHT-1 ) {
           return false;
      }
-     if ( world::walk_blocked[idx] == true ) {
+     if ( nz < 1) {
+	  return false;
+     }
+     if ( nz > REGION_DEPTH-1 ) {
+	  return false;
+     }
+     if ( world::walk_blocked_3d[idx] == true ) {
           return false;
      }
-     if ( world::current_region->tiles[idx].base_tile_type == tile_type::WATER ) {
-          return false;
-     }
+     // FIXME: We should handle ramps and water properly
+     //if ( world::current_region->tiles[idx].base_tile_type == tile_type::WATER ) {
+     //     return false;
+     //}
      return true;
 }
 
-inline void move_to ( position_component * pos, const int &nx, const int &ny )
+inline void move_to ( position_component3d * pos, const int &nx, const int &ny, const int &nz )
 {
      facing_t new_facing = OMNI;
-     if ( pos->x < nx ) {
+     if ( pos->pos.x < nx ) {
           new_facing = EAST;
      }
-     if ( pos->x > nx ) {
+     if ( pos->pos.x > nx ) {
           new_facing = WEST;
      }
-     if ( pos->y < ny ) {
+     if ( pos->pos.y < ny ) {
           new_facing = SOUTH;
      }
-     if ( pos->y > ny ) {
+     if ( pos->pos.y > ny ) {
           new_facing = NORTH;
      }
 
      pos->moved=true;
-     pos->x = nx;
-     pos->y = ny;
+     pos->pos.x = nx;
+     pos->pos.y = ny;
+     pos->pos.z = nz;
      pos->facing = new_facing;
      game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 }
 
-void wander_randomly ( settler_ai_component &settler, position_component * pos )
+// FIXME: This won't work properly
+void wander_randomly ( settler_ai_component &settler, position_component3d * pos )
 {
      // For now, they will wander around aimlessly with no purpose or collision-detection.
-     int x = pos->x;
-     int y = pos->y;
+     int x = pos->pos.x;
+     int y = pos->pos.y;
+     int z = pos->pos.z;
 
      int direction = game_engine->rng.roll_dice ( 1,5 );
      switch ( direction ) {
      case 1 :
-          if ( is_move_possible ( pos, -1, 0 ) ) {
-               move_to ( pos, x-1, y );
+          if ( is_move_possible ( pos, -1, 0, 0 ) ) {
+               move_to ( pos, x-1, y, z );
           }
           break;
      case 2 :
-          if ( is_move_possible ( pos, 1, 0 ) ) {
-               move_to ( pos, x+1, y );
+          if ( is_move_possible ( pos, 1, 0, 0 ) ) {
+               move_to ( pos, x+1, y, z );
           }
           break;
      case 3 :
-          if ( is_move_possible ( pos, 0, -1 ) ) {
-               move_to ( pos, x, y-1 );
+          if ( is_move_possible ( pos, 0, -1, 0 ) ) {
+               move_to ( pos, x, y-1, z );
           }
           break;
      case 4 :
-          if ( is_move_possible ( pos, 0, 1 ) ) {
-               move_to ( pos, x, y+1 );
+          if ( is_move_possible ( pos, 0, 1, 0 ) ) {
+               move_to ( pos, x, y+1, z );
           }
           break;
      }
 }
 
-int create_needs_fulfillment_job ( const int &need, settler_ai_component * settler, position_component * pos )
+int create_needs_fulfillment_job ( const int &need, settler_ai_component * settler, position_component3d * pos )
 {
-     int chosen_source_id = ai::find_nearest_provision ( need, std::make_pair ( pos->x, pos->y ) );
+     int chosen_source_id = ai::find_nearest_provision ( need, pos->pos.x, pos->pos.y, pos->pos.z );
      if (chosen_source_id == -1) {
         // TODO: Physical effects of missing these needs
 	switch (need) {
@@ -186,7 +198,7 @@ int create_needs_fulfillment_job ( const int &need, settler_ai_component * settl
      return job.job_id;
 }
 
-void idle ( settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos )
+void idle ( settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component3d * pos )
 {
      bool claimed_job = false;
      for ( auto it = ai::jobs_board.begin(); it != ai::jobs_board.end(); ++it ) {
@@ -206,7 +218,7 @@ void idle ( settler_ai_component &settler, game_stats_component * stats, rendera
      }
 }
 
-void do_your_job ( settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component * pos )
+void do_your_job ( settler_ai_component &settler, game_stats_component * stats, renderable_component * renderable, position_component3d * pos )
 {
      auto job = ai::jobs_board.find ( settler.job_id );
      if ( job == ai::jobs_board.end() ) {
@@ -226,7 +238,8 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      switch ( step.type ) {
      case ai::MOVE_TO : {
           // Are we there yet?
-          const int distance = std::sqrt ( ( std::abs ( pos->x - step.target_x ) *std::abs ( pos->x - step.target_x ) ) + ( std::abs ( pos->y - step.target_y ) * ( std::abs ( pos->y - step.target_y ) ) ) );
+          //const int distance = std::sqrt ( ( std::abs ( pos->x - step.target_x ) *std::abs ( pos->x - step.target_x ) ) + ( std::abs ( pos->y - step.target_y ) * ( std::abs ( pos->y - step.target_y ) ) ) );
+	  const int distance = geometry::distance3d( pos->pos.x, pos->pos.y, pos->pos.z, step.target_x, step.target_y, step.target_z );
           if ( distance <= 1 ) {
                // We've reached our destination
                ++job->second.current_step;
@@ -237,11 +250,11 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           // No - so we better consult the map
           if ( settler.current_path == nullptr ) {
                // If there is no path - request one to the destination and exit (no moving and pathing!)
-               settler.current_path = ai::find_path ( std::make_pair ( pos->x, pos->y ), std::make_pair ( step.target_x, step.target_y ), world::walk_blocked );
+               settler.current_path = ai::find_path ( std::make_tuple ( pos->pos.x, pos->pos.y, pos->pos.z ), std::make_tuple ( step.target_x, step.target_y, step.target_z ), world::walk_blocked_3d );
                return;
           } else {
                // There is a path...
-               if ( settler.current_path->destination.first != step.target_x or settler.current_path->destination.second != step.target_y ) {
+	       if ( std::get<0>(settler.current_path->destination) != step.target_x or std::get<1>(settler.current_path->destination) != step.target_y or std::get<2>(settler.current_path->destination) != step.target_z )
                     // Does it go to the right place? If not, then make a new one and exit
                     settler.current_path.reset();
                     return;
@@ -251,19 +264,20 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                     settler.current_path.reset();
                     return;
                }
-               std::pair<int,int> next_step = settler.current_path->steps.front();
+               std::tuple<int,int,int> next_step = settler.current_path->steps.front();
                settler.current_path->steps.pop();
-               const int delta_x = next_step.first - pos->x;
-               const int delta_y = next_step.second - pos->y;
-               if ( is_move_possible ( pos, delta_x, delta_y ) ) {
-                    move_to ( pos, next_step.first, next_step.second );
+               const int delta_x = std::get<0>(next_step) - pos->pos.x;
+               const int delta_y = std::get<1>(next_step) - pos->pos.y;
+	       const int delta_z = std::get<2>(next_step) - pos->pos.z;
+               if ( is_move_possible ( pos, delta_x, delta_y, delta_z ) ) {
+                    move_to ( pos, std::get<0>(next_step), std::get<1>(next_step), std::get<2>(next_step) );
                     return;
                } else {
                     // Reset the path - something went wrong
                     settler.current_path.reset();
                     return;
                }
-          }
+          
      }
      break;
      case ai::PICK_UP_COMPONENT : {
@@ -273,7 +287,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	  if (storage != nullptr) {
 	      storage->deleted = true; // It's not stored anymore, so delete the component
 	  }
-	  position_component * item_pos = game_engine->ecs->find_entity_component<position_component>( step.component_id );
+	  position_component3d * item_pos = game_engine->ecs->find_entity_component<position_component3d>( step.component_id );
 	  if (item_pos != nullptr) {
 	      item_pos->deleted = true;
 	  }
@@ -287,7 +301,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
           item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
-          game_engine->ecs->add_component<position_component> ( *item, position_component ( pos->x, pos->y ) );
+          game_engine->ecs->add_component<position_component3d> ( *item, position_component3d ( pos->pos, OMNI ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
@@ -296,7 +310,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
           item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
-          game_engine->ecs->add_component<position_component> ( *item, position_component ( pos->x, pos->y ) );
+          game_engine->ecs->add_component<position_component3d> ( *item, position_component3d ( pos->pos, OMNI ) );
 	  item_component * item_c = game_engine->ecs->find_entity_component<item_component>( step.component_id );
 	  item_c->claimed = false;
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
@@ -317,7 +331,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 		  if (result == game_system::CRITICAL_FAIL) {
 		       emote( "OUCH!", pos, chat_emote_color_t::RED );
 		       int damage_taken = game_engine->rng.roll_dice(1,6);
-		       game_engine->messaging->add_message<inflict_damage_message>( inflict_damage_message( settler.entity_id, damage_taken, step.skill_name + string(" Mishap" ), pos->x, pos->y ) );
+		       game_engine->messaging->add_message<inflict_damage_message>( inflict_damage_message( settler.entity_id, damage_taken, step.skill_name + string(" Mishap" ), pos->pos.x, pos->pos.y, pos->pos.z ) );
 		  } else {
 		      int random = game_engine->rng.roll_dice(1, 6);
 		      switch (random) {
@@ -352,8 +366,9 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      case ai::CONSUME_NEED : {
           if ( step.placeholder_structure_id == 3 ) {
                // Sleep mode
-	       pos->x = step.target_x;
-	       pos->y = step.target_y;
+	       pos->pos.x = step.target_x;
+	       pos->pos.y = step.target_y;
+	       pos->pos.z = step.target_z;
                const int wakeful_gain = stat_modifier ( stats->constitution ) + 8 + game_engine->rng.roll_dice ( 1,6 );
                settler.wakefulness += wakeful_gain;
 	       if ( game_engine->rng.roll_dice(1,3)==1 ) emite_particle( "z", pos );
@@ -381,14 +396,14 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	  const int number_of_logs = game_engine->rng.roll_dice(1,6);
 	  for (int i=0; i<number_of_logs; ++i) {
 	      int wood_id = raws::create_item_from_raws("Wood Logs");
-	      game_engine->ecs->add_component<position_component>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component( step.target_x, step.target_y ) );
+	      game_engine->ecs->add_component<position_component3d>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component3d( location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z}, OMNI ) );
 	      game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( wood_id ) );
 	  }
 	  ++job->second.current_step;
      } break;
      case ai::CREATE_ITEM : {
 	  int wood_id = raws::create_item_from_raws(step.skill_name);
-	  game_engine->ecs->add_component<position_component>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component( step.target_x, step.target_y ) );
+	  game_engine->ecs->add_component<position_component3d>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component3d( location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z}, OMNI ) );
 	  game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( wood_id ) );
 	  ++job->second.current_step;
      } break;
@@ -417,7 +432,7 @@ void settler_ai_system::tick ( const double &duration_ms )
           }
 
           settler_ai_detail::settler_needs needs = settler_ai_detail::needs_clocks ( settler );
-          position_component * pos = game_engine->ecs->find_entity_component<position_component> ( settler.entity_id );
+          position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d> ( settler.entity_id );
 
           // Needs will override current action!
           if ( needs.needs_sleep and settler.state_major != JOB ) {
