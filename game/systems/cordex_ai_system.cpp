@@ -4,6 +4,7 @@
 #include "../game.h"
 #include "../raws/raws.h"
 #include "../tasks/help_wanted.h"
+#include "../../engine/geometry.hpp"
 
 using world::available_item;
 
@@ -48,7 +49,8 @@ void cordex_ai_system::handle_build_orders()
 	    for (world::available_item item : finder->second) {
 		item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
 		if (!item_comp->claimed) {
-		    float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
+		    //float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
+		    float distance = geometry::distance3d( msg.x, msg.y, msg.z, item.location.x, item.location.y, item.location.z );
 		    int distance_i = distance;
 		    distance_components[distance_i] = &item;
 		}
@@ -62,26 +64,27 @@ void cordex_ai_system::handle_build_orders()
 	
 	// For each required component
 	for (world::available_item * component : chosen_components) {
-	    const int component_x = component->location.first;
-	    const int component_y = component->location.second;
+	    const int component_x = component->location.x;
+	    const int component_y = component->location.y;
+	    const int component_z = component->location.z;
 	    const int component_id = component->entity_id;
 	  
-	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, 0, false, "", 0 } );
-	    job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_id, false, "", 0 } );
-	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, 0, false, "", 0 } );
-	    job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_COMPONENT, msg.x, msg.y, component_id, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_z, component_id, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, msg.z, 0, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_COMPONENT, msg.x, msg.y, msg.z, component_id, false, "", 0 } );
 	}
 	
 	// Add the skill check
-	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Construction", 0, 12 } );
+	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, msg.z, 0, true, "Construction", 0, 12 } );
 	
 	// Once the skill has been passed
 	//	For each component
 	for (world::available_item * component : chosen_components) {
 	    const int component_id = component->entity_id;
-	    job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, msg.x, msg.y, component_id, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, msg.x, msg.y, msg.z, component_id, false, "", 0 } );
 	}
-	job.steps.push_back( ai::job_step_t{ ai::CONVERT_PLACEHOLDER_STRUCTURE, msg.x, msg.y, 0, false, "", entity_id } );
+	job.steps.push_back( ai::job_step_t{ ai::CONVERT_PLACEHOLDER_STRUCTURE, msg.x, msg.y, msg.z, 0, false, "", entity_id } );
 
 	
 	// Add it to the help-wanted board
@@ -113,7 +116,8 @@ void cordex_ai_system::handle_tree_chop_orders()
 	for (world::available_item item : finder->second) {
 	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
 	    if (!item_comp->claimed) {
-		float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
+		//float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
+		float distance = geometry::distance3d( msg.x, msg.y, msg.z, item.location.x, item.location.y, item.location.z );
 		int distance_i = distance;
 		distance_components[distance_i] = &item;
 	    }
@@ -124,27 +128,28 @@ void cordex_ai_system::handle_tree_chop_orders()
 	game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
 	
 	// Navigate to axe
-	const int component_x = axe->location.first;
-	const int component_y = axe->location.second;
+	const int component_x = axe->location.x;
+	const int component_y = axe->location.y;
+	const int component_z = axe->location.z;
 	const int component_id = axe->entity_id;
 	  
-	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, 0, false, "", 0 } );
-	job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_id, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_z, component_id, false, "", 0 } );
 	
 	// Navigate to tree
-	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, 0, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, msg.z, 0, false, "", 0 } );
 	
 	// Skill roll
-	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, 0, true, "Lumberjack", 0, 15 } );
+	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, msg.z, 0, true, "Lumberjack", 0, 15 } );
 	
 	// Destroy tree
-	job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, msg.x, msg.y, msg.tree_id, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, msg.x, msg.y, msg.z, msg.tree_id, false, "", 0 } );
 	
 	// Add wood
-	job.steps.push_back( ai::job_step_t{ ai::CREATE_WOOD, msg.x, msg.y, msg.tree_id, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::CREATE_WOOD, msg.x, msg.y, msg.z, msg.tree_id, false, "", 0 } );
 	
 	// Drop axe
-	job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_TOOL, msg.x, msg.y, component_id, false, "", 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_TOOL, msg.x, msg.y, msg.z, component_id, false, "", 0 } );
 	
 	// Add it to the help-wanted board
 	ai::jobs_board[ job.job_id ] = job;
@@ -165,7 +170,7 @@ void cordex_ai_system::handle_reaction_orders()
 	job.type = ai::PERFORM_REACTION;
 	
 	// Find the workshop
-	position_component * workshop_pos = game_engine->ecs->find_entity_component<position_component>( msg.workshop_id );
+	position_component3d * workshop_pos = game_engine->ecs->find_entity_component<position_component3d>( msg.workshop_id );
 	
 	// Build component vector
 	vector<string> components;
@@ -187,7 +192,8 @@ void cordex_ai_system::handle_reaction_orders()
 	    for (world::available_item item : finder->second) {
 		item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
 		if (!item_comp->claimed) {
-		    float distance = std::sqrt( (std::abs(workshop_pos->x - item.location.first)*std::abs(workshop_pos->x - item.location.first)) + (std::abs(workshop_pos->y - item.location.second)*std::abs(workshop_pos->y - item.location.second)));
+		    //float distance = std::sqrt( (std::abs(workshop_pos->x - item.location.first)*std::abs(workshop_pos->x - item.location.first)) + (std::abs(workshop_pos->y - item.location.second)*std::abs(workshop_pos->y - item.location.second)));
+		    float distance = geometry::distance3d( workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, item.location.x, item.location.y, item.location.z );
 		    int distance_i = distance;
 		    distance_components[distance_i] = &item;
 		}
@@ -200,32 +206,33 @@ void cordex_ai_system::handle_reaction_orders()
 	
 	// For each required component
 	for (world::available_item * component : chosen_components) {
-	    const int component_x = component->location.first;
-	    const int component_y = component->location.second;
+	    const int component_x = component->location.x;
+	    const int component_y = component->location.y;
+	    const int component_z = component->location.z;
 	    const int component_id = component->entity_id;
 	  
-	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, 0, false, "", 0 } );
-	    job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_id, false, "", 0 } );
-	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, workshop_pos->x, workshop_pos->y, 0, false, "", 0 } );
-	    job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_COMPONENT, workshop_pos->x, workshop_pos->y, component_id, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_z, component_id, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, 0, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::DROP_OFF_COMPONENT, workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, component_id, false, "", 0 } );
 	}
 	
 	// Add the skill check
 	// TODO: We need to track a skill here
-	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, workshop_pos->x, workshop_pos->y, 0, true, "Construction", 0, 12 } );
+	job.steps.push_back( ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, 0, true, "Construction", 0, 12 } );
 	
 	// Power drain
-	job.steps.push_back( ai::job_step_t{ ai::CONSUME_POWER, workshop_pos->x, workshop_pos->y, msg.power_drain, true, "Construction", 0, 0 } );
+	job.steps.push_back( ai::job_step_t{ ai::CONSUME_POWER, workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z,  msg.power_drain, true, "Construction", 0, 0 } );
 	
 	// Destroy the components
 	for (world::available_item * component : chosen_components) {
 	    const int component_id = component->entity_id;
-	    job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, workshop_pos->x, workshop_pos->y, component_id, false, "", 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::DESTROY_COMPONENT, workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, component_id, false, "", 0 } );
 	}
 	
 	// Create the result
 	for (const string &new_component : results ) {
-	    job.steps.push_back( ai::job_step_t{ ai::CREATE_ITEM, workshop_pos->x, workshop_pos->y, 0, false, new_component, 0 } );
+	    job.steps.push_back( ai::job_step_t{ ai::CREATE_ITEM, workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, 0, false, new_component, 0 } );
 	}
 	
 	// Add it to the help-wanted board

@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <utility>
+#include <cmath>
 
 using std::pair;
 
@@ -21,5 +22,9 @@ pair<int,int> project_angle ( const int x, const int y, const double radius, con
  * http://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm
  */
 void line_func ( int x1, int y1, const int x2, const int y2, std::function<void ( int,int ) > func );
+
+inline float distance3d ( uint8_t x1, uint8_t y1, uint8_t z1, uint8_t x2, uint8_t y2, uint8_t z2 ) {
+    return std::sqrt(std::pow(x1-x2,2.0)+std::pow(y1-y2,2.0)+std::pow(z1-z2,2.0));
+}
 
 }

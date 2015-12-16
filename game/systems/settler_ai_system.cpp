@@ -179,9 +179,9 @@ int create_needs_fulfillment_job ( const int &need, settler_ai_component * settl
      job.job_id = ai::get_next_job_id();
      job.type = ai::MEET_PHYSICAL_NEED;
 
-     position_component * source_pos = game_engine->ecs->find_entity_component<position_component> ( chosen_source_id );
-     job.steps.push_back ( ai::job_step_t { ai::MOVE_TO, source_pos->x, source_pos->y, chosen_source_id, false, "", 0 } );
-     job.steps.push_back ( ai::job_step_t { ai::CONSUME_NEED, source_pos->x, source_pos->y, chosen_source_id, false, "", need } );
+     position_component3d * source_pos = game_engine->ecs->find_entity_component<position_component3d> ( chosen_source_id );
+     job.steps.push_back ( ai::job_step_t { ai::MOVE_TO, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z, chosen_source_id, false, "", 0 } );
+     job.steps.push_back ( ai::job_step_t { ai::CONSUME_NEED, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z, chosen_source_id, false, "", need } );
      ai::jobs_board [ job.job_id ] = job;
      return job.job_id;
 }

@@ -180,7 +180,7 @@ void game_mode::init_systems()
      game_engine->ecs->add_system ( make_camera_system() );
      game_engine->ecs->add_system ( make_calendar_system() );
      game_engine->ecs->add_system ( make_obstruction_system() );
-     //game_engine->ecs->add_system ( make_inventory_system() );
+     game_engine->ecs->add_system ( make_inventory_system() );
      game_engine->ecs->add_system ( make_power_system() );
      //game_engine->ecs->add_system ( make_cordex_ai_system() );
      //game_engine->ecs->add_system ( make_settler_ai_system() );
