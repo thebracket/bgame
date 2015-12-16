@@ -138,7 +138,7 @@ public:
      }
 private:
      void render_power_bar ( sdl2_backend * SDL ) {
-          const float power_percent = float ( world::stored_power ) / float ( world::max_power );
+          const float power_percent = static_cast<float> ( world::stored_power ) / static_cast<float> ( world::max_power );
           const int power_tenths = ( power_percent * 10.0 )-1;
           SDL_Rect src { power_tenths * 46, 0, 46, 48 };
           SDL_Rect dest { 4, 0, 48, 48 };
