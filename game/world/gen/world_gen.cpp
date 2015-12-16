@@ -18,20 +18,20 @@ using namespace engine;
 
 inline void really_hollow(const location_t &loc) {
     tile_t * tile = world::planet->get_tile(loc);
-    if (tile->solid) {
-      tile->solid = false;
-      tile->base_tile_type = tile_type::EMPTY_SPACE;
-    }
+    tile->solid = false;
+    tile->base_tile_type = tile_type::EMPTY_SPACE;
 }
 
 void hollow(const location_t &loc) {
   really_hollow(loc);
-  location_t above = loc;
-  above.z++;
-  location_t below = loc;
-  above.z--;
+  
+  location_t above = { loc.region, loc.x, loc.y, loc.z-1 };
+  location_t below = { loc.region, loc.x, loc.y, loc.z+1 };
+  
   really_hollow(above);
   really_hollow(below);
+  raws::create_structure_from_raws("Ship Superstructure", above);
+  raws::create_structure_from_raws("Ship Superstructure", below);
 }
 
 void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx, planet_t * planet ) {
@@ -76,7 +76,7 @@ void add_cordex( const uint8_t start_x, const uint8_t start_y, const uint8_t sta
 
 void add_solar_collector(const uint8_t x, const uint8_t y, const uint8_t z, const uint8_t planet_idx) {
     raws::create_structure_from_raws("Solar Collector", location_t { planet_idx, x, y, z });
-    hollow(location_t { planet_idx, x, y, z-1 });
+    //hollow(location_t { planet_idx, x, y, z-1 });
 }
 
 void add_food_replicator(const uint8_t x, const uint8_t y, const uint8_t z, const uint8_t planet_idx) {
@@ -310,6 +310,12 @@ void make_entities( planet_t * planet ) {
     raws::create_structure_from_raws("Communications Console", location_t {planet_idx, start_x, static_cast<uint8_t>(start_y+1), start_z});
     raws::create_structure_from_raws("Water Purifier", location_t {planet_idx, static_cast<uint8_t>(start_x+3), static_cast<uint8_t>(start_y-2), start_z} );
     raws::create_structure_from_raws("Food Dispenser", location_t {planet_idx, static_cast<uint8_t>(start_x+3), static_cast<uint8_t>(start_y+2), start_z} );
+    hollow( location_t {planet_idx, static_cast<uint8_t>(start_x-1), start_y, start_z} );
+    hollow( location_t {planet_idx, static_cast<uint8_t>(start_x+1), start_y, start_z} );
+    hollow( location_t {planet_idx, start_x, static_cast<uint8_t>(start_y-1), start_z} );
+    hollow( location_t {planet_idx, start_x, static_cast<uint8_t>(start_y+1), start_z} );
+    hollow( location_t {planet_idx, static_cast<uint8_t>(start_x+3), static_cast<uint8_t>(start_y-2), start_z} );
+    hollow( location_t {planet_idx, static_cast<uint8_t>(start_x+3), static_cast<uint8_t>(start_y+2), start_z} );
     
     // Refridgerator/Food Replicator at (x+4,y)
     add_food_replicator(start_x+4, start_y, start_z, planet_idx);
@@ -368,6 +374,7 @@ void make_entities( planet_t * planet ) {
     add_camera( start_x, start_y, start_z, planet_idx );
     world::stored_power = 25;
   
+    planet->save_region( planet_idx );
     game_engine->ecs->save_game("world/savegame3d.dat");
 }
 

@@ -123,15 +123,6 @@ public:
 private:
     void render_power_bar ( sdl2_backend * SDL )
     {
-	/*SDL_Rect src { 0, 0, 1024, 16 };
-	SDL_Rect dest { 0 , 16 , 1024, 16 };
-	SDL->render_bitmap ( "power_bar_red", src, dest );
-
-	const float power_percent = float ( world::stored_power ) / float ( world::max_power );
-	const int ticks = 1024 * power_percent;
-	dest = { 0 , 16 , ticks, 16 };
-	SDL->render_bitmap ( "power_bar_green", src, dest );*/
-	
 	const float power_percent = float ( world::stored_power ) / float ( world::max_power );
 	const int power_tenths = (power_percent * 10.0)-1;
 	SDL_Rect src { power_tenths * 46, 0, 46, 48 };
