@@ -25,8 +25,8 @@ inline void really_hollow(const location_t &loc) {
 void hollow(const location_t &loc) {
   really_hollow(loc);
   
-  location_t above = { loc.region, loc.x, loc.y, loc.z-1 };
-  location_t below = { loc.region, loc.x, loc.y, loc.z+1 };
+  location_t above = { loc.region, loc.x, loc.y, static_cast<uint8_t>(loc.z-1) };
+  location_t below = { loc.region, loc.x, loc.y, static_cast<uint8_t>(loc.z+1) };
   
   really_hollow(above);
   really_hollow(below);
@@ -281,7 +281,8 @@ void make_entities( planet_t * planet ) {
     planet->load_region( planet_idx );
     bool found = false;
     while (!found) {
-	tile_t * candidate = planet->get_tile( location_t{ planet_idx, start_x, start_y, start_z }  );
+	// -4 to ensure that the back door is usable
+	tile_t * candidate = planet->get_tile( location_t{ planet_idx, static_cast<uint8_t>(start_x-4), start_y, start_z }  );
 	if ( candidate->solid ) {
 	  ++start_z;
 	} else {

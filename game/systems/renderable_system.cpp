@@ -29,7 +29,7 @@ void renderable_system::tick ( const double &duration_ms )
 	      if ( pos.pos.region == camera_pos->pos.region and pos.pos.x > left_x and pos.pos.x <= right_x and pos.pos.y > top_y and pos.pos.y <= bottom_y ) {
 		renderable_component * render_info = game_engine->ecs->find_entity_component<renderable_component> ( pos.entity_id );
 		if ( render_info != nullptr ) {
-		    const int idx = (pos.pos.z * REGION_HEIGHT*REGION_WIDTH) + ( pos.pos.y * REGION_WIDTH ) + pos.pos.x;
+		    const int idx = get_tile_index( pos.pos.x, pos.pos.y, pos.pos.z );
 		    world::render_list_3d [ idx ] = engine::vterm::screen_character{ render_info->glyph, render_info->foreground, render_info->background };
 		    //std::cout << "Renderable at " << pos.pos.x << "/" << pos.pos.y << "/" << +pos.pos.z << "\n";
 		}

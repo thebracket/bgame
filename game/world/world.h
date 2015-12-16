@@ -68,6 +68,8 @@ extern std::vector<bool> walk_blocked;
 extern std::vector<bool> view_blocked;
 
 extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
+extern std::vector<bool> walk_blocked_3d;
+extern std::vector<bool> view_blocked_3d;
 
 struct available_item {
      string name;

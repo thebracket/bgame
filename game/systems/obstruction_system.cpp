@@ -13,17 +13,16 @@ void obstruction_system::tick ( const double& duration_ms )
           msg.deleted = true;
      }
      if ( changes ) {
-	  std::fill( world::walk_blocked.begin(), world::walk_blocked.end(), false );
-	  std::fill( world::view_blocked.begin(), world::view_blocked.end(), false );
-
-          const vector<obstruction_component> * blockages = game_engine->ecs->find_components_by_type<obstruction_component>();
+	  std::fill ( world::walk_blocked_3d.begin(), world::walk_blocked_3d.end(), false );
+	  std::fill ( world::view_blocked_3d.begin(), world::view_blocked_3d.end(), false );
+       
+	  const vector<obstruction_component> * blockages = game_engine->ecs->find_components_by_type<obstruction_component>();
           for ( const obstruction_component &block : *blockages ) {
-
-               position_component * pos = game_engine->ecs->find_entity_component<position_component> ( block.entity_id );
+	      position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d> ( block.entity_id );
                if ( pos != nullptr ) {
-                    const int idx = world::current_region->idx ( pos->x, pos->y );
-                    if ( block.blocks_entry ) world::walk_blocked[idx] = true;
-                    if ( block.blocks_visibility ) world::view_blocked[idx] = true;
+                    const int idx = get_tile_index( pos->pos.x, pos->pos.y, pos->pos.z );
+                    if ( block.blocks_entry ) world::walk_blocked_3d[idx] = true;
+                    if ( block.blocks_visibility ) world::view_blocked_3d[idx] = true;
                }
           }
      }
