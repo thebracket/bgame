@@ -2,10 +2,11 @@
 
 #include "component_types.h"
 #include "../world/location.hpp"
-#include "position_component.h"
 #include "../world/world_defs.hpp"
 
 using namespace serialization_generic;
+
+enum facing_t { OMNI, NORTH, SOUTH, EAST, WEST };
 
 struct position_component3d {
      int entity_id;

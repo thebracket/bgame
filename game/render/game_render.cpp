@@ -6,7 +6,7 @@
 using std::make_pair;
 
 void game_render::render ( sdl2_backend * SDL )
-{
+{  
      process_mouse_events();
 
      if ( world::render_graphics ) {

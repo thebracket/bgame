@@ -2,11 +2,13 @@
 
 namespace render {
 
-panel_tooltip::panel_tooltip ( sdl2_backend * sdl, const std::pair<int,int> region_loc, const std::pair<int,int> mouse_loc )
+panel_tooltip::panel_tooltip ( sdl2_backend * sdl, const location_t &loc, const std::pair<int,int> mouse_loc )
 {
      SDL = sdl;
-     int region_x, region_y, mouse_vx, mouse_vy;
-     std::tie ( region_x, region_y ) = region_loc;
+     int region_x, region_y, region_z, mouse_vx, mouse_vy;
+     region_x = loc.x;
+     region_y = loc.y;
+     region_z = loc.z;
      std::tie ( mouse_vx, mouse_vy ) = mouse_loc;
 
      const int idx = world::current_region->idx ( region_x, region_y );
@@ -21,7 +23,7 @@ panel_tooltip::panel_tooltip ( sdl2_backend * sdl, const std::pair<int,int> regi
      lines.add_line ( SDL, "Right Click for Options", sdl_red );
      lines.add_line ( SDL, world::current_region->tiles[idx].get_description(), sdl_green );
      lines.add_line ( SDL, world::current_region->tiles[idx].get_climate(), sdl_cyan );
-     add_tile_contents ( region_loc.first, region_loc.second );
+     add_tile_contents ( loc.x, loc.y, loc.z );
 
      render_buffer();
 }
@@ -57,14 +59,14 @@ void panel_tooltip::render_buffer()
      SDL->reset_texture_target ();
 }
 
-void panel_tooltip::add_tile_contents ( const int region_x, const int region_y )
+void panel_tooltip::add_tile_contents ( const int region_x, const int region_y, const int region_z )
 {
-     vector<position_component *> positions = game_engine->ecs->find_components_by_func<position_component> (
-     [region_x, region_y] ( const position_component &c ) {
-          return ( c.x == region_x and c.y == region_y );
+     vector<position_component3d *> positions = game_engine->ecs->find_components_by_func<position_component3d> (
+     [region_x, region_y, region_z] ( const position_component3d &c ) {
+          return ( c.pos.x == region_x and c.pos.y == region_y and c.pos.z == region_z );
      }
                );
-     for ( const position_component * pos : positions ) {
+     for ( const position_component3d * pos : positions ) {
           const int entity_id = pos->entity_id;
           if ( !add_settler_details ( entity_id ) ) add_name_details ( entity_id );
           add_containers ( entity_id );

@@ -13,7 +13,7 @@ using my_messages = message_list_t<command_message, power_consumed_message, chat
   particle_message>;
 
 using my_components = component_list_t<calendar_component, debug_name_component, obstruction_component, 
-  position_component, power_battery_component, power_generator_component, renderable_component, settler_ai_component, 
+  power_battery_component, power_generator_component, renderable_component, settler_ai_component, 
   viewshed_component, game_stats_component, game_species_component, game_health_component, provisions_component, 
   item_storage_component, item_carried_component, description_component, item_component, tree_component,
   particle_emitter_component, position_component3d>;

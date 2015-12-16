@@ -2,7 +2,6 @@
 
 #include "../world/world.h"
 #include "../../engine/ecs.hpp"
-#include "../components/position_component.h"
 
 using engine::base_system;
 

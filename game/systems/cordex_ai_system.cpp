@@ -23,12 +23,14 @@ void cordex_ai_system::tick ( const double& duration_ms )
 
 void cordex_ai_system::handle_build_orders()
 {
+    position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>(world::camera_handle);  
+  
     vector<build_order_message> * orders = game_engine->messaging->get_messages_by_type< build_order_message >();
     for (build_order_message &msg : *orders) {
 	msg.deleted = true; // No repeats
 	
 	// Create a place-holder entity for the new structure (just a renderable and a position, obtain the entity ID)
-	const int entity_id = raws::create_placeholder_structure_from_raws( msg.structure_name, msg.x, msg.y );
+	const int entity_id = raws::create_placeholder_structure_from_raws( msg.structure_name, location_t { camera_pos->pos.region, msg.x, msg.y, msg.z } );
 	game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 	
 	// Create a job
