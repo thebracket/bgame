@@ -12,6 +12,7 @@ void viewshed_system::tick ( const double &duration_ms ) {
     vector<viewshed_component> * viewsheds = game_engine->ecs->find_components_by_type<viewshed_component> ();
     for (viewshed_component &viewshed : *viewsheds) {
         position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d>(viewshed.entity_id);
+	region_t * region = world::planet->get_region( pos->pos.region );
 
         if (pos->moved or viewshed.last_visibility.empty()) {
             switch (viewshed.scanner_type) {
@@ -28,7 +29,7 @@ void viewshed_system::tick ( const double &duration_ms ) {
 
         // Apply the cached viewshed
         for (const int &idx : viewshed.last_visibility) {
-            world::planet->get_region( pos->pos.region )->visible[idx] = true;
+            region->visible[idx] = true;
         }
     }
 }
@@ -65,7 +66,7 @@ bool viewshed_system::is_facing_this_way ( const position_component3d* pos, cons
 }
 
 void viewshed_system::scan_radius_for_visibility(viewshed_component * view, const position_component3d * pos) {
-    constexpr double sweep_degrees_radians = 0.5 * DEGRAD;
+    constexpr double sweep_degrees_radians = 2 * DEGRAD;
     constexpr double three_sixy_degrees_radians = 360 * DEGRAD;
 
     view->last_visibility.clear();
@@ -78,6 +79,7 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
     const int my_idx = get_tile_index(x,y,z);
     const int radius = view->scanner_range;
     view->last_visibility.push_back(my_idx);
+    region_t * current_region = world::planet->get_region( region_idx );
 
     // Sweep around
     for ( double angle=0; angle<three_sixy_degrees_radians; angle+=sweep_degrees_radians ) {
@@ -87,14 +89,14 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
         pair<int,int> destination = project_angle ( x, y, this_radius, angle );
 	for ( int lz = z-radius; lz<z+radius; ++lz ) {
 	    bool blocked = false;
-	    line_func_3d ( destination.first, destination.second, lz, x, y, z, [&blocked,view,region_idx] (int tx, int ty, int tz) {
-		if (tx < 0 or tx > REGION_WIDTH or ty < 0 or ty > REGION_HEIGHT or tz>0 or tz<REGION_DEPTH) return;
+	    line_func_3d ( x, y, z, destination.first, destination.second, lz, [&blocked,view,current_region] (int tx, int ty, int tz) {
+		if (tx < 0 or tx > REGION_WIDTH or ty < 0 or ty > REGION_HEIGHT or tz<0 or tz>REGION_DEPTH) return;
 		const int index = get_tile_index(tx,ty,tx);
 
 		if (!blocked) {
 		    if (tx >=0 and tx < REGION_WIDTH and ty>=0 and ty<REGION_HEIGHT and tz>0 and tz<REGION_DEPTH) {
 			view->last_visibility.push_back(index);
-			world::planet->get_region( region_idx )->revealed[index] = true;
+			current_region->revealed[index] = true;
 		    }
 
 		    if (world::view_blocked_3d[index]) {
@@ -108,7 +110,7 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
 }
 
 void viewshed_system::scan_radius_penetrating(viewshed_component * view, const position_component3d * pos) {
-    constexpr double sweep_degrees_radians = 0.5 * DEGRAD;
+    constexpr double sweep_degrees_radians = 2 * DEGRAD;
     constexpr double three_sixy_degrees_radians = 360 * DEGRAD;
 
     view->last_visibility.clear();
@@ -118,6 +120,7 @@ void viewshed_system::scan_radius_penetrating(viewshed_component * view, const p
     const int16_t y = pos->pos.y;
     const uint8_t z = pos->pos.z;
     const uint8_t region_idx = pos->pos.region;
+    region_t * current_region = world::planet->get_region( region_idx );
     const double radius = view->scanner_range;
     view->last_visibility.push_back(get_tile_index(x, y, z));
 
@@ -128,11 +131,11 @@ void viewshed_system::scan_radius_penetrating(viewshed_component * view, const p
 	
         pair<int,int> destination = project_angle ( x, y, this_radius, angle );
 	for ( int lz = z-this_radius; lz<z+this_radius; ++lz ) {
-	    line_func_3d ( destination.first, destination.second, lz, x, y, z, [view,region_idx] (int tx, int ty, int tz) {
+	    line_func_3d ( destination.first, destination.second, lz, x, y, z, [view,current_region] (int tx, int ty, int tz) {
 		const int index = get_tile_index(tx,ty,tz);
 		if (tx >=0 and tx < REGION_WIDTH and ty>=0 and ty<REGION_HEIGHT and tz>0 and tz<REGION_DEPTH) {
 		    view->last_visibility.push_back(index);
-		    world::planet->get_region( region_idx )->revealed[index] = true;
+		    current_region->revealed[index] = true;
 		}
 	    });
 	}
