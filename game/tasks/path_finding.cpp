@@ -18,31 +18,31 @@ using std::make_pair;
 namespace ai {
 
   //FIXME: This is awful
-void spread_flow ( vector<tuple<short,int,int,int>> &new_cells, unordered_set<int> &visited, const int &x, const int &y, const int &z, const short &distance, vector<bool> &walkable )
+void spread_flow ( vector<tuple<short,int,int,int>> &new_cells, unordered_set<int> &visited, const int &x, const int &y, const int &z, const short &distance, std::vector<bool> &walkable )
 {
      const int index = get_tile_index ( x,y,z );
-     if ( world::current_region->revealed[index]==false ) {
-          return;
-     }
+     //if ( world::current_region->revealed[index]==false ) {
+     //     return;
+     // }
      if ( visited.find ( index ) != visited.end() ) {
           return;
      }
      if ( walkable[ index ] != false ) {
           return;
      }
-     if ( world::current_region->tiles[ index].base_tile_type == tile_type::WATER ) {
-          return;
-     }
+     //if ( world::current_region->tiles[ index].base_tile_type == tile_type::WATER ) {
+     //     return;
+     // }
      if ( x < 0 ) {
           return;
      }
-     if ( x > landblock_width-1 ) {
+     if ( x > REGION_WIDTH-1 ) {
           return;
      }
      if ( y < 0 ) {
           return;
      }
-     if ( y > landblock_height-1 ) {
+     if ( y > REGION_WIDTH-1 ) {
           return;
      }
 

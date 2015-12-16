@@ -39,8 +39,6 @@ add_library(game
 	    tasks/path_finding.cpp
 	    tasks/find_nearest_provision.cpp
 	    world/world.cpp 
-	    world/tile.cpp 
-	    world/landblock.cpp 
 	    world/console.cpp 
 	    world/serialization_utils.cpp
 	    world/universe.cpp

@@ -6,14 +6,8 @@ using std::pair;
 
 namespace world {
 
-array<unique_ptr<land_block>, world_size> world;
 console log;
-land_block * current_region;
-std::vector<render_layers_t> entity_render_list ( tiles_per_landblock) ;
-std::vector<bool> walk_blocked ( tiles_per_landblock );
-std::vector<bool> view_blocked ( tiles_per_landblock );
 unordered_map<string, vector<available_item>> inventory;
-
 std::vector<optional<engine::vterm::screen_character>> render_list_3d ( REGION_TILES );
 std::vector<bool> walk_blocked_3d ( REGION_TILES );
 std::vector<bool> view_blocked_3d ( REGION_TILES );
