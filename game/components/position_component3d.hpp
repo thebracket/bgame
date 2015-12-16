@@ -17,7 +17,8 @@ struct position_component3d {
      position_component3d(const location_t &loc, const facing_t &fac) : facing(fac) { pos = loc; }
 
      facing_t facing;
-     location_t pos;          
+     location_t pos;      
+     bool moved = false;
 
      void load ( fstream &lbfile ) {
           load_common_component_properties<position_component3d> ( lbfile, *this );

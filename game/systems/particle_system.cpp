@@ -13,8 +13,8 @@ void particle_system::tick ( const double& duration_ms )
     vector<particle_emitter_component> * emitters = game_engine->ecs->find_components_by_type<particle_emitter_component>();
     for ( const particle_emitter_component &emitter : *emitters ) {
 	if ( game_engine->rng.roll_dice( 1, emitter.emits_one_in_x ) == 1 ) {
-	      position_component * pos = game_engine->ecs->find_entity_component<position_component>( emitter.entity_id );
-	      game_engine->messaging->add_message<particle_message>( particle_message ( emitter.message, pos->x, pos->y, emitter.ttl, static_cast<chat_emote_color_t>(emitter.color) ) );
+	      position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d>( emitter.entity_id );
+	      game_engine->messaging->add_message<particle_message>( particle_message ( emitter.message, pos->pos.x, pos->pos.y, pos->pos.z, emitter.ttl, static_cast<chat_emote_color_t>(emitter.color) ) );
 	}
     }
 }

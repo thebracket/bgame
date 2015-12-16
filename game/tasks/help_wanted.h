@@ -22,9 +22,9 @@ int get_next_job_id();
 
 struct job_step_t {
      job_step_e type;
-     int target_x = 0;
-     int target_y = 0;
-     int target_z = 0;
+     int16_t target_x = 0;
+     int16_t target_y = 0;
+     uint8_t target_z = 0;
      int component_id = 0;
      bool requires_skill = false;
      string skill_name = "";

@@ -64,9 +64,9 @@ void cordex_ai_system::handle_build_orders()
 	
 	// For each required component
 	for (world::available_item * component : chosen_components) {
-	    const int component_x = component->location.x;
-	    const int component_y = component->location.y;
-	    const int component_z = component->location.z;
+	    const int16_t component_x = component->location.x;
+	    const int16_t component_y = component->location.y;
+	    const uint8_t component_z = component->location.z;
 	    const int component_id = component->entity_id;
 	  
 	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 } );
@@ -128,9 +128,9 @@ void cordex_ai_system::handle_tree_chop_orders()
 	game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
 	
 	// Navigate to axe
-	const int component_x = axe->location.x;
-	const int component_y = axe->location.y;
-	const int component_z = axe->location.z;
+	const int16_t component_x = axe->location.x;
+	const int16_t component_y = axe->location.y;
+	const uint8_t component_z = axe->location.z;
 	const int component_id = axe->entity_id;
 	  
 	job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 } );
@@ -206,9 +206,9 @@ void cordex_ai_system::handle_reaction_orders()
 	
 	// For each required component
 	for (world::available_item * component : chosen_components) {
-	    const int component_x = component->location.x;
-	    const int component_y = component->location.y;
-	    const int component_z = component->location.z;
+	    const int16_t component_x = component->location.x;
+	    const int16_t component_y = component->location.y;
+	    const uint8_t component_z = component->location.z;
 	    const int component_id = component->entity_id;
 	  
 	    job.steps.push_back( ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 } );

@@ -11,8 +11,8 @@ struct build_order_message {
     bool deleted = false;
     int ttl = 2;
     
-    int x;
-    int y;
-    int z;
+    int16_t x;
+    int16_t y;
+    uint8_t z;
     string structure_name;
 };

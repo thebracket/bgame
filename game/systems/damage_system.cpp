@@ -15,7 +15,7 @@ void damage_system::tick ( const double& duration_ms )
 		// TODO: Blood splatters
 		std::stringstream msg;
 		msg << (0-damage.damage_taken);
-		game_engine->messaging->add_message<particle_message>( particle_message( msg.str(), damage.tile_x, damage.tile_y, 64, RED ) );
+		game_engine->messaging->add_message<particle_message>( particle_message( msg.str(), damage.tile_x, damage.tile_y, damage.tile_z, 64, RED ) );
 	    } else {
 		std::cout << "Warning: Attempting to inflict damage on something with no hitpoints!\n";
 	    }
@@ -33,8 +33,8 @@ void damage_system::tick ( const double& duration_ms )
 		if (h.current_hit_points < h.max_hit_points) {
 		    if ( game_system::skill_roll( h.entity_id, "Self Heal", 12 ) >= game_system::SUCCESS ) {
 			++h.current_hit_points;
-			position_component * pos = game_engine->ecs->find_entity_component<position_component>( h.entity_id );
-			game_engine->messaging->add_message<particle_message>( particle_message( "+1", pos->x, pos->y, 64, GREEN ) );
+			position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d>( h.entity_id );
+			game_engine->messaging->add_message<particle_message>( particle_message( "+1", pos->pos.x, pos->pos.y, pos->pos.z, 64, GREEN ) );
 		    }
 		}
 	    }
