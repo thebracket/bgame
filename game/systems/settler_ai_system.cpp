@@ -350,7 +350,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      case ai::CONVERT_PLACEHOLDER_STRUCTURE : {
           debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( step.placeholder_structure_id );
           game_engine->ecs->delete_entity ( step.placeholder_structure_id );
-          raws::create_structure_from_raws ( name->debug_name, step.target_x, step.target_y );
+          raws::create_structure_from_raws ( name->debug_name, location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z} );
 	  game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message ( ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;

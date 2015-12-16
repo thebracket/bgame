@@ -20,7 +20,6 @@ void component_loader(fstream &lbfile) {
 
 inline void component_factory(fstream &lbfile, const int ct) {
   switch ( ct ) {
-      case position : component_loader<position_component>(lbfile); break;
       case name : component_loader<debug_name_component>(lbfile); break;
       case renderable : component_loader<renderable_component>(lbfile); break;
       case viewshed :  component_loader<viewshed_component>(lbfile); break;

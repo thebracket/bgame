@@ -4,7 +4,6 @@
 #include "calendar_component.h"
 #include "debug_name_component.h"
 #include "obstruction_component.h"
-#include "position_component.h"
 #include "power_battery_component.h"
 #include "power_generator_component.h"
 #include "renderable_component.h"

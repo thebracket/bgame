@@ -1,10 +1,7 @@
 #include "main_menu.h"
-#include "play_mode.h"
-#include "world_gen_mode.h"
 #include "genesis_mode.hpp"
 #include "game_mode.hpp"
 #include <fstream>
-#include "world/worldgen.h"
 #include "../engine/gui/gui_frame.h"
 #include "../engine/gui/gui_static_text.h"
 #include "game.h"

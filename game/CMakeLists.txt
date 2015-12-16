@@ -1,13 +1,10 @@
 add_library(game 
 	    game.cpp 
 	    loading_screen.cpp 
-	    main_menu.cpp 
-	    play_mode.cpp 
-	    world_gen_mode.cpp
+	    main_menu.cpp
 	    genesis_mode.cpp
 	    game_mode.cpp
 	    
-	    render/game_render.cpp
 	    render/panel_tooltip.cpp
 	    render/window.cpp
 	    render/settler_compositor.cpp
@@ -45,7 +42,6 @@ add_library(game
 	    world/tile.cpp 
 	    world/landblock.cpp 
 	    world/console.cpp 
-	    world/worldgen.cpp 
 	    world/serialization_utils.cpp
 	    world/universe.cpp
 	    world/solar_system.cpp

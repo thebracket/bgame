@@ -47,7 +47,7 @@ private:
     }
 
 public:
-    build_options_window ( sdl2_backend* sdl, const string& title, const bool& decor, const int rx, const int ry ) : window ( sdl,title,decor ), region_x ( rx ), region_y ( ry ) {
+    build_options_window ( sdl2_backend* sdl, const string& title, const bool& decor, const int rx, const int ry, const int rz ) : window ( sdl,title,decor ), region_x ( rx ), region_y ( ry ), region_z(rz) {
         const int idx = world::current_region->idx ( region_x, region_y );
 
         determine_buildables ( idx );
@@ -86,12 +86,12 @@ public:
 
         // Bail out if there is already something here
         bool occupied = false;
-        vector<position_component *> positions = game_engine->ecs->find_components_by_func<position_component> (
-        [this] ( const position_component &c ) {
-            return ( c.x == this->region_x and c.y == this->region_y );
+        vector<position_component3d *> positions = game_engine->ecs->find_components_by_func<position_component3d> (
+        [this] ( const position_component3d &c ) {
+            return ( c.pos.x == this->region_x and c.pos.y == this->region_y and c.pos.z == this->region_z );
         } );
 
-        for ( const position_component * pos : positions ) {
+        for ( const position_component3d * pos : positions ) {
             settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component> ( pos->entity_id );
             if ( settler == nullptr ) {
                 occupied = true;
@@ -146,6 +146,7 @@ public:
 private:
     const int region_x;
     const int region_y;
+    const int region_z;
 
 };
 

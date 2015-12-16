@@ -16,13 +16,13 @@ namespace render {
 
 class panel_tooltip {
 public:
-     panel_tooltip ( sdl2_backend * sdl, const std::pair<int,int> region_loc, const std::pair<int,int> mouse_loc );     
+     panel_tooltip ( sdl2_backend * sdl, const location_t &loc, const std::pair<int,int> mouse_loc );     
      void render();
      bool render_me = true;
      
 private:
      void render_buffer();
-     void add_tile_contents ( const int region_x, const int region_y );
+     void add_tile_contents ( const int region_x, const int region_y, const int region_z );
      bool add_settler_details ( const int entity_id );
      inline void add_name_details ( const int entity_id );
      inline void add_containers ( const int entity_id );
