@@ -65,7 +65,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		for (uint8_t x=0; x<REGION_WIDTH; ++x) {
 		    for (uint8_t Z=0; Z<REGION_DEPTH; ++Z) {
 			tile_t * tile = planet->get_tile( location_t{ region_index, x, y, Z } );
-			tile->flags.set( TILE_OPTIONS::SOLID );
+			tile->flags.reset( TILE_OPTIONS::SOLID );
 			tile->base_tile_type = tile_type::EMPTY_SPACE;
 			tile->ground = tile_ground::IGNEOUS;
 			tile->climate = tile_climate::TEMPERATE;
