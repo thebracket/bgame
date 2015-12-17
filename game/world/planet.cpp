@@ -48,6 +48,7 @@ std::string planet_t::get_filename ( const uint8_t region_index ) const
 
 void planet_t::load_region ( const uint8_t region_index )
 {
+    std::cout << "Loading region " << +region_index << "\n";
     const std::string filename = get_filename( region_index );
     region_t * region = create_region( region_index );
     fstream lbfile(filename, std::ios::in | std::ios::binary);

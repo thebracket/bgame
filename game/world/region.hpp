@@ -19,6 +19,8 @@ public:
   }
   void save( Poco::DeflatingOutputStream &lbfile );
   void load( Poco::InflatingInputStream &lbfile );
+  
+  void calculate_walkability();
 
   std::vector< tile_t > tiles;
   std::vector<bool> revealed;

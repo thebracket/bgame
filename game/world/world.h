@@ -22,7 +22,6 @@ using boost::optional;
 
 namespace world {
 
-
 // Features for use by the various other structures of the game
 extern console log;
 
@@ -40,8 +39,6 @@ extern bool paused;
 extern bool render_graphics;
 
 extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
-extern std::vector<bool> walk_blocked_3d;
-extern std::vector<bool> view_blocked_3d;
 
 struct available_item {
      string name;

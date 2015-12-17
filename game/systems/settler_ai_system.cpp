@@ -9,6 +9,7 @@
 #include "../raws/raws.h"
 #include "../world/skill_test.h"
 #include "../../engine/geometry.hpp"
+#include "../world/planet.hpp"
 #include <map>
 
 namespace settler_ai_detail {
@@ -97,7 +98,7 @@ bool is_move_possible ( const position_component3d * pos, const int &delta_x, co
      if ( nz > REGION_DEPTH-1 ) {
 	  return false;
      }
-     if ( world::walk_blocked_3d[idx] == true ) {
+     if ( world::planet->get_region( pos->pos.region )->tiles[idx].flags.test( TILE_OPTIONS::WALK_BLOCKED ) ) {
           return false;
      }
      // FIXME: We should handle ramps and water properly
@@ -249,11 +250,11 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           // No - so we better consult the map
           if ( settler.current_path == nullptr ) {
                // If there is no path - request one to the destination and exit (no moving and pathing!)
-               settler.current_path = ai::find_path ( std::make_tuple ( pos->pos.x, pos->pos.y, pos->pos.z ), std::make_tuple ( step.target_x, step.target_y, step.target_z ), world::walk_blocked_3d );
+               settler.current_path = ai::find_path ( pos->pos, location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z } ); 
                return;
           } else {
                // There is a path...
-	       if ( std::get<0>(settler.current_path->destination) != step.target_x or std::get<1>(settler.current_path->destination) != step.target_y or std::get<2>(settler.current_path->destination) != step.target_z )
+	       if ( settler.current_path->destination.x == step.target_x or settler.current_path->destination.y != step.target_y or settler.current_path->destination.z != step.target_z )
                     // Does it go to the right place? If not, then make a new one and exit
                     settler.current_path.reset();
                     return;
@@ -263,13 +264,13 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                     settler.current_path.reset();
                     return;
                }
-               std::tuple<int,int,int> next_step = settler.current_path->steps.front();
+               location_t next_step = settler.current_path->steps.front();
                settler.current_path->steps.pop();
-               const int delta_x = std::get<0>(next_step) - pos->pos.x;
-               const int delta_y = std::get<1>(next_step) - pos->pos.y;
-	       const int delta_z = std::get<2>(next_step) - pos->pos.z;
+               const int delta_x = next_step.x - pos->pos.x;
+               const int delta_y = next_step.y - pos->pos.y;
+	       const int delta_z = next_step.z - pos->pos.z;
                if ( is_move_possible ( pos, delta_x, delta_y, delta_z ) ) {
-                    move_to ( pos, std::get<0>(next_step), std::get<1>(next_step), std::get<2>(next_step) );
+                    move_to ( pos, next_step.x, next_step.y, next_step.z );
                     return;
                } else {
                     // Reset the path - something went wrong
