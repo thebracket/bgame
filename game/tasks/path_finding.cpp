@@ -19,7 +19,10 @@ namespace ai {
 
 shared_ptr< navigation_path > find_path ( location_t start, location_t end )
 {
-    return shared_ptr< navigation_path >();
+    shared_ptr<navigation_path> result;
+    result->destination = end;
+    result->steps.push( end );
+    return result;
 }
   
 }
