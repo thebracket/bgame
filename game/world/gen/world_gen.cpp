@@ -18,7 +18,7 @@ using namespace engine;
 
 inline void really_hollow(const location_t &loc) {
     tile_t * tile = world::planet->get_tile(loc);
-    tile->solid = false;
+    tile->flags.reset ( TILE_OPTIONS::SOLID );
     tile->base_tile_type = tile_type::EMPTY_SPACE;
 }
 
@@ -42,7 +42,7 @@ void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_
 	    bool found = false;
 	    while (!found) {
 		tile_t * candidate = planet->get_tile( location_t{ planet_idx, X, Y, Z }  );
-		if ( candidate->solid ) {
+		if ( candidate->flags.test( TILE_OPTIONS::SOLID ) ) {
 		    ++Z;
 		} else {
 		    found = true;
@@ -283,7 +283,7 @@ void make_entities( planet_t * planet ) {
     while (!found) {
 	// -4 to ensure that the back door is usable
 	tile_t * candidate = planet->get_tile( location_t{ planet_idx, static_cast<uint8_t>(start_x-4), start_y, start_z }  );
-	if ( candidate->solid ) {
+	if ( candidate->flags.test( TILE_OPTIONS::SOLID ) ) {
 	  ++start_z;
 	} else {
 	  found = true;
@@ -380,7 +380,7 @@ void make_entities( planet_t * planet ) {
 }
 
 void world_gen_phase_1()
-{
+{  
     std::cout << "World gen running\n";
     engine::random_number_generator rng;
   
@@ -402,7 +402,7 @@ void world_gen_phase_1()
     std::unique_ptr<planet_t> planet = make_world_layers( base_map.get(), rng, water.get(), &biomes );
     
     std::cout << "Making starting entites\n";    
-    // Make the camera
+    game_engine->ecs->init();
     make_entities( planet.get() );
     
     std::cout << "World gen done\n";

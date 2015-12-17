@@ -7,6 +7,7 @@
 #include <array>
 #include <tuple>
 #include <vector>
+#include "../world/location.hpp"
 
 using std::unordered_map;
 using std::tuple;
@@ -17,11 +18,11 @@ using std::array;
 namespace ai {
   
 struct navigation_path {
-  tuple<int,int,int> destination;
-  queue<std::tuple<int,int,int>> steps;
+  location_t destination;
+  queue<location_t> steps;
 };
 
-shared_ptr<navigation_path> find_path(tuple<int,int,int> start, tuple<int,int,int> end, std::vector<bool> &walkable);
+shared_ptr<navigation_path> find_path(location_t start, location_t end);
 
   
 }

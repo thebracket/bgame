@@ -65,7 +65,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		for (uint8_t x=0; x<REGION_WIDTH; ++x) {
 		    for (uint8_t Z=0; Z<REGION_DEPTH; ++Z) {
 			tile_t * tile = planet->get_tile( location_t{ region_index, x, y, Z } );
-			tile->solid = false;
+			tile->flags.set( TILE_OPTIONS::SOLID );
 			tile->base_tile_type = tile_type::EMPTY_SPACE;
 			tile->ground = tile_ground::IGNEOUS;
 			tile->climate = tile_climate::TEMPERATE;
@@ -77,7 +77,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		  
 		    // Build upwards. Bottom level has to be solid. Then lava for min 3, biased by altitude. Then rock. Then water, if > 10.
 		    tile_t * bottom = planet->get_tile( location_t{ region_index, x, y, 0 } );
-		    bottom->solid = true;
+		    bottom->flags.set( TILE_OPTIONS::SOLID );
 		    bottom->base_tile_type = tile_type::FLAT;
 		    bottom->ground = tile_ground::IGNEOUS;
 		    bottom->covering = tile_covering::BARE;
@@ -88,7 +88,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    uint8_t z = 1;
 		    while ( z < n_magma+1) {
 			tile_t * target = planet->get_tile( location_t{region_index, x, y, z} );
-			  target->solid = true;
+			  target->flags.set( TILE_OPTIONS::SOLID );
 			  target->base_tile_type = tile_type::MAGMA;
 			  target->covering = tile_covering::BARE;
 			  target->climate = tile_climate::MOLTEN;
@@ -96,7 +96,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    }
 		    
 		    bottom = planet->get_tile( location_t{region_index, x, y, z} );
-		    bottom->solid = true;
+		    bottom->flags.set( TILE_OPTIONS::SOLID );
 		    bottom->base_tile_type = tile_type::FLAT;
 		    bottom->ground = tile_ground::IGNEOUS;
 		    bottom->covering = tile_covering::BARE;
@@ -107,7 +107,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    const int n_layers = rng.roll_dice(1, 6);
 		    while ( z < bands[ hidx ]-n_layers ) {
 			tile_t * target = planet->get_tile( location_t{region_index, x, y, z} );
-			target->solid = true;
+			target->flags.set( TILE_OPTIONS::SOLID );
 			target->base_tile_type = tile_type::FLAT;
 			target->ground = tile_ground::IGNEOUS;
 			target->covering = tile_covering::BARE;
@@ -117,7 +117,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    
 		    while ( z < bands[ hidx ]-1 ) {
 			tile_t * target = planet->get_tile( location_t{region_index, x, y, z} );
-			target->solid = true;
+			target->flags.set( TILE_OPTIONS::SOLID );
 			target->base_tile_type = tile_type::FLAT;
 			target->ground = tile_ground::SEDIMENTARY;
 			target->covering = tile_covering::BARE;
@@ -127,7 +127,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    
 		    // The surface
 		    tile_t * target = planet->get_tile( location_t{region_index, x, y, z} );
-		    target->solid = false;
+		    target->flags.reset( TILE_OPTIONS::SOLID );
 		    target->base_tile_type = tile_type::FLAT;
 		    if ( ramps[ hidx ] == true ) target->base_tile_type = tile_type::RAMP;
 		    target->ground = tile_ground::SEDIMENTARY;
@@ -138,7 +138,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
 		    // Just add water
 		    while ( z < water_z ) {
 			target = planet->get_tile( location_t{region_index, x, y, z} );
-			target->solid = false;
+			target->flags.reset( TILE_OPTIONS::SOLID );
 			if ( target->base_tile_type != tile_type::RAMP ) target->base_tile_type = tile_type::FLAT;
 			target->covering = tile_covering::BARE;
 			target->climate = tile_climate::TEMPERATE;

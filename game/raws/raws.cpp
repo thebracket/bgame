@@ -33,6 +33,7 @@
 #include "raw_power_drain.h"
 #include "raw_output.h"
 #include "raw_particle_emitter.h"
+#include "raw_walkable_roof.h"
 
 #include "../game.h"
 
@@ -316,6 +317,13 @@ void parse_raw_power_drain ( const vector<string> &chunks )
      current->children.push_back ( std::move ( desc ) );
 }
 
+void parse_raw_walkable_roof ( const vector<string> &chunks ) {
+    const string yes = chunks[1];
+    if (yes != "Y") return;
+    unique_ptr<raw_walkable_roof> roof = make_unique<raw_walkable_roof>();
+    current->children.push_back ( std::move ( roof ) );
+}
+
 /* Specific parser functions */
 
 void parse_structure ( const vector<string> &chunks )
@@ -382,6 +390,10 @@ void parse_structure ( const vector<string> &chunks )
      if ( chunks[0] == "OBSTRUCTS" ) {
           parse_raw_obstruction ( chunks );
           return;
+     }
+     if ( chunks[0] == "WALKABLE_ROOF" ) {
+	  parse_raw_walkable_roof( chunks );
+	  return;
      }
      if ( chunks[0] == "GENERATOR" ) {
           parse_raw_power_generator ( chunks );

@@ -103,7 +103,8 @@ void viewshed_system::scan_radius_for_visibility(viewshed_component * view, cons
 		    }
 
 		    // FIXME: More block reasons
-		    if (world::view_blocked_3d[index]) {
+		    tile_t * tile = &current_region->tiles[index];
+		    if (tile->flags.test( TILE_OPTIONS::VIEW_BLOCKED ) or tile->flags.test( TILE_OPTIONS::SOLID )) {
 			blocked = true;
 		    }
 		}

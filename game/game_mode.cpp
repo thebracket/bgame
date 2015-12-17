@@ -71,7 +71,7 @@ public:
           int texture_x = ( target_char % 16 ) * 8;
           int texture_y = ( target_char / 16 ) * 8;
           SDL_Rect source = {texture_x, texture_y, 8, 8 };
-          const SDL_Rect bg_source = { 88, 104, 8, 8 };
+          //const SDL_Rect bg_source = { 88, 104, 8, 8 };
 
           color_t fg = target.foreground_color;
           if ( depth > 0 ) {
@@ -115,7 +115,7 @@ public:
 		    
 		    const int tile_idx = get_tile_index( world_loc.x, world_loc.y, world_loc.z );
 		    
-                    if ( !tile->solid and tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[tile_idx] ) {
+                    if ( !tile->flags.test ( TILE_OPTIONS::SOLID ) and tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[tile_idx] ) {
                          // 3d dive
                          int depth = 1;
                          bool go = false;
@@ -124,11 +124,11 @@ public:
                               tile_t * dive_tile = world::planet->get_tile ( location_t { camera_pos->pos.region, world_loc.x, world_loc.y, static_cast<uint8_t> ( camera_pos->pos.z-depth ) } );
 			      dive_tile_idx = get_tile_index( world_loc.x, world_loc.y, world_loc.z - depth );
 			      
-                              if ( !dive_tile->solid and dive_tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[dive_tile_idx] ) {
+                              if ( !dive_tile->flags.test ( TILE_OPTIONS::SOLID ) and dive_tile->base_tile_type==tile_type::EMPTY_SPACE and !world::render_list_3d[dive_tile_idx] ) {
                                    ++depth;
                                    if ( depth > 10 ) go = true;
                               } else {
-                                   if ( dive_tile->solid ) {
+                                   if ( dive_tile->flags.test ( TILE_OPTIONS::SOLID ) ) {
                                         target.character = 219;
                                         target.foreground_color = color_t {128,128,128};
                                         target.background_color = color_t {0,0,0};
@@ -148,7 +148,7 @@ public:
 			 }
 			 
                     } else {
-                         if ( tile->solid ) {
+                         if ( tile->flags.test ( TILE_OPTIONS::SOLID ) ) {
                               target.character = 219;
                               target.foreground_color = color_t {128,128,128};
                               target.background_color = color_t {0,0,0};
@@ -182,7 +182,7 @@ private:
      }
 
      void render_date_time ( sdl2_backend * SDL ) {
-          SDL_Color sdl_white = {255,255,255,255};
+          //SDL_Color sdl_white = {255,255,255,255};
 
           if ( world::display_day_month.empty() ) {
                world::display_day_month = " ";
@@ -224,7 +224,7 @@ void game_mode::init_systems()
 void game_mode::init()
 {
      finished = false;
-     world::planet->load_region ( world::planet->planet_idx ( WORLD_WIDTH/2, WORLD_HEIGHT-2 ) );
+     world::planet->load_region ( world::planet->planet_idx ( WORLD_WIDTH/2, WORLD_HEIGHT-1 ) );
 
      SDL_Rect all {0, 0, 1024, 48};
      sg.children.push_back ( make_unique<scene_blit> ( "header", all, all ) );
@@ -250,6 +250,7 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
      if ( is_key_down ( Q ) ) finished = true;
 
      if ( finished ) {
+       game_engine->ecs->done();
           return make_pair ( POP, NO_PUSHED_MODE );
      } else {
           return make_pair ( CONTINUE, NO_PUSHED_MODE );
