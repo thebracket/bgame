@@ -103,8 +103,8 @@ bool is_move_possible ( const position_component3d * pos, const int &delta_x, co
      if ( delta_x > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_EAST )) return false;
      if ( delta_y < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_SOUTH )) return false;
      if ( delta_y > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH )) return false;
-     if ( delta_z < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_UP )) return false;
-     if ( delta_z > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN )) return false;
+     if ( delta_z < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN )) return false;
+     if ( delta_z > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_UP )) return false;
      
      if ( world::planet->get_region( pos->pos.region )->tiles[idx].flags.test( TILE_OPTIONS::WALK_BLOCKED ) ) {
           return false;
@@ -192,6 +192,12 @@ int create_needs_fulfillment_job ( const int &need, settler_ai_component * settl
 	}
 	settler->state_major = IDLE;
 	return -1;
+     } else {
+	switch (need) {
+	  case 1 : { emote( "I'm hungry, Cordex!", pos, RED );  } break;
+	  case 2 : { emote( "I'm thirsty, Cordex!", pos, RED );  } break;
+	  case 3 : { emote( "I'm tired!", pos, RED );  } break;
+	}
      }
      
      if (need == 3) {
@@ -281,17 +287,17 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                }
                location_t next_step = settler.current_path->steps.front();
                settler.current_path->steps.pop();
-               const int delta_x = next_step.x - pos->pos.x;
-               const int delta_y = next_step.y - pos->pos.y;
-	       const int delta_z = next_step.z - pos->pos.z;
-               if ( is_move_possible ( pos, delta_x, delta_y, delta_z ) ) {
+               //const int delta_x = next_step.x - pos->pos.x;
+               //const int delta_y = next_step.y - pos->pos.y;
+	       //const int delta_z = next_step.z - pos->pos.z;
+               //if ( is_move_possible ( pos, delta_x, delta_y, delta_z ) ) {
                     move_to ( pos, next_step.x, next_step.y, next_step.z );
-                    return;
-               } else {
+               //     return;
+               //} else {
                     // Reset the path - something went wrong
-                    settler.current_path.reset();
-                    return;
-               }
+               //     settler.current_path.reset();
+               //     return;
+               //}
           
      }
      break;
