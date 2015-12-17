@@ -21,6 +21,7 @@ int stored_power;
 int max_power=100;
 bool paused = true;
 bool render_graphics = true;
+bool omniscience = false;
 
 void load_world_constants(fstream& lbfile)
 {

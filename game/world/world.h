@@ -37,6 +37,7 @@ extern int max_power;
 extern float sun_angle;
 extern bool paused;
 extern bool render_graphics;
+extern bool omniscience;
 
 extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
 

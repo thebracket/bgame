@@ -80,7 +80,7 @@ public:
                darken ( darken_amount, fg );
           }
           
-          if (!visible) {
+          if (!visible and !world::omniscience) {
 	      desaturate ( fg );
           }
 
@@ -144,7 +144,7 @@ public:
                               }
                          }
                          //std::cout << "Dive reached depth: " << depth << "\n";
-                         if ( depth < 10 and current_region->revealed[dive_tile_idx] ) {
+                         if ( depth < 10 and (current_region->revealed[dive_tile_idx] ) or world::omniscience ) {
 			    render_ascii ( dest, target, SDL, depth, current_region->visible[dive_tile_idx] );
 			 }
 			 
@@ -160,7 +160,7 @@ public:
                          if ( world::render_list_3d[tile_idx] ) {
                               target = world::render_list_3d[tile_idx].value();
                          }
-                         if ( current_region->revealed[tile_idx] ) {
+                         if ( current_region->revealed[tile_idx] or world::omniscience ) {
 			    render_ascii ( dest, target, SDL, 0, current_region->visible[tile_idx] );
 			 }
 
@@ -254,6 +254,9 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
        for ( auto line : timings ) {
 	 std::cout << std::setw(20) << std::get<0>(line) << std::setw(10) << std::get<1>(line)<< std::setw(10) << std::get<2>(line)<< std::setw(10) << std::get<3>(line) << "\n";
        }
+     }
+     if ( is_key_down( F10) ) {
+	world::omniscience = !world::omniscience;
      }
 
      if ( finished ) {
