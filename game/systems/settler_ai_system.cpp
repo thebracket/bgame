@@ -98,13 +98,18 @@ bool is_move_possible ( const position_component3d * pos, const int &delta_x, co
      if ( nz > REGION_DEPTH-1 ) {
 	  return false;
      }
+     tile_t * my_tile = world::planet->get_tile ( pos->pos );
+     if ( delta_x < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_WEST )) return false;
+     if ( delta_x > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_EAST )) return false;
+     if ( delta_y < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_SOUTH )) return false;
+     if ( delta_y > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH )) return false;
+     if ( delta_z < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_UP )) return false;
+     if ( delta_z > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN )) return false;
+     
      if ( world::planet->get_region( pos->pos.region )->tiles[idx].flags.test( TILE_OPTIONS::WALK_BLOCKED ) ) {
           return false;
      }
-     // FIXME: We should handle ramps and water properly
-     //if ( world::current_region->tiles[idx].base_tile_type == tile_type::WATER ) {
-     //     return false;
-     //}
+     
      return true;
 }
 
@@ -140,7 +145,7 @@ void wander_randomly ( settler_ai_component &settler, position_component3d * pos
      int y = pos->pos.y;
      int z = pos->pos.z;
 
-     int direction = game_engine->rng.roll_dice ( 1,5 );
+     int direction = game_engine->rng.roll_dice ( 1,6 );
      switch ( direction ) {
      case 1 :
           if ( is_move_possible ( pos, -1, 0, 0 ) ) {
@@ -160,6 +165,16 @@ void wander_randomly ( settler_ai_component &settler, position_component3d * pos
      case 4 :
           if ( is_move_possible ( pos, 0, 1, 0 ) ) {
                move_to ( pos, x, y+1, z );
+          }
+          break;
+      case 5 :
+          if ( is_move_possible ( pos, 0, 0, 1 ) ) {
+               move_to ( pos, x, y, z+1 );
+          }
+          break;
+      case 6 :
+          if ( is_move_possible ( pos, 0, 0, -1 ) ) {
+               move_to ( pos, x, y, z-1 );
           }
           break;
      }
