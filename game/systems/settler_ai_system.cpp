@@ -292,19 +292,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                }
                location_t next_step = settler.current_path->steps.front();
                settler.current_path->steps.pop();
-               const int delta_x = next_step.x - pos->pos.x;
-               const int delta_y = next_step.y - pos->pos.y;
-	       const int delta_z = next_step.z - pos->pos.z;
-	       //std:: cout << "Path step: " << delta_x << " " << delta_y << " " << delta_z << "\n";
-               //if ( is_move_possible ( pos, delta_x, delta_y, delta_z ) ) {
-                    move_to ( pos, next_step.x, next_step.y, next_step.z );
-               //     return;
-               //} else {
-                    // Reset the path - something went wrong
-	       //	std::cout << "Path cancelled: cannot go that way\n";
-               //     settler.current_path.reset();
-               //     return;
-               //}
+	       move_to ( pos, next_step.x, next_step.y, next_step.z );
 	  }
           
      }
