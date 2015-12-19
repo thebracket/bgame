@@ -235,7 +235,7 @@ void idle ( settler_ai_component &settler, game_stats_component * stats, rendera
      if ( settler.state_major == IDLE ) {
           renderable->glyph = '@';
           renderable->foreground = color_t {255,255,0};
-          settler_ai_detail::wander_randomly ( settler, pos );
+          //settler_ai_detail::wander_randomly ( settler, pos );
      }
 }
 
