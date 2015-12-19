@@ -123,8 +123,8 @@ public:
           } // y
           
 	  render_emotes ( SDL );
-	  //render_particles ( SDL );
-
+	  render_particles ( SDL );
+	  render_cursor ( SDL );
      }
 private:
      void render_power_bar ( sdl2_backend * SDL ) {
@@ -257,6 +257,50 @@ private:
 	      SDL_Rect dst{ x+particle.offset_x, y+particle.offset_y, particle.ttl/4, particle.ttl/4 };
 	      SDL->render_bitmap( emote_text, src, dst );
 	  }
+     }
+     
+     void render_cursor ( sdl2_backend * SDL ) {
+	int mouse_x = engine::command::mouse_x;
+	int mouse_y = engine::command::mouse_y;
+	pair<int,int> screen_size = SDL->get_screen_size();
+	
+	if (mouse_x > 0 and mouse_x < screen_size.first and mouse_y > 48 and mouse_y < screen_size.second) {
+	    const int tile_x = mouse_x/8;
+	    const int tile_y = (mouse_y-48)/8;
+	    
+	    position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
+	    screen_size.second -= 48;
+	    const int ascii_width = screen_size.first / 8;
+	    const int ascii_height = screen_size.second / 8;
+	    if ( camera_pos->pos.x < ascii_width/2 ) camera_pos->pos.x = ascii_width/2;
+	    if ( camera_pos->pos.x > REGION_WIDTH - ( ascii_width/2 ) ) camera_pos->pos.x = REGION_WIDTH - ( ascii_width/2 );
+	    if ( camera_pos->pos.y < ascii_height/2 ) camera_pos->pos.y = ascii_height/2;
+	    if ( camera_pos->pos.y > REGION_HEIGHT- ( ascii_height/2 ) ) camera_pos->pos.y = REGION_HEIGHT - ( ascii_height/2 );
+	    SDL_Rect viewport { camera_pos->pos.x - ( ascii_width/2 ), camera_pos->pos.y - ( ascii_height/2 ), ascii_width, ascii_height };
+	    
+	    const int tilespace_x = tile_x + viewport.x;
+	    const int tilespace_y = tile_y + viewport.y;
+	    const location_t target { camera_pos->pos.region, tilespace_x, tilespace_y, camera_pos->pos.z };
+	    const int target_idx = get_tile_index( tilespace_x, tilespace_y, camera_pos->pos.z );
+	    
+	    engine::vterm::screen_character cursor { 219, color_t{255,255,0}, color_t{0,0,0} };
+	    if ( !world::planet->get_region( target.region )->revealed [ target_idx ] ) {
+		cursor.foreground_color = color_t { 64, 64, 64 };
+	    } else {
+		tile_t * target_tile = world::planet->get_tile( target );
+		if (target_tile->flags.test ( TILE_OPTIONS::SOLID ) ) {
+		    cursor.foreground_color = color_t { 255, 0, 0 };
+		}
+		if (target_tile->flags.test ( TILE_OPTIONS::CAN_STAND_HERE ) ) {
+		    cursor.foreground_color = color_t { 0, 255, 255 };
+		}
+	    }
+	    
+	    SDL->set_alpha_mod( "font_s", 128 );
+	    SDL_Rect dest { tile_x * 8, (tile_y * 8)+48, 8, 8 };
+	    render_ascii( dest, cursor, SDL );
+	    SDL->set_alpha_mod( "font_s", 255 );
+	}
      }
 
 };
