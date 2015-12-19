@@ -59,7 +59,7 @@ std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::r
     for (int wy=0; wy<WORLD_HEIGHT; ++wy) {
 	for (int wx=0; wx<WORLD_WIDTH; ++wx) {
 	    const uint8_t region_index = planet->planet_idx ( wx, wy );
-	    region_t * region_ptr = planet->create_region ( region_index );
+	    planet->create_region ( region_index );
 	    
 	    for (uint8_t y=0; y<REGION_HEIGHT; ++y) {
 		for (uint8_t x=0; x<REGION_WIDTH; ++x) {
