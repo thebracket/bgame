@@ -51,7 +51,6 @@ void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_
 	    }
 	}
     }
-    planet->save_region( planet_idx );
 }
 
 void add_camera( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx ) {
