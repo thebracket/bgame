@@ -62,7 +62,7 @@ public:
           for ( int y = 0; y<viewport.h; ++y ) {
                for ( int x = 0; x<viewport.w; ++x ) {
                     SDL_Rect dest {x*8, ( y*8 ) +48,8,8};
-                    vterm::screen_character target;
+                    vterm::screen_character target { '.', color_t{255,255,255}, color_t{0,0,0} };
                     const location_t world_loc {
                          camera_pos->pos.region, static_cast<uint8_t> ( viewport.x + x ), static_cast<uint8_t> ( viewport.y + y ), camera_pos->pos.z
                     };
@@ -164,7 +164,6 @@ private:
      
      void render_emotes ( sdl2_backend * SDL ) {
 	  position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
-	  region_t * current_region = world::planet->get_region( camera_pos->pos.region );
           pair<int,int> screen_size = SDL->get_screen_size();
           screen_size.second -= 48;
           const int ascii_width = screen_size.first / 8;
@@ -185,6 +184,7 @@ private:
                };
 	       SDL_Color text_color = sdl_black;
 	       switch ( emote.color ) {
+		 case BLACK : text_color = render::sdl_black; break;
 		 case WHITE : text_color =  render::sdl_white; break;
 		 case YELLOW : text_color = render::sdl_yellow; break;
 		 case CYAN : text_color = render::sdl_cyan; break;
@@ -225,7 +225,6 @@ private:
      
      void render_particles ( sdl2_backend * SDL ) {
 	  position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
-	  region_t * current_region = world::planet->get_region( camera_pos->pos.region );
           pair<int,int> screen_size = SDL->get_screen_size();
           screen_size.second -= 48;
           const int ascii_width = screen_size.first / 8;
