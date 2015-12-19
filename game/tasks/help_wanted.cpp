@@ -23,7 +23,7 @@ void save_help_wanted ( fstream& lbfile ) {
      for (auto it = jobs_board.begin(); it != jobs_board.end(); ++it) {
 	save_primitive<int>( lbfile, it->second.type );
 	save_primitive<int>( lbfile, it->second.job_id );
-	save_primitive<int>( lbfile, it->second.current_step );
+	save_primitive<uint8_t>( lbfile, it->second.current_step );
 	save_primitive<int>( lbfile, it->second.assigned_to );
 	save_primitive<int>( lbfile, it->second.steps.size() );
 	for (auto steps = it->second.steps.begin(); steps != it->second.steps.end(); ++steps) {
@@ -45,10 +45,11 @@ void load_help_wanted ( fstream& lbfile ) {
      int number_of_jobs = 0;
      load_primitive<int>( lbfile, number_of_jobs );
      for (int i=0; i<number_of_jobs; ++i) {
-	int job_type, job_id, current_step, assigned_to, number_of_steps;
+	int job_type, job_id, assigned_to, number_of_steps;
+	uint8_t current_step;
 	load_primitive <int> ( lbfile, job_type );
 	load_primitive <int> ( lbfile, job_id );
-	load_primitive <int> ( lbfile, current_step );
+	load_primitive <uint8_t> ( lbfile, current_step );
 	load_primitive <int> ( lbfile, assigned_to );
 	load_primitive <int> ( lbfile, number_of_steps );
 	job_t job{ static_cast<job_type_e>(job_type), job_id, {}, current_step, assigned_to };
