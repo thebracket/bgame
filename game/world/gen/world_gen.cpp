@@ -51,7 +51,6 @@ void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_
 	    }
 	}
     }
-    planet->save_region( planet_idx );
 }
 
 void add_camera( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx ) {
@@ -377,6 +376,7 @@ void make_entities( planet_t * planet ) {
   
     planet->save_region( planet_idx );
     game_engine->ecs->save_game("world/savegame3d.dat");
+    game_engine->ecs->done();
 }
 
 void world_gen_phase_1()

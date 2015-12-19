@@ -144,7 +144,7 @@ public:
                               }
                          }
                          //std::cout << "Dive reached depth: " << depth << "\n";
-                         if ( depth < 10 and (current_region->revealed[dive_tile_idx] ) or world::omniscience ) {
+                         if ( depth < 10 and (current_region->revealed[dive_tile_idx] or world::omniscience )) {
 			    render_ascii ( dest, target, SDL, depth, current_region->visible[dive_tile_idx] );
 			 }
 			 
@@ -169,7 +169,7 @@ public:
           } // y
           
 	  render_emotes ( SDL );
-	  render_particles ( SDL );
+	  //render_particles ( SDL );
 
      }
 private:
@@ -344,7 +344,6 @@ void game_mode::init()
 
 void game_mode::done()
 {
-
 }
 
 pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( const double time_elapsed )
@@ -362,7 +361,8 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
      }
 
      if ( finished ) {
-       game_engine->ecs->done();
+	  //game_engine->ecs->save_game( "world/savegame3d.dat" );
+	  game_engine->ecs->done();
           return make_pair ( POP, NO_PUSHED_MODE );
      } else {
           return make_pair ( CONTINUE, NO_PUSHED_MODE );

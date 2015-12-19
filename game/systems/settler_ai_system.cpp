@@ -99,12 +99,12 @@ bool is_move_possible ( const position_component3d * pos, const int &delta_x, co
 	  return false;
      }
      tile_t * my_tile = world::planet->get_tile ( pos->pos );
-     if ( delta_x < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_WEST )) return false;
-     if ( delta_x > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_EAST )) return false;
-     if ( delta_y < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_SOUTH )) return false;
-     if ( delta_y > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH )) return false;
-     if ( delta_z < 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN )) return false;
-     if ( delta_z > 0 and my_tile->flags.test( TILE_OPTIONS::CAN_GO_UP )) return false;
+     if ( delta_x < 0 and !my_tile->flags.test( TILE_OPTIONS::CAN_GO_WEST )) return false;
+     if ( delta_x > 0 and !my_tile->flags.test( TILE_OPTIONS::CAN_GO_EAST )) return false;
+     if ( delta_y < 0 and !my_tile->flags.test( TILE_OPTIONS::CAN_GO_SOUTH )) return false;
+     if ( delta_y > 0 and !my_tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH )) return false;
+     if ( delta_z < 0 and !my_tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN )) return false;
+     if ( delta_z > 0 and !my_tile->flags.test( TILE_OPTIONS::CAN_GO_UP )) return false;
      
      if ( world::planet->get_region( pos->pos.region )->tiles[idx].flags.test( TILE_OPTIONS::WALK_BLOCKED ) ) {
           return false;
@@ -261,6 +261,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           // Are we there yet?
           //const int distance = std::sqrt ( ( std::abs ( pos->x - step.target_x ) *std::abs ( pos->x - step.target_x ) ) + ( std::abs ( pos->y - step.target_y ) * ( std::abs ( pos->y - step.target_y ) ) ) );
 	  const int distance = geometry::distance3d( pos->pos.x, pos->pos.y, pos->pos.z, step.target_x, step.target_y, step.target_z );
+	  //std::cout << "Distance: " << distance << "\n";
           if ( distance <= 1 ) {
                // We've reached our destination
                ++job->second.current_step;
@@ -271,33 +272,40 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
           // No - so we better consult the map
           if ( settler.current_path == nullptr ) {
                // If there is no path - request one to the destination and exit (no moving and pathing!)
+	       //std::cout << "Path requested\n";
                settler.current_path = ai::find_path ( pos->pos, location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z } ); 
+	       //if ( settler.current_path == nullptr) std::cout << "But returned null!\n";
                return;
           } else {
                // There is a path...
-	       if ( settler.current_path->destination.x == step.target_x or settler.current_path->destination.y != step.target_y or settler.current_path->destination.z != step.target_z )
+	       if ( settler.current_path->destination.x != step.target_x or settler.current_path->destination.y != step.target_y or settler.current_path->destination.z != step.target_z ) {
                     // Does it go to the right place? If not, then make a new one and exit
-                    settler.current_path.reset();
+                    //std::cout << "Path cancelled: not the right destination.\n";
+		    settler.current_path.reset();
                     return;
                }
                // ... and it goes to the right place!
                if ( settler.current_path->steps.empty() ) {
+		    //std::cout << "Path cancelled: empty\n";
                     settler.current_path.reset();
                     return;
                }
                location_t next_step = settler.current_path->steps.front();
                settler.current_path->steps.pop();
-               //const int delta_x = next_step.x - pos->pos.x;
-               //const int delta_y = next_step.y - pos->pos.y;
-	       //const int delta_z = next_step.z - pos->pos.z;
+               const int delta_x = next_step.x - pos->pos.x;
+               const int delta_y = next_step.y - pos->pos.y;
+	       const int delta_z = next_step.z - pos->pos.z;
+	       //std:: cout << "Path step: " << delta_x << " " << delta_y << " " << delta_z << "\n";
                //if ( is_move_possible ( pos, delta_x, delta_y, delta_z ) ) {
                     move_to ( pos, next_step.x, next_step.y, next_step.z );
                //     return;
                //} else {
                     // Reset the path - something went wrong
+	       //	std::cout << "Path cancelled: cannot go that way\n";
                //     settler.current_path.reset();
                //     return;
                //}
+	  }
           
      }
      break;

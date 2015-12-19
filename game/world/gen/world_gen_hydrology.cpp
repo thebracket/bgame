@@ -94,6 +94,8 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 		      // There's nowhere to go from here.
 		      if ( heightmap_copy->operator[] ( hidx ) > min_heights->operator[] ( hidx ) ) {
 			heightmap_copy->operator[] ( hidx ) = heightmap_copy->operator[] ( hidx ) - 1;
+			stable = false;
+			++changes;
 		      }
 		      ++stuck;
 		  } else {
@@ -109,8 +111,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 		    if ( water_copy->operator[] ( hidx ) > 1 )
 			water_copy->operator[] ( hidx ) = water_copy->operator[] ( hidx ) -1;					
 
-		    stable = false;
-		    ++changes;
+		    
 		  }
 		} else { ++dry; } // if
 	      } // x
@@ -128,7 +129,7 @@ std::unique_ptr<water_level_map_t> perform_hydrology ( heightmap_t * heightmap, 
 	    }
 	    
 	    ++pass_count;
-	    //std::cout << "Pass " << pass << "~" << pass_count << " (changes: " << changes << ", dry: " << dry << ", unmoving: " << stuck << ") \n";
+	    std::cout << "Pass " << pass << "~" << pass_count << " (changes: " << changes << ", dry: " << dry << ", unmoving: " << stuck << ") \n";
 	    changes = 0;
 	    dry = 0;
 	}
