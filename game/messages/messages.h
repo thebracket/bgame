@@ -12,3 +12,4 @@
 #include "reaction_order_message.h"
 #include "inflict_damage_message.h"
 #include "particle_message.h"
+#include "highlight_message.h"

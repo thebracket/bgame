@@ -15,7 +15,7 @@ struct chat_emote_message {
     }
   
     bool deleted = false;
-    int ttl = 32;
+    int ttl = 64;
     
     string message;
     int16_t x;

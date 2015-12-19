@@ -178,7 +178,7 @@ private:
 	  vector<chat_emote_message> * emote_ptr = game_engine->messaging->get_messages_by_type<chat_emote_message>();
 	  for ( chat_emote_message &emote : *emote_ptr) {
 	      //std::cout << "Emote: " << emote.message << "\n";
-	      const unsigned char fade = 8 * emote.ttl;
+	      const unsigned char fade = 4 * emote.ttl;
                const SDL_Color sdl_black {
                     0,0,0,0
                };
@@ -221,6 +221,15 @@ private:
                SDL->render_bitmap_simple ( emote_text, x+4, y );
                SDL->set_alpha_mod ( "emote_bubble", 0 );
 	  }
+	  
+	  vector<highlight_message> * highlights = game_engine->messaging->get_messages_by_type<highlight_message>();
+	  for ( highlight_message &highlight : *highlights) {
+	      SDL_Rect dest { (highlight.tile_x - viewport.x)*8, ((highlight.tile_y-viewport.y)*8)+48, 8, 8 };
+	      engine::vterm::screen_character highlight_c { 219, color_t{ 255, 0, 255 }, color_t{ 0, 0, 0 } };
+	      SDL->set_alpha_mod( "font_s", 128 + highlight.ttl );
+	      render_ascii( dest, highlight_c, SDL );
+	  }
+	  SDL->set_alpha_mod( "font_s", 255 );
      }
      
      void render_particles ( sdl2_backend * SDL ) {
