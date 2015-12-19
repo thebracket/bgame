@@ -241,7 +241,7 @@ void game_mode::init()
 
 void game_mode::done()
 {
-
+     game_engine->ecs->save_game( "world/savegame3d.dat" );
 }
 
 pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( const double time_elapsed )
