@@ -21,6 +21,10 @@ using engine::vterm::darken;
 
 class game3d_render : public engine::base_node {
 public:
+     int last_mouse_x = 0;
+     int last_mouse_y = 0;
+     int mouse_hover_time = 0;
+  
      inline void render_ascii ( const SDL_Rect &dest, const vterm::screen_character &target, sdl2_backend * SDL, int depth=0, bool visible=true ) {
           unsigned char target_char = target.character;
           int texture_x = ( target_char % 16 ) * 8;
@@ -289,6 +293,15 @@ private:
 	    
 	    const int tilespace_x = tile_x + viewport.x;
 	    const int tilespace_y = tile_y + viewport.y;
+	    
+	    if (tilespace_x == last_mouse_x and tilespace_y == last_mouse_y) {
+		++mouse_hover_time;
+	    } else {
+		mouse_hover_time = 0;		
+	    }
+	    last_mouse_x = tilespace_x;
+	    last_mouse_y = tilespace_y;
+	    
 	    const location_t target { camera_pos->pos.region, tilespace_x, tilespace_y, camera_pos->pos.z };
 	    const int target_idx = get_tile_index( tilespace_x, tilespace_y, camera_pos->pos.z );
 	    
@@ -305,7 +318,9 @@ private:
 		}
 	    }
 	    
-	    SDL->set_alpha_mod( "font_s", 128 );
+	    int alpha = 32 + (mouse_hover_time*8);
+	    if (alpha > 200) alpha = 200;
+	    SDL->set_alpha_mod( "font_s", alpha );
 	    SDL_Rect dest { tile_x * 8, (tile_y * 8)+48, 8, 8 };
 	    render_ascii( dest, cursor, SDL );
 	    SDL->set_alpha_mod( "font_s", 255 );
