@@ -16,54 +16,8 @@ using namespace engine;
 using namespace engine::command;
 using engine::vterm::color_t;
 using std::make_unique;
-
-inline void darken ( const int &amount, color_t &col )
-{
-     unsigned char red = std::get<0> ( col );
-     unsigned char green = std::get<1> ( col );
-     unsigned char blue = std::get<2> ( col );
-
-     if ( red > amount ) {
-          red -= amount;
-     } else {
-          red = 0;
-     }
-     if ( green > amount ) {
-          green -= amount;
-     } else {
-          green = 0;
-     }
-     if ( blue > amount ) {
-          blue -= amount;
-     } else {
-          blue = 0;
-     }
-
-     std::get<0> ( col ) = red;
-     std::get<1> ( col ) = green;
-     std::get<2> ( col ) = blue;
-}
-
-inline void desaturate ( color_t &col )
-{
-     unsigned char red = std::get<0> ( col );
-     unsigned char green = std::get<1> ( col );
-     unsigned char blue = std::get<2> ( col );
-
-     // Goes here
-     float RED = red/255.0F;
-     float GREEN = green/255.0F;
-     float BLUE = blue/255.0F;
-     float luminance = 0.299 * RED + 0.587 * GREEN + 0.114 * BLUE;
-     
-     red = (luminance * 255.0F);
-     green = ( luminance * 255.0F);
-     blue = ( luminance * 255.0F);
-
-     std::get<0> ( col ) = red;
-     std::get<1> ( col ) = green;
-     std::get<2> ( col ) = blue;
-}
+using engine::vterm::desaturate;
+using engine::vterm::darken;
 
 class game3d_render : public engine::base_node {
 public:
