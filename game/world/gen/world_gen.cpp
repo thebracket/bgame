@@ -377,6 +377,7 @@ void make_entities( planet_t * planet ) {
   
     planet->save_region( planet_idx );
     game_engine->ecs->save_game("world/savegame3d.dat");
+    game_engine->ecs->done();
 }
 
 void world_gen_phase_1()
