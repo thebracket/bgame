@@ -64,9 +64,23 @@ bool map_search_node::GetSuccessors ( AStarSearch< map_search_node >* a_star_sea
 	parent_y = parent_node->pos.y;
 	parent_z = parent_node->pos.z;
     }
-    
+ 
+    //std::cout << "Considering exits from: " << +pos.region << "/" << pos.x << "/" << pos.y << "/" << +pos.z << "\n";
+ 
     map_search_node new_node;
     tile_t * tile = world::planet->get_tile( pos );
+    /*if ( tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN ) ) cout << "Down ";
+    if ( tile->flags.test( TILE_OPTIONS::CAN_GO_UP ) ) cout << "Up ";
+    if ( tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH ) ) cout << "North ";
+    if ( tile->flags.test( TILE_OPTIONS::CAN_GO_SOUTH ) ) cout << "South ";
+    if ( tile->flags.test( TILE_OPTIONS::CAN_GO_EAST ) ) cout << "East ";
+    if ( tile->flags.test( TILE_OPTIONS::CAN_GO_WEST ) ) cout << "West ";
+    if ( tile->flags.test( TILE_OPTIONS::CAN_STAND_HERE ) ) cout << "Standable ";
+    if ( tile->flags.test( TILE_OPTIONS::SOLID ) ) cout << "SOLID ";
+    if ( tile->flags.test( TILE_OPTIONS::VIEW_BLOCKED ) ) cout << "View_Block ";
+    if ( tile->flags.test( TILE_OPTIONS::WALK_BLOCKED ) ) cout << "Walk_Block ";
+    std::cout << "\n";*/
+    
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH ) and parent_y != pos.y-1 ) { 
       new_node = map_search_node( location_t{ pos.region, pos.x, static_cast<uint8_t>(pos.y-1), pos.z } );
       a_star_search->AddSuccessor( new_node );        
@@ -111,22 +125,23 @@ shared_ptr< navigation_path > find_path ( location_t start, location_t end )
     AStarSearch<map_search_node> a_star_search;
     map_search_node a_start(start);
     map_search_node a_end(end);
+    //std::cout << "Start: " << +start.region << "/" << start.x << "/" << start.y << "/" << +start.z << "\n";
+    //std::cout << "End: " << +end.region << "/" << end.x << "/" << end.y << "/" << +end.z << "\n";
     
     a_star_search.SetStartAndGoalStates( a_start, a_end );
     unsigned int search_state;
-    unsigned int search_steps;
+    unsigned int search_steps = 0;
     
     do {
       search_state = a_star_search.SearchStep();
       ++search_steps;
-      std::cout << "Step: " << search_steps << "\n";
     } while ( search_state == AStarSearch< map_search_node >::SEARCH_STATE_SEARCHING );
       
     if ( search_state == AStarSearch<map_search_node>::SEARCH_STATE_SUCCEEDED ) {
-      shared_ptr<navigation_path> result = make_shared<navigation_path>();
+      //std::cout << "Path success in " << search_steps << " steps.\n";
+      shared_ptr<navigation_path> result = std::shared_ptr<navigation_path>( new navigation_path() );
       result->destination = end;
       map_search_node *node = a_star_search.GetSolutionStart();
-      result->steps.push( node->pos );
       for ( ; ; ) {
 	  node = a_star_search.GetSolutionNext();
 	  if (!node) break;
