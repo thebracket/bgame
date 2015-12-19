@@ -28,7 +28,7 @@ void region_t::load ( Poco::InflatingInputStream& lbfile )
 }
 
 void test_walkability(int flag, tile_t * src, tile_t * dst) {
-    if ( !dst->flags.test( TILE_OPTIONS::SOLID ) and !dst->flags.test( TILE_OPTIONS::WALK_BLOCKED ) and !dst->base_tile_type == tile_type::EMPTY_SPACE and dst->water_level==0 ) {
+    if ( !dst->flags.test( TILE_OPTIONS::SOLID ) and !dst->flags.test( TILE_OPTIONS::WALK_BLOCKED ) and dst->base_tile_type != tile_type::EMPTY_SPACE and dst->water_level==0 ) {
 	src->flags.set(flag);
     }
 }
