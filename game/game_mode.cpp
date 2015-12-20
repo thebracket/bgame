@@ -126,9 +126,9 @@ public:
                } // x
           } // y
           
-	  render_emotes ( SDL );
-	  render_particles ( SDL );
-	  render_cursor ( SDL );
+	  render_emotes ( SDL, viewport );
+	  render_particles ( SDL, viewport );
+	  render_cursor ( SDL, screen_size, viewport, camera_pos );
      }
 private:
      void render_power_bar ( sdl2_backend * SDL ) {
@@ -166,18 +166,7 @@ private:
           }
      }
      
-     void render_emotes ( sdl2_backend * SDL ) {
-	  position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
-          pair<int,int> screen_size = SDL->get_screen_size();
-          screen_size.second -= 48;
-          const int ascii_width = screen_size.first / 8;
-          const int ascii_height = screen_size.second / 8;
-          if ( camera_pos->pos.x < ascii_width/2 ) camera_pos->pos.x = ascii_width/2;
-          if ( camera_pos->pos.x > REGION_WIDTH - ( ascii_width/2 ) ) camera_pos->pos.x = REGION_WIDTH - ( ascii_width/2 );
-          if ( camera_pos->pos.y < ascii_height/2 ) camera_pos->pos.y = ascii_height/2;
-          if ( camera_pos->pos.y > REGION_HEIGHT- ( ascii_height/2 ) ) camera_pos->pos.y = REGION_HEIGHT - ( ascii_height/2 );
-          SDL_Rect viewport { camera_pos->pos.x - ( ascii_width/2 ), camera_pos->pos.y - ( ascii_height/2 ), ascii_width, ascii_height };
-	  
+     void render_emotes ( sdl2_backend * SDL, SDL_Rect &viewport ) {
 	  
 	  vector<chat_emote_message> * emote_ptr = game_engine->messaging->get_messages_by_type<chat_emote_message>();
 	  for ( chat_emote_message &emote : *emote_ptr) {
@@ -236,18 +225,7 @@ private:
 	  SDL->set_alpha_mod( "font_s", 255 );
      }
      
-     void render_particles ( sdl2_backend * SDL ) {
-	  position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
-          pair<int,int> screen_size = SDL->get_screen_size();
-          screen_size.second -= 48;
-          const int ascii_width = screen_size.first / 8;
-          const int ascii_height = screen_size.second / 8;
-          if ( camera_pos->pos.x < ascii_width/2 ) camera_pos->pos.x = ascii_width/2;
-          if ( camera_pos->pos.x > REGION_WIDTH - ( ascii_width/2 ) ) camera_pos->pos.x = REGION_WIDTH - ( ascii_width/2 );
-          if ( camera_pos->pos.y < ascii_height/2 ) camera_pos->pos.y = ascii_height/2;
-          if ( camera_pos->pos.y > REGION_HEIGHT- ( ascii_height/2 ) ) camera_pos->pos.y = REGION_HEIGHT - ( ascii_height/2 );
-          SDL_Rect viewport { camera_pos->pos.x - ( ascii_width/2 ), camera_pos->pos.y - ( ascii_height/2 ), ascii_width, ascii_height };
-	  
+     void render_particles ( sdl2_backend * SDL, SDL_Rect &viewport ) {	  
 	  vector<particle_message> * particles = game_engine->messaging->get_messages_by_type<particle_message>();
 	  for (particle_message &particle : *particles) {
 	      //std::cout << "Particle!\n";
@@ -272,27 +250,16 @@ private:
 	  }
      }
      
-     void render_cursor ( sdl2_backend * SDL ) {
+     void render_cursor ( sdl2_backend * SDL, pair<int,int> &screen_size, SDL_Rect &viewport, position_component3d * camera_pos ) {
 	int mouse_x = engine::command::mouse_x;
 	int mouse_y = engine::command::mouse_y;
-	pair<int,int> screen_size = SDL->get_screen_size();
 	
 	if (mouse_x > 0 and mouse_x < screen_size.first and mouse_y > 48 and mouse_y < screen_size.second) {
 	    const int tile_x = mouse_x/8;
 	    const int tile_y = (mouse_y-48)/8;
-	    
-	    position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
-	    screen_size.second -= 48;
-	    const int ascii_width = screen_size.first / 8;
-	    const int ascii_height = screen_size.second / 8;
-	    if ( camera_pos->pos.x < ascii_width/2 ) camera_pos->pos.x = ascii_width/2;
-	    if ( camera_pos->pos.x > REGION_WIDTH - ( ascii_width/2 ) ) camera_pos->pos.x = REGION_WIDTH - ( ascii_width/2 );
-	    if ( camera_pos->pos.y < ascii_height/2 ) camera_pos->pos.y = ascii_height/2;
-	    if ( camera_pos->pos.y > REGION_HEIGHT- ( ascii_height/2 ) ) camera_pos->pos.y = REGION_HEIGHT - ( ascii_height/2 );
-	    SDL_Rect viewport { camera_pos->pos.x - ( ascii_width/2 ), camera_pos->pos.y - ( ascii_height/2 ), ascii_width, ascii_height };
-	    
-	    const int tilespace_x = tile_x + viewport.x;
-	    const int tilespace_y = tile_y + viewport.y;
+	    	    
+	    const int16_t tilespace_x = tile_x + viewport.x;
+	    const int16_t tilespace_y = tile_y + viewport.y;
 	    
 	    if (tilespace_x == last_mouse_x and tilespace_y == last_mouse_y) {
 		++mouse_hover_time;
@@ -324,6 +291,10 @@ private:
 	    SDL_Rect dest { tile_x * 8, (tile_y * 8)+48, 8, 8 };
 	    render_ascii( dest, cursor, SDL );
 	    SDL->set_alpha_mod( "font_s", 255 );
+	    
+	    if ( mouse_hover_time > 10 ) {
+		// TODO: Tool-tip time
+	    }
 	}
      }
 
