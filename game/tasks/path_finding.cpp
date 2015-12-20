@@ -67,7 +67,7 @@ bool map_search_node::GetSuccessors ( AStarSearch< map_search_node >* a_star_sea
  
     //std::cout << "Considering exits from: " << +pos.region << "/" << pos.x << "/" << pos.y << "/" << +pos.z << "\n";
  
-    map_search_node new_node;
+    vector<map_search_node> options;
     tile_t * tile = world::planet->get_tile( pos );
     /*if ( tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN ) ) cout << "Down ";
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_UP ) ) cout << "Up ";
@@ -82,29 +82,27 @@ bool map_search_node::GetSuccessors ( AStarSearch< map_search_node >* a_star_sea
     std::cout << "\n";*/
     
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_NORTH ) and parent_y != pos.y-1 ) { 
-      new_node = map_search_node( location_t{ pos.region, pos.x, static_cast<uint8_t>(pos.y-1), pos.z } );
-      a_star_search->AddSuccessor( new_node );        
+      options.push_back( map_search_node( location_t{ pos.region, pos.x, static_cast<uint8_t>(pos.y-1), pos.z } ) );
     };
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_SOUTH ) and parent_y != pos.y+1 ) { 
-      new_node = map_search_node( location_t{ pos.region, pos.x, static_cast<uint8_t>(pos.y+1), pos.z } );
-      a_star_search->AddSuccessor( new_node );        
+      options.push_back( map_search_node( location_t{ pos.region, pos.x, static_cast<uint8_t>(pos.y+1), pos.z } ) );
     };
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_EAST ) and parent_x != pos.x+1 ) { 
-      new_node = map_search_node( location_t{ pos.region, static_cast<uint8_t>(pos.x+1), pos.y, pos.z } );
-      a_star_search->AddSuccessor( new_node );        
+      options.push_back( map_search_node( location_t{ pos.region, static_cast<uint8_t>(pos.x+1), pos.y, pos.z } ) );
     };
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_WEST ) and parent_x != pos.x-1 ) { 
-      new_node = map_search_node( location_t{ pos.region, static_cast<uint8_t>(pos.x-1), pos.y, pos.z } );
-      a_star_search->AddSuccessor( new_node );        
+      options.push_back( map_search_node( location_t{ pos.region, static_cast<uint8_t>(pos.x-1), pos.y, pos.z } ) );
     };
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_UP ) and parent_z != pos.z+1 ) { 
-      new_node = map_search_node( location_t{ pos.region, pos.x, pos.y, static_cast<uint8_t>(pos.z+1) } );
-      a_star_search->AddSuccessor( new_node );        
+      options.push_back( map_search_node( location_t{ pos.region, pos.x, pos.y, static_cast<uint8_t>(pos.z+1) } ) );
     };
     if ( tile->flags.test( TILE_OPTIONS::CAN_GO_DOWN ) and parent_z != pos.z-1 ) { 
-      new_node = map_search_node( location_t{ pos.region, pos.x, pos.y, static_cast<uint8_t>(pos.z-1) } );
-      a_star_search->AddSuccessor( new_node );
+      options.push_back( map_search_node( location_t{ pos.region, pos.x, pos.y, static_cast<uint8_t>(pos.z-1) } ) );
     };
+    
+    for ( map_search_node & opt : options) {
+	a_star_search->AddSuccessor( opt );
+    }
 
     return true;
 }

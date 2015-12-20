@@ -40,6 +40,7 @@ void region_t::calculate_walkability()
 	for (int x=1; x<REGION_HEIGHT-1; ++x) {
 	    tile_t * tile = &tiles[ tile_idx(x,y,z) ];
 	    if (tile->flags.test( TILE_OPTIONS::SOLID )) {
+	      
 		tile->flags.set( TILE_OPTIONS::VIEW_BLOCKED );
 		tile->flags.set( TILE_OPTIONS::WALK_BLOCKED );
 		const int above_idx = tile_idx( x, y, z+1 );
