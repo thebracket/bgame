@@ -22,7 +22,7 @@ private:
     int current_x;
     int current_y;
     std::vector<std::pair<int,int>> flight_path;
-    int flight_progress = 0;
+    unsigned int flight_progress = 0;
     
     void begin_genesis( const double time_elapsed );
     void ugen( const double time_elapsed );

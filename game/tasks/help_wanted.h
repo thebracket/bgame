@@ -36,7 +36,7 @@ struct job_t {
      job_type_e type;
      int job_id = 0;
      vector<job_step_t> steps;
-     int current_step = 0;
+     uint8_t current_step = 0;
      int assigned_to = 0;
 };
 

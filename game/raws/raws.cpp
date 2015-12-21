@@ -260,7 +260,7 @@ void parse_raw_clothing_slot ( const vector<string> &chunks )
 void parse_raw_clothing_color ( const vector<string> &chunks )
 {
     unique_ptr< raw_clothing_color > color = make_unique< raw_clothing_color > ( );
-    for (int i=1; i<chunks.size(); ++i) {
+    for (std::size_t i=1; i<chunks.size(); ++i) {
       color->colors.push_back( chunks[i] );
     }
     current->children.push_back ( std::move ( color ) );

@@ -68,7 +68,7 @@ void add_cordex( const uint8_t start_x, const uint8_t start_y, const uint8_t sta
     game_engine->ecs->add_component(cordex, viewshed_component(penetrating,16));
     game_engine->ecs->add_component(cordex, calendar_component(0L));
     game_engine->ecs->add_component(cordex, renderable_component(15, cyan, black,17));
-    game_engine->ecs->add_component(cordex, obstruction_component());
+    game_engine->ecs->add_component(cordex, obstruction_component(true, true));
     game_engine->ecs->add_component(cordex, description_component( "You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendents alive."));
     hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }

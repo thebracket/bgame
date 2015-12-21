@@ -29,3 +29,4 @@ unique_ptr< base_system > make_inventory_system() {return make_unique<inventory_
 unique_ptr< base_system > make_cordex_ai_system() { return make_unique<cordex_ai_system>(); }
 unique_ptr< base_system > make_damage_system() { return make_unique<damage_system>(); }
 unique_ptr< base_system > make_particle_system() { return make_unique<particle_system>(); }
+
