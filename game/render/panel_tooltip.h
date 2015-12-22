@@ -17,7 +17,7 @@ namespace render {
 class panel_tooltip {
 public:
      panel_tooltip ( sdl2_backend * sdl, const location_t &loc, const std::pair<int,int> mouse_loc );     
-     void render();
+     void render( const int hover_time );
      bool render_me = true;
      
 private:
