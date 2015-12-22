@@ -1,4 +1,5 @@
 #include "panel_tooltip.h"
+#include "../world/planet.hpp"
 
 namespace render {
 
@@ -17,22 +18,32 @@ panel_tooltip::panel_tooltip ( sdl2_backend * sdl, const location_t &loc, const 
           return;
      }*/
 
-     screen_x = mouse_vx*16 + 16;
-     screen_y = mouse_vy*16 + 48;
+     screen_x = mouse_vx*8 + 8;
+     screen_y = mouse_vy*8 + 48;
 
      lines.add_line ( SDL, "Right Click for Options", sdl_red );
-     //lines.add_line ( SDL, world::current_region->tiles[idx].get_description(), sdl_green );
-     //lines.add_line ( SDL, world::current_region->tiles[idx].get_climate(), sdl_cyan );
+     tile_t * target_tile = world::planet->get_tile( loc );
+     stringstream ss;
+     ss << tile_type_to_string( target_tile->base_tile_type ) << " / ";
+     if (target_tile->base_tile_type != tile_type::EMPTY_SPACE) {
+	ss << ground_type_to_string( target_tile->ground ) << " / ";
+	ss << covering_type_to_string( target_tile->covering ) << " / ";
+     }
+     ss << climate_type_to_string( target_tile->climate );
+     
+     lines.add_line ( SDL, ss.str(), sdl_magenta );
      add_tile_contents ( loc.x, loc.y, loc.z );
 
      render_buffer();
 }
 
-void panel_tooltip::render()
+void panel_tooltip::render( const int hover_time )
 {
-     SDL_Rect source { 0, 0, panel_holder->width, panel_holder->height };
+     const int width = std::min ( panel_holder->width, hover_time * 16);
+     const int height = std::min ( panel_holder->height, hover_time * 4 );
+     SDL_Rect source { 0, 0, width, height };
      int line_size = static_cast<int> ( ( lines.size() /2 ) * 16 );
-     SDL_Rect dest { screen_x, screen_y - line_size, panel_holder->width, panel_holder->height };
+     SDL_Rect dest { screen_x, screen_y - line_size, width, height };
      SDL->render_bitmap ( panel_holder->texture_id, source, dest );
 }
 

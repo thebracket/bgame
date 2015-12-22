@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/engine.h"
+#include <memory>
 
 class game_mode : public engine::base_mode {
 public:
@@ -13,6 +14,6 @@ private:
      
      engine::scene_graph sg;
      
-     void init_systems();
+     void init_systems();          
      
 };

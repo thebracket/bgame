@@ -10,6 +10,7 @@
 #include "systems/system_factory.h"
 #include "render/colors.h"
 #include <iomanip>
+#include "render/panel_tooltip.h"
 
 using std::make_pair;
 using namespace engine;
@@ -250,6 +251,8 @@ private:
 	  }
      }
      
+     std::unique_ptr<render::panel_tooltip> tooltip_window;
+     
      void render_cursor ( sdl2_backend * SDL, pair<int,int> &screen_size, SDL_Rect &viewport, position_component3d * camera_pos ) {
 	int mouse_x = engine::command::mouse_x;
 	int mouse_y = engine::command::mouse_y;
@@ -265,6 +268,7 @@ private:
 		++mouse_hover_time;
 	    } else {
 		mouse_hover_time = 0;		
+		if ( tooltip_window ) tooltip_window.reset();
 	    }
 	    last_mouse_x = tilespace_x;
 	    last_mouse_y = tilespace_y;
@@ -292,12 +296,21 @@ private:
 	    render_ascii( dest, cursor, SDL );
 	    SDL->set_alpha_mod( "font_s", 255 );
 	    
-	    if ( mouse_hover_time > 10 ) {
-		// TODO: Tool-tip time
+	    if ( mouse_hover_time > 10 and world::planet->get_region( camera_pos->pos.region )->revealed [ target_idx ] ) {
+		render_tooltip( SDL, target, std::make_pair( tilespace_x - viewport.x, tilespace_y - viewport.y ) );
 	    }
 	}
      }
 
+     void render_tooltip ( sdl2_backend * SDL, const location_t &loc, const std::pair<int,int> mouse ) {
+	  if ( tooltip_window ) {
+	      tooltip_window->render( mouse_hover_time );
+	      return;
+	  }
+       	  	  
+	  tooltip_window = std::make_unique<render::panel_tooltip>( SDL, loc, mouse );
+	  tooltip_window->render( mouse_hover_time );
+     }
 };
 
 void game_mode::init_systems()
