@@ -73,7 +73,23 @@ void add_cordex( const uint8_t start_x, const uint8_t start_y, const uint8_t sta
     hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }
 
+
+void add_structural_element(const location_t &loc, unsigned char glyph, bool block=true) {
+  hollow(loc);
+  switch (glyph) {
+    case 16 : raws::create_structure_from_raws("Ship Front", loc); break;
+    case 186 : raws::create_structure_from_raws("Ship Wall NS", loc); break;
+    case 200 : raws::create_structure_from_raws("Ship Wall NE", loc); break;
+    case 201 : raws::create_structure_from_raws("Ship Wall SE", loc); break;
+    case 219 : raws::create_structure_from_raws("Ship Superstructure", loc); break;
+    case 46 : raws::create_structure_from_raws("Ship Floor", loc); break;
+    case 205 : raws::create_structure_from_raws("Ship Wall EW", loc); break;
+    default : std::cout << "Oops - missed a structure, code " << +glyph << "\n";
+  }
+}
+
 void add_solar_collector(const uint8_t x, const uint8_t y, const uint8_t z, const uint8_t planet_idx) {
+    add_structural_element(location_t{ planet_idx, x, y, static_cast<uint8_t>(z-1)}, '.');
     raws::create_structure_from_raws("Solar Collector", location_t { planet_idx, x, y, z });
     //hollow(location_t { planet_idx, x, y, z-1 });
 }
@@ -95,20 +111,6 @@ void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z, const u
     game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( fire_kit ), item_storage_component(container_id) );
     int fire_axe = raws::create_item_from_raws("Fire Axe");
     game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( fire_axe ), item_storage_component(container_id) );
-}
-
-void add_structural_element(const location_t &loc, unsigned char glyph, bool block=true) {
-  hollow(loc);
-  switch (glyph) {
-    case 16 : raws::create_structure_from_raws("Ship Front", loc); break;
-    case 186 : raws::create_structure_from_raws("Ship Wall NS", loc); break;
-    case 200 : raws::create_structure_from_raws("Ship Wall NE", loc); break;
-    case 201 : raws::create_structure_from_raws("Ship Wall SE", loc); break;
-    case 219 : raws::create_structure_from_raws("Ship Superstructure", loc); break;
-    case 46 : raws::create_structure_from_raws("Ship Floor", loc); break;
-    case 205 : raws::create_structure_from_raws("Ship Wall EW", loc); break;
-    default : std::cout << "Oops - missed a structure, code " << +glyph << "\n";
-  }
 }
 
 entity make_settler(const location_t &loc)
@@ -337,7 +339,7 @@ void make_entities( planet_t * planet ) {
       if (i != 2) {
 	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x-4), static_cast<uint8_t>(start_y-2+i), start_z}, 186); // Add left wall
       } else {
-	// TODO: Door goes here!
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x-4), static_cast<uint8_t>(start_y-2+i), start_z}, '.');
       }
     }
     
