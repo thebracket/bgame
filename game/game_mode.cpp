@@ -20,6 +20,8 @@ using std::make_unique;
 using engine::vterm::desaturate;
 using engine::vterm::darken;
 
+enum game_mode_t { normal, radial };
+
 class game3d_render : public engine::base_node {
 public:
      int last_mouse_x = 0;
@@ -129,9 +131,19 @@ public:
           
 	  render_emotes ( SDL, viewport );
 	  render_particles ( SDL, viewport );
-	  render_cursor ( SDL, screen_size, viewport, camera_pos );
+	  if ( mode == normal ) {
+	    render_cursor ( SDL, screen_size, viewport, camera_pos );
+	  } else if ( mode == radial ) {
+          if ( !world::paused ) {
+               mode = normal;
+          } else {
+	      // TODO: Render Radial
+          }
+     }
      }
 private:
+     game_mode_t mode = normal;
+  
      void render_power_bar ( sdl2_backend * SDL ) {
           const float power_percent = static_cast<float> ( world::stored_power ) / static_cast<float> ( world::max_power );
           const int power_tenths = ( power_percent * 10.0 )-1;
@@ -349,6 +361,8 @@ void game_mode::init()
 
 void game_mode::done()
 {
+    game_engine->ecs->save_game( "world/savegame3d.dat" );
+    game_engine->ecs->done();
 }
 
 pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( const double time_elapsed )
@@ -366,8 +380,6 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
      }
 
      if ( finished ) {
-	  //game_engine->ecs->save_game( "world/savegame3d.dat" );
-	  game_engine->ecs->done();
           return make_pair ( POP, NO_PUSHED_MODE );
      } else {
           return make_pair ( CONTINUE, NO_PUSHED_MODE );
