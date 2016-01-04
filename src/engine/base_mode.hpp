@@ -2,7 +2,8 @@
 
 #include <memory>
 #include <utility>
-#include "scene_graph.h"
+
+#include "scene_graph.hpp"
 
 using std::unique_ptr;
 using std::pair;
