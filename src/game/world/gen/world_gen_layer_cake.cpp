@@ -2,7 +2,8 @@
 #include "../planet.hpp"
 #include "world_height_map_marching_squares.hpp"
 #include <iostream>
-#include "../../../engine/png_writer.h"
+
+#include "../../../engine/png_writer.hpp"
 #include "tile_builder.hpp"
 
 std::unique_ptr< planet_t > make_world_layers ( heightmap_t* base_map, engine::random_number_generator& rng, water_level_map_t * water, biome_map_t * biomes )

@@ -3,7 +3,8 @@
 #include <utility>
 #include <vector>
 #include <iostream>
-#include "../../../engine/png_writer.h"
+
+#include "../../../engine/png_writer.hpp"
 
 using std::pair;
 using std::make_pair;
