@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../engine/engine.h"
 #include <memory>
+#include "../engine/engine.hpp"
 
 class game_mode : public engine::base_mode {
 public:
