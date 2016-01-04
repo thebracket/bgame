@@ -1,5 +1,6 @@
 #include "input_system.h"
-#include "../../engine/engine.h"
+
+#include "../../engine/engine.hpp"
 #include "../game.h"
 
 using namespace engine::command;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/engine.h"
+#include "../engine/engine.hpp"
 #include "components/components.h"
 #include "messages/messages.h"
 

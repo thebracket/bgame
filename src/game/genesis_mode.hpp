@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../engine/engine.h"
 #include "world/universegen.hpp"
 #include <thread>
 #include <memory>
+#include "../engine/engine.hpp"
 
 enum genesis_stage_t { INIT, UGEN, UDISPLAY, UDISPLAY2, TRAVEL, SYSTEM_SCAN };
 
