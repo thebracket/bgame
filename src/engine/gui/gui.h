@@ -9,26 +9,32 @@ using std::vector;
 using std::unique_ptr;
 using std::string;
 
-namespace engine {
+namespace engine
+{
 
-class gui {
+class gui
+{
 public:
-    gui();
-    
-    std::pair<int,int> get_screen_size() {
-        return std::make_pair(screen_width, screen_height);
-    };
-    
-    void add_child(unique_ptr<gui_element_base> child) {
-        children.push_back(std::move(child));
-    };
-    gui_element_base * find_child(string tag);
-    
-    void render();
+	gui();
+
+	std::pair<int, int> get_screen_size()
+	{
+		return std::make_pair(screen_width, screen_height);
+	}
+	;
+
+	void add_child(unique_ptr<gui_element_base> child)
+	{
+		children.push_back(std::move(child));
+	}
+	;
+	gui_element_base * find_child(string tag);
+
+	void render();
 private:
-    int screen_width;
-    int screen_height;
-    vector<unique_ptr<gui_element_base>> children;
+	int screen_width;
+	int screen_height;
+	vector<unique_ptr<gui_element_base>> children;
 };
 
 }

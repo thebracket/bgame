@@ -16,17 +16,52 @@
 using std::make_unique;
 using std::unique_ptr;
 
-
-unique_ptr<base_system> make_camera_system() { return make_unique<camera_system>(); }
-unique_ptr<base_system> make_renderable_system() { return make_unique<renderable_system>(); }
-unique_ptr<base_system> make_viewshed_system() { return make_unique<viewshed_system>(); }
-unique_ptr<base_system> make_calendar_system() { return make_unique<calendar_system>(); }
-unique_ptr<base_system> make_settler_ai_system() { return make_unique<settler_ai_system>(); }
-unique_ptr<base_system> make_obstruction_system() { return make_unique<obstruction_system>(); }
-unique_ptr<base_system> make_power_system() { return make_unique<power_system>(); }
-unique_ptr< base_system > make_input_system() { return make_unique<input_system>(); }
-unique_ptr< base_system > make_inventory_system() {return make_unique<inventory_system>(); }
-unique_ptr< base_system > make_cordex_ai_system() { return make_unique<cordex_ai_system>(); }
-unique_ptr< base_system > make_damage_system() { return make_unique<damage_system>(); }
-unique_ptr< base_system > make_particle_system() { return make_unique<particle_system>(); }
+unique_ptr<base_system> make_camera_system()
+{
+	return make_unique<camera_system>();
+}
+unique_ptr<base_system> make_renderable_system()
+{
+	return make_unique<renderable_system>();
+}
+unique_ptr<base_system> make_viewshed_system()
+{
+	return make_unique<viewshed_system>();
+}
+unique_ptr<base_system> make_calendar_system()
+{
+	return make_unique<calendar_system>();
+}
+unique_ptr<base_system> make_settler_ai_system()
+{
+	return make_unique<settler_ai_system>();
+}
+unique_ptr<base_system> make_obstruction_system()
+{
+	return make_unique<obstruction_system>();
+}
+unique_ptr<base_system> make_power_system()
+{
+	return make_unique<power_system>();
+}
+unique_ptr<base_system> make_input_system()
+{
+	return make_unique<input_system>();
+}
+unique_ptr<base_system> make_inventory_system()
+{
+	return make_unique<inventory_system>();
+}
+unique_ptr<base_system> make_cordex_ai_system()
+{
+	return make_unique<cordex_ai_system>();
+}
+unique_ptr<base_system> make_damage_system()
+{
+	return make_unique<damage_system>();
+}
+unique_ptr<base_system> make_particle_system()
+{
+	return make_unique<particle_system>();
+}
 

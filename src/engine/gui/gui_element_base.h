@@ -11,37 +11,47 @@ using std::vector;
 using std::unique_ptr;
 using std::string;
 
-namespace engine {
+namespace engine
+{
 
-struct screen_region {
-    int x;
-    int y;
-    int w;
-    int h;
+struct screen_region
+{
+	int x;
+	int y;
+	int w;
+	int h;
 };
 
-class gui_element_base {
+class gui_element_base
+{
 public:
-	virtual ~gui_element_base() {}
+	virtual ~gui_element_base()
+	{
+	}
 
-    virtual void render(const screen_region viewport)=0;
+	virtual void render(const screen_region viewport)=0;
 
-    virtual void add_child(unique_ptr<gui_element_base> child) {
-        children.push_back(std::move(child));
-    }
-    
-    gui_element_base * find(const string &name) {
-      if (tag == name) return this;
-      for (const auto& child : children) {
-	gui_element_base *r = child->find(name);
-	if (r != nullptr) return r;
-      }
-      return nullptr;
-    }
+	virtual void add_child(unique_ptr<gui_element_base> child)
+	{
+		children.push_back(std::move(child));
+	}
 
-    string tag;
+	gui_element_base * find(const string &name)
+	{
+		if (tag == name)
+			return this;
+		for (const auto& child : children)
+		{
+			gui_element_base *r = child->find(name);
+			if (r != nullptr)
+				return r;
+		}
+		return nullptr;
+	}
 
-    vector<unique_ptr<gui_element_base>> children;
+	string tag;
+
+	vector<unique_ptr<gui_element_base>> children;
 };
 
 }

@@ -8,12 +8,16 @@
 
 using std::vector;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_buildable : public base_raw {
-     raw_buildable() {
-          type = BUILDABLE;
-     };     
+struct raw_buildable: public base_raw
+{
+	raw_buildable()
+	{
+		type = BUILDABLE;
+	}
+	;
 };
 
 }

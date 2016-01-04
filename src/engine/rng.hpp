@@ -2,15 +2,17 @@
 
 #include <random>
 
-namespace engine {
+namespace engine
+{
 
-class random_number_generator {
+class random_number_generator
+{
 public:
-    random_number_generator();
-    
-    int roll_dice(const int &n, const int &d);
+	random_number_generator();
+
+	int roll_dice(const int &n, const int &d);
 private:
-    std::mt19937 rng;
+	std::mt19937 rng;
 };
 
 }

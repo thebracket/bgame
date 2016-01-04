@@ -5,7 +5,8 @@
 
 using namespace std;
 
-class png_writer {
+class png_writer
+{
 public:
 	png_writer(string nFilename, int w, int h);
 	void setPixel(int x, int y, png_byte r, png_byte g, png_byte b, png_byte a);

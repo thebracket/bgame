@@ -4,10 +4,14 @@
 
 using engine::base_system;
 
-class power_system : public base_system {
+class power_system: public base_system
+{
 public:
-     power_system() { system_name = "Power System"; }
-     virtual void tick ( const double &duration_ms );
+	power_system()
+	{
+		system_name = "Power System";
+	}
+	virtual void tick(const double &duration_ms);
 private:
-     long last_tick=0;
+	long last_tick = 0;
 };

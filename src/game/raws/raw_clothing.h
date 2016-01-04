@@ -7,14 +7,25 @@
 
 using std::string;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_clothing : public base_raw {
-    raw_clothing() { type = CLOTHING; };
-    raw_clothing(const string &where, const string &new_name, const int &gender_req) : slot(where), item (new_name), gender(gender_req) { type=CLOTHING; }
-    string slot;
-    string item;    
-    int gender; // 0 = any, 1 = male, 2 = female
+struct raw_clothing: public base_raw
+{
+	raw_clothing()
+	{
+		type = CLOTHING;
+	}
+	;
+	raw_clothing(const string &where, const string &new_name,
+			const int &gender_req) :
+			slot(where), item(new_name), gender(gender_req)
+	{
+		type = CLOTHING;
+	}
+	string slot;
+	string item;
+	int gender; // 0 = any, 1 = male, 2 = female
 };
-  
+
 }
