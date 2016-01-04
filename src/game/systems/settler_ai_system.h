@@ -4,9 +4,9 @@
 #include "../../engine/ecs.hpp"
 #include "../components/calendar_component.h"
 #include "../components/settler_ai_component.h"
-#include "../../engine/rng.h"
 #include <sstream>
 #include <string>
+#include "../../engine/rng.hpp"
 
 using std::string;
 using std::stringstream;
