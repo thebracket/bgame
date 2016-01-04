@@ -36,6 +36,7 @@
 **Structure**
 
 * Retire the 'world' module, globals belong in their place in the universe.
+* Provide helper functions for commonly accessed component access.
 
 **Overall goals**
 
