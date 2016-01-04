@@ -1,5 +1,9 @@
 # To-Do List
 
+**Tiles**
+
+* I don't like the way flags are stored in tiles currently; it's cache-inefficient and clunky to access a whole tile when all you need is a yes/no. Clean it up.
+
 **Visibility**
 
 * Efficient ray-cast routine; cast to box rather than by angle, and cache the resulting shape per-size.
@@ -57,4 +61,14 @@
 **Engine**
 
 * Logging system
+* Input handler needs re-working
+
+**Raws**
+
+* Move to a standard file-format for easier reading.
+* Optimize the storage, so data-structures don't require a big recursive search to find things like "buildables".
+
+**Graphics**
+
+* Tile-engine again in the future.
 
