@@ -5,7 +5,7 @@
 #include <fstream>
 #include <utility>
 #include "solar_system_body.hpp"
-#include "../../engine/sdl2_backend.h"
+#include "../../engine/sdl2_backend.hpp"
 
 // See: https://en.wikipedia.org/wiki/Stellar_classification
 enum system_class_t { O, B, A, F, G, K, M };

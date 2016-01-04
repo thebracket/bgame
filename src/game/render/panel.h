@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "../../engine/sdl2_backend.h"
+#include "../../engine/sdl2_backend.hpp"
 
 using std::string;
 using engine::sdl2_backend;

@@ -1,9 +1,9 @@
 #include "game_mode.hpp"
-#include "../engine/command_manager.h"
+#include "../engine/command_manager.hpp"
 #include <utility>
 #include "world/planet.hpp"
 #include "world/world_defs.hpp"
-#include "../engine/virtual_terminal.h"
+#include "../engine/virtual_terminal.hpp"
 #include <sstream>
 #include "../game/game.h"
 #include "world/universe.hpp"

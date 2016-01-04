@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 
 using std::string;
 using std::vector;

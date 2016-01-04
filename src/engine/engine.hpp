@@ -9,10 +9,10 @@
 #include "colors.hpp"
 #include "command_manager.hpp"
 #include "gui/gui.h"
-#include "sdl2_backend.h"
+#include "sdl2_backend.hpp"
 #include "ecs.hpp"
 #include "rng.hpp"
-#include "scene_graph.h"
+#include "scene_graph.hpp"
 #include "virtual_terminal.hpp"
 
 namespace engine {

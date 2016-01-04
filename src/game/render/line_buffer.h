@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <utility>
-#include "../../engine/sdl2_backend.h"
+#include "../../engine/sdl2_backend.hpp"
 #include "colors.h"
 
 using std::string;

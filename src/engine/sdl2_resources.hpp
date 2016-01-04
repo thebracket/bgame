@@ -160,7 +160,7 @@ struct sdl_resource_manager {
 	if (finder != texture_index.end() ) finder->second.deleted = true;
     }
     
-    pair<int,int> text_size( const std::string &font, const string &text ) {
+    std::pair<int,int> text_size( const std::string &font, const std::string &text ) {
 	int w,h;
 	TTF_Font * sdl_font = get_font_by_tag( font );
 	TTF_SizeText( sdl_font, text.c_str(), &w, &h );

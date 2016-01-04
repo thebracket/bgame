@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "../colors.h"
+#include "../colors.hpp"
 #include "../virtual_terminal.hpp"
 
 using std::vector;

@@ -3,7 +3,7 @@
 #include "tile_types.hpp"
 #include <Poco/DeflatingStream.h>
 #include <Poco/InflatingStream.h>
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 #include <bitset>
 
 enum TILE_OPTIONS {

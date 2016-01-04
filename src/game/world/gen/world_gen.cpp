@@ -2,14 +2,14 @@
 #include "world_height_map.hpp"
 #include "world_gen_biomes.hpp"
 #include "world_gen_hydrology.hpp"
-#include "../../../engine/rng.h"
+#include "../../../engine/rng.hpp"
 #include "world_gen_layer_cake.hpp"
 #include "world_gen_noise.hpp"
 #include <iostream>
 #include "../../game.h"
 #include "../universe.hpp"
 #include "../../raws/raws.h"
-#include "../../../engine/colors.h"
+#include "../../../engine/colors.hpp"
 #include "../tables.h"
 #include "../../raws/raw_clothing.h"
 

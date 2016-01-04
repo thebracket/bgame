@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <string>
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 #include "../world/location.hpp"
 
 using std::ostream;
