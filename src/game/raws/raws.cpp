@@ -6,7 +6,7 @@
 #include <iostream>
 #include "raws.h"
 
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 #include "raw_renderable.h"
 #include "raw_name.h"
 #include "raw_glyph.h"

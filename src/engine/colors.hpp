@@ -1,6 +1,6 @@
 #pragma once
 
-#include "virtual_terminal.h"
+#include "virtual_terminal.hpp"
 
 using engine::vterm::color_t;
 
