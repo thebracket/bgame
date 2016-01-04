@@ -7,7 +7,6 @@
 #include <string>
 #include <tuple>
 #include <array>
-#include "console.h"
 #include "../../engine/virtual_terminal.hpp"
 #include <boost/optional.hpp>
 #include "location.hpp"
@@ -22,9 +21,6 @@ using boost::optional;
 
 namespace world
 {
-
-// Features for use by the various other structures of the game
-extern console log;
 
 // Convenience: storing the camera's handle globally is messy,
 // but makes it quick and easy for systems that want to find it.
