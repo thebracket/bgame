@@ -1,7 +1,6 @@
 #include "game/game.h"
 
-int main()
-{
-    run_game();
+int main() {
+	run_game();
 }
 
