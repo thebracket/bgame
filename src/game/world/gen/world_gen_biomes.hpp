@@ -1,13 +1,13 @@
 #pragma once
 
 #include "world_height_map.hpp"
-#include "../../../engine/rng.h"
 #include "world_gen_hydrology.hpp"
 #include "../tile_types.hpp"
 #include <memory>
 #include <vector>
 #include <utility>
 #include <iostream>
+#include "../../../engine/rng.hpp"
 
 struct biome_t {
     std::vector<std::pair<uint16_t,uint16_t>> points;

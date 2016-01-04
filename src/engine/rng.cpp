@@ -1,4 +1,5 @@
-#include "rng.h"
+#include "rng.hpp"
+
 #include <iostream>
 
 using std::mt19937;
