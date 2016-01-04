@@ -8,7 +8,6 @@
 #include "base_mode.hpp"
 #include "colors.hpp"
 #include "command_manager.hpp"
-#include "gui/gui.h"
 #include "sdl2_backend.hpp"
 #include "ecs.hpp"
 #include "rng.hpp"

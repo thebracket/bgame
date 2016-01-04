@@ -2,8 +2,6 @@
 #include "genesis_mode.hpp"
 #include "game_mode.hpp"
 #include <fstream>
-#include "../engine/gui/gui_frame.h"
-#include "../engine/gui/gui_static_text.h"
 #include "game.h"
 #include <string>
 
