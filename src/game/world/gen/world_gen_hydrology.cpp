@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <memory>
 
 std::unique_ptr<heightmap_t> get_minimum_erosion( heightmap_t * heightmap ) {
     std::unique_ptr<heightmap_t> erosion_minimum = get_height_map();
