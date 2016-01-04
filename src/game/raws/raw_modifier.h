@@ -10,11 +10,13 @@ using std::string;
 namespace raws {
 
 struct raw_modifier : public base_raw {
+	 virtual ~raw_modifier() {}
+
      raw_modifier() {
           type = MODIFIER;
      };
      raw_modifier ( const string &stat, const int &mod ) : stat_to_modify ( stat ), modifier ( mod ) {
-          type=COLOR_PAIR;
+          type=MODIFIER;
      }
      string stat_to_modify;
      int modifier;

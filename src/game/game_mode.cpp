@@ -24,6 +24,8 @@ enum game_mode_t { normal, radial };
 
 class game3d_render : public engine::base_node {
 public:
+	 virtual ~game3d_render() {}
+
      int last_mouse_x = 0;
      int last_mouse_y = 0;
      int mouse_hover_time = 0;
