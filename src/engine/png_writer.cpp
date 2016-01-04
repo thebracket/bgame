@@ -1,4 +1,5 @@
-#include "png_writer.h"
+#include "png_writer.hpp"
+
 #include <iostream>
 #include <cstdlib>
 
