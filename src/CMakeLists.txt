@@ -60,7 +60,6 @@ add_executable(bgame main.cpp
 	    game/tasks/path_finding.cpp
 	    game/tasks/find_nearest_provision.cpp
 	    game/world/world.cpp 
-	    game/world/console.cpp 
 	    game/world/serialization_utils.cpp
 	    game/world/universe.cpp
 	    game/world/solar_system.cpp
