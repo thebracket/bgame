@@ -65,7 +65,7 @@ void game_render::process_mouse_events()
                     std::tie ( selected_tile_x, selected_tile_y ) = get_region_coordinates();
 		    
 		    // Center on the clicked area.
-		    //position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+		    //position_component * camera_pos = ECS->find_entity_component<position_component> ( world::camera_handle );
 		    //camera_pos->x = selected_tile_x;
 		    //camera_pos->y = selected_tile_y;
                }
@@ -410,7 +410,7 @@ inline void render_ascii_char( const world::render_info_t &layer, SDL_Rect &sour
 
 void game_render::render_map_ascii ( sdl2_backend * SDL )
 {
-     const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+     const position_component * camera_pos = ECS->find_entity_component<position_component> ( world::camera_handle );
      int region_y = camera_pos->y - 23;
      int left_x = camera_pos->x - 32;
 
@@ -478,7 +478,7 @@ inline void render_map_tile( const world::render_info_t &layer, SDL_Rect &source
 
 void game_render::render_map ( sdl2_backend * SDL )
 {
-     const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+     const position_component * camera_pos = ECS->find_entity_component<position_component> ( world::camera_handle );
 
      int region_y = camera_pos->y - 23;
      int left_x = camera_pos->x - 32;
@@ -537,7 +537,7 @@ void game_render::render_map ( sdl2_backend * SDL )
 
 pair< int, int > game_render::get_region_coordinates() const
 {
-     const position_component * camera_pos = game_engine->ecs->find_entity_component<position_component> ( world::camera_handle );
+     const position_component * camera_pos = ECS->find_entity_component<position_component> ( world::camera_handle );
      const int region_x = camera_pos->x - 32 + mouse_vx;
      const int region_y = camera_pos->y - 23 + mouse_vy;
      return make_pair ( region_x, region_y );

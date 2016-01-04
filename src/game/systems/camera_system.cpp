@@ -3,7 +3,7 @@
 #include "../world/region.hpp"
 
 void camera_system::tick(const double &duration_ms) {
-    position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>(world::camera_handle);
+    position_component3d * camera_pos = ECS->find_entity_component<position_component3d>(world::camera_handle);
 
     std::pair<int,int> size = engine::vterm::get_screen_size();
     const int width = size.first/8;

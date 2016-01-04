@@ -70,13 +70,13 @@ private:
           // Iterate components and find structures that are here
           line_buffer lines;
 
-          vector<position_component *> positions = game_engine->ecs->find_components_by_func<position_component> (
+          vector<position_component *> positions = ECS->find_components_by_func<position_component> (
           [this] ( const position_component &c ) {
                return ( c.x == this->region_x and c.y == this->region_y );
           } );
 
           for ( const position_component * pos : positions ) {
-               settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component> ( pos->entity_id );
+               settler_ai_component * settler = ECS->find_entity_component<settler_ai_component> ( pos->entity_id );
                if ( settler == nullptr ) {
                     // It's not a settler, so we can describe it here
                     info_windows.push_back ( std::make_unique<structure_info_window> ( SDL, "", true, pos->entity_id ) );

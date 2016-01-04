@@ -17,19 +17,19 @@ void inventory_system::store_inventory ( debug_name_component * name, position_c
 }
 
 void inventory_system::register_inventory_stored( item_storage_component * store ) {
-    debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( store->entity_id );
-    position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d> ( store->container_id );
+    debug_name_component * name = ECS->find_entity_component<debug_name_component> ( store->entity_id );
+    position_component3d * pos = ECS->find_entity_component<position_component3d> ( store->container_id );
     store_inventory( name, pos );
 }
 
 void inventory_system::register_inventory_carried ( item_carried_component * carried ) {
-    debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( carried->entity_id );
-    position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d> ( carried->carried_by_id );
+    debug_name_component * name = ECS->find_entity_component<debug_name_component> ( carried->entity_id );
+    position_component3d * pos = ECS->find_entity_component<position_component3d> ( carried->carried_by_id );
     store_inventory( name, pos );
 }
 
 void inventory_system::register_inventory_ground ( position_component3d * pos ) {
-    debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( pos->entity_id );
+    debug_name_component * name = ECS->find_entity_component<debug_name_component> ( pos->entity_id );
     store_inventory( name, pos );
 }
 
@@ -47,12 +47,12 @@ void inventory_system::tick ( const double& duration_ms )
      if (!need_inventory_refresh) return;
      
      inventory.clear();
-     vector<item_component> * items = game_engine->ecs->find_components_by_type<item_component>();
+     vector<item_component> * items = ECS->find_components_by_type<item_component>();
      for (const item_component &item : *items) {
 	if ( !item.claimed ) {
-	    item_storage_component * store = game_engine->ecs->find_entity_component<item_storage_component>( item.entity_id );
-	    item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component>( item.entity_id );
-	    position_component3d * on_ground = game_engine->ecs->find_entity_component<position_component3d>( item.entity_id );
+	    item_storage_component * store = ECS->find_entity_component<item_storage_component>( item.entity_id );
+	    item_carried_component * carried = ECS->find_entity_component<item_carried_component>( item.entity_id );
+	    position_component3d * on_ground = ECS->find_entity_component<position_component3d>( item.entity_id );
 
 	    if ( store != nullptr ) {
 		register_inventory_stored ( store );

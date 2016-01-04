@@ -23,3 +23,6 @@ using my_engine = engine::bracket_engine<my_components, my_messages>;
 extern my_engine * game_engine;
   
 void run_game();
+
+// For convenient access
+#define ECS game_engine->ecs

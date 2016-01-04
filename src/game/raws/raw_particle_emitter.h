@@ -18,7 +18,7 @@ struct raw_particle_emitter : public base_raw {
     chat_emote_color_t color;
     
     virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
-	if (!placeholder) game_engine->ecs->add_component(parent, particle_emitter_component(message,ttl,frequency,color));
+	if (!placeholder) ECS->add_component(parent, particle_emitter_component(message,ttl,frequency,color));
     }
     
 };

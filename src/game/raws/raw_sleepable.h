@@ -25,7 +25,7 @@ struct raw_sleepable : public base_raw {
 	p.provided_resource = 3;
 	p.action_name = "sleeps";
 	
-	game_engine->ecs->add_component<provisions_component>(parent, p);
+	ECS->add_component<provisions_component>(parent, p);
      }
 };
 

@@ -16,7 +16,7 @@ struct raw_power_battery : public base_raw {
     int storage_capacity;
 
     void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
-        if (!placeholder) game_engine->ecs->add_component(parent, power_battery_component(storage_capacity));
+        if (!placeholder) ECS->add_component(parent, power_battery_component(storage_capacity));
     }
 };
 

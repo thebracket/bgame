@@ -14,9 +14,9 @@ class settler_info_window : public window {
 public:
      settler_info_window ( sdl2_backend* sdl, const string& title, const bool& decor, const settler_ai_component * dood ) : window ( sdl,title,decor ), settler ( dood ) {
           line_buffer lines;
-          game_health_component * health = game_engine->ecs->find_entity_component<game_health_component> ( settler->entity_id );
-          game_species_component * species = game_engine->ecs->find_entity_component<game_species_component> ( settler->entity_id );
-          game_stats_component * stats = game_engine->ecs->find_entity_component<game_stats_component> ( settler->entity_id );
+          game_health_component * health = ECS->find_entity_component<game_health_component> ( settler->entity_id );
+          game_species_component * species = ECS->find_entity_component<game_species_component> ( settler->entity_id );
+          game_stats_component * stats = ECS->find_entity_component<game_stats_component> ( settler->entity_id );
 
           {
                stringstream ss;
@@ -228,11 +228,11 @@ public:
 		  lines.add_line ( SDL, comment.str(), sdl_yellow );
 	  }
 	  
-	  vector<item_carried_component> * carried = game_engine->ecs->find_components_by_type<item_carried_component>();
+	  vector<item_carried_component> * carried = ECS->find_components_by_type<item_carried_component>();
 	  for (const item_carried_component &item_c : *carried) {
 	      if (item_c.carried_by_id == dood->entity_id) {
-		  debug_name_component * item_name = game_engine->ecs->find_entity_component<debug_name_component>( item_c.entity_id );
-		  description_component * desc = game_engine->ecs->find_entity_component<description_component>( item_c.entity_id );
+		  debug_name_component * item_name = ECS->find_entity_component<debug_name_component>( item_c.entity_id );
+		  description_component * desc = ECS->find_entity_component<description_component>( item_c.entity_id );
 		  stringstream ss;
 		  ss << item_name->debug_name << " : " << desc->desc ;
 		  lines.add_line ( SDL, ss.str(), sdl_green );

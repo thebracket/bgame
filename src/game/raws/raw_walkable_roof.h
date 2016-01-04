@@ -17,7 +17,7 @@ struct raw_walkable_roof : public base_raw {
      virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const override {
 	if (placeholder) return;
 	walkable_roof_component obs = walkable_roof_component();
-	game_engine->ecs->add_component(parent, std::move(obs));
+	ECS->add_component(parent, std::move(obs));
     }
 };
 
