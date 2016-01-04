@@ -10,6 +10,8 @@ using std::string;
 namespace engine {
 class gui_static_text : public gui_element_base {
 public:
+	virtual ~gui_static_text() {}
+
     gui_static_text ( const string &name,
 		      const string &txt,
                       const int &nx, const int &ny, const vterm::color_t &fg,

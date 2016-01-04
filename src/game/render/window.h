@@ -24,7 +24,7 @@ struct hotspot {
 class window {
 public:
      window ( sdl2_backend * sdl, const string &title, const bool &decor ) : window_title ( title ), render_decor ( decor ), SDL ( sdl ) {}
-     ~window();
+     virtual ~window();
      virtual bool render ( const int &mouse_x, const int &mouse_y, const bool clicked );
      void allocate();
      void render_decorations();

@@ -22,6 +22,8 @@ struct screen_region {
 
 class gui_element_base {
 public:
+	virtual ~gui_element_base() {}
+
     virtual void render(const screen_region viewport)=0;
 
     virtual void add_child(unique_ptr<gui_element_base> child) {

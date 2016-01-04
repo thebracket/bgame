@@ -16,6 +16,8 @@ enum GUI_FRAME_MODE { FILL_REGION, TRI_MAIN, TRI_CONSOLE, TRI_PANEL };
   
 class gui_frame : public gui_element_base {
 public:
+	virtual ~gui_frame() {}
+
   gui_frame(const string name, const GUI_FRAME_MODE new_mode) : mode(new_mode)
   {
     tag = name;
