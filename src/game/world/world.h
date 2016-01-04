@@ -20,7 +20,8 @@ using std::string;
 using std::tuple;
 using boost::optional;
 
-namespace world {
+namespace world
+{
 
 // Features for use by the various other structures of the game
 extern console log;
@@ -41,10 +42,11 @@ extern bool omniscience;
 
 extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
 
-struct available_item {
-     string name;
-     location_t location;
-     int entity_id;
+struct available_item
+{
+	string name;
+	location_t location;
+	int entity_id;
 };
 extern unordered_map<string, vector<available_item>> inventory;
 

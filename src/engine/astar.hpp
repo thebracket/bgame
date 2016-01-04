@@ -55,12 +55,14 @@ using namespace std;
 template<class T> class AStarState;
 
 // The AStar search class. UserState is the users state space type
-template<class UserState> class AStarSearch {
+template<class UserState> class AStarSearch
+{
 
 public:
 	// data
 
-	enum {
+	enum
+	{
 		SEARCH_STATE_NOT_INITIALISED,
 		SEARCH_STATE_SEARCHING,
 		SEARCH_STATE_SUCCEEDED,
@@ -74,7 +76,8 @@ public:
 
 public:
 
-	class Node {
+	class Node
+	{
 	public:
 
 		Node *parent; // used during the search to record the parent of successor nodes
@@ -85,7 +88,8 @@ public:
 		float f; // sum of cumulative cost of predecessors and self and heuristic
 
 		Node() :
-				parent(0), child(0), g(0.0f), h(0.0f), f(0.0f) {
+				parent(0), child(0), g(0.0f), h(0.0f), f(0.0f)
+		{
 		}
 
 		UserState m_UserState;
@@ -94,10 +98,12 @@ public:
 	// For sorting the heap the STL needs compare function that lets us compare
 	// the f value of two nodes
 
-	class HeapCompare_f {
+	class HeapCompare_f
+	{
 	public:
 
-		bool operator()(const Node *x, const Node *y) const {
+		bool operator()(const Node *x, const Node *y) const
+		{
 			return x->f > y->f;
 		}
 	};
@@ -111,7 +117,8 @@ public:
 #if USE_FSA_MEMORY
 					m_FixedSizeAllocator(1000),
 #endif
-					m_AllocateNodeCount(0), m_CancelRequest(false) {
+					m_AllocateNodeCount(0), m_CancelRequest(false)
+	{
 	}
 
 	AStarSearch(int MaxNodes) :
@@ -119,16 +126,19 @@ public:
 #if USE_FSA_MEMORY
 					m_FixedSizeAllocator(MaxNodes),
 #endif
-					m_AllocateNodeCount(0), m_CancelRequest(false) {
+					m_AllocateNodeCount(0), m_CancelRequest(false)
+	{
 	}
 
 	// call at any time to cancel the search and free up all the memory
-	void CancelSearch() {
+	void CancelSearch()
+	{
 		m_CancelRequest = true;
 	}
 
 	// Set Start and goal states
-	void SetStartAndGoalStates(UserState &Start, UserState &Goal) {
+	void SetStartAndGoalStates(UserState &Start, UserState &Goal)
+	{
 		m_CancelRequest = false;
 
 		m_Start = AllocateNode();
@@ -162,7 +172,8 @@ public:
 	}
 
 	// Advances search one step 
-	unsigned int SearchStep() {
+	unsigned int SearchStep()
+	{
 		// Firstly break if the user has not initialised the search
 		assert(
 				(m_State > SEARCH_STATE_NOT_INITIALISED)
@@ -170,14 +181,16 @@ public:
 
 		// Next I want it to be safe to do a searchstep once the search has succeeded...
 		if ((m_State == SEARCH_STATE_SUCCEEDED)
-				|| (m_State == SEARCH_STATE_FAILED)) {
+				|| (m_State == SEARCH_STATE_FAILED))
+		{
 			return m_State;
 		}
 
 		// Failure is defined as emptying the open list as there is nothing left to 
 		// search...
 		// New: Allow user abort
-		if (m_OpenList.empty() || m_CancelRequest) {
+		if (m_OpenList.empty() || m_CancelRequest)
+		{
 			FreeAllNodes();
 			m_State = SEARCH_STATE_FAILED;
 			return m_State;
@@ -192,7 +205,8 @@ public:
 		m_OpenList.pop_back();
 
 		// Check for the goal, once we pop that we're done
-		if (n->m_UserState.IsGoal(m_Goal->m_UserState)) {
+		if (n->m_UserState.IsGoal(m_Goal->m_UserState))
+		{
 			// The user is going to use the Goal Node he passed in 
 			// so copy the parent pointer of n 
 			m_Goal->parent = n->parent;
@@ -200,14 +214,16 @@ public:
 
 			// A special case is that the goal was passed in as the start state
 			// so handle that here
-			if (false == n->m_UserState.IsSameState(m_Start->m_UserState)) {
+			if (false == n->m_UserState.IsSameState(m_Start->m_UserState))
+			{
 				FreeNode(n);
 
 				// set the child pointers in each node (except Goal which has no child)
 				Node *nodeChild = m_Goal;
 				Node *nodeParent = m_Goal->parent;
 
-				do {
+				do
+				{
 					nodeParent->child = nodeChild;
 
 					nodeChild = nodeParent;
@@ -223,7 +239,8 @@ public:
 			m_State = SEARCH_STATE_SUCCEEDED;
 
 			return m_State;
-		} else // not goal
+		}
+		else // not goal
 		{
 
 			// We now need to generate the successors of this node
@@ -237,13 +254,15 @@ public:
 			bool ret = n->m_UserState.GetSuccessors(this,
 					n->parent ? &n->parent->m_UserState : NULL);
 
-			if (!ret) {
+			if (!ret)
+			{
 
 				typename vector<Node *>::iterator successor;
 
 				// free the nodes that may previously have been added 
 				for (successor = m_Successors.begin();
-						successor != m_Successors.end(); successor++) {
+						successor != m_Successors.end(); successor++)
+				{
 					FreeNode((*successor));
 				}
 
@@ -259,7 +278,8 @@ public:
 			// Now handle each successor to the current node ...
 			for (typename vector<Node *>::iterator successor =
 					m_Successors.begin(); successor != m_Successors.end();
-					successor++) {
+					successor++)
+			{
 
 				// 	The g value for this successor ...
 				float newg = n->g
@@ -274,19 +294,22 @@ public:
 				typename vector<Node *>::iterator openlist_result;
 
 				for (openlist_result = m_OpenList.begin();
-						openlist_result != m_OpenList.end();
-						openlist_result++) {
+						openlist_result != m_OpenList.end(); openlist_result++)
+				{
 					if ((*openlist_result)->m_UserState.IsSameState(
-							(*successor)->m_UserState)) {
+							(*successor)->m_UserState))
+					{
 						break;
 					}
 				}
 
-				if (openlist_result != m_OpenList.end()) {
+				if (openlist_result != m_OpenList.end())
+				{
 
 					// we found this state on open
 
-					if ((*openlist_result)->g <= newg) {
+					if ((*openlist_result)->g <= newg)
+					{
 						FreeNode((*successor));
 
 						// the one on Open is cheaper than this one
@@ -298,18 +321,22 @@ public:
 
 				for (closedlist_result = m_ClosedList.begin();
 						closedlist_result != m_ClosedList.end();
-						closedlist_result++) {
+						closedlist_result++)
+				{
 					if ((*closedlist_result)->m_UserState.IsSameState(
-							(*successor)->m_UserState)) {
+							(*successor)->m_UserState))
+					{
 						break;
 					}
 				}
 
-				if (closedlist_result != m_ClosedList.end()) {
+				if (closedlist_result != m_ClosedList.end())
+				{
 
 					// we found this state on closed
 
-					if ((*closedlist_result)->g <= newg) {
+					if ((*closedlist_result)->g <= newg)
+					{
 						// the one on Closed is cheaper than this one
 						FreeNode((*successor));
 
@@ -329,7 +356,8 @@ public:
 
 				// Remove successor from closed if it was on it
 
-				if (closedlist_result != m_ClosedList.end()) {
+				if (closedlist_result != m_ClosedList.end())
+				{
 					// remove it from Closed
 					FreeNode((*closedlist_result));
 					m_ClosedList.erase(closedlist_result);
@@ -343,7 +371,8 @@ public:
 				}
 
 				// Update old version of this node
-				if (openlist_result != m_OpenList.end()) {
+				if (openlist_result != m_OpenList.end())
+				{
 
 					FreeNode((*openlist_result));
 					m_OpenList.erase(openlist_result);
@@ -378,10 +407,12 @@ public:
 
 	// User calls this to add a successor to a list of successors
 	// when expanding the search frontier
-	bool AddSuccessor(UserState &State) {
+	bool AddSuccessor(UserState &State)
+	{
 		Node *node = AllocateNode();
 
-		if (node) {
+		if (node)
+		{
 			node->m_UserState = State;
 
 			m_Successors.push_back(node);
@@ -395,11 +426,14 @@ public:
 	// Free the solution nodes
 	// This is done to clean up all used Node memory when you are done with the
 	// search
-	void FreeSolutionNodes() {
+	void FreeSolutionNodes()
+	{
 		Node *n = m_Start;
 
-		if (m_Start->child) {
-			do {
+		if (m_Start->child)
+		{
+			do
+			{
 				Node *del = n;
 				n = n->child;
 				FreeNode(del);
@@ -410,7 +444,9 @@ public:
 
 			FreeNode(n); // Delete the goal
 
-		} else {
+		}
+		else
+		{
 			// if the start node is the solution we need to just delete the start and goal
 			// nodes
 			FreeNode(m_Start);
@@ -422,19 +458,26 @@ public:
 	// Functions for traversing the solution
 
 	// Get start node
-	UserState *GetSolutionStart() {
+	UserState *GetSolutionStart()
+	{
 		m_CurrentSolutionNode = m_Start;
-		if (m_Start) {
+		if (m_Start)
+		{
 			return &m_Start->m_UserState;
-		} else {
+		}
+		else
+		{
 			return NULL;
 		}
 	}
 
 	// Get next node
-	UserState *GetSolutionNext() {
-		if (m_CurrentSolutionNode) {
-			if (m_CurrentSolutionNode->child) {
+	UserState *GetSolutionNext()
+	{
+		if (m_CurrentSolutionNode)
+		{
+			if (m_CurrentSolutionNode->child)
+			{
 
 				Node *child = m_CurrentSolutionNode->child;
 
@@ -448,19 +491,26 @@ public:
 	}
 
 	// Get end node
-	UserState *GetSolutionEnd() {
+	UserState *GetSolutionEnd()
+	{
 		m_CurrentSolutionNode = m_Goal;
-		if (m_Goal) {
+		if (m_Goal)
+		{
 			return &m_Goal->m_UserState;
-		} else {
+		}
+		else
+		{
 			return NULL;
 		}
 	}
 
 	// Step solution iterator backwards
-	UserState *GetSolutionPrev() {
-		if (m_CurrentSolutionNode) {
-			if (m_CurrentSolutionNode->parent) {
+	UserState *GetSolutionPrev()
+	{
+		if (m_CurrentSolutionNode)
+		{
+			if (m_CurrentSolutionNode->parent)
+			{
 
 				Node *parent = m_CurrentSolutionNode->parent;
 
@@ -475,10 +525,14 @@ public:
 
 	// Get final cost of solution
 	// Returns FLT_MAX if goal is not defined or there is no solution
-	float GetSolutionCost() {
-		if (m_Goal && m_State == SEARCH_STATE_SUCCEEDED) {
+	float GetSolutionCost()
+	{
+		if (m_Goal && m_State == SEARCH_STATE_SUCCEEDED)
+		{
 			return m_Goal->g;
-		} else {
+		}
+		else
+		{
 			return FLT_MAX;
 		}
 	}
@@ -486,14 +540,17 @@ public:
 	// For educational use and debugging it is useful to be able to view
 	// the open and closed list at each step, here are two functions to allow that.
 
-	UserState *GetOpenListStart() {
+	UserState *GetOpenListStart()
+	{
 		float f, g, h;
 		return GetOpenListStart(f, g, h);
 	}
 
-	UserState *GetOpenListStart(float &f, float &g, float &h) {
+	UserState *GetOpenListStart(float &f, float &g, float &h)
+	{
 		iterDbgOpen = m_OpenList.begin();
-		if (iterDbgOpen != m_OpenList.end()) {
+		if (iterDbgOpen != m_OpenList.end())
+		{
 			f = (*iterDbgOpen)->f;
 			g = (*iterDbgOpen)->g;
 			h = (*iterDbgOpen)->h;
@@ -503,14 +560,17 @@ public:
 		return NULL;
 	}
 
-	UserState *GetOpenListNext() {
+	UserState *GetOpenListNext()
+	{
 		float f, g, h;
 		return GetOpenListNext(f, g, h);
 	}
 
-	UserState *GetOpenListNext(float &f, float &g, float &h) {
+	UserState *GetOpenListNext(float &f, float &g, float &h)
+	{
 		iterDbgOpen++;
-		if (iterDbgOpen != m_OpenList.end()) {
+		if (iterDbgOpen != m_OpenList.end())
+		{
 			f = (*iterDbgOpen)->f;
 			g = (*iterDbgOpen)->g;
 			h = (*iterDbgOpen)->h;
@@ -520,14 +580,17 @@ public:
 		return NULL;
 	}
 
-	UserState *GetClosedListStart() {
+	UserState *GetClosedListStart()
+	{
 		float f, g, h;
 		return GetClosedListStart(f, g, h);
 	}
 
-	UserState *GetClosedListStart(float &f, float &g, float &h) {
+	UserState *GetClosedListStart(float &f, float &g, float &h)
+	{
 		iterDbgClosed = m_ClosedList.begin();
-		if (iterDbgClosed != m_ClosedList.end()) {
+		if (iterDbgClosed != m_ClosedList.end())
+		{
 			f = (*iterDbgClosed)->f;
 			g = (*iterDbgClosed)->g;
 			h = (*iterDbgClosed)->h;
@@ -538,14 +601,17 @@ public:
 		return NULL;
 	}
 
-	UserState *GetClosedListNext() {
+	UserState *GetClosedListNext()
+	{
 		float f, g, h;
 		return GetClosedListNext(f, g, h);
 	}
 
-	UserState *GetClosedListNext(float &f, float &g, float &h) {
+	UserState *GetClosedListNext(float &f, float &g, float &h)
+	{
 		iterDbgClosed++;
-		if (iterDbgClosed != m_ClosedList.end()) {
+		if (iterDbgClosed != m_ClosedList.end())
+		{
 			f = (*iterDbgClosed)->f;
 			g = (*iterDbgClosed)->g;
 			h = (*iterDbgClosed)->h;
@@ -558,11 +624,13 @@ public:
 
 	// Get the number of steps
 
-	int GetStepCount() {
+	int GetStepCount()
+	{
 		return m_Steps;
 	}
 
-	void EnsureMemoryFreed() {
+	void EnsureMemoryFreed()
+	{
 #if USE_FSA_MEMORY
 		assert(m_AllocateNodeCount == 0);
 #endif
@@ -574,11 +642,13 @@ private:
 
 	// This is called when a search fails or is cancelled to free all used
 	// memory 
-	void FreeAllNodes() {
+	void FreeAllNodes()
+	{
 		// iterate open list and delete all nodes
 		typename vector<Node *>::iterator iterOpen = m_OpenList.begin();
 
-		while (iterOpen != m_OpenList.end()) {
+		while (iterOpen != m_OpenList.end())
+		{
 			Node *n = (*iterOpen);
 			FreeNode(n);
 
@@ -591,7 +661,8 @@ private:
 		typename vector<Node *>::iterator iterClosed;
 
 		for (iterClosed = m_ClosedList.begin();
-				iterClosed != m_ClosedList.end(); iterClosed++) {
+				iterClosed != m_ClosedList.end(); iterClosed++)
+		{
 			Node *n = (*iterClosed);
 			FreeNode(n);
 		}
@@ -606,14 +677,17 @@ private:
 	// This call is made by the search class when the search ends. A lot of nodes may be
 	// created that are still present when the search ends. They will be deleted by this 
 	// routine once the search ends
-	void FreeUnusedNodes() {
+	void FreeUnusedNodes()
+	{
 		// iterate open list and delete unused nodes
 		typename vector<Node *>::iterator iterOpen = m_OpenList.begin();
 
-		while (iterOpen != m_OpenList.end()) {
+		while (iterOpen != m_OpenList.end())
+		{
 			Node *n = (*iterOpen);
 
-			if (!n->child) {
+			if (!n->child)
+			{
 				FreeNode(n);
 
 				n = NULL;
@@ -628,10 +702,12 @@ private:
 		typename vector<Node *>::iterator iterClosed;
 
 		for (iterClosed = m_ClosedList.begin();
-				iterClosed != m_ClosedList.end(); iterClosed++) {
+				iterClosed != m_ClosedList.end(); iterClosed++)
+		{
 			Node *n = (*iterClosed);
 
-			if (!n->child) {
+			if (!n->child)
+			{
 				FreeNode(n);
 				n = NULL;
 
@@ -643,7 +719,8 @@ private:
 	}
 
 	// Node memory management
-	Node *AllocateNode() {
+	Node *AllocateNode()
+	{
 
 #if !USE_FSA_MEMORY
 		Node *p = new Node;
@@ -651,7 +728,8 @@ private:
 #else
 		Node *address = m_FixedSizeAllocator.alloc();
 
-		if (!address) {
+		if (!address)
+		{
 			return NULL;
 		}
 		m_AllocateNodeCount++;
@@ -660,7 +738,8 @@ private:
 #endif
 	}
 
-	void FreeNode(Node *node) {
+	void FreeNode(Node *node)
+	{
 
 		m_AllocateNodeCount--;
 
@@ -714,9 +793,11 @@ private:
 
 };
 
-template<class T> class AStarState {
+template<class T> class AStarState
+{
 public:
-	virtual ~AStarState() {
+	virtual ~AStarState()
+	{
 	}
 	virtual float GoalDistanceEstimate(T &nodeGoal) = 0; // Heuristic function which computes the estimated cost to the goal node
 	virtual bool IsGoal(T &nodeGoal) = 0; // Returns true if this node is the goal node

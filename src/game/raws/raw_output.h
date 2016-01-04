@@ -8,19 +8,25 @@
 
 using std::vector;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_output : public base_raw {
-     raw_output() {
-          type = OUTPUT;
-     };
-     
-     raw_output(const string &item, const int &qty) : created_item (item), quantity(qty) {
-	  type = OUTPUT;
-     }
-     
-     string created_item;
-     int quantity;     
+struct raw_output: public base_raw
+{
+	raw_output()
+	{
+		type = OUTPUT;
+	}
+	;
+
+	raw_output(const string &item, const int &qty) :
+			created_item(item), quantity(qty)
+	{
+		type = OUTPUT;
+	}
+
+	string created_item;
+	int quantity;
 };
 
 }

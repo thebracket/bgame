@@ -1,7 +1,11 @@
 #pragma once
 
-namespace raws {
+namespace raws
+{
 
-enum power_generator_condition { DAYLIGHT };
-  
+enum power_generator_condition
+{
+	DAYLIGHT
+};
+
 }

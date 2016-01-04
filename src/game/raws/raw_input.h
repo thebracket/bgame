@@ -8,19 +8,25 @@
 
 using std::vector;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_input : public base_raw {
-     raw_input() {
-          type = INPUT;
-     };
-     
-     raw_input(const string &item, const int &qty) : required_item(item), quantity(qty) {
-	  type = INPUT;
-     }
-     
-     string required_item;
-     int quantity;     
+struct raw_input: public base_raw
+{
+	raw_input()
+	{
+		type = INPUT;
+	}
+	;
+
+	raw_input(const string &item, const int &qty) :
+			required_item(item), quantity(qty)
+	{
+		type = INPUT;
+	}
+
+	string required_item;
+	int quantity;
 };
 
 }

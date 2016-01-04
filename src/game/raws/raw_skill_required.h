@@ -8,20 +8,26 @@
 
 using std::vector;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_skill_required : public base_raw {
-     raw_skill_required() {
-          type = SKILL_REQUIRED;
-     };
-     
-     raw_skill_required(const string skill, const int diff, const int t) : skill_name(skill), difficulty(diff), time (t) {
-	  type = SKILL_REQUIRED;
-     }
-     
-     string skill_name;
-     int difficulty;
-     int time;
+struct raw_skill_required: public base_raw
+{
+	raw_skill_required()
+	{
+		type = SKILL_REQUIRED;
+	}
+	;
+
+	raw_skill_required(const string skill, const int diff, const int t) :
+			skill_name(skill), difficulty(diff), time(t)
+	{
+		type = SKILL_REQUIRED;
+	}
+
+	string skill_name;
+	int difficulty;
+	int time;
 };
 
 }

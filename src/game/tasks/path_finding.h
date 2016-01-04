@@ -15,14 +15,15 @@ using std::shared_ptr;
 using std::queue;
 using std::array;
 
-namespace ai {
-  
-struct navigation_path {
-  location_t destination;
-  queue<location_t> steps;
+namespace ai
+{
+
+struct navigation_path
+{
+	location_t destination;
+	queue<location_t> steps;
 };
 
 shared_ptr<navigation_path> find_path(location_t start, location_t end);
 
-  
 }

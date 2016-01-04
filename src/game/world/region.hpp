@@ -8,21 +8,32 @@
 #include "world_defs.hpp"
 #include "tile3d.hpp"
 
-class region_t {
+class region_t
+{
 public:
-  region_t() { tiles.resize( REGION_TILES ); revealed.resize( REGION_TILES ); visible.resize( REGION_TILES ); }
-  
-  inline uint32_t tile_idx ( const uint8_t x, const uint8_t y, const uint8_t z ) const { return (z * REGION_HEIGHT*REGION_WIDTH) + ( y * REGION_WIDTH ) + x; }
+	region_t()
+	{
+		tiles.resize(REGION_TILES);
+		revealed.resize(REGION_TILES);
+		visible.resize(REGION_TILES);
+	}
 
-  tile_t * get_tile ( const uint8_t x, const uint8_t y, const uint8_t z ) {     
-    return &(tiles[ tile_idx ( x, y, z ) ]);
-  }
-  void save( Poco::DeflatingOutputStream &lbfile );
-  void load( Poco::InflatingInputStream &lbfile );
-  
-  void calculate_walkability();
+	inline uint32_t tile_idx(const uint8_t x, const uint8_t y,
+			const uint8_t z) const
+	{
+		return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x;
+	}
 
-  std::vector< tile_t > tiles;
-  std::vector<bool> revealed;
-  std::vector<bool> visible;
+	tile_t * get_tile(const uint8_t x, const uint8_t y, const uint8_t z)
+	{
+		return &(tiles[tile_idx(x, y, z)]);
+	}
+	void save(Poco::DeflatingOutputStream &lbfile);
+	void load(Poco::InflatingInputStream &lbfile);
+
+	void calculate_walkability();
+
+	std::vector<tile_t> tiles;
+	std::vector<bool> revealed;
+	std::vector<bool> visible;
 };

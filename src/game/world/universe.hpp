@@ -17,24 +17,26 @@ constexpr uint8_t UNIVERSE_WIDTH = 64;
  * Holds the universe, at least in an abstract sense. There are certain constants maintained at the
  * "universe" level, which are really globals. This is left deliberately vague, since we aren't anywhere
  * close to actually needing much of the universe yet.
- */ 
-struct universe_t {
-    // Defining the universe
-    std::unordered_map<uint16_t, solar_system_t> solar_systems;
-    
-    // Global state
-    shared_data_t globals;
-        
-    // Serialization
-    void save() const;
-    void load();
+ */
+struct universe_t
+{
+	// Defining the universe
+	std::unordered_map<uint16_t, solar_system_t> solar_systems;
+
+	// Global state
+	shared_data_t globals;
+
+	// Serialization
+	void save() const;
+	void load();
 };
 
 /*
  * Get a universe index, a location point for a space at universe-scale.
  */
-inline uint16_t universe_idx(const int &x, const int &y) {
-    return (y * UNIVERSE_WIDTH) + x;
+inline uint16_t universe_idx(const int &x, const int &y)
+{
+	return (y * UNIVERSE_WIDTH) + x;
 }
 
 /*

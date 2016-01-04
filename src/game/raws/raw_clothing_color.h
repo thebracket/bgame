@@ -7,12 +7,18 @@
 
 using std::string;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_clothing_color : public base_raw {
-    raw_clothing_color() { type = CLOTHING_COLOR; };
-    vector<string> colors;
-  
+struct raw_clothing_color: public base_raw
+{
+	raw_clothing_color()
+	{
+		type = CLOTHING_COLOR;
+	}
+	;
+	vector<string> colors;
+
 };
-  
+
 }

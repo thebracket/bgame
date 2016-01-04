@@ -7,20 +7,33 @@
 
 using std::string;
 
-namespace raws {
+namespace raws
+{
 
-struct raw_name : public base_raw {
-    raw_name() { type = NAME; };
-    raw_name(const string &new_name) : name(new_name) { type=NAME; }
-    string name;
-    
-    virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
-	ECS->add_component(parent, debug_name_component(name));
-    }
-    
-    virtual string get_name_override() override {
-       return name;
-     }
+struct raw_name: public base_raw
+{
+	raw_name()
+	{
+		type = NAME;
+	}
+	;
+	raw_name(const string &new_name) :
+			name(new_name)
+	{
+		type = NAME;
+	}
+	string name;
+
+	virtual void build_components(entity &parent, const int &x, const int &y,
+			const bool placeholder = false) const
+	{
+		ECS->add_component(parent, debug_name_component(name));
+	}
+
+	virtual string get_name_override() override
+	{
+		return name;
+	}
 };
-  
+
 }
