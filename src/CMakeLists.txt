@@ -11,9 +11,6 @@ add_executable(bgame main.cpp
 	    engine/rng.cpp 
 	    engine/virtual_terminal.cpp 
 	    engine/command_manager.cpp 
-	    engine/gui/gui.cpp
-	    engine/gui/gui_frame.cpp 
-	    engine/gui/gui_static_text.cpp 
 	    engine/sdl2_backend.cpp 
 	    engine/command_manager.cpp
 	    engine/geometry.cpp
