@@ -5,10 +5,10 @@
 #include <thread>
 #include <functional>
 
+#include "base_mode.hpp"
 #include "rng.h"
 #include "virtual_terminal.h"
 #include "colors.h"
-#include "base_mode.h"
 #include "gui/gui.h"
 #include "command_manager.h"
 #include "sdl2_backend.h"
