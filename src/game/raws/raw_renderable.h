@@ -47,7 +47,7 @@ struct raw_renderable : public base_raw {
         if ( placeholder ) {
             translucent = true;
         }
-        game_engine->ecs->add_component ( parent, renderable_component ( glyph_to_use, fg, bg, tile_idx, layer, translucent ) );
+        ECS->add_component ( parent, renderable_component ( glyph_to_use, fg, bg, tile_idx, layer, translucent ) );
     }
 };
 

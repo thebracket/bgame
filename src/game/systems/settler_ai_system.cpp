@@ -202,7 +202,7 @@ int create_needs_fulfillment_job ( const int &need, settler_ai_component * settl
      
      if (need == 3) {
 	// Claim the tent!
-       provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( chosen_source_id );
+       provisions_component * bed = ECS->find_entity_component<provisions_component>( chosen_source_id );
        bed->provides_quantity = 1;
      }
      
@@ -212,7 +212,7 @@ int create_needs_fulfillment_job ( const int &need, settler_ai_component * settl
      job.job_id = ai::get_next_job_id();
      job.type = ai::MEET_PHYSICAL_NEED;
 
-     position_component3d * source_pos = game_engine->ecs->find_entity_component<position_component3d> ( chosen_source_id );
+     position_component3d * source_pos = ECS->find_entity_component<position_component3d> ( chosen_source_id );
      job.steps.push_back ( ai::job_step_t { ai::MOVE_TO, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z, chosen_source_id, false, "", 0 } );
      job.steps.push_back ( ai::job_step_t { ai::CONSUME_NEED, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z, chosen_source_id, false, "", need } );
      ai::jobs_board [ job.job_id ] = job;
@@ -301,36 +301,36 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      break;
      case ai::PICK_UP_COMPONENT : {
           // We've reached the component, so we pick it up
-          engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
-          item_storage_component * storage = game_engine->ecs->find_entity_component<item_storage_component> ( step.component_id );
+          engine::entity * item = ECS->get_entity_by_handle ( step.component_id );
+          item_storage_component * storage = ECS->find_entity_component<item_storage_component> ( step.component_id );
 	  if (storage != nullptr) {
 	      storage->deleted = true; // It's not stored anymore, so delete the component
 	  }
-	  position_component3d * item_pos = game_engine->ecs->find_entity_component<position_component3d>( step.component_id );
+	  position_component3d * item_pos = ECS->find_entity_component<position_component3d>( step.component_id );
 	  if (item_pos != nullptr) {
 	      item_pos->deleted = true;
 	  }
-          game_engine->ecs->add_component<item_carried_component> ( *item, item_carried_component ( settler.entity_id, 0 ) );
+          ECS->add_component<item_carried_component> ( *item, item_carried_component ( settler.entity_id, 0 ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
      }
      break;
      case ai::DROP_OFF_COMPONENT : {
-          engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
-          item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
+          engine::entity * item = ECS->get_entity_by_handle ( step.component_id );
+          item_carried_component * carried = ECS->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
-          game_engine->ecs->add_component<position_component3d> ( *item, position_component3d ( pos->pos, OMNI ) );
+          ECS->add_component<position_component3d> ( *item, position_component3d ( pos->pos, OMNI ) );
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
           ++job->second.current_step;
      } break;
      case ai::DROP_OFF_TOOL : {
-          engine::entity * item = game_engine->ecs->get_entity_by_handle ( step.component_id );
-          item_carried_component * carried = game_engine->ecs->find_entity_component<item_carried_component> ( step.component_id );
+          engine::entity * item = ECS->get_entity_by_handle ( step.component_id );
+          item_carried_component * carried = ECS->find_entity_component<item_carried_component> ( step.component_id );
           carried->deleted = true; // It's not carried anymore, so delete the component
-          game_engine->ecs->add_component<position_component3d> ( *item, position_component3d ( pos->pos, OMNI ) );
-	  item_component * item_c = game_engine->ecs->find_entity_component<item_component>( step.component_id );
+          ECS->add_component<position_component3d> ( *item, position_component3d ( pos->pos, OMNI ) );
+	  item_component * item_c = ECS->find_entity_component<item_component>( step.component_id );
 	  item_c->claimed = false;
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( item->handle ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
@@ -367,8 +367,8 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      }
      break;
      case ai::CONVERT_PLACEHOLDER_STRUCTURE : {
-          debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( step.placeholder_structure_id );
-          game_engine->ecs->delete_entity ( step.placeholder_structure_id );
+          debug_name_component * name = ECS->find_entity_component<debug_name_component> ( step.placeholder_structure_id );
+          ECS->delete_entity ( step.placeholder_structure_id );
           raws::create_structure_from_raws ( name->debug_name, location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z} );
 	  game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message ( ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
@@ -378,7 +378,7 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
      case ai::DESTROY_COMPONENT : {
           game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( step.component_id ) );
 	  game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
-          game_engine->ecs->delete_entity ( step.component_id );
+          ECS->delete_entity ( step.component_id );
           ++job->second.current_step;
      }
      break;
@@ -394,12 +394,12 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
                if ( settler.wakefulness > 1000 ) {
                     emote ( "YAWN!", pos, YELLOW );
 		    // We need to free the bed
-		    provisions_component * bed = game_engine->ecs->find_entity_component<provisions_component>( step.component_id );
+		    provisions_component * bed = ECS->find_entity_component<provisions_component>( step.component_id );
 		    bed->provides_quantity = 0;
                     ++job->second.current_step;
                }
           } else {
-               provisions_component * provider = game_engine->ecs->find_entity_component<provisions_component> ( step.component_id );
+               provisions_component * provider = ECS->find_entity_component<provisions_component> ( step.component_id );
                consume_power ( provider->power_drain );
                emote ( provider->action_name, pos, CYAN );
                if ( step.placeholder_structure_id == 2 ) {
@@ -415,14 +415,14 @@ void do_your_job ( settler_ai_component &settler, game_stats_component * stats, 
 	  const int number_of_logs = game_engine->rng.roll_dice(1,6);
 	  for (int i=0; i<number_of_logs; ++i) {
 	      int wood_id = raws::create_item_from_raws("Wood Logs");
-	      game_engine->ecs->add_component<position_component3d>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component3d( location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z}, OMNI ) );
+	      ECS->add_component<position_component3d>( *ECS->get_entity_by_handle( wood_id ), position_component3d( location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z}, OMNI ) );
 	      game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( wood_id ) );
 	  }
 	  ++job->second.current_step;
      } break;
      case ai::CREATE_ITEM : {
 	  int wood_id = raws::create_item_from_raws(step.skill_name);
-	  game_engine->ecs->add_component<position_component3d>( *game_engine->ecs->get_entity_by_handle( wood_id ), position_component3d( location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z}, OMNI ) );
+	  ECS->add_component<position_component3d>( *ECS->get_entity_by_handle( wood_id ), position_component3d( location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z}, OMNI ) );
 	  game_engine->messaging->add_message<item_changed_message> ( item_changed_message ( wood_id ) );
 	  ++job->second.current_step;
      } break;
@@ -442,16 +442,16 @@ void settler_ai_system::tick ( const double &duration_ms )
      }
 
      // Obtain a link to the calendar
-     calendar_component * calendar = game_engine->ecs->find_entity_component<calendar_component> ( world::cordex_handle );
+     calendar_component * calendar = ECS->find_entity_component<calendar_component> ( world::cordex_handle );
 
-     vector<settler_ai_component> * settlers = game_engine->ecs->find_components_by_type<settler_ai_component>();
+     vector<settler_ai_component> * settlers = ECS->find_components_by_type<settler_ai_component>();
      for ( settler_ai_component &settler : *settlers ) {
           if ( settler.next_tick > calendar->system_time ) {
                break;
           }
 
           settler_ai_detail::settler_needs needs = settler_ai_detail::needs_clocks ( settler );
-          position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d> ( settler.entity_id );
+          position_component3d * pos = ECS->find_entity_component<position_component3d> ( settler.entity_id );
 
           // Needs will override current action!
           if ( needs.needs_sleep and settler.state_major != JOB ) {
@@ -466,8 +466,8 @@ void settler_ai_system::tick ( const double &duration_ms )
           }
 
           // Perform actions
-          renderable_component * renderable = game_engine->ecs->find_entity_component<renderable_component> ( settler.entity_id );
-          game_stats_component * stats = game_engine->ecs->find_entity_component<game_stats_component> ( settler.entity_id );
+          renderable_component * renderable = ECS->find_entity_component<renderable_component> ( settler.entity_id );
+          game_stats_component * stats = ECS->find_entity_component<game_stats_component> ( settler.entity_id );
 
           if ( settler.next_tick <= calendar->system_time ) {
                // Time for the settler to do something!

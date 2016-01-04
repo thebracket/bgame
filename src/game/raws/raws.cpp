@@ -751,8 +751,8 @@ int create_structure_from_raws ( const string &name, const location_t loc )
           throw 105;
      }
 
-     entity e = game_engine->ecs->add_entity();
-     game_engine->ecs->add_component ( e, position_component3d ( loc, OMNI ) );
+     entity e = ECS->add_entity();
+     ECS->add_component ( e, position_component3d ( loc, OMNI ) );
      finder->second->build_components ( e, 0, 0 );
 
      return e.handle;
@@ -766,8 +766,8 @@ int create_placeholder_structure_from_raws ( const string &name, const location_
           throw 105;
      }
 
-     entity e = game_engine->ecs->add_entity ();
-     game_engine->ecs->add_component ( e, position_component3d ( loc, OMNI ) );
+     entity e = ECS->add_entity ();
+     ECS->add_component ( e, position_component3d ( loc, OMNI ) );
      finder->second->build_components ( e, loc.x, loc.y, true );
 
      return e.handle;
@@ -786,7 +786,7 @@ int create_item_from_raws ( const string &name )
      item_component item( item_type );
      item.is_tinted = true;
 
-     entity e = game_engine->ecs->add_entity ();
+     entity e = ECS->add_entity ();
      // Note: no position is created, that's the caller's responsibility. Since it could be worn/held, in a container
      // or on the landscape, this would become an enormous factory if we try and offer an interface to everything!
      finder->second->build_components ( e, 0, 0 );
@@ -812,7 +812,7 @@ int create_item_from_raws ( const string &name )
 	    
 	}
      }
-     game_engine->ecs->add_component ( e, item );
+     ECS->add_component ( e, item );
      
      return e.handle;
 }

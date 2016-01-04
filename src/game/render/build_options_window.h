@@ -86,13 +86,13 @@ public:
 
         // Bail out if there is already something here
         bool occupied = false;
-        vector<position_component3d *> positions = game_engine->ecs->find_components_by_func<position_component3d> (
+        vector<position_component3d *> positions = ECS->find_components_by_func<position_component3d> (
         [this] ( const position_component3d &c ) {
             return ( c.pos.x == this->region_x and c.pos.y == this->region_y and c.pos.z == this->region_z );
         } );
 
         for ( const position_component3d * pos : positions ) {
-            settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component> ( pos->entity_id );
+            settler_ai_component * settler = ECS->find_entity_component<settler_ai_component> ( pos->entity_id );
             if ( settler == nullptr ) {
                 occupied = true;
             }

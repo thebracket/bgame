@@ -23,7 +23,7 @@ void cordex_ai_system::tick ( const double& duration_ms )
 
 void cordex_ai_system::handle_build_orders()
 {
-    position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>(world::camera_handle);  
+    position_component3d * camera_pos = ECS->find_entity_component<position_component3d>(world::camera_handle);  
   
     vector<build_order_message> * orders = game_engine->messaging->get_messages_by_type< build_order_message >();
     for (build_order_message &msg : *orders) {
@@ -49,7 +49,7 @@ void cordex_ai_system::handle_build_orders()
 	    // Find the closest candidate
 	    std::map<int,world::available_item *> distance_components;
 	    for (world::available_item item : finder->second) {
-		item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
+		item_component * item_comp = ECS->find_entity_component<item_component>( item.entity_id );
 		if (!item_comp->claimed) {
 		    //float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
 		    float distance = geometry::distance3d( msg.x, msg.y, msg.z, item.location.x, item.location.y, item.location.z );
@@ -58,7 +58,7 @@ void cordex_ai_system::handle_build_orders()
 		}
 	    }
 	    chosen_components.push_back( distance_components.begin()->second );
-	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
+	    item_component * item_comp = ECS->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
 	    item_comp->claimed = true;
 	    game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
 	}
@@ -116,7 +116,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 	}
 	std::map<int,world::available_item *> distance_components;
 	for (world::available_item item : finder->second) {
-	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
+	    item_component * item_comp = ECS->find_entity_component<item_component>( item.entity_id );
 	    if (!item_comp->claimed) {
 		//float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
 		float distance = geometry::distance3d( msg.x, msg.y, msg.z, item.location.x, item.location.y, item.location.z );
@@ -125,7 +125,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 	    }
 	}
 	available_item * axe = distance_components.begin()->second;
-	item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
+	item_component * item_comp = ECS->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
 	item_comp->claimed = true;
 	game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
 	
@@ -172,7 +172,7 @@ void cordex_ai_system::handle_reaction_orders()
 	job.type = ai::PERFORM_REACTION;
 	
 	// Find the workshop
-	position_component3d * workshop_pos = game_engine->ecs->find_entity_component<position_component3d>( msg.workshop_id );
+	position_component3d * workshop_pos = ECS->find_entity_component<position_component3d>( msg.workshop_id );
 	
 	// Build component vector
 	vector<string> components;
@@ -192,7 +192,7 @@ void cordex_ai_system::handle_reaction_orders()
 	    // Find the closest candidate
 	    std::map<int,world::available_item *> distance_components;
 	    for (world::available_item item : finder->second) {
-		item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( item.entity_id );
+		item_component * item_comp = ECS->find_entity_component<item_component>( item.entity_id );
 		if (!item_comp->claimed) {
 		    //float distance = std::sqrt( (std::abs(workshop_pos->x - item.location.first)*std::abs(workshop_pos->x - item.location.first)) + (std::abs(workshop_pos->y - item.location.second)*std::abs(workshop_pos->y - item.location.second)));
 		    float distance = geometry::distance3d( workshop_pos->pos.x, workshop_pos->pos.y, workshop_pos->pos.z, item.location.x, item.location.y, item.location.z );
@@ -201,7 +201,7 @@ void cordex_ai_system::handle_reaction_orders()
 		}
 	    }
 	    chosen_components.push_back( distance_components.begin()->second );
-	    item_component * item_comp = game_engine->ecs->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
+	    item_component * item_comp = ECS->find_entity_component<item_component>( distance_components.begin()->second->entity_id );
 	    item_comp->claimed = true;
 	    game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id ));
 	}

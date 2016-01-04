@@ -72,7 +72,7 @@ void panel_tooltip::render_buffer()
 
 void panel_tooltip::add_tile_contents ( const int region_x, const int region_y, const int region_z )
 {
-     vector<position_component3d *> positions = game_engine->ecs->find_components_by_func<position_component3d> (
+     vector<position_component3d *> positions = ECS->find_components_by_func<position_component3d> (
      [region_x, region_y, region_z] ( const position_component3d &c ) {
           return ( c.pos.x == region_x and c.pos.y == region_y and c.pos.z == region_z );
      }
@@ -86,7 +86,7 @@ void panel_tooltip::add_tile_contents ( const int region_x, const int region_y, 
 
 bool panel_tooltip::add_settler_details ( const int entity_id )
 {
-     const settler_ai_component * settler = game_engine->ecs->find_entity_component<settler_ai_component> ( entity_id );
+     const settler_ai_component * settler = ECS->find_entity_component<settler_ai_component> ( entity_id );
      if ( settler == nullptr ) return false;
 
      stringstream settler_name;
@@ -98,7 +98,7 @@ bool panel_tooltip::add_settler_details ( const int entity_id )
 
 void panel_tooltip::add_name_details ( const int entity_id )
 {
-     const debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( entity_id );
+     const debug_name_component * name = ECS->find_entity_component<debug_name_component> ( entity_id );
      if ( name != nullptr ) {
           lines.add_line ( SDL, name->debug_name, render::sdl_white );
      }
@@ -106,7 +106,7 @@ void panel_tooltip::add_name_details ( const int entity_id )
 
 void panel_tooltip::add_containers ( const int entity_id )
 {
-     vector<item_storage_component *> stored_items = game_engine->ecs->find_components_by_func<item_storage_component> (
+     vector<item_storage_component *> stored_items = ECS->find_components_by_func<item_storage_component> (
      [entity_id] ( const item_storage_component &e ) {
           if ( e.container_id == entity_id ) {
                return true;
@@ -115,7 +115,7 @@ void panel_tooltip::add_containers ( const int entity_id )
           }
      } );
      for ( item_storage_component * item : stored_items ) {
-          debug_name_component * nc = game_engine->ecs->find_entity_component<debug_name_component> ( item->entity_id );
+          debug_name_component * nc = ECS->find_entity_component<debug_name_component> ( item->entity_id );
           lines.add_line ( SDL, string ( " " ) + nc->debug_name, render::sdl_green );
      }
 }

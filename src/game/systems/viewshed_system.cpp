@@ -9,9 +9,9 @@ void viewshed_system::tick ( const double &duration_ms ) {
     reset_visibility();
 
     // Run a viewshed for every system that has one
-    vector<viewshed_component> * viewsheds = game_engine->ecs->find_components_by_type<viewshed_component> ();
+    vector<viewshed_component> * viewsheds = ECS->find_components_by_type<viewshed_component> ();
     for (viewshed_component &viewshed : *viewsheds) {
-        position_component3d * pos = game_engine->ecs->find_entity_component<position_component3d>(viewshed.entity_id);
+        position_component3d * pos = ECS->find_entity_component<position_component3d>(viewshed.entity_id);
 	region_t * region = world::planet->get_region( pos->pos.region );
 	if ( region == nullptr ) {
 	    std::cout << "Danger! Region null for a viewshed component!\n";
@@ -39,7 +39,7 @@ void viewshed_system::tick ( const double &duration_ms ) {
 
 
 void viewshed_system::reset_visibility() {
-    position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d>(world::camera_handle);
+    position_component3d * camera_pos = ECS->find_entity_component<position_component3d>(world::camera_handle);
     const uint8_t region_idx = camera_pos->pos.region;
     std::fill(world::planet->get_region( region_idx )->visible.begin(), world::planet->get_region( region_idx )->visible.end(), false);
 }

@@ -15,7 +15,7 @@ struct raw_name : public base_raw {
     string name;
     
     virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
-	game_engine->ecs->add_component(parent, debug_name_component(name));
+	ECS->add_component(parent, debug_name_component(name));
     }
     
     virtual string get_name_override() override {

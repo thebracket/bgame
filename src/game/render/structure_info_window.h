@@ -30,18 +30,18 @@ private:
      }
 public:
      structure_info_window ( sdl2_backend* sdl, const string& title, const bool& decor, const int &entity ) : window ( sdl,title,decor ), entity_id ( entity ) {
-          debug_name_component * name = game_engine->ecs->find_entity_component<debug_name_component> ( entity_id );
+          debug_name_component * name = ECS->find_entity_component<debug_name_component> ( entity_id );
           if ( name != nullptr ) {
                window_title = name->debug_name;
 
-               description_component * desc = game_engine->ecs->find_entity_component<description_component> ( entity_id );
+               description_component * desc = ECS->find_entity_component<description_component> ( entity_id );
                if ( desc != nullptr ) {
-                    renderable_component * renderable = game_engine->ecs->find_entity_component<renderable_component> ( entity_id );
+                    renderable_component * renderable = ECS->find_entity_component<renderable_component> ( entity_id );
                     add_line ( desc->desc, sdl_white, renderable->tile_idx );
                }
 
                // Render any held items
-               vector<item_storage_component *> stored_items = game_engine->ecs->find_components_by_func<item_storage_component> (
+               vector<item_storage_component *> stored_items = ECS->find_components_by_func<item_storage_component> (
                [this] ( const item_storage_component &e ) {
                     if ( e.container_id == entity_id ) {
                          return true;
@@ -50,23 +50,23 @@ public:
                     }
                } );
                for ( item_storage_component * item : stored_items ) {
-                    debug_name_component * nc = game_engine->ecs->find_entity_component<debug_name_component> ( item->entity_id );
-                    renderable_component * renderable = game_engine->ecs->find_entity_component<renderable_component> ( item->entity_id );
+                    debug_name_component * nc = ECS->find_entity_component<debug_name_component> ( item->entity_id );
+                    renderable_component * renderable = ECS->find_entity_component<renderable_component> ( item->entity_id );
                     if ( !renderable->extra_tall ) {
                          add_line ( string ( " " ) + nc->debug_name, sdl_green, renderable->tile_idx );
                     } else {
                          add_line ( string ( " " ) + nc->debug_name, sdl_green, 0 );
                     }
-                    desc = game_engine->ecs->find_entity_component<description_component> ( item->entity_id );
+                    desc = ECS->find_entity_component<description_component> ( item->entity_id );
                     if ( desc != nullptr ) {
                          add_line ( string ( "  " ) + desc->desc, sdl_white, 0 );
                     }
                }
 
                // Is it a tree? Trees are a special case
-               tree_component * tree = game_engine->ecs->find_entity_component<tree_component> ( entity_id );
+               tree_component * tree = ECS->find_entity_component<tree_component> ( entity_id );
                if ( tree != nullptr ) {
-                    position_component * pos = game_engine->ecs->find_entity_component<position_component> ( entity_id );
+                    position_component * pos = ECS->find_entity_component<position_component> ( entity_id );
                     const int region_x = pos->x;
                     const int region_y = pos->y;
                     add_line ( "Chop Down Tree (Uses: Axe, Produces: Logs)", sdl_yellow, 56, true, [=] {

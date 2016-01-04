@@ -56,7 +56,7 @@ public:
           render_date_time ( SDL );
           render_paused ( SDL );
 
-          position_component3d * camera_pos = game_engine->ecs->find_entity_component<position_component3d> ( world::camera_handle );
+          position_component3d * camera_pos = ECS->find_entity_component<position_component3d> ( world::camera_handle );
 	  region_t * current_region = world::planet->get_region( camera_pos->pos.region );
           pair<int,int> screen_size = SDL->get_screen_size();
           screen_size.second -= 48;
@@ -329,18 +329,18 @@ private:
 
 void game_mode::init_systems()
 {
-     game_engine->ecs->add_system ( make_input_system() );
-     game_engine->ecs->add_system ( make_camera_system() );
-     game_engine->ecs->add_system ( make_calendar_system() );
-     game_engine->ecs->add_system ( make_obstruction_system() );
-     game_engine->ecs->add_system ( make_inventory_system() );
-     game_engine->ecs->add_system ( make_power_system() );
-     game_engine->ecs->add_system ( make_cordex_ai_system() );
-     game_engine->ecs->add_system ( make_settler_ai_system() );
-     game_engine->ecs->add_system ( make_damage_system() );
-     game_engine->ecs->add_system ( make_particle_system() );
-     game_engine->ecs->add_system ( make_viewshed_system() );
-     game_engine->ecs->add_system ( make_renderable_system() );
+     ECS->add_system ( make_input_system() );
+     ECS->add_system ( make_camera_system() );
+     ECS->add_system ( make_calendar_system() );
+     ECS->add_system ( make_obstruction_system() );
+     ECS->add_system ( make_inventory_system() );
+     ECS->add_system ( make_power_system() );
+     ECS->add_system ( make_cordex_ai_system() );
+     ECS->add_system ( make_settler_ai_system() );
+     ECS->add_system ( make_damage_system() );
+     ECS->add_system ( make_particle_system() );
+     ECS->add_system ( make_viewshed_system() );
+     ECS->add_system ( make_renderable_system() );
 }
 
 void game_mode::init()
@@ -352,8 +352,8 @@ void game_mode::init()
      sg.children.push_back ( make_unique<scene_blit> ( "header", all, all ) );
      sg.children.push_back ( make_unique<game3d_render>() );
 
-     game_engine->ecs->init();
-     game_engine->ecs->load_game ( "world/savegame3d.dat" );
+     ECS->init();
+     ECS->load_game ( "world/savegame3d.dat" );
      init_systems();
 
      // Tell the rendering and movement systems to fire
@@ -363,8 +363,8 @@ void game_mode::init()
 
 void game_mode::done()
 {
-    game_engine->ecs->save_game( "world/savegame3d.dat" );
-    game_engine->ecs->done();
+    ECS->save_game( "world/savegame3d.dat" );
+    ECS->done();
 }
 
 pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( const double time_elapsed )
@@ -372,7 +372,7 @@ pair< engine::return_mode, unique_ptr< engine::base_mode > > game_mode::tick ( c
      // Temporary
      if ( is_key_down ( Q ) ) finished = true;
      if ( is_key_down( command::TILDE ) ) {
-       vector<tuple<string,int,int,int>> timings = game_engine->ecs->get_profile_info();
+       vector<tuple<string,int,int,int>> timings = ECS->get_profile_info();
        for ( auto line : timings ) {
 	 std::cout << std::setw(20) << std::get<0>(line) << std::setw(10) << std::get<1>(line)<< std::setw(10) << std::get<2>(line)<< std::setw(10) << std::get<3>(line) << "\n";
        }

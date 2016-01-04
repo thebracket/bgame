@@ -35,7 +35,7 @@ void hollow(const location_t &loc) {
 }
 
 void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx, planet_t * planet ) {
-    for (uint8_t X = 0; X < start_x+6; ++X) {
+    for (uint8_t X = start_x/2; X < start_x+6; ++X) {
 	const int half_width = 5 + ( X / 64 );
 	for ( uint8_t Y = start_y-half_width; Y<start_y+half_width; ++Y ) {
 	    uint8_t Z = 1;
@@ -54,22 +54,22 @@ void crash_the_ship ( const uint8_t start_x, const uint8_t start_y, const uint8_
 }
 
 void add_camera( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx ) {
-    entity camera = game_engine->ecs->add_entity();
-    game_engine->ecs->add_component(camera, position_component3d({ planet_idx, start_x, start_y, start_z }, OMNI));
+    entity camera = ECS->add_entity();
+    ECS->add_component(camera, position_component3d({ planet_idx, start_x, start_y, start_z }, OMNI));
     universe->globals.camera_handle = camera.handle;
     world::camera_handle = camera.handle;
 }
 
 void add_cordex( const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx ) {
-    entity cordex = game_engine->ecs->add_entity();
+    entity cordex = ECS->add_entity();
     world::cordex_handle = cordex.handle;
-    game_engine->ecs->add_component(cordex, debug_name_component("Cordex"));
-    game_engine->ecs->add_component(cordex, position_component3d( location_t{ planet_idx, start_x, start_y, start_z }, OMNI));
-    game_engine->ecs->add_component(cordex, viewshed_component(penetrating,16));
-    game_engine->ecs->add_component(cordex, calendar_component(0L));
-    game_engine->ecs->add_component(cordex, renderable_component(15, cyan, black,17));
-    game_engine->ecs->add_component(cordex, obstruction_component(true, true));
-    game_engine->ecs->add_component(cordex, description_component( "You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendents alive."));
+    ECS->add_component(cordex, debug_name_component("Cordex"));
+    ECS->add_component(cordex, position_component3d( location_t{ planet_idx, start_x, start_y, start_z }, OMNI));
+    ECS->add_component(cordex, viewshed_component(penetrating,16));
+    ECS->add_component(cordex, calendar_component(0L));
+    ECS->add_component(cordex, renderable_component(15, cyan, black,17));
+    ECS->add_component(cordex, obstruction_component(true, true));
+    ECS->add_component(cordex, description_component( "You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendents alive."));
     hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }
 
@@ -105,23 +105,23 @@ void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z, const u
     
     for (int i=0; i<3; ++i) {
 	int tent_kit = raws::create_item_from_raws("Personal Survival Shelter Kit");
-	game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( tent_kit ), item_storage_component(container_id) );
+	ECS->add_component<item_storage_component>( *ECS->get_entity_by_handle( tent_kit ), item_storage_component(container_id) );
     }
     int fire_kit = raws::create_item_from_raws("Camping Fire Kit");
-    game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( fire_kit ), item_storage_component(container_id) );
+    ECS->add_component<item_storage_component>( *ECS->get_entity_by_handle( fire_kit ), item_storage_component(container_id) );
     int fire_axe = raws::create_item_from_raws("Fire Axe");
-    game_engine->ecs->add_component<item_storage_component>( *game_engine->ecs->get_entity_by_handle( fire_axe ), item_storage_component(container_id) );
+    ECS->add_component<item_storage_component>( *ECS->get_entity_by_handle( fire_axe ), item_storage_component(container_id) );
 }
 
 entity make_settler(const location_t &loc)
 {
-    entity test = game_engine->ecs->add_entity();
+    entity test = ECS->add_entity();
 
-    game_engine->ecs->add_component(test, debug_name_component("Test"));
-    game_engine->ecs->add_component(test, position_component3d(loc, OMNI));
+    ECS->add_component(test, debug_name_component("Test"));
+    ECS->add_component(test, position_component3d(loc, OMNI));
     //engine::globals::ecs->add_component(test, obstruction_component(true,false));
-    game_engine->ecs->add_component(test, renderable_component('@', yellow, black,34,1,false,true));
-    game_engine->ecs->add_component(test, viewshed_component(visibility,12));
+    ECS->add_component(test, renderable_component('@', yellow, black,34,1,false,true));
+    ECS->add_component(test, viewshed_component(visibility,12));
     settler_ai_component ai;
     
     std::pair<string, raws::base_raw *> profession = raws::get_random_starting_profession();    
@@ -238,10 +238,10 @@ entity make_settler(const location_t &loc)
 	}
     }
     
-    game_engine->ecs->add_component(test, ai);
-    game_engine->ecs->add_component(test, stats);
-    game_engine->ecs->add_component(test, health);
-    game_engine->ecs->add_component(test, species);
+    ECS->add_component(test, ai);
+    ECS->add_component(test, stats);
+    ECS->add_component(test, health);
+    ECS->add_component(test, species);
     
     // Make clothing for the settler
     //std::cout << "Generating: " << profession.first << "\n";
@@ -260,9 +260,9 @@ entity make_settler(const location_t &loc)
 		if (rawc->slot == "Shoes") position = 4;
 		
 		item_carried_component carried( test.handle, position );
-		game_engine->ecs->add_component<item_carried_component>( *game_engine->ecs->get_entity_by_handle( item_entity_id ), carried );
+		ECS->add_component<item_carried_component>( *ECS->get_entity_by_handle( item_entity_id ), carried );
 		
-		item_component * item = game_engine->ecs->find_entity_component<item_component>( item_entity_id );
+		item_component * item = ECS->find_entity_component<item_component>( item_entity_id );
 		item->clothing_slot = position;
 	    }
 	}
@@ -377,8 +377,8 @@ void make_entities( planet_t * planet ) {
     world::stored_power = 25;
   
     planet->save_region( planet_idx );
-    game_engine->ecs->save_game("world/savegame3d.dat");
-    game_engine->ecs->done();
+    ECS->save_game("world/savegame3d.dat");
+    ECS->done();
 }
 
 void world_gen_phase_1()
@@ -404,7 +404,7 @@ void world_gen_phase_1()
     std::unique_ptr<planet_t> planet = make_world_layers( base_map.get(), rng, water.get(), &biomes );
     
     std::cout << "Making starting entites\n";    
-    game_engine->ecs->init();
+    ECS->init();
     make_entities( planet.get() );
     
     std::cout << "World gen done\n";

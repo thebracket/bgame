@@ -10,11 +10,11 @@ void component_loader(fstream &lbfile) {
   T component;
   component.load(lbfile);
   const int entity_handle = component.entity_id;
-  entity * parent = game_engine->ecs->get_entity_by_handle ( entity_handle );
+  entity * parent = ECS->get_entity_by_handle ( entity_handle );
   if (parent == nullptr) {
     std::cout << "Error! Entity " << component.entity_id << " is null.\n";
   } else {
-    game_engine->ecs->add_component<T>(*parent, component);
+    ECS->add_component<T>(*parent, component);
   }
 }
 

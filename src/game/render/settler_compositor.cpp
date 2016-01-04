@@ -6,7 +6,7 @@ namespace render {
 
 void render_settler_composite ( sdl2_backend* SDL, const int& entity_id, const int& x, const int& y )
 {
-     game_species_component * species = game_engine->ecs->find_entity_component<game_species_component> ( entity_id );
+     game_species_component * species = ECS->find_entity_component<game_species_component> ( entity_id );
 
      SDL_Rect src;
      SDL_Rect dest {x,y,16,16};
@@ -77,13 +77,13 @@ void render_settler_composite ( sdl2_backend* SDL, const int& entity_id, const i
      }
 
      //SDL->set_color_mod ( "spritesheet", 255, 255, 255 );
-     vector<item_carried_component> * carried = game_engine->ecs->find_components_by_type<item_carried_component>();
+     vector<item_carried_component> * carried = ECS->find_components_by_type<item_carried_component>();
      for (const item_carried_component item_c : *carried) {
 	  if ( item_c.carried_by_id == entity_id ) {
-	      const item_component * item = game_engine->ecs->find_entity_component<item_component>( item_c.entity_id );
+	      const item_component * item = ECS->find_entity_component<item_component>( item_c.entity_id );
 	      
 	      if (item != nullptr and item->clothing_slot > 0) {
-		  const renderable_component * item_r = game_engine->ecs->find_entity_component<renderable_component>( item_c.entity_id );
+		  const renderable_component * item_r = ECS->find_entity_component<renderable_component>( item_c.entity_id );
 		  src = raws::get_tile_source( item_r->tile_idx );
 		  if ( item->is_tinted ) {
 		    SDL->set_color_mod( "spritesheet", item->tint_red, item->tint_green, item->tint_blue );

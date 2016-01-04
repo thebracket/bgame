@@ -15,7 +15,7 @@ struct raw_description : public base_raw {
     string description;
     
     virtual void build_components(entity &parent, const int &x, const int &y, const bool placeholder=false) const {
-	game_engine->ecs->add_component(parent, description_component(description));
+	ECS->add_component(parent, description_component(description));
     }
 };
   

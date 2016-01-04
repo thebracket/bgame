@@ -43,7 +43,7 @@ inline int get_skill_modifier(const game_stats_component * entity_stats, const s
 }
 
 inline skill_test_result skill_roll(const int entity_id, const string skill_name, int difficulty) {
-    const game_stats_component * entity_stats = game_engine->ecs->find_entity_component<game_stats_component>( entity_id );
+    const game_stats_component * entity_stats = ECS->find_entity_component<game_stats_component>( entity_id );
     if ( entity_stats == nullptr) {
       std::cout << "Warning: no game_stats attached to entity.\n";
       return FAIL;
