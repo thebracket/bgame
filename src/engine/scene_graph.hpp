@@ -1,9 +1,9 @@
 #pragma once
 
-#include "sdl2_backend.h"
 #include <vector>
 #include <memory>
 #include <string>
+#include "sdl2_backend.hpp"
 
 using std::vector;
 using std::unique_ptr;
