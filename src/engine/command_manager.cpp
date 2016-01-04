@@ -1,4 +1,5 @@
-#include "command_manager.h"
+#include "command_manager.hpp"
+
 #include <set>
 
 using std::set;
