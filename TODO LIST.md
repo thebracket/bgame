@@ -62,6 +62,7 @@
 
 * Logging system
 * Input handler needs re-working
+* Support different graphics modes
 
 **Raws**
 
