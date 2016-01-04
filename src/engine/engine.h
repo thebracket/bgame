@@ -7,10 +7,10 @@
 
 #include "base_mode.hpp"
 #include "colors.hpp"
+#include "command_manager.hpp"
 #include "rng.h"
 #include "virtual_terminal.h"
 #include "gui/gui.h"
-#include "command_manager.h"
 #include "sdl2_backend.h"
 #include "ecs.hpp"
 #include "scene_graph.h"
