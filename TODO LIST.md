@@ -52,3 +52,8 @@
 * Add in oil and plastics.
 * Start work on other civilizations
 * Fighting and conversation...
+
+**Engine**
+
+* Logging system
+
