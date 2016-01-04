@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "../virtual_terminal.h"
 #include "../colors.h"
+#include "../virtual_terminal.hpp"
 
 using std::vector;
 using std::unique_ptr;

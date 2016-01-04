@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../engine/virtual_terminal.h"
 #include <fstream>
+#include "../../engine/virtual_terminal.hpp"
 
 using engine::vterm::color_t;
 using std::fstream;

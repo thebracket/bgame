@@ -1,4 +1,5 @@
-#include "virtual_terminal.h"
+#include "virtual_terminal.hpp"
+
 #include <algorithm>
 #include <memory>
 #include <iostream>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "virtual_terminal.h"
 #include <SDL2/SDL.h>
 #include <string>
 #include "sdl2_resources.hpp"
+#include "virtual_terminal.hpp"
 
 using std::pair;
 
