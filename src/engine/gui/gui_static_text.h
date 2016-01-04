@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gui_element_base.h"
-#include "../virtual_terminal.h"
+#include "../virtual_terminal.hpp"
 #include <string>
 #include <iostream>
 

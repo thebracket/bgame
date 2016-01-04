@@ -2,7 +2,7 @@
 #include <iostream>
 #include <tuple>
 #include "../game.h"
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 #include "../world/planet.hpp"
 
 void renderable_system::tick ( const double &duration_ms )

@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <memory>
-#include "../../../engine/rng.h"
+#include "../../../engine/rng.hpp"
 
 typedef std::vector<uint8_t> rain_map_t;
 typedef std::vector<int16_t> temperature_map_t;

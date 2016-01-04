@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/engine.h"
+#include "../engine/engine.hpp"
 
 using std::make_pair;
 using engine::vterm::color_t;

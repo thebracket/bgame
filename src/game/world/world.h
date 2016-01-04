@@ -8,7 +8,7 @@
 #include <tuple>
 #include <array>
 #include "console.h"
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 #include <boost/optional.hpp>
 #include "location.hpp"
 

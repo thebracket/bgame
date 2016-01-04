@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include "gui_element_base.h"
-#include "../virtual_terminal.h"
+#include "../virtual_terminal.hpp"
 #include <iostream>
 
 using std::vector;

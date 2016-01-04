@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/engine.h"
+#include "../engine/engine.hpp"
 
 class loading_screen : public engine::base_mode {
 public:

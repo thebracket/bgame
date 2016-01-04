@@ -1,7 +1,7 @@
 #pragma once
 
 #include "component_types.h"
-#include "../../engine/virtual_terminal.h"
+#include "../../engine/virtual_terminal.hpp"
 #include <vector>
 #include <iostream>
 

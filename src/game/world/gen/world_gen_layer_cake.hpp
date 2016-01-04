@@ -2,7 +2,7 @@
 
 #include "world_height_map.hpp"
 #include "world_gen_hydrology.hpp"
-#include "../../../engine/rng.h"
+#include "../../../engine/rng.hpp"
 #include <memory>
 #include "../planet.hpp"
 #include "world_gen_biomes.hpp"
