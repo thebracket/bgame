@@ -6,9 +6,49 @@
 #include <algorithm>
 #include <numeric>
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <Poco/InflatingStream.h>
+#include <Poco/DeflatingStream.h>
+#include <iostream>
 #include "../world_defs.hpp"
+#include "../../components/component_loader.h"
 
 using heightmap_t = std::vector< int >;
+
+/*
+ * Persist the height map to disk
+ */
+inline void save_height_map(heightmap_t * heights) {
+	const std::string filename = "world/heights.dat";
+	std::fstream lbfile(filename, std::ios::out | std::ios::binary);
+	Poco::DeflatingOutputStream deflate(lbfile,
+			Poco::DeflatingStreamBuf::STREAM_GZIP);
+
+	for ( int &h : *heights ) {
+		save_primitive<int>(deflate, h);
+	}
+
+	deflate.close();
+}
+
+/*
+ * Load the height map from disk
+ */
+inline std::unique_ptr<heightmap_t> load_height_map() {
+	std::unique_ptr<heightmap_t> result = std::make_unique<heightmap_t>();
+	result->resize(NUMBER_OF_TILES_IN_THE_WORLD);
+
+	const std::string filename = "world/heights.dat";
+	fstream lbfile(filename, std::ios::in | std::ios::binary);
+	Poco::InflatingInputStream inflate(lbfile, Poco::InflatingStreamBuf::STREAM_GZIP);
+
+	for (int i=0; i<NUMBER_OF_TILES_IN_THE_WORLD; ++i) {
+		load_primitive<int>(inflate, result->operator[](i));
+	}
+
+	return std::move(result);
+}
 
 /*
  * Creates a new height map
