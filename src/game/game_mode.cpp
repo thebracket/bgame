@@ -215,7 +215,7 @@ private:
 	void render_power_bar(sdl2_backend * SDL)
 	{
 		const float power_percent = static_cast<float>(universe->globals.stored_power)
-				/ static_cast<float>(world::max_power);
+				/ static_cast<float>(universe->globals.max_power);
 		const int power_tenths = (power_percent * 10.0) - 1;
 		SDL_Rect src
 		{ power_tenths * 46, 0, 46, 48 };
@@ -224,7 +224,7 @@ private:
 		SDL->render_bitmap("cordex", src, dest);
 
 		std::stringstream ss;
-		ss << "Power: " << universe->globals.stored_power << " I " << world::max_power;
+		ss << "Power: " << universe->globals.stored_power << " I " << universe->globals.max_power;
 		string emote_text = SDL->render_text_to_image("lcd10", ss.str(), "tmp",
 				render::sdl_dark_grey);
 		SDL->render_bitmap_simple(emote_text, 68, 22);
