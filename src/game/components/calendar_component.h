@@ -30,6 +30,11 @@ public:
 
 	double duration_buffer = 0.0;
 
+	// Non-persistent
+	std::string display_day_month;
+	std::string display_time;
+	std::string display_season;
+
 	void save(fstream &lbfile)
 	{
 		save_common_component_properties<calendar_component>(lbfile, *this);

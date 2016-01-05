@@ -67,7 +67,7 @@ void calendar_system::advance_calendar(calendar_component * time)
 	}
 }
 
-void calendar_system::update_display_time(const calendar_component* t)
+void calendar_system::update_display_time(calendar_component* t)
 {
 	stringstream day;
 	day << calendar_detail::months[t->month] << " " << (t->day + 1) << ", "
@@ -82,9 +82,9 @@ void calendar_system::update_display_time(const calendar_component* t)
 
 	const string season =
 			calendar_detail::season_names[calendar_detail::season_months[t->month]];
-	world::display_day_month = day.str();
-	world::display_time = time.str();
-	world::display_season = season;
+	t->display_day_month = day.str();
+	t->display_time = time.str();
+	t->display_season = season;
 }
 
 float calendar_system::calculate_sun_angle(const calendar_component* t) const
