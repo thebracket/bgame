@@ -38,7 +38,7 @@ void damage_system::tick(const double& duration_ms)
 		damage.deleted = true;
 	}
 
-	if (!world::paused)
+	if (!universe->globals.paused)
 	{
 		calendar_component * calendar = ECS->find_entity_component<
 				calendar_component>(universe->globals.cordex_handle);

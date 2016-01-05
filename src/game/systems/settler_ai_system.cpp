@@ -635,7 +635,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 
 void settler_ai_system::tick(const double &duration_ms)
 {
-	if (world::paused)
+	if (universe->globals.paused)
 	{
 		return;
 	}

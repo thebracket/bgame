@@ -26,7 +26,7 @@ int calculate_power_gain(const power_generator_component* gen)
 
 void power_system::tick(const double& duration_ms)
 {
-	if (world::paused)
+	if (universe->globals.paused)
 		return;
 
 	calendar_component * calendar = ECS->find_entity_component<calendar_component>(universe->globals.cordex_handle);

@@ -135,12 +135,12 @@ void calendar_system::tick(const double &duration_ms)
 	{
 		if (!cmd.deleted and cmd.command == TOGGLE_PAUSE)
 		{
-			world::paused = !world::paused;
+			universe->globals.paused = !universe->globals.paused;
 			cmd.deleted = true;
 		}
 	}
 
-	if (world::paused)
+	if (universe->globals.paused)
 	{
 		update_display_time(calendar);
 		return;

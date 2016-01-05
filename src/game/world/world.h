@@ -22,12 +22,6 @@ using boost::optional;
 namespace world
 {
 
-// Convenience: storing the camera's handle globally is messy,
-// but makes it quick and easy for systems that want to find it.
-extern bool paused;
-extern bool render_graphics;
-extern bool omniscience;
-
 extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
 
 struct available_item
