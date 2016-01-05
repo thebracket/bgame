@@ -2,7 +2,6 @@
 #include "../components/power_battery_component.h"
 #include "../components/power_generator_component.h"
 #include "../components/calendar_component.h"
-#include "../world/world.h"
 #include <iostream>
 #include "../game.h"
 #include "../messages/power_consumed_message.h"

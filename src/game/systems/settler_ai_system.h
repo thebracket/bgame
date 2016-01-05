@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../world/world.h"
 #include "../../engine/ecs.hpp"
 #include "../components/calendar_component.h"
 #include "../components/settler_ai_component.h"

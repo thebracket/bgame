@@ -102,7 +102,7 @@ public:
 
 				if (!tile->flags.test(TILE_OPTIONS::SOLID)
 						and tile->base_tile_type == tile_type::EMPTY_SPACE
-						and !world::render_list_3d[tile_idx])
+						and !universe->globals.render_list_3d[tile_idx])
 				{
 					// 3d dive
 					int depth = 1;
@@ -122,7 +122,7 @@ public:
 						if (!dive_tile->flags.test(TILE_OPTIONS::SOLID)
 								and dive_tile->base_tile_type
 										== tile_type::EMPTY_SPACE
-								and !world::render_list_3d[dive_tile_idx])
+								and !universe->globals.render_list_3d[dive_tile_idx])
 						{
 							++depth;
 							if (depth > 10)
@@ -144,10 +144,10 @@ public:
 								go = true;
 							}
 
-							if (world::render_list_3d[dive_tile_idx])
+							if (universe->globals.render_list_3d[dive_tile_idx])
 							{
 								target =
-										world::render_list_3d[dive_tile_idx].value();
+										universe->globals.render_list_3d[dive_tile_idx].value();
 							}
 						}
 					}
@@ -173,9 +173,9 @@ public:
 						target = tile->render_as;
 					}
 
-					if (world::render_list_3d[tile_idx])
+					if (universe->globals.render_list_3d[tile_idx])
 					{
-						target = world::render_list_3d[tile_idx].value();
+						target = universe->globals.render_list_3d[tile_idx].value();
 					}
 					if (current_region->revealed[tile_idx] or universe->globals.omniscience)
 					{

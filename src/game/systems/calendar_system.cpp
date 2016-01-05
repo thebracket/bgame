@@ -4,7 +4,6 @@
 #include <sstream>
 #include <iostream>
 #include "../world/universe.hpp"
-#include "../world/world.h"
 #include "../game.h"
 
 using std::string;

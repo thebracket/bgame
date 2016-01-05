@@ -31,7 +31,7 @@ struct position_component3d
 	location_t pos;
 	bool moved = false;
 
-	void load(fstream &lbfile)
+	void load(std::fstream &lbfile)
 	{
 		load_common_component_properties<position_component3d>(lbfile, *this);
 		int f = 0;
@@ -40,7 +40,7 @@ struct position_component3d
 		load_primitive<location_t>(lbfile, pos);
 	}
 
-	void save(fstream &lbfile)
+	void save(std::fstream &lbfile)
 	{
 		save_common_component_properties<position_component3d>(lbfile, *this);
 		save_primitive<int>(lbfile, facing);

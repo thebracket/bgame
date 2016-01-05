@@ -7,7 +7,6 @@
 #include <memory>
 #include <sstream>
 #include "../game.h"
-#include "../world/world.h"
 #include "../raws/raws.h"
 
 using std::stringstream;

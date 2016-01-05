@@ -21,8 +21,8 @@ void renderable_system::tick(const double &duration_ms)
 	if (changes)
 	{
 
-		std::fill(world::render_list_3d.begin(), world::render_list_3d.end(),
-				optional<engine::vterm::screen_character>());
+		std::fill(universe->globals.render_list_3d.begin(), universe->globals.render_list_3d.end(),
+				boost::optional<engine::vterm::screen_character>());
 
 		const position_component3d * camera_pos = get_camera_position();
 		const int top_y = camera_pos->pos.y - ((768 / 8) / 2);
@@ -44,7 +44,7 @@ void renderable_system::tick(const double &duration_ms)
 				{
 					const int idx = get_tile_index(pos.pos.x, pos.pos.y,
 							pos.pos.z);
-					world::render_list_3d[idx] = engine::vterm::screen_character
+					universe->globals.render_list_3d[idx] = engine::vterm::screen_character
 					{ render_info->glyph, render_info->foreground,
 							render_info->background };
 					//std::cout << "Renderable at " << pos.pos.x << "/" << pos.pos.y << "/" << +pos.pos.z << "\n";

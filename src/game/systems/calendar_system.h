@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../world/world.h"
 #include "../../engine/ecs.hpp"
 #include "../components/calendar_component.h"
 

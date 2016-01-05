@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../world/world.h"
 #include "../../engine/ecs.hpp"
 #include "../components/position_component3d.hpp"
 #include "../components/viewshed_component.h"
