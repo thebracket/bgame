@@ -1,7 +1,6 @@
 #include "obstruction_system.h"
 #include "../components/obstruction_component.h"
 #include "../components/walkable_roof_component.h"
-#include "../world/world.h"
 #include "../game.h"
 #include "../world/planet.hpp"
 #include "../world/universe.hpp"

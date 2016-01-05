@@ -1,5 +1,4 @@
 #include "path_finding.h"
-#include "../world/world.h"
 #include <unordered_set>
 #include <tuple>
 #include <map>

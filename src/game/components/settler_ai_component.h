@@ -2,7 +2,6 @@
 
 #include "component_types.h"
 #include <string>
-#include "../world/world.h"
 #include "../tasks/path_finding.h"
 
 using namespace serialization_generic;

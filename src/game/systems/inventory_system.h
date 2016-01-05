@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../world/world.h"
 #include "../../engine/ecs.hpp"
 #include "../game.h"
 #include <vector>
