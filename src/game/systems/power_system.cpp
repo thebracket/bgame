@@ -6,6 +6,7 @@
 #include <iostream>
 #include "../game.h"
 #include "../messages/power_consumed_message.h"
+#include "../world/universe.hpp"
 
 namespace power_system_detail
 {
@@ -40,12 +41,11 @@ void power_system::tick(const double& duration_ms)
 	if (world::paused)
 		return;
 
-	calendar_component * calendar = ECS->find_entity_component<
-			calendar_component>(world::cordex_handle);
+	calendar_component * calendar = ECS->find_entity_component<calendar_component>(universe->globals.cordex_handle);
 
 	if (last_tick + 10 < calendar->system_time or last_tick == 0)
 	{
-		int power = world::stored_power;
+		int power = universe->globals.stored_power;
 
 		const vector<power_generator_component> * producers =
 				ECS->find_components_by_type<power_generator_component>();
@@ -79,7 +79,7 @@ void power_system::tick(const double& duration_ms)
 			power = storage_capacity;
 		if (power < 0)
 			power = 0; // TODO: Dead!
-		world::stored_power = power;
+		universe->globals.stored_power = power;
 		world::max_power = storage_capacity;
 		// TODO: If power < 0 - dead!
 		last_tick = calendar->system_time;

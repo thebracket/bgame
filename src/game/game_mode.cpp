@@ -1,16 +1,16 @@
 #include "game_mode.hpp"
 #include "../engine/command_manager.hpp"
-#include <utility>
 #include "world/planet.hpp"
 #include "world/world_defs.hpp"
 #include "../engine/virtual_terminal.hpp"
-#include <sstream>
 #include "../game/game.h"
 #include "world/universe.hpp"
 #include "systems/system_factory.h"
 #include "render/colors.h"
-#include <iomanip>
 #include "render/panel_tooltip.h"
+#include <utility>
+#include <iomanip>
+#include <sstream>
 
 using std::make_pair;
 using namespace engine;
@@ -70,25 +70,17 @@ public:
 		render_date_time(SDL);
 		render_paused(SDL);
 
-		position_component3d * camera_pos = ECS->find_entity_component<
-				position_component3d>(world::camera_handle);
-		region_t * current_region = world::planet->get_region(
-				camera_pos->pos.region);
+		position_component3d * camera_pos = get_camera_position();
+		region_t * current_region = world::planet->get_region(camera_pos->pos.region);
 		pair<int, int> screen_size = SDL->get_screen_size();
 		screen_size.second -= 48;
 		const int ascii_width = screen_size.first / 8;
 		const int ascii_height = screen_size.second / 8;
-		if (camera_pos->pos.x < ascii_width / 2)
-			camera_pos->pos.x = ascii_width / 2;
-		if (camera_pos->pos.x > REGION_WIDTH - (ascii_width / 2))
-			camera_pos->pos.x = REGION_WIDTH - (ascii_width / 2);
-		if (camera_pos->pos.y < ascii_height / 2)
-			camera_pos->pos.y = ascii_height / 2;
-		if (camera_pos->pos.y > REGION_HEIGHT - (ascii_height / 2))
-			camera_pos->pos.y = REGION_HEIGHT - (ascii_height / 2);
-		SDL_Rect viewport
-		{ camera_pos->pos.x - (ascii_width / 2), camera_pos->pos.y
-				- (ascii_height / 2), ascii_width, ascii_height };
+		if (camera_pos->pos.x < ascii_width / 2) camera_pos->pos.x = ascii_width / 2;
+		if (camera_pos->pos.x > REGION_WIDTH - (ascii_width / 2)) camera_pos->pos.x = REGION_WIDTH - (ascii_width / 2);
+		if (camera_pos->pos.y < ascii_height / 2) camera_pos->pos.y = ascii_height / 2;
+		if (camera_pos->pos.y > REGION_HEIGHT - (ascii_height / 2))	camera_pos->pos.y = REGION_HEIGHT - (ascii_height / 2);
+		SDL_Rect viewport{ camera_pos->pos.x - (ascii_width / 2), camera_pos->pos.y	- (ascii_height / 2), ascii_width, ascii_height };
 
 		for (int y = 0; y < viewport.h; ++y)
 		{
@@ -222,7 +214,7 @@ private:
 
 	void render_power_bar(sdl2_backend * SDL)
 	{
-		const float power_percent = static_cast<float>(world::stored_power)
+		const float power_percent = static_cast<float>(universe->globals.stored_power)
 				/ static_cast<float>(world::max_power);
 		const int power_tenths = (power_percent * 10.0) - 1;
 		SDL_Rect src
@@ -232,7 +224,7 @@ private:
 		SDL->render_bitmap("cordex", src, dest);
 
 		std::stringstream ss;
-		ss << "Power: " << world::stored_power << " I " << world::max_power;
+		ss << "Power: " << universe->globals.stored_power << " I " << world::max_power;
 		string emote_text = SDL->render_text_to_image("lcd10", ss.str(), "tmp",
 				render::sdl_dark_grey);
 		SDL->render_bitmap_simple(emote_text, 68, 22);

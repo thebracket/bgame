@@ -70,29 +70,23 @@ void add_camera(const uint8_t start_x, const uint8_t start_y,
 		const uint8_t start_z, const uint8_t planet_idx)
 {
 	entity camera = ECS->add_entity();
-	ECS->add_component(camera, position_component3d(
-	{ planet_idx, start_x, start_y, start_z }, OMNI));
+	ECS->add_component(camera, position_component3d({ planet_idx, start_x, start_y, start_z }, OMNI));
 	universe->globals.camera_handle = camera.handle;
-	world::camera_handle = camera.handle;
 }
 
 void add_cordex(const uint8_t start_x, const uint8_t start_y,
 		const uint8_t start_z, const uint8_t planet_idx)
 {
 	entity cordex = ECS->add_entity();
-	world::cordex_handle = cordex.handle;
+	universe->globals.cordex_handle = cordex.handle;
 	ECS->add_component(cordex, debug_name_component("Cordex"));
-	ECS->add_component(cordex, position_component3d(location_t
-	{ planet_idx, start_x, start_y, start_z }, OMNI));
+	ECS->add_component(cordex, position_component3d(location_t{ planet_idx, start_x, start_y, start_z }, OMNI));
 	ECS->add_component(cordex, viewshed_component(penetrating, 16));
 	ECS->add_component(cordex, calendar_component(0L));
 	ECS->add_component(cordex, renderable_component(15, cyan, black, 17));
 	ECS->add_component(cordex, obstruction_component(true, true));
-	ECS->add_component(cordex,
-			description_component(
-					"You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendents alive."));
-	hollow(location_t
-	{ planet_idx, start_x, start_y, start_z });
+	ECS->add_component(cordex, description_component("You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendants alive."));
+	hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }
 
 void add_structural_element(const location_t &loc, unsigned char glyph,
@@ -649,7 +643,7 @@ void make_entities(planet_t * planet)
 					static_cast<uint8_t>(start_y + 2), start_z });
 
 	add_camera(start_x, start_y, start_z, planet_idx);
-	world::stored_power = 25;
+	universe->globals.stored_power = 25;
 
 	planet->save_region(planet_idx);
 	ECS->save_game("world/savegame3d.dat");

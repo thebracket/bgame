@@ -4,6 +4,7 @@
 #include "../world/world.h"
 #include "../game.h"
 #include "../world/planet.hpp"
+#include "../world/universe.hpp"
 
 void obstruction_system::tick(const double& duration_ms)
 {
@@ -18,11 +19,7 @@ void obstruction_system::tick(const double& duration_ms)
 	}
 	if (changes)
 	{
-
-		position_component3d * camera_pos = ECS->find_entity_component<
-				position_component3d>(world::camera_handle);
-		region_t * current_region = world::planet->get_region(
-				camera_pos->pos.region);
+		region_t * current_region = get_current_region();
 		current_region->calculate_walkability();
 
 		// Obstructions from components

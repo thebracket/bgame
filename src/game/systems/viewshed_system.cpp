@@ -1,6 +1,7 @@
 #include "viewshed_system.h"
 #include "../game.h"
 #include "../world/planet.hpp"
+#include "../world/universe.hpp"
 
 using geometry::line_func_3d;
 using geometry::project_angle;
@@ -47,8 +48,7 @@ void viewshed_system::tick(const double &duration_ms)
 
 void viewshed_system::reset_visibility()
 {
-	position_component3d * camera_pos = ECS->find_entity_component<
-			position_component3d>(world::camera_handle);
+	position_component3d * camera_pos = get_camera_position();
 	const uint8_t region_idx = camera_pos->pos.region;
 	std::fill(world::planet->get_region(region_idx)->visible.begin(),
 			world::planet->get_region(region_idx)->visible.end(), false);
