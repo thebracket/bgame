@@ -24,12 +24,9 @@ namespace world
 
 // Convenience: storing the camera's handle globally is messy,
 // but makes it quick and easy for systems that want to find it.
-extern int camera_handle;
-extern int cordex_handle;
 extern string display_day_month;
 extern string display_time;
 extern string display_season;
-extern int stored_power;
 extern int max_power;
 extern float sun_angle;
 extern bool paused;
@@ -46,6 +43,4 @@ struct available_item
 };
 extern unordered_map<string, vector<available_item>> inventory;
 
-void load_world_constants(fstream &lbfile);
-void save_world_constants(fstream &lbfile);
 }

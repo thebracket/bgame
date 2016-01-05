@@ -15,8 +15,6 @@ void load_universe_state(fstream& lbfile)
 			sizeof(universe->globals.cordex_handle));
 	lbfile.read(reinterpret_cast<char *>(&universe->globals.stored_power),
 			sizeof(universe->globals.stored_power));
-	lbfile.read(reinterpret_cast<char *>(&universe->globals.render_graphics),
-			sizeof(universe->globals.render_graphics));
 	lbfile.read(reinterpret_cast<char *>(&universe->globals.starting_system_x),
 			sizeof(universe->globals.starting_system_x));
 	lbfile.read(reinterpret_cast<char *>(&universe->globals.starting_system_y),
@@ -36,9 +34,6 @@ void save_universe_state(fstream& lbfile)
 	lbfile.write(
 			reinterpret_cast<const char *>(&universe->globals.stored_power),
 			sizeof(universe->globals.stored_power));
-	lbfile.write(
-			reinterpret_cast<const char *>(&universe->globals.render_graphics),
-			sizeof(universe->globals.render_graphics));
 	lbfile.write(
 			reinterpret_cast<const char *>(&universe->globals.starting_system_x),
 			sizeof(universe->globals.starting_system_x));

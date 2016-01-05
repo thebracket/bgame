@@ -1,6 +1,7 @@
 #include "damage_system.h"
 #include "../game.h"
 #include "../world/skill_test.h"
+#include "../world/universe.hpp"
 
 void damage_system::tick(const double& duration_ms)
 {
@@ -40,7 +41,7 @@ void damage_system::tick(const double& duration_ms)
 	if (!world::paused)
 	{
 		calendar_component * calendar = ECS->find_entity_component<
-				calendar_component>(world::cordex_handle);
+				calendar_component>(universe->globals.cordex_handle);
 
 		if (calendar->minute % 30 == 0)
 		{

@@ -132,7 +132,8 @@ pair<engine::return_mode, unique_ptr<engine::base_mode> > main_menu::tick(
 		if (selected_item == 3)
 			return make_pair(POP, NO_PUSHED_MODE); // Quit
 
-				}
+
+		}
 				//if ( engine::command::is_key_down( engine::command::Q ) ) return make_pair ( PUSH, make_unique<genesis_mode>() );
 				//if ( engine::command::is_key_down( engine::command::P ) ) return make_pair ( PUSH, make_unique<game_mode>() );
 

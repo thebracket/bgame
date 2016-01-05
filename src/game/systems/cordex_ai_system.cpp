@@ -5,6 +5,7 @@
 #include "../raws/raws.h"
 #include "../tasks/help_wanted.h"
 #include "../../engine/geometry.hpp"
+#include "../world/universe.hpp"
 
 using world::available_item;
 
@@ -24,11 +25,9 @@ void cordex_ai_system::tick(const double& duration_ms)
 
 void cordex_ai_system::handle_build_orders()
 {
-	position_component3d * camera_pos = ECS->find_entity_component<
-			position_component3d>(world::camera_handle);
+	position_component3d * camera_pos = get_camera_position();
 
-	vector<build_order_message> * orders =
-			game_engine->messaging->get_messages_by_type<build_order_message>();
+	vector<build_order_message> * orders = game_engine->messaging->get_messages_by_type<build_order_message>();
 	for (build_order_message &msg : *orders)
 	{
 		msg.deleted = true; // No repeats

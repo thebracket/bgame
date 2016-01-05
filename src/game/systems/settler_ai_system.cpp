@@ -10,6 +10,7 @@
 #include "../world/skill_test.h"
 #include "../../engine/geometry.hpp"
 #include "../world/planet.hpp"
+#include "../world/universe.hpp"
 #include <map>
 
 namespace settler_ai_detail
@@ -641,7 +642,7 @@ void settler_ai_system::tick(const double &duration_ms)
 
 	// Obtain a link to the calendar
 	calendar_component * calendar = ECS->find_entity_component<
-			calendar_component>(world::cordex_handle);
+			calendar_component>(universe->globals.cordex_handle);
 
 	vector<settler_ai_component> * settlers = ECS->find_components_by_type<
 			settler_ai_component>();

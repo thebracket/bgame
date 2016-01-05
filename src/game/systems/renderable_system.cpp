@@ -4,6 +4,7 @@
 #include "../game.h"
 #include "../../engine/virtual_terminal.hpp"
 #include "../world/planet.hpp"
+#include "../world/universe.hpp"
 
 void renderable_system::tick(const double &duration_ms)
 {
@@ -23,8 +24,7 @@ void renderable_system::tick(const double &duration_ms)
 		std::fill(world::render_list_3d.begin(), world::render_list_3d.end(),
 				optional<engine::vterm::screen_character>());
 
-		const position_component3d * camera_pos = ECS->find_entity_component<
-				position_component3d>(world::camera_handle);
+		const position_component3d * camera_pos = get_camera_position();
 		const int top_y = camera_pos->pos.y - ((768 / 8) / 2);
 		const int bottom_y = camera_pos->pos.y + ((768 / 8) / 2);
 		const int left_x = camera_pos->pos.x - ((1024 / 8) / 2);

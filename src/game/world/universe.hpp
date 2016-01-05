@@ -2,6 +2,9 @@
 
 #include "solar_system.hpp"
 #include "shared_data.hpp"
+#include "../game.h"
+#include "../components/position_component3d.hpp"
+#include "planet.hpp"
 #include <unordered_map>
 #include <cstdint>
 #include <fstream>
@@ -53,3 +56,19 @@ void load_universe_state(std::fstream &lbfile);
  * De-serialize universal globals
  */
 void save_universe_state(std::fstream &lbfile);
+
+/*
+ * Retrieves the current position of the camera
+ */
+inline position_component3d * get_camera_position()
+{
+	const int camera_component_id = universe->globals.camera_handle;
+	return ECS->find_entity_component<position_component3d>(camera_component_id);
+}
+
+inline region_t * get_current_region()
+{
+	position_component3d * camera_pos = get_camera_position();
+	region_t * current_region = world::planet->get_region(camera_pos->pos.region);
+	return current_region;
+}
