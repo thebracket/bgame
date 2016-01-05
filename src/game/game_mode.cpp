@@ -9,6 +9,7 @@
 #include "render/colors.h"
 #include "render/panel_tooltip.h"
 #include "render/render_list.hpp"
+#include "world/tile_types.hpp"
 #include <utility>
 #include <iomanip>
 #include <sstream>
@@ -39,7 +40,7 @@ public:
 	int mouse_hover_time = 0;
 
 	inline void render_ascii(const SDL_Rect &dest, const vterm::screen_character &target, sdl2_backend * SDL,
-			int depth = 0, const int tile_idx=0 ,bool visible = true)
+			int depth, const std::tuple<float,float,float> &light_color, bool visible)
 	{
 		unsigned char target_char = target.character;
 		int texture_x = (target_char % 16) * 8;
@@ -61,7 +62,7 @@ public:
 		}
 
 		// Apply lighting
-		//apply_colored_light(fg, std::make_tuple(0.0, 0.0, 0.2));
+		apply_colored_light(fg, light_color);
 
 		SDL->set_color_mod("font_s", std::get<0>(fg), std::get<1>(fg),
 				std::get<2>(fg));
@@ -157,7 +158,7 @@ public:
 					//std::cout << "Dive reached depth: " << depth << "\n";
 					if (depth < 10 and (current_region->revealed[dive_tile_idx]	or universe->globals.omniscience))
 					{
-						render_ascii(dest, target, SDL, depth, dive_tile_idx, current_region->visible[dive_tile_idx]);
+						render_ascii(dest, target, SDL, depth, current_region->tiles[dive_tile_idx].light_color, current_region->visible[dive_tile_idx]);
 					}
 
 				}
@@ -166,10 +167,8 @@ public:
 					if (tile->flags.test(TILE_OPTIONS::SOLID))
 					{
 						target.character = 219;
-						target.foreground_color = color_t
-						{ 128, 128, 128 };
-						target.background_color = color_t
-						{ 0, 0, 0 };
+						target.foreground_color = color_t{ 128, 128, 128 };
+						target.background_color = color_t{ 0, 0, 0 };
 					}
 					else
 					{
@@ -182,8 +181,7 @@ public:
 					}
 					if (current_region->revealed[tile_idx] or universe->globals.omniscience)
 					{
-						render_ascii(dest, target, SDL, 0, tile_idx,
-								current_region->visible[tile_idx]);
+						render_ascii(dest, target, SDL, 0, current_region->tiles[tile_idx].light_color,	current_region->visible[tile_idx]);
 					}
 
 				}
@@ -348,7 +346,7 @@ private:
 			{ 255, 0, 255 }, color_t
 			{ 0, 0, 0 } };
 			SDL->set_alpha_mod("font_s", 128 + highlight.ttl);
-			render_ascii(dest, highlight_c, SDL);
+			render_ascii(dest, highlight_c, SDL, 0, make_tuple(1.0,1.0,1.0),true);
 		}
 		SDL->set_alpha_mod("font_s", 255);
 	}
@@ -468,7 +466,7 @@ private:
 			SDL->set_alpha_mod("font_s", alpha);
 			SDL_Rect dest
 			{ tile_x * 8, (tile_y * 8) + 48, 8, 8 };
-			render_ascii(dest, cursor, SDL);
+			render_ascii(dest, cursor, SDL, 0, make_tuple(1.0,1.0,1.0),true);
 			SDL->set_alpha_mod("font_s", 255);
 
 			if (mouse_hover_time > 10

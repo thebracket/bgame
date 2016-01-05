@@ -1,6 +1,7 @@
 #include "tile3d.hpp"
 #include "../components/component_types.h"
 #include <iostream>
+#include "tile_types.hpp"
 
 using namespace serialization_generic;
 using engine::vterm::color_t;
