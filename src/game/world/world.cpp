@@ -11,7 +11,6 @@ unordered_map<string, vector<available_item>> inventory;
 std::vector<optional<engine::vterm::screen_character>> render_list_3d(
 		REGION_TILES);
 
-float sun_angle = 0.0F;
 int max_power = 100;
 bool paused = true;
 bool render_graphics = true;

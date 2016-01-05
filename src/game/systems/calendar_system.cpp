@@ -152,8 +152,6 @@ void calendar_system::tick(const double &duration_ms)
 		calendar->duration_buffer = 0.0;
 		advance_calendar(calendar);
 		update_display_time(calendar);
-		world::sun_angle = calculate_sun_angle(calendar);
-		if (world::sun_angle > 180.0F)
-			world::sun_angle = 0.0F;
+		// TODO: Sun angle calculation 2.0
 	}
 }
