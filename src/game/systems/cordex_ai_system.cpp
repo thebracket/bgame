@@ -7,8 +7,6 @@
 #include "../../engine/geometry.hpp"
 #include "../world/universe.hpp"
 
-using world::available_item;
-
 struct selected_component
 {
 	int id;
@@ -49,18 +47,17 @@ void cordex_ai_system::handle_build_orders()
 		// Create the sub-tasks; we need to know what components go into the task
 		vector<string> components = raws::get_buildable_requirements(
 				msg.structure_name);
-		vector<world::available_item *> chosen_components;
+		vector<available_item_t *> chosen_components;
 		for (const string &component : components)
 		{
-			auto finder = world::inventory.find(component);
-			if (finder == world::inventory.end())
+			auto finder = universe->globals.inventory.find(component);
+			if (finder == universe->globals.inventory.end())
 				return; // Can't do it!
 			// Find the closest candidate
-			std::map<int, world::available_item *> distance_components;
-			for (world::available_item item : finder->second)
+			std::map<int, available_item_t *> distance_components;
+			for (available_item_t item : finder->second)
 			{
-				item_component * item_comp = ECS->find_entity_component<
-						item_component>(item.entity_id);
+				item_component * item_comp = ECS->find_entity_component<item_component>(item.entity_id);
 				if (!item_comp->claimed)
 				{
 					//float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
@@ -80,7 +77,7 @@ void cordex_ai_system::handle_build_orders()
 		}
 
 		// For each required component
-		for (world::available_item * component : chosen_components)
+		for (available_item_t * component : chosen_components)
 		{
 			const int16_t component_x = component->location.x;
 			const int16_t component_y = component->location.y;
@@ -107,7 +104,7 @@ void cordex_ai_system::handle_build_orders()
 
 		// Once the skill has been passed
 		//	For each component
-		for (world::available_item * component : chosen_components)
+		for (available_item_t * component : chosen_components)
 		{
 			const int component_id = component->entity_id;
 			job.steps.push_back(ai::job_step_t
@@ -140,14 +137,14 @@ void cordex_ai_system::handle_tree_chop_orders()
 
 		// Sub tasks:
 		// Find axe
-		auto finder = world::inventory.find("Fire Axe");
-		if (finder == world::inventory.end())
+		auto finder = universe->globals.inventory.find("Fire Axe");
+		if (finder == universe->globals.inventory.end())
 		{
 			std::cout << "Unable to locate an axe.\n";
 			return; // Can't do it!
 		}
-		std::map<int, world::available_item *> distance_components;
-		for (world::available_item item : finder->second)
+		std::map<int, available_item_t *> distance_components;
+		for (available_item_t item : finder->second)
 		{
 			item_component * item_comp = ECS->find_entity_component<
 					item_component>(item.entity_id);
@@ -160,7 +157,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 				distance_components[distance_i] = &item;
 			}
 		}
-		available_item * axe = distance_components.begin()->second;
+		available_item_t * axe = distance_components.begin()->second;
 		item_component * item_comp = ECS->find_entity_component<item_component>(
 				distance_components.begin()->second->entity_id);
 		item_comp->claimed = true;
@@ -243,15 +240,15 @@ void cordex_ai_system::handle_reaction_orders()
 		}
 
 		// Choose components
-		vector<world::available_item *> chosen_components;
+		vector<available_item_t *> chosen_components;
 		for (const string &component : components)
 		{
-			auto finder = world::inventory.find(component);
-			if (finder == world::inventory.end())
+			auto finder = universe->globals.inventory.find(component);
+			if (finder == universe->globals.inventory.end())
 				return; // Can't do it!
 			// Find the closest candidate
-			std::map<int, world::available_item *> distance_components;
-			for (world::available_item item : finder->second)
+			std::map<int, available_item_t *> distance_components;
+			for (available_item_t item : finder->second)
 			{
 				item_component * item_comp = ECS->find_entity_component<
 						item_component>(item.entity_id);
@@ -275,7 +272,7 @@ void cordex_ai_system::handle_reaction_orders()
 		}
 
 		// For each required component
-		for (world::available_item * component : chosen_components)
+		for (available_item_t * component : chosen_components)
 		{
 			const int16_t component_x = component->location.x;
 			const int16_t component_y = component->location.y;
@@ -310,7 +307,7 @@ void cordex_ai_system::handle_reaction_orders()
 						"Construction", 0, 0 });
 
 		// Destroy the components
-		for (world::available_item * component : chosen_components)
+		for (available_item_t * component : chosen_components)
 		{
 			const int component_id = component->entity_id;
 			job.steps.push_back(ai::job_step_t
