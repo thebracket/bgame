@@ -36,8 +36,8 @@
 
 **Structure**
 
-* Retire the 'world' module, globals belong in their place in the universe.
-* Provide helper functions for commonly accessed component access.
+* Move the render list into its own class.
+* Move the game state items that aren't persistent (paused, etc.) into their own holders.
 
 **Overall goals**
 
