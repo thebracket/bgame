@@ -69,10 +69,13 @@ std::unique_ptr<planet_t> make_world_layers(heightmap_t* base_map,
 	// TODO: Beach detection with marching squares.
 
 	// Make regions and cells
-	for (int wy = 0; wy < WORLD_HEIGHT; ++wy)
-	{
-		for (int wx = 0; wx < WORLD_WIDTH; ++wx)
-		{
+	const int wy = WORLD_HEIGHT-1;
+	const int wx = WORLD_WIDTH/2;
+
+	//for (int wy = 0; wy < WORLD_HEIGHT; ++wy)
+	//{
+		//for (int wx = 0; wx < WORLD_WIDTH; ++wx)
+		//{
 			const uint8_t region_index = planet->planet_idx(wx, wy);
 			planet->create_region(region_index);
 
@@ -229,8 +232,8 @@ std::unique_ptr<planet_t> make_world_layers(heightmap_t* base_map,
 			std::cout << "Saving region: " << wx << "x" << wy << "\n";
 			planet->save_region(region_index);
 			planet->free_region(region_index);
-		}
-	}
+		//}
+	//}
 	std::cout << "Saving PNG\n";
 	png.save();
 	return std::move(planet);
