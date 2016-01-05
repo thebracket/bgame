@@ -39,6 +39,7 @@ add_executable(bgame main.cpp
 	    game/world/gen/world_gen_layer_cake.cpp
 	    game/world/gen/world_gen_noise.cpp
 	    game/world/gen/tile_builder.cpp
+	    game/world/gen/world_gen_settlers.cpp
 	    
 	    game/raws/raws.cpp 
 	    game/raws/raw_power_generator.cpp	    
