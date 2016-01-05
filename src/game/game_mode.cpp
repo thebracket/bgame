@@ -548,12 +548,15 @@ pair<engine::return_mode, unique_ptr<engine::base_mode> > game_mode::tick(
 	if (is_key_down(command::TILDE))
 	{
 		vector<tuple<string, int, int, int>> timings = ECS->get_profile_info();
+		std::cout << std::setw(20) << "System" << std::setw(10) << "Last" << std::setw(10) << "Min" << std::setw(10) << "Max\n";
+		std::cout << "--------------------------------------------------\n";
 		for (auto line : timings)
 		{
 			std::cout << std::setw(20) << std::get<0>(line) << std::setw(10)
 					<< std::get<1>(line) << std::setw(10) << std::get<2>(line)
 					<< std::setw(10) << std::get<3>(line) << "\n";
 		}
+		std::cout << "--------------------------------------------------\n";
 	}
 	if (is_key_down(F10))
 	{
