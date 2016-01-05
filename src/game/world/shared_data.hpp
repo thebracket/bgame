@@ -7,4 +7,7 @@ struct shared_data_t
 	int stored_power;
 	int starting_system_x;
 	int starting_system_y;
+
+	// Non Persistent
+	int max_power = 100;
 };

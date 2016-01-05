@@ -68,7 +68,7 @@ void power_system::tick(const double& duration_ms)
 		if (power < 0)
 			power = 0; // TODO: Dead!
 		universe->globals.stored_power = power;
-		world::max_power = storage_capacity;
+		universe->globals.max_power = storage_capacity;
 		// TODO: If power < 0 - dead!
 		last_tick = calendar->system_time;
 	}
