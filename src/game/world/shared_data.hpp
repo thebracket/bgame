@@ -10,4 +10,7 @@ struct shared_data_t
 
 	// Non Persistent
 	int max_power = 100;
+	bool paused = true;
+	bool render_graphics = true;
+	bool omniscience = false;
 };

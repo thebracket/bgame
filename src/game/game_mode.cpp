@@ -54,7 +54,7 @@ public:
 			darken(darken_amount, fg);
 		}
 
-		if (!visible and !world::omniscience)
+		if (!visible and !universe->globals.omniscience)
 		{
 			desaturate(fg);
 		}
@@ -152,12 +152,9 @@ public:
 						}
 					}
 					//std::cout << "Dive reached depth: " << depth << "\n";
-					if (depth < 10
-							and (current_region->revealed[dive_tile_idx]
-									or world::omniscience))
+					if (depth < 10 and (current_region->revealed[dive_tile_idx]	or universe->globals.omniscience))
 					{
-						render_ascii(dest, target, SDL, depth,
-								current_region->visible[dive_tile_idx]);
+						render_ascii(dest, target, SDL, depth, current_region->visible[dive_tile_idx]);
 					}
 
 				}
@@ -180,8 +177,7 @@ public:
 					{
 						target = world::render_list_3d[tile_idx].value();
 					}
-					if (current_region->revealed[tile_idx]
-							or world::omniscience)
+					if (current_region->revealed[tile_idx] or universe->globals.omniscience)
 					{
 						render_ascii(dest, target, SDL, 0,
 								current_region->visible[tile_idx]);
@@ -199,7 +195,7 @@ public:
 		}
 		else if (mode == radial)
 		{
-			if (!world::paused)
+			if (!universe->globals.paused)
 			{
 				mode = normal;
 			}
@@ -254,7 +250,7 @@ private:
 
 	void render_paused(sdl2_backend * SDL)
 	{
-		if (world::paused)
+		if (universe->globals.paused)
 		{
 			const std::string paused = game_engine->render_text_to_image(
 					"lcd10", "PAUSED", "btn_playgame", render::sdl_dark_grey);
@@ -559,7 +555,7 @@ pair<engine::return_mode, unique_ptr<engine::base_mode> > game_mode::tick(
 	}
 	if (is_key_down(F10))
 	{
-		world::omniscience = !world::omniscience;
+		universe->globals.omniscience = !universe->globals.omniscience;
 	}
 
 	if (finished)
