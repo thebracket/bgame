@@ -32,6 +32,7 @@ add_executable(bgame main.cpp
 	    game/world/planet.cpp
 	    game/world/region.cpp
 	    game/world/tile3d.cpp
+	    game/world/inventory.cpp
 	    game/world/gen/world_gen_biomes.cpp
 	    game/world/gen/world_height_map_marching_squares.cpp
 	    game/world/gen/world_gen_hydrology.cpp

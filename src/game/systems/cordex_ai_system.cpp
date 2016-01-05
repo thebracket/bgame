@@ -6,6 +6,7 @@
 #include "../tasks/help_wanted.h"
 #include "../../engine/geometry.hpp"
 #include "../world/universe.hpp"
+#include "../world/inventory.hpp"
 
 struct selected_component
 {
@@ -50,8 +51,8 @@ void cordex_ai_system::handle_build_orders()
 		vector<available_item_t *> chosen_components;
 		for (const string &component : components)
 		{
-			auto finder = universe->globals.inventory.find(component);
-			if (finder == universe->globals.inventory.end())
+			auto finder = inventory.find(component);
+			if (finder == inventory.end())
 				return; // Can't do it!
 			// Find the closest candidate
 			std::map<int, available_item_t *> distance_components;
@@ -137,8 +138,8 @@ void cordex_ai_system::handle_tree_chop_orders()
 
 		// Sub tasks:
 		// Find axe
-		auto finder = universe->globals.inventory.find("Fire Axe");
-		if (finder == universe->globals.inventory.end())
+		auto finder = inventory.find("Fire Axe");
+		if (finder == inventory.end())
 		{
 			std::cout << "Unable to locate an axe.\n";
 			return; // Can't do it!
@@ -243,8 +244,8 @@ void cordex_ai_system::handle_reaction_orders()
 		vector<available_item_t *> chosen_components;
 		for (const string &component : components)
 		{
-			auto finder = universe->globals.inventory.find(component);
-			if (finder == universe->globals.inventory.end())
+			auto finder = inventory.find(component);
+			if (finder == inventory.end())
 				return; // Can't do it!
 			// Find the closest candidate
 			std::map<int, available_item_t *> distance_components;

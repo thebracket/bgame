@@ -1,15 +1,16 @@
 #include "inventory_system.h"
 #include "../game.h"
 #include "../world/universe.hpp"
+#include "../world/inventory.hpp"
 
 void inventory_system::store_inventory(debug_name_component * name,
 		position_component3d * pos)
 {
-	auto finder = universe->globals.inventory.find(name->debug_name);
-	if (finder == universe->globals.inventory.end())
+	auto finder = inventory.find(name->debug_name);
+	if (finder == inventory.end())
 	{
 		available_item_t item{ name->debug_name, pos->pos, name->entity_id };
-		universe->globals.inventory[name->debug_name] = vector<available_item_t>{ item };
+		inventory[name->debug_name] = vector<available_item_t>{ item };
 	}
 	else
 	{
@@ -43,7 +44,7 @@ void inventory_system::register_inventory_ground(position_component3d * pos)
 void inventory_system::tick(const double& duration_ms)
 {
 	bool need_inventory_refresh = false;
-	if (universe->globals.inventory.empty()) {
+	if (inventory.empty()) {
 		need_inventory_refresh = true;
 	}
 	vector<item_changed_message> * item_changes = game_engine->messaging->get_messages_by_type<item_changed_message>();
@@ -56,7 +57,7 @@ void inventory_system::tick(const double& duration_ms)
 	if (!need_inventory_refresh)
 		return;
 
-	universe->globals.inventory.clear();
+	inventory.clear();
 	vector<item_component> * items = ECS->find_components_by_type<item_component>();
 	for (const item_component &item : *items)
 	{
