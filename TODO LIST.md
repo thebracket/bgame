@@ -3,6 +3,7 @@
 **Tiles**
 
 * I don't like the way flags are stored in tiles currently; it's cache-inefficient and clunky to access a whole tile when all you need is a yes/no. Clean it up.
+* Walkability calculations currently seem inaccurate; this would make sense to fix along-side the flags system.
 
 **Visibility**
 
