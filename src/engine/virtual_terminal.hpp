@@ -106,7 +106,6 @@ inline void desaturate(color_t &col)
 	unsigned char green = std::get<1>(col);
 	unsigned char blue = std::get<2>(col);
 
-	// Goes here
 	float RED = red / 255.0F;
 	float GREEN = green / 255.0F;
 	float BLUE = blue / 255.0F;
@@ -115,6 +114,35 @@ inline void desaturate(color_t &col)
 	red = (luminance * 255.0F);
 	green = (luminance * 255.0F);
 	blue = (luminance * 255.0F);
+
+	std::get<0>(col) = red;
+	std::get<1>(col) = green;
+	std::get<2>(col) = blue;
+}
+
+inline void apply_colored_light(color_t &col, const std::tuple<float,float,float> &light) {
+	unsigned char red = std::get<0>(col);
+	unsigned char green = std::get<1>(col);
+	unsigned char blue = std::get<2>(col);
+
+	float RED = red / 255.0F;
+	float GREEN = green / 255.0F;
+	float BLUE = blue / 255.0F;
+
+	RED *= std::get<0>(light);
+	GREEN *= std::get<1>(light);
+	BLUE *= std::get<2>(light);
+
+	if (RED > 1.0) RED = 1.0;
+	if (RED < 0.0) RED = 0.0;
+	if (GREEN > 1.0) GREEN = 1.0;
+	if (GREEN < 0.0) GREEN = 0.0;
+	if (BLUE > 1.0) BLUE = 1.0;
+	if (BLUE < 0.0) BLUE = 0.0;
+
+	red = (RED * 255.0F);
+	green = (GREEN * 255.0F);
+	blue = (BLUE * 255.0F);
 
 	std::get<0>(col) = red;
 	std::get<1>(col) = green;
