@@ -20,6 +20,7 @@ using engine::vterm::color_t;
 using std::make_unique;
 using engine::vterm::desaturate;
 using engine::vterm::darken;
+using engine::vterm::apply_colored_light;
 
 enum game_mode_t
 {
@@ -37,9 +38,8 @@ public:
 	int last_mouse_y = 0;
 	int mouse_hover_time = 0;
 
-	inline void render_ascii(const SDL_Rect &dest,
-			const vterm::screen_character &target, sdl2_backend * SDL,
-			int depth = 0, bool visible = true)
+	inline void render_ascii(const SDL_Rect &dest, const vterm::screen_character &target, sdl2_backend * SDL,
+			int depth = 0, const int tile_idx=0 ,bool visible = true)
 	{
 		unsigned char target_char = target.character;
 		int texture_x = (target_char % 16) * 8;
@@ -59,6 +59,9 @@ public:
 		{
 			desaturate(fg);
 		}
+
+		// Apply lighting
+		//apply_colored_light(fg, std::make_tuple(0.0, 0.0, 0.2));
 
 		SDL->set_color_mod("font_s", std::get<0>(fg), std::get<1>(fg),
 				std::get<2>(fg));
@@ -154,7 +157,7 @@ public:
 					//std::cout << "Dive reached depth: " << depth << "\n";
 					if (depth < 10 and (current_region->revealed[dive_tile_idx]	or universe->globals.omniscience))
 					{
-						render_ascii(dest, target, SDL, depth, current_region->visible[dive_tile_idx]);
+						render_ascii(dest, target, SDL, depth, dive_tile_idx, current_region->visible[dive_tile_idx]);
 					}
 
 				}
@@ -179,7 +182,7 @@ public:
 					}
 					if (current_region->revealed[tile_idx] or universe->globals.omniscience)
 					{
-						render_ascii(dest, target, SDL, 0,
+						render_ascii(dest, target, SDL, 0, tile_idx,
 								current_region->visible[tile_idx]);
 					}
 
