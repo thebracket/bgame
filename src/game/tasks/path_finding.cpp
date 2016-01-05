@@ -62,7 +62,9 @@ void map_search_node::PrintNodeInfo()
 
 bool map_search_node::IsGoal(map_search_node& node_goal)
 {
-	return IsSameState(node_goal);
+	//return IsSameState(node_goal);
+	if (GoalDistanceEstimate(node_goal) < 2) return true;
+	return false;
 }
 
 bool map_search_node::GetSuccessors(AStarSearch<map_search_node>* a_star_search,

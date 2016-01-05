@@ -19,6 +19,8 @@ inline void really_hollow(const location_t &loc)
 {
 	tile_t * tile = world::planet->get_tile(loc);
 	tile->flags.reset(TILE_OPTIONS::SOLID);
+	tile->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+	tile->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
 	tile->base_tile_type = tile_type::EMPTY_SPACE;
 }
 
