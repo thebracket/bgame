@@ -19,7 +19,7 @@ void obstruction_system::tick(const double& duration_ms)
 	if (changes)
 	{
 		region_t * current_region = get_current_region();
-		current_region->calculate_walkability();
+
 
 		// Obstructions from components
 		const vector<obstruction_component> * blockages =
@@ -54,5 +54,7 @@ void obstruction_system::tick(const double& duration_ms)
 						TILE_OPTIONS::CAN_STAND_HERE);
 			}
 		}
+
+		current_region->calculate_walkability();
 	}
 }
