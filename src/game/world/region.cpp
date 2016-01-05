@@ -1,5 +1,6 @@
 #include "region.hpp"
 #include "../components/component_loader.h"
+#include "tile_types.hpp"
 
 void region_t::save(Poco::DeflatingOutputStream& lbfile)
 {

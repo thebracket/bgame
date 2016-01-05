@@ -1,5 +1,6 @@
 #include "panel_tooltip.h"
 #include "../world/planet.hpp"
+#include "../world/tile_types.hpp"
 
 namespace render
 {

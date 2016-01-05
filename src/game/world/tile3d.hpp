@@ -1,10 +1,12 @@
 #pragma once
 
-#include "tile_types.hpp"
 #include <Poco/DeflatingStream.h>
 #include <Poco/InflatingStream.h>
-#include "../../engine/virtual_terminal.hpp"
 #include <bitset>
+#include <cstdint>
+#include <tuple>
+
+#include "../../engine/virtual_terminal.hpp"
 
 enum TILE_OPTIONS
 {
@@ -39,6 +41,7 @@ public:
 
 	// Non-persistent helpers
 	engine::vterm::screen_character render_as;
+	std::tuple<float,float,float> light_color{1.0,1.0,1.0};
 
 	void save(Poco::DeflatingOutputStream &lbfile);
 	void load(Poco::InflatingInputStream &lbfile);
