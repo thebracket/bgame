@@ -5,6 +5,7 @@
 #include "../../engine/virtual_terminal.hpp"
 #include "../world/planet.hpp"
 #include "../world/universe.hpp"
+#include "../render/render_list.hpp"
 
 void renderable_system::tick(const double &duration_ms)
 {
@@ -21,7 +22,7 @@ void renderable_system::tick(const double &duration_ms)
 	if (changes)
 	{
 
-		std::fill(universe->globals.render_list_3d.begin(), universe->globals.render_list_3d.end(),
+		std::fill(render_list_3d.begin(), render_list_3d.end(),
 				boost::optional<engine::vterm::screen_character>());
 
 		const position_component3d * camera_pos = get_camera_position();
@@ -44,7 +45,7 @@ void renderable_system::tick(const double &duration_ms)
 				{
 					const int idx = get_tile_index(pos.pos.x, pos.pos.y,
 							pos.pos.z);
-					universe->globals.render_list_3d[idx] = engine::vterm::screen_character
+					render_list_3d[idx] = engine::vterm::screen_character
 					{ render_info->glyph, render_info->foreground,
 							render_info->background };
 					//std::cout << "Renderable at " << pos.pos.x << "/" << pos.pos.y << "/" << +pos.pos.z << "\n";
