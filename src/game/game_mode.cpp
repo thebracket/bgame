@@ -508,6 +508,7 @@ void game_mode::init_systems()
 	ECS->add_system(make_particle_system());
 	ECS->add_system(make_viewshed_system());
 	ECS->add_system(make_renderable_system());
+	ECS->add_system(make_global_illumination_system());
 }
 
 void game_mode::init()

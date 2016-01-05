@@ -11,6 +11,7 @@
 #include "cordex_ai_system.h"
 #include "damage_system.h"
 #include "particle_system.h"
+#include "global_illumination_system.hpp"
 #include <memory>
 
 using std::make_unique;
@@ -64,4 +65,7 @@ unique_ptr<base_system> make_particle_system()
 {
 	return make_unique<particle_system>();
 }
-
+unique_ptr<base_system> make_global_illumination_system()
+{
+	return make_unique<global_illumination_system>();
+}

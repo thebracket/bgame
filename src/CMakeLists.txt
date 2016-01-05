@@ -56,6 +56,7 @@ add_executable(bgame main.cpp
 	    game/systems/cordex_ai_system.cpp
 	    game/systems/damage_system.cpp
 	    game/systems/particle_system.cpp
+	    game/systems/global_illumination_system.cpp
 	    game/tasks/help_wanted.cpp
 	    game/tasks/path_finding.cpp
 	    game/tasks/find_nearest_provision.cpp
