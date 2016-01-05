@@ -25,7 +25,6 @@ namespace world
 // Convenience: storing the camera's handle globally is messy,
 // but makes it quick and easy for systems that want to find it.
 extern int max_power;
-extern float sun_angle;
 extern bool paused;
 extern bool render_graphics;
 extern bool omniscience;

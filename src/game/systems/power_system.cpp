@@ -15,20 +15,8 @@ int calculate_power_gain(const power_generator_component* gen)
 {
 	if (gen->generator_mode == raws::DAYLIGHT)
 	{
-		float efficiency = 0.0F;
-		if (world::sun_angle <= 90.0F)
-		{
-			efficiency = 1.0 - ((90.0F - world::sun_angle) / 90.0F);
-		}
-		else
-		{
-			efficiency = 1.0 - ((world::sun_angle - 90.0F) / 90.0F);
-		}
-		if (efficiency > 1.0)
-			efficiency = 0.9F;
-		if (efficiency < 0.01)
-			efficiency = 0.0F;
-		float generated = gen->amount * efficiency;
+		// TODO: Once the sun is restored, calculate solar efficiency
+		const float generated = gen->amount;
 		return generated;
 	}
 	return 0;
