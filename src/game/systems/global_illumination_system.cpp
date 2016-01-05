@@ -11,6 +11,7 @@ void global_illumination_system::tick(const double &duration_ms) {
 		for (int y=0; y<REGION_HEIGHT; ++y) {
 			for (int x=0; x<REGION_WIDTH; ++x) {
 				const int tile_idx = get_tile_index(x,y,z);
+
 				region->tiles[tile_idx].light_color = { 1.0, 1.0, 1.0 };
 			}
 		}
