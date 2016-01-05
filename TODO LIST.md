@@ -34,11 +34,6 @@
 * Rock types for mining
 * Refactor settler generation into its own module.
 
-**Structure**
-
-* Move the render list into its own class.
-* Move the game state items that aren't persistent (paused, etc.) into their own holders.
-
 **Overall goals**
 
 * Get building working again. The structure is there, it needs GUI work.
