@@ -81,7 +81,7 @@ inline void save_primitive(ostream &lbfile, const component_type &t)
 template<>
 inline void save_primitive(ostream &lbfile, const location_t &t)
 {
-	save_primitive<uint8_t>(lbfile, t.region);
+	save_primitive<uint16_t>(lbfile, t.region);
 	save_primitive<int16_t>(lbfile, t.x);
 	save_primitive<int16_t>(lbfile, t.y);
 	save_primitive<uint8_t>(lbfile, t.z);
@@ -142,7 +142,7 @@ inline void load_primitive(istream &lbfile, component_type &t)
 template<>
 inline void load_primitive(istream &lbfile, location_t &t)
 {
-	load_primitive<uint8_t>(lbfile, t.region);
+	load_primitive<uint16_t>(lbfile, t.region);
 	load_primitive<int16_t>(lbfile, t.x);
 	load_primitive<int16_t>(lbfile, t.y);
 	load_primitive<uint8_t>(lbfile, t.z);

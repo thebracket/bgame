@@ -8,7 +8,7 @@
 struct location_t
 {
 	/* The index of the region to which the point belongs. */
-	uint8_t region;
+	uint16_t region;
 
 	/* X coordinate. */
 	int16_t x;
