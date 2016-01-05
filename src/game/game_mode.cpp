@@ -8,6 +8,7 @@
 #include "systems/system_factory.h"
 #include "render/colors.h"
 #include "render/panel_tooltip.h"
+#include "render/render_list.hpp"
 #include <utility>
 #include <iomanip>
 #include <sstream>
@@ -102,7 +103,7 @@ public:
 
 				if (!tile->flags.test(TILE_OPTIONS::SOLID)
 						and tile->base_tile_type == tile_type::EMPTY_SPACE
-						and !universe->globals.render_list_3d[tile_idx])
+						and !render_list_3d[tile_idx])
 				{
 					// 3d dive
 					int depth = 1;
@@ -122,7 +123,7 @@ public:
 						if (!dive_tile->flags.test(TILE_OPTIONS::SOLID)
 								and dive_tile->base_tile_type
 										== tile_type::EMPTY_SPACE
-								and !universe->globals.render_list_3d[dive_tile_idx])
+								and !render_list_3d[dive_tile_idx])
 						{
 							++depth;
 							if (depth > 10)
@@ -144,10 +145,9 @@ public:
 								go = true;
 							}
 
-							if (universe->globals.render_list_3d[dive_tile_idx])
+							if (render_list_3d[dive_tile_idx])
 							{
-								target =
-										universe->globals.render_list_3d[dive_tile_idx].value();
+								target = render_list_3d[dive_tile_idx].value();
 							}
 						}
 					}
@@ -173,9 +173,9 @@ public:
 						target = tile->render_as;
 					}
 
-					if (universe->globals.render_list_3d[tile_idx])
+					if (render_list_3d[tile_idx])
 					{
-						target = universe->globals.render_list_3d[tile_idx].value();
+						target = render_list_3d[tile_idx].value();
 					}
 					if (current_region->revealed[tile_idx] or universe->globals.omniscience)
 					{

@@ -26,6 +26,7 @@ add_executable(bgame main.cpp
 	    game/render/panel_tooltip.cpp
 	    game/render/window.cpp
 	    game/render/settler_compositor.cpp
+	    game/render/render_list.cpp
 	    
 	    game/world/gen/world_gen.cpp
 	    game/world/planet.cpp
