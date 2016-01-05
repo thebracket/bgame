@@ -24,9 +24,6 @@ namespace world
 
 // Convenience: storing the camera's handle globally is messy,
 // but makes it quick and easy for systems that want to find it.
-extern string display_day_month;
-extern string display_time;
-extern string display_season;
 extern int max_power;
 extern float sun_angle;
 extern bool paused;

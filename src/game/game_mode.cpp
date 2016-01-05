@@ -232,21 +232,22 @@ private:
 
 	void render_date_time(sdl2_backend * SDL)
 	{
+		calendar_component * calendar = ECS->find_entity_component<calendar_component>(universe->globals.cordex_handle);
 		//SDL_Color sdl_white = {255,255,255,255};
 
-		if (world::display_day_month.empty())
+		if (calendar->display_day_month.empty())
 		{
-			world::display_day_month = " ";
+			calendar->display_day_month = " ";
 		}
-		if (world::display_time.empty())
+		if (calendar->display_time.empty())
 		{
-			world::display_time = " ";
+			calendar->display_time = " ";
 		}
 		const std::string the_date = game_engine->render_text_to_image("lcd10",
-				world::display_day_month, "btn_playgame",
+				calendar->display_day_month, "btn_playgame",
 				render::sdl_dark_grey);
 		const std::string the_time = game_engine->render_text_to_image("lcd10",
-				world::display_time, "btn_playgame", render::sdl_dark_grey);
+				calendar->display_time, "btn_playgame", render::sdl_dark_grey);
 		SDL->render_bitmap_simple(the_date, 68, 8);
 		SDL->render_bitmap_simple(the_time, 178, 8);
 	}
