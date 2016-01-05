@@ -32,7 +32,6 @@
 * Rivers and lakes!
 * Trees!
 * Rock types for mining
-* Refactor settler generation into its own module.
 
 **Overall goals**
 
