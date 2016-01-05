@@ -7,7 +7,6 @@ using std::pair;
 namespace world
 {
 
-unordered_map<string, vector<available_item>> inventory;
 std::vector<optional<engine::vterm::screen_character>> render_list_3d(
 		REGION_TILES);
 

@@ -24,12 +24,4 @@ namespace world
 
 extern std::vector<optional<engine::vterm::screen_character>> render_list_3d;
 
-struct available_item
-{
-	string name;
-	location_t location;
-	int entity_id;
-};
-extern unordered_map<string, vector<available_item>> inventory;
-
 }
