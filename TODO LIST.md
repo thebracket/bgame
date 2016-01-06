@@ -9,10 +9,6 @@
 
 * Efficient ray-cast routine; cast to box rather than by angle, and cache the resulting shape per-size.
 
-**Lighting**
-
-* Light sources: ray-cast from each light-source until range/occlusion occurs.
-
 **Render becomes a system**
 
 * Move the render code out of being a special case, and into an ECS system to benefit from the timing.
