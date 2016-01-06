@@ -11,8 +11,7 @@ void viewshed_system::tick(const double &duration_ms)
 	reset_visibility();
 
 	// Run a viewshed for every system that has one
-	vector<viewshed_component> * viewsheds = ECS->find_components_by_type<
-			viewshed_component>();
+	vector<viewshed_component> * viewsheds = ECS->find_components_by_type<viewshed_component>();
 	for (viewshed_component &viewshed : *viewsheds)
 	{
 		position_component3d * pos = ECS->find_entity_component<

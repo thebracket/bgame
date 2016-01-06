@@ -86,6 +86,9 @@ inline void component_factory(fstream &lbfile, const int ct)
 	case walkable_roof:
 		component_loader<walkable_roof_component>(lbfile);
 		break;
+	case pointlight:
+		component_loader<point_light_component>(lbfile);
+		break;
 	default:
 		throw 102;
 	}

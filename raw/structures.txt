@@ -22,7 +22,7 @@
 [RENDER_TILE:WATER_COOLER]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
+[OBSTRUCTS:N:Y]
 [DESCRIPTION:A roof-top array condenses water, purifies it, and keeps it nice and cool.]
 [SETTLER-ACTION]
 [SA-NAME:Drink Purified Water]
@@ -39,7 +39,7 @@
 [RENDER_TILE:FOOD_DISPENSER]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
+[OBSTRUCTS:N:Y]
 [DESCRIPTION:A system that combines nutrients to provide a healthy, but flavorless, Nutra-gunk meal. It is better than starving. Honest.]
 [SETTLER-ACTION]
 [SA-NAME:Eat NutraGunk]
@@ -56,7 +56,7 @@
 [RENDER_TILE:REPLICATOR]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
+[OBSTRUCTS:N:Y]
 [DESCRIPTION:A replicator unit, capable of converting raw materials into useful items.]
 [/STRUCTURE]
 
@@ -68,7 +68,7 @@
 [RENDER_TILE:CABINET]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
+[OBSTRUCTS:N:Y]
 [DESCRIPTION:A luggage container access panel, linked to a luggage compartment below.]
 [/STRUCTURE]
 
@@ -80,7 +80,6 @@
 [RENDER_TILE:BLUE_CONSOLE]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
 [DESCRIPTION:A human-computer interface terminal, dedicated to providing eduction from Cordex's database.]
 [/STRUCTURE]
 
@@ -92,7 +91,6 @@
 [RENDER_TILE:GREEN_CONSOLE]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
 [DESCRIPTION:A console designed through which items can be scanned by Cordex, and information gleaned from them.]
 [/STRUCTURE]
 
@@ -104,7 +102,6 @@
 [RENDER_TILE:YELLOW_CONSOLE]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
 [DESCRIPTION:A console for controlling Cordex's defense systems.]
 [/STRUCTURE]
 
@@ -116,7 +113,6 @@
 [RENDER_TILE:PINK_CONSOLE]
 [RENDER_LAYER:BUILDING]
 [/RENDER]
-[OBSTRUCTS:Y:Y]
 [DESCRIPTION:A human-computer interface terminal, providing access to Cordex's communication systems.]
 [/STRUCTURE]
 

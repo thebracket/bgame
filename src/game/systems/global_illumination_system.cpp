@@ -2,7 +2,12 @@
 #include "../world/universe.hpp"
 #include "../world/world_defs.hpp"
 #include "../game.h"
+#include "../../engine/geometry.hpp"
 #include <unordered_set>
+
+using geometry::line_func_3d;
+using geometry::project_angle;
+using geometry::DEGRAD;
 
 void sunlight() {
 	region_t * region = get_current_region();
@@ -79,8 +84,88 @@ void sunlight() {
 	}
 }
 
+void light_radius_for_visibility(point_light_component * view, const position_component3d * pos)
+{
+	constexpr double sweep_degrees_radians = 2 * DEGRAD;
+	constexpr double three_sixy_degrees_radians = 360 * DEGRAD;
+
+	view->last_visibility.clear();
+
+	// You can always see yourself
+	const int16_t x = pos->pos.x;
+	const int16_t y = pos->pos.y;
+	const uint8_t z = pos->pos.z;
+	const uint8_t region_idx = pos->pos.region;
+	const int my_idx = get_tile_index(x, y, z);
+	const int radius = view->light_range;
+	view->last_visibility.push_back(my_idx);
+	region_t * current_region = world::planet->get_region(region_idx);
+
+	// Sweep around
+	for (double angle = 0; angle < three_sixy_degrees_radians; angle +=
+			sweep_degrees_radians)
+	{
+		double this_radius = radius;
+
+		pair<int, int> destination = project_angle(x, y, this_radius, angle);
+		for (int lz = z - radius; lz < z + radius; ++lz)
+		{
+			bool blocked = false;
+			line_func_3d(x, y, z, destination.first, destination.second, lz,
+					[&blocked,view,current_region] (int tx, int ty, int tz)
+					{
+						if (tx < 0 or tx > REGION_WIDTH or ty < 0 or ty > REGION_HEIGHT or tz<0 or tz>REGION_DEPTH) return;
+						const int index = get_tile_index(tx,ty,tz);
+
+						if (!blocked)
+						{
+							if (tx >=0 and tx < REGION_WIDTH and ty>=0 and ty<REGION_HEIGHT and tz>0 and tz<REGION_DEPTH)
+							{
+								view->last_visibility.push_back(index);
+							}
+
+							// FIXME: More block reasons
+							tile_t * tile = &current_region->tiles[index];
+							if (tile->flags.test( TILE_OPTIONS::VIEW_BLOCKED ) )
+							{
+								blocked = true;
+							}
+						}
+					});
+		}
+	}
+
+}
+
+void point_lights() {
+	// Run a light view for every system that has one
+	vector<point_light_component> * lights = ECS->find_components_by_type<point_light_component>();
+	for (point_light_component &light : *lights)
+	{
+		position_component3d * pos = ECS->find_entity_component<position_component3d>(light.entity_id);
+		region_t * region = world::planet->get_region(pos->pos.region);
+		if (region == nullptr)
+		{
+			std::cout << "Danger! Region null for a light component!\n";
+		}
+
+		if (pos->moved or light.last_visibility.empty())
+		{
+			light_radius_for_visibility(&light, pos);
+		}
+
+		// Apply the cached lighting shed
+		for (const int &idx : light.last_visibility)
+		{
+			region->tiles[idx].light_color = {1.0, 1.0, 1.0};
+		}
+	}
+}
+
 void global_illumination_system::tick(const double &duration_ms) {
-	if (universe->globals.paused) return;
+	if (universe->globals.paused and has_run==false) return;
+	has_run = true;
 
 	sunlight();
+	point_lights();
 }
