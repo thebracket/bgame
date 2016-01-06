@@ -185,7 +185,7 @@ shared_ptr<navigation_path> find_path(location_t start, location_t end)
 		return result;
 
 	}
-	std::cout << "No search solution!\n";
+	//std::cout << "No search solution!\n";
 	shared_ptr<navigation_path> result = make_shared<navigation_path>();
 	a_star_search.EnsureMemoryFreed();
 	return result;
