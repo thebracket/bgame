@@ -65,6 +65,17 @@ void power_system::tick(const double& duration_ms)
 		universe->globals.max_power = storage_capacity;
 		// TODO: If power < 0 - dead!
 		last_tick = calendar->system_time;
+
+		point_light_component * cordex_light = ECS->find_entity_component<point_light_component>(universe->globals.cordex_handle);
+		if (power < storage_capacity/3) {
+			cordex_light->red = 1.0F;
+			cordex_light->green = 0.25F;
+			cordex_light->blue = 0.25F;
+		} else {
+			cordex_light->red = 1.0F;
+			cordex_light->green = 1.0F;
+			cordex_light->blue = 0.95F;
+		}
 	}
 }
 

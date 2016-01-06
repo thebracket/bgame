@@ -25,8 +25,6 @@ void sunlight() {
 	const float delta_x = (calendar->sun_x / 768.0F)*2.0;
 	//std::cout << "Delta-X: " << delta_x << "\n";
 
-	const float sun_intensity = 1.0F;
-
 	for (int z=camera_pos->pos.z-10; z<camera_pos->pos.z+1; ++z) {
 		for (int y=top_y; y<bottom_y; ++y) {
 			for (int x=left_x; x<right_x; ++x) {
@@ -72,7 +70,7 @@ void sunlight() {
 
 				if (lit) {
 					if ( calendar->is_daytime ) {
-						region->tiles[tile_idx].light_color = std::make_tuple( sun_intensity, sun_intensity, sun_intensity );
+						region->tiles[tile_idx].light_color = std::make_tuple( 1.0F, 1.0F, 0.95F );
 					} else {
 						region->tiles[tile_idx].light_color = { 0.2, 0.2, 0.5 };
 					}
@@ -157,13 +155,13 @@ void point_lights() {
 		// Apply the cached lighting shed
 		for (const int &idx : light.last_visibility)
 		{
-			region->tiles[idx].light_color = {1.0, 1.0, 1.0};
+			region->tiles[idx].light_color = std::make_tuple(light.red, light.green, light.blue);
 		}
 	}
 }
 
 void global_illumination_system::tick(const double &duration_ms) {
-	if (universe->globals.paused and has_run==false) return;
+	//if (universe->globals.paused and has_run==false) return;
 	has_run = true;
 
 	sunlight();
