@@ -18,5 +18,5 @@ public:
 private:
 	void advance_calendar(calendar_component* time);
 	void update_display_time(calendar_component* t);
-	float calculate_sun_angle(const calendar_component* t) const;
+	void calculate_sun_angle(calendar_component* t) const;
 };
