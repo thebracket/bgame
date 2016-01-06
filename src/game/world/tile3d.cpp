@@ -138,85 +138,73 @@ void tile_render_calculation(tile_t * tile)
 	case tile_covering::CACTUS:
 	{
 		tile->render_as.character = 15;
-		tile->render_as.foreground_color = color_t
-		{ 0, 255, 0 };
+		tile->render_as.foreground_color = color_t{ 1, 166, 17 };
 	}
 		break;
 	case tile_covering::GORSE:
 	{
 		tile->render_as.character = 37;
-		tile->render_as.foreground_color = color_t
-		{ 0, 255, 0 };
+		tile->render_as.foreground_color = color_t{ 1, 166, 17 };
 	}
 		break;
 	case tile_covering::GRASS:
 	{
-		tile->render_as.character = 34;
-		tile->render_as.foreground_color = color_t
-		{ 0, 255, 0 };
+		tile->render_as.character = 177;
+		tile->render_as.foreground_color = color_t{ 1, 142, 14 };
 	}
 		break;
 	case tile_covering::GRASS_SPARSE:
 	{
-		tile->render_as.character = 39;
-		tile->render_as.foreground_color = color_t
-		{ 0, 255, 0 };
+		tile->render_as.character = 176;
+		tile->render_as.foreground_color = color_t{ 1, 166, 17 };
 	}
 		break;
 	case tile_covering::HEATHER:
 	{
 		tile->render_as.character = 126;
-		tile->render_as.foreground_color = color_t
-		{ 158, 162, 162 };
+		tile->render_as.foreground_color = color_t{ 158, 162, 162 };
 	}
 		break;
 	case tile_covering::LYCHEN:
 	{
 		tile->render_as.character = 246;
-		tile->render_as.foreground_color = color_t
-		{ 17, 150, 113 };
+		tile->render_as.foreground_color = color_t{ 17, 150, 113 };
 	}
 		break;
 	case tile_covering::MOSS:
 	{
 		tile->render_as.character = 178;
-		tile->render_as.foreground_color = color_t
-		{ 0, 255, 0 };
+		tile->render_as.foreground_color = color_t{ 5, 92, 9 };
 	}
 		break;
 	case tile_covering::PEBBLES:
 	{
 		tile->render_as.character = 176;
-		tile->render_as.foreground_color = color_t
-		{ 128, 128, 128 };
+		tile->render_as.foreground_color = color_t{ 128, 128, 128 };
 	}
 		break;
 	case tile_covering::REEDS:
 	{
 		tile->render_as.character = 159;
-		tile->render_as.foreground_color = color_t
-		{ 0, 192, 0 };
+		tile->render_as.foreground_color = color_t{ 5, 92, 9 };
 	}
 		break;
 	case tile_covering::SHRUB:
 	{
 		tile->render_as.character = 15;
-		tile->render_as.foreground_color = color_t
-		{ 158, 162, 162 };
+		tile->render_as.foreground_color = color_t{ 58, 192, 58 };
 	}
 		break;
 	case tile_covering::THISTLE:
 	{
 		tile->render_as.character = 37;
-		tile->render_as.foreground_color = color_t
-		{ 0, 255, 0 };
+		tile->render_as.foreground_color = color_t{ 5, 92, 9 };
 	}
 		break;
 	case tile_covering::WILDFLOWER:
 	{
 		tile->render_as.character = 96;
-		tile->render_as.foreground_color = color_t
-		{ 255, 255, 0 };
+		tile->render_as.foreground_color = color_t{ 255, 255, 64 };
 	}
 		break;
 	default:
