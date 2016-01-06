@@ -96,7 +96,7 @@ void calendar_system::calculate_sun_angle(calendar_component* t) const
 	const int hours_after_dawn = t->hour - 6;
 	const float minute_fraction = t->minute / 60.0F;
 	const float day_fraction = (hours_after_dawn + minute_fraction) / 13.0F;
-	const float sun_x = (768.0F * day_fraction) - 384.0F;
+	const float sun_x = 0.0F -( (768.0F * day_fraction) - 384.0F );
 	t->sun_x = std::floor(sun_x);
 	t->is_daytime = true;
 }
