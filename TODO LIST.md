@@ -11,11 +11,7 @@
 
 **Lighting**
 
-* Create "lit tile" array of float RGB.
-* Lighting pass: set ambient by time-of-day for outside, dark for inside.
-* Sunlight: ray-cast surface tiles to the sun, and light if not occluded (will give perfect shadowing)
 * Light sources: ray-cast from each light-source until range/occlusion occurs.
-* Integrate into the render loop.
 
 **Render becomes a system**
 
