@@ -181,7 +181,7 @@ void parse_raw_obstruction(const vector<string> &chunks)
 	{
 		walk = true;
 	}
-	unique_ptr<raw_obstruction> obs = make_unique<raw_obstruction>(view, walk);
+	unique_ptr<raw_obstruction> obs = make_unique<raw_obstruction>(walk, view);
 	current->children.push_back(std::move(obs));
 }
 

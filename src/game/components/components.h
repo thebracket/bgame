@@ -21,3 +21,4 @@
 #include "particle_emitter_component.h"
 #include "position_component3d.hpp"
 #include "walkable_roof_component.h"
+#include "point_light_component.h"

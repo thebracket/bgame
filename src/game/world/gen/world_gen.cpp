@@ -85,8 +85,9 @@ void add_cordex(const uint8_t start_x, const uint8_t start_y,
 	ECS->add_component(cordex, viewshed_component(penetrating, 16));
 	ECS->add_component(cordex, calendar_component(0L));
 	ECS->add_component(cordex, renderable_component(15, cyan, black, 17));
-	ECS->add_component(cordex, obstruction_component(true, true));
+	ECS->add_component(cordex, obstruction_component(true, false));
 	ECS->add_component(cordex, description_component("You! The ship-board AI responsible for keeping these barely-functional hairless ape-descendants alive."));
+	ECS->add_component(cordex, point_light_component(8));
 	hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }
 

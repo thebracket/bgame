@@ -13,4 +13,6 @@ public:
 		system_name = "Global Illumination";
 	}
 	virtual void tick(const double &duration_ms);
+private:
+	bool has_run = false;
 };

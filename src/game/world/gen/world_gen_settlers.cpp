@@ -209,6 +209,7 @@ entity make_settler(const location_t &loc)
 	ECS->add_component(test, stats);
 	ECS->add_component(test, health);
 	ECS->add_component(test, species);
+	//ECS->add_component(test, point_light_component(6));
 
 	// Make clothing for the settler
 	//std::cout << "Generating: " << profession.first << "\n";
