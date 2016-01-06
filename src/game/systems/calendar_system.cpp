@@ -79,52 +79,25 @@ void calendar_system::update_display_time(calendar_component* t)
 		time << "0";
 	time << (t->minute + 2);
 
-	const string season =
-			calendar_detail::season_names[calendar_detail::season_months[t->month]];
+	const string season = calendar_detail::season_names[calendar_detail::season_months[t->month]];
 	t->display_day_month = day.str();
 	t->display_time = time.str();
 	t->display_season = season;
 }
 
-float calendar_system::calculate_sun_angle(const calendar_component* t) const
+void calendar_system::calculate_sun_angle(calendar_component* t) const
 {
-	// TODO: Vary by season!
-	const int hour = t->hour + 1;
-	switch (hour)
-	{
-	case 5:
-		return 10.0F;
-	case 6:
-		return 20.0F;
-	case 7:
-		return 40.0F;
-	case 8:
-		return 50.0F;
-	case 9:
-		return 60.0F;
-	case 10:
-		return 70.0F;
-	case 11:
-		return 80.0F;
-	case 12:
-		return 90.0F;
-	case 13:
-		return 100.0F;
-	case 14:
-		return 110.0F;
-	case 15:
-		return 120.0F;
-	case 16:
-		return 130.0F;
-	case 17:
-		return 140.0F;
-	case 18:
-		return 160.0F;
-	case 19:
-		return 170.0F;
-	default:
-		return 0.0F;
+	if ( t->hour < 6 or t->hour > 20 ) {
+		t->is_daytime = false;
+		t->sun_x = 0;
+		return;
 	}
+
+	const int hours_after_dawn = t->hour - 6;
+	const float minute_fraction = t->minute / 60.0F;
+	const float day_fraction = (hours_after_dawn + minute_fraction) / 15.0F;
+	const float sun_x = (768.0F * day_fraction) - 256.0F;
+	t->sun_x = std::floor(sun_x);
 }
 
 void calendar_system::tick(const double &duration_ms)
@@ -151,6 +124,6 @@ void calendar_system::tick(const double &duration_ms)
 		calendar->duration_buffer = 0.0;
 		advance_calendar(calendar);
 		update_display_time(calendar);
-		// TODO: Sun angle calculation 2.0
+		calculate_sun_angle(calendar);
 	}
 }

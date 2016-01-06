@@ -8,8 +8,8 @@ using namespace serialization_generic;
 struct calendar_component
 {
 public:
-	int entity_id;
-	int handle;
+	int entity_id = 0;
+	int handle = 0;
 	component_type type = calendar;
 	bool deleted = false;
 
@@ -31,9 +31,12 @@ public:
 	double duration_buffer = 0.0;
 
 	// Non-persistent
-	std::string display_day_month;
-	std::string display_time;
-	std::string display_season;
+	std::string display_day_month = "";
+	std::string display_time = "";
+	std::string display_season = "";
+
+	bool is_daytime = false;
+	int sun_x = 0;
 
 	void save(fstream &lbfile)
 	{
