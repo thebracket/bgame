@@ -23,7 +23,6 @@ add_executable(bgame main.cpp
 	    game/genesis_mode.cpp
 	    game/game_mode.cpp
 	    
-	    game/render/panel_tooltip.cpp
 	    game/render/window.cpp
 	    game/render/settler_compositor.cpp
 	    game/render/render_list.cpp
