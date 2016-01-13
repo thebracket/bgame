@@ -5,7 +5,7 @@
 
 using engine::base_system;
 
-constexpr double TICK_LENGTH = 10.0;
+constexpr double TICK_LENGTH = 1.0;
 
 class calendar_system: public base_system
 {
