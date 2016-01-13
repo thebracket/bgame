@@ -30,6 +30,12 @@ private:
 	game_mode_t mode = normal;
 	std::unique_ptr<render::panel_tooltip> tooltip_window;
 
+	int radial_screen_x = 0;
+	int radial_screen_y = 0;
+	int radial_tilespace_x = 0;
+	int radial_tilespace_y = 0;
+	int radial_tilespace_z = 0;
+
 	void render_tooltip(sdl2_backend * SDL, const location_t &loc, const std::pair<int, int> mouse);
 	void render_cursor(sdl2_backend * SDL, pair<int, int> &screen_size,	SDL_Rect &viewport, position_component3d * camera_pos);
 };

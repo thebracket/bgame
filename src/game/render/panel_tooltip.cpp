@@ -48,9 +48,10 @@ void panel_tooltip::render(const int hover_time)
 	SDL_Rect source
 	{ 0, 0, width, height };
 	int line_size = static_cast<int>((lines.size() / 2) * 16);
-	SDL_Rect dest
-	{ screen_x, screen_y - line_size, width, height };
+	SDL_Rect dest{ screen_x, screen_y - line_size, width, height };
+	SDL->set_alpha_mod(panel_holder->texture_id, 128);
 	SDL->render_bitmap(panel_holder->texture_id, source, dest);
+	SDL->set_alpha_mod(panel_holder->texture_id, 255);
 }
 
 void panel_tooltip::render_buffer()
@@ -61,16 +62,14 @@ void panel_tooltip::render_buffer()
 	SDL->texture_target(panel_holder->texture_id);
 
 	SDL_Rect source = raws::get_tile_source_by_name("BLACKMASK");
-	SDL_Rect dest
-	{ 0, 0, width, height };
+	SDL_Rect dest{ 0, 0, width, height };
 	SDL->render_bitmap("spritesheet", source, dest);
 
 	int y = 8;
 	const int x = 16;
 	for (const std::pair<std::string, SDL_Color> &tooltip_line : lines.lines)
 	{
-		std::string line_s = SDL->render_text_to_image("disco14",
-				tooltip_line.first, "tmp", tooltip_line.second);
+		std::string line_s = SDL->render_text_to_image("disco14", tooltip_line.first, "tmp", tooltip_line.second);
 		SDL->render_bitmap_simple(line_s, x, y);
 		y += 16;
 	}

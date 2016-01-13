@@ -2,14 +2,14 @@
 #include "../game.h"
 #include "../world/universe.hpp"
 #include "render_ascii.hpp"
+#include <memory>
 
 void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen_size,	SDL_Rect &viewport, position_component3d * camera_pos)
 {
 	int mouse_x = engine::command::mouse_x;
 	int mouse_y = engine::command::mouse_y;
 
-	if (mouse_x > 0 and mouse_x < screen_size.first and mouse_y > 48
-			and mouse_y < screen_size.second)
+	if (mouse_x > 0 and mouse_x < screen_size.first and mouse_y > 48 and mouse_y < screen_size.second)
 	{
 		const int tile_x = mouse_x / 8;
 		const int tile_y = (mouse_y - 48) / 8;
@@ -74,8 +74,7 @@ void gui_render_system::render_tooltip(sdl2_backend * SDL, const location_t &loc
 		return;
 	}
 
-	tooltip_window = std::make_unique<render::panel_tooltip>(SDL, loc,
-			mouse);
+	tooltip_window = std::make_unique<render::panel_tooltip>(SDL, loc,mouse);
 	tooltip_window->render(mouse_hover_time);
 }
 
@@ -96,6 +95,25 @@ void gui_render_system::tick(const double& duration_ms) {
 	SDL_Rect viewport{ camera_pos->pos.x - (ascii_width / 2), camera_pos->pos.y	- (ascii_height / 2), ascii_width, ascii_height };
 
 	// Render mode
+	if (mode == normal and engine::command::right_click and mouse_x > 0 and mouse_x < screen_size.first and mouse_y > 48 and mouse_y < screen_size.second) {
+		mode = radial;
+		const int tile_x = mouse_x / 8;
+		const int tile_y = (mouse_y - 48) / 8;
+
+		const int16_t tilespace_x = tile_x + viewport.x;
+		const int16_t tilespace_y = tile_y + viewport.y;
+
+		radial_screen_x = mouse_x;
+		radial_screen_y = mouse_y;
+		radial_tilespace_x = tilespace_x;
+		radial_tilespace_y = tilespace_y;
+		radial_tilespace_z = camera_pos->pos.z;
+
+		universe->globals.paused = true;
+
+		// TODO: Launch the pop-ups!
+	}
+
 	if (mode == normal)
 	{
 		render_cursor(SDL, screen_size, viewport, camera_pos);
@@ -108,7 +126,7 @@ void gui_render_system::tick(const double& duration_ms) {
 		}
 		else
 		{
-			// TODO: Render Radial
+			// TODO: GUI Rendering
 		}
 	}
 }
