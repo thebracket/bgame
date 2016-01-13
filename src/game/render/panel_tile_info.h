@@ -4,8 +4,6 @@
 #include <utility>
 #include <sstream>
 #include <memory>
-#include "../world/world.h"
-#include "../../engine/sdl2_backend.h"
 #include "../game.h"
 #include "../raws/raws.h"
 #include "terrain_info_window.h"
@@ -22,29 +20,22 @@ namespace render
 class panel_tile_info
 {
 public:
-	panel_tile_info(sdl2_backend * sdl, const std::pair<int, int> region_loc,
-			const std::pair<int, int> mouse_loc)
+	panel_tile_info(sdl2_backend * sdl, const location_t region_loc, const std::pair<int, int> mouse_loc)
 	{
 		SDL = sdl;
 		int mouse_vx, mouse_vy;
-		std::tie(region_x, region_y) = region_loc;
 		std::tie(mouse_vx, mouse_vy) = mouse_loc;
 
 		screen_x = mouse_vx * 16 + 16;
 		screen_y = mouse_vy * 16 + 48;
 
 		// We are going to make a panel for each major option group
-		info_windows.push_back(
-				std::make_unique<terrain_info_window>(sdl,
-						"Terrain Information", true, region_x, region_y));
+		info_windows.push_back(std::make_unique<terrain_info_window>(sdl,"Terrain Information", true, region_loc));
 		add_structure_panels(); // Settler panels are called from here
-		info_windows.push_back(
-				std::make_unique<build_options_window>(sdl, "Build Options",
-						true, region_x, region_y));
+		info_windows.push_back(std::make_unique<build_options_window>(sdl, "Build Options",	true, region_loc));
 	}
 
-	bool render(const std::pair<int, int> mouse_loc, bool left_click,
-			bool right_click)
+	bool render(const std::pair<int, int> mouse_loc, bool left_click, bool right_click)
 	{
 		int y = 90;
 		int mouse_x, mouse_y;
