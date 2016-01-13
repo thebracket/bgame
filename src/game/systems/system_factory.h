@@ -19,3 +19,4 @@ unique_ptr<base_system> make_cordex_ai_system();
 unique_ptr<base_system> make_damage_system();
 unique_ptr<base_system> make_particle_system();
 unique_ptr<base_system> make_global_illumination_system();
+unique_ptr<base_system> make_hud_render_system();

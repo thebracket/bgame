@@ -26,12 +26,10 @@ class scene_graph
 public:
 	void render(sdl2_backend * sdl)
 	{
-		sdl->clear_screen();
 		for (const unique_ptr<base_node> &child : children)
 		{
 			child->render(sdl);
 		}
-		sdl->present();
 	}
 
 	vector<unique_ptr<base_node>> children;

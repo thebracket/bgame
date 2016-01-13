@@ -194,7 +194,7 @@ pair<int, int> sdl2_backend::text_size(const string& font, const string& text)
 void sdl2_backend::draw_vterm(vector<vterm::screen_character>* screen)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
+	//SDL_RenderClear(renderer);
 	SDL_Texture * font_image = resources.get_texture_by_tag("font");
 
 	const int ascii_height = SCREEN_HEIGHT / TERMINAL_SIZE;
@@ -235,7 +235,7 @@ void sdl2_backend::draw_vterm(vector<vterm::screen_character>* screen)
 		}
 	}
 
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 }
 
 command::keys translate_keycode(const SDL_Event &e)
