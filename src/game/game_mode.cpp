@@ -71,10 +71,6 @@ public:
 
 	virtual void render(sdl2_backend * SDL) override
 	{
-		render_power_bar(SDL);
-		render_date_time(SDL);
-		render_paused(SDL);
-
 		position_component3d * camera_pos = get_camera_position();
 		region_t * current_region = world::planet->get_region(camera_pos->pos.region);
 		pair<int, int> screen_size = SDL->get_screen_size();
@@ -208,56 +204,6 @@ public:
 	}
 private:
 	game_mode_t mode = normal;
-
-	void render_power_bar(sdl2_backend * SDL)
-	{
-		const float power_percent = static_cast<float>(universe->globals.stored_power)
-				/ static_cast<float>(universe->globals.max_power);
-		const int power_tenths = (power_percent * 10.0) - 1;
-		SDL_Rect src
-		{ power_tenths * 46, 0, 46, 48 };
-		SDL_Rect dest
-		{ 4, 0, 48, 48 };
-		SDL->render_bitmap("cordex", src, dest);
-
-		std::stringstream ss;
-		ss << "Power: " << universe->globals.stored_power << " I " << universe->globals.max_power;
-		string emote_text = SDL->render_text_to_image("lcd10", ss.str(), "tmp",
-				render::sdl_dark_grey);
-		SDL->render_bitmap_simple(emote_text, 68, 22);
-	}
-
-	void render_date_time(sdl2_backend * SDL)
-	{
-		calendar_component * calendar = ECS->find_entity_component<calendar_component>(universe->globals.cordex_handle);
-		//SDL_Color sdl_white = {255,255,255,255};
-
-		if (calendar->display_day_month.empty())
-		{
-			calendar->display_day_month = " ";
-		}
-		if (calendar->display_time.empty())
-		{
-			calendar->display_time = " ";
-		}
-		const std::string the_date = game_engine->render_text_to_image("lcd10",
-				calendar->display_day_month, "btn_playgame",
-				render::sdl_dark_grey);
-		const std::string the_time = game_engine->render_text_to_image("lcd10",
-				calendar->display_time, "btn_playgame", render::sdl_dark_grey);
-		SDL->render_bitmap_simple(the_date, 68, 8);
-		SDL->render_bitmap_simple(the_time, 178, 8);
-	}
-
-	void render_paused(sdl2_backend * SDL)
-	{
-		if (universe->globals.paused)
-		{
-			const std::string paused = game_engine->render_text_to_image(
-					"lcd10", "PAUSED", "btn_playgame", render::sdl_dark_grey);
-			SDL->render_bitmap_simple(paused, 310, 8);
-		}
-	}
 
 	void render_emotes(sdl2_backend * SDL, SDL_Rect &viewport)
 	{
@@ -509,6 +455,7 @@ void game_mode::init_systems()
 	ECS->add_system(make_viewshed_system());
 	ECS->add_system(make_renderable_system());
 	ECS->add_system(make_global_illumination_system());
+	ECS->add_system(make_hud_render_system());
 }
 
 void game_mode::init()
@@ -517,9 +464,8 @@ void game_mode::init()
 	world::planet->load_region(
 			world::planet->planet_idx(WORLD_WIDTH / 2, WORLD_HEIGHT - 1));
 
-	SDL_Rect all
-	{ 0, 0, 1024, 48 };
-	sg.children.push_back(make_unique<scene_blit>("header", all, all));
+	//SDL_Rect all{ 0, 0, 1024, 48 };
+	//sg.children.push_back(make_unique<scene_blit>("header", all, all));
 	sg.children.push_back(make_unique<game3d_render>());
 
 	ECS->init();

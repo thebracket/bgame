@@ -42,6 +42,7 @@ public:
 	entity_component_system<typename component_list::type_list> * ecs;
 	message_bus<typename message_list::type_list> * messaging;
 	random_number_generator rng;
+	sdl2_backend * get_backend() { return &backend_driver; };
 
 private:
 	sdl2_backend backend_driver;
@@ -90,6 +91,9 @@ public:
 		double duration_ms = 0;
 		while (!quitting)
 		{
+			vterm::clear_screen();
+			backend_driver.clear_screen();
+
 			clock_t start_time = clock();
 			messaging->clear();
 			backend_driver.resource_cleanup_tick();
@@ -97,8 +101,6 @@ public:
 			backend_driver.poll_inputs();
 			ecs->tick(duration_ms);
 
-			// Render Control
-			vterm::clear_screen();
 
 			pair<return_mode, unique_ptr<base_mode>> continuation_mode =
 					current_mode->tick(duration_ms);
@@ -128,6 +130,8 @@ public:
 						std::chrono::milliseconds(sleepy_time));
 				duration_ms = 33;
 			}
+
+			backend_driver.present();
 		}
 		backend_driver.stop();
 	}
