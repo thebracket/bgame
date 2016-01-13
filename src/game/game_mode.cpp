@@ -7,7 +7,6 @@
 #include "world/universe.hpp"
 #include "systems/system_factory.h"
 #include "render/colors.h"
-#include "render/panel_tooltip.h"
 #include "render/render_list.hpp"
 #include "world/tile_types.hpp"
 #include <utility>

@@ -3,8 +3,11 @@
 #include "../world/universe.hpp"
 #include "render_ascii.hpp"
 #include <memory>
+#include <sstream>
 
-void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen_size,	SDL_Rect &viewport, position_component3d * camera_pos)
+using std::stringstream;
+
+void gui_render_system::render_cursor(engine::sdl2_backend * SDL, std::pair<int, int> &screen_size, SDL_Rect &viewport, position_component3d * camera_pos)
 {
 	int mouse_x = engine::command::mouse_x;
 	int mouse_y = engine::command::mouse_y;
@@ -24,8 +27,6 @@ void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen
 		else
 		{
 			mouse_hover_time = 0;
-			if (tooltip_window)
-				tooltip_window.reset();
 		}
 		last_mouse_x = tilespace_x;
 		last_mouse_y = tilespace_y;
@@ -52,30 +53,76 @@ void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen
 		}
 
 		int alpha = 32 + (mouse_hover_time * 8);
-		if (alpha > 200)
-			alpha = 200;
+		if (alpha > 200) alpha = 200;
 		SDL->set_alpha_mod("font_s", alpha);
 		SDL_Rect dest{ tile_x * 8, (tile_y * 8) + 48, 8, 8 };
 		render_ascii(dest, cursor, SDL, 0, make_tuple(1.0,1.0,1.0),true);
 		SDL->set_alpha_mod("font_s", 255);
 
-		if (mouse_hover_time > 10 and world::planet->get_region(camera_pos->pos.region)->revealed[target_idx])
+		if (world::planet->get_region(camera_pos->pos.region)->revealed[target_idx])
 		{
-			render_tooltip(SDL, target,	std::make_pair(tilespace_x - viewport.x, tilespace_y - viewport.y));
+			tile_t * target_tile = world::planet->get_tile(target);
+			{
+				stringstream ss;
+				ss << tile_type_to_string(target_tile->base_tile_type) << " / ";
+				if (target_tile->base_tile_type != tile_type::EMPTY_SPACE)
+				{
+					ss << ground_type_to_string(target_tile->ground) << " / ";
+					ss << covering_type_to_string(target_tile->covering) << " / ";
+				}
+				ss << climate_type_to_string(target_tile->climate);
+
+				std::string line_s = SDL->render_text_to_image("disco10", ss.str(), "tmp", render::sdl_white);
+				SDL->render_bitmap_simple(line_s, 10, screen_size.second-10);
+			}
+
+			// Add tile contents
+			stringstream ss;
+
+			int region_x = tilespace_x;
+			int region_y = tilespace_y;
+			int region_z = camera_pos->pos.z;
+			vector<position_component3d *> positions = ECS->find_components_by_func<position_component3d>([&ss, region_x, region_y, region_z] ( const position_component3d &c )
+			{
+				return ( c.pos.x == region_x and c.pos.y == region_y and c.pos.z == region_z );
+			});
+			for (const position_component3d * pos : positions)
+			{
+				const int entity_id = pos->entity_id;
+
+				const settler_ai_component * settler = ECS->find_entity_component<settler_ai_component>(entity_id);
+				if ( settler != nullptr) {
+					ss << settler->first_name << " " << settler->last_name << "  ";
+				} else {
+					debug_name_component * name = ECS->find_entity_component<debug_name_component>(entity_id);
+					if (name != nullptr) ss << name->debug_name << "  ";
+				}
+
+				vector<item_storage_component *> stored_items =	ECS->find_components_by_func<item_storage_component>(
+									[entity_id] ( const item_storage_component &e )
+									{
+										if ( e.container_id == entity_id )
+										{
+											return true;
+										}
+										else
+										{
+											return false;
+										}
+									});
+					for (item_storage_component * item : stored_items)
+					{
+						debug_name_component * nc = ECS->find_entity_component<debug_name_component>(item->entity_id);
+						ss << "[" << nc->debug_name << "]  ";
+					}
+			}
+
+			if (ss.str().size() > 0) {
+				std::string line_s = SDL->render_text_to_image("disco10", ss.str(), "tmp", render::sdl_white);
+				SDL->render_bitmap_simple(line_s, 10, screen_size.second+2);
+			}
 		}
 	}
-}
-
-void gui_render_system::render_tooltip(sdl2_backend * SDL, const location_t &loc, const std::pair<int, int> mouse)
-{
-	if (tooltip_window)
-	{
-		tooltip_window->render(mouse_hover_time);
-		return;
-	}
-
-	tooltip_window = std::make_unique<render::panel_tooltip>(SDL, loc,mouse);
-	tooltip_window->render(mouse_hover_time);
 }
 
 void gui_render_system::tick(const double& duration_ms) {
