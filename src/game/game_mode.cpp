@@ -40,6 +40,7 @@ void game_mode::init_systems()
 	ECS->add_system(make_global_illumination_system());
 	ECS->add_system(make_hud_render_system());
 	ECS->add_system(make_map_render_system());
+	ECS->add_system(make_gui_render_system());
 }
 
 void game_mode::init()
