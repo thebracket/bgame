@@ -59,6 +59,7 @@ add_executable(bgame main.cpp
 	    game/systems/global_illumination_system.cpp
 	    game/systems/hud_render_system.cpp
 	    game/systems/map_render_system.cpp
+	    game/systems/gui_render_system.cpp
 	    game/tasks/help_wanted.cpp
 	    game/tasks/path_finding.cpp
 	    game/tasks/find_nearest_provision.cpp
