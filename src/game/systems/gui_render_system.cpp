@@ -33,7 +33,7 @@ void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen
 		const location_t target	{ camera_pos->pos.region, tilespace_x, tilespace_y,	camera_pos->pos.z };
 		const int target_idx = get_tile_index(tilespace_x, tilespace_y,	camera_pos->pos.z);
 
-		engine::vterm::screen_character cursor{ 9, color_t{ 255, 255, 0 }, color_t{ 0, 0, 0 } };
+		engine::vterm::screen_character cursor{ 176, color_t{ 255, 255, 0 }, color_t{ 0, 0, 0 } };
 		if (!world::planet->get_region(target.region)->revealed[target_idx])
 		{
 			cursor.foreground_color = color_t{ 64, 64, 64 };
