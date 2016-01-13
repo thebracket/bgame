@@ -30,33 +30,24 @@ void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen
 		last_mouse_x = tilespace_x;
 		last_mouse_y = tilespace_y;
 
-		const location_t target
-		{ camera_pos->pos.region, tilespace_x, tilespace_y,
-				camera_pos->pos.z };
-		const int target_idx = get_tile_index(tilespace_x, tilespace_y,
-				camera_pos->pos.z);
+		const location_t target	{ camera_pos->pos.region, tilespace_x, tilespace_y,	camera_pos->pos.z };
+		const int target_idx = get_tile_index(tilespace_x, tilespace_y,	camera_pos->pos.z);
 
-		engine::vterm::screen_character cursor
-		{ 9, color_t
-		{ 255, 255, 0 }, color_t
-		{ 0, 0, 0 } };
+		engine::vterm::screen_character cursor{ 9, color_t{ 255, 255, 0 }, color_t{ 0, 0, 0 } };
 		if (!world::planet->get_region(target.region)->revealed[target_idx])
 		{
-			cursor.foreground_color = color_t
-			{ 64, 64, 64 };
+			cursor.foreground_color = color_t{ 64, 64, 64 };
 		}
 		else
 		{
 			tile_t * target_tile = world::planet->get_tile(target);
 			if (target_tile->flags.test(TILE_OPTIONS::SOLID))
 			{
-				cursor.foreground_color = color_t
-				{ 255, 0, 0 };
+				cursor.foreground_color = color_t{ 255, 0, 0 };
 			}
 			if (target_tile->flags.test(TILE_OPTIONS::CAN_STAND_HERE))
 			{
-				cursor.foreground_color = color_t
-				{ 0, 255, 255 };
+				cursor.foreground_color = color_t{ 0, 255, 255 };
 			}
 		}
 
@@ -64,17 +55,13 @@ void gui_render_system::render_cursor(sdl2_backend * SDL, pair<int, int> &screen
 		if (alpha > 200)
 			alpha = 200;
 		SDL->set_alpha_mod("font_s", alpha);
-		SDL_Rect dest
-		{ tile_x * 8, (tile_y * 8) + 48, 8, 8 };
+		SDL_Rect dest{ tile_x * 8, (tile_y * 8) + 48, 8, 8 };
 		render_ascii(dest, cursor, SDL, 0, make_tuple(1.0,1.0,1.0),true);
 		SDL->set_alpha_mod("font_s", 255);
 
-		if (mouse_hover_time > 10
-				and world::planet->get_region(camera_pos->pos.region)->revealed[target_idx])
+		if (mouse_hover_time > 10 and world::planet->get_region(camera_pos->pos.region)->revealed[target_idx])
 		{
-			render_tooltip(SDL, target,
-					std::make_pair(tilespace_x - viewport.x,
-							tilespace_y - viewport.y));
+			render_tooltip(SDL, target,	std::make_pair(tilespace_x - viewport.x, tilespace_y - viewport.y));
 		}
 	}
 }
