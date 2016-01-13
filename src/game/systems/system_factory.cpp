@@ -13,6 +13,7 @@
 #include "particle_system.h"
 #include "global_illumination_system.hpp"
 #include "hud_render_system.h"
+#include "map_render_system.h"
 #include <memory>
 
 using std::make_unique;
@@ -73,4 +74,8 @@ unique_ptr<base_system> make_global_illumination_system()
 unique_ptr<base_system> make_hud_render_system()
 {
 	return make_unique<hud_render_system>();
+}
+unique_ptr<base_system> make_map_render_system()
+{
+	return make_unique<map_render_system>();
 }
