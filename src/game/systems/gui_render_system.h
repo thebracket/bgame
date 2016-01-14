@@ -7,6 +7,7 @@
 #include "../../engine/ecs.hpp"
 #include "../../engine/engine.hpp"
 #include "../components/position_component3d.hpp"
+#include "gui/game_gui.hpp"
 
 using engine::base_system;
 
@@ -35,6 +36,8 @@ private:
 	int radial_tilespace_x = 0;
 	int radial_tilespace_y = 0;
 	int radial_tilespace_z = 0;
+
+	game_gui gui;
 
 	void render_cursor(engine::sdl2_backend * SDL, std::pair<int, int> &screen_size, SDL_Rect &viewport, position_component3d * camera_pos);
 };
