@@ -2,6 +2,7 @@
 #include "../game.h"
 #include "../world/universe.hpp"
 #include "render_ascii.hpp"
+#include "gui/gui_static_text.hpp"
 #include <memory>
 #include <sstream>
 
@@ -72,8 +73,16 @@ void gui_render_system::render_cursor(engine::sdl2_backend * SDL, std::pair<int,
 				}
 				ss << climate_type_to_string(target_tile->climate);
 
-				std::string line_s = SDL->render_text_to_image("disco10", ss.str(), "tmp", render::sdl_white);
-				SDL->render_bitmap_simple(line_s, 10, screen_size.second-10);
+				gui_element * tooltip1 = gui.get_element("tooltip1");
+				if (tooltip1 == nullptr) {
+					gui.add_element("tooltip1", std::make_unique<gui_static_text>( "disco10", ss.str(), render::sdl_white, 10, screen_size.second-10 ));
+				} else {
+					gui_static_text * tt1 = static_cast<gui_static_text *>(tooltip1);
+					tt1->message = ss.str();
+				}
+
+				//std::string line_s = SDL->render_text_to_image("disco10", ss.str(), "tmp", render::sdl_white);
+				//SDL->render_bitmap_simple(line_s, 10, screen_size.second-10);
 			}
 
 			// Add tile contents
@@ -117,10 +126,17 @@ void gui_render_system::render_cursor(engine::sdl2_backend * SDL, std::pair<int,
 					}
 			}
 
-			if (ss.str().size() > 0) {
-				std::string line_s = SDL->render_text_to_image("disco10", ss.str(), "tmp", render::sdl_white);
-				SDL->render_bitmap_simple(line_s, 10, screen_size.second+2);
+			if (ss.str().size() < 1) {
+				ss << "Nothing interesting here.";
 			}
+			gui_element * tooltip2 = gui.get_element("tooltip2");
+			if (tooltip2 == nullptr) {
+				gui.add_element("tooltip2", std::make_unique<gui_static_text>("disco10", ss.str(), render::sdl_white, 10, screen_size.second+2));
+			} else {
+				gui_static_text * tt2 = static_cast<gui_static_text *>(tooltip2);
+				tt2->message = ss.str();
+			}
+
 		}
 	}
 }
@@ -171,9 +187,6 @@ void gui_render_system::tick(const double& duration_ms) {
 		{
 			mode = normal;
 		}
-		else
-		{
-			// TODO: GUI Rendering
-		}
 	}
+	gui.render();
 }
