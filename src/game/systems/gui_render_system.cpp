@@ -7,6 +7,10 @@
 #include "../tasks/path_finding.h"
 #include "../raws/raws.h"
 #include "../world/inventory.hpp"
+#include "../raws/raw_input.h"
+#include "../raws/raw_output.h"
+#include "../raws/raw_power_drain.h"
+#include "../raws/raw_emote.h"
 #include <memory>
 #include <sstream>
 #include <vector>
@@ -203,6 +207,87 @@ void gui_render_system::tick(const double& duration_ms) {
 				// Is there a structure here? If so, it gets an option
 				if (!added_something) {
 					// TODO: Add names/descriptions, reactions, chopping, deconstruction if nothing already here
+					tree_component * tree = ECS->find_entity_component<tree_component>(entity_id);
+					if (tree != nullptr) {
+						menu->add_option(gui_menu_option{ "Chop down tree", [=] {
+							game_engine->messaging->add_message<chop_order_message> ( chop_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, entity_id, "Chop Tree" ) );
+						}});
+						added_something = true;
+					}
+
+					// Look for reactions
+					debug_name_component * name = ECS->find_entity_component<debug_name_component>(entity_id);
+					if (name != nullptr) {
+						vector<raws::base_raw *> reactions = raws::get_possible_reactions_for_structure(name->debug_name);
+						for (raws::base_raw * br : reactions)
+						{
+							vector<pair<string, int>> required_components;
+							vector<pair<string, int>> creates;
+							int power_drain = 0;
+							string emote;
+							string reaction_name;
+							int output_idx = 0;
+
+							for (const std::unique_ptr<raws::base_raw> &brc : br->children)
+							{
+								if (brc->type == raws::INPUT)
+								{
+									raws::raw_input * input = static_cast<raws::raw_input *>(brc.get());
+									required_components.push_back(std::make_pair(input->required_item, input->quantity));
+								}
+								if (brc->type == raws::OUTPUT)
+								{
+									raws::raw_output * input = static_cast<raws::raw_output *>(brc.get());
+									creates.push_back(std::make_pair(input->created_item, input->quantity));
+								}
+								if (brc->type == raws::POWER_DRAIN)
+								{
+									raws::raw_power_drain * input =	static_cast<raws::raw_power_drain *>(brc.get());
+									power_drain = input->quantity;
+								}
+								if (brc->type == raws::EMOTE)
+								{
+									raws::raw_emote * input = static_cast<raws::raw_emote *>(brc.get());
+									emote = input->emote;
+								}
+								if (brc->type == raws::NAME)
+								{
+									reaction_name = brc->get_name_override();
+								}
+							}
+
+							bool possible = true;
+							for (const std::pair<string, int> &component : required_components)
+							{
+								auto finder = inventory.find(component.first);
+								if (finder == inventory.end())
+								{
+									possible = false;
+								}
+								else
+								{
+									const int available_components = finder->second.size();
+									if (available_components < component.second)
+										possible = false;
+								}
+							}
+
+							if (possible)
+							{
+								menu->add_option(gui_menu_option{reaction_name,
+										[=]
+										{
+											game_engine->messaging->add_message<reaction_order_message>( reaction_order_message( reaction_name, entity_id, required_components, creates, emote, power_drain ) );
+										}
+								});
+								added_something = true;
+							}
+							else
+							{
+								std::cout << "Reaction " << reaction_name << " was ruled impossible.\n";
+							}
+						}
+					}
 				}
 			}
 		}

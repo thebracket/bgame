@@ -109,9 +109,7 @@ public:
 			}
 
 			// It might also be a workshop that has reactions - determine this
-			vector<raws::base_raw *> reactions =
-					raws::get_possible_reactions_for_structure(
-							name->debug_name);
+			vector<raws::base_raw *> reactions = raws::get_possible_reactions_for_structure(name->debug_name);
 			for (raws::base_raw * br : reactions)
 			{
 				vector<pair<string, int>> required_components;
@@ -125,30 +123,22 @@ public:
 				{
 					if (brc->type == raws::INPUT)
 					{
-						raws::raw_input * input =
-								static_cast<raws::raw_input *>(brc.get());
-						required_components.push_back(
-								std::make_pair(input->required_item,
-										input->quantity));
+						raws::raw_input * input = static_cast<raws::raw_input *>(brc.get());
+						required_components.push_back(std::make_pair(input->required_item, input->quantity));
 					}
 					if (brc->type == raws::OUTPUT)
 					{
-						raws::raw_output * input =
-								static_cast<raws::raw_output *>(brc.get());
-						creates.push_back(
-								std::make_pair(input->created_item,
-										input->quantity));
+						raws::raw_output * input = static_cast<raws::raw_output *>(brc.get());
+						creates.push_back(std::make_pair(input->created_item, input->quantity));
 					}
 					if (brc->type == raws::POWER_DRAIN)
 					{
-						raws::raw_power_drain * input =
-								static_cast<raws::raw_power_drain *>(brc.get());
+						raws::raw_power_drain * input =	static_cast<raws::raw_power_drain *>(brc.get());
 						power_drain = input->quantity;
 					}
 					if (brc->type == raws::EMOTE)
 					{
-						raws::raw_emote * input =
-								static_cast<raws::raw_emote *>(brc.get());
+						raws::raw_emote * input = static_cast<raws::raw_emote *>(brc.get());
 						emote = input->emote;
 					}
 					if (brc->type == raws::NAME)
