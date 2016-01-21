@@ -39,8 +39,7 @@ void hollow(const location_t &loc)
 	raws::create_structure_from_raws("Ship Superstructure", below);
 }
 
-void crash_the_ship(const uint8_t start_x, const uint8_t start_y,
-		const uint8_t start_z, const uint8_t planet_idx, planet_t * planet)
+void crash_the_ship(const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx, planet_t * planet)
 {
 	for (uint8_t X = start_x / 2; X < start_x + 6; ++X)
 	{
@@ -51,8 +50,7 @@ void crash_the_ship(const uint8_t start_x, const uint8_t start_y,
 			bool found = false;
 			while (!found)
 			{
-				tile_t * candidate = planet->get_tile(location_t
-				{ planet_idx, X, Y, Z });
+				tile_t * candidate = planet->get_tile(location_t{ planet_idx, X, Y, Z });
 				if (candidate->flags.test(TILE_OPTIONS::SOLID))
 				{
 					++Z;
@@ -61,11 +59,38 @@ void crash_the_ship(const uint8_t start_x, const uint8_t start_y,
 				{
 					found = true;
 					candidate->covering = tile_covering::BARE;
+					if (candidate->tree > 0) {
+						candidate->tree = tree_potential::FORMER_TREE;
+						// We need to spawn some wood
+						int wood_id = raws::create_item_from_raws("Wood Logs");
+						ECS->add_component<position_component3d>(*ECS->get_entity_by_handle(wood_id), position_component3d(location_t{ planet_idx, X, Y, Z }, OMNI));
+					}
 				}
 			}
 		}
 	}
 }
+
+void grow_trees(const uint8_t planet_idx, planet_t * planet) {
+	for (uint8_t z=0; z<REGION_DEPTH; ++z) {
+		for (int16_t y=0; y<REGION_HEIGHT; ++y) {
+			for (int16_t x=0; x<REGION_WIDTH; ++x) {
+				tile_t * target = planet->get_tile(location_t{ planet_idx, x, y, z });
+				if (target->tree > 1) {
+					// Time to grow a tree!
+					entity tree = ECS->add_entity();
+					ECS->add_component(tree, position_component3d({ planet_idx, x, y, z }, OMNI));
+					ECS->add_component(tree, renderable_component(6, color_t{64,255,64}, color_t{0,0,0}, 0));
+					ECS->add_component(tree, tree_component());
+					ECS->add_component(tree, debug_name_component("Pine Tree"));
+					ECS->add_component(tree, description_component("A pine tree"));
+					ECS->add_component(tree, obstruction_component(true, true));
+				}
+			}
+		}
+	}
+}
+
 
 void add_camera(const uint8_t start_x, const uint8_t start_y,
 		const uint8_t start_z, const uint8_t planet_idx)
@@ -200,6 +225,7 @@ void make_entities(planet_t * planet)
 
 	// Clear a crash trail
 	crash_the_ship(start_x, start_y, start_z, planet_idx, planet);
+	grow_trees(planet_idx, planet);
 
 	// TODO: Hollow out the landing zone
 

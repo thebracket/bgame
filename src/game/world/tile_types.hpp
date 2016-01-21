@@ -234,3 +234,9 @@ inline std::string biome_type_to_string(const unsigned char t)
 	}
 	return "Unknown";
 }
+
+namespace tree_potential {
+constexpr uint8_t NO_TREES = 0;
+constexpr uint8_t FORMER_TREE = 1;
+constexpr uint8_t PINE = 2;
+}

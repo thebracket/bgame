@@ -596,14 +596,8 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		for (int i = 0; i < number_of_logs; ++i)
 		{
 			int wood_id = raws::create_item_from_raws("Wood Logs");
-			ECS->add_component<position_component3d>(
-					*ECS->get_entity_by_handle(wood_id),
-					position_component3d(
-							location_t
-							{ pos->pos.region, step.target_x, step.target_y,
-									step.target_z }, OMNI));
-			game_engine->messaging->add_message<item_changed_message>(
-					item_changed_message(wood_id));
+			ECS->add_component<position_component3d>(*ECS->get_entity_by_handle(wood_id), position_component3d(location_t{ pos->pos.region, step.target_x, step.target_y,	step.target_z }, OMNI));
+			game_engine->messaging->add_message<item_changed_message>(item_changed_message(wood_id));
 		}
 		++job->second.current_step;
 	}

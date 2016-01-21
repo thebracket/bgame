@@ -37,6 +37,7 @@ public:
 	unsigned char ground;
 	unsigned char climate;
 	unsigned char covering;
+	unsigned char tree = 0;
 	std::bitset<TILE_OPTIONS_COUNT> flags;
 
 	// Non-persistent helpers
