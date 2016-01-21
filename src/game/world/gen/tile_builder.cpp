@@ -2,8 +2,7 @@
 #include "../tile_types.hpp"
 #include <iostream>
 
-void build_tile_tundra(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_tundra(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 4);
 	switch (ground_roll)
@@ -40,8 +39,7 @@ void build_tile_tundra(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_desert(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_desert(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 10);
 	switch (ground_roll)
@@ -83,8 +81,7 @@ void build_tile_desert(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_badlands(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_badlands(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -118,8 +115,7 @@ void build_tile_badlands(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_swamp(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_swamp(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -162,8 +158,7 @@ void build_tile_swamp(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_flatland(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_flatland(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -212,8 +207,7 @@ void build_tile_flatland(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_woods(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_woods(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -262,8 +256,7 @@ void build_tile_woods(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_forest(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_forest(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -312,8 +305,7 @@ void build_tile_forest(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_jungle(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_jungle(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -356,8 +348,7 @@ void build_tile_jungle(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile_hills(const biome_t &biome, tile_t *tile,
-		engine::random_number_generator &rng)
+void build_tile_hills(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
 	int ground_roll = rng.roll_dice(1, 6);
 	switch (ground_roll)
@@ -406,8 +397,7 @@ void build_tile_hills(const biome_t &biome, tile_t *tile,
 	}
 }
 
-void build_tile(const biome_t& biome, tile_t* tile,
-		engine::random_number_generator &rng)
+void build_tile(const biome_t& biome, tile_t* tile,	engine::random_number_generator &rng)
 {
 	tile->climate = biome.climate;
 
