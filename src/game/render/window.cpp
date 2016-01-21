@@ -28,8 +28,7 @@ bool window::render(const int& mouse_x, const int& mouse_y, const bool clicked)
 				and mouse_y < (hy + hs.area.h))
 		{
 			// Highlight
-			SDL_Rect dest
-			{ hx, hy, hs.area.w, hs.area.h };
+			SDL_Rect dest{ hx, hy, hs.area.w, hs.area.h };
 			src = raws::get_tile_source_by_name("WINDOWMASK");
 			SDL->set_alpha_mod("spritesheet", 128);
 			SDL->set_color_mod("spritesheet", 128, 0, 0);

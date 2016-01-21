@@ -9,4 +9,5 @@ public:
 	virtual void render()=0;
 	int x=0;
 	int y=0;
+	bool request_close = false;
 };

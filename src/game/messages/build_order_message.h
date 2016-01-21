@@ -9,8 +9,8 @@ struct build_order_message
 	build_order_message()
 	{
 	}
-	build_order_message(const int &X, const int &Y, const string &name) :
-			x(X), y(Y), structure_name(name)
+	build_order_message(const int &X, const int &Y, const int &Z, const string &name) :
+			x(X), y(Y), z(Z), structure_name(name)
 	{
 	}
 

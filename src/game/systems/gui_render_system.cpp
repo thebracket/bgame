@@ -3,8 +3,13 @@
 #include "../world/universe.hpp"
 #include "render_ascii.hpp"
 #include "gui/gui_static_text.hpp"
+#include "gui/gui_popup_menu.hpp"
+#include "../tasks/path_finding.h"
+#include "../raws/raws.h"
+#include "../world/inventory.hpp"
 #include <memory>
 #include <sstream>
+#include <vector>
 
 using std::stringstream;
 
@@ -174,7 +179,89 @@ void gui_render_system::tick(const double& duration_ms) {
 
 		universe->globals.paused = true;
 
-		// TODO: Launch the pop-ups!
+		// Launch the pop-up menu
+		std::unique_ptr<gui_popup_menu> menu = std::make_unique<gui_popup_menu>("TILE OPTIONS", radial_screen_x, radial_screen_y);
+
+		bool added_something = false;
+
+		std::vector<position_component3d> * positions = ECS->find_components_by_type<position_component3d>();
+		for (const position_component3d &pos : *positions) {
+			if (pos.pos.x == radial_tilespace_x and pos.pos.y == radial_tilespace_y and pos.pos.z == radial_tilespace_z) {
+				const int entity_id = pos.entity_id;
+
+				// Is there a settler here? If so, they get an option
+				settler_ai_component * settler = ECS->find_entity_component<settler_ai_component>(entity_id);
+				if (settler != nullptr) {
+					added_something = true;
+					std::stringstream ss;
+					ss << settler->first_name << " " << settler->last_name << " (" << settler->profession_tag << ")";
+					menu->add_option(gui_menu_option{ ss.str(), [] {
+						std::cout << "Settler info requested\n";
+					} });
+				}
+
+				// Is there a structure here? If so, it gets an option
+				if (!added_something) {
+					// TODO: Add names/descriptions, reactions, chopping, deconstruction if nothing already here
+				}
+			}
+		}
+
+		if (!added_something) {
+			// Can we build here? If so, then buildables go here
+			bool can_build = true;
+			// Only allow building if we can get to the tile or an adjacent tile
+			position_component3d * cordex_position = ECS->find_entity_component<position_component3d>(universe->globals.cordex_handle);
+			std::shared_ptr<ai::navigation_path> path = ai::find_path(cordex_position->pos, camera_pos->pos);
+			if ( path->steps.size() == 0 ) {
+				can_build = false;
+			}
+
+			// TODO: More checking on position - can you stand there, etc.
+
+			if (can_build) {
+				// Determine if there is anything we can build
+				vector<tuple<string, int, vector<string>>> buildables = raws::get_buildables();
+				for (const tuple<string, int, vector<string>> &buildable : buildables) {
+					// Check that we have its components
+					bool have_components = true;
+					int available = 0;
+
+					for (const string &component : std::get<2>(buildable))
+					{
+						auto finder = inventory.find(component);
+						if (finder == inventory.end())
+						{
+							have_components = false;
+						}
+						else
+						{
+							available = finder->second.size();
+						}
+					}
+
+					// If we're still good - add it
+					if (have_components) {
+						added_something = true;
+						std::stringstream ss;
+						ss << std::get<0>(buildable);
+						ss << ", using: ";
+						for (const string &component : std::get<2>(buildable)) {
+							ss << component << " ";
+						}
+						ss << " <" << available << ">";
+						menu->add_option(gui_menu_option{ss.str(), [=] {
+							game_engine->messaging->add_message<build_order_message> ( build_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, std::get<0>(buildable) ) );
+						}});
+					}
+				}
+			}
+		}
+
+		if (!added_something) {
+			menu->add_option(gui_menu_option{"Nothing to do here"});
+		}
+		gui.add_element("popup_menu", std::move(menu));
 	}
 
 	if (mode == normal)
@@ -186,7 +273,11 @@ void gui_render_system::tick(const double& duration_ms) {
 		if (!universe->globals.paused)
 		{
 			mode = normal;
+			gui.delete_element("popup_menu");
 		}
 	}
 	gui.render();
+	if (mode == radial and gui.get_element("popup_menu")==nullptr) {
+		mode = normal;
+	}
 }
