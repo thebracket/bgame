@@ -34,6 +34,7 @@
 #include "raw_output.h"
 #include "raw_particle_emitter.h"
 #include "raw_walkable_roof.h"
+#include "raw_light.h"
 
 #include "../game.h"
 
@@ -510,6 +511,11 @@ void parse_structure(const vector<string> &chunks)
 		current->children.push_back(
 				make_unique<raw_particle_emitter>(message, ttl, frequency,
 						color));
+		return;
+	}
+	if (chunks[0] == "LIGHT")
+	{
+		current->children.push_back(make_unique<raw_light>(std::stoi(chunks[1])));
 		return;
 	}
 
