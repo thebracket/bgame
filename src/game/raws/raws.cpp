@@ -879,7 +879,9 @@ int create_structure_from_raws(const string &name, const location_t loc)
 	}
 
 	entity e = ECS->add_entity();
-	ECS->add_component(e, position_component3d(loc, OMNI));
+	position_component3d pos(loc,OMNI);
+	pos.moved = true;
+	ECS->add_component(e, pos);
 	finder->second->build_components(e, 0, 0);
 
 	return e.handle;
