@@ -214,7 +214,8 @@ void gui_render_system::tick(const double& duration_ms) {
 			position_component3d * cordex_position = ECS->find_entity_component<position_component3d>(universe->globals.cordex_handle);
 			std::shared_ptr<ai::navigation_path> path = ai::find_path(cordex_position->pos, camera_pos->pos);
 			if ( path->steps.size() == 0 ) {
-				can_build = false;
+				std::cout << "Excluding because of lack of path.\n";
+				//can_build = false;
 			}
 
 			// TODO: More checking on position - can you stand there, etc.
