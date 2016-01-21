@@ -41,18 +41,15 @@ public:
 			const bool& decor, const int &entity) :
 			window(sdl, title, decor), entity_id(entity)
 	{
-		debug_name_component * name = ECS->find_entity_component<
-				debug_name_component>(entity_id);
+		debug_name_component * name = ECS->find_entity_component<debug_name_component>(entity_id);
 		if (name != nullptr)
 		{
 			window_title = name->debug_name;
 
-			description_component * desc = ECS->find_entity_component<
-					description_component>(entity_id);
+			description_component * desc = ECS->find_entity_component<description_component>(entity_id);
 			if (desc != nullptr)
 			{
-				renderable_component * renderable = ECS->find_entity_component<
-						renderable_component>(entity_id);
+				renderable_component * renderable = ECS->find_entity_component<renderable_component>(entity_id);
 				add_line(desc->desc, sdl_white, renderable->tile_idx);
 			}
 
