@@ -178,6 +178,7 @@ void tile_t::save(Poco::DeflatingOutputStream& lbfile)
 	save_primitive<unsigned char>(lbfile, covering);
 	string flags_export = flags.to_string();
 	save_primitive<string>(lbfile, flags_export);
+	save_primitive<uint8_t>(lbfile, tree);
 }
 
 void tile_t::load(Poco::InflatingInputStream& lbfile)
@@ -190,6 +191,7 @@ void tile_t::load(Poco::InflatingInputStream& lbfile)
 	string flags_import;
 	load_primitive<string>(lbfile, flags_import);
 	flags = std::bitset<TILE_OPTIONS_COUNT>(flags_import);
+	load_primitive<uint8_t>(lbfile, tree);
 
 	tile_render_calculation(this);
 }

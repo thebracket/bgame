@@ -37,6 +37,10 @@ void build_tile_tundra(const biome_t &biome, tile_t *tile, engine::random_number
 		tile->covering = tile_covering::BARE;
 		break;
 	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,20)==1) tile->tree = tree_potential::PINE;
+	}
 }
 
 void build_tile_desert(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
@@ -79,6 +83,10 @@ void build_tile_desert(const biome_t &biome, tile_t *tile, engine::random_number
 	default:
 		tile->covering = tile_covering::BARE;
 	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,20)==1) tile->tree = tree_potential::PINE;
+	}
 }
 
 void build_tile_badlands(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
@@ -112,6 +120,10 @@ void build_tile_badlands(const biome_t &biome, tile_t *tile, engine::random_numb
 	default:
 		tile->covering = tile_covering::BARE;
 		break;
+	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,20)==1) tile->tree = tree_potential::PINE;
 	}
 }
 
@@ -155,6 +167,10 @@ void build_tile_swamp(const biome_t &biome, tile_t *tile, engine::random_number_
 	default:
 		tile->covering = tile_covering::REEDS;
 		break;
+	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,10)==1) tile->tree = tree_potential::PINE;
 	}
 }
 
@@ -205,6 +221,10 @@ void build_tile_flatland(const biome_t &biome, tile_t *tile, engine::random_numb
 		tile->covering = tile_covering::GRASS;
 		break;
 	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,6)==1) tile->tree = tree_potential::PINE;
+	}
 }
 
 void build_tile_woods(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
@@ -253,6 +273,10 @@ void build_tile_woods(const biome_t &biome, tile_t *tile, engine::random_number_
 	default:
 		tile->covering = tile_covering::GRASS;
 		break;
+	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,4)==1) tile->tree = tree_potential::PINE;
 	}
 }
 
@@ -303,6 +327,10 @@ void build_tile_forest(const biome_t &biome, tile_t *tile, engine::random_number
 		tile->covering = tile_covering::GRASS;
 		break;
 	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,3)==1) tile->tree = tree_potential::PINE;
+	}
 }
 
 void build_tile_jungle(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
@@ -345,6 +373,10 @@ void build_tile_jungle(const biome_t &biome, tile_t *tile, engine::random_number
 	default:
 		tile->covering = tile_covering::GRASS;
 		break;
+	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,3)==1) tile->tree = tree_potential::PINE;
 	}
 }
 
@@ -394,6 +426,10 @@ void build_tile_hills(const biome_t &biome, tile_t *tile, engine::random_number_
 	default:
 		tile->covering = tile_covering::GRASS;
 		break;
+	}
+
+	if (tile->base_tile_type == tile_type::FLAT) {
+		if (rng.roll_dice(1,8)==1) tile->tree = tree_potential::PINE;
 	}
 }
 
