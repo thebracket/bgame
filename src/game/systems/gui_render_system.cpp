@@ -74,6 +74,7 @@ void gui_render_system::render_cursor(engine::sdl2_backend * SDL, std::pair<int,
 			tile_t * target_tile = world::planet->get_tile(target);
 			{
 				stringstream ss;
+				if (target_tile->flags.test(TILE_OPTIONS::SOLID)) ss << "SOLID / ";
 				ss << tile_type_to_string(target_tile->base_tile_type) << " / ";
 				if (target_tile->base_tile_type != tile_type::EMPTY_SPACE)
 				{
@@ -182,6 +183,9 @@ void gui_render_system::tick(const double& duration_ms) {
 		radial_tilespace_z = camera_pos->pos.z;
 
 		universe->globals.paused = true;
+
+		tile_t * target_tile = world::planet->get_tile(location_t{camera_pos->pos.region,
+			static_cast<int16_t>(radial_tilespace_x), static_cast<int16_t>(radial_tilespace_y), static_cast<uint8_t>(radial_tilespace_z)});
 
 		// Launch the pop-up menu
 		std::unique_ptr<gui_popup_menu> menu = std::make_unique<gui_popup_menu>("TILE OPTIONS", radial_screen_x, radial_screen_y);
@@ -298,12 +302,15 @@ void gui_render_system::tick(const double& duration_ms) {
 			// Only allow building if we can get to the tile or an adjacent tile
 			position_component3d * cordex_position = ECS->find_entity_component<position_component3d>(universe->globals.cordex_handle);
 			std::shared_ptr<ai::navigation_path> path = ai::find_path(cordex_position->pos, camera_pos->pos);
-			if ( path->steps.size() == 0 ) {
+			if ( path->success == false ) {
 				std::cout << "Excluding because of lack of path.\n";
-				//can_build = false;
+				can_build = false;
 			}
 
 			// TODO: More checking on position - can you stand there, etc.
+			if (target_tile->flags.test(TILE_OPTIONS::SOLID)) can_build = false;
+			if (target_tile->flags.test(TILE_OPTIONS::WALK_BLOCKED)) can_build = false;
+			if (target_tile->flags.test(TILE_OPTIONS::CAN_STAND_HERE)==false) can_build = false;
 
 			if (can_build) {
 				// Determine if there is anything we can build
@@ -342,6 +349,14 @@ void gui_render_system::tick(const double& duration_ms) {
 					}
 				}
 			}
+		}
+
+		if (!added_something and target_tile->flags.test(TILE_OPTIONS::SOLID)) {
+			// Can you path to an adjacent tile?
+			menu->add_option(gui_menu_option{"Dig out tile", [=] {
+				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z ) );
+			}});
+			added_something = true;
 		}
 
 		if (!added_something) {

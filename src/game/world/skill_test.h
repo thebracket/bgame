@@ -50,12 +50,10 @@ inline int get_skill_modifier(const game_stats_component * entity_stats,
 {
 	int modifier = 0;
 
-	if (skill_name == "Construction")
-		modifier = stat_modifier(entity_stats->dexterity);
-	if (skill_name == "Lumberjack")
-		modifier = stat_modifier(entity_stats->strength);
-	if (skill_name == "Self Heal")
-		modifier = stat_modifier(entity_stats->constitution);
+	if (skill_name == "Construction") modifier = stat_modifier(entity_stats->dexterity);
+	if (skill_name == "Lumberjack") modifier = stat_modifier(entity_stats->strength);
+	if (skill_name == "Mining") modifier = stat_modifier(entity_stats->strength);
+	if (skill_name == "Self Heal") modifier = stat_modifier(entity_stats->constitution);
 
 	return modifier;
 }

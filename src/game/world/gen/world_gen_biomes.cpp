@@ -108,11 +108,11 @@ biome_map_t make_biome_map(heightmap_t* heightmap,
 		{
 			result.biomes[i].climate = tile_climate::TEMPERATE;
 		}
-		else if (temperature_c_base < 30)
+		else if (temperature_c_base < 25)
 		{
 			result.biomes[i].climate = tile_climate::WARM;
 		}
-		else if (temperature_c_base < 40)
+		else if (temperature_c_base < 35)
 		{
 			result.biomes[i].climate = tile_climate::HOT;
 		}
@@ -179,8 +179,7 @@ biome_map_t make_biome_map(heightmap_t* heightmap,
 				}
 			}
 		}
-		if (result.biomes[i].climate == tile_climate::HOT
-				or result.biomes[i].climate == tile_climate::VERY_HOT)
+		if (result.biomes[i].climate == tile_climate::HOT or result.biomes[i].climate == tile_climate::VERY_HOT)
 		{
 			if (AVERAGE_WETNESS < 0.01)
 			{

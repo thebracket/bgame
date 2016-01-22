@@ -185,13 +185,11 @@ void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z,
 				item_storage_component(container_id));
 	}
 	int fire_kit = raws::create_item_from_raws("Camping Fire Kit");
-	ECS->add_component<item_storage_component>(
-			*ECS->get_entity_by_handle(fire_kit),
-			item_storage_component(container_id));
+	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(fire_kit), item_storage_component(container_id));
 	int fire_axe = raws::create_item_from_raws("Fire Axe");
-	ECS->add_component<item_storage_component>(
-			*ECS->get_entity_by_handle(fire_axe),
-			item_storage_component(container_id));
+	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(fire_axe),item_storage_component(container_id));
+	int pick_axe = raws::create_item_from_raws("Pickaxe");
+	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(pick_axe),item_storage_component(container_id));
 }
 
 void make_entities(planet_t * planet)

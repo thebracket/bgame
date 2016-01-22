@@ -86,14 +86,10 @@ void region_t::calculate_walkability()
 					const int east_idx = tile_idx(x + 1, y, z);
 					const int west_idx = tile_idx(x - 1, y, z);
 
-					test_walkability(TILE_OPTIONS::CAN_GO_NORTH, tile,
-							&tiles[north_idx]);
-					test_walkability(TILE_OPTIONS::CAN_GO_SOUTH, tile,
-							&tiles[south_idx]);
-					test_walkability(TILE_OPTIONS::CAN_GO_EAST, tile,
-							&tiles[east_idx]);
-					test_walkability(TILE_OPTIONS::CAN_GO_WEST, tile,
-							&tiles[west_idx]);
+					test_walkability(TILE_OPTIONS::CAN_GO_NORTH, tile, &tiles[north_idx]);
+					test_walkability(TILE_OPTIONS::CAN_GO_SOUTH, tile, &tiles[south_idx]);
+					test_walkability(TILE_OPTIONS::CAN_GO_EAST, tile, &tiles[east_idx]);
+					test_walkability(TILE_OPTIONS::CAN_GO_WEST, tile, &tiles[west_idx]);
 
 				}
 			}
