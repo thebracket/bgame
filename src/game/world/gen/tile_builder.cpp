@@ -382,7 +382,7 @@ void build_tile_jungle(const biome_t &biome, tile_t *tile, engine::random_number
 
 void build_tile_hills(const biome_t &biome, tile_t *tile, engine::random_number_generator &rng)
 {
-	int ground_roll = rng.roll_dice(1, 6);
+	int ground_roll = rng.roll_dice(1, 8);
 	switch (ground_roll)
 	{
 	case 1:
@@ -397,7 +397,7 @@ void build_tile_hills(const biome_t &biome, tile_t *tile, engine::random_number_
 	case 4:
 		tile->ground = tile_ground::IGNEOUS;
 		break;
-	case 6:
+	case 5:
 		tile->covering = tile_covering::SHRUB;
 		break;
 	default:
