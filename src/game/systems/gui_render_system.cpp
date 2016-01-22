@@ -356,6 +356,7 @@ void gui_render_system::tick(const double& duration_ms) {
 	}
 	else if (mode == radial)
 	{
+		universe->globals.render_flat = true;
 		if (!universe->globals.paused)
 		{
 			mode = normal;
