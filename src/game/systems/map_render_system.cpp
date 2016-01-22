@@ -183,7 +183,7 @@ void map_render_system::tick(const double& duration_ms) {
 
 			if (!tile->flags.test(TILE_OPTIONS::SOLID)
 					and tile->base_tile_type == tile_type::EMPTY_SPACE
-					and !render_list_3d[tile_idx])
+					and !render_list_3d[tile_idx] and !universe->globals.render_flat)
 			{
 				// 3d dive
 				int depth = 1;
@@ -266,4 +266,5 @@ void map_render_system::tick(const double& duration_ms) {
 
 	render_emotes(SDL, viewport);
 	render_particles(SDL, viewport);
+	universe->globals.render_flat = false;
 }
