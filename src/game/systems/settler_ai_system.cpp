@@ -260,6 +260,7 @@ int create_needs_fulfillment_job(const int &need,
 	}
 	else
 	{
+		/*
 		switch (need)
 		{
 		case 1:
@@ -278,13 +279,13 @@ int create_needs_fulfillment_job(const int &need,
 		}
 			break;
 		}
+		*/
 	}
 
 	if (need == 3)
 	{
 		// Claim the tent!
-		provisions_component * bed = ECS->find_entity_component<
-				provisions_component>(chosen_source_id);
+		provisions_component * bed = ECS->find_entity_component<provisions_component>(chosen_source_id);
 		bed->provides_quantity = 1;
 	}
 
@@ -399,8 +400,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 			}
 			location_t next_step = settler.current_path->steps.front();
 			settler.current_path->steps.pop();
-			game_engine->messaging->add_message<highlight_message>(
-					highlight_message(pos->pos.x, pos->pos.y, pos->pos.z));
+			//game_engine->messaging->add_message<highlight_message>(highlight_message(pos->pos.x, pos->pos.y, pos->pos.z));
 			//std::cout << "move from " << pos->pos.x << "," << pos->pos.y << " TO " << next_step.x << "," << next_step.y << "\n"; 
 			move_to(pos, next_step.x, next_step.y, next_step.z);
 		}
