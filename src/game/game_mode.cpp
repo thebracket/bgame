@@ -45,8 +45,7 @@ void game_mode::init_systems()
 void game_mode::init()
 {
 	finished = false;
-	world::planet->load_region(
-			world::planet->planet_idx(WORLD_WIDTH / 2, WORLD_HEIGHT - 1));
+	world::planet->load_region(world::planet->planet_idx(WORLD_WIDTH / 2, WORLD_HEIGHT - 1));
 
 	ECS->init();
 	ECS->load_game("world/savegame3d.dat");
@@ -60,6 +59,7 @@ void game_mode::init()
 void game_mode::done()
 {
 	ECS->save_game("world/savegame3d.dat");
+	world::planet->save_region(world::planet->planet_idx(WORLD_WIDTH / 2, WORLD_HEIGHT - 1));
 	ECS->done();
 }
 

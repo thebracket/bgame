@@ -20,6 +20,7 @@ void cordex_ai_system::tick(const double& duration_ms)
 	handle_build_orders();
 	handle_tree_chop_orders();
 	handle_reaction_orders();
+	handle_dig_orders();
 }
 
 void cordex_ai_system::handle_build_orders()
@@ -123,8 +124,7 @@ void cordex_ai_system::handle_build_orders()
 
 void cordex_ai_system::handle_tree_chop_orders()
 {
-	vector<chop_order_message> * orders =
-			game_engine->messaging->get_messages_by_type<chop_order_message>();
+	vector<chop_order_message> * orders = game_engine->messaging->get_messages_by_type<chop_order_message>();
 	for (chop_order_message &msg : *orders)
 	{
 		msg.deleted = true; // No repeats
@@ -209,8 +209,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 
 void cordex_ai_system::handle_reaction_orders()
 {
-	vector<reaction_order_message> * orders =
-			game_engine->messaging->get_messages_by_type<reaction_order_message>();
+	vector<reaction_order_message> * orders = game_engine->messaging->get_messages_by_type<reaction_order_message>();
 	for (reaction_order_message &msg : *orders)
 	{
 		msg.deleted = true; // No dupes!
@@ -329,3 +328,69 @@ void cordex_ai_system::handle_reaction_orders()
 	}
 }
 
+void cordex_ai_system::handle_dig_orders()
+{
+	vector<dig_order_message> * orders = game_engine->messaging->get_messages_by_type<dig_order_message>();
+
+	for (dig_order_message &msg : *orders)
+	{
+		msg.deleted = true; // No repeats
+
+		// Create a job
+		ai::job_t job;
+		job.job_id = ai::get_next_job_id();
+		job.current_step = 0;
+		job.assigned_to = 0;
+		job.type = ai::DIG;
+
+		// Sub tasks:
+		// Find axe
+		auto finder = inventory.find("Pickaxe");
+		if (finder == inventory.end())
+		{
+			std::cout << "Unable to locate a pickaxe.\n";
+			return; // Can't do it!
+		}
+		std::map<int, available_item_t *> distance_components;
+		for (available_item_t item : finder->second)
+		{
+			item_component * item_comp = ECS->find_entity_component<
+					item_component>(item.entity_id);
+			if (!item_comp->claimed)
+			{
+				//float distance = std::sqrt( (std::abs(msg.x - item.location.first)*std::abs(msg.x - item.location.first)) + (std::abs(msg.y - item.location.second)*std::abs(msg.y - item.location.second)));
+				float distance = geometry::distance3d(msg.x, msg.y, msg.z, item.location.x, item.location.y, item.location.z);
+				int distance_i = distance;
+				distance_components[distance_i] = &item;
+			}
+		}
+		available_item_t * axe = distance_components.begin()->second;
+		item_component * item_comp = ECS->find_entity_component<item_component>(distance_components.begin()->second->entity_id);
+		item_comp->claimed = true;
+		game_engine->messaging->add_message<item_changed_message>(item_changed_message(item_comp->entity_id));
+
+		// Navigate to axe
+		const int16_t component_x = axe->location.x;
+		const int16_t component_y = axe->location.y;
+		const uint8_t component_z = axe->location.z;
+		const int component_id = axe->entity_id;
+
+		job.steps.push_back(ai::job_step_t{ ai::MOVE_TO, component_x, component_y, component_z, 0, false, "", 0 });
+		job.steps.push_back(ai::job_step_t{ ai::PICK_UP_COMPONENT, component_x, component_y, component_z, component_id, false, "", 0 });
+
+		// Navigate to dig site
+		job.steps.push_back(ai::job_step_t{ ai::MOVE_TO, msg.x, msg.y, msg.z, 0, false, "", 0 });
+
+		// Skill roll
+		job.steps.push_back(ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, msg.z, 0, true, "Mining", 0, 15 });
+
+		// Clear dug-out area
+		job.steps.push_back(ai::job_step_t{ ai::DIG_TILE, msg.x, msg.y, msg.z, 0, false, "", 0 });
+
+		// Drop axe
+		job.steps.push_back(ai::job_step_t{ ai::DROP_OFF_TOOL, msg.x, msg.y, msg.z, component_id, false, "", 0 });
+
+		// Add it to the help-wanted board
+		ai::jobs_board[job.job_id] = job;
+	}
+}

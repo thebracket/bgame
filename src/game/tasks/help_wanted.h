@@ -15,7 +15,7 @@ namespace ai
 
 enum job_type_e
 {
-	BUILD_STRUCTURE, MEET_PHYSICAL_NEED, CHOP_TREE, PERFORM_REACTION
+	BUILD_STRUCTURE, MEET_PHYSICAL_NEED, CHOP_TREE, PERFORM_REACTION, DIG
 };
 enum job_step_e
 {
@@ -29,7 +29,8 @@ enum job_step_e
 	CREATE_WOOD,
 	DROP_OFF_TOOL,
 	CREATE_ITEM,
-	CONSUME_POWER
+	CONSUME_POWER,
+	DIG_TILE
 };
 
 int get_next_job_id();
