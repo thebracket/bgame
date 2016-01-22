@@ -450,6 +450,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		target->base_tile_type = tile_type::FLAT;
 		target->covering = tile_covering::BARE;
 		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
 		++job->second.current_step;
 	} break;
 	case ai::CONSTRUCT_WITH_SKILL:
