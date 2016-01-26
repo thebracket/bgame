@@ -11,6 +11,7 @@
 #include "../../raws/raws.h"
 #include "../../../engine/colors.hpp"
 #include "world_gen_settlers.hpp"
+#include "../../../engine/geometry.hpp"
 
 using engine::entity;
 using namespace engine;
@@ -85,14 +86,16 @@ void mark_tree_trunk(planet_t * planet, const location_t &loc, int x_offset, int
 void mark_tree_foliage(planet_t * planet, const location_t &loc, int x_offset, int y_offset, int z_offset, entity &tree) {
 	const location_t destination { loc.region, static_cast<int16_t>(loc.x + x_offset), static_cast<int16_t>(loc.y+y_offset), static_cast<uint8_t>(loc.z + z_offset) };
 	tile_t * target = planet->get_tile(destination);
-	target->flags.set(TILE_OPTIONS::SOLID);
-	target->flags.set(TILE_OPTIONS::WALK_BLOCKED);
-	target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
-	target->base_tile_type = tile_type::TREE_FOLIAGE;
-	target->covering = tile_covering::BARE;
-	target->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
-	ECS->add_component(tree, position_component3d(destination, OMNI));
-	//std::cout << "Tree ID #" << tree.handle << "\n";
+	if (target->base_tile_type != tile_type::TREE_TRUNK and target->base_tile_type != tile_type::TREE_FOLIAGE) {
+		target->flags.set(TILE_OPTIONS::SOLID);
+		target->flags.set(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
+		target->base_tile_type = tile_type::TREE_FOLIAGE;
+		target->covering = tile_covering::BARE;
+		target->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
+		ECS->add_component(tree, position_component3d(destination, OMNI));
+		//std::cout << "Tree ID #" << tree.handle << "\n";
+	}
 }
 
 void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_number_generator &rng) {
@@ -118,11 +121,14 @@ void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_numb
 						mark_tree_trunk(planet, tree_loc, 0, 0, i, tree);
 
 						const int distance = (tree_height - i) + 1;
-						for (int j=1; j<=distance; ++j) {
-							mark_tree_foliage(planet, tree_loc, 0-j, 0, i, tree);
-							mark_tree_foliage(planet, tree_loc, j, 0, i, tree);
-							mark_tree_foliage(planet, tree_loc, 0, j, i, tree);
-							mark_tree_foliage(planet, tree_loc, 0, 0-j, i, tree);
+						for (int j=0-distance; j<=distance; ++j) {
+							for (int k=0-distance; k<=distance; ++k) {
+								const float d = std::abs(std::sqrt(std::abs(j*j)+std::abs(k*k)));
+								//std::cout << j << "x" << k << "=" << d << "\n";
+								if (!(j==0 and k==0) and d<=distance and rng.roll_dice(1,6)>1) {
+									mark_tree_foliage(planet, tree_loc, j, k, i, tree);
+								}
+							}
 						}
 					}
 				}
