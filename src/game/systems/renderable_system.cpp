@@ -10,8 +10,7 @@
 void renderable_system::tick(const double &duration_ms)
 {
 	bool changes = false;
-	vector<entity_moved_message> * change_list =
-			game_engine->messaging->get_messages_by_type<entity_moved_message>();
+	vector<entity_moved_message> * change_list = game_engine->messaging->get_messages_by_type<entity_moved_message>();
 	for (entity_moved_message &msg : *change_list)
 	{
 		if (!msg.deleted)
@@ -22,8 +21,7 @@ void renderable_system::tick(const double &duration_ms)
 	if (changes)
 	{
 
-		std::fill(render_list_3d.begin(), render_list_3d.end(),
-				boost::optional<engine::vterm::screen_character>());
+		std::fill(render_list_3d.begin(), render_list_3d.end(), boost::optional<engine::vterm::screen_character>());
 
 		const position_component3d * camera_pos = get_camera_position();
 		const int top_y = camera_pos->pos.y - ((768 / 8) / 2);
@@ -31,8 +29,7 @@ void renderable_system::tick(const double &duration_ms)
 		const int left_x = camera_pos->pos.x - ((1024 / 8) / 2);
 		const int right_x = camera_pos->pos.x + ((1024 / 8) / 2);
 
-		const vector<position_component3d> * positions =
-				ECS->find_components_by_type<position_component3d>();
+		const vector<position_component3d> * positions = ECS->find_components_by_type<position_component3d>();
 		for (const position_component3d &pos : *positions)
 		{
 			if (pos.pos.region == camera_pos->pos.region and pos.pos.x > left_x

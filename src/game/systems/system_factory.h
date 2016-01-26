@@ -22,3 +22,4 @@ unique_ptr<base_system> make_global_illumination_system();
 unique_ptr<base_system> make_hud_render_system();
 unique_ptr<base_system> make_map_render_system();
 unique_ptr<base_system> make_gui_render_system();
+unique_ptr<base_system> make_entity_cleanup_system();

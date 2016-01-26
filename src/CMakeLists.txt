@@ -4,7 +4,7 @@ project("Berts Game")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -march=native -mtune=native -g -I/opt/local/include")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -Wpedantic -march=native -mtune=native -g -I/opt/local/include")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/usr/lib/i386-linux-gnu -lSDL2 -lSDL2_image -lSDL2_ttf")
 
 add_executable(bgame main.cpp
@@ -62,6 +62,7 @@ add_executable(bgame main.cpp
 	    game/systems/gui/game_gui.cpp
 	    game/systems/gui/gui_static_text.cpp
 	    game/systems/gui/gui_popup_menu.cpp
+	    game/systems/entity_cleanup_system.cpp
 	    game/tasks/help_wanted.cpp
 	    game/tasks/path_finding.cpp
 	    game/tasks/find_nearest_provision.cpp
