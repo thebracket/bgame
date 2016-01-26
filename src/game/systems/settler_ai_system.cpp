@@ -447,6 +447,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
 		target->base_tile_type = tile_type::FLAT;
 		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
 		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
 		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
 		++job->second.current_step;
@@ -470,6 +471,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 					target->base_tile_type = tile_type::FLAT;
 				}
 				target->covering = tile_covering::BARE;
+				tile_render_calculation(target);
 				std::cout << "Cleared tile at " << tree_loc.pos.x << "/" << tree_loc.pos.y << "/" << +tree_loc.pos.z << "\n";
 			}
 		}
