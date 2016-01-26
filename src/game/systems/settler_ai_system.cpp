@@ -348,9 +348,9 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 	{
 		// Are we there yet?
 		//const int distance = std::sqrt ( ( std::abs ( pos->x - step.target_x ) *std::abs ( pos->x - step.target_x ) ) + ( std::abs ( pos->y - step.target_y ) * ( std::abs ( pos->y - step.target_y ) ) ) );
-		const int distance = geometry::distance3d(pos->pos.x, pos->pos.y, pos->pos.z, step.target_x, step.target_y, step.target_z);
+		const float distance = geometry::distance3d(pos->pos.x, pos->pos.y, pos->pos.z, step.target_x, step.target_y, step.target_z);
 		//std::cout << "Distance: " << distance << "\n";
-		if (distance <= 1)
+		if (distance <= 1.6)
 		{
 			// We've reached our destination
 			++job->second.current_step;
@@ -456,13 +456,19 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		const int tree_id = step.component_id;
 		std::cout << "Destroying tree: " << tree_id << "\n";
 		vector<position_component3d> * tree_tile_list = ECS->find_components_by_type<position_component3d>();
+		bool first = true;
 		for (position_component3d &tree_loc : *tree_tile_list) {
 			if (tree_loc.entity_id == tree_id) {
 				tile_t * target = world::planet->get_tile(tree_loc.pos);
 				target->flags.reset(TILE_OPTIONS::SOLID);
 				target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
 				target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
-				target->base_tile_type = tile_type::EMPTY_SPACE;
+				if (!first) {
+					target->base_tile_type = tile_type::EMPTY_SPACE;
+				} else {
+					first = false;
+					target->base_tile_type = tile_type::FLAT;
+				}
 				target->covering = tile_covering::BARE;
 				std::cout << "Cleared tile at " << tree_loc.pos.x << "/" << tree_loc.pos.y << "/" << +tree_loc.pos.z << "\n";
 			}
