@@ -69,7 +69,7 @@ void crash_the_ship(const uint8_t start_x, const uint8_t start_y, const uint8_t 
 	}
 }
 
-void grow_trees(const uint8_t planet_idx, planet_t * planet) {
+void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_number_generator &rng) {
 	for (uint8_t z=0; z<REGION_DEPTH; ++z) {
 		for (int16_t y=0; y<REGION_HEIGHT; ++y) {
 			for (int16_t x=0; x<REGION_WIDTH; ++x) {
@@ -78,7 +78,7 @@ void grow_trees(const uint8_t planet_idx, planet_t * planet) {
 					// Time to grow a tree!
 					entity tree = ECS->add_entity();
 					ECS->add_component(tree, position_component3d({ planet_idx, x, y, z }, OMNI));
-					ECS->add_component(tree, renderable_component(6, color_t{64,255,64}, color_t{0,0,0}, 0));
+					ECS->add_component(tree, renderable_component(9, color_t{102,51,5}, color_t{0,0,0}, 0));
 					ECS->add_component(tree, tree_component());
 					ECS->add_component(tree, debug_name_component("Pine Tree"));
 					ECS->add_component(tree, description_component("A pine tree"));
@@ -90,16 +90,14 @@ void grow_trees(const uint8_t planet_idx, planet_t * planet) {
 }
 
 
-void add_camera(const uint8_t start_x, const uint8_t start_y,
-		const uint8_t start_z, const uint8_t planet_idx)
+void add_camera(const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx)
 {
 	entity camera = ECS->add_entity();
 	ECS->add_component(camera, position_component3d({ planet_idx, start_x, start_y, start_z }, OMNI));
 	universe->globals.camera_handle = camera.handle;
 }
 
-void add_cordex(const uint8_t start_x, const uint8_t start_y,
-		const uint8_t start_z, const uint8_t planet_idx)
+void add_cordex(const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx)
 {
 	entity cordex = ECS->add_entity();
 	universe->globals.cordex_handle = cordex.handle;
@@ -114,8 +112,7 @@ void add_cordex(const uint8_t start_x, const uint8_t start_y,
 	hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }
 
-void add_structural_element(const location_t &loc, unsigned char glyph,
-		bool block = true)
+void add_structural_element(const location_t &loc, unsigned char glyph, bool block = true)
 {
 	hollow(loc);
 	switch (glyph)
@@ -156,10 +153,8 @@ void add_solar_collector(const uint8_t x, const uint8_t y, const uint8_t z,	cons
 void add_food_replicator(const uint8_t x, const uint8_t y, const uint8_t z,
 		const uint8_t planet_idx)
 {
-	raws::create_structure_from_raws("Small Replicator", location_t
-	{ planet_idx, x, y, z });
-	hollow(location_t
-	{ planet_idx, x, y, z });
+	raws::create_structure_from_raws("Small Replicator", location_t{ planet_idx, x, y, z });
+	hollow(location_t{ planet_idx, x, y, z });
 }
 
 void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z, const uint8_t planet_idx)
@@ -180,7 +175,7 @@ void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z, const u
 	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(pick_axe),item_storage_component(container_id));
 }
 
-void make_entities(planet_t * planet)
+void make_entities(planet_t * planet, engine::random_number_generator &rng)
 {
 	const uint8_t planet_idx = planet->planet_idx(WORLD_WIDTH / 2, WORLD_HEIGHT - 1);
 
@@ -210,7 +205,7 @@ void make_entities(planet_t * planet)
 	std::cout << "Crashing the ship\n";
 	crash_the_ship(start_x, start_y, start_z, planet_idx, planet);
 	std::cout << "Growing trees\n";
-	grow_trees(planet_idx, planet);
+	grow_trees(planet_idx, planet, rng);
 
 	// TODO: Hollow out the landing zone
 
@@ -290,33 +285,13 @@ void make_entities(planet_t * planet)
 		if (i > 0 and i < 4)
 			add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',false);
 	}
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 1),
-					static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x),
-					static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 1),
-					static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 1),
-					static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x),
-					static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 1),
-					static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
-	add_structural_element(location_t
-	{ planet_idx, static_cast<uint8_t>(start_x + 5),
-			static_cast<uint8_t>(start_y), start_z }, 219);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x - 1), static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
+	add_structural_element( location_t{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
+	add_structural_element( location_t{ planet_idx, static_cast<uint8_t>(start_x - 1), static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 5), static_cast<uint8_t>(start_y), start_z }, 219);
 
 	// Add random settlers    
 	std::cout << "Settlers\n";
@@ -359,7 +334,7 @@ void world_gen_phase_1()
 
 	std::cout << "Making starting entites\n";
 	ECS->init();
-	make_entities(planet.get());
+	make_entities(planet.get(), rng);
 
 	std::cout << "World gen done\n";
 }

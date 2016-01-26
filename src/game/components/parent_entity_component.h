@@ -18,6 +18,8 @@ public:
 	{
 	}
 
+	parent_entity_component(const int &parent) : parent_id(parent) {}
+
 	void save(fstream &lbfile)
 	{
 		save_common_component_properties<parent_entity_component>(lbfile, *this);
