@@ -76,13 +76,13 @@ void tile_render_calculation(tile_t * tile)
 		tile->render_as = screen_character{ 247, color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
 		break;
 	case tile_ground::YELLOW_SAND:
-		tile->render_as = screen_character{ 176, color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
+		tile->render_as = screen_character{ '~', color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
 		break;
 	case tile_ground::YELLOW_SAND_DIRTY:
 		tile->render_as = screen_character{ '\'', color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
 		break;
 	case tile_ground::YELLOW_SAND_RIPPLE:
-		tile->render_as = screen_character{ 247, color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
+		tile->render_as = screen_character{ '`', color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
 		break;
 	default:
 		std::cout << "Unknown ground type: " << tile->ground << "\n";
