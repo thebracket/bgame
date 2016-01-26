@@ -30,7 +30,8 @@ enum job_step_e
 	DROP_OFF_TOOL,
 	CREATE_ITEM,
 	CONSUME_POWER,
-	DIG_TILE
+	DIG_TILE,
+	DESTROY_TREE
 };
 
 int get_next_job_id();

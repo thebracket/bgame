@@ -348,8 +348,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 	{
 		// Are we there yet?
 		//const int distance = std::sqrt ( ( std::abs ( pos->x - step.target_x ) *std::abs ( pos->x - step.target_x ) ) + ( std::abs ( pos->y - step.target_y ) * ( std::abs ( pos->y - step.target_y ) ) ) );
-		const int distance = geometry::distance3d(pos->pos.x, pos->pos.y,
-				pos->pos.z, step.target_x, step.target_y, step.target_z);
+		const int distance = geometry::distance3d(pos->pos.x, pos->pos.y, pos->pos.z, step.target_x, step.target_y, step.target_z);
 		//std::cout << "Distance: " << distance << "\n";
 		if (distance <= 1)
 		{
@@ -364,8 +363,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		{
 			// If there is no path - request one to the destination and exit (no moving and pathing!)
 			//std::cout << "Path requested\n";
-			settler.current_path = ai::find_path(pos->pos, location_t
-			{ pos->pos.region, step.target_x, step.target_y, step.target_z });
+			settler.current_path = ai::find_path(pos->pos, location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z });
 			//if ( settler.current_path == nullptr) std::cout << "But returned null!\n";
 			return;
 		}
@@ -449,6 +447,27 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
 		target->base_tile_type = tile_type::FLAT;
 		target->covering = tile_covering::BARE;
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DESTROY_TREE:
+	{
+		const int tree_id = step.component_id;
+		std::cout << "Destroying tree: " << tree_id << "\n";
+		vector<position_component3d> * tree_tile_list = ECS->find_components_by_type<position_component3d>();
+		for (position_component3d &tree_loc : *tree_tile_list) {
+			if (tree_loc.entity_id == tree_id) {
+				tile_t * target = world::planet->get_tile(tree_loc.pos);
+				target->flags.reset(TILE_OPTIONS::SOLID);
+				target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+				target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+				target->base_tile_type = tile_type::EMPTY_SPACE;
+				target->covering = tile_covering::BARE;
+				std::cout << "Cleared tile at " << tree_loc.pos.x << "/" << tree_loc.pos.y << "/" << +tree_loc.pos.z << "\n";
+			}
+		}
+		ECS->delete_entity(tree_id);
 		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
 		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
 		++job->second.current_step;
