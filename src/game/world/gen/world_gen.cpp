@@ -79,6 +79,7 @@ void mark_tree_trunk(planet_t * planet, const location_t &loc, int x_offset, int
 	target->covering = tile_covering::BARE;
 	target->render_as = engine::vterm::screen_character{ 9, {85, 53, 10}, {0,0,0} };
 	ECS->add_component(tree, position_component3d(destination, OMNI));
+	//std::cout << "Tree ID #" << tree.handle << "\n";
 }
 
 void mark_tree_foliage(planet_t * planet, const location_t &loc, int x_offset, int y_offset, int z_offset, entity &tree) {
@@ -91,6 +92,7 @@ void mark_tree_foliage(planet_t * planet, const location_t &loc, int x_offset, i
 	target->covering = tile_covering::BARE;
 	target->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
 	ECS->add_component(tree, position_component3d(destination, OMNI));
+	//std::cout << "Tree ID #" << tree.handle << "\n";
 }
 
 void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_number_generator &rng) {
@@ -103,6 +105,8 @@ void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_numb
 					const location_t tree_loc { planet_idx, x, y, z };
 					entity tree = ECS->add_entity();
 					ECS->add_component(tree, tree_component());
+					ECS->add_component(tree, debug_name_component("Tree"));
+					//std::cout << "Tree ID #" << tree.handle << "=" << tree.handle << "\n";
 
 					// New approach: we add position components for each tile, but actually modify
 					// the map itself. This keeps the render path clean, using already-fast code.

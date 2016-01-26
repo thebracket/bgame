@@ -189,10 +189,7 @@ void cordex_ai_system::handle_tree_chop_orders()
 				0, 15 });
 
 		// Destroy tree
-		job.steps.push_back(
-				ai::job_step_t
-				{ ai::DESTROY_COMPONENT, msg.x, msg.y, msg.z, msg.tree_id,
-						false, "", 0 });
+		job.steps.push_back(ai::job_step_t{ ai::DESTROY_TREE, msg.x, msg.y, msg.z, msg.tree_id, false, "", 0 });
 
 		// Add wood
 		job.steps.push_back(ai::job_step_t

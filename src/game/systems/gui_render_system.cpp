@@ -114,7 +114,7 @@ void gui_render_system::render_cursor(engine::sdl2_backend * SDL, std::pair<int,
 					ss << settler->first_name << " " << settler->last_name << "  ";
 				} else {
 					debug_name_component * name = ECS->find_entity_component<debug_name_component>(entity_id);
-					if (name != nullptr) ss << name->debug_name << "  ";
+					if (name != nullptr) ss << name->debug_name << "(" << name->entity_id << ") ";
 				}
 
 				vector<item_storage_component *> stored_items =	ECS->find_components_by_func<item_storage_component>(
@@ -213,8 +213,13 @@ void gui_render_system::tick(const double& duration_ms) {
 					// TODO: Add names/descriptions, reactions, chopping, deconstruction if nothing already here
 					tree_component * tree = ECS->find_entity_component<tree_component>(entity_id);
 					if (tree != nullptr) {
-						menu->add_option(gui_menu_option{ "Chop down tree", [=] {
-							game_engine->messaging->add_message<chop_order_message> ( chop_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, entity_id, "Chop Tree" ) );
+						std::stringstream ss;
+						ss << "Chop down tree #" << entity_id;
+						int TREE = entity_id;
+						menu->add_option(gui_menu_option{ ss.str(), [=] {
+							std::cout << "Chopper #" << TREE << "\n";
+							game_engine->messaging->add_message<chop_order_message> ( chop_order_message ( this->radial_tilespace_x, this->radial_tilespace_y, this->radial_tilespace_z, TREE, "Chop Tree" ) );
+							std::cout << "Chopper #" << TREE << "\n";
 						}});
 						added_something = true;
 					}

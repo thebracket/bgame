@@ -9,10 +9,10 @@ struct chop_order_message
 	chop_order_message()
 	{
 	}
-	chop_order_message(const int16_t &X, const int16_t &Y, const uint8_t &Z, const uint8_t &eid,
-			const string &name) :
+	chop_order_message(const int16_t &X, const int16_t &Y, const uint8_t &Z, const int &eid, const string &name) :
 			x(X), y(Y), z(Z), tree_id(eid), structure_name(name)
 	{
+		std::cout << "Chop order for tree #" << tree_id << "\n";
 	}
 
 	bool deleted = false;
