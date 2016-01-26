@@ -69,6 +69,30 @@ void crash_the_ship(const uint8_t start_x, const uint8_t start_y, const uint8_t 
 	}
 }
 
+void mark_tree_trunk(planet_t * planet, const location_t &loc, int x_offset, int y_offset, int z_offset, entity &tree) {
+	const location_t destination { loc.region, static_cast<int16_t>(loc.x + x_offset), static_cast<int16_t>(loc.y+y_offset), static_cast<uint8_t>(loc.z + z_offset) };
+	tile_t * target = planet->get_tile(destination);
+	target->flags.set(TILE_OPTIONS::SOLID);
+	target->flags.set(TILE_OPTIONS::WALK_BLOCKED);
+	target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
+	target->base_tile_type = tile_type::TREE_TRUNK;
+	target->covering = tile_covering::BARE;
+	target->render_as = engine::vterm::screen_character{ 9, {85, 53, 10}, {0,0,0} };
+	ECS->add_component(tree, position_component3d(destination, OMNI));
+}
+
+void mark_tree_foliage(planet_t * planet, const location_t &loc, int x_offset, int y_offset, int z_offset, entity &tree) {
+	const location_t destination { loc.region, static_cast<int16_t>(loc.x + x_offset), static_cast<int16_t>(loc.y+y_offset), static_cast<uint8_t>(loc.z + z_offset) };
+	tile_t * target = planet->get_tile(destination);
+	target->flags.set(TILE_OPTIONS::SOLID);
+	target->flags.set(TILE_OPTIONS::WALK_BLOCKED);
+	target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
+	target->base_tile_type = tile_type::TREE_FOLIAGE;
+	target->covering = tile_covering::BARE;
+	target->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
+	ECS->add_component(tree, position_component3d(destination, OMNI));
+}
+
 void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_number_generator &rng) {
 	for (uint8_t z=0; z<REGION_DEPTH; ++z) {
 		for (int16_t y=0; y<REGION_HEIGHT; ++y) {
@@ -76,13 +100,27 @@ void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_numb
 				tile_t * target = planet->get_tile(location_t{ planet_idx, x, y, z });
 				if (target->tree > 1) {
 					// Time to grow a tree!
+					const location_t tree_loc { planet_idx, x, y, z };
 					entity tree = ECS->add_entity();
-					ECS->add_component(tree, position_component3d({ planet_idx, x, y, z }, OMNI));
-					ECS->add_component(tree, renderable_component(9, color_t{102,51,5}, color_t{0,0,0}, 0));
 					ECS->add_component(tree, tree_component());
-					ECS->add_component(tree, debug_name_component("Pine Tree"));
-					ECS->add_component(tree, description_component("A pine tree"));
-					ECS->add_component(tree, obstruction_component(true, true));
+
+					// New approach: we add position components for each tile, but actually modify
+					// the map itself. This keeps the render path clean, using already-fast code.
+					// We had terrible performance problems when we tried a few thousand trees as
+					// entities/parent entities!
+					mark_tree_trunk(planet, tree_loc, 0, 0, 0, tree);
+					int tree_height = rng.roll_dice(1, 6);
+					for (int i=1; i<=tree_height; ++i) {
+						mark_tree_trunk(planet, tree_loc, 0, 0, i, tree);
+
+						const int distance = (tree_height - i) + 1;
+						for (int j=1; j<=distance; ++j) {
+							mark_tree_foliage(planet, tree_loc, 0-j, 0, i, tree);
+							mark_tree_foliage(planet, tree_loc, j, 0, i, tree);
+							mark_tree_foliage(planet, tree_loc, 0, j, i, tree);
+							mark_tree_foliage(planet, tree_loc, 0, 0-j, i, tree);
+						}
+					}
 				}
 			}
 		}
