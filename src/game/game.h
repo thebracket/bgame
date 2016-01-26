@@ -16,7 +16,8 @@ using my_components = component_list_t<calendar_component, debug_name_component,
 power_battery_component, power_generator_component, renderable_component, settler_ai_component,
 viewshed_component, game_stats_component, game_species_component, game_health_component, provisions_component,
 item_storage_component, item_carried_component, description_component, item_component, tree_component,
-particle_emitter_component, position_component3d, walkable_roof_component, point_light_component>;
+particle_emitter_component, position_component3d, walkable_roof_component, point_light_component,
+parent_entity_component>;
 
 using my_engine = engine::bracket_engine<my_components, my_messages>;
 
