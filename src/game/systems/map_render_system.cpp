@@ -167,23 +167,15 @@ void map_render_system::tick(const double& duration_ms) {
 	{
 		for (int x = 0; x < viewport.w; ++x)
 		{
-			SDL_Rect dest
-			{ x * 8, (y * 8) + 48, 8, 8 };
-			vterm::screen_character target
-			{ '.', color_t
-			{ 255, 255, 255 }, color_t
-			{ 0, 0, 0 } };
-			const location_t world_loc
-			{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x),
-					static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
+			SDL_Rect dest{ x * 8, (y * 8) + 48, 8, 8 };
+			vterm::screen_character target{ '.', color_t{ 255, 255, 255 }, color_t{ 0, 0, 0 } };
+			const location_t world_loc{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x),static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
 			tile_t * tile = world::planet->get_tile(world_loc);
 
-			const int tile_idx = get_tile_index(world_loc.x, world_loc.y,
-					world_loc.z);
+			const int tile_idx = get_tile_index(world_loc.x, world_loc.y, world_loc.z);
 
-			if (!tile->flags.test(TILE_OPTIONS::SOLID)
-					and tile->base_tile_type == tile_type::EMPTY_SPACE
-					and !render_list_3d[tile_idx] and !universe->globals.render_flat)
+			//universe->globals.render_flat = true;
+			if (!tile->flags.test(TILE_OPTIONS::SOLID) and tile->base_tile_type == tile_type::EMPTY_SPACE and !render_list_3d[tile_idx] and !universe->globals.render_flat)
 			{
 				// 3d dive
 				int depth = 1;
@@ -191,30 +183,18 @@ void map_render_system::tick(const double& duration_ms) {
 				int dive_tile_idx;
 				while (!go)
 				{
-					tile_t * dive_tile = world::planet->get_tile(location_t { camera_pos->pos.region, world_loc.x,
-									world_loc.y, static_cast<uint8_t>(camera_pos->pos.z	- depth) });
+					tile_t * dive_tile = world::planet->get_tile(location_t { camera_pos->pos.region, world_loc.x, world_loc.y, static_cast<uint8_t>(camera_pos->pos.z	- depth) });
 					dive_tile_idx = get_tile_index(world_loc.x, world_loc.y, world_loc.z - depth);
 
-					if (!dive_tile->flags.test(TILE_OPTIONS::SOLID) and dive_tile->base_tile_type == tile_type::EMPTY_SPACE
-							and !render_list_3d[dive_tile_idx])
+					if (!dive_tile->flags.test(TILE_OPTIONS::SOLID) and dive_tile->base_tile_type == tile_type::EMPTY_SPACE and !render_list_3d[dive_tile_idx])
 					{
 						++depth;
-						if (depth > 10)
-							go = true;
+						if (depth > 10) go = true;
 					}
 					else
 					{
-						if (dive_tile->flags.test(TILE_OPTIONS::SOLID))
-						{
-							target.character = 219;
-							target.foreground_color = color_t{ 128, 128, 128 };
-							target.background_color = color_t{ 0, 0, 0 };
-						}
-						else
-						{
-							target = dive_tile->render_as;
-							go = true;
-						}
+						go = true;
+						target = dive_tile->render_as;
 
 						if (render_list_3d[dive_tile_idx])
 						{
@@ -231,16 +211,7 @@ void map_render_system::tick(const double& duration_ms) {
 			}
 			else
 			{
-				if (tile->flags.test(TILE_OPTIONS::SOLID))
-				{
-					target.character = 219;
-					target.foreground_color = color_t{ 128, 128, 128 };
-					target.background_color = color_t{ 0, 0, 0 };
-				}
-				else
-				{
-					target = tile->render_as;
-				}
+				target = tile->render_as;
 
 				if (render_list_3d[tile_idx])
 				{

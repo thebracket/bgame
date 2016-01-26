@@ -24,6 +24,8 @@ constexpr unsigned char RAMP_WD_SD = 16;
 constexpr unsigned char MAGMA = 17;
 constexpr unsigned char EMPTY_SPACE = 18;
 constexpr unsigned char PERMANENT_ICE = 19;
+constexpr unsigned char TREE_TRUNK = 20;
+constexpr unsigned char TREE_FOLIAGE = 21;
 }
 
 inline std::string tile_type_to_string(const unsigned char t)
@@ -44,6 +46,10 @@ inline std::string tile_type_to_string(const unsigned char t)
 		return "Empty space";
 	case tile_type::PERMANENT_ICE:
 		return "Permanent Ice";
+	case tile_type::TREE_TRUNK:
+		return "Tree Trunk";
+	case tile_type::TREE_FOLIAGE:
+		return "Tree Foliage";
 	}
 	return "Unknown";
 }
