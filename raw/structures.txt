@@ -229,7 +229,7 @@
 [NAME:Fake Camp Fire]
 [DESCRIPTION:A roaring campfire, powered by a tiny internal nuclear reactor. It includes a tiny marshmallow dispenser.]
 [RENDER]
-[RENDER_GLYPH:OMEGA]
+[RENDER_GLYPH:CAMPFIRE]
 [RENDER_COLOR:RED:BLACK]
 [RENDER_TILE:CAMPFIRE]
 [RENDER_LAYER:BUILDING]
