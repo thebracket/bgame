@@ -34,7 +34,8 @@ enum component_type
 	position3d,
 	walkable_roof,
 	pointlight,
-	parent_entity
+	parent_entity,
+	stairs
 };
 
 namespace serialization_generic

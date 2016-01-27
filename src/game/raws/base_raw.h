@@ -44,7 +44,8 @@ enum tag_type
 	OUTPUT,
 	PARTICLE_EMITTER,
 	WALKABLE_ROOF,
-	LIGHT
+	LIGHT,
+	STAIRS
 };
 
 struct base_raw

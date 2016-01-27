@@ -1,6 +1,7 @@
 #include "obstruction_system.h"
 #include "../components/obstruction_component.h"
 #include "../components/walkable_roof_component.h"
+#include "../components/stairs_component.h"
 #include "../game.h"
 #include "../world/planet.hpp"
 #include "../world/universe.hpp"
@@ -43,6 +44,31 @@ void obstruction_system::tick(const double& duration_ms)
 				location_t up = pos->pos;
 				up.z++;
 				current_region->get_tile(up.x, up.y, up.z)->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+			}
+		}
+
+		// Stairs
+		const vector<stairs_component> * stairs = ECS->find_components_by_type<stairs_component>();
+		for (const stairs_component &stair : *stairs) {
+			position_component3d * pos = ECS->find_entity_component<position_component3d>(stair.entity_id);
+			if (pos != nullptr)
+			{
+				if (stair.stairs_type == stairs_types::UP or stair.stairs_type == stairs_types::UPDOWN) {
+					tile_t * main = current_region->get_tile(pos->pos.x, pos->pos.y, pos->pos.z);
+					tile_t * upwards = current_region->get_tile(pos->pos.x, pos->pos.y, static_cast<uint8_t>(pos->pos.z+1));
+					main->flags.set(TILE_OPTIONS::CAN_GO_UP);
+					main->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+					upwards->flags.set(TILE_OPTIONS::CAN_GO_DOWN);
+					upwards->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+				}
+				if (stair.stairs_type == stairs_types::DOWN or stair.stairs_type == stairs_types::UPDOWN) {
+					tile_t * main = current_region->get_tile(pos->pos.x, pos->pos.y, pos->pos.z);
+					tile_t * downwards = current_region->get_tile(pos->pos.x, pos->pos.y, static_cast<uint8_t>(pos->pos.z-1));
+					main->flags.set(TILE_OPTIONS::CAN_GO_DOWN);
+					main->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+					downwards->flags.set(TILE_OPTIONS::CAN_GO_UP);
+					downwards->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+				}
 			}
 		}
 
