@@ -190,7 +190,7 @@ void tile_render_calculation(tile_t * tile)
 	if (tile->base_tile_type == tile_type::STAIRS_DOWN) {
 		tile->render_as.character = '>';
 	}
-	if (tile->base_tile_type == tile_type::STAIRS_UP) {
+	if (tile->base_tile_type == tile_type::STAIRS_UPDOWN) {
 		tile->render_as.character = 18;
 	}
 }
