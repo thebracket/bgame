@@ -452,6 +452,96 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
 		++job->second.current_step;
 	} break;
+	case ai::CHANNEL_TILE:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::FLAT;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, static_cast<uint8_t>(step.target_z-1)});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::RAMP;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_RAMP:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::RAMP;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, static_cast<uint8_t>(step.target_z+1)});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::FLAT;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_TILE_DOWNSTAIRS:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::STAIRS_DOWN;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_TILE_UPSTAIRS:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::STAIRS_UP;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_TILE_UPDOWNSTAIRS:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::STAIRS_UPDOWN;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
 	case ai::DESTROY_TREE:
 	{
 		const int tree_id = step.component_id;

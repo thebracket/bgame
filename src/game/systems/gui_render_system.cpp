@@ -361,6 +361,21 @@ void gui_render_system::tick(const double& duration_ms) {
 			menu->add_option(gui_menu_option{"Dig out tile", [=] {
 				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z ) );
 			}});
+			menu->add_option(gui_menu_option{"Channel out tile", [=] {
+				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, dig_types::CHANNEL ) );
+			}});
+			menu->add_option(gui_menu_option{"Dig upwards ramp", [=] {
+				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, dig_types::RAMP ) );
+			}});
+			menu->add_option(gui_menu_option{"Dig downwards staircase", [=] {
+				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, dig_types::DOWNSTAIRS ) );
+			}});
+			menu->add_option(gui_menu_option{"Dig upwards staircase", [=] {
+				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, dig_types::UPSTAIRS ) );
+			}});
+			menu->add_option(gui_menu_option{"Dig up/down stairs", [=] {
+				game_engine->messaging->add_message<dig_order_message> ( dig_order_message ( radial_tilespace_x, radial_tilespace_y, radial_tilespace_z, dig_types::UPDOWNSTAIRS ) );
+			}});
 			added_something = true;
 		}
 

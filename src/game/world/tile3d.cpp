@@ -32,9 +32,9 @@ void tile_render_calculation(tile_t * tile)
 		return;
 	}
 	if (tile->base_tile_type == tile_type::TREE_FOLIAGE) {
-			tile->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
-			return;
-		}
+		tile->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
+		return;
+	}
 
 	// Set the ground type
 	switch (tile->ground)
@@ -183,6 +183,15 @@ void tile_render_calculation(tile_t * tile)
 	if (tile->base_tile_type == tile_type::RAMP)
 	{
 		tile->render_as.character = 30;
+	}
+	if (tile->base_tile_type == tile_type::STAIRS_UP) {
+		tile->render_as.character = '<';
+	}
+	if (tile->base_tile_type == tile_type::STAIRS_DOWN) {
+		tile->render_as.character = '>';
+	}
+	if (tile->base_tile_type == tile_type::STAIRS_UP) {
+		tile->render_as.character = 18;
 	}
 }
 
