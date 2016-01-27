@@ -382,7 +382,14 @@ void cordex_ai_system::handle_dig_orders()
 		job.steps.push_back(ai::job_step_t{ ai::CONSTRUCT_WITH_SKILL, msg.x, msg.y, msg.z, 0, true, "Mining", 0, 15 });
 
 		// Clear dug-out area
-		job.steps.push_back(ai::job_step_t{ ai::DIG_TILE, msg.x, msg.y, msg.z, 0, false, "", 0 });
+		switch (msg.dig_type) {
+		case dig_types::MINE : job.steps.push_back(ai::job_step_t{ ai::DIG_TILE, msg.x, msg.y, msg.z, 0, false, "", 0 }); break;
+		case dig_types::CHANNEL : job.steps.push_back(ai::job_step_t{ ai::CHANNEL_TILE, msg.x, msg.y, msg.z, 0, false, "", 0 }); break;
+		case dig_types::RAMP : job.steps.push_back(ai::job_step_t{ ai::DIG_RAMP, msg.x, msg.y, msg.z, 0, false, "", 0 }); break;
+		case dig_types::DOWNSTAIRS : job.steps.push_back(ai::job_step_t{ ai::DIG_TILE_DOWNSTAIRS, msg.x, msg.y, msg.z, 0, false, "", 0 }); break;
+		case dig_types::UPSTAIRS : job.steps.push_back(ai::job_step_t{ ai::DIG_TILE_UPSTAIRS, msg.x, msg.y, msg.z, 0, false, "", 0 }); break;
+		case dig_types::UPDOWNSTAIRS : job.steps.push_back(ai::job_step_t{ ai::DIG_TILE_UPDOWNSTAIRS, msg.x, msg.y, msg.z, 0, false, "", 0 }); break;
+		}
 
 		// Drop axe
 		job.steps.push_back(ai::job_step_t{ ai::DROP_OFF_TOOL, msg.x, msg.y, msg.z, component_id, false, "", 0 });

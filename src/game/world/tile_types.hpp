@@ -26,6 +26,9 @@ constexpr unsigned char EMPTY_SPACE = 18;
 constexpr unsigned char PERMANENT_ICE = 19;
 constexpr unsigned char TREE_TRUNK = 20;
 constexpr unsigned char TREE_FOLIAGE = 21;
+constexpr unsigned char STAIRS_UP = 22;
+constexpr unsigned char STAIRS_DOWN = 23;
+constexpr unsigned char STAIRS_UPDOWN = 24;
 }
 
 inline std::string tile_type_to_string(const unsigned char t)
@@ -50,6 +53,12 @@ inline std::string tile_type_to_string(const unsigned char t)
 		return "Tree Trunk";
 	case tile_type::TREE_FOLIAGE:
 		return "Tree Foliage";
+	case tile_type::STAIRS_UP:
+		return "Stairs (Up)";
+	case tile_type::STAIRS_DOWN:
+		return "Stairs (Down)";
+	case tile_type::STAIRS_UPDOWN:
+		return "Stairs (Up and Down)";
 	}
 	return "Unknown";
 }

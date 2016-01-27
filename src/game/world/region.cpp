@@ -66,17 +66,28 @@ void region_t::calculate_walkability()
 				}
 				else
 				{
-					if (tile->base_tile_type == tile_type::RAMP)
+					if (tile->base_tile_type == tile_type::RAMP or tile->base_tile_type == tile_type::STAIRS_UP
+							or tile->base_tile_type == tile_type::STAIRS_UPDOWN)
 					{
 						// Ramps have the tile above them marked as walkable and gain the down option
 						const int above_idx = tile_idx(x, y, z + 1);
 						tile_t * above_solid = &tiles[above_idx];
 						if (!above_solid->flags.test(TILE_OPTIONS::SOLID))
 						{
-							above_solid->flags.set(
-									TILE_OPTIONS::CAN_STAND_HERE);
+							above_solid->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
 							above_solid->flags.set(TILE_OPTIONS::CAN_GO_DOWN);
 							tile->flags.set(TILE_OPTIONS::CAN_GO_UP);
+						}
+					}
+					if (tile->base_tile_type == tile_type::STAIRS_DOWN or tile->base_tile_type == tile_type::STAIRS_UPDOWN) {
+						// Ramps have the tile below them marked as walkable and gain the up option
+						const int below_idx = tile_idx(x, y, z - 1);
+						tile_t * below_solid = &tiles[below_idx];
+						if (!below_solid->flags.test(TILE_OPTIONS::SOLID))
+						{
+							below_solid->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+							below_solid->flags.set(TILE_OPTIONS::CAN_GO_UP);
+							tile->flags.set(TILE_OPTIONS::CAN_GO_DOWN);
 						}
 					}
 
