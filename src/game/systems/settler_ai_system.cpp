@@ -459,7 +459,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
 		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
 		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
-		target->base_tile_type = tile_type::FLAT;
+		target->base_tile_type = tile_type::EMPTY_SPACE;
 		target->covering = tile_covering::BARE;
 		tile_render_calculation(target);
 
@@ -492,7 +492,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
 		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
 		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
-		target->base_tile_type = tile_type::FLAT;
+		target->base_tile_type = tile_type::EMPTY_SPACE;
 		target->covering = tile_covering::BARE;
 		tile_render_calculation(target);
 
