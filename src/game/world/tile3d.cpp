@@ -43,7 +43,11 @@ void tile_render_calculation(tile_t * tile)
 		tile->render_as = screen_character{ '%', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
 		break;
 	case tile_ground::IGNEOUS:
-		tile->render_as = screen_character{ '#', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		if (tile->flags.test(TILE_OPTIONS::SOLID)) {
+			tile->render_as = screen_character{ '#', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		} else {
+			tile->render_as = screen_character{ '.', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		}
 		break;
 	case tile_ground::MUD:
 		tile->render_as = screen_character{ '\'', color_t{ 121, 76, 19 }, color_t{ 60, 35, 8 } };
@@ -70,7 +74,11 @@ void tile_render_calculation(tile_t * tile)
 		tile->render_as = screen_character{ '~', color_t{ 236, 197, 168 }, color_t{ 120, 95, 85 } };
 		break;
 	case tile_ground::SEDIMENTARY:
-		tile->render_as = screen_character{ '#', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		if (tile->flags.test(TILE_OPTIONS::SOLID)) {
+			tile->render_as = screen_character{ '#', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		} else {
+			tile->render_as = screen_character{ '.', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		}
 		break;
 	case tile_ground::WHITE_SAND:
 		tile->render_as = screen_character{ 247, color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
