@@ -94,6 +94,7 @@ inline void component_factory(fstream &lbfile, const int ct)
 		break;
 	case stairs:
 		component_loader<stairs_component>(lbfile);
+		break;
 	default:
 		throw 102;
 	}
