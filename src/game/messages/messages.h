@@ -13,3 +13,5 @@
 #include "inflict_damage_message.h"
 #include "particle_message.h"
 #include "highlight_message.h"
+#include "dig_order_message.h"
+#include "lighting_changed_message.h"

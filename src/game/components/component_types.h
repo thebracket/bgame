@@ -33,7 +33,9 @@ enum component_type
 	particle_emitter,
 	position3d,
 	walkable_roof,
-	pointlight
+	pointlight,
+	parent_entity,
+	stairs
 };
 
 namespace serialization_generic

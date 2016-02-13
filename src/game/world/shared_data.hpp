@@ -13,4 +13,5 @@ struct shared_data_t
 	bool paused = true;
 	bool render_graphics = true;
 	bool omniscience = false;
+	bool render_flat = false;
 };

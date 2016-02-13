@@ -16,18 +16,23 @@ void tile_render_calculation(tile_t * tile)
 		if (tile->climate == tile_climate::ARCTIC
 				or tile->climate == tile_climate::SUBARCTIC)
 		{
-			tile->render_as.foreground_color = color_t
-			{ 255, 255, 255 };
-			tile->render_as.background_color = color_t
-			{ 128, 128, 128 };
+			tile->render_as.foreground_color = color_t{ 255, 255, 255 };
+			tile->render_as.background_color = color_t{ 128, 128, 128 };
 		}
 		else
 		{
-			tile->render_as.foreground_color = color_t
-			{ 0, 255, 255 };
-			tile->render_as.background_color = color_t
-			{ 0, 0, 64 };
+			tile->render_as.foreground_color = color_t{ 0, 255, 255 };
+			tile->render_as.background_color = color_t{ 0, 0, 64 };
 		}
+		return;
+	}
+
+	if (tile->base_tile_type == tile_type::TREE_TRUNK) {
+		tile->render_as = engine::vterm::screen_character{ 9, {85, 53, 10}, {0,0,0} };
+		return;
+	}
+	if (tile->base_tile_type == tile_type::TREE_FOLIAGE) {
+		tile->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
 		return;
 	}
 
@@ -35,94 +40,57 @@ void tile_render_calculation(tile_t * tile)
 	switch (tile->ground)
 	{
 	case tile_ground::GRAVEL:
-		tile->render_as = screen_character
-		{ 176, color_t
-		{ 128, 128, 128 }, color_t
-		{ 64, 64, 64 } };
+		tile->render_as = screen_character{ '%', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
 		break;
 	case tile_ground::IGNEOUS:
-		tile->render_as = screen_character
-		{ 178, color_t
-		{ 128, 128, 128 }, color_t
-		{ 64, 64, 64 } };
+		if (tile->flags.test(TILE_OPTIONS::SOLID)) {
+			tile->render_as = screen_character{ '#', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		} else {
+			tile->render_as = screen_character{ '.', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		}
 		break;
 	case tile_ground::MUD:
-		tile->render_as = screen_character
-		{ 177, color_t
-		{ 121, 76, 19 }, color_t
-		{ 60, 35, 8 } };
+		tile->render_as = screen_character{ '\'', color_t{ 121, 76, 19 }, color_t{ 60, 35, 8 } };
 		break;
 	case tile_ground::PERMAFROST_BLUE:
-		tile->render_as = screen_character
-		{ 177, color_t
-		{ 255, 255, 255 }, color_t
-		{ 128, 128, 255 } };
+		tile->render_as = screen_character{ '\'', color_t{ 255, 255, 255 }, color_t{ 128, 128, 255 } };
 		break;
 	case tile_ground::PERMAFROST_CRACKED:
-		tile->render_as = screen_character
-		{ 35, color_t
-		{ 255, 255, 255 }, color_t
-		{ 128, 128, 255 } };
+		tile->render_as = screen_character{ 35, color_t{ 255, 255, 255 }, color_t{ 128, 128, 255 } };
 		break;
 	case tile_ground::PERMAFROST_DIRTY:
-		tile->render_as = screen_character
-		{ 177, color_t
-		{ 192, 192, 192 }, color_t
-		{ 64, 64, 46 } };
+		tile->render_as = screen_character{ '\'', color_t{ 192, 192, 192 }, color_t{ 64, 64, 46 } };
 		break;
 	case tile_ground::PERMAFROST_WHITE:
-		tile->render_as = screen_character
-		{ 177, color_t
-		{ 255, 255, 255 }, color_t
-		{ 192, 192, 192 } };
+		tile->render_as = screen_character{ '\'', color_t{ 255, 255, 255 }, color_t{ 192, 192, 192 } };
 		break;
 	case tile_ground::RED_SAND:
-		tile->render_as = screen_character
-		{ 177, color_t
-		{ 236, 197, 168 }, color_t
-		{ 120, 95, 85 } };
+		tile->render_as = screen_character{ '\'', color_t{ 236, 197, 168 }, color_t{ 120, 95, 85 } };
 		break;
 	case tile_ground::RED_SAND_RIPPLE:
-		tile->render_as = screen_character
-		{ 247, color_t
-		{ 236, 197, 168 }, color_t
-		{ 120, 95, 85 } };
+		tile->render_as = screen_character{ 247, color_t{ 236, 197, 168 }, color_t{ 120, 95, 85 } };
 		break;
 	case tile_ground::RED_SAND_ROUGH:
-		tile->render_as = screen_character
-		{ 178, color_t
-		{ 236, 197, 168 }, color_t
-		{ 120, 95, 85 } };
+		tile->render_as = screen_character{ '~', color_t{ 236, 197, 168 }, color_t{ 120, 95, 85 } };
 		break;
 	case tile_ground::SEDIMENTARY:
-		tile->render_as = screen_character
-		{ 176, color_t
-		{ 128, 128, 128 }, color_t
-		{ 64, 64, 64 } };
+		if (tile->flags.test(TILE_OPTIONS::SOLID)) {
+			tile->render_as = screen_character{ '#', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		} else {
+			tile->render_as = screen_character{ '.', color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
+		}
 		break;
 	case tile_ground::WHITE_SAND:
-		tile->render_as = screen_character
-		{ 247, color_t
-		{ 128, 128, 128 }, color_t
-		{ 64, 64, 64 } };
+		tile->render_as = screen_character{ 247, color_t{ 128, 128, 128 }, color_t{ 64, 64, 64 } };
 		break;
 	case tile_ground::YELLOW_SAND:
-		tile->render_as = screen_character
-		{ 176, color_t
-		{ 239, 221, 111 }, color_t
-		{ 116, 110, 56 } };
+		tile->render_as = screen_character{ '~', color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
 		break;
 	case tile_ground::YELLOW_SAND_DIRTY:
-		tile->render_as = screen_character
-		{ 177, color_t
-		{ 239, 221, 111 }, color_t
-		{ 116, 110, 56 } };
+		tile->render_as = screen_character{ '\'', color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
 		break;
 	case tile_ground::YELLOW_SAND_RIPPLE:
-		tile->render_as = screen_character
-		{ 247, color_t
-		{ 239, 221, 111 }, color_t
-		{ 116, 110, 56 } };
+		tile->render_as = screen_character{ '`', color_t{ 239, 221, 111 }, color_t{ 116, 110, 56 } };
 		break;
 	default:
 		std::cout << "Unknown ground type: " << tile->ground << "\n";
@@ -149,13 +117,13 @@ void tile_render_calculation(tile_t * tile)
 		break;
 	case tile_covering::GRASS:
 	{
-		tile->render_as.character = 177;
+		tile->render_as.character = '"';
 		tile->render_as.foreground_color = color_t{ 1, 142, 14 };
 	}
 		break;
 	case tile_covering::GRASS_SPARSE:
 	{
-		tile->render_as.character = 176;
+		tile->render_as.character = '\'';
 		tile->render_as.foreground_color = color_t{ 1, 166, 17 };
 	}
 		break;
@@ -216,6 +184,15 @@ void tile_render_calculation(tile_t * tile)
 	{
 		tile->render_as.character = 30;
 	}
+	if (tile->base_tile_type == tile_type::STAIRS_UP) {
+		tile->render_as.character = '<';
+	}
+	if (tile->base_tile_type == tile_type::STAIRS_DOWN) {
+		tile->render_as.character = '>';
+	}
+	if (tile->base_tile_type == tile_type::STAIRS_UPDOWN) {
+		tile->render_as.character = 18;
+	}
 }
 
 void tile_t::save(Poco::DeflatingOutputStream& lbfile)
@@ -227,6 +204,7 @@ void tile_t::save(Poco::DeflatingOutputStream& lbfile)
 	save_primitive<unsigned char>(lbfile, covering);
 	string flags_export = flags.to_string();
 	save_primitive<string>(lbfile, flags_export);
+	save_primitive<uint8_t>(lbfile, tree);
 }
 
 void tile_t::load(Poco::InflatingInputStream& lbfile)
@@ -239,6 +217,7 @@ void tile_t::load(Poco::InflatingInputStream& lbfile)
 	string flags_import;
 	load_primitive<string>(lbfile, flags_import);
 	flags = std::bitset<TILE_OPTIONS_COUNT>(flags_import);
+	load_primitive<uint8_t>(lbfile, tree);
 
 	tile_render_calculation(this);
 }

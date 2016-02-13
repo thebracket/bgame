@@ -182,6 +182,7 @@ shared_ptr<navigation_path> find_path(location_t start, location_t end)
 		a_star_search.FreeSolutionNodes();
 
 		a_star_search.EnsureMemoryFreed();
+		result->success = true;
 		return result;
 
 	}

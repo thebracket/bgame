@@ -11,6 +11,7 @@
 #include "../../engine/geometry.hpp"
 #include "../world/planet.hpp"
 #include "../world/universe.hpp"
+#include "../world/tile_types.hpp"
 #include <map>
 
 namespace settler_ai_detail
@@ -18,29 +19,23 @@ namespace settler_ai_detail
 
 void consume_power(const int &quantity)
 {
-	game_engine->messaging->add_message<power_consumed_message>(
-			power_consumed_message(quantity));
+	game_engine->messaging->add_message<power_consumed_message>(power_consumed_message(quantity));
 }
 
-void emote(const string &message, const position_component3d * pos,
-		const chat_emote_color_t &color)
+void emote(const string &message, const position_component3d * pos, const chat_emote_color_t &color)
 {
-	game_engine->messaging->add_message<chat_emote_message>(
-			chat_emote_message(string(" ") + message, pos->pos.x + 1,
-					pos->pos.y, pos->pos.z, color));
+	game_engine->messaging->add_message<chat_emote_message>(chat_emote_message(string(" ") + message, pos->pos.x + 1, pos->pos.y, pos->pos.z, color));
 }
 
 void emite_particle(const string &message, const position_component3d * pos)
 {
-	game_engine->messaging->add_message<particle_message>(
-			particle_message(string(" ") + message, pos->pos.x + 1, pos->pos.y,
+	game_engine->messaging->add_message<particle_message>( particle_message(string(" ") + message, pos->pos.x + 1, pos->pos.y,
 					pos->pos.z));
 }
 
 void append_name(stringstream &ss, const settler_ai_component &settler)
 {
-	ss << "@CYAN@" << settler.first_name << " " << settler.last_name
-			<< "@WHITE@ (" << settler.profession_tag << ") ";
+	ss << "@CYAN@" << settler.first_name << " " << settler.last_name << "@WHITE@ (" << settler.profession_tag << ") ";
 }
 
 string announce(const string &state, const settler_ai_component &settler)
@@ -260,6 +255,7 @@ int create_needs_fulfillment_job(const int &need,
 	}
 	else
 	{
+		/*
 		switch (need)
 		{
 		case 1:
@@ -278,13 +274,13 @@ int create_needs_fulfillment_job(const int &need,
 		}
 			break;
 		}
+		*/
 	}
 
 	if (need == 3)
 	{
 		// Claim the tent!
-		provisions_component * bed = ECS->find_entity_component<
-				provisions_component>(chosen_source_id);
+		provisions_component * bed = ECS->find_entity_component<provisions_component>(chosen_source_id);
 		bed->provides_quantity = 1;
 	}
 
@@ -294,14 +290,9 @@ int create_needs_fulfillment_job(const int &need,
 	job.job_id = ai::get_next_job_id();
 	job.type = ai::MEET_PHYSICAL_NEED;
 
-	position_component3d * source_pos = ECS->find_entity_component<
-			position_component3d>(chosen_source_id);
-	job.steps.push_back(ai::job_step_t
-	{ ai::MOVE_TO, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z,
-			chosen_source_id, false, "", 0 });
-	job.steps.push_back(ai::job_step_t
-	{ ai::CONSUME_NEED, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z,
-			chosen_source_id, false, "", need });
+	position_component3d * source_pos = ECS->find_entity_component<position_component3d>(chosen_source_id);
+	job.steps.push_back(ai::job_step_t{ ai::MOVE_TO, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z, chosen_source_id, false, "", 0 });
+	job.steps.push_back(ai::job_step_t{ ai::CONSUME_NEED, source_pos->pos.x, source_pos->pos.y, source_pos->pos.z,chosen_source_id, false, "", need });
 	ai::jobs_board[job.job_id] = job;
 	return job.job_id;
 }
@@ -357,10 +348,9 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 	{
 		// Are we there yet?
 		//const int distance = std::sqrt ( ( std::abs ( pos->x - step.target_x ) *std::abs ( pos->x - step.target_x ) ) + ( std::abs ( pos->y - step.target_y ) * ( std::abs ( pos->y - step.target_y ) ) ) );
-		const int distance = geometry::distance3d(pos->pos.x, pos->pos.y,
-				pos->pos.z, step.target_x, step.target_y, step.target_z);
+		const float distance = geometry::distance3d(pos->pos.x, pos->pos.y, pos->pos.z, step.target_x, step.target_y, step.target_z);
 		//std::cout << "Distance: " << distance << "\n";
-		if (distance <= 1)
+		if (distance <= 1.6)
 		{
 			// We've reached our destination
 			++job->second.current_step;
@@ -373,8 +363,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		{
 			// If there is no path - request one to the destination and exit (no moving and pathing!)
 			//std::cout << "Path requested\n";
-			settler.current_path = ai::find_path(pos->pos, location_t
-			{ pos->pos.region, step.target_x, step.target_y, step.target_z });
+			settler.current_path = ai::find_path(pos->pos, location_t{ pos->pos.region, step.target_x, step.target_y, step.target_z });
 			//if ( settler.current_path == nullptr) std::cout << "But returned null!\n";
 			return;
 		}
@@ -399,8 +388,7 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 			}
 			location_t next_step = settler.current_path->steps.front();
 			settler.current_path->steps.pop();
-			game_engine->messaging->add_message<highlight_message>(
-					highlight_message(pos->pos.x, pos->pos.y, pos->pos.z));
+			//game_engine->messaging->add_message<highlight_message>(highlight_message(pos->pos.x, pos->pos.y, pos->pos.z));
 			//std::cout << "move from " << pos->pos.x << "," << pos->pos.y << " TO " << next_step.x << "," << next_step.y << "\n"; 
 			move_to(pos, next_step.x, next_step.y, next_step.z);
 		}
@@ -411,60 +399,177 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 	{
 		// We've reached the component, so we pick it up
 		engine::entity * item = ECS->get_entity_by_handle(step.component_id);
-		item_storage_component * storage = ECS->find_entity_component<
-				item_storage_component>(step.component_id);
+		item_storage_component * storage = ECS->find_entity_component<item_storage_component>(step.component_id);
 		if (storage != nullptr)
 		{
 			storage->deleted = true; // It's not stored anymore, so delete the component
 		}
-		position_component3d * item_pos = ECS->find_entity_component<
-				position_component3d>(step.component_id);
+		position_component3d * item_pos = ECS->find_entity_component<position_component3d>(step.component_id);
 		if (item_pos != nullptr)
 		{
 			item_pos->deleted = true;
 		}
-		ECS->add_component<item_carried_component>(*item,
-				item_carried_component(settler.entity_id, 0));
-		game_engine->messaging->add_message<item_changed_message>(
-				item_changed_message(item->handle));
-		game_engine->messaging->add_message<entity_moved_message>(
-				entity_moved_message());
+		ECS->add_component<item_carried_component>(*item,item_carried_component(settler.entity_id, 0));
+		game_engine->messaging->add_message<item_changed_message>(item_changed_message(item->handle));
+		game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 		++job->second.current_step;
 	}
 		break;
 	case ai::DROP_OFF_COMPONENT:
 	{
 		engine::entity * item = ECS->get_entity_by_handle(step.component_id);
-		item_carried_component * carried = ECS->find_entity_component<
-				item_carried_component>(step.component_id);
+		item_carried_component * carried = ECS->find_entity_component<item_carried_component>(step.component_id);
 		carried->deleted = true; // It's not carried anymore, so delete the component
-		ECS->add_component<position_component3d>(*item,
-				position_component3d(pos->pos, OMNI));
-		game_engine->messaging->add_message<item_changed_message>(
-				item_changed_message(item->handle));
-		game_engine->messaging->add_message<entity_moved_message>(
-				entity_moved_message());
+		ECS->add_component<position_component3d>(*item,position_component3d(pos->pos, OMNI));
+		game_engine->messaging->add_message<item_changed_message>(item_changed_message(item->handle));
+		game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 		++job->second.current_step;
 	}
 		break;
 	case ai::DROP_OFF_TOOL:
 	{
 		engine::entity * item = ECS->get_entity_by_handle(step.component_id);
-		item_carried_component * carried = ECS->find_entity_component<
-				item_carried_component>(step.component_id);
+		item_carried_component * carried = ECS->find_entity_component<item_carried_component>(step.component_id);
 		carried->deleted = true; // It's not carried anymore, so delete the component
-		ECS->add_component<position_component3d>(*item,
-				position_component3d(pos->pos, OMNI));
-		item_component * item_c = ECS->find_entity_component<item_component>(
-				step.component_id);
+		ECS->add_component<position_component3d>(*item,position_component3d(pos->pos, OMNI));
+		item_component * item_c = ECS->find_entity_component<item_component>(step.component_id);
 		item_c->claimed = false;
-		game_engine->messaging->add_message<item_changed_message>(
-				item_changed_message(item->handle));
-		game_engine->messaging->add_message<entity_moved_message>(
-				entity_moved_message());
+		game_engine->messaging->add_message<item_changed_message>(item_changed_message(item->handle));
+		game_engine->messaging->add_message<entity_moved_message>(entity_moved_message());
 		++job->second.current_step;
-	}
-		break;
+	} break;
+	case ai::DIG_TILE:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::FLAT;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::CHANNEL_TILE:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::EMPTY_SPACE;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, static_cast<uint8_t>(step.target_z-1)});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::RAMP;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_RAMP:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::RAMP;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, static_cast<uint8_t>(step.target_z+1)});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::EMPTY_SPACE;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_TILE_DOWNSTAIRS:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::STAIRS_DOWN;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_TILE_UPSTAIRS:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::STAIRS_UP;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DIG_TILE_UPDOWNSTAIRS:
+	{
+		tile_t * target = world::planet->get_tile(location_t{pos->pos.region, step.target_x, step.target_y, step.target_z});
+		target->flags.reset(TILE_OPTIONS::SOLID);
+		target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+		target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::CAN_STAND_HERE);
+		target->base_tile_type = tile_type::STAIRS_UPDOWN;
+		target->covering = tile_covering::BARE;
+		tile_render_calculation(target);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
+	case ai::DESTROY_TREE:
+	{
+		const int tree_id = step.component_id;
+		std::cout << "Destroying tree: " << tree_id << "\n";
+		vector<position_component3d> * tree_tile_list = ECS->find_components_by_type<position_component3d>();
+		bool first = true;
+		for (position_component3d &tree_loc : *tree_tile_list) {
+			if (tree_loc.entity_id == tree_id) {
+				tile_t * target = world::planet->get_tile(tree_loc.pos);
+				target->flags.reset(TILE_OPTIONS::SOLID);
+				target->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
+				target->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
+				if (!first) {
+					target->base_tile_type = tile_type::EMPTY_SPACE;
+				} else {
+					first = false;
+					target->base_tile_type = tile_type::FLAT;
+				}
+				target->covering = tile_covering::BARE;
+				tile_render_calculation(target);
+				std::cout << "Cleared tile at " << tree_loc.pos.x << "/" << tree_loc.pos.y << "/" << +tree_loc.pos.z << "\n";
+			}
+		}
+		ECS->delete_entity(tree_id);
+		game_engine->messaging->add_message<walkability_changed_message> ( walkability_changed_message () );
+		game_engine->messaging->add_message<lighting_changed_message> ( lighting_changed_message () );
+		++job->second.current_step;
+	} break;
 	case ai::CONSTRUCT_WITH_SKILL:
 	{
 		++settler.state_timer;
@@ -596,14 +701,8 @@ void do_your_job(settler_ai_component &settler, game_stats_component * stats,
 		for (int i = 0; i < number_of_logs; ++i)
 		{
 			int wood_id = raws::create_item_from_raws("Wood Logs");
-			ECS->add_component<position_component3d>(
-					*ECS->get_entity_by_handle(wood_id),
-					position_component3d(
-							location_t
-							{ pos->pos.region, step.target_x, step.target_y,
-									step.target_z }, OMNI));
-			game_engine->messaging->add_message<item_changed_message>(
-					item_changed_message(wood_id));
+			ECS->add_component<position_component3d>(*ECS->get_entity_by_handle(wood_id), position_component3d(location_t{ pos->pos.region, step.target_x, step.target_y,	step.target_z }, OMNI));
+			game_engine->messaging->add_message<item_changed_message>(item_changed_message(wood_id));
 		}
 		++job->second.current_step;
 	}

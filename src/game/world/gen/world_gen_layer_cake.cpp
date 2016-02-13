@@ -157,8 +157,7 @@ std::unique_ptr<planet_t> make_world_layers(heightmap_t* base_map,
 					}
 
 					// The surface
-					tile_t * target = planet->get_tile(location_t
-					{ region_index, x, y, z });
+					tile_t * target = planet->get_tile(location_t{ region_index, x, y, z });
 					target->flags.reset(TILE_OPTIONS::SOLID);
 					target->base_tile_type = tile_type::FLAT;
 					if (ramps[hidx] == true)
@@ -170,34 +169,27 @@ std::unique_ptr<planet_t> make_world_layers(heightmap_t* base_map,
 					// Just add water
 					while (z < water_z)
 					{
-						target = planet->get_tile(location_t
-						{ region_index, x, y, z });
+						target = planet->get_tile(location_t{ region_index, x, y, z });
 						target->flags.reset(TILE_OPTIONS::SOLID);
 						if (target->base_tile_type != tile_type::RAMP)
 							target->base_tile_type = tile_type::FLAT;
 						target->covering = tile_covering::BARE;
 						target->climate = tile_climate::TEMPERATE;
 						target->water_level = 10;
-						png.setPixel((wx * REGION_WIDTH) + x,
-								(wy * REGION_HEIGHT) + y, 0, 0, 255, 255);
+						png.setPixel((wx * REGION_WIDTH) + x, (wy * REGION_HEIGHT) + y, 0, 0, 255, 255);
 						++z;
 					}
 
-					biome_t biome =
-							biomes->biomes[biomes->biome_map->operator[](hidx)];
+					biome_t biome =	biomes->biomes[biomes->biome_map->operator[](hidx)];
 					build_tile(biome, target, rng);
 					//std::cout << +z << "\n";
 					if (z >= water_z)
 					{
 						tile_render_calculation(target);
-						engine::vterm::screen_character render_target =
-								target->render_as;
-						unsigned char r = std::get<0>(
-								render_target.foreground_color);
-						unsigned char g = std::get<1>(
-								render_target.foreground_color);
-						unsigned char b = std::get<2>(
-								render_target.foreground_color);
+						engine::vterm::screen_character render_target =	target->render_as;
+						unsigned char r = std::get<0>(render_target.foreground_color);
+						unsigned char g = std::get<1>(render_target.foreground_color);
+						unsigned char b = std::get<2>(render_target.foreground_color);
 						const int darken = 255 - (z * 2);
 						if (r > darken)
 						{

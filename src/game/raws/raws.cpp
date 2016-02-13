@@ -34,6 +34,8 @@
 #include "raw_output.h"
 #include "raw_particle_emitter.h"
 #include "raw_walkable_roof.h"
+#include "raw_light.h"
+#include "raw_stairs.h"
 
 #include "../game.h"
 
@@ -350,6 +352,19 @@ void parse_raw_walkable_roof(const vector<string> &chunks)
 	current->children.push_back(std::move(roof));
 }
 
+void parse_raw_stairs(const vector<string> &chunks)
+{
+	const string up = chunks[1];
+	const string down = chunks[2];
+	int type = 0;
+	if (up == "Y" and down == "N") type = stairs_types::UP;
+	if (up == "N" and down == "Y") type = stairs_types::DOWN;
+	if (up == "Y" and down == "Y") type = stairs_types::UPDOWN;
+	unique_ptr<raw_stairs> stairs = make_unique<raw_stairs>();
+	stairs->stairs_type = type;
+	current->children.push_back(std::move(stairs));
+}
+
 /* Specific parser functions */
 
 void parse_structure(const vector<string> &chunks)
@@ -436,6 +451,11 @@ void parse_structure(const vector<string> &chunks)
 		parse_raw_walkable_roof(chunks);
 		return;
 	}
+	if (chunks[0] == "STAIRS")
+		{
+			parse_raw_stairs(chunks);
+			return;
+		}
 	if (chunks[0] == "GENERATOR")
 	{
 		parse_raw_power_generator(chunks);
@@ -510,6 +530,11 @@ void parse_structure(const vector<string> &chunks)
 		current->children.push_back(
 				make_unique<raw_particle_emitter>(message, ttl, frequency,
 						color));
+		return;
+	}
+	if (chunks[0] == "LIGHT")
+	{
+		current->children.push_back(make_unique<raw_light>(std::stoi(chunks[1])));
 		return;
 	}
 
@@ -873,7 +898,9 @@ int create_structure_from_raws(const string &name, const location_t loc)
 	}
 
 	entity e = ECS->add_entity();
-	ECS->add_component(e, position_component3d(loc, OMNI));
+	position_component3d pos(loc,OMNI);
+	pos.moved = true;
+	ECS->add_component(e, pos);
 	finder->second->build_components(e, 0, 0);
 
 	return e.handle;
