@@ -1,4 +1,5 @@
-#include "viewshed_system.h"
+#include "viewshed_system.hpp"
+
 #include "../game.h"
 #include "../world/planet.hpp"
 #include "../world/universe.hpp"

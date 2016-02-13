@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../world/world.h"
-#include "../systems/system_factory.h"
 #include "../game.h"
 #include "../raws/raws.h"
 #include "panel_tooltip.h"
 #include "panel_tile_info.h"
 #include <sstream>
+#include "../systems/system_factory.hpp"
 
 using namespace engine;
 

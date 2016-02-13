@@ -1,4 +1,5 @@
-#include "camera_system.h"
+#include "camera_system.hpp"
+
 #include "../game.h"
 #include "../world/region.hpp"
 #include "../world/universe.hpp"

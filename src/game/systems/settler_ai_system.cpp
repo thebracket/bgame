@@ -1,4 +1,5 @@
-#include "settler_ai_system.h"
+#include "settler_ai_system.hpp"
+
 #include "../game.h"
 #include "../world/tables.h"
 #include "../messages/power_consumed_message.h"

@@ -1,4 +1,5 @@
-#include "obstruction_system.h"
+#include "obstruction_system.hpp"
+
 #include "../components/obstruction_component.h"
 #include "../components/walkable_roof_component.h"
 #include "../components/stairs_component.h"

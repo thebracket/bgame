@@ -1,4 +1,5 @@
-#include "cordex_ai_system.h"
+#include "cordex_ai_system.hpp"
+
 #include <iostream>
 #include <map>
 #include "../game.h"

@@ -1,4 +1,5 @@
-#include "gui_render_system.h"
+#include "gui_render_system.hpp"
+
 #include "../game.h"
 #include "../world/universe.hpp"
 #include "render_ascii.hpp"
