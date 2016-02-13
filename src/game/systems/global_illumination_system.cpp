@@ -72,11 +72,7 @@ void sunlight() {
 					if ( calendar->is_daytime ) {
 						region->tiles[tile_idx].light_color = std::make_tuple( 1.0F, 1.0F, 0.95F );
 					} else {
-<<<<<<< HEAD
 						region->tiles[tile_idx].light_color = std::make_tuple( 0.25, 0.5, 0.9 );
-=======
-						region->tiles[tile_idx].light_color = { 0.25, 0.25, 0.25 };
->>>>>>> 87fbf38f61a1bddef7ba331fe16f72d61e72d852
 					}
 				} else {
 					region->tiles[tile_idx].light_color = std::make_tuple( 0.5, 0.5, 0.5 );
