@@ -3,9 +3,7 @@
 #include "../world/tables.h"
 #include "../messages/power_consumed_message.h"
 #include "../messages/chat_emote_message.h"
-#include "../tasks/help_wanted.h"
-#include "../tasks/path_finding.h"
-#include "../tasks/find_nearest_provision.h"
+#include "../tasks/path_finding.hpp"
 #include "../raws/raws.h"
 #include "../world/skill_test.h"
 #include "../../engine/geometry.hpp"
@@ -13,6 +11,8 @@
 #include "../world/universe.hpp"
 #include "../world/tile_types.hpp"
 #include <map>
+#include "../tasks/find_nearest_provision.hpp"
+#include "../tasks/help_wanted.hpp"
 
 namespace settler_ai_detail
 {

@@ -4,7 +4,7 @@
 #include "render_ascii.hpp"
 #include "gui/gui_static_text.hpp"
 #include "gui/gui_popup_menu.hpp"
-#include "../tasks/path_finding.h"
+#include "../tasks/path_finding.hpp"
 #include "../raws/raws.h"
 #include "../world/inventory.hpp"
 #include "../raws/raw_input.h"

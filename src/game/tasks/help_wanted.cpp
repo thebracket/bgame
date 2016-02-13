@@ -1,4 +1,5 @@
-#include "help_wanted.h"
+#include "help_wanted.hpp"
+
 #include "../components/component_types.h"
 
 using namespace serialization_generic;
