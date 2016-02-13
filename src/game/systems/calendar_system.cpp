@@ -17,16 +17,10 @@ enum season_t
 {
 	WINTER = 0, SPRING = 1, SUMMER = 2, AUTUMN = 3
 };
-const vector<string> months
-{ "January", "February", "March", "April", "May", "June", "July", "August",
-		"September", "October", "November", "December" };
-const vector<int> days_in_month
-{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-const vector<season_t> season_months
-{ WINTER, WINTER, SPRING, SPRING, SPRING, SUMMER, SUMMER, SUMMER, AUTUMN,
-		AUTUMN, AUTUMN, WINTER };
-const vector<string> season_names
-{ "Winter", "Spring", "Summer", "Autumn" };
+const vector<string> months{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+const vector<int> days_in_month{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+const vector<season_t> season_months{ WINTER, WINTER, SPRING, SPRING, SPRING, SUMMER, SUMMER, SUMMER, AUTUMN, AUTUMN, AUTUMN, WINTER };
+const vector<string> season_names{ "Winter", "Spring", "Summer", "Autumn" };
 constexpr int MONTHS_PER_YEAR = 12;
 constexpr int MINUTES_PER_HOUR = 60;
 constexpr int HOURS_PER_DAY = 24;
