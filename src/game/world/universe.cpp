@@ -1,6 +1,6 @@
 #include "universe.hpp"
-#include "../tasks/help_wanted.h"
 #include <string>
+#include "../tasks/help_wanted.hpp"
 
 using std::string;
 using std::fstream;

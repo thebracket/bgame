@@ -2,7 +2,8 @@
 
 #include "component_types.h"
 #include <string>
-#include "../tasks/path_finding.h"
+
+#include "../tasks/path_finding.hpp"
 
 using namespace serialization_generic;
 using std::string;

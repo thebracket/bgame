@@ -1,4 +1,5 @@
-#include "path_finding.h"
+#include "path_finding.hpp"
+
 #include <unordered_set>
 #include <tuple>
 #include <map>
