@@ -78,7 +78,7 @@ void mark_tree_trunk(planet_t * planet, const location_t &loc, int x_offset, int
 	target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
 	target->base_tile_type = tile_type::TREE_TRUNK;
 	target->covering = tile_covering::BARE;
-	target->render_as = engine::vterm::screen_character{ 9, {85, 53, 10}, {0,0,0} };
+	target->render_as = engine::vterm::screen_character{ 9, std::make_tuple<uint8_t, uint8_t, uint8_t>(85, 53, 10), std::make_tuple<uint8_t,uint8_t,uint8_t>(0,0,0) };
 	ECS->add_component(tree, position_component3d(destination, OMNI));
 	//std::cout << "Tree ID #" << tree.handle << "\n";
 }
@@ -92,7 +92,7 @@ void mark_tree_foliage(planet_t * planet, const location_t &loc, int x_offset, i
 		target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
 		target->base_tile_type = tile_type::TREE_FOLIAGE;
 		target->covering = tile_covering::BARE;
-		target->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
+		target->render_as = engine::vterm::screen_character{ '#', std::make_tuple<uint8_t,uint8_t,uint8_t>(130, 212, 53), std::make_tuple<uint8_t,uint8_t,uint8_t>(0,0,0) };
 		ECS->add_component(tree, position_component3d(destination, OMNI));
 		//std::cout << "Tree ID #" << tree.handle << "\n";
 	}
