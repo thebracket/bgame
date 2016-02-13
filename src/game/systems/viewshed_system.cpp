@@ -15,8 +15,7 @@ void viewshed_system::tick(const double &duration_ms)
 	vector<viewshed_component> * viewsheds = ECS->find_components_by_type<viewshed_component>();
 	for (viewshed_component &viewshed : *viewsheds)
 	{
-		position_component3d * pos = ECS->find_entity_component<
-				position_component3d>(viewshed.entity_id);
+		position_component3d * pos = ECS->find_entity_component<position_component3d>(viewshed.entity_id);
 		region_t * region = world::planet->get_region(pos->pos.region);
 		if (region == nullptr)
 		{
@@ -50,8 +49,7 @@ void viewshed_system::reset_visibility()
 {
 	position_component3d * camera_pos = get_camera_position();
 	const uint8_t region_idx = camera_pos->pos.region;
-	std::fill(world::planet->get_region(region_idx)->visible.begin(),
-			world::planet->get_region(region_idx)->visible.end(), false);
+	std::fill(world::planet->get_region(region_idx)->visible.begin(), world::planet->get_region(region_idx)->visible.end(), false);
 }
 
 bool viewshed_system::is_facing_this_way(const position_component3d* pos,
@@ -180,7 +178,8 @@ void viewshed_system::scan_radius_penetrating(viewshed_component * view,
 							view->last_visibility.push_back(index);
 							current_region->revealed[index] = true;
 						}
-					});
+					}
+			);
 		}
 	}
 }
