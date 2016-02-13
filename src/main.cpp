@@ -4,4 +4,3 @@ int main()
 {
 	run_game();
 }
-
