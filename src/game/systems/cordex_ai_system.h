@@ -16,4 +16,5 @@ private:
 	void handle_build_orders();
 	void handle_tree_chop_orders();
 	void handle_reaction_orders();
+	void handle_dig_orders();
 };

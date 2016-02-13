@@ -67,24 +67,18 @@ void render_emotes(sdl2_backend * SDL, SDL_Rect &viewport)
 		const int y = (emote.y - viewport.y) * 8 + 48;
 		const int height = emote_size.second;
 
-		SDL_Rect src
-		{ 0, 0, 4, 8 };
-		SDL_Rect dest
-		{ x, y, 4, height };
+		SDL_Rect src{ 0, 0, 4, 8 };
+		SDL_Rect dest{ x, y, 4, height };
 		SDL->render_bitmap("emote_bubble", src, dest);
 
 		// Center of bubble
-		src =
-		{	5, 0, 4, 8};
-		dest =
-		{	x + 4, y, emote_size.first, height};
+		src ={	5, 0, 4, 8};
+		dest ={	x + 4, y, emote_size.first, height};
 		SDL->render_bitmap("emote_bubble", src, dest);
 
 		// Right part of bubble
-		src =
-		{	27, 0, 4, 8};
-		dest =
-		{	x + 4+emote_size.first, y, 4, height};
+		src = {	27, 0, 4, 8};
+		dest = {	x + 4+emote_size.first, y, 4, height};
 		SDL->render_bitmap("emote_bubble", src, dest);
 
 		// The text itself
@@ -92,17 +86,13 @@ void render_emotes(sdl2_backend * SDL, SDL_Rect &viewport)
 		SDL->set_alpha_mod("emote_bubble", 0);
 	}
 
-	vector<highlight_message> * highlights =
-			game_engine->messaging->get_messages_by_type<highlight_message>();
+	vector<highlight_message> * highlights = game_engine->messaging->get_messages_by_type<highlight_message>();
 	for (highlight_message &highlight : *highlights)
 	{
 		SDL_Rect dest
 		{ (highlight.tile_x - viewport.x) * 8, ((highlight.tile_y
 				- viewport.y) * 8) + 48, 8, 8 };
-		engine::vterm::screen_character highlight_c
-		{ 219, color_t
-		{ 255, 0, 255 }, color_t
-		{ 0, 0, 0 } };
+		engine::vterm::screen_character highlight_c	{ 219, color_t{ 255, 0, 255 }, color_t{ 0, 0, 0 } };
 		SDL->set_alpha_mod("font_s", 128 + highlight.ttl);
 		render_ascii(dest, highlight_c, SDL, 0, make_tuple(1.0,1.0,1.0),true);
 	}
@@ -177,23 +167,15 @@ void map_render_system::tick(const double& duration_ms) {
 	{
 		for (int x = 0; x < viewport.w; ++x)
 		{
-			SDL_Rect dest
-			{ x * 8, (y * 8) + 48, 8, 8 };
-			vterm::screen_character target
-			{ '.', color_t
-			{ 255, 255, 255 }, color_t
-			{ 0, 0, 0 } };
-			const location_t world_loc
-			{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x),
-					static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
+			SDL_Rect dest{ x * 8, (y * 8) + 48, 8, 8 };
+			vterm::screen_character target{ '.', color_t{ 255, 255, 255 }, color_t{ 0, 0, 0 } };
+			const location_t world_loc{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x),static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
 			tile_t * tile = world::planet->get_tile(world_loc);
 
-			const int tile_idx = get_tile_index(world_loc.x, world_loc.y,
-					world_loc.z);
+			const int tile_idx = get_tile_index(world_loc.x, world_loc.y, world_loc.z);
 
-			if (!tile->flags.test(TILE_OPTIONS::SOLID)
-					and tile->base_tile_type == tile_type::EMPTY_SPACE
-					and !render_list_3d[tile_idx])
+			//universe->globals.render_flat = true;
+			if (!tile->flags.test(TILE_OPTIONS::SOLID) and tile->base_tile_type == tile_type::EMPTY_SPACE and !render_list_3d[tile_idx] and !universe->globals.render_flat)
 			{
 				// 3d dive
 				int depth = 1;
@@ -201,39 +183,18 @@ void map_render_system::tick(const double& duration_ms) {
 				int dive_tile_idx;
 				while (!go)
 				{
-					tile_t * dive_tile = world::planet->get_tile(
-							location_t
-							{ camera_pos->pos.region, world_loc.x,
-									world_loc.y,
-									static_cast<uint8_t>(camera_pos->pos.z
-											- depth) });
-					dive_tile_idx = get_tile_index(world_loc.x, world_loc.y,
-							world_loc.z - depth);
+					tile_t * dive_tile = world::planet->get_tile(location_t { camera_pos->pos.region, world_loc.x, world_loc.y, static_cast<uint8_t>(camera_pos->pos.z	- depth) });
+					dive_tile_idx = get_tile_index(world_loc.x, world_loc.y, world_loc.z - depth);
 
-					if (!dive_tile->flags.test(TILE_OPTIONS::SOLID)
-							and dive_tile->base_tile_type
-									== tile_type::EMPTY_SPACE
-							and !render_list_3d[dive_tile_idx])
+					if (!dive_tile->flags.test(TILE_OPTIONS::SOLID) and dive_tile->base_tile_type == tile_type::EMPTY_SPACE and !render_list_3d[dive_tile_idx])
 					{
 						++depth;
-						if (depth > 10)
-							go = true;
+						if (depth > 10) go = true;
 					}
 					else
 					{
-						if (dive_tile->flags.test(TILE_OPTIONS::SOLID))
-						{
-							target.character = 219;
-							target.foreground_color = color_t
-							{ 128, 128, 128 };
-							target.background_color = color_t
-							{ 0, 0, 0 };
-						}
-						else
-						{
-							target = dive_tile->render_as;
-							go = true;
-						}
+						go = true;
+						target = dive_tile->render_as;
 
 						if (render_list_3d[dive_tile_idx])
 						{
@@ -250,16 +211,7 @@ void map_render_system::tick(const double& duration_ms) {
 			}
 			else
 			{
-				if (tile->flags.test(TILE_OPTIONS::SOLID))
-				{
-					target.character = 219;
-					target.foreground_color = color_t{ 128, 128, 128 };
-					target.background_color = color_t{ 0, 0, 0 };
-				}
-				else
-				{
-					target = tile->render_as;
-				}
+				target = tile->render_as;
 
 				if (render_list_3d[tile_idx])
 				{
@@ -276,4 +228,5 @@ void map_render_system::tick(const double& duration_ms) {
 
 	render_emotes(SDL, viewport);
 	render_particles(SDL, viewport);
+	universe->globals.render_flat = false;
 }

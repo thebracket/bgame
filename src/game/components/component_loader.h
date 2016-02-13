@@ -89,6 +89,12 @@ inline void component_factory(fstream &lbfile, const int ct)
 	case pointlight:
 		component_loader<point_light_component>(lbfile);
 		break;
+	case parent_entity:
+		component_loader<parent_entity_component>(lbfile);
+		break;
+	case stairs:
+		component_loader<stairs_component>(lbfile);
+		break;
 	default:
 		throw 102;
 	}

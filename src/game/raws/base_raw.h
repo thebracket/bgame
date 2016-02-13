@@ -43,7 +43,9 @@ enum tag_type
 	POWER_DRAIN,
 	OUTPUT,
 	PARTICLE_EMITTER,
-	WALKABLE_ROOF
+	WALKABLE_ROOF,
+	LIGHT,
+	STAIRS
 };
 
 struct base_raw

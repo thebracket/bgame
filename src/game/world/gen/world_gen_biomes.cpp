@@ -71,10 +71,8 @@ biome_map_t make_biome_map(heightmap_t* heightmap,
 		int COUNT = 0;
 		for (const std::pair<int, int> &point : result.biomes[i].points)
 		{
-			TOTAL_ALT += heightmap->operator[](
-					height_map_idx(point.first, point.second));
-			TOTAL_WET += water->operator[](
-					height_map_idx(point.first, point.second));
+			TOTAL_ALT += heightmap->operator[](height_map_idx(point.first, point.second));
+			TOTAL_WET += water->operator[](height_map_idx(point.first, point.second));
 			++COUNT;
 		}
 		const int BIOME_AVERAGE_ALTITUDE = TOTAL_ALT / COUNT;
@@ -108,11 +106,11 @@ biome_map_t make_biome_map(heightmap_t* heightmap,
 		{
 			result.biomes[i].climate = tile_climate::TEMPERATE;
 		}
-		else if (temperature_c_base < 30)
+		else if (temperature_c_base < 25)
 		{
 			result.biomes[i].climate = tile_climate::WARM;
 		}
-		else if (temperature_c_base < 40)
+		else if (temperature_c_base < 35)
 		{
 			result.biomes[i].climate = tile_climate::HOT;
 		}
@@ -179,20 +177,16 @@ biome_map_t make_biome_map(heightmap_t* heightmap,
 				}
 			}
 		}
-		if (result.biomes[i].climate == tile_climate::HOT
-				or result.biomes[i].climate == tile_climate::VERY_HOT)
+		if (result.biomes[i].climate == tile_climate::HOT or result.biomes[i].climate == tile_climate::VERY_HOT)
 		{
-			if (AVERAGE_WETNESS < 0.01)
-			{
-				result.biomes[i].biome_type = biome_types::DESERT;
-			}
-			else if (AVERAGE_WETNESS < 0.05)
-			{
-				result.biomes[i].biome_type = biome_types::BADLANDS;
-			}
-			else
-			{
-				result.biomes[i].biome_type = biome_types::JUNGLE;
+			int dice = rng->roll_dice(1,6);
+			switch (dice) {
+			case 1 : result.biomes[i].biome_type = biome_types::DESERT; break;
+			case 2 : result.biomes[i].biome_type = biome_types::DESERT; break;
+			case 3 : result.biomes[i].biome_type = biome_types::DESERT; break;
+			case 4 : result.biomes[i].biome_type = biome_types::JUNGLE; break;
+			case 5 : result.biomes[i].biome_type = biome_types::JUNGLE; break;
+			case 6 : result.biomes[i].biome_type = biome_types::BADLANDS; break;
 			}
 		}
 

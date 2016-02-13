@@ -72,7 +72,11 @@ void sunlight() {
 					if ( calendar->is_daytime ) {
 						region->tiles[tile_idx].light_color = std::make_tuple( 1.0F, 1.0F, 0.95F );
 					} else {
+<<<<<<< HEAD
 						region->tiles[tile_idx].light_color = std::make_tuple( 0.25, 0.5, 0.9 );
+=======
+						region->tiles[tile_idx].light_color = { 0.25, 0.25, 0.25 };
+>>>>>>> 87fbf38f61a1bddef7ba331fe16f72d61e72d852
 					}
 				} else {
 					region->tiles[tile_idx].light_color = std::make_tuple( 0.5, 0.5, 0.5 );
@@ -100,8 +104,7 @@ void light_radius_for_visibility(point_light_component * view, const position_co
 	region_t * current_region = world::planet->get_region(region_idx);
 
 	// Sweep around
-	for (double angle = 0; angle < three_sixy_degrees_radians; angle +=
-			sweep_degrees_radians)
+	for (double angle = 0; angle < three_sixy_degrees_radians; angle +=	sweep_degrees_radians)
 	{
 		double this_radius = radius;
 
@@ -136,10 +139,20 @@ void light_radius_for_visibility(point_light_component * view, const position_co
 }
 
 void point_lights() {
+	bool forced = false;
+	vector<lighting_changed_message> * change_list = game_engine->messaging->get_messages_by_type<lighting_changed_message>();
+	for (lighting_changed_message &msg : *change_list)
+	{
+		if (!msg.deleted) forced = true;
+		msg.deleted = true;
+	}
+
 	// Run a light view for every system that has one
 	vector<point_light_component> * lights = ECS->find_components_by_type<point_light_component>();
+	int i=0;
 	for (point_light_component &light : *lights)
 	{
+		++i;
 		position_component3d * pos = ECS->find_entity_component<position_component3d>(light.entity_id);
 		region_t * region = world::planet->get_region(pos->pos.region);
 		if (region == nullptr)
@@ -147,9 +160,11 @@ void point_lights() {
 			std::cout << "Danger! Region null for a light component!\n";
 		}
 
-		if (pos->moved or light.last_visibility.empty())
+		if (light.last_visibility.empty() or forced==true)
 		{
+			std::cout << "Light " << i << " recalculated. " << light.red << "/" << light.green << "/" << light.blue << "\n";
 			light_radius_for_visibility(&light, pos);
+			std::cout << light.last_visibility.size() << " lit tiles.\n";
 		}
 
 		// Apply the cached lighting shed

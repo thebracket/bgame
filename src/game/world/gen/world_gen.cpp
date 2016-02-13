@@ -11,6 +11,7 @@
 #include "../../raws/raws.h"
 #include "../../../engine/colors.hpp"
 #include "world_gen_settlers.hpp"
+#include "../../../engine/geometry.hpp"
 
 using engine::entity;
 using namespace engine;
@@ -21,17 +22,15 @@ inline void really_hollow(const location_t &loc)
 	tile->flags.reset(TILE_OPTIONS::SOLID);
 	tile->flags.reset(TILE_OPTIONS::WALK_BLOCKED);
 	tile->flags.reset(TILE_OPTIONS::VIEW_BLOCKED);
-	tile->base_tile_type = tile_type::EMPTY_SPACE;
+	tile->base_tile_type = tile_type::FLAT;
 }
 
 void hollow(const location_t &loc)
 {
 	really_hollow(loc);
 
-	location_t above =
-	{ loc.region, loc.x, loc.y, static_cast<uint8_t>(loc.z - 1) };
-	location_t below =
-	{ loc.region, loc.x, loc.y, static_cast<uint8_t>(loc.z + 1) };
+	location_t above ={ loc.region, loc.x, loc.y, static_cast<uint8_t>(loc.z - 1) };
+	location_t below ={ loc.region, loc.x, loc.y, static_cast<uint8_t>(loc.z + 1) };
 
 	really_hollow(above);
 	really_hollow(below);
@@ -39,8 +38,7 @@ void hollow(const location_t &loc)
 	raws::create_structure_from_raws("Ship Superstructure", below);
 }
 
-void crash_the_ship(const uint8_t start_x, const uint8_t start_y,
-		const uint8_t start_z, const uint8_t planet_idx, planet_t * planet)
+void crash_the_ship(const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx, planet_t * planet)
 {
 	for (uint8_t X = start_x / 2; X < start_x + 6; ++X)
 	{
@@ -51,8 +49,7 @@ void crash_the_ship(const uint8_t start_x, const uint8_t start_y,
 			bool found = false;
 			while (!found)
 			{
-				tile_t * candidate = planet->get_tile(location_t
-				{ planet_idx, X, Y, Z });
+				tile_t * candidate = planet->get_tile(location_t{ planet_idx, X, Y, Z });
 				if (candidate->flags.test(TILE_OPTIONS::SOLID))
 				{
 					++Z;
@@ -61,22 +58,94 @@ void crash_the_ship(const uint8_t start_x, const uint8_t start_y,
 				{
 					found = true;
 					candidate->covering = tile_covering::BARE;
+					if (candidate->tree > 0) {
+						candidate->tree = tree_potential::FORMER_TREE;
+						// We need to spawn some wood
+						int wood_id = raws::create_item_from_raws("Wood Logs");
+						ECS->add_component<position_component3d>(*ECS->get_entity_by_handle(wood_id), position_component3d(location_t{ planet_idx, X, Y, Z }, OMNI));
+					}
 				}
 			}
 		}
 	}
 }
 
-void add_camera(const uint8_t start_x, const uint8_t start_y,
-		const uint8_t start_z, const uint8_t planet_idx)
+void mark_tree_trunk(planet_t * planet, const location_t &loc, int x_offset, int y_offset, int z_offset, entity &tree) {
+	const location_t destination { loc.region, static_cast<int16_t>(loc.x + x_offset), static_cast<int16_t>(loc.y+y_offset), static_cast<uint8_t>(loc.z + z_offset) };
+	tile_t * target = planet->get_tile(destination);
+	target->flags.set(TILE_OPTIONS::SOLID);
+	target->flags.set(TILE_OPTIONS::WALK_BLOCKED);
+	target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
+	target->base_tile_type = tile_type::TREE_TRUNK;
+	target->covering = tile_covering::BARE;
+	target->render_as = engine::vterm::screen_character{ 9, {85, 53, 10}, {0,0,0} };
+	ECS->add_component(tree, position_component3d(destination, OMNI));
+	//std::cout << "Tree ID #" << tree.handle << "\n";
+}
+
+void mark_tree_foliage(planet_t * planet, const location_t &loc, int x_offset, int y_offset, int z_offset, entity &tree) {
+	const location_t destination { loc.region, static_cast<int16_t>(loc.x + x_offset), static_cast<int16_t>(loc.y+y_offset), static_cast<uint8_t>(loc.z + z_offset) };
+	tile_t * target = planet->get_tile(destination);
+	if (target->base_tile_type != tile_type::TREE_TRUNK and target->base_tile_type != tile_type::TREE_FOLIAGE) {
+		target->flags.set(TILE_OPTIONS::SOLID);
+		target->flags.set(TILE_OPTIONS::WALK_BLOCKED);
+		target->flags.set(TILE_OPTIONS::VIEW_BLOCKED);
+		target->base_tile_type = tile_type::TREE_FOLIAGE;
+		target->covering = tile_covering::BARE;
+		target->render_as = engine::vterm::screen_character{ '#', {130, 212, 53}, {0,0,0} };
+		ECS->add_component(tree, position_component3d(destination, OMNI));
+		//std::cout << "Tree ID #" << tree.handle << "\n";
+	}
+}
+
+void grow_trees(const uint8_t planet_idx, planet_t * planet, engine::random_number_generator &rng) {
+	for (uint8_t z=0; z<REGION_DEPTH; ++z) {
+		for (int16_t y=0; y<REGION_HEIGHT; ++y) {
+			for (int16_t x=0; x<REGION_WIDTH; ++x) {
+				tile_t * target = planet->get_tile(location_t{ planet_idx, x, y, z });
+				if (target->tree > 1) {
+					// Time to grow a tree!
+					const location_t tree_loc { planet_idx, x, y, z };
+					entity tree = ECS->add_entity();
+					ECS->add_component(tree, tree_component());
+					ECS->add_component(tree, debug_name_component("Tree"));
+					//std::cout << "Tree ID #" << tree.handle << "=" << tree.handle << "\n";
+
+					// New approach: we add position components for each tile, but actually modify
+					// the map itself. This keeps the render path clean, using already-fast code.
+					// We had terrible performance problems when we tried a few thousand trees as
+					// entities/parent entities!
+					mark_tree_trunk(planet, tree_loc, 0, 0, 0, tree);
+					int tree_height = rng.roll_dice(1, 6);
+					for (int i=1; i<=tree_height; ++i) {
+						mark_tree_trunk(planet, tree_loc, 0, 0, i, tree);
+
+						const int distance = (tree_height - i) + 1;
+						for (int j=0-distance; j<=distance; ++j) {
+							for (int k=0-distance; k<=distance; ++k) {
+								const float d = std::abs(std::sqrt(std::abs(j*j)+std::abs(k*k)));
+								//std::cout << j << "x" << k << "=" << d << "\n";
+								if (!(j==0 and k==0) and d<=distance and rng.roll_dice(1,6)>1) {
+									mark_tree_foliage(planet, tree_loc, j, k, i, tree);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+void add_camera(const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx)
 {
 	entity camera = ECS->add_entity();
 	ECS->add_component(camera, position_component3d({ planet_idx, start_x, start_y, start_z }, OMNI));
 	universe->globals.camera_handle = camera.handle;
 }
 
-void add_cordex(const uint8_t start_x, const uint8_t start_y,
-		const uint8_t start_z, const uint8_t planet_idx)
+void add_cordex(const uint8_t start_x, const uint8_t start_y, const uint8_t start_z, const uint8_t planet_idx)
 {
 	entity cordex = ECS->add_entity();
 	universe->globals.cordex_handle = cordex.handle;
@@ -91,8 +160,7 @@ void add_cordex(const uint8_t start_x, const uint8_t start_y,
 	hollow(location_t{ planet_idx, start_x, start_y, start_z });
 }
 
-void add_structural_element(const location_t &loc, unsigned char glyph,
-		bool block = true)
+void add_structural_element(const location_t &loc, unsigned char glyph, bool block = true)
 {
 	hollow(loc);
 	switch (glyph)
@@ -123,69 +191,53 @@ void add_structural_element(const location_t &loc, unsigned char glyph,
 	}
 }
 
-void add_solar_collector(const uint8_t x, const uint8_t y, const uint8_t z,
-		const uint8_t planet_idx)
+void add_solar_collector(const uint8_t x, const uint8_t y, const uint8_t z,	const uint8_t planet_idx)
 {
-	add_structural_element(location_t
-	{ planet_idx, x, y, static_cast<uint8_t>(z - 1) }, '.');
-	raws::create_structure_from_raws("Solar Collector", location_t
-	{ planet_idx, x, y, z });
+	add_structural_element(location_t{ planet_idx, x, y, static_cast<uint8_t>(z - 1) }, '.');
+	raws::create_structure_from_raws("Solar Collector", location_t{ planet_idx, x, y, z });
 	//hollow(location_t { planet_idx, x, y, z-1 });
 }
 
 void add_food_replicator(const uint8_t x, const uint8_t y, const uint8_t z,
 		const uint8_t planet_idx)
 {
-	raws::create_structure_from_raws("Small Replicator", location_t
-	{ planet_idx, x, y, z });
-	hollow(location_t
-	{ planet_idx, x, y, z });
+	raws::create_structure_from_raws("Small Replicator", location_t{ planet_idx, x, y, z });
+	hollow(location_t{ planet_idx, x, y, z });
 }
 
-void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z,
-		const uint8_t planet_idx)
+void add_storage_unit(const uint8_t x, const uint8_t y, const uint8_t z, const uint8_t planet_idx)
 {
-	int container_id = raws::create_structure_from_raws("Storage Unit",
-			location_t
-			{ planet_idx, x, y, z });
-	hollow(location_t
-	{ planet_idx, x, y, z });
+	int container_id = raws::create_structure_from_raws("Storage Unit", location_t{ planet_idx, x, y, z });
+	hollow(location_t{ planet_idx, x, y, z });
 
 	for (int i = 0; i < 3; ++i)
 	{
-		int tent_kit = raws::create_item_from_raws(
-				"Personal Survival Shelter Kit");
-		ECS->add_component<item_storage_component>(
-				*ECS->get_entity_by_handle(tent_kit),
-				item_storage_component(container_id));
+		int tent_kit = raws::create_item_from_raws("Personal Survival Shelter Kit");
+		ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(tent_kit),item_storage_component(container_id));
 	}
 	int fire_kit = raws::create_item_from_raws("Camping Fire Kit");
-	ECS->add_component<item_storage_component>(
-			*ECS->get_entity_by_handle(fire_kit),
-			item_storage_component(container_id));
+	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(fire_kit), item_storage_component(container_id));
 	int fire_axe = raws::create_item_from_raws("Fire Axe");
-	ECS->add_component<item_storage_component>(
-			*ECS->get_entity_by_handle(fire_axe),
-			item_storage_component(container_id));
+	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(fire_axe),item_storage_component(container_id));
+	int pick_axe = raws::create_item_from_raws("Pickaxe");
+	ECS->add_component<item_storage_component>(*ECS->get_entity_by_handle(pick_axe),item_storage_component(container_id));
 }
 
-void make_entities(planet_t * planet)
+void make_entities(planet_t * planet, engine::random_number_generator &rng)
 {
-	const uint8_t planet_idx = planet->planet_idx(WORLD_WIDTH / 2,
-			WORLD_HEIGHT - 1);
+	const uint8_t planet_idx = planet->planet_idx(WORLD_WIDTH / 2, WORLD_HEIGHT - 1);
 
 	// Determine starting location
 	uint8_t start_x = REGION_WIDTH / 2;
 	uint8_t start_y = REGION_HEIGHT / 2;
 	uint8_t start_z = 1;
 
-	planet->load_region(planet_idx);
+	//planet->load_region(planet_idx);
 	bool found = false;
 	while (!found)
 	{
 		// -4 to ensure that the back door is usable
-		tile_t * candidate = planet->get_tile(location_t
-		{ planet_idx, static_cast<uint8_t>(start_x - 4), start_y, start_z });
+		tile_t * candidate = planet->get_tile(location_t{ planet_idx, static_cast<uint8_t>(start_x - 4), start_y, start_z });
 		if (candidate->flags.test(TILE_OPTIONS::SOLID))
 		{
 			++start_z;
@@ -195,210 +247,108 @@ void make_entities(planet_t * planet)
 			found = true;
 		}
 	}
-	std::cout << "Starting at: " << +start_x << "/" << +start_y << "/"
-			<< +start_z << "\n";
+	std::cout << "Starting at: " << +start_x << "/" << +start_y << "/" << +start_z << "\n";
 
 	// Clear a crash trail
+	std::cout << "Crashing the ship\n";
 	crash_the_ship(start_x, start_y, start_z, planet_idx, planet);
+	std::cout << "Growing trees\n";
+	grow_trees(planet_idx, planet, rng);
 
 	// TODO: Hollow out the landing zone
 
+	planet->save_region(planet_idx);
+	std::cout << "Cordex\n";
 	// Add ship hull, superstructure, doors, power, sensors, cordex
 	add_cordex(start_x, start_y, start_z, planet_idx);
 	// Solar collector at (x-1,y-1), (x+1,y-1), (x-1,y+1), (x+1,y+1)
-	add_solar_collector(static_cast<uint8_t>(start_x - 1),
-			static_cast<uint8_t>(start_y - 1),
-			static_cast<uint8_t>(start_z + 1), planet_idx);
-	add_solar_collector(static_cast<uint8_t>(start_x + 1),
-			static_cast<uint8_t>(start_y - 1),
-			static_cast<uint8_t>(start_z + 1), planet_idx);
-	add_solar_collector(static_cast<uint8_t>(start_x - 1),
-			static_cast<uint8_t>(start_y + 1),
-			static_cast<uint8_t>(start_z + 1), planet_idx);
-	add_solar_collector(static_cast<uint8_t>(start_x + 1),
-			static_cast<uint8_t>(start_y + 1),
-			static_cast<uint8_t>(start_z + 1), planet_idx);
+	std::cout << "Solar panels\n";
+	add_solar_collector(static_cast<uint8_t>(start_x - 1), static_cast<uint8_t>(start_y - 1), static_cast<uint8_t>(start_z + 1), planet_idx);
+	add_solar_collector(static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y - 1), static_cast<uint8_t>(start_z + 1), planet_idx);
+	add_solar_collector(static_cast<uint8_t>(start_x - 1), static_cast<uint8_t>(start_y + 1), static_cast<uint8_t>(start_z + 1), planet_idx);
+	add_solar_collector(static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y + 1), static_cast<uint8_t>(start_z + 1), planet_idx);
 
 	// Console constructions at (x-1,y), (x+1,y), (x,y-1), (x,y+1)
-	raws::create_structure_from_raws("Education Console", location_t
-	{ planet_idx, static_cast<uint8_t>(start_x - 1), start_y, start_z });
-	raws::create_structure_from_raws("Scanner Console", location_t
-	{ planet_idx, static_cast<uint8_t>(start_x + 1), start_y, start_z });
-	raws::create_structure_from_raws("Defense Console", location_t
-	{ planet_idx, start_x, static_cast<uint8_t>(start_y - 1), start_z });
-	raws::create_structure_from_raws("Communications Console", location_t
-	{ planet_idx, start_x, static_cast<uint8_t>(start_y + 1), start_z });
-	raws::create_structure_from_raws("Water Purifier",
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y - 2), start_z });
-	raws::create_structure_from_raws("Food Dispenser",
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y + 2), start_z });
-	hollow(location_t
-	{ planet_idx, static_cast<uint8_t>(start_x - 1), start_y, start_z });
-	hollow(location_t
-	{ planet_idx, static_cast<uint8_t>(start_x + 1), start_y, start_z });
-	hollow(location_t
-	{ planet_idx, start_x, static_cast<uint8_t>(start_y - 1), start_z });
-	hollow(location_t
-	{ planet_idx, start_x, static_cast<uint8_t>(start_y + 1), start_z });
-	hollow(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y - 2), start_z });
-	hollow(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y + 2), start_z });
+	std::cout << "Consoles\n";
+	raws::create_structure_from_raws("Education Console", location_t{ planet_idx, static_cast<uint8_t>(start_x - 1), start_y, start_z });
+	raws::create_structure_from_raws("Scanner Console", location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), start_y, start_z });
+	raws::create_structure_from_raws("Defense Console", location_t{ planet_idx, start_x, static_cast<uint8_t>(start_y - 1), start_z });
+	raws::create_structure_from_raws("Communications Console", location_t{ planet_idx, start_x, static_cast<uint8_t>(start_y + 1), start_z });
+	raws::create_structure_from_raws("Water Purifier", location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y - 2), start_z });
+	raws::create_structure_from_raws("Food Dispenser", location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y + 2), start_z });
+	std::cout << "Digging\n";
+	hollow(location_t{ planet_idx, static_cast<uint8_t>(start_x - 1), start_y, start_z });
+	hollow(location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), start_y, start_z });
+	hollow(location_t{ planet_idx, start_x, static_cast<uint8_t>(start_y - 1), start_z });
+	hollow(location_t{ planet_idx, start_x, static_cast<uint8_t>(start_y + 1), start_z });
+	hollow(location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y - 2), start_z });
+	hollow(location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y + 2), start_z });
 
 	// Refridgerator/Food Replicator at (x+4,y)
+	std::cout << "Replicator\n";
 	add_food_replicator(start_x + 4, start_y, start_z, planet_idx);
 
 	// Storage unit at (x+4,y-1) and (x+4,y+1)
+	std::cout << "Cabinets\n";
 	add_storage_unit(start_x + 4, start_y - 1, start_z, planet_idx);
 	add_storage_unit(start_x + 4, start_y + 1, start_z, planet_idx);
 
+	std::cout << "Ship super-structure\n";
 	// Escape pod structure
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 4),
-					static_cast<uint8_t>(start_y - 3), start_z }, 201); // TL Corner
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 4),
-					static_cast<uint8_t>(start_y + 3), start_z }, 200); // BL Corner
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 4), static_cast<uint8_t>(start_y - 3), start_z }, 201); // TL Corner
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 4), static_cast<uint8_t>(start_y + 3), start_z }, 200); // BL Corner
 	for (int i = 0; i < 6; ++i)
 	{
 		if (i != 3)
 		{
-			add_structural_element(location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 3 + i),
-					static_cast<uint8_t>(start_y - 3), start_z }, 205); // Upper hull wall
-			add_structural_element(location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 3 + i),
-					static_cast<uint8_t>(start_y + 3), start_z }, 205); // Lower hull wall
+			add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 3 + i), static_cast<uint8_t>(start_y - 3), start_z }, 205); // Upper hull wall
+			add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 3 + i), static_cast<uint8_t>(start_y + 3), start_z }, 205); // Lower hull wall
 		}
 	}
 	for (int i = 0; i < 5; ++i)
 	{
 		if (i != 2)
 		{
-			add_structural_element(location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 4),
-					static_cast<uint8_t>(start_y - 2 + i), start_z }, 186); // Add left wall
+			add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 4), static_cast<uint8_t>(start_y - 2 + i), start_z }, 186); // Add left wall
 		}
 		else
 		{
-			add_structural_element(location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 4),
-					static_cast<uint8_t>(start_y - 2 + i), start_z }, '.');
+			add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 4),static_cast<uint8_t>(start_y - 2 + i), start_z }, '.');
 		}
 	}
 
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y - 3), start_z }, 16); // Front
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 4),
-					static_cast<uint8_t>(start_y - 2), start_z }, 16); // Front
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 5),
-					static_cast<uint8_t>(start_y - 1), start_z }, 16); // Front
-	add_structural_element(location_t
-	{ planet_idx, static_cast<uint8_t>(start_x + 6),
-			static_cast<uint8_t>(start_y), start_z }, 16); // Front
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 5),
-					static_cast<uint8_t>(start_y + 1), start_z }, 16); // Front
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 4),
-					static_cast<uint8_t>(start_y + 2), start_z }, 16); // Front
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y + 3), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y - 3), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 4), static_cast<uint8_t>(start_y - 2), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 5), static_cast<uint8_t>(start_y - 1), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 6), static_cast<uint8_t>(start_y), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 5), static_cast<uint8_t>(start_y + 1), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 4), static_cast<uint8_t>(start_y + 2), start_z }, 16); // Front
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y + 3), start_z }, 16); // Front
 
 	for (int i = 0; i < 5; ++i)
 	{
-		add_structural_element(
-				location_t
-				{ planet_idx, static_cast<uint8_t>(start_x - 3),
-						static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',
-				false);
-		add_structural_element(
-				location_t
-				{ planet_idx, static_cast<uint8_t>(start_x - 2),
-						static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',
-				false);
-		add_structural_element(
-				location_t
-				{ planet_idx, static_cast<uint8_t>(start_x + 2),
-						static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',
-				false);
+		add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 3),static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',false);
+		add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x - 2),static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',false);
+		add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 2),static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',false);
 		if (i > 0 and i < 4)
-			add_structural_element(location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 3),
-					static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',
-					false);
+			add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 3), static_cast<uint8_t>(start_y - 2 + i), start_z }, '.',false);
 	}
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 1),
-					static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x),
-					static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 1),
-					static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x - 1),
-					static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x),
-					static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
-	add_structural_element(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 1),
-					static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
-	add_structural_element(location_t
-	{ planet_idx, static_cast<uint8_t>(start_x + 5),
-			static_cast<uint8_t>(start_y), start_z }, 219);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x - 1), static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
+	add_structural_element( location_t{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y - 2), start_z }, '.', false);
+	add_structural_element( location_t{ planet_idx, static_cast<uint8_t>(start_x - 1), static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
+	add_structural_element(	location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y + 2), start_z }, '.', false);
+	add_structural_element(location_t{ planet_idx, static_cast<uint8_t>(start_x + 5), static_cast<uint8_t>(start_y), start_z }, 219);
 
 	// Add random settlers    
-	make_settler(location_t
-	{ planet_idx, start_x, static_cast<uint8_t>(start_y - 2), start_z });
-	make_settler(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 1),
-					static_cast<uint8_t>(start_y - 2), start_z });
-	make_settler(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 2),
-					static_cast<uint8_t>(start_y - 2), start_z });
-	make_settler(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x),
-					static_cast<uint8_t>(start_y + 2), start_z });
-	make_settler(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 1),
-					static_cast<uint8_t>(start_y + 2), start_z });
-	make_settler(
-			location_t
-			{ planet_idx, static_cast<uint8_t>(start_x + 2),
-					static_cast<uint8_t>(start_y + 2), start_z });
+	std::cout << "Settlers\n";
+	make_settler(location_t	{ planet_idx, start_x, static_cast<uint8_t>(start_y - 2), start_z });
+	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y - 2), start_z });
+	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 2), static_cast<uint8_t>(start_y - 2), start_z });
+	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y + 2), start_z });
+	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y + 2), start_z });
+	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 2), static_cast<uint8_t>(start_y + 2), start_z });
 
 	add_camera(start_x, start_y, start_z, planet_idx);
 	universe->globals.stored_power = 25;
@@ -422,19 +372,17 @@ void world_gen_phase_1()
 	smooth_height_map(base_map.get());
 
 	std::cout << "Hydrology\n";
-	std::unique_ptr<water_level_map_t> water = perform_hydrology(base_map.get(),
-			&rng);
+	std::unique_ptr<water_level_map_t> water = perform_hydrology(base_map.get(), &rng);
 
 	std::cout << "Biomes\n";
 	biome_map_t biomes = make_biome_map(base_map.get(), &rng, water.get());
 
 	std::cout << "Layercake\n";
-	std::unique_ptr<planet_t> planet = make_world_layers(base_map.get(), rng,
-			water.get(), &biomes);
+	std::unique_ptr<planet_t> planet = make_world_layers(base_map.get(), rng, water.get(), &biomes);
 
 	std::cout << "Making starting entites\n";
 	ECS->init();
-	make_entities(planet.get());
+	make_entities(planet.get(), rng);
 
 	std::cout << "World gen done\n";
 }

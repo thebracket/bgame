@@ -15,7 +15,10 @@ void game_gui::delete_element(const std::string &name) {
 		delete_element(child);
 	}
 
-	elements.erase(std::remove_if(elements.begin(), elements.end(), [&name] (std::pair<std::string, std::unique_ptr<gui_element>> &e) { return (e.first == name); }));
+	auto finder = std::find_if(elements.begin(), elements.end(), [&name] (std::pair<std::string, std::unique_ptr<gui_element>> &e) { return (e.first == name); });
+	if (finder != elements.end()) {
+		elements.erase(std::remove_if(elements.begin(), elements.end(), [&name] (std::pair<std::string, std::unique_ptr<gui_element>> &e) { return (e.first == name); }));
+	}
 }
 
 void game_gui::delete_all() {
@@ -29,5 +32,17 @@ gui_element * game_gui::get_element(const std::string &name) {
 }
 
 void game_gui::render() {
-	std::for_each(elements.begin(), elements.end(), [] (std::pair<std::string, std::unique_ptr<gui_element>> &e) { e.second->render(); });
+	std::vector<std::string> closing;
+	std::for_each(elements.begin(), elements.end(), [&closing] (std::pair<std::string, std::unique_ptr<gui_element>> &e) {
+		e.second->render();
+		if (e.second->request_close) {
+			closing.push_back(e.first);
+		}
+	});
+
+	while (!closing.empty()) {
+		const std::string target = closing[0];
+		closing.erase(closing.begin());
+		delete_element(target);
+	}
 }

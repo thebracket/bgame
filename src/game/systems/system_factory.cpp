@@ -15,6 +15,7 @@
 #include "hud_render_system.h"
 #include "map_render_system.h"
 #include "gui_render_system.h"
+#include "entity_cleanup_system.hpp"
 #include <memory>
 
 using std::make_unique;
@@ -83,4 +84,8 @@ unique_ptr<base_system> make_map_render_system()
 unique_ptr<base_system> make_gui_render_system()
 {
 	return make_unique<gui_render_system>();
+}
+unique_ptr<base_system> make_entity_cleanup_system()
+{
+	return make_unique<entity_cleanup_system>();
 }

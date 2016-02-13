@@ -24,6 +24,11 @@ constexpr unsigned char RAMP_WD_SD = 16;
 constexpr unsigned char MAGMA = 17;
 constexpr unsigned char EMPTY_SPACE = 18;
 constexpr unsigned char PERMANENT_ICE = 19;
+constexpr unsigned char TREE_TRUNK = 20;
+constexpr unsigned char TREE_FOLIAGE = 21;
+constexpr unsigned char STAIRS_UP = 22;
+constexpr unsigned char STAIRS_DOWN = 23;
+constexpr unsigned char STAIRS_UPDOWN = 24;
 }
 
 inline std::string tile_type_to_string(const unsigned char t)
@@ -44,6 +49,16 @@ inline std::string tile_type_to_string(const unsigned char t)
 		return "Empty space";
 	case tile_type::PERMANENT_ICE:
 		return "Permanent Ice";
+	case tile_type::TREE_TRUNK:
+		return "Tree Trunk";
+	case tile_type::TREE_FOLIAGE:
+		return "Tree Foliage";
+	case tile_type::STAIRS_UP:
+		return "Stairs (Up)";
+	case tile_type::STAIRS_DOWN:
+		return "Stairs (Down)";
+	case tile_type::STAIRS_UPDOWN:
+		return "Stairs (Up and Down)";
 	}
 	return "Unknown";
 }
@@ -233,4 +248,10 @@ inline std::string biome_type_to_string(const unsigned char t)
 		return "Hills";
 	}
 	return "Unknown";
+}
+
+namespace tree_potential {
+constexpr uint8_t NO_TREES = 0;
+constexpr uint8_t FORMER_TREE = 1;
+constexpr uint8_t PINE = 2;
 }

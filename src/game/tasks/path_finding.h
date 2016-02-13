@@ -20,6 +20,7 @@ namespace ai
 
 struct navigation_path
 {
+	bool success = false;
 	location_t destination;
 	queue<location_t> steps;
 };
