@@ -1,4 +1,5 @@
-#include "power_system.h"
+#include "power_system.hpp"
+
 #include "../components/power_battery_component.h"
 #include "../components/power_generator_component.h"
 #include "../components/calendar_component.h"

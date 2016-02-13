@@ -1,4 +1,4 @@
-#include "particle_system.h"
+#include "particle_system.hpp"
 
 #include "../game.h"
 

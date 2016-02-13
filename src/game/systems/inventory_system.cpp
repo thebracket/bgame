@@ -1,4 +1,5 @@
-#include "inventory_system.h"
+#include "inventory_system.hpp"
+
 #include "../game.h"
 #include "../world/universe.hpp"
 #include "../world/inventory.hpp"

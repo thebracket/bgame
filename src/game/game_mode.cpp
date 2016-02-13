@@ -5,13 +5,13 @@
 #include "../engine/virtual_terminal.hpp"
 #include "../game/game.h"
 #include "world/universe.hpp"
-#include "systems/system_factory.h"
 #include "render/colors.h"
 #include "render/render_list.hpp"
 #include "world/tile_types.hpp"
 #include <utility>
 #include <iomanip>
 #include <sstream>
+#include "systems/system_factory.hpp"
 
 using std::make_pair;
 using namespace engine;

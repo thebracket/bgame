@@ -1,4 +1,5 @@
-#include "damage_system.h"
+#include "damage_system.hpp"
+
 #include "../game.h"
 #include "../world/skill_test.h"
 #include "../world/universe.hpp"

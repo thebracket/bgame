@@ -1,4 +1,5 @@
-#include "hud_render_system.h"
+#include "hud_render_system.hpp"
+
 #include "../game.h"
 #include "../world/universe.hpp"
 #include "../render/colors.h"

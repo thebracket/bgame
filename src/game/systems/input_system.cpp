@@ -1,4 +1,4 @@
-#include "input_system.h"
+#include "input_system.hpp"
 
 #include "../../engine/engine.hpp"
 #include "../game.h"
