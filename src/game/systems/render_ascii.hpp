@@ -24,8 +24,7 @@ inline void render_ascii(const SDL_Rect &dest, const vterm::screen_character &ta
 	unsigned char target_char = target.character;
 	int texture_x = (target_char % 16) * 8;
 	int texture_y = (target_char / 16) * 8;
-	SDL_Rect source =
-	{ texture_x, texture_y, 8, 8 };
+	SDL_Rect source{ texture_x, texture_y, 8, 8 };
 	//const SDL_Rect bg_source = { 88, 104, 8, 8 };
 
 	color_t fg = target.foreground_color;
@@ -43,7 +42,6 @@ inline void render_ascii(const SDL_Rect &dest, const vterm::screen_character &ta
 	// Apply lighting
 	apply_colored_light(fg, light_color);
 
-	SDL->set_color_mod("font_s", std::get<0>(fg), std::get<1>(fg),
-			std::get<2>(fg));
-	SDL->render_bitmap("font_s", source, dest);
+	SDL->set_color_mod("font_s", std::get<0>(fg), std::get<1>(fg), std::get<2>(fg));
+	SDL->render_bitmap_rotated("font_s", source, dest, 0.0);
 }

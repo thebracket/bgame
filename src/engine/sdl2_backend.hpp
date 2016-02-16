@@ -27,6 +27,7 @@ public:
 	void render_bitmap(const std::string &tag, const SDL_Rect &source, const SDL_Rect &dest);
 	void render_bitmap_simple(const std::string &tag, const int &x, const int &y);
 	void render_bitmap_centered(const std::string &tag, const int &x, const int &y);
+	void render_bitmap_rotated(const std::string &tag, const SDL_Rect &source, const SDL_Rect &dest, double angle);
 
 	void load_image_resource(const std::string &filename, const std::string &tag);
 	void load_font_resource(const std::string &filename, const std::string &tag, const int &size);
