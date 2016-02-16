@@ -23,6 +23,7 @@ struct screen_character
 	unsigned char character;
 	color_t foreground_color;
 	color_t background_color;
+	double rotation = 0.0;
 };
 
 /* Returns the screen size, width/height format */
