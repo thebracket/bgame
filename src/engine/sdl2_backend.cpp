@@ -24,27 +24,22 @@ sdl2_backend::~sdl2_backend()
 	stop();
 }
 
-void sdl2_backend::load_image_resource(const std::string &filename,
-		const std::string &tag)
+void sdl2_backend::load_image_resource(const std::string &filename, const std::string &tag)
 {
 	resources.load_image(renderer, filename, tag);
 }
 
-void sdl2_backend::load_font_resource(const string& filename, const string& tag,
-		const int& size)
+void sdl2_backend::load_font_resource(const string& filename, const string& tag, const int& size)
 {
 	resources.load_font(filename, tag, size);
 }
 
-string sdl2_backend::render_text_to_image(const string& font_tag,
-		const string text, const string& new_tag, SDL_Color color)
+string sdl2_backend::render_text_to_image(const string& font_tag, const string text, const string& new_tag, SDL_Color color)
 {
-	return resources.render_text_to_texture(renderer, font_tag, text, new_tag,
-			color);
+	return resources.render_text_to_texture(renderer, font_tag, text, new_tag, color);
 }
 
-void sdl2_backend::init(const std::string &window_title, const int width = 1024,
-		const int height = 768)
+void sdl2_backend::init(const std::string &window_title, const int width = 1024, const int height = 768)
 {
 	SCREEN_HEIGHT = height;
 	SCREEN_WIDTH = width;
@@ -52,23 +47,23 @@ void sdl2_backend::init(const std::string &window_title, const int width = 1024,
 	if (error_code < 0)
 		throw 101; // TODO: Real exception
 
-	window = SDL_CreateWindow(window_title.c_str(),
-	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+	window = SDL_CreateWindow(window_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
 			SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-	if (window == NULL)
+	if (window == NULL) {
 		throw 102;
+	}
 
-	renderer = SDL_CreateRenderer(window, -1,
-			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (renderer == NULL)
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (renderer == NULL) {
 		throw 103;
+	}
 
-	if (TTF_Init() == -1)
+	if (TTF_Init() == -1) {
 		throw 104;
+	}
 
 	resources.load_image(renderer, "../assets/terminal16x16.png", "font");
-	resources.load_image(renderer, "../assets/terminal8x8_palette2.png",
-			"font_s");
+	resources.load_image(renderer, "../assets/terminal8x8_palette2.png", "font_s");
 
 	initialized = true;
 }
@@ -87,8 +82,7 @@ void sdl2_backend::stop()
 
 pair<int, int> sdl2_backend::get_console_size()
 {
-	return make_pair(SCREEN_WIDTH / TERMINAL_SIZE,
-			SCREEN_HEIGHT / TERMINAL_SIZE);
+	return make_pair(SCREEN_WIDTH / TERMINAL_SIZE, SCREEN_HEIGHT / TERMINAL_SIZE);
 }
 
 void sdl2_backend::clear_screen()
@@ -107,19 +101,18 @@ pair<int, int> sdl2_backend::get_screen_size()
 	return make_pair(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void sdl2_backend::render_bitmap(const string& tag, const SDL_Rect& source,
-		const SDL_Rect& dest)
+void sdl2_backend::render_bitmap(const string& tag, const SDL_Rect& source, const SDL_Rect& dest)
 {
 	SDL_Texture * bmp = resources.get_texture_by_tag(tag);
 	SDL_RenderCopy(renderer, bmp, &source, &dest);
 }
 
-void sdl2_backend::render_bitmap_simple(const string& tag, const int& x,
-		const int& y)
+void sdl2_backend::render_bitmap_simple(const string& tag, const int& x, const int& y)
 {
 	SDL_Texture * bmp = resources.get_texture_by_tag(tag);
-	if (bmp == nullptr)
+	if (bmp == nullptr) {
 		throw 101;
+	}
 	int image_width, image_height;
 	SDL_QueryTexture(bmp, NULL, NULL, &image_width, &image_height);
 	SDL_Rect target
@@ -130,8 +123,7 @@ void sdl2_backend::render_bitmap_simple(const string& tag, const int& x,
 	SDL_RenderCopy(renderer, bmp, &src, &target);
 }
 
-void sdl2_backend::render_bitmap_centered(const string& tag, const int& x,
-		const int& y)
+void sdl2_backend::render_bitmap_centered(const string& tag, const int& x, const int& y)
 {
 	SDL_Texture * bmp = resources.get_texture_by_tag(tag);
 	int image_width, image_height;
@@ -208,29 +200,22 @@ void sdl2_backend::draw_vterm(vector<vterm::screen_character>* screen)
 		{
 			const int screen_x = x * TERMINAL_SIZE;
 			const int screen_y = y * TERMINAL_SIZE;
-			const unsigned char target_char = screen->operator[](
-					(y * ascii_width) + x).character;
-			const tuple<unsigned char, unsigned char, unsigned char> foreground =
-					screen->operator[]((y * ascii_width) + x).foreground_color;
-			const tuple<unsigned char, unsigned char, unsigned char> background =
-					screen->operator[]((y * ascii_width) + x).background_color;
+			const unsigned char target_char = screen->operator[]((y * ascii_width) + x).character;
+			const tuple<unsigned char, unsigned char, unsigned char> foreground = screen->operator[]((y * ascii_width) + x).foreground_color;
+			const tuple<unsigned char, unsigned char, unsigned char> background = screen->operator[]((y * ascii_width) + x).background_color;
 			const int texture_x = (target_char % 16) * TERMINAL_SIZE;
 			const int texture_y = (target_char / 16) * TERMINAL_SIZE;
 
 			// Where it goes
-			SDL_Rect dst_rect
-			{ screen_x, screen_y, TERMINAL_SIZE, TERMINAL_SIZE };
+			SDL_Rect dst_rect{ screen_x, screen_y, TERMINAL_SIZE, TERMINAL_SIZE };
 
 			// Blit the background
-			SDL_SetTextureColorMod(font_image, std::get<0>(background),
-					std::get<1>(background), std::get<2>(background));
+			SDL_SetTextureColorMod(font_image, std::get<0>(background), std::get<1>(background), std::get<2>(background));
 			SDL_RenderCopy(renderer, font_image, &background_source, &dst_rect);
 
 			// Blit the foreground
-			SDL_SetTextureColorMod(font_image, std::get<0>(foreground),
-					std::get<1>(foreground), std::get<2>(foreground));
-			SDL_Rect src_rect
-			{ texture_x, texture_y, TERMINAL_SIZE, TERMINAL_SIZE };
+			SDL_SetTextureColorMod(font_image, std::get<0>(foreground), std::get<1>(foreground), std::get<2>(foreground));
+			SDL_Rect src_rect{ texture_x, texture_y, TERMINAL_SIZE, TERMINAL_SIZE };
 			SDL_RenderCopy(renderer, font_image, &src_rect, &dst_rect);
 		}
 	}

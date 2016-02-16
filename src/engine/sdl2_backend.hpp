@@ -24,23 +24,16 @@ public:
 	void clear_screen();
 	void present();
 	pair<int, int> get_screen_size();
-	void render_bitmap(const std::string &tag, const SDL_Rect &source,
-			const SDL_Rect &dest);
-	void render_bitmap_simple(const std::string &tag, const int &x,
-			const int &y);
-	void render_bitmap_centered(const std::string &tag, const int &x,
-			const int &y);
+	void render_bitmap(const std::string &tag, const SDL_Rect &source, const SDL_Rect &dest);
+	void render_bitmap_simple(const std::string &tag, const int &x, const int &y);
+	void render_bitmap_centered(const std::string &tag, const int &x, const int &y);
 
-	void load_image_resource(const std::string &filename,
-			const std::string &tag);
-	void load_font_resource(const std::string &filename, const std::string &tag,
-			const int &size);
-	std::string render_text_to_image(const string& font_tag, const string text,
-			const string& new_tag, SDL_Color color);
+	void load_image_resource(const std::string &filename, const std::string &tag);
+	void load_font_resource(const std::string &filename, const std::string &tag, const int &size);
+	std::string render_text_to_image(const string& font_tag, const string text,	const string& new_tag, SDL_Color color);
 	std::pair<int, int> query_bitmap_size(const string &tag);
 	void set_alpha_mod(const std::string &tag, unsigned char mod);
-	void set_color_mod(const string& tag, unsigned char r, unsigned char g,
-			unsigned char b);
+	void set_color_mod(const string& tag, unsigned char r, unsigned char g, unsigned char b);
 
 	std::string create_temporary_texture(const int &width, const int &height);
 	void texture_target(const std::string &target);
