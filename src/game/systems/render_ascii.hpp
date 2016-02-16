@@ -43,5 +43,9 @@ inline void render_ascii(const SDL_Rect &dest, const vterm::screen_character &ta
 	apply_colored_light(fg, light_color);
 
 	SDL->set_color_mod("font_s", std::get<0>(fg), std::get<1>(fg), std::get<2>(fg));
-	SDL->render_bitmap_rotated("font_s", source, dest, 0.0);
+	if (target.rotation != 0) {
+		SDL->render_bitmap_rotated("font_s", source, dest, target.rotation);
+	} else {
+		SDL->render_bitmap("font_s", source, dest);
+	}
 }
