@@ -27,8 +27,7 @@ void render_emotes(sdl2_backend * SDL, SDL_Rect &viewport)
 	{
 		//std::cout << "Emote: " << emote.message << "\n";
 		const unsigned char fade = 4 * emote.ttl;
-		const SDL_Color sdl_black
-		{ 0, 0, 0, 0 };
+		const SDL_Color sdl_black{ 0, 0, 0, 0 };
 		SDL_Color text_color = sdl_black;
 		switch (emote.color)
 		{
@@ -57,8 +56,7 @@ void render_emotes(sdl2_backend * SDL, SDL_Rect &viewport)
 			text_color = render::sdl_blue;
 			break;
 		}
-		string emote_text = SDL->render_text_to_image("disco12",
-				emote.message, "tmp", sdl_black);
+		string emote_text = SDL->render_text_to_image("disco12", emote.message, "tmp", sdl_black);
 		SDL->set_alpha_mod(emote_text, fade);
 		SDL->set_alpha_mod("emote_bubble", fade);
 		std::pair<int, int> emote_size = SDL->query_bitmap_size(emote_text);
@@ -91,8 +89,7 @@ void render_emotes(sdl2_backend * SDL, SDL_Rect &viewport)
 	for (highlight_message &highlight : *highlights)
 	{
 		SDL_Rect dest
-		{ (highlight.tile_x - viewport.x) * 8, ((highlight.tile_y
-				- viewport.y) * 8) + 48, 8, 8 };
+		{ (highlight.tile_x - viewport.x) * 8, ((highlight.tile_y - viewport.y) * 8) + 48, 8, 8 };
 		engine::vterm::screen_character highlight_c	{ 219, color_t{ 255, 0, 255 }, color_t{ 0, 0, 0 } };
 		SDL->set_alpha_mod("font_s", 128 + highlight.ttl);
 		render_ascii(dest, highlight_c, SDL, 0, make_tuple(1.0,1.0,1.0),true);

@@ -47,8 +47,7 @@ void sdl2_backend::init(const std::string &window_title, const int width = 1024,
 	if (error_code < 0)
 		throw 101; // TODO: Real exception
 
-	window = SDL_CreateWindow(window_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-			SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow(window_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,	SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	if (window == NULL) {
 		throw 102;
 	}
@@ -105,6 +104,12 @@ void sdl2_backend::render_bitmap(const string& tag, const SDL_Rect& source, cons
 {
 	SDL_Texture * bmp = resources.get_texture_by_tag(tag);
 	SDL_RenderCopy(renderer, bmp, &source, &dest);
+}
+
+void sdl2_backend::render_bitmap_rotated(const string& tag, const SDL_Rect& source, const SDL_Rect& dest, double angle)
+{
+	SDL_Texture * bmp = resources.get_texture_by_tag(tag);
+	SDL_RenderCopyEx(renderer, bmp, &source, &dest, angle, nullptr, SDL_FLIP_NONE);
 }
 
 void sdl2_backend::render_bitmap_simple(const string& tag, const int& x, const int& y)
