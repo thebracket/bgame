@@ -343,12 +343,20 @@ void make_entities(planet_t * planet, engine::random_number_generator &rng)
 
 	// Add random settlers    
 	std::cout << "Settlers\n";
-	make_settler(location_t	{ planet_idx, start_x, static_cast<uint8_t>(start_y - 2), start_z });
-	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y - 2), start_z });
-	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 2), static_cast<uint8_t>(start_y - 2), start_z });
-	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y + 2), start_z });
-	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y + 2), start_z });
-	make_settler(location_t	{ planet_idx, static_cast<uint8_t>(start_x + 2), static_cast<uint8_t>(start_y + 2), start_z });
+
+	const std::vector< location_t > settler_starts {
+		location_t{ planet_idx, start_x, static_cast<uint8_t>(start_y - 2), start_z },
+		location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y - 2), start_z },
+		location_t{ planet_idx, static_cast<uint8_t>(start_x + 2), static_cast<uint8_t>(start_y - 2), start_z },
+		location_t{ planet_idx, static_cast<uint8_t>(start_x), static_cast<uint8_t>(start_y + 2), start_z },
+		location_t{ planet_idx, static_cast<uint8_t>(start_x + 1), static_cast<uint8_t>(start_y + 2), start_z },
+		location_t{ planet_idx, static_cast<uint8_t>(start_x + 2), static_cast<uint8_t>(start_y + 2), start_z }
+	};
+
+	for (const auto &sl : settler_starts) {
+		make_settler(sl);
+		really_hollow(sl);		
+	}
 
 	add_camera(start_x, start_y, start_z, planet_idx);
 	universe->globals.stored_power = 25;
