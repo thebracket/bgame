@@ -150,6 +150,7 @@ void point_lights() {
 	{
 		++i;
 		position_component3d * pos = ECS->find_entity_component<position_component3d>(light.entity_id);
+		if (pos == nullptr) break;
 		region_t * region = world::planet->get_region(pos->pos.region);
 		if (region == nullptr)
 		{
