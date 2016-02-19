@@ -16,6 +16,7 @@ void viewshed_system::tick(const double &duration_ms)
 	for (viewshed_component &viewshed : *viewsheds)
 	{
 		position_component3d * pos = ECS->find_entity_component<position_component3d>(viewshed.entity_id);
+		if (pos == nullptr) break;
 		region_t * region = world::planet->get_region(pos->pos.region);
 		if (region == nullptr)
 		{
