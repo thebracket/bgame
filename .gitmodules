@@ -1,0 +1,3 @@
+[submodule "src/rltk"]
+	path = src/rltk
+	url = https://github.com/thebracket/rltk
