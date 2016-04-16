@@ -14,8 +14,7 @@ entity make_settler(const location_t &loc)
 	ECS->add_component(test, debug_name_component("Test"));
 	ECS->add_component(test, position_component3d(loc, OMNI));
 	//engine::globals::ecs->add_component(test, obstruction_component(true,false));
-	ECS->add_component(test,
-			renderable_component('@', yellow, black, 34, 1, false, true));
+	ECS->add_component(test, renderable_component(1, yellow, black, 34, 1, false, true));
 	ECS->add_component(test, viewshed_component(visibility, 12));
 	settler_ai_component ai;
 

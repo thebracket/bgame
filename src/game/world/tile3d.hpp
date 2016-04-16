@@ -19,10 +19,13 @@ enum TILE_OPTIONS
 	CAN_GO_WEST = 7,
 	CAN_GO_UP = 8,
 	CAN_GO_DOWN = 9,
-	SOLID = 10
+	SOLID = 10,
+	ROTATED_90 = 11,
+	ROTATED_180 = 12,
+	ROTATED_270 = 13
 };
 
-constexpr int TILE_OPTIONS_COUNT = 11;
+constexpr int TILE_OPTIONS_COUNT = 14;
 
 class tile_t
 {
