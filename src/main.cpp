@@ -1,19 +1,23 @@
 #include <rltk.hpp>
-#include <sstream>
+#include "splash_screen/splash_screen.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
 
+enum game_mode_t { SPLASH };
+game_mode_t mode = SPLASH;
+
+splash_screen splash;
+
 void tick(double duration_ms) {
-	console->clear();
-    std::stringstream ss;
-    ss << "Frame duration: " << duration_ms << " ms (" << (1000.0/duration_ms) << " FPS).";
-    console->print(1, 1, "Hello World", WHITE, BLACK);
-    console->print(1, 2, ss.str(), YELLOW, BLUE);
+	switch (mode) {
+		case SPLASH : splash.tick(duration_ms); break;
+	}
 }
 
 int main()
 {
-	init(config_simple("../assets", 80, 50, "Black Future", "8x8"));
+	init(config_advanced("../assets", 800, 600, "Black Future"));
+	splash.init();
     run(tick);
 }
