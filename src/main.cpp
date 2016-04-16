@@ -14,6 +14,6 @@ void tick(double duration_ms) {
 
 int main()
 {
-	init(config_simple_px("../assets"));
+	init(config_simple("../assets", 80, 50, "Black Future", "8x8"));
     run(tick);
 }
