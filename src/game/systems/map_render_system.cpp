@@ -132,16 +132,12 @@ void render_particles(sdl2_backend * SDL, SDL_Rect &viewport)
 			text_color = render::sdl_dark_grey;
 			break;
 		}
-		string emote_text = SDL->render_text_to_image("disco12",
-				particle.message, "tmp", text_color);
+		string emote_text = SDL->render_text_to_image("disco12", particle.message, "tmp", text_color);
 		std::pair<int, int> emote_size = SDL->query_bitmap_size(emote_text);
 		const int x = (particle.tile_x - viewport.x) * 8;
 		const int y = (particle.tile_y - viewport.y - 1) * 8 + 48 + 4;
-		SDL_Rect src
-		{ 0, 0, emote_size.first, emote_size.second };
-		SDL_Rect dst
-		{ x + particle.offset_x, y + particle.offset_y, particle.ttl / 4,
-				particle.ttl / 4 };
+		SDL_Rect src{ 0, 0, emote_size.first, emote_size.second };
+		SDL_Rect dst{ x + particle.offset_x, y + particle.offset_y, particle.ttl / 4,particle.ttl / 4 };
 		SDL->render_bitmap(emote_text, src, dst);
 	}
 }
@@ -166,7 +162,7 @@ void map_render_system::tick(const double& duration_ms) {
 		for (int x = 0; x < viewport.w; ++x)
 		{
 			SDL_Rect dest{ x * 8, (y * 8) + 48, 8, 8 };
-			vterm::screen_character target{ '.', color_t{ 255, 255, 255 }, color_t{ 0, 0, 0 } };
+			vterm::screen_character target{ '.', color_t{ 255, 255, 255 }, color_t{ 0, 0, 0 }, 0.0 };
 			const location_t world_loc{ camera_pos->pos.region, static_cast<uint8_t>(viewport.x + x),static_cast<uint8_t>(viewport.y + y), camera_pos->pos.z };
 			tile_t * tile = world::planet->get_tile(world_loc);
 

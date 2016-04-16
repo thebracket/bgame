@@ -28,7 +28,7 @@ void tile_render_calculation(tile_t * tile)
 	}
 
 	if (tile->base_tile_type == tile_type::TREE_TRUNK) {
-		tile->render_as = engine::vterm::screen_character{ 9, std::make_tuple<uint8_t,uint8_t,uint8_t>(85, 53, 10), std::make_tuple<uint8_t,uint8_t,uint8_t>(0,0,0) };
+		tile->render_as = engine::vterm::screen_character{ 7, std::make_tuple<uint8_t,uint8_t,uint8_t>(85, 53, 10), std::make_tuple<uint8_t,uint8_t,uint8_t>(0,0,0) };
 		return;
 	}
 	if (tile->base_tile_type == tile_type::TREE_FOLIAGE) {
