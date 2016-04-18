@@ -27,7 +27,7 @@ find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
 add_executable(bgame main.cpp
-	splash_screen/splash_screen.cpp
+	splash_screen.cpp
 )
 target_include_directories(bgame PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rltk/rltk>

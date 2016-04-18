@@ -1,5 +1,5 @@
 #include <rltk.hpp>
-#include "splash_screen/splash_screen.hpp"
+#include "splash_screen.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
