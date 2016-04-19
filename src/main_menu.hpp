@@ -1,10 +1,9 @@
 #pragma once
 
-class splash_screen {
+class main_menu {
 public:
 	void init();
 	void destroy();
 	void tick(const double duration_ms);
-
-	bool done_loading = false;
 };
+
