@@ -1,15 +1,17 @@
 #include <rltk.hpp>
 #include "splash_screen.hpp"
 #include "main_menu.hpp"
+#include "world_gen.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
 
-enum game_mode_t { SPLASH, MAIN_MENU };
+enum game_mode_t { SPLASH, MAIN_MENU, WORLD_GEN };
 game_mode_t mode = SPLASH;
 
 splash_screen splash;
 main_menu menu;
+world_gen worldgen;
 
 void tick(double duration_ms) {
 	switch (mode) {
@@ -26,11 +28,18 @@ void tick(double duration_ms) {
 			if (menu.clicked) {
 				switch (menu.selected) {
 					case 0 : { /* TODO: Play Game */ } break;
-					case 1 : { /* TODO: World Gen */ } break;
+					case 1 : {
+						menu.destroy();
+						worldgen.init();
+						mode = WORLD_GEN;
+					} break;
 					case 2 : { get_window()->close(); } break;
 				}
 			}
 		} break;
+		case WORLD_GEN : {
+			worldgen.tick(duration_ms);
+		}
 	}
 }
 
