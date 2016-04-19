@@ -23,6 +23,13 @@ void tick(double duration_ms) {
 		} break;
 		case MAIN_MENU : {
 			menu.tick(duration_ms);
+			if (menu.clicked) {
+				switch (menu.selected) {
+					case 0 : { /* TODO: Play Game */ } break;
+					case 1 : { /* TODO: World Gen */ } break;
+					case 2 : { get_window()->close(); } break;
+				}
+			}
 		} break;
 	}
 }
