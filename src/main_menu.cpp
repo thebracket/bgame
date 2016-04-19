@@ -65,6 +65,7 @@ void main_menu::tick(const double duration_ms) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			--selected;
 			if (selected < 0) selected = 2;
+			if (!world_exists && selected == 0) selected = 2;
 			key_delay = 5.0;
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -89,7 +90,11 @@ void main_menu::tick(const double duration_ms) {
 	term(LOG_LAYER)->print_center(y_center + 5, "Powered by RLTK - the RogueLike Tool Kit", RED, BLACK);
 
 	if (selected != 0) {
-		term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", WHITE, BLACK);
+		if (world_exists) {
+			term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", WHITE, BLACK);
+		} else {
+			term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", DARK_GREY, BLACK);			
+		}
 	} else {
 		term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", GREEN, BLACK);
 	}
