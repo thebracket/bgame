@@ -1,4 +1,5 @@
 #include "world_gen.hpp"
+#include "planet/planet_builder.hpp"
 
 constexpr int WORLD_LAYER=1;
 constexpr int LOG_LAYER=2;
