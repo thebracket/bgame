@@ -58,6 +58,7 @@ void main_menu::init() {
 void main_menu::destroy() {
 	gui->delete_layer(BACKDROP_LAYER);
 	gui->delete_layer(LOG_LAYER);
+	clicked = false;
 }
 
 void main_menu::tick(const double duration_ms) {

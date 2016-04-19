@@ -29,17 +29,27 @@ void tick(double duration_ms) {
 				switch (menu.selected) {
 					case 0 : { /* TODO: Play Game */ } break;
 					case 1 : {
+						// World gen
 						menu.destroy();
 						worldgen.init();
 						mode = WORLD_GEN;
 					} break;
-					case 2 : { get_window()->close(); } break;
+					
+					case 2 : { 
+						// Quit
+						get_window()->close(); 
+					} break;
 				}
 			}
 		} break;
 		case WORLD_GEN : {
 			worldgen.tick(duration_ms);
-		}
+			if (worldgen.done) {
+				worldgen.destroy();
+				mode = MAIN_MENU;
+				menu.init();
+			}
+		} break;
 	}
 }
 
