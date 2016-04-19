@@ -11,7 +11,10 @@ bool is_planet_build_complete() {
 void build_planet() {
 	planet_build_done.store(false);
 
-	// Do something
+	// Make a zero-height map
+	// Noise-based world map
+	// Make a biome map
+	// Save it to disk
 
 	planet_build_done.store(true);
 }
