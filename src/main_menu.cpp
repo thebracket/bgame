@@ -1,6 +1,7 @@
 #include "main_menu.hpp"
 #include <rltk.hpp>
 #include <boost/filesystem.hpp>
+#include <algorithm>
 #include "menu_helper.hpp"
 #include "constants.hpp"
 

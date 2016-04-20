@@ -6,21 +6,29 @@
 constexpr int WORLD_HEIGHT = 1024;
 constexpr int WORLD_WIDTH = 1024;
 
+enum block_type_t { WATER, PLAINS, HILLS, MOUNTAINS };
+enum climate_t {ARCTIC, SUBARCTIC, COLD, TEMPERATE, WARM, HOT, SCORCHING};
+enum biome_type_t { UNASSIGNED, GLACIER, ICY_SEA, DUST_SEA, OCEAN, TUNDRA, SWAMP, FLATLAND, WOODS, FOREST,
+	JUNGLE, DESERT, BADLANDS, HIGH_TUNDRA, HILL_BOG, HIGH_DESERT, HIGH_BADLANDS, NORMAL_MOUNTAINS };
+
 struct biome_t {
-	int biome_type;
+	biome_type_t biome_type;
 	std::string name;
+	int mean_temperature;
+	climate_t climate;
 };
 
 struct block_t {
 	int height;
+	block_type_t type;
 	int biome_idx;
-	int mean_temperature_celsius;
 };
 
 struct planet_t {
 	std::string name;
 	long generated;
-	int perlin_noise_seed;
+
+	int rng_seed;
 
 	std::vector<biome_t> biomes;
 	std::vector<block_t> landblocks;
