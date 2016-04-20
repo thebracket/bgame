@@ -10,21 +10,18 @@ using namespace rltk::colors;
 
 void world_gen::init() {
 	gui->add_layer(WORLD_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
-	gui->add_layer(LOG_LAYER, 0, 0, 800, 600, "8x16", resize_fullscreen, false);
 	done = false;
 	setup_build_planet(term(WORLD_LAYER)->term_width, term(WORLD_LAYER)->term_height);
 	world_thread = std::make_unique<std::thread>(build_planet);
 }
 
 void world_gen::destroy() {
-	gui->delete_layer(LOG_LAYER);
 	gui->delete_layer(WORLD_LAYER);
 	world_thread->join();
 	world_thread.reset();
 }
 
 void world_gen::tick(const double duration_ms) {
-	term(LOG_LAYER)->clear();
 	term(WORLD_LAYER)->clear();
 
 	planet_builder_lock.lock();
@@ -34,7 +31,7 @@ void world_gen::tick(const double duration_ms) {
 			term(WORLD_LAYER)->set_char(idx, planet_builder_display[idx]);
 		}
 	}
-	term(LOG_LAYER)->print_center(2, planet_builder_status, WHITE, BLACK);
+	term(WORLD_LAYER)->print_center(1, " " + planet_builder_status + " ", YELLOW, BLACK);
 	planet_builder_lock.unlock();
 
 	if (is_planet_build_complete()) done = true;
