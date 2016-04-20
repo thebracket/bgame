@@ -148,6 +148,44 @@ void planet_base_type_allocation(planet_t &planet) {
 	planet_display_update_initial(planet);
 }
 
+std::string name_biome(const biome_t & biome) {
+	std::string result = "The ";
+
+	switch (biome.climate) {
+		case ARCTIC : { result += "Frigid "; } break;
+		case SUBARCTIC : { result += "Icy "; } break;
+		case COLD : { result += "Cold "; } break;
+		case TEMPERATE : { result += "Pleasant "; } break;
+		case WARM : { result += "Warm "; } break;
+		case HOT : { result += "Hot "; } break;
+		case SCORCHING : { result += "Burning "; } break;
+	}
+
+	switch (biome.biome_type) {
+		case GLACIER : { result += "Glacier"; } break;
+		case ICY_SEA : { result += "Icy Sea"; } break;
+		case DUST_SEA : { result += "Dust Sea"; } break;
+		case OCEAN : { result += "Ocean"; } break;
+		case TUNDRA : { result += "Tundra"; } break;
+		case SWAMP : { result += "Swamp"; } break;
+		case FLATLAND : { result += "Plains"; } break;
+		case WOODS : { result += "Woods"; } break;
+		case FOREST : { result += "Forest"; } break;
+		case JUNGLE : { result += "Jungle"; } break;
+		case DESERT : { result += "Desert"; } break;
+		case BADLANDS : { result += "Badlands"; } break;
+		case HIGH_TUNDRA : { result += "Frozen Peaks"; } break;
+		case HILL_BOG : { result += "Bog"; } break;
+		case HIGH_DESERT : { result += "High Desert"; } break;
+		case HIGH_BADLANDS : { result += "Badland Mountains"; } break;
+		case NORMAL_MOUNTAINS : { result += "Mountains"; } break;
+	}
+
+	// TODO: Add a descriptive word
+
+	return result;
+}
+
 void build_biomes(planet_t &planet, random_number_generator &rng) {
 	planet_builder_lock.lock();
 	planet_builder_status = "Placing Biomes";
@@ -219,7 +257,7 @@ void build_biomes(planet_t &planet, random_number_generator &rng) {
 		if (n_cells > 0) {
 			const int average_latitude = total_latitude / n_cells;
 			// Determine mean temperature
-			const double distance_from_equator = 0.9 - ((std::abs( (WORLD_HEIGHT/2.0) - average_latitude ))/(WORLD_HEIGHT/2.0));
+			const double distance_from_equator = 1.0 - ((std::abs( (WORLD_HEIGHT/2.0) - average_latitude ))/(WORLD_HEIGHT/1.8));
 			planet.biomes[i].mean_temperature = -89 + (distance_from_equator*147) + rng.roll_dice(1,10) - rng.roll_dice(1,10);
 
 			if (planet.biomes[i].mean_temperature < -20) {
@@ -379,14 +417,21 @@ void build_biomes(planet_t &planet, random_number_generator &rng) {
 				}
 			}
 
-			// TODO: Name the biome!
+			planet.biomes[i].name = name_biome(planet.biomes[i]);
 
 			planet_display_update_initial(planet);
 			planet_builder_lock.lock();
-			planet_builder_status = "Biome #" + std::to_string(i) + " has " + std::to_string(n_cells) + " members.";
+			planet_builder_status = planet.biomes[i].name;
 			planet_builder_lock.unlock();
 		}
 	}
+}
+
+void save_planet() {
+	planet_builder_lock.lock();
+	planet_builder_status = "Saving the world. To disk, sadly.";
+	planet_builder_lock.unlock();
+	std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
 void build_planet() {
@@ -410,7 +455,10 @@ void build_planet() {
 	build_biomes(planet, rng);
 
 	// Save it to disk
-	std::this_thread::sleep_for(std::chrono::seconds(10));
+	save_planet();
+
+	// Select a crash site
+	// Materialize this region
 
 	planet_build_done.store(true);
 }
