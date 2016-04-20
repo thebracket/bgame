@@ -427,10 +427,11 @@ void build_biomes(planet_t &planet, random_number_generator &rng) {
 	}
 }
 
-void save_planet() {
+void builder_save_planet() {
 	planet_builder_lock.lock();
 	planet_builder_status = "Saving the world. To disk, sadly.";
 	planet_builder_lock.unlock();
+	save_planet();
 	std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
@@ -441,6 +442,7 @@ void build_planet() {
 	planet_t planet;
 	planet.rng_seed = rng.initial_seed;
 	const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
+	planet.perlin_seed = perlin_seed;
 
 	// Make a zero-height map
 	planet_zero_fill(planet);
@@ -455,7 +457,7 @@ void build_planet() {
 	build_biomes(planet, rng);
 
 	// Save it to disk
-	save_planet();
+	builder_save_planet();
 
 	// Select a crash site
 	// Materialize this region

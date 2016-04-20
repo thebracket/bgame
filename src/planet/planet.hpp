@@ -26,11 +26,14 @@ struct block_t {
 
 struct planet_t {
 	std::string name;
-	long generated;
 
 	int rng_seed;
+	int perlin_seed;
 
 	std::vector<biome_t> biomes;
 	std::vector<block_t> landblocks;
 	inline int idx(const int x, const int y) { return y*WORLD_WIDTH + x; }
 };
+
+void save_planet();
+planet_t load_planet();
