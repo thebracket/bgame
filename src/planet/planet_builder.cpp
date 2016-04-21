@@ -70,6 +70,41 @@ void planet_display_update_initial(planet_t &planet) {
 	planet_builder_lock.unlock();
 }
 
+void planet_display_update_regional(planet_t &planet, const int site_x, const int site_y, const int min, const int max) {
+	planet_builder_lock.lock();
+
+	const int top_y = site_y - planet_build_term_height/2;
+	const int bottom_y = site_y + planet_build_term_height/2;
+	const int left_x = site_x - planet_build_term_width/2;
+	const int right_x = site_x + planet_build_term_width/2;
+
+	int Y=0,X=0;
+	for (int y=top_y; y<bottom_y; ++y) {
+		X=0;
+		for (int x=left_x; x<right_x; ++x) {
+			const int idx = (planet_build_term_width * Y) + X;
+			const int block_idx = planet.idx(x,y);
+
+			switch (planet.landblocks[block_idx].type) {
+				case WATER : planet_builder_display[idx] = vchar{ 176, BLUE, BLACK}; break;
+				case PLAINS : {
+					const int height = planet.landblocks[block_idx].height;
+					const double shade_d = static_cast<double>(height+min) / static_cast<double>(max);
+					const int shade = static_cast<uint8_t>(shade_d * 256.0)+127;
+					color_t shading = color_t{0, shade, 0};
+					planet_builder_display[idx] = vchar{ 176, shading, BLACK}; 
+				} break;
+				case HILLS : planet_builder_display[idx] = vchar{ 30, GREEN, BLACK}; break;
+				case MOUNTAINS : planet_builder_display[idx] = vchar{ 30, GREY, BLACK}; break;
+			}
+
+			++X;
+		}
+		++Y;
+	}
+	planet_builder_lock.unlock();
+}
+
 void planet_zero_fill(planet_t &planet) {
 	planet_builder_lock.lock();
 	planet_builder_status = "Flatting the world";
@@ -77,7 +112,6 @@ void planet_zero_fill(planet_t &planet) {
 
 	planet.landblocks.resize(WORLD_HEIGHT * WORLD_WIDTH);
 	std::fill(planet.landblocks.begin(), planet.landblocks.end(), block_t{0, WATER, -1});
-	planet_display_update_initial(planet);
 }
 
 void planet_noise_map(planet_t &planet, const int &perlin_seed) {
@@ -190,7 +224,7 @@ void build_biomes(planet_t &planet, random_number_generator &rng) {
 	planet_builder_lock.lock();
 	planet_builder_status = "Placing Biomes";
 	planet_builder_lock.unlock();
-	const int n_biomes = WORLD_HEIGHT * WORLD_WIDTH / (256 + rng.roll_dice(1,256));
+	const int n_biomes = WORLD_HEIGHT * WORLD_WIDTH / (64 + rng.roll_dice(1,64));
 
 	// Randomly place biome centers
 	std::vector<std::pair<int,int>> centroids;
@@ -427,7 +461,7 @@ void build_biomes(planet_t &planet, random_number_generator &rng) {
 	}
 }
 
-void builder_save_planet() {
+void builder_save_planet(planet_t &planet) {
 	planet_builder_lock.lock();
 	planet_builder_status = "Saving the world. To disk, sadly.";
 	planet_builder_lock.unlock();
@@ -435,31 +469,70 @@ void builder_save_planet() {
 	std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
+std::pair<int,int> builder_select_starting_region(planet_t &planet, const int min, const int max) {
+	int start_x = WORLD_WIDTH / 2;
+	int start_y = WORLD_HEIGHT / 2;
+
+
+	planet_builder_lock.lock();
+	planet_builder_status = "Picking a comfortable place to crash-land";
+	planet_builder_lock.unlock();
+
+	for (int x=planet_build_term_width/2; x<WORLD_WIDTH-(planet_build_term_width/2); ++x) {
+		planet_display_update_regional(planet, x, start_y, min, max);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+	}
+
+	std::this_thread::sleep_for(std::chrono::seconds(10));
+}
+
 void build_planet() {
 	planet_build_done.store(false);
 
+	bool ok = false;
+
 	random_number_generator rng;
 	planet_t planet;
-	planet.rng_seed = rng.initial_seed;
-	const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
-	planet.perlin_seed = perlin_seed;
+	int max = std::numeric_limits<int>::min();
+	int min = std::numeric_limits<int>::max();
+	while (!ok) {
+		planet.rng_seed = rng.initial_seed;
+		const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
+		planet.perlin_seed = perlin_seed;
 
-	// Make a zero-height map
-	planet_zero_fill(planet);
+		// Make a zero-height map
+		planet_zero_fill(planet);
 
-	// Noise-based world map
-	planet_noise_map(planet, perlin_seed);
+		// Noise-based world map
+		planet_noise_map(planet, perlin_seed);
 
-	// Divide types by height
-	planet_base_type_allocation(planet);
+		// Divide types by height
+		planet_base_type_allocation(planet);
+
+		// Check for validity
+		for (block_t &block : planet.landblocks) {
+			if (block.height > max) max = block.height;
+			if (block.height < min) min = block.height;
+		}
+		std::cout << min << ".." << max << "\n";
+		if (max < 1000) {
+			ok = true;
+		} else {
+			max = std::numeric_limits<int>::min();
+			min = std::numeric_limits<int>::max();
+		}
+
+	}
 
 	// Make a biome map
 	build_biomes(planet, rng);
 
 	// Save it to disk
-	builder_save_planet();
+	builder_save_planet(planet);
 
 	// Select a crash site
+	auto crash_site = builder_select_starting_region(planet, min, max);
+
 	// Materialize this region
 
 	planet_build_done.store(true);
