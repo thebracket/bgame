@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-constexpr int WORLD_HEIGHT = 1024;
-constexpr int WORLD_WIDTH = 1024;
+constexpr int WORLD_HEIGHT = 256;
+constexpr int WORLD_WIDTH = 256;
 
 enum block_type_t { WATER, PLAINS, HILLS, MOUNTAINS };
 enum climate_t {ARCTIC, SUBARCTIC, COLD, TEMPERATE, WARM, HOT, SCORCHING};
@@ -29,6 +29,10 @@ struct planet_t {
 
 	int rng_seed;
 	int perlin_seed;
+
+	int water_height;
+	int plains_height;
+	int hills_height;
 
 	std::vector<biome_t> biomes;
 	std::vector<block_t> landblocks;
