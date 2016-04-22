@@ -467,7 +467,7 @@ void builder_save_planet(planet_t &planet) {
 	planet_builder_status = "Saving the world. To disk, sadly.";
 	planet_builder_lock.unlock();
 	save_planet();
-	std::this_thread::sleep_for(std::chrono::seconds(10));
+	//std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
 std::pair<int,int> builder_select_starting_region(planet_t &planet, const int min, const int max) {
@@ -484,7 +484,7 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 
-	std::this_thread::sleep_for(std::chrono::seconds(10));
+	//std::this_thread::sleep_for(std::chrono::seconds(10));
 	return std::make_pair(start_x, start_y);
 }
 
@@ -500,20 +500,32 @@ void build_region(planet_t &planet, std::pair<int,int> location) {
 
 	std::vector<int> height_map(REGION_WIDTH * REGION_HEIGHT);
 	for (int y=0; y<REGION_HEIGHT; ++y) {
-		double Y = static_cast<double>(location.second) + (static_cast<double>(y) / static_cast<double>(REGION_HEIGHT));
+		double Y = static_cast<double>(location.second) + (1.0 / (static_cast<double>(REGION_HEIGHT)*static_cast<double>(y)));
 
 		for (int x=0; x<REGION_WIDTH; ++x) {
-			double X = static_cast<double>(location.first) + (static_cast<double>(x) / static_cast<double>(REGION_WIDTH));
+			double X = static_cast<double>(location.first) + (1.0 / (static_cast<double>(REGION_WIDTH)*static_cast<double>(x)));
 
 			const double mtn_noise_pixel = (mountains.get_height(X, Y) + 1.0) * 300.0;
 			double mixer_noise_pixel = (mixer.get_height(X * 0.25, Y * 0.25) + 0.5);
 			if (mixer_noise_pixel < 0.0) mixer_noise_pixel = 0.0;
 			if (mixer_noise_pixel > 1.0) mixer_noise_pixel = 1.0;
 
-			const double height = mixer_noise_pixel * mtn_noise_pixel * north_bias;
-			height_map[y * REGION_WIDTH + x] = static_cast<int>(height);
+			double height = mixer_noise_pixel * mtn_noise_pixel * north_bias;
+			if (height < 0.0) height = 0.0;
+			int height_i = static_cast<int>(height);
+			if (height_i < 0) height_i = 0;
+			height_map[y * REGION_WIDTH + x] = height_i;
 		}
 	}
+
+	// Find top and bottom heights
+	int max = std::numeric_limits<int>::min();
+	int min = std::numeric_limits<int>::max();
+	for (int &n : height_map) {
+		if (n > max) max = n;
+		if (n < min) min = n;
+	}
+	std::cout << "Regional height range: " << min << ".." << max << ". Water level is: " << planet.water_height << "\n";
 
 	// Start laying down surface layers
 	// Trees will go here
