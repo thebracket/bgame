@@ -490,10 +490,34 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 
 void build_region(planet_t &planet, std::pair<int,int> location) {
 	planet_builder_lock.lock();
-	planet_builder_status = "Scanning the crash-site";
+	planet_builder_status = "Scanning the crash-site - altitude";
 	planet_builder_lock.unlock();
 
-	
+	// Prime the noise function, and extrapolate the region's noise into a height map
+	perlin_noise mountains(0.1, 0.1, 1.0, 8, planet.perlin_seed);
+	perlin_noise mixer(0.1, 0.1, 1.0, 8, planet.perlin_seed);
+	const double north_bias = ((static_cast<double>(location.second) / WORLD_HEIGHT) * 0.7) + 0.3;
+
+	std::vector<int> height_map(REGION_WIDTH * REGION_HEIGHT);
+	for (int y=0; y<REGION_HEIGHT; ++y) {
+		double Y = static_cast<double>(location.second) + (static_cast<double>(y) / static_cast<double>(REGION_HEIGHT));
+
+		for (int x=0; x<REGION_WIDTH; ++x) {
+			double X = static_cast<double>(location.first) + (static_cast<double>(x) / static_cast<double>(REGION_WIDTH));
+
+			const double mtn_noise_pixel = (mountains.get_height(X, Y) + 1.0) * 300.0;
+			double mixer_noise_pixel = (mixer.get_height(X * 0.25, Y * 0.25) + 0.5);
+			if (mixer_noise_pixel < 0.0) mixer_noise_pixel = 0.0;
+			if (mixer_noise_pixel > 1.0) mixer_noise_pixel = 1.0;
+
+			const double height = mixer_noise_pixel * mtn_noise_pixel * north_bias;
+			height_map[y * REGION_WIDTH + x] = static_cast<int>(height);
+		}
+	}
+
+	// Start laying down surface layers
+	// Trees will go here
+	// Crash site
 }
 
 void build_planet() {

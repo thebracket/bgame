@@ -17,7 +17,8 @@ struct tile_t {
 };
 
 struct region_t {
+	region_t() { tiles.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH); }
 	int region_x, region_y, biome_idx;
-	std::vector<tile_t> tiles(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
-	inline int idx(const int x, const int y) { return y*REGION_WIDTH + x; }
+	std::vector<tile_t> tiles;
+	inline int idx(const int x, const int y, const int z) { return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; }
 };
