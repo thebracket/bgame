@@ -1,5 +1,6 @@
 #include "planet_builder.hpp"
 #include "planet.hpp"
+#include "region.hpp"
 
 #include <atomic>
 #include <iostream>
@@ -164,16 +165,16 @@ void planet_base_type_allocation(planet_t &planet) {
 	const int n_cells_plains = (n_cells / 3) + n_cells_water;
 	const int n_cells_hills = (n_cells / 6) + n_cells_plains;
 	
-	const int water_height = plenet_determine_proportion(planet, candidate, n_cells_water);
-	const int plains_height = plenet_determine_proportion(planet, candidate, n_cells_plains);
-	const int hills_height = plenet_determine_proportion(planet, candidate, n_cells_hills);
+	planet.water_height = plenet_determine_proportion(planet, candidate, n_cells_water);
+	planet.plains_height = plenet_determine_proportion(planet, candidate, n_cells_plains);
+	planet.hills_height = plenet_determine_proportion(planet, candidate, n_cells_hills);
 
 	for (block_t &block : planet.landblocks) {
-		if (block.height <= water_height) {
+		if (block.height <= planet.water_height) {
 			block.type = WATER;
-		} else if (block.height <= plains_height) {
+		} else if (block.height <= planet.plains_height) {
 			block.type = PLAINS;
-		} else if (block.height <= hills_height) {
+		} else if (block.height <= planet.hills_height) {
 			block.type = HILLS;
 		} else {
 			block.type = MOUNTAINS;
@@ -484,6 +485,15 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 	}
 
 	std::this_thread::sleep_for(std::chrono::seconds(10));
+	return std::make_pair(start_x, start_y);
+}
+
+void build_region(planet_t &planet, std::pair<int,int> location) {
+	planet_builder_lock.lock();
+	planet_builder_status = "Scanning the crash-site";
+	planet_builder_lock.unlock();
+
+	
 }
 
 void build_planet() {
@@ -514,7 +524,7 @@ void build_planet() {
 			if (block.height > max) max = block.height;
 			if (block.height < min) min = block.height;
 		}
-		std::cout << min << ".." << max << "\n";
+		//std::cout << min << ".." << max << "\n";
 		if (max < 1000) {
 			ok = true;
 		} else {
@@ -534,6 +544,7 @@ void build_planet() {
 	auto crash_site = builder_select_starting_region(planet, min, max);
 
 	// Materialize this region
+	build_region(planet, crash_site);
 
 	planet_build_done.store(true);
 }

@@ -33,6 +33,7 @@ add_executable(bgame main.cpp
 	main_menu.cpp
 	world_gen.cpp
 	planet/planet.cpp
+	planet/region.cpp
 	planet/planet_builder.cpp
 )
 target_include_directories(bgame PUBLIC
