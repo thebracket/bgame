@@ -485,7 +485,7 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 	}
 
 	//std::this_thread::sleep_for(std::chrono::seconds(10));
-	while (planet.landblocks[planet.idx(start_x, start_y)].type == OCEAN) {
+	while (planet.landblocks[planet.idx(start_x, start_y)].type == WATER) {
 		--start_x;
 	}
 	return std::make_pair(start_x, start_y);
@@ -513,8 +513,8 @@ void build_region(planet_t &planet, std::pair<int,int> location) {
 			const double X = region_noise_x + ((double)x * region_step_x);
 
 			const double mtn_noise_pixel = mountains.noise(X, Y, 0.8) * 300.0;
-			const double flat_noise_pixel = flatlands.noise(X/4.0, Y/4.0, 0.8) * 100.0;
-			const double mtn_pct = mixer.noise(X/2.0,Y/2.0,0.8);
+			const double flat_noise_pixel = flatlands.noise(X/4.0, Y/4.0, 0.8) * 20.0;
+			const double mtn_pct = mixer.noise(X/10.0,Y/10.0,0.8);
 			const double flat_pct = 1.0 - mtn_pct;
 
 			const double height = (mtn_noise_pixel * mtn_pct) + (flat_noise_pixel * flat_pct);
@@ -529,10 +529,10 @@ void build_region(planet_t &planet, std::pair<int,int> location) {
 		n /= 20;
 		if (n > max) max = n;
 		if (n < min) min = n;
-		std::cout << n;
 	}
 	std::cout << "\n";
-	std::cout << "Regional height range: " << min << ".." << max << ". Water level is: " << planet.water_height/20 << "\n";
+	std::cout << "Type: " << planet.landblocks[planet.idx(location.first, location.second)].type << 
+			", Regional height range: " << min << ".." << max << ". Water level is: " << planet.water_height/20 << "\n";
 
 	// Start laying down surface layers
 	// Trees will go here
