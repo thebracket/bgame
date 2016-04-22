@@ -120,20 +120,20 @@ void planet_noise_map(planet_t &planet, const int &perlin_seed) {
 	planet_builder_status = "Building basic features";
 	planet_builder_lock.unlock();
 
-	perlin_noise mountains(0.1, 0.1, 1.0, 8, perlin_seed);
-	perlin_noise mixer(0.1, 0.1, 1.0, 8, perlin_seed);
+	perlin_noise mountains(perlin_seed);
+	perlin_noise flatlands(std::numeric_limits<int>::max()-perlin_seed);
+	perlin_noise mixer(std::numeric_limits<int>::max()+perlin_seed);
 	for (int y=0; y<WORLD_HEIGHT; ++y) {
-		const double Y = y;
-		const double north_bias = ((Y / WORLD_HEIGHT) * 0.7) + 0.3;
+		const double Y = (double)y / WORLD_PERLIN_DIVISOR;
 
 		for (int x=0; x<WORLD_WIDTH; ++x) {
-			const double X = x;
-			const double mtn_noise_pixel = (mountains.get_height(X, Y) + 1.0) * 300.0;
-			double mixer_noise_pixel = (mixer.get_height(X * 0.25, Y * 0.25) + 0.5);
-			if (mixer_noise_pixel < 0.0) mixer_noise_pixel = 0.0;
-			if (mixer_noise_pixel > 1.0) mixer_noise_pixel = 1.0;
+			const double X = (double)x / WORLD_PERLIN_DIVISOR;
+			const double mtn_noise_pixel = mountains.noise(X, Y, 0.8) * 300.0;
+			const double flat_noise_pixel = flatlands.noise(X/4.0, Y/4.0, 0.8) * 100.0;
+			const double mtn_pct = mixer.noise(X/2.0,Y/2.0,0.8);
+			const double flat_pct = 1.0 - mtn_pct;
 
-			const double height = mixer_noise_pixel * mtn_noise_pixel * north_bias;
+			const double height = (mtn_noise_pixel * mtn_pct) + (flat_noise_pixel * flat_pct);
 			planet.landblocks[planet.idx(x,y)].height = height;
 		}
 	}
@@ -485,6 +485,9 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 	}
 
 	//std::this_thread::sleep_for(std::chrono::seconds(10));
+	while (planet.landblocks[planet.idx(start_x, start_y)].type == OCEAN) {
+		--start_x;
+	}
 	return std::make_pair(start_x, start_y);
 }
 
@@ -493,43 +496,48 @@ void build_region(planet_t &planet, std::pair<int,int> location) {
 	planet_builder_status = "Scanning the crash-site - altitude";
 	planet_builder_lock.unlock();
 
+	const double region_noise_x = (double)location.first / WORLD_PERLIN_DIVISOR;
+	const double region_noise_y = (double)location.second / WORLD_PERLIN_DIVISOR;
+	const double region_step_x = 1.0 / WORLD_PERLIN_DIVISOR * (double)REGION_WIDTH;
+	const double region_step_y = 1.0 / WORLD_PERLIN_DIVISOR * (double)REGION_HEIGHT;
+
 	// Prime the noise function, and extrapolate the region's noise into a height map
-	perlin_noise mountains(0.1, 0.1, 1.0, 8, planet.perlin_seed);
-	perlin_noise mixer(0.1, 0.1, 1.0, 8, planet.perlin_seed);
-	const double north_bias = ((static_cast<double>(location.second) / WORLD_HEIGHT) * 0.7) + 0.3;
+	perlin_noise mountains(planet.perlin_seed);
+	perlin_noise flatlands(std::numeric_limits<int>::max()-planet.perlin_seed);
+	perlin_noise mixer(std::numeric_limits<int>::max()+planet.perlin_seed);
 
 	std::vector<int> height_map(REGION_WIDTH * REGION_HEIGHT);
 	for (int y=0; y<REGION_HEIGHT; ++y) {
-		double Y = static_cast<double>(location.second) + (1.0 / (static_cast<double>(REGION_HEIGHT)*static_cast<double>(y)));
-
+		const double Y = region_noise_y + ((double)y * region_step_y);
 		for (int x=0; x<REGION_WIDTH; ++x) {
-			double X = static_cast<double>(location.first) + (1.0 / (static_cast<double>(REGION_WIDTH)*static_cast<double>(x)));
+			const double X = region_noise_x + ((double)x * region_step_x);
 
-			const double mtn_noise_pixel = (mountains.get_height(X, Y) + 1.0) * 300.0;
-			double mixer_noise_pixel = (mixer.get_height(X * 0.25, Y * 0.25) + 0.5);
-			if (mixer_noise_pixel < 0.0) mixer_noise_pixel = 0.0;
-			if (mixer_noise_pixel > 1.0) mixer_noise_pixel = 1.0;
+			const double mtn_noise_pixel = mountains.noise(X, Y, 0.8) * 300.0;
+			const double flat_noise_pixel = flatlands.noise(X/4.0, Y/4.0, 0.8) * 100.0;
+			const double mtn_pct = mixer.noise(X/2.0,Y/2.0,0.8);
+			const double flat_pct = 1.0 - mtn_pct;
 
-			double height = mixer_noise_pixel * mtn_noise_pixel * north_bias;
-			if (height < 0.0) height = 0.0;
-			int height_i = static_cast<int>(height);
-			if (height_i < 0) height_i = 0;
-			height_map[y * REGION_WIDTH + x] = height_i;
+			const double height = (mtn_noise_pixel * mtn_pct) + (flat_noise_pixel * flat_pct);
+			height_map[(REGION_WIDTH * y) + x] = height;
 		}
 	}
 
-	// Find top and bottom heights
+	// Divide everything by 20!
 	int max = std::numeric_limits<int>::min();
 	int min = std::numeric_limits<int>::max();
 	for (int &n : height_map) {
+		n /= 20;
 		if (n > max) max = n;
 		if (n < min) min = n;
+		std::cout << n;
 	}
-	std::cout << "Regional height range: " << min << ".." << max << ". Water level is: " << planet.water_height << "\n";
+	std::cout << "\n";
+	std::cout << "Regional height range: " << min << ".." << max << ". Water level is: " << planet.water_height/20 << "\n";
 
 	// Start laying down surface layers
 	// Trees will go here
 	// Crash site
+
 }
 
 void build_planet() {
