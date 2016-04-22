@@ -6,6 +6,7 @@
 constexpr int WORLD_HEIGHT = 512;
 constexpr int WORLD_WIDTH = 512;
 constexpr double WORLD_PERLIN_DIVISOR = WORLD_HEIGHT/4.0;
+constexpr double WORLD_MOUNTAIN_MULTIPLIER = 2.0;
 
 enum block_type_t { WATER, PLAINS, HILLS, MOUNTAINS };
 enum climate_t {ARCTIC, SUBARCTIC, COLD, TEMPERATE, WARM, HOT, SCORCHING};
