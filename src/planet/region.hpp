@@ -56,3 +56,7 @@ struct region_t {
 		}
 	}
 };
+
+void save_region(const region_t &region);
+region_t load_region(const int region_x, const int region_y);
+
