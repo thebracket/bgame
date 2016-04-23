@@ -27,7 +27,7 @@ struct block_t {
 };
 
 struct planet_t {
-	std::string name;
+	std::string name = "";
 
 	int rng_seed;
 	int perlin_seed;
@@ -41,5 +41,5 @@ struct planet_t {
 	inline int idx(const int x, const int y) { return y*WORLD_WIDTH + x; }
 };
 
-void save_planet();
+void save_planet(const planet_t &planet);
 planet_t load_planet();
