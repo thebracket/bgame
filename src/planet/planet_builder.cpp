@@ -555,6 +555,9 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 
 	// Start laying down surface layers
 	region_t region;
+	region.region_x = location.first;
+	region.region_y = location.second;
+	region.biome_idx = planet.landblocks[planet.idx(location.first, location.second)].biome_idx;
 
 	for (int y=0; y<REGION_HEIGHT; ++y) {
 		for (int x=0; x<REGION_WIDTH; ++x) {
@@ -582,6 +585,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 	// Settler building
 	// Initial inventory
 	// Save the region
+	save_region(region);
 }
 
 void build_planet() {
