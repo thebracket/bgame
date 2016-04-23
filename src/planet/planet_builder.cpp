@@ -466,7 +466,7 @@ void builder_save_planet(planet_t &planet) {
 	planet_builder_lock.lock();
 	planet_builder_status = "Saving the world. To disk, sadly.";
 	planet_builder_lock.unlock();
-	save_planet();
+	save_planet(planet);
 	//std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
@@ -552,12 +552,36 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 		if (n > max) max = n;
 		if (n < min) min = n;
 	}
-	std::cout << "Regional variance: " << min << ".." << max << ". Water level: " << (planet.water_height/30) << "\n";
 
 	// Start laying down surface layers
+	region_t region;
+
+	for (int y=0; y<REGION_HEIGHT; ++y) {
+		for (int x=0; x<REGION_WIDTH; ++x) {
+			// The bottom layer is *always* special solid rock.
+			region.set(x,y,0, tile_type::SEMI_MOLTEN_ROCK, tile_content::NOTHING, 0, 0, true);
+
+			// Fill rock under the ground
+			const int ground_height = 64+height_map[(y*REGION_WIDTH)+x];
+			for (int z=1; z<ground_height; ++z) {
+				region.set(x,y,z, tile_type::ROCK, tile_content::NOTHING, 0, 0, true);
+			}
+
+			// TODO: Pick an appropriate surface tile here
+			region.set(x,y,ground_height, tile_type::NOTHING, tile_content::NOTHING, 0, 0, false);
+
+			// Fill in the sky
+			for (int z=ground_height+1; z<REGION_DEPTH; ++z) {
+				region.set(x,y,z, tile_type::NOTHING, tile_content::NOTHING, 0, 0, false);
+			}
+		}
+	}
+
 	// Trees will go here
 	// Crash site
-
+	// Settler building
+	// Initial inventory
+	// Save the region
 }
 
 void build_planet() {
