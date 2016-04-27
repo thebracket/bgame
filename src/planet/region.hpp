@@ -60,6 +60,8 @@ constexpr uint16_t HEATHER = 1033;
 namespace tile_flags {
 
 constexpr int SOLID = 1;
+constexpr int TREE = 2;
+constexpr int CONSTRUCTION = 3;
 
 }
 
