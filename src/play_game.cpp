@@ -11,11 +11,20 @@
 using namespace rltk;
 using namespace rltk::colors;
 
+constexpr int WORLD_LAYER=1;
+
 void play_game::tick(const double duration_ms) {
+	term(WORLD_LAYER)->clear();
+	term(WORLD_LAYER)->print(2,2,"Press Q to quit");
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+		quitting = true;
+	}
 }
 
 void play_game::init() {
 	// Setup the display
+	gui->add_layer(WORLD_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
 
 	// Load the game
 	planet = load_planet();
@@ -42,4 +51,5 @@ void play_game::init() {
 }
 
 void play_game::destroy() {
+	gui->delete_layer(WORLD_LAYER);
 }
