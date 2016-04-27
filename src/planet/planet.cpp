@@ -1,13 +1,16 @@
 #include "planet.hpp"
 #include <fstream>
 #include <rltk.hpp>
+#include <Poco/InflatingStream.h>
+#include <Poco/DeflatingStream.h>
 
 using namespace rltk;
 
 const std::string planet_filename = "world/planet.dat";
 
 void save_planet(const planet_t &planet) {
-	std::fstream lbfile(planet_filename, std::ios::out | std::ios::binary);
+	std::fstream masterfile(planet_filename, std::ios::out | std::ios::binary);
+	Poco::DeflatingOutputStream lbfile(masterfile, Poco::DeflatingStreamBuf::STREAM_GZIP);
 	serialize(lbfile, planet.name);
 	serialize(lbfile, planet.rng_seed);
 	serialize(lbfile, planet.perlin_seed);
@@ -34,7 +37,8 @@ void save_planet(const planet_t &planet) {
 planet_t load_planet() {
 	planet_t planet;
 
-	std::fstream lbfile(planet_filename, std::ios::in | std::ios::binary);
+	std::fstream masterfile(planet_filename, std::ios::in | std::ios::binary);
+	Poco::InflatingInputStream lbfile(masterfile, Poco::InflatingStreamBuf::STREAM_GZIP);
 	deserialize(lbfile, planet.name);
 	deserialize(lbfile, planet.rng_seed);
 	deserialize(lbfile, planet.perlin_seed);

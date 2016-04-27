@@ -58,5 +58,5 @@ endif()
 #include_directories(${PNG_INCLUDE_DIRS})
 #target_link_libraries(bgame ${PNG_LIBRARIES})
 
-#find_library(POCO_FOUNDATION PocoFoundation)
-#target_link_libraries(bgame ${POCO_FOUNDATION} ${POCO_NET})
+find_library(POCO_FOUNDATION PocoFoundation)
+target_link_libraries(bgame ${POCO_FOUNDATION} ${POCO_NET})
