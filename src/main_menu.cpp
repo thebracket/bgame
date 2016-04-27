@@ -39,7 +39,7 @@ void main_menu::init() {
 	gui->add_owner_layer(BACKDROP_LAYER, 0, 0, 800, 600, resize_fullscreen, draw_splash_backdrop);
 	gui->add_layer(LOG_LAYER, 0, 0, 800, 600, "8x16", resize_fullscreen, false);
 
-	if (boost::filesystem::exists("world/savegame3d.dat")) {
+	if (boost::filesystem::exists("world/savegame.dat")) {
 		world_exists = true;
 		selected = 0;
 	}
