@@ -7,6 +7,8 @@
 #include <limits>
 #include <thread>
 #include <rltk.hpp>
+#include <Poco/InflatingStream.h>
+#include <Poco/DeflatingStream.h>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -491,7 +493,95 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 	return std::make_pair(start_x, start_y);
 }
 
-void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_site=true) {
+std::pair<uint8_t, int> planet_builder_soil_height(const biome_t &biome, random_number_generator &rng) {
+	switch (biome.biome_type) {
+		case ICY_SEA: return std::make_pair(tile_type::SOIL, rng.roll_dice(1,6));
+		case DUST_SEA: return std::make_pair(tile_type::YELLOW_SAND, rng.roll_dice(1,4));
+		case OCEAN: return std::make_pair(tile_type::SOIL, rng.roll_dice(1,10));
+		case TUNDRA: return std::make_pair(tile_type::SOIL, rng.roll_dice(1,3));
+		case SWAMP: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
+		case FLATLAND: return std::make_pair(tile_type::SOIL, rng.roll_dice(2,4));
+		case WOODS: return std::make_pair(tile_type::SOIL, rng.roll_dice(2,6));
+		case FOREST: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
+		case JUNGLE: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
+		case HIGH_TUNDRA: return std::make_pair(tile_type::SOIL, 1);
+		case HILL_BOG: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
+		case DESERT: return std::make_pair(tile_type::YELLOW_SAND, rng.roll_dice(2,4));
+		case BADLANDS: return std::make_pair(tile_type::RED_SAND, rng.roll_dice(1,3));
+		case HIGH_DESERT: return std::make_pair(tile_type::YELLOW_SAND, 1);
+		case HIGH_BADLANDS: return std::make_pair(tile_type::RED_SAND, 1);
+		default: return std::make_pair(tile_type::SOIL, 1);
+	}
+}
+
+uint16_t planet_builder_covering(const biome_t &biome, random_number_generator &rng, const bool is_water) {
+	if (is_water) return tile_content::NOTHING;
+
+	if (biome.biome_type == ICY_SEA || biome.biome_type == TUNDRA || biome.biome_type == HIGH_TUNDRA) {
+		int roll = rng.roll_dice(1,8);
+		switch (roll) {
+			case 1 : return tile_content::PERMAFROST_BLUE;
+			case 3 : return tile_content::PERMAFROST_CRACKED;
+			case 4 : return tile_content::PERMAFROST_DIRTY;
+			case 5 : return tile_content::LYCHEN;
+			case 6 : return tile_content::MOSS;
+			default : return tile_content::PERMAFROST_WHITE;
+		}
+	} else if (biome.biome_type == DESERT || biome.biome_type == DUST_SEA || biome.biome_type == HIGH_DESERT) {
+		int roll = rng.roll_dice(1,20);
+		switch (roll) {
+			case 1 : return tile_content::YELLOW_SAND_CRACKED;
+			case 2 : return tile_content::YELLOW_SAND_DIRTY;
+			case 3 : return tile_content::RED_SAND;
+			case 4 : return tile_content::RED_SAND_CRACKED;
+			case 5 : return tile_content::CACTUS;
+			case 6 : return tile_content::PEBBLES;
+			default : return tile_content::NOTHING;
+		}
+	} else if (biome.biome_type == BADLANDS || biome.biome_type == HIGH_BADLANDS) {
+		int roll = rng.roll_dice(1,40);
+		switch (roll) {
+			case 1 : return tile_content::YELLOW_SAND_CRACKED;
+			case 2 : return tile_content::YELLOW_SAND_DIRTY;
+			case 3 : return tile_content::RED_SAND;
+			case 4 : return tile_content::RED_SAND_CRACKED;
+			case 5 : return tile_content::CACTUS;
+			case 6 : return tile_content::PEBBLES;
+			default : return tile_content::NOTHING;
+		}
+	} else if (biome.biome_type == SWAMP) {
+		int roll = rng.roll_dice(1,10);
+		switch (roll) {
+			case 1 : return tile_content::WHITE_SAND;
+			case 2 : return tile_content::GRAVEL;
+			case 3 : return tile_content::MUD;
+			case 4 : return tile_content::NOTHING;
+			case 5 : return tile_content::REEDS;
+			case 6 : return tile_content::MOSS;
+			case 7 : return tile_content::GORSE;
+			case 8 : return tile_content::GRASS;
+			case 9 : return tile_content::GRASS_SPARSE;
+			default : return tile_content::NOTHING;
+		}
+	} else if (biome.biome_type == FLATLAND || biome.biome_type == OCEAN || biome.biome_type == WOODS || biome.biome_type == FOREST || biome.biome_type == JUNGLE) {
+		int roll = rng.roll_dice(1,10);
+		switch (roll) {
+			case 1 : return tile_content::WILDFLOWER;
+			case 2 : return tile_content::GRAVEL;
+			case 3 : return tile_content::MUD;
+			case 4 : return tile_content::GRASS_SPARSE;
+			case 5 : return tile_content::REEDS;
+			case 6 : return tile_content::THISTLE;
+			case 7 : return tile_content::HEATHER;
+			case 8 : return tile_content::SHRUB;
+			default : return tile_content::GRASS;
+		}
+	}
+
+	return tile_content::NOTHING;
+}
+
+void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {
 	const biome_t biome = planet.biomes[planet.landblocks[planet.idx(location.first, location.second)].biome_idx];
 	const std::string region_name = biome.name;
 
@@ -572,6 +662,8 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 	region.region_y = location.second;
 	region.biome_idx = planet.landblocks[planet.idx(location.first, location.second)].biome_idx;
 
+	const std::pair<uint8_t,int> soil_height = planet_builder_soil_height(biome, rng);
+
 	for (int y=0; y<REGION_HEIGHT; ++y) {
 		for (int x=0; x<REGION_WIDTH; ++x) {
 			// The bottom layer is *always* special solid rock.
@@ -579,12 +671,15 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 
 			// Fill rock under the ground
 			const int ground_height = 64+height_map[(y*REGION_WIDTH)+x];
-			for (int z=1; z<ground_height; ++z) {
+			for (int z=1; z<ground_height - soil_height.second; ++z) {
 				region.set(x,y,z, tile_type::ROCK, tile_content::NOTHING, 0, 0, true);
+			}
+			for (int z=ground_height-soil_height.second; z<ground_height; ++z) {
+				region.set(x,y,z, soil_height.first, tile_content::NOTHING, 0, 0, true);
 			}
 
 			// TODO: Pick an appropriate surface tile here
-			region.set(x,y,ground_height, tile_type::NOTHING, tile_content::NOTHING, 0, 0, false);
+			region.set(x,y,ground_height, soil_height.first, planet_builder_covering(biome, rng, ground_height < planet.water_height/30), 0, 0, false);
 
 			// Fill in the sky
 			for (int z=ground_height+1; z<REGION_DEPTH; ++z) {
@@ -615,6 +710,10 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 	planet_builder_status = "Saving " + region_name + " to disk";
 	planet_builder_lock.unlock();
 	save_region(region);
+	const std::string save_filename = "world/savegame.dat";
+	std::fstream lbfile(save_filename, std::ios::out | std::ios::binary);
+	Poco::DeflatingOutputStream deflate(lbfile, Poco::DeflatingStreamBuf::STREAM_GZIP);
+	ecs_save(deflate);
 }
 
 void build_planet() {
@@ -665,7 +764,7 @@ void build_planet() {
 	auto crash_site = builder_select_starting_region(planet, min, max);
 
 	// Materialize this region
-	build_region(planet, crash_site);
+	build_region(planet, crash_site, rng);
 
 	planet_build_done.store(true);
 }
