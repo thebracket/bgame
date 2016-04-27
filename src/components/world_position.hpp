@@ -19,4 +19,14 @@ struct world_position_t {
 		serialize(lbfile, region_y);
 		serialize(lbfile, region_z);
 	}
+
+	static world_position_t load(std::istream &lbfile) {
+		world_position_t c;
+		deserialize(lbfile, c.world_x);
+		deserialize(lbfile, c.world_y);
+		deserialize(lbfile, c.region_x);
+		deserialize(lbfile, c.region_y);
+		deserialize(lbfile, c.region_z);
+		return c;
+	}
 };

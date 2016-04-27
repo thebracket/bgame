@@ -9,4 +9,9 @@ struct calendar_t {
 
 	void save(std::ostream &lbfile) {
 	}
+
+	static calendar_t load(std::istream &lbfile) {
+		calendar_t c;
+		return c;
+	}
 };

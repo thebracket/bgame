@@ -3,6 +3,7 @@
 #include <rltk.hpp>
 #include <Poco/InflatingStream.h>
 #include <Poco/DeflatingStream.h>
+#include <iostream>
 
 using namespace rltk;
 
