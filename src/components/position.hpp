@@ -15,4 +15,12 @@ struct position_t {
 		serialize(lbfile, y);
 		serialize(lbfile, z);
 	}
+
+	static position_t load(std::istream &lbfile) {
+		position_t c;
+		deserialize(lbfile, c.x);
+		deserialize(lbfile, c.y);
+		deserialize(lbfile, c.z);
+		return c;
+	}
 };

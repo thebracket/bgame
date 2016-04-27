@@ -27,7 +27,7 @@ struct block_t {
 };
 
 struct planet_t {
-	std::string name = "";
+	std::string name = "Test World";
 
 	int rng_seed;
 	int perlin_seed;

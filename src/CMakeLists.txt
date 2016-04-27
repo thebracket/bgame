@@ -33,6 +33,8 @@ add_executable(bgame main.cpp
 	main_menu.cpp
 	world_gen.cpp
 	play_game.cpp
+	game_globals.cpp
+	components/loader.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp
