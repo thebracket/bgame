@@ -492,8 +492,11 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 }
 
 void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_site=true) {
+	const biome_t biome = planet.biomes[planet.landblocks[planet.idx(location.first, location.second)].biome_idx];
+	const std::string region_name = biome.name;
+
 	planet_builder_lock.lock();
-	planet_builder_status = "Scanning the crash-site - altitude";
+	planet_builder_status = "Scanning " + region_name + "- altitude";
 	planet_builder_lock.unlock();
 
 	const double region_noise_x = (double)location.first / WORLD_PERLIN_DIVISOR;
@@ -609,7 +612,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 
 	// Save the region
 	planet_builder_lock.lock();
-	planet_builder_status = "Saving the region to disk";
+	planet_builder_status = "Saving " + region_name + " to disk";
 	planet_builder_lock.unlock();
 	save_region(region);
 }
