@@ -13,12 +13,47 @@ namespace tile_type {
 constexpr uint8_t NOTHING = 0;
 constexpr uint8_t SEMI_MOLTEN_ROCK = 1;
 constexpr uint8_t ROCK = 2; // Note that this will expand greatly later
+constexpr uint8_t SOIL = 3;
+constexpr uint8_t YELLOW_SAND = 4;
+constexpr uint8_t WHITE_SAND = 5;
+constexpr uint8_t RED_SAND = 6;
 
 }
 
 namespace tile_content {
 
-constexpr uint8_t NOTHING = 0;
+constexpr uint16_t NOTHING = 0;
+
+// Types
+constexpr uint16_t PERMAFROST_WHITE = 1;
+constexpr uint16_t PERMAFROST_BLUE = 2;
+constexpr uint16_t PERMAFROST_CRACKED = 3;
+constexpr uint16_t PERMAFROST_DIRTY = 4;
+constexpr uint16_t YELLOW_SAND = 5;
+constexpr uint16_t YELLOW_SAND_CRACKED = 6;
+constexpr uint16_t YELLOW_SAND_DIRTY = 7;
+constexpr uint16_t YELLOW_SAND_RIPPLES = 8;
+constexpr uint16_t RED_SAND = 5;
+constexpr uint16_t RED_SAND_CRACKED = 6;
+constexpr uint16_t RED_SAND_DIRTY = 7;
+constexpr uint16_t RED_SAND_RIPPLES = 8;
+constexpr uint16_t PEBBLES = 9;
+constexpr uint16_t WHITE_SAND = 10;
+constexpr uint16_t GRAVEL = 11;
+constexpr uint16_t MUD = 12;
+
+// Vegetations
+constexpr uint16_t LYCHEN = 1024;
+constexpr uint16_t MOSS = 1025;
+constexpr uint16_t CACTUS = 1026;
+constexpr uint16_t GRASS = 1027;
+constexpr uint16_t GRASS_SPARSE = 1027;
+constexpr uint16_t REEDS = 1028;
+constexpr uint16_t GORSE = 1029;
+constexpr uint16_t WILDFLOWER = 1030;
+constexpr uint16_t THISTLE = 1031;
+constexpr uint16_t SHRUB = 1032;
+constexpr uint16_t HEATHER = 1033;
 
 }
 
@@ -30,7 +65,7 @@ constexpr int SOLID = 1;
 
 struct tile_t {
 	uint8_t base_type;
-	uint8_t contents;
+	uint16_t contents;
 	uint8_t liquid;
 	int16_t temperature;
 	std::bitset<TILE_OPTIONS_COUNT> flags;
