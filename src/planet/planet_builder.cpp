@@ -522,8 +522,15 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 		}
 	}	
 
+	planet_builder_lock.lock();
+	planet_builder_status = "Roughing up the edges a bit";
+	planet_builder_lock.unlock();
+
 	// TODO: Additional noise for hill and mountain regions
 
+	planet_builder_lock.lock();
+	planet_builder_status = "Applying spit and polish";
+	planet_builder_lock.unlock();
 	// Smoothing
 	for (int i=0; i<10; ++i) {
 		std::vector<int> smoothed_height_map = height_map;
@@ -544,6 +551,9 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 		height_map = smoothed_height_map;
 	}
 
+	planet_builder_lock.lock();
+	planet_builder_status = "Laying down strata";
+	planet_builder_lock.unlock();
 	// Divide everything by 30!
 	int max = std::numeric_limits<int>::min();
 	int min = std::numeric_limits<int>::max();
@@ -581,10 +591,26 @@ void build_region(planet_t &planet, std::pair<int,int> location, bool has_crash_
 	}
 
 	// Trees will go here
+	planet_builder_lock.lock();
+	planet_builder_status = "Planting trees";
+	planet_builder_lock.unlock();
+
 	// Crash site
+	planet_builder_lock.lock();
+	planet_builder_status = "Crashing the space ship";
+	planet_builder_lock.unlock();
+
 	// Settler building
+	planet_builder_lock.lock();
+	planet_builder_status = "Determining initial local populations";
+	planet_builder_lock.unlock();
+
 	// Initial inventory
+
 	// Save the region
+	planet_builder_lock.lock();
+	planet_builder_status = "Saving the region to disk";
+	planet_builder_lock.unlock();
 	save_region(region);
 }
 
