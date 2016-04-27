@@ -1,6 +1,7 @@
 #include "planet_builder.hpp"
 #include "planet.hpp"
 #include "region.hpp"
+#include "../components/components.hpp"
 
 #include <atomic>
 #include <iostream>
@@ -697,6 +698,12 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	planet_builder_lock.lock();
 	planet_builder_status = "Crashing the space ship";
 	planet_builder_lock.unlock();
+
+	// Control components
+	auto camera = create_entity()
+		->assign(world_position_t{location.first, location.second})
+		->assign(position_t{REGION_WIDTH/2, REGION_HEIGHT/2, 64})
+		->assign(calendar_t{});
 
 	// Settler building
 	planet_builder_lock.lock();
