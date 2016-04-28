@@ -118,7 +118,7 @@ vchar map_render_system::get_render_char(const int idx) const {
 			case tile_content::MUD : return vchar{178, rltk::colors::Brown, rltk::colors::BLACK};
 			case tile_content::LYCHEN : return vchar{'%', rltk::colors::GREEN, rltk::colors::BLACK};
 			case tile_content::MOSS : return vchar{'#', rltk::colors::GREEN, rltk::colors::BLACK};
-			case tile_content::CACTUS : return vchar{15, rltk::colors::MAGENTA, rltk::colors::BLACK};
+			case tile_content::CACTUS : return vchar{157, rltk::colors::GREEN, rltk::colors::BLACK};
 			case tile_content::GRASS : return vchar{219, rltk::colors::GREEN, rltk::colors::BLACK};
 			case tile_content::GRASS_SPARSE : return vchar{176, rltk::colors::GREEN, rltk::colors::BLACK};
 			case tile_content::REEDS : return vchar{'&', rltk::colors::GREEN, rltk::colors::BLACK};
