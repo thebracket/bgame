@@ -47,7 +47,7 @@ void map_render_system::update(const double duration_ms) {
 	if (dirty) {
 		term(1)->clear();
 
-		int Y = 0;
+		int Y = 2;
 		for (int y=clip_top; y<clip_bottom; ++y) {
 			int X = 0;
 			for (int x=clip_left; x<clip_right; ++x) {
@@ -59,7 +59,7 @@ void map_render_system::update(const double duration_ms) {
 			++Y;
 		}
 
-		term(1)->print(2,2,"Press Q to quit");
+		term(1)->print(0,1,"Press Q to quit");
 		dirty = false;
 	}
 }
@@ -72,8 +72,8 @@ void map_render_system::update_clipping_rectangle() {
 
 	clip_left = camera_position->region_x - half_width;
 	clip_right = camera_position->region_x + half_width;
-	clip_top = camera_position->region_y - half_height;
-	clip_bottom = camera_position->region_y + half_height;
+	clip_top = camera_position->region_y - half_height -2;
+	clip_bottom = camera_position->region_y + half_height -2;
 
 	if (clip_left < 0) clip_left = 0;
 	if (clip_right > REGION_WIDTH) clip_right = REGION_WIDTH;
