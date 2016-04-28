@@ -13,6 +13,7 @@ using namespace rltk;
 using namespace rltk::colors;
 
 constexpr int MAP_LAYER=1;
+constexpr int GUI_LAYER=2;
 
 void play_game::tick(const double duration_ms) {
 
@@ -26,6 +27,7 @@ void play_game::tick(const double duration_ms) {
 void play_game::init() {
 	// Setup the display
 	gui->add_layer(MAP_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
+	gui->add_layer(GUI_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, false);
 
 	// Load the game
 	planet = load_planet();
@@ -46,13 +48,16 @@ void play_game::init() {
 		region_x = pos.world_x;
 		region_y = pos.world_y;
 		camera_position = &pos;
+		calendar = &cal;
 	});
 	current_region = load_region(region_x, region_y);
 
 	// Setup systems
+	add_system<calendar_system>();
 	add_system<map_render_system>();
 }
 
 void play_game::destroy() {
 	gui->delete_layer(MAP_LAYER);
+	gui->delete_layer(GUI_LAYER);
 }
