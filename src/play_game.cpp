@@ -2,6 +2,7 @@
 #include "game_globals.hpp"
 #include "components/loader.hpp"
 #include "components/components.hpp"
+#include "systems/systems.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -11,20 +12,20 @@
 using namespace rltk;
 using namespace rltk::colors;
 
-constexpr int WORLD_LAYER=1;
+constexpr int MAP_LAYER=1;
 
 void play_game::tick(const double duration_ms) {
-	term(WORLD_LAYER)->clear();
-	term(WORLD_LAYER)->print(2,2,"Press Q to quit");
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 		quitting = true;
 	}
+
+	ecs_tick(duration_ms);
 }
 
 void play_game::init() {
 	// Setup the display
-	gui->add_layer(WORLD_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
+	gui->add_layer(MAP_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
 
 	// Load the game
 	planet = load_planet();
@@ -44,12 +45,14 @@ void play_game::init() {
 		camera_entity = entity.id;
 		region_x = pos.world_x;
 		region_y = pos.world_y;
+		camera_position = &pos;
 	});
+	current_region = load_region(region_x, region_y);
 
 	// Setup systems
-	current_region = load_region(region_x, region_y);
+	add_system<map_render_system>();
 }
 
 void play_game::destroy() {
-	gui->delete_layer(WORLD_LAYER);
+	gui->delete_layer(MAP_LAYER);
 }
