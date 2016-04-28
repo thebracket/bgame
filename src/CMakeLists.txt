@@ -40,6 +40,7 @@ add_executable(bgame main.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp
+	raws/raws.cpp
 )
 target_include_directories(bgame PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rltk/rltk>
