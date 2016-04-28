@@ -701,8 +701,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 
 	// Control components
 	auto camera = create_entity()
-		->assign(world_position_t{location.first, location.second})
-		->assign(position_t{REGION_WIDTH/2, REGION_HEIGHT/2, 64})
+		->assign(world_position_t{location.first, location.second, REGION_WIDTH/2, REGION_HEIGHT/2, 64})
 		->assign(calendar_t{});
 
 	// Settler building

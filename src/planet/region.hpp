@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <bitset>
+#include <rltk.hpp>
 
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
@@ -33,27 +34,27 @@ constexpr uint16_t YELLOW_SAND = 5;
 constexpr uint16_t YELLOW_SAND_CRACKED = 6;
 constexpr uint16_t YELLOW_SAND_DIRTY = 7;
 constexpr uint16_t YELLOW_SAND_RIPPLES = 8;
-constexpr uint16_t RED_SAND = 5;
-constexpr uint16_t RED_SAND_CRACKED = 6;
-constexpr uint16_t RED_SAND_DIRTY = 7;
-constexpr uint16_t RED_SAND_RIPPLES = 8;
-constexpr uint16_t PEBBLES = 9;
-constexpr uint16_t WHITE_SAND = 10;
-constexpr uint16_t GRAVEL = 11;
-constexpr uint16_t MUD = 12;
+constexpr uint16_t RED_SAND = 9;
+constexpr uint16_t RED_SAND_CRACKED = 10;
+constexpr uint16_t RED_SAND_DIRTY = 11;
+constexpr uint16_t RED_SAND_RIPPLES = 12;
+constexpr uint16_t PEBBLES = 13;
+constexpr uint16_t WHITE_SAND = 14;
+constexpr uint16_t GRAVEL = 15;
+constexpr uint16_t MUD = 16;
 
 // Vegetations
 constexpr uint16_t LYCHEN = 1024;
 constexpr uint16_t MOSS = 1025;
 constexpr uint16_t CACTUS = 1026;
 constexpr uint16_t GRASS = 1027;
-constexpr uint16_t GRASS_SPARSE = 1027;
-constexpr uint16_t REEDS = 1028;
-constexpr uint16_t GORSE = 1029;
-constexpr uint16_t WILDFLOWER = 1030;
-constexpr uint16_t THISTLE = 1031;
-constexpr uint16_t SHRUB = 1032;
-constexpr uint16_t HEATHER = 1033;
+constexpr uint16_t GRASS_SPARSE = 1028;
+constexpr uint16_t REEDS = 1029;
+constexpr uint16_t GORSE = 1030;
+constexpr uint16_t WILDFLOWER = 1031;
+constexpr uint16_t THISTLE = 1032;
+constexpr uint16_t SHRUB = 1033;
+constexpr uint16_t HEATHER = 1034;
 
 }
 
