@@ -140,7 +140,7 @@ vchar map_render_system::get_render_char(const int idx) const {
 			case tile_content::SHIP_WALL_NE : return vchar{200, rltk::colors::WHITE, rltk::colors::BLACK};
 			case tile_content::SHIP_WALL_NW : return vchar{187, rltk::colors::WHITE, rltk::colors::BLACK};
 			case tile_content::SHIP_WALL_SW : return vchar{188, rltk::colors::WHITE, rltk::colors::BLACK};
-			case tile_content::SHIP_WALL : return vchar{219, rltk::colors::GREY, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL : return vchar{219, rltk::colors::WHITE, rltk::colors::BLACK};
 			case tile_content::SHIP_UPDOWN : return vchar{'X', rltk::colors::GREY, rltk::colors::BLACK};
 			case tile_content::SHIP_UP : return vchar{'<', rltk::colors::GREY, rltk::colors::BLACK};
 			case tile_content::SHIP_DOWN : return vchar{'>', rltk::colors::GREY, rltk::colors::BLACK};
