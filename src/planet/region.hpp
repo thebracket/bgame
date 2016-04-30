@@ -62,6 +62,18 @@ constexpr uint16_t SCANNER_CONSOLE = 4097;
 constexpr uint16_t DEFENSE_CONSOLE = 4098;
 constexpr uint16_t EDUCATION_CONSOLE = 4099;
 constexpr uint16_t COMMUNICATIONS_CONSOLE = 4100;
+constexpr uint16_t SHIP_FLOOR = 4101;
+constexpr uint16_t SHIP_WALL_EW = 4102;
+constexpr uint16_t SHIP_WALL_NS = 4103;
+constexpr uint16_t SHIP_WALL_SE = 4104;
+constexpr uint16_t SHIP_WALL_NE = 4105;
+constexpr uint16_t SHIP_WALL_NW = 4106;
+constexpr uint16_t SHIP_WALL_SW = 4107;
+constexpr uint16_t SHIP_WALL = 4108;
+constexpr uint16_t SHIP_UPDOWN = 4109;
+constexpr uint16_t SHIP_DOWN = 4110;
+constexpr uint16_t SHIP_UP = 4111;
+
 
 }
 
