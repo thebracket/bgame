@@ -73,6 +73,12 @@ constexpr uint16_t SHIP_WALL = 4108;
 constexpr uint16_t SHIP_UPDOWN = 4109;
 constexpr uint16_t SHIP_DOWN = 4110;
 constexpr uint16_t SHIP_UP = 4111;
+constexpr uint16_t SOLAR_PANEL = 4112;
+constexpr uint16_t CRYO_BED = 4113;
+constexpr uint16_t STORAGE_LOCKER = 4114;
+constexpr uint16_t BATTERY = 4115;
+constexpr uint16_t RTG = 4116;
+constexpr uint16_t REPLICATOR = 4117;
 
 
 }

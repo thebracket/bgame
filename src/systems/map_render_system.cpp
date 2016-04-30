@@ -144,6 +144,12 @@ vchar map_render_system::get_render_char(const int idx) const {
 			case tile_content::SHIP_UPDOWN : return vchar{'X', rltk::colors::GREY, rltk::colors::BLACK};
 			case tile_content::SHIP_UP : return vchar{'<', rltk::colors::GREY, rltk::colors::BLACK};
 			case tile_content::SHIP_DOWN : return vchar{'>', rltk::colors::GREY, rltk::colors::BLACK};
+			case tile_content::SOLAR_PANEL : return vchar{176, rltk::colors::YELLOW, rltk::colors::CYAN};
+			case tile_content::CRYO_BED : return vchar{'0', rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::STORAGE_LOCKER : return vchar{236, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::BATTERY : return vchar{241, rltk::colors::LIGHT_RED, rltk::colors::BLACK};
+			case tile_content::RTG : return vchar{206, rltk::colors::ORANGE, rltk::colors::BLACK};
+			case tile_content::REPLICATOR : return vchar{228, rltk::colors::MAGENTA, rltk::colors::BLACK};
 
 			default : return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
 		}
