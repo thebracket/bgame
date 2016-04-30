@@ -753,7 +753,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 		add_construction(region, crash_x-5, crash_y-2, crash_z+z, tile_content::SHIP_WALL_NS, true);
 		add_construction(region, crash_x-5, crash_y-1, crash_z+z, tile_content::SHIP_WALL_NS, true);
 		if (z !=0) {
-			add_construction(region, crash_x-5, crash_y, crash_z, tile_content::SHIP_WALL_NS, true);
+			add_construction(region, crash_x-5, crash_y, crash_z+z, tile_content::SHIP_WALL_NS, true);
 		}
 		add_construction(region, crash_x-5, crash_y+1, crash_z+z, tile_content::SHIP_WALL_NS, true);
 		add_construction(region, crash_x-5, crash_y+2, crash_z+z, tile_content::SHIP_WALL_NS, true);
