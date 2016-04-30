@@ -128,6 +128,12 @@ vchar map_render_system::get_render_char(const int idx) const {
 			case tile_content::SHRUB : return vchar{'*', rltk::colors::GREEN, rltk::colors::BLACK};
 			case tile_content::HEATHER : return vchar{'#', rltk::colors::GREEN, rltk::colors::BLACK};
 
+			case tile_content::CORDEX : return vchar{15, rltk::colors::CYAN, rltk::colors::BLACK};
+			case tile_content::SCANNER_CONSOLE : return vchar{17, rltk::colors::CYAN, rltk::colors::BLACK};
+			case tile_content::DEFENSE_CONSOLE : return vchar{16, rltk::colors::CYAN, rltk::colors::BLACK};
+			case tile_content::EDUCATION_CONSOLE : return vchar{30, rltk::colors::CYAN, rltk::colors::BLACK};
+			case tile_content::COMMUNICATIONS_CONSOLE : return vchar{31, rltk::colors::CYAN, rltk::colors::BLACK};
+
 			default : return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
 		}
 	}

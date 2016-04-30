@@ -1,6 +1,5 @@
 #include "planet_builder.hpp"
 #include "planet.hpp"
-#include "region.hpp"
 #include "../components/components.hpp"
 
 #include <atomic>
@@ -582,6 +581,27 @@ uint16_t planet_builder_covering(const biome_t &biome, random_number_generator &
 	return tile_content::NOTHING;
 }
 
+int get_ground_z(region_t &region, const int x, const int y) {
+	int z = REGION_DEPTH-1;
+	bool hit_ground = false;
+	while (!hit_ground) {
+		const int idx = region.idx(x, y, z);
+		if (region.tiles[idx].flags.test(tile_flags::SOLID)) {
+			hit_ground = true;
+			++z;
+		} else {
+			--z;
+		}
+	}
+	return z;
+}
+
+void add_construction(region_t &region, const int x, const int y, const int z, const uint16_t type) {
+	const int idx = region.idx(x,y,z);
+	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
+	region.tiles[idx].contents = type;
+}
+
 void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {
 	const biome_t biome = planet.biomes[planet.landblocks[planet.idx(location.first, location.second)].biome_idx];
 	const std::string region_name = biome.name;
@@ -699,9 +719,29 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	planet_builder_status = "Crashing the space ship";
 	planet_builder_lock.unlock();
 
+	// Determine where to crash
+	const int crash_x = REGION_WIDTH / 2;
+	const int crash_y = REGION_HEIGHT / 2;
+	const int crash_z = get_ground_z(region, crash_x, crash_y);
+
+	// Trail of debris
+	for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
+		for (int y=crash_y - 4; y<crash_y+4; ++y) {
+			int z = get_ground_z(region, x, y);
+			region.tiles[region.idx(x,y,z)].contents = tile_content::NOTHING;
+		}
+	}
+
+	// Build the ship structure
+	add_construction(region, crash_x, crash_y, crash_z, tile_content::CORDEX);
+	add_construction(region, crash_x-1, crash_y, crash_z, tile_content::SCANNER_CONSOLE);
+	add_construction(region, crash_x+1, crash_y, crash_z, tile_content::DEFENSE_CONSOLE);
+	add_construction(region, crash_x, crash_y-1, crash_z, tile_content::EDUCATION_CONSOLE);
+	add_construction(region, crash_x, crash_y+1, crash_z, tile_content::COMMUNICATIONS_CONSOLE);
+
 	// Control components
 	auto camera = create_entity()
-		->assign(world_position_t{location.first, location.second, REGION_WIDTH/2, REGION_HEIGHT/2, 64})
+		->assign(world_position_t{location.first, location.second, crash_x, crash_y, crash_z})
 		->assign(calendar_t{});
 
 	// Settler building
