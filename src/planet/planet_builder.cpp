@@ -731,7 +731,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 
 	// Trail of debris
 	for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
-		for (int y=crash_y - 4; y<crash_y+4; ++y) {
+		for (int y=crash_y - 3; y<crash_y+4; ++y) {
 			int z = get_ground_z(region, x, y);
 			region.tiles[region.idx(x,y,z)].contents = tile_content::NOTHING;
 		}
@@ -742,12 +742,27 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 		for (int x=crash_x - 5; x<crash_x+4; ++x) {
 				add_construction(region, x, crash_y - 3, crash_z+z, tile_content::SHIP_WALL_EW, true);
 				add_construction(region, x, crash_y + 3, crash_z+z, tile_content::SHIP_WALL_EW, true);
+				add_construction(region, x, crash_y - 3, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y + 3, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y - 3, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y + 3, crash_z-2, tile_content::SHIP_WALL, true);
 
 				add_construction(region, x, crash_y - 2, crash_z+z, tile_content::SHIP_FLOOR);
 				add_construction(region, x, crash_y - 1, crash_z+z, tile_content::SHIP_FLOOR);
 				add_construction(region, x, crash_y, crash_z+z, tile_content::SHIP_FLOOR);
 				add_construction(region, x, crash_y + 1, crash_z+z, tile_content::SHIP_FLOOR);
 				add_construction(region, x, crash_y + 2, crash_z+z, tile_content::SHIP_FLOOR);
+
+				add_construction(region, x, crash_y - 2, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y - 1, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y + 1, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y + 2, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y - 2, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y - 1, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y + 1, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y + 2, crash_z+2, tile_content::SHIP_WALL, true);
 		}
 		add_construction(region, crash_x-5, crash_y-3, crash_z+z, tile_content::SHIP_WALL_SE, true);
 		add_construction(region, crash_x-5, crash_y-2, crash_z+z, tile_content::SHIP_WALL_NS, true);
@@ -759,6 +774,21 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 		add_construction(region, crash_x-5, crash_y+2, crash_z+z, tile_content::SHIP_WALL_NS, true);
 		add_construction(region, crash_x-5, crash_y+3, crash_z+z, tile_content::SHIP_WALL_NE, true);
 
+		add_construction(region, crash_x-5, crash_y-3, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y-3, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+2, tile_content::SHIP_WALL, true);
+
 		add_construction(region, crash_x+6, crash_y, crash_z+z, tile_content::SHIP_WALL_NS, true);
 		add_construction(region, crash_x+6, crash_y-1, crash_z+z, tile_content::SHIP_WALL_NW, true);
 		add_construction(region, crash_x+6, crash_y+1, crash_z+z, tile_content::SHIP_WALL_SW, true);
@@ -767,15 +797,48 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 		add_construction(region, crash_x+4, crash_y-3, crash_z+z, tile_content::SHIP_WALL_NW, true);
 		add_construction(region, crash_x+4, crash_y+3, crash_z+z, tile_content::SHIP_WALL_SW, true);
 
+		add_construction(region, crash_x+6, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+6, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z+2, tile_content::SHIP_WALL, true);
+
 		add_construction(region, crash_x+5, crash_y, crash_z+z, tile_content::SHIP_WALL, true);
 		add_construction(region, crash_x+5, crash_y-1, crash_z+z, tile_content::SHIP_WALL, true);
 		add_construction(region, crash_x+5, crash_y+1, crash_z+z, tile_content::SHIP_WALL, true);
 		add_construction(region, crash_x+4, crash_y-2, crash_z+z, tile_content::SHIP_WALL, true);
 		add_construction(region, crash_x+4, crash_y+2, crash_z+z, tile_content::SHIP_WALL, true);
+
+		add_construction(region, crash_x+5, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z-2, tile_content::SHIP_WALL, true);
 		
 		add_construction(region, crash_x+4, crash_y+1, crash_z+z, tile_content::SHIP_FLOOR);
 		add_construction(region, crash_x+4, crash_y, crash_z+z, tile_content::SHIP_FLOOR);
 		add_construction(region, crash_x+4, crash_y-1, crash_z+z, tile_content::SHIP_FLOOR);
+
+		add_construction(region, crash_x+4, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
 	}
 
 	add_construction(region, crash_x, crash_y, crash_z, tile_content::CORDEX, true);
