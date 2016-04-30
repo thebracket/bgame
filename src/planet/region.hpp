@@ -56,6 +56,13 @@ constexpr uint16_t THISTLE = 1032;
 constexpr uint16_t SHRUB = 1033;
 constexpr uint16_t HEATHER = 1034;
 
+// Constructions
+constexpr uint16_t CORDEX = 4096;
+constexpr uint16_t SCANNER_CONSOLE = 4097;
+constexpr uint16_t DEFENSE_CONSOLE = 4098;
+constexpr uint16_t EDUCATION_CONSOLE = 4099;
+constexpr uint16_t COMMUNICATIONS_CONSOLE = 4100;
+
 }
 
 namespace tile_flags {

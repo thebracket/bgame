@@ -1,0 +1,7 @@
+# This file defines the basic tile types that act as building blocks for a tile.
+
+TILE_MATERIAL:ROCK
+INDEX:2
+GLYPH:SOLID_SQUARE
+COLOR:GREY:BLACK
+
