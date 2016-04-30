@@ -596,9 +596,14 @@ int get_ground_z(region_t &region, const int x, const int y) {
 	return z;
 }
 
-void add_construction(region_t &region, const int x, const int y, const int z, const uint16_t type) {
+void add_construction(region_t &region, const int x, const int y, const int z, const uint16_t type, bool solid) {
 	const int idx = region.idx(x,y,z);
 	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
+	if (solid) {
+		region.tiles[idx].flags.reset(tile_flags::SOLID);
+	} else {
+		region.tiles[idx].flags.reset(tile_flags::SOLID);
+	}
 	region.tiles[idx].contents = type;
 }
 
@@ -733,11 +738,55 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	}
 
 	// Build the ship structure
-	add_construction(region, crash_x, crash_y, crash_z, tile_content::CORDEX);
-	add_construction(region, crash_x-1, crash_y, crash_z, tile_content::SCANNER_CONSOLE);
-	add_construction(region, crash_x+1, crash_y, crash_z, tile_content::DEFENSE_CONSOLE);
-	add_construction(region, crash_x, crash_y-1, crash_z, tile_content::EDUCATION_CONSOLE);
-	add_construction(region, crash_x, crash_y+1, crash_z, tile_content::COMMUNICATIONS_CONSOLE);
+	for (int z=-1; z<2; ++z) {
+		for (int x=crash_x - 5; x<crash_x+4; ++x) {
+				add_construction(region, x, crash_y - 3, crash_z+z, tile_content::SHIP_WALL_EW, true);
+				add_construction(region, x, crash_y + 3, crash_z+z, tile_content::SHIP_WALL_EW, true);
+
+				add_construction(region, x, crash_y - 2, crash_z+z, tile_content::SHIP_FLOOR);
+				add_construction(region, x, crash_y - 1, crash_z+z, tile_content::SHIP_FLOOR);
+				add_construction(region, x, crash_y, crash_z+z, tile_content::SHIP_FLOOR);
+				add_construction(region, x, crash_y + 1, crash_z+z, tile_content::SHIP_FLOOR);
+				add_construction(region, x, crash_y + 2, crash_z+z, tile_content::SHIP_FLOOR);
+		}
+		add_construction(region, crash_x-5, crash_y-3, crash_z+z, tile_content::SHIP_WALL_SE, true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z+z, tile_content::SHIP_WALL_NS, true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z+z, tile_content::SHIP_WALL_NS, true);
+		if (z !=0) {
+			add_construction(region, crash_x-5, crash_y, crash_z, tile_content::SHIP_WALL_NS, true);
+		}
+		add_construction(region, crash_x-5, crash_y+1, crash_z+z, tile_content::SHIP_WALL_NS, true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z+z, tile_content::SHIP_WALL_NS, true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+z, tile_content::SHIP_WALL_NE, true);
+
+		add_construction(region, crash_x+6, crash_y, crash_z+z, tile_content::SHIP_WALL_NS, true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z+z, tile_content::SHIP_WALL_NW, true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z+z, tile_content::SHIP_WALL_SW, true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z+z, tile_content::SHIP_WALL_NW, true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z+z, tile_content::SHIP_WALL_SW, true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z+z, tile_content::SHIP_WALL_NW, true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z+z, tile_content::SHIP_WALL_SW, true);
+
+		add_construction(region, crash_x+5, crash_y, crash_z+z, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z+z, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z+z, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z+z, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z+z, tile_content::SHIP_WALL, true);
+		
+		add_construction(region, crash_x+4, crash_y+1, crash_z+z, tile_content::SHIP_FLOOR);
+		add_construction(region, crash_x+4, crash_y, crash_z+z, tile_content::SHIP_FLOOR);
+		add_construction(region, crash_x+4, crash_y-1, crash_z+z, tile_content::SHIP_FLOOR);
+	}
+
+	add_construction(region, crash_x, crash_y, crash_z, tile_content::CORDEX, true);
+	add_construction(region, crash_x-1, crash_y, crash_z, tile_content::SCANNER_CONSOLE, true);
+	add_construction(region, crash_x+1, crash_y, crash_z, tile_content::DEFENSE_CONSOLE, true);
+	add_construction(region, crash_x, crash_y-1, crash_z, tile_content::EDUCATION_CONSOLE, true);
+	add_construction(region, crash_x, crash_y+1, crash_z, tile_content::COMMUNICATIONS_CONSOLE, true);
+
+	add_construction(region, crash_x+5, crash_y, crash_z-1, tile_content::SHIP_UP);
+	add_construction(region, crash_x+5, crash_y, crash_z, tile_content::SHIP_UPDOWN);
+	add_construction(region, crash_x+5, crash_y, crash_z+1, tile_content::SHIP_DOWN);
 
 	// Control components
 	auto camera = create_entity()

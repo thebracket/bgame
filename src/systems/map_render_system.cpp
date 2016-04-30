@@ -94,7 +94,7 @@ vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const
 }
 
 vchar map_render_system::get_render_char(const int idx) const {
-	if (current_region.tiles[idx].flags.test(tile_flags::SOLID)) {
+	if (current_region.tiles[idx].flags.test(tile_flags::SOLID) && !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
 		return get_render_char_for_base(current_region.tiles[idx].base_type);
 	} else {
 		switch (current_region.tiles[idx].contents) {
@@ -133,6 +133,17 @@ vchar map_render_system::get_render_char(const int idx) const {
 			case tile_content::DEFENSE_CONSOLE : return vchar{16, rltk::colors::CYAN, rltk::colors::BLACK};
 			case tile_content::EDUCATION_CONSOLE : return vchar{30, rltk::colors::CYAN, rltk::colors::BLACK};
 			case tile_content::COMMUNICATIONS_CONSOLE : return vchar{31, rltk::colors::CYAN, rltk::colors::BLACK};
+			case tile_content::SHIP_FLOOR : return vchar{176, rltk::colors::GREY, rltk::colors::DARK_GREY};
+			case tile_content::SHIP_WALL_EW : return vchar{205, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL_NS : return vchar{186, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL_SE : return vchar{201, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL_NE : return vchar{200, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL_NW : return vchar{187, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL_SW : return vchar{188, rltk::colors::WHITE, rltk::colors::BLACK};
+			case tile_content::SHIP_WALL : return vchar{219, rltk::colors::GREY, rltk::colors::BLACK};
+			case tile_content::SHIP_UPDOWN : return vchar{'X', rltk::colors::GREY, rltk::colors::BLACK};
+			case tile_content::SHIP_UP : return vchar{'<', rltk::colors::GREY, rltk::colors::BLACK};
+			case tile_content::SHIP_DOWN : return vchar{'>', rltk::colors::GREY, rltk::colors::BLACK};
 
 			default : return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
 		}
