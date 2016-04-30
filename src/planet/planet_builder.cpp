@@ -851,6 +851,33 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	add_construction(region, crash_x+5, crash_y, crash_z, tile_content::SHIP_UPDOWN);
 	add_construction(region, crash_x+5, crash_y, crash_z+1, tile_content::SHIP_DOWN);
 
+	// Add solar panels, batteries, RTG, water in the hold, beds, storage cabinets
+	add_construction(region, crash_x-1, crash_y-1, crash_z+2, tile_content::SOLAR_PANEL);
+	add_construction(region, crash_x+1, crash_y-1, crash_z+2, tile_content::SOLAR_PANEL);
+	add_construction(region, crash_x-1, crash_y+1, crash_z+2, tile_content::SOLAR_PANEL);
+	add_construction(region, crash_x+1, crash_y+1, crash_z+2, tile_content::SOLAR_PANEL);
+
+	add_construction(region, crash_x - 3, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x - 2, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x - 1, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x + 1, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x - 3, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x - 2, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x - 1, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x + 1, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
+
+	add_construction(region, crash_x + 3, crash_y + 2, crash_z + 1, tile_content::STORAGE_LOCKER);
+	add_construction(region, crash_x + 3, crash_y - 2, crash_z + 1, tile_content::STORAGE_LOCKER);
+
+	add_construction(region, crash_x - 4, crash_y+1, crash_z - 1, tile_content::BATTERY);
+	add_construction(region, crash_x - 4, crash_y+2, crash_z - 1, tile_content::BATTERY);
+	add_construction(region, crash_x - 4, crash_y-1, crash_z - 1, tile_content::BATTERY);
+	add_construction(region, crash_x - 4, crash_y-2, crash_z - 1, tile_content::BATTERY);
+	add_construction(region, crash_x - 4, crash_y, crash_z - 1, tile_content::RTG);
+	add_construction(region, crash_x +3, crash_y, crash_z, tile_content::REPLICATOR);
+
 	// Control components
 	auto camera = create_entity()
 		->assign(world_position_t{location.first, location.second, crash_x, crash_y, crash_z})
