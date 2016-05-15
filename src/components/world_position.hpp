@@ -12,6 +12,10 @@ struct world_position_t {
 	int region_z=0;
 	std::size_t serialization_identity = 1;
 
+	world_position_t(const int wx, const int wy, const int rx, const int ry, const int rz) :
+		world_x(wx), world_y(wy), region_x(rx), region_y(ry), region_z(rz) {}
+	world_position_t() {}
+
 	void save(std::ostream &lbfile) {
 		serialize(lbfile, world_x);
 		serialize(lbfile, world_y);
