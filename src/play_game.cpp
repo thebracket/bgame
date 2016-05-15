@@ -6,8 +6,8 @@
 
 #include <rltk.hpp>
 #include <iostream>
-#include <Poco/InflatingStream.h>
-#include <Poco/DeflatingStream.h>
+//#include <Poco/InflatingStream.h>
+//#include <Poco/DeflatingStream.h>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -36,9 +36,9 @@ void play_game::init() {
 	{
 		const std::string save_filename = "world/savegame.dat";
 		std::fstream lbfile(save_filename, std::ios::in | std::ios::binary);
-		Poco::InflatingInputStream inflate(lbfile, Poco::InflatingStreamBuf::STREAM_GZIP);
+		//Poco::InflatingInputStream inflate(lbfile, Poco::InflatingStreamBuf::STREAM_GZIP);
 		std::function<void(std::istream&,std::size_t,std::size_t)> helper(component_loader);
-		ecs_load(inflate, helper);
+		ecs_load(lbfile, helper);
 	}
 
 	// Load the current region - check the camera for the world position
