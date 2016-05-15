@@ -1,6 +1,7 @@
 #include "planet_builder.hpp"
 #include "planet.hpp"
 #include "../components/components.hpp"
+#include "../raws/raws.hpp"
 
 #include <atomic>
 #include <iostream>
@@ -607,6 +608,25 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 	region.tiles[idx].contents = type;
 }
 
+void create_settler(const int x, const int y, const int z, random_number_generator &rng) {
+	int gender_roll = rng.roll_dice(1, 6);
+	std::string first_name;
+	if (gender_roll < 4) {
+		first_name = first_names_female.random_entry(rng);
+	}
+	else 
+	{
+		first_name = first_names_male.random_entry(rng);
+	}
+
+	const std::string last_name = last_names.random_entry(rng);
+
+	auto settler = create_entity()
+		->assign(position_t{ x,y,z })
+		->assign(renderable_t{ '@',rltk::colors::YELLOW, rltk::colors::BLACK })
+		->assign(name_t{ first_name, last_name });
+}
+
 void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {
 	const biome_t biome = planet.biomes[planet.landblocks[planet.idx(location.first, location.second)].biome_idx];
 	const std::string region_name = biome.name;
@@ -887,6 +907,17 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	planet_builder_lock.lock();
 	planet_builder_status = "Determining initial local populations";
 	planet_builder_lock.unlock();
+
+	create_settler(crash_x - 3, crash_y - 1, crash_z + 1, rng);
+	create_settler(crash_x - 2, crash_y - 1, crash_z + 1, rng);
+	create_settler(crash_x - 1, crash_y - 1, crash_z + 1, rng);
+	create_settler(crash_x, crash_y - 1, crash_z + 1, rng);
+	create_settler(crash_x + 1, crash_y - 1, crash_z + 1, rng);
+	create_settler(crash_x - 3, crash_y + 1, crash_z + 1, rng);
+	create_settler(crash_x - 2, crash_y + 1, crash_z + 1, rng);
+	create_settler(crash_x - 1, crash_y + 1, crash_z + 1, rng);
+	create_settler(crash_x, crash_y + 1, crash_z + 1, rng);
+	create_settler(crash_x + 1, crash_y + 1, crash_z + 1, rng);
 
 	// Initial inventory
 
