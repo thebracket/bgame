@@ -19,5 +19,8 @@ struct string_table_t {
 extern std::unordered_map<std::string, rltk::color_t> color_table;
 extern std::unordered_map<std::string, uint8_t> glyph_table;
 extern std::unordered_map<int, raw::tile_material> tile_material_table;
+extern string_table_t first_names_male;
+extern string_table_t first_names_female;
+extern string_table_t last_names;
 
 void load_raws();

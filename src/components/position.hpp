@@ -8,6 +8,10 @@ struct position_t {
 	int x=0;
 	int y=0;
 	int z=0;
+
+	position_t() {}
+	position_t(const int X, const int Y, const int Z) : x(X), y(Y), z(Z) {}
+
 	std::size_t serialization_identity = 2;
 
 	void save(std::ostream &lbfile) {

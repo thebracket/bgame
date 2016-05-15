@@ -120,7 +120,9 @@
     <ClInclude Include="..\src\components\calendar.hpp" />
     <ClInclude Include="..\src\components\components.hpp" />
     <ClInclude Include="..\src\components\loader.hpp" />
+    <ClInclude Include="..\src\components\name.hpp" />
     <ClInclude Include="..\src\components\position.hpp" />
+    <ClInclude Include="..\src\components\renderable.hpp" />
     <ClInclude Include="..\src\components\world_position.hpp" />
     <ClInclude Include="..\src\constants.hpp" />
     <ClInclude Include="..\src\game_globals.hpp" />
