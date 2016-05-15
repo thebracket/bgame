@@ -13,77 +13,47 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\rltk">
+      <UniqueIdentifier>{a9c73a96-adac-41f6-ba53-d82f3c3f0f96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost">
+      <UniqueIdentifier>{b8d7c078-b921-4ab3-9418-11eb68529088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rltk">
+      <UniqueIdentifier>{a6bfc4b6-cd43-41ab-8afb-c9b7b3287fc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\components">
+      <UniqueIdentifier>{84ea8b2d-ead9-4dc9-9a2b-9625cfe76e45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\systems">
+      <UniqueIdentifier>{aaa09be8-ceed-47d9-9cdb-bdf3f9990c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\messages">
+      <UniqueIdentifier>{4aa37cbb-8f85-4f93-a75d-75e7bb8d17d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\planet">
+      <UniqueIdentifier>{760cb9a1-268d-42a5-962f-77b24f34c3a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\raws">
+      <UniqueIdentifier>{8e34f216-0637-4fa5-9229-224d126be1bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems">
+      <UniqueIdentifier>{b4e1fd18-e744-4af3-99f4-357e8581cf70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{1e7fc5eb-d114-490f-85ce-e33d6b023c03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\planet">
+      <UniqueIdentifier>{33aa8195-5152-42eb-90b2-0e2e283c8edf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\raws">
+      <UniqueIdentifier>{79fb0aef-8ab6-494f-88fc-682823ddf16e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\rltk\rltk\astar.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\bitmap_font.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\color_t.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\colors.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\font_manager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\fsa.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\geometry.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\gui.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\gui_control_t.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\input_handler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\layer_t.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\path_finding.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\perlin_noise.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\rltk.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\rng.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\serialization_utils.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\texture.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\texture_resources.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\virtual_terminal.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\virtual_terminal_sparse.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\visibility.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\ecs\ecs.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -105,98 +75,119 @@
     <ClInclude Include="..\src\world_gen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\calendar.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\components.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\loader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\position.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\world_position.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\messages\messages.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\messages\tick_message.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\planet\planet.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\planet\planet_builder.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\planet\region.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\astar.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\bitmap_font.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\color_t.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\colors.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\ecs\ecs.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\font_manager.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\fsa.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\geometry.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\gui.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\gui_control_t.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\input_handler.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\layer_t.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\path_finding.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\perlin_noise.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\rltk.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\rng.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\serialization_utils.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\visibility.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\virtual_terminal_sparse.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\virtual_terminal.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\texture_resources.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\texture.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\calendar.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\components.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\position.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\systems\calendar_system.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\src\systems\map_render_system.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\src\systems\systems.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\loader.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\messages.hpp">
+      <Filter>Header Files\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\tick_message.hpp">
+      <Filter>Header Files\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\planet.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\planet_builder.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\world_position.hpp">
+      <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\src\raws\raws.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\raws</Filter>
     </ClInclude>
     <ClInclude Include="..\src\raws\tile_material.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\raws</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\rltk\rltk\virtual_terminal_sparse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\virtual_terminal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\texture_resources.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\rng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\rltk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\layer_t.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\input_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\gui_control_t.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\gui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\font_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\ecs\ecs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\color_t.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\perlin_noise.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\game_globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -215,53 +206,98 @@
     <ClCompile Include="..\src\world_gen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\components\loader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\planet\planet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\planet\planet_builder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\planet\region.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\systems\calendar_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\systems\map_render_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\raws\raws.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.codecvt_error_category.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.operations.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.path.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.path_traits.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.portability.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.unique_path.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.utf8_codecvt_facet.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.windows_file_codecvt.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_system.error_code.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\color_t.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\ecs\ecs.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\font_manager.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\geometry.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\gui.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game_globals.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\gui_control_t.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\input_handler.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\layer_t.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\perlin_noise.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\rltk.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\rng.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\virtual_terminal_sparse.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\virtual_terminal.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\texture_resources.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\calendar_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\map_render_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\loader.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\planet.cpp">
+      <Filter>Source Files\planet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\planet_builder.cpp">
+      <Filter>Source Files\planet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\region.cpp">
+      <Filter>Source Files\planet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\raws\raws.cpp">
+      <Filter>Source Files\raws</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
