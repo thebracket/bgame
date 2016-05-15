@@ -7,8 +7,8 @@
 #include <limits>
 #include <thread>
 #include <rltk.hpp>
-#include <Poco/InflatingStream.h>
-#include <Poco/DeflatingStream.h>
+//#include <Poco/InflatingStream.h>
+//#include <Poco/DeflatingStream.h>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -897,8 +897,8 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	save_region(region);
 	const std::string save_filename = "world/savegame.dat";
 	std::fstream lbfile(save_filename, std::ios::out | std::ios::binary);
-	Poco::DeflatingOutputStream deflate(lbfile, Poco::DeflatingStreamBuf::STREAM_GZIP);
-	ecs_save(deflate);
+	//Poco::DeflatingOutputStream deflate(lbfile, Poco::DeflatingStreamBuf::STREAM_GZIP);
+	ecs_save(lbfile);
 }
 
 void build_planet() {
