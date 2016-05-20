@@ -1,12 +1,6 @@
 #include "lua_bridge.hpp"
 #include <iostream>
 
-extern "C" {
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
-}
-
 lua_State* lua_state;
 
 void init_lua() {
