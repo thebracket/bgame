@@ -8,7 +8,7 @@ glyphs = {
 	percent = 37,
 	zero = 48,
 	less_than = 60,
-	greater_than = 61,
+	greater_than = 62,
 	X = 88,
 	solid_square = 219,
 	three_quarters_solid = 178,
@@ -28,6 +28,7 @@ glyphs = {
 }
 
 colors = {
+	white = { r=255, g=255, b=255 },
 	black = { r=0, g=0, b=0 },
 	grey = { r=128, g=128, b=128 },
 	dark_grey = { r=64, g=64, b=64 },
