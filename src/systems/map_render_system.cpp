@@ -1,5 +1,6 @@
 #include "map_render_system.hpp"
 #include "../game_globals.hpp"
+#include "../raws/raws.hpp"
 #include <iostream>
 
 using namespace rltk;
@@ -82,6 +83,15 @@ void map_render_system::update_clipping_rectangle() {
 }
 
 vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const {
+	if (base_type == 0) return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
+
+	auto finder = tile_types.find(base_type);
+	if (finder != tile_types.end()) {
+		return vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
+	} else {
+		return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
+	}
+	/*
 	switch (base_type) {
 		case tile_type::NOTHING : return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
 		case tile_type::SEMI_MOLTEN_ROCK : return vchar{177, rltk::colors::RED, rltk::colors::YELLOW};
@@ -90,13 +100,24 @@ vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const
 		case tile_type::YELLOW_SAND : return vchar{176, rltk::colors::YELLOW, rltk::colors::BLACK};
 		case tile_type::RED_SAND : return vchar{176, rltk::colors::RED, rltk::colors::BLACK};
 		default : return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
-	}
+	}*/
 }
 
 vchar map_render_system::get_render_char(const int idx) const {
 	if (current_region.tiles[idx].flags.test(tile_flags::SOLID) && !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
 		return get_render_char_for_base(current_region.tiles[idx].base_type);
 	} else {
+		if (current_region.tiles[idx].contents == 0) {
+			return get_render_char_for_base(current_region.tiles[idx].base_type);
+		} else {
+			auto finder = tile_contents.find(current_region.tiles[idx].contents);
+			if (finder != tile_contents.end()) {
+				return vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
+			} else {
+				return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
+			}
+		}
+		/*
 		switch (current_region.tiles[idx].contents) {
 			case tile_content::NOTHING : return get_render_char_for_base(current_region.tiles[idx].base_type);
 			case tile_content::PERMAFROST_WHITE : return vchar{178, rltk::colors::WHITE, rltk::colors::BLACK};
@@ -152,7 +173,7 @@ vchar map_render_system::get_render_char(const int idx) const {
 			case tile_content::REPLICATOR : return vchar{228, rltk::colors::MAGENTA, rltk::colors::BLACK};
 
 			default : return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
-		}
+		}*/
 	}
 	return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
 }

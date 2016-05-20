@@ -168,3 +168,21 @@ void load_raws() {
 	// Extract game tables
 	load_game_tables();
 }
+
+int get_tile_type_index(const std::string name) {
+	auto finder = tile_type_index.find(name);
+	if (finder != tile_type_index.end()) {
+		return finder->second;
+	} else {
+		throw std::runtime_error("Unknown tile type: " + name);
+	}
+}
+
+int get_tile_contents_index(const std::string name) {
+	auto finder = tile_contents_index.find(name);
+	if (finder != tile_contents_index.end()) {
+		return finder->second;
+	} else {
+		throw std::runtime_error("Unknown tile contents: " + name);
+	}
+}
