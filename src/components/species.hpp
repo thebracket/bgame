@@ -22,7 +22,7 @@ struct species_t {
 
 	species_t() {}
 
-	std::size_t serialization_identity = 2;
+	std::size_t serialization_identity = 6;
 
 	void save(std::ostream &lbfile) {
 		serialize(lbfile, gender);
