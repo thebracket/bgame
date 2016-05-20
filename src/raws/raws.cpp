@@ -45,10 +45,12 @@ void load_raws() {
 	// Setup LUA
 	lua_handle = std::make_unique<lua_lifecycle>();
 
-	// Load game data
+	// Load game data via LUA
 	string_table_t raw_index;
 	load_string_table("world_defs/index.txt", raw_index);
 	for (const std::string &filename : raw_index.strings) {
 		load_lua_script("world_defs/" + filename);
 	}
+
+	// Extract game tables
 }
