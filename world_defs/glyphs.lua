@@ -1,4 +1,3 @@
-print('Setting up glyph and color mappings')
 glyphs = {
 	sun = 15,
 	ramp_right = 16,
@@ -29,22 +28,22 @@ glyphs = {
 }
 
 colors = {
-	black = { 0, 0, 0 },
-	grey = { 128, 128, 128 },
-	dark_grey = { 64, 64, 64 },
-	red = { 255, 0, 0 },
-	yellow = { 255, 255, 0 },
-	earth_brown = { 91, 84, 74 },
-	yellow_sand = { 239, 221, 111 },
-	red_sand = { 236, 197, 168 },
-	white_sand = { 245, 245, 245 },
-	icy_blue = { 212, 240, 255 },
-	lychen = { 192, 217, 175 },
-	moss = { 173, 223, 173 },
-	cactus = { 92, 117, 94 },
-	grass_green = { 0, 92, 9 },
-	heather = { 182, 192, 210 },
-	cyan = { 0, 255, 255 },
-	orange = { 255, 165, 0 },
-	magenta = { 255, 0, 255 }
+	black = { r=0, g=0, b=0 },
+	grey = { r=128, g=128, b=128 },
+	dark_grey = { r=64, g=64, b=64 },
+	red = { r=255, g=0, b=0 },
+	yellow = { r=255, g=255, b=0 },
+	earth_brown = { r=91, g=84, b=74 },
+	yellow_sand = { r=239, g=221, b=111 },
+	red_sand = { r=236, g=197, b=168 },
+	white_sand = { r=245, g=245, b=245 },
+	icy_blue = { r=212, g=240, b=255 },
+	lychen = { r=192, g=217, b=175 },
+	moss = { r=173, g=223, b=173 },
+	cactus = { r=92, g=117, b=94 },
+	grass_green = { r=0, g=92, b=9 },
+	heather = { r=182, g=192, b=210 },
+	cyan = { r=0, g=255, b=255 },
+	orange = { r=255, g=165, b=0 },
+	magenta = { r=255, g=0, b=255 }
 }

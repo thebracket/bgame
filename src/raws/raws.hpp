@@ -14,8 +14,29 @@ struct string_table_t {
 	}
 };
 
+struct tile_type_t {
+	std::string name;
+	int index;
+	uint8_t glyph;
+	rltk::color_t fg;
+	rltk::color_t bg;
+};
+
+struct tile_content_t {
+	std::string name;
+	int index;
+	uint8_t glyph;
+	rltk::color_t fg;
+	rltk::color_t bg;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
+
+extern std::unordered_map<int, tile_type_t> tile_types;
+extern std::unordered_map<std::string, int> tile_type_index;
+extern std::unordered_map<int, tile_content_t> tile_contents;
+extern std::unordered_map<std::string, int> tile_contents_index;
 
 void load_raws();

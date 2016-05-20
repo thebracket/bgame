@@ -1,4 +1,3 @@
-print('Setting up tile types')
 tile_types = {
 	nothing = { index = 0, glyph = glyphs['solid_square'], render=false, foreground=colors['black'], background=colors['white'] },
 	semi_molten_rock = { index = 1, glyph = glyphs['three_quarters_solid'], render=true, foreground=colors['red'], background=colors['yellow'] },

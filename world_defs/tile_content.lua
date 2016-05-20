@@ -1,4 +1,3 @@
-print('Setting up tile contents')
 tile_content = {
 	nothing = { index = 0 },
 
