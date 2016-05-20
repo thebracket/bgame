@@ -1,17 +1,50 @@
 print('Setting up glyph and color mappings')
 glyphs = {
+	sun = 15,
+	ramp_right = 16,
+	ramp_left = 17,
+	ramp_up = 30,
+	ramp_down = 31,
+	quote = 35,
+	percent = 37,
+	zero = 48,
+	less_than = 60,
+	greater_than = 61,
+	X = 88,
 	solid_square = 219,
 	three_quarters_solid = 178,
-	one_quarter_solid = 176
+	one_half_solid = 177,
+	one_quarter_solid = 176,
+	double_wall_ns = 186,
+	double_wall_nw = 187,
+	double_wall_sw = 188,
+	double_wall_ne = 200,
+	double_wall_se = 201,
+	double_wall_ew = 205,
+	sigma = 228,
+	infinity = 236,
+	plus_minus = 241,
+	double_pillar = 246,
+	double_wave = 247
 }
 
 colors = {
 	black = { 0, 0, 0 },
 	grey = { 128, 128, 128 },
+	dark_grey = { 64, 64, 64 },
 	red = { 255, 0, 0 },
 	yellow = { 255, 255, 0 },
 	earth_brown = { 91, 84, 74 },
 	yellow_sand = { 239, 221, 111 },
 	red_sand = { 236, 197, 168 },
-	white_sand = { 245, 245, 245 }
+	white_sand = { 245, 245, 245 },
+	icy_blue = { 212, 240, 255 },
+	lychen = { 192, 217, 175 },
+	moss = { 173, 223, 173 },
+	cactus = { 92, 117, 94 },
+	grass_green = { 0, 92, 9 },
+	heather = { 182, 192, 210 },
+	cyan = { 0, 255, 255 },
+	orange = { 255, 165, 0 },
+	magenta = { 255, 0, 255 }
 }
