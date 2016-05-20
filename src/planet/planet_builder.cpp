@@ -496,90 +496,90 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet, const int mi
 
 std::pair<uint8_t, int> planet_builder_soil_height(const biome_t &biome, random_number_generator &rng) {
 	switch (biome.biome_type) {
-		case ICY_SEA: return std::make_pair(tile_type::SOIL, rng.roll_dice(1,6));
-		case DUST_SEA: return std::make_pair(tile_type::YELLOW_SAND, rng.roll_dice(1,4));
-		case OCEAN: return std::make_pair(tile_type::SOIL, rng.roll_dice(1,10));
-		case TUNDRA: return std::make_pair(tile_type::SOIL, rng.roll_dice(1,3));
-		case SWAMP: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
-		case FLATLAND: return std::make_pair(tile_type::SOIL, rng.roll_dice(2,4));
-		case WOODS: return std::make_pair(tile_type::SOIL, rng.roll_dice(2,6));
-		case FOREST: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
-		case JUNGLE: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
-		case HIGH_TUNDRA: return std::make_pair(tile_type::SOIL, 1);
-		case HILL_BOG: return std::make_pair(tile_type::SOIL, rng.roll_dice(3,6));
-		case DESERT: return std::make_pair(tile_type::YELLOW_SAND, rng.roll_dice(2,4));
-		case BADLANDS: return std::make_pair(tile_type::RED_SAND, rng.roll_dice(1,3));
-		case HIGH_DESERT: return std::make_pair(tile_type::YELLOW_SAND, 1);
-		case HIGH_BADLANDS: return std::make_pair(tile_type::RED_SAND, 1);
-		default: return std::make_pair(tile_type::SOIL, 1);
+		case ICY_SEA: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(1,6));
+		case DUST_SEA: return std::make_pair(get_tile_type_index("yellow_sand"), rng.roll_dice(1,4));
+		case OCEAN: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(1,10));
+		case TUNDRA: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(1,3));
+		case SWAMP: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(3,6));
+		case FLATLAND: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(2,4));
+		case WOODS: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(2,6));
+		case FOREST: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(3,6));
+		case JUNGLE: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(3,6));
+		case HIGH_TUNDRA: return std::make_pair(get_tile_type_index("soil_default"), 1);
+		case HILL_BOG: return std::make_pair(get_tile_type_index("soil_default"), rng.roll_dice(3,6));
+		case DESERT: return std::make_pair(get_tile_type_index("yellow_sand"), rng.roll_dice(2,4));
+		case BADLANDS: return std::make_pair(get_tile_type_index("red_sand"), rng.roll_dice(1,3));
+		case HIGH_DESERT: return std::make_pair(get_tile_type_index("yellow_sand"), 1);
+		case HIGH_BADLANDS: return std::make_pair(get_tile_type_index("red_sand"), 1);
+		default: return std::make_pair(get_tile_type_index("soil_default"), 1);
 	}
 }
 
 uint16_t planet_builder_covering(const biome_t &biome, random_number_generator &rng, const bool is_water) {
-	if (is_water) return tile_content::NOTHING;
+	if (is_water) return get_tile_contents_index("nothing");
 
 	if (biome.biome_type == ICY_SEA || biome.biome_type == TUNDRA || biome.biome_type == HIGH_TUNDRA) {
 		int roll = rng.roll_dice(1,8);
 		switch (roll) {
-			case 1 : return tile_content::PERMAFROST_BLUE;
-			case 3 : return tile_content::PERMAFROST_CRACKED;
-			case 4 : return tile_content::PERMAFROST_DIRTY;
-			case 5 : return tile_content::LYCHEN;
-			case 6 : return tile_content::MOSS;
-			default : return tile_content::PERMAFROST_WHITE;
+			case 1 : return get_tile_contents_index("permafrost_blue");
+			case 3 : return get_tile_contents_index("permafrost_cracked");
+			case 4 : return get_tile_contents_index("permafrost_dirty");
+			case 5 : return get_tile_contents_index("lychen");
+			case 6 : return get_tile_contents_index("moss");
+			default : return get_tile_contents_index("permafrost_white");
 		}
 	} else if (biome.biome_type == DESERT || biome.biome_type == DUST_SEA || biome.biome_type == HIGH_DESERT) {
 		int roll = rng.roll_dice(1,20);
 		switch (roll) {
-			case 1 : return tile_content::YELLOW_SAND_CRACKED;
-			case 2 : return tile_content::YELLOW_SAND_DIRTY;
-			case 3 : return tile_content::RED_SAND;
-			case 4 : return tile_content::RED_SAND_CRACKED;
-			case 5 : return tile_content::CACTUS;
-			case 6 : return tile_content::PEBBLES;
-			default : return tile_content::NOTHING;
+			case 1 : return get_tile_contents_index("yellow_sand_cracked");
+			case 2 : return get_tile_contents_index("yellow_sand_dirty");
+			case 3 : return get_tile_contents_index("red_sand");
+			case 4 : return get_tile_contents_index("red_sand_dirty");
+			case 5 : return get_tile_contents_index("cactus");
+			case 6 : return get_tile_contents_index("pebbles");
+			default : return get_tile_contents_index("nothing");
 		}
 	} else if (biome.biome_type == BADLANDS || biome.biome_type == HIGH_BADLANDS) {
 		int roll = rng.roll_dice(1,40);
 		switch (roll) {
-			case 1 : return tile_content::YELLOW_SAND_CRACKED;
-			case 2 : return tile_content::YELLOW_SAND_DIRTY;
-			case 3 : return tile_content::RED_SAND;
-			case 4 : return tile_content::RED_SAND_CRACKED;
-			case 5 : return tile_content::CACTUS;
-			case 6 : return tile_content::PEBBLES;
-			default : return tile_content::NOTHING;
+			case 1 : return get_tile_contents_index("yellow_sand_cracked");
+			case 2 : return get_tile_contents_index("yellow_sand_dirty");
+			case 3 : return get_tile_contents_index("red_sand");
+			case 4 : return get_tile_contents_index("red_sand_cracked");
+			case 5 : return get_tile_contents_index("cactus");
+			case 6 : return get_tile_contents_index("pebbles");
+			default : return get_tile_contents_index("nothing");
 		}
 	} else if (biome.biome_type == SWAMP) {
 		int roll = rng.roll_dice(1,10);
 		switch (roll) {
-			case 1 : return tile_content::WHITE_SAND;
-			case 2 : return tile_content::GRAVEL;
-			case 3 : return tile_content::MUD;
-			case 4 : return tile_content::NOTHING;
-			case 5 : return tile_content::REEDS;
-			case 6 : return tile_content::MOSS;
-			case 7 : return tile_content::GORSE;
-			case 8 : return tile_content::GRASS;
-			case 9 : return tile_content::GRASS_SPARSE;
-			default : return tile_content::NOTHING;
+			case 1 : return get_tile_contents_index("white_sand");
+			case 2 : return get_tile_contents_index("gravel");
+			case 3 : return get_tile_contents_index("mud");
+			case 4 : return get_tile_contents_index("nothing");
+			case 5 : return get_tile_contents_index("reeds");
+			case 6 : return get_tile_contents_index("moss");
+			case 7 : return get_tile_contents_index("gorse");
+			case 8 : return get_tile_contents_index("grass");
+			case 9 : return get_tile_contents_index("grass_sparse");
+			default : return get_tile_contents_index("nothing");
 		}
 	} else if (biome.biome_type == FLATLAND || biome.biome_type == OCEAN || biome.biome_type == WOODS || biome.biome_type == FOREST || biome.biome_type == JUNGLE) {
 		int roll = rng.roll_dice(1,10);
 		switch (roll) {
-			case 1 : return tile_content::WILDFLOWER;
-			case 2 : return tile_content::GRAVEL;
-			case 3 : return tile_content::MUD;
-			case 4 : return tile_content::GRASS_SPARSE;
-			case 5 : return tile_content::REEDS;
-			case 6 : return tile_content::THISTLE;
-			case 7 : return tile_content::HEATHER;
-			case 8 : return tile_content::SHRUB;
-			default : return tile_content::GRASS;
+			case 1 : return get_tile_contents_index("wildflower");;
+			case 2 : return get_tile_contents_index("gravel");
+			case 3 : return get_tile_contents_index("mud");
+			case 4 : return get_tile_contents_index("grass_sparse");
+			case 5 : return get_tile_contents_index("reeds");
+			case 6 : return get_tile_contents_index("thistle");
+			case 7 : return get_tile_contents_index("heather");
+			case 8 : return get_tile_contents_index("shrub");
+			default : return get_tile_contents_index("grass");
 		}
 	}
 
-	return tile_content::NOTHING;
+	return get_tile_contents_index("nothing");
 }
 
 int get_ground_z(region_t &region, const int x, const int y) {
@@ -597,7 +597,7 @@ int get_ground_z(region_t &region, const int x, const int y) {
 	return z;
 }
 
-void add_construction(region_t &region, const int x, const int y, const int z, const uint16_t type, bool solid) {
+void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
 	const int idx = region.idx(x,y,z);
 	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
 	if (solid) {
@@ -605,7 +605,7 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 	} else {
 		region.tiles[idx].flags.reset(tile_flags::SOLID);
 	}
-	region.tiles[idx].contents = type;
+	region.tiles[idx].contents = get_tile_contents_index(type);
 }
 
 void create_settler(const int x, const int y, const int z, random_number_generator &rng) {
@@ -713,15 +713,15 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	for (int y=0; y<REGION_HEIGHT; ++y) {
 		for (int x=0; x<REGION_WIDTH; ++x) {
 			// The bottom layer is *always* special solid rock.
-			region.set(x,y,0, tile_type::SEMI_MOLTEN_ROCK, tile_content::NOTHING, 0, 0, true);
+			region.set(x,y,0, get_tile_type_index("semi_molten_rock"), get_tile_type_index("nothing"), 0, 0, true);
 
 			// Fill rock under the ground
 			const int ground_height = 64+height_map[(y*REGION_WIDTH)+x];
 			for (int z=1; z<ground_height - soil_height.second; ++z) {
-				region.set(x,y,z, tile_type::ROCK, tile_content::NOTHING, 0, 0, true);
+				region.set(x,y,z, get_tile_type_index("rock_default"), get_tile_type_index("nothing"), 0, 0, true);
 			}
 			for (int z=ground_height-soil_height.second; z<ground_height; ++z) {
-				region.set(x,y,z, soil_height.first, tile_content::NOTHING, 0, 0, true);
+				region.set(x,y,z, soil_height.first, get_tile_type_index("nothing"), 0, 0, true);
 			}
 
 			// TODO: Pick an appropriate surface tile here
@@ -729,7 +729,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 
 			// Fill in the sky
 			for (int z=ground_height+1; z<REGION_DEPTH; ++z) {
-				region.set(x,y,z, tile_type::NOTHING, tile_content::NOTHING, 0, 0, false);
+				region.set(x,y,z, get_tile_type_index("nothing"), get_tile_type_index("nothing"), 0, 0, false);
 			}
 		}
 	}
@@ -753,150 +753,150 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
 		for (int y=crash_y - 3; y<crash_y+4; ++y) {
 			int z = get_ground_z(region, x, y);
-			region.tiles[region.idx(x,y,z)].contents = tile_content::NOTHING;
+			region.tiles[region.idx(x,y,z)].contents = get_tile_contents_index("nothing");
 		}
 	}
 
 	// Build the ship structure
 	for (int z=-1; z<2; ++z) {
 		for (int x=crash_x - 5; x<crash_x+4; ++x) {
-				add_construction(region, x, crash_y - 3, crash_z+z, tile_content::SHIP_WALL_EW, true);
-				add_construction(region, x, crash_y + 3, crash_z+z, tile_content::SHIP_WALL_EW, true);
-				add_construction(region, x, crash_y - 3, crash_z+2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y + 3, crash_z+2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y - 3, crash_z-2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y + 3, crash_z-2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y - 3, crash_z+z, "ship_wall_ew", true);
+				add_construction(region, x, crash_y + 3, crash_z+z, "ship_wall_ew", true);
+				add_construction(region, x, crash_y - 3, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y + 3, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y - 3, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y + 3, crash_z-2, "ship_wall", true);
 
-				add_construction(region, x, crash_y - 2, crash_z+z, tile_content::SHIP_FLOOR);
-				add_construction(region, x, crash_y - 1, crash_z+z, tile_content::SHIP_FLOOR);
-				add_construction(region, x, crash_y, crash_z+z, tile_content::SHIP_FLOOR);
-				add_construction(region, x, crash_y + 1, crash_z+z, tile_content::SHIP_FLOOR);
-				add_construction(region, x, crash_y + 2, crash_z+z, tile_content::SHIP_FLOOR);
+				add_construction(region, x, crash_y - 2, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y - 1, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y + 1, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y + 2, crash_z+z, "ship_floor");
 
-				add_construction(region, x, crash_y - 2, crash_z-2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y - 1, crash_z-2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y + 1, crash_z-2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y + 2, crash_z-2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y - 2, crash_z+2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y - 1, crash_z+2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y + 1, crash_z+2, tile_content::SHIP_WALL, true);
-				add_construction(region, x, crash_y + 2, crash_z+2, tile_content::SHIP_WALL, true);
+				add_construction(region, x, crash_y - 2, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y - 1, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y + 1, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y + 2, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y - 2, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y - 1, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y + 1, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y + 2, crash_z+2, "ship_wall", true);
 		}
-		add_construction(region, crash_x-5, crash_y-3, crash_z+z, tile_content::SHIP_WALL_SE, true);
-		add_construction(region, crash_x-5, crash_y-2, crash_z+z, tile_content::SHIP_WALL_NS, true);
-		add_construction(region, crash_x-5, crash_y-1, crash_z+z, tile_content::SHIP_WALL_NS, true);
+		add_construction(region, crash_x-5, crash_y-3, crash_z+z, "ship_wall_se", true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z+z, "ship_wall_ns", true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z+z, "ship_wall_ns", true);
 		if (z !=0) {
-			add_construction(region, crash_x-5, crash_y, crash_z+z, tile_content::SHIP_WALL_NS, true);
+			add_construction(region, crash_x-5, crash_y, crash_z+z, "ship_wall_ns", true);
 		}
-		add_construction(region, crash_x-5, crash_y+1, crash_z+z, tile_content::SHIP_WALL_NS, true);
-		add_construction(region, crash_x-5, crash_y+2, crash_z+z, tile_content::SHIP_WALL_NS, true);
-		add_construction(region, crash_x-5, crash_y+3, crash_z+z, tile_content::SHIP_WALL_NE, true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z+z, "ship_wall_ns", true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z+z, "ship_wall_ns", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+z, "ship_wall_ns", true);
 
-		add_construction(region, crash_x-5, crash_y-3, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y-2, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y+2, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y+3, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y-3, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y-2, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y+2, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x-5, crash_y+3, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x-5, crash_y-3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-3, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+2, "ship_wall", true);
 
-		add_construction(region, crash_x+6, crash_y, crash_z+z, tile_content::SHIP_WALL_NS, true);
-		add_construction(region, crash_x+6, crash_y-1, crash_z+z, tile_content::SHIP_WALL_NW, true);
-		add_construction(region, crash_x+6, crash_y+1, crash_z+z, tile_content::SHIP_WALL_SW, true);
-		add_construction(region, crash_x+5, crash_y-2, crash_z+z, tile_content::SHIP_WALL_NW, true);
-		add_construction(region, crash_x+5, crash_y+2, crash_z+z, tile_content::SHIP_WALL_SW, true);
-		add_construction(region, crash_x+4, crash_y-3, crash_z+z, tile_content::SHIP_WALL_NW, true);
-		add_construction(region, crash_x+4, crash_y+3, crash_z+z, tile_content::SHIP_WALL_SW, true);
+		add_construction(region, crash_x+6, crash_y, crash_z+z, "ship_wall_ns", true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z+z, "ship_wall_nw", true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z+z, "ship_wall_sw", true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z+z, "ship_wall_nw", true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z+z, "ship_wall_sw", true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z+z, "ship_wall_nw", true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z+z, "ship_wall_sw", true);
 
-		add_construction(region, crash_x+6, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+6, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+6, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y-2, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y+2, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-3, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y+3, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+6, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+6, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+6, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y-2, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y+2, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-3, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y+3, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+6, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z+2, "ship_wall", true);
 
-		add_construction(region, crash_x+5, crash_y, crash_z+z, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y-1, crash_z+z, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y+1, crash_z+z, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-2, crash_z+z, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y+2, crash_z+z, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z+z, "ship_wall", true);
 
-		add_construction(region, crash_x+5, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-2, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y+2, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+5, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-2, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y+2, crash_z-2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+5, crash_y, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z-2, "ship_wall", true);
 		
-		add_construction(region, crash_x+4, crash_y+1, crash_z+z, tile_content::SHIP_FLOOR);
-		add_construction(region, crash_x+4, crash_y, crash_z+z, tile_content::SHIP_FLOOR);
-		add_construction(region, crash_x+4, crash_y-1, crash_z+z, tile_content::SHIP_FLOOR);
+		add_construction(region, crash_x+4, crash_y+1, crash_z+z, "ship_floor");
+		add_construction(region, crash_x+4, crash_y, crash_z+z, "ship_floor");
+		add_construction(region, crash_x+4, crash_y-1, crash_z+z, "ship_floor");
 
-		add_construction(region, crash_x+4, crash_y+1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-1, crash_z-2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y+1, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y, crash_z+2, tile_content::SHIP_WALL, true);
-		add_construction(region, crash_x+4, crash_y-1, crash_z+2, tile_content::SHIP_WALL, true);
+		add_construction(region, crash_x+4, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-1, crash_z+2, "ship_wall", true);
 	}
 
-	add_construction(region, crash_x, crash_y, crash_z, tile_content::CORDEX, true);
-	add_construction(region, crash_x-1, crash_y, crash_z, tile_content::SCANNER_CONSOLE, true);
-	add_construction(region, crash_x+1, crash_y, crash_z, tile_content::DEFENSE_CONSOLE, true);
-	add_construction(region, crash_x, crash_y-1, crash_z, tile_content::EDUCATION_CONSOLE, true);
-	add_construction(region, crash_x, crash_y+1, crash_z, tile_content::COMMUNICATIONS_CONSOLE, true);
+	add_construction(region, crash_x, crash_y, crash_z, "cordex", true);
+	add_construction(region, crash_x-1, crash_y, crash_z, "scanner_console", true);
+	add_construction(region, crash_x+1, crash_y, crash_z, "defense_console", true);
+	add_construction(region, crash_x, crash_y-1, crash_z, "education_console", true);
+	add_construction(region, crash_x, crash_y+1, crash_z, "communications_console", true);
 
-	add_construction(region, crash_x+5, crash_y, crash_z-1, tile_content::SHIP_UP);
-	add_construction(region, crash_x+5, crash_y, crash_z, tile_content::SHIP_UPDOWN);
-	add_construction(region, crash_x+5, crash_y, crash_z+1, tile_content::SHIP_DOWN);
+	add_construction(region, crash_x+5, crash_y, crash_z-1, "ship_up");
+	add_construction(region, crash_x+5, crash_y, crash_z, "ship_updown");
+	add_construction(region, crash_x+5, crash_y, crash_z+1, "ship_down");
 
 	// Add solar panels, batteries, RTG, water in the hold, beds, storage cabinets
-	add_construction(region, crash_x-1, crash_y-1, crash_z+2, tile_content::SOLAR_PANEL);
-	add_construction(region, crash_x+1, crash_y-1, crash_z+2, tile_content::SOLAR_PANEL);
-	add_construction(region, crash_x-1, crash_y+1, crash_z+2, tile_content::SOLAR_PANEL);
-	add_construction(region, crash_x+1, crash_y+1, crash_z+2, tile_content::SOLAR_PANEL);
+	add_construction(region, crash_x-1, crash_y-1, crash_z+2, "solar_panel");
+	add_construction(region, crash_x+1, crash_y-1, crash_z+2, "solar_panel");
+	add_construction(region, crash_x-1, crash_y+1, crash_z+2, "solar_panel");
+	add_construction(region, crash_x+1, crash_y+1, crash_z+2, "solar_panel");
 
-	add_construction(region, crash_x - 3, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x - 2, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x - 1, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x + 1, crash_y - 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x - 3, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x - 2, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x - 1, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
-	add_construction(region, crash_x + 1, crash_y + 2, crash_z + 1, tile_content::CRYO_BED);
+	add_construction(region, crash_x - 3, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 2, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 1, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x + 1, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 3, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 2, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 1, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x + 1, crash_y + 2, crash_z + 1, "cryo_bed");
 
-	add_construction(region, crash_x + 3, crash_y + 2, crash_z + 1, tile_content::STORAGE_LOCKER);
-	add_construction(region, crash_x + 3, crash_y - 2, crash_z + 1, tile_content::STORAGE_LOCKER);
+	add_construction(region, crash_x + 3, crash_y + 2, crash_z + 1, "storage_locker");
+	add_construction(region, crash_x + 3, crash_y - 2, crash_z + 1, "storage_locker");
 
-	add_construction(region, crash_x - 4, crash_y+1, crash_z - 1, tile_content::BATTERY);
-	add_construction(region, crash_x - 4, crash_y+2, crash_z - 1, tile_content::BATTERY);
-	add_construction(region, crash_x - 4, crash_y-1, crash_z - 1, tile_content::BATTERY);
-	add_construction(region, crash_x - 4, crash_y-2, crash_z - 1, tile_content::BATTERY);
-	add_construction(region, crash_x - 4, crash_y, crash_z - 1, tile_content::RTG);
-	add_construction(region, crash_x +3, crash_y, crash_z, tile_content::REPLICATOR);
+	add_construction(region, crash_x - 4, crash_y+1, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y+2, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y-1, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y-2, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y, crash_z - 1, "rtg");
+	add_construction(region, crash_x +3, crash_y, crash_z, "replicator");
 
 	// Control components
 	auto camera = create_entity()
