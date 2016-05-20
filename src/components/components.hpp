@@ -5,3 +5,4 @@
 #include "calendar.hpp"
 #include "renderable.hpp"
 #include "name.hpp"
+#include "species.hpp"

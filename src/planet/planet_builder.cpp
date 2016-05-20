@@ -609,9 +609,135 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 }
 
 void create_settler(const int x, const int y, const int z, random_number_generator &rng) {
-	int gender_roll = rng.roll_dice(1, 6);
+	species_t species;
+
+	// Gender
+	int gender_roll = rng.roll_dice(1, 21);
+	if (gender_roll < 10) {
+		species.gender = MALE;
+	} else if (gender_roll < 20) {
+		species.gender = FEMALE;
+	} else {
+		species.gender = HERMAPHRODITE;
+	}
+
+	// Sexuality
+	int sex_roll = rng.roll_dice(1,11);
+	if (sex_roll < 7) {
+		species.sexuality = HETEROSEXUAL;
+	} else if (sex_roll < 10) {
+		species.sexuality = HOMOSEXUAL;
+	} else {
+		species.sexuality = ASEXUAL;
+	}
+
+	// Height/Weight
+	if (species.gender == MALE || species.gender == HERMAPHRODITE)
+	{
+		species.height_cm = 147.0F + (rng.roll_dice(2, 10) * 2.5F);
+		species.weight_kg = 54.0F + (rng.roll_dice(2, 8) * 0.45);
+	}
+	else
+	{
+		species.height_cm = 134.0F + (rng.roll_dice(2, 10) * 2.5F);
+		species.weight_kg = 38.0F + (rng.roll_dice(2, 4) * 0.45);
+	}
+
+	// Hair/etc. this should be made more realistic one day!
+	const int ethnic_roll = rng.roll_dice(1, 4);
+	switch (ethnic_roll)
+	{
+	case 1:
+		species.skin_color = CAUCASIAN;
+		break;
+	case 2:
+		species.skin_color = ASIAN;
+		break;
+	case 3:
+		species.skin_color = INDIAN;
+		break;
+	case 4:
+		species.skin_color = AFRICAN;
+		break;
+	}
+
+	species.bearded = false;
+	if (species.gender == MALE)
+	{
+		const int beard_roll = rng.roll_dice(1, 20);
+		if (beard_roll < 7)
+		{
+			species.bearded = true;
+		}
+		else
+		{
+			species.bearded = false;
+		}
+	}
+
+	const int hair_color_roll = rng.roll_dice(1, 4);
+	switch (hair_color_roll)
+	{
+	case 1:
+		species.hair_color = BLACK_HAIR;
+		break;
+	case 2:
+		species.hair_color = BLONDE_HAIR;
+		break;
+	case 3:
+		species.hair_color = BROWN_HAIR;
+		break;
+	case 4:
+		species.hair_color = WHITE_HAIR;
+		break;
+	}
+
+	species.hair_style = BALD;
+	if (species.gender == MALE)
+	{
+		const int style_roll = rng.roll_dice(1, 5);
+		switch (style_roll)
+		{
+		case 1:
+			species.hair_style = BALD;
+			break;
+		case 2:
+			species.hair_style = BALDING;
+			break;
+		case 3:
+			species.hair_style = MOHAWK;
+			break;
+		case 4:
+			species.hair_style = SHORT;
+			break;
+		case 5:
+			species.hair_style = LONG;
+			break;
+		}
+	}
+	else
+	{
+		const int style_roll = rng.roll_dice(1, 4);
+		switch (style_roll)
+		{
+		case 1:
+			species.hair_style = SHORT;
+			break;
+		case 2:
+			species.hair_style = LONG;
+			break;
+		case 3:
+			species.hair_style = PIGTAILS;
+			break;
+		case 4:
+			species.hair_style = TRIANGLE;
+			break;
+		}
+	}
+
+	// Name
 	std::string first_name;
-	if (gender_roll < 4) {
+	if (species.gender == MALE) {
 		first_name = first_names_female.random_entry(rng);
 	}
 	else 
@@ -624,7 +750,8 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	auto settler = create_entity()
 		->assign(position_t{ x,y,z })
 		->assign(renderable_t{ '@',rltk::colors::YELLOW, rltk::colors::BLACK })
-		->assign(name_t{ first_name, last_name });
+		->assign(name_t{ first_name, last_name })
+		->assign(std::move(species));
 }
 
 void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {
