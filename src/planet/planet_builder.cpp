@@ -610,6 +610,8 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 
 void create_settler(const int x, const int y, const int z, random_number_generator &rng) {
 	species_t species;
+	game_stats_t stats;
+	health_t health;
 
 	// Gender
 	int gender_roll = rng.roll_dice(1, 21);
@@ -747,11 +749,27 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 
 	const std::string last_name = last_names.random_entry(rng);
 
+	// Stats
+	stats.strength = rng.roll_dice(3,6);
+	stats.dexterity = rng.roll_dice(3,6);
+	stats.constitution = rng.roll_dice(3,6);
+	stats.intelligence = rng.roll_dice(3,6);
+	stats.wisdom = rng.roll_dice(3,6);
+	stats.charisma = rng.roll_dice(3,6);
+	stats.comeliness = rng.roll_dice(3,6);
+	stats.ethics = rng.roll_dice(3,6);
+	stats.age = 15 + rng.roll_dice(3,6);
+
+	health.max_hitpoints = 10 + stat_modifier(stats.constitution);
+	health.current_hitpoints = health.max_hitpoints;
+
 	auto settler = create_entity()
 		->assign(position_t{ x,y,z })
 		->assign(renderable_t{ '@',rltk::colors::YELLOW, rltk::colors::BLACK })
 		->assign(name_t{ first_name, last_name })
-		->assign(std::move(species));
+		->assign(std::move(species))
+		->assign(std::move(health))
+		->assign(std::move(stats));
 }
 
 void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {

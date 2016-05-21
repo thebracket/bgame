@@ -10,5 +10,7 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 4 : entity(entity_id)->assign(renderable_t::load(lbfile)); break;
 		case 5 : entity(entity_id)->assign(name_t::load(lbfile)); break;
 		case 6 : entity(entity_id)->assign(species_t::load(lbfile)); break;
+		case 7 : entity(entity_id)->assign(health_t::load(lbfile)); break;
+		case 8 : entity(entity_id)->assign(game_stats_t::load(lbfile)); break;
 	}
 }
