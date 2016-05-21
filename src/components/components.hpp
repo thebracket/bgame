@@ -6,3 +6,5 @@
 #include "renderable.hpp"
 #include "name.hpp"
 #include "species.hpp"
+#include "health.hpp"
+#include "game_stats.hpp"
