@@ -16,6 +16,9 @@ std::unordered_map<std::string, int> tile_type_index;
 std::unordered_map<int, tile_content_t> tile_contents;
 std::unordered_map<std::string, int> tile_contents_index;
 
+std::unordered_map<int, clothing_t> clothing;
+std::unordered_map<std::string, int> clothing_index;
+
 std::vector<std::string> split ( const std::string str, const char delimiter )
 {
      std::vector<std::string> internal;
@@ -144,9 +147,44 @@ void read_tile_contents() {
     }
 }
 
+void read_clothing() {
+    lua_getglobal(lua_state, "clothing");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        clothing_t c;
+
+        std::string key = lua_tostring(lua_state, -2);
+        std::cout << "Clothing item: " << key << "\n";
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "slot") c.slot = lua_tostring(lua_state, -1);
+            if (field == "description") c.description = lua_tostring(lua_state, -1);
+            // TODO: Colors - array
+
+            std::cout << " -- " << field << "\n";
+            lua_pop(lua_state, 1);
+        }
+
+        lua_pop(lua_state, 1);
+    }
+}
+
+void read_professions() {
+
+}
+
 void load_game_tables() {
 	read_tile_types();
 	read_tile_contents();
+    read_clothing();
+    read_professions();
 }
 
 void load_raws() {

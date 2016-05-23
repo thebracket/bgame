@@ -30,6 +30,13 @@ struct tile_content_t {
 	rltk::color_t bg;
 };
 
+struct clothing_t {
+	std::string name;
+	std::vector<std::string> colors;
+	std::string slot;
+	std::string description;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -38,6 +45,9 @@ extern std::unordered_map<int, tile_type_t> tile_types;
 extern std::unordered_map<std::string, int> tile_type_index;
 extern std::unordered_map<int, tile_content_t> tile_contents;
 extern std::unordered_map<std::string, int> tile_contents_index;
+
+extern std::unordered_map<int, clothing_t> clothing;
+extern std::unordered_map<std::string, int> clothing_index;
 
 void load_raws();
 int get_tile_type_index(const std::string name);
