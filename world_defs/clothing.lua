@@ -1,8 +1,18 @@
-var clothing = {
+clothing = {
 	batman_hat = {
 		slot = "head",
 		colors = {"black"},
 		description = "A black helmet with bat-ear protrusions and a face-mask. Be the hero Cordex needs!"
+	},
+	police_hat = {
+		slot = "head",
+		colors = {"black"},
+		description = "A black, flat hat. Typically part of a uniform."
+	},
+	cat_ears = {
+		slot = "head",
+		colors = {"black"},
+		description = "Clip on, prosthetic cat ears (not made from a real cat)."
 	},
 	formal_shirt = {
 		slot = "torso",
