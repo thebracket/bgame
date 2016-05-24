@@ -20,6 +20,7 @@ struct skill_t
 
 struct game_stats_t {
 
+	std::string profession_tag;
 	short strength;
 	short dexterity;
 	short constitution;
@@ -36,6 +37,7 @@ struct game_stats_t {
 	std::size_t serialization_identity = 8;
 
 	void save(std::ostream &lbfile) {
+		serialize(lbfile, profession_tag);
 		serialize(lbfile, strength);
 		serialize(lbfile, dexterity);
 		serialize(lbfile, constitution);
@@ -54,6 +56,7 @@ struct game_stats_t {
 
 	static game_stats_t load(std::istream &lbfile) {
 		game_stats_t c;
+		deserialize(lbfile, c.profession_tag);
 		deserialize(lbfile, c.strength);
 		deserialize(lbfile, c.dexterity);
 		deserialize(lbfile, c.constitution);

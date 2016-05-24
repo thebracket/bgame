@@ -749,15 +749,20 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 
 	const std::string last_name = last_names.random_entry(rng);
 
+	// Profession
+	const int number_of_professions = starting_professions.size();
+	const std::size_t selected_profession = rng.roll_dice(1,number_of_professions)-1;
+	stats.profession_tag = starting_professions[selected_profession].name;
+
 	// Stats
-	stats.strength = rng.roll_dice(3,6);
-	stats.dexterity = rng.roll_dice(3,6);
-	stats.constitution = rng.roll_dice(3,6);
-	stats.intelligence = rng.roll_dice(3,6);
-	stats.wisdom = rng.roll_dice(3,6);
-	stats.charisma = rng.roll_dice(3,6);
-	stats.comeliness = rng.roll_dice(3,6);
-	stats.ethics = rng.roll_dice(3,6);
+	stats.strength = rng.roll_dice(3,6) + starting_professions[selected_profession].strength;
+	stats.dexterity = rng.roll_dice(3,6) + starting_professions[selected_profession].dexterity;
+	stats.constitution = rng.roll_dice(3,6) + starting_professions[selected_profession].constitution;
+	stats.intelligence = rng.roll_dice(3,6) + starting_professions[selected_profession].intelligence;
+	stats.wisdom = rng.roll_dice(3,6)  + starting_professions[selected_profession].wisdom;
+	stats.charisma = rng.roll_dice(3,6)  + starting_professions[selected_profession].charisma;
+	stats.comeliness = rng.roll_dice(3,6)  + starting_professions[selected_profession].comeliness;
+	stats.ethics = rng.roll_dice(3,6)  + starting_professions[selected_profession].ethics;
 	stats.age = 15 + rng.roll_dice(3,6);
 
 	health.max_hitpoints = 10 + stat_modifier(stats.constitution);
@@ -770,6 +775,21 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 		->assign(std::move(species))
 		->assign(std::move(health))
 		->assign(std::move(stats));
+
+	// TODO: Create clothing items
+	//std::cout << settler->id << "\n";
+	for (auto item : starting_professions[selected_profession].starting_clothes) {
+		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
+			std::string item_name = std::get<2>(item);
+			std::string slot_name = std::get<1>(item);
+			item_location_t position = INVENTORY;
+			if (slot_name == "head") position = HEAD;
+			if (slot_name == "torso") position = TORSO;
+			if (slot_name == "legs") position = LEGS;
+			if (slot_name == "shoes") position = FEET;
+			create_entity()->assign(item_t{item_name})->assign(item_carried_t{position, settler->id});
+		}
+	}
 }
 
 void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {
