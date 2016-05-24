@@ -957,7 +957,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 		}
 		add_construction(region, crash_x-5, crash_y+1, crash_z+z, "ship_wall_ns", true);
 		add_construction(region, crash_x-5, crash_y+2, crash_z+z, "ship_wall_ns", true);
-		add_construction(region, crash_x-5, crash_y+3, crash_z+z, "ship_wall_ns", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+z, "ship_wall_ne", true);
 
 		add_construction(region, crash_x-5, crash_y-3, crash_z-2, "ship_wall", true);
 		add_construction(region, crash_x-5, crash_y-2, crash_z-2, "ship_wall", true);
