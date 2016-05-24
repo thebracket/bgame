@@ -17,6 +17,7 @@ std::unordered_map<int, tile_content_t> tile_contents;
 std::unordered_map<std::string, int> tile_contents_index;
 
 std::unordered_map<std::string, clothing_t> clothing_types;
+std::vector<profession_t> starting_professions;
 
 std::vector<std::string> split ( const std::string str, const char delimiter )
 {
@@ -183,7 +184,64 @@ void read_clothing() {
 }
 
 void read_professions() {
+    lua_getglobal(lua_state, "starting_professions");
+    lua_pushnil(lua_state);
 
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+        profession_t p;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+            if (field == "name") p.name = lua_tostring(lua_state, -1);
+            // Stat mods
+            if (field == "modifiers") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string stat = lua_tostring(lua_state, -2);
+                    int modifier = lua_tonumber(lua_state, -1);
+                    if (stat == "str") p.strength = modifier;
+                    if (stat == "dex") p.dexterity = modifier;
+                    if (stat == "con") p.constitution = modifier;
+                    if (stat == "int") p.intelligence = modifier;
+                    if (stat == "wis") p.wisdom = modifier;
+                    if (stat == "cha") p.charisma = modifier;
+                    if (stat == "com") p.comeliness = modifier;
+                    if (stat == "eth") p.ethics = modifier;
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            // Starting clothes
+            if (field == "clothing") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    const std::string gender_specifier = lua_tostring(lua_state, -2);
+                    lua_pushstring(lua_state, gender_specifier.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        const std::string slot = lua_tostring(lua_state, -2);
+                        const std::string item = lua_tostring(lua_state, -1);
+                        int gender_tag = 0;
+                        if (gender_specifier == "male") gender_tag = 1;
+                        if (gender_specifier == "female") gender_tag = 2;
+                        p.starting_clothes.push_back( std::make_tuple(gender_tag, slot, item));
+                        lua_pop(lua_state, 1);
+                    }
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+        starting_professions.push_back(p);
+        lua_pop(lua_state, 1);
+    }
 }
 
 void load_game_tables() {
