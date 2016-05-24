@@ -37,6 +37,19 @@ struct clothing_t {
 	std::string description;
 };
 
+struct profession_t {
+	std::string name;	
+	short strength = 0;
+	short dexterity = 0;
+	short constitution = 0;
+	short intelligence = 0;
+	short wisdom = 0;
+	short charisma = 0;
+	short comeliness = 0;
+	short ethics;
+	std::vector< std::pair< uint8_t, std::string >> starting_clothes;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
