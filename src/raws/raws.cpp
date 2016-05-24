@@ -16,8 +16,7 @@ std::unordered_map<std::string, int> tile_type_index;
 std::unordered_map<int, tile_content_t> tile_contents;
 std::unordered_map<std::string, int> tile_contents_index;
 
-std::unordered_map<int, clothing_t> clothing;
-std::unordered_map<std::string, int> clothing_index;
+std::unordered_map<std::string, clothing_t> clothing_types;
 
 std::vector<std::string> split ( const std::string str, const char delimiter )
 {
@@ -156,7 +155,6 @@ void read_clothing() {
         clothing_t c;
 
         std::string key = lua_tostring(lua_state, -2);
-        std::cout << "Clothing item: " << key << "\n";
 
         lua_pushstring(lua_state, key.c_str());
         lua_gettable(lua_state, -2);
@@ -166,11 +164,19 @@ void read_clothing() {
             if (field == "name") c.name = lua_tostring(lua_state, -1);
             if (field == "slot") c.slot = lua_tostring(lua_state, -1);
             if (field == "description") c.description = lua_tostring(lua_state, -1);
-            // TODO: Colors - array
+            if (field == "colors") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string color = lua_tostring(lua_state, -1);
+                    c.colors.push_back(color);
+                    lua_pop(lua_state, 1);
+                }
+            }
 
-            std::cout << " -- " << field << "\n";
             lua_pop(lua_state, 1);
         }
+        clothing_types[key] = c;
 
         lua_pop(lua_state, 1);
     }
