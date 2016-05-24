@@ -1,8 +1,16 @@
 #include "map_render_system.hpp"
 #include "../raws/raws.hpp"
+#include "../messages/messages.hpp"
 #include <iostream>
 
 using namespace rltk;
+
+void map_render_system::configure() {
+	subscribe<renderables_changed_message>([this](renderables_changed_message &msg) {
+		this->renderables_changed = true;
+	});
+	renderables_changed = true;
+}
 
 void map_render_system::update(const double duration_ms) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -44,12 +52,14 @@ void map_render_system::update(const double duration_ms) {
 
 	if (clip_left == -1) update_clipping_rectangle();
 
-	for (auto i : renderables) {
-		i.reset();
+	if (renderables_changed) {
+		for (auto i : renderables) {
+			i.reset();
+		}
+		each<renderable_t, position_t>([this] (entity_t &entity, renderable_t &render, position_t &pos) {
+			this->renderables[current_region.idx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
+		});
 	}
-	each<renderable_t, position_t>([this] (entity_t &entity, renderable_t &render, position_t &pos) {
-		this->renderables[current_region.idx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
-	});
 
 	if (dirty) {
 		term(1)->clear();
