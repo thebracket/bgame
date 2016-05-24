@@ -8,3 +8,5 @@
 #include "species.hpp"
 #include "health.hpp"
 #include "game_stats.hpp"
+#include "item.hpp"
+#include "item_carried.hpp"
