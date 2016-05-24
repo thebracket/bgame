@@ -46,8 +46,7 @@ extern std::unordered_map<std::string, int> tile_type_index;
 extern std::unordered_map<int, tile_content_t> tile_contents;
 extern std::unordered_map<std::string, int> tile_contents_index;
 
-extern std::unordered_map<int, clothing_t> clothing;
-extern std::unordered_map<std::string, int> clothing_index;
+extern std::unordered_map<std::string, clothing_t> clothing_types;
 
 void load_raws();
 int get_tile_type_index(const std::string name);

@@ -53,6 +53,12 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "yellow"},
 		description = "A sporting shirt, showing the colors of your favorite team."
 	},
+	t_shirt = {
+		name = "T-Shirt",
+		slot = "torso",
+		colors = {"red", "blue", "yellow", "grey", "green", "yellow"},
+		description = "A sleeveless T-shirt, with a witty message on it."
+	},
 	cargo_pants = {
 		name = "Cargo Pants",
 		slot = "legs",
