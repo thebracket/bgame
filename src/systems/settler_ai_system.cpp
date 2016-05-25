@@ -1,6 +1,7 @@
 #include "settler_ai_system.hpp"
 #include "../messages/messages.hpp"
 #include "../components/components.hpp"
+#include "../game_globals.hpp"
 #include <iostream>
 
 using namespace rltk;
@@ -13,7 +14,13 @@ void settler_ai_system::configure() {
 		each<settler_ai_t, game_stats_t, species_t, position_t, name_t>([] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
 			species_t &species, position_t &pos, name_t &name) 
 		{
-			std::cout << name.first_name << " is thinking.\n";
+			if (ai.initiative < 1) {
+				//std::cout << name.first_name << " " << name.last_name << " (" << stats.profession_tag << ") is thinking.\n";
+
+				ai.initiative = rng.roll_dice(1, 6) - stat_modifier(stats.dexterity);
+			} else {
+				--ai.initiative;
+			}
 		});
 	});
 }
