@@ -54,7 +54,10 @@ void play_game::init() {
 
 	// Setup systems
 	add_system<calendar_system>();
+	add_system<settler_ai_system>();
 	add_system<map_render_system>();
+
+	ecs_configure();
 }
 
 void play_game::destroy() {
