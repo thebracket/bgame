@@ -7,7 +7,7 @@
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
 constexpr int REGION_DEPTH=128;
-constexpr int TILE_OPTIONS_COUNT = 14;
+constexpr int TILE_OPTIONS_COUNT = 15;
 
 namespace tile_flags {
 
@@ -25,6 +25,7 @@ constexpr int CAN_GO_SOUTH = 10;
 constexpr int CAN_GO_SOUTH_WEST = 11;
 constexpr int CAN_GO_WEST = 12;
 constexpr int CAN_GO_NORTH_WEST = 13;
+constexpr int CAN_STAND_HERE = 14;
 
 }
 
@@ -55,6 +56,10 @@ struct region_t {
 			tiles[loc].flags.reset(tile_flags::SOLID);
 		}
 	}
+
+	void determine_tile_standability(const int &x, const int &y, const int &z);
+	void determine_tile_connectivity(const int &x, const int &y, const int &z);
+	void determine_connectivity();
 };
 
 void save_region(const region_t &region);
