@@ -3,6 +3,7 @@
 #include "planet/planet.hpp"
 #include "planet/region.hpp"
 #include "components/components.hpp"
+#include <rltk.hpp>
 
 extern planet_t planet;
 extern region_t current_region;
@@ -13,3 +14,4 @@ extern int clip_left;
 extern int clip_right;
 extern int clip_top;
 extern int clip_bottom;
+extern rltk::random_number_generator rng;
