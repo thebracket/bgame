@@ -1087,6 +1087,12 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 
 	// Initial inventory
 
+	// Connectivity
+	planet_builder_lock.lock();
+	planet_builder_status = "Looking for the map";
+	planet_builder_lock.unlock();
+	region.determine_connectivity();
+
 	// Save the region
 	planet_builder_lock.lock();
 	planet_builder_status = "Saving " + region_name + " to disk";
