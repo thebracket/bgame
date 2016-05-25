@@ -37,6 +37,7 @@ add_executable(bgame main.cpp
 	components/loader.cpp
 	systems/map_render_system.cpp
 	systems/calendar_system.cpp
+	systems/settler_ai_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

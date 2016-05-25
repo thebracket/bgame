@@ -15,5 +15,6 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 8 : entity(entity_id)->assign(game_stats_t::load(lbfile)); break;
 		case 9 : entity(entity_id)->assign(item_t::load(lbfile)); break;
 		case 10 : entity(entity_id)->assign(item_carried_t::load(lbfile)); break;
+		case 11 : entity(entity_id)->assign(settler_ai_t::load(lbfile)); break;
 	}
 }

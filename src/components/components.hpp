@@ -10,3 +10,4 @@
 #include "game_stats.hpp"
 #include "item.hpp"
 #include "item_carried.hpp"
+#include "settler_ai.hpp"

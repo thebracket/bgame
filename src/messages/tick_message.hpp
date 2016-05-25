@@ -1,5 +1,7 @@
 #pragma once
 
-struct tick_message : public base_message_t {
+#include <rltk.hpp>
+
+struct tick_message : public rltk::base_message_t {
 
 };

@@ -774,7 +774,8 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 		->assign(name_t{ first_name, last_name })
 		->assign(std::move(species))
 		->assign(std::move(health))
-		->assign(std::move(stats));
+		->assign(std::move(stats))
+		->assign(settler_ai_t{});
 
 	// TODO: Create clothing items
 	//std::cout << settler->id << "\n";

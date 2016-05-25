@@ -1,5 +1,7 @@
 #pragma once
 
-struct renderables_changed_message : public base_message_t {
+#include <rltk.hpp>
+
+struct renderables_changed_message : public rltk::base_message_t {
 
 };

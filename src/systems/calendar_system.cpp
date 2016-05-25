@@ -9,7 +9,7 @@ void calendar_system::update(const double duration_ms) {
 		time_count = 0.0;
 
 		calendar->next_minute();
-		//emit(tick_message{});
+		emit(tick_message{});
 
 		// Update the calendar display
 		term(2)->clear();
