@@ -601,9 +601,11 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 	const int idx = region.idx(x,y,z);
 	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
 	if (solid) {
-		region.tiles[idx].flags.reset(tile_flags::SOLID);
+		region.tiles[idx].flags.set(tile_flags::SOLID);
+		region.tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
 	} else {
 		region.tiles[idx].flags.reset(tile_flags::SOLID);
+		region.tiles[idx].flags.set(tile_flags::CAN_STAND_HERE);
 	}
 	region.tiles[idx].contents = get_tile_contents_index(type);
 }
@@ -1066,7 +1068,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 
 	// Control components
 	auto camera = create_entity()
-		->assign(world_position_t{location.first, location.second, crash_x, crash_y, crash_z})
+		->assign(world_position_t{location.first, location.second, crash_x, crash_y, crash_z+1})
 		->assign(calendar_t{});
 
 	// Settler building
@@ -1074,16 +1076,16 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	planet_builder_status = "Determining initial local populations";
 	planet_builder_lock.unlock();
 
-	create_settler(crash_x - 3, crash_y - 1, crash_z + 1, rng);
-	create_settler(crash_x - 2, crash_y - 1, crash_z + 1, rng);
-	create_settler(crash_x - 1, crash_y - 1, crash_z + 1, rng);
-	create_settler(crash_x, crash_y - 1, crash_z + 1, rng);
-	create_settler(crash_x + 1, crash_y - 1, crash_z + 1, rng);
-	create_settler(crash_x - 3, crash_y + 1, crash_z + 1, rng);
-	create_settler(crash_x - 2, crash_y + 1, crash_z + 1, rng);
-	create_settler(crash_x - 1, crash_y + 1, crash_z + 1, rng);
-	create_settler(crash_x, crash_y + 1, crash_z + 1, rng);
-	create_settler(crash_x + 1, crash_y + 1, crash_z + 1, rng);
+	create_settler(crash_x - 3, crash_y - 1, crash_z+1, rng);
+	create_settler(crash_x - 2, crash_y - 1, crash_z+1, rng);
+	create_settler(crash_x - 1, crash_y - 1, crash_z+1, rng);
+	create_settler(crash_x, crash_y - 1, crash_z+1, rng);
+	create_settler(crash_x + 1, crash_y - 1, crash_z+1, rng);
+	create_settler(crash_x - 3, crash_y + 1, crash_z+1, rng);
+	create_settler(crash_x - 2, crash_y + 1, crash_z+1, rng);
+	create_settler(crash_x - 1, crash_y + 1, crash_z+1, rng);
+	create_settler(crash_x, crash_y + 1, crash_z+1, rng);
+	create_settler(crash_x + 1, crash_y + 1, crash_z+1, rng);
 
 	// Initial inventory
 

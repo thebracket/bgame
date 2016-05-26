@@ -54,10 +54,11 @@ void region_t::determine_tile_standability(const int &x, const int &y, const int
 	const bool solid = tiles[index].flags.test(tile_flags::SOLID);
 	const bool above_solid = tiles[index_above].flags.test(tile_flags::SOLID);
 
-	if (solid && !above_solid) {
-		tiles[index].flags.set(tile_flags::CAN_STAND_HERE);
-	} else {
+	// TODO: This isn't right!
+	if (solid) {
 		tiles[index].flags.reset(tile_flags::CAN_STAND_HERE);
+	} else {
+		tiles[index].flags.set(tile_flags::CAN_STAND_HERE);
 	}
 
 	// You can stand on stairs
@@ -85,16 +86,25 @@ void region_t::determine_tile_connectivity(const int &x, const int &y, const int
 		tiles[index].flags.reset(tile_flags::CAN_GO_NORTH_WEST);
 		tiles[index].flags.reset(tile_flags::CAN_GO_UP);
 		tiles[index].flags.reset(tile_flags::CAN_GO_DOWN);
+		tiles[index].flags.reset(tile_flags::CAN_STAND_HERE);
 	} else {
 		// Check each of the directions to see if the destination is open
-		if (y>1 && tiles[idx(x,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_NORTH);
-		if (y<REGION_HEIGHT-1 && tiles[idx(x,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_SOUTH);
-		if (x<REGION_WIDTH-1 && tiles[idx(x+1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_EAST);
-		if (x>1 && tiles[idx(x-1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_WEST);
-		if (y>1 && x>1 && tiles[idx(x-1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_NORTH_WEST);
-		if (y>1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_NORTH_EAST);
-		if (y<REGION_HEIGHT-1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_EAST);
-		if (y<REGION_HEIGHT-1 && x>1 && tiles[idx(x+1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_WEST);
+		if (y>1 && tiles[idx(x,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_NORTH);
+		if (y<REGION_HEIGHT-1 && tiles[idx(x,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_SOUTH);
+		if (x<REGION_WIDTH-1 && tiles[idx(x+1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_EAST);
+		if (x>1 && tiles[idx(x-1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_WEST);
+		if (y>1 && x>1 && tiles[idx(x-1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_NORTH_WEST);
+		if (y>1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_NORTH_EAST);
+		if (y<REGION_HEIGHT-1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_EAST);
+		if (y<REGION_HEIGHT-1 && x>1 && tiles[idx(x-1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+			tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_WEST);
 
 		// Stairs gain can_go flags based on type
 		if (tiles[index].flags.test(tile_flags::CONSTRUCTION)) {
@@ -121,6 +131,8 @@ void region_t::determine_connectivity() {
 		for (int y=0; y<REGION_HEIGHT; ++y) {
 			for (int x=0; x<REGION_WIDTH; ++x) {
 				determine_tile_connectivity(x, y, z);
+				//if (tiles[idx(x,y,z)].flags.test(tile_flags::CONSTRUCTION))
+				//	std::cout << tiles[idx(x,y,z)].flags << "\n";
 			}
 		}
 	}
