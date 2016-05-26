@@ -1,6 +1,7 @@
 #include "region.hpp"
 #include <rltk.hpp>
 #include <string>
+#include "../raws/raws.hpp"
 //#include <Poco/InflatingStream.h>
 //#include <Poco/DeflatingStream.h>
 
@@ -59,7 +60,14 @@ void region_t::determine_tile_standability(const int &x, const int &y, const int
 		tiles[index].flags.reset(tile_flags::CAN_STAND_HERE);
 	}
 
-	// TODO: CHECK FOR STAIRS
+	// You can stand on stairs
+	if (tiles[index].flags.test(tile_flags::CONSTRUCTION)) {
+		const int content_idx = tiles[index].contents;
+		auto finder = tile_contents.find(tiles[index].contents);
+		if (finder != tile_contents.end()) {
+			if (finder->second.stairs != 0) tiles[index].flags.set(tile_flags::CAN_STAND_HERE);
+		}
+	}
 }
 
 void region_t::determine_tile_connectivity(const int &x, const int &y, const int &z) {
@@ -86,9 +94,17 @@ void region_t::determine_tile_connectivity(const int &x, const int &y, const int
 		if (y>1 && x>1 && tiles[idx(x-1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_NORTH_WEST);
 		if (y>1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_NORTH_EAST);
 		if (y<REGION_HEIGHT-1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_EAST);
-		if (y<REGION_HEIGHT-1 && x>1 && tiles[idx(x+1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_WEST);
+		if (y<REGION_HEIGHT-1 && x>1 && tiles[idx(x+1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_WEST);
 
-		// TODO: Check for stairs
+		// Stairs gain can_go flags based on type
+		if (tiles[index].flags.test(tile_flags::CONSTRUCTION)) {
+			const int content_idx = tiles[index].contents;
+			auto finder = tile_contents.find(tiles[index].contents);
+			if (finder != tile_contents.end()) {
+				if ((finder->second.stairs == 1 || finder->second.stairs == 2)) tiles[index].flags.set(tile_flags::CAN_GO_UP);
+				if ((finder->second.stairs == 1 || finder->second.stairs == 3)) tiles[index].flags.set(tile_flags::CAN_GO_DOWN);
+			}
+		}
 	}
 }
 

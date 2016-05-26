@@ -50,9 +50,11 @@ tile_content = {
 	ship_wall_nw = { index = 4106, glyph = glyphs['double_wall_nw'], foreground = colors['white'], background = colors['black'] },
 	ship_wall_sw = { index = 4107, glyph = glyphs['double_wall_sw'], foreground = colors['white'], background = colors['black'] },
 	ship_wall = { index = 4108, glyph = glyphs['solid_square'], foreground = colors['white'], background = colors['black'] },
-	ship_updown = { index = 4109, glyph = glyphs['X'], foreground = colors['white'], background = colors['black']},
-	ship_down = { index = 4110, glyph = glyphs['greater_than'], foreground = colors['white'], background = colors['black'] },
-	ship_up = { index = 4111, glyph = glyphs['less_than'], foreground = colors['white'], background = colors['black'] },
+
+	ship_updown = { index = 4109, glyph = glyphs['X'], foreground = colors['white'], background = colors['black'], stairs='updown'},
+	ship_down = { index = 4110, glyph = glyphs['greater_than'], foreground = colors['white'], background = colors['black'], stairs='down' },
+	ship_up = { index = 4111, glyph = glyphs['less_than'], foreground = colors['white'], background = colors['black'], stairs='up' },
+
 	solar_panel = { index = 4112, glyph = glyphs['one_quarter_solid'], foreground = colors['yellow'], background = colors['cyan'] },
 	cryo_bed = { index = 4113, glyph = glyphs['zero'], foreground = colors['white'], background = colors['black'] },
 	storage_locker = { index = 4114, glyph = glyphs['infinity'], foreground = colors['white'], background = colors['black'] },
