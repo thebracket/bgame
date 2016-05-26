@@ -29,6 +29,7 @@ struct tile_content_t {
 	uint8_t glyph;
 	rltk::color_t fg;
 	rltk::color_t bg;
+	uint8_t stairs = 0;
 };
 
 struct clothing_t {

@@ -136,6 +136,12 @@ void read_tile_contents() {
     		if (field == "glyph") tt.glyph = lua_tonumber(lua_state, -1);
     		if (field == "background") tt.bg = read_lua_color("background");
     		if (field == "foreground") tt.fg = read_lua_color("foreground");
+            if (field == "stairs") {
+                std::string stairs_type = lua_tostring(lua_state, -1);
+                if (stairs_type == "updown") tt.stairs = 1;
+                if (stairs_type == "up") tt.stairs = 2;
+                if (stairs_type == "down") tt.stairs = 3;
+            }
     		lua_pop(lua_state, 1);
     	}
 
