@@ -53,12 +53,13 @@ void map_render_system::update(const double duration_ms) {
 	if (clip_left == -1) update_clipping_rectangle();
 
 	if (renderables_changed) {
-		for (auto i : renderables) {
+		for (auto &i : renderables) {
 			i.reset();
 		}
 		each<renderable_t, position_t>([this] (entity_t &entity, renderable_t &render, position_t &pos) {
 			this->renderables[current_region.idx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
 		});
+		dirty = true;
 	}
 
 	if (dirty) {
