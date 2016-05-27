@@ -5,6 +5,8 @@
 #include "components/components.hpp"
 #include <rltk.hpp>
 
+enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };
+
 extern planet_t planet;
 extern region_t current_region;
 extern std::size_t camera_entity;
@@ -15,3 +17,4 @@ extern int clip_right;
 extern int clip_top;
 extern int clip_bottom;
 extern rltk::random_number_generator rng;
+extern pause_mode_t pause_mode;
