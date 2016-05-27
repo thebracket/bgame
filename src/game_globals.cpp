@@ -10,3 +10,4 @@ int clip_right = -1;
 int clip_top = -1;
 int clip_bottom = -1;
 rltk::random_number_generator rng;
+pause_mode_t pause_mode = PAUSED;

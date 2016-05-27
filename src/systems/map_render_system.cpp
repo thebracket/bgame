@@ -37,13 +37,13 @@ void map_render_system::update(const double duration_ms) {
 		dirty = true;
 		update_clipping_rectangle();
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))) {
 		--camera_position->region_z;
 		if (camera_position->region_z < 0) camera_position->region_z = 0;
 		dirty = true;
 		update_clipping_rectangle();
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))) {
 		++camera_position->region_z;
 		if (camera_position->region_z > REGION_DEPTH) camera_position->region_z = REGION_DEPTH;
 		dirty = true;
