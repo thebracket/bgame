@@ -18,14 +18,10 @@ constexpr int CONSTRUCTION = 3;
 constexpr int CAN_GO_UP = 4;
 constexpr int CAN_GO_DOWN = 5;
 constexpr int CAN_GO_NORTH = 6;
-constexpr int CAN_GO_NORTH_EAST = 7;
-constexpr int CAN_GO_EAST = 8;
-constexpr int CAN_GO_SOUTH_EAST = 9;
-constexpr int CAN_GO_SOUTH = 10;
-constexpr int CAN_GO_SOUTH_WEST = 11;
-constexpr int CAN_GO_WEST = 12;
-constexpr int CAN_GO_NORTH_WEST = 13;
-constexpr int CAN_STAND_HERE = 14;
+constexpr int CAN_GO_EAST = 7;
+constexpr int CAN_GO_SOUTH = 8;
+constexpr int CAN_GO_WEST = 9;
+constexpr int CAN_STAND_HERE = 10;
 
 }
 

@@ -77,13 +77,9 @@ void region_t::determine_tile_connectivity(const int &x, const int &y, const int
 	if (solid) {
 		// It's solid - so we can't go anywhere!
 		tiles[index].flags.reset(tile_flags::CAN_GO_NORTH);
-		tiles[index].flags.reset(tile_flags::CAN_GO_NORTH_EAST);
 		tiles[index].flags.reset(tile_flags::CAN_GO_EAST);
-		tiles[index].flags.reset(tile_flags::CAN_GO_SOUTH_EAST);
 		tiles[index].flags.reset(tile_flags::CAN_GO_SOUTH);
-		tiles[index].flags.reset(tile_flags::CAN_GO_SOUTH_WEST);
 		tiles[index].flags.reset(tile_flags::CAN_GO_WEST);
-		tiles[index].flags.reset(tile_flags::CAN_GO_NORTH_WEST);
 		tiles[index].flags.reset(tile_flags::CAN_GO_UP);
 		tiles[index].flags.reset(tile_flags::CAN_GO_DOWN);
 		tiles[index].flags.reset(tile_flags::CAN_STAND_HERE);
@@ -97,14 +93,6 @@ void region_t::determine_tile_connectivity(const int &x, const int &y, const int
 			tiles[index].flags.set(tile_flags::CAN_GO_EAST);
 		if (x>1 && tiles[idx(x-1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
 			tiles[index].flags.set(tile_flags::CAN_GO_WEST);
-		if (y>1 && x>1 && tiles[idx(x-1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
-			tiles[index].flags.set(tile_flags::CAN_GO_NORTH_WEST);
-		if (y>1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
-			tiles[index].flags.set(tile_flags::CAN_GO_NORTH_EAST);
-		if (y<REGION_HEIGHT-1 && x<REGION_WIDTH-1 && tiles[idx(x+1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
-			tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_EAST);
-		if (y<REGION_HEIGHT-1 && x>1 && tiles[idx(x-1,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
-			tiles[index].flags.set(tile_flags::CAN_GO_SOUTH_WEST);
 
 		// Stairs gain can_go flags based on type
 		if (tiles[index].flags.test(tile_flags::CONSTRUCTION)) {
