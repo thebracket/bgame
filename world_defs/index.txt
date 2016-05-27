@@ -3,3 +3,4 @@ tile_types.lua
 tile_content.lua
 clothing.lua
 starting_professions.lua
+items.lua

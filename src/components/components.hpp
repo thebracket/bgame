@@ -11,3 +11,4 @@
 #include "item.hpp"
 #include "item_carried.hpp"
 #include "settler_ai.hpp"
+#include "item_stored.hpp"
