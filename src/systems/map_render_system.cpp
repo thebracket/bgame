@@ -69,8 +69,7 @@ void map_render_system::update(const double duration_ms) {
 		for (int y=clip_top; y<clip_bottom; ++y) {
 			int X = 0;
 			for (int x=clip_left; x<clip_right; ++x) {
-				const int map_idx = current_region.idx(x, y, camera_position->region_z);
-				term(1)->set_char(X, Y, get_render_char(map_idx));
+				term(1)->set_char(X, Y, get_render_char(x, y, camera_position->region_z));
 
 				++X;
 			}
@@ -110,22 +109,39 @@ vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const
 	}
 }
 
-vchar map_render_system::get_render_char(const int idx) const {
-	if (renderables[idx]) return renderables[idx].get();
+vchar map_render_system::get_render_char(const int x, const int y, const int z) const {
 
-	if (current_region.tiles[idx].flags.test(tile_flags::SOLID) && !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
-		return get_render_char_for_base(current_region.tiles[idx].base_type);
-	} else {
-		if (current_region.tiles[idx].contents == 0) {
-			return get_render_char_for_base(current_region.tiles[idx].base_type);
+	int dive_depth = 0;
+	boost::optional<vchar> result;
+
+	while (dive_depth < 5 && !result) {
+		const int idx = current_region.idx(x, y, z-dive_depth);
+
+		if (renderables[idx]) result = renderables[idx].get();
+
+		if (!result && current_region.tiles[idx].flags.test(tile_flags::SOLID) && !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION) && current_region.tiles[idx].base_type > 0) {
+			result=get_render_char_for_base(current_region.tiles[idx].base_type);
 		} else {
-			auto finder = tile_contents.find(current_region.tiles[idx].contents);
-			if (finder != tile_contents.end()) {
-				return vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
-			} else {
-				return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
+			if (!result) {
+				if (current_region.tiles[idx].contents>0) {
+					auto finder = tile_contents.find(current_region.tiles[idx].contents);
+					if (finder != tile_contents.end()) {
+						result = vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
+					} else {
+						result = vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
+					}
+				}
 			}
 		}
+		++dive_depth;
 	}
-	return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
+	if (!result) {
+		return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
+	} else {
+		const int darken_amount = (dive_depth-1) * 40;
+		vchar darkened = result.get();
+		darkened.foreground = darken(darken_amount, darkened.foreground);
+		darkened.background = darken(darken_amount, darkened.background);
+		return darkened;
+	}
 }

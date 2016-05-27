@@ -14,7 +14,7 @@ private:
 	bool dirty = true;
 	bool renderables_changed = true;
 	void update_clipping_rectangle();
-	rltk::vchar get_render_char(const int idx) const;
+	rltk::vchar get_render_char(const int x, const int y, const int z) const;
 	rltk::vchar get_render_char_for_base(const uint8_t base_type) const;
 	std::vector<boost::optional<rltk::vchar>> renderables;
 };
