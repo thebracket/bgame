@@ -21,8 +21,11 @@ glyphs = {
 	double_wall_se = 201,
 	double_wall_ew = 205,
 	sigma = 228,
+	kit = 233,
 	infinity = 236,
 	plus_minus = 241,
+	axe = 244,
+	pick = 245,
 	double_pillar = 246,
 	double_wave = 247
 }
