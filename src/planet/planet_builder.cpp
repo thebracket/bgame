@@ -893,7 +893,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 			}
 
 			// TODO: Pick an appropriate surface tile here
-			region.set(x,y,ground_height, soil_height.first, planet_builder_covering(biome, rng, ground_height < planet.water_height/30), 0, 0, false);
+			region.set(x, y, ground_height, soil_height.first, planet_builder_covering(biome, rng, ground_height < planet.water_height/30), 0, 0, false);
 
 			// Fill in the sky
 			for (int z=ground_height+1; z<REGION_DEPTH; ++z) {

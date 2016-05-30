@@ -17,6 +17,7 @@ struct string_table_t {
 
 struct tile_type_t {
 	std::string name = "";
+	std::string nice_name = "";
 	int index;
 	uint8_t glyph;
 	rltk::color_t fg;
@@ -25,6 +26,7 @@ struct tile_type_t {
 
 struct tile_content_t {
 	std::string name = "";
+	std::string nice_name = "";
 	int index;
 	uint8_t glyph;
 	rltk::color_t fg;
@@ -56,14 +58,14 @@ extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
 
-extern std::unordered_map<int, tile_type_t> tile_types;
-extern std::unordered_map<std::string, int> tile_type_index;
-extern std::unordered_map<int, tile_content_t> tile_contents;
-extern std::unordered_map<std::string, int> tile_contents_index;
+extern std::unordered_map<uint8_t, tile_type_t> tile_types;
+extern std::unordered_map<std::string, uint8_t> tile_type_index;
+extern std::unordered_map<uint16_t, tile_content_t> tile_contents;
+extern std::unordered_map<std::string, uint16_t> tile_contents_index;
 
 extern std::unordered_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;
 
 void load_raws();
-int get_tile_type_index(const std::string name);
-int get_tile_contents_index(const std::string name);
+uint8_t get_tile_type_index(const std::string name);
+uint16_t get_tile_contents_index(const std::string name);

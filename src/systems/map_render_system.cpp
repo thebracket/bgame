@@ -131,6 +131,7 @@ vchar map_render_system::get_render_char(const int x, const int y, const int z) 
 				if (current_region.tiles[idx].contents>0) {
 					auto finder = tile_contents.find(current_region.tiles[idx].contents);
 					if (finder != tile_contents.end()) {
+						//std::cout << finder->second.name << ", ";
 						result = vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
 					} else {
 						result = vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
