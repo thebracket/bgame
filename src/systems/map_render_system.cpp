@@ -1,6 +1,7 @@
 #include "map_render_system.hpp"
 #include "../raws/raws.hpp"
 #include "../messages/messages.hpp"
+#include "../game_globals.hpp"
 #include <iostream>
 
 using namespace rltk;
@@ -113,10 +114,12 @@ vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const
 
 vchar map_render_system::get_render_char(const int x, const int y, const int z) const {
 
+	int max_dive_depth = 5;
+	if (game_master_mode == DESIGN) max_dive_depth = 1;
 	int dive_depth = 0;
 	boost::optional<vchar> result;
 
-	while (dive_depth < 5 && !result) {
+	while (dive_depth < max_dive_depth && !result) {
 		const int idx = current_region.idx(x, y, z-dive_depth);
 
 		if (renderables[idx]) result = renderables[idx].get();
@@ -132,6 +135,9 @@ vchar map_render_system::get_render_char(const int x, const int y, const int z) 
 					} else {
 						result = vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
 					}
+				} else {
+					result=get_render_char_for_base(current_region.tiles[idx].base_type);
+					if (result.get().glyph == ' ') result.reset();
 				}
 			}
 		}
@@ -140,7 +146,7 @@ vchar map_render_system::get_render_char(const int x, const int y, const int z) 
 	if (!result) {
 		return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
 	} else {
-		const int darken_amount = (dive_depth-1) * 40;
+		const int darken_amount = (dive_depth) * 40;
 		vchar darkened = result.get();
 		darkened.foreground = darken(darken_amount, darkened.foreground);
 		darkened.background = darken(darken_amount, darkened.background);
