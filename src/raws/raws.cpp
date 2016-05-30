@@ -106,6 +106,7 @@ void read_tile_types() {
     		if (field == "glyph") tt.glyph = lua_tonumber(lua_state, -1);
     		if (field == "background") tt.bg = read_lua_color("background");
     		if (field == "foreground") tt.fg = read_lua_color("foreground");
+            if (field == "name") tt.name = lua_tostring(lua_state, -1);
     		lua_pop(lua_state, 1);
     	}
 
@@ -142,6 +143,7 @@ void read_tile_contents() {
                 if (stairs_type == "up") tt.stairs = 2;
                 if (stairs_type == "down") tt.stairs = 3;
             }
+            if (field == "name") tt.name = lua_tostring(lua_state, -1);
     		lua_pop(lua_state, 1);
     	}
 

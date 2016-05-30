@@ -14,6 +14,7 @@ using namespace rltk::colors;
 
 constexpr int MAP_LAYER=1;
 constexpr int GUI_LAYER=2;
+constexpr int RIGHT_PANEL = 3;
 
 void play_game::tick(const double duration_ms) {
 
@@ -24,10 +25,23 @@ void play_game::tick(const double duration_ms) {
 	ecs_tick(duration_ms);
 }
 
+void resize_right_panel(rltk::layer_t * l, int w, int h) {
+    // Use the whole window
+	l->x = w - (20 * 8);
+    l->w = 20 * 8;
+    l->h = h;
+}
+
+void resize_game_panel(rltk::layer_t * l, int w, int h) {
+	l->w = w - (20*8);
+	l->h = h;
+}
+
 void play_game::init() {
 	// Setup the display
-	gui->add_layer(MAP_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
+	gui->add_layer(MAP_LAYER, 0, 0, 800 - (20*8), 600, "8x8", resize_game_panel, true);
 	gui->add_layer(GUI_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, false);
+	gui->add_layer(RIGHT_PANEL, 800 - (20*8), 0, 20*8, 600, "8x16", resize_right_panel, true);
 
 	// Load the game
 	planet = load_planet();
@@ -56,6 +70,7 @@ void play_game::init() {
 	add_system<calendar_system>();
 	add_system<settler_ai_system>();
 	add_system<map_render_system>();
+	add_system<panel_render_system>();
 
 	ecs_configure();
 }

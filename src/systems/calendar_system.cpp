@@ -14,7 +14,7 @@ void calendar_system::update(const double duration_ms) {
 
 			// Update the calendar display
 			term(2)->clear();
-			term(2)->print(0,0,calendar->get_date_time(), rltk::colors::YELLOW);
+			term(2)->print(0,0,calendar->get_date_time(), rltk::colors::GREEN);
 
 			if (pause_mode == ONE_STEP) {
 				pause_mode = PAUSED;
@@ -22,17 +22,19 @@ void calendar_system::update(const double duration_ms) {
 		}
 	} else {
 		term(2)->clear();
-		term(2)->print(0,0,calendar->get_date_time() + " PAUSED", rltk::colors::YELLOW);
+		term(2)->print(0,0,calendar->get_date_time() + " PAUSED", rltk::colors::GREEN);
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		if (pause_mode == RUNNING) {
-			pause_mode = PAUSED;
-		} else {
-			pause_mode = RUNNING;
+	if (game_master_mode == PLAY) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			if (pause_mode == RUNNING) {
+				pause_mode = PAUSED;
+			} else {
+				pause_mode = RUNNING;
+			}
 		}
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))) {
-		pause_mode = ONE_STEP;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && !(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))) {
+			pause_mode = ONE_STEP;
+		}
 	}
 }
