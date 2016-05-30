@@ -91,6 +91,13 @@ void panel_render_system::render_play_mode() {
 				term(3)->print(1, term(3)->term_height - 3, ss.str(), GREEN, GREEN_BG);
 			}
 		}
+		{
+			std::stringstream ss;
+			if (current_region.tiles[idx].flags.test(tile_flags::SOLID)) ss << "Solid ";
+			if (current_region.tiles[idx].flags.test(tile_flags::TREE)) ss << "Tree ";
+			if (current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "Construct ";
+			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
+		}
 	}
 }
 
