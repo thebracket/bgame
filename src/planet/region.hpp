@@ -39,7 +39,7 @@ struct region_t {
 	std::vector<tile_t> tiles;
 	inline int idx(const int x, const int y, const int z) { return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; }
 
-	inline void set(const int x, const int y, const int z, const uint8_t base, const uint8_t content, const uint8_t liquid=0, 
+	inline void set(const int x, const int y, const int z, const uint8_t base, const uint16_t content, const uint8_t liquid=0, 
 			const int16_t temperature=0, const bool solid=false) {
 		const int loc = idx(x,y,z);
 		tiles[loc].base_type = base;

@@ -11,10 +11,10 @@ string_table_t first_names_male;
 string_table_t first_names_female;
 string_table_t last_names;
 
-std::unordered_map<int, tile_type_t> tile_types;
-std::unordered_map<std::string, int> tile_type_index;
-std::unordered_map<int, tile_content_t> tile_contents;
-std::unordered_map<std::string, int> tile_contents_index;
+std::unordered_map<uint8_t, tile_type_t> tile_types;
+std::unordered_map<std::string, uint8_t> tile_type_index;
+std::unordered_map<uint16_t, tile_content_t> tile_contents;
+std::unordered_map<std::string, uint16_t> tile_contents_index;
 
 std::unordered_map<std::string, clothing_t> clothing_types;
 std::vector<profession_t> starting_professions;
@@ -106,7 +106,7 @@ void read_tile_types() {
     		if (field == "glyph") tt.glyph = lua_tonumber(lua_state, -1);
     		if (field == "background") tt.bg = read_lua_color("background");
     		if (field == "foreground") tt.fg = read_lua_color("foreground");
-            if (field == "name") tt.name = lua_tostring(lua_state, -1);
+            if (field == "name") tt.nice_name = lua_tostring(lua_state, -1);
     		lua_pop(lua_state, 1);
     	}
 
@@ -143,7 +143,7 @@ void read_tile_contents() {
                 if (stairs_type == "up") tt.stairs = 2;
                 if (stairs_type == "down") tt.stairs = 3;
             }
-            if (field == "name") tt.name = lua_tostring(lua_state, -1);
+            if (field == "name") tt.nice_name = lua_tostring(lua_state, -1);
     		lua_pop(lua_state, 1);
     	}
 
@@ -279,7 +279,7 @@ void load_raws() {
 	load_game_tables();
 }
 
-int get_tile_type_index(const std::string name) {
+uint8_t get_tile_type_index(const std::string name) {
 	auto finder = tile_type_index.find(name);
 	if (finder != tile_type_index.end()) {
 		return finder->second;
@@ -288,9 +288,11 @@ int get_tile_type_index(const std::string name) {
 	}
 }
 
-int get_tile_contents_index(const std::string name) {
+uint16_t get_tile_contents_index(const std::string name) {
+    //std::cout << "Tile type: " << name;
 	auto finder = tile_contents_index.find(name);
 	if (finder != tile_contents_index.end()) {
+        //std::cout << " = " << finder->second << "\n";
 		return finder->second;
 	} else {
 		throw std::runtime_error("Unknown tile contents: " + name);
