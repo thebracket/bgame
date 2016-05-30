@@ -1,6 +1,7 @@
 #include "panel_render_system.hpp"
 #include "../game_globals.hpp"
 #include "../raws/raws.hpp"
+#include "../components/components.hpp"
 #include <sstream>
 
 using namespace rltk;
@@ -98,6 +99,13 @@ void panel_render_system::render_play_mode() {
 			if (current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "Construct ";
 			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
 		}
+		int count = 0;
+		each<name_t, position_t>([&count, &world_x, &world_y] (entity_t &entity, name_t &name, position_t &pos) {
+			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+				term(3)->print(1, term(3)->term_height - 5 - count, name.first_name + std::string(" ") + name.last_name, GREEN, GREEN_BG);
+				++count;
+			}
+		});
 	}
 }
 
