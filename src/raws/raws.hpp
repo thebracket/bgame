@@ -16,7 +16,7 @@ struct string_table_t {
 };
 
 struct tile_type_t {
-	std::string name;
+	std::string name = "";
 	int index;
 	uint8_t glyph;
 	rltk::color_t fg;
@@ -24,7 +24,7 @@ struct tile_type_t {
 };
 
 struct tile_content_t {
-	std::string name;
+	std::string name = "";
 	int index;
 	uint8_t glyph;
 	rltk::color_t fg;
@@ -33,14 +33,14 @@ struct tile_content_t {
 };
 
 struct clothing_t {
-	std::string name;
+	std::string name= "";
 	std::vector<std::string> colors;
 	std::string slot;
 	std::string description;
 };
 
 struct profession_t {
-	std::string name;	
+	std::string name = "";	
 	short strength = 0;
 	short dexterity = 0;
 	short constitution = 0;

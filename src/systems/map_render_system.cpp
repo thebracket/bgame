@@ -13,6 +13,8 @@ void map_render_system::configure() {
 }
 
 void map_render_system::update(const double duration_ms) {
+	update_clipping_rectangle();
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		--camera_position->region_x;
 		if (camera_position->region_x < 0) camera_position->region_x = 0;
@@ -69,14 +71,14 @@ void map_render_system::update(const double duration_ms) {
 		for (int y=clip_top; y<clip_bottom; ++y) {
 			int X = 0;
 			for (int x=clip_left; x<clip_right; ++x) {
-				term(1)->set_char(X, Y, get_render_char(x, y, camera_position->region_z));
-
+				try {
+					term(1)->set_char(X, Y, get_render_char(x, y, camera_position->region_z));
+				} catch (...) {}
 				++X;
 			}
 			++Y;
 		}
 
-		term(1)->print(0,1,"Press Q to quit");
 		dirty = false;
 	}
 }
