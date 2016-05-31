@@ -49,8 +49,16 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 	}
 
 	if (designations->mining[idx] != 0) {
-		result.foreground = rltk::colors::YELLOW;
+		result.foreground = rltk::colors::BLACK;
 		result.background = rltk::colors::YELLOW;
+		switch (designations->mining[idx]) {
+			case 1 : result.glyph = 177; break;
+			case 2 : result.glyph = 31; break;
+			case 3 : result.glyph = 30; break;
+			case 4 : result.glyph = '<'; break;
+			case 5 : result.glyph = '>'; break;
+			case 6 : result.glyph = 'X'; break;
+		}
 	}
 
 	return result;
