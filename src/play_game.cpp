@@ -57,12 +57,13 @@ void play_game::init() {
 
 	// Load the current region - check the camera for the world position
 	int region_x, region_y;
-	each<world_position_t, calendar_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal) {
+	each<world_position_t, calendar_t, designations_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design) {
 		camera_entity = entity.id;
 		region_x = pos.world_x;
 		region_y = pos.world_y;
 		camera_position = &pos;
 		calendar = &cal;
+		designations = &design;
 	});
 	current_region = load_region(region_x, region_y);
 
