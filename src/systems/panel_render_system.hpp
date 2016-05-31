@@ -8,8 +8,8 @@
 class panel_render_system : public rltk::base_system {
 public:
 	panel_render_system() { }
-	virtual void update(const double duration_ms) override;
-	virtual void configure() override;
+	virtual void update(const double duration_ms) override final;
+	virtual void configure() override final;
 private:
 	void render_play_mode();
 	void render_design_mode();
