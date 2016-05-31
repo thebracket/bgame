@@ -99,17 +99,6 @@ void map_render_system::update_clipping_rectangle() {
 	if (clip_bottom > REGION_HEIGHT) clip_bottom = REGION_HEIGHT;
 }
 
-boost::optional<vchar> map_render_system::get_render_char_for_base(const uint8_t base_type) const {
-	if (base_type == 0) return boost::optional<vchar>();
-
-	auto finder = tile_types.find(base_type);
-	if (finder != tile_types.end()) {
-		return vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
-	} else {
-		return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
-	}
-}
-
 vchar map_render_system::get_render_char(const int x, const int y, const int z) const {
 
 	const int max_dive_depth = 5;
@@ -119,24 +108,10 @@ vchar map_render_system::get_render_char(const int x, const int y, const int z) 
 	while (dive_depth < max_dive_depth && !result) {
 		const int idx = current_region.idx(x, y, z-dive_depth);
 
-		if (renderables[idx]) result = renderables[idx].get();
-
-		if (!result && current_region.tiles[idx].flags.test(tile_flags::SOLID) && !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION) && current_region.tiles[idx].base_type > 0) {
-			result=get_render_char_for_base(current_region.tiles[idx].base_type);
+		if (renderables[idx]) {
+			result = renderables[idx].get();
 		} else {
-			if (!result) {
-				if (current_region.tiles[idx].contents>0) {
-					auto finder = tile_contents.find(current_region.tiles[idx].contents);
-					if (finder != tile_contents.end()) {
-						//std::cout << finder->second.name << ", ";
-						result = vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
-					} else {
-						result = vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
-					}
-				} else {
-					result=get_render_char_for_base(current_region.tiles[idx].base_type);
-				}
-			}
+			result = current_region.tiles[idx].render_as;
 		}
 		++dive_depth;
 	}

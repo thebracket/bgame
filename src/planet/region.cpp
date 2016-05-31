@@ -45,6 +45,7 @@ region_t load_region(const int region_x, const int region_y) {
 		region.tiles[i] = tile;
 	}
 
+	region.calculate_render_tiles();
 	return region;
 }
 
@@ -124,4 +125,48 @@ void region_t::determine_connectivity() {
 			}
 		}
 	}
+}
+
+void region_t::calculate_render_tiles() {
+	for (int z=0; z<REGION_DEPTH-1; ++z) {
+		for (int y=0; y<REGION_HEIGHT; ++y) {
+			for (int x=0; x<REGION_WIDTH; ++x) {
+				const int index = idx(x,y,z);
+				calculate_render_tile(index);
+			}
+		}
+	}
+}
+
+boost::optional<vchar> get_render_char_for_base(const uint8_t base_type) {
+	if (base_type == 0) return boost::optional<vchar>();
+
+	auto finder = tile_types.find(base_type);
+	if (finder != tile_types.end()) {
+		return vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
+	} else {
+		return vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
+	}
+}
+
+void region_t::calculate_render_tile(const int &idx) {
+	boost::optional<vchar> result;
+
+	if (tiles[idx].flags.test(tile_flags::SOLID) && !tiles[idx].flags.test(tile_flags::CONSTRUCTION) && tiles[idx].base_type > 0) {
+		result = get_render_char_for_base(tiles[idx].base_type);
+	} else {
+		if (tiles[idx].contents>0) {
+			auto finder = tile_contents.find(tiles[idx].contents);
+			if (finder != tile_contents.end()) {
+				//std::cout << finder->second.name << ", ";
+				result = vchar{ finder->second.glyph, finder->second.fg, finder->second.bg };
+			} else {
+				result = vchar{'?', rltk::colors::MAGENTA, rltk::colors::BLACK};
+			}
+		} else {
+			result=get_render_char_for_base(tiles[idx].base_type);
+		}
+	}
+
+	tiles[idx].render_as = result;
 }
