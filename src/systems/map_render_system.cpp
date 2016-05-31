@@ -14,7 +14,7 @@ void map_render_system::configure() {
 }
 
 void map_render_system::update(const double duration_ms) {
-	update_clipping_rectangle();
+	if (dirty) update_clipping_rectangle();
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		--camera_position->region_x;
@@ -147,7 +147,7 @@ vchar map_render_system::get_render_char(const int x, const int y, const int z) 
 	if (!result) {
 		return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
 	} else {
-		const int darken_amount = (dive_depth) * 40;
+		const int darken_amount = (dive_depth-1) * 40;
 		vchar darkened = result.get();
 		darkened.foreground = darken(darken_amount, darkened.foreground);
 		darkened.background = darken(darken_amount, darkened.background);
