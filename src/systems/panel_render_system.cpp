@@ -114,6 +114,10 @@ void panel_render_system::render_play_mode() {
 	}
 }
 
+inline bool is_mining_designation_valid(const int &x, const int &y, const int &z, const game_mining_mode_t &mode) {
+	return true;
+}
+
 void panel_render_system::render_design_mode() {
 	if (game_design_mode == DIGGING) {
 		term(3)->print(1,3, "Digging", WHITE, DARKEST_GREEN);
@@ -144,16 +148,18 @@ void panel_render_system::render_design_mode() {
 				const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 				const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 				const int idx = current_region.idx(world_x, world_y, camera_position->region_z);
-				switch (game_mining_mode) {
-					case DIG : designations->mining[idx] = 1; break;
-					case CHANNEL : designations->mining[idx] = 2; break;
-					case RAMP : designations->mining[idx] = 3; break;
-					case UP : designations->mining[idx] = 4; break;
-					case DOWN : designations->mining[idx] = 5; break;
-					case UPDOWN : designations->mining[idx] = 6; break;
-					case DELETE : designations->mining[idx] = 0; break;
+				if (is_mining_designation_valid(world_x, world_y, camera_position->region_z, game_mining_mode)) {
+					switch (game_mining_mode) {
+						case DIG : designations->mining[idx] = 1; break;
+						case CHANNEL : designations->mining[idx] = 2; break;
+						case RAMP : designations->mining[idx] = 3; break;
+						case UP : designations->mining[idx] = 4; break;
+						case DOWN : designations->mining[idx] = 5; break;
+						case UPDOWN : designations->mining[idx] = 6; break;
+						case DELETE : designations->mining[idx] = 0; break;
+					}
+					emit(map_dirty_message{});
 				}
-				emit(map_dirty_message{});
 			}
 		}
 
