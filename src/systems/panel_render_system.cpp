@@ -40,6 +40,7 @@ void panel_render_system::update(const double duration_ms) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			game_master_mode = PLAY;
 			emit(map_dirty_message{});
+			emit(recalculate_mining_message{});
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			game_design_mode = DIGGING;
@@ -159,7 +160,6 @@ void panel_render_system::render_design_mode() {
 						case DELETE : designations->mining[idx] = 0; break;
 					}
 					emit(map_dirty_message{});
-					emit(recalculate_mining_message{});
 				}
 			}
 		}
