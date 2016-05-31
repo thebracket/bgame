@@ -159,6 +159,7 @@ void panel_render_system::render_design_mode() {
 						case DELETE : designations->mining[idx] = 0; break;
 					}
 					emit(map_dirty_message{});
+					emit(recalculate_mining_message{});
 				}
 			}
 		}
