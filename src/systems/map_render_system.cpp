@@ -72,9 +72,7 @@ void map_render_system::update(const double duration_ms) {
 		for (int y=clip_top; y<clip_bottom; ++y) {
 			int X = 0;
 			for (int x=clip_left; x<clip_right; ++x) {
-				try {
-					term(1)->set_char(X, Y, get_render_char(x, y, camera_position->region_z));
-				} catch (...) {}
+				term(1)->set_char(X, Y, get_render_char(x, y, camera_position->region_z));
 				++X;
 			}
 			++Y;
@@ -101,8 +99,8 @@ void map_render_system::update_clipping_rectangle() {
 	if (clip_bottom > REGION_HEIGHT) clip_bottom = REGION_HEIGHT;
 }
 
-vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const {
-	if (base_type == 0) return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
+boost::optional<vchar> map_render_system::get_render_char_for_base(const uint8_t base_type) const {
+	if (base_type == 0) return boost::optional<vchar>();
 
 	auto finder = tile_types.find(base_type);
 	if (finder != tile_types.end()) {
@@ -114,8 +112,7 @@ vchar map_render_system::get_render_char_for_base(const uint8_t base_type) const
 
 vchar map_render_system::get_render_char(const int x, const int y, const int z) const {
 
-	int max_dive_depth = 5;
-	if (game_master_mode == DESIGN) max_dive_depth = 1;
+	const int max_dive_depth = 5;
 	int dive_depth = 0;
 	boost::optional<vchar> result;
 
@@ -138,7 +135,6 @@ vchar map_render_system::get_render_char(const int x, const int y, const int z) 
 					}
 				} else {
 					result=get_render_char_for_base(current_region.tiles[idx].base_type);
-					if (result.get().glyph == ' ') result.reset();
 				}
 			}
 		}
