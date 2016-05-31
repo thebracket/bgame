@@ -101,7 +101,8 @@ void map_render_system::update_clipping_rectangle() {
 
 vchar map_render_system::get_render_char(const int x, const int y, const int z) const {
 
-	const int max_dive_depth = 5;
+	int max_dive_depth = 5;
+	if (game_master_mode == DESIGN) max_dive_depth = 1;
 	int dive_depth = 0;
 	boost::optional<vchar> result;
 
