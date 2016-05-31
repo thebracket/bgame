@@ -138,8 +138,8 @@ void region_t::calculate_render_tiles() {
 	}
 }
 
-boost::optional<vchar> get_render_char_for_base(const uint8_t base_type) {
-	if (base_type == 0) return boost::optional<vchar>();
+vchar get_render_char_for_base(const uint8_t base_type) {
+	if (base_type == 0) return vchar{' ', rltk::colors::MAGENTA, rltk::colors::BLACK};
 
 	auto finder = tile_types.find(base_type);
 	if (finder != tile_types.end()) {
@@ -150,7 +150,7 @@ boost::optional<vchar> get_render_char_for_base(const uint8_t base_type) {
 }
 
 void region_t::calculate_render_tile(const int &idx) {
-	boost::optional<vchar> result;
+	vchar result;
 
 	if (tiles[idx].flags.test(tile_flags::SOLID) && !tiles[idx].flags.test(tile_flags::CONSTRUCTION) && tiles[idx].base_type > 0) {
 		result = get_render_char_for_base(tiles[idx].base_type);
