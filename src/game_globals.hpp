@@ -14,6 +14,7 @@ extern region_t current_region;
 extern std::size_t camera_entity;
 extern world_position_t * camera_position;
 extern calendar_t * calendar;
+extern designations_t * designations;
 extern int clip_left;
 extern int clip_right;
 extern int clip_top;

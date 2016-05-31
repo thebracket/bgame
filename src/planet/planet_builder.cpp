@@ -1069,7 +1069,8 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	// Control components
 	auto camera = create_entity()
 		->assign(world_position_t{location.first, location.second, crash_x, crash_y, crash_z+1})
-		->assign(calendar_t{});
+		->assign(calendar_t{})
+		->assign(designations_t{});
 
 	// Settler building
 	planet_builder_lock.lock();
