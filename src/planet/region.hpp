@@ -3,7 +3,6 @@
 #include <vector>
 #include <bitset>
 #include <rltk.hpp>
-#include <boost/optional.hpp>
 
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
@@ -32,7 +31,7 @@ struct tile_t {
 	uint8_t liquid;
 	int16_t temperature;
 	std::bitset<TILE_OPTIONS_COUNT> flags;
-	boost::optional<rltk::vchar> render_as;
+	rltk::vchar render_as;
 };
 
 struct region_t {
