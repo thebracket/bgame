@@ -2,6 +2,7 @@
 #include "../game_globals.hpp"
 #include "../raws/raws.hpp"
 #include "../components/components.hpp"
+#include "../messages/messages.hpp"
 #include <sstream>
 
 using namespace rltk;
@@ -32,17 +33,21 @@ void panel_render_system::update(const double duration_ms) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			game_master_mode = DESIGN;
 			pause_mode = PAUSED;
+			emit(map_dirty_message{});
 		}
 	}
 	if (game_master_mode == DESIGN) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			game_master_mode = PLAY;
+			emit(map_dirty_message{});
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			game_design_mode = DIGGING;
+			emit(map_dirty_message{});
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
 			game_design_mode = BUILDING;
+			emit(map_dirty_message{});
 		}
 	}
 }
@@ -129,6 +134,28 @@ void panel_render_system::render_design_mode() {
 		if (game_mining_mode == UPDOWN) { term(3)->print(1,13, "(i) Up/Down Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,13, "(i) Up/Down Stairs", GREEN, GREEN_BG); }
 		if (game_mining_mode == DELETE) { term(3)->print(1,14, "(x) Clear", WHITE, DARKEST_GREEN); } else { term(3)->print(1,14, "(x) Clear", GREEN, GREEN_BG); }
 
+		int mouse_x, mouse_y;
+		std::tie(mouse_x, mouse_y) = get_mouse_position();
+		const int terminal_x = mouse_x / 8;
+		const int terminal_y = mouse_y / 8;
+
+		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
+			if (get_mouse_button_state(rltk::button::LEFT)) {
+				const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
+				const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
+				const int idx = current_region.idx(world_x, world_y, camera_position->region_z);
+				switch (game_mining_mode) {
+					case DIG : designations->mining[idx] = 1; break;
+					case CHANNEL : designations->mining[idx] = 2; break;
+					case RAMP : designations->mining[idx] = 3; break;
+					case UP : designations->mining[idx] = 4; break;
+					case DOWN : designations->mining[idx] = 5; break;
+					case UPDOWN : designations->mining[idx] = 6; break;
+					case DELETE : designations->mining[idx] = 0; break;
+				}
+				emit(map_dirty_message{});
+			}
+		}
 
 	} else {
 		term(3)->print(1,3, "(D)igging", GREEN, GREEN_BG);

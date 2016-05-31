@@ -38,7 +38,7 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 
 vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
-	boost::optional<vchar> result;
+	vchar result;
 
 	const int idx = current_region.idx(x, y, z);
 
@@ -48,11 +48,12 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 		result = current_region.tiles[idx].render_as;
 	}
 
-	if (!result) {
-		return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
-	} else {
-		return result.get();
+	if (designations->mining[idx] != 0) {
+		result.foreground = rltk::colors::YELLOW;
+		result.background = rltk::colors::YELLOW;
 	}
+
+	return result;
 }
 
 void map_render_system::configure() {
@@ -60,6 +61,9 @@ void map_render_system::configure() {
 		this->renderables_changed = true;
 	});
 	renderables_changed = true;
+	subscribe<map_dirty_message>([this](map_dirty_message &msg) {
+		dirty = true;
+	});
 }
 
 void map_render_system::update(const double duration_ms) {
