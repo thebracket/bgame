@@ -69,6 +69,7 @@ void play_game::init() {
 
 	// Setup systems
 	add_system<calendar_system>();
+	add_system<mining_system>();
 	add_system<settler_ai_system>();
 	add_system<map_render_system>();
 	add_system<panel_render_system>();
