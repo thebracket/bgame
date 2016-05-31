@@ -112,6 +112,24 @@ void panel_render_system::render_play_mode() {
 void panel_render_system::render_design_mode() {
 	if (game_design_mode == DIGGING) {
 		term(3)->print(1,3, "Digging", WHITE, DARKEST_GREEN);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) game_mining_mode = DIG;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) game_mining_mode = CHANNEL;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) game_mining_mode = RAMP;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) game_mining_mode = UP;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) game_mining_mode = DOWN;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) game_mining_mode = UPDOWN;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) game_mining_mode = DELETE;
+
+		if (game_mining_mode == DIG) { term(3)->print(1,8, "(d) Dig", WHITE, DARKEST_GREEN); } else { term(3)->print(1,8, "(d) Dig", GREEN, GREEN_BG); }
+		if (game_mining_mode == CHANNEL) { term(3)->print(1,9, "(c) Channel", WHITE, DARKEST_GREEN); } else { term(3)->print(1,9, "(c) Channel", GREEN, GREEN_BG); }
+		if (game_mining_mode == RAMP) { term(3)->print(1,10, "(r) Ramp", WHITE, DARKEST_GREEN); } else { term(3)->print(1,10, "(r) Ramp", GREEN, GREEN_BG); }
+		if (game_mining_mode == UP) { term(3)->print(1,11, "(u) Up Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,11, "(u) Up Stairs", GREEN, GREEN_BG); }
+		if (game_mining_mode == DOWN) { term(3)->print(1,12, "(j) Down Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,12, "(j) Down Stairs", GREEN, GREEN_BG); }
+		if (game_mining_mode == UPDOWN) { term(3)->print(1,13, "(i) Up/Down Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,13, "(i) Up/Down Stairs", GREEN, GREEN_BG); }
+		if (game_mining_mode == DELETE) { term(3)->print(1,14, "(x) Clear", WHITE, DARKEST_GREEN); } else { term(3)->print(1,14, "(x) Clear", GREEN, GREEN_BG); }
+
+
 	} else {
 		term(3)->print(1,3, "(D)igging", GREEN, GREEN_BG);
 	}

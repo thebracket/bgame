@@ -14,3 +14,4 @@ rltk::random_number_generator rng;
 pause_mode_t pause_mode = PAUSED;
 game_master_mode_t game_master_mode = PLAY;
 game_design_mode_t game_design_mode = DIGGING;
+game_mining_mode_t game_mining_mode = DIG;
