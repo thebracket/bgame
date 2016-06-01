@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include <unordered_map>
+#include <boost/container/flat_map.hpp>
 #include <tuple>
 #include <rltk.hpp>
 
@@ -58,12 +58,12 @@ extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
 
-extern std::unordered_map<uint8_t, tile_type_t> tile_types;
-extern std::unordered_map<std::string, uint8_t> tile_type_index;
-extern std::unordered_map<uint16_t, tile_content_t> tile_contents;
-extern std::unordered_map<std::string, uint16_t> tile_contents_index;
+extern boost::container::flat_map<uint8_t, tile_type_t> tile_types;
+extern boost::container::flat_map<std::string, uint8_t> tile_type_index;
+extern boost::container::flat_map<uint16_t, tile_content_t> tile_contents;
+extern boost::container::flat_map<std::string, uint16_t> tile_contents_index;
 
-extern std::unordered_map<std::string, clothing_t> clothing_types;
+extern boost::container::flat_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;
 
 void load_raws();

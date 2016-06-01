@@ -11,12 +11,12 @@ string_table_t first_names_male;
 string_table_t first_names_female;
 string_table_t last_names;
 
-std::unordered_map<uint8_t, tile_type_t> tile_types;
-std::unordered_map<std::string, uint8_t> tile_type_index;
-std::unordered_map<uint16_t, tile_content_t> tile_contents;
-std::unordered_map<std::string, uint16_t> tile_contents_index;
+boost::container::flat_map<uint8_t, tile_type_t> tile_types;
+boost::container::flat_map<std::string, uint8_t> tile_type_index;
+boost::container::flat_map<uint16_t, tile_content_t> tile_contents;
+boost::container::flat_map<std::string, uint16_t> tile_contents_index;
 
-std::unordered_map<std::string, clothing_t> clothing_types;
+boost::container::flat_map<std::string, clothing_t> clothing_types;
 std::vector<profession_t> starting_professions;
 
 std::vector<std::string> split ( const std::string str, const char delimiter )
