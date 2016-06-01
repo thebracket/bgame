@@ -5,3 +5,4 @@
 #include "settler_ai_system.hpp"
 #include "panel_render_system.hpp"
 #include "mining_system.hpp"
+#include "inventory_system.hpp"
