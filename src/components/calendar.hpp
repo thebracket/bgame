@@ -2,8 +2,17 @@
 
 #include <rltk.hpp>
 #include <string>
+#include <array>
+#include <vector>
 
 using namespace rltk;
+
+enum shift_type_t { SLEEP_SHIFT, LEISURE_SHIFT, WORK_SHIFT };
+
+struct shift_t {
+	std::string shift_name;
+	std::array<shift_type_t, 24> hours;
+};
 
 struct calendar_t {
 	std::size_t serialization_identity = 3;
@@ -13,6 +22,8 @@ struct calendar_t {
 	uint16_t day = 0;
 	uint8_t hour = 0;
 	uint8_t minute = 0;
+
+	std::vector<shift_t> defined_shifts;
 
 	std::string get_date_time() const {
 		std::string result;
@@ -48,6 +59,14 @@ struct calendar_t {
 		serialize(lbfile, day);
 		serialize(lbfile, hour);
 		serialize(lbfile, minute);
+		std::size_t n_shifts = defined_shifts.size();
+		serialize(lbfile, n_shifts);
+		for (int j=0; j<n_shifts; ++j) {
+			serialize(lbfile, defined_shifts[j].shift_name);
+			for (int i=0; i<24; ++i) {
+				serialize(lbfile, defined_shifts[j].hours[i]);
+			}
+		}
 	}
 
 	static calendar_t load(std::istream &lbfile) {
@@ -57,6 +76,16 @@ struct calendar_t {
 		deserialize(lbfile, c.day);
 		deserialize(lbfile, c.hour);
 		deserialize(lbfile, c.minute);
+		std::size_t n_shifts;
+		deserialize(lbfile, n_shifts);
+		for (std::size_t i=0; i<n_shifts; ++i) {
+			shift_t shift;
+			deserialize(lbfile, shift.shift_name);
+			for (int j=0; j<24; ++j) {
+				deserialize(lbfile, shift.hours[j]);
+			}
+			c.defined_shifts.push_back(shift);
+		}
 		return c;
 	}
 };

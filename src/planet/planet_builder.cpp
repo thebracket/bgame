@@ -642,7 +642,7 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 	}
 }
 
-void create_settler(const int x, const int y, const int z, random_number_generator &rng) {
+void create_settler(const int x, const int y, const int z, random_number_generator &rng, int shift_id) {
 	species_t species;
 	game_stats_t stats;
 	health_t health;
@@ -802,6 +802,9 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	health.max_hitpoints = 10 + stat_modifier(stats.constitution);
 	health.current_hitpoints = health.max_hitpoints;
 
+	settler_ai_t ai;
+	ai.shift_id = shift_id;
+
 	auto settler = create_entity()
 		->assign(position_t{ x,y,z })
 		->assign(renderable_t{ '@',rltk::colors::YELLOW, rltk::colors::BLACK })
@@ -809,7 +812,7 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 		->assign(std::move(species))
 		->assign(std::move(health))
 		->assign(std::move(stats))
-		->assign(settler_ai_t{});
+		->assign(std::move(ai));
 
 	// TODO: Create clothing items
 	//std::cout << settler->id << "\n";
@@ -1099,9 +1102,20 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	add_construction(region, crash_x +3, crash_y, crash_z, "replicator");
 
 	// Control components
+	calendar_t calendar;
+	calendar.defined_shifts.push_back(shift_t{"Early Shift", {
+		WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT }
+	});
+	calendar.defined_shifts.push_back(shift_t{"Day Shift", {
+		SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT,	WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT }
+	});
+	calendar.defined_shifts.push_back(shift_t{"Late Shift", {
+		LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT,	WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT }
+	});
+
 	auto camera = create_entity()
 		->assign(world_position_t{location.first, location.second, crash_x, crash_y, crash_z+1})
-		->assign(calendar_t{})
+		->assign(std::move(calendar))
 		->assign(designations_t{});
 
 	// Settler building
@@ -1109,16 +1123,16 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	planet_builder_status = "Determining initial local populations";
 	planet_builder_lock.unlock();
 
-	create_settler(crash_x - 3, crash_y - 1, crash_z+1, rng);
-	create_settler(crash_x - 2, crash_y - 1, crash_z+1, rng);
-	create_settler(crash_x - 1, crash_y - 1, crash_z+1, rng);
-	create_settler(crash_x, crash_y - 1, crash_z+1, rng);
-	create_settler(crash_x + 1, crash_y - 1, crash_z+1, rng);
-	create_settler(crash_x - 3, crash_y + 1, crash_z+1, rng);
-	create_settler(crash_x - 2, crash_y + 1, crash_z+1, rng);
-	create_settler(crash_x - 1, crash_y + 1, crash_z+1, rng);
-	create_settler(crash_x, crash_y + 1, crash_z+1, rng);
-	create_settler(crash_x + 1, crash_y + 1, crash_z+1, rng);
+	create_settler(crash_x - 3, crash_y - 1, crash_z+1, rng, 0);
+	create_settler(crash_x - 2, crash_y - 1, crash_z+1, rng, 0);
+	create_settler(crash_x - 1, crash_y - 1, crash_z+1, rng, 0);
+	create_settler(crash_x, crash_y - 1, crash_z+1, rng, 1);
+	create_settler(crash_x + 1, crash_y - 1, crash_z+1, rng, 1);
+	create_settler(crash_x - 3, crash_y + 1, crash_z+1, rng, 1);
+	create_settler(crash_x - 2, crash_y + 1, crash_z+1, rng, 1);
+	create_settler(crash_x - 1, crash_y + 1, crash_z+1, rng, 2);
+	create_settler(crash_x, crash_y + 1, crash_z+1, rng, 2);
+	create_settler(crash_x + 1, crash_y + 1, crash_z+1, rng, 2);
 
 	// Initial inventory
 

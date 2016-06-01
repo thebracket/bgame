@@ -35,7 +35,12 @@ void settler_ai_system::configure() {
 			species_t &species, position_t &pos, name_t &name) 
 		{
 			if (ai.initiative < 1) {
-				//std::cout << name.first_name << " " << name.last_name << " (" << stats.profession_tag << ") is thinking.\n";
+				const int shift_id = ai.shift_id;
+				const int hour_of_day = calendar->hour;
+				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
+
+				// TODO: DO SOMETHING USEFUL
+
 				this->wander_randomly(pos);
 				this->settler_calculate_initiative(ai, stats);
 			} else {
