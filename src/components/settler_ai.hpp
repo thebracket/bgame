@@ -12,6 +12,7 @@ struct settler_ai_t {
 
 	int initiative = 0;
 	std::array<bool, NUMBER_OF_JOB_CATEGORIES> permitted_work;
+	int shift_id = 0;
 
 	settler_ai_t() {
 		std::fill(permitted_work.begin(), permitted_work.end(), true);
@@ -24,13 +25,17 @@ struct settler_ai_t {
 		for (const bool &b : permitted_work) {
 			serialize(lbfile, b);
 		}
+		serialize(lbfile, shift_id);
 	}
 
 	static settler_ai_t load(std::istream &lbfile) {
 		settler_ai_t c;
 		deserialize(lbfile, c.initiative);
-		for (std::size_t i=0; i<NUMBER_OF_JOB_CATEGORIES; ++i)
+		for (std::size_t i=0; i<NUMBER_OF_JOB_CATEGORIES; ++i) {
 			deserialize(lbfile, c.permitted_work[i]);
+		}
+		deserialize(lbfile, c.shift_id);
+
 		return c;
 	}
 };
