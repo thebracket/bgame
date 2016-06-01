@@ -18,5 +18,8 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 11 : entity(entity_id)->assign(settler_ai_t::load(lbfile)); break;
 		case 12 : entity(entity_id)->assign(item_stored_t::load(lbfile)); break;
 		case 13 : entity(entity_id)->assign(designations_t::load(lbfile)); break;
+		case 14 : entity(entity_id)->assign(construct_container_t::load(lbfile)); break;
+		case 15 : entity(entity_id)->assign(construct_power_t::load(lbfile)); break;
+		case 16 : entity(entity_id)->assign(construct_provides_sleep_t::load(lbfile)); break;
 	}
 }

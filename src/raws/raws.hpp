@@ -5,6 +5,7 @@
 #include <boost/container/flat_map.hpp>
 #include <tuple>
 #include <rltk.hpp>
+#include <bitset>
 
 struct string_table_t {
 	std::vector<std::string> strings;
@@ -54,6 +55,22 @@ struct profession_t {
 	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
 };
 
+constexpr int NUMBER_OF_ITEM_CATEGORIES = 4;
+constexpr int COMPONENT = 0;
+constexpr int TOOL_CHOPPING = 1;
+constexpr int TOOL_DIGGING = 2;
+constexpr int WEAPON = 3;
+
+struct item_def_t {
+	std::string tag = "";
+	std::string name = "";
+	std::string description = "";
+	std::bitset<NUMBER_OF_ITEM_CATEGORIES> categories;
+	uint8_t glyph;
+	rltk::color_t fg;
+	rltk::color_t bg;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -66,6 +83,12 @@ extern boost::container::flat_map<std::string, uint16_t> tile_contents_index;
 extern boost::container::flat_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;
 
+extern boost::container::flat_map<std::string, item_def_t> item_defs;
+
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);
 uint16_t get_tile_contents_index(const std::string name);
+
+void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag);
+void spawn_item_in_container(const std::size_t container_id, const std::string &tag);
+

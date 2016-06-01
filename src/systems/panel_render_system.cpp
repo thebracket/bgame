@@ -106,10 +106,30 @@ void panel_render_system::render_play_mode() {
 			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
 		}
 		int count = 0;
+		// Named entities in the location
 		each<name_t, position_t>([&count, &world_x, &world_y] (entity_t &entity, name_t &name, position_t &pos) {
 			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
 				term(3)->print(1, term(3)->term_height - 5 - count, name.first_name + std::string(" ") + name.last_name, GREEN, GREEN_BG);
 				++count;
+			}
+		});
+		// Items on the ground
+		each<item_t, position_t>([&count, &world_x, &world_y] (entity_t &entity, item_t &item, position_t &pos) {
+			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+				term(3)->print(1, term(3)->term_height - 5 - count, item.item_name, GREEN, GREEN_BG);
+				++count;
+			}
+		});
+		// Storage lockers and similar
+		each<construct_container_t, position_t>([&count, &world_x, &world_y] (entity_t &storage_entity, construct_container_t &container, position_t &pos) {
+			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+				// It is a container and it is here - look inside!
+				each<item_t, item_stored_t>([&count, &world_x, &world_y, &storage_entity] (entity_t &entity, item_t &item, item_stored_t &stored) {
+					if (stored.stored_in == storage_entity.id) {
+						term(3)->print(1, term(3)->term_height - 5 - count, item.item_name, GREEN, GREEN_BG);
+						++count;
+					}
+				});
 			}
 		});
 	}
