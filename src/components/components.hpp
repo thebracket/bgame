@@ -13,3 +13,6 @@
 #include "settler_ai.hpp"
 #include "item_stored.hpp"
 #include "designations.hpp"
+#include "construct_container.hpp"
+#include "construct_power.hpp"
+#include "construct_provides_sleep.hpp"

@@ -1,5 +1,6 @@
 #include "raws.hpp"
 #include "lua_bridge.hpp"
+#include "../components/components.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -18,6 +19,8 @@ boost::container::flat_map<std::string, uint16_t> tile_contents_index;
 
 boost::container::flat_map<std::string, clothing_t> clothing_types;
 std::vector<profession_t> starting_professions;
+
+boost::container::flat_map<std::string, item_def_t> item_defs;
 
 std::vector<std::string> split ( const std::string str, const char delimiter )
 {
@@ -252,11 +255,54 @@ void read_professions() {
     }
 }
 
+void read_items() {
+    lua_getglobal(lua_state, "items");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        item_def_t c;
+
+        std::string key = lua_tostring(lua_state, -2);
+        c.tag = key;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "description") c.description = lua_tostring(lua_state, -1);
+            if (field == "background") c.bg = read_lua_color("background");
+            if (field == "foreground") c.fg = read_lua_color("foreground");
+            if (field == "glyph") c.glyph = lua_tonumber(lua_state, -1);
+            if (field == "itemtype") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string type = lua_tostring(lua_state, -1);
+                    if (type == "component") c.categories.set(COMPONENT);
+                    if (type == "tool-chopping") c.categories.set(TOOL_CHOPPING);
+                    if (type == "tool-digging") c.categories.set(TOOL_DIGGING);
+                    if (type == "weapon") c.categories.set(WEAPON);
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+        item_defs[key] = c;
+
+        lua_pop(lua_state, 1);
+    }
+}
+
 void load_game_tables() {
 	read_tile_types();
 	read_tile_contents();
     read_clothing();
     read_professions();
+    read_items();
 }
 
 void load_raws() {
@@ -297,4 +343,24 @@ uint16_t get_tile_contents_index(const std::string name) {
 	} else {
 		throw std::runtime_error("Unknown tile contents: " + name);
 	}
+}
+
+void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag) {
+    auto finder = item_defs.find(tag);
+    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+
+    auto item = create_entity()
+        ->assign(position_t{ x,y,z })
+        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(item_t{tag, finder->second.name, finder->second.categories});
+}
+
+void spawn_item_in_container(const std::size_t container_id, const std::string &tag) {
+    auto finder = item_defs.find(tag);
+    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+
+    auto item = create_entity()
+        ->assign(item_stored_t{ container_id })
+        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(item_t{tag, finder->second.name, finder->second.categories});
 }
