@@ -1,18 +1,16 @@
 #pragma once
 
 #include <rltk.hpp>
-#include <vector>
+#include <boost/container/flat_map.hpp>
 #include "../planet/region.hpp"
 
 using namespace rltk;
 
 struct designations_t {
 
-	std::vector<uint8_t> mining;
+	boost::container::flat_map<int, uint8_t> mining;
 
 	designations_t() {
-		mining.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
-		std::fill(mining.begin(), mining.end(), 0);
 	}
 
 	std::size_t serialization_identity = 13;
@@ -20,8 +18,9 @@ struct designations_t {
 	void save(std::ostream &lbfile) {
 		std::size_t size = mining.size();
 		serialize(lbfile, size);
-		for (uint8_t &n : mining) {
-			serialize(lbfile, n);
+		for (std::pair<int,uint8_t> &n : mining) {
+			serialize(lbfile, n.first);
+			serialize(lbfile, n.second);
 		}
 	}
 
@@ -30,7 +29,11 @@ struct designations_t {
 		std::size_t size;
 		deserialize(lbfile, size);
 		for (std::size_t i=0; i<size; ++i) {
-			deserialize(lbfile, c.mining[i]);
+			uint8_t idx;
+			uint8_t tmp;
+			deserialize(lbfile, idx);
+			deserialize(lbfile, tmp);
+			c.mining[idx] = tmp;
 		}
 		return c;
 	}
