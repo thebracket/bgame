@@ -2,6 +2,8 @@
 #include "../messages/messages.hpp"
 #include "../game_globals.hpp"
 #include "path_finding.hpp"
+#include "mining_system.hpp"
+#include "inventory_system.hpp"
 #include <iostream>
 #include <map>
 
@@ -131,6 +133,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 		pos.y = next_step.y;
 		pos.z = next_step.z;
 		ai.current_path->steps.pop_front();
+		emit(renderables_changed_message{});
 		return;
 	}
 
@@ -151,6 +154,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 void settler_ai_system::do_leisure_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_major == JOB_SLEEP) {
 		cancel_action(entity, ai, stats, species, pos, name, "Time to wake up");
+		return;
 	}
 	wander_randomly(entity, pos);
 }
@@ -158,6 +162,221 @@ void settler_ai_system::do_leisure_time(entity_t &entity, settler_ai_t &ai, game
 void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_major == JOB_SLEEP) {
 		cancel_action(entity, ai, stats, species, pos, name, "Time to wake up");
+		return;
 	}
-	wander_randomly(entity, pos);
+	if (ai.job_type_major == JOB_IDLE) {
+		// Find something to do!
+		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
+			renderable_t * render = entity.component<renderable_t>();
+			render->foreground = rltk::colors::WHITE;
+			emit(renderables_changed_message{});
+			ai.job_type_major = JOB_MINE;
+			ai.job_type_minor = JM_FIND_PICK;
+			ai.job_status = "Finding mining tools.";
+			return;
+		}
+	} 
+	if (ai.job_type_major == JOB_MINE) {
+		do_mining(entity, ai, stats, species, pos, name);
+	}
+	//wander_randomly(entity, pos);
+}
+
+void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	//std::cout << name.first_name << ": " << ai.job_status << "\n";
+
+	if (ai.job_type_minor == JM_FIND_PICK) {
+		inventory_item_t pick = claim_closest_item_by_category(TOOL_DIGGING, pos);
+		if (!pick.pos) throw std::runtime_error("Found a pick but can't go there!");
+		ai.current_path = find_path(pos, pick.pos.get());
+		if (!ai.current_path->success) throw std::runtime_error("Found a pick, but failed to path to it");
+		ai.job_type_minor = JM_GO_TO_PICK;
+		ai.target_x = pick.pos.get().x;
+		ai.target_y = pick.pos.get().y;
+		ai.target_z = pick.pos.get().z;
+		ai.job_status = "Traveling to digging tool";
+		ai.current_tool = pick.id;
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_PICK) {
+		if (pos == ai.current_path->destination) {
+			// We're at the pick
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_PICK;
+			ai.job_status = "Collect digging tool";
+			return;
+		}
+		// Travel to pick
+		position_t next_step = ai.current_path->steps.front();
+		pos.x = next_step.x;
+		pos.y = next_step.y;
+		pos.z = next_step.z;
+		ai.current_path->steps.pop_front();
+		emit(renderables_changed_message{});
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_PICK) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
+		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
+		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
+
+		// Notify the inventory system of the change	
+		emit(inventory_changed_message{});
+		emit(renderables_changed_message{});
+
+		ai.job_type_minor = JM_GO_TO_SITE;
+		ai.job_status = "Travelling to dig site";
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_SITE) {
+		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		if (mining_map[idx]==0) {
+			// We're at a diggable site
+			ai.job_type_minor = JM_DIG;
+			ai.job_status = "Digging";
+			return;
+		}
+		// Look at adjacent mining map entries, and path to the closest one. If there is no option,
+		// Drop the pick.
+		int current_direction = 0;
+		int min_value = 512;
+		if (mining_map[current_region.idx(pos.x, pos.y-1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
+			min_value = mining_map[current_region.idx(pos.x, pos.y-1, pos.z)]; 
+			current_direction = 1; 
+		}
+		if (mining_map[current_region.idx(pos.x, pos.y+1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { 
+			min_value = mining_map[current_region.idx(pos.x, pos.y+1, pos.z)]; 
+			current_direction = 2; 
+		}
+		if (mining_map[current_region.idx(pos.x-1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { 
+			min_value = mining_map[current_region.idx(pos.x-1, pos.y, pos.z)]; 
+			current_direction = 3; 
+		}
+		if (mining_map[current_region.idx(pos.x+1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { 
+			min_value = mining_map[current_region.idx(pos.x+1, pos.y, pos.z)]; 
+			current_direction = 4; 
+		}
+		if (mining_map[current_region.idx(pos.x, pos.y, pos.z-1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { 
+			min_value = mining_map[current_region.idx(pos.x, pos.y, pos.z-1)]; 
+			current_direction = 5; 
+		}
+		if (mining_map[current_region.idx(pos.x, pos.y, pos.z+1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { 
+			min_value = mining_map[current_region.idx(pos.x, pos.y, pos.z+1)]; 
+			current_direction = 6; 
+		}
+
+		if (current_direction == 0) {
+			ai.job_type_minor = JM_DROP_PICK;
+			ai.job_status = "Dropping digging tools.";
+			return;
+		}
+
+		switch (current_direction) {
+			case 1 : --pos.y; break;
+			case 2 : ++pos.y; break;
+			case 3 : --pos.x; break;
+			case 4 : ++pos.x; break;
+			case 5 : --pos.z; break;
+			case 6 : ++pos.z; break;
+		}
+		emit(renderables_changed_message{});
+
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DIG) {
+		// Determine the digging target from here
+		// Make a skill roll, and if successful complete the action
+		// When complete, move to dropping the pick
+		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		const int target_idx = mining_targets[idx];
+		const int target_operation = designations->mining[target_idx];
+
+		if (target_operation == 1) {
+			// Dig
+			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+			current_region.tiles[target_idx].contents = 0;
+			current_region.calculate_render_tile(target_idx);
+		} else if (target_operation == 2) {
+			// Channel
+			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+			current_region.tiles[target_idx].contents = 0;
+			current_region.tiles[target_idx].base_type = 0;
+			current_region.calculate_render_tile(target_idx);
+			
+			// Add ramp
+			const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
+			current_region.tiles[below].flags.reset(tile_flags::SOLID);
+			current_region.tiles[below].flags.set(tile_flags::CONSTRUCTION);
+			current_region.tiles[below].contents = 4118;
+			current_region.calculate_render_tile(below);
+		} else if (target_operation == 3) {
+			// Ramp
+			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+			current_region.tiles[target_idx].contents = 4118;
+			current_region.calculate_render_tile(target_idx);
+
+			const int above = target_idx + (REGION_WIDTH * REGION_HEIGHT);
+			current_region.tiles[above].flags.reset(tile_flags::SOLID);
+			current_region.tiles[above].base_type = 0;
+			current_region.tiles[above].contents = 0;
+			current_region.calculate_render_tile(above);
+			
+		} else if (target_operation == 4) {
+			// Up
+			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+			current_region.tiles[target_idx].contents = 4111;
+			current_region.calculate_render_tile(target_idx);
+		} else if (target_operation == 5) {
+			// Down
+			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+			current_region.tiles[target_idx].contents = 4110;
+			current_region.calculate_render_tile(target_idx);
+		} else if (target_operation == 6) {
+			// UpDown
+			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+			current_region.tiles[target_idx].contents = 4109;
+			current_region.calculate_render_tile(target_idx);
+		}
+
+		for (int Z=-2; Z<3; ++Z) {
+			for (int Y=-2; Y<3; ++Y) {
+				for (int X=-2; X<3; ++X) {
+					current_region.determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
+					current_region.determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+				}
+			}
+		}
+
+		designations->mining[target_idx] = 0;
+		emit(recalculate_mining_message{});
+		emit(map_dirty_message{});
+		ai.job_type_minor = JM_DROP_PICK;
+		ai.job_status = "Dropping digging tools.";
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DROP_PICK) {
+		// NOTE that this is broken and needs fixing
+		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
+		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
+		ai.job_type_major = JOB_IDLE;
+		ai.job_status = "Idle";
+		renderable_t * render = e.component<renderable_t>();
+		render->foreground = rltk::colors::YELLOW;
+		render->glyph = '@';
+		emit(renderables_changed_message{});
+		emit(inventory_changed_message{});	
+		emit(item_claimed_message{ai.current_tool, false});
+		ai.current_tool = 0;
+	}
 }
