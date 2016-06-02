@@ -18,8 +18,6 @@ void save_region(const region_t &region) {
 	for (const tile_t &tile : region.tiles) {
 		serialize(deflate, tile.base_type);
 		serialize(deflate, tile.contents);
-		serialize(deflate, tile.liquid);
-		serialize(deflate, tile.temperature);
 		serialize(deflate, tile.flags);
 	}
 }
@@ -39,8 +37,6 @@ region_t load_region(const int region_x, const int region_y) {
 		tile_t tile;
 		deserialize(inflate, tile.base_type);
 		deserialize(inflate, tile.contents);
-		deserialize(inflate, tile.liquid);
-		deserialize(inflate, tile.temperature);
 		deserialize(inflate, tile.flags);
 		region.tiles[i] = tile;
 	}
