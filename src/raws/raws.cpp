@@ -22,6 +22,17 @@ std::vector<profession_t> starting_professions;
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
 
+std::string to_proper_noun_case(const std::string &original)
+{
+    std::string result;
+    result += std::toupper(original[0]);
+    for (std::size_t i = 1; i < original.size(); ++i)
+    {
+        result += std::tolower(original[i]);
+    }
+    return result;
+}
+
 std::vector<std::string> split ( const std::string str, const char delimiter )
 {
      std::vector<std::string> internal;
