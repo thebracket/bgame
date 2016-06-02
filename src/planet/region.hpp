@@ -7,21 +7,21 @@
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
 constexpr int REGION_DEPTH=128;
-constexpr int TILE_OPTIONS_COUNT = 15;
+constexpr int TILE_OPTIONS_COUNT = 16;
 
 namespace tile_flags {
 
-constexpr int SOLID = 1;
-constexpr int TREE = 2;
-constexpr int CONSTRUCTION = 3;
+constexpr int SOLID = 0;
+constexpr int TREE = 1;
+constexpr int CONSTRUCTION = 2;
 
-constexpr int CAN_GO_UP = 4;
-constexpr int CAN_GO_DOWN = 5;
-constexpr int CAN_GO_NORTH = 6;
-constexpr int CAN_GO_EAST = 7;
-constexpr int CAN_GO_SOUTH = 8;
-constexpr int CAN_GO_WEST = 9;
-constexpr int CAN_STAND_HERE = 10;
+constexpr int CAN_GO_UP = 3;
+constexpr int CAN_GO_DOWN = 4;
+constexpr int CAN_GO_NORTH = 5;
+constexpr int CAN_GO_EAST = 6;
+constexpr int CAN_GO_SOUTH = 7;
+constexpr int CAN_GO_WEST = 8;
+constexpr int CAN_STAND_HERE = 9;
 
 }
 
