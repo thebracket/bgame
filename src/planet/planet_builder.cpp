@@ -774,14 +774,14 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	// Name
 	std::string first_name;
 	if (species.gender == MALE) {
-		first_name = first_names_female.random_entry(rng);
+		first_name = to_proper_noun_case(first_names_female.random_entry(rng));
 	}
 	else 
 	{
-		first_name = first_names_male.random_entry(rng);
+		first_name = to_proper_noun_case(first_names_male.random_entry(rng));
 	}
 
-	const std::string last_name = last_names.random_entry(rng);
+	const std::string last_name = to_proper_noun_case(last_names.random_entry(rng));
 
 	// Profession
 	const int number_of_professions = starting_professions.size();

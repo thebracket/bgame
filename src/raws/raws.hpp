@@ -92,3 +92,5 @@ uint16_t get_tile_contents_index(const std::string name);
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag);
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag);
 
+std::string to_proper_noun_case(const std::string &original);
+std::vector<std::string> split ( const std::string str, const char delimiter );
