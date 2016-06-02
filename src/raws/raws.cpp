@@ -334,6 +334,9 @@ void load_raws() {
 
 	// Extract game tables
 	load_game_tables();
+
+    // Quit LUA
+    lua_handle.reset();
 }
 
 uint8_t get_tile_type_index(const std::string name) {
