@@ -28,8 +28,6 @@ constexpr int CAN_STAND_HERE = 10;
 struct tile_t {
 	uint8_t base_type;
 	uint16_t contents;
-	uint8_t liquid;
-	int16_t temperature;
 	std::bitset<TILE_OPTIONS_COUNT> flags;
 	rltk::vchar render_as;
 };
@@ -45,8 +43,6 @@ struct region_t {
 		const int loc = idx(x,y,z);
 		tiles[loc].base_type = base;
 		tiles[loc].contents = content;
-		tiles[loc].liquid = liquid;
-		tiles[loc].temperature = temperature;
 		if (solid) {
 			tiles[loc].flags.set(tile_flags::SOLID);
 		} else {
