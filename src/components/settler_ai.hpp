@@ -9,10 +9,11 @@ using namespace rltk;
 constexpr int NUMBER_OF_JOB_CATEGORIES = 1;
 constexpr int JOB_MINING = 0;
 
-enum job_major_t { JOB_IDLE, JOB_SLEEP };
+enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE };
 enum job_minor_t { 
 	JM_NONE,
-	JM_FIND_BED, JM_GO_TO_BED, JM_SLEEP			// Bed-time steps
+	JM_FIND_BED, JM_GO_TO_BED, JM_SLEEP,				// Bed-time steps
+	JM_FIND_PICK, JM_GO_TO_PICK, JM_COLLECT_PICK, JM_GO_TO_SITE, JM_DIG, JM_DROP_PICK	// Mining steps
 };
 
 struct settler_ai_t {
@@ -30,6 +31,7 @@ struct settler_ai_t {
 
 	// Non-persistent
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
+	std::size_t current_tool;
 
 	settler_ai_t() {
 		std::fill(permitted_work.begin(), permitted_work.end(), true);

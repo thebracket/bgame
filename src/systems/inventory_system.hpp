@@ -22,3 +22,4 @@ private:
 };
 
 bool is_item_category_available(const int &category);
+inventory_item_t claim_closest_item_by_category(const int &category, position_t &pos);

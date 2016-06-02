@@ -3,7 +3,8 @@
 #include <rltk.hpp>
 #include <vector>
 
-extern std::vector<int> mining_map;
+extern std::vector<uint8_t> mining_map;
+extern std::vector<int> mining_targets;
 
 class mining_system : public rltk::base_system {
 public:

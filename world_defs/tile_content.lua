@@ -54,6 +54,7 @@ tile_content = {
 	ship_updown = { index = 4109, glyph = glyphs['X'], foreground = colors['white'], background = colors['black'], stairs='updown', name="Up/Down Stairs"},
 	ship_down = { index = 4110, glyph = glyphs['greater_than'], foreground = colors['white'], background = colors['black'], stairs='down', name="Down Stairs" },
 	ship_up = { index = 4111, glyph = glyphs['less_than'], foreground = colors['white'], background = colors['black'], stairs='up', name='Up Stairs' },
+	ship_ramp = { index = 4118, glyph = glyphs['ramp_up'], foreground = colors['white'], background = colors['black'], stairs='up', name='Up Ramp' },
 
 	solar_panel = { index = 4112, glyph = glyphs['one_quarter_solid'], foreground = colors['yellow'], background = colors['cyan'], name="Solar Panel" },
 	cryo_bed = { index = 4113, glyph = glyphs['zero'], foreground = colors['white'], background = colors['black'], name="Cryo Bed" },

@@ -3,6 +3,7 @@
 #include "main_menu.hpp"
 #include "world_gen.hpp"
 #include "play_game.hpp"
+#include "game_globals.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -59,10 +60,12 @@ void tick(double duration_ms) {
 		} break;
 		case PLAY_GAME : {
 			game.tick(duration_ms);
+			ecs_garbage_collect();
 			if (game.quitting) {
 				const std::string save_filename = "world/savegame.dat";
 				std::fstream lbfile(save_filename, std::ios::out | std::ios::binary);
 				ecs_save(lbfile);
+				save_region(current_region);
 				game.destroy();
 				mode = MAIN_MENU;
 				menu.init();
