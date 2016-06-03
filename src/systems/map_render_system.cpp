@@ -3,10 +3,11 @@
 #include "../messages/messages.hpp"
 #include "../game_globals.hpp"
 #include <iostream>
+#include <boost/container/flat_map.hpp>
 
 using namespace rltk;
 
-std::vector<boost::optional<rltk::vchar>> renderables;
+boost::container::flat_map<int, rltk::vchar> renderables;
 
 vchar get_render_char(const int &x, const int &y, const int &z) {
 
@@ -17,8 +18,9 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 	while (dive_depth < max_dive_depth && result.glyph == ' ') {
 		const int idx = current_region.idx(x, y, z-dive_depth);
 
-		if (renderables[idx]) {
-			result = renderables[idx].get();
+		auto rf = renderables.find(idx);
+		if (rf != renderables.end()) {
+			result = rf->second;
 		} else {
 			result = current_region.tiles[idx].render_as;
 		}
@@ -42,8 +44,9 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
 	const int idx = current_region.idx(x, y, z);
 
-	if (renderables[idx]) {
-		result = renderables[idx].get();
+	auto rf = renderables.find(idx);
+	if (rf != renderables.end()) {
+		result = rf->second;
 	} else {
 		result = current_region.tiles[idx].render_as;
 	}
@@ -117,9 +120,7 @@ void map_render_system::update(const double duration_ms) {
 	if (clip_left == -1) update_clipping_rectangle();
 
 	if (renderables_changed) {
-		for (auto &i : renderables) {
-			i.reset();
-		}
+		renderables.clear();
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
 			renderables[current_region.idx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
 		});
