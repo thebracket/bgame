@@ -60,7 +60,7 @@ target_link_libraries(bgame rltk)
 set(Boost_USE_STATIC_LIBS      OFF) # only find static libs
 set(Boost_USE_MULTITHREADED    ON)
 set(Boost_USE_STATIC_RUNTIME   OFF)
-find_package(Boost COMPONENTS filesystem system REQUIRED)
+find_package(Boost COMPONENTS filesystem system iostreams REQUIRED)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   target_link_libraries(rltk ${Boost_LIBRARIES})
