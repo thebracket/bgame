@@ -3,6 +3,7 @@
 #include "../raws/raws.hpp"
 #include "../components/components.hpp"
 #include "../messages/messages.hpp"
+#include "mining_system.hpp"
 #include <sstream>
 
 using namespace rltk;
@@ -100,9 +101,16 @@ void panel_render_system::render_play_mode() {
 		}
 		{
 			std::stringstream ss;
-			if (current_region.tiles[idx].flags.test(tile_flags::SOLID)) ss << "Solid ";
-			if (current_region.tiles[idx].flags.test(tile_flags::TREE)) ss << "Tree ";
-			if (current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "Construct ";
+			if (current_region.tiles[idx].flags.test(tile_flags::SOLID)) ss << "S";
+			if (current_region.tiles[idx].flags.test(tile_flags::TREE)) ss << "T";
+			if (current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "C";
+			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) ss << "N";
+			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) ss << "S";
+			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) ss << "E";
+			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) ss << "W";
+			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) ss << "U";
+			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) ss << "D";
+			ss << +mining_map[idx];
 			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
 		}
 		int count = 0;

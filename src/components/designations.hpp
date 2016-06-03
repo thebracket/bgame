@@ -18,9 +18,10 @@ struct designations_t {
 	void save(std::ostream &lbfile) {
 		std::size_t size = mining.size();
 		serialize(lbfile, size);
-		for (std::pair<int,uint8_t> &n : mining) {
-			serialize(lbfile, n.first);
-			serialize(lbfile, n.second);
+
+		for (auto it = mining.begin(); it != mining.end(); ++it) {
+			serialize(lbfile, it->first);
+			serialize(lbfile, it->second);
 		}
 	}
 
@@ -29,7 +30,7 @@ struct designations_t {
 		std::size_t size;
 		deserialize(lbfile, size);
 		for (std::size_t i=0; i<size; ++i) {
-			uint8_t idx;
+			int idx;
 			uint8_t tmp;
 			deserialize(lbfile, idx);
 			deserialize(lbfile, tmp);

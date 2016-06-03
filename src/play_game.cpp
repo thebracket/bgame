@@ -81,4 +81,5 @@ void play_game::init() {
 void play_game::destroy() {
 	gui->delete_layer(MAP_LAYER);
 	gui->delete_layer(GUI_LAYER);
+	gui->delete_layer(RIGHT_PANEL);
 }

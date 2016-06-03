@@ -10,6 +10,7 @@ std::array<int, NUMBER_OF_ITEM_CATEGORIES> item_availability;
 std::array<std::vector<std::size_t>, NUMBER_OF_ITEM_CATEGORIES> items_by_category;
 
 void inv_insert_or_update(inventory_item_t item) {
+	if (item.id == 0) std::cout << "Warning: item id 0 is probably not valid for insertion!\n";
 	auto finder = all_items.find(item.id);
 	if (finder == all_items.end()) {
 		// Insert it
@@ -70,6 +71,7 @@ void inventory_system::configure() {
 		dirty = true;
 	});
 	subscribe<item_claimed_message>([] (item_claimed_message &msg) {
+		std::cout << "Received item claimed message: " << msg.id << "," << msg.claimed << "\n";
 		auto finder = all_items.find(msg.id);
 		if (finder != all_items.end()) {
 			finder->second.claimed = msg.claimed;
@@ -77,8 +79,10 @@ void inventory_system::configure() {
 				if (finder->second.categories.test(i)) {
 					if (msg.claimed) {
 						--item_availability[i];
+						std::cout << "Claimed - available by category: " << item_availability[i] << "\n";
 					} else {
 						++item_availability[i];
+						std::cout << "Released - available by category: " << item_availability[i] << "\n";
 					}
 				}
 			}
@@ -109,5 +113,18 @@ inventory_item_t claim_closest_item_by_category(const int &category, position_t 
 	}
 
 	std::size_t closest_matching_id = distance_sorted.begin()->second;
+	all_items[closest_matching_id].claimed = true;
+
+	auto finder = all_items.find(closest_matching_id);
+	if (finder != all_items.end()) {
+		finder->second.claimed = true;
+		for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
+			if (finder->second.categories.test(i)) {
+				--item_availability[i];
+				std::cout << "Claimed - available by category: " << item_availability[i] << "\n";
+			}
+		}
+	}
+	std::cout << "Handing out tool with ID " << all_items[closest_matching_id].id << "\n";
 	return all_items[closest_matching_id];
 }

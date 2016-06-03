@@ -61,12 +61,20 @@ void settler_ai_system::configure() {
 	});
 }
 
-void settler_ai_system::cancel_action(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
+void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
 	// Drop whatever we are doing!
 	if (ai.job_type_major == JOB_SLEEP) {
 		each<construct_provides_sleep_t, position_t>([&pos] (entity_t &e, construct_provides_sleep_t &bed, position_t &bed_pos) {
 			if (bed_pos == pos) bed.claimed = false;
 		});
+	}
+	// Drop pick if mining
+	if (ai.job_type_major == JOB_MINE && ai.current_tool != 0) {
+		emit(item_claimed_message{ai.current_tool, false});
+		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
+		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
+		emit(inventory_changed_message{});	
+		ai.current_tool = 0;
 	}
 
 	std::cout << name.first_name << " cancels action: " << reason << "\n";
@@ -74,6 +82,9 @@ void settler_ai_system::cancel_action(entity_t &entity, settler_ai_t &ai, game_s
 	ai.target_x = 0; 
 	ai.target_y = 0; 
 	ai.target_z = 0;
+	renderable_t * render = e.component<renderable_t>();
+	render->foreground = rltk::colors::YELLOW;
+	render->glyph = '@';
 }
 
 void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
@@ -84,7 +95,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 	if (ai.job_type_major == JOB_IDLE) {
 		ai.job_type_major = JOB_SLEEP;
 		ai.job_type_minor = JM_FIND_BED;
-		ai.job_status = "Looking for a bed";
+		change_job_status(ai, name, "Looking for a bed");
 		return;
 	}
 	if (ai.job_type_major != JOB_SLEEP) throw std::runtime_error("Sleep mode, but shouldn't have made it to here.\n");
@@ -112,20 +123,20 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 			ai.current_path.reset();
 		}
 		ai.job_type_minor = JM_GO_TO_BED;
-		ai.job_status = "Going to bed";
+		change_job_status(ai, name, "Going to bed");
 		return;
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_BED) {
 		if (!ai.current_path) {
 			ai.job_type_minor = JM_FIND_BED;
-			ai.job_status = "Looking for a bed";
+			change_job_status(ai, name, "Looking for a bed");
 			std::cout << "No path to bed - trying again to find one.\n";
 			return;
 		}
 		if (pos == ai.current_path->destination) {
 			ai.job_type_minor = JM_SLEEP;
-			ai.job_status = "Sleeping";
+			change_job_status(ai, name, "Sleeping");
 			return;
 		}
 		position_t next_step = ai.current_path->steps.front();
@@ -173,7 +184,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			emit(renderables_changed_message{});
 			ai.job_type_major = JOB_MINE;
 			ai.job_type_minor = JM_FIND_PICK;
-			ai.job_status = "Finding mining tools.";
+			change_job_status(ai, name, "Finding mining tools.");
 			return;
 		}
 	} 
@@ -183,19 +194,30 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 	//wander_randomly(entity, pos);
 }
 
+void settler_ai_system::change_job_status(settler_ai_t &ai, name_t &name, const std::string new_status) {
+	ai.job_status = new_status;
+	std::cout << name.first_name << " is now: " << new_status << "\n";
+}
+
 void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	//std::cout << name.first_name << ": " << ai.job_status << "\n";
 
 	if (ai.job_type_minor == JM_FIND_PICK) {
 		inventory_item_t pick = claim_closest_item_by_category(TOOL_DIGGING, pos);
-		if (!pick.pos) throw std::runtime_error("Found a pick but can't go there!");
+		if (!pick.pos) {
+			cancel_action(e, ai, stats, species, pos, name, "No available pick");
+			return;
+		}
 		ai.current_path = find_path(pos, pick.pos.get());
-		if (!ai.current_path->success) throw std::runtime_error("Found a pick, but failed to path to it");
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No available pick");
+			return;
+		}
 		ai.job_type_minor = JM_GO_TO_PICK;
 		ai.target_x = pick.pos.get().x;
 		ai.target_y = pick.pos.get().y;
 		ai.target_z = pick.pos.get().z;
-		ai.job_status = "Traveling to digging tool";
+		change_job_status(ai, name, "Traveling to digging tool");
 		ai.current_tool = pick.id;
 		return;
 	}
@@ -205,7 +227,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			// We're at the pick
 			ai.current_path.reset();
 			ai.job_type_minor = JM_COLLECT_PICK;
-			ai.job_status = "Collect digging tool";
+			change_job_status(ai, name, "Collect digging tool");
 			return;
 		}
 		// Travel to pick
@@ -229,7 +251,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		emit(renderables_changed_message{});
 
 		ai.job_type_minor = JM_GO_TO_SITE;
-		ai.job_status = "Travelling to dig site";
+		change_job_status(ai, name, "Travelling to dig site");
 		return;
 	}
 
@@ -238,7 +260,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		if (mining_map[idx]==0) {
 			// We're at a diggable site
 			ai.job_type_minor = JM_DIG;
-			ai.job_status = "Digging";
+			change_job_status(ai, name, "Digging");
 			return;
 		}
 		// Look at adjacent mining map entries, and path to the closest one. If there is no option,
@@ -272,7 +294,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 
 		if (current_direction == 0) {
 			ai.job_type_minor = JM_DROP_PICK;
-			ai.job_status = "Dropping digging tools.";
+			change_job_status(ai, name, "Dropping digging tools due to being lost!");
 			return;
 		}
 
@@ -300,7 +322,8 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		if (target_operation == 1) {
 			// Dig
 			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].contents = 0;
+			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+			current_region.tiles[target_idx].contents = 4101;
 			current_region.calculate_render_tile(target_idx);
 		} else if (target_operation == 2) {
 			// Channel
@@ -357,26 +380,27 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			}
 		}
 
-		designations->mining[target_idx] = 0;
+		designations->mining.erase(target_idx);
 		emit(recalculate_mining_message{});
 		emit(map_dirty_message{});
 		ai.job_type_minor = JM_DROP_PICK;
-		ai.job_status = "Dropping digging tools.";
+		change_job_status(ai, name, "Dropping digging tools - work complete");
 		return;
 	}
 
 	if (ai.job_type_minor == JM_DROP_PICK) {
 		// NOTE that this is broken and needs fixing
+		if (ai.current_tool == 0) std::cout << "Warning: pick is unassigned at this time\n";
+		emit(item_claimed_message{ai.current_tool, false});
 		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
 		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
 		ai.job_type_major = JOB_IDLE;
-		ai.job_status = "Idle";
+		change_job_status(ai, name, "Idle");
 		renderable_t * render = e.component<renderable_t>();
 		render->foreground = rltk::colors::YELLOW;
 		render->glyph = '@';
 		emit(renderables_changed_message{});
 		emit(inventory_changed_message{});	
-		emit(item_claimed_message{ai.current_tool, false});
 		ai.current_tool = 0;
 	}
 }
