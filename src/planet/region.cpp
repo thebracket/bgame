@@ -2,15 +2,17 @@
 #include <rltk.hpp>
 #include <string>
 #include "../raws/raws.hpp"
-//#include <Poco/InflatingStream.h>
-//#include <Poco/DeflatingStream.h>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
 
 using namespace rltk;
 
 void save_region(const region_t &region) {
 	std::string region_filename = "world/region_" + std::to_string(region.region_x) + "_" + std::to_string(region.region_y) + ".dat";
-	std::fstream deflate(region_filename, std::ios::out | std::ios::binary);
-	//Poco::DeflatingOutputStream deflate(lbfile, Poco::DeflatingStreamBuf::STREAM_GZIP);
+	std::fstream lbfile(region_filename, std::ios::out | std::ios::binary);
+	boost::iostreams::filtering_stream<boost::iostreams::output> deflate;
+	deflate.push(boost::iostreams::zlib_compressor());
+    deflate.push(lbfile);
 	serialize(deflate, region.region_x);
 	serialize(deflate, region.region_y);
 	serialize(deflate, region.biome_idx);
@@ -24,8 +26,10 @@ void save_region(const region_t &region) {
 
 region_t load_region(const int region_x, const int region_y) {
 	std::string region_filename = "world/region_" + std::to_string(region_x) + "_" + std::to_string(region_y) + ".dat";
-	std::fstream inflate(region_filename, std::ios::in | std::ios::binary);
-	//Poco::InflatingInputStream inflate(lbfile, Poco::InflatingStreamBuf::STREAM_GZIP);
+	std::fstream lbfile(region_filename, std::ios::in | std::ios::binary);
+	boost::iostreams::filtering_stream<boost::iostreams::input> inflate;
+	inflate.push(boost::iostreams::zlib_decompressor());
+    inflate.push(lbfile);
 	region_t region;
 
 	deserialize(inflate, region.region_x);
