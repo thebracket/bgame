@@ -51,10 +51,11 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 		result = current_region.tiles[idx].render_as;
 	}
 
-	if (designations->mining[idx] != 0) {
+	auto mf = designations->mining.find(idx);
+	if (mf != designations->mining.end()) {
 		result.foreground = rltk::colors::BLACK;
 		result.background = rltk::colors::YELLOW;
-		switch (designations->mining[idx]) {
+		switch (mf->second) {
 			case 1 : result.glyph = 177; break;
 			case 2 : result.glyph = 31; break;
 			case 3 : result.glyph = 30; break;
