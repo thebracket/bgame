@@ -177,7 +177,7 @@ void panel_render_system::render_design_mode() {
 						case UP : designations->mining[idx] = 4; break;
 						case DOWN : designations->mining[idx] = 5; break;
 						case UPDOWN : designations->mining[idx] = 6; break;
-						case DELETE : designations->mining[idx] = 0; break;
+						case DELETE : designations->mining.erase(idx); break;
 					}
 					emit(map_dirty_message{});
 				}
