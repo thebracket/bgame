@@ -2,6 +2,7 @@
 
 #include <rltk.hpp>
 #include <vector>
+#include <unordered_map>
 
 using namespace rltk;
 
@@ -12,10 +13,11 @@ constexpr short stat_modifier(const short &stat)
 	return ((stat - 1) / 2) - 4;
 }
 
-struct skill_t
-{
-	std::string skill_name;
-	int8_t skill_level;
+struct skill_t {
+	skill_t() {}
+	skill_t(const int8_t lvl, const uint8_t &xp) : skill_level(lvl), experience_gained(xp) {}
+	int8_t skill_level = 0;
+	uint8_t experience_gained = 0;
 };
 
 struct game_stats_t {
@@ -30,7 +32,7 @@ struct game_stats_t {
 	short comeliness;
 	short ethics;
 	int age;
-	std::vector<skill_t> skills;
+	std::unordered_map<std::string, skill_t> skills;
 
 	game_stats_t() {}
 
@@ -48,9 +50,10 @@ struct game_stats_t {
 		serialize(lbfile, ethics);
 		serialize(lbfile, age);
 		serialize(lbfile, skills.size());
-		for (const skill_t &skill : skills) {
-			serialize(lbfile, skill.skill_name);
-			serialize(lbfile, skill.skill_level);
+		for (const auto &skill : skills) {
+			serialize(lbfile, skill.first);
+			serialize(lbfile, skill.second.skill_level);
+			serialize(lbfile, skill.second.experience_gained);
 		}
 	}
 
@@ -69,11 +72,76 @@ struct game_stats_t {
 		std::size_t number_of_skills;
 		deserialize(lbfile, number_of_skills);
 		for (std::size_t i=0; i<number_of_skills; ++i) {
-			skill_t skill;
-			deserialize(lbfile, skill.skill_name);
-			deserialize(lbfile, skill.skill_level);
-			c.skills.push_back(skill);
+			std::string skill_name;
+			int8_t skill_level;
+			uint8_t experience_gained;
+			deserialize(lbfile, skill_name);
+			deserialize(lbfile, skill_level);
+			deserialize(lbfile, experience_gained);
+			c.skills[skill_name] = skill_t{skill_level, experience_gained};
 		}
 		return c;
 	}
 };
+
+enum attributes_t { strength, dexterity, constitution, intelligence, wisdom, charisma, ethics };
+
+const std::unordered_map<std::string, attributes_t> skill_table {
+	{ "Mining", strength }
+};
+
+enum skill_roll_result_t { CRITICAL_FAIL, FAIL, SUCCESS, CRITICAL_SUCCESS };
+constexpr int DIFFICULTY_TRIVIAL = 0;
+constexpr int DIFFICULTY_EASY = 5;
+constexpr int DIFFICULTY_AVERAGE = 10;
+constexpr int DIFICULTY_TOUGH = 15;
+constexpr int DIFFICULTY_CHALLENGING = 20;
+constexpr int DIFFICULTY_FORMIDABLE = 25;
+constexpr int DIFFICULTY_HEROIC = 30;
+constexpr int DIFFICULTY_NEARLY_IMPOSSIBLE = 40;
+
+inline int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::string &skill) {
+	auto finder = skill_table.find(skill);
+	if (finder != skill_table.end()) {
+		switch (finder->second) {
+			case strength : return stat_modifier(stats.strength);
+			case dexterity : return stat_modifier(stats.dexterity);
+			case constitution : return stat_modifier(stats.constitution);
+			case intelligence : return stat_modifier(stats.intelligence);
+			case wisdom : return stat_modifier(stats.wisdom);
+			case charisma : return stat_modifier(stats.charisma);
+			case ethics : return stat_modifier(stats.ethics);
+		}
+	} else {
+		std::cout << "Warning: unknown skill [" << skill << "]\n";
+		return 0;
+	}
+}
+
+inline int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill) {
+	auto finder = stats.skills.find(skill);
+	if (finder != stats.skills.end()) {
+		return finder->second.skill_level;
+	} else {
+		return 0;
+	}
+}
+
+inline skill_roll_result_t skill_roll(const game_stats_t &stats, rltk::random_number_generator &rng, const std::string skill_name, const int difficulty) {
+	const int luck_component = rng.roll_dice( 1, 20 );
+	const int natural_ability = get_attribute_modifier_for_skill(stats, skill_name);
+	const int8_t person_skill = get_skill_modifier(stats, skill_name);
+	const int total = luck_component + natural_ability + person_skill;
+
+	std::cout << skill_name << " roll, difficulty " << difficulty << ". 1d20 = " << luck_component << ", +" << natural_ability << " (ability) + " << person_skill << " (skill) = " << total << "\n";
+
+	if (luck_component == 1) {
+		return CRITICAL_FAIL;
+	} else if (luck_component == 20) {
+		return CRITICAL_SUCCESS;
+	} else if (total >= difficulty) {
+		return SUCCESS;
+	} else {
+		return FAIL;
+	}
+}
