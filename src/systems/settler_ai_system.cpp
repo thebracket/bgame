@@ -312,80 +312,87 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	}
 
 	if (ai.job_type_minor == JM_DIG) {
-		// Determine the digging target from here
-		// Make a skill roll, and if successful complete the action
-		// When complete, move to dropping the pick
-		const int idx = current_region.idx(pos.x, pos.y, pos.z);
-		const int target_idx = mining_targets[idx];
-		const int target_operation = designations->mining[target_idx];
+		auto skill_check = skill_roll(stats, rng, "Mining", DIFICULTY_TOUGH);
+		if (skill_check >= SUCCESS) {
+			// Determine the digging target from here
+			// Make a skill roll, and if successful complete the action
+			// When complete, move to dropping the pick
+			const int idx = current_region.idx(pos.x, pos.y, pos.z);
+			const int target_idx = mining_targets[idx];
+			const int target_operation = designations->mining[target_idx];
 
-		if (target_operation == 1) {
-			// Dig
-			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-			current_region.tiles[target_idx].contents = 4101;
-			current_region.calculate_render_tile(target_idx);
-		} else if (target_operation == 2) {
-			// Channel
-			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].contents = 0;
-			current_region.tiles[target_idx].base_type = 0;
-			current_region.calculate_render_tile(target_idx);
-			
-			// Add ramp
-			const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
-			current_region.tiles[below].flags.reset(tile_flags::SOLID);
-			current_region.tiles[below].flags.set(tile_flags::CONSTRUCTION);
-			current_region.tiles[below].contents = 4118;
-			current_region.calculate_render_tile(below);
-		} else if (target_operation == 3) {
-			// Ramp
-			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-			current_region.tiles[target_idx].contents = 4118;
-			current_region.calculate_render_tile(target_idx);
+			if (target_operation == 1) {
+				// Dig
+				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region.tiles[target_idx].contents = 4101;
+				current_region.calculate_render_tile(target_idx);
+			} else if (target_operation == 2) {
+				// Channel
+				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region.tiles[target_idx].contents = 0;
+				current_region.tiles[target_idx].base_type = 0;
+				current_region.calculate_render_tile(target_idx);
+				
+				// Add ramp
+				const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
+				current_region.tiles[below].flags.reset(tile_flags::SOLID);
+				current_region.tiles[below].flags.set(tile_flags::CONSTRUCTION);
+				current_region.tiles[below].contents = 4118;
+				current_region.calculate_render_tile(below);
+			} else if (target_operation == 3) {
+				// Ramp
+				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region.tiles[target_idx].contents = 4118;
+				current_region.calculate_render_tile(target_idx);
 
-			const int above = target_idx + (REGION_WIDTH * REGION_HEIGHT);
-			current_region.tiles[above].flags.reset(tile_flags::SOLID);
-			current_region.tiles[above].base_type = 0;
-			current_region.tiles[above].contents = 0;
-			current_region.calculate_render_tile(above);
-			
-		} else if (target_operation == 4) {
-			// Up
-			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-			current_region.tiles[target_idx].contents = 4111;
-			current_region.calculate_render_tile(target_idx);
-		} else if (target_operation == 5) {
-			// Down
-			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-			current_region.tiles[target_idx].contents = 4110;
-			current_region.calculate_render_tile(target_idx);
-		} else if (target_operation == 6) {
-			// UpDown
-			current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-			current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-			current_region.tiles[target_idx].contents = 4109;
-			current_region.calculate_render_tile(target_idx);
-		}
+				const int above = target_idx + (REGION_WIDTH * REGION_HEIGHT);
+				current_region.tiles[above].flags.reset(tile_flags::SOLID);
+				current_region.tiles[above].base_type = 0;
+				current_region.tiles[above].contents = 0;
+				current_region.calculate_render_tile(above);
+				
+			} else if (target_operation == 4) {
+				// Up
+				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region.tiles[target_idx].contents = 4111;
+				current_region.calculate_render_tile(target_idx);
+			} else if (target_operation == 5) {
+				// Down
+				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region.tiles[target_idx].contents = 4110;
+				current_region.calculate_render_tile(target_idx);
+			} else if (target_operation == 6) {
+				// UpDown
+				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region.tiles[target_idx].contents = 4109;
+				current_region.calculate_render_tile(target_idx);
+			}
 
-		for (int Z=-2; Z<3; ++Z) {
-			for (int Y=-2; Y<3; ++Y) {
-				for (int X=-2; X<3; ++X) {
-					current_region.determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
-					current_region.determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+			for (int Z=-2; Z<3; ++Z) {
+				for (int Y=-2; Y<3; ++Y) {
+					for (int X=-2; X<3; ++X) {
+						current_region.determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region.determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+					}
 				}
 			}
-		}
 
-		designations->mining.erase(target_idx);
-		emit(recalculate_mining_message{});
-		emit(map_dirty_message{});
-		ai.job_type_minor = JM_DROP_PICK;
-		change_job_status(ai, name, "Dropping digging tools - work complete");
-		return;
+			designations->mining.erase(target_idx);
+			emit(recalculate_mining_message{});
+			emit(map_dirty_message{});
+			ai.job_type_minor = JM_DROP_PICK;
+			change_job_status(ai, name, "Dropping digging tools - work complete");
+			return;
+		} else {
+			// Failed!
+			// if (skill_check == CRITICAL_FAIL) inflictDamage!
+			return;
+		}
 	}
 
 	if (ai.job_type_minor == JM_DROP_PICK) {
