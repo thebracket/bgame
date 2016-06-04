@@ -23,6 +23,7 @@ glyphs = {
 	sigma = 228,
 	kit = 233,
 	infinity = 236,
+	arch = 239,
 	plus_minus = 241,
 	axe = 244,
 	pick = 245,
