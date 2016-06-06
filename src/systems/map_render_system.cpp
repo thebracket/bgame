@@ -49,7 +49,7 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 
 vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
-	vchar result;
+	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
 
 	const int idx = current_region.idx(x, y, z);
 
