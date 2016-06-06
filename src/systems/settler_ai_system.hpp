@@ -9,6 +9,7 @@ public:
 	virtual void configure() override final;
 private:
 	void settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats);
+	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
 	void cancel_action(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason);

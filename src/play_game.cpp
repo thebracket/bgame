@@ -72,6 +72,7 @@ void play_game::init() {
 	add_system<mining_system>();
 	add_system<inventory_system>();
 	add_system<settler_ai_system>();
+	add_system<visibility_system>();
 	add_system<map_render_system>();
 	add_system<panel_render_system>();
 

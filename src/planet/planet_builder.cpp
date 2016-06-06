@@ -622,7 +622,8 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 	} else if (type == "cordex") {
 		auto cordex = create_entity()
 			->assign(position_t{ x,y,z })
-			->assign(construct_power_t{10,1,0});
+			->assign(construct_power_t{10,1,0})
+			->assign(viewshed_t{16, true});
 	} else if (type == "solar_panel") {
 		auto panel = create_entity()
 			->assign(position_t{ x,y,z })
@@ -812,7 +813,8 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 		->assign(std::move(species))
 		->assign(std::move(health))
 		->assign(std::move(stats))
-		->assign(std::move(ai));
+		->assign(std::move(ai))
+		->assign(viewshed_t{ 8, false });
 
 	// TODO: Create clothing items
 	//std::cout << settler->id << "\n";

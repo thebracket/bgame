@@ -50,10 +50,10 @@ struct game_stats_t {
 		serialize(lbfile, ethics);
 		serialize(lbfile, age);
 		serialize(lbfile, skills.size());
-		for (const auto &skill : skills) {
-			serialize(lbfile, skill.first);
-			serialize(lbfile, skill.second.skill_level);
-			serialize(lbfile, skill.second.experience_gained);
+		for (auto it=skills.begin(); it!=skills.end(); ++it) {
+			serialize(lbfile, it->first);
+			serialize(lbfile, it->second.skill_level);
+			serialize(lbfile, it->second.experience_gained);
 		}
 	}
 
@@ -75,6 +75,7 @@ struct game_stats_t {
 			std::string skill_name;
 			int8_t skill_level;
 			uint8_t experience_gained;
+
 			deserialize(lbfile, skill_name);
 			deserialize(lbfile, skill_level);
 			deserialize(lbfile, experience_gained);

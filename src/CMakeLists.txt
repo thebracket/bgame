@@ -42,6 +42,7 @@ add_executable(bgame main.cpp
 	systems/mining_system.cpp
 	systems/inventory_system.cpp
 	systems/path_finding.cpp
+	systems/visibility_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

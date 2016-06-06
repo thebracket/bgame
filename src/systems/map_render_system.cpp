@@ -9,6 +9,12 @@ using namespace rltk;
 
 boost::container::flat_map<int, rltk::vchar> renderables;
 
+vchar greyscale(vchar target) {
+	target.foreground = greyscale(target.foreground);
+	target.background = greyscale(target.background);
+	return target;
+}
+
 vchar get_render_char(const int &x, const int &y, const int &z) {
 
 	const int max_dive_depth = 5;
@@ -17,12 +23,15 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 
 	while (dive_depth < max_dive_depth && result.glyph == ' ') {
 		const int idx = current_region.idx(x, y, z-dive_depth);
+		if (!current_region.tiles[idx].flags.test(tile_flags::REVEALED)) return result;
 
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		} else {
 			result = current_region.tiles[idx].render_as;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		}
 		++dive_depth;
 	}
@@ -33,7 +42,7 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 		const int darken_amount = (dive_depth-1) * 40;
 		vchar darkened = result;
 		darkened.foreground = darken(darken_amount, darkened.foreground);
-		darkened.background = darken(darken_amount, darkened.background);
+		darkened.background = darken(darken_amount, darkened.background);		
 		return darkened;
 	}
 }
@@ -44,11 +53,15 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
 	const int idx = current_region.idx(x, y, z);
 
-	auto rf = renderables.find(idx);
-	if (rf != renderables.end()) {
-		result = rf->second;
-	} else {
-		result = current_region.tiles[idx].render_as;
+	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
+		auto rf = renderables.find(idx);
+		if (rf != renderables.end()) {
+			result = rf->second;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+		} else {
+			result = current_region.tiles[idx].render_as;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+		}
 	}
 
 	auto mf = designations->mining.find(idx);
@@ -143,7 +156,8 @@ void map_render_system::update(const double duration_ms) {
 		for (int y=clip_top; y<clip_bottom; ++y) {
 			int X = 0;
 			for (int x=clip_left; x<clip_right; ++x) {
-				term(1)->set_char(X, Y, calculator(x, y, camera_z));
+				rltk::vchar render_target = calculator(x, y, camera_z);
+				term(1)->set_char(X, Y, render_target);
 				++X;
 			}
 			++Y;

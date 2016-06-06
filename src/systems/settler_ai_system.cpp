@@ -16,8 +16,8 @@ void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stat
 	ai.initiative = rng.roll_dice(1, 6) - stat_modifier(stats.dexterity);
 }
 
-void settler_ai_system::wander_randomly(entity_t &entity, position_t &pos) {
-	const position_t original = pos;
+void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {
+	position_t pos = original;
 	const int tile_index = current_region.idx(pos.x, pos.y, pos.z);
 	//std::cout << current_region.tiles[tile_index].flags << "\n";
 	const int direction = rng.roll_dice(1,6);
@@ -29,12 +29,15 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &pos) {
 		case 5 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_EAST)) pos.x++; break;
 		case 6 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_WEST)) pos.x--; break;
 	}
-	if (current_region.tiles[tile_index].flags.test(tile_flags::SOLID)) pos = original;
+	if (current_region.tiles[tile_index].flags.test(tile_flags::SOLID)) { 
+		pos = original;
+	} else {
+		move_to(entity, original, pos);
+	}
 
 	renderable_t * render = entity.component<renderable_t>();
 	render->foreground = rltk::colors::YELLOW;
 	render->glyph = '@';
-	emit(renderables_changed_message{});
 }
 
 void settler_ai_system::configure() {
@@ -59,6 +62,14 @@ void settler_ai_system::configure() {
 			}
 		});
 	});
+}
+
+void settler_ai_system::move_to(entity_t &e, position_t &pos, position_t &destination) {
+	pos.x = destination.x;
+	pos.y = destination.y;
+	pos.z = destination.z;
+	emit(entity_moved_message{e.id, destination});
+	emit(renderables_changed_message{});
 }
 
 void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
@@ -140,9 +151,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 			return;
 		}
 		position_t next_step = ai.current_path->steps.front();
-		pos.x = next_step.x;
-		pos.y = next_step.y;
-		pos.z = next_step.z;
+		move_to(entity, pos, next_step);
 		ai.current_path->steps.pop_front();
 		emit(renderables_changed_message{});
 		return;
@@ -232,11 +241,8 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		}
 		// Travel to pick
 		position_t next_step = ai.current_path->steps.front();
-		pos.x = next_step.x;
-		pos.y = next_step.y;
-		pos.z = next_step.z;
+		move_to(e, pos, next_step);
 		ai.current_path->steps.pop_front();
-		emit(renderables_changed_message{});
 		return;
 	}
 
@@ -298,6 +304,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			return;
 		}
 
+		position_t original = pos;
 		switch (current_direction) {
 			case 1 : --pos.y; break;
 			case 2 : ++pos.y; break;
@@ -306,7 +313,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			case 5 : --pos.z; break;
 			case 6 : ++pos.z; break;
 		}
-		emit(renderables_changed_message{});
+		move_to(e, original, pos);
 
 		return;
 	}

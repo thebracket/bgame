@@ -23,6 +23,9 @@ constexpr int CAN_GO_SOUTH = 7;
 constexpr int CAN_GO_WEST = 8;
 constexpr int CAN_STAND_HERE = 9;
 
+constexpr int REVEALED = 10;
+constexpr int VISIBLE = 11;
+
 }
 
 struct tile_t {
