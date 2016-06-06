@@ -16,11 +16,13 @@ void save_region(const region_t &region) {
 	serialize(deflate, region.region_x);
 	serialize(deflate, region.region_y);
 	serialize(deflate, region.biome_idx);
+	serialize(deflate, region.next_tree_id);
 	serialize(deflate, region.tiles.size());
 	for (const tile_t &tile : region.tiles) {
 		serialize(deflate, tile.base_type);
 		serialize(deflate, tile.contents);
 		serialize(deflate, tile.flags);
+		serialize(deflate, tile.tree_id);
 	}
 }
 
@@ -35,6 +37,7 @@ region_t load_region(const int region_x, const int region_y) {
 	deserialize(inflate, region.region_x);
 	deserialize(inflate, region.region_y);
 	deserialize(inflate, region.biome_idx);
+	deserialize(inflate, region.next_tree_id);
 	std::size_t number_of_tiles;
 	deserialize(inflate, number_of_tiles);
 	for (std::size_t i=0; i<number_of_tiles; ++i) {
@@ -42,6 +45,7 @@ region_t load_region(const int region_x, const int region_y) {
 		deserialize(inflate, tile.base_type);
 		deserialize(inflate, tile.contents);
 		deserialize(inflate, tile.flags);
+		deserialize(inflate, tile.tree_id);
 		region.tiles[i] = tile;
 	}
 

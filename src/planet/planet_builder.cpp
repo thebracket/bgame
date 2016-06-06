@@ -582,6 +582,29 @@ uint16_t planet_builder_covering(const biome_t &biome, random_number_generator &
 	return get_tile_contents_index("nothing");
 }
 
+int planet_builder_tree_chance(const biome_t &biome) {
+	switch (biome.biome_type) {
+		case GLACIER: return 2;
+		case ICY_SEA: return 5;
+		case DUST_SEA: return 5;
+		case OCEAN: return 10;
+		case TUNDRA: return 7;
+		case SWAMP: return 15;
+		case FLATLAND: return 18;
+		case WOODS: return 25;
+		case FOREST: return 30;
+		case JUNGLE: return 30;
+		case DESERT: return 5;
+		case BADLANDS: return 3;
+		case HIGH_TUNDRA: return 3;
+		case HILL_BOG: return 10;
+		case HIGH_DESERT: return 3;
+		case HIGH_BADLANDS: return 3;
+		case NORMAL_MOUNTAINS: return 10;
+		default: return 0;
+	}
+}
+
 int get_ground_z(region_t &region, const int x, const int y) {
 	int z = REGION_DEPTH-1;
 	bool hit_ground = false;
@@ -832,6 +855,48 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	}
 }
 
+void set_tree_trunk(region_t &region, const int x, const int y, const int z, const int tree_id) {
+	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
+		const int idx = region.idx(x,y,z);
+		region.tiles[idx].base_type = 7;
+		region.tiles[idx].contents = 0;
+		region.tiles[idx].flags.set(tile_flags::TREE);
+		region.tiles[idx].flags.set(tile_flags::SOLID);
+		region.tiles[idx].tree_id = tree_id;
+	}
+}
+
+void set_tree_foliage(region_t &region, const int x, const int y, const int z, const int tree_id) {
+	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
+		const int idx = region.idx(x,y,z);
+		region.tiles[idx].base_type = 8;
+		region.tiles[idx].contents = 0;
+		region.tiles[idx].flags.set(tile_flags::TREE);
+		region.tiles[idx].flags.set(tile_flags::SOLID);
+		region.tiles[idx].tree_id = tree_id;
+	}
+}
+
+void plant_tree(region_t &region, const int x, const int y, const int z, random_number_generator &rng) {
+	// Trees get their own entity
+	const int tree_height = 1 + rng.roll_dice(2,4);
+	for (int i=0; i<tree_height; ++i) {
+		set_tree_trunk(region, x, y, z+i, region.next_tree_id);
+		if ( i > 0) {
+			const int radius = ((tree_height-1)/2) + 1;
+			for (int X=x-radius; X<x+radius; ++X) {
+				for (int Y=y-radius; Y<y+radius; ++Y) {
+					const float distance = distance2d(x,y,X,Y);
+					if (distance <= radius && (X!=x || Y!=y)) {
+						set_tree_foliage(region, X, Y, z+i, region.next_tree_id);
+					}
+				}
+			}
+		}
+	}
+	++region.next_tree_id;
+}
+
 void build_region(planet_t &planet, std::pair<int,int> location, random_number_generator &rng, bool has_crash_site=true) {
 	const biome_t biome = planet.biomes[planet.landblocks[planet.idx(location.first, location.second)].biome_idx];
 	const std::string region_name = biome.name;
@@ -939,20 +1004,35 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 		}
 	}
 
+	// Determine where to crash
+	const int crash_x = REGION_WIDTH / 2;
+	const int crash_y = REGION_HEIGHT / 2;
+	const int crash_z = get_ground_z(region, crash_x, crash_y);	
+
 	// Trees will go here
 	planet_builder_lock.lock();
 	planet_builder_status = "Planting trees";
 	planet_builder_lock.unlock();
+	for (int y=10; y<REGION_HEIGHT-10; ++y) {
+		for (int x=10; x<REGION_WIDTH-10; ++x) {
+			const float distance_to_crash = distance2d(x, y, crash_x, crash_y);
+			if (distance_to_crash > 10.0) {
+				// Determine chance of tree
+				const int tree_chance_percent = planet_builder_tree_chance(biome);
+				// Roll for it
+				if (rng.roll_dice(1,100) < tree_chance_percent) {
+					// If a tree goes here, plant one
+					int z = get_ground_z(region, x, y);
+					plant_tree(region, x, y, z, rng);
+				}
+			}
+		}
+	}
 
 	// Crash site
 	planet_builder_lock.lock();
 	planet_builder_status = "Crashing the space ship";
 	planet_builder_lock.unlock();
-
-	// Determine where to crash
-	const int crash_x = REGION_WIDTH / 2;
-	const int crash_y = REGION_HEIGHT / 2;
-	const int crash_z = get_ground_z(region, crash_x, crash_y);
 
 	// Trail of debris
 	for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {

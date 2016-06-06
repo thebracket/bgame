@@ -1,5 +1,7 @@
 glyphs = {
 	clubs = 5,
+	circle = 9,
+	double_circle = 10,
 	sun = 15,
 	ramp_right = 16,
 	ramp_left = 17,
@@ -24,10 +26,12 @@ glyphs = {
 	double_wall_ns = 186,
 	double_wall_nw = 187,
 	double_wall_sw = 188,
+	double_up_single_right = 199,
 	double_wall_ne = 200,
 	double_wall_se = 201,
 	double_wall_ew = 205,
 	solid_square = 219,
+	thick_vert_bar = 222,
 	sigma = 228,
 	kit = 233,
 	infinity = 236,
@@ -59,5 +63,7 @@ colors = {
 	heather = { r=161, g=65, b=137 },
 	cyan = { r=0, g=255, b=255 },
 	orange = { r=255, g=165, b=0 },
-	magenta = { r=255, g=0, b=255 }
+	magenta = { r=255, g=0, b=255 },
+	wood_brown = { r=102, g=51, b=0 },
+	tree_green = { r=130, g=212, b=53}
 }

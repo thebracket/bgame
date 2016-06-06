@@ -33,6 +33,7 @@ struct tile_t {
 	uint16_t contents;
 	std::bitset<TILE_OPTIONS_COUNT> flags;
 	rltk::vchar render_as;
+	int tree_id = 0;
 };
 
 struct region_t {
@@ -59,6 +60,8 @@ struct region_t {
 
 	void calculate_render_tiles();
 	void calculate_render_tile(const int &idx);
+
+	int next_tree_id = 1;
 };
 
 void save_region(const region_t &region);
