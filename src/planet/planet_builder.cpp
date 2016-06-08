@@ -1009,7 +1009,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	const int crash_y = REGION_HEIGHT / 2;
 	const int crash_z = get_ground_z(region, crash_x, crash_y);	
 
-	// Trees will go here
+	// Plant trees
 	planet_builder_lock.lock();
 	planet_builder_status = "Planting trees";
 	planet_builder_lock.unlock();
