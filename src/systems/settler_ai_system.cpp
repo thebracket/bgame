@@ -87,6 +87,14 @@ void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_
 		emit(inventory_changed_message{});	
 		ai.current_tool = 0;
 	}
+	// Drop axe if chopping
+	if (ai.job_type_major == JOB_CHOP && ai.current_tool != 0) {
+		emit(item_claimed_message{ai.current_tool, false});
+		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
+		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
+		emit(inventory_changed_message{});	
+		ai.current_tool = 0;
+	}
 
 	std::cout << name.first_name << " cancels action: " << reason << "\n";
 	ai.job_type_major = JOB_IDLE;
@@ -511,6 +519,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 		if (ai.current_path) {
 			ai.job_type_minor = JM_GO_TO_TREE;
 			change_job_status(ai, name, "Travel to chopping site");
+			designations->chopping.erase(ai.target_id);
 			return;
 		} else {
 			cancel_action(e, ai, stats, species, pos, name, "Can't find tree'");
@@ -560,8 +569,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			const int tree_idx = current_region.idx(ai.target_x, ai.target_y, ai.target_z);
 			current_region.tiles[tree_idx].base_type = 3;
 			current_region.tiles[tree_idx].contents = 0;
-			current_region.calculate_render_tile(tree_idx);
-			designations->chopping.erase(ai.target_id);
+			current_region.calculate_render_tile(tree_idx);			
 
 			// Spawn wooden logs
 			number_of_logs = (number_of_logs/20)+1;
