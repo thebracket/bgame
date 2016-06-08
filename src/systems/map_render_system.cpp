@@ -81,6 +81,36 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 	return result;
 }
 
+vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
+
+	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
+
+	const int idx = current_region.idx(x, y, z);
+
+	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
+		auto rf = renderables.find(idx);
+		if (rf != renderables.end()) {
+			result = rf->second;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+		} else {
+			result = current_region.tiles[idx].render_as;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+		}
+	}
+
+	const int tree_id = current_region.tiles[idx].tree_id;
+	if (tree_id > 0) {
+		auto mf = designations->chopping.find(tree_id);
+		if (mf != designations->chopping.end()) {
+			result.foreground = rltk::colors::BLACK;
+			result.background = rltk::colors::RED;
+			result.glyph = '*';
+		}
+	}
+
+	return result;
+}
+
 void map_render_system::configure() {
 	subscribe<renderables_changed_message>([this](renderables_changed_message &msg) {
 		this->renderables_changed = true;
@@ -149,7 +179,10 @@ void map_render_system::update(const double duration_ms) {
 		if (game_master_mode == PLAY) {
 			calculator = get_render_char;
 		} else {
-			calculator = get_render_char_mining;
+			switch (game_design_mode) {
+				case DIGGING : calculator = get_render_char_mining; break;
+				case CHOPPING : calculator = get_render_char_chopping; break;
+			}
 		}
 
 		int Y = 2;

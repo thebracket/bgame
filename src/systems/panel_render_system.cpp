@@ -114,7 +114,7 @@ void panel_render_system::render_play_mode() {
 			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) ss << "W";
 			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) ss << "U";
 			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) ss << "D";
-			ss << +mining_map[idx];
+			ss << current_region.tiles[idx].tree_id;
 			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
 		}
 		int count = 0;
@@ -208,6 +208,28 @@ void panel_render_system::render_design_mode() {
 
 	if (game_design_mode == CHOPPING) {
 		term(3)->print(1,5, "Tree Chopping", WHITE, DARKEST_GREEN);
+
+		int mouse_x, mouse_y;
+		std::tie(mouse_x, mouse_y) = get_mouse_position();
+		const int terminal_x = mouse_x / 8;
+		const int terminal_y = mouse_y / 8;
+
+		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
+			const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
+			const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
+
+			const int idx = current_region.idx(world_x, world_y, camera_position->region_z);
+			const int tree_id = current_region.tiles[idx].tree_id;
+
+			if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
+				// TODO: This should be the base of the tree
+				designations->chopping[tree_id] = position_t{world_x, world_y, camera_position->region_z};
+				emit(map_dirty_message{});
+			} else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
+				designations->chopping.erase(tree_id);
+				emit(map_dirty_message{});
+			}
+		}
 	} else {
 		term(3)->print(1,5, "(T)ree Chopping", GREEN, GREEN_BG);
 	}
