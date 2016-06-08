@@ -111,6 +111,28 @@ vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
 	return result;
 }
 
+vchar get_render_char_building(const int &x, const int &y, const int &z) {
+
+	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
+
+	const int idx = current_region.idx(x, y, z);
+
+	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
+		auto rf = renderables.find(idx);
+		if (rf != renderables.end()) {
+			result = rf->second;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+		} else {
+			result = current_region.tiles[idx].render_as;
+			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+		}
+	}
+
+	// Build designations go here
+
+	return result;
+}
+
 void map_render_system::configure() {
 	subscribe<renderables_changed_message>([this](renderables_changed_message &msg) {
 		this->renderables_changed = true;
@@ -182,6 +204,7 @@ void map_render_system::update(const double duration_ms) {
 			switch (game_design_mode) {
 				case DIGGING : calculator = get_render_char_mining; break;
 				case CHOPPING : calculator = get_render_char_chopping; break;
+				case BUILDING : calculator = get_render_char_building; break;
 			}
 		}
 
