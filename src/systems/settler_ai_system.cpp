@@ -72,31 +72,15 @@ void settler_ai_system::move_to(entity_t &e, position_t &pos, position_t &destin
 	emit(renderables_changed_message{});
 }
 
-void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
-	// Drop whatever we are doing!
-	if (ai.job_type_major == JOB_SLEEP) {
-		each<construct_provides_sleep_t, position_t>([&pos] (entity_t &e, construct_provides_sleep_t &bed, position_t &bed_pos) {
-			if (bed_pos == pos) bed.claimed = false;
-		});
-	}
-	// Drop pick if mining
-	if (ai.job_type_major == JOB_MINE && ai.current_tool != 0) {
-		emit(item_claimed_message{ai.current_tool, false});
-		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
-		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
-		emit(inventory_changed_message{});	
-		ai.current_tool = 0;
-	}
-	// Drop axe if chopping
-	if (ai.job_type_major == JOB_CHOP && ai.current_tool != 0) {
-		emit(item_claimed_message{ai.current_tool, false});
-		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
-		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
-		emit(inventory_changed_message{});	
-		ai.current_tool = 0;
-	}
+void settler_ai_system::drop_current_tool(entity_t &e, settler_ai_t &ai, position_t &pos) {
+	emit(item_claimed_message{ai.current_tool, false});
+	try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
+	try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
+	emit(inventory_changed_message{});	
+	ai.current_tool = 0;
+}
 
-	std::cout << name.first_name << " cancels action: " << reason << "\n";
+void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
 	ai.job_type_major = JOB_IDLE;
 	ai.target_x = 0; 
 	ai.target_y = 0; 
@@ -104,6 +88,24 @@ void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_
 	renderable_t * render = e.component<renderable_t>();
 	render->foreground = rltk::colors::YELLOW;
 	render->glyph = '@';
+	change_job_status(ai, name, "Idle");
+	emit(renderables_changed_message{});
+}
+
+void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
+	// Drop whatever we are doing!
+	if (ai.job_type_major == JOB_SLEEP) {
+		each<construct_provides_sleep_t, position_t>([&pos] (entity_t &e, construct_provides_sleep_t &bed, position_t &bed_pos) {
+			if (bed_pos == pos) bed.claimed = false;
+		});
+	}
+	// Drop tool
+	if ((ai.job_type_major == JOB_MINE && ai.current_tool != 0) || (ai.job_type_major == JOB_CHOP && ai.current_tool != 0)) {
+		drop_current_tool(e, ai, pos);
+	}
+
+	std::cout << name.first_name << " cancels action: " << reason << "\n";
+	become_idle(e, ai, name);
 }
 
 void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
@@ -216,8 +218,10 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		}
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
+		return;
 	} else if (ai.job_type_major == JOB_CHOP) {
 		do_chopping(entity, ai, stats, species, pos, name);
+		return;
 	}
 	//wander_randomly(entity, pos);
 }
@@ -422,19 +426,10 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	}
 
 	if (ai.job_type_minor == JM_DROP_PICK) {
-		// NOTE that this is broken and needs fixing
 		if (ai.current_tool == 0) std::cout << "Warning: pick is unassigned at this time\n";
-		emit(item_claimed_message{ai.current_tool, false});
-		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
-		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
-		ai.job_type_major = JOB_IDLE;
-		change_job_status(ai, name, "Idle");
-		renderable_t * render = e.component<renderable_t>();
-		render->foreground = rltk::colors::YELLOW;
-		render->glyph = '@';
-		emit(renderables_changed_message{});
-		emit(inventory_changed_message{});	
-		ai.current_tool = 0;
+		drop_current_tool(e, ai, pos);
+
+		become_idle(e, ai, name);
 		return;
 	}
 }
@@ -600,19 +595,9 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_DROP_AXE) {
-		// NOTE that this is broken and needs fixing
 		if (ai.current_tool == 0) std::cout << "Warning: axe is unassigned at this time\n";
-		emit(item_claimed_message{ai.current_tool, false});
-		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
-		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
-		ai.job_type_major = JOB_IDLE;
-		change_job_status(ai, name, "Idle");
-		renderable_t * render = e.component<renderable_t>();
-		render->foreground = rltk::colors::YELLOW;
-		render->glyph = '@';
-		emit(renderables_changed_message{});
-		emit(inventory_changed_message{});	
-		ai.current_tool = 0;
+		drop_current_tool(e, ai, pos);
+		become_idle(e, ai, name);
 		return;
 	}
 }

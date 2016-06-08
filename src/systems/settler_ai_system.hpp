@@ -12,6 +12,8 @@ private:
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
+	void become_idle(entity_t &e, settler_ai_t &ai, name_t &name);
+	void drop_current_tool(entity_t &e, settler_ai_t &ai, position_t &pos);
 	void cancel_action(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason);
 
 	void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
