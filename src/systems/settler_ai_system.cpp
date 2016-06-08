@@ -80,16 +80,21 @@ void settler_ai_system::drop_current_tool(entity_t &e, settler_ai_t &ai, positio
 	ai.current_tool = 0;
 }
 
+void settler_ai_system::change_settler_glyph(entity_t &e, const vchar &render_as) {
+	renderable_t * render = e.component<renderable_t>();
+	render->foreground = render_as.foreground;
+	render->background = render_as.background;
+	render->glyph = render_as.glyph;
+	emit(renderables_changed_message{});
+}
+
 void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
 	ai.job_type_major = JOB_IDLE;
 	ai.target_x = 0; 
 	ai.target_y = 0; 
 	ai.target_z = 0;
-	renderable_t * render = e.component<renderable_t>();
-	render->foreground = rltk::colors::YELLOW;
-	render->glyph = '@';
+	change_settler_glyph(e, vchar{'@', rltk::colors::YELLOW, rltk::colors::BLACK});
 	change_job_status(ai, name, "Idle");
-	emit(renderables_changed_message{});
 }
 
 void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
@@ -199,18 +204,14 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		const int idx = current_region.idx(pos.x, pos.y, pos.z);
 		
 		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
-			renderable_t * render = entity.component<renderable_t>();
-			render->foreground = rltk::colors::WHITE;
-			emit(renderables_changed_message{});
+			change_settler_glyph(entity, vchar{'@', rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_MINE;
 			ai.job_type_minor = JM_FIND_PICK;
 			change_job_status(ai, name, "Finding mining tools.");
 			return;
 		}
 		if (ai.permitted_work[JOB_CHOPPING] && designations->chopping.size() > 0 && is_item_category_available(TOOL_CHOPPING)) {
-			renderable_t * render = entity.component<renderable_t>();
-			render->foreground = rltk::colors::Brown;
-			emit(renderables_changed_message{});
+			change_settler_glyph(entity, vchar{'@', rltk::colors::Brown, rltk::colors::BLACK});
 			ai.job_type_major = JOB_CHOP;
 			ai.job_type_minor = JM_FIND_AXE;
 			change_job_status(ai, name, "Finding chopping tools.");

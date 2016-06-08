@@ -12,6 +12,7 @@ private:
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
+	void change_settler_glyph(entity_t &entity, const vchar &render_as);
 	void become_idle(entity_t &e, settler_ai_t &ai, name_t &name);
 	void drop_current_tool(entity_t &e, settler_ai_t &ai, position_t &pos);
 	void cancel_action(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason);
