@@ -3,12 +3,14 @@
 #include <rltk.hpp>
 #include <boost/container/flat_map.hpp>
 #include "../planet/region.hpp"
+#include "position.hpp"
 
 using namespace rltk;
 
 struct designations_t {
 
 	boost::container::flat_map<int, uint8_t> mining;
+	boost::container::flat_map<int, position_t> chopping;
 
 	designations_t() {
 	}
@@ -23,6 +25,16 @@ struct designations_t {
 			serialize(lbfile, it->first);
 			serialize(lbfile, it->second);
 		}
+
+		size = chopping.size();
+		serialize(lbfile, size);
+
+		for (auto it = chopping.begin(); it != chopping.end(); ++it) {
+			serialize(lbfile, it->first);
+			serialize(lbfile, it->second.x);
+			serialize(lbfile, it->second.y);
+			serialize(lbfile, it->second.z);
+		}
 	}
 
 	static designations_t load(std::istream &lbfile) {
@@ -36,6 +48,18 @@ struct designations_t {
 			deserialize(lbfile, tmp);
 			c.mining[idx] = tmp;
 		}
+
+		deserialize(lbfile, size);
+		for (std::size_t i=0; i<size; ++i) {
+			int tree_id;
+			int x,y,z;
+			deserialize(lbfile, tree_id);
+			deserialize(lbfile, x);
+			deserialize(lbfile, y);
+			deserialize(lbfile, z);
+			c.chopping[tree_id] = position_t{x,y,z};
+		}
+
 		return c;
 	}
 };
