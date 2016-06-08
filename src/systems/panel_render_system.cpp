@@ -51,6 +51,10 @@ void panel_render_system::update(const double duration_ms) {
 			game_design_mode = BUILDING;
 			emit(map_dirty_message{});
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+			game_design_mode = CHOPPING;
+			emit(map_dirty_message{});
+		}
 	}
 }
 
@@ -200,5 +204,11 @@ void panel_render_system::render_design_mode() {
 		term(3)->print(1,4, "Building", WHITE, DARKEST_GREEN);
 	} else {
 		term(3)->print(1,4, "(B)uilding", GREEN, GREEN_BG);
+	}
+
+	if (game_design_mode == CHOPPING) {
+		term(3)->print(1,5, "Tree Chopping", WHITE, DARKEST_GREEN);
+	} else {
+		term(3)->print(1,5, "(T)ree Chopping", GREEN, GREEN_BG);
 	}
 }
