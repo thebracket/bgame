@@ -222,7 +222,26 @@ void panel_render_system::render_design_mode() {
 			const int tree_id = current_region.tiles[idx].tree_id;
 
 			if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
-				// TODO: This should be the base of the tree
+				// Naieve search for the base of the tree; this could be optimized a LOT
+				int lowest_z = camera_position->region_z;
+				const int stop_z = lowest_z-10;
+
+				position_t tree_pos{world_x, world_y, lowest_z};
+				while (lowest_z > stop_z) {
+					for (int y=-10; y<10; ++y) {
+						for (int x=-10; x<10; ++x) {
+							const int tree_idx = current_region.idx(world_x + x, world_y + y, lowest_z);
+							if (current_region.tiles[idx].tree_id == tree_id) {
+								tree_pos.x = world_x+x;
+								tree_pos.y = world_y+y;
+								tree_pos.z = lowest_z;
+							}
+						}
+					}
+					--lowest_z;
+				}
+
+
 				designations->chopping[tree_id] = position_t{world_x, world_y, camera_position->region_z};
 				emit(map_dirty_message{});
 			} else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
