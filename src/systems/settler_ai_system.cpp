@@ -187,6 +187,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 	if (ai.job_type_major == JOB_IDLE) {
 		// Find something to do!
 		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		
 		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
 			renderable_t * render = entity.component<renderable_t>();
 			render->foreground = rltk::colors::WHITE;
@@ -196,9 +197,19 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_job_status(ai, name, "Finding mining tools.");
 			return;
 		}
-	} 
-	if (ai.job_type_major == JOB_MINE) {
+		if (ai.permitted_work[JOB_CHOPPING] && designations->chopping.size() > 0 && is_item_category_available(TOOL_CHOPPING)) {
+			renderable_t * render = entity.component<renderable_t>();
+			render->foreground = rltk::colors::Brown;
+			emit(renderables_changed_message{});
+			ai.job_type_major = JOB_CHOP;
+			ai.job_type_minor = JM_FIND_AXE;
+			change_job_status(ai, name, "Finding chopping tools.");
+			return;
+		}
+	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
+	} else if (ai.job_type_major == JOB_CHOP) {
+		do_chopping(entity, ai, stats, species, pos, name);
 	}
 	//wander_randomly(entity, pos);
 }
@@ -416,5 +427,184 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		emit(renderables_changed_message{});
 		emit(inventory_changed_message{});	
 		ai.current_tool = 0;
+		return;
+	}
+}
+
+void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	//std::cout << name.first_name << ": " << ai.job_status << "\n";
+
+	if (ai.job_type_minor == JM_FIND_AXE) {
+		inventory_item_t axe = claim_closest_item_by_category(TOOL_CHOPPING, pos);
+		if (!axe.pos) {
+			cancel_action(e, ai, stats, species, pos, name, "No available axe");
+			return;
+		}
+		ai.current_path = find_path(pos, axe.pos.get());
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No available axe");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_AXE;
+		ai.target_x = axe.pos.get().x;
+		ai.target_y = axe.pos.get().y;
+		ai.target_z = axe.pos.get().z;
+		change_job_status(ai, name, "Traveling to chopping tool");
+		ai.current_tool = axe.id;
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_AXE) {
+		if (pos == ai.current_path->destination) {
+			// We're at the pick
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_AXE;
+			change_job_status(ai, name, "Collect chopping tool");
+			return;
+		}
+		// Travel to pick
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_AXE) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
+		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
+		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
+
+		// Notify the inventory system of the change	
+		emit(inventory_changed_message{});
+		emit(renderables_changed_message{});
+
+		ai.job_type_minor = JM_FIND_TREE;
+		change_job_status(ai, name, "Pathing to chopping site");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_FIND_TREE) {
+		position_t tree_pos = designations->chopping.begin()->second;
+		ai.target_id = designations->chopping.begin()->first;
+		std::cout << "Targeting tree #" << ai.target_id << "\n";
+
+		std::array<position_t, 4> target;
+		target[0] = position_t{ tree_pos.x, tree_pos.y-1, tree_pos.z };
+		target[1] = position_t{ tree_pos.x, tree_pos.y+1, tree_pos.z };
+		target[2] = position_t{ tree_pos.x-1, tree_pos.y, tree_pos.z };
+		target[3] = position_t{ tree_pos.x+1, tree_pos.y, tree_pos.z };
+
+		int n = 0;
+		while (!ai.current_path && n<4) {
+			ai.current_path = find_path(pos, target[n]);
+			if (ai.current_path->success) {
+				ai.target_x = target[n].x;
+				ai.target_y = target[n].y;
+				ai.target_z = target[n].z;
+			} else {
+				ai.current_path.reset();
+			}
+			++n;
+		}
+
+		if (ai.current_path) {
+			ai.job_type_minor = JM_GO_TO_TREE;
+			change_job_status(ai, name, "Travel to chopping site");
+			return;
+		} else {
+			cancel_action(e, ai, stats, species, pos, name, "Can't find tree'");
+			return;
+		}
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_TREE) {
+		if (pos == ai.current_path->destination) {
+			// We're at the tree
+			ai.current_path.reset();
+			ai.job_type_minor = JM_CHOP;
+			change_job_status(ai, name, "Chopping tree");
+			return;
+		}
+		// Travel to tree
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_CHOP) {
+		// Chop down the tree
+		auto skill_check = skill_roll(stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
+
+		if (skill_check >= SUCCESS) {
+			// Tree is going down!
+			int number_of_logs = 0;
+			for (int z=0; z<REGION_DEPTH; ++z) {
+				for (int y=0; y<REGION_HEIGHT; ++y) {
+					for (int x=0; x<REGION_WIDTH; ++x) {
+						const int idx = current_region.idx(x,y,z);
+						if (current_region.tiles[idx].tree_id == ai.target_id) {
+							current_region.tiles[idx].flags.reset(tile_flags::SOLID);
+							current_region.tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
+							current_region.tiles[idx].flags.reset(tile_flags::TREE);
+							current_region.tiles[idx].tree_id = 0;
+							current_region.tiles[idx].base_type = 0;
+							current_region.tiles[idx].contents = 0;
+							current_region.calculate_render_tile(idx);
+							++number_of_logs;
+						}
+					}
+				}
+			}
+			const int tree_idx = current_region.idx(ai.target_x, ai.target_y, ai.target_z);
+			current_region.tiles[tree_idx].base_type = 3;
+			current_region.tiles[tree_idx].contents = 0;
+			current_region.calculate_render_tile(tree_idx);
+			designations->chopping.erase(ai.target_id);
+
+			// Spawn wooden logs
+			number_of_logs = (number_of_logs/20)+1;
+			//std::cout << "We should spawn " << number_of_logs << " logs.\n";
+			for (int i=0; i<number_of_logs; ++i) {
+				spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, "wood_log");
+			}
+
+			// Update pathing
+			for (int Z=-2; Z<10; ++Z) {
+				for (int Y=-10; Y<10; ++Y) {
+					for (int X=-10; X<10; ++X) {
+						current_region.determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region.determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+					}
+				}
+			}
+
+			// Change status to drop axe
+			emit(map_dirty_message{});
+			emit(inventory_changed_message{});
+			ai.job_type_minor = JM_DROP_AXE;
+			change_job_status(ai, name, "Dropping axe");
+		} else if (skill_check == CRITICAL_FAIL) {
+			// Damage yourself
+		}
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DROP_AXE) {
+		// NOTE that this is broken and needs fixing
+		if (ai.current_tool == 0) std::cout << "Warning: axe is unassigned at this time\n";
+		emit(item_claimed_message{ai.current_tool, false});
+		try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
+		try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
+		ai.job_type_major = JOB_IDLE;
+		change_job_status(ai, name, "Idle");
+		renderable_t * render = e.component<renderable_t>();
+		render->foreground = rltk::colors::YELLOW;
+		render->glyph = '@';
+		emit(renderables_changed_message{});
+		emit(inventory_changed_message{});	
+		ai.current_tool = 0;
+		return;
 	}
 }

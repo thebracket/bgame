@@ -21,4 +21,5 @@ private:
 	void change_job_status(settler_ai_t &ai, name_t &name, const std::string new_status);
 
 	void do_mining(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
+	void do_chopping(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 };

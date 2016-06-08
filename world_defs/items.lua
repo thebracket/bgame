@@ -30,5 +30,13 @@ items = {
 		glyph = glyphs['pick'],
 		foreground = colors['white'],
 		background = colors['black']
-	}
+	},
+	wood_log = {
+		name = "Wood Log",
+		description = "Wood from a felled tree",
+		itemtype = {"component"},
+		glyph = glyphs['double_wall_ew'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
 }

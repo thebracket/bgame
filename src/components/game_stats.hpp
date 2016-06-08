@@ -88,7 +88,8 @@ struct game_stats_t {
 enum attributes_t { strength, dexterity, constitution, intelligence, wisdom, charisma, ethics };
 
 const std::unordered_map<std::string, attributes_t> skill_table {
-	{ "Mining", strength }
+	{ "Mining", strength },
+	{ "Lumberjacking", strength }
 };
 
 enum skill_roll_result_t { CRITICAL_FAIL, FAIL, SUCCESS, CRITICAL_SUCCESS };
