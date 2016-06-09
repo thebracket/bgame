@@ -13,3 +13,9 @@ private:
 	void update_clipping_rectangle();
 };
 
+namespace map_render_sys {
+	extern bool mouse_in_terminal;
+	extern int mouse_term_x;
+	extern int mouse_term_y;
+	extern bool building_possible;
+}

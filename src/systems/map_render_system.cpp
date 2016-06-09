@@ -6,6 +6,14 @@
 #include <boost/container/flat_map.hpp>
 
 using namespace rltk;
+using namespace map_render_sys;
+
+namespace map_render_sys {
+	bool mouse_in_terminal = false;
+	int mouse_term_x = 0;
+	int mouse_term_y = 0;
+	bool building_possible = false;
+}
 
 boost::container::flat_map<int, rltk::vchar> renderables;
 
@@ -129,6 +137,24 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 	}
 
 	// Build designations go here
+	if (build_mode_building && mouse_in_terminal) {
+		const int building_left_x = mouse_term_x;
+		const int building_top_y = mouse_term_y;
+		const int building_right_x = mouse_term_x + build_mode_building.get().width;
+		const int building_bottom_y = mouse_term_y + build_mode_building.get().height;
+		if (x >= building_left_x && x < building_right_x && y>= building_top_y && y < building_bottom_y) {
+			result.background = rltk::colors::BLACK;
+			result.glyph = 177;
+
+			if (!current_region.tiles[idx].flags.test(tile_flags::SOLID) && current_region.tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)
+				&& !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
+				result.foreground = rltk::colors::GREEN;
+			} else {
+				result.foreground = rltk::colors::RED;
+				building_possible = false;
+			}
+		}
+	}
 
 	return result;
 }
@@ -185,6 +211,16 @@ void map_render_system::update(const double duration_ms) {
 
 	if (clip_left == -1) update_clipping_rectangle();
 
+	int mouse_x, mouse_y;
+	std::tie(mouse_x, mouse_y) = get_mouse_position();
+
+	mouse_in_terminal = false;
+	if (mouse_x > layer(1)->x && mouse_y > layer(1)->y && mouse_x < layer(1)->x+layer(1)->w && mouse_y < layer(1)->y + layer(1)->h ) {
+		mouse_in_terminal = true;
+		mouse_term_x = (mouse_x / 8) + clip_left;
+		mouse_term_y = (mouse_y / 8) + clip_top - 2;
+	}
+
 	if (renderables_changed) {
 		renderables.clear();
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
@@ -204,7 +240,7 @@ void map_render_system::update(const double duration_ms) {
 			switch (game_design_mode) {
 				case DIGGING : calculator = get_render_char_mining; break;
 				case CHOPPING : calculator = get_render_char_chopping; break;
-				case BUILDING : calculator = get_render_char_building; break;
+				case BUILDING : { building_possible = true; calculator = get_render_char_building; } break;
 			}
 		}
 
@@ -220,6 +256,7 @@ void map_render_system::update(const double duration_ms) {
 		}
 
 		dirty = false;
+		if (game_master_mode == DESIGN && game_design_mode == BUILDING) dirty = true;
 		renderables_changed = false;
 	}
 }
