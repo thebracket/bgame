@@ -13,6 +13,14 @@ struct inventory_item_t {
 	std::string item_tag;
 };
 
+struct available_building_t {
+	available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
+
+	std::string name;
+	std::string tag;
+	std::vector<std::string> components;
+};
+
 class inventory_system : public rltk::base_system {
 public:
 	virtual void update(const double duration_ms) override final;
@@ -23,3 +31,5 @@ private:
 
 bool is_item_category_available(const int &category);
 inventory_item_t claim_closest_item_by_category(const int &category, position_t &pos);
+
+std::vector<available_building_t> get_available_buildings();

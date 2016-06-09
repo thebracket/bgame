@@ -128,3 +128,38 @@ inventory_item_t claim_closest_item_by_category(const int &category, position_t 
 	std::cout << "Handing out tool with ID " << all_items[closest_matching_id].id << "\n";
 	return all_items[closest_matching_id];
 }
+
+std::vector<available_building_t> get_available_buildings() {
+	std::vector<available_building_t> result;
+
+	for (auto it = building_defs.begin(); it != building_defs.end(); ++it) {
+		bool possible = true;
+
+		// Evaluate the required components and see if they are available
+		boost::container::flat_map<std::string, int> requirements;
+		for (const std::string &require : it->second.components) {
+			auto finder = requirements.find(require);
+			if (finder == requirements.end()) {
+				requirements[require] = 1;
+			} else {
+				++finder->second;
+			}
+		}
+
+		for (auto all = all_items.begin(); all != all_items.end(); ++all) {
+			auto finder = requirements.find(all->second.item_tag);
+			if (finder != requirements.end()) {
+				--finder->second;
+			}
+		}
+
+		for (auto req = requirements.begin(); req != requirements.end(); ++req) {
+			if (req->second > 0) possible = false;
+		}
+
+		if (possible)
+			result.push_back(available_building_t{it->second.name, it->second.tag});
+	}
+
+	return result;
+}

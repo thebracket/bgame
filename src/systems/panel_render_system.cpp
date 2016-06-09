@@ -4,10 +4,13 @@
 #include "../components/components.hpp"
 #include "../messages/messages.hpp"
 #include "mining_system.hpp"
+#include "inventory_system.hpp"
 #include <sstream>
 
 using namespace rltk;
 using namespace rltk::colors;
+
+std::vector<available_building_t> available_buildings;
 
 const color_t GREEN_BG{0,32,0};
 
@@ -49,6 +52,7 @@ void panel_render_system::update(const double duration_ms) {
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
 			game_design_mode = BUILDING;
+			available_buildings = get_available_buildings();
 			emit(map_dirty_message{});
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
@@ -202,6 +206,12 @@ void panel_render_system::render_design_mode() {
 
 	if (game_design_mode == BUILDING) {
 		term(3)->print(1,4, "Building", WHITE, DARKEST_GREEN);
+
+		int y=8;
+		for (const available_building_t &building : available_buildings) {
+			term(3)->print(1, y, building.name, GREEN, GREEN_BG);
+			++y;
+		}
 	} else {
 		term(3)->print(1,4, "(B)uilding", GREEN, GREEN_BG);
 	}
