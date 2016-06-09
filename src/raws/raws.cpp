@@ -21,6 +21,7 @@ boost::container::flat_map<std::string, clothing_t> clothing_types;
 std::vector<profession_t> starting_professions;
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
+boost::container::flat_map<std::string, building_def_t> building_defs;
 
 std::string to_proper_noun_case(const std::string &original)
 {
@@ -308,12 +309,88 @@ void read_items() {
     }
 }
 
+void read_buildings() {
+    lua_getglobal(lua_state, "buildings");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        building_def_t c;
+
+        std::string key = lua_tostring(lua_state, -2);
+        c.tag = key;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "components") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    c.components.push_back(lua_tostring(lua_state, -1));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "skill") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string type = lua_tostring(lua_state, -2);
+                    if (type == "name") c.skill.first = lua_tostring(lua_state, -1);
+                    if (type == "difficulty") c.skill.second = lua_tonumber(lua_state, -1);
+                    lua_pop(lua_state, 1);
+                }
+            }
+            // TODO: Support "provides"
+            if (field == "render") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string type = lua_tostring(lua_state, -2);
+                    if (type == "width") c.width = lua_tonumber(lua_state, -1);
+                    if (type == "height") c.height = lua_tonumber(lua_state, -1);
+                    if (type == "tiles") {
+                        lua_pushstring(lua_state, type.c_str());
+                        lua_gettable(lua_state, -2);
+                        int i = 0;
+                        while (lua_next(lua_state, -2) != 0) {
+                            rltk::vchar render;
+                            lua_pushnumber(lua_state, i);
+                            lua_gettable(lua_state, -2);
+                            while (lua_next(lua_state, -2) != 0) {
+                                std::string tiletag = lua_tostring(lua_state, -2);
+                                if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
+                                if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
+                                if (tiletag == "background") render.foreground = read_lua_color("background");
+                                lua_pop(lua_state, 1);
+                            }                       
+                            lua_pop(lua_state, 1);
+                            ++i;
+                            c.glyphs.push_back(render);
+                        }
+                    }
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+        building_defs[key] = c;
+
+        lua_pop(lua_state, 1);
+    }
+}
+
 void load_game_tables() {
 	read_tile_types();
 	read_tile_contents();
     read_clothing();
     read_professions();
     read_items();
+    read_buildings();
 }
 
 void load_raws() {

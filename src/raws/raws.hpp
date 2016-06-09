@@ -71,6 +71,24 @@ struct item_def_t {
 	rltk::color_t bg;
 };
 
+enum provides_t { provides_sleep, provides_food };
+
+struct building_provides_t {
+	provides_t provides;
+	int energy_cost;
+};
+
+struct building_def_t {
+	std::string tag = "";
+	std::string name = "";
+	std::vector<std::string> components;
+	std::pair<std::string, int> skill;
+	std::vector<building_provides_t> provides;	
+	int width = 1;
+	int height = 1;
+	std::vector<rltk::vchar> glyphs;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -84,6 +102,7 @@ extern boost::container::flat_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;
 
 extern boost::container::flat_map<std::string, item_def_t> item_defs;
+extern boost::container::flat_map<std::string, building_def_t> building_defs;
 
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);
