@@ -39,4 +39,12 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
+	stone_boulder = {
+		name = "Stone Boulder",
+		description = "A large stone boulder",
+		itemtype = {"component"},
+		glyph = glyphs['small_circle'],
+		foreground = colors['grey'],
+		background = colors['black']
+	}
 }

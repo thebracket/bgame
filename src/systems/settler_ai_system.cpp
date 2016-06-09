@@ -358,6 +358,9 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
 				current_region.tiles[target_idx].contents = 4101;
 				current_region.calculate_render_tile(target_idx);
+				if (current_region.tiles[target_idx].base_type==2 && rng.roll_dice(1,4)>=2) {
+					spawn_item_on_ground(pos.x, pos.y, pos.z, "stone_boulder");
+				}
 			} else if (target_operation == 2) {
 				// Channel
 				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
