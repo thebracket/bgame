@@ -12,6 +12,9 @@ struct available_building_t {
 	std::string name;
 	std::string tag;
 	std::vector<std::string> components;
+    int width;
+    int height;
+    std::vector<rltk::vchar> glyphs;
 };
 
 enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };

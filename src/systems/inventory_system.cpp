@@ -157,8 +157,14 @@ std::vector<available_building_t> get_available_buildings() {
 			if (req->second > 0) possible = false;
 		}
 
-		if (possible)
-			result.push_back(available_building_t{it->second.name, it->second.tag});
+		if (possible) {
+			available_building_t building{it->second.name, it->second.tag};
+			building.height = it->second.height;
+			building.width = it->second.width;
+			building.components = it->second.components;
+			building.glyphs = it->second.glyphs;
+			result.push_back(building);
+		}
 	}
 
 	return result;
