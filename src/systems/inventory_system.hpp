@@ -3,6 +3,7 @@
 #include <rltk.hpp>
 #include "../components/components.hpp"
 #include "../raws/raws.hpp"
+#include "../game_globals.hpp"
 
 struct inventory_item_t {
 	std::size_t id;
@@ -11,14 +12,6 @@ struct inventory_item_t {
 	std::bitset<NUMBER_OF_ITEM_CATEGORIES> categories;
 	std::string item_name;
 	std::string item_tag;
-};
-
-struct available_building_t {
-	available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
-
-	std::string name;
-	std::string tag;
-	std::vector<std::string> components;
 };
 
 class inventory_system : public rltk::base_system {
