@@ -883,7 +883,7 @@ void plant_tree(region_t &region, const int x, const int y, const int z, random_
 	for (int i=0; i<tree_height; ++i) {
 		set_tree_trunk(region, x, y, z+i, region.next_tree_id);
 		if ( i > 0) {
-			const int radius = ((tree_height-1)/2) + 1;
+			const int radius = (tree_height - i)/2 + 1;
 			for (int X=x-radius; X<x+radius; ++X) {
 				for (int Y=y-radius; Y<y+radius; ++Y) {
 					const float distance = distance2d(x,y,X,Y);
