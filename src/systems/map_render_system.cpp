@@ -256,7 +256,12 @@ void map_render_system::update(const double duration_ms) {
 		}
 
 		dirty = false;
-		if (game_master_mode == DESIGN && game_design_mode == BUILDING) dirty = true;
+		if (game_master_mode == DESIGN && game_design_mode == BUILDING) {
+			dirty = true;
+			if (get_mouse_button_state(rltk::button::LEFT) && mouse_in_terminal && building_possible) {
+				emit(build_request_message{});
+			}
+		}
 		renderables_changed = false;
 	}
 }

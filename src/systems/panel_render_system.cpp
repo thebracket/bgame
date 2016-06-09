@@ -63,7 +63,11 @@ void panel_render_system::update(const double duration_ms) {
 }
 
 void panel_render_system::configure() {
-
+	subscribe<build_request_message>([] (build_request_message &msg) {
+		// Building request arrived
+		// Claim components, create the designations
+		available_buildings = get_available_buildings();
+	});
 }
 
 void panel_render_system::render_play_mode() {
