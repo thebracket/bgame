@@ -209,8 +209,29 @@ void panel_render_system::render_design_mode() {
 
 		int y=8;
 		for (const available_building_t &building : available_buildings) {
-			term(3)->print(1, y, building.name, GREEN, GREEN_BG);
+			if (build_mode_building && build_mode_building.get().tag == building.tag) {
+				term(3)->print(1, y, building.name, WHITE, DARKEST_GREEN);
+			} else {
+				term(3)->print(1, y, building.name, GREEN, GREEN_BG);
+			}
 			++y;
+		}
+
+		if (get_mouse_button_state(rltk::button::LEFT)) {
+			int mouse_x, mouse_y;
+			std::tie(mouse_x, mouse_y) = get_mouse_position();
+
+			if (mouse_x > layer(3)->x && mouse_y > layer(3)->y && mouse_x < layer(3)->x+layer(3)->w && mouse_y < layer(3)->y + layer(3)->h ) {
+				mouse_x -= layer(3)->x;
+				mouse_y -= layer(3)->y;
+				int terminal_x = mouse_x / 8;
+				int terminal_y = mouse_y / 16;
+				
+				if (terminal_y > 7 && terminal_y < 8+available_buildings.size()) {
+					const int selected_building = terminal_y - 8;
+					build_mode_building = available_buildings[selected_building];
+				}
+			}
 		}
 	} else {
 		term(3)->print(1,4, "(B)uilding", GREEN, GREEN_BG);
