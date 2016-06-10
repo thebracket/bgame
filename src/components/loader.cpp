@@ -22,5 +22,6 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 15 : entity(entity_id)->assign(construct_power_t::load(lbfile)); break;
 		case 16 : entity(entity_id)->assign(construct_provides_sleep_t::load(lbfile)); break;
 		case 17  : entity(entity_id)->assign(viewshed_t::load(lbfile)); break;
+		case 18  : entity(entity_id)->assign(building_t::load(lbfile)); break;
 	}
 }

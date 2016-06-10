@@ -2,7 +2,7 @@ buildings = {
 	personal_survival_shelter = {
 		name = "Tent",
 		components = { "personal_survival_shelter_kit" },
-		skill = { name="construction", difficulty=5 },
+		skill = { name="Construction", difficulty=5 },
 		provides = { sleep={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
@@ -14,7 +14,7 @@ buildings = {
 	fake_camp_fire = {
 		name = "Nuclear Camp Fire",
 		components = { "camp_fire_kit" },
-		skill = { name="construction", difficulty=5 },
+		skill = { name="Construction", difficulty=5 },
 		provides = { food={energy_cost=5} },
 		render = {
 			width=1, height=1, tiles= {

@@ -17,3 +17,4 @@
 #include "construct_power.hpp"
 #include "construct_provides_sleep.hpp"
 #include "viewshed.hpp"
+#include "building.hpp"

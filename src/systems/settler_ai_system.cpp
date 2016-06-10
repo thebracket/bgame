@@ -217,11 +217,28 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_job_status(ai, name, "Finding chopping tools.");
 			return;
 		}
+		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
+			ai.building_target.reset();
+
+			ai.building_target = (designations->buildings.back());
+			designations->buildings.pop_back();
+
+			if (ai.building_target) {
+				change_settler_glyph(entity, vchar{'@', rltk::colors::Pink, rltk::colors::BLACK});
+				ai.job_type_major = JOB_CONST;
+				ai.job_type_minor = JM_SELECT_COMPONENT;
+				change_job_status(ai, name, "Reading building plans.");
+			}
+			return;
+		}
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
 		return;
 	} else if (ai.job_type_major == JOB_CHOP) {
 		do_chopping(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_CONST) {
+		do_building(entity, ai, stats, species, pos, name);
 		return;
 	}
 	//wander_randomly(entity, pos);
@@ -463,13 +480,13 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 	if (ai.job_type_minor == JM_GO_TO_AXE) {
 		if (pos == ai.current_path->destination) {
-			// We're at the pick
+			// We're at the axe
 			ai.current_path.reset();
 			ai.job_type_minor = JM_COLLECT_AXE;
 			change_job_status(ai, name, "Collect chopping tool");
 			return;
 		}
-		// Travel to pick
+		// Travel to axe
 		position_t next_step = ai.current_path->steps.front();
 		move_to(e, pos, next_step);
 		ai.current_path->steps.pop_front();
@@ -603,5 +620,113 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 		drop_current_tool(e, ai, pos);
 		become_idle(e, ai, name);
 		return;
+	}
+}
+
+void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_SELECT_COMPONENT) {
+		bool has_components = true;
+		for (std::pair<std::size_t, bool> &component : ai.building_target.get().component_ids) {
+			if (!component.second) {
+				has_components = false;
+				ai.current_tool = component.first;
+				ai.current_path = find_path(pos, get_item_location(ai.current_tool));
+				if (ai.current_path->success) {
+					component.second = true;
+					ai.job_type_minor = JM_GO_TO_COMPONENT;
+					change_job_status(ai, name, "Traveling to building component");
+				} else {
+					cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
+				}
+				return;
+			}
+		}
+
+		if (has_components) {
+			ai.job_type_minor = JM_ASSEMBLE;
+			change_job_status(ai, name, "Constructing building");
+		}
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_COMPONENT) {
+		if (pos == ai.current_path->destination) {
+			// We're at the component
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_COMPONENT;
+			change_job_status(ai, name, "Collect building component");
+			return;
+		}
+		// Travel to component
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_COMPONENT) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
+		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
+		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
+
+		// Notify the inventory system of the change	
+		emit(inventory_changed_message{});
+		emit(renderables_changed_message{});
+
+		ai.job_type_minor = JM_GO_TO_BUILDING;
+		change_job_status(ai, name, "Going to building site");
+		ai.current_path = find_path(pos, position_t{ai.building_target.get().x, ai.building_target.get().y, ai.building_target.get().z});
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_BUILDING) {
+		if (pos == ai.current_path->destination) {
+			// We're at the site
+			ai.current_path.reset();
+			ai.job_type_minor = JM_DROP_COMPONENT;
+			change_job_status(ai, name, "Dropping building component");
+			return;
+		}
+		// Travel to site
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DROP_COMPONENT) {
+		if (ai.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
+		drop_current_tool(e, ai, pos);
+		ai.current_tool = 0;
+		ai.job_type_minor = JM_SELECT_COMPONENT;
+		change_job_status(ai, name, "Reading building plans");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_ASSEMBLE) {
+		std::string tag = ai.building_target.get().tag;
+		auto finder = building_defs.find(tag);
+		if (finder == building_defs.end()) throw std::runtime_error("Building tag unknown!");
+
+		// Make a skill roll
+		const std::string skill = finder->second.skill.first;
+		const int difficulty = finder->second.skill.second;
+		auto skill_check = skill_roll(stats, rng, skill, difficulty);
+
+		if (skill_check >= SUCCESS) {
+			// Destroy components
+			for (auto &comp : ai.building_target.get().component_ids) {
+				delete_entity(comp.first);
+			}
+
+			// Place the building
+			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
+			emit(renderables_changed_message{});
+			emit(inventory_changed_message{});
+
+			// Become idle
+			become_idle(e, ai, name);
+		}
 	}
 }

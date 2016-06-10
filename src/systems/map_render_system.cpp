@@ -226,6 +226,16 @@ void map_render_system::update(const double duration_ms) {
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
 			renderables[current_region.idx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
 		});
+		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
+			int glyph_idx = 0;
+			for (int x = 0; x<b.width; ++x) {
+				for (int y=0; y<b.height; ++y) {
+					renderables[current_region.idx(pos.x+x, pos.y+y, pos.z)] = b.glyphs[glyph_idx];
+					if (!b.complete) b.glyphs[glyph_idx].foreground = rltk::colors::GREY;
+					++glyph_idx;
+				}
+			}
+		});
 		dirty = true;
 	}
 
@@ -259,7 +269,7 @@ void map_render_system::update(const double duration_ms) {
 		if (game_master_mode == DESIGN && game_design_mode == BUILDING) {
 			dirty = true;
 			if (get_mouse_button_state(rltk::button::LEFT) && mouse_in_terminal && building_possible) {
-				emit(build_request_message{});
+				emit(build_request_message{mouse_term_x, mouse_term_y, camera_position->region_z, build_mode_building});
 			}
 		}
 		renderables_changed = false;

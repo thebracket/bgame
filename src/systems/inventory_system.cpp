@@ -1,5 +1,6 @@
 #include "inventory_system.hpp"
 #include "../messages/messages.hpp"
+#include "../components/components.hpp"
 #include <boost/container/flat_map.hpp>
 #include <boost/optional.hpp>
 #include <array>
@@ -67,9 +68,13 @@ void inventory_system::update(const double duration_ms) {
 
 void inventory_system::configure() {
 	std::fill(item_availability.begin(), item_availability.end(), 0);
+
+	// Receive inventory change messages - refresh the inventory list
 	subscribe<inventory_changed_message>([this](inventory_changed_message &msg) {
 		dirty = true;
 	});
+
+	// Receive claim messages - update an item as claimed/unclaimed
 	subscribe<item_claimed_message>([] (item_claimed_message &msg) {
 		std::cout << "Received item claimed message: " << msg.id << "," << msg.claimed << "\n";
 		auto finder = all_items.find(msg.id);
@@ -87,6 +92,50 @@ void inventory_system::configure() {
 				}
 			}
 		}		
+	});
+
+	// Receive build requests - claim components and add to the designations list.
+	subscribe<build_request_message>([this] (build_request_message &msg) {
+		// Claim components, create the designations
+		available_building_t building = msg.building.get();
+
+		// Build designation
+		building_designation_t designate;
+		designate.x = msg.x;
+		designate.y = msg.y;
+		designate.z = msg.z;
+		designate.name = building.name;
+		designate.tag = building.tag;
+		designate.components = building.components;
+    	designate.width = building.width;
+    	designate.height = building.height;
+    	designate.glyphs = building.glyphs;
+
+		for (const std::string &requested_component : building.components) {
+			// Find the component and issue a claim for it
+			for (auto it=all_items.begin(); it != all_items.end(); ++it) {
+				if (it->second.item_tag == requested_component) {
+					emit(item_claimed_message{ it->second.id, true });
+					designate.component_ids.push_back(std::make_pair(it->second.id,false));
+					std::cout << "Claimed component #" << it->second.id << "\n";
+					break;
+				}
+			}
+		}
+
+		auto building_template = create_entity()
+			->assign(position_t{msg.x, msg.y, msg.z})
+			->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs, false });
+		designate.building_entity = building_template->id;
+
+		designations->buildings.push_back(designate);
+
+		for (int x = designate.x; x < designate.x + designate.width; ++x) {
+			for (int y=designate.y; y < designate.y + designate.height; ++y) {
+				const int idx = current_region.idx(x,y,camera_position->region_z);
+				current_region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
+			}
+		}
 	});
 }
 
@@ -168,4 +217,10 @@ std::vector<available_building_t> get_available_buildings() {
 	}
 
 	return result;
+}
+
+position_t get_item_location(std::size_t id) {
+	auto finder = all_items.find(id);
+	if (finder == all_items.end()) throw std::runtime_error("Unable to find item");
+	return finder->second.pos.get();
 }

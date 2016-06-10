@@ -90,6 +90,7 @@ enum attributes_t { strength, dexterity, constitution, intelligence, wisdom, cha
 const std::unordered_map<std::string, attributes_t> skill_table {
 	{ "Mining", strength },
 	{ "Lumberjacking", strength }
+	{ "Construction", dexterity }
 };
 
 enum skill_roll_result_t { CRITICAL_FAIL, FAIL, SUCCESS, CRITICAL_SUCCESS };
