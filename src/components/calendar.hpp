@@ -22,6 +22,7 @@ struct calendar_t {
 	uint16_t day = 0;
 	uint8_t hour = 0;
 	uint8_t minute = 0;
+	uint8_t second = 0;
 
 	std::vector<shift_t> defined_shifts;
 
@@ -46,7 +47,8 @@ struct calendar_t {
 	}
 
 	void next_minute() {
-		++minute;
+		second += 10;
+		if (second > 60) { second = 0; ++minute; }
 		if (minute > 60) { minute = 0; ++hour; }
 		if (hour > 23) { hour = 0; ++day; }
 		if (day > 30) { day = 0; ++month; }
@@ -59,6 +61,7 @@ struct calendar_t {
 		serialize(lbfile, day);
 		serialize(lbfile, hour);
 		serialize(lbfile, minute);
+		serialize(lbfile, second);
 		std::size_t n_shifts = defined_shifts.size();
 		serialize(lbfile, n_shifts);
 		for (int j=0; j<n_shifts; ++j) {
@@ -76,6 +79,7 @@ struct calendar_t {
 		deserialize(lbfile, c.day);
 		deserialize(lbfile, c.hour);
 		deserialize(lbfile, c.minute);
+		deserialize(lbfile, c.second);
 		std::size_t n_shifts;
 		deserialize(lbfile, n_shifts);
 		for (std::size_t i=0; i<n_shifts; ++i) {

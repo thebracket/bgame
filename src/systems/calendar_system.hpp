@@ -2,7 +2,7 @@
 
 #include <rltk.hpp>
 
-const double MS_PER_TICK = 5.0;
+const double MS_PER_TICK = 2.0;
 
 class calendar_system : public rltk::base_system {
 public:
