@@ -30,16 +30,37 @@ buildings = {
 		render = {
 			width=3, height=3, tiles= {
 				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
 				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
+
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['sun'], foreground = colors['icy_blue'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+
+				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']}
+			}
+		}
+	},
+
+	stonecutter = {
+		name = "Stonecutters",
+		components = { "stone_boulder" },
+		skill = { name="Construction", difficulty=12 },
+		render = {
+			width=3, height=3, tiles= {
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
 
 				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
 				{glyph= glyphs['sun'], foreground = colors['icy_blue'], background = colors['black']},
 				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
 
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
 				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']}
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']}
 			}
 		}
 	}
