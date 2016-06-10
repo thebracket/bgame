@@ -108,6 +108,17 @@ void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_
 	if ((ai.job_type_major == JOB_MINE && ai.current_tool != 0) || (ai.job_type_major == JOB_CHOP && ai.current_tool != 0)) {
 		drop_current_tool(e, ai, pos);
 	}
+	// Drop components if necessary
+	if (ai.job_type_major == JOB_CONSTRUCTION) {
+		// Put the job back on the available jobs list
+		if (ai.building_target) {
+			designations->buildings.push_back(ai.building_target.get());
+			ai.building_target.reset();
+		}
+
+		// If holding a component, drop it
+		if (ai.current_tool != 0) drop_current_tool(e, ai, pos);
+	}
 
 	std::cout << name.first_name << " cancels action: " << reason << "\n";
 	become_idle(e, ai, name);
