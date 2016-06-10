@@ -147,6 +147,17 @@ void panel_render_system::render_play_mode() {
 				});
 			}
 		});
+		// Buildings
+		each<building_t, position_t>([&count, &world_x, &world_y] (entity_t &building_entity, building_t &building, position_t &pos) {
+			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+				// It's building and we can see it
+				auto finder = building_defs.find(building.tag);
+				std::string building_name = "Unknown Building";
+				if (finder != building_defs.end()) building_name = finder->second.name;
+				term(3)->print(1, term(3)->term_height-5-count, building_name, GREEN, GREEN_BG);
+				++count;
+			}
+		});
 	}
 }
 
