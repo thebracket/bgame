@@ -364,7 +364,7 @@ void read_buildings() {
                                 std::string tiletag = lua_tostring(lua_state, -2);
                                 if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
                                 if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
-                                if (tiletag == "background") render.foreground = read_lua_color("background");
+                                if (tiletag == "background") render.background = read_lua_color("background");
                                 lua_pop(lua_state, 1);
                             }                       
                             lua_pop(lua_state, 1);
