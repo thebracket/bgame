@@ -230,8 +230,9 @@ void map_render_system::update(const double duration_ms) {
 			int glyph_idx = 0;
 			for (int x = 0; x<b.width; ++x) {
 				for (int y=0; y<b.height; ++y) {
-					renderables[current_region.idx(pos.x+x, pos.y+y, pos.z)] = b.glyphs[glyph_idx];
-					if (!b.complete) b.glyphs[glyph_idx].foreground = rltk::colors::GREY;
+					const int idx = current_region.idx(pos.x+x, pos.y+y, pos.z);
+					renderables[idx] = b.glyphs[glyph_idx];
+					if (!b.complete) renderables[idx].foreground = rltk::colors::GREY;
 					++glyph_idx;
 				}
 			}
