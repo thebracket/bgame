@@ -8,31 +8,37 @@ constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
 constexpr int REGION_DEPTH=128;
 constexpr int REGION_TILES_COUNT = REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH;
-constexpr int TILE_OPTIONS_COUNT = 16;
 
 namespace tile_flags {
 
-constexpr int SOLID = 0;
-constexpr int TREE = 1;
-constexpr int CONSTRUCTION = 2;
+constexpr uint16_t SOLID = 1;
+constexpr uint16_t TREE = 2;
+constexpr uint16_t CONSTRUCTION = 4;
 
-constexpr int CAN_GO_UP = 3;
-constexpr int CAN_GO_DOWN = 4;
-constexpr int CAN_GO_NORTH = 5;
-constexpr int CAN_GO_EAST = 6;
-constexpr int CAN_GO_SOUTH = 7;
-constexpr int CAN_GO_WEST = 8;
-constexpr int CAN_STAND_HERE = 9;
+constexpr uint16_t CAN_GO_UP = 8;
+constexpr uint16_t CAN_GO_DOWN = 16;
+constexpr uint16_t CAN_GO_NORTH = 32;
+constexpr uint16_t CAN_GO_EAST = 64;
+constexpr uint16_t CAN_GO_SOUTH = 128;
+constexpr uint16_t CAN_GO_WEST = 256;
+constexpr uint16_t CAN_STAND_HERE = 512;
 
-constexpr int REVEALED = 10;
-constexpr int VISIBLE = 11;
+constexpr uint16_t REVEALED = 1024;
+constexpr uint16_t VISIBLE = 2048;
 
 }
+
+struct bitset16 {
+	uint16_t bits;
+	constexpr void set(const uint16_t n) { bits |= n; }
+	constexpr void reset(const uint16_t n) { bits &= ~n; }
+	constexpr bool test(const uint16_t n) { return bits & n; }
+};
 
 struct tile_t {
 	uint8_t base_type;
 	uint16_t contents;
-	std::bitset<TILE_OPTIONS_COUNT> flags;
+	bitset16 flags;
 	rltk::vchar render_as;
 	uint16_t tree_id = 0;
 };
