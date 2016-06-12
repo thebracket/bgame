@@ -18,8 +18,8 @@ struct calendar_t {
 	std::size_t serialization_identity = 3;
 
 	uint16_t year = 2525;
-	uint16_t month = 0;
-	uint16_t day = 0;
+	uint8_t month = 0;
+	uint8_t day = 0;
 	uint8_t hour = 0;
 	uint8_t minute = 0;
 	uint8_t second = 0;
