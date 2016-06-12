@@ -54,8 +54,8 @@ region_t load_region(const int region_x, const int region_y) {
 }
 
 void region_t::determine_tile_standability(const int &x, const int &y, const int &z) {
-	const int index = idx(x,y,z);
-	const int index_above = idx(x,y,z+1);
+	const int index = mapidx(x,y,z);
+	const int index_above = mapidx(x,y,z+1);
 	const bool solid = tiles[index].flags.test(tile_flags::SOLID);
 	const bool above_solid = tiles[index_above].flags.test(tile_flags::SOLID);
 
@@ -77,7 +77,7 @@ void region_t::determine_tile_standability(const int &x, const int &y, const int
 }
 
 void region_t::determine_tile_connectivity(const int &x, const int &y, const int &z) {
-	const int index = idx(x,y,z);
+	const int index = mapidx(x,y,z);
 	const bool solid = tiles[index].flags.test(tile_flags::SOLID);
 	if (solid) {
 		// It's solid - so we can't go anywhere!
@@ -90,13 +90,13 @@ void region_t::determine_tile_connectivity(const int &x, const int &y, const int
 		tiles[index].flags.reset(tile_flags::CAN_STAND_HERE);
 	} else {
 		// Check each of the directions to see if the destination is open
-		if (y>1 && tiles[idx(x,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+		if (y>1 && tiles[mapidx(x,y-1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
 			tiles[index].flags.set(tile_flags::CAN_GO_NORTH);
-		if (y<REGION_HEIGHT-1 && tiles[idx(x,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+		if (y<REGION_HEIGHT-1 && tiles[mapidx(x,y+1,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
 			tiles[index].flags.set(tile_flags::CAN_GO_SOUTH);
-		if (x<REGION_WIDTH-1 && tiles[idx(x+1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+		if (x<REGION_WIDTH-1 && tiles[mapidx(x+1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
 			tiles[index].flags.set(tile_flags::CAN_GO_EAST);
-		if (x>1 && tiles[idx(x-1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
+		if (x>1 && tiles[mapidx(x-1,y,z)].flags.test(tile_flags::CAN_STAND_HERE)) 
 			tiles[index].flags.set(tile_flags::CAN_GO_WEST);
 
 		// Stairs gain can_go flags based on type
@@ -135,7 +135,7 @@ void region_t::calculate_render_tiles() {
 	for (int z=0; z<REGION_DEPTH-1; ++z) {
 		for (int y=0; y<REGION_HEIGHT; ++y) {
 			for (int x=0; x<REGION_WIDTH; ++x) {
-				const int index = idx(x,y,z);
+				const int index = mapidx(x,y,z);
 				calculate_render_tile(index);
 			}
 		}

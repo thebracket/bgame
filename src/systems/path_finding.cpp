@@ -16,7 +16,7 @@ struct navigator_t {
 	// This is where we calculate where you can go from a given tile. In this case, we check
 	// all 8 directions, and if the destination is walkable return it as an option.
 	static bool get_successors(position_t pos, std::vector<position_t> &successors) {
-		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		const int idx = mapidx(pos.x, pos.y, pos.z);
 		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) successors.push_back(position_t(pos.x, pos.y-1, pos.z));
 		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) successors.push_back(position_t(pos.x, pos.y+1, pos.z));
 		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) successors.push_back(position_t(pos.x+1, pos.y, pos.z));

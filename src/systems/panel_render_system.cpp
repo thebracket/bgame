@@ -86,7 +86,7 @@ void panel_render_system::render_play_mode() {
 	if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
 		const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 		const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
-		const int idx = current_region.idx(world_x, world_y, camera_position->region_z);
+		const int idx = mapidx(world_x, world_y, camera_position->region_z);
 
 		{
 			const int base_tile_type = current_region.tiles[idx].base_type;
@@ -194,7 +194,7 @@ void panel_render_system::render_design_mode() {
 			if (get_mouse_button_state(rltk::button::LEFT)) {
 				const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 				const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
-				const int idx = current_region.idx(world_x, world_y, camera_position->region_z);
+				const int idx = mapidx(world_x, world_y, camera_position->region_z);
 				if (is_mining_designation_valid(world_x, world_y, camera_position->region_z, game_mining_mode)) {
 					switch (game_mining_mode) {
 						case DIG : designations->mining[idx] = 1; break;
@@ -259,7 +259,7 @@ void panel_render_system::render_design_mode() {
 			const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 			const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 
-			const int idx = current_region.idx(world_x, world_y, camera_position->region_z);
+			const int idx = mapidx(world_x, world_y, camera_position->region_z);
 			const int tree_id = current_region.tiles[idx].tree_id;
 
 			if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
@@ -271,7 +271,7 @@ void panel_render_system::render_design_mode() {
 				while (lowest_z > stop_z) {
 					for (int y=-10; y<10; ++y) {
 						for (int x=-10; x<10; ++x) {
-							const int tree_idx = current_region.idx(world_x + x, world_y + y, lowest_z);
+							const int tree_idx = mapidx(world_x + x, world_y + y, lowest_z);
 							if (current_region.tiles[tree_idx].tree_id == tree_id) {
 								tree_pos.x = world_x+x;
 								tree_pos.y = world_y+y;

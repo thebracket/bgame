@@ -9,7 +9,7 @@ std::vector<int> mining_targets;
 
 void walk_mining_map(const int x, const int y, const int z, const int distance, const int IDX) {
 	if (distance > 250) return;
-	const int idx = current_region.idx(x,y,z);
+	const int idx = mapidx(x,y,z);
 	if (mining_map[idx] > distance) {
 		if (!current_region.tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)) return;
 		mining_map[idx] = distance;
@@ -34,7 +34,7 @@ void make_mining_map() {
 	for (int z=1; z<REGION_DEPTH-2; ++z) {
 		for (int y=1; y<REGION_HEIGHT-2; ++y) {
 			for (int x=1; x<REGION_WIDTH-2; ++x) {
-				const int idx = current_region.idx(x,y,z);
+				const int idx = mapidx(x,y,z);
 				auto mf = designations->mining.find(idx);
 				if (mf != designations->mining.end()) {
 					if (mf->second==1) {					

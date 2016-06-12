@@ -609,7 +609,7 @@ int get_ground_z(region_t &region, const int x, const int y) {
 	int z = REGION_DEPTH-1;
 	bool hit_ground = false;
 	while (!hit_ground) {
-		const int idx = region.idx(x, y, z);
+		const int idx = mapidx(x, y, z);
 		if (region.tiles[idx].flags.test(tile_flags::SOLID)) {
 			hit_ground = true;
 			++z;
@@ -621,7 +621,7 @@ int get_ground_z(region_t &region, const int x, const int y) {
 }
 
 void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
-	const int idx = region.idx(x,y,z);
+	const int idx = mapidx(x,y,z);
 	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
 	if (solid) {
 		region.tiles[idx].flags.set(tile_flags::SOLID);
@@ -857,7 +857,7 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 
 void set_tree_trunk(region_t &region, const int x, const int y, const int z, const int tree_id) {
 	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
-		const int idx = region.idx(x,y,z);
+		const int idx = mapidx(x,y,z);
 		region.tiles[idx].base_type = 7;
 		region.tiles[idx].contents = 0;
 		region.tiles[idx].flags.set(tile_flags::TREE);
@@ -868,7 +868,7 @@ void set_tree_trunk(region_t &region, const int x, const int y, const int z, con
 
 void set_tree_foliage(region_t &region, const int x, const int y, const int z, const int tree_id) {
 	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
-		const int idx = region.idx(x,y,z);
+		const int idx = mapidx(x,y,z);
 		region.tiles[idx].base_type = 8;
 		region.tiles[idx].contents = 0;
 		region.tiles[idx].flags.set(tile_flags::TREE);
@@ -1038,7 +1038,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
 		for (int y=crash_y - 3; y<crash_y+4; ++y) {
 			int z = get_ground_z(region, x, y);
-			region.tiles[region.idx(x,y,z)].contents = get_tile_contents_index("nothing");
+			region.tiles[mapidx(x,y,z)].contents = get_tile_contents_index("nothing");
 		}
 	}
 

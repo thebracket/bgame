@@ -7,6 +7,7 @@
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
 constexpr int REGION_DEPTH=128;
+constexpr int REGION_TILES_COUNT = REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH;
 constexpr int TILE_OPTIONS_COUNT = 16;
 
 namespace tile_flags {
@@ -36,15 +37,18 @@ struct tile_t {
 	uint16_t tree_id = 0;
 };
 
+constexpr std::size_t mapidx(const int x, const int y, const int z) { 
+	return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; 
+}
+
 struct region_t {
-	region_t() { tiles.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH); }
+	region_t() { tiles.resize(REGION_TILES_COUNT); }
 	int region_x, region_y, biome_idx;
-	std::vector<tile_t> tiles;
-	inline int idx(const int x, const int y, const int z) { return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; }
+	std::vector<tile_t> tiles;	
 
 	inline void set(const int x, const int y, const int z, const uint8_t base, const uint16_t content, const uint8_t liquid=0, 
 			const int16_t temperature=0, const bool solid=false) {
-		const int loc = idx(x,y,z);
+		const int loc = mapidx(x,y,z);
 		tiles[loc].base_type = base;
 		tiles[loc].contents = content;
 		if (solid) {

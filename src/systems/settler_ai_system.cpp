@@ -18,7 +18,7 @@ void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stat
 
 void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {
 	position_t pos = original;
-	const int tile_index = current_region.idx(pos.x, pos.y, pos.z);
+	const int tile_index = mapidx(pos.x, pos.y, pos.z);
 	//std::cout << current_region.tiles[tile_index].flags << "\n";
 	const int direction = rng.roll_dice(1,6);
 	switch (direction) {
@@ -212,7 +212,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 	}
 	if (ai.job_type_major == JOB_IDLE) {
 		// Find something to do!
-		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		const int idx = mapidx(pos.x, pos.y, pos.z);
 		
 		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
 			change_settler_glyph(entity, vchar{'@', rltk::colors::WHITE, rltk::colors::BLACK});
@@ -314,7 +314,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_SITE) {
-		const int idx = current_region.idx(pos.x, pos.y, pos.z);
+		const int idx = mapidx(pos.x, pos.y, pos.z);
 		if (mining_map[idx]==0) {
 			// We're at a diggable site
 			ai.job_type_minor = JM_DIG;
@@ -325,28 +325,28 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		// Drop the pick.
 		int current_direction = 0;
 		int min_value = 512;
-		if (mining_map[current_region.idx(pos.x, pos.y-1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
-			min_value = mining_map[current_region.idx(pos.x, pos.y-1, pos.z)]; 
+		if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
+			min_value = mining_map[mapidx(pos.x, pos.y-1, pos.z)]; 
 			current_direction = 1; 
 		}
-		if (mining_map[current_region.idx(pos.x, pos.y+1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { 
-			min_value = mining_map[current_region.idx(pos.x, pos.y+1, pos.z)]; 
+		if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { 
+			min_value = mining_map[mapidx(pos.x, pos.y+1, pos.z)]; 
 			current_direction = 2; 
 		}
-		if (mining_map[current_region.idx(pos.x-1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { 
-			min_value = mining_map[current_region.idx(pos.x-1, pos.y, pos.z)]; 
+		if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { 
+			min_value = mining_map[mapidx(pos.x-1, pos.y, pos.z)]; 
 			current_direction = 3; 
 		}
-		if (mining_map[current_region.idx(pos.x+1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { 
-			min_value = mining_map[current_region.idx(pos.x+1, pos.y, pos.z)]; 
+		if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { 
+			min_value = mining_map[mapidx(pos.x+1, pos.y, pos.z)]; 
 			current_direction = 4; 
 		}
-		if (mining_map[current_region.idx(pos.x, pos.y, pos.z-1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { 
-			min_value = mining_map[current_region.idx(pos.x, pos.y, pos.z-1)]; 
+		if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { 
+			min_value = mining_map[mapidx(pos.x, pos.y, pos.z-1)]; 
 			current_direction = 5; 
 		}
-		if (mining_map[current_region.idx(pos.x, pos.y, pos.z+1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { 
-			min_value = mining_map[current_region.idx(pos.x, pos.y, pos.z+1)]; 
+		if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { 
+			min_value = mining_map[mapidx(pos.x, pos.y, pos.z+1)]; 
 			current_direction = 6; 
 		}
 
@@ -376,7 +376,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			// Determine the digging target from here
 			// Make a skill roll, and if successful complete the action
 			// When complete, move to dropping the pick
-			const int idx = current_region.idx(pos.x, pos.y, pos.z);
+			const int idx = mapidx(pos.x, pos.y, pos.z);
 			const int target_idx = mining_targets[idx];
 			const int target_operation = designations->mining[target_idx];
 
@@ -579,7 +579,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			for (int z=0; z<REGION_DEPTH; ++z) {
 				for (int y=0; y<REGION_HEIGHT; ++y) {
 					for (int x=0; x<REGION_WIDTH; ++x) {
-						const int idx = current_region.idx(x,y,z);
+						const int idx = mapidx(x,y,z);
 						if (current_region.tiles[idx].tree_id == ai.target_id) {
 							current_region.tiles[idx].flags.reset(tile_flags::SOLID);
 							current_region.tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
@@ -593,7 +593,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 					}
 				}
 			}
-			const int tree_idx = current_region.idx(ai.target_x, ai.target_y, ai.target_z);
+			const int tree_idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
 			current_region.tiles[tree_idx].base_type = 3;
 			current_region.tiles[tree_idx].contents = 0;
 			current_region.calculate_render_tile(tree_idx);			

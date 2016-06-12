@@ -30,7 +30,7 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
 
 	while (dive_depth < max_dive_depth && result.glyph == ' ') {
-		const int idx = current_region.idx(x, y, z-dive_depth);
+		const int idx = mapidx(x, y, z-dive_depth);
 		if (!current_region.tiles[idx].flags.test(tile_flags::REVEALED)) return result;
 
 		auto rf = renderables.find(idx);
@@ -59,7 +59,7 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
 
-	const int idx = current_region.idx(x, y, z);
+	const int idx = mapidx(x, y, z);
 
 	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
 		auto rf = renderables.find(idx);
@@ -93,7 +93,7 @@ vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
 
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
 
-	const int idx = current_region.idx(x, y, z);
+	const int idx = mapidx(x, y, z);
 
 	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
 		auto rf = renderables.find(idx);
@@ -123,7 +123,7 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
 
-	const int idx = current_region.idx(x, y, z);
+	const int idx = mapidx(x, y, z);
 
 	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
 		auto rf = renderables.find(idx);
@@ -224,13 +224,13 @@ void map_render_system::update(const double duration_ms) {
 	if (renderables_changed) {
 		renderables.clear();
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[current_region.idx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
+			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
 		});
 		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
 			int glyph_idx = 0;
 			for (int x = 0; x<b.width; ++x) {
 				for (int y=0; y<b.height; ++y) {
-					const int idx = current_region.idx(pos.x+x, pos.y+y, pos.z);
+					const int idx = mapidx(pos.x+x, pos.y+y, pos.z);
 					renderables[idx] = b.glyphs[glyph_idx];
 					if (!b.complete) renderables[idx].foreground = rltk::colors::GREY;
 					++glyph_idx;
