@@ -19,17 +19,16 @@ void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stat
 void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {
 	position_t pos = original;
 	const int tile_index = mapidx(pos.x, pos.y, pos.z);
-	//std::cout << current_region.tiles[tile_index].flags << "\n";
 	const int direction = rng.roll_dice(1,6);
 	switch (direction) {
-		case 1 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_UP)) pos.z++; break;
-		case 2 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_DOWN)) pos.z--; break;
-		case 3 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_NORTH)) pos.y--; break;
-		case 4 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_SOUTH)) pos.y++; break;
-		case 5 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_EAST)) pos.x++; break;
-		case 6 : if (current_region.tiles[tile_index].flags.test(tile_flags::CAN_GO_WEST)) pos.x--; break;
+		case 1 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_UP)) pos.z++; break;
+		case 2 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_DOWN)) pos.z--; break;
+		case 3 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_NORTH)) pos.y--; break;
+		case 4 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_SOUTH)) pos.y++; break;
+		case 5 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_EAST)) pos.x++; break;
+		case 6 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_WEST)) pos.x--; break;
 	}
-	if (current_region.tiles[tile_index].flags.test(tile_flags::SOLID)) { 
+	if (current_region->tiles[tile_index].flags.test(tile_flags::SOLID)) { 
 		pos = original;
 	} else {
 		move_to(entity, original, pos);
@@ -325,27 +324,27 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		// Drop the pick.
 		int current_direction = 0;
 		int min_value = 512;
-		if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
+		if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y-1, pos.z)]; 
 			current_direction = 1; 
 		}
-		if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { 
+		if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y+1, pos.z)]; 
 			current_direction = 2; 
 		}
-		if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { 
+		if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { 
 			min_value = mining_map[mapidx(pos.x-1, pos.y, pos.z)]; 
 			current_direction = 3; 
 		}
-		if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { 
+		if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { 
 			min_value = mining_map[mapidx(pos.x+1, pos.y, pos.z)]; 
 			current_direction = 4; 
 		}
-		if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { 
+		if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y, pos.z-1)]; 
 			current_direction = 5; 
 		}
-		if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { 
+		if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y, pos.z+1)]; 
 			current_direction = 6; 
 		}
@@ -382,64 +381,64 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 
 			if (target_operation == 1) {
 				// Dig
-				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-				current_region.tiles[target_idx].contents = 4101;
-				current_region.calculate_render_tile(target_idx);
-				if (current_region.tiles[target_idx].base_type==2 && rng.roll_dice(1,4)>=2) {
+				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tiles[target_idx].contents = 4101;
+				current_region->calculate_render_tile(target_idx);
+				if (current_region->tiles[target_idx].base_type==2 && rng.roll_dice(1,4)>=2) {
 					spawn_item_on_ground(pos.x, pos.y, pos.z, "stone_boulder");
 				}
 			} else if (target_operation == 2) {
 				// Channel
-				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-				current_region.tiles[target_idx].contents = 0;
-				current_region.tiles[target_idx].base_type = 0;
-				current_region.calculate_render_tile(target_idx);
+				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->tiles[target_idx].contents = 0;
+				current_region->tiles[target_idx].base_type = 0;
+				current_region->calculate_render_tile(target_idx);
 				
 				// Add ramp
 				const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
-				current_region.tiles[below].flags.reset(tile_flags::SOLID);
-				current_region.tiles[below].flags.set(tile_flags::CONSTRUCTION);
-				current_region.tiles[below].contents = 4118;
-				current_region.calculate_render_tile(below);
+				current_region->tiles[below].flags.reset(tile_flags::SOLID);
+				current_region->tiles[below].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tiles[below].contents = 4118;
+				current_region->calculate_render_tile(below);
 			} else if (target_operation == 3) {
 				// Ramp
-				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-				current_region.tiles[target_idx].contents = 4118;
-				current_region.calculate_render_tile(target_idx);
+				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tiles[target_idx].contents = 4118;
+				current_region->calculate_render_tile(target_idx);
 
 				const int above = target_idx + (REGION_WIDTH * REGION_HEIGHT);
-				current_region.tiles[above].flags.reset(tile_flags::SOLID);
-				current_region.tiles[above].base_type = 0;
-				current_region.tiles[above].contents = 0;
-				current_region.calculate_render_tile(above);
+				current_region->tiles[above].flags.reset(tile_flags::SOLID);
+				current_region->tiles[above].base_type = 0;
+				current_region->tiles[above].contents = 0;
+				current_region->calculate_render_tile(above);
 				
 			} else if (target_operation == 4) {
 				// Up
-				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-				current_region.tiles[target_idx].contents = 4111;
-				current_region.calculate_render_tile(target_idx);
+				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tiles[target_idx].contents = 4111;
+				current_region->calculate_render_tile(target_idx);
 			} else if (target_operation == 5) {
 				// Down
-				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-				current_region.tiles[target_idx].contents = 4110;
-				current_region.calculate_render_tile(target_idx);
+				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tiles[target_idx].contents = 4110;
+				current_region->calculate_render_tile(target_idx);
 			} else if (target_operation == 6) {
 				// UpDown
-				current_region.tiles[target_idx].flags.reset(tile_flags::SOLID);
-				current_region.tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
-				current_region.tiles[target_idx].contents = 4109;
-				current_region.calculate_render_tile(target_idx);
+				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tiles[target_idx].contents = 4109;
+				current_region->calculate_render_tile(target_idx);
 			}
 
 			for (int Z=-2; Z<3; ++Z) {
 				for (int Y=-2; Y<3; ++Y) {
 					for (int X=-2; X<3; ++X) {
-						current_region.determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
-						current_region.determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
 					}
 				}
 			}
@@ -580,23 +579,23 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 				for (int y=0; y<REGION_HEIGHT; ++y) {
 					for (int x=0; x<REGION_WIDTH; ++x) {
 						const int idx = mapidx(x,y,z);
-						if (current_region.tiles[idx].tree_id == ai.target_id) {
-							current_region.tiles[idx].flags.reset(tile_flags::SOLID);
-							current_region.tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
-							current_region.tiles[idx].flags.reset(tile_flags::TREE);
-							current_region.tiles[idx].tree_id = 0;
-							current_region.tiles[idx].base_type = 0;
-							current_region.tiles[idx].contents = 0;
-							current_region.calculate_render_tile(idx);
+						if (current_region->tiles[idx].tree_id == ai.target_id) {
+							current_region->tiles[idx].flags.reset(tile_flags::SOLID);
+							current_region->tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
+							current_region->tiles[idx].flags.reset(tile_flags::TREE);
+							current_region->tiles[idx].tree_id = 0;
+							current_region->tiles[idx].base_type = 0;
+							current_region->tiles[idx].contents = 0;
+							current_region->calculate_render_tile(idx);
 							++number_of_logs;
 						}
 					}
 				}
 			}
 			const int tree_idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
-			current_region.tiles[tree_idx].base_type = 3;
-			current_region.tiles[tree_idx].contents = 0;
-			current_region.calculate_render_tile(tree_idx);			
+			current_region->tiles[tree_idx].base_type = 3;
+			current_region->tiles[tree_idx].contents = 0;
+			current_region->calculate_render_tile(tree_idx);			
 
 			// Spawn wooden logs
 			number_of_logs = (number_of_logs/20)+1;
@@ -609,8 +608,8 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			for (int Z=-2; Z<10; ++Z) {
 				for (int Y=-10; Y<10; ++Y) {
 					for (int X=-10; X<10; ++X) {
-						current_region.determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
-						current_region.determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
 					}
 				}
 			}

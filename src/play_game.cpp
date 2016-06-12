@@ -65,7 +65,7 @@ void play_game::init() {
 		calendar = &cal;
 		designations = &design;
 	});
-	current_region = load_region(region_x, region_y);
+	*current_region = load_region(region_x, region_y);
 
 	// Setup systems
 	add_system<calendar_system>();

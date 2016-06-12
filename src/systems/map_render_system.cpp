@@ -31,15 +31,15 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 
 	while (dive_depth < max_dive_depth && result.glyph == ' ') {
 		const int idx = mapidx(x, y, z-dive_depth);
-		if (!current_region.tiles[idx].flags.test(tile_flags::REVEALED)) return result;
+		if (!current_region->tiles[idx].flags.test(tile_flags::REVEALED)) return result;
 
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		} else {
-			result = current_region.tiles[idx].render_as;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			result = current_region->tiles[idx].render_as;
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		}
 		++dive_depth;
 	}
@@ -61,14 +61,14 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
 	const int idx = mapidx(x, y, z);
 
-	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
+	if (current_region->tiles[idx].flags.test(tile_flags::REVEALED)) {
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
 		} else {
-			result = current_region.tiles[idx].render_as;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			result = current_region->tiles[idx].render_as;
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		}
 	}
 
@@ -95,18 +95,18 @@ vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
 
 	const int idx = mapidx(x, y, z);
 
-	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
+	if (current_region->tiles[idx].flags.test(tile_flags::REVEALED)) {
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
 		} else {
-			result = current_region.tiles[idx].render_as;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			result = current_region->tiles[idx].render_as;
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		}
 	}
 
-	const int tree_id = current_region.tiles[idx].tree_id;
+	const int tree_id = current_region->tiles[idx].tree_id;
 	if (tree_id > 0) {
 		auto mf = designations->chopping.find(tree_id);
 		if (mf != designations->chopping.end()) {
@@ -125,14 +125,14 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 
 	const int idx = mapidx(x, y, z);
 
-	if (current_region.tiles[idx].flags.test(tile_flags::REVEALED)) {
+	if (current_region->tiles[idx].flags.test(tile_flags::REVEALED)) {
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
 		} else {
-			result = current_region.tiles[idx].render_as;
-			if (!current_region.tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			result = current_region->tiles[idx].render_as;
+			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
 		}
 	}
 
@@ -146,8 +146,8 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;
 
-			if (!current_region.tiles[idx].flags.test(tile_flags::SOLID) && current_region.tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)
-				&& !current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
+			if (!current_region->tiles[idx].flags.test(tile_flags::SOLID) && current_region->tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)
+				&& !current_region->tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
 				result.foreground = rltk::colors::GREEN;
 			} else {
 				result.foreground = rltk::colors::RED;

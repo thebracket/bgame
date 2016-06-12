@@ -5,6 +5,7 @@
 #include "components/components.hpp"
 #include <rltk.hpp>
 #include <boost/optional.hpp>
+#include <memory>
 
 struct available_building_t {
 	available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
@@ -23,7 +24,7 @@ enum game_design_mode_t { DIGGING, BUILDING, CHOPPING };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, DELETE };
 
 extern planet_t planet;
-extern region_t current_region;
+extern std::unique_ptr<region_t> current_region;
 extern std::size_t camera_entity;
 extern world_position_t * camera_position;
 extern calendar_t * calendar;

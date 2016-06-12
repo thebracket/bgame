@@ -5,7 +5,7 @@
 using namespace rltk;
 
 inline void reveal(const int &idx, viewshed_t &view) {
-	current_region.tiles[idx].flags.set(tile_flags::REVEALED);
+	current_region->tiles[idx].flags.set(tile_flags::REVEALED);
 	view.visible_cache.push_back(idx);
 }
 
@@ -33,7 +33,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 		if (distance > dist_square) {
 			return false;
 		}
-		return !(current_region.tiles[idx].flags.test(tile_flags::SOLID));
+		return !(current_region->tiles[idx].flags.test(tile_flags::SOLID));
 	});
 }
 
@@ -68,7 +68,7 @@ void visibility_system::update(const double duration_ms) {
 	if (!dirty) return;
 
 	// Apply to map - first clear everything
-	for (tile_t &tile : current_region.tiles) {
+	for (tile_t &tile : current_region->tiles) {
 		tile.flags.reset(tile_flags::VISIBLE);
 	}
 
@@ -85,7 +85,7 @@ void visibility_system::update(const double duration_ms) {
 
 		// Make visible
 		for (const int &idx : view.visible_cache) {
-			current_region.tiles[idx].flags.set(tile_flags::VISIBLE);
+			current_region->tiles[idx].flags.set(tile_flags::VISIBLE);
 		}
 	});
 	dirty_entities.clear();

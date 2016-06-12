@@ -65,7 +65,7 @@ void tick(double duration_ms) {
 				const std::string save_filename = "world/savegame.dat";
 				std::fstream lbfile(save_filename, std::ios::out | std::ios::binary);
 				ecs_save(lbfile);
-				save_region(current_region);
+				save_region(*current_region);
 				game.destroy();
 				mode = MAIN_MENU;
 				menu.init();

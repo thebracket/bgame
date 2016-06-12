@@ -89,7 +89,7 @@ void panel_render_system::render_play_mode() {
 		const int idx = mapidx(world_x, world_y, camera_position->region_z);
 
 		{
-			const int base_tile_type = current_region.tiles[idx].base_type;
+			const int base_tile_type = current_region->tiles[idx].base_type;
 			std::stringstream ss;
 			auto finder = tile_types.find(base_tile_type);
 			if (finder != tile_types.end()) {
@@ -98,7 +98,7 @@ void panel_render_system::render_play_mode() {
 			}
 		}
 		{
-			const int base_tile_content = current_region.tiles[idx].contents;
+			const int base_tile_content = current_region->tiles[idx].contents;
 			std::stringstream ss;
 			auto finder = tile_contents.find(base_tile_content);
 			if (finder != tile_contents.end()) {
@@ -108,16 +108,16 @@ void panel_render_system::render_play_mode() {
 		}
 		{
 			std::stringstream ss;
-			if (current_region.tiles[idx].flags.test(tile_flags::SOLID)) ss << "S";
-			if (current_region.tiles[idx].flags.test(tile_flags::TREE)) ss << "T";
-			if (current_region.tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "C";
-			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) ss << "N";
-			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) ss << "S";
-			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) ss << "E";
-			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) ss << "W";
-			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) ss << "U";
-			if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) ss << "D";
-			ss << current_region.tiles[idx].tree_id;
+			if (current_region->tiles[idx].flags.test(tile_flags::SOLID)) ss << "S";
+			if (current_region->tiles[idx].flags.test(tile_flags::TREE)) ss << "T";
+			if (current_region->tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "C";
+			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) ss << "N";
+			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) ss << "S";
+			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) ss << "E";
+			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) ss << "W";
+			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_UP)) ss << "U";
+			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) ss << "D";
+			ss << current_region->tiles[idx].tree_id;
 			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
 		}
 		int count = 0;
@@ -260,7 +260,7 @@ void panel_render_system::render_design_mode() {
 			const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 
 			const int idx = mapidx(world_x, world_y, camera_position->region_z);
-			const int tree_id = current_region.tiles[idx].tree_id;
+			const int tree_id = current_region->tiles[idx].tree_id;
 
 			if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
 				// Naieve search for the base of the tree; this could be optimized a LOT
@@ -272,7 +272,7 @@ void panel_render_system::render_design_mode() {
 					for (int y=-10; y<10; ++y) {
 						for (int x=-10; x<10; ++x) {
 							const int tree_idx = mapidx(world_x + x, world_y + y, lowest_z);
-							if (current_region.tiles[tree_idx].tree_id == tree_id) {
+							if (current_region->tiles[tree_idx].tree_id == tree_id) {
 								tree_pos.x = world_x+x;
 								tree_pos.y = world_y+y;
 								tree_pos.z = lowest_z;

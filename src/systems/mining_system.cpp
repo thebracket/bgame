@@ -11,16 +11,16 @@ void walk_mining_map(const int x, const int y, const int z, const int distance, 
 	if (distance > 250) return;
 	const int idx = mapidx(x,y,z);
 	if (mining_map[idx] > distance) {
-		if (!current_region.tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)) return;
+		if (!current_region->tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)) return;
 		mining_map[idx] = distance;
 		mining_targets[idx] = IDX;
 
-		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { walk_mining_map(x,y-1,z,distance+1,IDX); }
-		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { walk_mining_map(x,y+1,z,distance+1,IDX); }
-		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { walk_mining_map(x+1,y,z,distance+1,IDX); }
-		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { walk_mining_map(x-1,y,z,distance+1,IDX); }
-		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { walk_mining_map(x,y,z+1,distance+1,IDX); }
-		if (current_region.tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { walk_mining_map(x,y,z-1,distance+1,IDX); }
+		if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { walk_mining_map(x,y-1,z,distance+1,IDX); }
+		if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { walk_mining_map(x,y+1,z,distance+1,IDX); }
+		if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { walk_mining_map(x+1,y,z,distance+1,IDX); }
+		if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { walk_mining_map(x-1,y,z,distance+1,IDX); }
+		if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { walk_mining_map(x,y,z+1,distance+1,IDX); }
+		if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { walk_mining_map(x,y,z-1,distance+1,IDX); }
 	}
 }
 
