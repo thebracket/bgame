@@ -22,6 +22,7 @@ std::vector<profession_t> starting_professions;
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<std::string, building_def_t> building_defs;
+boost::container::flat_map<std::string, reaction_t> reaction_defs;
 
 std::string to_proper_noun_case(const std::string &original)
 {
@@ -384,6 +385,30 @@ void read_buildings() {
     }
 }
 
+void read_reactions() {
+    lua_getglobal(lua_state, "reactions");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        reaction_t c;
+
+        std::string key = lua_tostring(lua_state, -2);
+        c.tag = key;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            lua_pop(lua_state, 1);
+        }
+        reaction_defs[key] = c;
+
+        lua_pop(lua_state, 1);
+    }
+}
+
 void load_game_tables() {
 	read_tile_types();
 	read_tile_contents();
@@ -391,6 +416,7 @@ void load_game_tables() {
     read_professions();
     read_items();
     read_buildings();
+    read_reactions();
 }
 
 void load_raws() {
