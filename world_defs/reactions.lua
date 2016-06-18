@@ -2,15 +2,15 @@ reactions = {
     cut_wooden_planks = {
         name = "Cut Wooden Planks",
         workshop = "sawmill",
-        inputs = { {"wood_logs", 1} },
-        outputs = { {"wood_planks", 4} },
+        inputs = { { item="wood_logs", qty=1 } },
+        outputs = { { item="wood_planks", qty=4 } },
         automatic = true
     },
     cut_stone = {
         name = "Cut Stone Blocks",
         workshop = "stonecutter",
-        inputs = { {"stonecutter", 1} },
-        outputs = { {"stone_blocks", 4} },
+        inputs = { { item="stone_boulder", qty=1 } },
+        outputs = { { item="stone_blocks", qty=4 } },
         automatic = true
     }
 }

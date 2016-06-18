@@ -401,6 +401,46 @@ void read_reactions() {
         while (lua_next(lua_state, -2) != 0) {
             std::string field = lua_tostring(lua_state, -2);
 
+            if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "workshop") c.workshop = lua_tostring(lua_state, -1);
+            if (field == "inputs") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    lua_pushnil(lua_state);
+                    lua_gettable(lua_state, -2);
+                    std::pair<std::string, int> comp;
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string f = lua_tostring(lua_state, -2);
+                        if (f == "item") comp.first = lua_tostring(lua_state, -1);
+                        if (f == "qty") comp.second = lua_tonumber(lua_state, -1);
+                        lua_pop(lua_state, 1);
+                    }
+                    c.inputs.push_back(comp);
+
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "outputs") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    lua_pushnil(lua_state);
+                    lua_gettable(lua_state, -2);
+                    std::pair<std::string, int> comp;
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string f = lua_tostring(lua_state, -2);
+                        if (f == "item") comp.first = lua_tostring(lua_state, -1);
+                        if (f == "qty") comp.second = lua_tonumber(lua_state, -1);
+                        lua_pop(lua_state, 1);
+                    }
+                    c.outputs.push_back(comp);
+
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "automatic") c.automatic = lua_toboolean(lua_state, -1);
+
             lua_pop(lua_state, 1);
         }
         reaction_defs[key] = c;
