@@ -23,6 +23,7 @@ std::vector<profession_t> starting_professions;
 boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<std::string, building_def_t> building_defs;
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
+boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 std::string to_proper_noun_case(const std::string &original)
 {
@@ -403,6 +404,8 @@ void read_reactions() {
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
             if (field == "workshop") c.workshop = lua_tostring(lua_state, -1);
+            if (field == "skill") c.skill = lua_tostring(lua_state, -1);
+            if (field == "difficulty") c.difficulty = lua_tonumber(lua_state, -1);
             if (field == "inputs") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
@@ -444,6 +447,7 @@ void read_reactions() {
             lua_pop(lua_state, 1);
         }
         reaction_defs[key] = c;
+        reaction_building_defs[c.workshop].push_back(key);
 
         lua_pop(lua_state, 1);
     }

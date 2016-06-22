@@ -136,8 +136,6 @@ void inventory_system::configure() {
 				current_region->tiles[idx].flags.set(tile_flags::CONSTRUCTION);
 			}
 		}
-
-		emit(update_workflow_message{});
 	});
 }
 
@@ -225,4 +223,54 @@ position_t get_item_location(std::size_t id) {
 	auto finder = all_items.find(id);
 	if (finder == all_items.end()) throw std::runtime_error("Unable to find item");
 	return finder->second.pos.get();
+}
+
+void delete_item(const std::size_t &id) {
+	auto finder = all_items.find(id);
+	if (finder != all_items.end()) {
+		if (finder->second.claimed) {
+			for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
+				if (finder->second.categories.test(i)) {
+					++item_availability[i];
+					items_by_category[i].erase(std::remove_if(items_by_category[i].begin(), items_by_category[i].end(), [&id] (std::size_t item) { return item == id; }), items_by_category[i].end());
+				}
+			}
+		}
+	}
+	all_items.erase(id);
+	delete_entity(id);
+}
+
+int available_items_by_tag(const std::string &tag) {
+	int result = 0;
+	for (auto item=all_items.begin(); item!=all_items.end(); ++item) {
+		if (item->second.item_tag == tag && item->second.claimed != true) ++result;
+	}
+	return result;
+}
+
+std::size_t claim_item_by_tag(const std::string &tag) {
+	for (auto item=all_items.begin(); item!=all_items.end(); ++item) {
+		if (item->second.item_tag == tag && item->second.claimed == false) {
+			item->second.claimed = true;
+			for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
+				if (item->second.categories.test(i)) {
+					--item_availability[i];
+				}
+			}
+			return item->second.id;
+		}
+	}
+	return 0;
+}
+
+void unclaim_by_id(const std::size_t &id) {
+	auto finder = all_items.find(id);
+	if (finder != all_items.end()) {
+		finder->second.claimed = false;
+		for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
+			++item_availability[i];
+			std::cout << "Released - available by category: " << item_availability[i] << "\n";
+		}
+	}		
 }

@@ -95,6 +95,8 @@ struct reaction_t {
 	std::string workshop = "";
 	std::vector<std::pair<std::string, int>> inputs;
 	std::vector<std::pair<std::string, int>> outputs;
+	std::string skill;
+	int difficulty;
 	bool automatic = false;
 };
 
@@ -113,6 +115,7 @@ extern std::vector<profession_t> starting_professions;
 extern boost::container::flat_map<std::string, item_def_t> item_defs;
 extern boost::container::flat_map<std::string, building_def_t> building_defs;
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
+extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);

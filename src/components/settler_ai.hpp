@@ -8,18 +8,21 @@
 
 using namespace rltk;
 
-constexpr int NUMBER_OF_JOB_CATEGORIES = 3;
+constexpr int NUMBER_OF_JOB_CATEGORIES = 5;
 constexpr int JOB_MINING = 0;
 constexpr int JOB_CHOPPING = 1;
 constexpr int JOB_CONSTRUCTION = 2;
+constexpr int JOB_CARPENTRY = 3;
+constexpr int JOB_MASONRY = 4;
 
-enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST };
+enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST, JOB_REACTION };
 enum job_minor_t { 
 	JM_NONE,
 	JM_FIND_BED, JM_GO_TO_BED, JM_SLEEP,				// Bed-time steps
 	JM_FIND_PICK, JM_GO_TO_PICK, JM_COLLECT_PICK, JM_GO_TO_SITE, JM_DIG, JM_DROP_PICK,	// Mining steps
 	JM_FIND_AXE, JM_GO_TO_AXE, JM_COLLECT_AXE, JM_FIND_TREE, JM_GO_TO_TREE, JM_CHOP, JM_DROP_AXE,	// Tree cutting steps
-	JM_SELECT_COMPONENT, JM_GO_TO_COMPONENT, JM_COLLECT_COMPONENT, JM_GO_TO_BUILDING, JM_DROP_COMPONENT, JM_ASSEMBLE // Buildings
+	JM_SELECT_COMPONENT, JM_GO_TO_COMPONENT, JM_COLLECT_COMPONENT, JM_GO_TO_BUILDING, JM_DROP_COMPONENT, JM_ASSEMBLE, // Buildings
+	JM_SELECT_INPUT, JM_GO_TO_INPUT, JM_COLLECT_INPUT, JM_GO_TO_WORKSHOP, JM_DROP_INPUT, JM_REACT // Reactions
 };
 
 struct settler_ai_t {
@@ -36,6 +39,7 @@ struct settler_ai_t {
 	int target_z = 0;
 	int target_id = 0;
 	boost::optional<building_designation_t> building_target;
+	boost::optional<reaction_task_t> reaction_target;
 
 	// Non-persistent
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
@@ -62,8 +66,9 @@ struct settler_ai_t {
 		serialize(lbfile, target_id);
 
 		bool has_building_target = false;
+		if (building_target) has_building_target = true;
+
 		if (has_building_target) {
-			has_building_target = true;
 			serialize(lbfile, has_building_target);
 
 			serialize(lbfile, building_target.get().x);
@@ -92,6 +97,23 @@ struct settler_ai_t {
 			serialize(lbfile, building_target.get().building_entity);
 		} else {
 			serialize(lbfile, has_building_target);
+		}
+
+		bool has_reaction_target = false;
+		if (reaction_target) has_reaction_target = true;
+		if (has_reaction_target) {
+			serialize(lbfile, has_reaction_target);
+			serialize(lbfile, reaction_target.get().building_id);
+			serialize(lbfile, reaction_target.get().job_name);
+			serialize(lbfile, reaction_target.get().reaction_tag);
+			std::size_t n_comps = reaction_target.get().components.size();
+			serialize(lbfile, n_comps);
+			for (const std::pair<std::size_t,bool> &comp : reaction_target.get().components) {
+				serialize(lbfile, comp.first);
+				serialize(lbfile, comp.second);
+			}
+		} else {
+			serialize(lbfile, has_reaction_target);
 		}
 	}
 
@@ -143,6 +165,24 @@ struct settler_ai_t {
 			}
 			deserialize(lbfile, c.building_target.get().building_entity);
 			c.building_target = b;
+		}
+		bool has_reaction_target;
+		deserialize(lbfile, has_reaction_target);
+		if (has_reaction_target) {
+			reaction_task_t t;
+			deserialize(lbfile, t.building_id);
+			deserialize(lbfile, t.job_name);
+			deserialize(lbfile, t.reaction_tag);
+			std::size_t n_comps;
+			deserialize(lbfile, n_comps);
+			for (std::size_t i=0; i<n_comps; ++i) {
+				std::size_t comp;
+				bool claim;
+				deserialize(lbfile, comp);
+				deserialize(lbfile, claim);
+				t.components.push_back(std::make_pair(comp,claim));
+			}
+			c.reaction_target = t;
 		}
 
 		return c;

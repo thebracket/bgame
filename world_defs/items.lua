@@ -46,5 +46,21 @@ items = {
 		glyph = glyphs['small_circle'],
 		foreground = colors['grey'],
 		background = colors['black']
+	},
+	wood_plank = {
+		name = "Wood Plank",
+		description = "Wood, cut into a convenient shape",
+		itemtype = {"component"},
+		glyph = glyphs['single_wall_ew'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	stone_block = {
+		name = "Stone Block",
+		description = "Stone, cut into a convenient building block",
+		itemtype = {"component"},
+		glyph = glyphs['single_wall_ew'],
+		foreground = colors['grey'],
+		background = colors['black']
 	}
 }

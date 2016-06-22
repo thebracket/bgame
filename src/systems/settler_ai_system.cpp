@@ -4,6 +4,7 @@
 #include "path_finding.hpp"
 #include "mining_system.hpp"
 #include "inventory_system.hpp"
+#include "workflow_system.hpp"
 #include <iostream>
 #include <map>
 
@@ -241,6 +242,17 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			}
 			return;
 		}
+
+		// Look for an automatic reaction to perform
+		boost::optional<reaction_task_t> autojob = find_automatic_reaction_task(ai);
+		if (autojob) {
+			change_settler_glyph(entity, vchar{'@', rltk::colors::Grey, rltk::colors::BLACK});
+			ai.job_type_major = JOB_REACTION;
+			ai.job_type_minor = JM_SELECT_INPUT;
+			change_job_status(ai, name, autojob.get().job_name);
+			ai.reaction_target = autojob;
+			return;
+		}
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
 		return;
@@ -249,6 +261,9 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_CONST) {
 		do_building(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_REACTION) {
+		do_reaction(entity, ai, stats, species, pos, name);
 		return;
 	}
 	//wander_randomly(entity, pos);
@@ -727,11 +742,123 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 		if (skill_check >= SUCCESS) {
 			// Destroy components
 			for (auto &comp : ai.building_target.get().component_ids) {
-				delete_entity(comp.first);
+				delete_item(comp.first);
 			}
 
 			// Place the building
 			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
+			emit(renderables_changed_message{});
+			emit(inventory_changed_message{});
+			emit(update_workflow_message{});
+
+			// Become idle
+			become_idle(e, ai, name);
+		}
+	}
+}
+
+void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_SELECT_INPUT) {
+		bool has_components = true;
+		for (std::pair<std::size_t, bool> &component : ai.reaction_target.get().components) {
+			if (!component.second) {
+				has_components = false;
+				ai.current_tool = component.first;
+				ai.current_path = find_path(pos, get_item_location(ai.current_tool));
+				if (ai.current_path->success) {
+					component.second = true;
+					ai.job_type_minor = JM_GO_TO_INPUT;
+					change_job_status(ai, name, "Traveling to reaction component");
+				} else {
+					cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
+				}
+				return;
+			}
+		}
+
+		if (has_components) {
+			ai.job_type_minor = JM_REACT;
+			change_job_status(ai, name, "Constructing building");
+		}
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_INPUT) {
+		if (pos == ai.current_path->destination) {
+			// We're at the component
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_INPUT;
+			change_job_status(ai, name, "Collect building component");
+			return;
+		}
+		// Travel to component
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_INPUT) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
+		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
+		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
+
+		// Notify the inventory system of the change	
+		emit(inventory_changed_message{});
+		emit(renderables_changed_message{});
+
+		ai.job_type_minor = JM_GO_TO_WORKSHOP;
+		change_job_status(ai, name, "Going to building site");
+		position_t * reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
+		ai.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_WORKSHOP) {
+		if (pos == ai.current_path->destination) {
+			// We're at the site
+			ai.current_path.reset();
+			ai.job_type_minor = JM_DROP_INPUT;
+			change_job_status(ai, name, "Dropping reaction component");
+			return;
+		}
+		// Travel to site
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DROP_INPUT) {
+		if (ai.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
+		drop_current_tool(e, ai, pos);
+		ai.current_tool = 0;
+		ai.job_type_minor = JM_SELECT_INPUT;
+		change_job_status(ai, name, "Reading reaction specs");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_REACT) {
+		// Skill check, destroy inputs, create outputs
+		auto finder = reaction_defs.find(ai.reaction_target.get().reaction_tag);
+		auto skill_check = skill_roll(stats, rng, finder->second.skill, finder->second.difficulty);
+
+		if (skill_check >= SUCCESS) {
+			// Delete components
+			for (auto comp : ai.reaction_target.get().components) {
+				delete_item(comp.first);
+			}
+
+			// Spawn results
+			for (auto &output : finder->second.outputs) {
+				for (int i=0; i<output.second; ++i) {
+					spawn_item_on_ground(pos.x, pos.y, pos.z, output.first);
+				}
+			}
+
+			// Finish
+			free_workshop(ai.reaction_target.get().building_id);
 			emit(renderables_changed_message{});
 			emit(inventory_changed_message{});
 

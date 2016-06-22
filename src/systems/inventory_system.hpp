@@ -27,3 +27,8 @@ inventory_item_t claim_closest_item_by_category(const int &category, position_t 
 position_t get_item_location(std::size_t id);
 
 std::vector<available_building_t> get_available_buildings();
+int available_items_by_tag(const std::string &tag);
+std::size_t claim_item_by_tag(const std::string &tag);
+void unclaim_by_id(const std::size_t &id);
+
+void delete_item(const std::size_t &id);
