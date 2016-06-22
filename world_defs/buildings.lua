@@ -63,5 +63,47 @@ buildings = {
 				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']}
 			}
 		}
+	},
+
+	carpenter = {
+		name = "Carpentry Workshop",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=12 },
+		render = {
+			width=3, height=3, tiles= {
+				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']},
+
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['sun'], foreground = colors['icy_blue'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+
+				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']}
+			}
+		}
+	},
+
+	mason = {
+		name = "Masonry",
+		components = { "stone_block" },
+		skill = { name="Construction", difficulty=12 },
+		render = {
+			width=3, height=3, tiles= {
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+
+				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
+
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
+				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']}
+			}
+		}
 	}
 }
