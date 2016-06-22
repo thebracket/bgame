@@ -43,6 +43,7 @@ add_executable(bgame main.cpp
 	systems/inventory_system.cpp
 	systems/path_finding.cpp
 	systems/visibility_system.cpp
+	systems/workflow_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp
