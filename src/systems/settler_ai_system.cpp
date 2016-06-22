@@ -205,6 +205,15 @@ void settler_ai_system::do_leisure_time(entity_t &entity, settler_ai_t &ai, game
 	wander_randomly(entity, pos);
 }
 
+inline rltk::color_t get_task_color(const std::string &skill) {
+	if (skill == "Masonry") {
+		return rltk::colors::LightGrey;
+	} else if (skill == "Carpentry") {
+		return rltk::colors::BurlyWood;
+	}
+	return rltk::colors::Grey;
+}
+
 void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_major == JOB_SLEEP) {
 		cancel_action(entity, ai, stats, species, pos, name, "Time to wake up");
@@ -246,7 +255,8 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		// Look for an automatic reaction to perform
 		boost::optional<reaction_task_t> autojob = find_automatic_reaction_task(ai);
 		if (autojob) {
-			change_settler_glyph(entity, vchar{'@', rltk::colors::Grey, rltk::colors::BLACK});
+			auto finder = reaction_defs.find(autojob.get().reaction_tag);
+			change_settler_glyph(entity, vchar{'@', get_task_color(finder->second.skill), rltk::colors::BLACK});
 			ai.job_type_major = JOB_REACTION;
 			ai.job_type_minor = JM_SELECT_INPUT;
 			change_job_status(ai, name, autojob.get().job_name);
