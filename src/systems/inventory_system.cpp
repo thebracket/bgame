@@ -136,6 +136,8 @@ void inventory_system::configure() {
 				current_region->tiles[idx].flags.set(tile_flags::CONSTRUCTION);
 			}
 		}
+
+		emit(update_workflow_message{});
 	});
 }
 
