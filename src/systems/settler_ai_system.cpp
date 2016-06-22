@@ -768,7 +768,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 				if (ai.current_path->success) {
 					component.second = true;
 					ai.job_type_minor = JM_GO_TO_INPUT;
-					change_job_status(ai, name, "Traveling to reaction component");
+					change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
 				} else {
 					cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
 				}
@@ -778,7 +778,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		if (has_components) {
 			ai.job_type_minor = JM_REACT;
-			change_job_status(ai, name, "Constructing building");
+			change_job_status(ai, name, ai.reaction_target.get().job_name);
 		}
 		return;
 	}
@@ -788,7 +788,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 			// We're at the component
 			ai.current_path.reset();
 			ai.job_type_minor = JM_COLLECT_INPUT;
-			change_job_status(ai, name, "Collect building component");
+			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Collect)"));
 			return;
 		}
 		// Travel to component
@@ -809,7 +809,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 		emit(renderables_changed_message{});
 
 		ai.job_type_minor = JM_GO_TO_WORKSHOP;
-		change_job_status(ai, name, "Going to building site");
+		change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
 		position_t * reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
 		ai.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
 		return;
@@ -820,7 +820,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 			// We're at the site
 			ai.current_path.reset();
 			ai.job_type_minor = JM_DROP_INPUT;
-			change_job_status(ai, name, "Dropping reaction component");
+			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Drop)"));
 			return;
 		}
 		// Travel to site
@@ -835,7 +835,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 		drop_current_tool(e, ai, pos);
 		ai.current_tool = 0;
 		ai.job_type_minor = JM_SELECT_INPUT;
-		change_job_status(ai, name, "Reading reaction specs");
+		change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Planning)"));
 		return;
 	}
 
