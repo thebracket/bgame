@@ -61,7 +61,6 @@ boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t
             // Iterate available automatic reactions
             for (const std::string &reaction_name : outerit->second) {
                 auto reaction = reaction_defs.find(reaction_name);
-                std::cout << "Evaluating " << reaction_name << "\n";
                 if (reaction != reaction_defs.end()) {
                     // Is the settler allowed to do this?
                     int target_category = -1;
