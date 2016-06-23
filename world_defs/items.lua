@@ -62,5 +62,21 @@ items = {
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['grey'],
 		background = colors['black']
+	},
+	wood_table = {
+		name = "Wooden Table",
+		description = "A wooden picnic table",
+		itemtype = {"component"},
+		glyph = glyphs['table'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	stone_table = {
+		name = "Stone Table",
+		description = "A stone picnic table",
+		itemtype = {"component"},
+		glyph = glyphs['table'],
+		foreground = colors['grey'],
+		background = colors['black']
 	}
 }

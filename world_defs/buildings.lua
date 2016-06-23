@@ -105,5 +105,29 @@ buildings = {
 				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']}
 			}
 		}
+	},
+
+	stone_table = {
+		name = "Stone Table",
+		components = { "stone_table" },
+		skill = { name="Construction", difficulty=5 },
+		provides = { table={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']}
+			}
+		}
+	},
+
+	wood_table = {
+		name = "Wooden Table",
+		components = { "wood_table" },
+		skill = { name="Construction", difficulty=5 },
+		provides = { table={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']}
+			}
+		}
 	}
 }
