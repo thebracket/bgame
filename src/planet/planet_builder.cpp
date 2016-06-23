@@ -797,7 +797,7 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 
 	// Name
 	std::string first_name;
-	if (species.gender == MALE) {
+	if (species.gender == FEMALE) {
 		first_name = to_proper_noun_case(first_names_female.random_entry(rng));
 	}
 	else 

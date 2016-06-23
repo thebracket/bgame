@@ -57,6 +57,12 @@ void panel_render_system::update(const double duration_ms) {
 			emit(map_dirty_message{});
 			emit(recalculate_mining_message{});
 		}
+	} else if (game_master_mode == SETTLER) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			game_master_mode = PLAY;
+			emit(map_dirty_message{});
+			emit(recalculate_mining_message{});
+		}
 	}
 }
 
@@ -84,6 +90,10 @@ void panel_render_system::render_mode_select() {
 		render_units_mode();
 	} else {
 		term(2)->print(20,1,"(U)NITS", GREEN, GREEN_BG);
+	}
+
+	if (game_master_mode == SETTLER) {
+		render_settler_mode();
 	}
 }
 
@@ -329,10 +339,51 @@ void panel_render_system::render_units_mode() {
 
 	term(1)->print(5,4,"Settler Name        Profession     Current Status", YELLOW, BLACK);
 
-	each<settler_ai_t, name_t, game_stats_t>([&y] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
-		term(1)->print(5, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 19));
-		term(1)->print(25, y, max_width_str(stats.profession_tag, 14));
-		term(1)->print(40, y, max_width_str(ai.job_status, 29));
+	int mouse_x, mouse_y;
+	std::tie(mouse_x, mouse_y) = get_mouse_position();
+	int terminal_x = mouse_x/8;
+	int terminal_y = (mouse_y/8);
+
+	each<settler_ai_t, name_t, game_stats_t>([this, &y, &terminal_x, &terminal_y] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
+		color_t background = BLACK;
+		
+		if (terminal_y == y && terminal_x > 4 && terminal_x < 70) {
+			background = BLUE;
+
+			if (get_mouse_button_state(rltk::button::LEFT)) {
+				selected_settler = e.id;
+				game_master_mode = SETTLER;
+			}
+		}
+
+		term(1)->print(5, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 19), WHITE, background);
+		term(1)->print(25, y, max_width_str(stats.profession_tag, 14), WHITE, background);
+		term(1)->print(40, y, max_width_str(ai.job_status, 29), WHITE, background);
 		++y;
 	});
+}
+
+void panel_render_system::render_settler_mode() {
+	int y = 5;
+	term(1)->box(1, 2, 73, 60, WHITE, BLACK, true);
+	for (int i=3; i<60; ++i) term(1)->print(2, i, "                                                                        ");
+
+	name_t * name = entity(selected_settler)->component<name_t>();
+	game_stats_t * stats = entity(selected_settler)->component<game_stats_t>();
+	species_t * species = entity(selected_settler)->component<species_t>();
+
+	std::stringstream header;
+	header << name->first_name << " " << name->last_name << " (" << stats->profession_tag << "), " << stats->age << " year old " << species->gender_str();
+
+	term(1)->print(2, 4, header.str(), YELLOW, BLACK );
+	term(1)->print(30, 6, species->gender_pronoun() + std::string(" ") + stats->strength_str(), GREEN, BLACK);
+	term(1)->print(30, 7, species->gender_pronoun() + std::string(" ") + stats->dexterity_str(), GREEN, BLACK);
+	term(1)->print(30, 8, species->gender_pronoun() + std::string(" ") + stats->constitution_str(), GREEN, BLACK);
+	term(1)->print(30, 9, species->gender_pronoun() + std::string(" ") + stats->intelligence_str(), GREEN, BLACK);
+	term(1)->print(30, 10, species->gender_pronoun() + std::string(" ") + stats->wisdom_str(), GREEN, BLACK);
+	term(1)->print(30, 11, species->gender_pronoun() + std::string(" ") + stats->charisma_str(), GREEN, BLACK);
+	term(1)->print(30, 12, species->gender_pronoun() + std::string(" ") + stats->comeliness_str(), GREEN, BLACK);
+	term(1)->print(30, 13, species->gender_pronoun() + std::string(" ") + stats->ethics_str(), GREEN, BLACK);
+
+
 }

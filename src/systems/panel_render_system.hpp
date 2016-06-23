@@ -12,8 +12,11 @@ public:
 	virtual void configure() override final;
 private:
 	void render_mode_select();
-	
+
 	void render_play_mode();
 	void render_design_mode();
 	void render_units_mode();
+	void render_settler_mode();
+
+	std::size_t selected_settler;
 };

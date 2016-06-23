@@ -83,6 +83,78 @@ struct game_stats_t {
 		}
 		return c;
 	}
+
+	std::string strength_str() {
+		if (strength < 5) return "is very weak.";
+		if (strength < 8) return "is weak.";
+		if (strength < 12) return "is of average strength.";
+		if (strength < 15) return "is strong.";
+		if (strength < 18) return "is very strong.";
+		return "has super-human strength";
+	}
+
+	std::string dexterity_str() {
+		if (dexterity < 5) return "is very clumsy.";
+		if (dexterity < 8) return "is clumsy.";
+		if (dexterity < 12) return "is of average dexterity.";
+		if (dexterity < 15) return "is agile.";
+		if (dexterity < 18) return "is very agile.";
+		return "has super-human dexterity";
+	}
+
+	std::string constitution_str() {
+		if (constitution < 5) return "is very unhealthy.";
+		if (constitution < 8) return "is unhealthy.";
+		if (constitution < 12) return "is of average constitution.";
+		if (constitution < 15) return "is healthy.";
+		if (constitution < 18) return "is very healthy.";
+		return "has super-human constitution";
+	}
+
+	std::string intelligence_str() {
+		if (intelligence < 5) return "is very stupid.";
+		if (intelligence < 8) return "is stupid.";
+		if (intelligence < 12) return "is of average intelligence.";
+		if (intelligence < 15) return "is intelligent.";
+		if (intelligence < 18) return "is very intelligent.";
+		return "has super-human intelligence";
+	}
+
+	std::string wisdom_str() {
+		if (wisdom < 5) return "is very gullible.";
+		if (wisdom < 8) return "is gullible.";
+		if (wisdom < 12) return "is of average wisdom.";
+		if (wisdom < 15) return "is wise.";
+		if (wisdom < 18) return "is very wise.";
+		return "has super-human wisdom";
+	}
+
+	std::string charisma_str() {
+		if (charisma < 5) return "makes everyone uncomfortable.";
+		if (charisma < 8) return "is socially awkward.";
+		if (charisma < 12) return "is of average charisma.";
+		if (charisma < 15) return "is socially adept.";
+		if (charisma < 18) return "is always the center of attention.";
+		return "has super-human charisma";
+	}
+
+	std::string comeliness_str() {
+		if (comeliness < 5) return "is incredibly ugly.";
+		if (comeliness < 8) return "is ugly.";
+		if (comeliness < 12) return "is of average comeliness.";
+		if (comeliness < 15) return "is good looking.";
+		if (comeliness < 18) return "could be a supermodel.";
+		return "has super-human appearance";
+	}
+
+	std::string ethics_str() {
+		if (ethics < 5) return "would sell grandma for a profit.";
+		if (ethics < 8) return "has a weak sense of justice.";
+		if (ethics < 12) return "is of average ethics.";
+		if (ethics < 15) return "has a strong sense of right and wrong.";
+		if (ethics < 18) return "is a paragon of virtue.";
+		return "is unbending in their beliefs, a modern-day Paladin.";
+	}
 };
 
 enum attributes_t { strength, dexterity, constitution, intelligence, wisdom, charisma, ethics };

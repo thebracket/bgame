@@ -22,6 +22,22 @@ struct species_t {
 
 	species_t() {}
 
+	std::string gender_str() {
+		switch (gender) {
+			case MALE : return "Male";
+			case FEMALE : return "Female";
+			case HERMAPHRODITE : return "Hermaphrodite";
+		}
+	}
+
+	std::string gender_pronoun() {
+		switch (gender) {
+			case MALE : return "He";
+			case FEMALE : return "She";
+			case HERMAPHRODITE : return "It";
+		}
+	}
+
 	std::size_t serialization_identity = 6;
 
 	void save(std::ostream &lbfile) {
