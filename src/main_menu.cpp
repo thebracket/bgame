@@ -28,7 +28,7 @@ std::string main_menu::get_descriptive_noun() {
 		case 12 : return std::string("Insensitivity");
 		case 13 : return std::string("Indiscretion");
 		case 14 : return std::string("Mindlessness");
-		case 15 : return std::string("Moronic");
+		case 15 : return std::string("Moronism");
 		case 16 : return std::string("Obtuseness");
 		case 17 : return std::string("Unthinkingness");
 	}
