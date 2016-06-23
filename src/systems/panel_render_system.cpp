@@ -6,6 +6,7 @@
 #include "mining_system.hpp"
 #include "inventory_system.hpp"
 #include <sstream>
+#include <iomanip>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -18,20 +19,7 @@ void panel_render_system::update(const double duration_ms) {
 	term(3)->clear(vchar{' ', WHITE, GREEN_BG});
 	term(3)->box(DARKEST_GREEN);
 
-	// Mode switch controls
-	if (game_master_mode == PLAY) {
-		term(3)->print(1,1,"PLAY", WHITE, DARKEST_GREEN);
-		render_play_mode();
-	} else {
-		term(3)->print(1,1,"PLAY (ESC)", GREEN, GREEN_BG);
-	}
-
-	if (game_master_mode == DESIGN) {
-		term(3)->print(13,1,"DESIGN", WHITE, DARKEST_GREEN);
-		render_design_mode();
-	} else {
-		term(3)->print(10,1,"(D)ESIGN", GREEN, GREEN_BG);
-	}
+	render_mode_select();
 
 	if (game_master_mode == PLAY) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -39,8 +27,12 @@ void panel_render_system::update(const double duration_ms) {
 			pause_mode = PAUSED;
 			emit(map_dirty_message{});
 		}
-	}
-	if (game_master_mode == DESIGN) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+			game_master_mode = UNITS;
+			pause_mode = PAUSED;
+			emit(map_dirty_message{});
+		}
+	} else if (game_master_mode == DESIGN) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			game_master_mode = PLAY;
 			emit(map_dirty_message{});
@@ -59,10 +51,40 @@ void panel_render_system::update(const double duration_ms) {
 			game_design_mode = CHOPPING;
 			emit(map_dirty_message{});
 		}
+	} else if (game_master_mode == UNITS) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			game_master_mode = PLAY;
+			emit(map_dirty_message{});
+			emit(recalculate_mining_message{});
+		}
 	}
 }
 
 void panel_render_system::configure() {
+}
+
+void panel_render_system::render_mode_select() {
+	// Mode switch controls
+	if (game_master_mode == PLAY) {
+		term(2)->print(1,1,"PLAY", WHITE, DARKEST_GREEN);
+		render_play_mode();
+	} else {
+		term(2)->print(1,1,"(ESC) PLAY", GREEN, GREEN_BG);
+	}
+
+	if (game_master_mode == DESIGN) {
+		term(2)->print(13,1,"DESIGN", WHITE, DARKEST_GREEN);
+		render_design_mode();
+	} else {
+		term(2)->print(10,1,"(D)ESIGN", GREEN, GREEN_BG);
+	}
+
+	if (game_master_mode == UNITS) {
+		term(2)->print(23,1,"UNITS", WHITE, DARKEST_GREEN);
+		render_units_mode();
+	} else {
+		term(2)->print(20,1,"(U)NITS", GREEN, GREEN_BG);
+	}
 }
 
 void panel_render_system::render_play_mode() {
@@ -293,4 +315,24 @@ void panel_render_system::render_design_mode() {
 	} else {
 		term(3)->print(1,5, "(T)ree Chopping", GREEN, GREEN_BG);
 	}
+}
+
+std::string max_width_str(const std::string original, const int width) {
+	if (original.size() <= width) return original;
+	return original.substr(0,width);
+}
+
+void panel_render_system::render_units_mode() {
+	int y = 5;
+	term(1)->box(3, 2, 70, 40, WHITE, BLACK, true);
+	for (int i=3; i<42; ++i) term(1)->print(4, i, "                                                                     ");
+
+	term(1)->print(5,4,"Settler Name        Profession     Current Status", YELLOW, BLACK);
+
+	each<settler_ai_t, name_t, game_stats_t>([&y] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
+		term(1)->print(5, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 19));
+		term(1)->print(25, y, max_width_str(stats.profession_tag, 14));
+		term(1)->print(40, y, max_width_str(ai.job_status, 29));
+		++y;
+	});
 }

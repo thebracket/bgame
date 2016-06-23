@@ -203,6 +203,7 @@ void settler_ai_system::do_leisure_time(entity_t &entity, settler_ai_t &ai, game
 		return;
 	}
 	wander_randomly(entity, pos);
+	if (ai.job_status != "Idle") ai.job_status = "Idle";
 }
 
 inline rltk::color_t get_task_color(const std::string &skill) {
