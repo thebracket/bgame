@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <sstream>
+#include <iomanip>
 
 using namespace rltk;
 
@@ -36,6 +38,32 @@ struct species_t {
 			case FEMALE : return "She";
 			case HERMAPHRODITE : return "It";
 		}
+	}
+
+	std::string sexuality_str() {
+		switch (sexuality) {
+			case HETEROSEXUAL : return "Heterosexual";
+			case HOMOSEXUAL : return "Homosexual";
+			case BISEXUAL : return "Bi-sexual";
+			case ASEXUAL : return "A-sexual";
+		}
+	}
+
+	std::string height_feet() {
+		const float height_inches = height_cm/2.5;
+		const int height_feet = height_inches/12;
+		const int height_additional_inches = height_feet % 12;
+		std::stringstream result;
+		result << height_feet << "'" << height_additional_inches << "\"";
+		return result.str();
+	}
+
+	std::string weight_lbs() {
+		const float weight_lbs = weight_kg * 2.20462F;
+		std::stringstream result;
+		result.precision(0);
+		result << std::fixed << weight_lbs << " lbs";
+		return result.str();
 	}
 
 	std::size_t serialization_identity = 6;

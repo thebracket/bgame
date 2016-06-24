@@ -364,26 +364,35 @@ void panel_render_system::render_units_mode() {
 }
 
 void panel_render_system::render_settler_mode() {
-	int y = 5;
 	term(1)->box(1, 2, 73, 60, WHITE, BLACK, true);
 	for (int i=3; i<60; ++i) term(1)->print(2, i, "                                                                        ");
 
 	name_t * name = entity(selected_settler)->component<name_t>();
 	game_stats_t * stats = entity(selected_settler)->component<game_stats_t>();
 	species_t * species = entity(selected_settler)->component<species_t>();
+	settler_ai_t * ai = entity(selected_settler)->component<settler_ai_t>();
 
 	std::stringstream header;
-	header << name->first_name << " " << name->last_name << " (" << stats->profession_tag << "), " << stats->age << " year old " << species->gender_str();
+	header << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ")";
+	std::stringstream header2;
+	header2 << species->gender_str() << ", " << species->sexuality_str() << ", " << stats->age << " years old. "
+		<< species->height_feet() << ", " << species->weight_lbs();
 
 	term(1)->print(2, 4, header.str(), YELLOW, BLACK );
-	term(1)->print(30, 6, species->gender_pronoun() + std::string(" ") + stats->strength_str(), GREEN, BLACK);
-	term(1)->print(30, 7, species->gender_pronoun() + std::string(" ") + stats->dexterity_str(), GREEN, BLACK);
-	term(1)->print(30, 8, species->gender_pronoun() + std::string(" ") + stats->constitution_str(), GREEN, BLACK);
-	term(1)->print(30, 9, species->gender_pronoun() + std::string(" ") + stats->intelligence_str(), GREEN, BLACK);
-	term(1)->print(30, 10, species->gender_pronoun() + std::string(" ") + stats->wisdom_str(), GREEN, BLACK);
-	term(1)->print(30, 11, species->gender_pronoun() + std::string(" ") + stats->charisma_str(), GREEN, BLACK);
-	term(1)->print(30, 12, species->gender_pronoun() + std::string(" ") + stats->comeliness_str(), GREEN, BLACK);
-	term(1)->print(30, 13, species->gender_pronoun() + std::string(" ") + stats->ethics_str(), GREEN, BLACK);
+	term(1)->print(2, 5, header2.str(), WHITE, BLACK );
+	term(1)->print(2, 6, ai->job_status);
+	term(1)->print(30, 8, species->gender_pronoun() + std::string(" ") + stats->strength_str(), WHITE, BLACK);
+	term(1)->print(30, 9, species->gender_pronoun() + std::string(" ") + stats->dexterity_str(), WHITE, BLACK);
+	term(1)->print(30, 10, species->gender_pronoun() + std::string(" ") + stats->constitution_str(), WHITE, BLACK);
+	term(1)->print(30, 11, species->gender_pronoun() + std::string(" ") + stats->intelligence_str(), WHITE, BLACK);
+	term(1)->print(30, 12, species->gender_pronoun() + std::string(" ") + stats->wisdom_str(), WHITE, BLACK);
+	term(1)->print(30, 13, species->gender_pronoun() + std::string(" ") + stats->charisma_str(), WHITE, BLACK);
+	term(1)->print(30, 14, species->gender_pronoun() + std::string(" ") + stats->comeliness_str(), WHITE, BLACK);
+	term(1)->print(30, 15, species->gender_pronoun() + std::string(" ") + stats->ethics_str(), WHITE, BLACK);
 
+	int y=17;
+	for (const auto &skill : stats->skills) {
+		term(1)->print(30, y, skill.first + std::string(" : ") + std::to_string(skill.second.skill_level));
+	}
 
 }
