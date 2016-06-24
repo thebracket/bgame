@@ -394,5 +394,13 @@ void panel_render_system::render_settler_mode() {
 	for (const auto &skill : stats->skills) {
 		term(1)->print(30, y, skill.first + std::string(" : ") + std::to_string(skill.second.skill_level));
 	}
+	++y;
+
+	each<item_t, item_carried_t>([&y, this] (entity_t &e, item_t &item, item_carried_t &carried) {
+		if (carried.carried_by == selected_settler) {
+			term(1)->print(30, y, item.item_name);
+			++y;
+		}
+	});
 
 }

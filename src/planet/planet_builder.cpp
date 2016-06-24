@@ -683,7 +683,7 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 
 	// Sexuality
 	int sex_roll = rng.roll_dice(1,11);
-	if (sex_roll < 7) {
+	if (sex_roll < 9) {
 		species.sexuality = HETEROSEXUAL;
 	} else if (sex_roll < 10) {
 		species.sexuality = HOMOSEXUAL;

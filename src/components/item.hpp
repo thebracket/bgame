@@ -14,7 +14,21 @@ struct item_t {
 	std::bitset<NUMBER_OF_ITEM_CATEGORIES> category;
 	item_type_t type;
 	item_t() {}
-	item_t(const std::string name) : item_name(name), item_tag(""), type(CLOTHING) {}
+	item_t(const std::string name) : item_tag(name), type(CLOTHING) {
+		//std::cout << "[" << item_tag << "]\n";
+		auto finder = item_defs.find(item_tag);
+		if (finder != item_defs.end()) {
+			item_name = finder->second.name;
+		} else {
+			auto finder2 = clothing_types.find(item_tag);
+			if (finder2 != clothing_types.end()) {
+				item_name = finder2->second.name;
+			} else {
+				item_name = "ERROR";
+				std::cout << item_tag << " not found!\n";
+			}
+		}
+	}
 	item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats) : 
 		item_name(name), item_tag(tag), category(cats), type(ITEM) {}
 

@@ -36,7 +36,7 @@ struct species_t {
 		switch (gender) {
 			case MALE : return "He";
 			case FEMALE : return "She";
-			case HERMAPHRODITE : return "It";
+			case HERMAPHRODITE : return "Hir";
 		}
 	}
 
