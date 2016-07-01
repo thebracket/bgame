@@ -84,6 +84,7 @@ void mining_system::update(const double duration_ms) {
 }
 
 void mining_system::configure() {
+	system_name = "Mining";
 	mining_map.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
 	mining_targets.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
 	subscribe<recalculate_mining_message>([this](recalculate_mining_message &msg) {

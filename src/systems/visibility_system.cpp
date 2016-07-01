@@ -93,6 +93,7 @@ void visibility_system::update(const double duration_ms) {
 }
 
 void visibility_system::configure() {
+	system_name = "Visibility";
 	subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
 		dirty_entities.insert(msg.entity_id);
 		dirty = true;

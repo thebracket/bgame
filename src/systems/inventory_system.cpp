@@ -67,6 +67,7 @@ void inventory_system::update(const double duration_ms) {
 }
 
 void inventory_system::configure() {
+	system_name = "Inventory";
 	std::fill(item_availability.begin(), item_availability.end(), 0);
 
 	// Receive inventory change messages - refresh the inventory list

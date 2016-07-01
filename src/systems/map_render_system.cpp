@@ -160,6 +160,7 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 }
 
 void map_render_system::configure() {
+	system_name = "Map Render";
 	subscribe<renderables_changed_message>([this](renderables_changed_message &msg) {
 		this->renderables_changed = true;
 	});

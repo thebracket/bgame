@@ -43,6 +43,7 @@ void workflow_system::update(const double duration_ms) {
 }
 
 void workflow_system::configure() {
+    system_name = "Workflow";
     subscribe<update_workflow_message>([this] (update_workflow_message &msg) {
 		dirty = true;
 	});

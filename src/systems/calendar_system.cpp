@@ -2,6 +2,10 @@
 #include "../game_globals.hpp"
 #include "../messages/messages.hpp"
 
+void calendar_system::configure() {
+	system_name = "Calendar";
+}
+
 void calendar_system::update(const double duration_ms) {
 	if (pause_mode != PAUSED) {
 		time_count += duration_ms;

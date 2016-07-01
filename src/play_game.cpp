@@ -23,6 +23,10 @@ void play_game::tick(const double duration_ms) {
 	}
 
 	ecs_tick(duration_ms);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+		std::cout << ecs_profile_dump() << "\n";
+	}
 }
 
 void resize_right_panel(rltk::layer_t * l, int w, int h) {

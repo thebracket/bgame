@@ -67,6 +67,7 @@ void panel_render_system::update(const double duration_ms) {
 }
 
 void panel_render_system::configure() {
+	system_name = "Panel Render";
 }
 
 void panel_render_system::render_mode_select() {

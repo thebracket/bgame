@@ -41,6 +41,7 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 }
 
 void settler_ai_system::configure() {
+	system_name = "Settler AI";
 	subscribe<tick_message>([this](tick_message &msg) {
 		each<settler_ai_t, game_stats_t, species_t, position_t, name_t>([this] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
 			species_t &species, position_t &pos, name_t &name) 
