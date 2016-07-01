@@ -23,9 +23,6 @@ constexpr uint16_t CAN_GO_SOUTH = 128;
 constexpr uint16_t CAN_GO_WEST = 256;
 constexpr uint16_t CAN_STAND_HERE = 512;
 
-constexpr uint16_t REVEALED = 1024;
-constexpr uint16_t VISIBLE = 2048;
-
 }
 
 struct bitset16 {
@@ -48,9 +45,16 @@ constexpr std::size_t mapidx(const int x, const int y, const int z) {
 }
 
 struct region_t {
-	region_t() { tiles.resize(REGION_TILES_COUNT); }
+	region_t() { 
+		tiles.resize(REGION_TILES_COUNT);
+		revealed.resize(REGION_TILES_COUNT);
+		visible.resize(REGION_TILES_COUNT); 
+	}
+
 	int region_x, region_y, biome_idx;
-	std::vector<tile_t> tiles;	
+	std::vector<tile_t> tiles;
+	std::vector<bool> revealed;
+	std::vector<bool> visible;
 
 	inline void set(const int x, const int y, const int z, const uint8_t base, const uint16_t content, const uint8_t liquid=0, 
 			const int16_t temperature=0, const bool solid=false) {

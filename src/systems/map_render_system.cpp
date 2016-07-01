@@ -31,15 +31,15 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 
 	while (dive_depth < max_dive_depth && result.glyph == ' ') {
 		const int idx = mapidx(x, y, z-dive_depth);
-		if (!current_region->tiles[idx].flags.test(tile_flags::REVEALED)) return result;
+		if (!current_region->revealed[idx]) return result;
 
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			if (!current_region->visible[idx]) result = greyscale(result);
 		} else {
 			result = current_region->tiles[idx].render_as;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 		++dive_depth;
 	}
@@ -61,14 +61,14 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 
 	const int idx = mapidx(x, y, z);
 
-	if (current_region->tiles[idx].flags.test(tile_flags::REVEALED)) {
+	if (current_region->revealed[idx]) {
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+			if (!current_region->visible[idx]) result = greyscale(result);			
 		} else {
 			result = current_region->tiles[idx].render_as;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 	}
 
@@ -95,14 +95,14 @@ vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
 
 	const int idx = mapidx(x, y, z);
 
-	if (current_region->tiles[idx].flags.test(tile_flags::REVEALED)) {
+	if (current_region->revealed[idx]) {
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+			if (!current_region->visible[idx]) result = greyscale(result);			
 		} else {
 			result = current_region->tiles[idx].render_as;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 	}
 
@@ -125,14 +125,14 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 
 	const int idx = mapidx(x, y, z);
 
-	if (current_region->tiles[idx].flags.test(tile_flags::REVEALED)) {
+	if (current_region->revealed[idx]) {
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
 			result = rf->second;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);			
+			if (!current_region->visible[idx]) result = greyscale(result);			
 		} else {
 			result = current_region->tiles[idx].render_as;
-			if (!current_region->tiles[idx].flags.test(tile_flags::VISIBLE)) result = greyscale(result);
+			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 	}
 

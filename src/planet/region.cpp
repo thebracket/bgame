@@ -24,6 +24,12 @@ void save_region(const region_t &region) {
 		serialize(deflate, tile.flags);
 		serialize(deflate, tile.tree_id);
 	}
+	for (const bool &b : region.revealed) {
+		serialize(deflate, b);
+	}
+	for (const bool &b : region.visible) {
+		serialize(deflate, b);
+	}
 }
 
 region_t load_region(const int region_x, const int region_y) {
@@ -47,6 +53,16 @@ region_t load_region(const int region_x, const int region_y) {
 		deserialize(inflate, tile.flags);
 		deserialize(inflate, tile.tree_id);
 		region.tiles[i] = tile;
+	}
+	for (std::size_t i=0; i<number_of_tiles; ++i) {
+		bool b;
+		deserialize(inflate, b);
+		region.revealed[i] = b;
+	}
+	for (std::size_t i=0; i<number_of_tiles; ++i) {
+		bool b;
+		deserialize(inflate, b);
+		region.visible[i] = b;
 	}
 
 	region.calculate_render_tiles();
