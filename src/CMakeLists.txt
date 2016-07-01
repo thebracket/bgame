@@ -35,6 +35,9 @@ add_executable(bgame main.cpp
 	play_game.cpp
 	game_globals.cpp
 	components/loader.cpp
+	components/building.cpp
+	components/calendar.cpp
+	components/game_stats.cpp
 	systems/map_render_system.cpp
 	systems/calendar_system.cpp
 	systems/settler_ai_system.cpp
