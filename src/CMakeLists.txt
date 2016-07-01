@@ -21,6 +21,7 @@ add_library(rltk rltk/rltk/rltk.cpp
 	rltk/rltk/virtual_terminal_sparse.cpp
 	rltk/rltk/ecs.cpp
 	rltk/rltk/perlin_noise.cpp
+	rltk/rltk/rexspeeder.cpp
 	)
 
 # Require SFML
