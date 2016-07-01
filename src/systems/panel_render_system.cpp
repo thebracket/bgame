@@ -141,7 +141,7 @@ void panel_render_system::render_play_mode() {
 		}
 		{
 			std::stringstream ss;
-			if (current_region->tiles[idx].flags.test(tile_flags::SOLID)) ss << "S";
+			if (current_region->solid[idx]) ss << "S";
 			if (current_region->tiles[idx].flags.test(tile_flags::TREE)) ss << "T";
 			if (current_region->tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "C";
 			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) ss << "N";

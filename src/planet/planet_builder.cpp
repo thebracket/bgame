@@ -610,7 +610,7 @@ int get_ground_z(region_t &region, const int x, const int y) {
 	bool hit_ground = false;
 	while (!hit_ground) {
 		const int idx = mapidx(x, y, z);
-		if (region.tiles[idx].flags.test(tile_flags::SOLID)) {
+		if (region.solid[idx]) {
 			hit_ground = true;
 			++z;
 		} else {
@@ -624,10 +624,10 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
 	const int idx = mapidx(x,y,z);
 	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
 	if (solid) {
-		region.tiles[idx].flags.set(tile_flags::SOLID);
+		region.solid[idx]=true;
 		region.tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
 	} else {
-		region.tiles[idx].flags.reset(tile_flags::SOLID);
+		region.solid[idx]=false;
 		region.tiles[idx].flags.set(tile_flags::CAN_STAND_HERE);
 	}
 	region.tiles[idx].contents = get_tile_contents_index(type);
@@ -861,7 +861,7 @@ void set_tree_trunk(region_t &region, const int x, const int y, const int z, con
 		region.tiles[idx].base_type = 7;
 		region.tiles[idx].contents = 0;
 		region.tiles[idx].flags.set(tile_flags::TREE);
-		region.tiles[idx].flags.set(tile_flags::SOLID);
+		region.solid[idx] = true;
 		region.tiles[idx].tree_id = tree_id;
 	}
 }
@@ -872,7 +872,7 @@ void set_tree_foliage(region_t &region, const int x, const int y, const int z, c
 		region.tiles[idx].base_type = 8;
 		region.tiles[idx].contents = 0;
 		region.tiles[idx].flags.set(tile_flags::TREE);
-		region.tiles[idx].flags.set(tile_flags::SOLID);
+		region.solid[idx] = true;
 		region.tiles[idx].tree_id = tree_id;
 	}
 }

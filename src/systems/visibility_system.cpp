@@ -33,7 +33,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 		if (distance > dist_square) {
 			return false;
 		}
-		return !(current_region->tiles[idx].flags.test(tile_flags::SOLID));
+		return !(current_region->solid[idx]);
 	});
 }
 

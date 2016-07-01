@@ -11,7 +11,6 @@ constexpr int REGION_TILES_COUNT = REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH;
 
 namespace tile_flags {
 
-constexpr uint16_t SOLID = 1;
 constexpr uint16_t TREE = 2;
 constexpr uint16_t CONSTRUCTION = 4;
 
@@ -49,22 +48,24 @@ struct region_t {
 		tiles.resize(REGION_TILES_COUNT);
 		revealed.resize(REGION_TILES_COUNT);
 		visible.resize(REGION_TILES_COUNT); 
+		solid.resize(REGION_TILES_COUNT);
 	}
 
 	int region_x, region_y, biome_idx;
 	std::vector<tile_t> tiles;
 	std::vector<bool> revealed;
 	std::vector<bool> visible;
+	std::vector<bool> solid;
 
 	inline void set(const int x, const int y, const int z, const uint8_t base, const uint16_t content, const uint8_t liquid=0, 
-			const int16_t temperature=0, const bool solid=false) {
+		const int16_t temperature=0, const bool is_solid=false) {
 		const int loc = mapidx(x,y,z);
 		tiles[loc].base_type = base;
 		tiles[loc].contents = content;
-		if (solid) {
-			tiles[loc].flags.set(tile_flags::SOLID);
+		if (is_solid) {
+			solid[loc] = true;
 		} else {
-			tiles[loc].flags.reset(tile_flags::SOLID);
+			solid[loc] = false;
 		}
 	}
 

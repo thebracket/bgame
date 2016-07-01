@@ -29,7 +29,7 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 		case 5 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_EAST)) pos.x++; break;
 		case 6 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_WEST)) pos.x--; break;
 	}
-	if (current_region->tiles[tile_index].flags.test(tile_flags::SOLID)) { 
+	if (current_region->solid[tile_index]) { 
 		pos = original;
 	} else {
 		move_to(entity, original, pos);
@@ -408,7 +408,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 
 			if (target_operation == 1) {
 				// Dig
-				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->solid[target_idx]=false;
 				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4101;
 				current_region->calculate_render_tile(target_idx);
@@ -417,45 +417,45 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 				}
 			} else if (target_operation == 2) {
 				// Channel
-				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->solid[target_idx]=false;
 				current_region->tiles[target_idx].contents = 0;
 				current_region->tiles[target_idx].base_type = 0;
 				current_region->calculate_render_tile(target_idx);
 				
 				// Add ramp
 				const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
-				current_region->tiles[below].flags.reset(tile_flags::SOLID);
+				current_region->solid[below]=false;
 				current_region->tiles[below].flags.set(tile_flags::CONSTRUCTION);
 				current_region->tiles[below].contents = 4118;
 				current_region->calculate_render_tile(below);
 			} else if (target_operation == 3) {
 				// Ramp
-				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->solid[target_idx]=false;
 				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4118;
 				current_region->calculate_render_tile(target_idx);
 
 				const int above = target_idx + (REGION_WIDTH * REGION_HEIGHT);
-				current_region->tiles[above].flags.reset(tile_flags::SOLID);
+				current_region->solid[above]=false;
 				current_region->tiles[above].base_type = 0;
 				current_region->tiles[above].contents = 0;
 				current_region->calculate_render_tile(above);
 				
 			} else if (target_operation == 4) {
 				// Up
-				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->solid[target_idx]=false;
 				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4111;
 				current_region->calculate_render_tile(target_idx);
 			} else if (target_operation == 5) {
 				// Down
-				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->solid[target_idx]=false;
 				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4110;
 				current_region->calculate_render_tile(target_idx);
 			} else if (target_operation == 6) {
 				// UpDown
-				current_region->tiles[target_idx].flags.reset(tile_flags::SOLID);
+				current_region->solid[target_idx]=false;
 				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4109;
 				current_region->calculate_render_tile(target_idx);
@@ -607,7 +607,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 					for (int x=0; x<REGION_WIDTH; ++x) {
 						const int idx = mapidx(x,y,z);
 						if (current_region->tiles[idx].tree_id == ai.target_id) {
-							current_region->tiles[idx].flags.reset(tile_flags::SOLID);
+							current_region->solid[idx]=false;
 							current_region->tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
 							current_region->tiles[idx].flags.reset(tile_flags::TREE);
 							current_region->tiles[idx].tree_id = 0;

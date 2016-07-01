@@ -146,7 +146,7 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;
 
-			if (!current_region->tiles[idx].flags.test(tile_flags::SOLID) && current_region->tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)
+			if (!current_region->solid[idx] && current_region->tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)
 				&& !current_region->tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
 				result.foreground = rltk::colors::GREEN;
 			} else {

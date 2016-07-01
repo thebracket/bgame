@@ -30,6 +30,9 @@ void save_region(const region_t &region) {
 	for (const bool &b : region.visible) {
 		serialize(deflate, b);
 	}
+	for (const bool &b : region.solid) {
+		serialize(deflate, b);
+	}
 }
 
 region_t load_region(const int region_x, const int region_y) {
@@ -64,6 +67,11 @@ region_t load_region(const int region_x, const int region_y) {
 		deserialize(inflate, b);
 		region.visible[i] = b;
 	}
+	for (std::size_t i=0; i<number_of_tiles; ++i) {
+		bool b;
+		deserialize(inflate, b);
+		region.solid[i] = b;
+	}
 
 	region.calculate_render_tiles();
 	return region;
@@ -72,11 +80,11 @@ region_t load_region(const int region_x, const int region_y) {
 void region_t::determine_tile_standability(const int &x, const int &y, const int &z) {
 	const int index = mapidx(x,y,z);
 	const int index_above = mapidx(x,y,z+1);
-	const bool solid = tiles[index].flags.test(tile_flags::SOLID);
-	const bool above_solid = tiles[index_above].flags.test(tile_flags::SOLID);
+	const bool is_solid = solid[index];
+	//const bool above_solid = tiles[index_above].flags.test(tile_flags::SOLID);
 
 	// TODO: This isn't right!
-	if (solid) {
+	if (is_solid) {
 		tiles[index].flags.reset(tile_flags::CAN_STAND_HERE);
 	} else {
 		tiles[index].flags.set(tile_flags::CAN_STAND_HERE);
@@ -94,8 +102,8 @@ void region_t::determine_tile_standability(const int &x, const int &y, const int
 
 void region_t::determine_tile_connectivity(const int &x, const int &y, const int &z) {
 	const int index = mapidx(x,y,z);
-	const bool solid = tiles[index].flags.test(tile_flags::SOLID);
-	if (solid) {
+	const bool is_solid = solid[index];
+	if (is_solid) {
 		// It's solid - so we can't go anywhere!
 		tiles[index].flags.reset(tile_flags::CAN_GO_NORTH);
 		tiles[index].flags.reset(tile_flags::CAN_GO_EAST);
@@ -172,7 +180,7 @@ vchar get_render_char_for_base(const uint8_t base_type) {
 void region_t::calculate_render_tile(const int &idx) {
 	vchar result;
 
-	if (tiles[idx].flags.test(tile_flags::SOLID) && !tiles[idx].flags.test(tile_flags::CONSTRUCTION) && tiles[idx].base_type > 0) {
+	if (solid[idx] && !tiles[idx].flags.test(tile_flags::CONSTRUCTION) && tiles[idx].base_type > 0) {
 		result = get_render_char_for_base(tiles[idx].base_type);
 	} else {
 		if (tiles[idx].contents>0) {
