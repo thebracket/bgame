@@ -161,55 +161,71 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 
 void map_render_system::configure() {
 	system_name = "Map Render";
-	subscribe<renderables_changed_message>([this](renderables_changed_message &msg) {
-		this->renderables_changed = true;
-	});
 	renderables_changed = true;
-	subscribe<map_dirty_message>([this](map_dirty_message &msg) {
-		dirty = true;
-	});
+	dirty = true;
+	subscribe_mbox<key_pressed_t>();
+	subscribe_mbox<renderables_changed_message>();
+	subscribe_mbox<map_dirty_message>();
 }
 
 void map_render_system::update(const double duration_ms) {
+	// Handle re-render queues
+	std::queue<renderables_changed_message> * render_change = mbox<renderables_changed_message>();
+	while (!render_change->empty()) {
+		renderables_changed = true;
+		render_change->pop();
+	}
+	std::queue<map_dirty_message> * map_change = mbox<map_dirty_message>();
+	while (!map_change->empty()) {
+		dirty = true;
+		map_change->pop();
+	}
+
+	// Handle camera controls
+	std::queue<key_pressed_t> * messages = mbox<key_pressed_t>();
+	while (!messages->empty()) {
+		key_pressed_t e = messages->front();
+		messages->pop();
+
+		if (e.event.key.code == sf::Keyboard::Left) {
+			--camera_position->region_x;
+			if (camera_position->region_x < 0) camera_position->region_x = 0;
+			dirty = true;
+			update_clipping_rectangle();
+		}
+		if (e.event.key.code == sf::Keyboard::Right) {
+			++camera_position->region_x;
+			if (camera_position->region_x > REGION_WIDTH) camera_position->region_x = REGION_WIDTH;
+			dirty = true;
+			update_clipping_rectangle();
+		}
+		if (e.event.key.code == sf::Keyboard::Up) {
+			--camera_position->region_y;
+			if (camera_position->region_y < 0) camera_position->region_y = 0;
+			dirty = true;
+			update_clipping_rectangle();
+		}
+		if (e.event.key.code == sf::Keyboard::Down) {
+			++camera_position->region_y;
+			if (camera_position->region_y > REGION_HEIGHT) camera_position->region_y = REGION_HEIGHT;
+			dirty = true;
+			update_clipping_rectangle();
+		}
+		if (e.event.key.code == sf::Keyboard::Period && e.event.key.shift) {
+			--camera_position->region_z;
+			if (camera_position->region_z < 0) camera_position->region_z = 0;
+			dirty = true;
+			update_clipping_rectangle();
+		}
+		if (e.event.key.code == sf::Keyboard::Comma && e.event.key.shift) {
+			++camera_position->region_z;
+			if (camera_position->region_z > REGION_DEPTH) camera_position->region_z = REGION_DEPTH;
+			dirty = true;
+			update_clipping_rectangle();
+		}
+	}
+
 	if (dirty) update_clipping_rectangle();
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		--camera_position->region_x;
-		if (camera_position->region_x < 0) camera_position->region_x = 0;
-		dirty = true;
-		update_clipping_rectangle();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		++camera_position->region_x;
-		if (camera_position->region_x > REGION_WIDTH) camera_position->region_x = REGION_WIDTH;
-		dirty = true;
-		update_clipping_rectangle();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		--camera_position->region_y;
-		if (camera_position->region_y < 0) camera_position->region_y = 0;
-		dirty = true;
-		update_clipping_rectangle();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		++camera_position->region_y;
-		if (camera_position->region_y > REGION_HEIGHT) camera_position->region_y = REGION_HEIGHT;
-		dirty = true;
-		update_clipping_rectangle();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))) {
-		--camera_position->region_z;
-		if (camera_position->region_z < 0) camera_position->region_z = 0;
-		dirty = true;
-		update_clipping_rectangle();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))) {
-		++camera_position->region_z;
-		if (camera_position->region_z > REGION_DEPTH) camera_position->region_z = REGION_DEPTH;
-		dirty = true;
-		update_clipping_rectangle();
-	}
-
 	if (clip_left == -1) update_clipping_rectangle();
 
 	int mouse_x, mouse_y;
