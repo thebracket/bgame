@@ -288,6 +288,9 @@ void map_render_system::update(const double duration_ms) {
 			dirty = true;
 			if (get_mouse_button_state(rltk::button::LEFT) && mouse_in_terminal && building_possible) {
 				emit(build_request_message{mouse_term_x, mouse_term_y, camera_position->region_z, build_mode_building});
+				emit(refresh_available_buildings_message{});
+				emit(map_dirty_message{});
+				emit(renderables_changed_message{});
 			}
 		}
 		renderables_changed = false;

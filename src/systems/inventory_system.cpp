@@ -84,7 +84,7 @@ void inventory_system::configure() {
 			for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
 				if (finder->second.categories.test(i)) {
 					if (msg.claimed) {
-						--item_availability[i];
+						--item_availability[i];						
 						std::cout << "Claimed - available by category: " << item_availability[i] << "\n";
 					} else {
 						++item_availability[i];
@@ -115,7 +115,7 @@ void inventory_system::configure() {
 		for (const std::string &requested_component : building.components) {
 			// Find the component and issue a claim for it
 			for (auto it=all_items.begin(); it != all_items.end(); ++it) {
-				if (it->second.item_tag == requested_component) {
+				if (it->second.item_tag == requested_component && it->second.claimed==false) {
 					emit(item_claimed_message{ it->second.id, true });
 					designate.component_ids.push_back(std::make_pair(it->second.id,false));
 					std::cout << "Claimed component #" << it->second.id << "\n";
@@ -198,7 +198,7 @@ std::vector<available_building_t> get_available_buildings() {
 
 		for (auto all = all_items.begin(); all != all_items.end(); ++all) {
 			auto finder = requirements.find(all->second.item_tag);
-			if (finder != requirements.end()) {
+			if (finder != requirements.end() && all->second.claimed == false) {
 				--finder->second;
 			}
 		}

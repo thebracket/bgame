@@ -68,6 +68,9 @@ void panel_render_system::update(const double duration_ms) {
 
 void panel_render_system::configure() {
 	system_name = "Panel Render";
+	subscribe<refresh_available_buildings_message>([this] (refresh_available_buildings_message &msg) {
+		available_buildings = get_available_buildings();
+	});
 }
 
 void panel_render_system::render_mode_select() {

@@ -11,3 +11,6 @@ struct item_claimed_message : public rltk::base_message_t {
 	bool claimed;
 	std::size_t id;
 };
+
+struct refresh_available_buildings_message : public rltk::base_message_t {
+};
