@@ -96,6 +96,13 @@ void panel_render_system::render_mode_select() {
 		term(2)->print(20,1,"(U)NITS", GREEN, GREEN_BG);
 	}
 
+	if (game_master_mode == WORKFLOW) {
+		term(2)->print(32,1,"WORK", WHITE, DARKEST_GREEN);
+		render_work_mode();
+	} else {
+		term(2)->print(29,1,"(W)ORK", GREEN, GREEN_BG);
+	}
+
 	if (game_master_mode == SETTLER) {
 		render_settler_mode();
 	}
@@ -407,4 +414,7 @@ void panel_render_system::render_settler_mode() {
 		}
 	});
 
+}
+
+void panel_render_system::render_work_mode() {
 }

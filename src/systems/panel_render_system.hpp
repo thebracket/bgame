@@ -17,6 +17,7 @@ private:
 	void render_design_mode();
 	void render_units_mode();
 	void render_settler_mode();
+	void render_work_mode();
 
 	std::size_t selected_settler;
 };
