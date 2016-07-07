@@ -14,4 +14,5 @@ private:
 };
 
 boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t &ai);
+boost::optional<reaction_task_t> find_queued_reaction_task(const settler_ai_t &ai);
 void free_workshop(const std::size_t &id);

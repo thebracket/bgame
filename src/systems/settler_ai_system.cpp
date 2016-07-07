@@ -254,6 +254,21 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
+		// Look for a queued order to perform
+		if (!designations->build_orders.empty()) {
+			boost::optional<reaction_task_t> autojob = find_queued_reaction_task(ai);
+
+			if (autojob) {
+				auto finder = reaction_defs.find(autojob.get().reaction_tag);
+				change_settler_glyph(entity, vchar{'@', get_task_color(finder->second.skill), rltk::colors::BLACK});
+				ai.job_type_major = JOB_REACTION;
+				ai.job_type_minor = JM_SELECT_INPUT;
+				change_job_status(ai, name, autojob.get().job_name);
+				ai.reaction_target = autojob;
+				return;
+			}
+		}
+
 		// Look for an automatic reaction to perform
 		boost::optional<reaction_task_t> autojob = find_automatic_reaction_task(ai);
 		if (autojob) {

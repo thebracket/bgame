@@ -30,14 +30,21 @@ void workflow_system::update(const double duration_ms) {
                                 } else {
                                     automatic_finder->second.push_back(reaction_name);
                                 }
-                            } else {
-                                // TODO: Handle other reactions
                             }
                         }
                     }
                 }
             }
         });
+
+        // Erase all completed jobs
+        designations->build_orders.erase(
+            std::remove_if(designations->build_orders.begin(),
+                designations->build_orders.end(),
+                [] (auto order_pair) { return order_pair.first == 0; }),
+            designations->build_orders.end());
+
+        // Not dirty anymore!
         dirty = false;
     }
 }
@@ -96,6 +103,68 @@ boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+boost::optional<reaction_task_t> find_queued_reaction_task(const settler_ai_t &ai) {
+    if (designations->build_orders.empty()) return boost::optional<reaction_task_t>{};
+
+    boost::optional<reaction_task_t> result;
+
+    // Iterate through queued jobs
+    for (std::pair<uint8_t,std::string> &order : designations->build_orders) {
+        auto reaction = reaction_defs.find(order.second);
+
+        // Is there an available workshop of the right type?
+        bool possible = false;
+        std::size_t workshop_id;
+        each<building_t>([&possible, &reaction, &workshop_id] (entity_t &e, building_t &b) {
+            if (b.complete && b.tag == reaction->second.workshop) {
+                auto busy_finder = workshop_claimed.find(e.id);
+                if (busy_finder == workshop_claimed.end()) {
+                    workshop_id = e.id;
+                    possible = true;
+                }
+            }
+        });
+        if (!possible) break;
+
+        // Is the settler allowed to do this?
+        int target_category = -1;
+        if (reaction->second.skill == "Carpentry") {
+            target_category = JOB_CARPENTRY;
+        } else if (reaction->second.skill == "Masonry") {
+            target_category = JOB_MASONRY;
+        }
+        if (target_category == -1 || ai.permitted_work[target_category]) {
+            bool available = true;
+            std::vector<std::pair<std::size_t,bool>> components;
+            for (auto &input : reaction->second.inputs) {
+                const int n_available = available_items_by_tag(input.first);
+                if (n_available < input.second) {
+                    available = false;
+                } else {
+                    // Claim an item and push its # to the list
+                    std::size_t item_id = claim_item_by_tag(input.first);
+                    components.push_back(std::make_pair(item_id,false));
+                }
+            }
+
+            if (available) {
+                // Components are available, build job and return it
+                result = reaction_task_t{workshop_id, reaction->second.name, reaction->second.tag, components};
+                workshop_claimed.insert(workshop_id);
+                --order.first;
+                emit(update_workflow_message{});
+                return result;
+            } else {
+                for (auto comp : components) {
+                    unclaim_by_id(comp.first);
                 }
             }
         }

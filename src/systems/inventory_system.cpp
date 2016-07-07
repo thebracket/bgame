@@ -220,6 +220,54 @@ std::vector<available_building_t> get_available_buildings() {
 	return result;
 }
 
+std::vector<std::pair<std::string, std::string>> get_available_reactions() {
+	std::vector<std::pair<std::string, std::string>> result;
+
+	for (auto it=reaction_defs.begin(); it != reaction_defs.end(); ++it) {
+		const std::string tag = it->first;
+		const std::string workshop = it->second.workshop;
+		const std::string name = it->second.name;
+
+		if (!it->second.automatic) {
+			bool possible = false;
+			// Does a workshop exist?
+			each<building_t>([&possible, &workshop] (entity_t &e, building_t &b) {
+				if (b.complete && workshop == b.tag) possible = true;
+			});
+
+			// Do the components exist, and are unclaimed?
+			if (possible) {
+				boost::container::flat_map<std::string, int> requirements;
+				for (const std::pair<std::string,int> &require : it->second.inputs) {
+					auto finder = requirements.find(require.first);
+					if (finder == requirements.end()) {
+						requirements[require.first] = require.second;
+					} else {
+						finder->second += require.second;
+					}
+				}
+
+				for (auto all = all_items.begin(); all != all_items.end(); ++all) {
+					auto finder = requirements.find(all->second.item_tag);
+					if (finder != requirements.end() && all->second.claimed == false) {
+						--finder->second;
+					}
+				}
+
+				for (auto req = requirements.begin(); req != requirements.end(); ++req) {
+					if (req->second > 0) possible = false;
+				}
+
+				if (possible) {
+					result.push_back(std::make_pair(tag, name));
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
 position_t get_item_location(std::size_t id) {
 	auto finder = all_items.find(id);
 	if (finder == all_items.end()) throw std::runtime_error("Unable to find item");

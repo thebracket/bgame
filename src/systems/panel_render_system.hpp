@@ -20,4 +20,6 @@ private:
 	void render_work_mode();
 
 	std::size_t selected_settler;
+
+	double mouse_damper = 100.0;
 };

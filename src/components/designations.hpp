@@ -35,6 +35,7 @@ struct designations_t {
 	boost::container::flat_map<int, uint8_t> mining;
 	boost::container::flat_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
+	std::vector<std::pair<uint8_t, std::string>> build_orders;
 
 	designations_t() {
 	}
@@ -87,6 +88,12 @@ struct designations_t {
 				serialize(lbfile, ch);
 			}
 			serialize(lbfile, it->building_entity);
+		}
+		size = build_orders.size();
+		serialize(lbfile, size);
+		for (const auto &order : build_orders) {
+			serialize(lbfile, order.first);
+			serialize(lbfile, order.second);
 		}
 	}
 
@@ -147,6 +154,16 @@ struct designations_t {
 
 			deserialize(lbfile, b.building_entity);
 			c.buildings.push_back(b);
+		}
+
+		std::size_t sz;
+		deserialize(lbfile, sz);
+		for (std::size_t i=0; i<sz; ++i) {
+			uint8_t build_qty;
+			std::string build_name;
+			deserialize(lbfile, build_qty);
+			deserialize(lbfile, build_name);
+			c.build_orders.push_back(std::make_pair(build_qty, build_name));
 		}
 
 		return c;
