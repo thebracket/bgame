@@ -71,7 +71,7 @@ struct item_def_t {
 	rltk::color_t bg;
 };
 
-enum provides_t { provides_sleep, provides_food };
+enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, provides_wall };
 
 struct building_provides_t {
 	provides_t provides;

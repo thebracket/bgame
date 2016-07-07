@@ -346,7 +346,31 @@ void read_buildings() {
                     lua_pop(lua_state, 1);
                 }
             }
-            // TODO: Support "provides"
+            if (field == "provides") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+
+                while (lua_next(lua_state, -2) != 0) {
+                    building_provides_t provisions;
+                    std::string type = lua_tostring(lua_state, -2);
+                    if (type == "table") provisions.provides = provides_desk;
+                    if (type == "wall") provisions.provides = provides_wall;
+                    if (type == "door") provisions.provides = provides_door;
+                    if (type == "food") provisions.provides = provides_food;
+                    if (type == "sleep") provisions.provides = provides_sleep;
+
+                    lua_pushstring(lua_state, type.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string inner_type = lua_tostring(lua_state, -2);
+                        if (inner_type == "energy_cost") provisions.energy_cost = lua_tonumber(lua_state, -1);
+                        lua_pop(lua_state, 1);
+                    }
+
+                    c.provides.push_back(provisions);
+                    lua_pop(lua_state, 1);
+                }
+            }
             if (field == "render") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);

@@ -27,6 +27,7 @@ glyphs = {
 	double_wall_ns = 186,
 	double_wall_nw = 187,
 	double_wall_sw = 188,
+	door = 197,
 	double_up_single_right = 199,
 	double_wall_ne = 200,
 	double_wall_se = 201,

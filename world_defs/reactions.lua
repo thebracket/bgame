@@ -52,6 +52,24 @@ reactions = {
         skill = "Masonry",
         difficulty = 10,
         automatic = false
+    },
+    make_wooden_door = {
+        name = "Make Wooden Door",
+        workshop = "carpenter",
+        inputs = { { item="wood_plank", qty=1 } },
+        outputs = { { item="wood_door", qty=1 } },
+        skill = "Carpentry",
+        difficulty = 12,
+        automatic = false
+    },
+    make_stone_door = {
+        name = "Make Stone Door",
+        workshop = "mason",
+        inputs = { { item="stone_block", qty=1 } },
+        outputs = { { item="stone_door", qty=1 } },
+        skill = "Masonry",
+        difficulty = 12,
+        automatic = false
     }
 }
 

@@ -51,6 +51,23 @@ void settler_ai_system::configure() {
 				const int hour_of_day = calendar->hour;
 				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
+				const int map_index = mapidx(pos.x, pos.y, pos.z);
+				if (!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_NORTH) &&
+					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_SOUTH) &&
+					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_EAST) &&
+					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_WEST) &&
+					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_UP) &&
+					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_DOWN)
+				) {
+					std::cout << "Warning - settler is stuck; activating emergency teleport to bed!\n";
+					each<position_t, construct_provides_sleep_t>([&pos] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
+						pos.x = P.x;
+						pos.y = P.y;
+						pos.z = P.z;
+						// This should use power
+					});
+				}
+
 				switch (current_schedule) {
 					case SLEEP_SHIFT : this->do_sleep_time(entity, ai, stats, species, pos, name); break;
 					case LEISURE_SHIFT : this->do_leisure_time(entity, ai, stats, species, pos, name); break;
@@ -772,8 +789,36 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 				delete_item(comp.first);
 			}
 
-			// Place the building
+			// Place the building, and assign any provide tags
 			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
+			for (const building_provides_t &provides : finder->second.provides) {
+				if (provides.provides == provides_sleep) entity(ai.building_target.get().building_entity)->assign(construct_provides_sleep_t{});
+				if (provides.provides == provides_wall) {
+					position_t * wall_pos = entity(ai.building_target.get().building_entity)->component<position_t>();
+					const int index = mapidx(wall_pos->x, wall_pos->y, wall_pos->z);
+					current_region->solid[index] = true;
+
+					if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_NORTH)) {
+						--pos.y;
+					} else if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_SOUTH)) {
+						++pos.y;
+					} else if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_EAST)) {
+						++pos.x;
+					} else if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_WEST)) {
+						--pos.x;
+					}
+
+					// Update pathing
+					for (int Z=-2; Z<10; ++Z) {
+						for (int Y=-2; Y<2; ++Y) {
+							for (int X=-2; X<2; ++X) {
+								current_region->determine_tile_standability(wall_pos->x + X, wall_pos->y + Y, wall_pos->z + Z);
+								current_region->determine_tile_connectivity(wall_pos->x + X, wall_pos->y + Y, wall_pos->z + Z);
+							}
+						}
+					}
+				}
+			}
 			emit(renderables_changed_message{});
 			emit(inventory_changed_message{});
 			emit(update_workflow_message{});

@@ -129,9 +129,7 @@ buildings = {
 				{glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']}
 			}
 		}
-	}
-
-	,
+	},
 
 	stone_chair = {
 		name = "Stone Chair",
@@ -145,6 +143,18 @@ buildings = {
 		}
 	},
 
+	stone_door = {
+		name = "Stone Dooor",
+		components = { "stone_door" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { door={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['door'], foreground = colors['grey'], background = colors['black']}
+			}
+		}
+	},
+
 	wood_chair = {
 		name = "Wooden Chair",
 		components = { "wood_chair" },
@@ -153,6 +163,42 @@ buildings = {
 		render = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['chair'], foreground = colors['wood_brown'], background = colors['black']}
+			}
+		}
+	},
+
+	wood_door = {
+		name = "Wooden Door",
+		components = { "wood_door" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { door={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['door'], foreground = colors['wood_brown'], background = colors['black']}
+			}
+		}
+	},
+
+	wood_wall = {
+		name = "Wooden Wall",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { wall={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']}
+			}
+		}
+	},
+
+	stone_wall = {
+		name = "Stone Wall",
+		components = { "stone_block" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { wall={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']}
 			}
 		}
 	}

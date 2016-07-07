@@ -209,7 +209,13 @@ void panel_render_system::render_play_mode() {
 				// It's building and we can see it
 				auto finder = building_defs.find(building.tag);
 				std::string building_name = "Unknown Building";
-				if (finder != building_defs.end()) building_name = finder->second.name;
+				if (finder != building_defs.end()) {
+					if (building.complete) {
+						building_name = finder->second.name;
+					} else {
+						building_name = std::string("...") + finder->second.name;
+					}
+				}
 				term(3)->print(1, term(3)->term_height-5-count, building_name, GREEN, GREEN_BG);
 				++count;
 			}
