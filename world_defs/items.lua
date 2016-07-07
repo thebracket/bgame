@@ -78,5 +78,21 @@ items = {
 		glyph = glyphs['table'],
 		foreground = colors['grey'],
 		background = colors['black']
+	},
+	wood_chair = {
+		name = "Wooden Chair",
+		description = "A wooden picnic chair",
+		itemtype = {"component"},
+		glyph = glyphs['chair'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	stone_chair = {
+		name = "Stone Chair",
+		description = "A stone picnic chair",
+		itemtype = {"component"},
+		glyph = glyphs['chair'],
+		foreground = colors['grey'],
+		background = colors['black']
 	}
 }
