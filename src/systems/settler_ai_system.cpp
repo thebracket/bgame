@@ -68,10 +68,16 @@ void settler_ai_system::configure() {
 					});
 				}
 
-				switch (current_schedule) {
-					case SLEEP_SHIFT : this->do_sleep_time(entity, ai, stats, species, pos, name); break;
-					case LEISURE_SHIFT : this->do_leisure_time(entity, ai, stats, species, pos, name); break;
-					case WORK_SHIFT : this->do_work_time(entity, ai, stats, species, pos, name); break;
+				if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
+					|| ai.job_type_major == JOB_REACTION) {
+						// If we have a job to do - keep doing it
+						this->do_work_time(entity, ai, stats, species, pos, name);
+				} else {
+					switch (current_schedule) {
+						case SLEEP_SHIFT : this->do_sleep_time(entity, ai, stats, species, pos, name); break;
+						case LEISURE_SHIFT : this->do_leisure_time(entity, ai, stats, species, pos, name); break;
+						case WORK_SHIFT : this->do_work_time(entity, ai, stats, species, pos, name); break;
+					}
 				}
 				
 				this->settler_calculate_initiative(ai, stats);
@@ -382,7 +388,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		// Look at adjacent mining map entries, and path to the closest one. If there is no option,
 		// Drop the pick.
 		int current_direction = 0;
-		int min_value = 512;
+		uint8_t min_value = std::numeric_limits<uint8_t>::max();
 		if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y-1, pos.z)]; 
 			current_direction = 1; 
