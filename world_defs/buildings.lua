@@ -114,7 +114,7 @@ buildings = {
 		provides = { table={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']}
+				{glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -138,7 +138,7 @@ buildings = {
 		provides = { table={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['chair'], foreground = colors['grey'], background = colors['black']}
+				{glyph= glyphs['chair'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -150,7 +150,7 @@ buildings = {
 		provides = { door={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['door'], foreground = colors['grey'], background = colors['black']}
+				{glyph= glyphs['door'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -198,7 +198,7 @@ buildings = {
 		provides = { wall={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']}
+				{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	}
