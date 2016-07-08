@@ -14,7 +14,7 @@ void settler_ai_system::update(const double duration_ms) {
 }
 
 void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
-	ai.initiative = std::max(1, rng.roll_dice(1, 6) - stat_modifier(stats.dexterity));
+	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
 }
 
 void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {
