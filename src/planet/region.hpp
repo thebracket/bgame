@@ -48,8 +48,17 @@ struct region_t {
 	region_t() { 
 		tiles.resize(REGION_TILES_COUNT);
 		revealed.resize(REGION_TILES_COUNT);
-		visible.resize(REGION_TILES_COUNT); 
+		visible.resize(REGION_TILES_COUNT);
 		solid.resize(REGION_TILES_COUNT);
+		opaque.resize(REGION_TILES_COUNT);
+		tile_type.resize(REGION_TILES_COUNT);
+		tile_material.resize(REGION_TILES_COUNT);
+		tile_hit_points.resize(REGION_TILES_COUNT);
+		building_id.resize(REGION_TILES_COUNT);
+		tree_id.resize(REGION_TILES_COUNT);
+		tile_vegetation_type.resize(REGION_TILES_COUNT);
+		tile_flags.resize(REGION_TILES_COUNT);
+		render_cache.resize(REGION_TILES_COUNT);
 	}
 
 	int region_x, region_y, biome_idx;
@@ -57,6 +66,17 @@ struct region_t {
 	std::vector<bool> revealed;
 	std::vector<bool> visible;
 	std::vector<bool> solid;
+	std::vector<bool> opaque;
+
+	// New tile format data
+	std::vector<uint8_t> tile_type;
+	std::vector<uint16_t> tile_material;
+	std::vector<uint8_t> tile_hit_points;
+	std::vector<std::size_t> building_id;
+	std::vector<std::size_t> tree_id;
+	std::vector<uint16_t> tile_vegetation_type;
+	std::vector<bitset16> tile_flags;
+	std::vector<rltk::vchar> render_cache;
 
 	inline void set(const int x, const int y, const int z, const uint8_t base, const uint16_t content, const uint8_t liquid=0, 
 		const int16_t temperature=0, const bool is_solid=false) {
