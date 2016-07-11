@@ -34,6 +34,7 @@ struct vegetation_t {
 
 struct tile_t {
 	uint8_t base_type;
+    uint16_t base_material;
     uint8_t hit_points;
     // flags for special type/status
     // flags for navigation assistance
