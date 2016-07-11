@@ -3,6 +3,7 @@
 #include <vector>
 #include <bitset>
 #include <rltk.hpp>
+#include "tile.hpp"
 
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
