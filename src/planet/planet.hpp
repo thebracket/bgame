@@ -16,12 +16,15 @@ constexpr uint8_t MARSH = 5;
 constexpr uint8_t PLATEAU = 6;
 constexpr uint8_t HIGHLANDS = 7;
 constexpr uint8_t COASTAL = 8;
+constexpr uint8_t SALT_MARSH = 9;
 }
 
 struct block_t {
 	uint8_t height = 0;
 	uint8_t variance = 0;
 	uint8_t type = 0;
+	int8_t temperature_c = 0;
+	int8_t rainfall = 0;
 };
 
 struct planet_t {
