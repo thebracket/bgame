@@ -139,6 +139,7 @@ void panel_render_system::render_play_mode() {
 	const int terminal_x = mouse_x / 8;
 	const int terminal_y = mouse_y / 8;
 
+	/*
 	if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
 		const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 		const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
@@ -220,7 +221,7 @@ void panel_render_system::render_play_mode() {
 				++count;
 			}
 		});
-	}
+	}*/
 }
 
 inline bool is_mining_designation_valid(const int &x, const int &y, const int &z, const game_mining_mode_t &mode) {
@@ -312,6 +313,7 @@ void panel_render_system::render_design_mode() {
 	if (game_design_mode == CHOPPING) {
 		term(3)->print(1,5, "Tree Chopping", WHITE, DARKEST_GREEN);
 
+		/*
 		int mouse_x, mouse_y;
 		std::tie(mouse_x, mouse_y) = get_mouse_position();
 		const int terminal_x = mouse_x / 8;
@@ -351,7 +353,8 @@ void panel_render_system::render_design_mode() {
 				designations->chopping.erase(tree_id);
 				emit(map_dirty_message{});
 			}
-		}
+			
+		}*/
 	} else {
 		term(3)->print(1,5, "(T)ree Chopping", GREEN, GREEN_BG);
 	}

@@ -22,12 +22,12 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 	const int tile_index = mapidx(pos.x, pos.y, pos.z);
 	const int direction = rng.roll_dice(1,6);
 	switch (direction) {
-		case 1 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_UP)) pos.z++; break;
-		case 2 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_DOWN)) pos.z--; break;
-		case 3 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_NORTH)) pos.y--; break;
-		case 4 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_SOUTH)) pos.y++; break;
-		case 5 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_EAST)) pos.x++; break;
-		case 6 : if (current_region->tiles[tile_index].flags.test(tile_flags::CAN_GO_WEST)) pos.x--; break;
+		case 1 : if (current_region->tile_flags[tile_index].test(CAN_GO_UP)) pos.z++; break;
+		case 2 : if (current_region->tile_flags[tile_index].test(CAN_GO_DOWN)) pos.z--; break;
+		case 3 : if (current_region->tile_flags[tile_index].test(CAN_GO_NORTH)) pos.y--; break;
+		case 4 : if (current_region->tile_flags[tile_index].test(CAN_GO_SOUTH)) pos.y++; break;
+		case 5 : if (current_region->tile_flags[tile_index].test(CAN_GO_EAST)) pos.x++; break;
+		case 6 : if (current_region->tile_flags[tile_index].test(CAN_GO_WEST)) pos.x--; break;
 	}
 	if (current_region->solid[tile_index]) { 
 		pos = original;
@@ -52,12 +52,12 @@ void settler_ai_system::configure() {
 				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
 				const int map_index = mapidx(pos.x, pos.y, pos.z);
-				if (!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_NORTH) &&
-					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_SOUTH) &&
-					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_EAST) &&
-					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_WEST) &&
-					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_UP) &&
-					!current_region->tiles[map_index].flags.test(tile_flags::CAN_GO_DOWN)
+				if (!current_region->tile_flags[map_index].test(CAN_GO_NORTH) &&
+					!current_region->tile_flags[map_index].test(CAN_GO_SOUTH) &&
+					!current_region->tile_flags[map_index].test(CAN_GO_EAST) &&
+					!current_region->tile_flags[map_index].test(CAN_GO_WEST) &&
+					!current_region->tile_flags[map_index].test(CAN_GO_UP) &&
+					!current_region->tile_flags[map_index].test(CAN_GO_DOWN)
 				) {
 					std::cout << "Warning - settler is stuck; activating emergency teleport to bed!\n";
 					each<position_t, construct_provides_sleep_t>([&pos] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
@@ -389,27 +389,27 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 		// Drop the pick.
 		int current_direction = 0;
 		uint8_t min_value = std::numeric_limits<uint8_t>::max();
-		if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) { 
+		if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_NORTH)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y-1, pos.z)]; 
 			current_direction = 1; 
 		}
-		if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) { 
+		if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y+1, pos.z)]; 
 			current_direction = 2; 
 		}
-		if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) { 
+		if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_WEST)) { 
 			min_value = mining_map[mapidx(pos.x-1, pos.y, pos.z)]; 
 			current_direction = 3; 
 		}
-		if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) { 
+		if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_EAST)) { 
 			min_value = mining_map[mapidx(pos.x+1, pos.y, pos.z)]; 
 			current_direction = 4; 
 		}
-		if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) { 
+		if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && current_region->tile_flags[idx].test(CAN_GO_DOWN)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y, pos.z-1)]; 
 			current_direction = 5; 
 		}
-		if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && current_region->tiles[idx].flags.test(tile_flags::CAN_GO_UP)) { 
+		if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && current_region->tile_flags[idx].test(CAN_GO_UP)) { 
 			min_value = mining_map[mapidx(pos.x, pos.y, pos.z+1)]; 
 			current_direction = 6; 
 		}
@@ -444,10 +444,11 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			const int target_idx = mining_targets[idx];
 			const int target_operation = designations->mining[target_idx];
 
+			/*
 			if (target_operation == 1) {
 				// Dig
 				current_region->solid[target_idx]=false;
-				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[target_idx].set(CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4101;
 				current_region->calculate_render_tile(target_idx);
 				if (current_region->tiles[target_idx].base_type==2 && rng.roll_dice(1,4)>=2) {
@@ -463,13 +464,13 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 				// Add ramp
 				const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
 				current_region->solid[below]=false;
-				current_region->tiles[below].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[below].set(CONSTRUCTION);
 				current_region->tiles[below].contents = 4118;
 				current_region->calculate_render_tile(below);
 			} else if (target_operation == 3) {
 				// Ramp
 				current_region->solid[target_idx]=false;
-				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[target_idx].set(CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4118;
 				current_region->calculate_render_tile(target_idx);
 
@@ -482,23 +483,24 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			} else if (target_operation == 4) {
 				// Up
 				current_region->solid[target_idx]=false;
-				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[target_idx].set(CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4111;
 				current_region->calculate_render_tile(target_idx);
 			} else if (target_operation == 5) {
 				// Down
 				current_region->solid[target_idx]=false;
-				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[target_idx].set(CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4110;
 				current_region->calculate_render_tile(target_idx);
 			} else if (target_operation == 6) {
 				// UpDown
 				current_region->solid[target_idx]=false;
-				current_region->tiles[target_idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[target_idx].set(CONSTRUCTION);
 				current_region->tiles[target_idx].contents = 4109;
 				current_region->calculate_render_tile(target_idx);
 			}
 
+			
 			for (int Z=-2; Z<3; ++Z) {
 				for (int Y=-2; Y<3; ++Y) {
 					for (int X=-2; X<3; ++X) {
@@ -507,6 +509,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 					}
 				}
 			}
+			*/
 
 			designations->mining.erase(target_idx);
 			emit(recalculate_mining_message{});
@@ -639,6 +642,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		if (skill_check >= SUCCESS) {
 			// Tree is going down!
+			/*
 			int number_of_logs = 0;
 			for (int z=0; z<REGION_DEPTH; ++z) {
 				for (int y=0; y<REGION_HEIGHT; ++y) {
@@ -678,6 +682,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 					}
 				}
 			}
+			*/
 
 			// Change status to drop axe
 			emit(map_dirty_message{});
@@ -804,17 +809,18 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 					const int index = mapidx(wall_pos->x, wall_pos->y, wall_pos->z);
 					current_region->solid[index] = true;
 
-					if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_NORTH)) {
+					if (current_region->tile_flags[index].test(CAN_GO_NORTH)) {
 						--pos.y;
-					} else if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_SOUTH)) {
+					} else if (current_region->tile_flags[index].test(CAN_GO_SOUTH)) {
 						++pos.y;
-					} else if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_EAST)) {
+					} else if (current_region->tile_flags[index].test(CAN_GO_EAST)) {
 						++pos.x;
-					} else if (current_region->tiles[index].flags.test(tile_flags::CAN_GO_WEST)) {
+					} else if (current_region->tile_flags[index].test(CAN_GO_WEST)) {
 						--pos.x;
 					}
 
 					// Update pathing
+					/*
 					for (int Z=-2; Z<10; ++Z) {
 						for (int Y=-2; Y<2; ++Y) {
 							for (int X=-2; X<2; ++X) {
@@ -822,7 +828,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 								current_region->determine_tile_connectivity(wall_pos->x + X, wall_pos->y + Y, wall_pos->z + Z);
 							}
 						}
-					}
+					}*/
 				}
 			}
 			emit(renderables_changed_message{});

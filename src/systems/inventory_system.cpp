@@ -134,7 +134,7 @@ void inventory_system::configure() {
 		for (int x = designate.x; x < designate.x + designate.width; ++x) {
 			for (int y=designate.y; y < designate.y + designate.height; ++y) {
 				const int idx = mapidx(x,y,camera_position->region_z);
-				current_region->tiles[idx].flags.set(tile_flags::CONSTRUCTION);
+				current_region->tile_flags[idx].set(CONSTRUCTION);
 			}
 		}
 	});

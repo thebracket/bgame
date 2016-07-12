@@ -622,15 +622,15 @@ int get_ground_z(region_t &region, const int x, const int y) {
 
 void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
 	const int idx = mapidx(x,y,z);
-	region.tiles[idx].flags.set(tile_flags::CONSTRUCTION);
+	region.tile_flags[idx].set(CONSTRUCTION);
 	if (solid) {
 		region.solid[idx]=true;
-		region.tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
+		region.tile_flags[idx].reset(CAN_STAND_HERE);
 	} else {
 		region.solid[idx]=false;
-		region.tiles[idx].flags.set(tile_flags::CAN_STAND_HERE);
+		region.tile_flags[idx].set(CAN_STAND_HERE);
 	}
-	region.tiles[idx].contents = get_tile_contents_index(type);
+	//region.tiles[idx].contents = get_tile_contents_index(type);
 
 	if (type == "storage_locker") {
 		auto cabinet = create_entity()
@@ -856,25 +856,25 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 }
 
 void set_tree_trunk(region_t &region, const int x, const int y, const int z, const int tree_id) {
-	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
+	/*if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
 		const int idx = mapidx(x,y,z);
 		region.tiles[idx].base_type = 7;
 		region.tiles[idx].contents = 0;
 		region.tiles[idx].flags.set(tile_flags::TREE);
 		region.solid[idx] = true;
 		region.tiles[idx].tree_id = tree_id;
-	}
+	}*/
 }
 
 void set_tree_foliage(region_t &region, const int x, const int y, const int z, const int tree_id) {
-	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
+	/*if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
 		const int idx = mapidx(x,y,z);
 		region.tiles[idx].base_type = 8;
 		region.tiles[idx].contents = 0;
 		region.tiles[idx].flags.set(tile_flags::TREE);
 		region.solid[idx] = true;
 		region.tiles[idx].tree_id = tree_id;
-	}
+	}*/
 }
 
 void plant_tree(region_t &region, const int x, const int y, const int z, random_number_generator &rng) {
@@ -983,23 +983,23 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	for (int y=0; y<REGION_HEIGHT; ++y) {
 		for (int x=0; x<REGION_WIDTH; ++x) {
 			// The bottom layer is *always* special solid rock.
-			region.set(x,y,0, get_tile_type_index("semi_molten_rock"), get_tile_type_index("nothing"), 0, 0, true);
+			//region.set(x,y,0, get_tile_type_index("semi_molten_rock"), get_tile_type_index("nothing"), 0, 0, true);
 
 			// Fill rock under the ground
 			const int ground_height = 64+height_map[(y*REGION_WIDTH)+x];
 			for (int z=1; z<ground_height - soil_height.second; ++z) {
-				region.set(x,y,z, get_tile_type_index("rock_default"), get_tile_type_index("nothing"), 0, 0, true);
+				//region.set(x,y,z, get_tile_type_index("rock_default"), get_tile_type_index("nothing"), 0, 0, true);
 			}
 			for (int z=ground_height-soil_height.second; z<ground_height; ++z) {
-				region.set(x,y,z, soil_height.first, get_tile_type_index("nothing"), 0, 0, true);
+				//region.set(x,y,z, soil_height.first, get_tile_type_index("nothing"), 0, 0, true);
 			}
 
 			// TODO: Pick an appropriate surface tile here
-			region.set(x, y, ground_height, soil_height.first, planet_builder_covering(biome, rng, ground_height < planet.water_height/30), 0, 0, false);
+			//region.set(x, y, ground_height, soil_height.first, planet_builder_covering(biome, rng, ground_height < planet.water_height/30), 0, 0, false);
 
 			// Fill in the sky
 			for (int z=ground_height+1; z<REGION_DEPTH; ++z) {
-				region.set(x,y,z, get_tile_type_index("nothing"), get_tile_type_index("nothing"), 0, 0, false);
+				//region.set(x,y,z, get_tile_type_index("nothing"), get_tile_type_index("nothing"), 0, 0, false);
 			}
 		}
 	}
@@ -1038,7 +1038,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
 		for (int y=crash_y - 3; y<crash_y+4; ++y) {
 			int z = get_ground_z(region, x, y);
-			region.tiles[mapidx(x,y,z)].contents = get_tile_contents_index("nothing");
+			//region.tiles[mapidx(x,y,z)].contents = get_tile_contents_index("nothing");
 		}
 	}
 
@@ -1222,7 +1222,7 @@ void build_region(planet_t &planet, std::pair<int,int> location, random_number_g
 	planet_builder_lock.lock();
 	planet_builder_status = "Looking for the map";
 	planet_builder_lock.unlock();
-	region.determine_connectivity();
+	//region.determine_connectivity();
 
 	// Save the region
 	planet_builder_lock.lock();

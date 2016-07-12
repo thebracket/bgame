@@ -38,7 +38,7 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 			result = rf->second;
 			if (!current_region->visible[idx]) result = greyscale(result);
 		} else {
-			result = current_region->tiles[idx].render_as;
+			result = current_region->render_cache[idx];
 			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 		++dive_depth;
@@ -67,7 +67,7 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 			result = rf->second;
 			if (!current_region->visible[idx]) result = greyscale(result);			
 		} else {
-			result = current_region->tiles[idx].render_as;
+			result = current_region->render_cache[idx];
 			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 	}
@@ -101,12 +101,12 @@ vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
 			result = rf->second;
 			if (!current_region->visible[idx]) result = greyscale(result);			
 		} else {
-			result = current_region->tiles[idx].render_as;
+			result = current_region->render_cache[idx];
 			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 	}
 
-	const int tree_id = current_region->tiles[idx].tree_id;
+	const int tree_id = current_region->tree_id[idx];
 	if (tree_id > 0) {
 		auto mf = designations->chopping.find(tree_id);
 		if (mf != designations->chopping.end()) {
@@ -131,7 +131,7 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 			result = rf->second;
 			if (!current_region->visible[idx]) result = greyscale(result);			
 		} else {
-			result = current_region->tiles[idx].render_as;
+			result = current_region->render_cache[idx];
 			if (!current_region->visible[idx]) result = greyscale(result);
 		}
 	}
@@ -146,8 +146,8 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;
 
-			if (!current_region->solid[idx] && current_region->tiles[idx].flags.test(tile_flags::CAN_STAND_HERE)
-				&& !current_region->tiles[idx].flags.test(tile_flags::CONSTRUCTION)) {
+			if (!current_region->solid[idx] && current_region->tile_flags[idx].test(CAN_STAND_HERE)
+				&& !current_region->tile_flags[idx].test(CONSTRUCTION)) {
 				result.foreground = rltk::colors::GREEN;
 			} else {
 				result.foreground = rltk::colors::RED;

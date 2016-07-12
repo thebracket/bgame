@@ -13,26 +13,23 @@ void save_region(const region_t &region) {
 	boost::iostreams::filtering_stream<boost::iostreams::output> deflate;
 	deflate.push(boost::iostreams::zlib_compressor());
     deflate.push(lbfile);
+
 	serialize(deflate, region.region_x);
 	serialize(deflate, region.region_y);
 	serialize(deflate, region.biome_idx);
 	serialize(deflate, region.next_tree_id);
-	serialize(deflate, region.tiles.size());
-	for (const tile_t &tile : region.tiles) {
-		serialize(deflate, tile.base_type);
-		serialize(deflate, tile.contents);
-		serialize(deflate, tile.flags);
-		serialize(deflate, tile.tree_id);
-	}
-	for (const bool &b : region.revealed) {
-		serialize(deflate, b);
-	}
-	for (const bool &b : region.visible) {
-		serialize(deflate, b);
-	}
-	for (const bool &b : region.solid) {
-		serialize(deflate, b);
-	}
+
+	serialize(lbfile, region.revealed);
+	serialize(lbfile, region.visible);
+	serialize(lbfile, region.solid);
+	serialize(lbfile, region.opaque);
+	serialize(lbfile, region.tile_type);
+	serialize(lbfile, region.tile_material);
+	serialize(lbfile, region.tile_hit_points);
+	serialize(lbfile, region.building_id);
+	serialize(lbfile, region.tree_id);
+	serialize(lbfile, region.tile_vegetation_type);
+	serialize(lbfile, region.tile_flags);
 }
 
 region_t load_region(const int region_x, const int region_y) {
@@ -47,36 +44,23 @@ region_t load_region(const int region_x, const int region_y) {
 	deserialize(inflate, region.region_y);
 	deserialize(inflate, region.biome_idx);
 	deserialize(inflate, region.next_tree_id);
-	std::size_t number_of_tiles;
-	deserialize(inflate, number_of_tiles);
-	for (std::size_t i=0; i<number_of_tiles; ++i) {
-		tile_t tile;
-		deserialize(inflate, tile.base_type);
-		deserialize(inflate, tile.contents);
-		deserialize(inflate, tile.flags);
-		deserialize(inflate, tile.tree_id);
-		region.tiles[i] = tile;
-	}
-	for (std::size_t i=0; i<number_of_tiles; ++i) {
-		bool b;
-		deserialize(inflate, b);
-		region.revealed[i] = b;
-	}
-	for (std::size_t i=0; i<number_of_tiles; ++i) {
-		bool b;
-		deserialize(inflate, b);
-		region.visible[i] = b;
-	}
-	for (std::size_t i=0; i<number_of_tiles; ++i) {
-		bool b;
-		deserialize(inflate, b);
-		region.solid[i] = b;
-	}
 
-	region.calculate_render_tiles();
+	deserialize(lbfile, region.revealed);
+	deserialize(lbfile, region.visible);
+	deserialize(lbfile, region.solid);
+	deserialize(lbfile, region.opaque);
+	deserialize(lbfile, region.tile_type);
+	deserialize(lbfile, region.tile_material);
+	deserialize(lbfile, region.tile_hit_points);
+	deserialize(lbfile, region.building_id);
+	deserialize(lbfile, region.tree_id);
+	deserialize(lbfile, region.tile_vegetation_type);
+	deserialize(lbfile, region.tile_flags);
+
+	//region.calculate_render_tiles();
 	return region;
 }
-
+/*
 void region_t::determine_tile_standability(const int &x, const int &y, const int &z) {
 	const int index = mapidx(x,y,z);
 	const int index_above = mapidx(x,y,z+1);
@@ -198,3 +182,6 @@ void region_t::calculate_render_tile(const int &idx) {
 
 	tiles[idx].render_as = result;
 }
+*/
+
+void region_t::tile_calculate(const int &idx) {}
