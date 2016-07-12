@@ -51,6 +51,7 @@ add_executable(bgame main.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp
+	planet/builder/settler_builder.cpp
 	raws/raws.cpp
 	raws/lua_bridge.cpp
 )
