@@ -22,6 +22,16 @@ void save_planet(const planet_t &planet) {
 	serialize(deflate, planet.hills_height);
 
 	serialize(deflate, planet.landblocks);
+
+	serialize(lbfile, planet.biomes.size());
+	for (const biome_t &biome : planet.biomes) {
+		serialize(deflate, biome.biome_type);
+		serialize(deflate, biome.biome_name);
+		serialize(deflate, biome.mean_temperature);
+		serialize(deflate, biome.mean_rainfall);
+		serialize(deflate, biome.mean_altitude);
+		serialize(deflate, biome.mean_variance);
+	}
 }
 
 planet_t load_planet() {
@@ -39,6 +49,20 @@ planet_t load_planet() {
 	deserialize(inflate, planet.hills_height);
 
 	deserialize(inflate, planet.landblocks);
+	
+	std::size_t n_biomes;
+	deserialize(lbfile, n_biomes);
+	planet.biomes.resize(n_biomes);
+	for (std::size_t i=0; i<n_biomes; ++i) {
+		biome_t biome;
+		deserialize(inflate, biome.biome_type);
+		deserialize(inflate, biome.biome_name);
+		deserialize(inflate, biome.mean_temperature);
+		deserialize(inflate, biome.mean_rainfall);
+		deserialize(inflate, biome.mean_altitude);
+		deserialize(inflate, biome.mean_variance);
+		planet.biomes[i] = biome;
+	}
 
 	return planet;
 }

@@ -25,6 +25,16 @@ struct block_t {
 	uint8_t type = 0;
 	int8_t temperature_c = 0;
 	int8_t rainfall = 0;
+	int biome_idx = -1;
+};
+
+struct biome_t {
+	uint8_t biome_type = 0;
+	std::string biome_name = "";
+	int8_t mean_temperature = 0;
+	int8_t mean_rainfall = 0;
+	uint8_t mean_altitude = 0;
+	uint8_t mean_variance = 0;
 };
 
 struct planet_t {
@@ -38,6 +48,7 @@ struct planet_t {
 	uint8_t hills_height;
 
 	std::vector<block_t> landblocks;
+	std::vector<biome_t> biomes;
 	inline int idx(const int x, const int y) { return y*WORLD_WIDTH + x; }
 };
 

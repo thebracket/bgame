@@ -4,6 +4,7 @@
 #include "builder/settler_builder.hpp"
 #include "builder/build_utils.hpp"
 #include "builder/map_builder.hpp"
+#include "builder/biome_builder.hpp"
 
 #include <atomic>
 #include <iostream>
@@ -69,6 +70,8 @@ void planet_display_update_altitude(planet_t &planet) {
 			} else {
 				(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{col, col, col}, BLACK};
 			}
+
+			if (planet.landblocks[block_idx].biome_idx > -1) (*planet_builder_display.get())[idx].glyph = '!';
 		}
 	}
 	planet_builder_lock.unlock();
@@ -113,7 +116,7 @@ void build_planet() {
 	planet_rainfall(planet);
 
 	// Make a biome map
-	//build_biomes(planet, rng);
+	build_biomes(planet, rng);
 
 	// Save it to disk
 	builder_save_planet(planet);
