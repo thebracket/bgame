@@ -19,6 +19,7 @@ void world_gen::destroy() {
 	gui->delete_layer(WORLD_LAYER);
 	world_thread->join();
 	world_thread.reset();
+	planet_builder_display.reset();
 }
 
 void world_gen::tick(const double duration_ms) {
@@ -28,7 +29,7 @@ void world_gen::tick(const double duration_ms) {
 	for (int y=0; y<term(WORLD_LAYER)->term_height; ++y) {
 		for (int x=0; x<term(WORLD_LAYER)->term_width; ++x) {
 			const int idx = term(WORLD_LAYER)->at(x, y);
-			term(WORLD_LAYER)->set_char(idx, planet_builder_display[idx]);
+			term(WORLD_LAYER)->set_char(idx, (*planet_builder_display.get())[idx]);
 		}
 	}
 	term(WORLD_LAYER)->print_center(1, " " + planet_builder_status + " ", YELLOW, BLACK);

@@ -9,8 +9,6 @@
 #include <limits>
 #include <thread>
 #include <rltk.hpp>
-//#include <Poco/InflatingStream.h>
-//#include <Poco/DeflatingStream.h>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -19,7 +17,7 @@ std::atomic<bool> planet_build_done;
 std::mutex planet_builder_lock;
 int planet_build_term_width;
 int planet_build_term_height;
-std::vector<rltk::vchar> planet_builder_display;
+std::unique_ptr<std::vector<rltk::vchar>> planet_builder_display;
 std::string planet_builder_status = "";
 
 bool is_planet_build_complete() {
@@ -29,8 +27,9 @@ bool is_planet_build_complete() {
 void setup_build_planet(int width, int height) {
 	planet_build_term_width = width;
 	planet_build_term_height = height;
-	planet_builder_display.resize(width*height);
-	std::fill(planet_builder_display.begin(), planet_builder_display.end(), vchar{0, WHITE, BLACK});
+	planet_builder_display = std::make_unique<std::vector<rltk::vchar>>();
+	planet_builder_display->resize(width*height);
+	std::fill(planet_builder_display->begin(), planet_builder_display->end(), vchar{0, WHITE, BLACK});
 }
 
 void planet_display_update_initial(planet_t &planet) {
@@ -43,31 +42,31 @@ void planet_display_update_initial(planet_t &planet) {
 			const int idx = (planet_build_term_width * y) + x;
 			const int block_idx = planet.idx(x*stride_x, y*stride_y);
 			switch (planet.landblocks[block_idx].type) {
-				case WATER : planet_builder_display[idx] = vchar{ 176, BLUE, BLACK}; break;
-				case PLAINS : planet_builder_display[idx] = vchar{ 176, GREEN, BLACK}; break;
-				case HILLS : planet_builder_display[idx] = vchar{ 30, GREEN, BLACK}; break;
-				case MOUNTAINS : planet_builder_display[idx] = vchar{ 30, GREY, BLACK}; break;
+				case WATER : (*planet_builder_display.get())[idx] = vchar{ 176, BLUE, BLACK}; break;
+				case PLAINS : (*planet_builder_display.get())[idx] = vchar{ 176, GREEN, BLACK}; break;
+				case HILLS : (*planet_builder_display.get())[idx] = vchar{ 30, GREEN, BLACK}; break;
+				case MOUNTAINS : (*planet_builder_display.get())[idx] = vchar{ 30, GREY, BLACK}; break;
 			}
 
 			if (planet.landblocks[block_idx].biome_idx != -1) {
 				// TODO: Change tile
 				switch (planet.biomes[planet.landblocks[block_idx].biome_idx].biome_type) {
-					case GLACIER : planet_builder_display[idx] = vchar{ 219, WHITE, BLACK }; break;
-					case ICY_SEA : planet_builder_display[idx].foreground = CYAN; break;
-					case DUST_SEA : planet_builder_display[idx] = vchar{ 247, ORANGE, BLACK }; break;
-					case TUNDRA : planet_builder_display[idx] = vchar{ 178, WHITE, DARK_GREEN }; break;
-					case SWAMP : planet_builder_display[idx] = vchar{ '~', GREEN, DARK_GREEN }; break;
-					case FLATLAND : planet_builder_display[idx] = vchar{ '#', GREEN, BLACK }; break;
-					case WOODS : planet_builder_display[idx] = vchar{ 5, GREEN, BLACK }; break;
-					case FOREST : planet_builder_display[idx] = vchar{ 5, DARK_GREEN, BLACK }; break;
-					case JUNGLE : planet_builder_display[idx] = vchar{ 6, LIGHT_GREEN, BLACK }; break;
-					case DESERT : planet_builder_display[idx] = vchar{ '~', ORANGE, BLACK }; break;
-					case BADLANDS : planet_builder_display[idx] = vchar{ '#', DARK_RED, BLACK }; break;
-					case HIGH_TUNDRA : planet_builder_display[idx] = vchar{ 176, WHITE, BLACK }; break;
-					case HILL_BOG : planet_builder_display[idx] = vchar{ 176, CYAN, BLACK }; break;
-					case HIGH_DESERT : planet_builder_display[idx] = vchar{ 176, ORANGE, BLACK }; break;
-					case HIGH_BADLANDS : planet_builder_display[idx] = vchar{ 176, RED, BLACK }; break;
-					case NORMAL_MOUNTAINS : planet_builder_display[idx] = vchar{ 30, GREY, BLACK}; break;
+					case GLACIER : (*planet_builder_display.get())[idx] = vchar{ 219, WHITE, BLACK }; break;
+					case ICY_SEA : (*planet_builder_display.get())[idx].foreground = CYAN; break;
+					case DUST_SEA : (*planet_builder_display.get())[idx] = vchar{ 247, ORANGE, BLACK }; break;
+					case TUNDRA : (*planet_builder_display.get())[idx] = vchar{ 178, WHITE, DARK_GREEN }; break;
+					case SWAMP : (*planet_builder_display.get())[idx] = vchar{ '~', GREEN, DARK_GREEN }; break;
+					case FLATLAND : (*planet_builder_display.get())[idx] = vchar{ '#', GREEN, BLACK }; break;
+					case WOODS : (*planet_builder_display.get())[idx] = vchar{ 5, GREEN, BLACK }; break;
+					case FOREST : (*planet_builder_display.get())[idx] = vchar{ 5, DARK_GREEN, BLACK }; break;
+					case JUNGLE : (*planet_builder_display.get())[idx] = vchar{ 6, LIGHT_GREEN, BLACK }; break;
+					case DESERT : (*planet_builder_display.get())[idx] = vchar{ '~', ORANGE, BLACK }; break;
+					case BADLANDS : (*planet_builder_display.get())[idx] = vchar{ '#', DARK_RED, BLACK }; break;
+					case HIGH_TUNDRA : (*planet_builder_display.get())[idx] = vchar{ 176, WHITE, BLACK }; break;
+					case HILL_BOG : (*planet_builder_display.get())[idx] = vchar{ 176, CYAN, BLACK }; break;
+					case HIGH_DESERT : (*planet_builder_display.get())[idx] = vchar{ 176, ORANGE, BLACK }; break;
+					case HIGH_BADLANDS : (*planet_builder_display.get())[idx] = vchar{ 176, RED, BLACK }; break;
+					case NORMAL_MOUNTAINS : (*planet_builder_display.get())[idx] = vchar{ 30, GREY, BLACK}; break;
 				}
 			}
 		}
@@ -91,16 +90,16 @@ void planet_display_update_regional(planet_t &planet, const int site_x, const in
 			const int block_idx = planet.idx(x,y);
 
 			switch (planet.landblocks[block_idx].type) {
-				case WATER : planet_builder_display[idx] = vchar{ 176, BLUE, BLACK}; break;
+				case WATER : (*planet_builder_display.get())[idx] = vchar{ 176, BLUE, BLACK}; break;
 				case PLAINS : {
 					const int height = planet.landblocks[block_idx].height;
 					const double shade_d = static_cast<double>(height+min) / static_cast<double>(max);
 					const int shade = static_cast<uint8_t>(shade_d * 256.0)+127;
 					color_t shading = color_t{0, shade, 0};
-					planet_builder_display[idx] = vchar{ 176, shading, BLACK}; 
+					(*planet_builder_display.get())[idx] = vchar{ 176, shading, BLACK}; 
 				} break;
-				case HILLS : planet_builder_display[idx] = vchar{ 30, GREEN, BLACK}; break;
-				case MOUNTAINS : planet_builder_display[idx] = vchar{ 30, GREY, BLACK}; break;
+				case HILLS : (*planet_builder_display.get())[idx] = vchar{ 30, GREEN, BLACK}; break;
+				case MOUNTAINS : (*planet_builder_display.get())[idx] = vchar{ 30, GREY, BLACK}; break;
 			}
 
 			++X;
