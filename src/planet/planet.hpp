@@ -29,8 +29,8 @@ struct block_t {
 };
 
 struct biome_t {
-	uint8_t biome_type = 0;
-	std::string biome_name = "";
+	uint8_t type = 0;
+	std::string name = "";
 	int8_t mean_temperature = 0;
 	int8_t mean_rainfall = 0;
 	uint8_t mean_altitude = 0;

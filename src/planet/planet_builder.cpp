@@ -71,7 +71,10 @@ void planet_display_update_altitude(planet_t &planet) {
 				(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{col, col, col}, BLACK};
 			}
 
-			if (planet.landblocks[block_idx].biome_idx > -1) (*planet_builder_display.get())[idx].glyph = '!';
+			if (planet.landblocks[block_idx].biome_idx > -1) {
+				const int biome_idx = planet.landblocks[block_idx].biome_idx;
+				if (planet.biomes[biome_idx].type == 0) (*planet_builder_display.get())[idx].glyph = '!';
+			}
 		}
 	}
 	planet_builder_lock.unlock();
