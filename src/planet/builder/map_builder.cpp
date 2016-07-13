@@ -57,8 +57,8 @@ perlin_noise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 			planet.landblocks[planet.idx(x,y)].height = total_height / n_tiles;
 			planet.landblocks[planet.idx(x,y)].type = 0;
 			planet.landblocks[planet.idx(x,y)].variance = max - min;
-			planet.landblocks[planet.idx(x,y)].temperature_c = 58 - (distance_from_equator/2) - (planet.landblocks[planet.idx(x,y)].height / 5);
-            if (planet.landblocks[planet.idx(x,y)].temperature_c < -88) planet.landblocks[planet.idx(x,y)].temperature_c = -88;
+			planet.landblocks[planet.idx(x,y)].temperature_c = 58 - (distance_from_equator/3) - (std::abs(planet.landblocks[planet.idx(x,y)].height-planet.water_height) / 5);
+            if (planet.landblocks[planet.idx(x,y)].temperature_c < -55) planet.landblocks[planet.idx(x,y)].temperature_c = -55;
             if (planet.landblocks[planet.idx(x,y)].temperature_c > 55) planet.landblocks[planet.idx(x,y)].temperature_c = 55;
 
 		}
@@ -161,11 +161,11 @@ void planet_rainfall(planet_t &planet) {
 		int rain_amount = 10;
 		for (int x=0; x<WORLD_WIDTH; ++x) {
 			if (planet.landblocks[planet.idx(x,y)].type == block_type::MOUNTAINS) {
-				rain_amount -= 10;
+				rain_amount -= 20;
 			} else if (planet.landblocks[planet.idx(x,y)].type == block_type::HILLS) {
-				rain_amount -= 7;
+				rain_amount -= 10;
 			} else if (planet.landblocks[planet.idx(x,y)].type == block_type::COASTAL) {
-				rain_amount -= 3;
+				rain_amount -= 5;
 			} else {
 				rain_amount += 1;
 			}

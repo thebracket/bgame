@@ -7,6 +7,7 @@ constexpr int WORLD_HEIGHT = 512;
 constexpr int WORLD_WIDTH = 512;
 
 namespace block_type {
+constexpr uint8_t MAX_BLOCK_TYPE = 9;
 constexpr uint8_t NONE = 0;
 constexpr uint8_t WATER = 1;
 constexpr uint8_t PLAINS = 2;
@@ -29,12 +30,17 @@ struct block_t {
 };
 
 struct biome_t {
-	uint8_t type = 0;
+	std::size_t type = 0;
 	std::string name = "";
 	int8_t mean_temperature = 0;
 	int8_t mean_rainfall = 0;
 	uint8_t mean_altitude = 0;
 	uint8_t mean_variance = 0;
+	uint8_t warp_mutation = 0;
+	uint8_t evil = 0;
+	uint8_t savagery = 0;
+	int center_x = 0;
+	int center_y = 0;
 };
 
 struct planet_t {

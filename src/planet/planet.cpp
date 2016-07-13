@@ -25,12 +25,17 @@ void save_planet(const planet_t &planet) {
 
 	serialize(lbfile, planet.biomes.size());
 	for (const biome_t &biome : planet.biomes) {
-		serialize(deflate, biome.biome_type);
-		serialize(deflate, biome.biome_name);
+		serialize(deflate, biome.type);
+		serialize(deflate, biome.name);
 		serialize(deflate, biome.mean_temperature);
 		serialize(deflate, biome.mean_rainfall);
 		serialize(deflate, biome.mean_altitude);
 		serialize(deflate, biome.mean_variance);
+		serialize(deflate, biome.warp_mutation);
+		serialize(deflate, biome.evil);
+		serialize(deflate, biome.savagery);
+		serialize(deflate, biome.center_x);
+		serialize(deflate, biome.center_y);
 	}
 }
 
@@ -55,12 +60,18 @@ planet_t load_planet() {
 	planet.biomes.resize(n_biomes);
 	for (std::size_t i=0; i<n_biomes; ++i) {
 		biome_t biome;
-		deserialize(inflate, biome.biome_type);
-		deserialize(inflate, biome.biome_name);
+		deserialize(inflate, biome.type);
+		deserialize(inflate, biome.name);
 		deserialize(inflate, biome.mean_temperature);
 		deserialize(inflate, biome.mean_rainfall);
 		deserialize(inflate, biome.mean_altitude);
 		deserialize(inflate, biome.mean_variance);
+		deserialize(inflate, biome.warp_mutation);
+		deserialize(inflate, biome.evil);
+		deserialize(inflate, biome.savagery);
+		deserialize(inflate, biome.center_x);
+		deserialize(inflate, biome.center_y);
+
 		planet.biomes[i] = biome;
 	}
 

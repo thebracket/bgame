@@ -6,3 +6,4 @@ starting_professions.lua
 items.lua
 buildings.lua
 reactions.lua
+biomes.lua

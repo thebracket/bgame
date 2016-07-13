@@ -25,6 +25,8 @@ boost::container::flat_map<std::string, building_def_t> building_defs;
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
+std::vector<biome_type_t> biome_defs;
+
 std::string to_proper_noun_case(const std::string &original)
 {
     std::string result;
@@ -477,6 +479,58 @@ void read_reactions() {
     }
 }
 
+void read_biome_types() {
+    lua_getglobal(lua_state, "biomes");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+
+        biome_type_t b;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") b.name = lua_tostring(lua_state, -1);
+            if (field == "min_temp") b.min_temp = lua_tonumber(lua_state, -1);
+            if (field == "max_temp") b.max_temp = lua_tonumber(lua_state, -1);
+            if (field == "min_rain") b.min_rain = lua_tonumber(lua_state, -1);
+            if (field == "max_rain") b.max_rain = lua_tonumber(lua_state, -1);
+            if (field == "min_mutation") b.min_mutation = lua_tonumber(lua_state, -1);
+            if (field == "max_mutation") b.max_mutation = lua_tonumber(lua_state, -1);
+            if (field == "occurs") {
+                // List of biome type indices
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    b.occurs.push_back(lua_tonumber(lua_state, -1));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "worldgen_render") {
+                // Load glyph and color
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string sub_field = lua_tostring(lua_state, -2);
+                    if (sub_field == "glyph") b.worldgen_glyph = lua_tonumber(lua_state, -1);
+                    if (sub_field == "color") b.worldgen_color = read_lua_color("color");
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+
+        biome_defs.push_back(b);
+
+        lua_pop(lua_state, 1);
+    }
+}
+
 void load_game_tables() {
 	read_tile_types();
 	read_tile_contents();
@@ -485,6 +539,7 @@ void load_game_tables() {
     read_items();
     read_buildings();
     read_reactions();
+    read_biome_types();
 }
 
 void load_raws() {

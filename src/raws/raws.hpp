@@ -100,6 +100,19 @@ struct reaction_t {
 	bool automatic = false;
 };
 
+struct biome_type_t {
+	std::string name = "";
+	int8_t min_rain = 0;
+	int8_t max_rain = 100;
+	int8_t min_temp = -100;
+	int8_t max_temp = 100;
+	uint8_t min_mutation = 0;
+	uint8_t max_mutation = 100;
+	std::vector<uint8_t> occurs;
+	uint8_t worldgen_glyph;
+	rltk::color_t worldgen_color;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -116,6 +129,8 @@ extern boost::container::flat_map<std::string, item_def_t> item_defs;
 extern boost::container::flat_map<std::string, building_def_t> building_defs;
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
 extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
+
+extern std::vector<biome_type_t> biome_defs;
 
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);

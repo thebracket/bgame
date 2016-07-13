@@ -1,5 +1,6 @@
 glyphs = {
 	clubs = 5,
+	spades = 6,
 	small_circle = 7,
 	circle = 9,
 	double_circle = 10,
