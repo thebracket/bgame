@@ -62,29 +62,16 @@ boost::optional<std::unordered_map<uint8_t, double>> biome_membership(planet_t &
 	}
 	planet.biomes[idx].savagery = std::min(100, distance_from_center);
 
-	std::cout << "BIOME " << idx << " (contains " << n_cells << " cells)\n";
-	std::cout << "Means: Alt " << +planet.biomes[idx].mean_altitude 
-		<< ", Rain " << +planet.biomes[idx].mean_rainfall 
-		<< ", Temp " << +planet.biomes[idx].mean_temperature 
-		<< ", Var " << +planet.biomes[idx].mean_variance << "\n";
-	std::cout << "Centroid: " << planet.biomes[idx].center_x << "," << planet.biomes[idx].center_y << "\n";
-	std::cout << "Distance from pole and center: " << distance_from_pole << ", " << distance_from_center << "\n";
-	std::cout << "Mutation: " << +planet.biomes[idx].warp_mutation << ", Savagery: " << +planet.biomes[idx].savagery << "\n";
-
 	for (int i=0; i<=block_type::MAX_BLOCK_TYPE; ++i) {
 		auto finder = counts.find(i);
 		if (finder == counts.end()) {
 			percents[i] = 0.0;
-			std::cout << i << " : 0.0\n";
 		} else {
 			const double pct = (double)finder->second / counter;
 			percents[i] = pct;
-			std::cout << i << " : " << pct << "\n";
 		}
 
 	}
-
-	std::cout << "\n\n";
 
 	return percents;
 }
@@ -101,7 +88,7 @@ std::vector<const std::pair<double,std::size_t>> find_possible_biomes(std::unord
 			// It's possible, so check to see if tile types are available
 			for (const uint8_t &occur : bt.occurs) {
 				auto finder = percents.find(occur);
-				if (finder != percents.end()) {
+				if (finder != percents.end() && finder->second > 0) {
 					result.push_back(std::make_pair( finder->second * 100.0, idx ));
 				}
 			}
@@ -157,13 +144,26 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 		if (membership_count) {
 			auto possible_types = find_possible_biomes(membership_count.get(), biome);
 			if (!possible_types.empty()) {
-				std::cout << "There are " << possible_types.size() << " possible matches.\n";
 
-				// TODO: Match table
+				double max_roll = 0.0;
+				for (const auto &possible : possible_types) {
+					max_roll += possible.first;
+				}
+				int dice_roll = rng.roll_dice(1, max_roll);
+				for (const auto &possible : possible_types) {
+					dice_roll -= possible.first;
+					if (dice_roll < 0) {
+						biome.type = possible.second;
+						break;
+					}
+				}
+				if (biome.type == -1) biome.type = possible_types[possible_types.size()-1].second;
+				// Name that biome!
 			} else {
 				++ no_match;
 			}
 		}
+		planet_display_update_altitude(planet);
 
 		// Update the status
 		double pct = (double)count / planet.biomes.size() * 100.0; 
@@ -172,6 +172,4 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 		set_worldgen_status(ss.str());
 		++count;
 	}
-
-	std::cout << "Non-allocated biomes: " << no_match << ", Allocated biomes: " << (n_biomes - no_match) << "\n";
 }

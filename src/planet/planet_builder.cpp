@@ -73,7 +73,12 @@ void planet_display_update_altitude(planet_t &planet) {
 
 			if (planet.landblocks[block_idx].biome_idx > -1) {
 				const int biome_idx = planet.landblocks[block_idx].biome_idx;
-				if (planet.biomes[biome_idx].type == 0) (*planet_builder_display.get())[idx].glyph = '!';
+				if (planet.biomes[biome_idx].type == 0) {
+					(*planet_builder_display.get())[idx].glyph = '!';
+				} else {
+					(*planet_builder_display.get())[idx].glyph = biome_defs[planet.biomes[biome_idx].type].worldgen_glyph;
+					(*planet_builder_display.get())[idx].foreground = biome_defs[planet.biomes[biome_idx].type].worldgen_color;
+				}
 			}
 		}
 	}

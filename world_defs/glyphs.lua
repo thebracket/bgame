@@ -55,6 +55,8 @@ colors = {
 	grey = { r=128, g=128, b=128 },
 	dark_grey = { r=64, g=64, b=64 },
 	red = { r=255, g=0, b=0 },
+	green = { r=0, g=255, b=0 },
+	light_green = {r=128, g=255, b=128},
 	yellow = { r=255, g=255, b=0 },
 	earth_brown = { r=91, g=84, b=74 },
 	yellow_sand = { r=239, g=221, b=111 },
