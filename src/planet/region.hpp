@@ -44,7 +44,10 @@ struct region_t {
 	std::vector<rltk::vchar> render_cache;
 	std::vector<uint8_t> water_level;
 
+	void tile_recalc_all();
 	void tile_calculate(const int &x, const int &y, const int &z);
+	void tile_pathing(const int &x, const int &y, const int &z);
+	void calc_render(const int &idx);
 
 	int next_tree_id = 1;
 };

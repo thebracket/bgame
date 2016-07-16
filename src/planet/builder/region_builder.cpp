@@ -58,12 +58,59 @@ inline void build_heightmap_from_noise(std::pair<int,int> &target, perlin_noise 
     }
 }
 
+inline void create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng) {
+    const int n_subregions = 64 + rng.roll_dice(1,20);
+    const int region_variance = planet.landblocks[planet.idx(region.region_x, region.region_y)].variance;
+
+    set_worldgen_status("Finding sub-biomes");
+    std::vector<std::pair<int,int>> centroids(n_subregions);
+    for (std::size_t i=0; i<n_subregions; ++i) {
+        centroids[i] = std::make_pair( rng.roll_dice(1, REGION_WIDTH)-1, rng.roll_dice(1, REGION_HEIGHT)-1 );
+    }
+    std::vector<int> subregion_idx(REGION_HEIGHT * REGION_WIDTH);
+
+    for (int y=0; y<REGION_HEIGHT; ++y) {
+        for (int x=0; x<REGION_WIDTH; ++x) {
+            float distance = 20000.0;
+            int sub_idx = -1;
+            int i=0;
+            for (const std::pair<int,int> &centroid : centroids) {
+                const float D = distance2d(x, y, centroid.first, centroid.second);
+                if (D < distance) {
+                    distance = D;
+                    sub_idx = i;
+                }
+                ++i;
+            }
+            subregion_idx[(y*REGION_WIDTH) + x] = sub_idx;
+
+        }
+    }
+
+    set_worldgen_status("Making sub-biomes");
+    std::vector<int> variance;
+    for (int i=0; i<n_subregions; ++i) {
+        variance.push_back( rng.roll_dice(1, region_variance+2) - rng.roll_dice(1, region_variance+2)  );
+    }
+
+    set_worldgen_status("Applying sub-biomes");
+    // TODO: Actual variance rather than just altitude when the raws permit it
+    for (int y=0; y<REGION_HEIGHT; ++y) {
+        for (int x=0; x<REGION_WIDTH; ++x) {
+            const int tile_idx = (y * WORLD_WIDTH) + x;
+            const int sub_idx = subregion_idx[tile_idx];
+            const int delta_z = variance[sub_idx];
+            heightmap[tile_idx] += delta_z;
+        }
+    }
+}
+
 inline void zero_map(region_t &region) {
     region.next_tree_id = 1;
     std::fill(region.visible.begin(), region.visible.end(), false);
     std::fill(region.solid.begin(), region.solid.end(), false);
     std::fill(region.opaque.begin(), region.opaque.end(), false);
-    std::fill(region.revealed.begin(), region.revealed.end(), false);
+    std::fill(region.revealed.begin(), region.revealed.end(), true);
     std::fill(region.tile_type.begin(), region.tile_type.end(), tile_type::OPEN_SPACE);
     std::fill(region.tile_material.begin(), region.tile_material.end(), 0);
     std::fill(region.tile_hit_points.begin(), region.tile_hit_points.end(), 0);
@@ -74,11 +121,14 @@ inline void zero_map(region_t &region) {
 }
 
 inline void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome) {
+
     // Lay down layers
     for (int y=0; y<REGION_HEIGHT; ++y) {
         for (int x=0; x<REGION_WIDTH; ++x) {
             const int cell_idx = (y * REGION_WIDTH) + x;
             const uint8_t altitude = heightmap[cell_idx];
+            bool wet = false;
+            if (altitude < 5) wet = true;
             const int soil_height = 4; // Replace this
 
             // The bottom layer is always SMR to avoid spill-through
@@ -110,9 +160,10 @@ inline void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::p
             
             // Populate the surface tile at z-1
             region.tile_type[mapidx(x,y,z-1)] = tile_type::FLOOR;
-            if (z-1 < 69) {
+            if (wet) {
                 region.water_level[mapidx(x,y,z-1)] = 10; // Below the water line; flood it!
             } else {
+                region.water_level[mapidx(x,y,z-1)] = 0;
                 // Surface coverage
             }
 
@@ -154,7 +205,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Lookup the biome
     set_worldgen_status("Looking up biome");
     auto biome = get_biome_for_region(planet, target_region);
-    std::cout << biome.second.name << "\n";
+    std::cout << biome.second.name << ", variance " << +planet.landblocks[planet.idx(target_region.first, target_region.second)].variance << "\n";
 
     // Build height map based on region noise
     set_worldgen_status("Establishing ground altitude");
@@ -163,6 +214,8 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     const int water_level = 5;
 
     // Sub-biome map
+    create_subregions(planet, region, heightmap, biome, rng);
+
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
     zero_map(region);
@@ -170,8 +223,8 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 
     // Build ramps and beaches
 
-    set_worldgen_status("Planting trees");
     // Plant trees
+    set_worldgen_status("Planting trees");
 
     // Determine crash site
     set_worldgen_status("Crashing the ship");
@@ -191,13 +244,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Add settlers
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");
-    for (int z=0; z<REGION_DEPTH; ++z) {
-        for (int y=0; y<REGION_HEIGHT; ++y) {
-            for (int x=0; x<REGION_WIDTH; ++x) {
-                region.tile_calculate(x,y,z);
-            }
-        }
-    }
+    region.tile_recalc_all();
 
     // Save the region
     set_worldgen_status("Saving region to disk");
