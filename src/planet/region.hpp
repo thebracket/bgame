@@ -24,6 +24,7 @@ struct region_t {
 		tile_vegetation_type.resize(REGION_TILES_COUNT);
 		tile_flags.resize(REGION_TILES_COUNT);
 		render_cache.resize(REGION_TILES_COUNT);
+		water_level.resize(REGION_TILES_COUNT);
 	}
 
 	int region_x, region_y, biome_idx;
@@ -41,8 +42,9 @@ struct region_t {
 	std::vector<uint16_t> tile_vegetation_type;
 	std::vector<bitset8> tile_flags;
 	std::vector<rltk::vchar> render_cache;
+	std::vector<uint8_t> water_level;
 
-	void tile_calculate(const int &idx);
+	void tile_calculate(const int &x, const int &y, const int &z);
 
 	int next_tree_id = 1;
 };

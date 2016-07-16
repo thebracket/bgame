@@ -19,17 +19,18 @@ void save_region(const region_t &region) {
 	serialize(deflate, region.biome_idx);
 	serialize(deflate, region.next_tree_id);
 
-	serialize(lbfile, region.revealed);
-	serialize(lbfile, region.visible);
-	serialize(lbfile, region.solid);
-	serialize(lbfile, region.opaque);
-	serialize(lbfile, region.tile_type);
-	serialize(lbfile, region.tile_material);
-	serialize(lbfile, region.tile_hit_points);
-	serialize(lbfile, region.building_id);
-	serialize(lbfile, region.tree_id);
-	serialize(lbfile, region.tile_vegetation_type);
-	serialize(lbfile, region.tile_flags);
+	serialize(deflate, region.revealed);
+	serialize(deflate, region.visible);
+	serialize(deflate, region.solid);
+	serialize(deflate, region.opaque);
+	serialize(deflate, region.tile_type);
+	serialize(deflate, region.tile_material);
+	serialize(deflate, region.tile_hit_points);
+	serialize(deflate, region.building_id);
+	serialize(deflate, region.tree_id);
+	serialize(deflate, region.tile_vegetation_type);
+	serialize(deflate, region.tile_flags);
+	serialize(deflate, region.water_level);
 }
 
 region_t load_region(const int region_x, const int region_y) {
@@ -45,17 +46,18 @@ region_t load_region(const int region_x, const int region_y) {
 	deserialize(inflate, region.biome_idx);
 	deserialize(inflate, region.next_tree_id);
 
-	deserialize(lbfile, region.revealed);
-	deserialize(lbfile, region.visible);
-	deserialize(lbfile, region.solid);
-	deserialize(lbfile, region.opaque);
-	deserialize(lbfile, region.tile_type);
-	deserialize(lbfile, region.tile_material);
-	deserialize(lbfile, region.tile_hit_points);
-	deserialize(lbfile, region.building_id);
-	deserialize(lbfile, region.tree_id);
-	deserialize(lbfile, region.tile_vegetation_type);
-	deserialize(lbfile, region.tile_flags);
+	deserialize(inflate, region.revealed);
+	deserialize(inflate, region.visible);
+	deserialize(inflate, region.solid);
+	deserialize(inflate, region.opaque);
+	deserialize(inflate, region.tile_type);
+	deserialize(inflate, region.tile_material);
+	deserialize(inflate, region.tile_hit_points);
+	deserialize(inflate, region.building_id);
+	deserialize(inflate, region.tree_id);
+	deserialize(inflate, region.tile_vegetation_type);
+	deserialize(inflate, region.tile_flags);
+	deserialize(inflate, region.water_level);
 
 	//region.calculate_render_tiles();
 	return region;
@@ -184,4 +186,4 @@ void region_t::calculate_render_tile(const int &idx) {
 }
 */
 
-void region_t::tile_calculate(const int &idx) {}
+void region_t::tile_calculate(const int &x, const int &y, const int &z) {}

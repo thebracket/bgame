@@ -21,9 +21,17 @@ void save_planet(const planet_t &planet) {
 	serialize(deflate, planet.plains_height);
 	serialize(deflate, planet.hills_height);
 
-	serialize(deflate, planet.landblocks);
+	serialize(deflate, planet.landblocks.size());
+	for (const block_t &block : planet.landblocks) {
+		serialize(deflate, block.height);
+		serialize(deflate, block.variance);
+		serialize(deflate, block.type);
+		serialize(deflate, block.temperature_c);
+		serialize(deflate, block.rainfall);
+		serialize(deflate, block.biome_idx);
+	}
 
-	serialize(lbfile, planet.biomes.size());
+	serialize(deflate, planet.biomes.size());
 	for (const biome_t &biome : planet.biomes) {
 		serialize(deflate, biome.type);
 		serialize(deflate, biome.name);
@@ -53,10 +61,24 @@ planet_t load_planet() {
 	deserialize(inflate, planet.plains_height);
 	deserialize(inflate, planet.hills_height);
 
-	deserialize(inflate, planet.landblocks);
+	std::size_t n_blocks;
+
+	deserialize(inflate, n_blocks);
+	planet.landblocks.resize(n_blocks);
+	for (std::size_t i=0; i<n_blocks; ++i) {
+		block_t block;
+		deserialize(inflate, block.height);
+		deserialize(inflate, block.variance);
+		deserialize(inflate, block.type);
+		deserialize(inflate, block.temperature_c);
+		deserialize(inflate, block.rainfall);
+		deserialize(inflate, block.biome_idx);
+		planet.landblocks[i] = block;
+
+	}
 	
 	std::size_t n_biomes;
-	deserialize(lbfile, n_biomes);
+	deserialize(inflate, n_biomes);
 	planet.biomes.resize(n_biomes);
 	for (std::size_t i=0; i<n_biomes; ++i) {
 		biome_t biome;

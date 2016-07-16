@@ -48,9 +48,11 @@ void play_game::init() {
 	gui->add_layer(RIGHT_PANEL, 800 - (20*8), 0, 20*8, 600, "8x16", resize_right_panel, true);
 
 	// Load the game
+	std::cout << "Loading the planet\n";
 	planet = load_planet();
 
 	// Load the ECS
+	std::cout << "Loading game state\n";
 	{
 		const std::string save_filename = "world/savegame.dat";
 		std::fstream lbfile(save_filename, std::ios::in | std::ios::binary);
@@ -60,6 +62,8 @@ void play_game::init() {
 	}
 
 	// Load the current region - check the camera for the world position
+	std::cout << "Storing important entity handles\n";
+
 	int region_x, region_y;
 	each<world_position_t, calendar_t, designations_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design) {
 		camera_entity = entity.id;
@@ -69,9 +73,11 @@ void play_game::init() {
 		calendar = &cal;
 		designations = &design;
 	});
+	std::cout << "Loading the region\n";
 	*current_region = load_region(region_x, region_y);
 
 	// Setup systems
+	std::cout << "Setting up systems\n";
 	add_system<calendar_system>();
 	add_system<mining_system>();
 	add_system<inventory_system>();
@@ -81,7 +87,9 @@ void play_game::init() {
 	add_system<map_render_system>();
 	add_system<panel_render_system>();
 
+	std::cout << "ECS Config\n";
 	ecs_configure();
+	std::cout << "Go!\n";	
 }
 
 void play_game::destroy() {

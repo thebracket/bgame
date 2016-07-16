@@ -1,20 +1,5 @@
 #pragma once
 
-inline int get_ground_z(region_t &region, const int x, const int y) {
-	int z = REGION_DEPTH-1;
-	bool hit_ground = false;
-	while (!hit_ground) {
-		const int idx = mapidx(x, y, z);
-		if (region.solid[idx]) {
-			hit_ground = true;
-			++z;
-		} else {
-			--z;
-		}
-	}
-	return z;
-}
-
 inline void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
 	const int idx = mapidx(x,y,z);
 	region.tile_flags[idx].set(CONSTRUCTION);

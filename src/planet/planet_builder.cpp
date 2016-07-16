@@ -5,6 +5,7 @@
 #include "builder/build_utils.hpp"
 #include "builder/map_builder.hpp"
 #include "builder/biome_builder.hpp"
+#include "builder/region_builder.hpp"
 
 #include <atomic>
 #include <iostream>
@@ -96,7 +97,7 @@ void builder_save_planet(planet_t &planet) {
 	planet_builder_status = "Saving the world. To disk, sadly.";
 	planet_builder_lock.unlock();
 	save_planet(planet);
-	std::this_thread::sleep_for(std::chrono::seconds(10));
+	//std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
 void build_planet() {
@@ -129,13 +130,11 @@ void build_planet() {
 	// Save it to disk
 	builder_save_planet(planet);
 
-	/*
 	// Select a crash site
-	auto crash_site = builder_select_starting_region(planet, min, max);
+	auto crash_site = builder_select_starting_region(planet);
 
 	// Materialize this region
-	build_region(planet, crash_site, rng);
+	build_region(planet, crash_site, rng, noise);
 
-	*/
 	planet_build_done.store(true);
 }
