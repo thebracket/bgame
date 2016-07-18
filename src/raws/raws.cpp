@@ -507,7 +507,7 @@ void read_material_types() {
             if (field == "parent") m.parent_material_tag = lua_tostring(lua_state, -1);
             if (field == "glyph") m.glyph = lua_tonumber(lua_state, -1);
             if (field == "fg") m.fg = read_lua_color("fg");
-            if (field == "bg") m.fg = read_lua_color("bg");
+            if (field == "bg") m.bg = read_lua_color("bg");
             if (field == "hit_points") m.hit_points = lua_tonumber(lua_state, -1);
             if (field == "mines_to") m.mines_to_tag = lua_tostring(lua_state, -1);
             if (field == "mines_to_also") m.mines_to_tag_second = lua_tostring(lua_state, -1);
