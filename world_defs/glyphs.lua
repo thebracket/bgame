@@ -79,5 +79,6 @@ colors = {
 	orange = { r=255, g=165, b=0 },
 	magenta = { r=255, g=0, b=255 },
 	wood_brown = { r=102, g=51, b=0 },
-	tree_green = { r=130, g=212, b=53}
+	tree_green = { r=130, g=212, b=53},
+	pink = { r=255, g=128, b=128 }
 }

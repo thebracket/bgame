@@ -39,7 +39,7 @@ struct region_t {
 	std::vector<uint8_t> tile_hit_points;
 	std::vector<std::size_t> building_id;
 	std::vector<std::size_t> tree_id;
-	std::vector<uint16_t> tile_vegetation_type;
+	std::vector<std::size_t> tile_vegetation_type;
 	std::vector<bitset8> tile_flags;
 	std::vector<rltk::vchar> render_cache;
 	std::vector<uint8_t> water_level;

@@ -28,6 +28,8 @@ boost::container::flat_map<std::string, std::vector<std::string>> reaction_build
 std::vector<biome_type_t> biome_defs;
 boost::container::flat_map<std::string, std::size_t> material_defs_idx;
 std::vector<material_def_t> material_defs;
+boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
+std::vector<plant_t> plant_defs;
 
 std::string to_proper_noun_case(const std::string &original)
 {
@@ -522,6 +524,34 @@ void read_material_types() {
     }
 }
 
+void read_plant_types() {
+    lua_getglobal(lua_state, "vegetation");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+
+        plant_t p;
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while(lua_next(lua_state, -2) != 0)
+        {
+            std::string field = lua_tostring(lua_state, -2);
+            if (field == "name") p.name = lua_tostring(lua_state, -1);
+            if (field == "glyph") p.glyph = lua_tonumber(lua_state, -1);
+            if (field == "fg") p.fg = read_lua_color("fg");
+            if (field == "bg") p.bg = read_lua_color("bg");
+            if (field == "provides") p.provides = lua_tostring(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        plant_defs.push_back(p);
+        plant_defs_idx[key] = plant_defs.size()-1;
+        lua_pop(lua_state, 1);
+    }
+}
+
 void read_biome_types() {
     lua_getglobal(lua_state, "biomes");
     lua_pushnil(lua_state);
@@ -574,6 +604,16 @@ void read_biome_types() {
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "plants") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string plant_name = lua_tostring(lua_state, -2);
+                    int frequency = lua_tonumber(lua_state, -1);
+                    b.plants.push_back(std::make_pair(plant_name, frequency));
+                    lua_pop(lua_state, 1);
+                }
+            }
 
             lua_pop(lua_state, 1);
         }
@@ -593,6 +633,7 @@ void load_game_tables() {
     read_buildings();
     read_reactions();
     read_material_types();
+    read_plant_types();
     read_biome_types();
 }
 

@@ -170,12 +170,18 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::WALL : {
 			// TODO: Color determined by material, glyph by other walls adjacent
 			glyph = 219;
-			fg = rltk::colors::GREY;
+			fg = material_defs[tile_material[idx]].fg;
 		} break;
 		case tile_type::RAMP : {
 			// TODO: Color determined by material
 			glyph = 30;
-			fg = rltk::colors::GREY;
+			fg = material_defs[tile_material[idx]].fg;
+
+			if (tile_vegetation_type[idx]>0) {
+				glyph = plant_defs[tile_vegetation_type[idx]].glyph;
+				fg = plant_defs[tile_vegetation_type[idx]].fg;
+				bg = plant_defs[tile_vegetation_type[idx]].bg;
+			}
 		} break;
 		case tile_type::STAIRS_UP : {
 			// TODO: Color determined by material
@@ -200,7 +206,12 @@ void region_t::calc_render(const int &idx) {
 			}
 			fg = material_defs[tile_material[idx]].fg;
 
-			// TODO: Vegetative coverage can alter this
+			if (tile_vegetation_type[idx]>0) {
+				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
+				glyph = plant_defs[tile_vegetation_type[idx]].glyph;
+				fg = plant_defs[tile_vegetation_type[idx]].fg;
+				bg = plant_defs[tile_vegetation_type[idx]].bg;
+			}
 		} break;
 	}
 
@@ -218,8 +229,8 @@ void region_t::calc_render(const int &idx) {
 			case 10 : glyph = '0'; break;
 			default : glyph = '~';
 		}
-		fg = rltk::colors::BLUE;
-		bg = rltk::colors::CYAN;
+		fg = rltk::colors::Blue;
+		bg = rltk::colors::DarkBlue;
 	}
 
 	// Apply it

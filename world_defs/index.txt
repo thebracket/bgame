@@ -1,5 +1,6 @@
 glyphs.lua
 materials.lua
+vegetation.lua
 tile_types.lua
 tile_content.lua
 clothing.lua

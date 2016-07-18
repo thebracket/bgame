@@ -100,7 +100,11 @@ inline void create_subregions(planet_t &planet, region_t &region, std::vector<ui
             const int tile_idx = (y * WORLD_WIDTH) + x;
             const int sub_idx = subregion_idx[tile_idx];
             const int delta_z = variance[sub_idx];
-            heightmap[tile_idx] += delta_z;
+            if (distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2) > 20) {
+                heightmap[tile_idx] += delta_z;
+            } else {
+                if (heightmap[tile_idx] < 5) heightmap[tile_idx] = 5;
+            }
         }
     }
 }
@@ -196,7 +200,10 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     return result;
 }
 
-void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata) {
+void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng) {
+    // For vegetation
+    int max_veg_probability = 0;
+    for (const auto &vegprob : biome.second.plants) max_veg_probability += vegprob.second;
 
     // Lay down layers
     for (int y=0; y<REGION_HEIGHT; ++y) {
@@ -234,7 +241,23 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                 region.water_level[mapidx(x,y,z-1)] = 10; // Below the water line; flood it!
             } else {
                 region.water_level[mapidx(x,y,z-1)] = 0;
+                
                 // Surface coverage
+                std::string veg_type = "";
+                int die_roll = rng.roll_dice(1, max_veg_probability);
+                for (const auto &veg : biome.second.plants) {
+                    die_roll -= veg.second;
+                    if (die_roll < 1) {
+                        veg_type = veg.first;
+                        break;
+                    }
+                }
+                if (veg_type == "") veg_type = biome.second.plants[biome.second.plants.size()-1].first;
+
+                if (veg_type != "none") {
+                    auto finder = plant_defs_idx.find(veg_type);
+                    region.tile_vegetation_type[mapidx(x,y,z-1)] = finder->second;
+                }
             }
 
             while (z<REGION_DEPTH) {
@@ -293,7 +316,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
     zero_map(region);
-    lay_strata(region, heightmap, biome, strata);
+    lay_strata(region, heightmap, biome, strata, rng);
 
     // Build ramps and beaches
 
