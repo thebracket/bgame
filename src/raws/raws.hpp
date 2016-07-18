@@ -108,12 +108,14 @@ struct biome_type_t {
 	int8_t max_temp = 100;
 	uint8_t min_mutation = 0;
 	uint8_t max_mutation = 100;
+	uint8_t soil_pct = 50;
+	uint8_t sand_pct = 50;
 	std::vector<uint8_t> occurs;
 	uint8_t worldgen_glyph;
 	rltk::color_t worldgen_color;
 };
 
-enum material_def_spawn_type_t { cluster_rock, rock };
+enum material_def_spawn_type_t { cluster_rock, rock, soil, sand };
 
 struct material_def_t {
 	std::string name = "";
@@ -124,6 +126,8 @@ struct material_def_t {
 	rltk::color_t bg;
 	uint8_t hit_points;
 	std::string mines_to_tag = "";
+	std::string mines_to_tag_second = "";
+	std::string layer = "";
 };
 
 extern string_table_t first_names_male;
@@ -144,7 +148,8 @@ extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
 extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 extern std::vector<biome_type_t> biome_defs;
-extern boost::container::flat_map<std::string, material_def_t> material_defs;
+extern boost::container::flat_map<std::string, std::size_t> material_defs_idx;
+extern std::vector<material_def_t> material_defs;
 
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);

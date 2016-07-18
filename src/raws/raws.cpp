@@ -26,7 +26,8 @@ boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 std::vector<biome_type_t> biome_defs;
-boost::container::flat_map<std::string, material_def_t> material_defs;
+boost::container::flat_map<std::string, std::size_t> material_defs_idx;
+std::vector<material_def_t> material_defs;
 
 std::string to_proper_noun_case(const std::string &original)
 {
@@ -500,17 +501,22 @@ void read_material_types() {
                 std::string type_s = lua_tostring(lua_state, -1);
                 if (type_s == "cluster_rock") m.spawn_type = cluster_rock;
                 if (type_s == "rock") m.spawn_type = rock;
+                if (type_s == "soil") m.spawn_type = soil;
+                if (type_s == "sand") m.spawn_type = sand;
             }
             if (field == "parent") m.parent_material_tag = lua_tostring(lua_state, -1);
             if (field == "glyph") m.glyph = lua_tonumber(lua_state, -1);
             if (field == "fg") m.fg = read_lua_color("fg");
-            if (field == "bg") m.fg = read_lua_color("fg");
+            if (field == "bg") m.fg = read_lua_color("bg");
             if (field == "hit_points") m.hit_points = lua_tonumber(lua_state, -1);
             if (field == "mines_to") m.mines_to_tag = lua_tostring(lua_state, -1);
+            if (field == "mines_to_also") m.mines_to_tag_second = lua_tostring(lua_state, -1);
+            if (field == "layer") m.layer = lua_tostring(lua_state, -1);           
 
             lua_pop(lua_state, 1);
         }
-        material_defs[key] = m;
+        material_defs.push_back(m);
+        material_defs_idx[key] = material_defs.size()-1;
 
         lua_pop(lua_state, 1);
     }
@@ -538,6 +544,16 @@ void read_biome_types() {
             if (field == "max_rain") b.max_rain = lua_tonumber(lua_state, -1);
             if (field == "min_mutation") b.min_mutation = lua_tonumber(lua_state, -1);
             if (field == "max_mutation") b.max_mutation = lua_tonumber(lua_state, -1);
+            if (field == "soils") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string soil_type = lua_tostring(lua_state, -2);
+                    if (soil_type == "soil" ) b.soil_pct = lua_tonumber(lua_state, -1);
+                    if (soil_type == "sand" ) b.soil_pct = lua_tonumber(lua_state, -1);
+                    lua_pop(lua_state, 1);
+                }
+            }
             if (field == "occurs") {
                 // List of biome type indices
                 lua_pushstring(lua_state, field.c_str());

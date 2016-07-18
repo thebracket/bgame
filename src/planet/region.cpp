@@ -159,9 +159,9 @@ void region_t::calc_render(const int &idx) {
 			bg = rltk::colors::YELLOW;
 		} break;
 		case tile_type::SOLID : {
-			// TODO: Glyph & color determined by material
-			glyph = 219;
-			fg = rltk::colors::GREY;
+			glyph = material_defs[tile_material[idx]].glyph;
+			fg = material_defs[tile_material[idx]].fg;
+			bg = material_defs[tile_material[idx]].bg;
 		} break;
 		case tile_type::OPEN_SPACE : {
 			glyph = ' ';
@@ -180,22 +180,27 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::STAIRS_UP : {
 			// TODO: Color determined by material
 			glyph = '<';
-			fg = rltk::colors::GREY;
+			fg = material_defs[tile_material[idx]].fg;
 		} break;
 		case tile_type::STAIRS_DOWN : {
 			// TODO: Color determined by material
 			glyph = '>';
-			fg = rltk::colors::GREY;
+			fg = material_defs[tile_material[idx]].fg;
 		} break;
 		case tile_type::STAIRS_UPDOWN : {
 			// TODO: Color determined by material
 			glyph = 'X';
-			fg = rltk::colors::GREY;
+			fg = material_defs[tile_material[idx]].fg;
 		} break;
-		case tile_type::FLOOR : {
-			// TODO: Color and glyph determined by material
-			glyph = ',';
-			fg = rltk::colors::GREEN;
+		case tile_type::FLOOR : {	
+			if (material_defs[tile_material[idx]].spawn_type == sand) {
+				glyph = 247;
+			} else {
+				glyph = ',';
+			}
+			fg = material_defs[tile_material[idx]].fg;
+
+			// TODO: Vegetative coverage can alter this
 		} break;
 	}
 

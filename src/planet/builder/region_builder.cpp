@@ -120,7 +120,83 @@ inline void zero_map(region_t &region) {
     std::fill(region.water_level.begin(), region.water_level.end(), 0);
 }
 
-inline void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome) {
+struct strata_t {
+    std::vector<int> strata_map;
+    std::vector<std::size_t> material_idx;
+};
+
+strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome) {
+    strata_t result;
+    result.strata_map.resize(REGION_TILES_COUNT);
+
+    std::vector<std::size_t> soils;
+    std::vector<std::size_t> sedimintaries;
+    std::vector<std::size_t> igneouses;
+    std::vector<std::size_t> sands;
+
+    std::size_t i = 0;
+    for (auto it=material_defs.begin(); it != material_defs.end(); ++it) {
+        if (it->spawn_type == soil) soils.push_back(i);
+        if (it->spawn_type == sand) sands.push_back(i);
+        if (it->spawn_type == rock && it->layer == "sedimentary") sedimintaries.push_back(i);
+        if (it->spawn_type == rock && it->layer == "igneous") igneouses.push_back(i);
+        ++i;
+    }
+    std:: cout << soils.size() << "/" << sands.size() << "/" << sedimintaries.size() << "/" << igneouses.size() << "\n";
+
+    const int n_strata = 256 + rng.roll_dice(1,64);
+    std::vector<std::tuple<int,int,int>> centroids;
+    for (int i=0; i<n_strata; ++i) {
+        auto center = std::make_tuple( rng.roll_dice(1,REGION_WIDTH)-1, rng.roll_dice(1,REGION_HEIGHT)-1, rng.roll_dice(1, REGION_DEPTH)-1 );
+        centroids.push_back(center);
+
+        const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + 64;
+        const int z = std::get<2>(center);
+
+        if (z>altitude_at_center-10) {
+            // Soil
+            int roll = rng.roll_dice(1,100);
+            if (roll < biome.second.soil_pct) {
+                const std::size_t soil_idx = soils[rng.roll_dice(1, soils.size())-1];
+                result.material_idx.push_back(soil_idx);
+            } else {
+                const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+                result.material_idx.push_back(sands[sand_idx]);
+            }
+        } else if (z>(altitude_at_center-10)/2) {
+            // Sedimentary
+            const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
+            result.material_idx.push_back(sedimintaries[sed_idx]);
+        } else {
+            // Igneous
+            const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
+            result.material_idx.push_back(igneouses[ig_idx]);
+        }
+    }
+
+    for (int z=0; z<REGION_DEPTH; ++z) {
+        for (int y=0; y<REGION_HEIGHT; ++y) {
+            for (int x=0; x<REGION_WIDTH; ++x) {
+                const int map_idx = mapidx(x,y,z);
+                int min_distance = 20000;
+                int min_idx = -1;
+
+                for (int i=0; i<n_strata; ++i) {
+                    const int distance = distance3d_squared(x,y,z, std::get<0>(centroids[i]), std::get<1>(centroids[i]), std::get<2>(centroids[i]));
+                    if (distance < min_distance) {
+                        min_distance = distance;
+                        min_idx = i;
+                    }
+                }
+                result.strata_map[map_idx] = min_idx;
+            }
+        }
+    }
+
+    return result;
+}
+
+void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata) {
 
     // Lay down layers
     for (int y=0; y<REGION_HEIGHT; ++y) {
@@ -129,7 +205,6 @@ inline void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::p
             const uint8_t altitude = heightmap[cell_idx];
             bool wet = false;
             if (altitude < 5) wet = true;
-            const int soil_height = 4; // Replace this
 
             // The bottom layer is always SMR to avoid spill-through
             region.tile_type[mapidx(x,y,0)] = tile_type::SEMI_MOLTEN_ROCK;
@@ -143,18 +218,13 @@ inline void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::p
             }
 
             // Next up is rock, until the soil layer
-            while(z < altitude + 64 - soil_height) {
-                // Place rock
+            while(z < altitude + 64) {
+                // Place rock and soil
                 region.tile_type[mapidx(x,y,z)] = tile_type::SOLID;
-                // Select a tile material for the appropriate rock
-                ++z;
-            }
-
-            // Next up we place the soil layer
-            while (z<altitude+64) {
-                // Place soil
-                region.tile_type[mapidx(x,y,z)] = tile_type::SOLID;
-                // Select a tile material for the appropriate soil
+                const int strata_idx = strata.strata_map[mapidx(x,y,z)];
+                const std::size_t material_idx = strata.material_idx[strata_idx];
+                region.tile_material[mapidx(x,y,z)] = material_idx;
+                //std::cout << material_defs[material_idx].name << "\n";
                 ++z;
             }
             
@@ -216,10 +286,14 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Sub-biome map
     create_subregions(planet, region, heightmap, biome, rng);
 
+    // Strata map
+    set_worldgen_status("Dividing strata");
+    auto strata = build_strata(region, heightmap, rng, biome);
+
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
     zero_map(region);
-    lay_strata(region, heightmap, biome);
+    lay_strata(region, heightmap, biome, strata);
 
     // Build ramps and beaches
 
