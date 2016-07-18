@@ -91,7 +91,7 @@ materials = {
         glyph=glyphs['ukp'], fg=colors['white'], bg=colors['grey'],
         hit_points = 100, mines_to="lead_ore", mines_to_also="silver_ore"
     },
-    garnierite = { name="Garnierite", type="rock", layer="cluster_rock", parent="gabbro" 
+    garnierite = { name="Garnierite", type="rock", layer="cluster_rock", parent="gabbro",
         glyph=glyphs['ukp'], fg=colors['green'], bg=colors['grey'],
         hit_points = 100, mines_to="lead", mines_to_also="nickel_ore"
     },
@@ -107,7 +107,7 @@ materials = {
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
         hit_points = 100, mines_to="boulder"
     },
-    graphite = { name="Gabbro", type="rock", layer="cluster_rock", parent="gneiss" 
+    graphite = { name="Gabbro", type="rock", layer="cluster_rock", parent="gneiss",
         glyph=glyphs['circle'], fg=colors['dark_grey'], bg=colors['grey'],
         hit_points = 100, mines_to="boulder"
     },

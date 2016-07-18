@@ -26,6 +26,7 @@ boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 std::vector<biome_type_t> biome_defs;
+boost::container::flat_map<std::string, material_def_t> material_defs;
 
 std::string to_proper_noun_case(const std::string &original)
 {
@@ -479,6 +480,42 @@ void read_reactions() {
     }
 }
 
+void read_material_types() {
+    lua_getglobal(lua_state, "materials");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+
+        material_def_t m;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") m.name = lua_tostring(lua_state, -1);
+            if (field == "type") {
+                std::string type_s = lua_tostring(lua_state, -1);
+                if (type_s == "cluster_rock") m.spawn_type = cluster_rock;
+                if (type_s == "rock") m.spawn_type = rock;
+            }
+            if (field == "parent") m.parent_material_tag = lua_tostring(lua_state, -1);
+            if (field == "glyph") m.glyph = lua_tonumber(lua_state, -1);
+            if (field == "fg") m.fg = read_lua_color("fg");
+            if (field == "bg") m.fg = read_lua_color("fg");
+            if (field == "hit_points") m.hit_points = lua_tonumber(lua_state, -1);
+            if (field == "mines_to") m.mines_to_tag = lua_tostring(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        material_defs[key] = m;
+
+        lua_pop(lua_state, 1);
+    }
+}
+
 void read_biome_types() {
     lua_getglobal(lua_state, "biomes");
     lua_pushnil(lua_state);
@@ -539,6 +576,7 @@ void load_game_tables() {
     read_items();
     read_buildings();
     read_reactions();
+    read_material_types();
     read_biome_types();
 }
 
