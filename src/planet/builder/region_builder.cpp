@@ -75,7 +75,7 @@ inline void create_subregions(planet_t &planet, region_t &region, std::vector<ui
             int sub_idx = -1;
             int i=0;
             for (const std::pair<int,int> &centroid : centroids) {
-                const float D = distance2d(x, y, centroid.first, centroid.second);
+                const float D = distance2d_squared(x, y, centroid.first, centroid.second);
                 if (D < distance) {
                     distance = D;
                     sub_idx = i;
@@ -90,7 +90,9 @@ inline void create_subregions(planet_t &planet, region_t &region, std::vector<ui
     set_worldgen_status("Making sub-biomes");
     std::vector<int> variance;
     for (int i=0; i<n_subregions; ++i) {
-        variance.push_back( rng.roll_dice(1, region_variance+2) - rng.roll_dice(1, region_variance+2)  );
+        const int up_variance = rng.roll_dice(1, region_variance+1)-1;
+        const int down_variance = rng.roll_dice(1, region_variance+1)-1;
+        variance.push_back( up_variance - down_variance );
     }
 
     set_worldgen_status("Applying sub-biomes");
@@ -270,6 +272,44 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
     }
 }
 
+void build_ramps(region_t &region) {
+    for (int y=1; y<WORLD_HEIGHT-1; ++y) {
+        for (int x=1; x<WORLD_WIDTH; ++x) {
+            const int z = get_ground_z(region,x,y);
+            if (region.tile_type[mapidx(x,y,z)] == tile_type::FLOOR) {
+                bool is_ramp = false;
+                if (region.tile_type[mapidx(x,y-1,z+1)] == tile_type::FLOOR) is_ramp = true;
+                if (region.tile_type[mapidx(x,y+1,z+1)] == tile_type::FLOOR) is_ramp = true;
+                if (region.tile_type[mapidx(x-1,y,z+1)] == tile_type::FLOOR) is_ramp = true;
+                if (region.tile_type[mapidx(x+1,y,z+1)] == tile_type::FLOOR) is_ramp = true;
+
+                if (is_ramp) region.tile_type[mapidx(x,y,z)]=tile_type::RAMP;
+            }
+        }
+    }
+}
+
+void build_beaches(region_t &region) {
+    auto finder = material_defs_idx.find("yellow_sand");
+    for (int y=1; y<WORLD_HEIGHT-1; ++y) {
+        for (int x=1; x<WORLD_WIDTH; ++x) {
+            const int z = get_ground_z(region,x,y);
+            if (region.tile_type[mapidx(x,y,z)] == tile_type::FLOOR && region.water_level[mapidx(x,y,z)]==0) {
+                bool is_beach = false;
+                if (region.water_level[mapidx(x,y-1,z-1)] > 0) is_beach = true;
+                if (region.water_level[mapidx(x,y+1,z-1)] > 0) is_beach = true;
+                if (region.water_level[mapidx(x-1,y,z-1)] > 0) is_beach = true;
+                if (region.water_level[mapidx(x+1,y,z-1)] > 0) is_beach = true;
+
+                if (is_beach) {
+                    region.tile_material[mapidx(x,y,z)] = finder->second;
+                    region.tile_vegetation_type[mapidx(x,y,z)] = 0;
+                }
+            }
+        }
+    }
+}
+
 void build_game_components(region_t &region, const int crash_x, const int crash_y, const int crash_z) {
     calendar_t calendar;
 	calendar.defined_shifts.push_back(shift_t{"Early Shift", {
@@ -319,6 +359,8 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     lay_strata(region, heightmap, biome, strata, rng);
 
     // Build ramps and beaches
+    build_ramps(region);
+    build_beaches(region);
 
     // Plant trees
     set_worldgen_status("Planting trees");
