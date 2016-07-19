@@ -614,6 +614,17 @@ void read_biome_types() {
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "trees") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string tree_type = lua_tostring(lua_state, -2);
+                    int frequency = lua_tonumber(lua_state, -1);
+                    if (tree_type == "deciduous") b.deciduous_tree_chance = frequency;
+                    if (tree_type == "evergreen") b.evergreen_tree_chance = frequency;
+                    lua_pop(lua_state, 1);
+                }
+            }
 
             lua_pop(lua_state, 1);
         }

@@ -24,4 +24,6 @@ constexpr uint8_t STAIRS_UP = 5;
 constexpr uint8_t STAIRS_DOWN = 6;
 constexpr uint8_t STAIRS_UPDOWN = 7;
 constexpr uint8_t FLOOR = 8;
+constexpr uint8_t TREE_TRUNK = 9;
+constexpr uint8_t TREE_LEAF = 10;
 }

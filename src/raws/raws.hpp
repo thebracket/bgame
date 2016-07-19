@@ -114,6 +114,8 @@ struct biome_type_t {
 	uint8_t worldgen_glyph;
 	rltk::color_t worldgen_color;
 	std::vector<std::pair<std::string,int>> plants;
+	int deciduous_tree_chance = 0;
+	int evergreen_tree_chance = 0;
 };
 
 enum material_def_spawn_type_t { cluster_rock, rock, soil, sand };

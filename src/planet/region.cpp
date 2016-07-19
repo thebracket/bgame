@@ -213,6 +213,16 @@ void region_t::calc_render(const int &idx) {
 				bg = plant_defs[tile_vegetation_type[idx]].bg;
 			}
 		} break;
+		case tile_type::TREE_TRUNK : {
+			glyph = 10;
+			fg = rltk::colors::Brown;
+			bg = rltk::colors::Black;
+		} break;
+		case tile_type::TREE_LEAF : {
+			glyph = 177;
+			fg = rltk::colors::Green;
+			bg = rltk::colors::Black;
+		} break;
 	}
 
 	if (water_level[idx]>0) {
