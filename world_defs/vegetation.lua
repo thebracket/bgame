@@ -9,6 +9,6 @@ vegetation = {
     lavendar = { name = "Lavendar", glyph = glyphs['quote'], fg=colors['pink'], bg=colors['black'], provides = "lavendar" },
     sage = { name = "Sage", glyph = glyphs['quote'], fg=colors['grass_green'], bg=colors['black'], provides = "sage" },
 
-    daisy = { name = "Daisy", glyph = glyphs['sun'], fg=colors['white'], bg=colors['black'] },
+    daisy = { name = "Daisy", glyph = glyphs['backtick'], fg=colors['white'], bg=colors['black'] },
     heather = { name = "Daisy", glyph = glyphs['quote'], fg=colors['heather'], bg=colors['black'] }
 }

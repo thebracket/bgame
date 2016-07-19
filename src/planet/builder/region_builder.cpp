@@ -274,7 +274,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
 
 void build_ramps(region_t &region) {
     for (int y=1; y<WORLD_HEIGHT-1; ++y) {
-        for (int x=1; x<WORLD_WIDTH; ++x) {
+        for (int x=1; x<WORLD_WIDTH-1; ++x) {
             const int z = get_ground_z(region,x,y);
             if (region.tile_type[mapidx(x,y,z)] == tile_type::FLOOR) {
                 bool is_ramp = false;
@@ -287,6 +287,16 @@ void build_ramps(region_t &region) {
             }
         }
     }
+}
+
+void build_debris_trail(region_t &region, const int crash_x, const int crash_y) {
+    set_worldgen_status("Crashing the ship");
+    for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
+		for (int y=crash_y - 3; y<crash_y+4; ++y) {
+			int z = get_ground_z(region, x, y);
+			region.tile_vegetation_type[mapidx(x,y,z)] = 0;
+		}
+	}
 }
 
 void build_beaches(region_t &region) {
@@ -375,7 +385,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     build_game_components(region, crash_x, crash_y, crash_z);
 
     // Trail of debris
-
+    build_debris_trail(region, crash_x, crash_y);
   
     // Build the ship super-structure
     
