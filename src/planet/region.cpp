@@ -171,6 +171,7 @@ void region_t::calc_render(const int &idx) {
 			// TODO: Color determined by material, glyph by other walls adjacent
 			glyph = 219;
 			fg = material_defs[tile_material[idx]].fg;
+			//bg = material_defs[tile_material[idx]].bg;
 		} break;
 		case tile_type::RAMP : {
 			// TODO: Color determined by material

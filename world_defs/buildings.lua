@@ -1,4 +1,85 @@
 buildings = {
+	cordex = {
+		name = "Cordex",
+		components = { "cordex_core" },
+		skill = { name="Construction", difficulty=25 },
+		render = {
+			width=3, height=3, tiles={
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+				{glyph=glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
+			}
+		}
+	},
+
+	solar_panel = {
+		name = "Solar Panel",
+		components = { "solar_panel_kit" },
+		skill = { name="Construction", difficulty=15 },
+		provides = { generator={energy_cost=10} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['one_quarter_solid'], foreground = colors['cyan'], background = colors['white']}
+			}
+		}
+	},
+
+	cryo_bed = {
+		name = "Cryogenic Bed",
+		components = { "cryo_bed_kit" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { sleep={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['zero'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
+	battery = {
+		name = "A battery bank",
+		components = { "battery_kit" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { power_storage={energy_cost=20} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['plus_minus'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
+	storage_locker = {
+		name = "A storage locker",
+		components = { "storage_locker" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { storage={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['infinity'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
+	rtg = {
+		name = "A small nuclear power generator",
+		components = { "refined_plutonium" },
+		skill = { name="Construction", difficulty=15 },
+		provides = { storage={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['double_pillar'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
 	personal_survival_shelter = {
 		name = "Tent",
 		components = { "personal_survival_shelter_kit" },

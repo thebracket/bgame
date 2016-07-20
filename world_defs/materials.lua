@@ -320,4 +320,10 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand"
     },
+
+-- Synthetic Materials - don't occur in nature
+    plasteel = { name = "Plasteel", type="synthetic", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
+        hit_points = 200
+    }
 }

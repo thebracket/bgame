@@ -68,7 +68,7 @@ void visibility_system::update(const double duration_ms) {
 	if (!dirty) return;
 
 	// Apply to map - first clear everything
-	std::fill(current_region->visible.begin(), current_region->visible.end(), true);
+	std::fill(current_region->visible.begin(), current_region->visible.end(), false);
 
 	each<position_t, viewshed_t>([this] (entity_t &e, position_t &pos, viewshed_t &view) {
 		// Create viewsheds if needed

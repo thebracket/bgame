@@ -4,6 +4,7 @@
 #include "../planet_builder.hpp"
 #include "noise_helper.hpp"
 #include "../../components/components.hpp"
+#include "settler_builder.hpp"
 
 using namespace rltk;
 
@@ -116,7 +117,7 @@ inline void zero_map(region_t &region) {
     std::fill(region.visible.begin(), region.visible.end(), false);
     std::fill(region.solid.begin(), region.solid.end(), false);
     std::fill(region.opaque.begin(), region.opaque.end(), false);
-    std::fill(region.revealed.begin(), region.revealed.end(), true);
+    std::fill(region.revealed.begin(), region.revealed.end(), false);
     std::fill(region.tile_type.begin(), region.tile_type.end(), tile_type::OPEN_SPACE);
     std::fill(region.tile_material.begin(), region.tile_material.end(), 0);
     std::fill(region.tile_hit_points.begin(), region.tile_hit_points.end(), 0);
@@ -403,6 +404,216 @@ void build_trees(region_t &region, std::pair<biome_t, biome_type_t> &biome, rand
     }
 }
 
+void add_building(std::string tag, const int x, const int y, const int z) {
+    auto building = building_defs.find(tag);
+    if (building == building_defs.end()) std::cout << "Warning: do not know how to build " << tag << "\n";
+
+    auto new_building = create_entity()
+        ->assign(position_t{x, y, z})
+        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, true });
+
+    for (const building_provides_t &provides : building->second.provides) {
+        if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
+    }
+
+    if (tag == "storage_locker") {
+        spawn_item_in_container(new_building->id, "personal_survival_shelter_kit");
+		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit");
+		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit");
+		spawn_item_in_container(new_building->id, "camp_fire_kit");
+		spawn_item_in_container(new_building->id, "fire_axe");
+		spawn_item_in_container(new_building->id, "pickaxe");
+    }
+    if (tag == "cordex") {
+        new_building->assign(viewshed_t{16, false});
+    }
+}
+
+void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
+    const int idx = mapidx(x,y,z);
+    auto plasteel = material_defs_idx.find("plasteel");
+    if (plasteel == material_defs_idx.end()) std::cout << "Warning: Unable to locate plasteel\n";
+
+    if (type == "ship_wall") {
+        region.tile_type[idx] = tile_type::WALL;
+        region.solid[idx] = true;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = plasteel->second;
+    } else if (type == "ship_floor") {
+        region.tile_type[idx] = tile_type::FLOOR;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = plasteel->second;    
+    } else if (type == "ship_up") {
+        region.tile_type[idx] = tile_type::STAIRS_UP;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = plasteel->second;    
+    } else if (type == "ship_down") {
+        region.tile_type[idx] = tile_type::STAIRS_DOWN;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = plasteel->second;    
+    } else if (type == "ship_updown") {
+        region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = plasteel->second;    
+    } else if (type == "cordex") {
+        add_building("cordex", x-1, y-1, z);
+    } else if (type == "solar_panel") {
+        add_building("solar_panel", x, y, z);
+    } else if (type == "cryo_bed") {
+        add_building("cryo_bed", x, y, z);
+    } else if (type == "storage_locker") {
+        add_building("storage_locker", x, y, z);
+    } else if (type == "battery") {
+        add_building("battery", x, y, z);
+    } else if (type == "rtg") {
+        add_building("rtg", x, y, z);
+    } else {
+        std::cout << "Don't know how to build a " << type << "\n";
+    }
+}
+
+void build_escape_pod(region_t &region, const int crash_x, const int crash_y, const int crash_z) {
+    for (int z=-1; z<2; ++z) {
+		for (int x=crash_x - 5; x<crash_x+4; ++x) {
+				add_construction(region, x, crash_y - 3, crash_z+z, "ship_wall", true);
+				add_construction(region, x, crash_y + 3, crash_z+z, "ship_wall", true);
+				add_construction(region, x, crash_y - 3, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y + 3, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y - 3, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y + 3, crash_z-2, "ship_wall", true);
+
+				add_construction(region, x, crash_y - 2, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y - 1, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y + 1, crash_z+z, "ship_floor");
+				add_construction(region, x, crash_y + 2, crash_z+z, "ship_floor");
+
+				add_construction(region, x, crash_y - 2, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y - 1, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y + 1, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y + 2, crash_z-2, "ship_wall", true);
+				add_construction(region, x, crash_y - 2, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y - 1, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y + 1, crash_z+2, "ship_wall", true);
+				add_construction(region, x, crash_y + 2, crash_z+2, "ship_wall", true);
+		}
+		add_construction(region, crash_x-5, crash_y-3, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z+z, "ship_wall", true);
+		if (z !=0) {
+			add_construction(region, crash_x-5, crash_y, crash_z+z, "ship_wall", true);
+		}
+		add_construction(region, crash_x-5, crash_y+1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+z, "ship_wall", true);
+
+		add_construction(region, crash_x-5, crash_y-3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-3, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y-1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x-5, crash_y+3, crash_z+2, "ship_wall", true);
+
+		add_construction(region, crash_x+6, crash_y, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z+z, "ship_wall", true);
+
+		add_construction(region, crash_x+6, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y-1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+6, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-3, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+3, crash_z+2, "ship_wall", true);
+
+		add_construction(region, crash_x+5, crash_y, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z+z, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z+z, "ship_wall", true);
+
+		add_construction(region, crash_x+5, crash_y, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+5, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-2, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+2, crash_z-2, "ship_wall", true);
+		
+		add_construction(region, crash_x+4, crash_y+1, crash_z+z, "ship_floor");
+		add_construction(region, crash_x+4, crash_y, crash_z+z, "ship_floor");
+		add_construction(region, crash_x+4, crash_y-1, crash_z+z, "ship_floor");
+
+		add_construction(region, crash_x+4, crash_y+1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-1, crash_z-2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y+1, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y, crash_z+2, "ship_wall", true);
+		add_construction(region, crash_x+4, crash_y-1, crash_z+2, "ship_wall", true);
+	}
+
+	add_construction(region, crash_x, crash_y, crash_z, "cordex", true);
+
+	add_construction(region, crash_x+5, crash_y, crash_z-1, "ship_up");
+	add_construction(region, crash_x+5, crash_y, crash_z, "ship_updown");
+	add_construction(region, crash_x+5, crash_y, crash_z+1, "ship_down");
+
+	// Add solar panels, batteries, RTG, water in the hold, beds, storage cabinets
+	add_construction(region, crash_x-1, crash_y-1, crash_z+2, "solar_panel");
+	add_construction(region, crash_x+1, crash_y-1, crash_z+2, "solar_panel");
+	add_construction(region, crash_x-1, crash_y+1, crash_z+2, "solar_panel");
+	add_construction(region, crash_x+1, crash_y+1, crash_z+2, "solar_panel");
+
+	add_construction(region, crash_x - 3, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 2, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 1, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x + 1, crash_y - 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 3, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 2, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x - 1, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x, crash_y + 2, crash_z + 1, "cryo_bed");
+	add_construction(region, crash_x + 1, crash_y + 2, crash_z + 1, "cryo_bed");
+
+	add_construction(region, crash_x + 3, crash_y + 2, crash_z + 1, "storage_locker");
+	add_construction(region, crash_x + 3, crash_y - 2, crash_z + 1, "storage_locker");
+
+	add_construction(region, crash_x - 4, crash_y+1, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y+2, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y-1, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y-2, crash_z - 1, "battery");
+	add_construction(region, crash_x - 4, crash_y, crash_z - 1, "rtg");
+	//add_construction(region, crash_x +3, crash_y, crash_z, "replicator");
+}
+
 void build_game_components(region_t &region, const int crash_x, const int crash_y, const int crash_z) {
     calendar_t calendar;
 	calendar.defined_shifts.push_back(shift_t{"Early Shift", {
@@ -472,9 +683,20 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     build_debris_trail(region, crash_x, crash_y);
   
     // Build the ship super-structure
-    
+    build_escape_pod(region, crash_x, crash_y, crash_z);
 
     // Add settlers
+    create_settler(crash_x - 3, crash_y - 1, crash_z+1, rng, 0);
+	create_settler(crash_x - 2, crash_y - 1, crash_z+1, rng, 0);
+	create_settler(crash_x - 1, crash_y - 1, crash_z+1, rng, 0);
+	create_settler(crash_x, crash_y - 1, crash_z+1, rng, 1);
+	create_settler(crash_x + 1, crash_y - 1, crash_z+1, rng, 1);
+	create_settler(crash_x - 3, crash_y + 1, crash_z+1, rng, 1);
+	create_settler(crash_x - 2, crash_y + 1, crash_z+1, rng, 1);
+	create_settler(crash_x - 1, crash_y + 1, crash_z+1, rng, 2);
+	create_settler(crash_x, crash_y + 1, crash_z+1, rng, 2);
+	create_settler(crash_x + 1, crash_y + 1, crash_z+1, rng, 2);
+
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");
     region.tile_recalc_all();
