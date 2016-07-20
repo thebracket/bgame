@@ -4,6 +4,7 @@ void building_t::save(std::ostream &lbfile) {
     serialize(lbfile, tag);
     serialize(lbfile, width);
     serialize(lbfile, height);
+    serialize(lbfile, complete);
     std::size_t sz = glyphs.size();
     serialize(lbfile, sz);
     for (const rltk::vchar &glyph : glyphs) {
@@ -16,6 +17,7 @@ building_t building_t::load(std::istream &lbfile) {
     deserialize(lbfile, c.tag);
     deserialize(lbfile, c.width);
     deserialize(lbfile, c.height);
+    deserialize(lbfile, c.complete);
     std::size_t sz;
     deserialize(lbfile, sz);
     for (std::size_t i=0; i<sz; ++i) {

@@ -413,7 +413,6 @@ void add_building(std::string tag, const int x, const int y, const int z) {
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
         ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, true });
-    new_building->component<building_t>()->complete = true;
 
     for (const building_provides_t &provides : building->second.provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
