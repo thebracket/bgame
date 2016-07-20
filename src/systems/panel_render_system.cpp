@@ -313,7 +313,6 @@ void panel_render_system::render_design_mode() {
 	if (game_design_mode == CHOPPING) {
 		term(3)->print(1,5, "Tree Chopping", WHITE, DARKEST_GREEN);
 
-		/*
 		int mouse_x, mouse_y;
 		std::tie(mouse_x, mouse_y) = get_mouse_position();
 		const int terminal_x = mouse_x / 8;
@@ -324,7 +323,7 @@ void panel_render_system::render_design_mode() {
 			const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 
 			const int idx = mapidx(world_x, world_y, camera_position->region_z);
-			const int tree_id = current_region->tiles[idx].tree_id;
+			const int tree_id = current_region->tree_id[idx];
 
 			if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
 				// Naieve search for the base of the tree; this could be optimized a LOT
@@ -336,7 +335,7 @@ void panel_render_system::render_design_mode() {
 					for (int y=-10; y<10; ++y) {
 						for (int x=-10; x<10; ++x) {
 							const int tree_idx = mapidx(world_x + x, world_y + y, lowest_z);
-							if (current_region->tiles[tree_idx].tree_id == tree_id) {
+							if (current_region->tree_id[tree_idx] == tree_id) {
 								tree_pos.x = world_x+x;
 								tree_pos.y = world_y+y;
 								tree_pos.z = lowest_z;
@@ -346,7 +345,6 @@ void panel_render_system::render_design_mode() {
 					--lowest_z;
 				}
 
-
 				designations->chopping[tree_id] = tree_pos;
 				emit(map_dirty_message{});
 			} else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
@@ -354,7 +352,7 @@ void panel_render_system::render_design_mode() {
 				emit(map_dirty_message{});
 			}
 			
-		}*/
+		}
 	} else {
 		term(3)->print(1,5, "(T)ree Chopping", GREEN, GREEN_BG);
 	}

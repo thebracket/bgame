@@ -642,29 +642,25 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		if (skill_check >= SUCCESS) {
 			// Tree is going down!
-			/*
 			int number_of_logs = 0;
 			for (int z=0; z<REGION_DEPTH; ++z) {
 				for (int y=0; y<REGION_HEIGHT; ++y) {
 					for (int x=0; x<REGION_WIDTH; ++x) {
 						const int idx = mapidx(x,y,z);
-						if (current_region->tiles[idx].tree_id == ai.target_id) {
+						if (current_region->tree_id[idx] == ai.target_id) {
 							current_region->solid[idx]=false;
-							current_region->tiles[idx].flags.reset(tile_flags::CAN_STAND_HERE);
-							current_region->tiles[idx].flags.reset(tile_flags::TREE);
-							current_region->tiles[idx].tree_id = 0;
-							current_region->tiles[idx].base_type = 0;
-							current_region->tiles[idx].contents = 0;
-							current_region->calculate_render_tile(idx);
+							current_region->tile_flags[idx].reset(CAN_STAND_HERE);
+							current_region->tree_id[idx] = 0;
+							current_region->tile_type[idx] = tile_type::OPEN_SPACE;
+							current_region->tile_calculate(x,y,z);
 							++number_of_logs;
 						}
 					}
 				}
 			}
 			const int tree_idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
-			current_region->tiles[tree_idx].base_type = 3;
-			current_region->tiles[tree_idx].contents = 0;
-			current_region->calculate_render_tile(tree_idx);			
+			current_region->tile_type[tree_idx] = tile_type::FLOOR;
+			current_region->tile_calculate(ai.target_x, ai.target_y, ai.target_z);			
 
 			// Spawn wooden logs
 			number_of_logs = (number_of_logs/20)+1;
@@ -677,12 +673,11 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			for (int Z=-2; Z<10; ++Z) {
 				for (int Y=-10; Y<10; ++Y) {
 					for (int X=-10; X<10; ++X) {
-						current_region->determine_tile_standability(pos.x + X, pos.y + Y, pos.z + Z);
-						current_region->determine_tile_connectivity(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
 					}
 				}
 			}
-			*/
 
 			// Change status to drop axe
 			emit(map_dirty_message{});
