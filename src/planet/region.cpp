@@ -110,6 +110,8 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::STAIRS_UP) tile_flags[idx].set(CAN_STAND_HERE);
 		}
 	}
+
+	tile_pathing(x,y,z);
 }
 
 void region_t::tile_pathing(const int &x, const int &y, const int &z) {
