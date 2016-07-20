@@ -239,6 +239,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             }
             
             // Populate the surface tile at z-1
+            region.revealed[mapidx(x,y,z-1)] = true;
             region.tile_type[mapidx(x,y,z-1)] = tile_type::FLOOR;
             if (wet) {
                 region.water_level[mapidx(x,y,z-1)] = 10; // Below the water line; flood it!
@@ -265,6 +266,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
 
             while (z<REGION_DEPTH) {
                 // Place sky
+                region.revealed[mapidx(x,y,z)] = true;
                 region.tile_type[mapidx(x,y,z)] = tile_type::OPEN_SPACE;
                 if (z < 69) region.water_level[mapidx(x,y,z)] = 10; // Below the water line; flood it!
                 ++z;
@@ -411,6 +413,7 @@ void add_building(std::string tag, const int x, const int y, const int z) {
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
         ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, true });
+    new_building->component<building_t>()->complete = true;
 
     for (const building_provides_t &provides : building->second.provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
