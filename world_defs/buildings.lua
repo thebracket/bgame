@@ -3,21 +3,7 @@ buildings = {
 		name = "Cordex",
 		components = { "cordex_core" },
 		skill = { name="Construction", difficulty=25 },
-		render = {
-			width=3, height=3, tiles={
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-				{glyph=glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-				{glyph=glyphs['solid_square'], foreground = colors['cyan'], background = colors['black']},
-			}
-		}
+		render_rex = "cordex.xp"
 	},
 
 	solar_panel = {
@@ -108,84 +94,28 @@ buildings = {
 		name = "Sawmill",
 		components = { "wood_log" },
 		skill = { name="Construction", difficulty=12 },
-		render = {
-			width=3, height=3, tiles= {
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
-
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['sun'], foreground = colors['icy_blue'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']}
-			}
-		}
+		render_rex = "sawmill.xp"
 	},
 
 	stonecutter = {
 		name = "Stonecutters",
 		components = { "stone_boulder" },
 		skill = { name="Construction", difficulty=12 },
-		render = {
-			width=3, height=3, tiles= {
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['sun'], foreground = colors['icy_blue'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
-
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']}
-			}
-		}
+		render_rex = "stonecutter.xp"
 	},
 
 	carpenter = {
 		name = "Carpentry Workshop",
 		components = { "wood_plank" },
 		skill = { name="Construction", difficulty=12 },
-		render = {
-			width=3, height=3, tiles= {
-				{glyph= glyphs['one_quarter_solid'], foreground = colors['wood_brown'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']},
-
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['sun'], foreground = colors['icy_blue'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-
-				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']}
-			}
-		}
+		render_rex = "carpenter.xp"
 	},
 
 	mason = {
 		name = "Masonry",
 		components = { "stone_block" },
 		skill = { name="Construction", difficulty=12 },
-		render = {
-			width=3, height=3, tiles= {
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-
-				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
-
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['solid_square'], foreground = colors['grey'], background = colors['black']},
-				{glyph= glyphs['three_bar'], foreground = colors['grey'], background = colors['black']}
-			}
-		}
+		render_rex = "mason.xp"
 	},
 
 	stone_table = {

@@ -110,74 +110,6 @@ rltk::color_t read_lua_color(std::string field) {
 	return col;
 }
 
-void read_tile_types() {
-	lua_getglobal(lua_state, "tile_types");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-    	tile_type_t tt;
-
-    	std::string key = lua_tostring(lua_state, -2);
-    	tt.name = key;
-    	
-    	lua_pushstring(lua_state, key.c_str());
-    	lua_gettable(lua_state, -2);
-    	while (lua_next(lua_state, -2) != 0) {
-    		std::string field = lua_tostring(lua_state, -2);
-    		if (field == "index") tt.index = lua_tonumber(lua_state, -1);
-    		if (field == "glyph") tt.glyph = lua_tonumber(lua_state, -1);
-    		if (field == "background") tt.bg = read_lua_color("background");
-    		if (field == "foreground") tt.fg = read_lua_color("foreground");
-            if (field == "name") tt.nice_name = lua_tostring(lua_state, -1);
-    		lua_pop(lua_state, 1);
-    	}
-
-    	//std::cout << key << " is " << tt.index << ": " << +tt.glyph << ", " << +tt.bg.r << "/" << +tt.bg.g << "/" << +tt.bg.b << " \n";
-    	tile_types[tt.index] = tt;
-    	tile_type_index[tt.name] = tt.index;
-
-    	lua_pop(lua_state, 1);
-    }
-}
-
-void read_tile_contents() {
-	lua_getglobal(lua_state, "tile_content");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-    	tile_content_t tt;
-
-    	std::string key = lua_tostring(lua_state, -2);
-    	tt.name = key;
-    	
-    	lua_pushstring(lua_state, key.c_str());
-    	lua_gettable(lua_state, -2);
-    	while (lua_next(lua_state, -2) != 0) {
-    		std::string field = lua_tostring(lua_state, -2);
-    		if (field == "index") tt.index = lua_tonumber(lua_state, -1);
-    		if (field == "glyph") tt.glyph = lua_tonumber(lua_state, -1);
-    		if (field == "background") tt.bg = read_lua_color("background");
-    		if (field == "foreground") tt.fg = read_lua_color("foreground");
-            if (field == "stairs") {
-                std::string stairs_type = lua_tostring(lua_state, -1);
-                if (stairs_type == "updown") tt.stairs = 1;
-                if (stairs_type == "up") tt.stairs = 2;
-                if (stairs_type == "down") tt.stairs = 3;
-            }
-            if (field == "name") tt.nice_name = lua_tostring(lua_state, -1);
-    		lua_pop(lua_state, 1);
-    	}
-
-    	//std::cout << key << " is " << tt.index << ": " << +tt.glyph << ", " << +tt.bg.r << "/" << +tt.bg.g << "/" << +tt.bg.b << " \n";
-    	tile_contents[tt.index] = tt;
-    	tile_contents_index[tt.name] = tt.index;
-
-    	lua_pop(lua_state, 1);
-    }
-}
-
 void read_clothing() {
     lua_getglobal(lua_state, "clothing");
     lua_pushnil(lua_state);
@@ -405,6 +337,18 @@ void read_buildings() {
                         }
                     }
                     lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "render_rex") {
+                std::string filename = "rex/" + std::string(lua_tostring(lua_state, -1));
+                std::cout << "Reading " << filename << "\n";
+                xp::rex_sprite sprite(filename);
+                c.width = sprite.get_width();
+                c.height = sprite.get_height();
+                for (int y=0; y<c.height; ++y) {
+                    for (int x=0; x<c.width; ++x) {
+                        c.glyphs.push_back(*sprite.get_tile(0,x,y));
+                    }
                 }
             }
 
@@ -648,8 +592,6 @@ void read_biome_types() {
 }
 
 void load_game_tables() {
-	read_tile_types();
-	read_tile_contents();
     read_clothing();
     read_professions();
     read_items();
