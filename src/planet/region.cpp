@@ -94,12 +94,7 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 		solid[idx] = false;
 
 		// Locations on which one can stand
-		if (tile_type[idx] == tile_type::RAMP || tile_type[idx] == tile_type::FLOOR ||
-			tile_type[idx] == tile_type::STAIRS_UP || tile_type[idx] == tile_type::STAIRS_DOWN ||
-			tile_type[idx] == tile_type::STAIRS_UPDOWN) 
-		{
-			tile_flags[idx].set(CAN_STAND_HERE);
-		}
+		tile_flags[idx].set(CAN_STAND_HERE);
 
 		if (z>0) {
 			const int idx_below = mapidx(x,y,z-1);

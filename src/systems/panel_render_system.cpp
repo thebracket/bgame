@@ -138,43 +138,29 @@ void panel_render_system::render_play_mode() {
 	// coordinates. There will be a helper function for this once we get into retained GUIs.
 	const int terminal_x = mouse_x / 8;
 	const int terminal_y = mouse_y / 8;
-
-	/*
+	
 	if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
 		const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 		const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 		const int idx = mapidx(world_x, world_y, camera_position->region_z);
 
 		{
-			const int base_tile_type = current_region->tiles[idx].base_type;
+			const std::size_t base_tile_type = current_region->tile_material[idx];
 			std::stringstream ss;
-			auto finder = tile_types.find(base_tile_type);
-			if (finder != tile_types.end()) {
-				ss << finder->second.name;
-				term(3)->print(1, term(3)->term_height - 2, ss.str(), GREEN, GREEN_BG);
-			}
-		}
-		{
-			const int base_tile_content = current_region->tiles[idx].contents;
-			std::stringstream ss;
-			auto finder = tile_contents.find(base_tile_content);
-			if (finder != tile_contents.end()) {
-				ss << finder->second.name;
-				term(3)->print(1, term(3)->term_height - 3, ss.str(), GREEN, GREEN_BG);
-			}
+			ss << material_defs[base_tile_type].name;
+			term(3)->print(1, term(3)->term_height - 2, ss.str(), GREEN, GREEN_BG);
 		}
 		{
 			std::stringstream ss;
 			if (current_region->solid[idx]) ss << "S";
-			if (current_region->tiles[idx].flags.test(tile_flags::TREE)) ss << "T";
-			if (current_region->tiles[idx].flags.test(tile_flags::CONSTRUCTION)) ss << "C";
-			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_NORTH)) ss << "N";
-			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_SOUTH)) ss << "S";
-			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_EAST)) ss << "E";
-			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_WEST)) ss << "W";
-			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_UP)) ss << "U";
-			if (current_region->tiles[idx].flags.test(tile_flags::CAN_GO_DOWN)) ss << "D";
-			ss << current_region->tiles[idx].tree_id;
+			if (current_region->tile_flags[idx].test(CONSTRUCTION)) ss << "C";
+			if (current_region->tile_flags[idx].test(CAN_GO_NORTH)) ss << "N";
+			if (current_region->tile_flags[idx].test(CAN_GO_SOUTH)) ss << "S";
+			if (current_region->tile_flags[idx].test(CAN_GO_EAST)) ss << "E";
+			if (current_region->tile_flags[idx].test(CAN_GO_WEST)) ss << "W";
+			if (current_region->tile_flags[idx].test(CAN_GO_UP)) ss << "U";
+			if (current_region->tile_flags[idx].test(CAN_GO_DOWN)) ss << "D";
+			ss << +mining_map[idx];
 			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
 		}
 		int count = 0;
@@ -221,7 +207,7 @@ void panel_render_system::render_play_mode() {
 				++count;
 			}
 		});
-	}*/
+	}
 }
 
 inline bool is_mining_designation_valid(const int &x, const int &y, const int &z, const game_mining_mode_t &mode) {

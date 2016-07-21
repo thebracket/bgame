@@ -444,10 +444,10 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			const int target_idx = mining_targets[idx];
 			const int target_operation = designations->mining[target_idx];
 			
-			emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], pos.x, pos.y, pos.z});
-
-			designations->mining.erase(target_idx);
-			emit(recalculate_mining_message{});
+			if (target_operation > 0) {
+				emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], pos.x, pos.y, pos.z});
+				designations->mining.erase(target_idx);
+			}
 			ai.job_type_minor = JM_DROP_PICK;
 			change_job_status(ai, name, "Dropping digging tools - work complete");
 			return;

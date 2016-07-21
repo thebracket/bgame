@@ -1,5 +1,6 @@
 #include "topology_system.hpp"
 #include "../messages/map_dirty_message.hpp"
+#include "../messages/recalculate_mining_message.hpp"
 #include "../raws/raws.hpp"
 #include "../game_globals.hpp"
 
@@ -21,6 +22,7 @@ void topology_system::update(const double duration_ms) {
         spawn_mining_result(e);
         recalculate(e);
         emit(map_dirty_message{});
+        emit(recalculate_mining_message{});
     }
 }
 
@@ -79,6 +81,7 @@ void topology_system::recalculate(const perform_mining_message &e) {
     for (int Z=-2; Z<3; ++Z) {
         for (int Y=-2; Y<3; ++Y) {
             for (int X=-2; X<3; ++X) {
+                current_region->revealed[mapidx(e.x + X, e.y + Y, e.z + Z)] = true;
                 current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
                 current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
             }
