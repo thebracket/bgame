@@ -111,6 +111,27 @@ buildings = {
 		render_rex = "carpenter.xp"
 	},
 
+	charcoal_hut = {
+		name = "Charcoal Burner",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "charcoal_hut.xp"
+	},
+
+	smelter = {
+		name = "Smelter",
+		components = { "stone_block" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "smelter.xp"
+	},
+
+	glass_furnace = {
+		name = "Glass Furnace",
+		components = { "stone_block" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "glass_furnace.xp"
+	},
+
 	mason = {
 		name = "Masonry",
 		components = { "stone_block" },

@@ -95,11 +95,75 @@ items = {
 		name = "Zinc Ore", description = "A lump of unrefined zinc",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['zinc'], background = colors['black']
 	},
+	saltpeter_ore = {
+		name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",
+		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black']
+	},
+	alabaster_powder = {
+		name = "Alabaster Powder", description = "A lump of unrefined alabaster powder",
+		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['white'], background = colors['black']
+	},
+	gypsum_powder = {
+		name = "Gypsum Powder", description = "A lump of unrefined gypsum powder",
+		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['white'], background = colors['black']
+	},
+	coal = {
+		name = "Coal", description = "A lump of unrefined coal",
+		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['dark_grey'], background = colors['black']
+	},
+	sulphur = {
+		name = "Sulphur", description = "A lump of sulphur",
+		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['yellow'], background = colors['black']
+	},
+	flint = {
+		name = "Flint", description = "A piece of flint",
+		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['brown'], background = colors['black']
+	},
+	sand = {
+		name = "Sand", description = "A lump of raw sand",
+		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['yellow'], background = colors['black']
+	},
+	oil = {
+		name = "Oil", description = "A blob of viscous oil",
+		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['dark_grey'], background = colors['black']
+	},
+	clay = {
+		name = "Clay", description = "A blob of clay",
+		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['dark_red'], background = colors['black']
+	},
+	topsoil = {
+		name = "Topsoil", description = "A lump of rich topsoil",
+		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['brown'], background = colors['black']
+	},
 	wood_plank = {
 		name = "Wood Plank",
 		description = "Wood, cut into a convenient shape",
 		itemtype = {"component"},
 		glyph = glyphs['single_wall_ew'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	charcoal = {
+		name = "Charcoal",
+		description = "Wood, processed to burn at high temperature",
+		itemtype = {"component"},
+		glyph = glyphs['inset_square'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	raw_glass = {
+		name = "Raw Glass",
+		description = "Raw glass, ready to turn into something useful",
+		itemtype = {"component"},
+		glyph = glyphs['inset_square'],
+		foreground = colors['green'],
+		background = colors['black']
+	},
+	wood_waste = {
+		name = "Wood Offcuts",
+		description = "Wood off-cuts",
+		itemtype = {"component"},
+		glyph = glyphs['three_bar'],
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},

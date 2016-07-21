@@ -225,7 +225,7 @@ materials = {
     },
     sandstone = { name="Sandstone", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['dark_yellow'], bg=colors['grey'],
-        hit_points = 50, mines_to="yellow_sand"
+        hit_points = 50, mines_to="sand"
     },
     serpentine = { name="Serpentine", type="rock", layer="igneous", 
         glyph=glyphs['double_wave'], fg=colors['dark_green'], bg=colors['grey'],

@@ -52,7 +52,8 @@ glyphs = {
 	pick = 245,
 	double_pillar = 246,
 	double_wave = 247,
-	circle = 248
+	circle = 248,
+	inset_square = 254
 }
 
 colors = {

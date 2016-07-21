@@ -3,10 +3,28 @@ reactions = {
         name = "Cut Wooden Planks",
         workshop = "sawmill",
         inputs = { { item="wood_log", qty=1 } },
-        outputs = { { item="wood_plank", qty=4 } },
+        outputs = { { item="wood_plank", qty=4 }, { item="wood_waste", qty=2} },
         skill = "Carpentry",
         difficulty = 10,
         automatic = true
+    },
+    charcoal_waste = {
+        name = "Make Charcoal from Waste",
+        workshop = "charcoal_hut",
+        inputs = { { item="wood_waste", qty=1 } },
+        outputs = { { item="charcoal", qty=2 } },
+        skill = "Carpentry",
+        difficulty = 10,
+        automatic = true
+    },
+    make_raw_glass = {
+        name = "Make Raw Glass",
+        workshop = "glass_furnace",
+        inputs = { { item="charcoal", qty=1 }, { item="sand", qty=1} },
+        outputs = { { item="raw_glass", qty=2 } },
+        skill = "Carpentry",
+        difficulty = 10,
+        automatic = false
     },
     cut_stone = {
         name = "Cut Stone Blocks",
