@@ -121,6 +121,7 @@ struct biome_type_t {
 enum material_def_spawn_type_t { cluster_rock, rock, soil, sand };
 
 struct material_def_t {
+	std::string tag = "";
 	std::string name = "";
 	material_def_spawn_type_t spawn_type;
 	std::string parent_material_tag = "";
@@ -134,6 +135,7 @@ struct material_def_t {
 };
 
 struct plant_t {
+	std::string tag = "";
 	std::string name = "";
 	uint8_t glyph;
 	rltk::color_t fg;

@@ -492,6 +492,7 @@ void read_material_types() {
         std::string key = lua_tostring(lua_state, -2);
 
         material_def_t m;
+        m.tag = key;
 
         lua_pushstring(lua_state, key.c_str());
         lua_gettable(lua_state, -2);
@@ -518,9 +519,15 @@ void read_material_types() {
             lua_pop(lua_state, 1);
         }
         material_defs.push_back(m);
-        material_defs_idx[key] = material_defs.size()-1;
 
         lua_pop(lua_state, 1);
+    }
+
+    std::sort(material_defs.begin(), material_defs.end(), [] (material_def_t a, material_def_t b) {
+        return a.tag < b.tag;
+    });
+    for (std::size_t material_index = 0; material_index < material_defs.size(); ++material_index) {
+        material_defs_idx[material_defs[material_index].tag] = material_index;
     }
 }
 
@@ -533,6 +540,7 @@ void read_plant_types() {
         std::string key = lua_tostring(lua_state, -2);
 
         plant_t p;
+        p.tag = key;
         lua_pushstring(lua_state, key.c_str());
         lua_gettable(lua_state, -2);
         while(lua_next(lua_state, -2) != 0)
@@ -547,8 +555,12 @@ void read_plant_types() {
             lua_pop(lua_state, 1);
         }
         plant_defs.push_back(p);
-        plant_defs_idx[key] = plant_defs.size()-1;
         lua_pop(lua_state, 1);
+    }
+
+    std::sort(plant_defs.begin(), plant_defs.end(), [] (plant_t a, plant_t b) { return a.tag < b.tag; });
+    for (std::size_t i=0; i<plant_defs.size(); ++i) {
+        plant_defs_idx[plant_defs[i].tag] = i;
     }
 }
 
