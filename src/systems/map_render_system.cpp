@@ -18,8 +18,11 @@ namespace map_render_sys {
 boost::container::flat_map<int, rltk::vchar> renderables;
 
 vchar greyscale(vchar target) {
-	target.foreground = greyscale(target.foreground);
-	target.background = greyscale(target.background);
+	const color_t grey_fg = greyscale(target.foreground);
+	const color_t grey_bg = greyscale(target.background);
+
+	target.foreground = lerp(target.foreground, grey_fg, 0.8);
+	target.background = lerp(target.background, grey_bg, 0.8);
 	return target;
 }
 
