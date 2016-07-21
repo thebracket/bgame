@@ -444,66 +444,10 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			const int target_idx = mining_targets[idx];
 			const int target_operation = designations->mining[target_idx];
 			
-			if (target_operation == 1) {
-				// Dig
-				current_region->solid[target_idx]=false;
-				current_region->tile_type[target_idx] = tile_type::FLOOR;
-				current_region->tile_flags[target_idx].set(CAN_STAND_HERE);
-				if (rng.roll_dice(1,4)>=2) {
-					// TODO: Mine spawn by material!
-					spawn_item_on_ground(pos.x, pos.y, pos.z, "stone_boulder");
-				}
-			} else if (target_operation == 2) {
-				// Channel
-				current_region->solid[target_idx]=false;
-				current_region->tile_type[target_idx] = tile_type::OPEN_SPACE;
-				
-				// Add ramp
-				const int below = target_idx - (REGION_WIDTH * REGION_HEIGHT);
-				current_region->solid[below]=false;
-				current_region->tile_type[below] = tile_type::RAMP;
-				current_region->tile_flags[below].set(CAN_STAND_HERE);
-			} else if (target_operation == 3) {
-				// Ramp
-				current_region->solid[target_idx]=false;
-				current_region->tile_type[target_idx] = tile_type::RAMP;
-				current_region->tile_flags[target_idx].set(CAN_STAND_HERE);
-
-				const int above = target_idx + (REGION_WIDTH * REGION_HEIGHT);
-				current_region->solid[above]=false;
-				current_region->tile_type[above] = tile_type::OPEN_SPACE;
-				current_region->tile_flags[above].set(CAN_STAND_HERE);
-				
-			} else if (target_operation == 4) {
-				// Up
-				current_region->solid[target_idx]=false;
-				current_region->tile_type[target_idx] = tile_type::STAIRS_UP;
-				current_region->tile_flags[target_idx].set(CAN_STAND_HERE);
-			} else if (target_operation == 5) {
-				// Down
-				current_region->solid[target_idx]=false;
-				current_region->tile_type[target_idx] = tile_type::STAIRS_DOWN;
-				current_region->tile_flags[target_idx].set(CAN_STAND_HERE);
-			} else if (target_operation == 6) {
-				// UpDown
-				current_region->solid[target_idx]=false;
-				current_region->tile_type[target_idx] = tile_type::STAIRS_UPDOWN;
-				current_region->tile_flags[target_idx].set(CAN_STAND_HERE);
-			}
-
-			
-			for (int Z=-2; Z<3; ++Z) {
-				for (int Y=-2; Y<3; ++Y) {
-					for (int X=-2; X<3; ++X) {
-						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
-						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
-					}
-				}
-			}
+			emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], pos.x, pos.y, pos.z});
 
 			designations->mining.erase(target_idx);
 			emit(recalculate_mining_message{});
-			emit(map_dirty_message{});
 			ai.job_type_minor = JM_DROP_PICK;
 			change_job_status(ai, name, "Dropping digging tools - work complete");
 			return;

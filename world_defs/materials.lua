@@ -9,15 +9,15 @@ materials = {
     },
     alunite = { name="Alunite", type="rock", layer="igneous", 
         glyph=glyphs['backtick'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     andesite = { name="Andesite", type="rock", layer="igneous", 
         glyph=glyphs['infinity'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     basalt = { name="Basalt", type="rock", layer="igneous", 
         glyph=glyphs['hash'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     bauxite = { name="Bauxite", type="rock", layer="sedimentary", 
         glyph=glyphs['plus'], fg=colors['dark_red'], bg=colors['grey'],
@@ -41,7 +41,7 @@ materials = {
     },
     chalk = { name="Chalk", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 75, mines_to="boulder"
+        hit_points = 75, mines_to="stone_boulder"
     },
     chert = { name="Chert", type="rock", layer="sedimentary", 
         glyph=glyphs['equals'], fg=colors['dark_yellow'], bg=colors['grey'],
@@ -57,15 +57,15 @@ materials = {
     },
     claystone = { name="Claystone", type="rock", layer="sedimentary", 
         glyph=glyphs['comma'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 75, mines_to="boulder"
+        hit_points = 75, mines_to="stone_boulder"
     },
     cobaltite = { name="Cobaltite", type="rock", layer="igneous", 
         glyph=glyphs['urk'], fg=colors['blue'], bg=colors['grey'],
-        hit_points = 115, mines_to="boulder"
+        hit_points = 115, mines_to="stone_boulder"
     },
     conglomerate = { name="Conglomerate", type="rock", layer="sedimentary", 
         glyph=glyphs['infinity'], fg=colors['dark_yellow'], bg=colors['grey'],
-        hit_points = 75, mines_to="boulder"
+        hit_points = 75, mines_to="stone_boulder"
     },
     copper_rock = { name="Native Copper", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['dark_yellow'], bg=colors['grey'],
@@ -73,19 +73,19 @@ materials = {
     },
     dacite = { name="Dacite", type="rock", layer="igneous", 
         glyph=glyphs['period'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     diorite = { name="Diorite", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     dolomite = { name="Dolomite", type="rock", layer="sedimentary", 
         glyph=glyphs['white'], fg=colors['backtick'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     gabbro = { name="Gabbro", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     galena = { name="Galena", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['white'], bg=colors['grey'],
@@ -93,11 +93,11 @@ materials = {
     },
     garnierite = { name="Garnierite", type="rock", layer="cluster_rock", parent="gabbro",
         glyph=glyphs['ukp'], fg=colors['green'], bg=colors['grey'],
-        hit_points = 100, mines_to="lead", mines_to_also="nickel_ore"
+        hit_points = 100, mines_to="lead_ore", mines_to_also="nickel_ore"
     },
     gneiss = { name="Gabbro", type="rock", layer="igneous", 
         glyph=glyphs['equals'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     gold_rock = { name="Native Gold", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['yellow'], bg=colors['grey'],
@@ -105,11 +105,11 @@ materials = {
     },
     granite = { name="Granite", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     graphite = { name="Gabbro", type="rock", layer="cluster_rock", parent="gneiss",
         glyph=glyphs['circle'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     gypsum = { name="Gabbro", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['yellow'], bg=colors['grey'],
@@ -125,15 +125,15 @@ materials = {
     },
     hornblende = { name="Hornblende", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     jet = { name="Jet", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['black'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     kaolinite = { name="Kaolinite", type="rock", layer="sedimentary", 
         glyph=glyphs['equals'], fg=colors['dark_red'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     lignite = { name="Bithumous Coal", type="rock", layer="sedimentary", 
         glyph=glyphs['sun'], fg=colors['dark_grey'], bg=colors['grey'],
@@ -141,7 +141,7 @@ materials = {
     },
     limestone = { name="Limestone", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     limonite = { name="Limonite", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['yellow'], bg=colors['grey'],
@@ -157,35 +157,35 @@ materials = {
     },
     marble = { name="Marble", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     microcline = { name="Microcline", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['cyan'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     mudstone = { name="Marble", type="rock", layer="sedimentary", 
         glyph=glyphs['double_wave'], fg=colors['dark_yellow'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     obsidian = { name="Marble", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['black'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     olivine = { name="Olivine", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['dark_green'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     orpiment = { name="Marble", type="rock", layer="igneous", 
         glyph=glyphs['yellow'], fg=colors['tilde'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     orthoclase = { name="Orthoclase", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     phylite = { name="Phylite", type="rock", layer="sedimentary", 
         glyph=glyphs['minus'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     pitchblende = { name="Pitchblende", type="rock", layer="igneous", 
         glyph=glyphs['star'], fg=colors['purple'], bg=colors['grey'],
@@ -197,23 +197,23 @@ materials = {
     },
     pyrolusite = { name="Pyrolusite", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     quartzite = { name="Quartzite", type="rock", layer="igneous", 
         glyph=glyphs['minus'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     realgar = { name="Realgar", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['red'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     rhyolite = { name="Rhyolite", type="rock", layer="igneous", 
         glyph=glyphs['comma'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     rock_salt = { name="Rock Salt", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 50, mines_to="boulder"
+        hit_points = 50, mines_to="stone_boulder"
     },
     rutile = { name="Rutile", type="rock", layer="igneous", 
         glyph=glyphs['backtick'], fg=colors['purple'], bg=colors['grey'],
@@ -229,7 +229,7 @@ materials = {
     },
     serpentine = { name="Serpentine", type="rock", layer="igneous", 
         glyph=glyphs['double_wave'], fg=colors['dark_green'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     shale = { name="Shale", type="rock", layer="sedimentary", 
         glyph=glyphs['period'], fg=colors['dark_grey'], bg=colors['grey'],
@@ -249,7 +249,7 @@ materials = {
     },
     stibnite = { name="Stibnite", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="boulder"
+        hit_points = 100, mines_to="stone_boulder"
     },
     tetrahedrite = { name="Tetrahedrite", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['dark_grey'], bg=colors['grey'],

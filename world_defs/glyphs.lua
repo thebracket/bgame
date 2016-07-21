@@ -13,6 +13,7 @@ glyphs = {
 	hash = 35,
 	percent = 37,
 	apostrophe = 39,
+	star = 42,
 	plus = 43,
 	comma = 44,
 	period = 46,
@@ -80,5 +81,11 @@ colors = {
 	magenta = { r=255, g=0, b=255 },
 	wood_brown = { r=102, g=51, b=0 },
 	tree_green = { r=130, g=212, b=53},
-	pink = { r=255, g=128, b=128 }
+	pink = { r=255, g=128, b=128 },
+	aluminium_blue = { r=173, g=178, b=189 },
+	bismuth_yellow = { r=255, g=243, b=107 },
+	tin_blue = { r=211, g=212, b=213 },
+	chromium_blue = { r=198, g=200, b=201 },
+	copper = { r=205, g=153, b=153 },
+	zinc = { r=186, g=196, b=200 }
 }

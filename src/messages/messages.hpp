@@ -8,3 +8,4 @@
 #include "entity_moved_message.hpp"
 #include "build_request_message.hpp"
 #include "update_workflow_message.hpp"
+#include "perform_mining.hpp"
