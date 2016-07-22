@@ -13,7 +13,7 @@ reactions = {
         workshop = "charcoal_hut",
         inputs = { { item="wood_waste", qty=1 } },
         outputs = { { item="charcoal", qty=2 } },
-        skill = "Carpentry",
+        skill = "Furnace Operation",
         difficulty = 10,
         automatic = true
     },
@@ -85,9 +85,90 @@ reactions = {
         workshop = "mason",
         inputs = { { item="stone_block", qty=1 } },
         outputs = { { item="stone_door", qty=1 } },
-        skill = "Masonry",
+        skill = "Furnace Operation",
         difficulty = 12,
         automatic = false
+    },
+    smelt_aluminium = {
+        name = "Smelt Aluminium",
+        workshop = "smelter",
+        inputs = { { item="aluminium_ore", qty=1 } },
+        outputs = { { item="aluminium_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_tin = {
+        name = "Smelt Tin",
+        workshop = "smelter",
+        inputs = { { item="tin_ore", qty=1 } },
+        outputs = { { item="tin_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_chromium = {
+        name = "Smelt Chromium",
+        workshop = "smelter",
+        inputs = { { item="chromium_ore", qty=1 } },
+        outputs = { { item="chromium_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_tin = {
+        name = "Smelt Copper",
+        workshop = "smelter",
+        inputs = { { item="copper_ore", qty=1 } },
+        outputs = { { item="copper_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_lead = {
+        name = "Smelt Lead",
+        workshop = "smelter",
+        inputs = { { item="lead_ore", qty=1 } },
+        outputs = { { item="lead_bar", qty=2 } },
+        skill = "Masonry",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_gold = {
+        name = "Smelt Gold",
+        workshop = "smelter",
+        inputs = { { item="gold_ore", qty=1 } },
+        outputs = { { item="gold_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_platinum = {
+        name = "Smelt Platinum",
+        workshop = "smelter",
+        inputs = { { item="platinum_ore", qty=1 } },
+        outputs = { { item="platinum_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_silver = {
+        name = "Smelt Silver",
+        workshop = "smelter",
+        inputs = { { item="silver_ore", qty=1 } },
+        outputs = { { item="silver_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
+    },
+    smelt_zinc = {
+        name = "Smelt Zinc",
+        workshop = "smelter",
+        inputs = { { item="zinc_ore", qty=1 } },
+        outputs = { { item="zinc_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 12,
+        automatic = true
     }
 }
 
