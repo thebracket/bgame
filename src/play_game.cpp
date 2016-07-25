@@ -79,6 +79,7 @@ void play_game::init() {
 	// Setup systems
 	std::cout << "Setting up systems\n";
 	add_system<calendar_system>();
+	add_system<camera_system>();
 	add_system<mining_system>();
 	add_system<inventory_system>();
 	add_system<workflow_system>();

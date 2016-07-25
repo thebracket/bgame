@@ -10,7 +10,6 @@ public:
 private:
 	bool dirty = true;
 	bool renderables_changed = true;
-	void update_clipping_rectangle();
 };
 
 namespace map_render_sys {
