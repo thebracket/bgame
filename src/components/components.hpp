@@ -18,3 +18,4 @@
 #include "construct_provides_sleep.hpp"
 #include "viewshed.hpp"
 #include "building.hpp"
+#include "lightsource.hpp"

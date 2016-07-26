@@ -1,27 +1,75 @@
 #include "lighting_system.hpp"
 #include "camera_system.hpp"
 #include "../messages/map_dirty_message.hpp"
+#include "../messages/entity_moved_message.hpp"
 #include "../game_globals.hpp"
+#include "../components/components.hpp"
+#include <boost/container/flat_map.hpp>
 
 using namespace rltk;
 
 std::vector<color_t> light_map;
+boost::container::flat_map<int, color_t> lit_tiles;
 
 void lighting_system::configure() {
     system_name = "Lighting System";
     subscribe_mbox<map_rerender_message>();
+
+    subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
+		lighting_changed = true;
+	});
+}
+
+inline void reveal(const int &idx, lightsource_t &view) {
+	lit_tiles[idx] = view.color;
+}
+
+inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
+	const float dist_square = view.radius * view.radius;
+
+	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
+		const int idx = mapidx(X, Y, Z);
+		reveal(idx, view);
+		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
+		if (distance > dist_square) {
+			return false;
+		}
+		return !(current_region->solid[idx]);
+	});
+}
+
+void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
+	reveal(mapidx(pos.x, pos.y, pos.z), view);
+	for (int z=(0-view.radius); z<view.radius; ++z) {
+		for (int i=0-view.radius; i<view.radius; ++i) {
+			internal_light_to(pos, view, i, 0-view.radius, z);
+			internal_light_to(pos, view, i, view.radius, z);
+			internal_light_to(pos, view, 0-view.radius, i, z);
+			internal_light_to(pos, view, view.radius, i, z);
+		}
+	}
 }
 
 void lighting_system::update(double time_ms) {
     std::queue<map_rerender_message> * map_change = mbox<map_rerender_message>();
 	while (!map_change->empty()) {
-		lighting_changed = true;
+		dirty = true;
 		map_change->pop();
 	}
+
+    if (dirty) {
+        // Rebuild the light map
+        lit_tiles.clear();
+        each<position_t, lightsource_t>(update_normal_light);
+        dirty = false;
+    }
 
     timer += time_ms;
     if (lighting_changed && timer > 33.0) {
         timer = 0.0;
+
+
+        // Update visible lighting
         const int term_width = term(1)->term_width;
         const int term_height = term(1)->term_height;
         const int tile_size = term_width * term_height;
@@ -57,8 +105,10 @@ void lighting_system::update(double time_ms) {
                 int z = tileidx / (REGION_WIDTH * REGION_HEIGHT);
 
                 if (tileidx > 0) {
-                    // Check lightsources - or...
-                    if (current_region->above_ground[tileidx]) {
+                    auto finder = lit_tiles.find(tileidx);
+                    if (finder != lit_tiles.end()) {
+                        light_map[scridx] = finder->second;
+                    } else if (current_region->above_ground[tileidx]) {
                         // Determine sunlight
                         bool shadowed = false;
 

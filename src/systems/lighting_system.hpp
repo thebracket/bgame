@@ -11,5 +11,6 @@ public:
 	virtual void configure() override final;
 private:
 	bool lighting_changed = true;
+    bool dirty = true;
     double timer = 0.0;
 };

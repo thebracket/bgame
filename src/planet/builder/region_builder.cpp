@@ -427,7 +427,7 @@ void add_building(std::string tag, const int x, const int y, const int z) {
 		spawn_item_in_container(new_building->id, "pickaxe");
     }
     if (tag == "cordex") {
-        new_building->assign(viewshed_t{16, false});
+        new_building->assign(viewshed_t{16, false})->assign(lightsource_t{16, rltk::colors::WHITE});
     }
 }
 
