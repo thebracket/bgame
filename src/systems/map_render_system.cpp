@@ -2,8 +2,9 @@
 #include "../raws/raws.hpp"
 #include "../messages/messages.hpp"
 #include "../game_globals.hpp"
+#include "renderables_system.hpp"
+#include "camera_system.hpp"
 #include <iostream>
-#include <boost/container/flat_map.hpp>
 
 using namespace rltk;
 using namespace map_render_sys;
@@ -15,8 +16,6 @@ namespace map_render_sys {
 	bool building_possible = false;
 }
 
-boost::container::flat_map<int, rltk::vchar> renderables;
-
 vchar greyscale(vchar target) {
 	const color_t grey_fg = greyscale(target.foreground);
 	const color_t grey_bg = greyscale(target.background);
@@ -26,31 +25,26 @@ vchar greyscale(vchar target) {
 	return target;
 }
 
-vchar get_render_char(const int &x, const int &y, const int &z) {
-
-	const int max_dive_depth = 5;
-	int dive_depth = 0;
+vchar get_render_char(const int &x, const int &y) {
+	const int idx = render_tiles[((term(1)->term_width * y) + x)];
+	if (idx == 0) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
+	if (!current_region->revealed[idx]) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
+	
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
-
-	while (dive_depth < max_dive_depth && result.glyph == ' ') {
-		const int idx = mapidx(x, y, z-dive_depth);
-		if (!current_region->revealed[idx]) return result;
-
-		auto rf = renderables.find(idx);
-		if (rf != renderables.end()) {
-			result = rf->second;
-			if (!current_region->visible[idx]) result = greyscale(result);
-		} else {
-			result = current_region->render_cache[idx];
-			if (!current_region->visible[idx]) result = greyscale(result);
-		}
-		++dive_depth;
+	auto rf = renderables.find(idx);
+	if (rf != renderables.end()) {
+		result = rf->second;
+		if (!current_region->visible[idx]) result = greyscale(result);
+	} else {
+		result = current_region->render_cache[idx];
+		if (!current_region->visible[idx]) result = greyscale(result);
 	}
 
-	if (result.glyph == ' ') {
-		return vchar{' ', rltk::colors::GREY, rltk::colors::BLACK};
+	const int visible_z = idx / ( REGION_WIDTH * REGION_HEIGHT);
+	if (visible_z == camera_position->region_z) {
+		return result;
 	} else {
-		const int darken_amount = (dive_depth-1) * 40;
+		const int darken_amount = (camera_position->region_z - visible_z) * 40;
 		vchar darkened = result;
 		darkened.foreground = darken(darken_amount, darkened.foreground);
 		darkened.background = darken(darken_amount, darkened.background);		
@@ -58,22 +52,10 @@ vchar get_render_char(const int &x, const int &y, const int &z) {
 	}
 }
 
-vchar get_render_char_mining(const int &x, const int &y, const int &z) {
+vchar get_render_char_mining(const int &x, const int &y) {
 
-	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
-
-	const int idx = mapidx(x, y, z);
-
-	if (current_region->revealed[idx]) {
-		auto rf = renderables.find(idx);
-		if (rf != renderables.end()) {
-			result = rf->second;
-			if (!current_region->visible[idx]) result = greyscale(result);			
-		} else {
-			result = current_region->render_cache[idx];
-			if (!current_region->visible[idx]) result = greyscale(result);
-		}
-	}
+	vchar result = get_render_char(x,y);
+	const int idx = render_tiles[((term(1)->term_width * y) + x)];
 
 	auto mf = designations->mining.find(idx);
 	if (mf != designations->mining.end()) {
@@ -92,22 +74,10 @@ vchar get_render_char_mining(const int &x, const int &y, const int &z) {
 	return result;
 }
 
-vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
+vchar get_render_char_chopping(const int &x, const int &y) {
 
-	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
-
-	const int idx = mapidx(x, y, z);
-
-	if (current_region->revealed[idx]) {
-		auto rf = renderables.find(idx);
-		if (rf != renderables.end()) {
-			result = rf->second;
-			if (!current_region->visible[idx]) result = greyscale(result);			
-		} else {
-			result = current_region->render_cache[idx];
-			if (!current_region->visible[idx]) result = greyscale(result);
-		}
-	}
+	vchar result = get_render_char(x,y);
+	const int idx = render_tiles[((term(1)->term_width * y) + x)];
 
 	const int tree_id = current_region->tree_id[idx];
 	if (tree_id > 0) {
@@ -122,22 +92,10 @@ vchar get_render_char_chopping(const int &x, const int &y, const int &z) {
 	return result;
 }
 
-vchar get_render_char_building(const int &x, const int &y, const int &z) {
+vchar get_render_char_building(const int &x, const int &y) {
 
-	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
-
-	const int idx = mapidx(x, y, z);
-
-	if (current_region->revealed[idx]) {
-		auto rf = renderables.find(idx);
-		if (rf != renderables.end()) {
-			result = rf->second;
-			if (!current_region->visible[idx]) result = greyscale(result);			
-		} else {
-			result = current_region->render_cache[idx];
-			if (!current_region->visible[idx]) result = greyscale(result);
-		}
-	}
+	vchar result = get_render_char(x,y);
+	const int idx = render_tiles[((term(1)->term_width * y) + x)];
 
 	// Build designations go here
 	if (build_mode_building && mouse_in_terminal) {
@@ -145,7 +103,7 @@ vchar get_render_char_building(const int &x, const int &y, const int &z) {
 		const int building_top_y = mouse_term_y;
 		const int building_right_x = mouse_term_x + build_mode_building.get().width;
 		const int building_bottom_y = mouse_term_y + build_mode_building.get().height;
-		if (x >= building_left_x && x < building_right_x && y>= building_top_y && y < building_bottom_y) {
+		if (x+clip_left >= building_left_x && x+clip_left < building_right_x && y+clip_top>= building_top_y && y+clip_top < building_bottom_y) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;
 
@@ -167,17 +125,11 @@ void map_render_system::configure() {
 	renderables_changed = true;
 	dirty = true;
 	subscribe_mbox<key_pressed_t>();
-	subscribe_mbox<renderables_changed_message>();
 	subscribe_mbox<map_rerender_message>();
 }
 
 void map_render_system::update(const double duration_ms) {
 	// Handle re-render queues
-	std::queue<renderables_changed_message> * render_change = mbox<renderables_changed_message>();
-	while (!render_change->empty()) {
-		renderables_changed = true;
-		render_change->pop();
-	}
 	std::queue<map_rerender_message> * map_change = mbox<map_rerender_message>();
 	while (!map_change->empty()) {
 		dirty = true;
@@ -192,32 +144,13 @@ void map_render_system::update(const double duration_ms) {
 		mouse_in_terminal = true;
 		mouse_term_x = (mouse_x / 8) + clip_left;
 		mouse_term_y = (mouse_y / 8) + clip_top - 2;
-	}
-
-	if (renderables_changed) {
-		renderables.clear();
-		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
-		});
-		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
-			int glyph_idx = 0;
-			for (int y = 0; y<b.height; ++y) {
-				for (int x=0; x<b.width; ++x) {
-					const int idx = mapidx(pos.x+x, pos.y+y, pos.z);
-					renderables[idx] = b.glyphs[glyph_idx];
-					if (!b.complete) renderables[idx].foreground = rltk::colors::GREY;
-					++glyph_idx;
-				}
-			}
-		});
-		dirty = true;
-	}
+	}	
 
 	if (dirty) {
 		term(1)->clear();
 		const int camera_z = camera_position->region_z;
 
-		std::function<vchar(int,int,int)> calculator;
+		std::function<vchar(int,int)> calculator;
 		if (game_master_mode == PLAY) {
 			calculator = get_render_char;
 		} else {
@@ -232,7 +165,7 @@ void map_render_system::update(const double duration_ms) {
 		for (int y=clip_top; y<clip_bottom; ++y) {
 			int X = 0;
 			for (int x=clip_left; x<clip_right; ++x) {
-				rltk::vchar render_target = calculator(x, y, camera_z);
+				rltk::vchar render_target = calculator(X, Y-2);
 				term(1)->set_char(X, Y, render_target);
 				++X;
 			}
