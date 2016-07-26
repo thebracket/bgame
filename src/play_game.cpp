@@ -81,6 +81,7 @@ void play_game::init() {
 	add_system<calendar_system>();
 	add_system<renderables_system>();
 	add_system<camera_system>();
+	add_system<lighting_system>();
 	add_system<mining_system>();
 	add_system<inventory_system>();
 	add_system<workflow_system>();

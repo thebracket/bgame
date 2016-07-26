@@ -51,6 +51,7 @@ add_executable(bgame main.cpp
 	systems/topology_system.cpp
 	systems/camera_system.cpp
 	systems/renderables_system.cpp
+	systems/lighting_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

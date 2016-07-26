@@ -30,4 +30,12 @@ struct calendar_t {
 	void next_minute();
 	void save(std::ostream &lbfile);
 	static calendar_t load(std::istream &lbfile);
+
+	inline float sun_arc_percent() { 
+		if (hour < 12) {
+			return (hour/12.0F) + ((minute/60.0F)/1000.0F);
+		} else {
+			return ((24.0F-hour)/12.0F) - ((minute/60.0F)/1000.0F);
+		}
+	}
 };

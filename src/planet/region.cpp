@@ -87,7 +87,8 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 	calc_render(idx);
 	
 	// Solidity and first-pass standability
-	if (tile_type[idx] == tile_type::SEMI_MOLTEN_ROCK || tile_type[idx] == tile_type::SOLID || tile_type[idx] == tile_type::WALL) {
+	if (tile_type[idx] == tile_type::SEMI_MOLTEN_ROCK || tile_type[idx] == tile_type::SOLID 
+			|| tile_type[idx] == tile_type::WALL || tile_type[idx] == tile_type::TREE_TRUNK || tile_type[idx] == tile_type::TREE_LEAF) {
 		solid[idx] = true;
 		tile_flags[idx].reset(CAN_STAND_HERE);
 	} else {
@@ -104,6 +105,17 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::RAMP) tile_flags[idx].set(CAN_STAND_HERE);
 			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::STAIRS_UP) tile_flags[idx].set(CAN_STAND_HERE);
 		}
+	}
+
+	// Is it underground?
+	if (z == REGION_DEPTH-1) {
+		above_ground[idx] = true;
+	} else {
+		bool underground = false;
+		for (int z=REGION_DEPTH-1; z>0; --z) {
+			if (tile_type[idx] == tile_type::SOLID) underground = true;
+		}
+		above_ground[idx] = !underground;
 	}
 
 	tile_pathing(x,y,z);

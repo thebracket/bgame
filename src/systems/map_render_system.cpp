@@ -4,6 +4,7 @@
 #include "../game_globals.hpp"
 #include "renderables_system.hpp"
 #include "camera_system.hpp"
+#include "lighting_system.hpp"
 #include <iostream>
 
 using namespace rltk;
@@ -39,6 +40,9 @@ vchar get_render_char(const int &x, const int &y) {
 		result = current_region->render_cache[idx];
 		if (!current_region->visible[idx]) result = greyscale(result);
 	}
+
+	// Apply lighting
+	result.foreground = lerp(result.foreground, light_map[((term(1)->term_width * y) + x)], 0.5);
 
 	const int visible_z = idx / ( REGION_WIDTH * REGION_HEIGHT);
 	if (visible_z == camera_position->region_z) {

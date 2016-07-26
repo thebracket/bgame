@@ -11,3 +11,4 @@
 #include "topology_system.hpp"
 #include "camera_system.hpp"
 #include "renderables_system.hpp"
+#include "lighting_system.hpp"
