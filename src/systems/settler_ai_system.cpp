@@ -174,7 +174,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 		if (bed_candidates.empty()) std::cout << "Warning: no bed found. We should implement ground sleeping.\n";
 
 		// Claim it
-		bed_candidates.begin()->second.first.claimed = true;
+		//bed_candidates.begin()->second.first.claimed = true; - fix this
 		ai.target_x = bed_candidates.begin()->second.second.x;
 		ai.target_y = bed_candidates.begin()->second.second.y;
 		ai.target_z = bed_candidates.begin()->second.second.z;
