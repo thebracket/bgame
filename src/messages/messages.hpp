@@ -10,3 +10,4 @@
 #include "update_workflow_message.hpp"
 #include "perform_mining.hpp"
 #include "perform_construction.hpp"
+#include "power_consumed.hpp"

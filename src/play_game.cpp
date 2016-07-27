@@ -84,6 +84,7 @@ void play_game::init() {
 	add_system<lighting_system>();
 	add_system<mining_system>();
 	add_system<inventory_system>();
+	add_system<power_system>();
 	add_system<workflow_system>();
 	add_system<settler_ai_system>();
 	add_system<topology_system>();

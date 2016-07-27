@@ -36,6 +36,7 @@ struct designations_t {
 	boost::container::flat_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
+	int current_power = 10;
 
 	designations_t() {
 	}
@@ -95,6 +96,8 @@ struct designations_t {
 			serialize(lbfile, order.first);
 			serialize(lbfile, order.second);
 		}
+
+		serialize(lbfile, current_power);
 	}
 
 	static designations_t load(std::istream &lbfile) {
@@ -166,6 +169,7 @@ struct designations_t {
 			c.build_orders.push_back(std::make_pair(build_qty, build_name));
 		}
 
+		deserialize(lbfile, c.current_power);
 		return c;
 	}
 };
