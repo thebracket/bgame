@@ -160,7 +160,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
         const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + 64;
         const int z = std::get<2>(center);
 
-        if (z>altitude_at_center-10) {
+        if (z>altitude_at_center-(1+rng.roll_dice(1,4))) {
             // Soil
             int roll = rng.roll_dice(1,100);
             if (roll < biome.second.soil_pct) {
