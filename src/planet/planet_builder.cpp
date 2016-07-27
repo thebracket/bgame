@@ -2,7 +2,6 @@
 #include "../components/components.hpp"
 #include "../raws/raws.hpp"
 #include "builder/settler_builder.hpp"
-#include "builder/build_utils.hpp"
 #include "builder/map_builder.hpp"
 #include "builder/biome_builder.hpp"
 #include "builder/region_builder.hpp"

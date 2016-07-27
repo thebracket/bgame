@@ -9,3 +9,4 @@
 #include "build_request_message.hpp"
 #include "update_workflow_message.hpp"
 #include "perform_mining.hpp"
+#include "perform_construction.hpp"

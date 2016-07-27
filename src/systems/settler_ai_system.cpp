@@ -604,7 +604,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			number_of_logs = (number_of_logs/20)+1;
 			//std::cout << "We should spawn " << number_of_logs << " logs.\n";
 			for (int i=0; i<number_of_logs; ++i) {
-				spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, "wood_log");
+				spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, "wood_log", get_material_by_tag("wood"));
 			}
 
 			// Update pathing
@@ -729,41 +729,28 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		if (skill_check >= SUCCESS) {
 			// Destroy components
+			std::size_t material = 0;
 			for (auto &comp : ai.building_target.get().component_ids) {
+				material = entity(comp.first)->component<item_t>()->material;
 				delete_item(comp.first);
 			}
 
 			// Place the building, and assign any provide tags
+			std::cout << "Completing building # " << ai.building_target.get().building_entity << "\n";
 			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
+
 			for (const building_provides_t &provides : finder->second.provides) {
-				if (provides.provides == provides_sleep) entity(ai.building_target.get().building_entity)->assign(construct_provides_sleep_t{});
-				if (provides.provides == provides_wall) {
-					position_t * wall_pos = entity(ai.building_target.get().building_entity)->component<position_t>();
-					const int index = mapidx(wall_pos->x, wall_pos->y, wall_pos->z);
-					current_region->solid[index] = true;
-
-					if (current_region->tile_flags[index].test(CAN_GO_NORTH)) {
-						--pos.y;
-					} else if (current_region->tile_flags[index].test(CAN_GO_SOUTH)) {
-						++pos.y;
-					} else if (current_region->tile_flags[index].test(CAN_GO_EAST)) {
-						++pos.x;
-					} else if (current_region->tile_flags[index].test(CAN_GO_WEST)) {
-						--pos.x;
-					}
-
-					// Update pathing
-					/*
-					for (int Z=-2; Z<10; ++Z) {
-						for (int Y=-2; Y<2; ++Y) {
-							for (int X=-2; X<2; ++X) {
-								current_region->determine_tile_standability(wall_pos->x + X, wall_pos->y + Y, wall_pos->z + Z);
-								current_region->determine_tile_connectivity(wall_pos->x + X, wall_pos->y + Y, wall_pos->z + Z);
-							}
-						}
-					}*/
+				if (provides.provides == provides_sleep) {
+					entity(ai.building_target.get().building_entity)->assign(construct_provides_sleep_t{});
+				} else if (provides.provides == provides_wall || provides.provides == provides_floor 
+						|| provides.provides == provides_stairs_up
+						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 
+						|| provides.provides == provides_ramp) 
+				{					
+					emit(perform_construction_message{ai.building_target.get().building_entity, tag, material});
 				}
 			}
+
 			emit(renderables_changed_message{});
 			emit(inventory_changed_message{});
 			emit(update_workflow_message{});
@@ -863,14 +850,16 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		if (skill_check >= SUCCESS) {
 			// Delete components
+			std::size_t material;
 			for (auto comp : ai.reaction_target.get().components) {
+				material = entity(comp.first)->component<item_t>()->material;
 				delete_item(comp.first);
 			}
 
 			// Spawn results
 			for (auto &output : finder->second.outputs) {
 				for (int i=0; i<output.second; ++i) {
-					spawn_item_on_ground(pos.x, pos.y, pos.z, output.first);
+					spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
 				}
 			}
 

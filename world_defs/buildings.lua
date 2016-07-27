@@ -212,26 +212,52 @@ buildings = {
 	},
 
 	wood_wall = {
-		name = "Wooden Wall",
-		components = { "wood_plank" },
-		skill = { name="Construction", difficulty=10 },
-		provides = { wall={energy_cost=0} },
-		render = {
-			width=1, height=1, tiles= {
-				{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']}
-			}
-		}
+		name = "Wooden Wall", components = { "wood_plank" }, skill = { name="Construction", difficulty=10 },
+		provides = { wall={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	wood_floor = {
+		name = "Wooden Floor", components = { "wood_plank" }, skill = { name="Construction", difficulty=10 },
+		provides = { floor={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	wood_stairs_up = {
+		name = "Wooden Up Stairs", components = { "wood_plank" }, skill = { name="Construction", difficulty=10 },
+		provides = { stairs_up={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['less_than'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	wood_stairs_down = {
+		name = "Wooden Down Stairs", components = { "wood_plank" }, skill = { name="Construction", difficulty=10 },
+		provides = { stairs_down={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['greater_than'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	wood_stairs_updown = {
+		name = "Wooden Spiral Stairs", components = { "wood_plank" }, skill = { name="Construction", difficulty=10 },
+		provides = { stairs_updown={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['X'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	wood_ramp = {
+		name = "Wooden Ramp", components = { "wood_plank" }, skill = { name="Construction", difficulty=10 },
+		provides = { ramp={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['ramp_up'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 
 	stone_wall = {
-		name = "Stone Wall",
-		components = { "stone_block" },
-		skill = { name="Construction", difficulty=10 },
-		provides = { wall={energy_cost=0} },
-		render = {
-			width=1, height=1, tiles= {
-				{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}
-			}
-		}
+		name = "Stone Wall", components = { "stone_block" }, skill = { name="Construction", difficulty=10 },
+		provides = { wall={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} }
+	},
+	stone_floor = {
+		name = "Stone Floor", components = { "stone_block" }, skill = { name="Construction", difficulty=10 },
+		provides = { floor={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	stone_stairs_up = {
+		name = "Stone Up Stairs", components = { "stone_block" }, skill = { name="Construction", difficulty=10 },
+		provides = { stairs_up={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['less_than'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	stone_stairs_down = {
+		name = "Stone Down Stairs", components = { "stone_block" }, skill = { name="Construction", difficulty=10 },
+		provides = { stairs_down={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['greater_than'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	stone_stairs_updown = {
+		name = "Stone Spiral Stairs", components = { "stone_block" }, skill = { name="Construction", difficulty=10 },
+		provides = { stairs_updown={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['X'], foreground = colors['wood_brown'], background = colors['black']} } }
+	},
+	stone_ramp = {
+		name = "Stone Ramp", components = { "stone_block" }, skill = { name="Construction", difficulty=10 },
+		provides = { ramp={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['ramp_up'], foreground = colors['wood_brown'], background = colors['black']} } }
 	}
 }

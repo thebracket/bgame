@@ -1,6 +1,7 @@
 #include "topology_system.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/recalculate_mining_message.hpp"
+#include "../messages/renderables_changed_message.hpp"
 #include "../raws/raws.hpp"
 #include "../game_globals.hpp"
 
@@ -24,11 +25,20 @@ void topology_system::update(const double duration_ms) {
         emit(map_dirty_message{});
         emit(recalculate_mining_message{});
     }
+
+    std::queue<perform_construction_message> * cmessages = mbox<perform_construction_message>();
+    while (!cmessages->empty()) {
+        perform_construction_message e = cmessages->front();
+        cmessages->pop();
+
+        build_construction(e);
+    }
 }
 
 void topology_system::configure() {
 	system_name = "Topology";
     subscribe_mbox<perform_mining_message>();
+    subscribe_mbox<perform_construction_message>();
 }
 
 void topology_system::dig(const perform_mining_message &e) {
@@ -95,7 +105,7 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
     auto finder = item_defs.find(tag);
     if (finder != item_defs.end()) {
         //std::cout << "Topology system - producing a [" << tag << "]";
-        spawn_item_on_ground(e.x, e.y, e.z, tag);
+        spawn_item_on_ground(e.x, e.y, e.z, tag, current_region->tile_material[e.target_idx]);
     } else {
         std::cout << "Topology system - don't know how to spawn a [" << tag << "]\n";
     }
@@ -109,4 +119,44 @@ void topology_system::spawn_mining_result(const perform_mining_message &e) {
 
     spawn_mining_result_impl(e, mining_result);
     spawn_mining_result_impl(e, mining_result2);
+}
+
+void topology_system::build_construction(const perform_construction_message &e) {
+    std::cout << "Received a build construction message\n";
+    std::cout << "Entity ID: " << e.entity_id << "\n";
+    std::cout << "Tag: " << e.tag << "\n";
+    std::cout << "Material: " << e.material << "\n";
+
+    position_t * construction_pos = entity(e.entity_id)->component<position_t>();
+    const int index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
+    auto finder = building_defs.find(e.tag);
+    for (const building_provides_t &provides : finder->second.provides) {
+        
+        if (provides.provides == provides_wall) {
+            current_region->tile_type[index] = tile_type::WALL;
+        } else if (provides.provides == provides_floor) {
+            current_region->tile_type[index] = tile_type::FLOOR;
+        } else if (provides.provides == provides_stairs_up) {
+            current_region->tile_type[index] = tile_type::STAIRS_UP;
+        } else if (provides.provides == provides_stairs_down) {
+            current_region->tile_type[index] = tile_type::STAIRS_DOWN;
+        } else if (provides.provides == provides_stairs_updown) {
+            current_region->tile_type[index] = tile_type::STAIRS_UPDOWN;
+        } else if (provides.provides == provides_ramp) {
+            current_region->tile_type[index] = tile_type::RAMP;
+        }
+    }
+    current_region->tile_material[index] = e.material;
+
+    for (int Z=-2; Z<3; ++Z) {
+        for (int Y=-2; Y<3; ++Y) {
+            for (int X=-2; X<3; ++X) {
+                current_region->tile_calculate(construction_pos->x + X, construction_pos->y + Y, construction_pos->z + Z);
+            }
+        }
+    }
+
+    delete_entity(e.entity_id);
+    std::cout << "Deleted entity\n";
+    emit(renderables_changed_message{});
 }

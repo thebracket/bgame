@@ -296,6 +296,11 @@ void read_buildings() {
                     if (type == "door") provisions.provides = provides_door;
                     if (type == "food") provisions.provides = provides_food;
                     if (type == "sleep") provisions.provides = provides_sleep;
+                    if (type == "floor") provisions.provides = provides_floor;
+                    if (type == "stairs_up") provisions.provides = provides_stairs_up;
+                    if (type == "stairs_down") provisions.provides = provides_stairs_down;
+                    if (type == "stairs_updown") provisions.provides = provides_stairs_updown;
+                    if (type == "ramp") provisions.provides = provides_ramp;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
@@ -645,22 +650,22 @@ uint16_t get_tile_contents_index(const std::string name) {
 	}
 }
 
-void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag) {
+void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
     auto finder = item_defs.find(tag);
     if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto item = create_entity()
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories});
+        ->assign(item_t{tag, finder->second.name, finder->second.categories, material});
 }
 
-void spawn_item_in_container(const std::size_t container_id, const std::string &tag) {
+void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material) {
     auto finder = item_defs.find(tag);
     if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto item = create_entity()
         ->assign(item_stored_t{ container_id })
         ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories});
+        ->assign(item_t{tag, finder->second.name, finder->second.categories, material});
 }

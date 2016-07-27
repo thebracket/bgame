@@ -71,7 +71,9 @@ struct item_def_t {
 	rltk::color_t bg;
 };
 
-enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, provides_wall };
+enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 
+		provides_wall, provides_floor, provides_stairs_up, provides_stairs_down, provides_stairs_updown,
+		provides_ramp };
 
 struct building_provides_t {
 	provides_t provides;
@@ -170,8 +172,13 @@ void load_raws();
 uint8_t get_tile_type_index(const std::string name);
 uint16_t get_tile_contents_index(const std::string name);
 
-void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag);
-void spawn_item_in_container(const std::size_t container_id, const std::string &tag);
+void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material);
+void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 
 std::string to_proper_noun_case(const std::string &original);
 std::vector<std::string> split ( const std::string str, const char delimiter );
+
+inline std::size_t get_material_by_tag(const std::string &tag) {
+	auto finder = material_defs_idx.find(tag);
+	return finder->second;
+}

@@ -321,6 +321,12 @@ materials = {
         hit_points = 10, mines_to="sand"
     },
 
+-- Other materials needed
+    wood = { name = "Wood", type="synthetic", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['black'],
+        hit_points = 20
+    },
+
 -- Synthetic Materials - don't occur in nature
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],

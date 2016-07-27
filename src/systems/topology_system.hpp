@@ -2,6 +2,7 @@
 
 #include <rltk.hpp>
 #include "../messages/perform_mining.hpp"
+#include "../messages/perform_construction.hpp"
 
 class topology_system : public rltk::base_system {
 public:
@@ -17,4 +18,6 @@ private:
     void recalculate(const perform_mining_message &e);
     void spawn_mining_result(const perform_mining_message &e);
     void spawn_mining_result_impl(const perform_mining_message &e, std::string tag);
+
+    void build_construction(const perform_construction_message &e);
 };
