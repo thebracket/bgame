@@ -65,6 +65,7 @@ void camera_system::update(const double duration_ms) {
 	if (dirty || clip_left == -1) {
 		 update_clipping_rectangle();
 		 build_render_tiles();
+		 dirty = false;
 	}
 }
 
