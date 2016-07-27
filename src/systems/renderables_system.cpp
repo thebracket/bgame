@@ -29,9 +29,14 @@ void renderables_system::update(const double time_elapsed) {
 		});
 		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
 			int glyph_idx = 0;
+			int offset_x = 0;
+			int offset_y = 0;
+			if (b.width == 3) offset_x = -1;
+			if (b.height == 3) offset_y = -1;
+
 			for (int y = 0; y<b.height; ++y) {
 				for (int x=0; x<b.width; ++x) {
-					const int idx = mapidx(pos.x+x, pos.y+y, pos.z);
+					const int idx = mapidx(pos.x+x+offset_x, pos.y+y+offset_y, pos.z);
 					renderables[idx] = b.glyphs[glyph_idx];
 					if (!b.complete) renderables[idx].foreground = rltk::colors::GREY;
 					++glyph_idx;

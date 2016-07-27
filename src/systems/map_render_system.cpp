@@ -103,10 +103,16 @@ vchar get_render_char_building(const int &x, const int &y) {
 
 	// Build designations go here
 	if (build_mode_building && mouse_in_terminal) {
-		const int building_left_x = mouse_term_x;
-		const int building_top_y = mouse_term_y;
-		const int building_right_x = mouse_term_x + build_mode_building.get().width;
-		const int building_bottom_y = mouse_term_y + build_mode_building.get().height;
+		int offset_x = 0;
+		int offset_y = 0;
+
+		if (build_mode_building.get().width == 3) offset_x = -1;
+		if (build_mode_building.get().height == 3) offset_y = -1;
+
+		const int building_left_x = mouse_term_x + offset_x;
+		const int building_top_y = mouse_term_y + offset_y;
+		const int building_right_x = mouse_term_x + build_mode_building.get().width + offset_x;
+		const int building_bottom_y = mouse_term_y + build_mode_building.get().height + offset_y;
 		if (x+clip_left >= building_left_x && x+clip_left < building_right_x && y+clip_top>= building_top_y && y+clip_top < building_bottom_y) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;

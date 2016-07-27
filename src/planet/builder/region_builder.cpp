@@ -430,9 +430,9 @@ void add_building(std::string tag, const int x, const int y, const int z) {
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {
-        new_building->assign(construct_power_t{0,5,0});
+        new_building->assign(construct_power_t{0,1,0});
     } else if (tag == "solar_panel") {
-        new_building->assign(construct_power_t{20,0,5});
+        new_building->assign(construct_power_t{00,0,1});
     }
 }
 
@@ -587,7 +587,7 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
 		add_construction(region, crash_x+4, crash_y-1, crash_z+2, "ship_wall", true);
 	}
 
-	add_construction(region, crash_x, crash_y, crash_z, "cordex", true);
+	add_construction(region, crash_x+1, crash_y+1, crash_z, "cordex", true);
 
 	add_construction(region, crash_x+5, crash_y, crash_z-1, "ship_up");
 	add_construction(region, crash_x+5, crash_y, crash_z, "ship_updown");
