@@ -689,7 +689,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		ai.job_type_minor = JM_GO_TO_BUILDING;
 		change_job_status(ai, name, "Going to building site");
-		ai.current_path = find_path(pos, position_t{ai.building_target.get().x, ai.building_target.get().y, ai.building_target.get().z});
+		ai.current_path = find_path(pos, position_t{ai.building_target.get().x, ai.building_target.get().y, ai.building_target.get().z}, true);
 		return;
 	}
 

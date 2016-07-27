@@ -3,6 +3,7 @@
 #include "../planet/region.hpp"
 #include "../game_globals.hpp"
 
+template<int ADJACENCY>
 struct navigator_t {
 	static float get_distance_estimate(position_t &pos, position_t &goal) {
 		float d = distance3d_squared(pos.x, pos.y, pos.z, goal.x, goal.y, goal.z);
@@ -10,19 +11,23 @@ struct navigator_t {
 	}
 
 	static bool is_goal(position_t &pos, position_t &goal) {
-		return pos == goal;
+		if (ADJACENCY == 0) return pos == goal;
+		if (pos.z != goal.z) return false;
+		int d = distance2d(pos.x, pos.y, goal.x, goal.y);
+		if (d <= ADJACENCY) return true;
+		return false;
 	}
 
 	// This is where we calculate where you can go from a given tile. In this case, we check
 	// all 8 directions, and if the destination is walkable return it as an option.
 	static bool get_successors(position_t pos, std::vector<position_t> &successors) {
 		const int idx = mapidx(pos.x, pos.y, pos.z);
-		if (current_region->tile_flags[idx].test(CAN_GO_NORTH)) successors.push_back(position_t(pos.x, pos.y-1, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_SOUTH)) successors.push_back(position_t(pos.x, pos.y+1, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_EAST)) successors.push_back(position_t(pos.x+1, pos.y, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_WEST)) successors.push_back(position_t(pos.x-1, pos.y, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_UP)) successors.push_back(position_t(pos.x, pos.y, pos.z+1));
-		if (current_region->tile_flags[idx].test(CAN_GO_DOWN)) successors.push_back(position_t(pos.x, pos.y, pos.z-1));
+		if (current_region->tile_flags[idx].test(CAN_GO_NORTH) && current_region->water_level[idx-REGION_WIDTH]<4) successors.push_back(position_t(pos.x, pos.y-1, pos.z));
+		if (current_region->tile_flags[idx].test(CAN_GO_SOUTH) && current_region->water_level[idx+REGION_WIDTH]<4) successors.push_back(position_t(pos.x, pos.y+1, pos.z));
+		if (current_region->tile_flags[idx].test(CAN_GO_EAST) && current_region->water_level[idx+1]<4) successors.push_back(position_t(pos.x+1, pos.y, pos.z));
+		if (current_region->tile_flags[idx].test(CAN_GO_WEST) && current_region->water_level[idx-1]<4) successors.push_back(position_t(pos.x-1, pos.y, pos.z));
+		if (current_region->tile_flags[idx].test(CAN_GO_UP) && current_region->water_level[idx+(REGION_WIDTH*REGION_HEIGHT)]<4) successors.push_back(position_t(pos.x, pos.y, pos.z+1));
+		if (current_region->tile_flags[idx].test(CAN_GO_DOWN) && current_region->water_level[idx-(REGION_WIDTH*REGION_HEIGHT)]<4) successors.push_back(position_t(pos.x, pos.y, pos.z-1));
 
 		return true;
 	}
@@ -40,6 +45,7 @@ struct navigator_t {
 	}
 };
 
-std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &start, const position_t &end) {
-	return rltk::find_path<position_t, navigator_t>(start, end);
+std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &start, const position_t &end, const bool find_adjacent) {
+	if (!find_adjacent)	return rltk::find_path<position_t, navigator_t<0>>(start, end);
+	return rltk::find_path<position_t, navigator_t<1>>(start, end);
 }
