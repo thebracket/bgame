@@ -53,6 +53,7 @@ glyphs = {
 	double_pillar = 246,
 	double_wave = 247,
 	circle = 248,
+	square_root = 251,
 	squared = 253,
 	inset_square = 254
 }

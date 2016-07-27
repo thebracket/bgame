@@ -54,6 +54,18 @@ buildings = {
 		}
 	},
 
+	small_replicator = {
+		name = "A small replicator",
+		components = { "replicator_unit" },
+		skill = { name="Construction", difficulty=10 },
+		provides = { storage={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['square_root'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
 	rtg = {
 		name = "A small nuclear power generator",
 		components = { "refined_plutonium" },

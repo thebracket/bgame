@@ -479,6 +479,8 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         add_building("battery", x, y, z);
     } else if (type == "rtg") {
         add_building("rtg", x, y, z);
+    } else if (type == "small_replicator") {
+        add_building("small_replicator", x, y, z);
     } else {
         std::cout << "Don't know how to build a " << type << "\n";
     }
@@ -619,7 +621,7 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
 	add_construction(region, crash_x - 4, crash_y-1, crash_z - 1, "battery");
 	add_construction(region, crash_x - 4, crash_y-2, crash_z - 1, "battery");
 	add_construction(region, crash_x - 4, crash_y, crash_z - 1, "rtg");
-	//add_construction(region, crash_x +3, crash_y, crash_z, "replicator");
+	add_construction(region, crash_x +3, crash_y, crash_z, "small_replicator");
 }
 
 void build_game_components(region_t &region, const int crash_x, const int crash_y, const int crash_z) {

@@ -270,5 +270,21 @@ items = {
 		glyph = glyphs['squared'],
 		foreground = colors['magenta'],
 		background = colors['black']
+	},
+	tea_replicated = {
+		name = "Tea, Earl-Grey Lukewarm",
+		description = "A replicated substance that tastes somewhat like tea",
+		itemtype = {"drink"},
+		glyph = glyphs['squared'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	sandwich_replicated = {
+		name = "Stale-tasting sandwich",
+		description = "A replicated sandwich that sort-of tastes like chicken",
+		itemtype = {"food"},
+		glyph = glyphs['squared'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
 	}
 }

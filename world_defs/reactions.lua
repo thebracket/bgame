@@ -171,7 +171,7 @@ reactions = {
         automatic = true
     },
     replicate_tiny_marshmallow = {
-        name = "Make Tiny Marshmallow",
+        name = "Replicate Tiny Marshmallow",
         workshop = "fake_camp_fire",
         inputs = {  },
         outputs = { { item="tiny_marshmallow", qty=1 } },
@@ -179,6 +179,26 @@ reactions = {
         difficulty = 5,
         automatic = false,
         power_drain = 10
+    },
+    replicate_tea_earl_grey_hot = {
+        name = "Replicate Cup of Tea",
+        workshop = "small_replicator",
+        inputs = {  },
+        outputs = { { item="tea_replicated", qty=1 } },
+        skill = "Construction",
+        difficulty = 5,
+        automatic = false,
+        power_drain = 20
+    },
+    replicate_sandwich = {
+        name = "Replicate Sandwich",
+        workshop = "small_replicator",
+        inputs = {  },
+        outputs = { { item="sandwich_replicated", qty=1 } },
+        skill = "Construction",
+        difficulty = 5,
+        automatic = false,
+        power_drain = 20
     }
 }
 
