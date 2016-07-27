@@ -55,15 +55,27 @@ void make_mining_map() {
 						// Up stairs - can stand on the square or the square above
 						starting_points.push_back(std::make_tuple(x,y,z,idx));
 						starting_points.push_back(std::make_tuple(x,y,z+1,idx));
+						starting_points.push_back(std::make_tuple(x-1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x+1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x,y-1,z,idx));
+						starting_points.push_back(std::make_tuple(x,y+1,z,idx));
 					} else if (mf->second==5) {	
-						// Down stairs - can stand on the square or the square below
+						// Down stairs - can stand on the square or the square below, or adjacent to the top
 						starting_points.push_back(std::make_tuple(x,y,z,idx));
 						starting_points.push_back(std::make_tuple(x,y,z-1,idx));
+						starting_points.push_back(std::make_tuple(x-1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x+1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x,y-1,z,idx));
+						starting_points.push_back(std::make_tuple(x,y+1,z,idx));
 					} else if (mf->second==6) {	
 						// Up/down Stairs - can stand on the square or above/below
 						starting_points.push_back(std::make_tuple(x,y,z,idx));
 						starting_points.push_back(std::make_tuple(x,y,z-1,idx));
 						starting_points.push_back(std::make_tuple(x,y,z+1,idx));
+						starting_points.push_back(std::make_tuple(x-1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x+1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x,y-1,z,idx));
+						starting_points.push_back(std::make_tuple(x,y+1,z,idx));
 					}
 				}
 			}
