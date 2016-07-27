@@ -232,6 +232,8 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::FLOOR : {	
 			if (material_defs[tile_material[idx]].spawn_type == sand) {
 				glyph = 247;
+			} else if (tile_flags[idx].test(CONSTRUCTION)) {
+				glyph = 240;
 			} else {
 				glyph = ',';
 			}
