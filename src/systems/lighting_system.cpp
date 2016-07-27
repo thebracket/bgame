@@ -54,6 +54,7 @@ void lighting_system::update(double time_ms) {
     std::queue<map_rerender_message> * map_change = mbox<map_rerender_message>();
 	while (!map_change->empty()) {
 		dirty = true;
+        lighting_changed = true;
 		map_change->pop();
 	}
 
@@ -61,6 +62,7 @@ void lighting_system::update(double time_ms) {
         // Rebuild the light map
         lit_tiles.clear();
         each<position_t, lightsource_t>(update_normal_light);
+        lighting_changed = true;
         dirty = false;
     }
 
