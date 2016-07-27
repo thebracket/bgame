@@ -1,0 +1,60 @@
+digraph G {
+	trees -> "wood logs" -> sawmill -> "wood planks" -> carpenter -> furniture
+	"wood planks" -> "charcoal burner"
+	"wood planks" -> walls
+	"wood planks" -> doors
+	sawmill -> "wood offcuts" -> "charcoal burner" -> charcoal
+
+	stone -> stonecutter -> "stone blocks" -> mason -> furniture
+	"stone blocks" -> "glass furnace"
+	"stone blocks" -> smelter
+	"stone blocks" -> walls
+	"stone blocks" -> doors
+
+	sand -> "glass furnace" -> "raw glass"
+
+	charcoal -> smelter
+	charcoal -> "glass furnace"
+
+	"mined rock" -> stone
+	"mined rock" -> "aluminium ore"
+	"mined rock" -> "tin ore"
+	"mined rock" -> "chromium ore"
+	"mined rock" -> "copper ore"
+	"mined rock" -> "lead ore"
+	"mined rock" -> "gold ore"
+	"mined rock" -> "iron ore"
+	"mined rock" -> "platinum ore"
+	"mined rock" -> "silver ore"
+	"mined rock" -> "zinc ore"
+	"mined rock" -> bismuth
+	"mined rock" -> mercury
+	"mined rock" -> uranium
+	"mined rock" -> saltpeter
+	"mined rock" -> alabaster
+	"mined rock" -> gypsum
+	"mined rock" -> coal
+	"mined rock" -> sulphur
+	"mined rock" -> flint
+	"mined rock" -> sand
+	"mined rock" -> oil
+	"mined rock" -> clay
+	"mined rock" -> topsoil
+
+	"aluminium ore" -> smelter -> "aluminium bars"
+	"tin ore" -> smelter -> "tin bars"
+	"chromium ore" -> smelter -> "chromium bars"
+	"copper ore" -> smelter -> "copper bars"
+	"lead ore" -> smelter -> "lead bars"
+	"gold ore" -> smelter -> "gold bars"
+	"iron ore" -> smelter -> "iron bars"
+	"platinum ore" -> smelter -> "platinum bars"
+	"silver ore" -> smelter -> "silver bars"
+	"zinc ore" -> smelter -> "zinc bars"
+
+	"nuclear camp fire" -> "tiny marshmallow"
+
+	replicator -> "Cup of Tea"
+	replicator -> "Stale Sandwich"
+
+}
