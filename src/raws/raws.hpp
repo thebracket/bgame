@@ -73,11 +73,13 @@ struct item_def_t {
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 
 		provides_wall, provides_floor, provides_stairs_up, provides_stairs_down, provides_stairs_updown,
-		provides_ramp };
+		provides_ramp, provides_light };
 
 struct building_provides_t {
 	provides_t provides;
-	int energy_cost;
+	int energy_cost = 0;
+	int radius = 0;
+	rltk::color_t color = rltk::colors::WHITE;
 };
 
 struct building_def_t {
@@ -100,6 +102,7 @@ struct reaction_t {
 	std::string skill;
 	int difficulty;
 	bool automatic = false;
+	int power_drain = 0;
 };
 
 struct biome_type_t {

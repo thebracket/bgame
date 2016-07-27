@@ -169,6 +169,16 @@ reactions = {
         skill = "Furnace Operation",
         difficulty = 12,
         automatic = true
+    },
+    replicate_tiny_marshmallow = {
+        name = "Make Tiny Marshmallow",
+        workshop = "fake_camp_fire",
+        inputs = {  },
+        outputs = { { item="tiny_marshmallow", qty=1 } },
+        skill = "Construction",
+        difficulty = 5,
+        automatic = false,
+        power_drain = 10
     }
 }
 

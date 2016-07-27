@@ -38,6 +38,9 @@ struct designations_t {
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	int current_power = 10;
 
+	// Not serialized
+	rltk::color_t alert_color = rltk::colors::WHITE;
+
 	designations_t() {
 	}
 

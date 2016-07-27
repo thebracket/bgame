@@ -39,7 +39,7 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 }
 
 void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
-	reveal(mapidx(pos.x, pos.y, pos.z), view);
+    if (view.alert_status) view.color = designations->alert_color;
 	for (int z=(0-view.radius); z<view.radius; ++z) {
 		for (int i=0-view.radius; i<view.radius; ++i) {
 			internal_light_to(pos, view, i, 0-view.radius, z);

@@ -301,12 +301,15 @@ void read_buildings() {
                     if (type == "stairs_down") provisions.provides = provides_stairs_down;
                     if (type == "stairs_updown") provisions.provides = provides_stairs_updown;
                     if (type == "ramp") provisions.provides = provides_ramp;
+                    if (type == "light") provisions.provides = provides_light;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
                         std::string inner_type = lua_tostring(lua_state, -2);
                         if (inner_type == "energy_cost") provisions.energy_cost = lua_tonumber(lua_state, -1);
+                        if (inner_type == "radius") provisions.radius = lua_tonumber(lua_state, -1);
+                        if (inner_type == "color") provisions.color = read_lua_color("color");
                         lua_pop(lua_state, 1);
                     }
 
@@ -422,6 +425,7 @@ void read_reactions() {
                 }
             }
             if (field == "automatic") c.automatic = lua_toboolean(lua_state, -1);
+            if (field == "power_drain") c.power_drain = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }

@@ -45,8 +45,15 @@ void power_system::update(double time_ms) {
         total_solar += p.generation_solar;
     });
 
-    float power_pct = (float)designations->current_power / (float) total_capacity; 
+    float power_pct = (float)designations->current_power / (float) total_capacity;
+
+    if (power_pct < 0.5) {
+        designations->alert_color = lerp(rltk::colors::RED, rltk::colors::ORANGE, power_pct*2.0F);
+    } else {
+        designations->alert_color = lerp(rltk::colors::ORANGE, rltk::colors::GREEN, (power_pct-0.5F)*2.0F);
+    }
+
     std::stringstream ss;
     ss << "Power: " << designations->current_power << "/" << total_capacity;
-    term(2)->print(20,0,ss.str(), lerp(rltk::colors::RED, rltk::colors::GREEN, power_pct));
+    term(2)->print(20,0,ss.str(), designations->alert_color);
 }

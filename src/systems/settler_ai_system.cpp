@@ -742,6 +742,8 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			for (const building_provides_t &provides : finder->second.provides) {
 				if (provides.provides == provides_sleep) {
 					entity(ai.building_target.get().building_entity)->assign(construct_provides_sleep_t{});
+				} else if (provides.provides == provides_light) {
+					entity(ai.building_target.get().building_entity)->assign(lightsource_t{provides.radius, provides.color});
 				} else if (provides.provides == provides_wall || provides.provides == provides_floor 
 						|| provides.provides == provides_stairs_up
 						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 
@@ -850,7 +852,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		if (skill_check >= SUCCESS) {
 			// Delete components
-			std::size_t material;
+			std::size_t material = get_material_by_tag("plasteel");
 			for (auto comp : ai.reaction_target.get().components) {
 				material = entity(comp.first)->component<item_t>()->material;
 				delete_item(comp.first);
@@ -862,6 +864,9 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 					spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
 				}
 			}
+
+			// Consume power
+			if (finder->second.power_drain != 0) emit(power_consumed_message{finder->second.power_drain});
 
 			// Finish
 			free_workshop(ai.reaction_target.get().building_id);

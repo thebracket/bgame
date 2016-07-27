@@ -53,6 +53,7 @@ glyphs = {
 	double_pillar = 246,
 	double_wave = 247,
 	circle = 248,
+	squared = 253,
 	inset_square = 254
 }
 
@@ -88,5 +89,6 @@ colors = {
 	tin_blue = { r=211, g=212, b=213 },
 	chromium_blue = { r=198, g=200, b=201 },
 	copper = { r=205, g=153, b=153 },
-	zinc = { r=186, g=196, b=200 }
+	zinc = { r=186, g=196, b=200 },
+	firelight = { r=255, g=255, b=192 },
 }

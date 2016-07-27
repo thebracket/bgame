@@ -262,5 +262,13 @@ items = {
 		glyph = glyphs['door'],
 		foreground = colors['grey'],
 		background = colors['black']
+	},
+	tiny_marshmallow = {
+		name = "Tiny Marshmallow",
+		description = "A tiny lump of congealed sugar",
+		itemtype = {"food"},
+		glyph = glyphs['squared'],
+		foreground = colors['magenta'],
+		background = colors['black']
 	}
 }

@@ -82,10 +82,10 @@ buildings = {
 		name = "Nuclear Camp Fire",
 		components = { "camp_fire_kit" },
 		skill = { name="Construction", difficulty=5 },
-		provides = { food={energy_cost=5} },
+		provides = { light={radius=5, color = colors['yellow']} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['sun'], foreground = colors['orange'], background = colors['yellow']}
+				{glyph= glyphs['sun'], foreground = colors['firelight'], background = colors['yellow']}
 			}
 		}
 	},
