@@ -30,7 +30,7 @@ void calendar_system::update(const double duration_ms) {
 
 			// Update the calendar display
 			term(2)->clear();
-			term(2)->print(0,0,calendar->get_date_time(), rltk::colors::GREY);
+			term(2)->print(0,0,calendar->get_date_time(), rltk::colors::WHITE);
 
 			if (pause_mode == ONE_STEP) {
 				pause_mode = PAUSED;

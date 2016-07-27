@@ -45,7 +45,8 @@ void power_system::update(double time_ms) {
         total_solar += p.generation_solar;
     });
 
+    float power_pct = (float)designations->current_power / (float) total_capacity; 
     std::stringstream ss;
     ss << "Power: " << designations->current_power << "/" << total_capacity;
-    term(2)->print(18,0,ss.str(), rltk::colors::GREY);
+    term(2)->print(20,0,ss.str(), lerp(rltk::colors::RED, rltk::colors::GREEN, power_pct));
 }
