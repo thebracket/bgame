@@ -1,5 +1,6 @@
 #include "world_gen.hpp"
 #include "planet/planet_builder.hpp"
+#include "game_globals.hpp"
 #include <iostream>
 
 constexpr int WORLD_LAYER=1;
@@ -9,7 +10,11 @@ using namespace rltk;
 using namespace rltk::colors;
 
 void world_gen::init() {
-	gui->add_layer(WORLD_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, true);
+	auto window_size = get_window()->getSize();
+	const int window_width = window_size.x;
+	const int window_height = window_size.y;
+
+	gui->add_layer(WORLD_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, true);
 	done = false;
 	setup_build_planet(term(WORLD_LAYER)->term_width, term(WORLD_LAYER)->term_height);
 	world_thread = std::make_unique<std::thread>(build_planet);
