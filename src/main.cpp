@@ -4,6 +4,7 @@
 #include "world_gen.hpp"
 #include "play_game.hpp"
 #include "game_globals.hpp"
+#include "utils/string_utils.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -74,9 +75,23 @@ void tick(double duration_ms) {
 	}
 }
 
+void read_config() {
+	std::ifstream f("world_defs/config.txt");
+	std::string line;
+	while (getline(f, line))
+	{
+		auto split_line = split(line, '=');
+		if (split_line[0] == "window_width") game_config.window_width = std::stoi(split_line[1]);
+		if (split_line[0] == "window_height") game_config.window_height = std::stoi(split_line[1]);
+		if (split_line[0] == "game_font") game_config.game_font = split_line[1];
+		if (split_line[0] == "gui_font") game_config.gui_font = split_line[1];
+	}
+}
+
 int main()
 {
-	init(config_advanced("../assets", 800, 600, "Black Future"));
+	read_config();
+	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future"));
 	splash.init();
     run(tick);
 }

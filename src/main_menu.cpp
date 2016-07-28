@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "menu_helper.hpp"
 #include "constants.hpp"
+#include "game_globals.hpp"
 
 constexpr int BACKDROP_LAYER=1;
 constexpr int LOG_LAYER=2;
@@ -36,8 +37,12 @@ std::string main_menu::get_descriptive_noun() {
 }
 
 void main_menu::init() {
-	gui->add_owner_layer(BACKDROP_LAYER, 0, 0, 800, 600, resize_fullscreen, draw_splash_backdrop);
-	gui->add_layer(LOG_LAYER, 0, 0, 800, 600, "8x16", resize_fullscreen, false);
+	auto window_size = get_window()->getSize();
+	const int window_width = window_size.x;
+	const int window_height = window_size.y;
+
+	gui->add_owner_layer(BACKDROP_LAYER, 0, 0, window_width, window_height, resize_fullscreen, draw_splash_backdrop);
+	gui->add_layer(LOG_LAYER, 0, 0, window_width, window_height, game_config.gui_font, resize_fullscreen, false);
 
 	if (boost::filesystem::exists("world/savegame.dat")) {
 		world_exists = true;

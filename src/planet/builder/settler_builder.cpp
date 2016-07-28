@@ -1,5 +1,6 @@
 #include "settler_builder.hpp"
 #include "../../components/components.hpp"
+#include "../../utils/string_utils.hpp"
 
 using namespace rltk;
 

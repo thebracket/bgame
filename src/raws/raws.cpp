@@ -1,6 +1,7 @@
 #include "raws.hpp"
 #include "lua_bridge.hpp"
 #include "../components/components.hpp"
+#include "../utils/string_utils.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -31,30 +32,6 @@ std::vector<material_def_t> material_defs;
 boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
 
-std::string to_proper_noun_case(const std::string &original)
-{
-    std::string result;
-    result += std::toupper(original[0]);
-    for (std::size_t i = 1; i < original.size(); ++i)
-    {
-        result += std::tolower(original[i]);
-    }
-    return result;
-}
-
-std::vector<std::string> split ( const std::string str, const char delimiter )
-{
-     std::vector<std::string> internal;
-     std::stringstream ss ( str ); // Turn the string into a stream.
-     std::string tok;
-
-     while ( getline ( ss, tok, delimiter ) ) {
-          internal.push_back ( tok );
-     }
-
-     return internal;
-}
-
 void load_string_table(const std::string filename, string_table_t &target) {
 	std::ifstream f(filename);
 	std::string line;
@@ -63,38 +40,6 @@ void load_string_table(const std::string filename, string_table_t &target) {
 		target.strings.push_back(line);
 	}
 }
-
-/*
-void print_lua_table(lua_State *L, std::string table_name = "", int depth = 0)
-{
-	if (table_name != "") {
-		std::cout << table_name << "\n";
-		for (int i=0; i<table_name.size(); ++i) std::cout << "-";
-		std::cout << "\n";
-		lua_getglobal(L, table_name.c_str());
-	    lua_pushnil(L);
-	}
-
-    while(lua_next(L, -2) != 0)
-    {
-    	std::string key = lua_tostring(L, -2);
-
-    	if (depth == 0) std::cout << "\n";
-    	for (int i=0; i<depth*3; ++i) std::cout << " ";
-    	std::cout << "[" << key << "]";
-    	if (lua_istable(L, -1)) {
-    		std::cout << " is a table\n";
-    		lua_pushstring(L, key.c_str());
-    		lua_gettable(L, -2);
-    		print_lua_table(L, "", depth+1);
-    	} else {
-    		std::cout << " is a " << luaL_typename(L, -1) << "\n";
-    	}
-    	//printf("%s - %s\n", lua_tostring(L, -2), luaL_typename(L, -1));
-    	lua_pop(L, 1);
-    }
-}
-*/
 
 rltk::color_t read_lua_color(std::string field) {
 	rltk::color_t col;
@@ -349,7 +294,6 @@ void read_buildings() {
             }
             if (field == "render_rex") {
                 std::string filename = "rex/" + std::string(lua_tostring(lua_state, -1));
-                std::cout << "Reading " << filename << "\n";
                 xp::rex_sprite sprite(filename);
                 c.width = sprite.get_width();
                 c.height = sprite.get_height();

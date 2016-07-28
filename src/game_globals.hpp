@@ -7,6 +7,13 @@
 #include <boost/optional.hpp>
 #include <memory>
 
+struct config_t {
+	int window_width = 800;
+	int window_height = 600;
+	std::string game_font = "8x8";
+	std::string gui_font = "8x16";
+};
+
 struct available_building_t {
 	available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
 
@@ -23,6 +30,7 @@ enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW };
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, DELETE };
 
+extern config_t game_config;
 extern planet_t planet;
 extern std::unique_ptr<region_t> current_region;
 extern std::size_t camera_entity;

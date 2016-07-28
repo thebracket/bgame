@@ -42,10 +42,14 @@ void resize_game_panel(rltk::layer_t * l, int w, int h) {
 }
 
 void play_game::init() {
+	auto window_size = get_window()->getSize();
+	const int window_width = window_size.x;
+	const int window_height = window_size.y;
+
 	// Setup the display
-	gui->add_layer(MAP_LAYER, 0, 0, 800 - (20*8), 600, "8x8", resize_game_panel, true);
-	gui->add_layer(GUI_LAYER, 0, 0, 800, 600, "8x8", resize_fullscreen, false);
-	gui->add_layer(RIGHT_PANEL, 800 - (20*8), 0, 20*8, 600, "8x16", resize_right_panel, true);
+	gui->add_layer(MAP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_game_panel, true);
+	gui->add_layer(GUI_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, false);
+	gui->add_layer(RIGHT_PANEL, window_width - (20*8), 0, 20*8, window_height, game_config.gui_font, resize_right_panel, true);
 
 	// Load the game
 	std::cout << "Loading the planet\n";

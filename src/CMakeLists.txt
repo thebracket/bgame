@@ -62,6 +62,7 @@ add_executable(bgame main.cpp
 	planet/builder/region_builder.cpp
 	raws/raws.cpp
 	raws/lua_bridge.cpp
+	utils/string_utils.cpp
 )
 target_include_directories(bgame PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rltk/rltk>

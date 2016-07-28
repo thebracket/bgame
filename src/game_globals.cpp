@@ -1,5 +1,6 @@
 #include "game_globals.hpp"
 
+config_t game_config;
 planet_t planet;
 std::unique_ptr<region_t> current_region = std::make_unique<region_t>();
 std::size_t camera_entity;
