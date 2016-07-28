@@ -93,7 +93,6 @@ void topology_system::recalculate(const perform_mining_message &e) {
             for (int X=-2; X<3; ++X) {
                 current_region->revealed[mapidx(e.x + X, e.y + Y, e.z + Z)] = true;
                 current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
-                current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
             }
         }
     }

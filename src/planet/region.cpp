@@ -59,6 +59,7 @@ region_t load_region(const int region_x, const int region_y) {
 	deserialize(inflate, region.tile_flags);
 	deserialize(inflate, region.water_level);
 
+	std::cout << "Recalculating region paths\n";
 	region.tile_recalc_all();
 	return region;
 }
@@ -96,14 +97,18 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 
 		// Locations on which one can stand
 		tile_flags[idx].set(CAN_STAND_HERE);
+		if (tile_type[idx] == tile_type::OPEN_SPACE) tile_flags[idx].reset(CAN_STAND_HERE);
 
 		if (z>0) {
 			const int idx_below = mapidx(x,y,z-1);
 
 			// Can stand on the tile above walls, ramps and up stairs
+			if (tile_type[idx] == tile_type::FLOOR) tile_flags[idx].set(CAN_STAND_HERE);
 			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::WALL) tile_flags[idx].set(CAN_STAND_HERE);
 			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::RAMP) tile_flags[idx].set(CAN_STAND_HERE);
 			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::STAIRS_UP) tile_flags[idx].set(CAN_STAND_HERE);
+			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::STAIRS_UPDOWN) tile_flags[idx].set(CAN_STAND_HERE);
+			if (tile_type[idx] == tile_type::OPEN_SPACE && tile_type[idx_below] == tile_type::SOLID) tile_flags[idx].set(CAN_STAND_HERE);
 		}
 	}
 

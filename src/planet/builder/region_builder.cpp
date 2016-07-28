@@ -276,8 +276,8 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
 }
 
 void build_ramps(region_t &region) {
-    for (int y=1; y<WORLD_HEIGHT-1; ++y) {
-        for (int x=1; x<WORLD_WIDTH-1; ++x) {
+    for (int y=1; y<REGION_HEIGHT-1; ++y) {
+        for (int x=1; x<REGION_WIDTH-1; ++x) {
             const int z = get_ground_z(region,x,y);
             if (region.tile_type[mapidx(x,y,z)] == tile_type::FLOOR) {
                 bool is_ramp = false;

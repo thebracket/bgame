@@ -186,7 +186,7 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 	const int terminal_y = mouse_y / font_h;
 	const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 	const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
-	const int tile_idx = render_tiles[(terminal_y*term(1)->term_width)+terminal_x];
+	const int tile_idx = mapidx( world_x, world_y, camera_position->region_z );
 	bool tooltip = false;
 	
 	if (terminal_x == last_mouse_x && terminal_y == last_mouse_y && world_y > 0) {
@@ -201,6 +201,19 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 	if (tooltip) {
 		std::vector<std::string> lines;
 
+		{
+			std::stringstream ss;
+			if (current_region->tile_flags[tile_idx].test(CAN_GO_DOWN)) ss << "Down-";
+			if (current_region->tile_flags[tile_idx].test(CAN_GO_UP)) ss << "Up-";
+			if (current_region->tile_flags[tile_idx].test(CAN_GO_NORTH)) ss << "North-";
+			if (current_region->tile_flags[tile_idx].test(CAN_GO_EAST)) ss << "East-";
+			if (current_region->tile_flags[tile_idx].test(CAN_GO_WEST)) ss << "West-";
+			if (current_region->tile_flags[tile_idx].test(CAN_GO_SOUTH)) ss << "South-";
+			if (current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) ss << "Stand";
+			lines.push_back(ss.str());
+		}
+		if (current_region->water_level[tile_idx]>0) lines.push_back(std::string("Water level: " + std::to_string(current_region->water_level[tile_idx])));
+
 		{ // Base tile type
 			std::stringstream ss;
 			switch (current_region->tile_type[tile_idx]) {
@@ -212,9 +225,9 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 				case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
 				case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
-				case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				default : ss << "Unknown!";
 			}
 			lines.push_back(ss.str());

@@ -486,7 +486,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 		}
 		ai.current_path = find_path(pos, axe.pos.get());
 		if (!ai.current_path->success) {
-			cancel_action(e, ai, stats, species, pos, name, "No available axe");
+			cancel_action(e, ai, stats, species, pos, name, "No route to available axe");
 			return;
 		}
 		ai.job_type_minor = JM_GO_TO_AXE;
@@ -558,7 +558,8 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			designations->chopping.erase(ai.target_id);
 			return;
 		} else {
-			cancel_action(e, ai, stats, species, pos, name, "Can't find tree'");
+			designations->chopping.erase(ai.target_id);
+			cancel_action(e, ai, stats, species, pos, name, "Can't find tree");
 			return;
 		}
 	}
