@@ -462,12 +462,14 @@ void panel_render_system::render_design_mode() {
 	}
 
 	if (game_design_mode == CHOPPING) {
-		term(3)->print(1,5, "Tree Chopping", WHITE, DARKEST_GREEN);
+		term(1)->print(22, 3, "Tree Cutting", YELLOW);
 
 		int mouse_x, mouse_y;
+		int font_w, font_h;
 		std::tie(mouse_x, mouse_y) = get_mouse_position();
-		const int terminal_x = mouse_x / 8;
-		const int terminal_y = mouse_y / 8;
+		std::tie(font_w, font_h) = term(1)->get_font_size();
+		const int terminal_x = mouse_x / font_w;
+		const int terminal_y = mouse_y / font_h;
 
 		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
 			const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
@@ -505,7 +507,8 @@ void panel_render_system::render_design_mode() {
 			
 		}
 	} else {
-		term(3)->print(1,5, "(T)ree Chopping", GREEN, GREEN_BG);
+		term(1)->print(22, 3, "Tree Cutting", WHITE);
+		term(1)->print(22, 3, "t", YELLOW);
 	}
 }
 
