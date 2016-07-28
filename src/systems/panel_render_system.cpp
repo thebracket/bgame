@@ -5,8 +5,10 @@
 #include "../messages/messages.hpp"
 #include "mining_system.hpp"
 #include "inventory_system.hpp"
+#include "camera_system.hpp"
 #include <sstream>
 #include <iomanip>
+#include <map>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -57,7 +59,7 @@ void panel_render_system::update(const double duration_ms) {
 	term(3)->clear();
 	//term(3)->box(DARKEST_GREEN);
 
-	render_mode_select();
+	render_mode_select(duration_ms);
 
 	if (game_master_mode == PLAY) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -122,34 +124,37 @@ void panel_render_system::configure() {
 	});
 }
 
-void panel_render_system::render_mode_select() {
+void panel_render_system::render_mode_select(const double duration_ms) {
 	// Mode switch controls
 	if (game_master_mode == PLAY) {
-		term(2)->print(1,1,"PLAY", WHITE, DARKEST_GREEN);
-		render_play_mode();
+		term(2)->print(1,1,"Play", YELLOW, BLUE);
+		render_play_mode(duration_ms);
 	} else {
-		term(2)->print(1,1,"(ESC) PLAY", GREEN, GREEN_BG);
+		term(2)->print(1,1,"Play", WHITE, BLACK);
 	}
 
 	if (game_master_mode == DESIGN) {
-		term(2)->print(13,1,"DESIGN", WHITE, DARKEST_GREEN);
+		term(2)->print(6,1,"Design", YELLOW, BLUE);
 		render_design_mode();
 	} else {
-		term(2)->print(10,1,"(D)ESIGN", GREEN, GREEN_BG);
+		term(2)->print(6,1,"D", YELLOW, BLACK);
+		term(2)->print(7,1,"esign", WHITE, BLACK);
 	}
 
 	if (game_master_mode == UNITS) {
-		term(2)->print(23,1,"UNITS", WHITE, DARKEST_GREEN);
+		term(2)->print(13,1,"Units", YELLOW, BLUE);
 		render_units_mode();
 	} else {
-		term(2)->print(20,1,"(U)NITS", GREEN, GREEN_BG);
+		term(2)->print(13,1,"U", YELLOW, BLACK);
+		term(2)->print(14,1,"nits", WHITE, BLACK);
 	}
 
 	if (game_master_mode == WORKFLOW) {
-		term(2)->print(32,1,"WORK", WHITE, DARKEST_GREEN);
+		term(2)->print(19,1,"Workflow", YELLOW, BLUE);
 		render_work_mode();
 	} else {
-		term(2)->print(29,1,"(W)ORK", GREEN, GREEN_BG);
+		term(2)->print(19,1,"W", YELLOW, BLACK);
+		term(2)->print(20,1,"orkflow", WHITE, BLACK);
 	}
 
 	if (game_master_mode == SETTLER) {
@@ -157,77 +162,116 @@ void panel_render_system::render_mode_select() {
 	}
 }
 
-void panel_render_system::render_play_mode() {
+void panel_render_system::render_play_mode(const double duration_ms) {
 	// Controls Help
 	if (pause_mode == PAUSED) {
-		term(3)->print(1,3,"SPACE : Unpause", GREEN, GREEN_BG);
+		term(2)->print(28,1,"SPACE", YELLOW);
+		term(2)->print(33,1," Unpause", WHITE, GREEN_BG);
 	} else {
-		term(3)->print(1,3,"SPACE : Pause", GREEN, GREEN_BG);
+		term(2)->print(28,1,"SPACE", YELLOW);
+		term(2)->print(33,1," Pause", WHITE, GREEN_BG);
 	}
-	term(3)->print(1,4,".     : One Step", GREEN, GREEN_BG);
+	term(2)->print(42,1,".",YELLOW);
+	term(2)->print(43,1," One Step", WHITE, GREEN_BG);
 
 	// Mouse tips
 	int mouse_x, mouse_y;
+	int font_w, font_h;
 	std::tie(mouse_x, mouse_y) = get_mouse_position();
+	std::tie(font_w, font_h) = term(1)->get_font_size();
 
 	// Since we're using an 8x8, it's just a matter of dividing by 8 to find the terminal-character
 	// coordinates. There will be a helper function for this once we get into retained GUIs.
-	const int terminal_x = mouse_x / 8;
-	const int terminal_y = mouse_y / 8;
+	const int terminal_x = mouse_x / font_w;
+	const int terminal_y = mouse_y / font_h;
+	const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
+	const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
+	const int tile_idx = render_tiles[(terminal_y*term(1)->term_width)+terminal_x];
+	bool tooltip = false;
 	
-	if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
-		const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
-		const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
-		const int idx = mapidx(world_x, world_y, camera_position->region_z);
+	if (terminal_x == last_mouse_x && terminal_y == last_mouse_y && world_y > 0) {
+		mouse_dwell_time += duration_ms;
+		if (mouse_dwell_time > 200.0 && tile_idx !=0 && current_region->revealed[tile_idx] ) tooltip = true;
+	} else {
+		last_mouse_x = terminal_x;
+		last_mouse_y = terminal_y;
+		mouse_dwell_time = 0.0;
+	}
 
-		{
-			const std::size_t base_tile_type = current_region->tile_material[idx];
+	if (tooltip) {
+		std::vector<std::string> lines;
+
+		{ // Base tile type
 			std::stringstream ss;
-			ss << material_defs[base_tile_type].name;
-			term(3)->print(1, term(3)->term_height - 2, ss.str(), GREEN, GREEN_BG);
+			switch (current_region->tile_type[tile_idx]) {
+				case tile_type::SEMI_MOLTEN_ROCK : ss << "Magma"; break;
+				case tile_type::SOLID : ss << "Solid Rock (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::OPEN_SPACE : ss << "Open Space"; break;
+				case tile_type::WALL : ss << "Wall (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::RAMP : ss << "Ramp (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+				case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
+				case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
+				default : ss << "Unknown!";
+			}
+			lines.push_back(ss.str());
 		}
-		{
-			std::stringstream ss;
-			if (current_region->solid[idx]) ss << "S";
-			if (current_region->tile_flags[idx].test(CONSTRUCTION)) ss << "C";
-			if (current_region->tile_flags[idx].test(CAN_GO_NORTH)) ss << "N";
-			if (current_region->tile_flags[idx].test(CAN_GO_SOUTH)) ss << "S";
-			if (current_region->tile_flags[idx].test(CAN_GO_EAST)) ss << "E";
-			if (current_region->tile_flags[idx].test(CAN_GO_WEST)) ss << "W";
-			if (current_region->tile_flags[idx].test(CAN_GO_UP)) ss << "U";
-			if (current_region->tile_flags[idx].test(CAN_GO_DOWN)) ss << "D";
-			ss << +mining_map[idx];
-			term(3)->print(1, term(3)->term_height - 4, ss.str(), GREEN, GREEN_BG);
+		if (current_region->tile_type[tile_idx] == tile_type::FLOOR) {
+			if (current_region->tile_vegetation_type[tile_idx] > 0) {
+				lines.push_back(plant_defs[current_region->tile_vegetation_type[tile_idx]].name);
+			}
 		}
-		int count = 0;
+
 		// Named entities in the location
-		each<name_t, position_t>([&count, &world_x, &world_y] (entity_t &entity, name_t &name, position_t &pos) {
+		each<name_t, position_t>([&lines,&world_x, &world_y] (entity_t &entity, name_t &name, position_t &pos) {
 			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
-				term(3)->print(1, term(3)->term_height - 5 - count, name.first_name + std::string(" ") + name.last_name, GREEN, GREEN_BG);
-				++count;
+				lines.push_back(name.first_name + std::string(" ") + name.last_name);
 			}
 		});
 		// Items on the ground
-		each<item_t, position_t>([&count, &world_x, &world_y] (entity_t &entity, item_t &item, position_t &pos) {
+		std::map<std::string, int> items;
+		each<item_t, position_t>([&world_x, &world_y, &items] (entity_t &entity, item_t &item, position_t &pos) {
 			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
-				term(3)->print(1, term(3)->term_height - 5 - count, item.item_name, GREEN, GREEN_BG);
-				++count;
+				auto finder = items.find(item.item_name);
+				if (finder == items.end()) {
+					items[item.item_name] = 1;
+				} else {
+					++finder->second;
+				}
 			}
 		});
+		for (auto it=items.begin(); it!=items.end(); ++it) {
+			std::string n = std::to_string(it->second);
+			lines.push_back(n + std::string("x ") + it->first);
+		}
+
 		// Storage lockers and similar
-		each<construct_container_t, position_t>([&count, &world_x, &world_y] (entity_t &storage_entity, construct_container_t &container, position_t &pos) {
+		items.clear();
+		each<construct_container_t, position_t>([&world_x, &world_y, &items] (entity_t &storage_entity, construct_container_t &container, position_t &pos) {
 			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
 				// It is a container and it is here - look inside!
-				each<item_t, item_stored_t>([&count, &world_x, &world_y, &storage_entity] (entity_t &entity, item_t &item, item_stored_t &stored) {
+				each<item_t, item_stored_t>([&items,&world_x, &world_y, &storage_entity] (entity_t &entity, item_t &item, item_stored_t &stored) {
 					if (stored.stored_in == storage_entity.id) {
-						term(3)->print(1, term(3)->term_height - 5 - count, item.item_name, GREEN, GREEN_BG);
-						++count;
+						auto finder = items.find(item.item_name);
+						if (finder == items.end()) {
+							items[item.item_name] = 1;
+						} else {
+							++finder->second;
+						}
 					}
 				});
 			}
 		});
+		for (auto it=items.begin(); it!=items.end(); ++it) {
+			std::string n = std::to_string(it->second);
+			lines.push_back(n + std::string("x ") + it->first);
+		}
+
 		// Buildings
-		each<building_t, position_t>([&count, &world_x, &world_y] (entity_t &building_entity, building_t &building, position_t &pos) {
+		each<building_t, position_t>([&lines,&world_x, &world_y] (entity_t &building_entity, building_t &building, position_t &pos) {
 			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
 				// It's building and we can see it
 				auto finder = building_defs.find(building.tag);
@@ -239,10 +283,25 @@ void panel_render_system::render_play_mode() {
 						building_name = std::string("...") + finder->second.name;
 					}
 				}
-				term(3)->print(1, term(3)->term_height-5-count, building_name, GREEN, GREEN_BG);
-				++count;
+				lines.push_back(building_name);
 			}
 		});
+
+		int longest = 0;
+		for (const std::string &s : lines) {
+			if (s.size() > longest) longest = s.size();
+		}
+
+		// TODO - dynamic placement
+		int tt_x = terminal_x+2;
+		int tt_y = terminal_y;
+		term(1)->set_char(terminal_x+1, terminal_y, vchar{27, GREEN, BLACK});
+		term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, GREEN);
+		++tt_y;
+		for (const std::string &s : lines) {
+			term(1)->print(tt_x+1, tt_y, s, GREEN);
+			++tt_y;
+		}
 	}
 }
 
