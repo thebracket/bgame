@@ -144,6 +144,27 @@ buildings = {
 		render_rex = "glass_furnace.xp"
 	},
 
+	silicon_refinery = {
+		name = "Silicon Refinery",
+		components = { "stone_block", "raw_glass" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "silicon_refinery.xp"
+	},
+
+	primitive_forge = {
+		name = "Primitive Forge",
+		components = { "stone_block" },
+		skill = { name="Construction", difficulty=15 },
+		render_rex = "primitive_forge.xp"
+	},
+
+	primitive_workshop = {
+		name = "Primitive Workshop",
+		components = { "stone_block" },
+		skill = { name="Construction", difficulty=15 },
+		render_rex = "primitive_workshop.xp"
+	},
+
 	mason = {
 		name = "Masonry",
 		components = { "stone_block" },

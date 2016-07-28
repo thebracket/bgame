@@ -239,6 +239,10 @@ inline rltk::color_t get_task_color(const std::string &skill) {
 		return rltk::colors::BurlyWood;
 	} else if (skill == "Furnace Operation") {
 		return rltk::colors::Orange;
+	} else if (skill == "Glassmaking") {
+		return rltk::colors::CYAN;
+	} else if (skill == "Metalworking") {
+		return rltk::colors::BRASS;
 	}
 	return rltk::colors::Grey;
 }

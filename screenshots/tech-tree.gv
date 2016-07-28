@@ -3,18 +3,28 @@ digraph G {
 	"wood planks" -> "charcoal burner"
 	"wood planks" -> walls
 	"wood planks" -> doors
+	"wood planks" -> club
+	"wood planks" -> "axe haft"
 	sawmill -> "wood offcuts" -> "charcoal burner" -> charcoal
+	"charcoal burner" -> ash
 
 	stone -> stonecutter -> "stone blocks" -> mason -> furniture
 	"stone blocks" -> "glass furnace"
 	"stone blocks" -> smelter
 	"stone blocks" -> walls
 	"stone blocks" -> doors
+	"stone blocks" -> club
 
 	sand -> "glass furnace" -> "raw glass"
+	"raw glass" -> "silicon refinery"
+	"stone blocks" -> "silicon refinery"
+	"raw glass" -> "silicon refinery" -> "raw silicon"
 
 	charcoal -> smelter
 	charcoal -> "glass furnace"
+
+	"stone blocks" -> "primitive forge"
+	"stone blocks" -> "primitive workshop"
 
 	"mined rock" -> stone
 	"mined rock" -> "aluminium ore"
@@ -52,10 +62,51 @@ digraph G {
 	"silver ore" -> smelter -> "silver bars"
 	"zinc ore" -> smelter -> "zinc bars"
 
+	bismuth -> smelter -> "copper bars" -> "bronze bars"
+
 	"nuclear camp fire" -> "tiny marshmallow"
 
 	energy -> replicator
 	replicator -> "Cup of Tea"
 	replicator -> "Stale Sandwich"
 
+	"aluminium bars" -> "primitive forge" -> "axe blade"
+	"tin bars" -> "primitive forge" -> "axe blade"
+	"chromium bars" -> "primitive forge" -> "axe blade"
+	"copper bars" -> "primitive forge" -> "axe blade"
+	"lead bars" -> "primitive forge" -> "axe blade"
+	"gold bars" -> "primitive forge" -> "axe blade"
+	"iron bars" -> "primitive forge" -> "axe blade"
+	"platinum bars" -> "primitive forge" -> "axe blade"
+	"silver bars" -> "primitive forge" -> "axe blade"
+	"zinc bars" -> "primitive forge" -> "axe blade"
+	"bronze bars" -> "primitive forge" -> "axe blade"
+
+	"aluminium bars" -> "primitive forge" -> "pickaxe blade"
+	"tin bars" -> "primitive forge" -> "pickaxe blade"
+	"chromium bars" -> "primitive forge" -> "pickaxe blade"
+	"copper bars" -> "primitive forge" -> "pickaxe blade"
+	"lead bars" -> "primitive forge" -> "pickaxe blade"
+	"gold bars" -> "primitive forge" -> "pickaxe blade"
+	"iron bars" -> "primitive forge" -> "pickaxe blade"
+	"platinum bars" -> "primitive forge" -> "pickaxe blade"
+	"silver bars" -> "primitive forge" -> "pickaxe blade"
+	"zinc bars" -> "primitive forge" -> "pickaxe blade"
+	"bronze bars" -> "primitive forge" -> "pickaxe blade"
+
+	"axe blade" -> "primitive workshop" -> battleaxe
+	"axe haft" -> "primitive workshop"
+	"pickaxe blade" -> "primitive workshop" -> pickaxe
+
+	"aluminium bars" -> "primitive forge" -> "forge parts"
+	"tin bars" -> "primitive forge" -> "forge parts"
+	"chromium bars" -> "primitive forge" -> "forge parts"
+	"copper bars" -> "primitive forge" -> "forge parts"
+	"lead bars" -> "primitive forge" -> "forge parts"
+	"gold bars" -> "primitive forge" -> "forge parts"
+	"iron bars" -> "primitive forge" -> "forge parts"
+	"platinum bars" -> "primitive forge" -> "forge parts"
+	"silver bars" -> "primitive forge" -> "forge parts"
+	"zinc bars" -> "primitive forge" -> "forge parts"
+	"bronze bars" -> "primitive forge" -> "forge parts"
 }

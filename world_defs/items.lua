@@ -23,6 +23,14 @@ items = {
 		foreground = colors['white'],
 		background = colors['black']
 	},
+	battleaxe = {
+		name = "Battleaxe",
+		description = "An intimidating looking axe with a large blade.",
+		itemtype = {"tool-chopping", "weapon"},
+		glyph = glyphs['axe'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
 	pickaxe = {
 		name = "Pickaxe",
 		description = "A simple pickaxe, ideal for digging holes.",
@@ -54,6 +62,10 @@ items = {
 	bismuth_ore = {
 		name = "Bismuth Ore", description = "A lump of unrefined bismuth",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['bismuth_yellow'], background = colors['black']
+	},
+	bronze_bar = {
+		name = "Bronze Bars", description = "Bronze Bars",
+		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['bismuth_yellow'], background = colors['black']
 	},
 	tin_ore = {
 		name = "Tin Ore", description = "A lump of unrefined tin",
@@ -191,9 +203,25 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
+	ash = {
+		name = "Ash",
+		description = "Ash, remnants of burned wood",
+		itemtype = {"component"},
+		glyph = glyphs['one_quarter_solid'],
+		foreground = colors['grey'],
+		background = colors['black']
+	},
 	raw_glass = {
 		name = "Raw Glass",
 		description = "Raw glass, ready to turn into something useful",
+		itemtype = {"component"},
+		glyph = glyphs['inset_square'],
+		foreground = colors['green'],
+		background = colors['black']
+	},
+	raw_silicon = {
+		name = "Raw Silicon",
+		description = "Silicon, suitable for use in circuitry and chips",
 		itemtype = {"component"},
 		glyph = glyphs['inset_square'],
 		foreground = colors['green'],
@@ -285,6 +313,46 @@ items = {
 		itemtype = {"food"},
 		glyph = glyphs['squared'],
 		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	club = {
+		name = "Club",
+		description = "A simple club",
+		itemtype = {"weapon"},
+		glyph = glyphs['axe'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
+	axe_blade = {
+		name = "Axe Blade",
+		description = "An axe blade",
+		itemtype = {"component"},
+		glyph = glyphs['axe'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
+	pickaxe_blade = {
+		name = "Pick-Axe Blade",
+		description = "A pickaxe blade",
+		itemtype = {"component"},
+		glyph = glyphs['axe'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
+	axe_haft = {
+		name = "Axe Haft",
+		description = "An axe haft",
+		itemtype = {"component"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	forge_parts = {
+		name = "Forge Parts",
+		description = "Components required for an advanced forge",
+		itemtype = {"component"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
 		background = colors['black']
 	}
 }
