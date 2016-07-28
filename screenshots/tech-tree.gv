@@ -54,6 +54,7 @@ digraph G {
 
 	"nuclear camp fire" -> "tiny marshmallow"
 
+	energy -> replicator
 	replicator -> "Cup of Tea"
 	replicator -> "Stale Sandwich"
 
