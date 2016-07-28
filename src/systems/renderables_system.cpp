@@ -24,9 +24,8 @@ void renderables_system::update(const double time_elapsed) {
 
     if (renderables_changed) {
 		renderables.clear();
-		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
-		});
+
+		// Add buildings to renderables
 		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
 			int glyph_idx = 0;
 			int offset_x = 0;
@@ -43,6 +42,12 @@ void renderables_system::update(const double time_elapsed) {
 				}
 			}
 		});
+
+		// Add other entities
+		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
+			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
+		});
+		
         emit(map_rerender_message{});
 	}
 }
