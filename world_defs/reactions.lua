@@ -80,6 +80,15 @@ reactions = {
         difficulty = 10,
         automatic = false
     },
+    make_sword_hilt = {
+        name = "Make Sword Hilt",
+        workshop = "carpenter",
+        inputs = { { item="wood_plank", qty=1 } },
+        outputs = { { item="sword_hilt", qty=1 } },
+        skill = "Carpentry",
+        difficulty = 14,
+        automatic = false
+    },
     make_stone_chair = {
         name = "Make Stone Chair",
         workshop = "mason",
@@ -295,5 +304,17 @@ reactions = {
     make_pickaxe_blade_silver = { name="Make Silver Pickaxe Blade", inputs={{item="silver_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
     make_pickaxe_blade_zinc = { name="Make Zinc Pickaxe Blade", inputs={{item="zinc_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
     make_pickaxe_blade_bronze = { name="Make Bronze Pickaxe Blade", inputs={{item="bronze_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+
+    make_sword_blade_aluminium = { name="Make Aluminium Sword Blade", inputs={{item="aluminium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_tin = { name="Make Tin Sword Blade", inputs={{item="tin_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_chromium = { name="Make Chrome Sword Blade", inputs={{item="chromium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_copper = { name="Make Copper Sword Blade", inputs={{item="copper_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_lead = { name="Make Lead Sword Blade", inputs={{item="lead_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_gold = { name="Make Gold Sword Blade", inputs={{item="gold_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_iron = { name="Make Iron Sword Blade", inputs={{item="iron_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_platinum = { name="Make Platinum Sword Blade", inputs={{item="platinum_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_silver = { name="Make Silver Sword Blade", inputs={{item="silver_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_zinc = { name="Make Zinc Sword Blade", inputs={{item="zinc_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+    make_sword_blade_bronze = { name="Make Bronze Sword Blade", inputs={{item="bronze_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
 }
 

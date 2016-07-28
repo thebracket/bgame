@@ -323,6 +323,14 @@ items = {
 		foreground = colors['white'],
 		background = colors['black']
 	},
+	sword = {
+		name = "Sword",
+		description = "A simple sword",
+		itemtype = {"weapon"},
+		glyph = glyphs['axe'],
+		foreground = colors['cyan'],
+		background = colors['black']
+	},
 	axe_blade = {
 		name = "Axe Blade",
 		description = "An axe blade",
@@ -339,9 +347,25 @@ items = {
 		foreground = colors['white'],
 		background = colors['black']
 	},
+	sword_blade = {
+		name = "Sword Blade",
+		description = "A sword blade",
+		itemtype = {"component"},
+		glyph = glyphs['axe'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
 	axe_haft = {
 		name = "Axe Haft",
 		description = "An axe haft",
+		itemtype = {"component"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	sword_hilt = {
+		name = "Sword Hilt",
+		description = "A sword hilt",
 		itemtype = {"component"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],

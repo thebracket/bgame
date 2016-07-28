@@ -5,6 +5,7 @@ digraph G {
 	"wood planks" -> doors
 	"wood planks" -> club
 	"wood planks" -> "axe haft"
+	"wood planks" -> "sword hilt"
 	sawmill -> "wood offcuts" -> "charcoal burner" -> charcoal
 	"charcoal burner" -> ash
 
@@ -94,9 +95,23 @@ digraph G {
 	"zinc bars" -> "primitive forge" -> "pickaxe blade"
 	"bronze bars" -> "primitive forge" -> "pickaxe blade"
 
+	"aluminium bars" -> "primitive forge" -> "sword blade"
+	"tin bars" -> "primitive forge" -> "sword blade"
+	"chromium bars" -> "primitive forge" -> "sword blade"
+	"copper bars" -> "primitive forge" -> "sword blade"
+	"lead bars" -> "primitive forge" -> "sword blade"
+	"gold bars" -> "primitive forge" -> "sword blade"
+	"iron bars" -> "primitive forge" -> "sword blade"
+	"platinum bars" -> "primitive forge" -> "sword blade"
+	"silver bars" -> "primitive forge" -> "sword blade"
+	"zinc bars" -> "primitive forge" -> "sword blade"
+	"bronze bars" -> "primitive forge" -> "sword blade"
+
 	"axe blade" -> "primitive workshop" -> battleaxe
 	"axe haft" -> "primitive workshop"
 	"pickaxe blade" -> "primitive workshop" -> pickaxe
+	"sword blade" -> "primitive workshop" -> sword
+	"sword hilt" -> "primitive workshop"
 
 	"aluminium bars" -> "primitive forge" -> "forge parts"
 	"tin bars" -> "primitive forge" -> "forge parts"
