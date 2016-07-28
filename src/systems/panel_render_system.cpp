@@ -212,14 +212,14 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 				case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
-				case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
 				case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
+				case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 				default : ss << "Unknown!";
 			}
 			lines.push_back(ss.str());
 		}
-		if (current_region->tile_type[tile_idx] == tile_type::FLOOR) {
+		if (current_region->tile_type[tile_idx] == tile_type::FLOOR && !current_region->tile_flags[tile_idx].test(CONSTRUCTION)) {
 			if (current_region->tile_vegetation_type[tile_idx] > 0) {
 				lines.push_back(plant_defs[current_region->tile_vegetation_type[tile_idx]].name);
 			}
@@ -293,13 +293,25 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 		}
 
 		// TODO - dynamic placement
+		float revealed_pct = mouse_dwell_time - 100.0;
+		revealed_pct /= 200.0;
+		if (revealed_pct > 1.0) revealed_pct = 1.0;
+
+		if (revealed_pct < 1.0) {
+			for (std::string &s : lines) {
+				int n_garbled = s.size() - ((float)s.size() * (revealed_pct/2.0));
+				for (int i=0; i<n_garbled; ++i) s[i] = static_cast<uint8_t>(rng.roll_dice(1,255));
+			}
+		}
+
+		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
 		int tt_x = terminal_x+2;
 		int tt_y = terminal_y;
-		term(1)->set_char(terminal_x+1, terminal_y, vchar{27, GREEN, BLACK});
-		term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, GREEN);
+		term(1)->set_char(terminal_x+1, terminal_y, vchar{27, color, BLACK});
+		term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
-			term(1)->print(tt_x+1, tt_y, s, GREEN);
+			term(1)->print(tt_x+1, tt_y, s, color);
 			++tt_y;
 		}
 	}
