@@ -765,6 +765,15 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_SELECT_INPUT) {
+		// If there are no inputs, go to the workshop
+		position_t * reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
+		if (ai.reaction_target.get().components.empty() && ! (pos == *reactor_pos)) {
+			ai.job_type_minor = JM_GO_TO_WORKSHOP;
+			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
+			ai.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
+			return;
+		}
+
 		bool has_components = true;
 		for (std::pair<std::size_t, bool> &component : ai.reaction_target.get().components) {
 			if (!component.second) {
