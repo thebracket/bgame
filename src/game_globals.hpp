@@ -12,6 +12,8 @@ struct config_t {
 	int window_height = 600;
 	std::string game_font = "8x8";
 	std::string gui_font = "8x16";
+	bool tooltip_fadein = true;
+	float tooltip_speed = 100.0;
 };
 
 struct available_building_t {
