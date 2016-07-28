@@ -37,9 +37,11 @@ struct designations_t {
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	int current_power = 10;
+	uint64_t current_cash = 100;
 
 	// Not serialized
 	rltk::color_t alert_color = rltk::colors::WHITE;
+	int total_capacity = 10;
 
 	designations_t() {
 	}
@@ -101,6 +103,7 @@ struct designations_t {
 		}
 
 		serialize(lbfile, current_power);
+		serialize(lbfile, current_cash);
 	}
 
 	static designations_t load(std::istream &lbfile) {
@@ -173,6 +176,7 @@ struct designations_t {
 		}
 
 		deserialize(lbfile, c.current_power);
+		deserialize(lbfile, c.current_cash);
 		return c;
 	}
 };

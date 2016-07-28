@@ -15,6 +15,7 @@ using namespace rltk::colors;
 constexpr int MAP_LAYER=1;
 constexpr int GUI_LAYER=2;
 constexpr int RIGHT_PANEL = 3;
+constexpr int TOOLTIP_LAYER = 4;
 
 void play_game::tick(const double duration_ms) {
 
@@ -29,15 +30,8 @@ void play_game::tick(const double duration_ms) {
 	}
 }
 
-void resize_right_panel(rltk::layer_t * l, int w, int h) {
-    // Use the whole window
-	l->x = w - (20 * 8);
-    l->w = 20 * 8;
-    l->h = h;
-}
-
 void resize_game_panel(rltk::layer_t * l, int w, int h) {
-	l->w = w - (20*8);
+	l->w = w;
 	l->h = h;
 }
 
@@ -48,8 +42,11 @@ void play_game::init() {
 
 	// Setup the display
 	gui->add_layer(MAP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_game_panel, true);
+	gui->add_layer(TOOLTIP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_game_panel, false);
 	gui->add_layer(GUI_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, false);
-	gui->add_layer(RIGHT_PANEL, window_width - (20*8), 0, 20*8, window_height, game_config.gui_font, resize_right_panel, true);
+	gui->add_layer(RIGHT_PANEL, 0, 0, window_width, window_height, game_config.gui_font, resize_game_panel, false);
+
+	term(TOOLTIP_LAYER)->clear();
 
 	// Load the game
 	std::cout << "Loading the planet\n";
@@ -103,6 +100,7 @@ void play_game::init() {
 
 void play_game::destroy() {
 	gui->delete_layer(MAP_LAYER);
+	gui->delete_layer(TOOLTIP_LAYER);
 	gui->delete_layer(GUI_LAYER);
 	gui->delete_layer(RIGHT_PANEL);
 }

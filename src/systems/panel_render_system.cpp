@@ -15,11 +15,47 @@ std::vector<available_building_t> available_buildings;
 
 const color_t GREEN_BG{0,32,0};
 
+void panel_render_system::render_header() {
+	term(2)->clear();
+	term(2)->print(0,0,calendar->get_date_time(), rltk::colors::WHITE);
+	if (pause_mode) term(2)->print(term(2)->term_width - 8, 1, "*PAUSED*", rltk::colors::WHITE, rltk::colors::BLUE);
+	float power_pct = (float)designations->current_power / (float) designations->total_capacity;
+    if (power_pct < 0.5) {
+        designations->alert_color = lerp(rltk::colors::RED, rltk::colors::ORANGE, power_pct*2.0F);
+    } else {
+        designations->alert_color = lerp(rltk::colors::ORANGE, rltk::colors::GREEN, (power_pct-0.5F)*2.0F);
+    }
+    std::stringstream power_ss;
+    power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
+
+	const int power_width = term(2)->term_width - 30;
+	const int power_pips_filled = (float)power_width * power_pct;
+	const float pct_per_pip = 1.0 / (float)designations->total_capacity;
+	for (int x=0; x<power_width; ++x) {
+		const color_t pip_color = lerp(rltk::colors::GREY, designations->alert_color, pct_per_pip * (float)x); 
+		if (x <= power_pips_filled) {
+			term(2)->set_char(x+15, 0, vchar{176, pip_color, rltk::colors::BLACK});
+		} else {
+			term(2)->set_char(x+15, 0, vchar{7, pip_color, rltk::colors::BLACK});			
+		}
+	}
+	const std::string power_str = power_ss.str();
+	const int power_x = ((term(2)->term_width-30)/2) - (power_str.size() / 2);
+	term(2)->print( power_x, 0, power_str, designations->alert_color );
+
+	std::stringstream cash_ss;
+	cash_ss << "Cash: " << designations->current_cash << " Mcr";
+	const std::string cash_str = cash_ss.str();
+	term(2)->print( term(2)->term_width - cash_str.size(), 0, cash_str, rltk::colors::YELLOW );
+}
+
 void panel_render_system::update(const double duration_ms) {
+	render_header();
+
 	mouse_damper += duration_ms;
 
-	term(3)->clear(vchar{' ', WHITE, GREEN_BG});
-	term(3)->box(DARKEST_GREEN);
+	term(3)->clear();
+	//term(3)->box(DARKEST_GREEN);
 
 	render_mode_select();
 

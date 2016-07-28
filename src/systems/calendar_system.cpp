@@ -28,17 +28,10 @@ void calendar_system::update(const double duration_ms) {
 			calendar->next_minute();
 			emit(tick_message{});
 
-			// Update the calendar display
-			term(2)->clear();
-			term(2)->print(0,0,calendar->get_date_time(), rltk::colors::WHITE);
-
 			if (pause_mode == ONE_STEP) {
 				pause_mode = PAUSED;
 			}
 		}
-	} else {
-		term(2)->clear();
-		term(2)->print(0,0,calendar->get_date_time() + " PAUSED", rltk::colors::GREEN);
 	}
 
 	if (game_master_mode == PLAY) {
