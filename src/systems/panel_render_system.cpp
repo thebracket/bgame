@@ -322,8 +322,15 @@ inline bool is_mining_designation_valid(const int &x, const int &y, const int &z
 }
 
 void panel_render_system::render_design_mode() {
-	if (game_design_mode == DIGGING) {
-		term(3)->print(1,3, "Digging", WHITE, DARKEST_GREEN);
+	term(2)->print(32,1, "ESC", YELLOW);
+	term(2)->print(36,1, "Resume normal play");
+
+	if (game_design_mode == DIGGING) {		
+
+		int tt_x = term(1)->term_width - 21;
+		term(1)->box(tt_x, 4, 20, 10);
+		term(1)->print(tt_x+1, 5, "MINING MODE", WHITE, DARKEST_GREEN);
+		term(1)->print(5, 3, "Digging", YELLOW);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) game_mining_mode = DIG;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) game_mining_mode = CHANNEL;
@@ -333,18 +340,61 @@ void panel_render_system::render_design_mode() {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) game_mining_mode = UPDOWN;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) game_mining_mode = DELETE;
 
-		if (game_mining_mode == DIG) { term(3)->print(1,8, "(d) Dig", WHITE, DARKEST_GREEN); } else { term(3)->print(1,8, "(d) Dig", GREEN, GREEN_BG); }
-		if (game_mining_mode == CHANNEL) { term(3)->print(1,9, "(c) Channel", WHITE, DARKEST_GREEN); } else { term(3)->print(1,9, "(c) Channel", GREEN, GREEN_BG); }
-		if (game_mining_mode == RAMP) { term(3)->print(1,10, "(r) Ramp", WHITE, DARKEST_GREEN); } else { term(3)->print(1,10, "(r) Ramp", GREEN, GREEN_BG); }
-		if (game_mining_mode == UP) { term(3)->print(1,11, "(u) Up Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,11, "(u) Up Stairs", GREEN, GREEN_BG); }
-		if (game_mining_mode == DOWN) { term(3)->print(1,12, "(j) Down Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,12, "(j) Down Stairs", GREEN, GREEN_BG); }
-		if (game_mining_mode == UPDOWN) { term(3)->print(1,13, "(i) Up/Down Stairs", WHITE, DARKEST_GREEN); } else { term(3)->print(1,13, "(i) Up/Down Stairs", GREEN, GREEN_BG); }
-		if (game_mining_mode == DELETE) { term(3)->print(1,14, "(x) Clear", WHITE, DARKEST_GREEN); } else { term(3)->print(1,14, "(x) Clear", GREEN, GREEN_BG); }
+		if (game_mining_mode == DIG) {
+			term(1)->print(tt_x+1, 7, "(d) Dig", YELLOW, DARKEST_GREEN);
+		} else { 
+			term(1)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG); 
+		}
+		term(1)->print(tt_x+2, 7, "d", YELLOW); 
+
+		if (game_mining_mode == CHANNEL) { 
+			term(1)->print(tt_x+1, 8, "(c) Channel", YELLOW, DARKEST_GREEN);			
+		} else { 
+			term(1)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG); 
+		}
+		term(1)->print(tt_x+2, 8, "c", YELLOW); 
+
+		if (game_mining_mode == RAMP) { 
+			term(1)->print(tt_x+1, 9, "(r) Ramp", YELLOW, DARKEST_GREEN); 
+		} else { 
+			term(1)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG); 
+		}
+		term(1)->print(tt_x+2, 9, "r", YELLOW); 
+
+		if (game_mining_mode == UP) { 
+			term(1)->print(tt_x+1, 10, "(u) Up Stairs", YELLOW, DARKEST_GREEN); 
+		} else { 
+			term(1)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG); 		
+		}
+		term(1)->print(tt_x+2, 10, "u", YELLOW); 
+
+		if (game_mining_mode == DOWN) { 
+			term(1)->print(tt_x+1, 11, "(j) Down Stairs", YELLOW, DARKEST_GREEN); 
+		} else { 
+			term(1)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG); 
+		}
+		term(1)->print(tt_x+2, 11, "j", YELLOW); 
+
+		if (game_mining_mode == UPDOWN) { 
+			term(1)->print(tt_x+1, 12, "(i) Up/Down Stairs", YELLOW, DARKEST_GREEN); 
+		} else { 
+			term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG); 
+		}
+		term(1)->print(tt_x+2, 12, "i", YELLOW); 
+
+		if (game_mining_mode == DELETE) { 
+			term(1)->print(tt_x+1 ,13, "(x) Clear", YELLOW, DARKEST_GREEN); 
+		} else { 
+			term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG); 
+		}
+		term(1)->print(tt_x+2, 13, "x", YELLOW); 
 
 		int mouse_x, mouse_y;
+		int font_w, font_h;
 		std::tie(mouse_x, mouse_y) = get_mouse_position();
-		const int terminal_x = mouse_x / 8;
-		const int terminal_y = mouse_y / 8;
+		std::tie(font_w, font_h) = term(1)->get_font_size();
+		const int terminal_x = mouse_x / font_w;
+		const int terminal_y = mouse_y / font_h;
 
 		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
 			if (get_mouse_button_state(rltk::button::LEFT)) {
@@ -367,40 +417,48 @@ void panel_render_system::render_design_mode() {
 		}
 
 	} else {
-		term(3)->print(1,3, "(D)igging", GREEN, GREEN_BG);
+		term(1)->print(5, 3, "Digging", WHITE);
+		term(1)->print(5,3,"d", YELLOW);
 	}
 
 	if (game_design_mode == BUILDING) {
-		term(3)->print(1,4, "Building", WHITE, DARKEST_GREEN);
+		term(1)->print(13, 3, "Building", YELLOW);
 
-		int y=8;
+		int tt_x = term(1)->term_width - 30;
+		term(1)->box(tt_x, 4, 29, term(1)->term_height-5);
+		term(1)->print(tt_x+1, 5, "Available Buildings", WHITE, DARKEST_GREEN);
+
+		int y=7;
 		for (const available_building_t &building : available_buildings) {
 			if (build_mode_building && build_mode_building.get().tag == building.tag) {
-				term(3)->print(1, y, building.name, WHITE, DARKEST_GREEN);
+				term(1)->print(tt_x+1, y, building.name, YELLOW, DARKEST_GREEN);
 			} else {
-				term(3)->print(1, y, building.name, GREEN, GREEN_BG);
+				term(1)->print(tt_x+1, y, building.name, WHITE, GREEN_BG);
 			}
 			++y;
 		}
 
 		if (get_mouse_button_state(rltk::button::LEFT)) {
 			int mouse_x, mouse_y;
+			int font_w, font_h;
 			std::tie(mouse_x, mouse_y) = get_mouse_position();
+			std::tie(font_w, font_h) = term(1)->get_font_size();
 
-			if (mouse_x > layer(3)->x && mouse_y > layer(3)->y && mouse_x < layer(3)->x+layer(3)->w && mouse_y < layer(3)->y + layer(3)->h ) {
-				mouse_x -= layer(3)->x;
-				mouse_y -= layer(3)->y;
-				int terminal_x = mouse_x / 8;
-				int terminal_y = mouse_y / 16;
-				
-				if (terminal_y > 7 && terminal_y < 8+available_buildings.size()) {
-					const int selected_building = terminal_y - 8;
+			int terminal_x = mouse_x / font_w;
+			int terminal_y = mouse_y / font_h;
+			
+			if (terminal_y > 6 && terminal_y < 7+available_buildings.size() && terminal_x > tt_x+1) {
+				const int selected_building = terminal_y - 7;
+				if (selected_building > -1 && selected_building < available_buildings.size()) {
 					build_mode_building = available_buildings[selected_building];
+				} else {
+					std::cout << "Error: index " << selected_building << " is out of range.\n";
 				}
 			}
 		}
 	} else {
-		term(3)->print(1,4, "(B)uilding", GREEN, GREEN_BG);
+		term(1)->print(13, 3, "Building", WHITE);
+		term(1)->print(13, 3, "b", YELLOW);
 	}
 
 	if (game_design_mode == CHOPPING) {

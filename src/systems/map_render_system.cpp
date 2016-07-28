@@ -147,13 +147,15 @@ void map_render_system::update(const double duration_ms) {
 	}
 
 	int mouse_x, mouse_y;
+	int font_w, font_h;
 	std::tie(mouse_x, mouse_y) = get_mouse_position();
+	std::tie(font_w, font_h) = term(1)->get_font_size();
 
 	mouse_in_terminal = false;
 	if (mouse_x > layer(1)->x && mouse_y > layer(1)->y && mouse_x < layer(1)->x+layer(1)->w && mouse_y < layer(1)->y + layer(1)->h ) {
 		mouse_in_terminal = true;
-		mouse_term_x = (mouse_x / 8) + clip_left;
-		mouse_term_y = (mouse_y / 8) + clip_top - 2;
+		mouse_term_x = (mouse_x / font_w) + clip_left;
+		mouse_term_y = (mouse_y / font_h) + clip_top - 2;
 	}	
 
 	if (dirty) {
@@ -184,6 +186,7 @@ void map_render_system::update(const double duration_ms) {
 
 		dirty = false;
 		if (game_master_mode == DESIGN && game_design_mode == BUILDING) {
+			if (mouse_in_terminal && (mouse_x / font_w) > term(1)->term_width-30) mouse_in_terminal = false;
 			dirty = true;
 			if (get_mouse_button_state(rltk::button::LEFT) && mouse_in_terminal && building_possible) {
 				emit(build_request_message{mouse_term_x, mouse_term_y, camera_position->region_z, build_mode_building});
