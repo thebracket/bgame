@@ -1,175 +1,301 @@
 digraph G {
-	trees -> "wood logs" -> sawmill -> "wood planks" -> carpenter -> furniture
-	"wood planks" -> "charcoal burner"
-	"wood planks" -> walls
-	"wood planks" -> doors
-	"wood planks" -> club
-	"wood planks" -> "axe haft"
-	"wood planks" -> "sword hilt"
-	sawmill -> "wood offcuts" -> "charcoal burner" -> charcoal
-	"charcoal burner" -> ash
-
-	stone -> stonecutter -> "stone blocks" -> mason -> furniture
-	"stone blocks" -> "glass furnace"
-	"stone blocks" -> smelter
-	"stone blocks" -> walls
-	"stone blocks" -> doors
-	"stone blocks" -> club
-
-	sand -> "glass furnace" -> "raw glass"
-	"raw glass" -> "silicon refinery"
-	"stone blocks" -> "silicon refinery"
-	"raw glass" -> "silicon refinery" -> "raw silicon"
-
-	charcoal -> smelter
-	charcoal -> "glass furnace"
-
-	"stone blocks" -> "primitive forge"
-	"stone blocks" -> "primitive workshop"
-
-	"mined rock" -> stone
-	"mined rock" -> "aluminium ore"
-	"mined rock" -> "tin ore"
-	"mined rock" -> "chromium ore"
-	"mined rock" -> "copper ore"
-	"mined rock" -> "lead ore"
-	"mined rock" -> "gold ore"
-	"mined rock" -> "iron ore"
-	"mined rock" -> "platinum ore"
-	"mined rock" -> "silver ore"
-	"mined rock" -> "zinc ore"
-	"mined rock" -> bismuth
-	"mined rock" -> mercury
-	"mined rock" -> uranium
-	"mined rock" -> saltpeter
-	"mined rock" -> alabaster
-	"mined rock" -> gypsum
-	"mined rock" -> coal
-	"mined rock" -> sulphur
-	"mined rock" -> flint
-	"mined rock" -> sand
-	"mined rock" -> oil
-	"mined rock" -> clay
-	"mined rock" -> topsoil
-
-	"aluminium ore" -> smelter -> "aluminium bars"
-	"tin ore" -> smelter -> "tin bars"
-	"chromium ore" -> smelter -> "chromium bars"
-	"copper ore" -> smelter -> "copper bars"
-	"lead ore" -> smelter -> "lead bars"
-	"gold ore" -> smelter -> "gold bars"
-	"iron ore" -> smelter -> "iron bars"
-	"platinum ore" -> smelter -> "platinum bars"
-	"silver ore" -> smelter -> "silver bars"
-	"zinc ore" -> smelter -> "zinc bars"
-
-	bismuth -> smelter -> "copper bars" -> "bronze bars"
-
-	"nuclear camp fire" -> "tiny marshmallow"
-
-	energy -> replicator
-	replicator -> "Cup of Tea"
-	replicator -> "Stale Sandwich"
-
-	"aluminium bars" -> "primitive forge" -> "axe blade"
-	"tin bars" -> "primitive forge" -> "axe blade"
-	"chromium bars" -> "primitive forge" -> "axe blade"
-	"copper bars" -> "primitive forge" -> "axe blade"
-	"lead bars" -> "primitive forge" -> "axe blade"
-	"gold bars" -> "primitive forge" -> "axe blade"
-	"iron bars" -> "primitive forge" -> "axe blade"
-	"platinum bars" -> "primitive forge" -> "axe blade"
-	"silver bars" -> "primitive forge" -> "axe blade"
-	"zinc bars" -> "primitive forge" -> "axe blade"
-	"bronze bars" -> "primitive forge" -> "axe blade"
-
-	"aluminium bars" -> "primitive forge" -> "pickaxe blade"
-	"tin bars" -> "primitive forge" -> "pickaxe blade"
-	"chromium bars" -> "primitive forge" -> "pickaxe blade"
-	"copper bars" -> "primitive forge" -> "pickaxe blade"
-	"lead bars" -> "primitive forge" -> "pickaxe blade"
-	"gold bars" -> "primitive forge" -> "pickaxe blade"
-	"iron bars" -> "primitive forge" -> "pickaxe blade"
-	"platinum bars" -> "primitive forge" -> "pickaxe blade"
-	"silver bars" -> "primitive forge" -> "pickaxe blade"
-	"zinc bars" -> "primitive forge" -> "pickaxe blade"
-	"bronze bars" -> "primitive forge" -> "pickaxe blade"
-
-	"aluminium bars" -> "primitive forge" -> "sword blade"
-	"tin bars" -> "primitive forge" -> "sword blade"
-	"chromium bars" -> "primitive forge" -> "sword blade"
-	"copper bars" -> "primitive forge" -> "sword blade"
-	"lead bars" -> "primitive forge" -> "sword blade"
-	"gold bars" -> "primitive forge" -> "sword blade"
-	"iron bars" -> "primitive forge" -> "sword blade"
-	"platinum bars" -> "primitive forge" -> "sword blade"
-	"silver bars" -> "primitive forge" -> "sword blade"
-	"zinc bars" -> "primitive forge" -> "sword blade"
-	"bronze bars" -> "primitive forge" -> "sword blade"
-
-	"axe blade" -> "primitive workshop" -> battleaxe
-	"axe haft" -> "primitive workshop"
-	"pickaxe blade" -> "primitive workshop" -> pickaxe
-	"sword blade" -> "primitive workshop" -> sword
-	"sword hilt" -> "primitive workshop"
-
-	"aluminium bars" -> "primitive forge" -> "forge parts"
-	"tin bars" -> "primitive forge" -> "forge parts"
-	"chromium bars" -> "primitive forge" -> "forge parts"
-	"copper bars" -> "primitive forge" -> "forge parts"
-	"lead bars" -> "primitive forge" -> "forge parts"
-	"gold bars" -> "primitive forge" -> "forge parts"
-	"iron bars" -> "primitive forge" -> "forge parts"
-	"platinum bars" -> "primitive forge" -> "forge parts"
-	"silver bars" -> "primitive forge" -> "forge parts"
-	"zinc bars" -> "primitive forge" -> "forge parts"
-	"bronze bars" -> "primitive forge" -> "forge parts"
-
-	grass -> hay
-	reeds -> thread
-	lavendar -> herb
-	sage -> herb
-	strawberry -> fruit
-	artichoke -> vegetable
-	asparagus -> vegetable
-	"bambara groundnut" -> nut
-	"string bean" -> vegetable
-	"broad bean" -> vegetable
-	beetroot -> vegetable
-	goya -> vegetable
-	cabbage -> vegetable
-	caper -> vegetable
-	carrot -> vegetable
-	cassava -> vegetable
-	celery -> vegetable
-	chickpea -> vegetable
-	chickory -> herb
-	cowpea -> vegetable
-	cucumber -> vegetable
-	eggplant -> vegetable
-	cress -> vegetable
-	garlic -> herb
-	"horned melon" -> vegetable
-	leek -> vegetable
-	lentil -> vegetable
-	lettuce -> vegetable
-	"mung bean" -> vegetable
-	onion -> vegetable
-	parsnip -> vegetable
-	pea -> vegetable
-	peanut -> nut
-	pepper -> vegetable
-	potato -> vegetable
-	radish -> vegetable
-	"red bean" -> vegetable
-	rhubarb -> herb
-	soybean -> vegetable
-	spinach -> vegetable
-	squash -> vegetable
-	"sweet potato" -> vegetable
-	tomato -> fruit
-	tomatillo -> vegetable
-	turnip -> vegetable
-	watermelon -> vegetable
-	yam -> vegetable
+"cut trees" -> wood_logs
+item_stone_block -> stone_stairs_down
+item_wood_door -> wood_door
+item_replicator_unit -> small_replicator
+item_wood_plank -> wood_floor
+item_wood_plank -> wood_stairs_down
+item_stone_block -> primitive_forge
+item_stone_block -> stone_stairs_up
+item_cryo_bed_kit -> cryo_bed
+item_wood_log -> sawmill
+item_stone_block -> stone_wall
+item_camp_fire_kit -> fake_camp_fire
+item_cordex_core -> cordex
+item_stone_block -> mason
+item_stone_boulder -> stonecutter
+item_refined_plutonium -> rtg
+item_battery_kit -> battery
+item_stone_block -> stone_stairs_updown
+item_personal_survival_shelter_kit -> personal_survival_shelter
+item_stone_block -> glass_furnace
+item_wood_plank -> wood_wall
+item_stone_door -> stone_door
+item_wood_table -> wood_table
+item_wood_plank -> carpenter
+item_wood_plank -> wood_stairs_updown
+item_stone_block -> smelter
+item_wood_plank -> wood_stairs_up
+item_solar_panel_kit -> solar_panel
+item_stone_chair -> stone_chair
+item_stone_table -> stone_table
+item_stone_block -> stone_ramp
+item_wood_plank -> charcoal_hut
+item_stone_block -> stone_floor
+item_stone_block -> primitive_workshop
+item_wood_plank -> wood_ramp
+item_wood_chair -> wood_chair
+item_stone_block -> silicon_refinery
+item_raw_glass -> silicon_refinery
+item_storage_locker -> storage_locker
+item_wood_waste -> charcoal_hut
+charcoal_hut -> item_charcoal
+charcoal_hut -> item_ash
+item_wood_plank -> carpenter
+carpenter -> item_wood_door
+item_wood_plank -> carpenter
+carpenter -> item_sword_hilt
+item_stone_block -> mason
+mason -> item_stone_door
+item_bronze_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_tin_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_lead_ore -> smelter
+smelter -> item_lead_bar
+small_replicator -> item_tea_replicated
+item_tin_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_zinc_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_copper_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_silver_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_stone_block -> mason
+mason -> item_stone_chair
+item_gold_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_iron_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_platinum_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_copper_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_chromium_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_chromium_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_raw_glass -> silicon_refinery
+silicon_refinery -> item_raw_silicon
+item_copper_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_aluminium_ore -> smelter
+smelter -> item_aluminium_bar
+item_aluminium_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_aluminium_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_bismuth_ore -> smelter
+item_copper_bar -> smelter
+smelter -> item_bronze_bar
+item_silver_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_stone_block -> mason
+mason -> item_club
+item_lead_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_copper_ore -> smelter
+smelter -> item_copper_bar
+small_replicator -> item_sandwich_replicated
+item_iron_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_zinc_ore -> smelter
+smelter -> item_zinc_bar
+item_gold_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_lead_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_platinum_bar -> primitive_forge
+primitive_forge -> item_sword_blade
+item_aluminium_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_tin_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_stone_boulder -> stonecutter
+stonecutter -> item_stone_block
+item_lead_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_wood_plank -> carpenter
+carpenter -> item_wood_table
+item_zinc_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_iron_ore -> smelter
+smelter -> item_iron_bar
+fake_camp_fire -> item_tiny_marshmallow
+item_gold_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_iron_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_charcoal -> glass_furnace
+item_sand -> glass_furnace
+glass_furnace -> item_raw_glass
+item_chromium_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_bronze_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_pickaxe_blade -> primitive_workshop
+item_axe_haft -> primitive_workshop
+primitive_workshop -> item_pickaxe
+item_chromium_ore -> smelter
+smelter -> item_chromium_bar
+item_stone_block -> mason
+mason -> item_stone_table
+item_platinum_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_zinc_bar -> primitive_forge
+primitive_forge -> item_pickaxe_blade
+item_gold_ore -> smelter
+smelter -> item_gold_bar
+item_silver_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_wood_log -> sawmill
+sawmill -> item_wood_plank
+sawmill -> item_wood_waste
+item_silver_ore -> smelter
+smelter -> item_silver_bar
+item_wood_plank -> carpenter
+carpenter -> item_axe_haft
+item_wood_plank -> carpenter
+carpenter -> item_club
+item_bronze_bar -> primitive_forge
+primitive_forge -> item_axe_blade
+item_platinum_ore -> smelter
+smelter -> item_platinum_bar
+item_wood_plank -> carpenter
+carpenter -> item_wood_chair
+microcline -> mining -> item_stone_boulder
+rhyolite -> mining -> item_stone_boulder
+bauxite -> mining -> item_aluminium_ore
+claystone -> mining -> item_stone_boulder
+bismunthine -> mining -> item_bismuth_ore
+chromite -> mining -> item_chromium_ore
+pyrolusite -> mining -> item_stone_boulder
+gypsum -> mining -> item_gypsum_powder
+phylite -> mining -> item_stone_boulder
+sphalerite_rock -> mining -> item_zinc_ore
+yellow_sand -> mining -> item_sand
+cinnabar -> mining -> item_mercury_ore
+basalt -> mining -> item_stone_boulder
+granite -> mining -> item_stone_boulder
+alunite -> mining -> item_stone_boulder
+platinum_rock -> mining -> item_platinum_ore
+alabaster -> mining -> item_alabaster_powder
+red_sand -> mining -> item_sand
+hematite_se -> mining -> item_iron_ore
+malachite -> mining -> item_copper_ore
+mudstone -> mining -> item_stone_boulder
+obsidian -> mining -> item_stone_boulder
+orthoclase -> mining -> item_stone_boulder
+white_sand -> mining -> item_sand
+bithumous_coal -> mining -> item_coal
+siltstone -> mining -> item_oil
+jet -> mining -> item_stone_boulder
+gold_rock -> mining -> item_gold_ore
+dacite -> mining -> item_stone_boulder
+lignite -> mining -> item_coal
+quartzite -> mining -> item_stone_boulder
+cobaltite -> mining -> item_stone_boulder
+loamy_sand -> mining -> item_topsoil
+andesite -> mining -> item_stone_boulder
+diorite -> mining -> item_stone_boulder
+cassiterite -> mining -> item_tin_ore
+tetrahedrite -> mining -> item_copper_ore
+tetrahedrite -> mining -> item_silver_ore
+clay_soil -> mining -> item_clay
+copper_rock -> mining -> item_copper_ore
+sandy_clay -> mining -> item_clay
+hematite_ig -> mining -> item_iron_ore
+silt -> mining -> item_topsoil
+black_sand -> mining -> item_sand
+sand -> mining -> item_sand
+hornblende -> mining -> item_stone_boulder
+silt_loam -> mining -> item_topsoil
+silty_clay_loam -> mining -> item_topsoil
+chert -> mining -> item_flint
+silty_clay -> mining -> item_clay
+dolomite -> mining -> item_stone_boulder
+realgar -> mining -> item_stone_boulder
+peat -> mining -> item_topsoil
+loam -> mining -> item_topsoil
+conglomerate -> mining -> item_stone_boulder
+stibnite -> mining -> item_stone_boulder
+clay_loam -> mining -> item_clay
+silver_rock -> mining -> item_silver_ore
+kaolinite -> mining -> item_stone_boulder
+chalk -> mining -> item_stone_boulder
+sandy_clay_loam -> mining -> item_topsoil
+sandy_clay_loam -> mining -> item_clay
+serpentine -> mining -> item_stone_boulder
+graphite -> mining -> item_stone_boulder
+limonite -> mining -> item_iron_ore
+rock_salt -> mining -> item_stone_boulder
+limestone -> mining -> item_stone_boulder
+brimstone -> mining -> item_sulphur
+saltpeter -> mining -> item_saltpeter_ore
+gabbro -> mining -> item_stone_boulder
+rutile -> mining -> item_uranium_ore
+shale -> mining -> item_oil
+pitchblende -> mining -> item_uranium_ore
+orpiment -> mining -> item_stone_boulder
+olivine -> mining -> item_stone_boulder
+gneiss -> mining -> item_stone_boulder
+marble -> mining -> item_stone_boulder
+aluminium_rock -> mining -> item_aluminium_ore
+magnetite -> mining -> item_iron_ore
+sandstone -> mining -> item_sand
+galena -> mining -> item_lead_ore
+galena -> mining -> item_silver_ore
+garnierite -> mining -> item_lead_ore
+garnierite -> mining -> item_nickel_ore
+reeds -> farming -> item_thread
+cucumber -> farming -> item_cucumber_veg
+strawberry -> farming -> item_strawberry_fruit
+spinach -> farming -> item_spinach_veg
+chickpea -> farming -> item_chickpea_veg
+eggplant -> farming -> item_eggplant_veg
+carrot -> farming -> item_carrot_veg
+bambara_groundnut -> farming -> item_bambara_nut
+yam -> farming -> item_yam_veg
+onion -> farming -> item_onion_veg
+lettuce -> farming -> item_lettuce_veg
+sweet_potato -> farming -> item_sweet_potato_veg
+asparagus -> farming -> item_asparagus_veg
+tomato -> farming -> item_tomato_fruit
+dummy_grass -> farming -> item_hay
+cabbage -> farming -> item_cabbage_veg
+beetroot -> farming -> item_beetroot_veg
+lavendar -> farming -> item_lavendar_herb
+caper -> farming -> item_caper_veg
+lentil -> farming -> item_lentil_veg
+goya -> farming -> item_goya_veg
+chickory -> farming -> item_chickory_herb
+grass_short -> farming -> item_hay
+grass_long -> farming -> item_hay
+garlic -> farming -> item_garlic_herb
+turnip -> farming -> item_turnip_veg
+celery -> farming -> item_celergy_veg
+sage -> farming -> item_sage_herb
+watermelon -> farming -> item_watermelon_veg
+red_bean -> farming -> item_red_bean_veg
+tomatillo -> farming -> item_tomatillo_veg
+squash -> farming -> item_squash_veg
+soybean -> farming -> item_soybean_veg
+parsnip -> farming -> item_parsnip_veg
+radish -> farming -> item_radish_veg
+potato -> farming -> item_potato_veg
+cress -> farming -> item_cress_veg
+peanut -> farming -> item_peanut_veg
+pepper -> farming -> item_pepper_veg
+broad_bean -> farming -> item_broad_bean_veg
+pea -> farming -> item_pea_veg
+artichoke -> farming -> item_artichoke_veg
+cassava -> farming -> item_cassava_veg
+rhubarb -> farming -> item_rhubarb_herb
+string_bean -> farming -> item_string_bean_veg
+leek -> farming -> item_leek_veg
+grass -> farming -> item_hay
+horned_melon -> farming -> item_melon_veg
+cowpea -> farming -> item_cowpea_veg
+mung_bean -> farming -> item_mung_bean_veg
 }

@@ -55,7 +55,7 @@ rltk::color_t read_lua_color(std::string field) {
 	return col;
 }
 
-void read_clothing() {
+void read_clothing(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "clothing");
     lua_pushnil(lua_state);
 
@@ -91,7 +91,7 @@ void read_clothing() {
     }
 }
 
-void read_professions() {
+void read_professions(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "starting_professions");
     lua_pushnil(lua_state);
 
@@ -152,7 +152,7 @@ void read_professions() {
     }
 }
 
-void read_items() {
+void read_items(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "items");
     lua_pushnil(lua_state);
 
@@ -189,12 +189,13 @@ void read_items() {
             lua_pop(lua_state, 1);
         }
         item_defs[key] = c;
+        //tech_tree_file << "\"" << key << "\"\n";
 
         lua_pop(lua_state, 1);
     }
 }
 
-void read_buildings() {
+void read_buildings(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "buildings");
     lua_pushnil(lua_state);
 
@@ -215,7 +216,9 @@ void read_buildings() {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    c.components.push_back(lua_tostring(lua_state, -1));
+                    std::string comp_key = lua_tostring(lua_state, -1);
+                    c.components.push_back(comp_key);
+                    tech_tree_file << "item_" << comp_key << " -> " <<  key << "\n";
                     lua_pop(lua_state, 1);
                 }
             }
@@ -312,7 +315,7 @@ void read_buildings() {
     }
 }
 
-void read_reactions() {
+void read_reactions(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "reactions");
     lua_pushnil(lua_state);
 
@@ -364,6 +367,7 @@ void read_reactions() {
                         lua_pop(lua_state, 1);
                     }
                     c.outputs.push_back(comp);
+                    //tech_tree_file << "\"" << key << "\"" << comp.first << "\"\n";
 
                     lua_pop(lua_state, 1);
                 }
@@ -375,12 +379,18 @@ void read_reactions() {
         }
         reaction_defs[key] = c;
         reaction_building_defs[c.workshop].push_back(key);
+        for (const auto &input : c.inputs) {
+            tech_tree_file << "item_" << input.first << " -> " << c.workshop << "\n";
+        }
+        for (const auto &output : c.outputs) {
+            tech_tree_file << c.workshop << " -> item_" << output.first << "\n";
+        }
 
         lua_pop(lua_state, 1);
     }
 }
 
-void read_material_types() {
+void read_material_types(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "materials");
     lua_pushnil(lua_state);
 
@@ -416,6 +426,10 @@ void read_material_types() {
             lua_pop(lua_state, 1);
         }
         material_defs.push_back(m);
+        if (m.mines_to_tag.size() > 1)
+            tech_tree_file << key << " -> mining -> item_" << m.mines_to_tag << "\n"; 
+        if (m.mines_to_tag_second.size() > 1)
+            tech_tree_file << key << " -> mining -> item_" << m.mines_to_tag_second << "\n"; 
 
         lua_pop(lua_state, 1);
     }
@@ -428,7 +442,7 @@ void read_material_types() {
     }
 }
 
-void read_plant_types() {
+void read_plant_types(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "vegetation");
     lua_pushnil(lua_state);
 
@@ -452,6 +466,9 @@ void read_plant_types() {
             lua_pop(lua_state, 1);
         }
         plant_defs.push_back(p);
+        if (p.provides.size() > 1) {
+            tech_tree_file << key << " -> farming -> item_" << p.provides << "\n";
+        }
         lua_pop(lua_state, 1);
     }
 
@@ -461,7 +478,7 @@ void read_plant_types() {
     }
 }
 
-void read_biome_types() {
+void read_biome_types(std::ofstream &tech_tree_file) {
     lua_getglobal(lua_state, "biomes");
     lua_pushnil(lua_state);
 
@@ -545,14 +562,21 @@ void read_biome_types() {
 }
 
 void load_game_tables() {
-    read_clothing();
-    read_professions();
-    read_items();
-    read_buildings();
-    read_reactions();
-    read_material_types();
-    read_plant_types();
-    read_biome_types();
+    std::ofstream tech_tree_file("tech_tree.gv");
+    tech_tree_file << "digraph G {\n";
+    tech_tree_file << "\"cut trees\" -> wood_logs\n";
+
+    read_clothing(tech_tree_file);
+    read_professions(tech_tree_file);
+    read_items(tech_tree_file);
+    read_buildings(tech_tree_file);
+    read_reactions(tech_tree_file);
+    read_material_types(tech_tree_file);
+    read_plant_types(tech_tree_file);
+    read_biome_types(tech_tree_file);
+
+    tech_tree_file << "}\n";
+    tech_tree_file.close();
 }
 
 void load_raws() {
