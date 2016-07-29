@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-constexpr int WORLD_HEIGHT = 128;
-constexpr int WORLD_WIDTH = 128;
+constexpr int WORLD_HEIGHT = 512;
+constexpr int WORLD_WIDTH = 512;
 
 namespace block_type {
 constexpr uint8_t MAX_BLOCK_TYPE = 9;
