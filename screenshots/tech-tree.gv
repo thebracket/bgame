@@ -124,4 +124,52 @@ digraph G {
 	"silver bars" -> "primitive forge" -> "forge parts"
 	"zinc bars" -> "primitive forge" -> "forge parts"
 	"bronze bars" -> "primitive forge" -> "forge parts"
+
+	grass -> hay
+	reeds -> thread
+	lavendar -> herb
+	sage -> herb
+	strawberry -> fruit
+	artichoke -> vegetable
+	asparagus -> vegetable
+	"bambara groundnut" -> nut
+	"string bean" -> vegetable
+	"broad bean" -> vegetable
+	beetroot -> vegetable
+	goya -> vegetable
+	cabbage -> vegetable
+	caper -> vegetable
+	carrot -> vegetable
+	cassava -> vegetable
+	celery -> vegetable
+	chickpea -> vegetable
+	chickory -> herb
+	cowpea -> vegetable
+	cucumber -> vegetable
+	eggplant -> vegetable
+	cress -> vegetable
+	garlic -> herb
+	"horned melon" -> vegetable
+	leek -> vegetable
+	lentil -> vegetable
+	lettuce -> vegetable
+	"mung bean" -> vegetable
+	onion -> vegetable
+	parsnip -> vegetable
+	pea -> vegetable
+	peanut -> nut
+	pepper -> vegetable
+	potato -> vegetable
+	radish -> vegetable
+	"red bean" -> vegetable
+	rhubarb -> herb
+	soybean -> vegetable
+	spinach -> vegetable
+	squash -> vegetable
+	"sweet potato" -> vegetable
+	tomato -> fruit
+	tomatillo -> vegetable
+	turnip -> vegetable
+	watermelon -> vegetable
+	yam -> vegetable
 }
