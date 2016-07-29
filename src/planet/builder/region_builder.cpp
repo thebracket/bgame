@@ -19,6 +19,7 @@ inline int get_ground_z(region_t &region, const int x, const int y) {
 		} else {
 			--z;
 		}
+        if (z == 1) hit_ground = true;
 	}
 	return z;
 }
@@ -228,7 +229,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             }
 
             // Next up is rock, until the soil layer
-            while(z < altitude + 64) {
+            while(z < std::min(altitude + 64, REGION_DEPTH-20)) {
                 // Place rock and soil
                 region.tile_type[mapidx(x,y,z)] = tile_type::SOLID;
                 const int strata_idx = strata.strata_map[mapidx(x,y,z)];
