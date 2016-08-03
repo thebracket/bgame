@@ -22,12 +22,14 @@ struct lightsource_t {
 	void save(std::ostream &lbfile) {
 		serialize(lbfile, radius);
 		serialize(lbfile, color);
+		serialize(lbfile, alert_status);
 	}
 
 	static lightsource_t load(std::istream &lbfile) {
 		lightsource_t c;
 		deserialize(lbfile, c.radius);
 		deserialize(lbfile, c.color);
+		deserialize(lbfile, c.alert_status);
 		return c;
 	}
 };

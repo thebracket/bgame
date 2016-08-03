@@ -2,6 +2,7 @@
 #include "camera_system.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/entity_moved_message.hpp"
+#include "../messages/power_changed_message.hpp"
 #include "../game_globals.hpp"
 #include "../components/components.hpp"
 #include <boost/container/flat_map.hpp>
@@ -14,6 +15,7 @@ boost::container::flat_map<int, color_t> lit_tiles;
 void lighting_system::configure() {
     system_name = "Lighting System";
     subscribe_mbox<map_rerender_message>();
+    subscribe_mbox<power_changed_message>();
 
     subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
 		lighting_changed = true;
@@ -39,7 +41,9 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 }
 
 void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
-    if (view.alert_status) view.color = designations->alert_color;
+    if (view.alert_status) {
+        view.color = designations->alert_color;
+    }
 	for (int z=(0-view.radius); z<view.radius; ++z) {
 		for (int i=0-view.radius; i<view.radius; ++i) {
 			internal_light_to(pos, view, i, 0-view.radius, z);
@@ -56,6 +60,12 @@ void lighting_system::update(double time_ms) {
 		dirty = true;
         lighting_changed = true;
 		map_change->pop();
+	}
+    std::queue<power_changed_message> * power_change = mbox<power_changed_message>();
+	while (!power_change->empty()) {
+		dirty = true;
+        lighting_changed = true;
+		power_change->pop();
 	}
 
     if (dirty) {

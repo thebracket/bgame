@@ -11,3 +11,4 @@
 #include "perform_mining.hpp"
 #include "perform_construction.hpp"
 #include "power_consumed.hpp"
+#include "power_changed_message.hpp"

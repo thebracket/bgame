@@ -17,6 +17,8 @@ void power_system::calculate(int consumption) {
     if (calendar->hour > 6 && calendar->hour < 19) designations->current_power += total_solar;
     if (designations->current_power > designations->total_capacity) designations->current_power = designations->total_capacity;    
     designations->current_power -= consumption;
+
+    if (has_run) emit(power_changed_message{});
 }
 
 void power_system::configure() {
@@ -30,7 +32,7 @@ void power_system::configure() {
             messages->pop();
             consumption += e.amount;
         }
-        calculate(consumption);        
+        calculate(consumption);              
     });
 }
 
