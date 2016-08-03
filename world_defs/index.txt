@@ -2,6 +2,7 @@ glyphs.lua
 materials.lua
 vegetation.lua
 clothing.lua
+species.lua
 starting_professions.lua
 items.lua
 buildings.lua
