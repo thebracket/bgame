@@ -2,9 +2,7 @@
 
 #include <string>
 #include <vector>
-
-constexpr int WORLD_HEIGHT = 128;
-constexpr int WORLD_WIDTH = 128;
+#include "constants.hpp"
 
 namespace block_type {
 constexpr uint8_t MAX_BLOCK_TYPE = 9;

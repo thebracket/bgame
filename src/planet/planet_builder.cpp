@@ -35,6 +35,64 @@ void setup_build_planet(int width, int height) {
 	std::fill(planet_builder_display->begin(), planet_builder_display->end(), vchar{0, WHITE, BLACK});
 }
 
+inline void set_planet_display_char(const int &block_idx, const int &idx, const planet_t &planet) {
+	double hotness = ((double)planet.landblocks[block_idx].temperature_c + 88.0) / 146.0;
+	const color_t temperature = lerp(BLUE, RED, hotness);
+	uint8_t col = planet.landblocks[block_idx].height;
+	const uint8_t zero = 0;
+
+	rltk::color_t bg = BLACK;
+	const int biome_idx = planet.landblocks[block_idx].biome_idx;
+	if (biome_idx > -1) {
+		bg = biome_defs[planet.biomes[biome_idx].type].worldgen_color;
+	}
+
+	if (planet.landblocks[block_idx].type == block_type::NONE) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{col, col, col}, temperature};
+	} else if (planet.landblocks[block_idx].type == block_type::WATER) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{zero, zero, col}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::PLAINS) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{zero, col, zero}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::HILLS) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{zero, col, zero}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::MARSH) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{'~', color_t{zero, col, zero}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::PLATEAU) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{239, color_t{col, col, col}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::HIGHLANDS) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{col, col, col}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::COASTAL) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{176, color_t{zero, col, zero}, bg};
+	} else if (planet.landblocks[block_idx].type == block_type::SALT_MARSH) {
+		(*planet_builder_display.get())[idx] = rltk::vchar{247, color_t{zero, col, zero}, bg};
+	} else {
+		(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{col, col, col}, bg};
+	}
+}
+
+void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y) {
+	const int half_term_x = planet_build_term_width / 2;
+	const int half_term_y = planet_build_term_height / 2;
+
+	const int left_x = std::max(0, world_x - half_term_x);
+	const int right_x = std::min(WORLD_WIDTH, world_x + half_term_x);
+	const int top_y = std::max(0, world_y - half_term_y);
+	const int bottom_y = std::max(WORLD_HEIGHT, world_y + half_term_y);
+
+	int Y = 0;
+	for (int y=top_y; y<bottom_y; ++y) {
+		int X = 0;
+		for (int x=left_x; x<right_x; ++x) {
+			const int idx = (planet_build_term_width * Y) + X;
+			const int block_idx = planet.idx(x, y);			
+			if (block_idx < planet.landblocks.size() && idx < planet_build_term_height*planet_build_term_width)
+				set_planet_display_char(block_idx, idx, planet);
+			++X;
+		}
+		++Y;
+	}
+}
+
 void planet_display_update_altitude(planet_t &planet) {
 	const int stride_x = WORLD_WIDTH / planet_build_term_width;
 	const int stride_y = WORLD_HEIGHT / planet_build_term_height;
@@ -43,43 +101,8 @@ void planet_display_update_altitude(planet_t &planet) {
 	for (int y=0; y<planet_build_term_height; ++y) {
 		for (int x=0; x<planet_build_term_width; ++x) {
 			const int idx = (planet_build_term_width * y) + x;
-			const int block_idx = planet.idx(x*stride_x, y*stride_y);
-			double hotness = ((double)planet.landblocks[block_idx].temperature_c + 88.0) / 146.0;
-			const color_t temperature = lerp(BLUE, RED, hotness);
-
-			uint8_t col = planet.landblocks[block_idx].height;
-			const uint8_t zero = 0;
-			if (planet.landblocks[block_idx].type == block_type::NONE) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{col, col, col}, temperature};
-			} else if (planet.landblocks[block_idx].type == block_type::WATER) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{zero, zero, col}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::PLAINS) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{zero, col, zero}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::HILLS) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{zero, col, zero}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::MARSH) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{'~', color_t{zero, col, zero}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::PLATEAU) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{239, color_t{col, col, col}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::HIGHLANDS) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{col, col, col}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::COASTAL) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{176, color_t{zero, col, zero}, BLACK};
-			} else if (planet.landblocks[block_idx].type == block_type::SALT_MARSH) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{247, color_t{zero, col, zero}, BLACK};
-			} else {
-				(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{col, col, col}, BLACK};
-			}
-
-			/*if (planet.landblocks[block_idx].biome_idx > -1) {
-				const int biome_idx = planet.landblocks[block_idx].biome_idx;
-				if (planet.biomes[biome_idx].type == 0) {
-					//(*planet_builder_display.get())[idx].glyph = '!';
-				} else {
-					//(*planet_builder_display.get())[idx].glyph = biome_defs[planet.biomes[biome_idx].type].worldgen_glyph;
-					(*planet_builder_display.get())[idx].background = biome_defs[planet.biomes[biome_idx].type].worldgen_color;
-				}
-			}*/
+			const int block_idx = planet.idx(x*stride_x, y*stride_y);			
+			set_planet_display_char(block_idx, idx, planet);
 		}
 	}
 	planet_builder_lock.unlock();
@@ -131,6 +154,7 @@ void build_planet() {
 
 	// Select a crash site
 	auto crash_site = builder_select_starting_region(planet);
+	planet_display_update_zoomed(planet, crash_site.first, crash_site.second);
 
 	// Materialize this region
 	build_region(planet, crash_site, rng, noise);

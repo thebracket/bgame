@@ -18,3 +18,4 @@ void setup_build_planet(int width, int height);
 
 void set_worldgen_status(const std::string &status);
 void planet_display_update_altitude(planet_t &planet);
+void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y);

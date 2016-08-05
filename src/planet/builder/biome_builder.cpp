@@ -163,7 +163,7 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 				++ no_match;
 			}
 		}
-		planet_display_update_altitude(planet);
+		planet_display_update_zoomed(planet, biome.center_x, biome.center_y);
 
 		// Update the status
 		double pct = (double)count / planet.biomes.size() * 100.0; 

@@ -1,5 +1,8 @@
 #pragma once
 
+constexpr int WORLD_HEIGHT = 128;
+constexpr int WORLD_WIDTH = 128;
+
 constexpr int REGION_WIDTH=512;
 constexpr int REGION_HEIGHT=512;
 constexpr int REGION_DEPTH=128;
