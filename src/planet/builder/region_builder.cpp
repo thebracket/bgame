@@ -5,6 +5,7 @@
 #include "noise_helper.hpp"
 #include "../../components/components.hpp"
 #include "settler_builder.hpp"
+#include "../../utils/octree.hpp"
 
 using namespace rltk;
 
@@ -152,11 +153,15 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     }
     std:: cout << soils.size() << "/" << sands.size() << "/" << sedimintaries.size() << "/" << igneouses.size() << "\n";
 
-    const int n_strata = 256 + rng.roll_dice(1,64);
+    set_worldgen_status("Locating strata");
+    const int n_strata = REGION_WIDTH + rng.roll_dice(1,64);
     std::vector<std::tuple<int,int,int>> centroids;
+    octree_t octree(REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH);
+
     for (int i=0; i<n_strata; ++i) {
         auto center = std::make_tuple( rng.roll_dice(1,REGION_WIDTH)-1, rng.roll_dice(1,REGION_HEIGHT)-1, rng.roll_dice(1, REGION_DEPTH)-1 );
         centroids.push_back(center);
+        octree.add_node(octree_location_t{std::get<0>(center), std::get<1>(center), std::get<2>(center), i});
 
         const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + 64;
         const int z = std::get<2>(center);
@@ -183,10 +188,14 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     }
 
     for (int z=0; z<REGION_DEPTH; ++z) {
+        const float pct = ((float)z / REGION_DEPTH) * 100.0F;
+        std::stringstream ss;
+        ss << "Locating strata - " << (int)pct << "% done";
+        set_worldgen_status(ss.str());
         for (int y=0; y<REGION_HEIGHT; ++y) {
             for (int x=0; x<REGION_WIDTH; ++x) {
                 const int map_idx = mapidx(x,y,z);
-                int min_distance = 20000;
+                /*int min_distance = 20000;
                 int min_idx = -1;
 
                 for (int i=0; i<n_strata; ++i) {
@@ -195,8 +204,8 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
                         min_distance = distance;
                         min_idx = i;
                     }
-                }
-                result.strata_map[map_idx] = min_idx;
+                }*/
+                result.strata_map[map_idx] = octree.find_nearest(octree_location_t{x,y,z,0});
             }
         }
     }

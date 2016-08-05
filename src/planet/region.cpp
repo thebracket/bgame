@@ -173,9 +173,13 @@ void region_t::calc_render(const int &idx) {
 			bg = rltk::colors::YELLOW;
 		} break;
 		case tile_type::SOLID : {
-			glyph = material_defs[tile_material[idx]].glyph;
-			fg = material_defs[tile_material[idx]].fg;
-			bg = material_defs[tile_material[idx]].bg;
+			if (idx < tile_material.size() && tile_material[idx] < material_defs.size()) {
+				glyph = material_defs[tile_material[idx]].glyph;
+				fg = material_defs[tile_material[idx]].fg;
+				bg = material_defs[tile_material[idx]].bg;
+			} else {
+				std::cout << "Warning - material not found!\n";
+			}
 		} break;
 		case tile_type::OPEN_SPACE : {
 			glyph = ' ';
