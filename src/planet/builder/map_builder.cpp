@@ -16,9 +16,17 @@ perlin_noise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 	set_worldgen_status("Dividing the heavens from the earth: starting");
 	perlin_noise noise(perlin_seed);
 
+	constexpr float max_temperature = 56.7F;
+	constexpr float min_temperature = -55.2F;
+	constexpr float temperature_range = max_temperature - min_temperature;
+	constexpr float half_planet_height = WORLD_HEIGHT / 2.0F;
+
 	// Determine height of the region block as an average of the containing tiles
 	for (int y=0; y<WORLD_HEIGHT; ++y) {
 		const int distance_from_equator = std::abs((WORLD_HEIGHT/2)-y);
+		const float temp_range_pct = 1.0F - ((float)distance_from_equator / half_planet_height);
+		const float base_temp_by_latitude = ((temp_range_pct * temperature_range) + min_temperature);
+		//std::cout << y << "/" << distance_from_equator << "/" << temp_range_pct << "/" << base_temp_by_latitude << "\n";			
 		for (int x=0; x<WORLD_WIDTH; ++x) {
 			long total_height = 0L;
 
@@ -38,7 +46,8 @@ perlin_noise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 			planet.landblocks[planet.idx(x,y)].height = total_height / n_tiles;
 			planet.landblocks[planet.idx(x,y)].type = 0;
 			planet.landblocks[planet.idx(x,y)].variance = max - min;
-			planet.landblocks[planet.idx(x,y)].temperature_c = 58 - (distance_from_equator/3) - (std::abs(planet.landblocks[planet.idx(x,y)].height-planet.water_height) / 5);
+			const float altitude_deduction = std::abs(planet.landblocks[planet.idx(x,y)].height-planet.water_height) / 10.0F;
+			planet.landblocks[planet.idx(x,y)].temperature_c = base_temp_by_latitude - altitude_deduction;
             if (planet.landblocks[planet.idx(x,y)].temperature_c < -55) planet.landblocks[planet.idx(x,y)].temperature_c = -55;
             if (planet.landblocks[planet.idx(x,y)].temperature_c > 55) planet.landblocks[planet.idx(x,y)].temperature_c = 55;
 
