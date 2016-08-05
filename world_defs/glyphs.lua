@@ -7,6 +7,7 @@ glyphs = {
 	sun = 15,
 	ramp_right = 16,
 	ramp_left = 17,
+	paragraph = 20,
 	ramp_up = 30,
 	ramp_down = 31,
 	quote = 34,
