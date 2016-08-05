@@ -75,6 +75,23 @@ void inventory_system::configure() {
 		dirty = true;
 	});
 
+	// Receive drop messages
+	subscribe<drop_item_message>([this](drop_item_message &msg) {
+		emit(item_claimed_message{msg.id, false});
+		try { delete_component<item_carried_t>(msg.id); } catch (...) {}
+		try { entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z }); } catch (...) {}
+		dirty = true;
+	});
+
+	// Receive pick-up messages
+	subscribe<pickup_item_message>([this](pickup_item_message &msg) {
+		try { delete_component<position_t>(msg.id); } catch (...) {}
+		try { delete_component<item_stored_t>(msg.id); } catch (...) {}
+		entity(msg.id)->assign(item_carried_t{ INVENTORY, msg.collector });
+		dirty = true;
+		emit(renderables_changed_message{});
+	});
+
 	// Receive claim messages - update an item as claimed/unclaimed
 	subscribe<item_claimed_message>([] (item_claimed_message &msg) {
 		std::cout << "Received item claimed message: " << msg.id << "," << msg.claimed << "\n";

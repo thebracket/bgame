@@ -14,7 +14,7 @@ private:
 
 	void change_settler_glyph(entity_t &entity, const vchar &render_as);
 	void become_idle(entity_t &e, settler_ai_t &ai, name_t &name);
-	void drop_current_tool(entity_t &e, settler_ai_t &ai, position_t &pos);
+	void drop_current_tool(const entity_t &e, settler_ai_t &ai, const position_t &pos);
 	void cancel_action(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason);
 
 	void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);

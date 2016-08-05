@@ -96,11 +96,9 @@ void settler_ai_system::move_to(entity_t &e, position_t &pos, position_t &destin
 	emit(renderables_changed_message{});
 }
 
-void settler_ai_system::drop_current_tool(entity_t &e, settler_ai_t &ai, position_t &pos) {
-	emit(item_claimed_message{ai.current_tool, false});
-	try { delete_component<item_carried_t>(ai.current_tool); } catch (...) {}
-	try { entity(ai.current_tool)->assign(position_t{ pos.x, pos.y, pos.z }); } catch (...) {}
-	emit(inventory_changed_message{});	
+void settler_ai_system::drop_current_tool(const entity_t &e, settler_ai_t &ai, const position_t &pos) {
+	if (ai.current_tool == 0) return;
+	emit(drop_item_message{ ai.current_tool, pos.x, pos.y, pos.z });
 	ai.current_tool = 0;
 }
 
@@ -119,6 +117,10 @@ void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name)
 	ai.target_z = 0;
 	change_settler_glyph(e, vchar{'@', rltk::colors::YELLOW, rltk::colors::BLACK});
 	change_job_status(ai, name, "Idle");
+	if (ai.current_tool != 0) {
+		position_t * pos = e.component<position_t>();
+		drop_current_tool(e, ai, *pos);
+	}
 }
 
 void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
@@ -129,26 +131,15 @@ void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_
 		});
 	}
 	// Drop tool
-	if ((ai.job_type_major == JOB_MINE && ai.current_tool != 0) || (ai.job_type_major == JOB_CHOP && ai.current_tool != 0)) {
-		drop_current_tool(e, ai, pos);
-	}
-	// Drop components if necessary
-	if (ai.job_type_major == JOB_CONSTRUCTION) {
-		// Put the job back on the available jobs list
-		if (ai.building_target) {
-			designations->buildings.push_back(ai.building_target.get());
-			ai.building_target.reset();
-		}
-
-		// If holding a component, drop it
-		if (ai.current_tool != 0) drop_current_tool(e, ai, pos);
-	}
+	drop_current_tool(e, ai, pos);
 
 	std::cout << name.first_name << " cancels action: " << reason << "\n";
 	become_idle(e, ai, name);
 }
 
 void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.current_tool != 0) drop_current_tool(entity, ai, pos);
+
 	if (ai.job_type_major != JOB_IDLE && ai.job_type_major != JOB_SLEEP) {
 		cancel_action(entity, ai, stats, species, pos, name, "Bed time!");
 		return;
@@ -224,6 +215,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 }
 
 void settler_ai_system::do_leisure_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.current_tool != 0) drop_current_tool(entity, ai, pos);
 	if (ai.job_type_major == JOB_SLEEP) {
 		cancel_action(entity, ai, stats, species, pos, name, "Time to wake up");
 		return;
@@ -372,13 +364,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 
 	if (ai.job_type_minor == JM_COLLECT_PICK) {
 		// Find the pick, remove any position or stored components, add a carried_by component
-		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
-		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
-		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
-
-		// Notify the inventory system of the change	
-		emit(inventory_changed_message{});
-		emit(renderables_changed_message{});
+		emit(pickup_item_message{ai.current_tool, e.id});
 
 		ai.job_type_minor = JM_GO_TO_SITE;
 		change_job_status(ai, name, "Travelling to dig site");
@@ -515,13 +501,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 	if (ai.job_type_minor == JM_COLLECT_AXE) {
 		// Find the pick, remove any position or stored components, add a carried_by component
-		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
-		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
-		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
-
-		// Notify the inventory system of the change	
-		emit(inventory_changed_message{});
-		emit(renderables_changed_message{});
+		emit(pickup_item_message{ai.current_tool, e.id});
 
 		ai.job_type_minor = JM_FIND_TREE;
 		change_job_status(ai, name, "Pathing to chopping site");
@@ -683,14 +663,8 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_COLLECT_COMPONENT) {
-		// Find the pick, remove any position or stored components, add a carried_by component
-		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
-		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
-		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
-
-		// Notify the inventory system of the change	
-		emit(inventory_changed_message{});
-		emit(renderables_changed_message{});
+		// Find the component, remove any position or stored components, add a carried_by component
+		emit(pickup_item_message{ai.current_tool, e.id});
 
 		ai.job_type_minor = JM_GO_TO_BUILDING;
 		change_job_status(ai, name, "Going to building site");
@@ -819,14 +793,8 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_COLLECT_INPUT) {
-		// Find the pick, remove any position or stored components, add a carried_by component
-		try { delete_component<position_t>(ai.current_tool); } catch (...) {}
-		try { delete_component<item_stored_t>(ai.current_tool); } catch (...) {}
-		entity(ai.current_tool)->assign(item_carried_t{ INVENTORY, e.id });
-
-		// Notify the inventory system of the change	
-		emit(inventory_changed_message{});
-		emit(renderables_changed_message{});
+		// Find the component, remove any position or stored components, add a carried_by component
+		emit(pickup_item_message{ai.current_tool, e.id});
 
 		ai.job_type_minor = JM_GO_TO_WORKSHOP;
 		change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
