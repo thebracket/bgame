@@ -115,7 +115,7 @@ void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name)
 	ai.target_x = 0; 
 	ai.target_y = 0; 
 	ai.target_z = 0;
-	change_settler_glyph(e, vchar{'@', rltk::colors::YELLOW, rltk::colors::BLACK});
+	change_settler_glyph(e, vchar{1, rltk::colors::YELLOW, rltk::colors::BLACK});
 	change_job_status(ai, name, "Idle");
 	if (ai.current_tool != 0) {
 		position_t * pos = e.component<position_t>();
@@ -205,7 +205,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 		render->foreground = rltk::colors::BLUE;
 
 		if (rng.roll_dice(1,6) < 3) {
-			render->glyph = '@';
+			render->glyph = 1;
 		} else {
 			render->glyph = 'Z';
 		}
@@ -249,14 +249,14 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		const int idx = mapidx(pos.x, pos.y, pos.z);
 		
 		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
-			change_settler_glyph(entity, vchar{'@', rltk::colors::WHITE, rltk::colors::BLACK});
+			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_MINE;
 			ai.job_type_minor = JM_FIND_PICK;
 			change_job_status(ai, name, "Finding mining tools.");
 			return;
 		}
 		if (ai.permitted_work[JOB_CHOPPING] && designations->chopping.size() > 0 && is_item_category_available(TOOL_CHOPPING)) {
-			change_settler_glyph(entity, vchar{'@', rltk::colors::Brown, rltk::colors::BLACK});
+			change_settler_glyph(entity, vchar{1, rltk::colors::Brown, rltk::colors::BLACK});
 			ai.job_type_major = JOB_CHOP;
 			ai.job_type_minor = JM_FIND_AXE;
 			change_job_status(ai, name, "Finding chopping tools.");
@@ -269,7 +269,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			designations->buildings.pop_back();
 
 			if (ai.building_target) {
-				change_settler_glyph(entity, vchar{'@', rltk::colors::Pink, rltk::colors::BLACK});
+				change_settler_glyph(entity, vchar{1, rltk::colors::Pink, rltk::colors::BLACK});
 				ai.job_type_major = JOB_CONST;
 				ai.job_type_minor = JM_SELECT_COMPONENT;
 				change_job_status(ai, name, "Reading building plans.");
@@ -283,7 +283,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 
 			if (autojob) {
 				auto finder = reaction_defs.find(autojob.get().reaction_tag);
-				change_settler_glyph(entity, vchar{'@', get_task_color(finder->second.skill), rltk::colors::BLACK});
+				change_settler_glyph(entity, vchar{1, get_task_color(finder->second.skill), rltk::colors::BLACK});
 				ai.job_type_major = JOB_REACTION;
 				ai.job_type_minor = JM_SELECT_INPUT;
 				change_job_status(ai, name, autojob.get().job_name);
@@ -296,7 +296,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		boost::optional<reaction_task_t> autojob = find_automatic_reaction_task(ai);
 		if (autojob) {
 			auto finder = reaction_defs.find(autojob.get().reaction_tag);
-			change_settler_glyph(entity, vchar{'@', get_task_color(finder->second.skill), rltk::colors::BLACK});
+			change_settler_glyph(entity, vchar{1, get_task_color(finder->second.skill), rltk::colors::BLACK});
 			ai.job_type_major = JOB_REACTION;
 			ai.job_type_minor = JM_SELECT_INPUT;
 			change_job_status(ai, name, autojob.get().job_name);

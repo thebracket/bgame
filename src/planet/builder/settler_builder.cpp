@@ -169,7 +169,7 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 
 	auto settler = create_entity()
 		->assign(position_t{ x,y,z })
-		->assign(renderable_t{ '@',rltk::colors::YELLOW, rltk::colors::BLACK })
+		->assign(renderable_t{ 1,rltk::colors::YELLOW, rltk::colors::BLACK })
 		->assign(name_t{ first_name, last_name })
 		->assign(std::move(species))
 		->assign(std::move(health))
