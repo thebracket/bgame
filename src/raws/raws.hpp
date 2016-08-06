@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <boost/container/flat_map.hpp>
+#include <boost/container/flat_set.hpp>
 #include <tuple>
 #include <rltk.hpp>
 #include <bitset>
@@ -119,6 +120,7 @@ struct biome_type_t {
 	uint8_t worldgen_glyph;
 	rltk::color_t worldgen_color;
 	std::vector<std::pair<std::string,int>> plants;
+	std::vector<std::string> wildlife;
 	int deciduous_tree_chance = 0;
 	int evergreen_tree_chance = 0;
 };
@@ -148,6 +150,53 @@ struct plant_t {
 	std::string provides = "";
 };
 
+enum diet_t { diet_omnivore, diet_herbivore, diet_carnivore };
+enum alignment_t { align_good, align_neutral, align_evil };
+
+struct raw_species_t {
+	std::string tag = "";
+	std::string name = "";
+	std::string male_name = "";
+	std::string female_name = "";
+	std::string collective_name = "";
+	std::string description = "";
+	boost::container::flat_set<std::pair<std::string,int>> stat_mods;
+	std::vector<std::tuple<std::string, int, int>> body_parts;
+	diet_t diet;
+	alignment_t alignment;
+	int max_age;
+	int infant_age;
+	int child_age;
+	uint8_t glyph;
+};
+
+struct creature_attack_t {
+	std::string type;
+	int hit_bonus;
+	int damage_n_dice;
+	int damage_dice;
+	int damage_mod;
+};
+
+enum creature_ai_t { creature_grazer };
+
+struct raw_creature_t {
+	std::string tag = "";
+	std::string name = "";
+	std::string male_name = "";
+	std::string female_name = "";
+	std::string collective_name = "";
+	std::string description = "";
+	boost::container::flat_set<std::pair<std::string,int>> stats;
+	std::vector<std::tuple<std::string, int, int>> body_parts;
+	int armor_class;
+	std::vector<creature_attack_t> attacks;
+	int yield_hide;
+	int yield_meat;
+	creature_ai_t ai;
+	uint8_t glyph;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -170,6 +219,9 @@ extern boost::container::flat_map<std::string, std::size_t> material_defs_idx;
 extern std::vector<material_def_t> material_defs;
 extern boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 extern std::vector<plant_t> plant_defs;
+
+extern boost::container::flat_map<std::string, raw_species_t> species_defs;
+extern boost::container::flat_map<std::string, raw_creature_t> creature_defs;
 
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);

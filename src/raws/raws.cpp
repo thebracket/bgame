@@ -32,6 +32,9 @@ std::vector<material_def_t> material_defs;
 boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
 
+boost::container::flat_map<std::string, raw_species_t> species_defs;
+boost::container::flat_map<std::string, raw_creature_t> creature_defs;
+
 void load_string_table(const std::string filename, string_table_t &target) {
 	std::ifstream f(filename);
 	std::string line;
@@ -551,11 +554,209 @@ void read_biome_types(std::ofstream &tech_tree_file) {
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "wildlife") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string critter = lua_tostring(lua_state, -1);
+                    b.wildlife.push_back(critter);
+                    lua_pop(lua_state, 1);
+                }
+            }
 
             lua_pop(lua_state, 1);
         }
 
         biome_defs.push_back(b);
+
+        lua_pop(lua_state, 1);
+    }
+}
+
+void read_species_types(std::ofstream &tech_tree_file) {
+    lua_getglobal(lua_state, "species_sentient");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        raw_species_t s;
+        std::string key = lua_tostring(lua_state, -2);
+        s.tag = key;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") s.name = lua_tostring(lua_state, -1);
+            if (field == "male_name") s.male_name = lua_tostring(lua_state, -1);
+            if (field == "female_name") s.female_name = lua_tostring(lua_state, -1);
+            if (field == "group_name") s.collective_name = lua_tostring(lua_state, -1);
+            if (field == "description") s.description = lua_tostring(lua_state, -1);
+            if (field == "stat_mods") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string subfield = lua_tostring(lua_state, -2);
+                    int value = lua_tonumber(lua_state, -1);
+                    s.stat_mods.insert(std::make_pair(subfield, value));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "ethics") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string subfield = lua_tostring(lua_state, -2);
+                    if (subfield == "diet") {
+                        std::string diet_type = lua_tostring(lua_state, -1);
+                        if (diet_type == "omnivore") s.diet = diet_omnivore;
+                        if (diet_type == "herbivore") s.diet = diet_herbivore;
+                        if (diet_type == "carnivore") s.diet = diet_carnivore;
+                    }
+                    if (subfield == "alignment") {
+                        std::string alignment_type = lua_tostring(lua_state, -1);
+                        if (alignment_type == "good") s.alignment = align_good;
+                        if (alignment_type == "neutral") s.alignment = align_neutral;
+                        if (alignment_type == "evil") s.alignment = align_evil;
+                    }
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "parts") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string part_name = lua_tostring(lua_state, -2);
+                    std::tuple<std::string, int, int> part;
+                    std::get<0>(part) = part_name;
+                    lua_pushstring(lua_state, part_name.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string part_field = lua_tostring(lua_state, -2);
+                        if (part_field == "qty") std::get<1>(part) = lua_tonumber(lua_state, -1);
+                        if (part_field == "size") std::get<2>(part) = lua_tonumber(lua_state, -1);
+                        lua_pop(lua_state, 1);
+                    }
+                    s.body_parts.push_back(part);
+
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "max_age") s.max_age = lua_tonumber(lua_state, -1);
+            if (field == "infant_age") s.infant_age = lua_tonumber(lua_state, -1);
+            if (field == "child_age") s.child_age = lua_tonumber(lua_state, -1);
+            if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        species_defs[key] = s;
+
+        lua_pop(lua_state, 1);
+    }
+}
+
+void read_creature_types(std::ofstream &tech_tree_file) {
+    lua_getglobal(lua_state, "creatures");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        raw_creature_t s;
+        std::string key = lua_tostring(lua_state, -2);
+        s.tag = key;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+
+            if (field == "name") s.name = lua_tostring(lua_state, -1);
+            if (field == "male_name") s.male_name = lua_tostring(lua_state, -1);
+            if (field == "female_name") s.female_name = lua_tostring(lua_state, -1);
+            if (field == "group_name") s.collective_name = lua_tostring(lua_state, -1);
+            if (field == "description") s.description = lua_tostring(lua_state, -1);
+            if (field == "stats") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string subfield = lua_tostring(lua_state, -2);
+                    int value = lua_tonumber(lua_state, -1);
+                    s.stats.insert(std::make_pair(subfield, value));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "parts") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string part_name = lua_tostring(lua_state, -2);
+                    std::tuple<std::string, int, int> part;
+                    std::get<0>(part) = part_name;
+                    lua_pushstring(lua_state, part_name.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string part_field = lua_tostring(lua_state, -2);
+                        if (part_field == "qty") std::get<1>(part) = lua_tonumber(lua_state, -1);
+                        if (part_field == "size") std::get<2>(part) = lua_tonumber(lua_state, -1);
+                        lua_pop(lua_state, 1);
+                    }
+                    s.body_parts.push_back(part);
+
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "combat") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string cname = lua_tostring(lua_state, -2);
+                    if (cname == "armor_class") s.armor_class = lua_tonumber(lua_state, -1);
+                    if (cname == "attacks") {
+                        lua_pushstring(lua_state, cname.c_str());
+                        lua_gettable(lua_state, -2);
+                        while (lua_next(lua_state, -2) != 0) {
+                            std::string attack_name = lua_tostring(lua_state, -2);
+                            lua_pushstring(lua_state, attack_name.c_str());
+                            lua_gettable(lua_state, -2);
+                            creature_attack_t attack;
+                            while (lua_next(lua_state, -2) != 0) {
+                                std::string attack_field = lua_tostring(lua_state, -2);
+                                if (field == "type") attack.type = lua_tostring(lua_state, -1);
+                                if (field == "hit_bonus") attack.hit_bonus = lua_tonumber(lua_state, -1);
+                                if (field == "n_dice") attack.damage_n_dice = lua_tonumber(lua_state, -1);
+                                if (field == "die_type") attack.damage_dice = lua_tonumber(lua_state, -1);
+                                if (field == "die_mod") attack.damage_mod = lua_tonumber(lua_state, -1);
+                                lua_pop(lua_state, 1);
+                            }
+                            s.attacks.push_back(attack);
+                            lua_pop(lua_state, 1);
+                        }
+                    }
+
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "hunting_yield") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string yield_type = lua_tostring(lua_state, -2);
+                    int value = lua_tonumber(lua_state, -1);
+                    if (yield_type == "meat") s.yield_meat = value;
+                    if (yield_type == "hide") s.yield_hide = value;
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "ai") {
+                std::string ai_type = lua_tostring(lua_state, -1);
+                if (ai_type == "grazer") s.ai == creature_grazer;
+            }
+            if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        creature_defs[key] = s;
 
         lua_pop(lua_state, 1);
     }
@@ -574,6 +775,8 @@ void load_game_tables() {
     read_material_types(tech_tree_file);
     read_plant_types(tech_tree_file);
     read_biome_types(tech_tree_file);
+    read_species_types(tech_tree_file);
+    read_creature_types(tech_tree_file);
 
     tech_tree_file << "}\n";
     tech_tree_file.close();

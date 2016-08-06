@@ -3,6 +3,7 @@ materials.lua
 vegetation.lua
 clothing.lua
 species.lua
+creatures.lua
 starting_professions.lua
 items.lua
 buildings.lua
