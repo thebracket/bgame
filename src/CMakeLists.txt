@@ -53,6 +53,7 @@ add_executable(bgame main.cpp
 	systems/renderables_system.cpp
 	systems/lighting_system.cpp
 	systems/power_system.cpp
+	systems/damage_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

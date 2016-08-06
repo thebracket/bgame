@@ -12,3 +12,4 @@
 #include "perform_construction.hpp"
 #include "power_consumed.hpp"
 #include "power_changed_message.hpp"
+#include "inflict_damage_message.hpp"

@@ -447,7 +447,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			return;
 		} else {
 			// Failed!
-			// if (skill_check == CRITICAL_FAIL) inflictDamage!
+			if (skill_check == CRITICAL_FAIL) emit(inflict_damage_message{e.id, 1, "Mining Accident"});
 			return;
 		}
 	}
@@ -609,6 +609,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			change_job_status(ai, name, "Dropping axe");
 		} else if (skill_check == CRITICAL_FAIL) {
 			// Damage yourself
+			emit(inflict_damage_message{e.id, 1, "Lumberjacking Accident"});
 		}
 		return;
 	}

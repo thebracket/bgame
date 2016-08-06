@@ -13,3 +13,4 @@
 #include "renderables_system.hpp"
 #include "lighting_system.hpp"
 #include "power_system.hpp"
+#include "damage_system.hpp"
