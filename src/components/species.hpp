@@ -13,6 +13,7 @@ enum hair_style_t { BALD, SHORT, LONG, PIGTAILS, MOHAWK, BALDING, TRIANGLE };
 enum skin_color_t { CAUCASIAN, ASIAN, INDIAN, AFRICAN };
 
 struct species_t {
+	std::string tag = "";
 	gender_t gender;
 	sexuality_t sexuality;
 	hair_color_t hair_color;

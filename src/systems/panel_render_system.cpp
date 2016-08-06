@@ -570,6 +570,7 @@ void panel_render_system::render_settler_mode() {
 	game_stats_t * stats = entity(selected_settler)->component<game_stats_t>();
 	species_t * species = entity(selected_settler)->component<species_t>();
 	settler_ai_t * ai = entity(selected_settler)->component<settler_ai_t>();
+	health_t * health = entity(selected_settler)->component<health_t>();
 
 	std::stringstream header;
 	header << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ")";
@@ -580,6 +581,18 @@ void panel_render_system::render_settler_mode() {
 	term(1)->print(2, 4, header.str(), YELLOW, BLACK );
 	term(1)->print(2, 5, header2.str(), WHITE, BLACK );
 	term(1)->print(2, 6, ai->job_status);
+
+	term(1)->print(2, 8, "Hit Points: " + std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints));
+	int y = 9;
+	for (const health_part_t &part : health->parts) {
+		std::string part_state = "OK";
+		if (part.current_hitpoints < 1 && part.current_hitpoints > -10) part_state = "IMPAIRED";
+		if (part.current_hitpoints < -9 && part.current_hitpoints > -20) part_state = "BROKEN";
+		if (part.current_hitpoints < -19) part_state = "GONE";
+		term(1)->print(2,y, part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")"));
+		++y;
+	}
+
 	term(1)->print(30, 8, species->gender_pronoun() + std::string(" ") + stats->strength_str(), WHITE, BLACK);
 	term(1)->print(30, 9, species->gender_pronoun() + std::string(" ") + stats->dexterity_str(), WHITE, BLACK);
 	term(1)->print(30, 10, species->gender_pronoun() + std::string(" ") + stats->constitution_str(), WHITE, BLACK);
@@ -589,7 +602,7 @@ void panel_render_system::render_settler_mode() {
 	term(1)->print(30, 14, species->gender_pronoun() + std::string(" ") + stats->comeliness_str(), WHITE, BLACK);
 	term(1)->print(30, 15, species->gender_pronoun() + std::string(" ") + stats->ethics_str(), WHITE, BLACK);
 
-	int y=17;
+	y=17;
 	for (const auto &skill : stats->skills) {
 		term(1)->print(30, y, skill.first + std::string(" : ") + std::to_string(skill.second.skill_level));
 	}

@@ -14,6 +14,7 @@ creatures = {
         },
         hunting_yield = { meat=4, hide=4 },
         ai = "grazer",
-        glyph = glyphs['d']
+        glyph = glyphs['d'],
+        hp_n = 1, hp_dice = 10, hp_mod = 0
     }
 }

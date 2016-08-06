@@ -195,6 +195,7 @@ struct raw_creature_t {
 	int yield_meat;
 	creature_ai_t ai;
 	uint8_t glyph;
+	int hp_n, hp_dice, hp_mod;
 };
 
 extern string_table_t first_names_male;

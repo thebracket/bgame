@@ -1,13 +1,15 @@
 #include "settler_builder.hpp"
 #include "../../components/components.hpp"
 #include "../../utils/string_utils.hpp"
+#include "../../raws/health_factory.hpp"
 
 using namespace rltk;
 
 void create_settler(const int x, const int y, const int z, random_number_generator &rng, int shift_id) {
 	species_t species;
-	game_stats_t stats;
-	health_t health;
+	game_stats_t stats;	
+
+	species.tag = "human";
 
 	// Gender
 	int gender_roll = rng.roll_dice(1, 21);
@@ -161,8 +163,9 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	stats.ethics = rng.roll_dice(3,6)  + starting_professions[selected_profession].ethics;
 	stats.age = 15 + rng.roll_dice(3,6);
 
-	health.max_hitpoints = 10 + stat_modifier(stats.constitution);
-	health.current_hitpoints = health.max_hitpoints;
+	int base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
+	if (base_hp < 1) base_hp = 1;
+	health_t health = create_health_component_sentient("human", base_hp);
 
 	settler_ai_t ai;
 	ai.shift_id = shift_id;
