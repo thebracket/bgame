@@ -13,7 +13,7 @@ inline void internal_pen_view_to(position_t &pos, viewshed_t &view, int x, int y
 	const float dist_square = view.viewshed_radius * view.viewshed_radius;
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
-		reveal(mapidx(X, Y, Z), view);
+		if (view.good_guy_visibility) reveal(mapidx(X, Y, Z), view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance < dist_square) {
 			return true;
@@ -82,8 +82,10 @@ void visibility_system::update(const double duration_ms) {
 		}
 
 		// Make visible
-		for (const int &idx : view.visible_cache) {
-			current_region->visible[idx] = true;
+		if (view.good_guy_visibility) {
+			for (const int &idx : view.visible_cache) {
+				current_region->visible[idx] = true;
+			}
 		}
 	});
 	dirty_entities.clear();

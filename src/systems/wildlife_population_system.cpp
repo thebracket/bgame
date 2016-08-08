@@ -127,7 +127,8 @@ void wildlife_population_system::spawn_wildlife() {
                         ->assign(std::move(species))
                         ->assign(std::move(create_health_component_creature(critter_def->second.tag)))
                         ->assign(grazer_ai{ stat_modifier(stats.dexterity) })
-                        ->assign(std::move(stats));
+                        ->assign(std::move(stats))
+                        ->assign(viewshed_t(6, false, false));
                     }
                 }
         }
