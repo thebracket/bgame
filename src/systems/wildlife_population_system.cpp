@@ -63,29 +63,38 @@ void wildlife_population_system::spawn_wildlife() {
             const std::size_t n_critters = biome_defs[biome_type].wildlife.size();
             const std::size_t critter_idx = rng.roll_dice(1, n_critters)-1;
             const std::string critter_tag = biome_defs[biome_type].wildlife[critter_idx];
-            std::cout << "Looking for [" << critter_tag << "]";
             auto critter_def = creature_defs.find( critter_tag );
             if (critter_def == creature_defs.end()) throw std::runtime_error("Could not find " + biome_defs[biome_type].wildlife[critter_idx]);
             const int n_spawn = rng.roll_dice(critter_def->second.group_size_n_dice, critter_def->second.group_size_dice) + critter_def->second.group_size_mod;
-            std::cout << "Spawning " << n_spawn << " " << critter_def->second.tag << ", ";
 
             int edge = rng.roll_dice(1,4);
-            int base_x, base_y;
+            int base_x, base_y, base_z;
 
-            switch (edge) {
-                case 0 : { base_x = REGION_WIDTH/2; base_y = 1; } break;
-                case 1 : { base_x = REGION_WIDTH/2; base_y = REGION_HEIGHT-1; } break;
-                case 2 : { base_x = 1; base_y = REGION_HEIGHT/2; } break;
-                case 3 : { base_x = REGION_WIDTH-1; base_y = REGION_HEIGHT/2; } break;
+            int try_count=0;
+
+            while (try_count < 4) {
+                switch (edge) {
+                    case 0 : { base_x = REGION_WIDTH/2; base_y = 1; } break;
+                    case 1 : { base_x = REGION_WIDTH/2; base_y = REGION_HEIGHT-1; } break;
+                    case 2 : { base_x = 1; base_y = REGION_HEIGHT/2; } break;
+                    case 3 : { base_x = REGION_WIDTH-1; base_y = REGION_HEIGHT/2; } break;
+                }
+                base_z = get_ground_z(*current_region, base_x, base_y);
+                const int idx = mapidx(base_x, base_y, base_z);
+                if (current_region->water_level[idx] > 0) {
+                    ++try_count;
+                } else {
+                    try_count = 20;
+                }
             }
-            std::cout << "on edge " << edge << "\n";
+            if (try_count == 20) break;
 
             for (int j=0; j<n_spawn; ++j) {
                 // Critters have: appropriate AI component, wildlife_group, position, renderable, name, species, stats
                 bool male = true;
                 if (rng.roll_dice(1,4)<=2) male = false;
 
-                position_t pos{base_x, base_y, get_ground_z(*current_region, base_x, base_y)};
+                position_t pos{base_x, base_y, base_z};
                 renderable_t render{ critter_def->second.glyph, critter_def->second.fg, rltk::colors::BLACK };
                 name_t name{};
                 name.first_name = critter_def->second.name;
