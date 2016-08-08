@@ -87,6 +87,15 @@ void visibility_system::update(const double duration_ms) {
 				current_region->visible[idx] = true;
 			}
 		}
+
+		// What can we see?
+		view.visible_entities.clear();
+		for (const int &idx : view.visible_cache) {
+			each<position_t>([&view, &idx] (entity_t &E, position_t &P) {
+				const int target_idx = mapidx(P.x, P.y, P.z);
+				if (idx == target_idx) view.visible_entities.insert(E.id);
+			});
+		}
 	});
 	dirty_entities.clear();
 	dirty = false;

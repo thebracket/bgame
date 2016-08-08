@@ -22,23 +22,34 @@ void wildlife_population_system::move_to(entity_t &e, position_t &pos, position_
 
 void wildlife_population_system::configure() {
     subscribe<tick_message>([this](tick_message &msg) {
-        each<grazer_ai, position_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos) {
+        each<grazer_ai, position_t, viewshed_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos, viewshed_t &view) {
             if (ai.initiative < 1) {
-                // Handle the AI here
-                const int idx = mapidx(pos.x, pos.y, pos.z);
-                if (current_region->tile_vegetation_type[idx] > 0) {
-                    --current_region->tile_hit_points[idx];
-                    //std::cout << "Vegetation Damaged by Grazing - " << +current_region->tile_hit_points[idx] << " hp remain\n";
-                    if (current_region->tile_hit_points[idx] < 1) {
-                        // We've destroyed the vegetation!
-                        //std::cout << "Vegetation Destroyed\n";
-                        current_region->tile_hit_points[idx] = 0;
-                        current_region->tile_vegetation_type[idx] = 0;
-                        current_region->calc_render(idx);
-                        emit(map_dirty_message{});
+                // Can we see anything scary?
+                bool terrified = false;
+                for (const std::size_t other_entity : view.visible_entities) {
+                    if (entity(other_entity)->component<settler_ai_t>() != nullptr) {
+                        std::cout << "Grazer spots settler\n";
+                        this->wander_randomly(e, pos);
+                        terrified = true;
                     }
-                } else {
-                    this->wander_randomly(e, pos);
+                }
+                if (!terrified) {
+                    // Handle the AI here
+                    const int idx = mapidx(pos.x, pos.y, pos.z);
+                    if (current_region->tile_vegetation_type[idx] > 0) {
+                        --current_region->tile_hit_points[idx];
+                        //std::cout << "Vegetation Damaged by Grazing - " << +current_region->tile_hit_points[idx] << " hp remain\n";
+                        if (current_region->tile_hit_points[idx] < 1) {
+                            // We've destroyed the vegetation!
+                            //std::cout << "Vegetation Destroyed\n";
+                            current_region->tile_hit_points[idx] = 0;
+                            current_region->tile_vegetation_type[idx] = 0;
+                            current_region->calc_render(idx);
+                            emit(map_dirty_message{});
+                        }
+                    } else {
+                        this->wander_randomly(e, pos);
+                    }
                 }
 
                 ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
@@ -67,7 +78,7 @@ void wildlife_population_system::spawn_wildlife() {
             if (critter_def == creature_defs.end()) throw std::runtime_error("Could not find " + biome_defs[biome_type].wildlife[critter_idx]);
             const int n_spawn = rng.roll_dice(critter_def->second.group_size_n_dice, critter_def->second.group_size_dice) + critter_def->second.group_size_mod;
 
-            int edge = rng.roll_dice(1,4);
+            int edge = rng.roll_dice(1,4)-1;
             int base_x, base_y, base_z;
 
             int try_count=0;
@@ -83,13 +94,17 @@ void wildlife_population_system::spawn_wildlife() {
                 const int idx = mapidx(base_x, base_y, base_z);
                 if (current_region->water_level[idx] > 0) {
                     ++try_count;
+                    edge = rng.roll_dice(1,4)-1;
                 } else {
                     try_count = 20;
                 }
             }
-            if (try_count == 20) break;
+            if (try_count < 20) {
+                break;
+            }
 
             for (int j=0; j<n_spawn; ++j) {
+                std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                 // Critters have: appropriate AI component, wildlife_group, position, renderable, name, species, stats
                 bool male = true;
                 if (rng.roll_dice(1,4)<=2) male = false;
