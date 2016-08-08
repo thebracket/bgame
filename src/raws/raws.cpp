@@ -759,6 +759,7 @@ void read_creature_types(std::ofstream &tech_tree_file) {
             if (field == "group_size_n_dice") s.group_size_n_dice = lua_tonumber(lua_state, -1);
             if (field == "group_size_dice") s.group_size_dice = lua_tonumber(lua_state, -1);
             if (field == "group_size_mod") s.group_size_mod = lua_tonumber(lua_state, -1);
+            if (field == "color") s.fg = read_lua_color("color");
 
             lua_pop(lua_state, 1);
         }

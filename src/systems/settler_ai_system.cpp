@@ -20,7 +20,7 @@ void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stat
 void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	
 	renderable_t * render = entity.component<renderable_t>();
 	render->foreground = rltk::colors::YELLOW;
-	render->glyph = '@';
+	render->glyph = 1;
 	emit(entity_wants_to_move_randomly_message{entity.id});
 }
 

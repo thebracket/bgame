@@ -72,7 +72,7 @@ void wildlife_population_system::spawn_wildlife() {
                 if (rng.roll_dice(1,4)<=2) male = false;
 
                 position_t pos{base_x, base_y, get_ground_z(*current_region, base_x, base_y)};
-                renderable_t render{ critter_def->second.glyph, rltk::colors::LIGHT_GREY, rltk::colors::BLACK };
+                renderable_t render{ critter_def->second.glyph, critter_def->second.fg, rltk::colors::BLACK };
                 name_t name{};
                 name.first_name = critter_def->second.name;
                 if (male) {
