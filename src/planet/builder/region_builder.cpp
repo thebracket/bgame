@@ -9,22 +9,6 @@
 
 using namespace rltk;
 
-inline int get_ground_z(region_t &region, const int x, const int y) {
-	int z = REGION_DEPTH-1;
-	bool hit_ground = false;
-	while (!hit_ground) {
-		const int idx = mapidx(x, y, z);
-		if (region.tile_type[idx] == tile_type::SOLID) {
-			hit_ground = true;
-			++z;
-		} else {
-			--z;
-		}
-        if (z == 1) hit_ground = true;
-	}
-	return z;
-}
-
 std::pair<int,int> builder_select_starting_region(planet_t &planet) {
     std::pair<int,int> coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
 

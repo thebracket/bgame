@@ -80,6 +80,7 @@ void play_game::init() {
 	// Setup systems
 	std::cout << "Setting up systems\n";
 	add_system<calendar_system>();
+	add_system<wildlife_population_system>();
 	add_system<renderables_system>();
 	add_system<camera_system>();
 	add_system<lighting_system>();

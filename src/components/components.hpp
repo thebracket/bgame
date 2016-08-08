@@ -19,3 +19,5 @@
 #include "viewshed.hpp"
 #include "building.hpp"
 #include "lightsource.hpp"
+#include "grazer_ai.hpp"
+#include "wildlife_group.hpp"

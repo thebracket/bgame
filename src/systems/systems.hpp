@@ -14,3 +14,4 @@
 #include "lighting_system.hpp"
 #include "power_system.hpp"
 #include "damage_system.hpp"
+#include "wildlife_population_system.hpp"

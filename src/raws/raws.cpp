@@ -750,12 +750,15 @@ void read_creature_types(std::ofstream &tech_tree_file) {
             }
             if (field == "ai") {
                 std::string ai_type = lua_tostring(lua_state, -1);
-                if (ai_type == "grazer") s.ai == creature_grazer;
+                if (ai_type == "grazer") s.ai = creature_grazer;
             }
             if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
             if (field == "hp_n") s.hp_n = lua_tonumber(lua_state, -1);
             if (field == "hp_dice") s.hp_dice = lua_tonumber(lua_state, -1);
             if (field == "hp_mod") s.hp_mod = lua_tonumber(lua_state, -1);
+            if (field == "group_size_n_dice") s.group_size_n_dice = lua_tonumber(lua_state, -1);
+            if (field == "group_size_dice") s.group_size_dice = lua_tonumber(lua_state, -1);
+            if (field == "group_size_mod") s.group_size_mod = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }
