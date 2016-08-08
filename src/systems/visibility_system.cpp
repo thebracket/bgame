@@ -93,9 +93,8 @@ void visibility_system::update(const double duration_ms) {
 		// What can we see?
 		view.visible_entities.clear();
 		for (const int &idx : view.visible_cache) {
-			const int z = idx / (REGION_WIDTH * REGION_HEIGHT);
-			const int y = idx - (z * REGION_WIDTH * REGION_HEIGHT) / REGION_WIDTH;
-			const int x = idx - (z * REGION_WIDTH * REGION_HEIGHT) - (y * REGION_WIDTH);
+			int x,y,z;
+			std::tie(x,y,z) = idxmap(idx);
 			std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
 			for (const auto &v : visible_here) view.visible_entities.insert(v);
 		}

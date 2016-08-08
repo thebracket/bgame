@@ -10,6 +10,19 @@ constexpr std::size_t mapidx(const int x, const int y, const int z) {
 	return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; 
 }
 
+inline std::tuple<int,int,int> idxmap(int idx) {
+	// idx = (z*H*W) + (y*W) + x
+	int z = idx / (REGION_HEIGHT * REGION_WIDTH);
+	idx -= (z * REGION_WIDTH * REGION_HEIGHT);
+
+	int y = idx / REGION_WIDTH;
+	idx -= (y * REGION_WIDTH);
+
+	int x = idx;
+
+	return std::make_tuple(x,y,z);
+}
+
 struct region_t {
 	region_t() { 
 		revealed.resize(REGION_TILES_COUNT);
