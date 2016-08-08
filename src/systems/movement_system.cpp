@@ -1,6 +1,7 @@
 #include "movement_system.hpp"
 #include "../messages/entity_moved_message.hpp"
 #include "../messages/renderables_changed_message.hpp"
+#include "../messages/map_dirty_message.hpp"
 #include "../game_globals.hpp"
 #include <rltk.hpp>
 
@@ -37,6 +38,21 @@ void movement_system::update(const double ms) {
         epos->x = msg.destination.x;
         epos->y = msg.destination.y;
         epos->z = msg.destination.z;
+
+        // Do vegetation damage
+        const int idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
+        if (current_region->tile_vegetation_type[idx] > 0) {
+            --current_region->tile_hit_points[idx];
+            //std::cout << "Vegetation Damaged by Walking - " << +current_region->tile_hit_points[idx] << " hp remain\n";
+            if (current_region->tile_hit_points[idx] < 1) {
+                // We've destroyed the vegetation!
+                //std::cout << "Vegetation Destroyed\n";
+                current_region->tile_hit_points[idx] = 0;
+                current_region->tile_vegetation_type[idx] = 0;
+                current_region->calc_render(idx);
+                emit(map_dirty_message{});
+            }
+        }
 
         emit(entity_moved_message{msg.entity_id, msg.destination});
 	    emit(renderables_changed_message{});

@@ -219,7 +219,8 @@ void region_t::calc_render(const int &idx) {
 
 			if (tile_vegetation_type[idx]>0) {
 				glyph = plant_defs[tile_vegetation_type[idx]].glyph;
-				fg = plant_defs[tile_vegetation_type[idx]].fg;
+				const float damage_pct = (float)tile_hit_points[idx] / 10.0F;				
+				fg = lerp(fg, plant_defs[tile_vegetation_type[idx]].fg, damage_pct);
 				bg = plant_defs[tile_vegetation_type[idx]].bg;
 			}
 		} break;

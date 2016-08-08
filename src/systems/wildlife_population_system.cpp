@@ -25,7 +25,21 @@ void wildlife_population_system::configure() {
         each<grazer_ai, position_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos) {
             if (ai.initiative < 1) {
                 // Handle the AI here
-                this->wander_randomly(e, pos);
+                const int idx = mapidx(pos.x, pos.y, pos.z);
+                if (current_region->tile_vegetation_type[idx] > 0) {
+                    --current_region->tile_hit_points[idx];
+                    //std::cout << "Vegetation Damaged by Grazing - " << +current_region->tile_hit_points[idx] << " hp remain\n";
+                    if (current_region->tile_hit_points[idx] < 1) {
+                        // We've destroyed the vegetation!
+                        //std::cout << "Vegetation Destroyed\n";
+                        current_region->tile_hit_points[idx] = 0;
+                        current_region->tile_vegetation_type[idx] = 0;
+                        current_region->calc_render(idx);
+                        emit(map_dirty_message{});
+                    }
+                } else {
+                    this->wander_randomly(e, pos);
+                }
 
                 ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
             } else {
