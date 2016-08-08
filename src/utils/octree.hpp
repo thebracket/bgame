@@ -5,7 +5,8 @@
 #include <memory>
 
 struct octree_location_t {
-    int x, y, z, id;
+    int x, y, z;
+    std::size_t id;
 };
 
 struct octree_t {
@@ -33,4 +34,9 @@ struct octree_t {
 
     void add_node(const octree_location_t loc);
     int find_nearest(const octree_location_t &loc);
+    void remove_node(const octree_location_t &loc);
+    std::vector<std::size_t> find_by_loc(const octree_location_t &loc);
+
+private:
+    void find_by_loc_impl(const octree_location_t &loc, std::vector<std::size_t> &result);
 };

@@ -660,6 +660,11 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			return;
 		}
 		// Travel to site
+		if (ai.current_path->steps.empty()) {
+			// Oops - path doesn't actually work!
+			cancel_action(e, ai, stats, species, pos, name, "Broken path");
+			return;
+		}
 		position_t next_step = ai.current_path->steps.front();
 		move_to(e, pos, next_step);
 		ai.current_path->steps.pop_front();

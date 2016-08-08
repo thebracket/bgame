@@ -12,15 +12,8 @@ void wildlife_population_system::wander_randomly(entity_t &entity, position_t &o
     emit(entity_wants_to_move_randomly_message{entity.id});
 }
 
-void wildlife_population_system::move_to(entity_t &e, position_t &pos, position_t &destination) {
-	pos.x = destination.x;
-	pos.y = destination.y;
-	pos.z = destination.z;
-	emit(entity_moved_message{e.id, destination});
-	emit(renderables_changed_message{});
-}
-
 void wildlife_population_system::configure() {
+    system_name = "Wildlife Spawner";
     subscribe<tick_message>([this](tick_message &msg) {
         each<grazer_ai, position_t, viewshed_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos, viewshed_t &view) {
             if (ai.initiative < 1) {

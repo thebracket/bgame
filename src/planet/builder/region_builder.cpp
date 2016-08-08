@@ -142,7 +142,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     std::vector<std::tuple<int,int,int>> centroids;
     octree_t octree(REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH);
 
-    for (int i=0; i<n_strata; ++i) {
+    for (std::size_t i=0; i<n_strata; ++i) {
         auto center = std::make_tuple( rng.roll_dice(1,REGION_WIDTH)-1, rng.roll_dice(1,REGION_HEIGHT)-1, rng.roll_dice(1, REGION_DEPTH)-1 );
         centroids.push_back(center);
         octree.add_node(octree_location_t{std::get<0>(center), std::get<1>(center), std::get<2>(center), i});

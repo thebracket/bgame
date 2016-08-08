@@ -5,7 +5,10 @@
 #include "../game_globals.hpp"
 #include <rltk.hpp>
 
+octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};
+
 void movement_system::configure() {
+    system_name = "Movement System";
     subscribe_mbox<entity_wants_to_move_message>();
     subscribe<entity_wants_to_move_randomly_message>([] (entity_wants_to_move_randomly_message &msg) {
 
@@ -26,15 +29,26 @@ void movement_system::configure() {
             emit(entity_wants_to_move_message{msg.entity_id, pos});
         }
     });
+
+    // When an entity actually moves, update the octree
+    subscribe_mbox<entity_moved_message>();
 }
 
 void movement_system::update(const double ms) {
+    // If the octree is empty, fill it
+    if (entity_octree.total_nodes == 0) {
+        each<position_t>([] (entity_t &e, position_t &pos) {
+            entity_octree.add_node(octree_location_t{pos.x, pos.y, pos.z, e.id});
+        });
+    }
+
     std::queue<entity_wants_to_move_message> * movers = mbox<entity_wants_to_move_message>();
 	while (!movers->empty()) {
         entity_wants_to_move_message msg = movers->front();
 		movers->pop();
 
         position_t * epos = entity(msg.entity_id)->component<position_t>();
+        position_t origin{epos->x, epos->y, epos->z};
         epos->x = msg.destination.x;
         epos->y = msg.destination.y;
         epos->z = msg.destination.z;
@@ -54,7 +68,18 @@ void movement_system::update(const double ms) {
             }
         }
 
-        emit(entity_moved_message{msg.entity_id, msg.destination});
+        emit(entity_moved_message{msg.entity_id, origin, msg.destination});
 	    emit(renderables_changed_message{});
 	}
+
+    std::queue<entity_moved_message> * moved = mbox<entity_moved_message>();
+    while (!moved->empty()) {
+        entity_moved_message msg = moved->front();
+        moved->pop();
+
+        octree_location_t start = octree_location_t{msg.origin.x, msg.origin.y, msg.origin.z, msg.entity_id};
+        octree_location_t end = octree_location_t{msg.destination.x, msg.destination.y, msg.destination.z, msg.entity_id};
+        entity_octree.remove_node(start);
+        entity_octree.add_node(end);
+    }
 }

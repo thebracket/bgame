@@ -1,6 +1,8 @@
 #include "visibility_system.hpp"
 #include "../game_globals.hpp"
 #include "../messages/messages.hpp"
+#include "visibility_system.hpp"
+#include "movement_system.hpp"
 
 using namespace rltk;
 
@@ -28,7 +30,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
 		const int idx = mapidx(X, Y, Z);
-		reveal(idx, view);
+		if (view.good_guy_visibility) reveal(idx, view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {
 			return false;
@@ -40,7 +42,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 void update_penetrating_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 	view.visible_cache.clear();
 
-	reveal(mapidx(pos.x, pos.y, pos.z), view);
+	if (view.good_guy_visibility) reveal(mapidx(pos.x, pos.y, pos.z), view);
 	for (int z=(0-view.viewshed_radius); z<view.viewshed_radius; ++z) {
 		for (int i=0-view.viewshed_radius; i<view.viewshed_radius; ++i) {
 			internal_pen_view_to(pos, view, i, 0-view.viewshed_radius, z);
@@ -53,7 +55,7 @@ void update_penetrating_viewshed(entity_t &e, position_t &pos, viewshed_t &view)
 
 void update_normal_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 	view.visible_cache.clear();
-	reveal(mapidx(pos.x, pos.y, pos.z), view);
+	if (view.good_guy_visibility) reveal(mapidx(pos.x, pos.y, pos.z), view);
 	for (int z=(0-view.viewshed_radius); z<view.viewshed_radius; ++z) {
 		for (int i=0-view.viewshed_radius; i<view.viewshed_radius; ++i) {
 			internal_view_to(pos, view, i, 0-view.viewshed_radius, z);
@@ -91,10 +93,11 @@ void visibility_system::update(const double duration_ms) {
 		// What can we see?
 		view.visible_entities.clear();
 		for (const int &idx : view.visible_cache) {
-			each<position_t>([&view, &idx] (entity_t &E, position_t &P) {
-				const int target_idx = mapidx(P.x, P.y, P.z);
-				if (idx == target_idx) view.visible_entities.insert(E.id);
-			});
+			const int z = idx / (REGION_WIDTH * REGION_HEIGHT);
+			const int y = idx - (z * REGION_WIDTH * REGION_HEIGHT) / REGION_WIDTH;
+			const int x = idx - (z * REGION_WIDTH * REGION_HEIGHT) - (y * REGION_WIDTH);
+			std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
+			for (const auto &v : visible_here) view.visible_entities.insert(v);
 		}
 	});
 	dirty_entities.clear();

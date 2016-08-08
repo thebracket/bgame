@@ -55,3 +55,32 @@ int octree_t::find_nearest(const octree_location_t &loc) {
         return -1;
     }
 }
+
+void octree_t::remove_node(const octree_location_t &loc) {
+    // Does this node contain the desired entity?
+    auto finder = std::find_if(contents.begin(), contents.end(), [&loc] (octree_location_t &n) { return n.id==loc.id;});
+    if (finder != contents.end()) {
+        // If so, remove it and we're done
+        contents.erase(std::remove_if(contents.begin(), contents.end(), [&loc] (octree_location_t &n) { return n.id==loc.id;}));
+        return;
+    }
+
+    // If not, determine where it is and traverse down
+    const int subsection = get_child_index(loc);
+    if (children[subsection]) children[subsection]->remove_node(loc);
+}
+
+std::vector<std::size_t> octree_t::find_by_loc(const octree_location_t &loc) {
+    std::vector<std::size_t> result;
+    find_by_loc_impl(loc, result);
+    return result;
+}
+
+void octree_t::find_by_loc_impl(const octree_location_t &loc, std::vector<std::size_t> &result) {
+    for (const auto &l : contents) {
+        if (l.x == loc.x && l.y == loc.y && l.z == loc.z) result.push_back(l.id);
+    }
+
+    const int subsection = get_child_index(loc);
+    if (children[subsection]) children[subsection]->find_by_loc_impl(loc, result);
+}

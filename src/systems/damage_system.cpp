@@ -7,6 +7,7 @@
 #include <iostream>
 
 void damage_system::configure() {
+    system_name = "Damage System";
     subscribe_mbox<inflict_damage_message>();
 }
 
