@@ -9,22 +9,7 @@
 std::array<uint8_t, 4> group_populations;
 
 void wildlife_population_system::wander_randomly(entity_t &entity, position_t &original) {
-	position_t pos = original;
-	const int tile_index = mapidx(pos.x, pos.y, pos.z);
-	const int direction = rng.roll_dice(1,6);
-	switch (direction) {
-		case 1 : if (current_region->tile_flags[tile_index].test(CAN_GO_UP)) pos.z++; break;
-		case 2 : if (current_region->tile_flags[tile_index].test(CAN_GO_DOWN)) pos.z--; break;
-		case 3 : if (current_region->tile_flags[tile_index].test(CAN_GO_NORTH)) pos.y--; break;
-		case 4 : if (current_region->tile_flags[tile_index].test(CAN_GO_SOUTH)) pos.y++; break;
-		case 5 : if (current_region->tile_flags[tile_index].test(CAN_GO_EAST)) pos.x++; break;
-		case 6 : if (current_region->tile_flags[tile_index].test(CAN_GO_WEST)) pos.x--; break;
-	}
-	if (current_region->solid[tile_index]) { 
-		pos = original;
-	} else {
-		move_to(entity, original, pos);
-	}
+    emit(entity_wants_to_move_randomly_message{entity.id});
 }
 
 void wildlife_population_system::move_to(entity_t &e, position_t &pos, position_t &destination) {

@@ -17,27 +17,11 @@ void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stat
 	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
 }
 
-void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {
-	position_t pos = original;
-	const int tile_index = mapidx(pos.x, pos.y, pos.z);
-	const int direction = rng.roll_dice(1,6);
-	switch (direction) {
-		case 1 : if (current_region->tile_flags[tile_index].test(CAN_GO_UP)) pos.z++; break;
-		case 2 : if (current_region->tile_flags[tile_index].test(CAN_GO_DOWN)) pos.z--; break;
-		case 3 : if (current_region->tile_flags[tile_index].test(CAN_GO_NORTH)) pos.y--; break;
-		case 4 : if (current_region->tile_flags[tile_index].test(CAN_GO_SOUTH)) pos.y++; break;
-		case 5 : if (current_region->tile_flags[tile_index].test(CAN_GO_EAST)) pos.x++; break;
-		case 6 : if (current_region->tile_flags[tile_index].test(CAN_GO_WEST)) pos.x--; break;
-	}
-	if (current_region->solid[tile_index]) { 
-		pos = original;
-	} else {
-		move_to(entity, original, pos);
-	}
-
+void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	
 	renderable_t * render = entity.component<renderable_t>();
 	render->foreground = rltk::colors::YELLOW;
 	render->glyph = '@';
+	emit(entity_wants_to_move_randomly_message{entity.id});
 }
 
 void settler_ai_system::configure() {
@@ -60,10 +44,8 @@ void settler_ai_system::configure() {
 					!current_region->tile_flags[map_index].test(CAN_GO_DOWN)
 				) {
 					std::cout << "Warning - settler is stuck; activating emergency teleport to bed!\n";
-					each<position_t, construct_provides_sleep_t>([&pos] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
-						pos.x = P.x;
-						pos.y = P.y;
-						pos.z = P.z;
+					each<position_t, construct_provides_sleep_t>([this,&entity,&pos] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
+						move_to(entity, pos, P);
 						// This should use power
 					});
 				}
@@ -89,11 +71,7 @@ void settler_ai_system::configure() {
 }
 
 void settler_ai_system::move_to(entity_t &e, position_t &pos, position_t &destination) {
-	pos.x = destination.x;
-	pos.y = destination.y;
-	pos.z = destination.z;
-	emit(entity_moved_message{e.id, destination});
-	emit(renderables_changed_message{});
+	emit(entity_wants_to_move_message{e.id, destination});
 }
 
 void settler_ai_system::drop_current_tool(const entity_t &e, settler_ai_t &ai, const position_t &pos) {
