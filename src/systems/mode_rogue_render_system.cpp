@@ -12,6 +12,12 @@ void mode_rogue_render_system::update(const double ms) {
     
     // Draw the current settlers info panel
     entity_t * e = entity(selected_settler);
+    if (e == nullptr) {
+        // The settler has died!
+        game_master_mode = PLAY;
+        pause_mode = PAUSED;
+        return;
+    }
     name_t * name = e->component<name_t>();
 	game_stats_t * stats = e->component<game_stats_t>();
 	species_t * species = e->component<species_t>();
@@ -22,5 +28,10 @@ void mode_rogue_render_system::update(const double ms) {
     term(2)->print(3, y, "Now controlling:"); ++y;
     term(2)->print(3, y, name->first_name + std::string(" ") + name->last_name); ++y;
     term(2)->print(3, y, std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints) + std::string(" hp")); ++y;
+
+    if (health->unconscious) {
+        term(2)->print(3, y, "UNCONSCIOUS!", rltk::colors::RED); ++y;
+    }
+
     term(2)->print(3, y, "Click on map to move/interact"); ++y;           
 }

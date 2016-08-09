@@ -4,13 +4,25 @@
 #include "path_finding.hpp"
 #include <rltk.hpp>
 
+void mode_rogue_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
+	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
+}
+
 void mode_rogue_system::configure() {
     system_name = "Rogue Mode System";
     subscribe<tick_message>([this](tick_message &msg) {
         if (game_master_mode != ROGUE) return;
 
         entity_t * settler = entity(selected_settler);
+        if (settler == nullptr) {
+            // The settler has died!
+            game_master_mode = PLAY;
+            pause_mode = PAUSED;
+            return;
+        }
         settler_ai_t * ai = settler->component<settler_ai_t>();
+        health_t * health = settler->component<health_t>();
+        game_stats_t * stats = settler->component<game_stats_t>();
 
         if (ai->initiative < 1) {
             if (ai->job_type_major == JOB_IDLE) {
@@ -18,7 +30,9 @@ void mode_rogue_system::configure() {
                 pause_mode = PAUSED;
             } else {
                 // Perform the in-progress job
-                if (ai->job_type_major == JOB_ROGUE_GOTO) {
+                if (health->unconscious) {
+                    return;
+                } else if (ai->job_type_major == JOB_ROGUE_GOTO) {
                     if (!ai->current_path || ai->current_path->success == false || ai->current_path->steps.size() == 0) {
                         ai->job_type_major = JOB_IDLE;
                         ai->job_status = "Idle";
@@ -29,8 +43,9 @@ void mode_rogue_system::configure() {
                     emit(entity_wants_to_move_message{settler->id, next_step});
                     ai->current_path->steps.pop_front();
 
-                    return;
                 }
+
+                settler_calculate_initiative(*ai, *stats);
             }
         } else {
             --ai->initiative;

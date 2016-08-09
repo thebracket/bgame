@@ -27,11 +27,15 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 void settler_ai_system::configure() {
 	system_name = "Settler AI";
 	subscribe<tick_message>([this](tick_message &msg) {
-		each<settler_ai_t, game_stats_t, species_t, position_t, name_t>([this] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
-			species_t &species, position_t &pos, name_t &name) 
+
+		bool found_settler = false;
+		each<settler_ai_t, game_stats_t, species_t, position_t, name_t, health_t>([this, &found_settler] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
+			species_t &species, position_t &pos, name_t &name, health_t &health) 
 		{
+			found_settler = true;
 			if (ai.initiative < 1) {
 				if (game_master_mode == ROGUE && entity.id == selected_settler) return; // We handle this in the rogue system
+				if (health.unconscious) return; // Do nothing - they passed out!
 
 				const int shift_id = ai.shift_id;
 				const int hour_of_day = calendar->hour;
@@ -69,6 +73,10 @@ void settler_ai_system::configure() {
 				--ai.initiative;
 			}
 		});
+
+		if (!found_settler) {
+			std::cout << "Game should end now - everyone died\n";
+		}
 	});
 }
 

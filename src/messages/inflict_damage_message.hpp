@@ -18,3 +18,9 @@ struct creature_attack_message : public rltk::base_message_t {
     std::size_t attacker;
     std::size_t victim;
 };
+
+struct entity_slain_message : public rltk::base_message_t {
+    entity_slain_message() {}
+    entity_slain_message(const std::size_t id) : victim(id) {}
+    std::size_t victim;
+};

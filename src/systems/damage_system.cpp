@@ -1,5 +1,5 @@
 #include "damage_system.hpp"
-#include "../messages/inflict_damage_message.hpp"
+#include "../messages/messages.hpp"
 #include "../components/components.hpp"
 #include "../game_globals.hpp"
 #include <rltk.hpp>
@@ -10,6 +10,7 @@ void damage_system::configure() {
     system_name = "Damage System";
     subscribe_mbox<inflict_damage_message>();
     subscribe_mbox<creature_attack_message>();
+    subscribe_mbox<entity_slain_message>();
 }
 
 void damage_system::update(const double ms) {
@@ -67,7 +68,15 @@ void damage_system::update(const double ms) {
             }
 
             std::cout << name->first_name << " suffers " << msg.damage_amount << " points of damage. Source: " << msg.damage_type << "\n";
-            if (h->current_hitpoints < 0) std::cout << " - the victim would be unconscious or dead.\n";
+            if (h->current_hitpoints < 1) {
+                if (h->current_hitpoints > -10) {
+                    h->unconscious = true;
+                    std::cout << name->first_name << " is unconscious!\n";
+                } else {
+                    std::cout << name->first_name << " is dead!\n";
+                    emit(entity_slain_message{msg.victim});
+                }
+            }
 
             // Serious damage affects body parts too
             if (rng.roll_dice(1, 20) + msg.damage_amount > 15) {
@@ -83,7 +92,21 @@ void damage_system::update(const double ms) {
                 if (hit_part == nullptr) hit_part = &(h->parts[h->parts.size()-1]);
 
                 hit_part -> current_hitpoints -= msg.damage_amount;
-                if (hit_part->current_hitpoints < 0) std::cout << " - the " << hit_part->part << " would be impaired/gone.\n";
+                if (hit_part->current_hitpoints < 0) {
+                    if (hit_part->part == "head" && hit_part->current_hitpoints > -10) {
+                        std::cout << " - head trauma results in unconsciousness.\n";
+                        h->unconscious = true;
+                    } else if (hit_part->part == "head" && hit_part->current_hitpoints < -9) {
+                        std::cout << " - head trauma results in instant death!\n";
+                        emit(entity_slain_message{msg.victim});
+                    } else if (hit_part->current_hitpoints > -10) {
+                        std::cout << " - the victim passes out from " << hit_part->part << " trauma.\n";
+                        h->unconscious = true;
+                    } else {
+                        std::cout << " - the victim dies of " << hit_part->part << " trauma.\n";
+                        emit(entity_slain_message{msg.victim});
+                    }
+                }
             }
             position_t * pos = entity(msg.victim)->component<position_t>();
             current_region->blood_stains[mapidx(pos->x, pos->y, pos->z)] = true;
@@ -92,4 +115,32 @@ void damage_system::update(const double ms) {
 
 		damage->pop();
 	}
+
+    std::queue<entity_slain_message> * deaths = mbox<entity_slain_message>();
+	while (!deaths->empty()) {
+        entity_slain_message msg = deaths->front();
+        deaths->pop();
+
+        entity_t * victim = entity(msg.victim);
+        position_t * pos = victim->component<position_t>();
+        // Any items carried are dropped
+        each<item_carried_t>([&msg, pos] (entity_t &e, item_carried_t &item) {
+            if (item.carried_by == msg.victim) {
+                emit(drop_item_message{e.id, pos->x, pos->y, pos->z});
+            }
+        });
+                
+        // Spawn a body
+        if (victim->component<settler_ai_t>() != nullptr) {
+            // It's a dead settler, we create a special item
+            auto corpse = create_entity()
+                ->assign(position_t{ pos->x, pos->y, pos->z })
+                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED });
+        } else {
+            // TODO: Normal corpses!
+        }
+
+        // Remove the entity
+        delete_entity(msg.victim);
+    }
 }
