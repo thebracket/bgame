@@ -94,6 +94,7 @@ void mode_units_system::update(const double ms) {
                     camera_position->region_x = pos->x;
                     camera_position->region_y = pos->y;
                     camera_position->region_z = pos->z;
+                    entity(e.id)->component<settler_ai>()->job_type_major = JOB_IDLE;
                 }
             } else {
                 term(1)->print(box_left+8, y, " CONTROL ", WHITE, DARKEST_GREEN);
