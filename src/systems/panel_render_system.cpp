@@ -6,6 +6,7 @@
 #include "mining_system.hpp"
 #include "inventory_system.hpp"
 #include "camera_system.hpp"
+#include "../utils/string_utils.hpp"
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -96,12 +97,6 @@ void panel_render_system::update(const double duration_ms) {
 			game_design_mode = CHOPPING;
 			emit(map_dirty_message{});
 		}
-	} else if (game_master_mode == UNITS) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			game_master_mode = PLAY;
-			emit(map_dirty_message{});
-			emit(recalculate_mining_message{});
-		}
 	} else if (game_master_mode == SETTLER) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			game_master_mode = PLAY;
@@ -109,6 +104,12 @@ void panel_render_system::update(const double duration_ms) {
 			emit(recalculate_mining_message{});
 		}
 	} else if (game_master_mode == WORKFLOW) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			game_master_mode = PLAY;
+			emit(map_dirty_message{});
+			emit(recalculate_mining_message{});
+		}
+	} else if (game_master_mode == ROGUE) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			game_master_mode = PLAY;
 			emit(map_dirty_message{});
@@ -143,7 +144,6 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 
 	if (game_master_mode == UNITS) {
 		term(2)->print(13,1,"Units", YELLOW, BLUE);
-		render_units_mode();
 	} else {
 		term(2)->print(13,1,"U", YELLOW, BLACK);
 		term(2)->print(14,1,"nits", WHITE, BLACK);
@@ -159,6 +159,11 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 
 	if (game_master_mode == SETTLER) {
 		render_settler_mode();
+	}
+
+	if (game_master_mode == ROGUE) {
+		term(2)->print(28,1,"ESC", YELLOW);
+		term(2)->print(32,1,"Return to normal play", WHITE, GREEN_BG);
 	}
 }
 
@@ -524,42 +529,6 @@ void panel_render_system::render_design_mode() {
 		term(1)->print(22, 3, "Tree Cutting", WHITE);
 		term(1)->print(22, 3, "t", YELLOW);
 	}
-}
-
-std::string max_width_str(const std::string original, const int width) {
-	if (original.size() <= width) return original;
-	return original.substr(0,width);
-}
-
-void panel_render_system::render_units_mode() {
-	int y = 5;
-	term(1)->box(3, 2, 70, 40, WHITE, BLACK, true);
-	for (int i=3; i<42; ++i) term(1)->print(4, i, "                                                                     ");
-
-	term(1)->print(5,4,"Settler Name        Profession     Current Status", YELLOW, BLACK);
-
-	int mouse_x, mouse_y;
-	std::tie(mouse_x, mouse_y) = get_mouse_position();
-	int terminal_x = mouse_x/8;
-	int terminal_y = (mouse_y/8);
-
-	each<settler_ai_t, name_t, game_stats_t>([this, &y, &terminal_x, &terminal_y] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
-		color_t background = BLACK;
-		
-		if (terminal_y == y && terminal_x > 4 && terminal_x < 70) {
-			background = BLUE;
-
-			if (get_mouse_button_state(rltk::button::LEFT)) {
-				selected_settler = e.id;
-				game_master_mode = SETTLER;
-			}
-		}
-
-		term(1)->print(5, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 19), WHITE, background);
-		term(1)->print(25, y, max_width_str(stats.profession_tag, 14), WHITE, background);
-		term(1)->print(40, y, max_width_str(ai.job_status, 29), WHITE, background);
-		++y;
-	});
 }
 
 void panel_render_system::render_settler_mode() {

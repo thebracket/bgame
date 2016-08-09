@@ -5,6 +5,7 @@
 #include "../components/position.hpp"
 #include "../components/building.hpp"
 #include "../planet/region.hpp"
+#include "../game_globals.hpp"
 
 using namespace rltk;
 
@@ -47,6 +48,22 @@ void renderables_system::update(const double time_elapsed) {
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
 			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
 		});
+
+		// If we're rogue mode, and have a path, display it
+		if (game_master_mode == ROGUE) {
+			entity_t * settler = entity(selected_settler);
+			settler_ai_t * ai = settler->component<settler_ai_t>();
+			if (ai->current_path && ai->current_path->success) {
+				const float n_steps = ai->current_path->steps.size();
+				float i = 0;
+				for (auto step : ai->current_path->steps) {
+					const float lerp_amount = i / n_steps;
+					const int idx = mapidx(step.x, step.y, step.z);
+					renderables[idx] = rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK };
+					++i;
+				}
+			}
+		}
 		
         emit(map_rerender_message{});
 	}

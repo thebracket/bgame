@@ -15,7 +15,7 @@ constexpr int JOB_CONSTRUCTION = 2;
 constexpr int JOB_CARPENTRY = 3;
 constexpr int JOB_MASONRY = 4;
 
-enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST, JOB_REACTION };
+enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST, JOB_REACTION, JOB_ROGUE_GOTO };
 enum job_minor_t { 
 	JM_NONE,
 	JM_FIND_BED, JM_GO_TO_BED, JM_SLEEP,				// Bed-time steps

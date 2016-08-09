@@ -98,7 +98,7 @@ void camera_system::build_render_tiles() {
 	std::fill(render_tiles.begin(), render_tiles.end(), 0);
 
 	bool vertical_dive = false;
-	if (game_master_mode == PLAY) vertical_dive = true;
+	if (game_master_mode == PLAY || game_master_mode == ROGUE) vertical_dive = true;
 
 	if (vertical_dive) {
 		build_render_tiles_with_vertical_dive();

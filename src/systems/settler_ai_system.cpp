@@ -31,6 +31,8 @@ void settler_ai_system::configure() {
 			species_t &species, position_t &pos, name_t &name) 
 		{
 			if (ai.initiative < 1) {
+				if (game_master_mode == ROGUE && entity.id == selected_settler) return; // We handle this in the rogue system
+
 				const int shift_id = ai.shift_id;
 				const int hour_of_day = calendar->hour;
 				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];

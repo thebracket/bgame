@@ -24,3 +24,8 @@ std::string to_proper_noun_case(const std::string &original)
     }
     return result;
 }
+
+std::string max_width_str(const std::string original, const int width) {
+	if (original.size() <= width) return original;
+	return original.substr(0,width);
+}

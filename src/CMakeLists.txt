@@ -56,6 +56,9 @@ add_executable(bgame main.cpp
 	systems/damage_system.cpp
 	systems/wildlife_population_system.cpp
 	systems/movement_system.cpp
+	systems/mode_units_system.cpp
+	systems/mode_rogue_system.cpp
+	systems/mode_rogue_render_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

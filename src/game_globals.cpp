@@ -17,3 +17,4 @@ game_master_mode_t game_master_mode = PLAY;
 game_design_mode_t game_design_mode = DIGGING;
 game_mining_mode_t game_mining_mode = DIG;
 boost::optional<available_building_t> build_mode_building;
+std::size_t selected_settler;

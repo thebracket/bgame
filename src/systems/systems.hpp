@@ -16,3 +16,6 @@
 #include "damage_system.hpp"
 #include "wildlife_population_system.hpp"
 #include "movement_system.hpp"
+#include "mode_units_system.hpp"
+#include "mode_rogue_system.hpp"
+#include "mode_rogue_render_system.hpp"

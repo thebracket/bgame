@@ -28,7 +28,7 @@ struct available_building_t {
 };
 
 enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };
-enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW };
+enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE };
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, DELETE };
 
@@ -49,3 +49,4 @@ extern game_master_mode_t game_master_mode;
 extern game_design_mode_t game_design_mode;
 extern game_mining_mode_t game_mining_mode;
 extern boost::optional<available_building_t> build_mode_building;
+extern std::size_t selected_settler;

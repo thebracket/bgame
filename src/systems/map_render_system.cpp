@@ -165,6 +165,8 @@ void map_render_system::update(const double duration_ms) {
 		std::function<vchar(int,int)> calculator;
 		if (game_master_mode == PLAY) {
 			calculator = get_render_char;
+		} else if (game_master_mode == ROGUE) {
+			calculator = get_render_char;
 		} else {
 			switch (game_design_mode) {
 				case DIGGING : calculator = get_render_char_mining; break;

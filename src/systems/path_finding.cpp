@@ -42,6 +42,6 @@ struct navigator_t {
 
 std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &start, const position_t &end, const bool find_adjacent) {
 	auto result = rltk::find_path<position_t, navigator_t>(start, end);
-	std::cout << "Path found. " << result->success << ", " << result->steps.size() << "\n"; 
+	//std::cout << "Path found. " << result->success << ", " << result->steps.size() << "\n"; 
 	return result;
 }

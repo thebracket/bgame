@@ -18,11 +18,8 @@ private:
 	void render_play_mode(const double duration_ms);
 
 	void render_design_mode();
-	void render_units_mode();
 	void render_settler_mode();
 	void render_work_mode();
-
-	std::size_t selected_settler;
 
 	double mouse_damper = 100.0;
 	int last_mouse_x = 0;
