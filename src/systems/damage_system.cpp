@@ -85,6 +85,8 @@ void damage_system::update(const double ms) {
                 hit_part -> current_hitpoints -= msg.damage_amount;
                 if (hit_part->current_hitpoints < 0) std::cout << " - the " << hit_part->part << " would be impaired/gone.\n";
             }
+            position_t * pos = entity(msg.victim)->component<position_t>();
+            current_region->blood_stains[mapidx(pos->x, pos->y, pos->z)] = true;
 
         }
 

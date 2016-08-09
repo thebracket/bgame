@@ -31,6 +31,7 @@ void save_region(const region_t &region) {
 	serialize(deflate, region.tile_vegetation_type);
 	serialize(deflate, region.tile_flags);
 	serialize(deflate, region.water_level);
+	serialize(deflate, region.blood_stains);
 }
 
 region_t load_region(const int region_x, const int region_y) {
@@ -58,6 +59,7 @@ region_t load_region(const int region_x, const int region_y) {
 	deserialize(inflate, region.tile_vegetation_type);
 	deserialize(inflate, region.tile_flags);
 	deserialize(inflate, region.water_level);
+	deserialize(inflate, region.blood_stains);
 
 	std::cout << "Recalculating region paths\n";
 	region.tile_recalc_all();
