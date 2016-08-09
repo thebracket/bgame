@@ -1,5 +1,5 @@
-window_width=800
-window_height=600
+window_width=1024
+window_height=768
 game_font=8x8
 gui_font=8x16
 tooltip_fadein=yes
