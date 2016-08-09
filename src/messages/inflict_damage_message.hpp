@@ -10,3 +10,11 @@ struct inflict_damage_message : public rltk::base_message_t {
     int damage_amount;
     std::string damage_type;
 };
+
+struct creature_attack_message : public rltk::base_message_t {
+    creature_attack_message() {}
+    creature_attack_message(const std::size_t attack, const std::size_t defend) : attacker(attack), victim(defend) {}
+
+    std::size_t attacker;
+    std::size_t victim;
+};

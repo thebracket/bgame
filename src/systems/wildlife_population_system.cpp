@@ -19,10 +19,17 @@ void wildlife_population_system::configure() {
             if (ai.initiative < 1) {
                 // Can we see anything scary?
                 bool terrified = false;
+                float terror_distance = 1000.0F;
+                std::size_t closest_fear = 0;
                 for (const std::size_t other_entity : view.visible_entities) {
                     if (entity(other_entity)->component<settler_ai_t>() != nullptr) {
-                        this->wander_randomly(e, pos);
                         terrified = true;
+                        position_t * other_pos = entity(other_entity)->component<position_t>();
+                        const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
+                        if (d < terror_distance) {
+                            terror_distance = d;
+                            closest_fear = other_entity;
+                        }
                     }
                 }
                 if (!terrified) {
@@ -41,6 +48,25 @@ void wildlife_population_system::configure() {
                         }
                     } else {
                         this->wander_randomly(e, pos);
+                    }
+                } else {
+                    // Poor creature is scared!
+                    if (terror_distance < 1.5F) {
+                        // Attack the target
+                        emit(creature_attack_message{e.id, closest_fear});
+                    } else {
+                        position_t * other_pos = entity(closest_fear)->component<position_t>();
+                        if (pos.x < other_pos->x && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_EAST)) {
+                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x+1, pos.y, pos.z } });
+                        } else if (pos.x > other_pos->x && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_WEST)) {
+                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x-1, pos.y, pos.z } });
+                        } else if (pos.y < other_pos->y && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_NORTH)) {
+                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x, pos.y-1, pos.z } });
+                        } else if (pos.y > other_pos->y && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_SOUTH)) {
+                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x, pos.y+1, pos.z } });
+                        } else {
+                            emit(entity_wants_to_move_randomly_message{e.id});
+                        }
                     }
                 }
 

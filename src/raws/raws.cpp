@@ -722,13 +722,14 @@ void read_creature_types(std::ofstream &tech_tree_file) {
                             creature_attack_t attack;
                             while (lua_next(lua_state, -2) != 0) {
                                 std::string attack_field = lua_tostring(lua_state, -2);
-                                if (field == "type") attack.type = lua_tostring(lua_state, -1);
-                                if (field == "hit_bonus") attack.hit_bonus = lua_tonumber(lua_state, -1);
-                                if (field == "n_dice") attack.damage_n_dice = lua_tonumber(lua_state, -1);
-                                if (field == "die_type") attack.damage_dice = lua_tonumber(lua_state, -1);
-                                if (field == "die_mod") attack.damage_mod = lua_tonumber(lua_state, -1);
+                                if (attack_field == "type") attack.type = lua_tostring(lua_state, -1);
+                                if (attack_field == "hit_bonus") attack.hit_bonus = lua_tonumber(lua_state, -1);
+                                if (attack_field == "n_dice") attack.damage_n_dice = lua_tonumber(lua_state, -1);
+                                if (attack_field == "die_type") attack.damage_dice = lua_tonumber(lua_state, -1);
+                                if (attack_field == "die_mod") attack.damage_mod = lua_tonumber(lua_state, -1);
                                 lua_pop(lua_state, 1);
                             }
+                            //std::cout << attack.type << attack_name << "\n";
                             s.attacks.push_back(attack);
                             lua_pop(lua_state, 1);
                         }
