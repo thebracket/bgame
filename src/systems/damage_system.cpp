@@ -66,7 +66,7 @@ void damage_system::update(const double ms) {
                 total_size += p.size;
             }
 
-            std::cout << name->first_name << " suffers " << msg.damage_amount << ". Source: " << msg.damage_type << "\n";
+            std::cout << name->first_name << " suffers " << msg.damage_amount << " points of damage. Source: " << msg.damage_type << "\n";
             if (h->current_hitpoints < 0) std::cout << " - the victim would be unconscious or dead.\n";
 
             // Serious damage affects body parts too
