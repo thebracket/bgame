@@ -7,7 +7,7 @@
 using namespace rltk;
 
 inline void reveal(const int &idx, viewshed_t &view) {
-	current_region->revealed[idx] = true;
+	if (view.good_guy_visibility) current_region->revealed[idx] = true;
 	view.visible_cache.push_back(idx);
 }
 
@@ -15,7 +15,7 @@ inline void internal_pen_view_to(position_t &pos, viewshed_t &view, int x, int y
 	const float dist_square = view.viewshed_radius * view.viewshed_radius;
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
-		if (view.good_guy_visibility) reveal(mapidx(X, Y, Z), view);
+		reveal(mapidx(X, Y, Z), view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance < dist_square) {
 			return true;
@@ -30,7 +30,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
 		const int idx = mapidx(X, Y, Z);
-		if (view.good_guy_visibility) reveal(idx, view);
+		reveal(idx, view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {
 			return false;
@@ -42,7 +42,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 void update_penetrating_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 	view.visible_cache.clear();
 
-	if (view.good_guy_visibility) reveal(mapidx(pos.x, pos.y, pos.z), view);
+	reveal(mapidx(pos.x, pos.y, pos.z), view);
 	for (int z=(0-view.viewshed_radius); z<view.viewshed_radius; ++z) {
 		for (int i=0-view.viewshed_radius; i<view.viewshed_radius; ++i) {
 			internal_pen_view_to(pos, view, i, 0-view.viewshed_radius, z);
@@ -55,7 +55,7 @@ void update_penetrating_viewshed(entity_t &e, position_t &pos, viewshed_t &view)
 
 void update_normal_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 	view.visible_cache.clear();
-	if (view.good_guy_visibility) reveal(mapidx(pos.x, pos.y, pos.z), view);
+	reveal(mapidx(pos.x, pos.y, pos.z), view);
 	for (int z=(0-view.viewshed_radius); z<view.viewshed_radius; ++z) {
 		for (int i=0-view.viewshed_radius; i<view.viewshed_radius; ++i) {
 			internal_view_to(pos, view, i, 0-view.viewshed_radius, z);
@@ -91,12 +91,15 @@ void visibility_system::update(const double duration_ms) {
 		}
 
 		// What can we see?
+		grazer_ai * grazer = e.component<grazer_ai>();
 		view.visible_entities.clear();
 		for (const int &idx : view.visible_cache) {
 			int x,y,z;
 			std::tie(x,y,z) = idxmap(idx);
 			std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
-			for (const auto &v : visible_here) view.visible_entities.insert(v);
+			for (const auto &v : visible_here) {
+				view.visible_entities.insert(v);
+			}
 		}
 	});
 	dirty_entities.clear();

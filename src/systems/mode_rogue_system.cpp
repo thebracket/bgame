@@ -55,7 +55,7 @@ void mode_rogue_system::update(const double ms) {
     settler_ai_t * ai = settler->component<settler_ai_t>();
     position_t * pos = settler->component<position_t>();
 
-    if (current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {
+    if (ai->job_type_major == JOB_IDLE && current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {
         ai->current_path.reset();
         ai->current_path = find_path(*pos, position_t{ world_x, world_y, camera_position->region_z });
         if (get_mouse_button_state(rltk::button::LEFT)) {

@@ -21,7 +21,6 @@ void wildlife_population_system::configure() {
                 bool terrified = false;
                 for (const std::size_t other_entity : view.visible_entities) {
                     if (entity(other_entity)->component<settler_ai_t>() != nullptr) {
-                        std::cout << "Grazer spots settler\n";
                         this->wander_randomly(e, pos);
                         terrified = true;
                     }
@@ -97,7 +96,6 @@ void wildlife_population_system::spawn_wildlife() {
             }
 
             for (int j=0; j<n_spawn; ++j) {
-                std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                 // Critters have: appropriate AI component, wildlife_group, position, renderable, name, species, stats
                 bool male = true;
                 if (rng.roll_dice(1,4)<=2) male = false;
@@ -137,6 +135,7 @@ void wildlife_population_system::spawn_wildlife() {
                         ->assign(grazer_ai{ stat_modifier(stats.dexterity) })
                         ->assign(std::move(stats))
                         ->assign(viewshed_t(6, false, false));
+                        std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                     }
                 }
         }
