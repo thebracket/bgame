@@ -229,8 +229,11 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                 const int strata_idx = strata.strata_map[mapidx(x,y,z)];
                 const std::size_t material_idx = strata.material_idx[strata_idx];
                 region.tile_material[mapidx(x,y,z)] = material_idx;
-
-                region.tile_hit_points[mapidx(x,y,z)] = material_defs[material_idx].hit_points;
+                if (material_idx < material_defs.size()) {
+                    region.tile_hit_points[mapidx(x,y,z)] = material_defs[material_idx].hit_points;
+                } else {
+                    region.tile_hit_points[mapidx(x,y,z)] = 10;
+                }
                 ++z;
             }
             
