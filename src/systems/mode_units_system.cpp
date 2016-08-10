@@ -50,7 +50,20 @@ void mode_units_system::update(const double ms) {
     term(1)->print_center(box_top+1, " [Active Units] ", WHITE, GREEN);
 
     // Tabs
+
+    if (get_mouse_button_state(rltk::button::LEFT) && terminal_x > box_left && 
+        terminal_x < box_left + 10 && terminal_y > box_top+2 && terminal_y < box_top+4) 
+    {
+        tab = 0;
+    }
+    if (get_mouse_button_state(rltk::button::LEFT) && terminal_x > box_left+11 && 
+        terminal_x < box_left + 27 && terminal_y > box_top+2 && terminal_y < box_top+4) 
+    {
+        tab = 1;
+    }
+
     if (tab == 0) {
+        
         term(1)->box(box_left+1, box_top+2, 9, 2, GREEN, BLACK, false);
         term(1)->fill(box_left+2, box_top+3, box_left+11, box_top+3, ' ', DARK_GREEN, BLACK);
         term(1)->print(box_left+2, box_top+3, "Settlers", WHITE, BLACK);
@@ -116,6 +129,34 @@ void mode_units_system::update(const double ms) {
         term(1)->box(box_left+11, box_top+2, 10, 2, GREEN, BLACK, false);
         term(1)->fill(box_left+12, box_top+3, box_left+26, box_top+3, ' ', DARK_GREEN, BLACK);
         term(1)->print(box_left+12, box_top+3, "Creatures", WHITE, BLACK);
+
+        int y = box_top + 6;
+
+        each<grazer_ai, name_t, species_t>([&y,&terminal_x,&terminal_y] (entity_t &e, grazer_ai &ai, name_t &name, species_t &species) {
+            color_t background = BLACK;
+
+            if (terminal_y == y && terminal_x > 21) {
+                background = DARK_GREEN;
+            }
+
+            if (terminal_y == y && terminal_x > box_left+3 && terminal_x < box_left+8) {
+                term(1)->print (box_left+3, y, " GO ", WHITE, DARK_GREEN);
+                if (get_mouse_button_state(rltk::button::LEFT)) {
+                    // Move the camera and close
+                    game_master_mode = PLAY;
+                    emit(map_dirty_message{});
+                    emit(recalculate_mining_message{});
+                    position_t * pos = e.component<position_t>();
+                    camera_position->region_x = pos->x;
+                    camera_position->region_y = pos->y;
+                    camera_position->region_z = pos->z;
+                }
+            } else {
+                term(1)->print (box_left+3, y, " GO ", WHITE, DARKEST_GREEN);
+            }
+            term(1)->print(box_left+8, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 20), WHITE, background);
+            ++y;
+        });
     } else {
         term(1)->box(box_left+11, box_top+2, 10, 2, DARK_GREEN, BLACK, false);
         term(1)->fill(box_left+12, box_top+3, box_left+26, box_top+3, ' ', BLACK, BLACK);
