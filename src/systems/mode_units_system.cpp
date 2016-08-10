@@ -94,7 +94,7 @@ void mode_units_system::update(const double ms) {
                     camera_position->region_x = pos->x;
                     camera_position->region_y = pos->y;
                     camera_position->region_z = pos->z;
-                    entity(e.id)->component<settler_ai>()->job_type_major = JOB_IDLE;
+                    entity(e.id)->component<settler_ai_t>()->job_type_major = JOB_IDLE;
                 }
             } else {
                 term(1)->print(box_left+8, y, " CONTROL ", WHITE, DARKEST_GREEN);
@@ -121,34 +121,4 @@ void mode_units_system::update(const double ms) {
         term(1)->fill(box_left+12, box_top+3, box_left+26, box_top+3, ' ', BLACK, BLACK);
         term(1)->print(box_left+12, box_top+3, "Creatures", DARK_GREEN, BLACK);
     }
-
-    /*
-    int y = 5;
-	term(1)->box(3, 2, 70, 40, WHITE, BLACK, true);
-	for (int i=3; i<42; ++i) term(1)->print(4, i, "                                                                     ");
-
-	term(1)->print(5,4,"Settler Name        Profession     Current Status", YELLOW, BLACK);
-
-	int mouse_x, mouse_y;
-	std::tie(mouse_x, mouse_y) = get_mouse_position();
-	int terminal_x = mouse_x/8;
-	int terminal_y = (mouse_y/8);
-
-	each<settler_ai_t, name_t, game_stats_t>([this, &y, &terminal_x, &terminal_y] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
-		color_t background = BLACK;
-		
-		if (terminal_y == y && terminal_x > 4 && terminal_x < 70) {
-			background = BLUE;
-
-			if (get_mouse_button_state(rltk::button::LEFT)) {
-				selected_settler = e.id;
-				game_master_mode = SETTLER;
-			}
-		}
-
-		term(1)->print(5, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 19), WHITE, background);
-		term(1)->print(25, y, max_width_str(stats.profession_tag, 14), WHITE, background);
-		term(1)->print(40, y, max_width_str(ai.job_status, 29), WHITE, background);
-		++y;
-	});*/
 }

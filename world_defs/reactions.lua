@@ -254,6 +254,15 @@ reactions = {
         difficulty = 10,
         automatic = false
     },
+    make_pointy_stick = {
+        name = "Make Wooden Pointy Stick",
+        workshop = "carpenter",
+        inputs = { { item="wood_plank", qty=1 } },
+        outputs = { { item="pointy_stick", qty=1 } },
+        skill = "Carpentry",
+        difficulty = 7,
+        automatic = false
+    },
     make_stone_club = {
         name = "Make Stone Club",
         workshop = "mason",

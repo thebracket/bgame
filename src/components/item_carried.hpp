@@ -5,7 +5,7 @@
 
 using namespace rltk;
 
-enum item_location_t { INVENTORY, HEAD, TORSO, LEGS, FEET };
+enum item_location_t { INVENTORY, HEAD, TORSO, LEGS, FEET, WEAPON_MELEE, WEAPON_RANGED };
 
 struct item_carried_t {
 	item_location_t location = INVENTORY;

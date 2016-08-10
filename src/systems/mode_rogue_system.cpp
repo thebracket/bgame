@@ -31,6 +31,7 @@ void mode_rogue_system::configure() {
             } else {
                 // Perform the in-progress job
                 if (health->unconscious) {
+                    pause_mode = RUNNING;
                     return;
                 } else if (ai->job_type_major == JOB_ROGUE_GOTO) {
                     if (!ai->current_path || ai->current_path->success == false || ai->current_path->steps.size() == 0) {
