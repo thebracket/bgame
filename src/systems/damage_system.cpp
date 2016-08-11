@@ -10,11 +10,61 @@
 void damage_system::configure() {
     system_name = "Damage System";
     subscribe_mbox<inflict_damage_message>();
+    subscribe_mbox<settler_attack_message>();
     subscribe_mbox<creature_attack_message>();
     subscribe_mbox<entity_slain_message>();
 }
 
 void damage_system::update(const double ms) {
+    // Settler attacks
+    std::queue<settler_attack_message> * sattack = mbox<settler_attack_message>();
+    while (!sattack->empty()) {
+        settler_attack_message msg = sattack->front();
+        sattack->pop();
+
+        std::stringstream ss;
+        entity_t * attacker = entity(msg.attacker);
+        entity_t * defender = entity(msg.victim);
+        game_stats_t * attacker_stats = attacker->component<game_stats_t>();
+        name_t * attacker_name = attacker->component<name_t>();
+        name_t * defender_name = defender->component<name_t>();
+
+        std::size_t weapon_id = 0;
+        each<item_carried_t>([&msg, &weapon_id] (entity_t &E, item_carried_t &item) {
+            if (item.carried_by == msg.attacker && item.location == EQUIP_MELEE) weapon_id = E.id;
+        });
+        std::string weapon_name = "fists";
+        int weapon_n = 1;
+        int weapon_d = 4;
+        int weapon_mod = 0;
+        if (weapon_id != 0) {
+            item_t * weapon_component = entity(weapon_id)->component<item_t>();
+            if (weapon_component != nullptr) {
+                auto weapon_finder = item_defs.find(weapon_component->item_tag);
+                if (weapon_finder != item_defs.end()) {
+                    weapon_name = weapon_finder->second.name;
+                    weapon_n = weapon_finder->second.damage_n;
+                    weapon_d = weapon_finder->second.damage_d;
+                    weapon_d = weapon_finder->second.damage_mod;
+                }
+            }
+        }
+        ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";
+        const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->strength);
+        ss << "(Dice roll: " << die_roll << ") ";
+        // TODO: ARMOR CLASS
+        if (die_roll > 10) {
+            ss << "The attack hits, ";
+            const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
+            ss << "for " << damage << " points of damage.\n";
+            emit(inflict_damage_message{ msg.victim, damage, weapon_name });
+        } else {
+            ss << "The attack misses.\n";
+        }
+
+        std::cout << ss.str();
+    }
+
     // Creature attacks
     std::queue<creature_attack_message> * cattack = mbox<creature_attack_message>();
     while (!cattack->empty()) {
@@ -43,7 +93,7 @@ void damage_system::update(const double ms) {
             if (hit_roll < target) {
                 ss << " The attack misses (roll: " << hit_roll << ").\n";
             } else {
-                const int damage = rng.roll_dice(weapon.damage_n_dice, weapon.damage_dice) + weapon.damage_mod;
+                const int damage = std::max(1,rng.roll_dice(weapon.damage_n_dice, weapon.damage_dice) + weapon.damage_mod);
                 ss << " The attack hits (roll: " << hit_roll << "), for " << damage << " points of damage.\n";
                 emit(inflict_damage_message{ msg.victim, damage, weapon.type });
             }

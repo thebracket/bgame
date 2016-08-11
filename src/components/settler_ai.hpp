@@ -15,7 +15,7 @@ constexpr int JOB_CONSTRUCTION = 2;
 constexpr int JOB_CARPENTRY = 3;
 constexpr int JOB_MASONRY = 4;
 
-enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST, JOB_REACTION, JOB_ROGUE_GOTO, JOB_EQUIP_MELEE };
+enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST, JOB_REACTION, JOB_ROGUE_GOTO, JOB_EQUIP_MELEE, JOB_ROGUE_BASH };
 enum job_minor_t { 
 	JM_NONE,
 	JM_FIND_BED, JM_GO_TO_BED, JM_SLEEP,				// Bed-time steps
@@ -45,6 +45,7 @@ struct settler_ai_t {
 
 	// Non-persistent
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
+	std::size_t targeted_hostile = 0;
 
 	settler_ai_t() {
 		std::fill(permitted_work.begin(), permitted_work.end(), true);

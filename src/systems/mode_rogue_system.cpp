@@ -2,6 +2,7 @@
 
 #include "../messages/messages.hpp"
 #include "path_finding.hpp"
+#include "movement_system.hpp"
 #include <rltk.hpp>
 
 void mode_rogue_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
@@ -44,6 +45,12 @@ void mode_rogue_system::configure() {
                     emit(entity_wants_to_move_message{settler->id, next_step});
                     ai->current_path->steps.pop_front();
 
+                } else if (ai->job_type_major == JOB_ROGUE_BASH) {
+                    emit(settler_attack_message{settler->id, ai->targeted_hostile});
+                    ai->job_type_major = JOB_IDLE;
+                    ai->job_status = "Idle";
+                    pause_mode = PAUSED;
+                    return;
                 }
 
                 settler_calculate_initiative(*ai, *stats);
@@ -79,14 +86,33 @@ void mode_rogue_system::update(const double ms) {
         emit(map_dirty_message{});
     }
 
-    if (ai->job_type_major == JOB_IDLE && current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {
-        ai->current_path.reset();
-        ai->current_path = find_path(*pos, position_t{ world_x, world_y, camera_position->region_z });
-        if (get_mouse_button_state(rltk::button::LEFT)) {
-            ai->job_type_major = JOB_ROGUE_GOTO;
-            ai->job_status = "Travel";
-            emit(renderables_changed_message{});
-            pause_mode = RUNNING;
+    if (ai->job_type_major == JOB_IDLE) {
+        ai->targeted_hostile = 0;
+        auto entities = entity_octree.find_by_loc(octree_location_t{world_x, world_y, camera_position->region_z});
+        for (const auto &id : entities) {
+            if (entity(id)->component<grazer_ai>() != nullptr) ai->targeted_hostile = id;
+        }
+        if (ai->targeted_hostile != 0 && get_mouse_button_state(rltk::button::LEFT)) {
+            position_t * target_pos = entity(ai->targeted_hostile)->component<position_t>();
+            const float range = distance3d(pos->x, pos->y, pos->z, target_pos->x, target_pos->y, target_pos->z);
+            if (range < 1.5F) {
+                // Melee attack
+                ai->job_type_major = JOB_ROGUE_BASH;
+                ai->job_status = "Melee attack";
+                emit(renderables_changed_message{});
+                pause_mode = RUNNING;
+            } 
+        }
+
+        if (ai->targeted_hostile==0 && current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {
+            ai->current_path.reset();
+            ai->current_path = find_path(*pos, position_t{ world_x, world_y, camera_position->region_z });
+            if (get_mouse_button_state(rltk::button::LEFT)) {
+                ai->job_type_major = JOB_ROGUE_GOTO;
+                ai->job_status = "Travel";
+                emit(renderables_changed_message{});
+                pause_mode = RUNNING;
+            }
         }
     }
 }

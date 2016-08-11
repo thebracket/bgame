@@ -33,5 +33,9 @@ void mode_rogue_render_system::update(const double ms) {
         term(2)->print(3, y, "UNCONSCIOUS!", rltk::colors::RED); ++y;
     }
 
-    term(2)->print(3, y, "Click on map to move/interact"); ++y;           
+    term(2)->print(3, y, "Click on map to move/interact"); ++y;
+    if (ai->targeted_hostile != 0) {
+        name_t * target_name = entity(ai->targeted_hostile)->component<name_t>();
+        term(2)->print(3, y, "Click now to attack " + target_name->first_name); ++y;
+    }          
 }
