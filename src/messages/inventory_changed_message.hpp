@@ -28,3 +28,9 @@ struct pickup_item_message : public rltk::base_message_t {
 	std::size_t id;
 	std::size_t collector;
 };
+
+struct destroy_item_message : public rltk::base_message_t {
+	destroy_item_message() {}
+	destroy_item_message(const std::size_t ID) : id(ID) {}
+	std::size_t id;
+};

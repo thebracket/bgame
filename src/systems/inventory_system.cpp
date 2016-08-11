@@ -1,6 +1,7 @@
 #include "inventory_system.hpp"
 #include "../messages/messages.hpp"
 #include "../components/components.hpp"
+#include "movement_system.hpp"
 #include <boost/container/flat_map.hpp>
 #include <boost/optional.hpp>
 #include <array>
@@ -78,18 +79,48 @@ void inventory_system::configure() {
 	// Receive drop messages
 	subscribe<drop_item_message>([this](drop_item_message &msg) {
 		emit(item_claimed_message{msg.id, false});
-		try { delete_component<item_carried_t>(msg.id); } catch (...) {}
-		try { entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z }); } catch (...) {}
+		delete_component<item_carried_t>(msg.id);
+		entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
+		entity_octree.add_node(octree_location_t{msg.x,msg.y,msg.z,msg.id});
 		dirty = true;
 	});
 
 	// Receive pick-up messages
 	subscribe<pickup_item_message>([this](pickup_item_message &msg) {
-		try { delete_component<position_t>(msg.id); } catch (...) {}
-		try { delete_component<item_stored_t>(msg.id); } catch (...) {}
+		position_t * pos = entity(msg.id)->component<position_t>();
+		if (pos != nullptr) {
+			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
+			delete_component<position_t>(msg.id);
+		}
+		delete_component<item_stored_t>(msg.id);
 		entity(msg.id)->assign(item_carried_t{ INVENTORY, msg.collector });
 		dirty = true;
 		emit(renderables_changed_message{});
+	});
+
+	// Receive item destruction messages
+	subscribe<destroy_item_message>([this](destroy_item_message &msg) {
+		position_t * pos = entity(msg.id)->component<position_t>();
+		if (pos != nullptr) {
+			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
+			delete_component<position_t>(msg.id);
+		}
+
+		const std::size_t id = msg.id;
+		auto finder = all_items.find(id);
+		if (finder != all_items.end()) {
+			if (finder->second.claimed) {
+				for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
+					if (finder->second.categories.test(i)) {
+						++item_availability[i];
+						items_by_category[i].erase(std::remove_if(items_by_category[i].begin(), items_by_category[i].end(), [&id] (std::size_t item) { return item == id; }), items_by_category[i].end());
+					}
+				}
+			}
+		}
+		all_items.erase(id);
+
+		delete_entity(msg.id);
 	});
 
 	// Receive claim messages - update an item as claimed/unclaimed
@@ -292,19 +323,7 @@ position_t get_item_location(std::size_t id) {
 }
 
 void delete_item(const std::size_t &id) {
-	auto finder = all_items.find(id);
-	if (finder != all_items.end()) {
-		if (finder->second.claimed) {
-			for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-				if (finder->second.categories.test(i)) {
-					++item_availability[i];
-					items_by_category[i].erase(std::remove_if(items_by_category[i].begin(), items_by_category[i].end(), [&id] (std::size_t item) { return item == id; }), items_by_category[i].end());
-				}
-			}
-		}
-	}
-	all_items.erase(id);
-	delete_entity(id);
+	emit(destroy_item_message{id});
 }
 
 int available_items_by_tag(const std::string &tag) {
