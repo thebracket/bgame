@@ -55,18 +55,7 @@ void wildlife_population_system::configure() {
                         // Attack the target
                         emit(creature_attack_message{e.id, closest_fear});
                     } else {
-                        position_t * other_pos = entity(closest_fear)->component<position_t>();
-                        if (pos.x < other_pos->x && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_EAST)) {
-                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x+1, pos.y, pos.z } });
-                        } else if (pos.x > other_pos->x && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_WEST)) {
-                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x-1, pos.y, pos.z } });
-                        } else if (pos.y < other_pos->y && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_NORTH)) {
-                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x, pos.y-1, pos.z } });
-                        } else if (pos.y > other_pos->y && current_region->tile_flags[mapidx(pos.x,pos.y,pos.z)].test(CAN_GO_SOUTH)) {
-                            emit(entity_wants_to_move_message{ e.id, position_t{ pos.x, pos.y+1, pos.z } });
-                        } else {
-                            emit(entity_wants_to_move_randomly_message{e.id});
-                        }
+                        emit(entity_wants_to_flee_message{e.id, closest_fear});
                     }
                 }
 

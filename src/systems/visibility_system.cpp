@@ -90,15 +90,18 @@ void visibility_system::update(const double duration_ms) {
 			}
 		}
 
-		// What can we see?
+		// What can we see? - Grazers and Settlers only
 		grazer_ai * grazer = e.component<grazer_ai>();
-		view.visible_entities.clear();
-		for (const int &idx : view.visible_cache) {
-			int x,y,z;
-			std::tie(x,y,z) = idxmap(idx);
-			std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
-			for (const auto &v : visible_here) {
-				view.visible_entities.insert(v);
+		settler_ai_t * settler = e.component<settler_ai_t>();		
+		if (grazer || settler) {
+			view.visible_entities.clear();
+			for (const int &idx : view.visible_cache) {
+				int x,y,z;
+				std::tie(x,y,z) = idxmap(idx);
+				std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
+				for (const auto &v : visible_here) {
+					view.visible_entities.insert(v);
+				}
 			}
 		}
 	});
