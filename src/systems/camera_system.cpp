@@ -76,9 +76,9 @@ void camera_system::update_clipping_rectangle() {
 	const int half_height = term_height / 2;
 
 	if (camera_position->region_x < half_width) camera_position->region_x = half_width;
-	if (camera_position->region_x > REGION_WIDTH-half_width) camera_position->region_x = REGION_WIDTH-half_width;
+	if (camera_position->region_x > (REGION_WIDTH+2)-half_width) camera_position->region_x = (REGION_WIDTH+2)-half_width;
 	if (camera_position->region_y < half_height) camera_position->region_y = half_height;
-	if (camera_position->region_y > REGION_HEIGHT-half_height) camera_position->region_y = REGION_HEIGHT-half_height;
+	if (camera_position->region_y > (REGION_HEIGHT+2)-half_height) camera_position->region_y = (REGION_HEIGHT+2)-half_height;
 
 	clip_left = camera_position->region_x - half_width;
 	clip_right = camera_position->region_x + half_width;

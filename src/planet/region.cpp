@@ -241,15 +241,22 @@ void region_t::calc_render(const int &idx) {
 			glyph = 'X';
 			fg = material_defs[tile_material[idx]].fg;
 		} break;
-		case tile_type::FLOOR : {	
-			if (material_defs[tile_material[idx]].spawn_type == sand) {
+		case tile_type::FLOOR : {
+			if (tile_material[idx] > material_defs.size()) {
+				glyph = ',';
+			} else if (material_defs[tile_material[idx]].spawn_type == sand) {
 				glyph = 247;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
 				glyph = 240;
 			} else {
 				glyph = ',';
 			}
-			fg = material_defs[tile_material[idx]].fg;
+
+			if (tile_material[idx] > material_defs.size()) {
+				fg = rltk::colors::WHITE;
+			} else {
+				fg = material_defs[tile_material[idx]].fg;
+			}
 
 			if (tile_vegetation_type[idx]>0) {
 				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";

@@ -139,7 +139,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     std:: cout << soils.size() << "/" << sands.size() << "/" << sedimintaries.size() << "/" << igneouses.size() << "\n";
 
     set_worldgen_status("Locating strata");
-    const int n_strata = REGION_WIDTH + rng.roll_dice(1,64);
+    const int n_strata = REGION_WIDTH + REGION_HEIGHT + rng.roll_dice(1,64);
     std::vector<std::tuple<int,int,int>> centroids;
     octree_t octree(REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH);
 
@@ -155,19 +155,23 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
             // Soil
             int roll = rng.roll_dice(1,100);
             if (roll < biome.second.soil_pct) {
-                const std::size_t soil_idx = soils[rng.roll_dice(1, soils.size())-1];
-                result.material_idx.push_back(soil_idx);
+                const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
+                std::cout << material_defs[soils[soil_idx]].name << "\n";
+                result.material_idx.push_back(soils[soil_idx]);
             } else {
                 const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+                std::cout << material_defs[sands[sand_idx]].name << "\n";
                 result.material_idx.push_back(sands[sand_idx]);
             }
         } else if (z>(altitude_at_center-10)/2) {
             // Sedimentary
             const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
+            std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
             result.material_idx.push_back(sedimintaries[sed_idx]);
         } else {
             // Igneous
             const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
+            std::cout << material_defs[igneouses[ig_idx]].name << "\n";
             result.material_idx.push_back(igneouses[ig_idx]);
         }
     }
@@ -180,16 +184,6 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
         for (int y=0; y<REGION_HEIGHT; ++y) {
             for (int x=0; x<REGION_WIDTH; ++x) {
                 const int map_idx = mapidx(x,y,z);
-                /*int min_distance = 20000;
-                int min_idx = -1;
-
-                for (int i=0; i<n_strata; ++i) {
-                    const int distance = distance3d_squared(x,y,z, std::get<0>(centroids[i]), std::get<1>(centroids[i]), std::get<2>(centroids[i]));
-                    if (distance < min_distance) {
-                        min_distance = distance;
-                        min_idx = i;
-                    }
-                }*/
                 result.strata_map[map_idx] = octree.find_nearest(octree_location_t{x,y,z,0});
             }
         }
@@ -255,7 +249,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                         break;
                     }
                 }
-                if (veg_type == "") veg_type = biome.second.plants[biome.second.plants.size()-1].first;
+                if (veg_type == "") veg_type = "none";
 
                 if (veg_type != "none") {
                     auto finder = plant_defs_idx.find(veg_type);

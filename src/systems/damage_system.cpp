@@ -2,6 +2,7 @@
 #include "../messages/messages.hpp"
 #include "../components/components.hpp"
 #include "../game_globals.hpp"
+#include "movement_system.hpp"
 #include <rltk.hpp>
 #include <iostream>
 #include <sstream>
@@ -141,6 +142,7 @@ void damage_system::update(const double ms) {
         }
 
         // Remove the entity
+        entity_octree.remove_node(octree_location_t{pos->x, pos->y, pos->z, msg.victim});
         delete_entity(msg.victim);
     }
 }

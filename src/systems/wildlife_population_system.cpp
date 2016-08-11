@@ -86,7 +86,7 @@ void wildlife_population_system::count_wildlife_populations() {
 }
 
 void wildlife_population_system::spawn_wildlife() {
-    for (std::size_t i=0; i<4; ++i) {
+    for (uint8_t i=0; i<4; ++i) {
         if (group_populations[i] == 0) {
             const std::size_t biome_type = planet.biomes[current_region->biome_idx].type;
             const std::size_t n_critters = biome_defs[biome_type].wildlife.size();
@@ -104,9 +104,9 @@ void wildlife_population_system::spawn_wildlife() {
             while (try_count < 4) {
                 switch (edge) {
                     case 0 : { base_x = REGION_WIDTH/2; base_y = 1; } break;
-                    case 1 : { base_x = REGION_WIDTH/2; base_y = REGION_HEIGHT-1; } break;
+                    case 1 : { base_x = REGION_WIDTH/2; base_y = REGION_HEIGHT-2; } break;
                     case 2 : { base_x = 1; base_y = REGION_HEIGHT/2; } break;
-                    case 3 : { base_x = REGION_WIDTH-1; base_y = REGION_HEIGHT/2; } break;
+                    case 3 : { base_x = REGION_WIDTH-2; base_y = REGION_HEIGHT/2; } break;
                 }
                 base_z = get_ground_z(*current_region, base_x, base_y);
                 const int idx = mapidx(base_x, base_y, base_z);
@@ -160,7 +160,8 @@ void wildlife_population_system::spawn_wildlife() {
                         ->assign(std::move(create_health_component_creature(critter_def->second.tag)))
                         ->assign(grazer_ai{ stat_modifier(stats.dexterity) })
                         ->assign(std::move(stats))
-                        ->assign(viewshed_t(6, false, false));
+                        ->assign(viewshed_t(6, false, false))
+                        ->assign(wildlife_group{i});
                         std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                     }
                 }

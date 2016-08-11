@@ -40,10 +40,10 @@ struct settler_ai_t {
 	int target_id = 0;
 	boost::optional<building_designation_t> building_target;
 	boost::optional<reaction_task_t> reaction_target;
+	std::size_t current_tool = 0;
 
 	// Non-persistent
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
-	std::size_t current_tool;
 
 	settler_ai_t() {
 		std::fill(permitted_work.begin(), permitted_work.end(), true);
@@ -64,6 +64,7 @@ struct settler_ai_t {
 		serialize(lbfile, target_y);
 		serialize(lbfile, target_z);
 		serialize(lbfile, target_id);
+		serialize(lbfile, current_tool);
 
 		bool has_building_target = false;
 		if (building_target) has_building_target = true;
@@ -131,6 +132,7 @@ struct settler_ai_t {
 		deserialize(lbfile, c.target_y);
 		deserialize(lbfile, c.target_z);
 		deserialize(lbfile, c.target_id);
+		deserialize(lbfile, c.current_tool);
 		bool has_building_target;
 		deserialize(lbfile, has_building_target);
 		if (has_building_target) {
