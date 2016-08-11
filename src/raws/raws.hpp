@@ -56,11 +56,12 @@ struct profession_t {
 	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
 };
 
-constexpr int NUMBER_OF_ITEM_CATEGORIES = 4;
+constexpr int NUMBER_OF_ITEM_CATEGORIES = 5;
 constexpr int COMPONENT = 0;
 constexpr int TOOL_CHOPPING = 1;
 constexpr int TOOL_DIGGING = 2;
-constexpr int WEAPON = 3;
+constexpr int WEAPON_MELEE = 3;
+constexpr int WEAPON_RANGED = 4;
 
 struct item_def_t {
 	std::string tag = "";
@@ -70,6 +71,8 @@ struct item_def_t {
 	uint8_t glyph;
 	rltk::color_t fg;
 	rltk::color_t bg;
+	int damage_n=0, damage_d=0, damage_mod=0;
+	int range = 0;
 };
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 

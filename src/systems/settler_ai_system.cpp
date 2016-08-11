@@ -291,6 +291,23 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			ai.reaction_target = autojob;
 			return;
 		}
+
+		// If we don't have a melee weapon, and one is available, equip it
+		if (is_item_category_available(WEAPON_MELEE)) {
+			bool has_weapon = false;
+			each<item_carried_t>([&entity, &has_weapon] (entity_t &E, item_carried_t &item) {
+				if (item.carried_by == entity.id && item.location == EQUIP_MELEE) has_weapon = true;
+			});
+
+			if (!has_weapon) {
+				change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
+				ai.job_type_major = JOB_EQUIP_MELEE;
+				ai.job_type_minor = JM_FIND_MELEE_WEAPON;
+				change_job_status(ai, name, "Finding a melee weapon.");
+				return;
+			}
+		}
+
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
 		return;
@@ -303,6 +320,8 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 	} else if (ai.job_type_major == JOB_REACTION) {
 		do_reaction(entity, ai, stats, species, pos, name);
 		return;
+	} else if (ai.job_type_major == JOB_EQUIP_MELEE) {
+		do_equip_melee(entity, ai, stats, species, pos, name);
 	}
 	//wander_randomly(entity, pos);
 }
@@ -853,4 +872,50 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 			become_idle(e, ai, name);
 		}
 	}
+}
+
+void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_FIND_MELEE_WEAPON) {
+		inventory_item_t axe = claim_closest_item_by_category(WEAPON_MELEE, pos);
+		if (!axe.pos) {
+			cancel_action(e, ai, stats, species, pos, name, "No available melee weapon");
+			return;
+		}
+		ai.current_path = find_path(pos, axe.pos.get());
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to available melee weapon");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_MELEE_WEAPON;
+		ai.target_x = axe.pos.get().x;
+		ai.target_y = axe.pos.get().y;
+		ai.target_z = axe.pos.get().z;
+		change_job_status(ai, name, "Traveling to melee weapon");
+		ai.current_tool = axe.id;
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_MELEE_WEAPON) {
+		if (pos == ai.current_path->destination) {
+			// We're at the axe
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_MELEE_WEAPON;
+			change_job_status(ai, name, "Collect melee weapon");
+			return;
+		}
+		// Travel to axe
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_MELEE_WEAPON) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		emit(pickup_item_message{ai.current_tool, e.id, EQUIP_MELEE});
+		ai.current_tool = 0;
+
+		become_idle(e, ai, name);
+		return;
+	}	
 }

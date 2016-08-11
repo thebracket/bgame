@@ -184,10 +184,14 @@ void read_items(std::ofstream &tech_tree_file) {
                     if (type == "component") c.categories.set(COMPONENT);
                     if (type == "tool-chopping") c.categories.set(TOOL_CHOPPING);
                     if (type == "tool-digging") c.categories.set(TOOL_DIGGING);
-                    if (type == "weapon") c.categories.set(WEAPON);
+                    if (type == "weapon-melee") c.categories.set(WEAPON_MELEE);
+                    if (type == "weapon-ranged") c.categories.set(WEAPON_RANGED);
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "damage_n") c.damage_n = lua_tonumber(lua_state, -1);
+            if (field == "damage_d") c.damage_d = lua_tonumber(lua_state, -1);
+            if (field == "damage_mod") c.damage_mod = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }

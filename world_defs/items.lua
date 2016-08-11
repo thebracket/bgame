@@ -29,7 +29,8 @@ items = {
 		itemtype = {"tool-chopping", "weapon-melee"},
 		glyph = glyphs['paragraph'],
 		foreground = colors['white'],
-		background = colors['black']
+		background = colors['black'],
+		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str"
 	},
 	pickaxe = {
 		name = "Pickaxe",
@@ -321,7 +322,8 @@ items = {
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['white'],
-		background = colors['black']
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
 	pointy_stick = {
 		name = "Pointy Stick",
@@ -329,7 +331,8 @@ items = {
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['white'],
-		background = colors['black']
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
 	sword = {
 		name = "Sword",
@@ -337,7 +340,8 @@ items = {
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['cyan'],
-		background = colors['black']
+		background = colors['black'],
+		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str"
 	},
 	axe_blade = {
 		name = "Axe Blade",

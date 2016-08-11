@@ -93,7 +93,7 @@ void inventory_system::configure() {
 			delete_component<position_t>(msg.id);
 		}
 		delete_component<item_stored_t>(msg.id);
-		entity(msg.id)->assign(item_carried_t{ INVENTORY, msg.collector });
+		entity(msg.id)->assign(item_carried_t{ msg.loc, msg.collector });
 		dirty = true;
 		emit(renderables_changed_message{});
 	});

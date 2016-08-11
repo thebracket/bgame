@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "../components/item_carried.hpp"
 
 struct inventory_changed_message : public rltk::base_message_t {
 };
@@ -25,8 +26,10 @@ struct drop_item_message : public rltk::base_message_t {
 struct pickup_item_message : public rltk::base_message_t {
 	pickup_item_message() {}
 	pickup_item_message(const std::size_t &ID, const std::size_t &holder) : id(ID), collector(holder) {}
+	pickup_item_message(const std::size_t &ID, const std::size_t &holder, const item_location_t &LOC) : id(ID), collector(holder), loc(LOC) {}
 	std::size_t id;
 	std::size_t collector;
+	item_location_t loc = INVENTORY;
 };
 
 struct destroy_item_message : public rltk::base_message_t {
