@@ -53,7 +53,8 @@ void wildlife_population_system::configure() {
                     // Poor creature is scared!
                     if (terror_distance < 1.5F) {
                         // Attack the target
-                        emit(creature_attack_message{e.id, closest_fear});
+                        health_t * health = entity(e.id)->component<health_t>();
+                        if (!health->unconscious) emit(creature_attack_message{e.id, closest_fear});
                     } else {
                         emit(entity_wants_to_flee_message{e.id, closest_fear});
                     }
