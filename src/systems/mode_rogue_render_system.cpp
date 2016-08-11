@@ -39,6 +39,7 @@ void mode_rogue_render_system::update(const double ms) {
         if (hostile) {
             name_t * target_name = hostile->component<name_t>();
             term(2)->print(3, y, "Click now to attack " + target_name->first_name); ++y;
+            ai->current_path.reset();
         } else {
             ai->targeted_hostile = 0;
         }
