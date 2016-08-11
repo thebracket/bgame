@@ -12,6 +12,8 @@ private:
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
+	bool has_melee_weapon(const entity_t &entity) const;
+
 	void change_settler_glyph(entity_t &entity, const vchar &render_as);
 	void become_idle(entity_t &e, settler_ai_t &ai, name_t &name);
 	void drop_current_tool(const entity_t &e, settler_ai_t &ai, const position_t &pos);

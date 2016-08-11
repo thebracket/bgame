@@ -24,6 +24,14 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 	emit(entity_wants_to_move_randomly_message{entity.id});
 }
 
+bool settler_ai_system::has_melee_weapon(const entity_t &entity) const {
+	bool has_weapon = false;
+	each<item_carried_t>([&entity, &has_weapon] (entity_t &E, item_carried_t &item) {
+		if (item.carried_by == entity.id && item.location == EQUIP_MELEE) has_weapon = true;
+	});
+	return has_weapon;
+}
+
 void settler_ai_system::configure() {
 	system_name = "Settler AI";
 	subscribe<tick_message>([this](tick_message &msg) {
@@ -293,19 +301,12 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		}
 
 		// If we don't have a melee weapon, and one is available, equip it
-		if (is_item_category_available(WEAPON_MELEE)) {
-			bool has_weapon = false;
-			each<item_carried_t>([&entity, &has_weapon] (entity_t &E, item_carried_t &item) {
-				if (item.carried_by == entity.id && item.location == EQUIP_MELEE) has_weapon = true;
-			});
-
-			if (!has_weapon) {
-				change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
-				ai.job_type_major = JOB_EQUIP_MELEE;
-				ai.job_type_minor = JM_FIND_MELEE_WEAPON;
-				change_job_status(ai, name, "Finding a melee weapon.");
-				return;
-			}
+		if (is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
+			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
+			ai.job_type_major = JOB_EQUIP_MELEE;
+			ai.job_type_minor = JM_FIND_MELEE_WEAPON;
+			change_job_status(ai, name, "Finding a melee weapon.");
+			return;
 		}
 
 	} else if (ai.job_type_major == JOB_MINE) {
