@@ -37,8 +37,8 @@ void settler_ai_system::configure() {
 	subscribe<tick_message>([this](tick_message &msg) {
 
 		bool found_settler = false;
-		each<settler_ai_t, game_stats_t, species_t, position_t, name_t, health_t>([this, &found_settler] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
-			species_t &species, position_t &pos, name_t &name, health_t &health) 
+		each<settler_ai_t, game_stats_t, species_t, position_t, name_t, health_t, viewshed_t>([this, &found_settler] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
+			species_t &species, position_t &pos, name_t &name, health_t &health, viewshed_t &view) 
 		{
 			found_settler = true;
 			if (ai.initiative < 1) {
@@ -64,7 +64,27 @@ void settler_ai_system::configure() {
 					});
 				}
 
-				if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
+				// Do we have any hostiles to worry about?
+				bool terrified = false;
+                float terror_distance = 1000.0F;
+                std::size_t closest_fear = 0;
+                for (const std::size_t other_entity : view.visible_entities) {
+                    if (rltk::entity(other_entity)->component<grazer_ai>() != nullptr) {
+                        terrified = true;
+                        position_t * other_pos = rltk::entity(other_entity)->component<position_t>();
+                        const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
+                        if (d < terror_distance) {
+                            terror_distance = d;
+                            closest_fear = other_entity;
+                        }
+                    }
+                }
+
+				if (terrified) {
+					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
+					// is implemented it's a good idea not to run away from your target.
+					emit(entity_wants_to_flee_message{entity.id, closest_fear});
+				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
 					|| ai.job_type_major == JOB_REACTION) {
 						// If we have a job to do - keep doing it
 						this->do_work_time(entity, ai, stats, species, pos, name);
