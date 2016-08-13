@@ -495,7 +495,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 	if (ai.job_type_minor == JM_FIND_AXE) {
 		auto axe = claim_closest_item_by_category(TOOL_CHOPPING, pos);
-		if (axe>0) {
+		if (axe==0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available axe");
 			return;
 		}

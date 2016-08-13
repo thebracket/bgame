@@ -213,6 +213,12 @@ position_t * get_item_location(std::size_t id) {
 		if (stored) {
 			entity_t * container = entity(stored->stored_in);
 			pos = container->component<position_t>();
+		} else {
+			item_carried_t * carried = e->component<item_carried_t>();
+			if (carried) {
+				entity_t * holder = entity(carried->carried_by);
+				pos = holder->component<position_t>();
+			}
 		}
 	}
 	return pos;
