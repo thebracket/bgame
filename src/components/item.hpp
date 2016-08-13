@@ -14,6 +14,7 @@ struct item_t {
 	std::bitset<NUMBER_OF_ITEM_CATEGORIES> category;
 	item_type_t type;
 	std::size_t material;
+	bool claimed = false;
 
 	item_t() {}
 	item_t(const std::string name) : item_tag(name), type(CLOTHING) {
@@ -42,6 +43,7 @@ struct item_t {
 		serialize(lbfile, category);
 		serialize(lbfile, type);
 		serialize(lbfile, material);
+		serialize(lbfile, claimed);
 	}
 
 	static item_t load(std::istream &lbfile) {
@@ -51,6 +53,7 @@ struct item_t {
 		deserialize(lbfile, c.category);
 		deserialize(lbfile, c.type);
 		deserialize(lbfile, c.material);
+		deserialize(lbfile, c.claimed);
 		return c;
 	}
 };

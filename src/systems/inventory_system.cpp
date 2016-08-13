@@ -2,74 +2,13 @@
 #include "../messages/messages.hpp"
 #include "../components/components.hpp"
 #include "movement_system.hpp"
-#include <boost/container/flat_map.hpp>
-#include <boost/optional.hpp>
-#include <array>
-#include <map>
-
-boost::container::flat_map<std::size_t, inventory_item_t> all_items;
-std::array<int, NUMBER_OF_ITEM_CATEGORIES> item_availability;
-std::array<std::vector<std::size_t>, NUMBER_OF_ITEM_CATEGORIES> items_by_category;
-
-void inv_insert_or_update(inventory_item_t item) {
-	if (item.id == 0) std::cout << "Warning: item id 0 is probably not valid for insertion!\n";
-	auto finder = all_items.find(item.id);
-	if (finder == all_items.end()) {
-		// Insert it
-		all_items[item.id] = item;
-		for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-			if (item.categories.test(i)) {
-				++item_availability[i];
-				items_by_category[i].push_back(item.id);
-			}
-		}
-	} else {
-		if (item.pos) {
-			finder->second.pos = item.pos;
-		} else {
-			finder->second.pos.reset();
-		}
-	}
-}
 
 void inventory_system::update(const double duration_ms) {
-	if (dirty) {
-		// Build the inventory list
-
-		// Query items on the ground
-		each<item_t, position_t>([] (entity_t &entity, item_t &item, position_t &pos) {
-			inv_insert_or_update(inventory_item_t{ entity.id, false, pos, item.category, item.item_name, item.item_tag });
-		});
-
-		// Query items in storage containers
-		each<item_t, item_stored_t>([] (entity_t &e, item_t &item, item_stored_t &stored) {
-			const std::size_t stored_in = stored.stored_in;
-			entity_t * container = entity(stored_in);
-			position_t * pos = container->component<position_t>();
-
-			inv_insert_or_update( inventory_item_t{ e.id, false, *pos, item.category, item.item_name, item.item_tag } );
-		});
-
-		// Query carried items
-		each<item_t, item_carried_t>([] (entity_t &e, item_t &item, item_carried_t &stored) {
-			const std::size_t stored_in = stored.carried_by;
-			entity_t * container = entity(stored_in);
-			position_t * pos = container->component<position_t>();
-
-			inv_insert_or_update( inventory_item_t{ e.id, false, *pos, item.category, item.item_name, item.item_tag } );
-		});
-
-		/*
-		for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i)
-			std::cout << "Available category " << i << " : " << item_availability[i] << "\n";
-		*/
-	}
-	dirty = false;
+	// Do nothing!
 }
 
 void inventory_system::configure() {
 	system_name = "Inventory";
-	std::fill(item_availability.begin(), item_availability.end(), 0);
 
 	// Receive inventory change messages - refresh the inventory list
 	subscribe<inventory_changed_message>([this](inventory_changed_message &msg) {
@@ -106,41 +45,16 @@ void inventory_system::configure() {
 			delete_component<position_t>(msg.id);
 		}
 
-		const std::size_t id = msg.id;
-		auto finder = all_items.find(id);
-		if (finder != all_items.end()) {
-			if (finder->second.claimed) {
-				for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-					if (finder->second.categories.test(i)) {
-						++item_availability[i];
-						items_by_category[i].erase(std::remove_if(items_by_category[i].begin(), items_by_category[i].end(), [&id] (std::size_t item) { return item == id; }), items_by_category[i].end());
-					}
-				}
-			}
-		}
-		all_items.erase(id);
-
 		delete_entity(msg.id);
 	});
 
 	// Receive claim messages - update an item as claimed/unclaimed
 	subscribe<item_claimed_message>([] (item_claimed_message &msg) {
-		std::cout << "Received item claimed message: " << msg.id << "," << msg.claimed << "\n";
-		auto finder = all_items.find(msg.id);
-		if (finder != all_items.end()) {
-			finder->second.claimed = msg.claimed;
-			for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-				if (finder->second.categories.test(i)) {
-					if (msg.claimed) {
-						--item_availability[i];						
-						std::cout << "Claimed - available by category: " << item_availability[i] << "\n";
-					} else {
-						++item_availability[i];
-						std::cout << "Released - available by category: " << item_availability[i] << "\n";
-					}
-				}
-			}
-		}		
+		entity_t * e = entity(msg.id);
+		if (e) {
+			item_t * item = e->component<item_t>();
+			item->claimed = msg.claimed;
+		}
 	});
 
 	// Receive build requests - claim components and add to the designations list.
@@ -161,15 +75,9 @@ void inventory_system::configure() {
     	designate.glyphs = building.glyphs;
 
 		for (const std::string &requested_component : building.components) {
-			// Find the component and issue a claim for it
-			for (auto it=all_items.begin(); it != all_items.end(); ++it) {
-				if (it->second.item_tag == requested_component && it->second.claimed==false) {
-					emit(item_claimed_message{ it->second.id, true });
-					designate.component_ids.push_back(std::make_pair(it->second.id,false));
-					std::cout << "Claimed component #" << it->second.id << "\n";
-					break;
-				}
-			}
+			const std::size_t component_id = claim_item_by_tag(requested_component);
+			std::cout << "Component [" << requested_component << "] #" << component_id << "\n";
+			designate.component_ids.push_back(std::make_pair(component_id, false));
 		}
 
 		auto building_template = create_entity()
@@ -188,43 +96,38 @@ void inventory_system::configure() {
 	});
 }
 
-bool is_item_category_available(const int &category) {
-	if (item_availability[category] > 0) return true;
-	return false;
+int item_category_available(const int &category) {
+	int result = 0;
+	each<item_t>([&result, &category] (entity_t &e, item_t &i) {
+		if (i.category.test(category) && i.claimed == false) ++result;
+	});
+	return result;
 }
 
-inventory_item_t claim_closest_item_by_category(const int &category, position_t &pos) {
+bool is_item_category_available(const int &category) {
+	return (item_category_available(category)>0);
+}
+
+std::size_t claim_closest_item_by_category(const int &category, position_t &pos) {
 	// We're taking advantage of map being sorted to find the closest here
 	std::map<float, std::size_t> distance_sorted; 
 
-	for (const int &id : items_by_category[category]) {
-		auto f = all_items.find(id);
-		if (f != all_items.end()) {
-			if (f->second.claimed == false) {
-				if (f->second.pos) {
-					position_t pos2 = f->second.pos.get();
-					float distance = rltk::distance3d( pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z );
-					distance_sorted[distance] = f->second.id;
-				}
+	each<item_t>([&distance_sorted, &category, &pos] (entity_t &e, item_t &i) {
+		if (i.category.test(category) && i.claimed==false) {
+			position_t * p = get_item_location(e.id);
+			if (p) {
+				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
+				distance_sorted[distance] = e.id;
 			}
 		}
-	}
+	});
+
+	if (distance_sorted.empty()) return 0;
 
 	std::size_t closest_matching_id = distance_sorted.begin()->second;
-	all_items[closest_matching_id].claimed = true;
+	emit(item_claimed_message{closest_matching_id, true});
 
-	auto finder = all_items.find(closest_matching_id);
-	if (finder != all_items.end()) {
-		finder->second.claimed = true;
-		for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-			if (finder->second.categories.test(i)) {
-				--item_availability[i];
-				std::cout << "Claimed - available by category: " << item_availability[i] << "\n";
-			}
-		}
-	}
-	std::cout << "Handing out tool with ID " << all_items[closest_matching_id].id << "\n";
-	return all_items[closest_matching_id];
+	return closest_matching_id;
 }
 
 std::vector<available_building_t> get_available_buildings() {
@@ -234,25 +137,17 @@ std::vector<available_building_t> get_available_buildings() {
 		bool possible = true;
 
 		// Evaluate the required components and see if they are available
-		boost::container::flat_map<std::string, int> requirements;
+		boost::container::flat_map<std::string, std::pair<int,int>> requirements;
 		for (const std::string &require : it->second.components) {
 			auto finder = requirements.find(require);
 			if (finder == requirements.end()) {
-				requirements[require] = 1;
+				const int available_item_count = available_items_by_tag(require);
+				requirements[require] = std::make_pair( 1, available_item_count );
+				if (available_item_count < 1) possible = false;
 			} else {
-				++finder->second;
+				++finder->second.first;
+				if (finder->second.first > finder->second.second) possible=false;
 			}
-		}
-
-		for (auto all = all_items.begin(); all != all_items.end(); ++all) {
-			auto finder = requirements.find(all->second.item_tag);
-			if (finder != requirements.end() && all->second.claimed == false) {
-				--finder->second;
-			}
-		}
-
-		for (auto req = requirements.begin(); req != requirements.end(); ++req) {
-			if (req->second > 0) possible = false;
 		}
 
 		if (possible) {
@@ -285,25 +180,17 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 
 			// Do the components exist, and are unclaimed?
 			if (possible) {
-				boost::container::flat_map<std::string, int> requirements;
+				boost::container::flat_map<std::string, std::pair<int,int>> requirements;
 				for (const std::pair<std::string,int> &require : it->second.inputs) {
 					auto finder = requirements.find(require.first);
 					if (finder == requirements.end()) {
-						requirements[require.first] = require.second;
+						const int available_components = available_items_by_tag(require.first);
+						requirements[require.first] = std::make_pair(require.second, available_components);
+						if (require.second > available_components) possible = false;
 					} else {
-						finder->second += require.second;
+						finder->second.first += require.second;
+						if (finder->second.first > finder->second.second) possible = false;
 					}
-				}
-
-				for (auto all = all_items.begin(); all != all_items.end(); ++all) {
-					auto finder = requirements.find(all->second.item_tag);
-					if (finder != requirements.end() && all->second.claimed == false) {
-						--finder->second;
-					}
-				}
-
-				for (auto req = requirements.begin(); req != requirements.end(); ++req) {
-					if (req->second > 0) possible = false;
 				}
 
 				if (possible) {
@@ -316,10 +203,19 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 	return result;
 }
 
-position_t get_item_location(std::size_t id) {
-	auto finder = all_items.find(id);
-	if (finder == all_items.end()) throw std::runtime_error("Unable to find item");
-	return finder->second.pos.get();
+position_t * get_item_location(std::size_t id) {
+	entity_t * e = entity(id);
+	if (e == nullptr) return nullptr;
+	position_t * pos = e->component<position_t>();
+
+	if (pos == nullptr) {
+		item_stored_t * stored = e->component<item_stored_t>();
+		if (stored) {
+			entity_t * container = entity(stored->stored_in);
+			pos = container->component<position_t>();
+		}
+	}
+	return pos;
 }
 
 void delete_item(const std::size_t &id) {
@@ -328,34 +224,23 @@ void delete_item(const std::size_t &id) {
 
 int available_items_by_tag(const std::string &tag) {
 	int result = 0;
-	for (auto item=all_items.begin(); item!=all_items.end(); ++item) {
-		if (item->second.item_tag == tag && item->second.claimed != true) ++result;
-	}
+	each<item_t>([&result, &tag] (entity_t &e, item_t &i) {
+		if (i.item_tag == tag && i.claimed == false) ++result;
+	});
 	return result;
 }
 
 std::size_t claim_item_by_tag(const std::string &tag) {
-	for (auto item=all_items.begin(); item!=all_items.end(); ++item) {
-		if (item->second.item_tag == tag && item->second.claimed == false) {
-			item->second.claimed = true;
-			for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-				if (item->second.categories.test(i)) {
-					--item_availability[i];
-				}
-			}
-			return item->second.id;
-		}
+	std::size_t result = 0;
+	each<item_t>([&result, &tag] (entity_t &e, item_t &i) {
+		if (i.item_tag == tag && i.claimed == false) result = e.id;
+	});
+	if (result != 0) {
+		emit(item_claimed_message{result, true});
 	}
-	return 0;
+	return result;
 }
 
 void unclaim_by_id(const std::size_t &id) {
-	auto finder = all_items.find(id);
-	if (finder != all_items.end()) {
-		finder->second.claimed = false;
-		for (int i=0; i<NUMBER_OF_ITEM_CATEGORIES; ++i) {
-			++item_availability[i];
-			std::cout << "Released - available by category: " << item_availability[i] << "\n";
-		}
-	}		
+	emit(item_claimed_message{id, false});	
 }

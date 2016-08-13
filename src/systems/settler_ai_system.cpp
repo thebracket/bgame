@@ -356,22 +356,23 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	//std::cout << name.first_name << ": " << ai.job_status << "\n";
 
 	if (ai.job_type_minor == JM_FIND_PICK) {
-		inventory_item_t pick = claim_closest_item_by_category(TOOL_DIGGING, pos);
-		if (!pick.pos) {
+		auto pick = claim_closest_item_by_category(TOOL_DIGGING, pos);
+		if (pick==0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available pick");
 			return;
 		}
-		ai.current_path = find_path(pos, pick.pos.get());
+		position_t * pick_pos = get_item_location(pick);
+		ai.current_path = find_path(pos, *pick_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No available pick");
 			return;
 		}
 		ai.job_type_minor = JM_GO_TO_PICK;
-		ai.target_x = pick.pos.get().x;
-		ai.target_y = pick.pos.get().y;
-		ai.target_z = pick.pos.get().z;
+		ai.target_x = pick_pos->x;
+		ai.target_y = pick_pos->y;
+		ai.target_z = pick_pos->z;
 		change_job_status(ai, name, "Traveling to digging tool");
-		ai.current_tool = pick.id;
+		ai.current_tool = pick;
 		return;
 	}
 
@@ -493,22 +494,23 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 	//std::cout << name.first_name << ": " << ai.job_status << "\n";
 
 	if (ai.job_type_minor == JM_FIND_AXE) {
-		inventory_item_t axe = claim_closest_item_by_category(TOOL_CHOPPING, pos);
-		if (!axe.pos) {
+		auto axe = claim_closest_item_by_category(TOOL_CHOPPING, pos);
+		if (axe>0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available axe");
 			return;
 		}
-		ai.current_path = find_path(pos, axe.pos.get());
+		position_t * axe_pos = get_item_location(axe);
+		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available axe");
 			return;
 		}
 		ai.job_type_minor = JM_GO_TO_AXE;
-		ai.target_x = axe.pos.get().x;
-		ai.target_y = axe.pos.get().y;
-		ai.target_z = axe.pos.get().z;
+		ai.target_x = axe_pos->x;
+		ai.target_y = axe_pos->y;
+		ai.target_z = axe_pos->z;
 		change_job_status(ai, name, "Traveling to chopping tool");
-		ai.current_tool = axe.id;
+		ai.current_tool = axe;
 		return;
 	}
 
@@ -657,7 +659,8 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			if (!component.second) {
 				has_components = false;
 				ai.current_tool = component.first;
-				ai.current_path = find_path(pos, get_item_location(ai.current_tool));
+				position_t * item_loc = get_item_location(ai.current_tool);
+				ai.current_path = find_path(pos, *item_loc);
 				if (ai.current_path->success) {
 					component.second = true;
 					ai.job_type_minor = JM_GO_TO_COMPONENT;
@@ -792,7 +795,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 			if (!component.second) {
 				has_components = false;
 				ai.current_tool = component.first;
-				ai.current_path = find_path(pos, get_item_location(ai.current_tool));
+				ai.current_path = find_path(pos, *get_item_location(ai.current_tool));
 				if (ai.current_path->success) {
 					component.second = true;
 					ai.job_type_minor = JM_GO_TO_INPUT;
@@ -897,22 +900,23 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_FIND_MELEE_WEAPON) {
-		inventory_item_t axe = claim_closest_item_by_category(WEAPON_MELEE, pos);
-		if (!axe.pos) {
+		auto axe = claim_closest_item_by_category(WEAPON_MELEE, pos);
+		if (axe==0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available melee weapon");
 			return;
 		}
-		ai.current_path = find_path(pos, axe.pos.get());
+		position_t * axe_pos = get_item_location(axe);
+		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available melee weapon");
 			return;
 		}
 		ai.job_type_minor = JM_GO_TO_MELEE_WEAPON;
-		ai.target_x = axe.pos.get().x;
-		ai.target_y = axe.pos.get().y;
-		ai.target_z = axe.pos.get().z;
+		ai.target_x = axe_pos->x;
+		ai.target_y = axe_pos->y;
+		ai.target_z = axe_pos->z;
 		change_job_status(ai, name, "Traveling to melee weapon");
-		ai.current_tool = axe.id;
+		ai.current_tool = axe;
 		return;
 	}
 
