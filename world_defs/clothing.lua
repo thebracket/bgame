@@ -17,6 +17,12 @@ clothing = {
 		colors = {"black"},
 		description = "Clip on, prosthetic cat ears (not made from a real cat)."
 	},
+	tiara = {
+		name = "Tiara",
+		slot = "head",
+		colors = {"black"},
+		description = "Plastic tiara, perfect for your wannabe princess."
+	},
 	formal_shirt = {
 		name = "Formal Shirt",
 		slot = "torso",
