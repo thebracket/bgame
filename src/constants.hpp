@@ -2,4 +2,4 @@
 
 #include <string>
 
-const std::string VERSION = "Version 1.0.0a";
+const std::string VERSION = "Version 0.0.10a";
