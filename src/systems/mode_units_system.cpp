@@ -69,7 +69,7 @@ void mode_units_system::update(const double ms) {
         term(1)->print(box_left+2, box_top+3, "Settlers", WHITE, BLACK);
 
         int y = box_top + 6;
-        each<settler_ai_t, name_t, game_stats_t>([this, &y, &terminal_x, &terminal_y] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
+        each<settler_ai_t, name_t, game_stats_t>([this, &y, &terminal_x, &terminal_y, &box_left] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
             color_t background = BLACK;
 
             if (terminal_y == y && terminal_x > 21) {
@@ -132,7 +132,7 @@ void mode_units_system::update(const double ms) {
 
         int y = box_top + 6;
 
-        each<grazer_ai, name_t, species_t>([&y,&terminal_x,&terminal_y] (entity_t &e, grazer_ai &ai, name_t &name, species_t &species) {
+        each<grazer_ai, name_t, species_t>([&y,&terminal_x,&terminal_y, &box_left] (entity_t &e, grazer_ai &ai, name_t &name, species_t &species) {
             color_t background = BLACK;
 
             if (terminal_y == y && terminal_x > 21) {

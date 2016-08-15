@@ -6,7 +6,7 @@
 
 using namespace rltk;
 
-constexpr short stat_modifier(const short &stat)
+inline short stat_modifier(const short &stat)
 {
 	if (stat == 1)
 		return -5;

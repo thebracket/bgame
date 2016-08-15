@@ -76,8 +76,8 @@ boost::optional<std::unordered_map<uint8_t, double>> biome_membership(planet_t &
 	return percents;
 }
 
-std::vector<const std::pair<double,std::size_t>> find_possible_biomes(std::unordered_map<uint8_t, double> &percents, const biome_t &biome) {
-	std::vector<const std::pair<double,std::size_t>> result;
+std::vector<std::pair<double,std::size_t>> find_possible_biomes(std::unordered_map<uint8_t, double> &percents, const biome_t &biome) {
+	std::vector<std::pair<double,std::size_t>> result;
 
 	std::size_t idx = 0;
 	for (const biome_type_t &bt : biome_defs) {

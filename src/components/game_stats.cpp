@@ -185,7 +185,7 @@ void gain_skill_from_success(game_stats_t &stats, const std::string &skill, cons
 			}
 		}
 	} else {
-		stats.skills[skill] = skill_t{ 1, difficulty };
+		stats.skills[skill] = skill_t{ 1, static_cast<uint16_t>(difficulty) };
 	}
 }
 

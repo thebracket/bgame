@@ -49,6 +49,18 @@
     <Filter Include="Source Files\raws">
       <UniqueIdentifier>{79fb0aef-8ab6-494f-88fc-682823ddf16e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{c16f30c9-6bde-407f-a570-bb8ef7466d93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{199e3d6f-20c7-43fe-a2b3-e2741da74046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\planet\builder">
+      <UniqueIdentifier>{b0ce4ec9-59f3-40cb-b938-d67f1c7b4bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\planet\builder">
+      <UniqueIdentifier>{2acad772-a365-4a76-aa38-6155272be51a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -192,6 +204,147 @@
     <ClInclude Include="..\src\components\name.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\building.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\construct_container.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\construct_power.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\construct_provides_sleep.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\designations.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\game_stats.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\grazer_ai.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\health.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\item.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\item_carried.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\item_stored.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\lightsource.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\settler_ai.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\species.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\viewshed.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\wildlife_group.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\camera_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\damage_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\inventory_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\lighting_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\mining_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\mode_rogue_render_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\mode_rogue_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\mode_units_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\movement_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\panel_render_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\path_finding.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\power_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\renderables_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\settler_ai_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\topology_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\visibility_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\wildlife_population_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\workflow_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utils\bitset8.hpp">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utils\octree.hpp">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utils\string_utils.hpp">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\raws\health_factory.hpp">
+      <Filter>Header Files\raws</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\raws\lua_bridge.hpp">
+      <Filter>Header Files\raws</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\biome_builder.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\map_builder.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\noise_helper.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\region_builder.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\settler_builder.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\constants.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\tile.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\rexspeeder.hpp">
+      <Filter>Header Files\rltk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -240,9 +393,6 @@
       <Filter>Source Files\boost</Filter>
     </ClCompile>
     <ClCompile Include="..\src\rltk\rltk\color_t.cpp">
-      <Filter>Source Files\rltk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\rltk\rltk\ecs\ecs.cpp">
       <Filter>Source Files\rltk</Filter>
     </ClCompile>
     <ClCompile Include="..\src\rltk\rltk\font_manager.cpp">
@@ -304,6 +454,99 @@
     </ClCompile>
     <ClCompile Include="..\src\raws\raws.cpp">
       <Filter>Source Files\raws</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\ecs.cpp">
+      <Filter>Source Files\rltk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\building.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\calendar.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\game_stats.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\camera_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\damage_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\inventory_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\lighting_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\mining_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\mode_rogue_render_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\mode_rogue_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\mode_units_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\movement_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\panel_render_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\path_finding.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\power_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\renderables_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\settler_ai_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\topology_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\visibility_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\wildlife_population_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\workflow_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utils\octree.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utils\string_utils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\raws\health_factory.cpp">
+      <Filter>Source Files\raws</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\raws\lua_bridge.cpp">
+      <Filter>Source Files\raws</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\builder\biome_builder.cpp">
+      <Filter>Source Files\planet\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\builder\map_builder.cpp">
+      <Filter>Source Files\planet\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\builder\region_builder.cpp">
+      <Filter>Source Files\planet\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\builder\settler_builder.cpp">
+      <Filter>Source Files\planet\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rltk\rltk\rexspeeder.cpp">
+      <Filter>Source Files\rltk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

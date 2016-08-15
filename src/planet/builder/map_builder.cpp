@@ -8,7 +8,7 @@ void planet_zero_fill(planet_t &planet) {
 	set_worldgen_status("Building initial ball of mud");
 
 	planet.landblocks.resize(WORLD_HEIGHT * WORLD_WIDTH);
-	std::fill(planet.landblocks.begin(), planet.landblocks.end(), block_t{0,0});
+	std::fill(planet.landblocks.begin(), planet.landblocks.end(), block_t{});
 }
 
 perlin_noise planet_noise_map(planet_t &planet, const int &perlin_seed) {
