@@ -15,6 +15,7 @@ struct item_t {
 	item_type_t type;
 	std::size_t material;
 	bool claimed = false;
+	int stack_size = 1;
 
 	item_t() {}
 	item_t(const std::string name) : item_tag(name), type(CLOTHING) {
@@ -32,8 +33,9 @@ struct item_t {
 			}
 		}
 	}
-	item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats, const std::size_t mat) : 
-		item_name(name), item_tag(tag), category(cats), type(ITEM), material(mat) {}
+	item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats, 
+		const std::size_t mat, int stack=1) : 
+		item_name(name), item_tag(tag), category(cats), type(ITEM), material(mat), stack_size(stack) {}
 
 	std::size_t serialization_identity = 9;
 
@@ -44,6 +46,7 @@ struct item_t {
 		serialize(lbfile, type);
 		serialize(lbfile, material);
 		serialize(lbfile, claimed);
+		serialize(lbfile, stack_size);
 	}
 
 	static item_t load(std::istream &lbfile) {
@@ -54,6 +57,7 @@ struct item_t {
 		deserialize(lbfile, c.type);
 		deserialize(lbfile, c.material);
 		deserialize(lbfile, c.claimed);
+		deserialize(lbfile, c.stack_size);
 		return c;
 	}
 };

@@ -263,6 +263,24 @@ reactions = {
         difficulty = 7,
         automatic = false
     },
+    make_atlatl = {
+        name = "Make Atlatl",
+        workshop = "carpenter",
+        inputs = { { item="wood_plank", qty=1 } },
+        outputs = { { item="atlatl", qty=1 } },
+        skill = "Carpentry",
+        difficulty = 15,
+        automatic = false
+    },
+    make_wood_dart= {
+        name = "Make Wooden Dart",
+        workshop = "carpenter",
+        inputs = { { item="wood_plank", qty=1 } },
+        outputs = { { item="wood_dart", qty=1 } },
+        skill = "Carpentry",
+        difficulty = 12,
+        automatic = false
+    },
     make_stone_club = {
         name = "Make Stone Club",
         workshop = "mason",

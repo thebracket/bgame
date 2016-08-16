@@ -12,7 +12,7 @@ creatures = {
             armor_class = 13,
             attacks = { bite1 = { type="bite", hit_bonus=2, n_dice=1, die_type=4, die_mod=0 } }
         },
-        hunting_yield = { meat=4, hide=4 },
+        hunting_yield = { meat=4, hide=4, bone=2, skull=1 },
         ai = "grazer",
         glyph = glyphs['d'], color=colors['wood_brown'],
         hp_n = 1, hp_dice = 10, hp_mod = 0,

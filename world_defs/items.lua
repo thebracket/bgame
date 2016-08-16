@@ -343,6 +343,24 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str"
 	},
+	atlatl = {
+		name = "Atlatl",
+		description = "A curved piece of wood used to launch darts at high velocity",
+		itemtype = {"weapon-ranged"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black'],
+		damage_mod=0, damage_stat="str", range=6, ammo="dart"
+	},
+	wood_dart = {
+		name = "Wooden Dart",
+		description = "A simple wooden dart",
+		itemtype = {"ammo-dart"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, stack_size=20
+	},
 	axe_blade = {
 		name = "Axe Blade",
 		description = "An axe blade",

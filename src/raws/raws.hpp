@@ -73,6 +73,8 @@ struct item_def_t {
 	rltk::color_t bg;
 	int damage_n=0, damage_d=0, damage_mod=0;
 	int range = 0;
+	std::string ammo;
+	int stack_size = 1;
 };
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 

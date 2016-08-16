@@ -192,6 +192,9 @@ void read_items(std::ofstream &tech_tree_file) {
             if (field == "damage_n") c.damage_n = lua_tonumber(lua_state, -1);
             if (field == "damage_d") c.damage_d = lua_tonumber(lua_state, -1);
             if (field == "damage_mod") c.damage_mod = lua_tonumber(lua_state, -1);
+            if (field == "ammo") c.ammo = lua_tostring(lua_state, -1);
+            if (field == "range") c.range = lua_tonumber(lua_state, -1);
+            if (field == "stack_size") c.stack_size = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }
@@ -844,7 +847,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     auto item = create_entity()
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories, material});
+        ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material) {
@@ -854,5 +857,5 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
     auto item = create_entity()
         ->assign(item_stored_t{ container_id })
         ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories, material});
+        ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
