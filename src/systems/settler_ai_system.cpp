@@ -32,6 +32,14 @@ bool settler_ai_system::has_melee_weapon(const entity_t &entity) const {
 	return has_weapon;
 }
 
+bool settler_ai_system::has_ranged_weapon(const entity_t &entity) const {
+	bool has_weapon = false;
+	each<item_carried_t>([&entity, &has_weapon] (entity_t &E, item_carried_t &item) {
+		if (item.carried_by == entity.id && item.location == EQUIP_RANGED) has_weapon = true;
+	});
+	return has_weapon;
+}
+
 void settler_ai_system::configure() {
 	system_name = "Settler AI";
 	subscribe<tick_message>([this](tick_message &msg) {
@@ -321,6 +329,17 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
+		// If we don't have a ranged weapon, and one is available, equip it
+		if (is_item_category_available(WEAPON_RANGED) && has_ranged_weapon(entity)==false) {
+			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
+			ai.job_type_major = JOB_EQUIP_RANGED;
+			ai.job_type_minor = JM_FIND_RANGED_WEAPON;
+			change_job_status(ai, name, "Finding a ranged weapon.");
+			return;
+		}
+
+		// TODO: Equip ammunition
+
 		// If we don't have a melee weapon, and one is available, equip it
 		if (is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
@@ -344,6 +363,8 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_EQUIP_MELEE) {
 		do_equip_melee(entity, ai, stats, species, pos, name);
+	} else if (ai.job_type_major == JOB_EQUIP_RANGED) {
+		do_equip_ranged(entity, ai, stats, species, pos, name);
 	}
 	//wander_randomly(entity, pos);
 }
@@ -939,6 +960,53 @@ void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats
 	if (ai.job_type_minor == JM_COLLECT_MELEE_WEAPON) {
 		// Find the pick, remove any position or stored components, add a carried_by component
 		emit(pickup_item_message{ai.current_tool, e.id, EQUIP_MELEE});
+		ai.current_tool = 0;
+
+		become_idle(e, ai, name);
+		return;
+	}	
+}
+
+void settler_ai_system::do_equip_ranged(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_FIND_RANGED_WEAPON) {
+		auto axe = claim_closest_item_by_category(WEAPON_RANGED, pos);
+		if (axe==0) {
+			cancel_action(e, ai, stats, species, pos, name, "No available ranged weapon");
+			return;
+		}
+		position_t * axe_pos = get_item_location(axe);
+		ai.current_path = find_path(pos, *axe_pos);
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to available ranged weapon");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_RANGED_WEAPON;
+		ai.target_x = axe_pos->x;
+		ai.target_y = axe_pos->y;
+		ai.target_z = axe_pos->z;
+		change_job_status(ai, name, "Traveling to ranged weapon");
+		ai.current_tool = axe;
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_RANGED_WEAPON) {
+		if (pos == ai.current_path->destination) {
+			// We're at the axe
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_RANGED_WEAPON;
+			change_job_status(ai, name, "Collect ranged weapon");
+			return;
+		}
+		// Travel to axe
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_RANGED_WEAPON) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		emit(pickup_item_message{ai.current_tool, e.id, EQUIP_RANGED});
 		ai.current_tool = 0;
 
 		become_idle(e, ai, name);

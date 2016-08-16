@@ -186,6 +186,7 @@ void read_items(std::ofstream &tech_tree_file) {
                     if (type == "tool-digging") c.categories.set(TOOL_DIGGING);
                     if (type == "weapon-melee") c.categories.set(WEAPON_MELEE);
                     if (type == "weapon-ranged") c.categories.set(WEAPON_RANGED);
+                    if (type == "ammo") c.categories.set(WEAPON_AMMO);
                     lua_pop(lua_state, 1);
                 }
             }

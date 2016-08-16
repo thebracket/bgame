@@ -56,12 +56,13 @@ struct profession_t {
 	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
 };
 
-constexpr int NUMBER_OF_ITEM_CATEGORIES = 5;
+constexpr int NUMBER_OF_ITEM_CATEGORIES = 6;
 constexpr int COMPONENT = 0;
 constexpr int TOOL_CHOPPING = 1;
 constexpr int TOOL_DIGGING = 2;
 constexpr int WEAPON_MELEE = 3;
 constexpr int WEAPON_RANGED = 4;
+constexpr int WEAPON_AMMO = 5;
 
 struct item_def_t {
 	std::string tag = "";
