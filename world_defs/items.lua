@@ -359,7 +359,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, stack_size=20
+		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="dart"
 	},
 	axe_blade = {
 		name = "Axe Blade",

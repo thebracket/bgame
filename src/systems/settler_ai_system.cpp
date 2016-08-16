@@ -349,6 +349,8 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
+		// TODO: Look for upgrades for equipment and clothing at some point
+
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
 		return;
