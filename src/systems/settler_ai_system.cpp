@@ -45,19 +45,24 @@ std::pair<bool, std::string> settler_ai_system::has_ranged_weapon(const entity_t
 	return std::make_pair(has_weapon, ammo_type);
 }
 
-bool settler_ai_system::has_appropriate_ammo(const entity_t &entity, const std::string ammo_type) const {
+bool settler_ai_system::has_appropriate_ammo(const entity_t &entity, const std::string ammo_type, const position_t &pos) const {
 	bool has_weapon = false;
-	each<item_carried_t, item_t>([&entity, &has_weapon, &ammo_type] (entity_t &E, item_carried_t &item, item_t &i) {
-		if (item.carried_by == entity.id && item.location == EQUIP_AMMO && 
-				item_defs.find(i.item_tag)->second.ammo == ammo_type) has_weapon = true;
+	each<item_carried_t, item_t>([&entity, &has_weapon, &ammo_type, &pos] (entity_t &E, item_carried_t &item, item_t &i) {
+		if (item.carried_by == entity.id && item.location == EQUIP_AMMO) { 
+			if (item_defs.find(i.item_tag)->second.ammo == ammo_type) {
+				has_weapon = true;
+			} else {
+				emit(drop_item_message{E.id, pos.x, pos.y, pos.z});
+			}
+		}
 	});
 	return has_weapon;
 }
 
-int settler_ai_system::shooting_range(const entity_t &entity) const {
+int settler_ai_system::shooting_range(const entity_t &entity, const position_t &pos) const {
 	int result = -1;
 	auto ranged_status = has_ranged_weapon(entity);
-	if (ranged_status.first && has_appropriate_ammo(entity, ranged_status.second)) {
+	if (ranged_status.first && has_appropriate_ammo(entity, ranged_status.second, pos)) {
 		each<item_carried_t, item_t>([&entity, &result] (entity_t &E, item_carried_t &item, item_t &i) {
 			if (item.carried_by == entity.id && item.location == EQUIP_RANGED) {
 				result = item_defs.find(i.item_tag)->second.range;
@@ -138,7 +143,7 @@ void settler_ai_system::configure() {
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						emit(settler_attack_message{entity.id, closest_fear});
-					} else if (shooting_range(entity) < terror_distance) {
+					} else if (shooting_range(entity, pos) < terror_distance) {
 						// Shoot it
 						emit(settler_ranged_attack_message{entity.id, closest_fear});
 					} else {
@@ -404,7 +409,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		}
 
 		// Likewise, search for ammo if available
-		bool has_ammo = has_appropriate_ammo(entity, ranged_status.second);
+		bool has_ammo = has_appropriate_ammo(entity, ranged_status.second, pos);
 		if (ranged_status.first && !has_ammo && is_ammo_available(ranged_status.second)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_AMMO;
@@ -1168,7 +1173,7 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 
 void settler_ai_system::do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	auto ranged_status = has_ranged_weapon(e);
-	bool has_ammo = has_appropriate_ammo(e, ranged_status.second);
+	bool has_ammo = has_appropriate_ammo(e, ranged_status.second, pos);
 	if (!ranged_status.first || !has_ammo) {
 		cancel_action(e, ai, stats, species, pos, name, "Out of ammo");
 		return;
