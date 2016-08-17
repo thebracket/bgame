@@ -170,3 +170,13 @@ void wildlife_population_system::update(const double ms) {
         first_run = false;
     }
 }
+
+std::map<int, position_t> get_hunting_candidates(position_t &hunter_pos) {
+    std::map<int, position_t> result;
+
+    each<grazer_ai, position_t>([&result, &hunter_pos] (entity_t &e, grazer_ai &ai, position_t &pos) {
+        result[distance3d_squared(hunter_pos.x, hunter_pos.y, hunter_pos.z, pos.x, pos.y, pos.z)] = pos;
+    });
+
+    return result;
+}

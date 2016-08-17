@@ -5,6 +5,7 @@
 #include "mining_system.hpp"
 #include "inventory_system.hpp"
 #include "workflow_system.hpp"
+#include "wildlife_population_system.hpp"
 #include <iostream>
 #include <map>
 
@@ -51,6 +52,19 @@ bool settler_ai_system::has_appropriate_ammo(const entity_t &entity, const std::
 				item_defs.find(i.item_tag)->second.ammo == ammo_type) has_weapon = true;
 	});
 	return has_weapon;
+}
+
+int settler_ai_system::shooting_range(const entity_t &entity) const {
+	int result = -1;
+	auto ranged_status = has_ranged_weapon(entity);
+	if (ranged_status.first && has_appropriate_ammo(entity, ranged_status.second)) {
+		each<item_carried_t, item_t>([&entity, &result] (entity_t &E, item_carried_t &item, item_t &i) {
+			if (item.carried_by == entity.id && item.location == EQUIP_RANGED) {
+				result = item_defs.find(i.item_tag)->second.range;
+			}
+		});
+	}
+	return result;
 }
 
 void settler_ai_system::configure() {
@@ -105,7 +119,15 @@ void settler_ai_system::configure() {
 				if (terrified) {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
-					emit(entity_wants_to_flee_message{entity.id, closest_fear});
+					if (terror_distance < 1.5F) {
+						// Hit it with melee weapon
+						emit(settler_attack_message{entity.id, closest_fear});
+					} else if (shooting_range(entity) < terror_distance) {
+						// Shoot it
+						emit(settler_ranged_attack_message{entity.id, closest_fear});
+					} else {
+						emit(entity_wants_to_flee_message{entity.id, closest_fear});
+					}
 				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
 					|| ai.job_type_major == JOB_REACTION) {
 						// If we have a job to do - keep doing it
@@ -352,11 +374,20 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
-		if (ranged_status.first && !has_appropriate_ammo(entity, ranged_status.second) && is_ammo_available(ranged_status.second)) {
+		bool has_ammo = has_appropriate_ammo(entity, ranged_status.second);
+		if (ranged_status.first && !has_ammo && is_ammo_available(ranged_status.second)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_AMMO;
 			ai.job_type_minor = JM_FIND_AMMO;
 			change_job_status(ai, name, "Finding ammunition.");
+			return;
+		}
+
+		if (ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
+			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
+			ai.job_type_major = JOB_HUNT;
+			ai.job_type_minor = JM_HUNT_FIND_TARGET;
+			change_job_status(ai, name, "Finding target to hunt.");
 			return;
 		}
 
@@ -389,6 +420,8 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		do_equip_ranged(entity, ai, stats, species, pos, name);
 	} else if (ai.job_type_major == JOB_EQUIP_AMMO) {
 		do_equip_ammo(entity, ai, stats, species, pos, name);
+	} else if (ai.job_type_major == JOB_HUNT) {
+		do_hunting(entity, ai, stats, species, pos, name);
 	}
 	//wander_randomly(entity, pos);
 }
@@ -1084,4 +1117,45 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 		become_idle(e, ai, name);
 		return;
 	}	
+}
+
+void settler_ai_system::do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_HUNT_FIND_TARGET) {
+		auto hunting_targets = get_hunting_candidates(pos);
+		if (hunting_targets.empty()) {
+			cancel_action(e, ai, stats, species, pos, name, "No huntable targets");
+			return;
+		}
+
+		ai.current_path.reset();
+		auto it = hunting_targets.begin();
+		while (it != hunting_targets.end() && !ai.current_path) {
+			ai.current_path = find_path(pos, it->second);
+			if (!ai.current_path) ++it;
+		}
+
+		if (ai.current_path) {
+			ai.target_x = ai.current_path->destination.x;
+			ai.target_y = ai.current_path->destination.y;
+			ai.target_z = ai.current_path->destination.z;
+			ai.job_type_minor = JM_HUNT;
+			ai.job_status = "Hunting";
+			return;
+		}
+	}
+
+	if (ai.job_type_minor == JM_HUNT) {
+		if (pos == ai.current_path->destination) {
+			// We're at the destination
+			ai.current_path.reset();
+			ai.job_type_minor = JM_HUNT_FIND_TARGET;
+			change_job_status(ai, name, "Finding hunting targets");
+			return;
+		}
+		// Travel to destination
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
 }
