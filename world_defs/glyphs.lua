@@ -1,4 +1,5 @@
 glyphs = {
+	happy_face = 1,
 	clubs = 5,
 	spades = 6,
 	small_circle = 7,

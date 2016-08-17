@@ -8,15 +8,17 @@
 
 using namespace rltk;
 
-constexpr int NUMBER_OF_JOB_CATEGORIES = 5;
+constexpr int NUMBER_OF_JOB_CATEGORIES = 7;
 constexpr int JOB_MINING = 0;
 constexpr int JOB_CHOPPING = 1;
 constexpr int JOB_CONSTRUCTION = 2;
 constexpr int JOB_CARPENTRY = 3;
 constexpr int JOB_MASONRY = 4;
+constexpr int JOB_HUNTING = 5;
+constexpr int JOB_BUTCHER = 6;
 
 enum job_major_t { JOB_IDLE, JOB_SLEEP, JOB_MINE, JOB_CHOP, JOB_CONST, JOB_REACTION, JOB_ROGUE_GOTO, JOB_EQUIP_MELEE, 
-		JOB_ROGUE_BASH, JOB_EQUIP_RANGED, JOB_EQUIP_AMMO, JOB_HUNT };
+		JOB_ROGUE_BASH, JOB_EQUIP_RANGED, JOB_EQUIP_AMMO, JOB_HUNT, JOB_BUTCHERING };
 enum job_minor_t { 
 	JM_NONE,
 	JM_FIND_BED, JM_GO_TO_BED, JM_SLEEP,				// Bed-time steps
@@ -27,7 +29,8 @@ enum job_minor_t {
 	JM_FIND_MELEE_WEAPON, JM_GO_TO_MELEE_WEAPON, JM_COLLECT_MELEE_WEAPON, // Equip a melee weapon
 	JM_FIND_RANGED_WEAPON, JM_GO_TO_RANGED_WEAPON, JM_COLLECT_RANGED_WEAPON, // Equip a ranged weapon
 	JM_FIND_AMMO, JM_GO_TO_AMMO, JM_COLLECT_AMMO, // Equip a ranged weapon
-	JM_HUNT_FIND_TARGET, JM_HUNT
+	JM_HUNT_FIND_TARGET, JM_HUNT, // Hunting
+	JM_BUTCHER_FIND_CORPSE, JM_BUTCHER_GO_TO_CORPSE, JM_BUTCHER_COLLECT_CORPSE, JM_BUTCHER_GO_TO_SHOP, JM_BUTCHER_CHOP // Butchering
 };
 
 struct settler_ai_t {

@@ -17,6 +17,15 @@ reactions = {
         difficulty = 10,
         automatic = true
     },
+    tan_leather = {
+        name = "Tan Leather",
+        workshop = "tanner",
+        inputs = { { item="hide", qty=1 } },
+        outputs = { { item="leather", qty=2 } },
+        skill = "Tanning",
+        difficulty = 10,
+        automatic = true
+    },
     make_raw_glass = {
         name = "Make Raw Glass",
         workshop = "glass_furnace",

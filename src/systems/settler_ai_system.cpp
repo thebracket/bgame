@@ -67,6 +67,22 @@ int settler_ai_system::shooting_range(const entity_t &entity) const {
 	return result;
 }
 
+bool settler_ai_system::butcher_and_corpses_exist() const {
+	bool butcher_exists = false;
+	bool corpses_exist = false;
+
+	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
+		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
+	});
+	if (butcher_exists) {
+		each<corpse_harvestable>([&corpses_exist] (entity_t &e, corpse_harvestable &corpse) {
+			if (!corpse.claimed) corpses_exist = true;
+		});
+	}
+
+	return (butcher_exists && corpses_exist);
+}
+
 void settler_ai_system::configure() {
 	system_name = "Settler AI";
 	subscribe<tick_message>([this](tick_message &msg) {
@@ -129,7 +145,7 @@ void settler_ai_system::configure() {
 						emit(entity_wants_to_flee_message{entity.id, closest_fear});
 					}
 				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
-					|| ai.job_type_major == JOB_REACTION) {
+					|| ai.job_type_major == JOB_REACTION || ai.job_type_major == JOB_BUTCHER) {
 						// If we have a job to do - keep doing it
 						this->do_work_time(entity, ai, stats, species, pos, name);
 				} else {
@@ -171,6 +187,14 @@ void settler_ai_system::change_settler_glyph(entity_t &e, const vchar &render_as
 }
 
 void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
+	if (ai.job_type_major == JOB_BUTCHERING && ai.targeted_hostile>0) {
+		entity_t * body = entity(ai.targeted_hostile);
+		if (body) {
+			corpse_harvestable * corpse = body->component<corpse_harvestable>();
+			if (corpse) corpse->claimed = false;
+		}
+	}
+
 	ai.job_type_major = JOB_IDLE;
 	ai.target_x = 0; 
 	ai.target_y = 0; 
@@ -383,11 +407,19 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
-		if (ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
+		if (ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
 			ai.job_type_major = JOB_HUNT;
 			ai.job_type_minor = JM_HUNT_FIND_TARGET;
 			change_job_status(ai, name, "Finding target to hunt.");
+			return;
+		}
+
+		if (ai.permitted_work[JOB_BUTCHER] && butcher_and_corpses_exist()) {
+			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
+			ai.job_type_major = JOB_BUTCHERING;
+			ai.job_type_minor = JM_BUTCHER_FIND_CORPSE;
+			change_job_status(ai, name, "Finding corpse to butcher.");
 			return;
 		}
 
@@ -416,14 +448,21 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_EQUIP_MELEE) {
 		do_equip_melee(entity, ai, stats, species, pos, name);
+		return;
 	} else if (ai.job_type_major == JOB_EQUIP_RANGED) {
 		do_equip_ranged(entity, ai, stats, species, pos, name);
+		return;
 	} else if (ai.job_type_major == JOB_EQUIP_AMMO) {
 		do_equip_ammo(entity, ai, stats, species, pos, name);
+		return;
 	} else if (ai.job_type_major == JOB_HUNT) {
 		do_hunting(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_BUTCHERING) {
+		do_butchering(entity, ai, stats, species, pos, name);
+		return;
 	}
-	//wander_randomly(entity, pos);
+	wander_randomly(entity, pos);
 }
 
 void settler_ai_system::change_job_status(settler_ai_t &ai, name_t &name, const std::string new_status) {
@@ -1156,6 +1195,97 @@ void settler_ai_system::do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &
 		position_t next_step = ai.current_path->steps.front();
 		move_to(e, pos, next_step);
 		ai.current_path->steps.pop_front();
+		return;
+	}
+}
+
+void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_BUTCHER_FIND_CORPSE) {
+		std::map<int, std::pair<std::size_t, position_t>> corpse_map;
+		each<corpse_harvestable, position_t>([&corpse_map, &pos] (entity_t &E, corpse_harvestable &corpse, position_t &cpos) {
+			if (!corpse.claimed) {
+				corpse_map[distance3d_squared(pos.x, pos.y, pos.z, cpos.x, cpos.y, cpos.z)] = std::make_pair(E.id, cpos);
+			}
+		});
+
+		ai.current_path.reset();
+		auto it = corpse_map.begin();
+		while (it != corpse_map.end() && !ai.current_path) {
+			ai.current_path = find_path(pos, it->second.second);
+			if (!ai.current_path) ++it;
+		}
+		if (!ai.current_path) {
+			cancel_action(e, ai, stats, species, pos, name, "No butcherable targets");
+			return;
+		} else {
+			ai.job_type_minor = JM_BUTCHER_GO_TO_CORPSE;
+			ai.job_status = "Travel to corpse";
+			entity(it->second.first)->component<corpse_harvestable>()->claimed = true;
+			ai.targeted_hostile = it->second.first;
+			return;
+		}		
+	}
+
+	if (ai.job_type_minor == JM_BUTCHER_GO_TO_CORPSE) {
+		if (pos == ai.current_path->destination) {
+			// We're at the destination
+			ai.current_path.reset();
+			ai.job_type_minor = JM_BUTCHER_COLLECT_CORPSE;
+			change_job_status(ai, name, "Collecting corpse");
+			return;
+		}
+		// Travel to destination
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_BUTCHER_COLLECT_CORPSE) {
+		ai.job_type_minor = JM_BUTCHER_GO_TO_SHOP;
+		ai.job_status = "Carrying corpse to butcher";
+		position_t butcher_pos;
+		each<building_t, position_t>([&butcher_pos] (entity_t &E, building_t &b, position_t &p) {
+			if (b.complete == true && b.tag == "butcher") butcher_pos = p;
+		});
+		ai.current_path = find_path(pos, butcher_pos);
+		if (!ai.current_path) {
+			cancel_action(e, ai, stats, species, pos, name, "Unable to find butcher shop");
+			return;
+		}
+		return;
+	}
+
+	if (ai.job_type_minor == JM_BUTCHER_GO_TO_SHOP) {
+		if (pos == ai.current_path->destination) {
+			// We're at the destination
+			ai.current_path.reset();
+			ai.job_type_minor = JM_BUTCHER_CHOP;
+			change_job_status(ai, name, "Butchering corpse");
+			return;
+		}
+		// Travel to destination
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		entity(ai.targeted_hostile)->component<position_t>()->x = next_step.x;
+		entity(ai.targeted_hostile)->component<position_t>()->y = next_step.y;
+		entity(ai.targeted_hostile)->component<position_t>()->z = next_step.z;
+		return;
+	}
+
+	if (ai.job_type_minor == JM_CHOP) {
+		corpse_harvestable * corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
+		auto finder = creature_defs.find(corpse->creature_tag);
+		if (finder != creature_defs.end()) {
+			for (int i=0; i<finder->second.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", 0);
+			for (int i=0; i<finder->second.yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", 0);
+			for (int i=0; i<finder->second.yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", 0);
+			for (int i=0; i<finder->second.yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", 0);
+		}
+
+		delete_entity(ai.targeted_hostile); // Destroy the corpse
+		become_idle(e, ai, name);
 		return;
 	}
 }

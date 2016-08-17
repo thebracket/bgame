@@ -408,5 +408,46 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black']
+	},
+
+	bone = {
+		name = "Bone",
+		description = "Bones",
+		itemtype = {"component"},
+		glyph = glyphs['single_wall_ew'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
+	hide = {
+		name = "Hide",
+		description = "Untanned Hide",
+		itemtype = {"component"},
+		glyph = glyphs['single_wall_ew'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
+	},
+	meat = {
+		name = "Meat",
+		description = "Raw Meat",
+		itemtype = {"component"},
+		glyph = glyphs['single_wall_ew'],
+		foreground = colors['red'],
+		background = colors['black']
+	},
+	skull = {
+		name = "Skull",
+		description = "A skull",
+		itemtype = {"component"},
+		glyph = glyphs['happy_face'],
+		foreground = colors['white'],
+		background = colors['black']
+	},
+	leather = {
+		name = "Leather",
+		description = "Tanned leather, ready to make into something useful",
+		itemtype = {"component"},
+		glyph = glyphs['single_wall_ew'],
+		foreground = colors['wood_brown'],
+		background = colors['black']
 	}
 }

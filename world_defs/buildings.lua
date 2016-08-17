@@ -109,6 +109,20 @@ buildings = {
 		render_rex = "sawmill.xp"
 	},
 
+	butcher = {
+		name = "Butcher",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "butchershop.xp"
+	},
+
+	tanner = {
+		name = "Tanner",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "tanner.xp"
+	},
+
 	stonecutter = {
 		name = "Stonecutters",
 		components = { "stone_boulder" },
