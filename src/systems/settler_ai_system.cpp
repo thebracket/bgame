@@ -407,19 +407,19 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
-		if (ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
-			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
-			ai.job_type_major = JOB_HUNT;
-			ai.job_type_minor = JM_HUNT_FIND_TARGET;
-			change_job_status(ai, name, "Finding target to hunt.");
-			return;
-		}
-
 		if (ai.permitted_work[JOB_BUTCHER] && butcher_and_corpses_exist()) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
 			ai.job_type_major = JOB_BUTCHERING;
 			ai.job_type_minor = JM_BUTCHER_FIND_CORPSE;
 			change_job_status(ai, name, "Finding corpse to butcher.");
+			return;
+		}
+
+		if (ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
+			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
+			ai.job_type_major = JOB_HUNT;
+			ai.job_type_minor = JM_HUNT_FIND_TARGET;
+			change_job_status(ai, name, "Finding target to hunt.");
 			return;
 		}
 
@@ -1274,14 +1274,17 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 		return;
 	}
 
-	if (ai.job_type_minor == JM_CHOP) {
+	if (ai.job_type_minor == JM_BUTCHER_CHOP) {
 		corpse_harvestable * corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
+		auto mat_finder = material_defs_idx.find("organic");
+		const std::size_t organic_idx = mat_finder->second;
+
 		auto finder = creature_defs.find(corpse->creature_tag);
 		if (finder != creature_defs.end()) {
-			for (int i=0; i<finder->second.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", 0);
-			for (int i=0; i<finder->second.yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", 0);
-			for (int i=0; i<finder->second.yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", 0);
-			for (int i=0; i<finder->second.yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", 0);
+			for (int i=0; i<finder->second.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
+			for (int i=0; i<finder->second.yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
+			for (int i=0; i<finder->second.yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", organic_idx);
+			for (int i=0; i<finder->second.yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
 		}
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
