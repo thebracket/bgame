@@ -189,7 +189,7 @@ void damage_system::update(const double ms) {
                     std::cout << name->first_name << " is unconscious!\n";
                 } else {
                     std::cout << name->first_name << " is dead!\n";
-                    emit(entity_slain_message{msg.victim});
+                    emit(entity_slain_message{msg.victim, msg.damage_type});
                 }
             }
 
@@ -213,13 +213,13 @@ void damage_system::update(const double ms) {
                         h->unconscious = true;
                     } else if (hit_part->part == "head" && hit_part->current_hitpoints < -9) {
                         std::cout << " - head trauma results in instant death!\n";
-                        emit(entity_slain_message{msg.victim});
+                        emit(entity_slain_message{msg.victim, msg.damage_type});
                     } else if (hit_part->current_hitpoints > -10) {
                         std::cout << " - the victim passes out from " << hit_part->part << " trauma.\n";
                         h->unconscious = true;
                     } else {
                         std::cout << " - the victim dies of " << hit_part->part << " trauma.\n";
-                        emit(entity_slain_message{msg.victim});
+                        emit(entity_slain_message{msg.victim, msg.damage_type});
                     }
                 }
             }
@@ -253,7 +253,7 @@ void damage_system::update(const double ms) {
                 ->assign(position_t{ pos->x, pos->y, pos->z })
                 ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
-                ->assign(corpse_settler{});
+                ->assign(corpse_settler{msg.cause_of_death});
         } else {
             // It's something else that died.
             std::string tag = "";

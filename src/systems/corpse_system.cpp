@@ -13,7 +13,7 @@ void corpse_system::configure() {
                 // TODO: Emit decomposition
             }
             if (corpse.ticks_since_death > 10000) {
-                to_destroy.push_back(e.id);
+                // TODO: Haunt someone!
             }
         });
         each<corpse_harvestable>([&to_destroy] (entity_t &e, corpse_harvestable &corpse) {
