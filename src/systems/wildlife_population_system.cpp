@@ -14,6 +14,7 @@ void wildlife_population_system::wander_randomly(entity_t &entity, position_t &o
 
 void wildlife_population_system::configure() {
     system_name = "Wildlife Spawner";
+    subscribe_mbox<hour_elapsed_message>();
     subscribe<tick_message>([this](tick_message &msg) {
         each<grazer_ai, position_t, viewshed_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos, viewshed_t &view) {
             if (ai.initiative < 1) {
@@ -168,6 +169,15 @@ void wildlife_population_system::update(const double ms) {
         spawn_wildlife();
 
         first_run = false;
+    }
+
+    std::queue<hour_elapsed_message> * hour = mbox<hour_elapsed_message>();
+	while (!hour->empty()) {
+        hour_elapsed_message msg = hour->front();
+        hour->pop();
+
+        count_wildlife_populations();
+        spawn_wildlife();
     }
 }
 

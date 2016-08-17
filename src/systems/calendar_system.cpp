@@ -25,8 +25,10 @@ void calendar_system::update(const double duration_ms) {
 		if (time_count > MS_PER_TICK) {
 			time_count = 0.0;
 
+			auto hour = calendar->hour;
 			calendar->next_minute();
 			emit(tick_message{});
+			if (calendar->hour != hour) emit(hour_elapsed_message{});
 
 			if (pause_mode == ONE_STEP) {
 				pause_mode = PAUSED;

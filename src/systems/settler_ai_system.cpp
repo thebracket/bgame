@@ -294,6 +294,11 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 			render->glyph = 'Z';
 		}
 
+		health_t * health = entity.component<health_t>();
+		if (health && health->current_hitpoints < health->max_hitpoints && rng.roll_dice(1,20) + stat_modifier(stats.constitution) > 12) {
+			++health->current_hitpoints;
+		}
+
 		emit(renderables_changed_message{});
 	}
 }
@@ -398,6 +403,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
+		// Likewise, search for ammo if available
 		bool has_ammo = has_appropriate_ammo(entity, ranged_status.second);
 		if (ranged_status.first && !has_ammo && is_ammo_available(ranged_status.second)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
@@ -407,6 +413,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
+		// Butcher corpses
 		if (ai.permitted_work[JOB_BUTCHER] && butcher_and_corpses_exist()) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
 			ai.job_type_major = JOB_BUTCHERING;
@@ -415,6 +422,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
+		// Hunt
 		if (ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
 			ai.job_type_major = JOB_HUNT;

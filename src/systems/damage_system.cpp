@@ -272,4 +272,14 @@ void damage_system::update(const double ms) {
         entity_octree.remove_node(octree_location_t{pos->x, pos->y, pos->z, msg.victim});
         delete_entity(msg.victim);
     }
+
+    std::queue<hour_elapsed_message> * hour = mbox<hour_elapsed_message>();
+	while (!hour->empty()) {
+        hour_elapsed_message msg = hour->front();
+        hour->pop();
+
+        each<health_t>([] (entity_t &e, health_t &h) {
+            if (h.max_hitpoints > h.current_hitpoints) ++h.current_hitpoints;
+        });
+    }
 }
