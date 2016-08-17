@@ -26,5 +26,7 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 19  : entity(entity_id)->assign(lightsource_t::load(lbfile)); break;
 		case 20  : entity(entity_id)->assign(grazer_ai::load(lbfile)); break;
 		case 21  : entity(entity_id)->assign(wildlife_group::load(lbfile)); break;
+		case 22  : entity(entity_id)->assign(corpse_settler::load(lbfile)); break;
+		case 23  : entity(entity_id)->assign(corpse_harvestable::load(lbfile)); break;
 	}
 }

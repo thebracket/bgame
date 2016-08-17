@@ -754,6 +754,8 @@ void read_creature_types(std::ofstream &tech_tree_file) {
                     int value = lua_tonumber(lua_state, -1);
                     if (yield_type == "meat") s.yield_meat = value;
                     if (yield_type == "hide") s.yield_hide = value;
+                    if (yield_type == "bone") s.yield_bone = value;
+                    if (yield_type == "skull") s.yield_skull = value;
                     lua_pop(lua_state, 1);
                 }
             }

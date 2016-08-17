@@ -197,8 +197,10 @@ struct raw_creature_t {
 	std::vector<std::tuple<std::string, int, int>> body_parts;
 	int armor_class;
 	std::vector<creature_attack_t> attacks;
-	int yield_hide;
-	int yield_meat;
+	int yield_hide=0;
+	int yield_meat=0;
+	int yield_bone=0;
+	int yield_skull=0;
 	creature_ai_t ai;
 	uint8_t glyph;
 	rltk::color_t fg;

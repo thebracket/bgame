@@ -19,3 +19,4 @@
 #include "mode_units_system.hpp"
 #include "mode_rogue_system.hpp"
 #include "mode_rogue_render_system.hpp"
+#include "corpse_system.hpp"

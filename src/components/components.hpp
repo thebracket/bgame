@@ -21,3 +21,5 @@
 #include "lightsource.hpp"
 #include "grazer_ai.hpp"
 #include "wildlife_group.hpp"
+#include "corpse_settler.hpp"
+#include "corpse_harvestable.hpp"

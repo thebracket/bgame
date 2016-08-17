@@ -59,6 +59,7 @@ add_executable(bgame main.cpp
 	systems/mode_units_system.cpp
 	systems/mode_rogue_system.cpp
 	systems/mode_rogue_render_system.cpp
+	systems/corpse_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

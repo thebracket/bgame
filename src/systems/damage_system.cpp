@@ -61,6 +61,7 @@ void damage_system::update(const double ms) {
                 --ammo_component->stack_size;
                 if (ammo_component->stack_size < 1) delete_entity(ammo_id);
             }
+            // TODO: Emit a special effect!
         }
 
         ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";
@@ -247,11 +248,24 @@ void damage_system::update(const double ms) {
         // Spawn a body
         if (victim->component<settler_ai_t>() != nullptr) {
             // It's a dead settler, we create a special item
+            name_t * name = victim->component<name_t>();
             auto corpse = create_entity()
                 ->assign(position_t{ pos->x, pos->y, pos->z })
-                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED });
+                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
+                ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
+                ->assign(corpse_settler{});
         } else {
-            // TODO: Normal corpses!
+            // It's something else that died.
+            std::string tag = "";
+            species_t * species = victim->component<species_t>();
+            if (species) tag = species->tag;
+            renderable_t * old_render = victim->component<renderable_t>();
+            if (old_render && tag != "") {
+                auto corpse = create_entity()
+                    ->assign(position_t{ pos->x, pos->y, pos->z })
+                    ->assign(renderable_t{ old_render->glyph, rltk::colors::GREY, rltk::colors::BLACK })
+                    ->assign(corpse_harvestable{tag});
+            }
         }
 
         // Remove the entity
