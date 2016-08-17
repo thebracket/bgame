@@ -13,7 +13,8 @@ private:
 	void wander_randomly(entity_t &entity, position_t &pos);
 
 	bool has_melee_weapon(const entity_t &entity) const;
-	bool has_ranged_weapon(const entity_t &entity) const;
+	std::pair<bool, std::string> has_ranged_weapon(const entity_t &entity) const;
+	bool has_appropriate_ammo(const entity_t &entity, const std::string ammo_type) const;
 
 	void change_settler_glyph(entity_t &entity, const vchar &render_as);
 	void become_idle(entity_t &e, settler_ai_t &ai, name_t &name);
@@ -32,4 +33,5 @@ private:
 	void do_reaction(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 	void do_equip_melee(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 	void do_equip_ranged(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
+	void do_equip_ammo(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 };

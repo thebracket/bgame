@@ -108,12 +108,42 @@ bool is_item_category_available(const int &category) {
 	return (item_category_available(category)>0);
 }
 
+bool is_ammo_available(const std::string &ammo_type) {
+	int result = 0;
+	each<item_t>([&result, &ammo_type] (entity_t &e, item_t &i) {
+		if (i.category.test(WEAPON_AMMO) && i.claimed == false && item_defs.find(i.item_tag)->second.ammo == ammo_type) ++result;
+	});
+	return (result > 0);
+}
+
 std::size_t claim_closest_item_by_category(const int &category, position_t &pos) {
 	// We're taking advantage of map being sorted to find the closest here
 	std::map<float, std::size_t> distance_sorted; 
 
 	each<item_t>([&distance_sorted, &category, &pos] (entity_t &e, item_t &i) {
 		if (i.category.test(category) && i.claimed==false) {
+			position_t * p = get_item_location(e.id);
+			if (p) {
+				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
+				distance_sorted[distance] = e.id;
+			}
+		}
+	});
+
+	if (distance_sorted.empty()) return 0;
+
+	std::size_t closest_matching_id = distance_sorted.begin()->second;
+	emit(item_claimed_message{closest_matching_id, true});
+
+	return closest_matching_id;
+}
+
+std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::string &ammo_type) {
+	// We're taking advantage of map being sorted to find the closest here
+	std::map<float, std::size_t> distance_sorted; 
+
+	each<item_t>([&distance_sorted, &category, &pos, &ammo_type] (entity_t &e, item_t &i) {
+		if (i.category.test(category) && i.claimed==false && item_defs.find(i.item_tag)->second.ammo == ammo_type) {
 			position_t * p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
