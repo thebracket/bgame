@@ -1167,6 +1167,13 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 }
 
 void settler_ai_system::do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	auto ranged_status = has_ranged_weapon(e);
+	bool has_ammo = has_appropriate_ammo(e, ranged_status.second);
+	if (!ranged_status.first || !has_ammo) {
+		cancel_action(e, ai, stats, species, pos, name, "Out of ammo");
+		return;
+	}
+	
 	if (ai.job_type_minor == JM_HUNT_FIND_TARGET) {
 		auto hunting_targets = get_hunting_candidates(pos);
 		if (hunting_targets.empty()) {
