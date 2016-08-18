@@ -6,6 +6,7 @@
 #include "../components/building.hpp"
 #include "../planet/region.hpp"
 #include "../game_globals.hpp"
+#include "particle_system.hpp"
 
 using namespace rltk;
 
@@ -48,6 +49,12 @@ void renderables_system::update(const double time_elapsed) {
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
 			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
 		});
+
+		// Add particles
+		for (const particle_t &p : particles) {
+			const int idx = mapidx(p.x, p.y, p.z);
+			renderables[idx] = p.glyph;
+		}
 
 		// If we're rogue mode, and have a path, display it
 		if (game_master_mode == ROGUE) {

@@ -20,3 +20,4 @@
 #include "mode_rogue_system.hpp"
 #include "mode_rogue_render_system.hpp"
 #include "corpse_system.hpp"
+#include "particle_system.hpp"

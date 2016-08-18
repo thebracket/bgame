@@ -899,6 +899,9 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 					emit(perform_construction_message{ai.building_target.get().building_entity, tag, material});
 				}
 			}
+			if (finder->second.emits_smoke) {
+				entity(ai.building_target.get().building_entity)->assign(smoke_emitter_t{});
+			}
 
 			emit(renderables_changed_message{});
 			emit(inventory_changed_message{});
@@ -1014,6 +1017,9 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 					spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
 				}
 			}
+
+			// Emit smoke
+			if (finder->second.emits_smoke) emit(emit_particles_message{1, pos.x, pos.y, pos.z});
 
 			// Consume power
 			if (finder->second.power_drain != 0) emit(power_consumed_message{finder->second.power_drain});

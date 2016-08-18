@@ -23,3 +23,4 @@
 #include "wildlife_group.hpp"
 #include "corpse_settler.hpp"
 #include "corpse_harvestable.hpp"
+#include "smoke_emitter.hpp"

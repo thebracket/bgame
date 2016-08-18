@@ -30,6 +30,8 @@ void damage_system::update(const double ms) {
         game_stats_t * attacker_stats = attacker->component<game_stats_t>();
         name_t * attacker_name = attacker->component<name_t>();
         name_t * defender_name = defender->component<name_t>();
+        position_t * attacker_pos = attacker->component<position_t>();
+        position_t * defender_pos = defender->component<position_t>();
 
         std::size_t weapon_id = 0;
         std::size_t ammo_id = 0;
@@ -62,7 +64,8 @@ void damage_system::update(const double ms) {
                 --ammo_component->stack_size;
                 if (ammo_component->stack_size < 1) delete_entity(ammo_id);
             }
-            // TODO: Emit a special effect!
+            emit(emit_particles_message{3, attacker_pos->x, attacker_pos->y, attacker_pos->z, 
+                    defender_pos->x, defender_pos->y, defender_pos->z});
         }
 
         ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";

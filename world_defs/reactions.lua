@@ -15,7 +15,8 @@ reactions = {
         outputs = { { item="charcoal", qty=2 }, { item="ash", qty=1} },
         skill = "Furnace Operation",
         difficulty = 10,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     tan_leather = {
         name = "Tan Leather",
@@ -33,7 +34,8 @@ reactions = {
         outputs = { { item="raw_glass", qty=2 } },
         skill = "Glassmaking",
         difficulty = 10,
-        automatic = false
+        automatic = false,
+        emits_smoke = true
     },
     make_raw_silicon = {
         name = "Make Raw Silicon",
@@ -168,7 +170,8 @@ reactions = {
         outputs = { { item="lead_bar", qty=2 } },
         skill = "Masonry",
         difficulty = 12,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     smelt_gold = {
         name = "Smelt Gold",
@@ -177,7 +180,8 @@ reactions = {
         outputs = { { item="gold_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     smelt_platinum = {
         name = "Smelt Platinum",
@@ -186,7 +190,8 @@ reactions = {
         outputs = { { item="platinum_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     smelt_silver = {
         name = "Smelt Silver",
@@ -195,7 +200,8 @@ reactions = {
         outputs = { { item="silver_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     smelt_zinc = {
         name = "Smelt Zinc",
@@ -204,7 +210,8 @@ reactions = {
         outputs = { { item="zinc_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     smelt_iron = {
         name = "Smelt Iron",
@@ -213,7 +220,8 @@ reactions = {
         outputs = { { item="iron_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     make_bismuth_bronze = {
         name = "Smelt Bronze Alloy",
@@ -222,7 +230,8 @@ reactions = {
         outputs = { { item="bronze_bar", qty=1 } },
         skill = "Furnace Operation",
         difficulty = 14,
-        automatic = true
+        automatic = true,
+        emits_smoke = true
     },
     replicate_tiny_marshmallow = {
         name = "Replicate Tiny Marshmallow",

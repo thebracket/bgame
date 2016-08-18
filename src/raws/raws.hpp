@@ -98,6 +98,7 @@ struct building_def_t {
 	int width = 1;
 	int height = 1;
 	std::vector<rltk::vchar> glyphs;
+	bool emits_smoke = false;
 };
 
 struct reaction_t {
@@ -110,6 +111,7 @@ struct reaction_t {
 	int difficulty;
 	bool automatic = false;
 	int power_drain = 0;
+	bool emits_smoke = false;
 };
 
 struct biome_type_t {

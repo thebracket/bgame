@@ -99,7 +99,8 @@ buildings = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['sun'], foreground = colors['firelight'], background = colors['yellow']}
 			}
-		}
+		},
+        emits_smoke = true
 	},
 
 	sawmill = {

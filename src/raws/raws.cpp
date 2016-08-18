@@ -223,6 +223,7 @@ void read_buildings(std::ofstream &tech_tree_file) {
             std::string field = lua_tostring(lua_state, -2);
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
             if (field == "components") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
@@ -343,6 +344,7 @@ void read_reactions(std::ofstream &tech_tree_file) {
             std::string field = lua_tostring(lua_state, -2);
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
             if (field == "workshop") c.workshop = lua_tostring(lua_state, -1);
             if (field == "skill") c.skill = lua_tostring(lua_state, -1);
             if (field == "difficulty") c.difficulty = lua_tonumber(lua_state, -1);
