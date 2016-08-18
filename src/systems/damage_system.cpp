@@ -14,6 +14,7 @@ void damage_system::configure() {
     subscribe_mbox<settler_ranged_attack_message>();
     subscribe_mbox<creature_attack_message>();
     subscribe_mbox<entity_slain_message>();
+    subscribe_mbox<hour_elapsed_message>();
 }
 
 void damage_system::update(const double ms) {

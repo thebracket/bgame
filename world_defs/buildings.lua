@@ -123,6 +123,20 @@ buildings = {
 		render_rex = "tanner.xp"
 	},
 
+	leatherworker = {
+		name = "Leatherworker",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "leatherworker.xp"
+	},
+
+	bonecarver = {
+		name = "Bonecarver",
+		components = { "wood_plank" },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "bonecarver.xp"
+	},
+
 	stonecutter = {
 		name = "Stonecutters",
 		components = { "stone_boulder" },
