@@ -16,7 +16,7 @@ void particle_system::configure() {
 
 void particle_system::update(const double ms) {
     each<smoke_emitter_t, position_t>([] (entity_t &e, smoke_emitter_t &s, position_t &pos) {
-        if (rng.roll_dice(1,6)==1) emit(emit_particles_message{1, pos.x, pos.y, pos.z}); 
+        if (rng.roll_dice(1,6)<4) emit(emit_particles_message{1, pos.x, pos.y, pos.z}); 
     });
 
 
@@ -32,11 +32,15 @@ void particle_system::update(const double ms) {
         }
 	}
 
+    subscribe<tick_message>([this](tick_message &msg) {
+        tick = true;
+    });
+
     bool updated = false;
     for (particle_t &p : particles) {
         updated = true;
 
-        if (p.mode < 3) {
+        if (p.mode < 3 && tick) {
             // Smoke and miasma
             p.lifespan--;
             if (p.lifespan < 0) p.deleteme = true;
@@ -45,12 +49,12 @@ void particle_system::update(const double ms) {
             }
             int direction = rng.roll_dice(1,6);
             switch (direction) {
-                case 1 : if (p.x > 1 && current_region->solid[mapidx(p.x-1, p.y, p.z)]) --p.x; break; 
-                case 2 : if (p.x < REGION_WIDTH-1 && current_region->solid[mapidx(p.x+1, p.y, p.z)]) ++p.x; break; 
-                case 3 : if (p.y > 1 && current_region->solid[mapidx(p.x, p.y-1, p.z)]) --p.y; break; 
-                case 4 : if (p.y < REGION_HEIGHT-1 && current_region->solid[mapidx(p.x, p.y+1, p.z)]) ++p.x; break; 
+                case 1 : if (p.x > 1 && !current_region->solid[mapidx(p.x-1, p.y, p.z)]) --p.x; break; 
+                case 2 : if (p.x < REGION_WIDTH-1 && !current_region->solid[mapidx(p.x+1, p.y, p.z)]) ++p.x; break; 
+                case 3 : if (p.y > 1 && !current_region->solid[mapidx(p.x, p.y-1, p.z)]) --p.y; break; 
+                case 4 : if (p.y < REGION_HEIGHT-1 && !current_region->solid[mapidx(p.x, p.y+1, p.z)]) ++p.x; break; 
             }
-        } else {
+        } else if (p.mode == 3) {
             // Projectiles move towards their target
             if (p.x < p.dest_x) ++p.x;
             if (p.x > p.dest_x) --p.x;
@@ -65,4 +69,5 @@ void particle_system::update(const double ms) {
         particles.erase(std::remove_if(particles.begin(), particles.end(), [] (particle_t p) { return p.deleteme; }), particles.end());
         emit(renderables_changed_message{});
     }
+    tick = false;
 }
