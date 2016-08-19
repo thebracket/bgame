@@ -9,14 +9,14 @@
 std::array<uint8_t, 4> group_populations;
 
 void wildlife_population_system::wander_randomly(entity_t &entity, position_t &original) {
-    emit(entity_wants_to_move_randomly_message{entity.id});
+    emit_deferred(entity_wants_to_move_randomly_message{entity.id});
 }
 
 void wildlife_population_system::configure() {
     system_name = "Wildlife Spawner";
     subscribe_mbox<hour_elapsed_message>();
     subscribe<tick_message>([this](tick_message &msg) {
-        each<grazer_ai, position_t, viewshed_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos, viewshed_t &view) {
+        parallel_each<grazer_ai, position_t, viewshed_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos, viewshed_t &view) {
             if (ai.initiative < 1) {
                 // Can we see anything scary?
                 bool terrified = false;
@@ -37,16 +37,7 @@ void wildlife_population_system::configure() {
                     // Handle the AI here
                     const int idx = mapidx(pos.x, pos.y, pos.z);
                     if (current_region->tile_vegetation_type[idx] > 0) {
-                        --current_region->tile_hit_points[idx];
-                        //std::cout << "Vegetation Damaged by Grazing - " << +current_region->tile_hit_points[idx] << " hp remain\n";
-                        if (current_region->tile_hit_points[idx] < 1) {
-                            // We've destroyed the vegetation!
-                            //std::cout << "Vegetation Destroyed\n";
-                            current_region->tile_hit_points[idx] = 0;
-                            current_region->tile_vegetation_type[idx] = 0;
-                            current_region->calc_render(idx);
-                            emit(map_dirty_message{});
-                        }
+                        if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});                         
                     } else {
                         this->wander_randomly(e, pos);
                     }
@@ -55,9 +46,9 @@ void wildlife_population_system::configure() {
                     if (terror_distance < 1.5F) {
                         // Attack the target
                         health_t * health = entity(e.id)->component<health_t>();
-                        if (!health->unconscious) emit(creature_attack_message{e.id, closest_fear});
+                        if (!health->unconscious) emit_deferred(creature_attack_message{e.id, closest_fear});
                     } else {
-                        emit(entity_wants_to_flee_message{e.id, closest_fear});
+                        emit_deferred(entity_wants_to_flee_message{e.id, closest_fear});
                     }
                 }
 

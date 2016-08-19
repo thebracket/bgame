@@ -96,6 +96,7 @@ void play_game::init() {
 	add_system<damage_system>();
 	add_system<topology_system>();
 	add_system<visibility_system>();
+	add_system<vegetation_system>();
 	add_system<map_render_system>();
 	add_system<panel_render_system>();
 	add_system<mode_units_system>();
