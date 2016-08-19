@@ -15,8 +15,8 @@ void particle_system::configure() {
 }
 
 void particle_system::update(const double ms) {
-    each<smoke_emitter_t, position_t>([] (entity_t &e, smoke_emitter_t &s, position_t &pos) {
-        if (rng.roll_dice(1,6)<4) emit(emit_particles_message{1, pos.x, pos.y, pos.z}); 
+    parallel_each<smoke_emitter_t, position_t>([] (entity_t &e, smoke_emitter_t &s, position_t &pos) {
+        if (rng.roll_dice(1,6)<4) emit_deferred(emit_particles_message{1, pos.x, pos.y, pos.z}); 
     });
 
 
