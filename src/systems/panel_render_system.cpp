@@ -26,7 +26,7 @@ void panel_render_system::render_header() {
     if (power_pct < 0.5) {
         designations->alert_color = lerp(rltk::colors::RED, rltk::colors::ORANGE, power_pct*2.0F);
     } else {
-        designations->alert_color = lerp(rltk::colors::ORANGE, rltk::colors::GREEN, (power_pct-0.5F)*2.0F);
+        designations->alert_color = lerp(rltk::colors::ORANGE, rltk::colors::WHITE, (power_pct-0.5F)*2.0F);
     }
     std::stringstream power_ss;
     power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
