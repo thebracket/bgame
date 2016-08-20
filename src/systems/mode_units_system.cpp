@@ -9,6 +9,7 @@ using namespace rltk;
 using namespace rltk::colors;
 
 void mode_units_system::configure() {
+    system_name = "Units Render System";
     subscribe_mbox<key_pressed_t>();
 }
 

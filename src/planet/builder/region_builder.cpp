@@ -139,7 +139,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     std:: cout << soils.size() << "/" << sands.size() << "/" << sedimintaries.size() << "/" << igneouses.size() << "\n";
 
     set_worldgen_status("Locating strata");
-    const int n_strata = REGION_WIDTH + REGION_HEIGHT + rng.roll_dice(1,64);
+    const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
     std::vector<std::tuple<int,int,int>> centroids;
     octree_t octree(REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH);
 
@@ -148,7 +148,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
         centroids.push_back(center);
         octree.add_node(octree_location_t{std::get<0>(center), std::get<1>(center), std::get<2>(center), i});
 
-        const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + 64;
+        const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + (REGION_DEPTH/2);
         const int z = std::get<2>(center);
 
         if (z>altitude_at_center-(1+rng.roll_dice(1,4))) {

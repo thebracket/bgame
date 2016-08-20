@@ -62,7 +62,7 @@ void tick(double duration_ms) {
 		case PLAY_GAME : {
 			game.tick(duration_ms);
 			ecs_garbage_collect();
-			if (game.quitting) {
+			if (quitting) {
 				const std::string save_filename = "world/savegame.dat";
 				std::fstream lbfile(save_filename, std::ios::out | std::ios::binary);
 				ecs_save(lbfile);

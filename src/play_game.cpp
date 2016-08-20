@@ -18,16 +18,7 @@ constexpr int RIGHT_PANEL = 3;
 constexpr int TOOLTIP_LAYER = 4;
 
 void play_game::tick(const double duration_ms) {
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-		quitting = true;
-	}
-
 	ecs_tick(duration_ms);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-		std::cout << ecs_profile_dump() << "\n";
-	}
 }
 
 void resize_game_panel(rltk::layer_t * l, int w, int h) {
@@ -79,6 +70,7 @@ void play_game::init() {
 
 	// Setup systems
 	std::cout << "Setting up systems\n";
+	add_system<keyboard_system>();
 	add_system<calendar_system>();
 	add_system<wildlife_population_system>();
 	add_system<corpse_system>();

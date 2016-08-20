@@ -50,3 +50,4 @@ extern game_design_mode_t game_design_mode;
 extern game_mining_mode_t game_mining_mode;
 extern boost::optional<available_building_t> build_mode_building;
 extern std::size_t selected_settler;
+extern bool quitting;

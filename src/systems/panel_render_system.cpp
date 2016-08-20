@@ -61,61 +61,6 @@ void panel_render_system::update(const double duration_ms) {
 	//term(3)->box(DARKEST_GREEN);
 
 	render_mode_select(duration_ms);
-
-	if (game_master_mode == PLAY) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			game_master_mode = DESIGN;
-			pause_mode = PAUSED;
-			emit(map_dirty_message{});
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
-			game_master_mode = UNITS;
-			pause_mode = PAUSED;
-			emit(map_dirty_message{});
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-			game_master_mode = WORKFLOW;
-			pause_mode = PAUSED;
-			emit(map_dirty_message{});
-		}
-	} else if (game_master_mode == DESIGN) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			game_master_mode = PLAY;
-			emit(map_dirty_message{});
-			emit(recalculate_mining_message{});
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			game_design_mode = DIGGING;
-			emit(map_dirty_message{});
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-			game_design_mode = BUILDING;
-			available_buildings = get_available_buildings();
-			emit(map_dirty_message{});
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
-			game_design_mode = CHOPPING;
-			emit(map_dirty_message{});
-		}
-	} else if (game_master_mode == SETTLER) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			game_master_mode = PLAY;
-			emit(map_dirty_message{});
-			emit(recalculate_mining_message{});
-		}
-	} else if (game_master_mode == WORKFLOW) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			game_master_mode = PLAY;
-			emit(map_dirty_message{});
-			emit(recalculate_mining_message{});
-		}
-	} else if (game_master_mode == ROGUE) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			game_master_mode = PLAY;
-			emit(map_dirty_message{});
-			emit(recalculate_mining_message{});
-		}
-	}
 }
 
 void panel_render_system::configure() {

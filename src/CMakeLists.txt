@@ -62,6 +62,7 @@ add_executable(bgame main.cpp
 	systems/corpse_system.cpp
 	systems/particle_system.cpp
 	systems/vegetation_system.cpp
+	systems/keyboard_system.cpp
 	planet/planet.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp

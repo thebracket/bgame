@@ -4,21 +4,12 @@
 
 void calendar_system::configure() {
 	system_name = "Calendar";
-	subscribe_mbox<key_pressed_t>();
+
+	subscribe<pause_requested_message>([this] (pause_requested_message &msg) { requested_pause = true; });
+	subscribe<one_step_requested_message>([this] (one_step_requested_message &msg) { requested_step = true; });
 }
 
 void calendar_system::update(const double duration_ms) {
-	bool requested_pause = false;
-	bool requested_step = false;
-	std::queue<key_pressed_t> * messages = mbox<key_pressed_t>();
-	while (!messages->empty()) {
-		key_pressed_t e = messages->front();
-		messages->pop();
-
-		if (e.event.key.code == sf::Keyboard::Space) requested_pause = true;
-		if (e.event.key.code == sf::Keyboard::Period && !e.event.key.shift) requested_step = true;
-	}
-
 	if (pause_mode != PAUSED) {
 		time_count += duration_ms;
 
@@ -48,4 +39,7 @@ void calendar_system::update(const double duration_ms) {
 			pause_mode = ONE_STEP;
 		}
 	}
+
+	requested_pause = false;
+	requested_step = false;
 }

@@ -1,5 +1,6 @@
 #include "camera_system.hpp"
 #include "../messages/map_dirty_message.hpp"
+#include "../messages/inputs.hpp"
 #include "renderables_system.hpp"
 
 std::vector<int> render_tiles;
@@ -7,7 +8,7 @@ std::vector<int> render_tiles;
 void camera_system::configure() {
 	system_name = "Camera";
 	dirty = true;
-	subscribe_mbox<key_pressed_t>();
+	subscribe_mbox<camera_move_requested_message>();
 	subscribe_mbox<map_dirty_message>();
 }
 
@@ -19,43 +20,43 @@ void camera_system::update(const double duration_ms) {
 	}
 
 	// Handle camera controls
-	std::queue<key_pressed_t> * messages = mbox<key_pressed_t>();
+	std::queue<camera_move_requested_message> * messages = mbox<camera_move_requested_message>();
 	while (!messages->empty()) {
-		key_pressed_t e = messages->front();
+		camera_move_requested_message e = messages->front();
 		messages->pop();
 
-		if (e.event.key.code == sf::Keyboard::Left) {
-			--camera_position->region_x;
+		if (e.direction == 1) {
+			camera_position->region_x -= e.step;
 			if (camera_position->region_x < 0) camera_position->region_x = 0;
 			dirty = true;
 			update_clipping_rectangle();
 		}
-		if (e.event.key.code == sf::Keyboard::Right) {
-			++camera_position->region_x;
+		if (e.direction == 2) {
+			camera_position->region_x += e.step;
 			if (camera_position->region_x > REGION_WIDTH) camera_position->region_x = REGION_WIDTH;
 			dirty = true;
 			update_clipping_rectangle();
 		}
-		if (e.event.key.code == sf::Keyboard::Up) {
-			--camera_position->region_y;
+		if (e.direction == 3) {
+			camera_position->region_y -= e.step;
 			if (camera_position->region_y < 0) camera_position->region_y = 0;
 			dirty = true;
 			update_clipping_rectangle();
 		}
-		if (e.event.key.code == sf::Keyboard::Down) {
-			++camera_position->region_y;
+		if (e.direction == 4) {
+			camera_position->region_y += e.step;
 			if (camera_position->region_y > REGION_HEIGHT) camera_position->region_y = REGION_HEIGHT;
 			dirty = true;
 			update_clipping_rectangle();
 		}
-		if (e.event.key.code == sf::Keyboard::Period && e.event.key.shift) {
-			--camera_position->region_z;
+		if (e.direction == 5) {
+			camera_position->region_z -= e.step;
 			if (camera_position->region_z < 0) camera_position->region_z = 0;
 			dirty = true;
 			update_clipping_rectangle();
 		}
-		if (e.event.key.code == sf::Keyboard::Comma && e.event.key.shift) {
-			++camera_position->region_z;
+		if (e.direction == 6) {
+			camera_position->region_z += e.step;
 			if (camera_position->region_z > REGION_DEPTH) camera_position->region_z = REGION_DEPTH;
 			dirty = true;
 			update_clipping_rectangle();
