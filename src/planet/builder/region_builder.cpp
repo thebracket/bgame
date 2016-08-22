@@ -5,7 +5,6 @@
 #include "noise_helper.hpp"
 #include "../../components/components.hpp"
 #include "settler_builder.hpp"
-#include "../../utils/octree.hpp"
 
 using namespace rltk;
 
@@ -13,7 +12,8 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet) {
     std::pair<int,int> coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
 
     while (planet.landblocks[planet.idx(coords.first, coords.second)].type != block_type::WATER &&
-            planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude > planet.water_height ) 
+            planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude > planet.water_height+2 &&
+            biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name.find("Ocean") == std::string::npos ) 
     {
         --coords.first;
     }
@@ -119,9 +119,10 @@ inline void zero_map(region_t &region) {
 struct strata_t {
     std::vector<int> strata_map;
     std::vector<std::size_t> material_idx;
+    std::vector<std::tuple<int,int,int,int>> counts;
 };
 
-strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome) {
+strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
     strata_t result;
     result.strata_map.resize(REGION_TILES_COUNT);
 
@@ -142,13 +143,72 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
 
     set_worldgen_status("Locating strata");
     const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
-    std::vector<std::tuple<int,int,int>> centroids;
-    octree_t octree(REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH);
+    result.material_idx.resize(n_strata);
+    result.counts.resize(n_strata);
 
+    FastNoise biome_noise(planet.perlin_seed + (region.region_y * REGION_WIDTH ) + region.region_x);
+    biome_noise.SetNoiseType(FastNoise::Cellular);
+
+    for (int z=0; z<REGION_DEPTH; ++z) {
+        const float Z = (float)z*8.0F;
+        for (int y=0; y<REGION_WIDTH; ++y) {
+            const float Y = (float)y*8.0F;
+            for (int x=0; x<REGION_HEIGHT; ++x) {
+                const float X = (float)x*8.0F;
+                const float biome_ramp = (biome_noise.GetCellular(X,Y,Z) + 1.0F)/2.0F;
+                int biome_idx = biome_ramp * n_strata;
+                ++std::get<0>(result.counts[biome_idx]);
+                std::get<1>(result.counts[biome_idx]) += x;
+                std::get<2>(result.counts[biome_idx]) += y;
+                std::get<3>(result.counts[biome_idx]) += z;
+                const int map_idx = mapidx(x,y,z);
+                result.strata_map[map_idx] = biome_idx;
+                //std::cout << x << "/" << y << "/" << z << " : " << X << "/" << Y << "/" << Z << " = " << biome_ramp << " : " << biome_idx << "\n";
+            }
+        }
+    }
+
+    int count_used = 0;
+    for (int i=0; i<n_strata; ++i) {
+        if (std::get<0>(result.counts[i])>0) {
+            ++count_used;
+            std::get<1>(result.counts[i]) /= std::get<0>(result.counts[i]);
+            std::get<2>(result.counts[i]) /= std::get<0>(result.counts[i]);
+            std::get<3>(result.counts[i]) /= std::get<0>(result.counts[i]);
+
+            int n,x,y,z;
+            std::tie(n,x,y,z) = result.counts[i];
+            const uint8_t altitude_at_center = heightmap[(y * REGION_WIDTH) + x] + REGION_DEPTH/2;
+
+            if (z>altitude_at_center-(1+rng.roll_dice(1,4))) {
+                // Soil
+                int roll = rng.roll_dice(1,100);
+                if (roll < biome.second.soil_pct) {
+                    const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
+                    //std::cout << material_defs[soils[soil_idx]].name << "\n";
+                    result.material_idx[i] = soils[soil_idx];
+                } else {
+                    const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+                    //std::cout << material_defs[sands[sand_idx]].name << "\n";
+                    result.material_idx[i] = sands[sand_idx];
+                }
+            } else if (z>(altitude_at_center-10)/2) {
+                // Sedimentary
+                const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
+                //std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
+                result.material_idx[i] = sedimintaries[sed_idx];
+            } else {
+                // Igneous
+                const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
+                //std::cout << material_defs[igneouses[ig_idx]].name << "\n";
+                result.material_idx[i] = igneouses[ig_idx];
+            }
+        }
+    }
+    std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
+
+        /*
     for (std::size_t i=0; i<n_strata; ++i) {
-        auto center = std::make_tuple( rng.roll_dice(1,REGION_WIDTH)-1, rng.roll_dice(1,REGION_HEIGHT)-1, rng.roll_dice(1, REGION_DEPTH)-1 );
-        centroids.push_back(center);
-        octree.add_node(octree_location_t{std::get<0>(center), std::get<1>(center), std::get<2>(center), i});
 
         const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + (REGION_DEPTH/2);
         const int z = std::get<2>(center);
@@ -186,10 +246,10 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
         for (int y=0; y<REGION_HEIGHT; ++y) {
             for (int x=0; x<REGION_WIDTH; ++x) {
                 const int map_idx = mapidx(x,y,z);
-                result.strata_map[map_idx] = octree.find_nearest(octree_location_t{x,y,z,0});
+                //result.strata_map[map_idx] = octree.find_nearest(octree_location_t{x,y,z,0});
             }
         }
-    }
+    }*/
 
     return result;
 }
@@ -661,7 +721,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 
     // Strata map
     set_worldgen_status("Dividing strata");
-    auto strata = build_strata(region, heightmap, rng, biome);
+    auto strata = build_strata(region, heightmap, rng, biome, planet);
 
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");

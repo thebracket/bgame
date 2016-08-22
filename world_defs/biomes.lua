@@ -74,7 +74,8 @@ biomes = {
         occurs = { biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['light_green'] },
         plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, goya=1, cabbage=1, caper=1, cassava=1, horned_melon=1, lentil=1, lettuce=1, onion=1, parsnip=1, soybean=1, watermelon=1, yam=1 },
-        trees = { deciduous = 10, evergreen = 0 }
+        trees = { deciduous = 10, evergreen = 0 },
+        wildlife = { "deer"}
     },
 
     -- Salt-marsh Zones
