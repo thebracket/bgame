@@ -11,10 +11,15 @@ void planet_zero_fill(planet_t &planet) {
 	std::fill(planet.landblocks.begin(), planet.landblocks.end(), block_t{});
 }
 
-perlin_noise planet_noise_map(planet_t &planet, const int &perlin_seed) {
+FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 	
 	set_worldgen_status("Dividing the heavens from the earth: starting");
-	perlin_noise noise(perlin_seed);
+	FastNoise noise(perlin_seed);
+	noise.SetNoiseType(FastNoise::GradientFractal);
+	noise.SetFractalType(FastNoise::FBM);
+	noise.SetFractalOctaves(octaves);
+	noise.SetFractalGain(persistence);
+	noise.SetFractalLacunarity(frequency);
 
 	constexpr float max_temperature = 56.7F;
 	constexpr float min_temperature = -55.2F;
@@ -35,7 +40,8 @@ perlin_noise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 			int n_tiles = 0;
 			for (int y1=0; y1<REGION_HEIGHT/REGION_FRACTION_TO_CONSIDER; ++y1) {
 				for (int x1=0; x1<REGION_WIDTH/REGION_FRACTION_TO_CONSIDER; ++x1) {
-					const double nh = noise.noise_octaves ( noise_x(x,x1*REGION_FRACTION_TO_CONSIDER), noise_y(y,y1*REGION_FRACTION_TO_CONSIDER), 0.0, octaves, persistence, frequency );
+					const double nh = noise.GetNoise ( noise_x(x,x1*REGION_FRACTION_TO_CONSIDER), noise_y(y,y1*REGION_FRACTION_TO_CONSIDER) );
+					//std::cout << nh << "\n";
 					const uint8_t n = noise_to_planet_height(nh);
 					if (n < min) min = n;
 					if (n > max) max = n;

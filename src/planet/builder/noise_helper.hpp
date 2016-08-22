@@ -1,15 +1,15 @@
 #pragma once
 
-constexpr int REGION_FRACTION_TO_CONSIDER = 32;
-constexpr int octaves = 7;
+constexpr int REGION_FRACTION_TO_CONSIDER = 64;
+constexpr int octaves = 5;
 constexpr double persistence = 0.5;
-constexpr double frequency = 3.0;
+constexpr double frequency = 2.0;
 
 inline uint8_t noise_to_planet_height(const double &n) {
-	return n * 200.0;
+	return (n + 1.0F) * 150.0;
 }
 
-constexpr double NOISE_SIZE = WORLD_WIDTH / 256.0F;
+constexpr double NOISE_SIZE = 256.0F;
 
 inline double noise_x(const int world_x, const int region_x) {
 	const double big_x = (world_x * WORLD_WIDTH) + region_x;

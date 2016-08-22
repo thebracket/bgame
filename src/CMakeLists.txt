@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -O3 -Wall -Wpedantic -march=native -mtune=native -g")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/opt/local/lib/lua-5.2")
 
+add_library(FastNoise FastNoise/FastNoise.cpp)
+
 add_library(rltk rltk/rltk/rltk.cpp
 	rltk/rltk/texture_resources.cpp
 	rltk/rltk/color_t.cpp
@@ -85,6 +87,7 @@ target_include_directories(bgame PUBLIC
 target_link_libraries(bgame)
 target_link_libraries(rltk ${SFML_LIBRARIES})
 target_link_libraries(bgame rltk)
+target_link_libraries(bgame FastNoise)
 
 # Require Boost
 set(Boost_USE_STATIC_LIBS      OFF) # only find static libs

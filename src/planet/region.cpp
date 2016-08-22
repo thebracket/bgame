@@ -215,9 +215,12 @@ void region_t::calc_render(const int &idx) {
 			//bg = material_defs[tile_material[idx]].bg;
 		} break;
 		case tile_type::RAMP : {
-			// TODO: Color determined by material
 			glyph = 30;
-			fg = material_defs[tile_material[idx]].fg;
+			if (tile_material[idx] > 0 && tile_material[idx]<material_defs.size()) {
+				fg = material_defs[tile_material[idx]].fg;
+			} else {
+				fg = rltk::colors::GREY;
+			} 
 
 			if (tile_vegetation_type[idx]>0) {
 				glyph = plant_defs[tile_vegetation_type[idx]].glyph;

@@ -12,7 +12,9 @@ using namespace rltk;
 std::pair<int,int> builder_select_starting_region(planet_t &planet) {
     std::pair<int,int> coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
 
-    while (planet.landblocks[planet.idx(coords.first, coords.second)].type != block_type::WATER) {
+    while (planet.landblocks[planet.idx(coords.first, coords.second)].type != block_type::WATER &&
+            planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude > planet.water_height ) 
+    {
         --coords.first;
     }
 
@@ -32,12 +34,12 @@ inline std::vector<uint8_t> create_empty_heightmap() {
     return heightmap;
 }
 
-inline void build_heightmap_from_noise(std::pair<int,int> &target, perlin_noise &noise, std::vector<uint8_t> &heightmap, planet_t &planet) {
+inline void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &noise, std::vector<uint8_t> &heightmap, planet_t &planet) {
     for (int y=0; y<REGION_HEIGHT; ++y) {
         for (int x=0; x<REGION_WIDTH; ++x) {
             const double nx = noise_x(target.first, x);
             const double ny = noise_y(target.second, y);
-            const double nh = noise.noise_octaves ( nx, ny, 0.0, octaves, persistence, frequency );
+            const double nh = noise.GetNoise ( nx, ny );
             const uint8_t altitude = noise_to_planet_height(nh);
             const int cell_idx = (y * REGION_WIDTH) + x;
             heightmap[cell_idx] = altitude - planet.water_height + 5;
@@ -156,22 +158,22 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
             int roll = rng.roll_dice(1,100);
             if (roll < biome.second.soil_pct) {
                 const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
-                std::cout << material_defs[soils[soil_idx]].name << "\n";
+                //std::cout << material_defs[soils[soil_idx]].name << "\n";
                 result.material_idx.push_back(soils[soil_idx]);
             } else {
                 const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
-                std::cout << material_defs[sands[sand_idx]].name << "\n";
+                //std::cout << material_defs[sands[sand_idx]].name << "\n";
                 result.material_idx.push_back(sands[sand_idx]);
             }
         } else if (z>(altitude_at_center-10)/2) {
             // Sedimentary
             const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
-            std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
+            //std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
             result.material_idx.push_back(sedimintaries[sed_idx]);
         } else {
             // Igneous
             const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
-            std::cout << material_defs[igneouses[ig_idx]].name << "\n";
+            //std::cout << material_defs[igneouses[ig_idx]].name << "\n";
             result.material_idx.push_back(igneouses[ig_idx]);
         }
     }
@@ -636,7 +638,7 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
 		->assign(designations_t{});
 }
 
-void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::random_number_generator &rng, perlin_noise &noise) {
+void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::random_number_generator &rng, FastNoise &noise) {
     // Builder region
     region_t region;
 	region.region_x = target_region.first;

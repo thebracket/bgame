@@ -5,6 +5,7 @@
 #include "builder/map_builder.hpp"
 #include "builder/biome_builder.hpp"
 #include "builder/region_builder.hpp"
+#include "../FastNoise/FastNoise.h"
 
 #include <atomic>
 #include <iostream>
@@ -135,7 +136,7 @@ void build_planet() {
 	planet_zero_fill(planet);
 
 	// Noise-based world map
-	perlin_noise noise = planet_noise_map(planet, perlin_seed);
+	FastNoise noise = planet_noise_map(planet, perlin_seed);
 
 	// Divide types by height
 	planet_base_type_allocation(planet);
