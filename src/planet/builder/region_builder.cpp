@@ -13,9 +13,14 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet) {
 
     while (planet.landblocks[planet.idx(coords.first, coords.second)].type != block_type::WATER &&
             planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude > planet.water_height+2 &&
-            biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name.find("Ocean") == std::string::npos ) 
+            biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name.find("Ocean") != std::string::npos ) 
     {
+        std::cout << biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name << "\n";
         --coords.first;
+        if (coords.first < 0) {
+            coords.first = WORLD_WIDTH-1;
+            --coords.second;
+        }
     }
 
     return coords;
@@ -206,50 +211,6 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
         }
     }
     std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
-
-        /*
-    for (std::size_t i=0; i<n_strata; ++i) {
-
-        const uint8_t altitude_at_center = heightmap[(std::get<1>(center) * REGION_WIDTH) + std::get<0>(center)] + (REGION_DEPTH/2);
-        const int z = std::get<2>(center);
-
-        if (z>altitude_at_center-(1+rng.roll_dice(1,4))) {
-            // Soil
-            int roll = rng.roll_dice(1,100);
-            if (roll < biome.second.soil_pct) {
-                const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
-                //std::cout << material_defs[soils[soil_idx]].name << "\n";
-                result.material_idx.push_back(soils[soil_idx]);
-            } else {
-                const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
-                //std::cout << material_defs[sands[sand_idx]].name << "\n";
-                result.material_idx.push_back(sands[sand_idx]);
-            }
-        } else if (z>(altitude_at_center-10)/2) {
-            // Sedimentary
-            const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
-            //std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
-            result.material_idx.push_back(sedimintaries[sed_idx]);
-        } else {
-            // Igneous
-            const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
-            //std::cout << material_defs[igneouses[ig_idx]].name << "\n";
-            result.material_idx.push_back(igneouses[ig_idx]);
-        }
-    }
-
-    for (int z=0; z<REGION_DEPTH; ++z) {
-        const float pct = ((float)z / REGION_DEPTH) * 100.0F;
-        std::stringstream ss;
-        ss << "Locating strata - " << (int)pct << "% done";
-        set_worldgen_status(ss.str());
-        for (int y=0; y<REGION_HEIGHT; ++y) {
-            for (int x=0; x<REGION_WIDTH; ++x) {
-                const int map_idx = mapidx(x,y,z);
-                //result.strata_map[map_idx] = octree.find_nearest(octree_location_t{x,y,z,0});
-            }
-        }
-    }*/
 
     return result;
 }
