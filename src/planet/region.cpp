@@ -2,64 +2,56 @@
 #include <rltk.hpp>
 #include <string>
 #include "../raws/raws.hpp"
-//#include <boost/iostreams/filtering_stream.hpp>
-//#include <boost/iostreams/filter/zlib.hpp>
 
 using namespace rltk;
 
 void save_region(const region_t &region) {
 	std::string region_filename = "world/region_" + std::to_string(region.region_x) + "_" + std::to_string(region.region_y) + ".dat";
-	std::fstream deflate(region_filename, std::ios::out | std::ios::binary);
-	//boost::iostreams::filtering_stream<boost::iostreams::output> deflate;
-	//deflate.push(boost::iostreams::zlib_compressor());
-    //deflate.push(lbfile);
+	gzip_file deflate(region_filename, "wb");
 
-	serialize(deflate, region.region_x);
-	serialize(deflate, region.region_y);
-	serialize(deflate, region.biome_idx);
-	serialize(deflate, region.next_tree_id);
+	deflate.serialize(region.region_x);
+	deflate.serialize(region.region_y);
+	deflate.serialize(region.biome_idx);
+	deflate.serialize(region.next_tree_id);
 
-	serialize(deflate, region.revealed);
-	serialize(deflate, region.visible);
-	serialize(deflate, region.solid);
-	serialize(deflate, region.opaque);
-	serialize(deflate, region.tile_type);
-	serialize(deflate, region.tile_material);
-	serialize(deflate, region.tile_hit_points);
-	serialize(deflate, region.building_id);
-	serialize(deflate, region.tree_id);
-	serialize(deflate, region.tile_vegetation_type);
-	serialize(deflate, region.tile_flags);
-	serialize(deflate, region.water_level);
-	serialize(deflate, region.blood_stains);
+	deflate.serialize_vector_bool(region.revealed);
+	deflate.serialize_vector_bool(region.visible);
+	deflate.serialize_vector_bool(region.solid);
+	deflate.serialize_vector_bool(region.opaque);
+	deflate.serialize(region.tile_type);
+	deflate.serialize(region.tile_material);
+	deflate.serialize(region.tile_hit_points);
+	deflate.serialize(region.building_id);
+	deflate.serialize(region.tree_id);
+	deflate.serialize(region.tile_vegetation_type);
+	deflate.serialize(region.tile_flags);
+	deflate.serialize(region.water_level);
+	deflate.serialize_vector_bool(region.blood_stains);
 }
 
 region_t load_region(const int region_x, const int region_y) {
 	std::string region_filename = "world/region_" + std::to_string(region_x) + "_" + std::to_string(region_y) + ".dat";
-	std::fstream inflate(region_filename, std::ios::in | std::ios::binary);
-	//boost::iostreams::filtering_stream<boost::iostreams::input> inflate;
-	//inflate.push(boost::iostreams::zlib_decompressor());
-    //inflate.push(lbfile);
+	gzip_file inflate(region_filename, "rb");
 	region_t region;
 
-	deserialize(inflate, region.region_x);
-	deserialize(inflate, region.region_y);
-	deserialize(inflate, region.biome_idx);
-	deserialize(inflate, region.next_tree_id);
+	inflate.deserialize(region.region_x);
+	inflate.deserialize(region.region_y);
+	inflate.deserialize(region.biome_idx);
+	inflate.deserialize(region.next_tree_id);
 
-	deserialize(inflate, region.revealed);
-	deserialize(inflate, region.visible);
-	deserialize(inflate, region.solid);
-	deserialize(inflate, region.opaque);
-	deserialize(inflate, region.tile_type);
-	deserialize(inflate, region.tile_material);
-	deserialize(inflate, region.tile_hit_points);
-	deserialize(inflate, region.building_id);
-	deserialize(inflate, region.tree_id);
-	deserialize(inflate, region.tile_vegetation_type);
-	deserialize(inflate, region.tile_flags);
-	deserialize(inflate, region.water_level);
-	deserialize(inflate, region.blood_stains);
+	inflate.deserialize(region.revealed);
+	inflate.deserialize(region.visible);
+	inflate.deserialize(region.solid);
+	inflate.deserialize(region.opaque);
+	inflate.deserialize(region.tile_type);
+	inflate.deserialize(region.tile_material);
+	inflate.deserialize(region.tile_hit_points);
+	inflate.deserialize(region.building_id);
+	inflate.deserialize(region.tree_id);
+	inflate.deserialize(region.tile_vegetation_type);
+	inflate.deserialize(region.tile_flags);
+	inflate.deserialize(region.water_level);
+	inflate.deserialize(region.blood_stains);
 
 	std::cout << "Recalculating region paths\n";
 	region.tile_recalc_all();
