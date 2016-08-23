@@ -75,10 +75,10 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 	const int half_term_x = planet_build_term_width / 2;
 	const int half_term_y = planet_build_term_height / 2;
 
-	const int left_x = std::max(0, world_x - half_term_x);
-	const int right_x = std::min(WORLD_WIDTH, world_x + half_term_x);
-	const int top_y = std::max(0, world_y - half_term_y);
-	const int bottom_y = std::max(WORLD_HEIGHT, world_y + half_term_y);
+	const int left_x = std::max(half_term_x, world_x - half_term_x);
+	const int right_x = std::min(WORLD_WIDTH-half_term_x, world_x + half_term_x);
+	const int top_y = std::max(half_term_y, world_y - half_term_y);
+	const int bottom_y = std::max(WORLD_HEIGHT-half_term_y, world_y + half_term_y);
 
 	int Y = 0;
 	for (int y=top_y; y<bottom_y; ++y) {
