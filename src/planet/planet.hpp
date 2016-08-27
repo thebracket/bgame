@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include "constants.hpp"
+#include "civilizations.hpp"
+#include "history.hpp"
 
 namespace block_type {
 constexpr uint8_t MAX_BLOCK_TYPE = 9;
@@ -54,6 +56,8 @@ struct planet_t {
 	std::vector<block_t> landblocks;
 	std::vector<biome_t> biomes;
 	inline int idx(const int x, const int y) { return y*WORLD_WIDTH + x; }
+	civ_holder_t civs;
+	history_t history;
 };
 
 void save_planet(const planet_t &planet);

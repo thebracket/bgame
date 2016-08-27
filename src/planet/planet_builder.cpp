@@ -5,6 +5,7 @@
 #include "builder/map_builder.hpp"
 #include "builder/biome_builder.hpp"
 #include "builder/region_builder.hpp"
+#include "builder/history_builder.hpp"
 #include "../FastNoise/FastNoise.h"
 
 #include <atomic>
@@ -45,7 +46,8 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, const 
 	rltk::color_t bg = BLACK;
 	const int biome_idx = planet.landblocks[block_idx].biome_idx;
 	if (biome_idx > -1) {
-		bg = biome_defs[planet.biomes[biome_idx].type].worldgen_color;
+		//bg = biome_defs[planet.biomes[biome_idx].type].worldgen_color;
+		bg = rltk::colors::BLACK;
 	}
 
 	if (planet.landblocks[block_idx].type == block_type::NONE) {
@@ -75,10 +77,27 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 	const int half_term_x = planet_build_term_width / 2;
 	const int half_term_y = planet_build_term_height / 2;
 
-	const int left_x = std::max(half_term_x, world_x - half_term_x);
-	const int right_x = std::min(WORLD_WIDTH-half_term_x, world_x + half_term_x);
-	const int top_y = std::max(half_term_y, world_y - half_term_y);
-	const int bottom_y = std::max(WORLD_HEIGHT-half_term_y, world_y + half_term_y);
+	int left_x = world_x - half_term_x;
+	int right_x = world_x + half_term_x;
+	int top_y = world_y - half_term_y;
+	int bottom_y = world_y + half_term_y;
+
+	if (left_x < 0) {
+		left_x = 0;
+		right_x = planet_build_term_width;
+	}
+	if (right_x > WORLD_WIDTH) {
+		left_x = WORLD_WIDTH - planet_build_term_width;
+		right_x = WORLD_WIDTH;
+	}
+	if (top_y < 0) {
+		top_y = 0;
+		bottom_y = planet_build_term_height;
+	}
+	if (bottom_y > WORLD_HEIGHT) {
+		bottom_y = WORLD_HEIGHT;
+		top_y = WORLD_HEIGHT - planet_build_term_height;
+	}
 
 	int Y = 0;
 	for (int y=top_y; y<bottom_y; ++y) {
@@ -87,7 +106,14 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 			const int idx = (planet_build_term_width * Y) + X;
 			const int block_idx = planet.idx(x, y);			
 			if (block_idx < planet.landblocks.size() && idx < planet_build_term_height*planet_build_term_width)
+			{
 				set_planet_display_char(block_idx, idx, planet);
+				for (const auto &s : planet.civs.settlements) {
+					if (s.world_x == x && s.world_y == y) {
+						(*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::WHITE, rltk::colors::BLACK};
+					}
+				}
+			}
 			++X;
 		}
 		++Y;
@@ -131,6 +157,7 @@ void build_planet() {
 	planet.rng_seed = rng.initial_seed;
 	const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
 	planet.perlin_seed = perlin_seed;
+	std::cout << "Planet seed: " << planet.perlin_seed << "\n";
 
 	// Make a zero-height map
 	planet_zero_fill(planet);
@@ -149,6 +176,10 @@ void build_planet() {
 
 	// Make a biome map
 	build_biomes(planet, rng);
+
+	// Run history
+	planet_build_initial_civs(planet, rng);
+	planet_build_initial_history(planet, rng);
 
 	// Save it to disk
 	builder_save_planet(planet);

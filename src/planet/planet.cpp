@@ -45,6 +45,9 @@ void save_planet(const planet_t &planet) {
 		serialize(deflate, biome.center_x);
 		serialize(deflate, biome.center_y);
 	}
+
+	planet.civs.save(deflate);
+	planet.history.save(deflate);
 }
 
 planet_t load_planet() {
@@ -96,6 +99,9 @@ planet_t load_planet() {
 
 		planet.biomes[i] = biome;
 	}
+
+	planet.civs.load(inflate);
+	planet.history.load(inflate);
 
 	return planet;
 }

@@ -66,12 +66,15 @@ add_executable(bgame main.cpp
 	systems/vegetation_system.cpp
 	systems/keyboard_system.cpp
 	planet/planet.cpp
+	planet/civilizations.cpp
+	planet/history.cpp
 	planet/region.cpp
 	planet/planet_builder.cpp
 	planet/builder/settler_builder.cpp
 	planet/builder/map_builder.cpp
 	planet/builder/biome_builder.cpp
 	planet/builder/region_builder.cpp
+	planet/builder/history_builder.cpp
 	raws/raws.cpp
 	raws/lua_bridge.cpp
 	raws/health_factory.cpp
