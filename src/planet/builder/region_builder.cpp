@@ -724,6 +724,20 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 	create_settler(crash_x, crash_y + 1, crash_z+1, rng, 2);
 	create_settler(crash_x + 1, crash_y + 1, crash_z+1, rng, 2);
 
+    // Add features
+    for (auto &town : planet.civs.settlements) {
+        if (town.world_x == region.region_x && town.world_y == region.region_y) {
+            std::cout << "A settlement of type " << +town.status << " should be here.\n";
+        }
+    }
+
+    // Add anyone who is still here from world-gen
+    for (auto &peep : planet.civs.unimportant_people) {
+        if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
+            std::cout << "TODO: Spawn a " << peep.species_tag << "!\n";
+        }
+    }
+
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");
     region.tile_recalc_all();
