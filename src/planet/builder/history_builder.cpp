@@ -2,6 +2,7 @@
 #include "../planet_builder.hpp"
 #include "../../raws/raws.hpp"
 #include "../constants.hpp"
+#include <boost/container/flat_map.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -16,7 +17,7 @@ const std::string random_species(rltk::random_number_generator &rng) {
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
-    const int n_civs = WORLD_WIDTH + rng.roll_dice(1,WORLD_WIDTH);
+    const int n_civs = WORLD_WIDTH;
     for (int i=0; i<n_civs; ++i) {
         civ_t civ;
 
@@ -54,14 +55,14 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They have founded the town, " << town.name << "\n";
 
         // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(10,20);
+        const int n_peeps = rng.roll_dice(4,10);
         for (int j=0; j<n_peeps; ++j) {
             unimportant_person_t peep;
             peep.civ_id = i;
             peep.species_tag = civ.species_tag;
             peep.world_x = starting_loc.first;
             peep.world_y = starting_loc.second;
-            if (rng.roll_dice(1,6)<=3) {
+            if (rng.roll_dice(1,2)==1) {
                 peep.male = true;
             } else {
                 peep.male = false;
@@ -86,8 +87,8 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
     set_worldgen_status("Running Year " + std::to_string(year));
 
     std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> newborns;
-    std::unordered_map<int, std::vector<int>> civlocs;
-    std::unordered_map<int, int> civpops;
+    boost::container::flat_map<int, std::vector<int>> civlocs;
+    boost::container::flat_map<int, int> civpops;
     std::vector<std::size_t> peep_killer;
 
     // Technological advancement
@@ -95,7 +96,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
         if (!civ.extinct) {
             if (civ.tech_level < 10) {
                 const int tech_roll = rng.roll_dice(1,100);
-                if (tech_roll > 97) {
+                if (tech_roll > 98) {
                     ++civ.tech_level;
                 } else if (civ.tech_level > 1 && tech_roll == 1) {
                     -- civ.tech_level;
@@ -114,9 +115,14 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             ++peep.age;
             if (peep.age > species->second.max_age) peep_killer.push_back(peep_id);
 
+            // TODO: Biome death!
+
             // Births
             if (!peep.male && peep.age > species->second.child_age) {
-                int birth_chance = 12 - planet.civs.civs[peep.civ_id].tech_level;
+                int birth_chance = 20 - planet.civs.civs[peep.civ_id].tech_level;
+                int max_age = species->second.max_age;
+                int age_bonus = std::max(10-max_age/10, 20);
+                birth_chance += age_bonus;
                 if (peep.married) birth_chance += 10;
                 if (rng.roll_dice(1,100) < birth_chance) {
                     newborns.push_back({peep.civ_id, peep_id, peep.married_to});
@@ -124,7 +130,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             }
 
             // Random movement
-            if (peep.age > species->second.child_age && rng.roll_dice(1,10)>5) {
+            if (peep.age > species->second.child_age && rng.roll_dice(1,20)<(planet.civs.civs[peep.civ_id].tech_level+7)) {
                 int direction = rng.roll_dice(1,4);
                 switch (direction) {
                     case 1 : if (peep.world_y>2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y-1)].type != block_type::WATER) --peep.world_y; break;
@@ -138,7 +144,8 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             if (peep.age > species->second.child_age && peep.married == false && rng.roll_dice(1,10)>7) {
                 int peep2_id = 0;
                 for (auto &peep2 : planet.civs.unimportant_people) {
-                    if (!peep2.deceased && peep.male == !peep2.male && !peep2.married && peep.world_x == peep2.world_x && peep.world_y == peep2.world_y) {
+                    if (!peep2.deceased && peep.male == !peep2.male && !peep2.married && peep.world_x == peep2.world_x 
+                        && peep.world_y == peep2.world_y && peep2.age > species->second.child_age) {
                         peep.married = true;
                         peep2.married = true;
                         peep2.married_to = peep_id;
@@ -308,8 +315,8 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 
                         if (friendliness < 0) {
                             //std::cout << " -- FIGHT! ";
-                            int our_strength = (it->second[civ_id] * planet.civs.civs[civ_id].tech_level) + rng.roll_dice(1,10);
-                            int their_strength = (it->second[other_civ] * planet.civs.civs[civ_id].tech_level) + rng.roll_dice(1,10);
+                            int our_strength = (it->second[civ_id] + planet.civs.civs[civ_id].tech_level) + rng.roll_dice(1,10);
+                            int their_strength = (it->second[other_civ] + planet.civs.civs[civ_id].tech_level) + rng.roll_dice(1,10);
                             //std::cout << our_strength << " - " << their_strength << "\n";
 
                             if (our_strength > their_strength) {
@@ -384,11 +391,11 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 }
 
 void planet_build_initial_history(planet_t &planet, rltk::random_number_generator &rng) {
-    for (int year=0; year<2525; ++year) {        
+    for (int year=2325; year<2525; ++year) {        
         planet_build_run_year(year, planet, rng);
     }
 
-    std::unordered_map<int, int> civpops;
+    boost::container::flat_map<int, int> civpops;
     int living=0;
     int dead=0;
     for (const auto &peep : planet.civs.unimportant_people) {
@@ -412,7 +419,7 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
             if (finder == civpops.end()) {
                 std::cout << "Bordering on extinct\n";
             } else {
-                std::cout << finder->second << " remain. Tech level: " << planet.civs.civs[i].tech_level << "\n";
+                std::cout << finder->second << " remain. Tech level: " << +planet.civs.civs[i].tech_level << "\n";
             }
         }
     }

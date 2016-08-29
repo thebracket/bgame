@@ -31,6 +31,24 @@ species_sentient = {
         max_age = 200, infant_age=3, child_age=30,
         glyph = glyphs['d']
     },
+    halfling = {
+        name = "Halfling", male_name = "Halfing", female_name = "Halfling", group_name = "Halflings",
+        description = "Short, sturdy folk obsessed food",
+        stat_mods = {con=1,str=1,dex=2},
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="good" },
+        max_age = 200, infant_age=3, child_age=33,
+        glyph = glyphs['h']
+    },
+    ratling = {
+        name = "Ratling", male_name = "Ratman", female_name = "Ratgirl", group_name = "Ratties",
+        description = "Short half-rat, half-human creatures who eat everything",
+        stat_mods = {con=-1,str=-1,dex=2},
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="evil" },
+        max_age = 50, infant_age=3, child_age=7,
+        glyph = glyphs['r']
+    },
     gnome = {
         name = "Gnome", male_name = "Nebli", female_name = "Neebli", group_name = "Gnomes",
         description = "Short, sturdy folk with a bad habit of inventing explosives",
@@ -48,6 +66,42 @@ species_sentient = {
         ethics = { diet="omnivore", alignment="evil" },
         max_age = 40, infant_age=1, child_age=3,
         glyph = glyphs['v']
+    },
+    goblin = {
+        name = "Goblin", male_name = "Gobbo", female_name = "Gabba", group_name = "Goblinoids",
+        description = "A small, malicious green humanoid",
+        stat_mods = { str=1, con=1, int=-2 },
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="evil" },
+        max_age = 40, infant_age=1, child_age=3,
+        glyph = glyphs['g']
+    },
+    kobold = {
+        name = "Kobold", male_name = "Kobold", female_name = "Kobold-wife", group_name = "Kobolds",
+        description = "A small, malicious blue humanoid genetically predisposed to theft",
+        stat_mods = { str=-1, dex=2, int=-1 },
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="evil" },
+        max_age = 40, infant_age=1, child_age=3,
+        glyph = glyphs['k']
+    },
+    orc = {
+        name = "Orc", male_name = "Ork", female_name = "Orc", group_name = "Orcs",
+        description = "A large, malicious green humanoid",
+        stat_mods = { str=1, con=1, int=-2 },
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="evil" },
+        max_age = 60, infant_age=1, child_age=3,
+        glyph = glyphs['o']
+    },
+    ogre = {
+        name = "Ogre", male_name = "Ogryn", female_name = "Ogra", group_name = "Ogres",
+        description = "A large, malicious humanoid",
+        stat_mods = { str=2, con=2, int=-4 },
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="evil" },
+        max_age = 60, infant_age=1, child_age=10,
+        glyph = glyphs['O']
     },
     felinus = {
         name = "Felinus", male_name = "Tom", female_name = "Queen", group_name = "Clowder",
