@@ -33,6 +33,7 @@ void settlement_t::save(std::fstream &deflate) const {
     serialize(deflate, name);
     serialize(deflate, world_x);
     serialize(deflate, world_y);
+    serialize(deflate, status);
 }
 
 void settlement_t::load(std::fstream &inflate) {
@@ -40,6 +41,7 @@ void settlement_t::load(std::fstream &inflate) {
     deserialize(inflate, name);
     deserialize(inflate, world_x);
     deserialize(inflate, world_y);
+    deserialize(inflate, status);
 }
 
 void civ_t::save(std::fstream &deflate) const {
@@ -50,6 +52,11 @@ void civ_t::save(std::fstream &deflate) const {
         serialize(deflate, it->first);
         serialize(deflate, it->second);
     }
+    serialize(deflate, extinct);
+    serialize(deflate, tech_level);
+    serialize(deflate, r);
+    serialize(deflate, g);
+    serialize(deflate, b);
 }
 
 void civ_t::load(std::fstream &inflate) {
@@ -64,6 +71,11 @@ void civ_t::load(std::fstream &inflate) {
         deserialize(inflate, feelings);
         relations[idx] = feelings;
     }
+    deserialize(inflate, extinct);
+    deserialize(inflate, tech_level);
+    deserialize(inflate, r);
+    deserialize(inflate, g);
+    deserialize(inflate, b);
 }
 
 void unimportant_person_t::save(std::fstream &deflate) const {
@@ -77,6 +89,8 @@ void unimportant_person_t::save(std::fstream &deflate) const {
     serialize(deflate, age);
     serialize(deflate, deceased);
     serialize(deflate, occupation);
+    serialize(deflate, mother_id);
+    serialize(deflate, father_id);
 }
 
 void unimportant_person_t::load(std::fstream &inflate) {
@@ -90,4 +104,6 @@ void unimportant_person_t::load(std::fstream &inflate) {
     deserialize(inflate, age);
     deserialize(inflate, deceased);
     deserialize(inflate, occupation);
+    deserialize(inflate, mother_id);
+    deserialize(inflate, father_id);
 }
