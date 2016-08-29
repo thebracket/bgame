@@ -9,12 +9,18 @@ struct settlement_t {
     int world_x, world_y;
     uint8_t status = 1;
     bool deleted = false;
+    uint8_t abandoned_years = 0;
 
     void save(std::fstream &deflate) const;
     void load(std::fstream &inflate);
 };
 
 inline void civ_cull_settlements(std::vector<settlement_t> &settlements) {
+    for (auto &s : settlements) {
+        if (s.status == 0) ++s.abandoned_years;
+        if (s.abandoned_years > 20) s.deleted = true;
+    }
+
     settlements.erase(std::remove_if(settlements.begin(), settlements.end(), [] (settlement_t &s) { return s.deleted; }), settlements.end());
 }
 
