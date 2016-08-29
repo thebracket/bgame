@@ -16,7 +16,7 @@ const std::string random_species(rltk::random_number_generator &rng) {
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
-    const int n_civs = WORLD_WIDTH;
+    const int n_civs = WORLD_WIDTH + rng.roll_dice(1,WORLD_WIDTH);
     for (int i=0; i<n_civs; ++i) {
         civ_t civ;
 
@@ -54,7 +54,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They have founded the town, " << town.name << "\n";
 
         // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(6,20);
+        const int n_peeps = rng.roll_dice(10,20);
         for (int j=0; j<n_peeps; ++j) {
             unimportant_person_t peep;
             peep.civ_id = i;
@@ -199,7 +199,9 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
         if (!planet.civs.civs[i].extinct) {
             if (civpops.find(i) == civpops.end()) {
                 planet.civs.civs[i].extinct = true;
-                std::cout << planet.civs.civs[i].name << " is now extinct.\n";
+                for (auto &town : planet.civs.settlements) {
+                    if (town.civ_id == i) town.status = 0;
+                }
             }
         }
     }
@@ -379,11 +381,39 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 
     civ_cull_settlements(planet.civs.settlements);
     planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
-    std::cout << "Year summary: " << newborns.size() << " births, " << peep_killer.size() << " deaths.\n";
 }
 
 void planet_build_initial_history(planet_t &planet, rltk::random_number_generator &rng) {
-    for (int year=2000; year<2525; ++year) {        
+    for (int year=0; year<2525; ++year) {        
         planet_build_run_year(year, planet, rng);
+    }
+
+    std::unordered_map<int, int> civpops;
+    int living=0;
+    int dead=0;
+    for (const auto &peep : planet.civs.unimportant_people) {
+        if (peep.deceased) {
+            ++dead;
+        } else {
+            ++living;
+            auto finder = civpops.find(peep.civ_id);
+            if (finder == civpops.end()) {
+                civpops[peep.civ_id] = 1;
+            } else {
+                ++finder->second;
+            }
+        }
+    }
+    std::cout << "Remaining population: " << living << ", " << dead << " deceased.\n";
+    for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
+        if (!planet.civs.civs[i].extinct) {
+        std::cout << "Civ " << planet.civs.civs[i].name << " (" << planet.civs.civs[i].species_tag << "): ";
+            auto finder = civpops.find(i);
+            if (finder == civpops.end()) {
+                std::cout << "Bordering on extinct\n";
+            } else {
+                std::cout << finder->second << " remain. Tech level: " << planet.civs.civs[i].tech_level << "\n";
+            }
+        }
     }
 }
