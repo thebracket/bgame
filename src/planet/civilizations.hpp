@@ -41,7 +41,7 @@ constexpr int GOV_DEMOCRACY = 13;
 constexpr int GOV_DEMARCHY = 14;
 constexpr int GOV_REPUBLIC = 15;
 constexpr int GOV_THEOCRACY = 16;
-const std::vector<std::string> GOVERNMENT_NAMES{"Kraterocracy", "Plutocracy", "Geniocracy", "Meritocracy", "Technocracy",
+const std::vector<std::string> GOVERNMENT_NAMES{"", "Kraterocracy", "Plutocracy", "Geniocracy", "Meritocracy", "Technocracy",
     "Timocracy", "Autocracy", "Oligarchy", "Monarchy", "Constitutional Monarchy", "Authoritarian", "Totalitarian",
     "Democracy", "Demarchy", "Republic", "Theocracy"};
 

@@ -17,7 +17,7 @@ const std::string random_species(rltk::random_number_generator &rng) {
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
-    const int n_civs = WORLD_WIDTH;
+    const int n_civs = WORLD_WIDTH*2;
     for (int i=0; i<n_civs; ++i) {
         civ_t civ;
 
@@ -56,7 +56,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They have founded the town, " << town.name << "\n";
 
         // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(10,10);
+        const int n_peeps = rng.roll_dice(3,10);
         for (int j=0; j<n_peeps; ++j) {
             unimportant_person_t peep;
             peep.civ_id = i;
@@ -91,13 +91,80 @@ inline void planet_build_year_tech_advance(planet_t &planet, rltk::random_number
         if (!civ.extinct) {
             if (civ.tech_level < 10) {
                 const int tech_roll = rng.roll_dice(1,100);
-                if (tech_roll > 98) {
+                if (tech_roll > 90) {
                     ++civ.tech_level;
                 } else if (civ.tech_level > 1 && tech_roll == 1) {
                     -- civ.tech_level;
                 }
             }
         }
+    }
+}
+
+inline void planet_build_evaluate_move_option(std::vector<int> &candidates, planet_t &planet, const int &idx) {
+    if (planet.landblocks[idx].type == block_type::WATER) return;
+
+    int weight = 1;
+    if (planet.landblocks[idx].type == block_type::PLAINS) weight=4;
+    if (planet.landblocks[idx].type == block_type::HILLS) weight=2;
+    if (planet.landblocks[idx].type == block_type::MOUNTAINS) weight=1;
+    if (planet.landblocks[idx].type == block_type::MARSH) weight=2;
+    if (planet.landblocks[idx].type == block_type::PLATEAU) weight=4;
+    if (planet.landblocks[idx].type == block_type::HIGHLANDS) weight=3;
+    if (planet.landblocks[idx].type == block_type::COASTAL) weight=4;
+    if (planet.landblocks[idx].type == block_type::SALT_MARSH) weight=1;
+
+    for (int i=0; i<weight; ++i) candidates.push_back(idx);
+}
+
+inline void planet_build_run_movement(planet_t &planet, rltk::random_number_generator &rng,
+    unimportant_person_t &peep, std::size_t &peep_id, boost::container::flat_map<std::string, raw_species_t>::iterator &species)
+{
+    // No movement for kids
+    if (peep.age < species->second.child_age) return;
+
+    int chance_of_movement = 5;
+    switch (peep.occupation) {
+        case OCC_LABORER : chance_of_movement = 5; break;
+        case OCC_FARMER : chance_of_movement = 3; break;
+        case OCC_HERBALIST : chance_of_movement = 7; break;
+        case OCC_METALWORKER : chance_of_movement = 3; break;
+        case OCC_STONEWORKER : chance_of_movement = 3; break;
+        case OCC_WOODWORKER : chance_of_movement = 3; break;
+        case OCC_COOK : chance_of_movement = 4; break;
+        case OCC_HUNTER : chance_of_movement = 7; break;
+        case OCC_SKIRMISHER : chance_of_movement = 8; break;
+        case OCC_LIGHT_INFANTRY : chance_of_movement = 15; break;
+        case OCC_INFANTRY : chance_of_movement = 10; break;
+        case OCC_HEAVY_INFANTRY : chance_of_movement = 10; break;
+        case OCC_LIGHT_CAVALRY : chance_of_movement = 15; break;
+        case OCC_MEDIUM_CAVALRY : chance_of_movement = 13; break;
+        case OCC_HEAVY_CAVALRY : chance_of_movement = 12; break;
+    }
+
+    if (rng.roll_dice(1, 20) <= chance_of_movement+5) {
+        std::vector<int> candidates;
+        if (peep.world_y > 2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x, peep.world_y-1));
+        if (peep.world_y < WORLD_HEIGHT-2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x, peep.world_y+1));
+        if (peep.world_x > 2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x-1, peep.world_y));
+        if (peep.world_x < WORLD_WIDTH-2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x+1, peep.world_y));
+
+        if (!candidates.empty()) {
+            const int roll = rng.roll_dice(1, candidates.size())-1;
+            const int destination = candidates[roll];
+            peep.world_x = destination % WORLD_WIDTH;
+            peep.world_y = destination / WORLD_WIDTH;
+        }
+
+        /*
+        int direction = rng.roll_dice(1,4);
+        switch (direction) {
+            case 1 : if (peep.world_y>2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y-1)].type != block_type::WATER) --peep.world_y; break;
+            case 2 : if (peep.world_y<WORLD_HEIGHT-2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y+1)].type != block_type::WATER) ++peep.world_y; break;
+            case 3 : if (peep.world_x>2 && planet.landblocks[planet.idx(peep.world_x-1, peep.world_y)].type != block_type::WATER) --peep.world_x; break;
+            case 4 : if (peep.world_x<WORLD_WIDTH-2 && planet.landblocks[planet.idx(peep.world_x+1, peep.world_y)].type != block_type::WATER) ++peep.world_x; break;
+        }
+        */
     }
 }
 
@@ -115,35 +182,34 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
 
             // Age and natural death
             ++peep.age;
-            if (peep.age > species->second.max_age) peep_killer.push_back(peep_id);
+            if (peep.age > species->second.max_age) {
+                peep.deceased = true;
+                peep_killer.push_back(peep_id);
+            }
 
             // TODO: Biome death!
+            if (rng.roll_dice(1,100)==1) {
+                peep.deceased = true;
+                peep_killer.push_back(peep_id);
+            }
 
             // Births
-            if (!peep.male && peep.age > species->second.child_age) {
-                int birth_chance = 20 - planet.civs.civs[peep.civ_id].tech_level;
+            if (!peep.deceased && !peep.male && peep.age > species->second.child_age) {
+                int birth_chance = 7 - planet.civs.civs[peep.civ_id].tech_level/2;
                 int max_age = species->second.max_age;
-                int age_bonus = std::max(10-max_age/10, 20);
+                int age_bonus = std::max(10-max_age/30, 5);
                 birth_chance += age_bonus;
-                if (peep.married) birth_chance += 10;
+                if (peep.married) birth_chance += 7;
                 if (rng.roll_dice(1,100) < birth_chance) {
                     newborns.push_back({peep.civ_id, peep_id, peep.married_to});
                 }
             }
 
             // Random movement
-            if (peep.age > species->second.child_age && rng.roll_dice(1,20)<(planet.civs.civs[peep.civ_id].tech_level+7)) {
-                int direction = rng.roll_dice(1,4);
-                switch (direction) {
-                    case 1 : if (peep.world_y>2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y-1)].type != block_type::WATER) --peep.world_y; break;
-                    case 2 : if (peep.world_y<WORLD_HEIGHT-2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y+1)].type != block_type::WATER) ++peep.world_y; break;
-                    case 3 : if (peep.world_x>2 && planet.landblocks[planet.idx(peep.world_x-1, peep.world_y)].type != block_type::WATER) --peep.world_x; break;
-                    case 4 : if (peep.world_x<WORLD_WIDTH-2 && planet.landblocks[planet.idx(peep.world_x+1, peep.world_y)].type != block_type::WATER) ++peep.world_x; break;
-                }
-            }
+            planet_build_run_movement(planet, rng, peep, peep_id, species);
 
             // Marriages
-            if (peep.age > species->second.child_age && peep.married == false && rng.roll_dice(1,10)>7) {
+            if (!peep.deceased && peep.age > species->second.child_age && peep.married == false && rng.roll_dice(1,10)>7) {
                 int peep2_id = 0;
                 for (auto &peep2 : planet.civs.unimportant_people) {
                     if (!peep2.deceased && peep.male == !peep2.male && !peep2.married && peep.world_x == peep2.world_x 
@@ -371,12 +437,14 @@ inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_
     }
 }
 
-inline void planet_build_new_births(planet_t &planet, std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> &newborns) {
+inline void planet_build_new_births(planet_t &planet, std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> &newborns,
+    rltk::random_number_generator &rng) 
+{
     for (auto &birth : newborns) {
         if (!planet.civs.civs[std::get<0>(birth)].extinct) {
             unimportant_person_t newbie;
             newbie.civ_id = std::get<0>(birth);
-            newbie.species_tag = planet.civs.civs[newbie.civ_id].species_tag;
+            newbie.species_tag = planet.civs.unimportant_people[std::get<1>(birth)].species_tag;
             newbie.married = false;
             newbie.married_to = 0;
             newbie.deceased = false;
@@ -385,6 +453,8 @@ inline void planet_build_new_births(planet_t &planet, std::vector<std::tuple<std
             newbie.father_id = std::get<2>(birth);
             newbie.world_x = planet.civs.unimportant_people[std::get<1>(birth)].world_x;
             newbie.world_y = planet.civs.unimportant_people[std::get<1>(birth)].world_y;
+            newbie.occupation = rng.roll_dice(1, MAX_OCCUPATION);
+            newbie.level = 1;
             planet.civs.unimportant_people.push_back(newbie);
         }
     }
@@ -420,7 +490,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
     planet_build_run_interactions(planet, rng, civlocs, peep_killer);
 
     // Perform births
-    planet_build_new_births(planet, newborns);
+    planet_build_new_births(planet, newborns, rng);
 
     // Perform deaths
     for (auto &id : peep_killer) {
@@ -436,7 +506,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 }
 
 void planet_build_initial_history(planet_t &planet, rltk::random_number_generator &rng) {
-    for (int year=2325; year<2525; ++year) {        
+    for (int year=2475; year<2525; ++year) {        
         planet_build_run_year(year, planet, rng);
     }
 
@@ -459,7 +529,7 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
     std::cout << "Remaining population: " << living << ", " << dead << " deceased.\n";
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
-        std::cout << "Civ " << planet.civs.civs[i].name << " : " << GOVERNMENT_NAMES[planet.civs.civs[i].gov_type] << " (" << planet.civs.civs[i].species_tag << "): ";
+            std::cout << "Civ " << planet.civs.civs[i].name << " : " << GOVERNMENT_NAMES[planet.civs.civs[i].gov_type] << " (" << planet.civs.civs[i].species_tag << "): ";
             auto finder = civpops.find(i);
             if (finder == civpops.end()) {
                 std::cout << "Bordering on extinct\n";

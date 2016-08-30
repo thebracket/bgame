@@ -734,7 +734,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Add anyone who is still here from world-gen
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
-            std::cout << "TODO: Spawn a " << peep.species_tag << "!\n";
+            std::cout << "TODO: Spawn a " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << "!\n";
         }
     }
 
