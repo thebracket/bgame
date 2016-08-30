@@ -57,6 +57,7 @@ void civ_t::save(std::fstream &deflate) const {
     serialize(deflate, r);
     serialize(deflate, g);
     serialize(deflate, b);
+    serialize(deflate, gov_type);
 }
 
 void civ_t::load(std::fstream &inflate) {
@@ -76,6 +77,7 @@ void civ_t::load(std::fstream &inflate) {
     deserialize(inflate, r);
     deserialize(inflate, g);
     deserialize(inflate, b);
+    deserialize(inflate, gov_type);
 }
 
 void unimportant_person_t::save(std::fstream &deflate) const {
@@ -91,6 +93,7 @@ void unimportant_person_t::save(std::fstream &deflate) const {
     serialize(deflate, occupation);
     serialize(deflate, mother_id);
     serialize(deflate, father_id);
+    serialize(deflate, level);
 }
 
 void unimportant_person_t::load(std::fstream &inflate) {
@@ -106,4 +109,5 @@ void unimportant_person_t::load(std::fstream &inflate) {
     deserialize(inflate, occupation);
     deserialize(inflate, mother_id);
     deserialize(inflate, father_id);
+    deserialize(inflate, level);
 }

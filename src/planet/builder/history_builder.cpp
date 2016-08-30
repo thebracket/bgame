@@ -27,6 +27,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         civ.r = rng.roll_dice(1,255);
         civ.g = rng.roll_dice(1,255);
         civ.b = rng.roll_dice(1,255);
+        civ.gov_type = rng.roll_dice(1, MAX_GOV_TYPE);
         //std::cout << civ.name << " - " << civ.species_tag << "\n";
 
         // Find a starting location
@@ -55,7 +56,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They have founded the town, " << town.name << "\n";
 
         // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(4,10);
+        const int n_peeps = rng.roll_dice(10,10);
         for (int j=0; j<n_peeps; ++j) {
             unimportant_person_t peep;
             peep.civ_id = i;
@@ -71,6 +72,8 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
             peep.married_to = 0;            
             peep.deceased = false;
             peep.age = 12 + rng.roll_dice(1,30);
+            peep.occupation = rng.roll_dice(1, MAX_OCCUPATION);
+            peep.level = 1;
 
             planet.civs.unimportant_people.push_back(peep);
         }
@@ -83,15 +86,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
     std::cout << "Seeded the world with " << n_civs << " civilizations and " << planet.civs.unimportant_people.size() << " folk.\n";
 }
 
-void planet_build_run_year(const int &year, planet_t &planet, rltk::random_number_generator &rng) {
-    set_worldgen_status("Running Year " + std::to_string(year));
-
-    std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> newborns;
-    boost::container::flat_map<int, std::vector<int>> civlocs;
-    boost::container::flat_map<int, int> civpops;
-    std::vector<std::size_t> peep_killer;
-
-    // Technological advancement
+inline void planet_build_year_tech_advance(planet_t &planet, rltk::random_number_generator &rng) {
     for (auto &civ : planet.civs.civs) {
         if (!civ.extinct) {
             if (civ.tech_level < 10) {
@@ -104,7 +99,14 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             }
         }
     }
+}
 
+inline void planet_build_run_people(planet_t &planet, rltk::random_number_generator &rng, 
+    std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> &newborns,
+    boost::container::flat_map<int, std::vector<int>> &civlocs,
+    boost::container::flat_map<int, int> &civpops,
+    std::vector<std::size_t> &peep_killer) 
+{
     std::size_t peep_id = 0;
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased) {
@@ -175,9 +177,11 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 
         ++peep_id;
     }
+}
 
-    // Second pass - put children with a parent
-    peep_id = 0;
+inline void planet_build_run_relocations(planet_t &planet, rltk::random_number_generator &rng, std::vector<std::size_t> &peep_killer) 
+{
+    std::size_t peep_id = 0;
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && !peep.male && peep.deceased) {
             if (!planet.civs.unimportant_people[peep.married_to].deceased) {
@@ -200,8 +204,9 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
         }
         ++peep_id;
     }
+}
 
-    // Check for extinct civilizations
+inline void planet_build_run_extinctions(planet_t &planet, boost::container::flat_map<int, int> &civpops) {
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
             if (civpops.find(i) == civpops.end()) {
@@ -212,8 +217,9 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             }
         }
     }
+}
 
-    // Check for new and empty settlements
+inline void planet_build_run_settlements(planet_t &planet, boost::container::flat_map<int, std::vector<int>> &civlocs) {
     for (auto it=civlocs.begin(); it!=civlocs.end(); ++it) {
         bool settlement_here = false;
         std::vector<std::size_t> deletable_settlements;
@@ -254,8 +260,9 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             planet.civs.settlements.push_back(town);
         }
     }
+}
 
-    // Empty settlements
+inline void planet_build_run_empty_settlements(planet_t &planet, boost::container::flat_map<int, std::vector<int>> &civlocs) {
     for (auto &town : planet.civs.settlements) {
         const int map_index = planet.idx(town.world_x, town.world_y);
         auto finder = civlocs.find(map_index);
@@ -266,7 +273,11 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             if (pop < 1) town.status = 0; // Nobody here - abandoned
         }
     }
+}
 
+inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_generator &rng, 
+    boost::container::flat_map<int, std::vector<int>> &civlocs, std::vector<std::size_t> &peep_killer)
+{
     // Check for interactions
     for (auto it=civlocs.begin(); it!=civlocs.end(); ++it) {
         int n_civs = 0;
@@ -321,7 +332,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 
                             if (our_strength > their_strength) {
                                 // Kill all of them!
-                                peep_id = 0;
+                                std::size_t peep_id = 0;
                                 for (auto &peep : planet.civs.unimportant_people) {
                                     if (!peep.deceased && peep.civ_id == other_civ && peep.world_x == x && peep.world_y == y) {
                                         if (rng.roll_dice(1,6)>3) {
@@ -337,7 +348,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
                                 //std::cout << " -- Exterminations: " << exterminated << "\n";
                             } else {
                                 // Kill all of us!
-                                peep_id = 0;
+                                std::size_t peep_id = 0;
                                 for (auto &peep : planet.civs.unimportant_people) {
                                     if (!peep.deceased && peep.civ_id == civ_id && peep.world_x == x && peep.world_y == y) {
                                         if (rng.roll_dice(1,6)>3) {
@@ -358,8 +369,9 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             }
         }
     }
+}
 
-    // Perform births
+inline void planet_build_new_births(planet_t &planet, std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> &newborns) {
     for (auto &birth : newborns) {
         if (!planet.civs.civs[std::get<0>(birth)].extinct) {
             unimportant_person_t newbie;
@@ -376,6 +388,39 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
             planet.civs.unimportant_people.push_back(newbie);
         }
     }
+}
+
+void planet_build_run_year(const int &year, planet_t &planet, rltk::random_number_generator &rng) {
+    set_worldgen_status("Running Year " + std::to_string(year));
+
+    std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> newborns;
+    boost::container::flat_map<int, std::vector<int>> civlocs;
+    boost::container::flat_map<int, int> civpops;
+    std::vector<std::size_t> peep_killer;
+
+    // Technological advancement
+    planet_build_year_tech_advance(planet, rng);
+
+    // Each peep acts independently
+    planet_build_run_people(planet, rng, newborns, civlocs, civpops, peep_killer);
+
+    // Second pass - put children with a parent
+    planet_build_run_relocations(planet, rng, peep_killer);
+
+    // Check for extinct civilizations
+    planet_build_run_extinctions(planet, civpops);
+
+    // Check for new and empty settlements
+    planet_build_run_settlements(planet, civlocs);
+
+    // Empty settlements
+    planet_build_run_empty_settlements(planet, civlocs);
+
+    // Interactions
+    planet_build_run_interactions(planet, rng, civlocs, peep_killer);
+
+    // Perform births
+    planet_build_new_births(planet, newborns);
 
     // Perform deaths
     for (auto &id : peep_killer) {
@@ -414,7 +459,7 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
     std::cout << "Remaining population: " << living << ", " << dead << " deceased.\n";
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
-        std::cout << "Civ " << planet.civs.civs[i].name << " (" << planet.civs.civs[i].species_tag << "): ";
+        std::cout << "Civ " << planet.civs.civs[i].name << " : " << GOVERNMENT_NAMES[planet.civs.civs[i].gov_type] << " (" << planet.civs.civs[i].species_tag << "): ";
             auto finder = civpops.find(i);
             if (finder == civpops.end()) {
                 std::cout << "Bordering on extinct\n";
