@@ -647,13 +647,16 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     for (auto &town : planet.civs.settlements) {
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
+            std::cout << "It had a peak population of " << town.max_size << "\n";
+            std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
+            std::cout << "With a tech level of " << +planet.civs.civs[town.civ_id].tech_level << "\n";
         }
     }
 
     // Add anyone who is still here from world-gen
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
-            std::cout << "TODO: Spawn a " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << "!\n";
+            std::cout << "TODO: Spawn a tech-level " << +planet.civs.civs[peep.civ_id].tech_level << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
         }
     }
 

@@ -10,6 +10,7 @@ struct settlement_t {
     uint8_t status = 1;
     bool deleted = false;
     uint8_t abandoned_years = 0;
+    int max_size = 0;
 
     void save(std::fstream &deflate) const;
     void load(std::fstream &inflate);
@@ -24,26 +25,23 @@ inline void civ_cull_settlements(std::vector<settlement_t> &settlements) {
     settlements.erase(std::remove_if(settlements.begin(), settlements.end(), [] (settlement_t &s) { return s.deleted; }), settlements.end());
 }
 
-constexpr uint8_t MAX_GOV_TYPE = 16;
-constexpr uint8_t GOV_KRATEROCRACY = 1;
-constexpr uint8_t GOV_PLUTOCRACY = 2;
-constexpr uint8_t GOV_GENIOCRACY = 3;
-constexpr uint8_t GOV_MERITOCRACY = 4;
+constexpr uint8_t MAX_GOV_TYPE = 13;
+constexpr uint8_t GOV_ANARCHY = 1;
+constexpr uint8_t GOV_FEUDAL = 2;
+constexpr uint8_t GOV_DICTATORSHIP = 3;
+constexpr uint8_t GOV_COMMUNIST = 4;
 constexpr uint8_t GOV_TECHNOCRACY = 5;
-constexpr uint8_t GOV_TIMOCRACY = 6;
-constexpr uint8_t GOV_AUTOCRACY = 7;
+constexpr uint8_t GOV_DEMOCRACY = 6;
+constexpr uint8_t GOV_REPUBLIC = 7;
 constexpr uint8_t GOV_OLIGARCHY = 8;
-constexpr uint8_t GOV_MONARCHY = 9;
+constexpr uint8_t GOV_FASCIST = 9;
 constexpr uint8_t GOV_CONSTITUTIONAL_MONARCHY = 10;
-constexpr uint8_t GOV_AUTHORITARIAN = 11;
+constexpr uint8_t GOV_WARLORD = 11;
 constexpr uint8_t GOV_TOTALITARIAN = 12;
-constexpr uint8_t GOV_DEMOCRACY = 13;
-constexpr uint8_t GOV_DEMARCHY = 14;
-constexpr uint8_t GOV_REPUBLIC = 15;
-constexpr uint8_t GOV_THEOCRACY = 16;
-const std::vector<std::string> GOVERNMENT_NAMES{"", "Kraterocracy", "Plutocracy", "Geniocracy", "Meritocracy", "Technocracy",
-    "Timocracy", "Autocracy", "Oligarchy", "Monarchy", "Constitutional Monarchy", "Authoritarian", "Totalitarian",
-    "Democracy", "Demarchy", "Republic", "Theocracy"};
+constexpr uint8_t GOV_THEOCRACY = 13;
+const std::vector<std::string> GOVERNMENT_NAMES{"", "Anarchy", "Feudal", "Dictatorship", "Communist", "Technocracy",
+    "Democracy", "Republic", "Oligarchy", "Fascist", "Constitutional Monarchy", "Warlord", "Totalitarian",
+    "Theocracy"};
 
 struct civ_t {
     std::string name;

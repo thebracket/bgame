@@ -14,6 +14,38 @@ const std::string random_species(rltk::random_number_generator &rng) {
     return it->first;
 }
 
+std::string str_replace(std::string &s,
+                      const std::string &toReplace,
+                      const std::string &replaceWith)
+{
+    return(s.replace(s.find(toReplace), toReplace.length(), replaceWith));
+}
+
+std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag, uint8_t gov_type, rltk::random_number_generator &rng) {
+    std::string format;
+    switch (gov_type) {
+        case GOV_ANARCHY : format = "Free {SPECIES} of {NOUN}"; break;
+        case GOV_FEUDAL : format = "{SPECIES} Duchy of {NOUN}"; break;
+        case GOV_DICTATORSHIP : format = "{SPECIES} Clan of {NOUN}"; break;
+        case GOV_COMMUNIST : format = "{SPECIES} utopian {NOUN}"; break;
+        case GOV_TECHNOCRACY : format = "{NOUN} Technocracy of Free {SPECIES}"; break;
+        case GOV_DEMOCRACY : format = "Democratic {SPECIES} of {NOUN}"; break;
+        case GOV_REPUBLIC : format = "Republican {SPECIES} of {NOUN}"; break;
+        case GOV_OLIGARCHY : format = "Corporate {SPECIES} of {NOUN}"; break;
+        case GOV_FASCIST : format = "National Socialist {SPECIES} of {NOUN}"; break;
+        case GOV_CONSTITUTIONAL_MONARCHY : format = "{SPECIES} Kingdom of {NOUN}"; break;
+        case GOV_WARLORD : format = "Mighty {SPECIES} of {NOUN}"; break;
+        case GOV_TOTALITARIAN : format = "{SPECIES} junta of {NOUN}"; break;
+        case GOV_THEOCRACY : format = "Holy {NOUN} of {SPECIES}"; break;
+        default : format = "The {SPECIES} of {NOUN}";
+    }
+    auto species = species_defs.find(species_tag);
+    str_replace(format, "{SPECIES}", species->second.collective_name);
+    str_replace(format, "{NOUN}", last_names.random_entry(rng));
+
+    return format;
+}
+
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
@@ -22,12 +54,12 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         civ_t civ;
 
         // Define the initial species
-        civ.name = std::string("Civ #") + std::to_string(i);
         civ.species_tag = random_species(rng);
         civ.r = rng.roll_dice(1,255);
         civ.g = rng.roll_dice(1,255);
         civ.b = rng.roll_dice(1,255);
         civ.gov_type = rng.roll_dice(1, MAX_GOV_TYPE);
+        civ.name = civ_name_generator(planet, i, civ.species_tag, civ.gov_type, rng);
         //std::cout << civ.name << " - " << civ.species_tag << "\n";
 
         // Find a starting location
@@ -277,7 +309,7 @@ inline void planet_build_run_extinctions(planet_t &planet, boost::container::fla
                     const std::size_t civ_id = it->first;
                     const int feelings = it->second;
 
-                    if (feelings > 0 && planet.civs.civs[i].tech_level+2 < planet.civs.civs[civ_id].tech_level) {
+                    if (feelings > 0 && planet.civs.civs[i].tech_level+4 < planet.civs.civs[civ_id].tech_level) {
                         if (rng.roll_dice(1,4)==1) {
                             planet.civs.civs[i].extinct = true;
                             for (auto &peep : planet.civs.unimportant_people) {
@@ -347,6 +379,7 @@ inline void planet_build_run_empty_settlements(planet_t &planet, boost::containe
         } else {
             const int pop = finder->second[town.civ_id];
             if (pop < 1) town.status = 0; // Nobody here - abandoned
+            if (pop > town.max_size) town.max_size = pop;
         }
     }
 }
@@ -358,7 +391,7 @@ inline int planet_build_ethics_difference(planet_t &planet, const int civ1, cons
     auto s2 = species_defs.find(species2);
 
     if (s1->second.alignment == s2->second.alignment) return 3;
-    return -3;
+    return -10;
 }
 
 inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_generator &rng, 

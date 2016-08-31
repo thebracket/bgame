@@ -34,6 +34,7 @@ void settlement_t::save(std::fstream &deflate) const {
     serialize(deflate, world_x);
     serialize(deflate, world_y);
     serialize(deflate, status);
+    serialize(deflate, max_size);
 }
 
 void settlement_t::load(std::fstream &inflate) {
@@ -42,6 +43,7 @@ void settlement_t::load(std::fstream &inflate) {
     deserialize(inflate, world_x);
     deserialize(inflate, world_y);
     deserialize(inflate, status);
+    deserialize(inflate, max_size);
 }
 
 void civ_t::save(std::fstream &deflate) const {
