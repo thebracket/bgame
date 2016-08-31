@@ -99,7 +99,7 @@ inline void create_subregions(planet_t &planet, region_t &region, std::vector<ui
             if (distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2) > 20) {
                 heightmap[tile_idx] += delta_z;
             } else {
-                if (heightmap[tile_idx] < 5) heightmap[tile_idx] = 5;
+                if (heightmap[tile_idx] < 6) heightmap[tile_idx] = 6;
             }
         }
     }

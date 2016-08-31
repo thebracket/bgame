@@ -91,7 +91,7 @@ inline void planet_build_year_tech_advance(planet_t &planet, rltk::random_number
         if (!civ.extinct) {
             if (civ.tech_level < 10) {
                 const int tech_roll = rng.roll_dice(1,100);
-                if (tech_roll > 90) {
+                if (tech_roll > 97) {
                     ++civ.tech_level;
                 } else if (civ.tech_level > 1 && tech_roll == 1) {
                     -- civ.tech_level;
@@ -155,16 +155,6 @@ inline void planet_build_run_movement(planet_t &planet, rltk::random_number_gene
             peep.world_x = destination % WORLD_WIDTH;
             peep.world_y = destination / WORLD_WIDTH;
         }
-
-        /*
-        int direction = rng.roll_dice(1,4);
-        switch (direction) {
-            case 1 : if (peep.world_y>2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y-1)].type != block_type::WATER) --peep.world_y; break;
-            case 2 : if (peep.world_y<WORLD_HEIGHT-2 && planet.landblocks[planet.idx(peep.world_x, peep.world_y+1)].type != block_type::WATER) ++peep.world_y; break;
-            case 3 : if (peep.world_x>2 && planet.landblocks[planet.idx(peep.world_x-1, peep.world_y)].type != block_type::WATER) --peep.world_x; break;
-            case 4 : if (peep.world_x<WORLD_WIDTH-2 && planet.landblocks[planet.idx(peep.world_x+1, peep.world_y)].type != block_type::WATER) ++peep.world_x; break;
-        }
-        */
     }
 }
 
@@ -272,13 +262,33 @@ inline void planet_build_run_relocations(planet_t &planet, rltk::random_number_g
     }
 }
 
-inline void planet_build_run_extinctions(planet_t &planet, boost::container::flat_map<int, int> &civpops) {
+inline void planet_build_run_extinctions(planet_t &planet, boost::container::flat_map<int, int> &civpops, rltk::random_number_generator &rng) {
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
             if (civpops.find(i) == civpops.end()) {
                 planet.civs.civs[i].extinct = true;
                 for (auto &town : planet.civs.settlements) {
                     if (town.civ_id == i) town.status = 0;
+                }
+            } else {
+                // Civ will consider surrendering to people it doesn't hate who are significantly
+                // more advanced than it.
+                for (auto it = planet.civs.civs[i].relations.begin(); it!=planet.civs.civs[i].relations.end(); ++it) {
+                    const std::size_t civ_id = it->first;
+                    const int feelings = it->second;
+
+                    if (feelings > 0 && planet.civs.civs[i].tech_level+2 < planet.civs.civs[civ_id].tech_level) {
+                        if (rng.roll_dice(1,4)==1) {
+                            planet.civs.civs[i].extinct = true;
+                            for (auto &peep : planet.civs.unimportant_people) {
+                                if (peep.civ_id == i) peep.civ_id = civ_id;
+                            }
+                            for (auto &town : planet.civs.settlements) {
+                                if (town.civ_id == i) town.civ_id = civ_id;
+                            }
+                            
+                        }
+                    } 
                 }
             }
         }
@@ -341,6 +351,16 @@ inline void planet_build_run_empty_settlements(planet_t &planet, boost::containe
     }
 }
 
+inline int planet_build_ethics_difference(planet_t &planet, const int civ1, const int civ2) {
+    const std::string species1 = planet.civs.civs[civ1].species_tag;
+    const std::string species2 = planet.civs.civs[civ2].species_tag;
+    auto s1 = species_defs.find(species1);
+    auto s2 = species_defs.find(species2);
+
+    if (s1->second.alignment == s2->second.alignment) return 3;
+    return -3;
+}
+
 inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_generator &rng, 
     boost::container::flat_map<int, std::vector<int>> &civlocs, std::vector<std::size_t> &peep_killer)
 {
@@ -376,15 +396,15 @@ inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_
                             if (relation_finder2 == planet.civs.civs[other_civ].relations.end()) {
                                 // No known relations! Determine
                                 //std::cout << " -- First contact!\n";
-                                friendliness = rng.roll_dice(1,10)-5; // TODO: Modify by ethics
+                                friendliness = rng.roll_dice(1,10)-5+planet_build_ethics_difference(planet, civ_id, other_civ); // TODO: Modify by ethics
                                 planet.civs.civs[civ_id].relations[other_civ] = friendliness;
                                 planet.civs.civs[other_civ].relations[civ_id] = friendliness;
                             } else {
-                                --relation_finder2->second;
+                                relation_finder2->second += rng.roll_dice(1,6)-3;
                                 friendliness = relation_finder2->second;
                             }
                         } else {
-                            --relation_finder->second;
+                            relation_finder->second += rng.roll_dice(1,6)-3;
                             friendliness = relation_finder->second;
                         }
 
@@ -429,6 +449,20 @@ inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_
                                 ++peep_id;
                                 //std::cout << " -- Exterminations: " << exterminated << "\n";
                             }
+                        } else {
+                            /* REMOVED FOR BALANCE
+                            // It's a friendly interaction - chance that both improve
+                            const int tl1 = planet.civs.civs[civ_id].tech_level;
+                            const int tl2 = planet.civs.civs[other_civ].tech_level;
+                            if (tl1 > tl2) {
+                                if (rng.roll_dice(1,200)==1 && tl2<10) {
+                                    ++planet.civs.civs[other_civ].tech_level;
+                                }
+                            } else {
+                                if (rng.roll_dice(1,200)==1 && tl1<10) {
+                                    ++planet.civs.civs[civ_id].tech_level;
+                                }
+                            }*/
                         }
                     }
                 }
@@ -478,7 +512,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
     planet_build_run_relocations(planet, rng, peep_killer);
 
     // Check for extinct civilizations
-    planet_build_run_extinctions(planet, civpops);
+    planet_build_run_extinctions(planet, civpops, rng);
 
     // Check for new and empty settlements
     planet_build_run_settlements(planet, civlocs);
