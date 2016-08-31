@@ -342,7 +342,7 @@ void build_beaches(region_t &region) {
 }
 
 inline void set_tree_trunk(region_t &region, const int x, const int y, const int z, const int tree_id) {
-	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
+	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-2) {
 		const int idx = mapidx(x,y,z);
         region.tile_type[idx] = tile_type::TREE_TRUNK;
         region.tree_id[idx] = tree_id;
@@ -351,7 +351,7 @@ inline void set_tree_trunk(region_t &region, const int x, const int y, const int
 }
 
 inline void set_tree_foliage(region_t &region, const int x, const int y, const int z, const int tree_id) {
-	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-1) {
+	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-2) {
 		const int idx = mapidx(x,y,z);
         region.tile_type[idx] = tile_type::TREE_LEAF;
         region.tree_id[idx] = tree_id;
@@ -458,8 +458,13 @@ void add_building(std::string tag, const int x, const int y, const int z) {
 void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
     const int idx = mapidx(x,y,z);
     region.water_level[idx] = 0;
+    region.solid[idx] = false;
+    region.tile_type[idx] = tile_type::FLOOR;
+    region.tile_flags[idx].set(CONSTRUCTION);
     auto plasteel = material_defs_idx.find("plasteel");
     if (plasteel == material_defs_idx.end()) std::cout << "Warning: Unable to locate plasteel\n";
+    region.tile_material[idx] = plasteel->second;
+    region.tile_vegetation_type[idx] = 0;
 
     if (type == "ship_wall") {
         region.tile_type[idx] = tile_type::WALL;
@@ -518,7 +523,7 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
 				if (output != nullptr && !xp::is_transparent(output)) {
                     if (output->glyph == 219 || output->glyph == 177) {
                         add_construction(region, x, y, z, "ship_wall", true);
-                    } else if (output->glyph == 176) {
+                    } else if (output->glyph == 176 || output->glyph == 197) {
                         add_construction(region, x, y, z, "ship_floor");
                     } else if (output->glyph == 'X') {
                         add_construction(region, x, y, z, "ship_updown");
