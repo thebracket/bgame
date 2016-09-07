@@ -53,7 +53,7 @@ inline void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &no
     }
 }
 
-inline void create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng) {
+inline std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng) {
     const int n_subregions = 64 + rng.roll_dice(1,20);
     const int region_variance = planet.landblocks[planet.idx(region.region_x, region.region_y)].variance;
 
@@ -466,6 +466,8 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     region.tile_material[idx] = plasteel->second;
     region.tile_vegetation_type[idx] = 0;
 
+    auto wood = material_defs_idx.find("wood");
+
     if (type == "ship_wall") {
         region.tile_type[idx] = tile_type::WALL;
         region.solid[idx] = true;
@@ -476,7 +478,17 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel->second;    
-    } else if (type == "ship_up") {
+    } else if (type == "hut_wall") {
+        region.tile_type[idx] = tile_type::WALL;
+        region.solid[idx] = true;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = wood->second;
+    } else if (type == "hut_floor") {
+        region.tile_type[idx] = tile_type::FLOOR;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = wood->second; 
+    }else if (type == "ship_up") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
@@ -578,6 +590,30 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
 		->assign(designations_t{});
 }
 
+void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active) {
+    // Temporary code - we're just going to spawn mud huts with no regard to sanity. :-X
+    auto hut = xp::rex_sprite("rex/mud-hut.xp");
+
+    for (int i=0; i<n_buildings; ++i) {
+        const int x = rng.roll_dice(1, REGION_WIDTH - 20) + 10;
+        const int y = rng.roll_dice(1, REGION_HEIGHT - 20) + 10;
+        const int z = get_ground_z(region, x, y);
+
+        for (int layer = 0; layer < 2; ++layer) {
+            for (int Y=0; Y < hut.get_height(); ++Y) {
+                for (int X = 0; X < hut.get_width(); ++X) {
+                    const vchar * output = hut.get_tile(layer,X,Y);
+                    if (output->glyph == 219 || output->glyph == 177) {
+                        add_construction(region, x+X, y+Y, z+layer, "hut_wall", true);
+                    } else if (output->glyph == 176 || output->glyph == 197) {
+                        add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                    }
+                }
+            }
+        }
+    }
+}
+
 void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::random_number_generator &rng, FastNoise &noise) {
     // Builder region
     region_t region;
@@ -597,7 +633,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     const int water_level = 5;
 
     // Sub-biome map
-    create_subregions(planet, region, heightmap, biome, rng);
+    auto subregions = create_subregions(planet, region, heightmap, biome, rng);
 
     // Strata map
     set_worldgen_status("Dividing strata");
@@ -644,13 +680,27 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 	create_settler(crash_x + 1, crash_y, crash_z+1, rng, 2);
 
     // Add features
+    bool has_settlement = false;
+    bool settlement_active = false;
+    int max_size = 0;
     for (auto &town : planet.civs.settlements) {
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
             std::cout << "It had a peak population of " << town.max_size << "\n";
             std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
             std::cout << "With a tech level of " << +planet.civs.civs[town.civ_id].tech_level << "\n";
+
+            has_settlement = true;
+            if (town.status > 0) settlement_active = true;
+            max_size += town.max_size;
         }
+    }
+
+    if (has_settlement) {
+        const int n_buildings = max_size * 5;
+        std::cout << "Spawning " << n_buildings << " buildings. \n";
+        if (!settlement_active) std::cout << "The buildings are ruined.\n";
+        build_buildings(region, rng, n_buildings, settlement_active);
     }
 
     // Add anyone who is still here from world-gen
