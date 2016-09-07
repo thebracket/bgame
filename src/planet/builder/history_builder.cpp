@@ -49,7 +49,7 @@ std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
-    const int n_civs = WORLD_WIDTH*2;
+    const int n_civs = WORLD_WIDTH*4;
     for (int i=0; i<n_civs; ++i) {
         civ_t civ;
 
@@ -88,7 +88,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They have founded the town, " << town.name << "\n";
 
         // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(3,10);
+        const int n_peeps = rng.roll_dice(5,10);
         for (int j=0; j<n_peeps; ++j) {
             unimportant_person_t peep;
             peep.civ_id = i;
