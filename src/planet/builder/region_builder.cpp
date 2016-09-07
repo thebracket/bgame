@@ -597,8 +597,17 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
     for (int i=0; i<n_buildings; ++i) {
         const int x = rng.roll_dice(1, REGION_WIDTH - 20) + 10;
         const int y = rng.roll_dice(1, REGION_HEIGHT - 20) + 10;
-        const int z = get_ground_z(region, x, y);
+        int z = get_ground_z(region, x, y);
 
+        // Find lowest point
+        for (int Y=0; Y < hut.get_height(); ++Y) {
+            for (int X = 0; X < hut.get_width(); ++X) {
+                const int tmp_z = get_ground_z(region, x+X, y+Y);
+                if (z > tmp_z) z = tmp_z;
+            }
+        }
+
+        // Spawn the hut
         for (int layer = 0; layer < 2; ++layer) {
             for (int Y=0; Y < hut.get_height(); ++Y) {
                 for (int X = 0; X < hut.get_width(); ++X) {
