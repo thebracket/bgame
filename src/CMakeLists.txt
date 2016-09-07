@@ -75,6 +75,7 @@ add_executable(bgame main.cpp
 	planet/builder/biome_builder.cpp
 	planet/builder/region_builder.cpp
 	planet/builder/history_builder.cpp
+	planet/builder/sentient_builder.cpp
 	raws/raws.cpp
 	raws/lua_bridge.cpp
 	raws/health_factory.cpp

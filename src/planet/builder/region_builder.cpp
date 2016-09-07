@@ -5,6 +5,7 @@
 #include "noise_helper.hpp"
 #include "../../components/components.hpp"
 #include "settler_builder.hpp"
+#include "sentient_builder.hpp"
 #include <rltk.hpp>
 
 using namespace rltk;
@@ -713,10 +714,16 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     }
 
     // Add anyone who is still here from world-gen
+    std::size_t peep_id = 0;
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
             std::cout << "TODO: Spawn a tech-level " << +planet.civs.civs[peep.civ_id].tech_level << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
+            const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
+            const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
+            const int z = get_ground_z(region, x, y);
+            create_sentient(x, y, z, rng, region, peep_id);
         }
+        ++peep_id;
     }
 
     // Build connectivity graphs
