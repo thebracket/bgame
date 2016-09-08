@@ -103,6 +103,19 @@ buildings = {
         emits_smoke = true
 	},
 
+	camp_fire = {
+		name = "Camp Fire",
+		components = { "wood_log" },
+		skill = { name="Construction", difficulty=5 },
+		provides = { light={radius=5, color = colors['yellow']} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['sun'], foreground = colors['firelight'], background = colors['yellow']}
+			}
+		},
+        emits_smoke = true
+	},
+
 	sawmill = {
 		name = "Sawmill",
 		components = { "wood_log" },

@@ -2,6 +2,7 @@
 #include "../planet_builder.hpp"
 #include "../../raws/raws.hpp"
 #include "../constants.hpp"
+#include "../../utils/string_utils.hpp"
 #include <boost/container/flat_map.hpp>
 #include <iostream>
 #include <sstream>
@@ -41,7 +42,7 @@ std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag
     }
     auto species = species_defs.find(species_tag);
     str_replace(format, "{SPECIES}", species->second.collective_name);
-    str_replace(format, "{NOUN}", last_names.random_entry(rng));
+    str_replace(format, "{NOUN}", to_proper_noun_case(last_names.random_entry(rng)));
 
     return format;
 }
@@ -174,7 +175,7 @@ inline void planet_build_run_movement(planet_t &planet, rltk::random_number_gene
         case OCC_HEAVY_CAVALRY : chance_of_movement = 12; break;
     }
 
-    if (rng.roll_dice(1, 20) <= chance_of_movement+5) {
+    if (rng.roll_dice(1, 20) <= chance_of_movement) {
         std::vector<int> candidates;
         if (peep.world_y > 2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x, peep.world_y-1));
         if (peep.world_y < WORLD_HEIGHT-2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x, peep.world_y+1));

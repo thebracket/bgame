@@ -10,21 +10,35 @@
 
 using namespace rltk;
 
+inline bool has_civilization(planet_t &planet, const int &x, const int &y) {
+    for (auto &town : planet.civs.settlements) {
+        if (town.world_x == x && town.world_y == y && town.status > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::pair<int,int> builder_select_starting_region(planet_t &planet) {
     std::pair<int,int> coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
 
-    while (planet.landblocks[planet.idx(coords.first, coords.second)].type != block_type::WATER &&
-            planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude > planet.water_height+2 &&
-            biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name.find("Ocean") != std::string::npos ) 
-    {
-        std::cout << biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name << "\n";
-        --coords.first;
-        if (coords.first < 0) {
-            coords.first = WORLD_WIDTH-1;
-            --coords.second;
-        }
-    }
+    bool ok = false;
+    while (!ok) {
+        ok = true;
+        if (planet.landblocks[planet.idx(coords.first, coords.second)].type == block_type::WATER) ok = false;
+        if (planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude < planet.water_height+2) ok = false;
+        if (!has_civilization(planet, coords.first, coords.second)) ok = false;
 
+        if (!ok) {
+            --coords.first;
+            if (coords.first < 0) {
+                coords.first = WORLD_WIDTH-1;
+                --coords.second;
+            }
+        }        
+    }
+    std::cout << biome_defs[planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].type].name << "\n";
+    
     return coords;
 }
 
@@ -453,6 +467,9 @@ void add_building(std::string tag, const int x, const int y, const int z) {
         new_building->assign(construct_power_t{0,1,0});
     } else if (tag == "solar_panel") {
         new_building->assign(construct_power_t{00,0,1});
+    } else if (tag == "camp_fire") {
+        new_building->assign(lightsource_t{5, rltk::colors::YELLOW});
+        new_building->assign(smoke_emitter_t{});
     }
 }
 
@@ -518,6 +535,8 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         add_building("rtg", x, y, z);
     } else if (type == "small_replicator") {
         add_building("small_replicator", x, y, z);
+    } else if (type == "campfire") {
+        add_building("camp_fire", x, y, z);
     } else {
         std::cout << "Don't know how to build a " << type << "\n";
     }
@@ -591,36 +610,70 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
 		->assign(designations_t{});
 }
 
-void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active) {
-    // Temporary code - we're just going to spawn mud huts with no regard to sanity. :-X
-    auto hut = xp::rex_sprite("rex/mud-hut.xp");
-
-    for (int i=0; i<n_buildings; ++i) {
-        const int x = rng.roll_dice(1, REGION_WIDTH - 20) + 10;
-        const int y = rng.roll_dice(1, REGION_HEIGHT - 20) + 10;
-        int z = get_ground_z(region, x, y);
-
-        // Find lowest point
-        for (int Y=0; Y < hut.get_height(); ++Y) {
-            for (int X = 0; X < hut.get_width(); ++X) {
-                const int tmp_z = get_ground_z(region, x+X, y+Y);
-                if (z > tmp_z) z = tmp_z;
-            }
-        }
-
-        // Spawn the hut
-        for (int layer = 0; layer < 2; ++layer) {
-            for (int Y=0; Y < hut.get_height(); ++Y) {
-                for (int X = 0; X < hut.get_width(); ++X) {
-                    const vchar * output = hut.get_tile(layer,X,Y);
-                    if (output->glyph == 219 || output->glyph == 177) {
-                        add_construction(region, x+X, y+Y, z+layer, "hut_wall", true);
-                    } else if (output->glyph == 176 || output->glyph == 197) {
-                        add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+inline int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, region_t &region, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active) {
+    int n_spawn = 0;
+    for (int layer = 0; layer < sprite.get_num_layers(); ++layer) {
+        for (int Y=0; Y < sprite.get_height(); ++Y) {
+            for (int X = 0; X < sprite.get_width(); ++X) {
+                const vchar * output = sprite.get_tile(layer,X,Y);
+                if (output->glyph == 219 || output->glyph == 177) {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_wall", true);
+                } else if (output->glyph == 176 || output->glyph == 197) {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                } else if (output->glyph == 's') {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                    spawn_points.push_back(std::make_tuple(x+X, y+Y, z+layer));
+                    ++n_spawn;
+                } else if (output->glyph == 234) {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                    if (active) {
+                        add_construction(region, x+X, y+Y, z+layer, "campfire");
                     }
                 }
             }
         }
+    }
+    return n_spawn;
+}
+
+void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active, std::vector<std::tuple<int,int,int>> &spawn_points) {
+    // Temporary code - we're just going to spawn mud huts with no regard to sanity. :-X
+    auto hut = xp::rex_sprite("rex/mud-hut.xp");
+
+    xp::rex_sprite * building = &hut;
+
+    for (int i=0; i<n_buildings; ++i) {
+        bool ok = false;
+        int x,y,z;
+        while (!ok) {
+            ok = true;
+            x = rng.roll_dice(1, REGION_WIDTH - 20) + 10;
+            y = rng.roll_dice(1, REGION_HEIGHT - 20) + 10;
+            z = get_ground_z(region, x, y);
+
+            // Find lowest point
+            for (int Y=0; Y < building->get_height(); ++Y) {
+                for (int X = 0; X < building->get_width(); ++X) {
+                    const int tmp_z = get_ground_z(region, x+X, y+Y);
+                    if (z > tmp_z) z = tmp_z;
+                }
+            }
+
+            // Check for solid or underwater
+            for (int Y=0; Y < building->get_height(); ++Y) {
+                for (int X = 0; X < building->get_width(); ++X) {
+                    for (int Z = 0; Z < building->get_num_layers(); ++Z) {
+                        const int idx = mapidx(X+x, Y+y, Z+z);
+                        if (region.solid[idx]) ok = false;
+                        if (region.water_level[idx] > 0) ok = false;
+                    }
+                }
+            }
+        }
+
+        // Spawn the hut
+        const int n_spawn = build_building(*building, x, y, z, region, spawn_points, active);
+        i += (n_spawn -1);
     }
 }
 
@@ -706,23 +759,32 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         }
     }
 
+    std::vector<std::tuple<int,int,int>> spawn_points;
     if (has_settlement) {
         const int n_buildings = max_size * 5;
         std::cout << "Spawning " << n_buildings << " buildings. \n";
         if (!settlement_active) std::cout << "The buildings are ruined.\n";
-        build_buildings(region, rng, n_buildings, settlement_active);
+        build_buildings(region, rng, n_buildings, settlement_active, spawn_points);
     }
 
     // Add anyone who is still here from world-gen
+    int count = 0;
     std::size_t peep_id = 0;
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
-            std::cout << "TODO: Spawn a tech-level " << +planet.civs.civs[peep.civ_id].tech_level << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
             for (int i=0; i<5; ++i) {
-                const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
-                const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
-                const int z = get_ground_z(region, x, y);
-                create_sentient(x, y, z, rng, planet, region, peep_id);
+                std::cout << "Spawn a tech-level " << +planet.civs.civs[peep.civ_id].tech_level << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
+
+                if (count < spawn_points.size()) {
+                    create_sentient(std::get<0>(spawn_points[count]), std::get<1>(spawn_points[count]), std::get<2>(spawn_points[count]),
+                        rng, planet, region, peep_id);
+                } else {
+                    const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
+                    const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
+                    const int z = get_ground_z(region, x, y);
+                    create_sentient(x, y, z, rng, planet, region, peep_id);
+                }
+                ++count;
             }
         }
         ++peep_id;
