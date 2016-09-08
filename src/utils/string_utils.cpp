@@ -30,3 +30,8 @@ std::string max_width_str(const std::string original, const int width) {
 	if (original.size() <= width) return original;
 	return original.substr(0,width);
 }
+
+std::string str_replace(std::string &s, const std::string &toReplace, const std::string &replaceWith)
+{
+    return(s.replace(s.find(toReplace), toReplace.length(), replaceWith));
+}

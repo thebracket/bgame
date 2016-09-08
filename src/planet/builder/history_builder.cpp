@@ -15,13 +15,6 @@ const std::string random_species(rltk::random_number_generator &rng) {
     return it->first;
 }
 
-std::string str_replace(std::string &s,
-                      const std::string &toReplace,
-                      const std::string &replaceWith)
-{
-    return(s.replace(s.find(toReplace), toReplace.length(), replaceWith));
-}
-
 std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag, uint8_t gov_type, rltk::random_number_generator &rng) {
     std::string format;
     switch (gov_type) {
