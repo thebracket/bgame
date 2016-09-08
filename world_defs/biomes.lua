@@ -86,7 +86,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['white'] },
         plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 5 },
-        wildlife = { "deer"}
+        wildlife = { "deer","mammoth"}
     },
     cold_salt = {
         name = "Cold Coast", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -94,7 +94,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['cyan'] },
         plants = { none=10, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, cabbage=1, cress=1 },
         trees = { deciduous = 3, evergreen = 10 },
-        wildlife = { "deer"}
+        wildlife = { "deer","mammoth"}
     },
     temperate_salt = {
         name = "Temperate Coast", min_temp = 5, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -118,7 +118,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['white'] },
         plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
-        wildlife = { "deer"}
+        wildlife = { "deer","mammoth"}
     },
     rocky_plain = {
         name = "Rocky Plain", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -152,7 +152,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['white'] },
         plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
-        wildlife = { "deer"}
+        wildlife = { "deer","mammoth"}
     },
     rocky_hills = {
         name = "Rocky Hills", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       

@@ -92,7 +92,27 @@ creatures = {
         hunting_yield = { meat=16, hide=16, bone=8, skull=1 },
         ai = "grazer",
         glyph = glyphs['b'], color=colors['wood_brown'],
-        hp_n = 1, hp_dice = 8, hp_mod = 5,
+        hp_n = 13, hp_dice = 8, hp_mod = 78,
+        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
+    },
+    mammoth = {
+        name = "Mammoth", male_name = "Bull", female_name = "Female", group_name = "Elephants",
+        description = "Enormous hairy mammals with tusks and a trunk.",
+        stats = { str=30, dex=10, con=19, int=2, wis=13, cha=7, hp=93 },
+        parts = { 
+            head = { qty=1, size = 15 },
+            trunk = { qty=1, size=10 },
+            torso = { qty = 1, size = 50 }, 
+            legs = { qty=4, size = 10 } 
+        },
+        combat = {
+            armor_class = 17,
+            attacks = { bite1 = { type="gore", hit_bonus=8, n_dice=2, die_type=8, die_mod=10 } }
+        },
+        hunting_yield = { meat=16, hide=16, bone=8, skull=1 },
+        ai = "grazer",
+        glyph = glyphs['b'], color=colors['wood_brown'],
+        hp_n = 13, hp_dice = 8, hp_mod = 78,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     }
 }
