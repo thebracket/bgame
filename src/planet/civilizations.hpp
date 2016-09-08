@@ -76,6 +76,19 @@ const std::vector<std::string> OCCUPATION_NAMES{"Unemployed", "Laborer", "Farmer
     "Stoneworker", "Woodworker", "Cook", "Hunter", "Skirmisher", "Light Infantry", "Infantry", "Heavy Infantry",
     "Light Cavalry", "Medium Cavalry", "Heavy Cavalry"}; 
 
+constexpr uint8_t TECH_AGE_STONE = 1;
+constexpr uint8_t TECH_AGE_BRONZE = 2;
+constexpr uint8_t TECH_AGE_IRON = 3;
+constexpr uint8_t TECH_AGE_MEDIEVAL = 4;
+constexpr uint8_t TECH_AGE_RENAISSANCE = 5;
+constexpr uint8_t TECH_AGE_EARLY_MODERN = 6;
+constexpr uint8_t TECH_AGE_MODERN = 7;
+constexpr uint8_t TECH_AGE_EARLY_SPACE = 8;
+constexpr uint8_t TECH_AGE_ADVANCED_SPACE = 9;
+constexpr uint8_t TECH_AGE_AMAZING = 10;
+const std::vector<std::string> TECH_LEVELS{"", "Stone Age", "Bronze Age", "Iron Age", "Medieval", "Renaissance",
+    "Early Modern", "Modern", "Early Space", "Advanced Space", "Amazing"};
+
 struct unimportant_person_t {
     std::size_t civ_id;
     std::string species_tag;

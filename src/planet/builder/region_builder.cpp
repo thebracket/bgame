@@ -616,6 +616,14 @@ inline int build_building(xp::rex_sprite &sprite, const int x, const int y, cons
         for (int Y=0; Y < sprite.get_height(); ++Y) {
             for (int X = 0; X < sprite.get_width(); ++X) {
                 const vchar * output = sprite.get_tile(layer,X,Y);
+                int material = 0;
+                if (output->foreground.r == 102 && output->foreground.g == 82 && output->foreground.b == 51) {
+                    material = 1; // Wood
+                } else {
+                    if (output->foreground.r != 0 && output->foreground.g != 0 && output->foreground.b != 0)
+                        std::cout << +output->foreground.r << "," << +output->foreground.g << "," << +output->foreground.b << "\n";
+                }
+
                 if (output->glyph == 219 || output->glyph == 177) {
                     add_construction(region, x+X, y+Y, z+layer, "hut_wall", true);
                 } else if (output->glyph == 176 || output->glyph == 197) {
@@ -666,6 +674,7 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
                         const int idx = mapidx(X+x, Y+y, Z+z);
                         if (region.solid[idx]) ok = false;
                         if (region.water_level[idx] > 0) ok = false;
+                        if (region.tile_type[idx] == tile_type::SOLID) ok = false;
                     }
                 }
             }
@@ -751,7 +760,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
             std::cout << "It had a peak population of " << town.max_size << "\n";
             std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
-            std::cout << "With a tech level of " << +planet.civs.civs[town.civ_id].tech_level << "\n";
+            std::cout << "With a tech level of " << TECH_LEVELS[planet.civs.civs[town.civ_id].tech_level] << "\n";
 
             has_settlement = true;
             if (town.status > 0) settlement_active = true;
@@ -773,7 +782,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
             for (int i=0; i<5; ++i) {
-                std::cout << "Spawn a tech-level " << +planet.civs.civs[peep.civ_id].tech_level << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
+                std::cout << "Spawn a " << TECH_LEVELS[planet.civs.civs[peep.civ_id].tech_level] << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
 
                 if (count < spawn_points.size()) {
                     create_sentient(std::get<0>(spawn_points[count]), std::get<1>(spawn_points[count]), std::get<2>(spawn_points[count]),

@@ -130,7 +130,8 @@ species_sentient = {
             horn_weapon = { qty = 1, size = 10 }
         },
         ethics = { diet="herbivore", alignment="neutral" },
-        max_age = 60, infant_age = 2, child_age = 14
+        max_age = 60, infant_age = 2, child_age = 14,
+        glyph = glyphs['R']
     },
     elder = {
         name = "Elder", male_name = "Shi", female_name = "Sha", group_name = "Wise Ones",

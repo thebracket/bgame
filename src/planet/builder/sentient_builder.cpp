@@ -18,10 +18,12 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         species.gender = FEMALE;
     }
 
+    //std::cout << species_finder->second.glyph << "\n";
     auto sentient = create_entity()
         ->assign(position_t{x,y,z})
         ->assign(name_t{ species_finder->second.name, OCCUPATION_NAMES[planet.civs.unimportant_people[person_id].occupation] })
-        ->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK });
+        ->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
+        ->assign(viewshed_t{ 8, false });
 
     /*auto sentient = create_entity()
 		->assign(position_t{ x,y,z })
