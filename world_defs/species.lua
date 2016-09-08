@@ -40,6 +40,15 @@ species_sentient = {
         max_age = 200, infant_age=3, child_age=33,
         glyph = glyphs['h']
     },
+    hamsterman = {
+        name = "Hamsterperson", male_name = "Hamsterman", female_name = "Hamsterwoman", group_name = "Hamsters",
+        description = "Cute, furry creatures with large cheek pouches",
+        stat_mods = {con=1,str=1,dex=2},
+        parts = humanoid_parts,
+        ethics = { diet="omnivore", alignment="good" },
+        max_age = 50, infant_age=1, child_age=5,
+        glyph = glyphs['h']
+    },
     ratling = {
         name = "Ratling", male_name = "Ratman", female_name = "Ratgirl", group_name = "Ratties",
         description = "Short half-rat, half-human creatures who eat everything",
@@ -132,6 +141,21 @@ species_sentient = {
         ethics = { diet="herbivore", alignment="neutral" },
         max_age = 60, infant_age = 2, child_age = 14,
         glyph = glyphs['R']
+    },
+    spiderman = {
+        name = "Spider-Person", male_name = "Spiderman", female_name = "Black Widow", group_name = "Nest",
+        description = "A terrifying hybrid spider-human",
+        stat_mods = { str=2, dex=2, int=-1 },
+        parts = { 
+            head = { qty=1, size = 10 }, 
+            torso = { qty = 1, size = 40 }, 
+            arms = { qty=4, size = 10 }, 
+            legs = { qty=4, size = 10 },
+            horn_weapon = { qty = 1, size = 10 }
+        },
+        ethics = { diet="carnivore", alignment="evil" },
+        max_age = 30, infant_age = 1, child_age = 2,
+        glyph = glyphs['S']
     },
     elder = {
         name = "Elder", male_name = "Shi", female_name = "Sha", group_name = "Wise Ones",
