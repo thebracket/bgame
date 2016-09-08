@@ -65,6 +65,7 @@ add_executable(bgame main.cpp
 	systems/particle_system.cpp
 	systems/vegetation_system.cpp
 	systems/keyboard_system.cpp
+	systems/sentient_ai_system.cpp
 	planet/planet.cpp
 	planet/civilizations.cpp
 	planet/history.cpp

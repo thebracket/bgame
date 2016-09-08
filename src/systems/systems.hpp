@@ -23,3 +23,4 @@
 #include "particle_system.hpp"
 #include "vegetation_system.hpp"
 #include "keyboard_system.hpp"
+#include "sentient_ai_system.hpp"
