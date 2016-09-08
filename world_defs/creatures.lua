@@ -133,5 +133,24 @@ creatures = {
         glyph = glyphs['h'], color=colors['wood_brown'],
         hp_n = 1, hp_dice = 4, hp_mod = 0,
         group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
+    },
+    antelope = {
+        name = "Antelope", male_name = "Buck", female_name = "Doe", group_name = "Deer",
+        description = "A graceful, horned mammal.",
+        stats = { str=10, dex=17, con=14, int=2, wis=13, cha=7, hp=8 },
+        parts = { 
+            head = { qty=1, size = 15 }, 
+            torso = { qty = 1, size = 50 }, 
+            legs = { qty=4, size = 10 } 
+        },
+        combat = {
+            armor_class = 14,
+            attacks = { bite1 = { type="bite", hit_bonus=0, n_dice=1, die_type=4, die_mod=1 } }
+        },
+        hunting_yield = { meat=4, hide=4, bone=2, skull=1 },
+        ai = "grazer",
+        glyph = glyphs['d'], color=colors['wood_brown'],
+        hp_n = 1, hp_dice = 8, hp_mod = 2,
+        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     }
 }
