@@ -142,7 +142,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['earth_brown'] },
         plants = { none=3, grass=10, grass_long=10, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1,asparagus=1, string_bean=1, broad_bean=1, caper=1, carrot=1, cassava=1, celery=1, chickpea=1, chickory=1, cowpea=1, cucumber=1, eggplant=1, garlic=1, horned_melon=1, lentil=1, lettuce=1, mung_bean=1, onion=1, parsnip=1, peanut=1, pepper=1, soybean=1, spinach=1, squash=1, sweet_potato=1, tomatillo=1, watermelon=1, yam=1 },
         trees = { deciduous = 20, evergreen = 0 },
-        wildlife = { "deer","armadillo","boar"}
+        wildlife = { "deer","armadillo","boar","elephant"}
     },
 
     -- Hills
@@ -176,7 +176,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['earth_brown'] },
         plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2,asparagus=1, cabbage=1, caper=1, carrot=1, celery=1, chickpea=1, chickory=1, eggplant=1, lentil=1, onion=1, peanut=1, pepper=1, soybean=1 },
         trees = { deciduous = 10, evergreen = 0 },
-        wildlife = { "deer","boar"}
+        wildlife = { "deer","boar","elephant"}
     },
 
      -- Plateau
