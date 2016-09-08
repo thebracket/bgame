@@ -62,6 +62,11 @@ void mode_units_system::update(const double ms) {
     {
         tab = 1;
     }
+    if (get_mouse_button_state(rltk::button::LEFT) && terminal_x > box_left+23 && 
+        terminal_x < box_left + 33 && terminal_y > box_top+2 && terminal_y < box_top+4) 
+    {
+        tab = 2;
+    }
 
     if (tab == 0) {
         
@@ -162,5 +167,43 @@ void mode_units_system::update(const double ms) {
         term(1)->box(box_left+11, box_top+2, 10, 2, DARK_GREEN, BLACK, false);
         term(1)->fill(box_left+12, box_top+3, box_left+26, box_top+3, ' ', BLACK, BLACK);
         term(1)->print(box_left+12, box_top+3, "Creatures", DARK_GREEN, BLACK);
+    }
+
+    if (tab == 2) {
+        term(1)->box(box_left+22, box_top+2, 8, 2, DARK_GREEN, BLACK, false);
+        term(1)->fill(box_left+23, box_top+3, box_left+36, box_top+3, ' ', BLACK, BLACK);
+        term(1)->print(box_left+23, box_top+3, "Natives", WHITE, BLACK);
+
+        int y = box_top + 6;
+
+        each<sentient_ai, name_t>([&y,&terminal_x,&terminal_y, &box_left] (entity_t &e, sentient_ai &ai, name_t &name) {
+            color_t background = BLACK;
+
+            if (terminal_y == y && terminal_x > 21) {
+                background = DARK_GREEN;
+            }
+
+            if (terminal_y == y && terminal_x > box_left+3 && terminal_x < box_left+8) {
+                term(1)->print (box_left+3, y, " GO ", WHITE, DARK_GREEN);
+                if (get_mouse_button_state(rltk::button::LEFT)) {
+                    // Move the camera and close
+                    game_master_mode = PLAY;
+                    emit(map_dirty_message{});
+                    emit(recalculate_mining_message{});
+                    position_t * pos = e.component<position_t>();
+                    camera_position->region_x = pos->x;
+                    camera_position->region_y = pos->y;
+                    camera_position->region_z = pos->z;
+                }
+            } else {
+                term(1)->print (box_left+3, y, " GO ", WHITE, DARKEST_GREEN);
+            }
+            term(1)->print(box_left+8, y, max_width_str(name.first_name + std::string(" ") + name.last_name, 20), WHITE, background);
+            ++y;
+        });
+    } else {
+        term(1)->box(box_left+22, box_top+2, 8, 2, DARK_GREEN, BLACK, false);
+        term(1)->fill(box_left+23, box_top+3, box_left+36, box_top+3, ' ', BLACK, BLACK);
+        term(1)->print(box_left+23, box_top+3, "Natives", DARK_GREEN, BLACK);
     }
 }
