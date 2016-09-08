@@ -134,7 +134,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['green'] },
         plants = { none=3, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1, asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cucumber=1, cress=1, garlic=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1 },
         trees = { deciduous = 20, evergreen = 3 },
-        wildlife = { "deer","boar"}
+        wildlife = { "deer","boar","hedgehog"}
     },
     savannah_plain = {
         name = "Savannah Plain", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -341,7 +341,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
         plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, bambara_groundnut=1, strawberry=1, cucumber=1, eggplant=1, garlic=1, tomato=1, tomatillo=1 },
         trees = { deciduous = 100, evergreen = 0 },
-        wildlife = { "deer","badger","boar"}
+        wildlife = { "deer","badger","boar","hedgehog"}
     },
     deciduous_needleleaf = {
         name = "Deciduous Needleleaf", min_temp = 5, max_temp = 34, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        
@@ -349,7 +349,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['clubs'], color=colors['tree_green'] },
         plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, cucumber=1, garlic=1, tomato=1, tomatillo=1 },
         trees = { deciduous = 100, evergreen = 5 },
-        wildlife = { "deer","badger","boar"}
+        wildlife = { "deer","badger","boar","hedgehog"}
     },
     evergreen_broadleef = {
         name = "Evergreen Broadleaf", min_temp = -5, max_temp = 20, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        
@@ -357,7 +357,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
         plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, garlic=1 },
         trees = { deciduous = 0, evergreen = 100 },
-        wildlife = { "deer","badger","boar"}
+        wildlife = { "deer","badger","boar","hedgehog"}
     },
     evergreen_needleleef = {
         name = "Evergreen Broadleaf", min_temp = -15, max_temp = 30, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        

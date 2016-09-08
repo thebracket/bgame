@@ -26,6 +26,7 @@ glyphs = {
 	greater_than = 62,
 	at = 64,
 	C = 67,
+	E = 69,
 	O = 79,
 	R = 82,
 	X = 88,

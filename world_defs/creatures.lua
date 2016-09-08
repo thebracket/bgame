@@ -91,7 +91,7 @@ creatures = {
         },
         hunting_yield = { meat=16, hide=16, bone=8, skull=1 },
         ai = "grazer",
-        glyph = glyphs['b'], color=colors['wood_brown'],
+        glyph = glyphs['E'], color=colors['wood_brown'],
         hp_n = 13, hp_dice = 8, hp_mod = 78,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     },
@@ -111,8 +111,27 @@ creatures = {
         },
         hunting_yield = { meat=16, hide=16, bone=8, skull=1 },
         ai = "grazer",
-        glyph = glyphs['b'], color=colors['wood_brown'],
+        glyph = glyphs['E'], color=colors['wood_brown'],
         hp_n = 13, hp_dice = 8, hp_mod = 78,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
+    },
+    hedgehog = {
+        name = "Hedgehog", male_name = "Male", female_name = "Female", group_name = "Boars",
+        description = "A dimunitive, spiny mammal with a cute nose.",
+        stats = { str=1, dex=16, con=6, int=2, wis=12, cha=7, hp=2 },
+        parts = { 
+            head = { qty=1, size = 15 }, 
+            torso = { qty = 1, size = 50 }, 
+            legs = { qty=4, size = 10 } 
+        },
+        combat = {
+            armor_class = 18,
+            attacks = { bite1 = { type="gore", hit_bonus=0, n_dice=1, die_type=8, die_mod=0 } }
+        },
+        hunting_yield = { meat=4, hide=4, bone=4, skull=1 },
+        ai = "grazer",
+        glyph = glyphs['h'], color=colors['wood_brown'],
+        hp_n = 1, hp_dice = 4, hp_mod = 0,
+        group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
     }
 }
