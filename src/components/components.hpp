@@ -24,3 +24,4 @@
 #include "corpse_settler.hpp"
 #include "corpse_harvestable.hpp"
 #include "smoke_emitter.hpp"
+#include "sentient_ai.hpp"
