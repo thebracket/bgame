@@ -37,7 +37,7 @@ creatures = {
         hp_n = 1, hp_dice = 4, hp_mod = 0,
         group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
     },
-    bager = {
+    badger = {
         name = "Badger", male_name = "Male", female_name = "Female", group_name = "Badgers",
         description = "A black and white foraging mammal.",
         stats = { str=10, dex=13, con=15, int=2, wis=12, cha=6, hp=9 },
