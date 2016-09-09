@@ -1,5 +1,5 @@
 #include "panel_render_system.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "../raws/raws.hpp"
 #include "../components/components.hpp"
 #include "../messages/messages.hpp"

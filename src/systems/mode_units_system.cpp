@@ -1,5 +1,5 @@
 #include "mode_units_system.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/recalculate_mining_message.hpp"
 #include "../utils/string_utils.hpp"

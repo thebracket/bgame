@@ -3,7 +3,7 @@
 #include "../messages/renderables_changed_message.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/vegetation_damage_message.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include <rltk.hpp>
 
 octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};

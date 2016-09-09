@@ -2,7 +2,7 @@
 
 #include <rltk.hpp>
 #include <vector>
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "boost/optional.hpp"
 
 class panel_render_system : public rltk::base_system {

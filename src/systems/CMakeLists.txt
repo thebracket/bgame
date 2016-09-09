@@ -1,0 +1,28 @@
+add_library(systems 
+	map_render_system.cpp
+	calendar_system.cpp
+	settler_ai_system.cpp
+	panel_render_system.cpp
+	mining_system.cpp
+	inventory_system.cpp
+	path_finding.cpp
+	visibility_system.cpp
+	workflow_system.cpp
+	topology_system.cpp
+	camera_system.cpp
+	renderables_system.cpp
+	lighting_system.cpp
+	power_system.cpp
+	damage_system.cpp
+	wildlife_population_system.cpp
+	movement_system.cpp
+	mode_units_system.cpp
+	mode_rogue_system.cpp
+	mode_rogue_render_system.cpp
+	corpse_system.cpp
+	particle_system.cpp
+	vegetation_system.cpp
+	keyboard_system.cpp
+	sentient_ai_system.cpp
+	world_system.cpp
+)

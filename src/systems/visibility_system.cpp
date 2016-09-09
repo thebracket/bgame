@@ -1,5 +1,5 @@
 #include "visibility_system.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "../messages/messages.hpp"
 #include "visibility_system.hpp"
 #include "movement_system.hpp"

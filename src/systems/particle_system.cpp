@@ -1,6 +1,6 @@
 #include "particle_system.hpp"
 #include "../messages/messages.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "../components/components.hpp"
 #include <rltk.hpp>
 #include <algorithm>

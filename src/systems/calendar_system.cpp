@@ -1,5 +1,5 @@
 #include "calendar_system.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "../messages/messages.hpp"
 
 void calendar_system::configure() {

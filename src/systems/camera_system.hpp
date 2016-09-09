@@ -1,7 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include <vector>
 
 extern std::vector<int> render_tiles;

@@ -3,7 +3,7 @@
 #include "../messages/recalculate_mining_message.hpp"
 #include "../messages/renderables_changed_message.hpp"
 #include "../raws/raws.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 
 void topology_system::update(const double duration_ms) {
     std::queue<perform_mining_message> * messages = mbox<perform_mining_message>();

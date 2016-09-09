@@ -1,11 +1,30 @@
 cmake_minimum_required(VERSION 3.1)
-project("Berts Game")
+project("Black Future")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -O3 -Wall -Wpedantic -march=native -mtune=native -g")
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/opt/local/lib/lua-5.2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -march=native -mtune=native -g")
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/opt/local/lib/lua-5.2 -flto")
+
+include_directories(rltk/rltk)
+
+# Require Boost
+set(Boost_USE_STATIC_LIBS      OFF) # only find static libs
+set(Boost_USE_MULTITHREADED    ON)
+set(Boost_USE_STATIC_RUNTIME   OFF)
+find_package(Boost COMPONENTS filesystem system iostreams REQUIRED)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
+# Require LUA - experimental
+set(LUA_LIBRARIES	lua-5.2)
+find_package(Lua REQUIRED)
+if(LUA_FOUND)
+	include_directories(${LUA_INCLUDE_DIR})
+endif()
+
 
 add_library(FastNoise FastNoise/FastNoise.cpp)
 
@@ -30,88 +49,28 @@ add_library(rltk rltk/rltk/rltk.cpp
 find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
-add_executable(bgame main.cpp
-	menu_helper.cpp
-	splash_screen.cpp
-	main_menu.cpp
-	world_gen.cpp
-	play_game.cpp
-	game_globals.cpp
-	components/loader.cpp
-	components/building.cpp
-	components/calendar.cpp
-	components/game_stats.cpp
-	systems/map_render_system.cpp
-	systems/calendar_system.cpp
-	systems/settler_ai_system.cpp
-	systems/panel_render_system.cpp
-	systems/mining_system.cpp
-	systems/inventory_system.cpp
-	systems/path_finding.cpp
-	systems/visibility_system.cpp
-	systems/workflow_system.cpp
-	systems/topology_system.cpp
-	systems/camera_system.cpp
-	systems/renderables_system.cpp
-	systems/lighting_system.cpp
-	systems/power_system.cpp
-	systems/damage_system.cpp
-	systems/wildlife_population_system.cpp
-	systems/movement_system.cpp
-	systems/mode_units_system.cpp
-	systems/mode_rogue_system.cpp
-	systems/mode_rogue_render_system.cpp
-	systems/corpse_system.cpp
-	systems/particle_system.cpp
-	systems/vegetation_system.cpp
-	systems/keyboard_system.cpp
-	systems/sentient_ai_system.cpp
-	systems/world_system.cpp
-	planet/planet.cpp
-	planet/civilizations.cpp
-	planet/history.cpp
-	planet/region.cpp
-	planet/planet_builder.cpp
-	planet/builder/settler_builder.cpp
-	planet/builder/map_builder.cpp
-	planet/builder/biome_builder.cpp
-	planet/builder/region_builder.cpp
-	planet/builder/history_builder.cpp
-	planet/builder/sentient_builder.cpp
-	raws/raws.cpp
-	raws/lua_bridge.cpp
-	raws/health_factory.cpp
-	utils/string_utils.cpp
-	utils/octree.cpp
-)
-add_executable(png2rex png2rex/main.cpp png2rex/PngLoader.cpp png2rex/REXSPeeder.cpp)
+add_subdirectory(components)
+add_subdirectory(planet)
+add_subdirectory(raws)
+add_subdirectory(systems)
+add_subdirectory(utils)
+add_subdirectory(main)
 
-target_include_directories(bgame PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rltk/rltk>
-)
+add_executable(bgame main.cpp)
+add_executable(png2rex png2rex/main.cpp png2rex/PngLoader.cpp png2rex/REXSPeeder.cpp)
 
 target_link_libraries(bgame)
 target_link_libraries(rltk ${SFML_LIBRARIES})
 target_link_libraries(bgame rltk)
 target_link_libraries(bgame FastNoise)
-
-# Require Boost
-set(Boost_USE_STATIC_LIBS      OFF) # only find static libs
-set(Boost_USE_MULTITHREADED    ON)
-set(Boost_USE_STATIC_RUNTIME   OFF)
-find_package(Boost COMPONENTS filesystem system iostreams REQUIRED)
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
-  target_link_libraries(rltk ${Boost_LIBRARIES})
-endif()
-
-# Require LUA - experimental
-set(LUA_LIBRARIES	lua-5.2)
-find_package(Lua REQUIRED)
-if(LUA_FOUND)
-	include_directories(${LUA_INCLUDE_DIR})
-	target_link_libraries(bgame ${LUA_LIBRARIES})
-endif()
+target_link_libraries(bgame components)
+target_link_libraries(bgame planet)
+target_link_libraries(bgame raws)
+target_link_libraries(bgame systems)
+target_link_libraries(bgame utils)
+target_link_libraries(bgame bfmain)
+target_link_libraries(rltk ${Boost_LIBRARIES})
+target_link_libraries(bgame ${LUA_LIBRARIES})
 
 # We depend upon zlib
 find_package(ZLIB REQUIRED)
@@ -125,4 +84,3 @@ endif()
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIRS})
 target_link_libraries(png2rex ${PNG_LIBRARIES})
-

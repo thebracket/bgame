@@ -1,7 +1,7 @@
 #include "vegetation_system.hpp"
 #include "../messages/vegetation_damage_message.hpp"
 #include "../messages/map_dirty_message.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 
 void vegetation_system::configure() {
     system_name = "Vegetation System";

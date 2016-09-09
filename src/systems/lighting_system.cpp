@@ -3,7 +3,7 @@
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/entity_moved_message.hpp"
 #include "../messages/power_changed_message.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "../components/components.hpp"
 #include <boost/container/flat_map.hpp>
 

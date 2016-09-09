@@ -1,9 +1,9 @@
 #include <rltk.hpp>
-#include "splash_screen.hpp"
-#include "main_menu.hpp"
-#include "world_gen.hpp"
-#include "play_game.hpp"
-#include "game_globals.hpp"
+#include "main/splash_screen.hpp"
+#include "main/main_menu.hpp"
+#include "main/world_gen.hpp"
+#include "main/play_game.hpp"
+#include "main/game_globals.hpp"
 #include "utils/string_utils.hpp"
 
 using namespace rltk;

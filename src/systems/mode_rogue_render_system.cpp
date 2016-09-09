@@ -1,6 +1,6 @@
 #include "mode_rogue_render_system.hpp"
 
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include <rltk.hpp>
 
 void mode_rogue_render_system::configure() {

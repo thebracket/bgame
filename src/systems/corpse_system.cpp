@@ -1,7 +1,7 @@
 #include "corpse_system.hpp"
 #include "../components/components.hpp"
 #include "../messages/messages.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 
 void corpse_system::configure() {
     system_name = "Corpse Handler";

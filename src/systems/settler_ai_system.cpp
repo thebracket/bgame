@@ -1,6 +1,6 @@
 #include "settler_ai_system.hpp"
 #include "../messages/messages.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "path_finding.hpp"
 #include "mining_system.hpp"
 #include "inventory_system.hpp"

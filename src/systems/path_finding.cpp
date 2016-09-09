@@ -1,7 +1,7 @@
 #include "path_finding.hpp"
 #include <rltk.hpp>
 #include "../planet/region.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 
 struct navigator_t {
 	static float get_distance_estimate(position_t &pos, position_t &goal) {

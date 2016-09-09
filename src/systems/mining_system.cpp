@@ -1,7 +1,7 @@
 #include "mining_system.hpp"
 #include "../messages/messages.hpp"
 #include "../planet/region.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include <tuple>
 
 std::vector<uint8_t> mining_map;

@@ -1,5 +1,5 @@
 #include "world_gen.hpp"
-#include "planet/planet_builder.hpp"
+#include "../planet/planet_builder.hpp"
 #include "game_globals.hpp"
 #include <iostream>
 

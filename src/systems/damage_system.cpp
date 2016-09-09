@@ -1,7 +1,7 @@
 #include "damage_system.hpp"
 #include "../messages/messages.hpp"
 #include "../components/components.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "movement_system.hpp"
 #include <rltk.hpp>
 #include <iostream>

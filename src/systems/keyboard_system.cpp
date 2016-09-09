@@ -1,6 +1,6 @@
 #include "keyboard_system.hpp"
 #include "../messages/messages.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 
 void keyboard_system::configure() {
     system_name = "Keyboard Handler";

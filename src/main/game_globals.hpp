@@ -1,8 +1,8 @@
 #pragma once
 
-#include "planet/planet.hpp"
-#include "planet/region.hpp"
-#include "components/components.hpp"
+#include "../planet/planet.hpp"
+#include "../planet/region.hpp"
+#include "../components/components.hpp"
 #include <rltk.hpp>
 #include <boost/optional.hpp>
 #include <memory>

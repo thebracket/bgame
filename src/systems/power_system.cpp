@@ -1,6 +1,6 @@
 #include "power_system.hpp"
 #include "../messages/messages.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include <sstream>
 
 void power_system::calculate(int consumption) {

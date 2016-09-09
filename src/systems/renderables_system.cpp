@@ -5,7 +5,7 @@
 #include "../components/position.hpp"
 #include "../components/building.hpp"
 #include "../planet/region.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "particle_system.hpp"
 
 using namespace rltk;

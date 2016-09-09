@@ -2,7 +2,7 @@
 #include "splash_screen.hpp"
 #include "menu_helper.hpp"
 #include "constants.hpp"
-#include "raws/raws.hpp"
+#include "../raws/raws.hpp"
 #include "game_globals.hpp"
 #include <iostream>
 #include <atomic>
@@ -42,8 +42,8 @@ void splash_screen::tick(const double duration_ms) {
 }
 
 void splash_screen::init() {
-	register_texture("../assets/background_image.png", "backdrop");
-	register_texture("../assets/gamelogo.png", "logo");
+	register_texture("assets/background_image.png", "backdrop");
+	register_texture("assets/gamelogo.png", "logo");
 
 	auto window_size = get_window()->getSize();
 	const int window_width = window_size.x;

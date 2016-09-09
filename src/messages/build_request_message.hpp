@@ -2,7 +2,7 @@
 
 #include <rltk.hpp>
 #include "../components/position.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include <boost/optional.hpp>
 
 struct build_request_message : public rltk::base_message_t {

@@ -1,7 +1,7 @@
 #include "map_render_system.hpp"
 #include "../raws/raws.hpp"
 #include "../messages/messages.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 #include "renderables_system.hpp"
 #include "camera_system.hpp"
 #include "lighting_system.hpp"

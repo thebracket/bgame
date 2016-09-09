@@ -3,7 +3,7 @@
 #include <rltk.hpp>
 #include "../components/components.hpp"
 #include "../raws/raws.hpp"
-#include "../game_globals.hpp"
+#include "../main/game_globals.hpp"
 
 class inventory_system : public rltk::base_system {
 public:
