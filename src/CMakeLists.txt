@@ -59,6 +59,38 @@ add_subdirectory(main)
 add_executable(bgame main.cpp)
 add_executable(png2rex png2rex/main.cpp png2rex/PngLoader.cpp png2rex/REXSPeeder.cpp)
 
+if (APPLE)
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+	set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2015-Present Bracket Productions")
+	set(MACOSX_BUNDLE_BUNDLE_NAME "Black Future")
+	add_executable(bf MACOSX_BUNDLE main.cpp)
+	target_link_libraries(bf)
+	target_link_libraries(bf rltk)
+	target_link_libraries(bf FastNoise)
+	target_link_libraries(bf components)
+	target_link_libraries(bf planet)
+	target_link_libraries(bf raws)
+	target_link_libraries(bf systems)
+	target_link_libraries(bf utils)
+	target_link_libraries(bf bfmain)
+	target_link_libraries(bf ${LUA_LIBRARIES})
+#	fixup_bundle(${CMAKE_INSTALL_PREFIX}/bf.app "" "")
+	install(CODE "
+	include (BundleUtilities)
+	fixup_bundle(${CMAKE_INSTALL_PREFIX}/bf.app \"\" \"\")
+	" COMPONENT bf)
+	add_custom_command(
+		TARGET bf
+		COMMAND mkdir -p bf.app/Contents/MacOS/assets
+		COMMAND mkdir -p bf.app/Contents/MacOS/world
+		COMMAND mkdir -p bf.app/Contents/MacOS/world_defs
+		COMMAND mkdir -p bf.app/Contents/MacOS/rex
+		COMMAND cp -R ../assets/* bf.app/Contents/MacOS/assets
+		COMMAND cp -R ../world_defs/* bf.app/Contents/MacOS/world_defs
+		COMMAND cp -R ../rex/* bf.app/Contents/MacOS/rex
+	)
+endif()
+
 target_link_libraries(bgame)
 target_link_libraries(rltk ${SFML_LIBRARIES})
 target_link_libraries(bgame rltk)
@@ -84,3 +116,4 @@ endif()
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIRS})
 target_link_libraries(png2rex ${PNG_LIBRARIES})
+

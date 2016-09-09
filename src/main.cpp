@@ -5,9 +5,12 @@
 #include "main/play_game.hpp"
 #include "main/game_globals.hpp"
 #include "utils/string_utils.hpp"
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
 using namespace rltk;
 using namespace rltk::colors;
+namespace fs = boost::filesystem;
 
 enum game_mode_t { SPLASH, MAIN_MENU, WORLD_GEN, PLAY_GAME };
 game_mode_t mode = SPLASH;
@@ -90,8 +93,14 @@ void read_config() {
 	}
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+	fs::path full_path( fs::initial_path<fs::path>() );
+	full_path = fs::system_complete( fs::path( argv[0] ) );
+	std::cout << full_path << std::endl;
+	std::cout << full_path.parent_path() << std::endl;
+	fs::current_path(full_path.parent_path());
+
 	read_config();
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future"));
 	splash.init();
