@@ -2,5 +2,8 @@
 /.kdev4/
 /bgame.kdev4
 /build_eclipse/
+ext/
+artwork/
+.vscode/
 .DS_Store
 
