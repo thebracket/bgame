@@ -97,6 +97,7 @@ void mode_rogue_system::update(const double ms) {
         auto entities = entity_octree.find_by_loc(octree_location_t{world_x, world_y, camera_position->region_z});
         for (const auto &id : entities) {
             if (entity(id)->component<grazer_ai>() != nullptr) ai->targeted_hostile = id;
+            if (entity(id)->component<sentient_ai>() != nullptr) ai->targeted_hostile = id;
         }
         if (ai->targeted_hostile != 0 && get_mouse_button_state(rltk::button::LEFT)) {
             position_t * target_pos = entity(ai->targeted_hostile)->component<position_t>();
