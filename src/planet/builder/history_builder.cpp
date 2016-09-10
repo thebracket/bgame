@@ -303,8 +303,8 @@ inline void planet_build_run_extinctions(planet_t &planet, boost::container::fla
                     const std::size_t civ_id = it->first;
                     const int feelings = it->second;
 
-                    if (feelings > 0 && planet.civs.civs[i].tech_level+4 < planet.civs.civs[civ_id].tech_level) {
-                        if (rng.roll_dice(1,4)==1) {
+                    if (feelings > 0 && planet.civs.civs[i].tech_level+2 < planet.civs.civs[civ_id].tech_level) {
+                        if (rng.roll_dice(1,8)==1) {
                             planet.civs.civs[i].extinct = true;
                             for (auto &peep : planet.civs.unimportant_people) {
                                 if (peep.civ_id == i) peep.civ_id = civ_id;

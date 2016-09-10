@@ -100,8 +100,8 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
     set_worldgen_status("Making sub-biomes");
     std::vector<int> variance;
     for (int i=0; i<n_subregions; ++i) {
-        const int up_variance = rng.roll_dice(1, region_variance+1)-1;
-        const int down_variance = rng.roll_dice(1, region_variance+1)-1;
+        const int up_variance = rng.roll_dice(1, 2)-1;
+        const int down_variance = rng.roll_dice(1, 2)-1;
         variance.push_back( up_variance - down_variance );
     }
 
@@ -114,8 +114,6 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
             const int delta_z = variance[sub_idx];
             if (distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2) > 20) {
                 heightmap[tile_idx] += delta_z;
-            } else {
-                if (heightmap[tile_idx] < 6) heightmap[tile_idx] = 6;
             }
         }
     }

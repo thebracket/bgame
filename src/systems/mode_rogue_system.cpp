@@ -51,7 +51,6 @@ void mode_rogue_system::configure() {
                     ai->job_type_major = JOB_IDLE;
                     ai->job_status = "Idle";
                     pause_mode = PAUSED;
-                    return;
                 } else if (ai->job_type_major == JOB_ROGUE_SHOOT) {
                     emit(settler_ranged_attack_message{settler->id, ai->targeted_hostile});
                     ai->job_type_major = JOB_IDLE;
