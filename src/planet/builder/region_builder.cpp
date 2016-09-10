@@ -109,11 +109,13 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
     // TODO: Actual variance rather than just altitude when the raws permit it
     for (int y=0; y<REGION_HEIGHT; ++y) {
         for (int x=0; x<REGION_WIDTH; ++x) {
-            const int tile_idx = (y * WORLD_WIDTH) + x;
+            const int tile_idx = (y * REGION_WIDTH) + x;
             const int sub_idx = subregion_idx[tile_idx];
             const int delta_z = variance[sub_idx];
             if (distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2) > 20) {
                 heightmap[tile_idx] += delta_z;
+            } else {
+                heightmap[tile_idx] = heightmap[ ( REGION_HEIGHT/2 * REGION_WIDTH) + ((REGION_WIDTH/2) - 20) ];
             }
         }
     }
@@ -676,6 +678,9 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
                     }
                 }
             }
+
+            // Not too close to the escape pod!
+            if (distance2d(x,y, REGION_WIDTH/2, REGION_HEIGHT/2) < 15.0F) ok = false;
         }
 
         // Spawn the hut
