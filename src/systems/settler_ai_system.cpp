@@ -80,7 +80,7 @@ void settler_ai_system::configure() {
                 std::size_t closest_fear = 0;
                 for (const std::size_t other_entity : view.visible_entities) {
 					entity_t * other_ptr = rltk::entity(other_entity);
-                    if (other_ptr != nullptr && other_ptr->component<grazer_ai>() != nullptr) {
+                    if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() != nullptr || other_ptr->component<sentient_ai>() != nullptr)) {
                         terrified = true;
                         position_t * other_pos = rltk::entity(other_entity)->component<position_t>();
                         const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
