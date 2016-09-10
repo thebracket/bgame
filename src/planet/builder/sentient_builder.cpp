@@ -45,7 +45,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ->assign(position_t{x,y,z})
         ->assign(name_t{ species_finder->second.name, OCCUPATION_NAMES[planet.civs.unimportant_people[person_id].occupation] })
         ->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
-        ->assign(viewshed_t{ 8, false })
+        ->assign(viewshed_t{ 8, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
         ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id});

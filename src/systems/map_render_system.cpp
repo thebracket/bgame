@@ -31,7 +31,7 @@ vchar get_render_char(const int &x, const int &y) {
 	if (idx == 0) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 	if (!current_region->revealed[idx]) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 	
-	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
+	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};	
 	auto rf = renderables.find(idx);
 	if (rf != renderables.end()) {
 		result = rf->second;
