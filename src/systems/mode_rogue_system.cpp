@@ -3,6 +3,7 @@
 #include "../messages/messages.hpp"
 #include "path_finding.hpp"
 #include "movement_system.hpp"
+#include "weapons_helpers.hpp"
 #include <rltk.hpp>
 
 void mode_rogue_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
@@ -51,6 +52,11 @@ void mode_rogue_system::configure() {
                     ai->job_status = "Idle";
                     pause_mode = PAUSED;
                     return;
+                } else if (ai->job_type_major == JOB_ROGUE_SHOOT) {
+                    emit(settler_ranged_attack_message{settler->id, ai->targeted_hostile});
+                    ai->job_type_major = JOB_IDLE;
+                    ai->job_status = "Idle";
+                    pause_mode = PAUSED;
                 }
 
                 settler_calculate_initiative(*ai, *stats);
@@ -101,7 +107,16 @@ void mode_rogue_system::update(const double ms) {
                 ai->job_status = "Melee attack";
                 emit(renderables_changed_message{});
                 pause_mode = RUNNING;
-            } 
+            } else {
+                if (shooting_range(*settler, *pos) > range) {
+                    ai->job_type_major = JOB_ROGUE_SHOOT;
+                    ai->job_status = "Ranged attack";
+                    emit(renderables_changed_message{});
+                    pause_mode = RUNNING;
+                } else {
+                    std::cout << "Cannot fire - weapon/range/ammo fail.\n";
+                }
+            }
         }
 
         if (ai->targeted_hostile==0 && current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {

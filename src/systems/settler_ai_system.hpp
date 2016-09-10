@@ -12,10 +12,6 @@ private:
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
-	bool has_melee_weapon(const entity_t &entity) const;
-	std::pair<bool, std::string> has_ranged_weapon(const entity_t &entity) const;
-	bool has_appropriate_ammo(const entity_t &entity, const std::string ammo_type, const position_t &pos) const;
-	int shooting_range(const entity_t &entity, const position_t &pos) const;
 	bool butcher_and_corpses_exist() const;
 
 	void change_settler_glyph(entity_t &entity, const vchar &render_as);

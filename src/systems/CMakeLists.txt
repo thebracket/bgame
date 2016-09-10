@@ -25,4 +25,5 @@ add_library(systems
 	keyboard_system.cpp
 	sentient_ai_system.cpp
 	world_system.cpp
+	weapons_helpers.cpp
 )
