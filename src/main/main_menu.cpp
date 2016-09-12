@@ -91,6 +91,29 @@ void main_menu::tick(const double duration_ms) {
 	const int y_height = term(LOG_LAYER)->term_height;
 	const int y_center = y_height / 2;
 
+	int mouse_x, mouse_y;
+	int font_w, font_h;
+	std::tie(mouse_x, mouse_y) = get_mouse_position();
+	std::tie(font_w, font_h) = term(LOG_LAYER)->get_font_size();
+	const int terminal_x = mouse_x / font_w;
+	const int terminal_y = mouse_y / font_h;
+	const int term_width = term(LOG_LAYER)->term_width;
+	const int half_term_width = term_width/2;
+
+	if (terminal_y == y_center-3 && terminal_x > half_term_width-6 && terminal_x < half_term_width+7 && world_exists) {
+		selected=0;
+		if (get_mouse_button_state(rltk::button::LEFT)) clicked = true;
+	}
+	if (terminal_y == y_center-2 && terminal_x > half_term_width-6 && terminal_x < half_term_width+7) {
+		selected=1;
+		if (get_mouse_button_state(rltk::button::LEFT)) clicked = true;
+	}
+	if (terminal_y == y_center-1 && terminal_x > half_term_width-6 && terminal_x < half_term_width+7 && world_exists) {
+		selected=2;
+		if (get_mouse_button_state(rltk::button::LEFT)) clicked = true;
+	}
+
+
 	term(LOG_LAYER)->clear();
 	term(LOG_LAYER)->print_center(y_center - 6, VERSION, WHITE, BLACK);
 	term(LOG_LAYER)->print_center(y_center - 5, tagline, LIGHT_RED, BLACK);
