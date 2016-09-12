@@ -68,7 +68,7 @@ void main_menu::destroy() {
 }
 
 void main_menu::tick(const double duration_ms) {
-	if (key_delay < 1.0) {
+	if (key_delay < 1.0 && is_window_focused()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			--selected;
 			if (selected < 0) selected = 2;
