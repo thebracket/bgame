@@ -15,6 +15,6 @@ public:
 
 private:
 	std::string tagline;
-	std::string get_descriptive_noun();
+	std::pair<int,std::string> get_descriptive_noun(const int do_not_use=-1) const;
 };
 

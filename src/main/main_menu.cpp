@@ -12,28 +12,32 @@ constexpr int LOG_LAYER=2;
 using namespace rltk;
 using namespace rltk::colors;
 
-std::string main_menu::get_descriptive_noun() {
+std::pair<int,std::string> main_menu::get_descriptive_noun(const int do_not_use) const {
 	random_number_generator rng;
-	switch (rng.roll_dice(1,17)) {
-		case 1 : return std::string("Stupidity");
-		case 2 : return std::string("Idiocy");
-		case 3 : return std::string("Dullness");
-		case 4 : return std::string("Foolishness");
-		case 5 : return std::string("Futility");
-		case 6 : return std::string("Naievity");
-		case 7 : return std::string("Senselessness");
-		case 8 : return std::string("Shortsightedness");
-		case 9 : return std::string("Triviality");
-		case 10 : return std::string("Brainlessness");
-		case 11 : return std::string("Inanity");
-		case 12 : return std::string("Insensitivity");
-		case 13 : return std::string("Indiscretion");
-		case 14 : return std::string("Mindlessness");
-		case 15 : return std::string("Moronism");
-		case 16 : return std::string("Obtuseness");
-		case 17 : return std::string("Unthinkingness");
+	int roll = do_not_use;
+	while (roll == do_not_use) {
+		roll = rng.roll_dice(1,17);
 	}
-	return "Bugginess";
+	switch (roll) {
+		case 1 : return std::make_pair(1, std::string("Stupidity"));
+		case 2 : return std::make_pair(2, std::string("Idiocy"));
+		case 3 : return std::make_pair(3, std::string("Dullness"));
+		case 4 : return std::make_pair(4, std::string("Foolishness"));
+		case 5 : return std::make_pair(5, std::string("Futility"));
+		case 6 : return std::make_pair(6, std::string("Naievity"));
+		case 7 : return std::make_pair(7, std::string("Senselessness"));
+		case 8 : return std::make_pair(8, std::string("Shortsightedness"));
+		case 9 : return std::make_pair(9, std::string("Triviality"));
+		case 10 : return std::make_pair(10, std::string("Brainlessness"));
+		case 11 : return std::make_pair(11, std::string("Inanity"));
+		case 12 : return std::make_pair(12, std::string("Insensitivity"));
+		case 13 : return std::make_pair(13, std::string("Indiscretion"));
+		case 14 : return std::make_pair(14, std::string("Mindlessness"));
+		case 15 : return std::make_pair(15, std::string("Moronism"));
+		case 16 : return std::make_pair(16, std::string("Obtuseness"));
+		case 17 : return std::make_pair(17, std::string("Unthinkingness"));
+	}
+	return std::make_pair(18, "Bugginess");
 }
 
 void main_menu::init() {
@@ -50,15 +54,21 @@ void main_menu::init() {
 	}
 
 	random_number_generator rng;
-	switch (rng.roll_dice(1,6)) {
+	switch (rng.roll_dice(1,8)) {
 		case 1 : tagline = "Histories "; break;
 		case 2 : tagline = "Chronicles "; break;
 		case 3 : tagline = "Sagas "; break;
 		case 4 : tagline = "Annals "; break;
 		case 5 : tagline = "Narratives "; break;
 		case 6 : tagline = "Recitals "; break;
+		case 7 : tagline = "Tales "; break;
+		case 8 : tagline = "Stories "; break;
 	}
-	tagline += "of " + get_descriptive_noun() + " and " + get_descriptive_noun();
+
+	auto first_noun = get_descriptive_noun();
+	auto second_noun = get_descriptive_noun(first_noun.first);
+
+	tagline += "of " + first_noun.second + " and " + second_noun.second;
 }
 
 void main_menu::destroy() {
@@ -118,6 +128,7 @@ void main_menu::tick(const double duration_ms) {
 	term(LOG_LAYER)->print_center(y_center - 6, VERSION, WHITE, BLACK);
 	term(LOG_LAYER)->print_center(y_center - 5, tagline, LIGHT_RED, BLACK);
 	term(LOG_LAYER)->print_center(y_center + 5, "Powered by RLTK - the RogueLike Tool Kit", RED, BLACK);
+	term(LOG_LAYER)->print_center(y_center + 6, "http://www.bracketproductions.com/", YELLOW, BLACK);
 
 	if (selected != 0) {
 		if (world_exists) {
