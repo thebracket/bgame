@@ -215,24 +215,20 @@ void region_t::calc_render(const int &idx) {
 			} 
 
 			if (tile_vegetation_type[idx]>0) {
-				glyph = plant_defs[tile_vegetation_type[idx]].glyph;
 				const float damage_pct = (float)tile_hit_points[idx] / 10.0F;				
 				fg = lerp(fg, plant_defs[tile_vegetation_type[idx]].fg, damage_pct);
 				bg = plant_defs[tile_vegetation_type[idx]].bg;
 			}
 		} break;
 		case tile_type::STAIRS_UP : {
-			// TODO: Color determined by material
 			glyph = '<';
 			fg = material_defs[tile_material[idx]].fg;
 		} break;
 		case tile_type::STAIRS_DOWN : {
-			// TODO: Color determined by material
 			glyph = '>';
 			fg = material_defs[tile_material[idx]].fg;
 		} break;
 		case tile_type::STAIRS_UPDOWN : {
-			// TODO: Color determined by material
 			glyph = 'X';
 			fg = material_defs[tile_material[idx]].fg;
 		} break;

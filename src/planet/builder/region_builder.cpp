@@ -271,7 +271,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             }
             
             // Populate the surface tile at z-1
-            //region.revealed[mapidx(x,y,z-1)] = true;
+            region.revealed[mapidx(x,y,z-1)] = true;
             region.tile_type[mapidx(x,y,z-1)] = tile_type::FLOOR;
             if (wet) {
                 region.water_level[mapidx(x,y,z-1)] = 10; // Below the water line; flood it!
@@ -319,7 +319,29 @@ void build_ramps(region_t &region) {
                 if (region.tile_type[mapidx(x-1,y,z+1)] == tile_type::FLOOR) is_ramp = true;
                 if (region.tile_type[mapidx(x+1,y,z+1)] == tile_type::FLOOR) is_ramp = true;
 
-                if (is_ramp) region.tile_type[mapidx(x,y,z)]=tile_type::RAMP;
+                if (is_ramp) {
+                    const int idx = mapidx(x,y,z);
+                    region.tile_type[idx]=tile_type::RAMP;
+                    region.revealed[idx] = true;
+                }
+            }
+        }
+    }
+
+    for (int z=1; z<REGION_DEPTH-1; ++z) {
+        for (int y=1; y<REGION_HEIGHT-1; ++y) {
+            for (int x=1; x<REGION_WIDTH-1; ++x) {
+                if (region.tile_type[mapidx(x,y,z)] == tile_type::SOLID) {
+                    bool is_edge = false;
+                    if (region.tile_type[mapidx(x,y-1,z)] == tile_type::FLOOR || region.tile_type[mapidx(x,y-1,z)] == tile_type::OPEN_SPACE) is_edge = true;
+                    if (region.tile_type[mapidx(x,y+1,z)] == tile_type::FLOOR || region.tile_type[mapidx(x,y+1,z)] == tile_type::OPEN_SPACE) is_edge = true;
+                    if (region.tile_type[mapidx(x-1,y,z)] == tile_type::FLOOR || region.tile_type[mapidx(x-1,y,z)] == tile_type::OPEN_SPACE) is_edge = true;
+                    if (region.tile_type[mapidx(x+1,y,z)] == tile_type::FLOOR || region.tile_type[mapidx(x+1,y,z)] == tile_type::OPEN_SPACE) is_edge = true;
+
+                    if (is_edge) {
+                        region.revealed[mapidx(x,y,z)] = true;
+                    }
+                }
             }
         }
     }
