@@ -333,6 +333,14 @@ void panel_render_system::render_design_mode() {
 	term(2)->print(32,1, "ESC", YELLOW);
 	term(2)->print(36,1, "Resume normal play");
 
+	int mouse_x, mouse_y;
+	int font_w, font_h;
+	std::tie(mouse_x, mouse_y) = get_mouse_position();
+	std::tie(font_w, font_h) = term(1)->get_font_size();
+	const int terminal_x = mouse_x / font_w;
+	const int terminal_y = mouse_y / font_h;
+	const bool clicked = get_mouse_button_state(rltk::button::LEFT);
+
 	if (game_design_mode == DIGGING) {		
 
 		int tt_x = term(1)->term_width - 21;
@@ -352,59 +360,87 @@ void panel_render_system::render_design_mode() {
 
 		if (game_mining_mode == DIG) {
 			term(1)->print(tt_x+1, 7, "(d) Dig", YELLOW, DARKEST_GREEN);
-		} else { 
-			term(1)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG); 
+		} else {
+			if (terminal_y == 7 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,7, "(d) Dig", GREEN, GREEN_BG);
+				if (clicked) game_mining_mode = DIG;
+			} else {
+				term(1)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG);
+			} 
 		}
 		term(1)->print(tt_x+2, 7, "d", YELLOW); 
 
 		if (game_mining_mode == CHANNEL) { 
 			term(1)->print(tt_x+1, 8, "(c) Channel", YELLOW, DARKEST_GREEN);			
 		} else { 
-			term(1)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG); 
+			if (terminal_y == 8 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,8, "(c) Channel", GREEN, GREEN_BG);
+				if (clicked) game_mining_mode = CHANNEL;
+			} else {
+				term(1)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG);
+			} 
 		}
 		term(1)->print(tt_x+2, 8, "c", YELLOW); 
 
 		if (game_mining_mode == RAMP) { 
 			term(1)->print(tt_x+1, 9, "(r) Ramp", YELLOW, DARKEST_GREEN); 
-		} else { 
-			term(1)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG); 
+		} else {
+			if (terminal_y == 9 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,9, "(r) Ramp", GREEN, GREEN_BG);
+				if (clicked) game_mining_mode = RAMP;
+			} else {
+				term(1)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG);
+			} 
 		}
 		term(1)->print(tt_x+2, 9, "r", YELLOW); 
 
 		if (game_mining_mode == UP) { 
 			term(1)->print(tt_x+1, 10, "(u) Up Stairs", YELLOW, DARKEST_GREEN); 
 		} else { 
-			term(1)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG); 		
+			if (terminal_y == 10 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,10, "(u) Up Stairs", GREEN, GREEN_BG);
+				if (clicked) game_mining_mode = UP;
+			} else {
+				term(1)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG);
+			} 		
 		}
 		term(1)->print(tt_x+2, 10, "u", YELLOW); 
 
 		if (game_mining_mode == DOWN) { 
 			term(1)->print(tt_x+1, 11, "(j) Down Stairs", YELLOW, DARKEST_GREEN); 
 		} else { 
-			term(1)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG); 
+			if (terminal_y == 11 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,11, "(j) Down Stairs", GREEN, GREEN_BG);
+				if (clicked) game_mining_mode = DOWN;
+			} else {
+				term(1)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG);
+			} 
 		}
 		term(1)->print(tt_x+2, 11, "j", YELLOW); 
 
 		if (game_mining_mode == UPDOWN) { 
 			term(1)->print(tt_x+1, 12, "(i) Up/Down Stairs", YELLOW, DARKEST_GREEN); 
 		} else { 
-			term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG); 
+			if (terminal_y == 12 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", GREEN, GREEN_BG);
+				if (clicked) game_mining_mode = UPDOWN;
+			} else {
+				term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG);
+			} 
 		}
 		term(1)->print(tt_x+2, 12, "i", YELLOW); 
 
 		if (game_mining_mode == DELETE) { 
 			term(1)->print(tt_x+1 ,13, "(x) Clear", YELLOW, DARKEST_GREEN); 
 		} else { 
-			term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG); 
+			if (terminal_y == 13 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
+				term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
+				if (clicked) game_mining_mode = DELETE;
+			} else {
+				term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
+			} 
 		}
 		term(1)->print(tt_x+2, 13, "x", YELLOW); 
-
-		int mouse_x, mouse_y;
-		int font_w, font_h;
-		std::tie(mouse_x, mouse_y) = get_mouse_position();
-		std::tie(font_w, font_h) = term(1)->get_font_size();
-		const int terminal_x = mouse_x / font_w;
-		const int terminal_y = mouse_y / font_h;
 
 		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
 			if (get_mouse_button_state(rltk::button::LEFT)) {
@@ -427,8 +463,16 @@ void panel_render_system::render_design_mode() {
 		}
 
 	} else {
-		term(1)->print(5, 3, "Digging", WHITE);
-		term(1)->print(5,3,"d", YELLOW);
+		if (terminal_y == 3 && terminal_x > 4 && terminal_x < 13) {
+			term(1)->print(5, 3, "Digging", GREEN);
+			if (clicked) {
+				game_design_mode = DIGGING;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(1)->print(5, 3, "Digging", WHITE);
+			term(1)->print(5,3,"d", YELLOW);
+		}
 	}
 
 	if (game_design_mode == BUILDING) {
@@ -467,8 +511,17 @@ void panel_render_system::render_design_mode() {
 			}
 		}
 	} else {
-		term(1)->print(13, 3, "Building", WHITE);
-		term(1)->print(13, 3, "b", YELLOW);
+		if (terminal_y == 3 && terminal_x > 12 && terminal_x < 22) {
+			term(1)->print(13, 3, "Building", GREEN);
+			if (clicked) {
+				game_design_mode = BUILDING;
+                emit_deferred(refresh_available_buildings_message{});
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(1)->print(13, 3, "Building", WHITE);
+			term(1)->print(13, 3, "b", YELLOW);
+		}
 	}
 
 	if (game_design_mode == CHOPPING) {
@@ -517,8 +570,16 @@ void panel_render_system::render_design_mode() {
 			
 		}
 	} else {
-		term(1)->print(22, 3, "Tree Cutting", WHITE);
-		term(1)->print(22, 3, "t", YELLOW);
+		if (terminal_y == 3 && terminal_x > 22 && terminal_x < 32) {
+			term(1)->print(22, 3, "Tree Cutting", GREEN);
+			if (clicked) {
+				game_design_mode = CHOPPING;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(1)->print(22, 3, "Tree Cutting", WHITE);
+			term(1)->print(22, 3, "t", YELLOW);
+		}
 	}
 }
 

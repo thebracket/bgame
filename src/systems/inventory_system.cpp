@@ -59,6 +59,8 @@ void inventory_system::configure() {
 
 	// Receive build requests - claim components and add to the designations list.
 	subscribe<build_request_message>([this] (build_request_message &msg) {
+		if (!msg.building) return;
+		
 		// Claim components, create the designations
 		available_building_t building = msg.building.get();
 
