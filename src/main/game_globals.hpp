@@ -25,6 +25,10 @@ struct available_building_t {
     int width;
     int height;
     std::vector<rltk::vchar> glyphs;
+	int n_existing = 0;
+	std::string get_name() const  {
+		return name + std::string(" (") + std::to_string(n_existing) + std::string(")");
+	}
 };
 
 enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };

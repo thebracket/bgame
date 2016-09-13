@@ -60,7 +60,7 @@ void inventory_system::configure() {
 	// Receive build requests - claim components and add to the designations list.
 	subscribe<build_request_message>([this] (build_request_message &msg) {
 		if (!msg.building) return;
-		
+
 		// Claim components, create the designations
 		available_building_t building = msg.building.get();
 
@@ -165,6 +165,16 @@ std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::
 std::vector<available_building_t> get_available_buildings() {
 	std::vector<available_building_t> result;
 
+	std::unordered_map<std::string, int> existing_buildings;
+	each<building_t>([&existing_buildings] (entity_t &e, building_t &b) {
+		auto finder = existing_buildings.find(b.tag);
+		if (finder == existing_buildings.end()) {
+			existing_buildings[b.tag] = 1;
+		} else {
+			++finder->second;
+		}
+	});
+
 	for (auto it = building_defs.begin(); it != building_defs.end(); ++it) {
 		bool possible = true;
 
@@ -184,6 +194,13 @@ std::vector<available_building_t> get_available_buildings() {
 
 		if (possible) {
 			available_building_t building{it->second.name, it->second.tag};
+			auto finder = existing_buildings.find(it->second.tag);
+			if (finder == existing_buildings.end()) {
+				building.n_existing = 0;
+			} else {
+				building.n_existing = finder->second;
+			}
+
 			building.height = it->second.height;
 			building.width = it->second.width;
 			building.components = it->second.components;

@@ -487,12 +487,12 @@ void panel_render_system::render_design_mode() {
 		int y=7;
 		for (const available_building_t &building : available_buildings) {
 			if (build_mode_building && build_mode_building.get().tag == building.tag) {
-				term(1)->print(tt_x+1, y, building.name, YELLOW, DARKEST_GREEN);
+				term(1)->print(tt_x+1, y, building.get_name(), YELLOW, DARKEST_GREEN);
 			} else {
 				if (terminal_y == y && terminal_x > tt_x && terminal_x) {
-					term(1)->print(tt_x+1, y, building.name, GREEN, GREEN_BG);
+					term(1)->print(tt_x+1, y, building.get_name(), GREEN, GREEN_BG);
 				} else {
-					term(1)->print(tt_x+1, y, building.name, WHITE, GREEN_BG);
+					term(1)->print(tt_x+1, y, building.get_name(), WHITE, GREEN_BG);
 				}
 			}
 			++y;
