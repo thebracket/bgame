@@ -71,35 +71,79 @@ void panel_render_system::configure() {
 }
 
 void panel_render_system::render_mode_select(const double duration_ms) {
+	int mouse_x, mouse_y;
+	int font_w, font_h;
+	std::tie(mouse_x, mouse_y) = get_mouse_position();
+	std::tie(font_w, font_h) = term(1)->get_font_size();
+	const int terminal_x = mouse_x / font_w;
+	const int terminal_y = mouse_y / font_h;
+	const bool clicked = get_mouse_button_state(rltk::button::LEFT);
+
 	// Mode switch controls
 	if (game_master_mode == PLAY) {
 		term(2)->print(1,1,"Play", YELLOW, BLUE);
 		render_play_mode(duration_ms);
 	} else {
-		term(2)->print(1,1,"Play", WHITE, BLACK);
+		if (terminal_y == 1 && terminal_x > 0 && terminal_x < 5) {
+			term(2)->print(1,1,"Play", GREEN, BLACK);
+			if (clicked) {
+				game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+			}
+		} else {
+			term(2)->print(1,1,"Play", WHITE, BLACK);
+		}
 	}
 
 	if (game_master_mode == DESIGN) {
 		term(2)->print(6,1,"Design", YELLOW, BLUE);
 		render_design_mode();
 	} else {
-		term(2)->print(6,1,"D", YELLOW, BLACK);
-		term(2)->print(7,1,"esign", WHITE, BLACK);
+		if (terminal_y == 1 && terminal_x > 5 && terminal_x < 13) {
+			term(2)->print(6,1,"Design", GREEN, BLACK);
+			if (clicked) {
+				game_master_mode = DESIGN;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(2)->print(6,1,"D", YELLOW, BLACK);
+			term(2)->print(7,1,"esign", WHITE, BLACK);
+		}
 	}
 
 	if (game_master_mode == UNITS) {
 		term(2)->print(13,1,"Units", YELLOW, BLUE);
 	} else {
-		term(2)->print(13,1,"U", YELLOW, BLACK);
-		term(2)->print(14,1,"nits", WHITE, BLACK);
+		if (terminal_y == 1 && terminal_x > 12 && terminal_x < 19) {
+			term(2)->print(13,1,"Units",GREEN,BLACK);
+			if (clicked) {
+				game_master_mode = UNITS;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(2)->print(13,1,"U", YELLOW, BLACK);
+			term(2)->print(14,1,"nits", WHITE, BLACK);
+		}
 	}
 
 	if (game_master_mode == WORKFLOW) {
 		term(2)->print(19,1,"Workflow", YELLOW, BLUE);
 		render_work_mode();
 	} else {
-		term(2)->print(19,1,"W", YELLOW, BLACK);
-		term(2)->print(20,1,"orkflow", WHITE, BLACK);
+		if (terminal_y == 1 && terminal_x > 18 && terminal_x < 27) {
+			term(2)->print(19,1,"Workflow",GREEN,BLACK);
+			if (clicked) {
+				game_master_mode = WORKFLOW;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(2)->print(19,1,"W", YELLOW, BLACK);
+			term(2)->print(20,1,"orkflow", WHITE, BLACK);
+		}
 	}
 
 	if (game_master_mode == SETTLER) {
@@ -296,13 +340,15 @@ void panel_render_system::render_design_mode() {
 		term(1)->print(tt_x+1, 5, "MINING MODE", WHITE, DARKEST_GREEN);
 		term(1)->print(5, 3, "Digging", YELLOW);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) game_mining_mode = DIG;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) game_mining_mode = CHANNEL;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) game_mining_mode = RAMP;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) game_mining_mode = UP;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) game_mining_mode = DOWN;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) game_mining_mode = UPDOWN;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) game_mining_mode = DELETE;
+		if (is_window_focused()) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) game_mining_mode = DIG;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) game_mining_mode = CHANNEL;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) game_mining_mode = RAMP;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) game_mining_mode = UP;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) game_mining_mode = DOWN;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) game_mining_mode = UPDOWN;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) game_mining_mode = DELETE;
+		}
 
 		if (game_mining_mode == DIG) {
 			term(1)->print(tt_x+1, 7, "(d) Dig", YELLOW, DARKEST_GREEN);

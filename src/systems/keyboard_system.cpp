@@ -8,6 +8,7 @@ void keyboard_system::configure() {
 }
 
 void keyboard_system::update(const double ms) {
+    // Keyboard queue
     std::queue<key_pressed_t> * messages = mbox<key_pressed_t>();
     while (!messages->empty()) {
 		key_pressed_t e = messages->front();
@@ -58,59 +59,59 @@ void keyboard_system::update(const double ms) {
         }
 
         // Mode changes
-        	if (game_master_mode == PLAY) {
-                if (e.event.key.code == sf::Keyboard::D) {
-                    game_master_mode = DESIGN;
-                    pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                }
-                if (e.event.key.code == sf::Keyboard::U) {
-                    game_master_mode = UNITS;
-                    pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                }
-                if (e.event.key.code == sf::Keyboard::W) {
-                    game_master_mode = WORKFLOW;
-                    pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                }
-            } else if (game_master_mode == DESIGN) {
-                if (e.event.key.code == sf::Keyboard::Escape) {
-                    game_master_mode = PLAY;
-                    emit_deferred(map_dirty_message{});
-                    emit_deferred(recalculate_mining_message{});
-                }
-                if (e.event.key.code == sf::Keyboard::D) {
-                    game_design_mode = DIGGING;
-                    emit_deferred(map_dirty_message{});
-                }
-                if (e.event.key.code == sf::Keyboard::B) {
-                    game_design_mode = BUILDING;
-                    emit_deferred(refresh_available_buildings_message{});
-                    emit_deferred(map_dirty_message{});
-                }
-                if (e.event.key.code == sf::Keyboard::T) {
-                    game_design_mode = CHOPPING;
-                    emit_deferred(map_dirty_message{});
-                }
-            } else if (game_master_mode == SETTLER) {
-                if (e.event.key.code == sf::Keyboard::Escape) {
-                    game_master_mode = PLAY;
-                    emit_deferred(map_dirty_message{});
-                    emit_deferred(recalculate_mining_message{});
-                }
-            } else if (game_master_mode == WORKFLOW) {
-                if (e.event.key.code == sf::Keyboard::Escape) {
-                    game_master_mode = PLAY;
-                    emit_deferred(map_dirty_message{});
-                    emit_deferred(recalculate_mining_message{});
-                }
-            } else if (game_master_mode == ROGUE) {
-                if (e.event.key.code == sf::Keyboard::Escape) {
-                    game_master_mode = PLAY;
-                    emit_deferred(map_dirty_message{});
-                    emit_deferred(recalculate_mining_message{});
-                }
+        if (game_master_mode == PLAY) {
+            if (e.event.key.code == sf::Keyboard::D) {
+                game_master_mode = DESIGN;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
             }
+            if (e.event.key.code == sf::Keyboard::U) {
+                game_master_mode = UNITS;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+            }
+            if (e.event.key.code == sf::Keyboard::W) {
+                game_master_mode = WORKFLOW;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+            }
+        } else if (game_master_mode == DESIGN) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+            if (e.event.key.code == sf::Keyboard::D) {
+                game_design_mode = DIGGING;
+                emit_deferred(map_dirty_message{});
+            }
+            if (e.event.key.code == sf::Keyboard::B) {
+                game_design_mode = BUILDING;
+                emit_deferred(refresh_available_buildings_message{});
+                emit_deferred(map_dirty_message{});
+            }
+            if (e.event.key.code == sf::Keyboard::T) {
+                game_design_mode = CHOPPING;
+                emit_deferred(map_dirty_message{});
+            }
+        } else if (game_master_mode == SETTLER) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        } else if (game_master_mode == WORKFLOW) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        } else if (game_master_mode == ROGUE) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        }
 	}
 }
