@@ -480,26 +480,25 @@ void panel_render_system::render_design_mode() {
 
 		int tt_x = term(1)->term_width - 30;
 		term(1)->box(tt_x, 4, 29, term(1)->term_height-5);
-		term(1)->print(tt_x+1, 5, "Available Buildings", WHITE, DARKEST_GREEN);
+		term(1)->fill(tt_x+1, 5, tt_x+29, term(1)->term_height-2, ' ');
+		term(1)->fill(tt_x+1, 5, tt_x+29, 6, ' ', WHITE, DARK_GREEN);
+		term(1)->print(tt_x+4, 5, "[Available Buildings]", WHITE, DARK_GREEN);
 
 		int y=7;
 		for (const available_building_t &building : available_buildings) {
 			if (build_mode_building && build_mode_building.get().tag == building.tag) {
 				term(1)->print(tt_x+1, y, building.name, YELLOW, DARKEST_GREEN);
 			} else {
-				term(1)->print(tt_x+1, y, building.name, WHITE, GREEN_BG);
+				if (terminal_y == y && terminal_x > tt_x && terminal_x) {
+					term(1)->print(tt_x+1, y, building.name, GREEN, GREEN_BG);
+				} else {
+					term(1)->print(tt_x+1, y, building.name, WHITE, GREEN_BG);
+				}
 			}
 			++y;
 		}
 
 		if (get_mouse_button_state(rltk::button::LEFT)) {
-			int mouse_x, mouse_y;
-			int font_w, font_h;
-			std::tie(mouse_x, mouse_y) = get_mouse_position();
-			std::tie(font_w, font_h) = term(1)->get_font_size();
-
-			int terminal_x = mouse_x / font_w;
-			int terminal_y = mouse_y / font_h;
 			
 			if (terminal_y > 6 && terminal_y < 7+available_buildings.size() && terminal_x > tt_x+1) {
 				const int selected_building = terminal_y - 7;
