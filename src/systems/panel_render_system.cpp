@@ -363,7 +363,10 @@ void panel_render_system::render_design_mode() {
 		} else {
 			if (terminal_y == 7 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,7, "(d) Dig", GREEN, GREEN_BG);
-				if (clicked) game_mining_mode = DIG;
+				if (clicked) {
+					game_mining_mode = DIG;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG);
 			} 
@@ -375,7 +378,10 @@ void panel_render_system::render_design_mode() {
 		} else { 
 			if (terminal_y == 8 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,8, "(c) Channel", GREEN, GREEN_BG);
-				if (clicked) game_mining_mode = CHANNEL;
+				if (clicked) {
+					game_mining_mode = CHANNEL;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG);
 			} 
@@ -387,7 +393,10 @@ void panel_render_system::render_design_mode() {
 		} else {
 			if (terminal_y == 9 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,9, "(r) Ramp", GREEN, GREEN_BG);
-				if (clicked) game_mining_mode = RAMP;
+				if (clicked) {
+					game_mining_mode = RAMP;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG);
 			} 
@@ -399,7 +408,10 @@ void panel_render_system::render_design_mode() {
 		} else { 
 			if (terminal_y == 10 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,10, "(u) Up Stairs", GREEN, GREEN_BG);
-				if (clicked) game_mining_mode = UP;
+				if (clicked) {
+					game_mining_mode = UP;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG);
 			} 		
@@ -411,7 +423,10 @@ void panel_render_system::render_design_mode() {
 		} else { 
 			if (terminal_y == 11 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,11, "(j) Down Stairs", GREEN, GREEN_BG);
-				if (clicked) game_mining_mode = DOWN;
+				if (clicked) {
+					game_mining_mode = DOWN;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG);
 			} 
@@ -423,7 +438,10 @@ void panel_render_system::render_design_mode() {
 		} else { 
 			if (terminal_y == 12 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", GREEN, GREEN_BG);
-				if (clicked) game_mining_mode = UPDOWN;
+				if (clicked) {
+					game_mining_mode = UPDOWN;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG);
 			} 
@@ -435,14 +453,17 @@ void panel_render_system::render_design_mode() {
 		} else { 
 			if (terminal_y == 13 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
 				term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
-				if (clicked) game_mining_mode = DELETE;
+				if (clicked) {
+					game_mining_mode = DELETE;
+					return;
+				}
 			} else {
 				term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
 			} 
 		}
 		term(1)->print(tt_x+2, 13, "x", YELLOW); 
 
-		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
+		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 3 && terminal_y < term(1)->term_height) {
 			if (get_mouse_button_state(rltk::button::LEFT)) {
 				const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 				const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
@@ -533,7 +554,7 @@ void panel_render_system::render_design_mode() {
 		const int terminal_x = mouse_x / font_w;
 		const int terminal_y = mouse_y / font_h;
 
-		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 0 && terminal_y < term(1)->term_height) {
+		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 3 && terminal_y < term(1)->term_height) {
 			const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
 			const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 
