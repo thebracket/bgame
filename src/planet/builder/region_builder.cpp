@@ -333,10 +333,10 @@ void build_ramps(region_t &region) {
             for (int x=1; x<REGION_WIDTH-1; ++x) {
                 if (region.tile_type[mapidx(x,y,z)] == tile_type::SOLID) {
                     bool is_edge = false;
-                    if (region.tile_type[mapidx(x,y-1,z)] == tile_type::FLOOR || region.tile_type[mapidx(x,y-1,z)] == tile_type::OPEN_SPACE) is_edge = true;
-                    if (region.tile_type[mapidx(x,y+1,z)] == tile_type::FLOOR || region.tile_type[mapidx(x,y+1,z)] == tile_type::OPEN_SPACE) is_edge = true;
-                    if (region.tile_type[mapidx(x-1,y,z)] == tile_type::FLOOR || region.tile_type[mapidx(x-1,y,z)] == tile_type::OPEN_SPACE) is_edge = true;
-                    if (region.tile_type[mapidx(x+1,y,z)] == tile_type::FLOOR || region.tile_type[mapidx(x+1,y,z)] == tile_type::OPEN_SPACE) is_edge = true;
+                    if (region.tile_type[mapidx(x,y-1,z)] == tile_type::FLOOR || region.tile_type[mapidx(x,y-1,z)] == tile_type::OPEN_SPACE ||region.tile_type[mapidx(x,y-1,z)] == tile_type::RAMP) is_edge = true;
+                    if (region.tile_type[mapidx(x,y+1,z)] == tile_type::FLOOR || region.tile_type[mapidx(x,y+1,z)] == tile_type::OPEN_SPACE || region.tile_type[mapidx(x,y+1,z)] == tile_type::RAMP) is_edge = true;
+                    if (region.tile_type[mapidx(x-1,y,z)] == tile_type::FLOOR || region.tile_type[mapidx(x-1,y,z)] == tile_type::OPEN_SPACE || region.tile_type[mapidx(x-1,y,z)] == tile_type::RAMP) is_edge = true;
+                    if (region.tile_type[mapidx(x+1,y,z)] == tile_type::FLOOR || region.tile_type[mapidx(x+1,y,z)] == tile_type::OPEN_SPACE || region.tile_type[mapidx(x+1,y,z)] == tile_type::RAMP) is_edge = true;
 
                     if (is_edge) {
                         region.revealed[mapidx(x,y,z)] = true;
