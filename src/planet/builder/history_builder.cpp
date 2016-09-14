@@ -49,6 +49,8 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         // Define the initial species
         civ.species_tag = random_species(rng);
+        auto species = species_defs.find(civ.species_tag);
+        if (species->second.alignment == align_evil) civ.cordex_feelings = -3;
         civ.r = rng.roll_dice(1,255);
         civ.g = rng.roll_dice(1,255);
         civ.b = rng.roll_dice(1,255);

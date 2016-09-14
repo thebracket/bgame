@@ -16,6 +16,13 @@ struct entity_wants_to_flee_message : public rltk::base_message_t {
 	std::size_t flee_from_id;
 };
 
+struct entity_wants_to_charge_message : public rltk::base_message_t {
+	entity_wants_to_charge_message() {}
+	entity_wants_to_charge_message(std::size_t id, std::size_t charge_to) : entity_id(id), charge_to_id(charge_to) {}
+	std::size_t entity_id;
+	std::size_t charge_to_id;
+};
+
 struct entity_wants_to_move_message : public rltk::base_message_t {
 	entity_wants_to_move_message() {}
 	entity_wants_to_move_message(std::size_t id, const position_t dest) : entity_id(id), destination(dest) {}

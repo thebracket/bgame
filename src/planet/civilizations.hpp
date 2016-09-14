@@ -51,6 +51,7 @@ struct civ_t {
     uint8_t tech_level = 1;
     uint8_t r,g,b;
     uint8_t gov_type;
+    int cordex_feelings = 0;
 
     void save(std::fstream &deflate) const;
     void load(std::fstream &inflate);    

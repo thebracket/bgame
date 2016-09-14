@@ -33,6 +33,13 @@ void damage_system::update(const double ms) {
         position_t * attacker_pos = attacker->component<position_t>();
         position_t * defender_pos = defender->component<position_t>();
 
+        sentient_ai * victim_ai = defender->component<sentient_ai>();
+        if (victim_ai != nullptr) {
+            if (planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings > -10) {
+                --planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings;
+            }
+        }
+
         std::size_t weapon_id = 0;
         std::size_t ammo_id = 0;
         each<item_carried_t>([&msg, &weapon_id, &ammo_id] (entity_t &E, item_carried_t &item) {
@@ -96,6 +103,13 @@ void damage_system::update(const double ms) {
         game_stats_t * attacker_stats = attacker->component<game_stats_t>();
         name_t * attacker_name = attacker->component<name_t>();
         name_t * defender_name = defender->component<name_t>();
+
+        sentient_ai * victim_ai = defender->component<sentient_ai>();
+        if (victim_ai != nullptr) {
+            if (planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings > -10) {
+                --planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings;
+            }
+        }
 
         std::size_t weapon_id = 0;
         each<item_carried_t>([&msg, &weapon_id] (entity_t &E, item_carried_t &item) {

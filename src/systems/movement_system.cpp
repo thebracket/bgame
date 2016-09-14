@@ -46,6 +46,22 @@ void movement_system::configure() {
             emit(entity_wants_to_move_randomly_message{msg.entity_id});
         }
     });
+    subscribe<entity_wants_to_charge_message>([] (entity_wants_to_charge_message &msg) {
+        position_t * pos = entity(msg.entity_id)->component<position_t>();
+        position_t * other_pos = entity(msg.charge_to_id)->component<position_t>();
+
+        if (pos->x > other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_EAST)) {
+            emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x-1, pos->y, pos->z } });
+        } else if (pos->x < other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_WEST)) {
+            emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x+1, pos->y, pos->z } });
+        } else if (pos->y < other_pos->y && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_NORTH)) {
+            emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x, pos->y+1, pos->z } });
+        } else if (pos->y > other_pos->y && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_SOUTH)) {
+            emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x, pos->y-1, pos->z } });
+        } else {
+            emit(entity_wants_to_move_randomly_message{msg.entity_id});
+        }
+    });
 
     // When an entity actually moves, update the octree
     subscribe_mbox<entity_moved_message>();
