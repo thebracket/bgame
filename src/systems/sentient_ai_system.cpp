@@ -46,7 +46,7 @@ void sentient_ai_system::configure() {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
                     const float range = shooting_range(e, pos);
-                    std::cout << range << "\n";
+                    //std::cout << range << "\n";
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						emit(settler_attack_message{e.id, closest_fear});
