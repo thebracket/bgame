@@ -75,6 +75,9 @@ constexpr uint8_t OCC_HEAVY_CAVALRY = 15;
 const std::vector<std::string> OCCUPATION_NAMES{"Unemployed", "Laborer", "Farmer", "Herbalist", "Metalworker", 
     "Stoneworker", "Woodworker", "Cook", "Hunter", "Skirmisher", "Light Infantry", "Infantry", "Heavy Infantry",
     "Light Cavalry", "Medium Cavalry", "Heavy Cavalry"}; 
+const std::vector<std::string> OCCUPATION_TAGS{"Unemployed", "laborer", "farmer", "herbalist", "metalworker", 
+    "stoneworker", "woodworker", "cook", "hunter", "skirmisher", "lightinfantry", "infantry", "heavyinfantry",
+    "lightcavalry", "mediumcavalry", "heavycavalry"}; 
 
 constexpr uint8_t TECH_AGE_STONE = 1;
 constexpr uint8_t TECH_AGE_BRONZE = 2;

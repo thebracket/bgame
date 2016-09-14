@@ -130,5 +130,61 @@ clothing = {
 		slot = "shoes",
 		colors = {"brown", "black", "red", "green", "yellow"},
 		description = "Comfortable running shoes, complete with oxygenated layer to protect your feet and a patented No-Stink technology."
-	}
+	},
+
+	-- Stone-age clothing
+	hide_tunic = {
+		name = "Hide Tunic",
+		slot = "torso",
+		colors = {"brown", "black", "grey"},
+		description = "A simple tunic made from animal hides."
+	},
+	hide_pants = {
+		name = "Hide Pants",
+		slot = "legs",
+		colors = {"brown", "black", "grey"},
+		description = "A simple pair of pants made from animal hides."
+	},
+	hide_skirt = {
+		name = "Hide Skirt",
+		slot = "legs",
+		colors = {"brown", "black", "grey"},
+		description = "A simple skirt made from animal hides."
+	},
+	hide_sandals = {
+		name = "Hide Sandals",
+		slot = "torso",
+		colors = {"brown", "black", "grey"},
+		description = "A simple pair of sandals made from animal hides."
+	},
+	leather_tunic = {
+		name = "Leather Tunic",
+		slot = "torso",
+		colors = {"brown", "black", "grey"},
+		description = "A padded leather tunic made from animal hides."
+	},
+	leather_cap = {
+		name = "Leather Cap",
+		slot = "head",
+		colors = {"brown", "black", "grey"},
+		description = "A padded leather cap, offering minimal head protection."
+	},
+	leather_pants = {
+		name = "Leather Pants",
+		slot = "legs",
+		colors = {"brown", "black", "grey"},
+		description = "Padded leather pants, offering some leg protection or just a cool look at parties."
+	},
+	leather_skirt = {
+		name = "Leather Skirt",
+		slot = "legs",
+		colors = {"brown", "black", "grey"},
+		description = "Padded leather skirt, offering some leg protection or just a cool look at parties."
+	},
+	boiled_leather_tunic = {
+		name = "Boiled Leather Tunic",
+		slot = "torso",
+		colors = {"brown", "black", "grey"},
+		description = "A boiled leather tunic made from animal hides."
+	},
 }

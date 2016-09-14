@@ -326,6 +326,33 @@ reactions = {
         difficulty = 10,
         automatic = false
     },
+    make_stone_hammer = {
+        name = "Make Stone Hammer",
+        workshop = "primitive_workshop",
+        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="stone_hammer", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_stone_axe = {
+        name = "Make Stone Axe",
+        workshop = "primitive_workshop",
+        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="stone_axe", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_stone_knife = {
+        name = "Make Stone Knife",
+        workshop = "primitive_workshop",
+        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="stone_knife", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 10,
+        automatic = false
+    },
     make_axe_blade_aluminium = { name="Make Aluminium Axe Blade", inputs={{item="aluminium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
     make_axe_blade_tin = { name="Make Tin Axe Blade", inputs={{item="tin_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
     make_axe_blade_chromium = { name="Make Chrome Axe Blade", inputs={{item="chromium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
@@ -361,5 +388,78 @@ reactions = {
     make_sword_blade_silver = { name="Make Silver Sword Blade", inputs={{item="silver_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
     make_sword_blade_zinc = { name="Make Zinc Sword Blade", inputs={{item="zinc_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
     make_sword_blade_bronze = { name="Make Bronze Sword Blade", inputs={{item="bronze_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
+
+    make_hide_tunic = {
+        name = "Make Hide Tunic",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="hide_tunic", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_hide_pants = {
+        name = "Make Hide Pants",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="hide_pants", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_hide_skirt = {
+        name = "Make Hide Skirt",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="hide_skirt", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_hide_sandals = {
+        name = "Make Hide Sandals",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="hide_sandals", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_leather_tunic = {
+        name = "Make Leather Tunic",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="leather_tunic", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 14,
+        automatic = false
+    },
+    make_leather_pants = {
+        name = "Make Leather Pants",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="leather_pants", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 14,
+        automatic = false
+    },
+    make_leather_skirt = {
+        name = "Make Leather Skirt",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="leather_skirt", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 14,
+        automatic = false
+    },
+    make_boiled_leather_tunic = {
+        name = "Make Boiled Leather Tunic",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=2 } },
+        outputs = { { item="boiled_leather_tunic", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 16,
+        automatic = false
+    },
 }
 

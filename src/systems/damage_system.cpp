@@ -258,6 +258,14 @@ void damage_system::update(const double ms) {
                 ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
+        } else if (victim->component<sentient_ai>() != nullptr) {
+            // It's a dead native
+            name_t * name = victim->component<name_t>();
+            auto corpse = create_entity()
+                ->assign(position_t{ pos->x, pos->y, pos->z })
+                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
+                ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
+                ->assign(corpse_settler{msg.cause_of_death});
         } else {
             // It's something else that died.
             std::string tag = "";

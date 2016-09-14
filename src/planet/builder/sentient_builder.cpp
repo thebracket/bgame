@@ -40,24 +40,56 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 	if (base_hp < 1) base_hp = 1;
 	health_t health = create_health_component_sentient(species.tag, base_hp);
 
+
+    int techlevel = planet.civs.civs[planet.civs.unimportant_people[person_id].civ_id].tech_level;
+    if (techlevel > 1) techlevel = 1;
+    const std::string profession_tag = OCCUPATION_TAGS[planet.civs.unimportant_people[person_id].occupation] + std::string("_") + 
+        std::to_string(techlevel);
+    std::cout << profession_tag << "\n";
+    auto profession = native_pop_defs.find(profession_tag);
+    if (profession == native_pop_defs.end()) {
+        throw std::runtime_error(std::string("Cannot find ") + profession_tag);
+    }
+    const int profidx = rng.roll_dice(1,profession->second.size())-1;    
+
     //std::cout << species_finder->second.glyph << "\n";
     auto sentient = create_entity()
         ->assign(position_t{x,y,z})
-        ->assign(name_t{ species_finder->second.name, OCCUPATION_NAMES[planet.civs.unimportant_people[person_id].occupation] })
+        ->assign(name_t{ species_finder->second.name, profession->second[profidx].name })
         ->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
         ->assign(viewshed_t{ 8, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
         ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id});
+    std::cout << "Sentient #" << sentient->id << "\n";
 
-    /*auto sentient = create_entity()
-		->assign(position_t{ x,y,z })
-		->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
-		->assign(name_t{ first_name, last_name })
-		->assign(std::move(species))
-		->assign(std::move(health))
-		->assign(std::move(stats))
-		->assign(std::move(ai))
-		->assign(viewshed_t{ 8, false });
-    */
+    for (auto item : profession->second[profidx].starting_clothes) {
+		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
+			std::string item_name = std::get<2>(item);
+			std::string slot_name = std::get<1>(item);
+			item_location_t position = INVENTORY;
+			if (slot_name == "head") position = HEAD;
+			if (slot_name == "torso") position = TORSO;
+			if (slot_name == "legs") position = LEGS;
+			if (slot_name == "shoes") position = FEET;
+            std::cout << "Created " << item_name << "\n";
+			create_entity()->assign(item_t{item_name})->assign(item_carried_t{position, sentient->id});
+		}
+	}
+
+    if (profession->second[profidx].melee != "") {
+        const std::string item_name = profession->second[profidx].melee;
+        std::cout << "Created " << item_name << "\n";
+        create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_MELEE, sentient->id});
+    }
+    if (profession->second[profidx].ranged != "") {
+        const std::string item_name = profession->second[profidx].ranged;
+        std::cout << "Created " << item_name << "\n";
+        create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_RANGED, sentient->id});
+    }
+    if (profession->second[profidx].ammo != "") {
+        const std::string item_name = profession->second[profidx].ammo;
+        std::cout << "Created " << item_name << "\n";
+        create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_AMMO, sentient->id});
+    }
 }

@@ -35,6 +35,8 @@ std::vector<plant_t> plant_defs;
 boost::container::flat_map<std::string, raw_species_t> species_defs;
 boost::container::flat_map<std::string, raw_creature_t> creature_defs;
 
+boost::container::flat_map<std::string, std::vector<native_population_t>> native_pop_defs;
+
 void load_string_table(const std::string filename, string_table_t &target) {
 	std::ifstream f(filename);
 	std::string line;
@@ -782,6 +784,87 @@ void read_creature_types(std::ofstream &tech_tree_file) {
     }
 }
 
+void read_native_population_types(std::ofstream &tech_tree_file) {
+    lua_getglobal(lua_state, "native_populations");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            native_population_t p;
+
+            // We need to iterate the array
+            lua_pushnil(lua_state);
+            lua_gettable(lua_state, -2);
+            while (lua_next(lua_state, -2) != 0) {
+
+                std::string field = lua_tostring(lua_state, -2);
+                if (field == "title") {
+                    p.name = lua_tostring(lua_state, -1);
+                }
+                if (field == "aggression") p.aggression = lua_tonumber(lua_state, -1);
+                if (field == "melee") p.melee = lua_tostring(lua_state, -1);
+                if (field == "ranged") p.ranged = lua_tostring(lua_state, -1);
+                if (field == "ammo") p.ammo = lua_tostring(lua_state, -1);
+                // Stat mods
+                if (field == "modifiers") {
+                    lua_pushstring(lua_state, field.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string stat = lua_tostring(lua_state, -2);
+                        int modifier = lua_tonumber(lua_state, -1);
+                        if (stat == "str") p.strength = modifier;
+                        if (stat == "dex") p.dexterity = modifier;
+                        if (stat == "con") p.constitution = modifier;
+                        if (stat == "int") p.intelligence = modifier;
+                        if (stat == "wis") p.wisdom = modifier;
+                        if (stat == "cha") p.charisma = modifier;
+                        if (stat == "com") p.comeliness = modifier;
+                        if (stat == "eth") p.ethics = modifier;
+                        lua_pop(lua_state, 1);
+                    }
+                }
+
+                // Starting clothes
+                if (field == "clothing") {
+                    lua_pushstring(lua_state, field.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        const std::string gender_specifier = lua_tostring(lua_state, -2);
+                        lua_pushstring(lua_state, gender_specifier.c_str());
+                        lua_gettable(lua_state, -2);
+                        while (lua_next(lua_state, -2) != 0) {
+                            const std::string slot = lua_tostring(lua_state, -2);
+                            const std::string item = lua_tostring(lua_state, -1);
+                            int gender_tag = 0;
+                            if (gender_specifier == "male") gender_tag = 1;
+                            if (gender_specifier == "female") gender_tag = 2;
+                            p.starting_clothes.push_back( std::make_tuple(gender_tag, slot, item));
+                            lua_pop(lua_state, 1);
+                        }
+                        lua_pop(lua_state, 1);
+                    }
+                }
+
+                lua_pop(lua_state, 1);
+                auto finder = native_pop_defs.find(key);
+                if (finder == native_pop_defs.end()) {
+                    native_pop_defs[key] = { p };
+                } else {
+                    finder->second.push_back(p);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+        lua_pop(lua_state, 1);
+    }
+}
+
 void load_game_tables() {
     std::ofstream tech_tree_file("tech_tree.gv");
     tech_tree_file << "digraph G {\n";
@@ -797,6 +880,7 @@ void load_game_tables() {
     read_biome_types(tech_tree_file);
     read_species_types(tech_tree_file);
     read_creature_types(tech_tree_file);
+    read_native_population_types(tech_tree_file);
 
     tech_tree_file << "}\n";
     tech_tree_file.close();

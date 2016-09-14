@@ -9,3 +9,4 @@ items.lua
 buildings.lua
 reactions.lua
 biomes.lua
+populace.lua

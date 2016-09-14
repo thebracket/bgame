@@ -343,6 +343,33 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str"
 	},
+	stone_hammer = {
+		name = "Stone Hammer",
+		description = "A simple hammer with a stone head",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+	},
+	stone_axe = {
+		name = "Stone Axe",
+		description = "A simple axe with a stone head",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+	},
+	stone_knife = {
+		name = "Stone Knife",
+		description = "A simple knife with a stone head",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+	},
 	atlatl = {
 		name = "Atlatl",
 		description = "A curved piece of wood used to launch darts at high velocity",
@@ -352,6 +379,15 @@ items = {
 		background = colors['black'],
 		damage_mod=0, damage_stat="str", range=6, ammo="dart"
 	},
+	wood_shortbow = {
+		name = "Wooden Shortbow",
+		description = "A simple wooden shortbow",
+		itemtype = {"weapon-ranged"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black'],
+		damage_mod=0, damage_stat="dex", range=4, ammo="arrow"
+	},
 	wood_dart = {
 		name = "Wooden Dart",
 		description = "A simple wooden dart",
@@ -360,6 +396,15 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="dart"
+	},
+	wood_arrow = {
+		name = "Wooden Arrow",
+		description = "A simple wooden arrow",
+		itemtype = {"ammo"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="arrow"
 	},
 	axe_blade = {
 		name = "Axe Blade",

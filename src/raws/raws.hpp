@@ -52,7 +52,7 @@ struct profession_t {
 	short wisdom = 0;
 	short charisma = 0;
 	short comeliness = 0;
-	short ethics;
+	short ethics = 0;
 	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
 };
 
@@ -210,6 +210,23 @@ struct raw_creature_t {
 	int group_size_n_dice, group_size_dice, group_size_mod;
 };
 
+struct native_population_t {
+	std::string name = "";
+	short aggression = 0;
+	short strength = 0;
+	short dexterity = 0;
+	short constitution = 0;
+	short intelligence = 0;
+	short wisdom = 0;
+	short charisma = 0;
+	short comeliness = 0;
+	short ethics = 0;
+	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
+	std::string melee = "";
+	std::string ranged = "";
+	std::string ammo = "";
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -235,6 +252,8 @@ extern std::vector<plant_t> plant_defs;
 
 extern boost::container::flat_map<std::string, raw_species_t> species_defs;
 extern boost::container::flat_map<std::string, raw_creature_t> creature_defs;
+
+extern boost::container::flat_map<std::string, std::vector<native_population_t>> native_pop_defs;
 
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);

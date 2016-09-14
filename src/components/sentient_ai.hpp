@@ -9,6 +9,7 @@ struct sentient_ai {
 	sentient_ai(const int init_mod, const std::size_t pid) : initiative_modifier(init_mod), person_id(pid) {}
 	int initiative = 0;
 	int initiative_modifier = 0;
+	int aggression = 0;
     std::size_t person_id;
 
 	std::size_t serialization_identity = 25;
@@ -17,6 +18,7 @@ struct sentient_ai {
 		serialize(lbfile, initiative);
 		serialize(lbfile, initiative_modifier);
         serialize(lbfile, person_id);
+		serialize(lbfile, aggression);
 	}
 
 	static sentient_ai load(std::istream &lbfile) {
@@ -24,6 +26,7 @@ struct sentient_ai {
 		deserialize(lbfile, c.initiative);
 		deserialize(lbfile, c.initiative_modifier);
         deserialize(lbfile, c.person_id);
+		deserialize(lbfile, c.aggression);
 		return c;
 	}
 };
