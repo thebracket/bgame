@@ -204,7 +204,9 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 		std::map<float, std::pair<construct_provides_sleep_t,position_t>> bed_candidates;
 		each<construct_provides_sleep_t, position_t>([&bed_candidates, &pos] (entity_t &e, construct_provides_sleep_t &bed, position_t &bed_pos) {
 			if (!bed.claimed) {
-				bed_candidates[distance3d(pos.x, pos.y, pos.z, bed_pos.x, bed_pos.y, bed_pos.z)] = std::make_pair(bed, bed_pos);
+				if (find_path(pos, bed_pos)->success) {
+					bed_candidates[distance3d(pos.x, pos.y, pos.z, bed_pos.x, bed_pos.y, bed_pos.z)] = std::make_pair(bed, bed_pos);
+				}
 			} else {
 				std::cout << "Bed is busy, trying next\n";
 			}

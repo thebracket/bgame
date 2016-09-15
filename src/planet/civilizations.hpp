@@ -52,6 +52,7 @@ struct civ_t {
     uint8_t r,g,b;
     uint8_t gov_type;
     int cordex_feelings = 0;
+    bool met_cordex = false;
 
     void save(std::fstream &deflate) const;
     void load(std::fstream &inflate);    

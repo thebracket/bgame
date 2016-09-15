@@ -279,6 +279,7 @@ void damage_system::update(const double ms) {
                 ->assign(corpse_settler{msg.cause_of_death});
         } else if (victim->component<sentient_ai>() != nullptr) {
             // It's a dead native
+            planet.civs.unimportant_people[victim->component<sentient_ai>()->person_id].deceased = true;
             name_t * name = victim->component<name_t>();
             renderable_t * renderable = victim->component<renderable_t>();
             auto corpse = create_entity()

@@ -17,9 +17,11 @@ void calendar_system::update(const double duration_ms) {
 			time_count = 0.0;
 
 			auto hour = calendar->hour;
+			auto day = calendar->day;
 			calendar->next_minute();
 			emit(tick_message{});
 			if (calendar->hour != hour) emit(hour_elapsed_message{});
+			if (calendar->day != day) emit(day_elapsed_message{});
 
 			if (pause_mode == ONE_STEP) {
 				pause_mode = PAUSED;

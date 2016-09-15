@@ -61,6 +61,7 @@ void civ_t::save(std::fstream &deflate) const {
     serialize(deflate, b);
     serialize(deflate, gov_type);
     serialize(deflate, cordex_feelings);
+    serialize(deflate, met_cordex);
 }
 
 void civ_t::load(std::fstream &inflate) {
@@ -82,6 +83,7 @@ void civ_t::load(std::fstream &inflate) {
     deserialize(inflate, b);
     deserialize(inflate, gov_type);
     deserialize(inflate, cordex_feelings);
+    deserialize(inflate, met_cordex);
 }
 
 void unimportant_person_t::save(std::fstream &deflate) const {

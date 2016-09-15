@@ -91,8 +91,8 @@ void lighting_system::update(double time_ms) {
         std::fill(light_map.begin(), light_map.end(), color_t{0,0,0});
 
         const float sun_arc = calendar->sun_arc_percent();
-        color_t ambient{96,96,120};;
-        color_t lit{127,127,180};
+        color_t ambient{96,96,100};;
+        color_t lit{127,127,135};
 
         const float latitude = ((float)current_region->region_y - ((float)WORLD_HEIGHT/2.0F)) * 90.0F;
         const float sun_offset_y = latitude * (float)REGION_HEIGHT;

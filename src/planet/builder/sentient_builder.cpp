@@ -92,4 +92,6 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         std::cout << "Created " << item_name << "\n";
         create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_AMMO, sentient->id});
     }
+
+    planet.civs.civs[planet.civs.unimportant_people[person_id].civ_id].met_cordex = true;
 }
