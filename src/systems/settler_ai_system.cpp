@@ -76,29 +76,32 @@ void settler_ai_system::configure() {
 
 				// Do we have any hostiles to worry about?
 				bool terrified = false;
-                float terror_distance = 1000.0F;
-                std::size_t closest_fear = 0;
-                for (const std::size_t other_entity : view.visible_entities) {
-					entity_t * other_ptr = rltk::entity(other_entity);
-                    if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() != nullptr || 
-						(other_ptr->component<sentient_ai>() != nullptr && other_ptr->component<sentient_ai>()->hostile))) {
-                        terrified = true;
-                        position_t * other_pos = rltk::entity(other_entity)->component<position_t>();
-                        const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
-                        if (d < terror_distance) {
-                            terror_distance = d;
-                            closest_fear = other_entity;
-                        }
-                    }
-                }
+				float terror_distance = 1000.0F;
+				std::size_t closest_fear = 0;
+				if (ai.job_type_minor != JM_SLEEP) {
+					for (const std::size_t other_entity : view.visible_entities) {
+						entity_t * other_ptr = rltk::entity(other_entity);
+						if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() != nullptr || 
+							(other_ptr->component<sentient_ai>() != nullptr && other_ptr->component<sentient_ai>()->hostile))) {
+							terrified = true;
+							position_t * other_pos = rltk::entity(other_entity)->component<position_t>();
+							const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
+							if (d < terror_distance) {
+								terror_distance = d;
+								closest_fear = other_entity;
+							}
+						}
+					}
+				}
 
 				if (terrified) {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
+					const int range = shooting_range(entity, pos);
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						emit(settler_attack_message{entity.id, closest_fear});
-					} else if (shooting_range(entity, pos) < terror_distance) {
+					} else if (range != -1 && range < terror_distance) {
 						// Shoot it
 						emit(settler_ranged_attack_message{entity.id, closest_fear});
 					} else {

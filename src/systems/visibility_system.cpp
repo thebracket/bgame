@@ -31,14 +31,32 @@ inline void internal_pen_view_to(position_t &pos, viewshed_t &view, int x, int y
 inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, int z) {
 	const float dist_square = view.viewshed_radius * view.viewshed_radius;
 
-	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
+	int last_z = pos.z;
+	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square, &last_z] (int X, int Y, int Z) {
 		const int idx = mapidx(X, Y, Z);
-		reveal(idx, view);
+		bool blocked = current_region->solid[idx];
+		if (!blocked && last_z != Z) {
+			//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
+			// Check for ceilings and floors
+			if (last_z > Z) {
+				if (current_region->tile_type[idx] == tile_type::FLOOR) {
+					blocked = true;
+					//std::cout << "Ceiling block\n";
+				}
+			} else {
+				if (current_region->tile_type[mapidx(X,Y,last_z)] == tile_type::FLOOR) {
+					blocked = true;
+					//std::cout << "Floor block\n";
+				}
+			}
+		}
+		if (!blocked) reveal(idx, view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {
 			return false;
 		}
-		return !(current_region->solid[idx]);
+		last_z = Z;
+		return !blocked;
 	});
 }
 

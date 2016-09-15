@@ -60,7 +60,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ->assign(viewshed_t{ 6, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
-        ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id});
+        ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id, profession->second[profidx].aggression+5});
     std::cout << "Sentient #" << sentient->id << "\n";
 
     for (auto item : profession->second[profidx].starting_clothes) {

@@ -100,6 +100,7 @@ void damage_system::update(const double ms) {
         std::stringstream ss;
         entity_t * attacker = entity(msg.attacker);
         entity_t * defender = entity(msg.victim);
+        if (attacker == nullptr || defender == nullptr) break;
         game_stats_t * attacker_stats = attacker->component<game_stats_t>();
         name_t * attacker_name = attacker->component<name_t>();
         name_t * defender_name = defender->component<name_t>();
@@ -156,11 +157,13 @@ void damage_system::update(const double ms) {
         // Start by determining the attack
         std::stringstream ss;
         entity_t * attacker = entity(msg.attacker);
+        if (attacker == nullptr) break;
         species_t * attack_species = attacker->component<species_t>();
         name_t * attacker_name = attacker->component<name_t>();
         auto creature = creature_defs.find(attack_species->tag);
 
         entity_t * defender = entity(msg.victim);
+        if (defender == nullptr) break;
         name_t * defender_name = defender->component<name_t>();
         game_stats_t * defender_stats = defender->component<game_stats_t>();
 
@@ -189,6 +192,7 @@ void damage_system::update(const double ms) {
     std::queue<inflict_damage_message> * damage = mbox<inflict_damage_message>();
 	while (!damage->empty()) {
         inflict_damage_message msg = damage->front();
+        if (entity(msg.victim) == nullptr) break;
         health_t * h = entity(msg.victim)->component<health_t>();
         name_t * name = entity(msg.victim)->component<name_t>();
 
@@ -255,6 +259,7 @@ void damage_system::update(const double ms) {
         deaths->pop();
 
         entity_t * victim = entity(msg.victim);
+        if (victim == nullptr) break;
         position_t * pos = victim->component<position_t>();
         // Any items carried are dropped
         each<item_carried_t>([&msg, pos] (entity_t &e, item_carried_t &item) {
@@ -275,9 +280,10 @@ void damage_system::update(const double ms) {
         } else if (victim->component<sentient_ai>() != nullptr) {
             // It's a dead native
             name_t * name = victim->component<name_t>();
+            renderable_t * renderable = victim->component<renderable_t>();
             auto corpse = create_entity()
                 ->assign(position_t{ pos->x, pos->y, pos->z })
-                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
+                ->assign(renderable_t{ renderable->glyph, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
         } else {

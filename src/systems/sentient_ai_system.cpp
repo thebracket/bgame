@@ -3,6 +3,7 @@
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
 #include "weapons_helpers.hpp"
+#include "path_finding.hpp"
 
 void sentient_ai_system::configure() {
     system_name = "Sentient AI";
@@ -22,7 +23,6 @@ void sentient_ai_system::configure() {
                 } else {
                     ai.hostile = false;
                 }
-                //std::cout << "Feelings: " << feelings << "\n";
 
                 // Look for immediate threats
                 bool terrified = false;
@@ -46,27 +46,68 @@ void sentient_ai_system::configure() {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
                     const float range = shooting_range(e, pos);
-                    //std::cout << range << "\n";
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						emit(settler_attack_message{e.id, closest_fear});
-                        //std::cout << "Attack!\n";
 					} else if ( range != -1 && range < terror_distance) {
 						// Shoot it
 						emit(settler_ranged_attack_message{e.id, closest_fear});
-                        //std::cout << "Shoot!\n";
 					} else {
-                        if (rng.roll_dice(1,10) > ai.aggression) {
-                            emit(entity_wants_to_flee_message{e.id, closest_fear});
-                            //std::cout << "Flee!\n";
-                        } else {
-                            emit(entity_wants_to_charge_message{e.id, closest_fear});
-                            //std::cout << "Charge!\n";
-                        }
+                        emit(entity_wants_to_charge_message{e.id, closest_fear});
+                        ai.goal = SENTIENT_GOAL_CHARGE;
 					}
 				} else {
-                    // Otherwise we move randomly
-                    emit_deferred(entity_wants_to_move_randomly_message{e.id});
+                    if (ai.goal == SENTIENT_GOAL_CHARGE || ai.goal == SENTIENT_GOAL_FLEE) {
+                        ai.goal = SENTIENT_GOAL_IDLE;
+                    }
+
+                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,500)-1 <= ai.aggression) {
+                        // Look for a settler to kill
+                        std::map<float, std::size_t> targets;
+                        each<settler_ai_t, position_t>([&targets, &pos] (entity_t &se, settler_ai_t &settler_ai, position_t &spos) {
+                            const float distance = distance3d(pos.x, pos.y, pos.z, spos.x, spos.y, spos.z);
+                            targets[distance] = se.id; 
+                        });
+
+                        if (!targets.empty()) {
+                            auto it = targets.begin();
+                            ai.target = 0;
+                            while (ai.target == 0 && it != targets.end()) {
+                                ai.current_path = find_path(pos, *entity(it->second)->component<position_t>());
+                                if (ai.current_path->success) {
+                                    ai.target = it->second;
+                                }
+
+                                ++it;
+                            }
+
+                            if (ai.target == 0) {
+                                ai.current_path.reset();
+                            } else {
+                                ai.goal = SENTIENT_GOAL_KILL;
+                            }
+                        }
+                    } else if (ai.goal == SENTIENT_GOAL_KILL ) {
+                        if (pos == ai.current_path->destination) {
+                            ai.current_path.reset();
+                            ai.goal = SENTIENT_GOAL_IDLE;
+                            ai.target = 0;
+                        }
+
+                        position_t next_step = ai.current_path->steps.front();
+                        if (current_region->solid[mapidx(next_step.x, next_step.y, next_step.z)]) {
+                            ai.current_path.reset();
+                            ai.goal = SENTIENT_GOAL_IDLE;
+                            ai.target = 0;
+                        } else {
+                            emit_deferred(entity_wants_to_move_message{e.id, next_step});
+                            ai.current_path->steps.pop_front();
+                            emit_deferred(renderables_changed_message{});
+                        }
+                    } else if (ai.goal == SENTIENT_GOAL_IDLE) {
+                        // Otherwise we move randomly
+                        emit_deferred(entity_wants_to_move_randomly_message{e.id});
+                    }
                 }
 
                 ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);

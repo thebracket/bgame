@@ -197,6 +197,7 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 
 		{
 			std::stringstream ss;
+			if (current_region->solid[tile_idx]) ss << "Solid-";
 			if (current_region->tile_flags[tile_idx].test(CAN_GO_DOWN)) ss << "Down-";
 			if (current_region->tile_flags[tile_idx].test(CAN_GO_UP)) ss << "Up-";
 			if (current_region->tile_flags[tile_idx].test(CAN_GO_NORTH)) ss << "North-";
