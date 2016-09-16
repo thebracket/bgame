@@ -19,6 +19,7 @@ void inventory_system::configure() {
 	subscribe<drop_item_message>([this](drop_item_message &msg) {
 		emit(item_claimed_message{msg.id, false});
 		delete_component<item_carried_t>(msg.id);
+		entity(msg.id)->component<item_t>()->claimed = false;
 		entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
 		entity_octree.add_node(octree_location_t{msg.x,msg.y,msg.z,msg.id});
 		dirty = true;
