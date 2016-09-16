@@ -26,6 +26,16 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 	emit(entity_wants_to_move_randomly_message{entity.id});
 }
 
+bool settler_ai_system::butcher_exist() const {
+	bool butcher_exists = false;
+
+	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
+		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
+	});
+
+	return butcher_exists;
+}
+
 bool settler_ai_system::butcher_and_corpses_exist() const {
 	bool butcher_exists = false;
 	bool corpses_exist = false;
@@ -388,7 +398,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		}
 
 		// Hunt
-		if (ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
+		if (butcher_exist() && ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
 			ai.job_type_major = JOB_HUNT;
 			ai.job_type_minor = JM_HUNT_FIND_TARGET;

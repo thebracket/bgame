@@ -12,6 +12,7 @@ private:
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
+	bool butcher_exist() const;
 	bool butcher_and_corpses_exist() const;
 
 	void change_settler_glyph(entity_t &entity, const vchar &render_as);

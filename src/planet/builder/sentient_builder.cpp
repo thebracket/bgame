@@ -84,6 +84,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         auto weapon = create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_MELEE, sentient->id});
         weapon->component<item_t>()->stack_size = finder->second.stack_size;
         weapon->component<item_t>()->category = finder->second.categories;
+        weapon->component<item_t>()->claimed = true;
     }
     if (profession->second[profidx].ranged != "") {
         const std::string item_name = profession->second[profidx].ranged;
@@ -92,6 +93,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         auto weapon = create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_RANGED, sentient->id});
         weapon->component<item_t>()->stack_size = finder->second.stack_size;
         weapon->component<item_t>()->category = finder->second.categories;
+        weapon->component<item_t>()->claimed = true;
     }
     if (profession->second[profidx].ammo != "") {
         const std::string item_name = profession->second[profidx].ammo;
@@ -100,6 +102,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         auto ammo = create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_AMMO, sentient->id});
         ammo->component<item_t>()->stack_size = finder->second.stack_size;
         ammo->component<item_t>()->category = finder->second.categories;
+        ammo->component<item_t>()->claimed = true;
     }
 
     planet.civs.civs[planet.civs.unimportant_people[person_id].civ_id].met_cordex = true;
