@@ -851,14 +851,14 @@ void read_native_population_types(std::ofstream &tech_tree_file) {
                 }
 
                 lua_pop(lua_state, 1);
-                auto finder = native_pop_defs.find(key);
-                if (finder == native_pop_defs.end()) {
-                    native_pop_defs[key] = { p };
-                } else {
-                    finder->second.push_back(p);
-                }
             }
-
+            //std::cout << key << ":" << p.name << "\n"; 
+            auto finder = native_pop_defs.find(key);
+            if (finder == native_pop_defs.end()) {
+                native_pop_defs[key] = { p };
+            } else {
+                finder->second.push_back(p);
+            }
             lua_pop(lua_state, 1);
         }
         lua_pop(lua_state, 1);
