@@ -187,4 +187,66 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A boiled leather tunic made from animal hides."
 	},
+
+	-- Bronze age clothing
+	cloth_tunic = {
+		name = "Cloth Tunic",
+		slot = "torso",
+		colors = {"brown", "black", "grey", "red", "blue", "green"},
+		description = "A simple tunic made from spun thread."
+	},
+	cloth_pants = {
+		name = "Cloth Pants",
+		slot = "legs",
+		colors = {"brown", "black", "grey", "red", "blue", "green"},
+		description = "A simple pair of pants made from spun thread."
+	},
+	cloth_skirt = {
+		name = "Cloth Skirt",
+		slot = "legs",
+		colors = {"brown", "black", "grey", "red", "blue", "green"},
+		description = "A simple skirt made from spun thread."
+	},
+	leather_sandals = {
+		name = "Leather Sandals",
+		slot = "torso",
+		colors = {"brown", "black", "grey"},
+		description = "A simple pair of sandals made from tanned leather."
+	},
+	bronze_ringmail = {
+		name = "Bronze Ringmail",
+		slot = "torso",
+		colors = {"brown", "black", "grey", "red", "blue", "green"},
+		description = "A leather tunic with rings of bronze attached."
+	},
+	bronze_cap = {
+		name = "Bronze Cap",
+		slot = "head",
+		colors = {"brown", "black", "yellow"},
+		description = "A bronze cap, offering some head protection."
+	},
+	bronze_helm = {
+		name = "Bronze Helm",
+		slot = "head",
+		colors = {"brown", "black", "yellow"},
+		description = "A full-face bronze helmet."
+	},
+	bronze_breastplate = {
+		name = "Bronze Breastplate",
+		slot = "torso",
+		colors = {"yellow"},
+		description = "A hard bronze breastplate, backed by hardened leather."
+	},
+	bronze_leggings = {
+		name = "Bronze Leggings",
+		slot = "legs",
+		colors = {"brown", "yellw"},
+		description = "Leather leggings, covered in bronze rings for added protection."
+	},
+	bronze_skirt = {
+		name = "Bronze Skirt",
+		slot = "legs",
+		colors = {"brown", "yellow"},
+		description = "A leather skirt, covered in bronze rings for added protection."
+	},
 }

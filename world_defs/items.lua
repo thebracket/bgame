@@ -23,15 +23,6 @@ items = {
 		foreground = colors['white'],
 		background = colors['black']
 	},
-	battleaxe = {
-		name = "Battleaxe",
-		description = "An intimidating looking axe with a large blade.",
-		itemtype = {"tool-chopping", "weapon-melee"},
-		glyph = glyphs['paragraph'],
-		foreground = colors['white'],
-		background = colors['black'],
-		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str"
-	},
 	pickaxe = {
 		name = "Pickaxe",
 		description = "A simple pickaxe, ideal for digging holes.",
@@ -334,15 +325,6 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
-	sword = {
-		name = "Sword",
-		description = "A simple sword",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['cyan'],
-		background = colors['black'],
-		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str"
-	},
 	stone_hammer = {
 		name = "Stone Hammer",
 		description = "A simple hammer with a stone head",
@@ -360,6 +342,51 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+	},
+	bronze_axe = {
+		name = "Bronze Axe",
+		description = "A socketed bronze axe",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+	},
+	bronze_hammer = {
+		name = "Bronze Hammer",
+		description = "A socketed bronze hammer",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+	},
+	bronze_pickaxe = {
+		name = "Bronze Pickaxe",
+		description = "A socketed bronze pickaxe",
+		itemtype = {"weapon-melee", "tool-digging"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+	},
+	bronze_dagger = {
+		name = "Bronze Dagger",
+		description = "A bronze dagger",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+	},
+	bronze_sword = {
+		name = "Bronze Sword",
+		description = "A bronze sword",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
 	},
 	stone_knife = {
 		name = "Stone Knife",
@@ -412,38 +439,6 @@ items = {
 		itemtype = {"component"},
 		glyph = glyphs['axe'],
 		foreground = colors['white'],
-		background = colors['black']
-	},
-	pickaxe_blade = {
-		name = "Pick-Axe Blade",
-		description = "A pickaxe blade",
-		itemtype = {"component"},
-		glyph = glyphs['axe'],
-		foreground = colors['white'],
-		background = colors['black']
-	},
-	sword_blade = {
-		name = "Sword Blade",
-		description = "A sword blade",
-		itemtype = {"component"},
-		glyph = glyphs['axe'],
-		foreground = colors['white'],
-		background = colors['black']
-	},
-	axe_haft = {
-		name = "Axe Haft",
-		description = "An axe haft",
-		itemtype = {"component"},
-		glyph = glyphs['axe'],
-		foreground = colors['wood_brown'],
-		background = colors['black']
-	},
-	sword_hilt = {
-		name = "Sword Hilt",
-		description = "A sword hilt",
-		itemtype = {"component"},
-		glyph = glyphs['axe'],
-		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
 	forge_parts = {

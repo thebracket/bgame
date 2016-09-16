@@ -82,24 +82,6 @@ reactions = {
         difficulty = 10,
         automatic = false
     },
-    make_axe_haft = {
-        name = "Make Axe Haft",
-        workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
-        outputs = { { item="axe_haft", qty=1 } },
-        skill = "Carpentry",
-        difficulty = 10,
-        automatic = false
-    },
-    make_sword_hilt = {
-        name = "Make Sword Hilt",
-        workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
-        outputs = { { item="sword_hilt", qty=1 } },
-        skill = "Carpentry",
-        difficulty = 14,
-        automatic = false
-    },
     make_stone_chair = {
         name = "Make Stone Chair",
         workshop = "mason",
@@ -157,8 +139,8 @@ reactions = {
     smelt_tin = {
         name = "Smelt Copper",
         workshop = "smelter",
-        inputs = { { item="copper_ore", qty=1 } },
-        outputs = { { item="copper_bar", qty=2 } },
+        inputs = { { item="tin_ore", qty=1 } },
+        outputs = { { item="tin_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
         automatic = true
@@ -223,11 +205,31 @@ reactions = {
         automatic = true,
         emits_smoke = true
     },
+    make_bronze_ore = {
+        name = "Smelt Bronze Alloy (Ore)",
+        workshop = "smelter",
+        inputs = { { item="tin_ore", qty=1 }, { item="copper_ore", qty=1} },
+        outputs = { { item="bronze_bar", qty=1 } },
+        skill = "Furnace Operation",
+        difficulty = 14,
+        automatic = true,
+        emits_smoke = true
+    },
+    make_bronze_bar = {
+        name = "Smelt Bronze Alloy (Bar)",
+        workshop = "smelter",
+        inputs = { { item="tin_bar", qty=1 }, { item="copper_bar", qty=1} },
+        outputs = { { item="bronze_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 14,
+        automatic = true,
+        emits_smoke = true
+    },
     make_bismuth_bronze = {
-        name = "Smelt Bronze Alloy",
+        name = "Smelt Bronze Alloy (Bismuth)",
         workshop = "smelter",
         inputs = { { item="bismuth_ore", qty=1 }, { item="copper_bar", qty=1} },
-        outputs = { { item="bronze_bar", qty=1 } },
+        outputs = { { item="bronze_bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 14,
         automatic = true,
@@ -299,96 +301,8 @@ reactions = {
         difficulty = 12,
         automatic = false
     },
-    make_stone_club = {
-        name = "Make Stone Club",
-        workshop = "mason",
-        inputs = { { item="stone_block", qty=1 } },
-        outputs = { { item="club", qty=1 } },
-        skill = "Masonry",
-        difficulty = 10,
-        automatic = false
-    },
-    make_battleaxe = {
-        name = "Make Battleaxe",
-        workshop = "primitive_workshop",
-        inputs = { { item="axe_blade", qty=1 }, { item="axe_haft", qty=1 } },
-        outputs = { { item="battleaxe", qty=1 } },
-        skill = "Metalworking",
-        difficulty = 10,
-        automatic = false
-    },
-    make_battleaxe = {
-        name = "Make Pickaxe",
-        workshop = "primitive_workshop",
-        inputs = { { item="pickaxe_blade", qty=1 }, { item="axe_haft", qty=1 } },
-        outputs = { { item="pickaxe", qty=1 } },
-        skill = "Metalworking",
-        difficulty = 10,
-        automatic = false
-    },
-    make_stone_hammer = {
-        name = "Make Stone Hammer",
-        workshop = "primitive_workshop",
-        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
-        outputs = { { item="stone_hammer", qty=1 } },
-        skill = "Metalworking",
-        difficulty = 10,
-        automatic = false
-    },
-    make_stone_axe = {
-        name = "Make Stone Axe",
-        workshop = "primitive_workshop",
-        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
-        outputs = { { item="stone_axe", qty=1 } },
-        skill = "Metalworking",
-        difficulty = 10,
-        automatic = false
-    },
-    make_stone_knife = {
-        name = "Make Stone Knife",
-        workshop = "primitive_workshop",
-        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
-        outputs = { { item="stone_knife", qty=1 } },
-        skill = "Metalworking",
-        difficulty = 10,
-        automatic = false
-    },
-    make_axe_blade_aluminium = { name="Make Aluminium Axe Blade", inputs={{item="aluminium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_tin = { name="Make Tin Axe Blade", inputs={{item="tin_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_chromium = { name="Make Chrome Axe Blade", inputs={{item="chromium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_copper = { name="Make Copper Axe Blade", inputs={{item="copper_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_lead = { name="Make Lead Axe Blade", inputs={{item="lead_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_gold = { name="Make Gold Axe Blade", inputs={{item="gold_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_iron = { name="Make Iron Axe Blade", inputs={{item="iron_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_platinum = { name="Make Platinum Axe Blade", inputs={{item="platinum_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_silver = { name="Make Silver Axe Blade", inputs={{item="silver_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_zinc = { name="Make Zinc Axe Blade", inputs={{item="zinc_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_axe_blade_bronze = { name="Make Bronze Axe Blade", inputs={{item="bronze_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="axe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
 
-    make_pickaxe_blade_aluminium = { name="Make Aluminium Pickaxe Blade", inputs={{item="aluminium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_tin = { name="Make Tin Pickaxe Blade", inputs={{item="tin_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_chromium = { name="Make Chrome Pickaxe Blade", inputs={{item="chromium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_copper = { name="Make Copper Pickaxe Blade", inputs={{item="copper_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_lead = { name="Make Lead Pickaxe Blade", inputs={{item="lead_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_gold = { name="Make Gold Pickaxe Blade", inputs={{item="gold_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_iron = { name="Make Iron Pickaxe Blade", inputs={{item="iron_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_platinum = { name="Make Platinum Pickaxe Blade", inputs={{item="platinum_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_silver = { name="Make Silver Pickaxe Blade", inputs={{item="silver_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_zinc = { name="Make Zinc Pickaxe Blade", inputs={{item="zinc_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_pickaxe_blade_bronze = { name="Make Bronze Pickaxe Blade", inputs={{item="bronze_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="pickaxe_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-
-    make_sword_blade_aluminium = { name="Make Aluminium Sword Blade", inputs={{item="aluminium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_tin = { name="Make Tin Sword Blade", inputs={{item="tin_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_chromium = { name="Make Chrome Sword Blade", inputs={{item="chromium_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_copper = { name="Make Copper Sword Blade", inputs={{item="copper_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_lead = { name="Make Lead Sword Blade", inputs={{item="lead_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_gold = { name="Make Gold Sword Blade", inputs={{item="gold_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_iron = { name="Make Iron Sword Blade", inputs={{item="iron_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_platinum = { name="Make Platinum Sword Blade", inputs={{item="platinum_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_silver = { name="Make Silver Sword Blade", inputs={{item="silver_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_zinc = { name="Make Zinc Sword Blade", inputs={{item="zinc_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-    make_sword_blade_bronze = { name="Make Bronze Sword Blade", inputs={{item="bronze_bar", qty=1}}, workshop="primitive_forge", outputs = {{item="sword_blade",qty=1}}, skill="Metalworking", difficulty=12, automatic=false},
-
+    -- Stone Age Support
     make_hide_tunic = {
         name = "Make Hide Tunic",
         workshop = "leatherworker",
@@ -458,6 +372,152 @@ reactions = {
         inputs = { { item="leather", qty=2 } },
         outputs = { { item="boiled_leather_tunic", qty=1 } },
         skill = "Leatherworking",
+        difficulty = 16,
+        automatic = false
+    },
+    make_stone_club = {
+        name = "Make Stone Club",
+        workshop = "mason",
+        inputs = { { item="stone_block", qty=1 } },
+        outputs = { { item="club", qty=1 } },
+        skill = "Masonry",
+        difficulty = 10,
+        automatic = false
+    },
+    make_stone_hammer = {
+        name = "Make Stone Hammer",
+        workshop = "primitive_workshop",
+        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="stone_hammer", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_stone_axe = {
+        name = "Make Stone Axe",
+        workshop = "primitive_workshop",
+        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="stone_axe", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 10,
+        automatic = false
+    },
+    make_stone_knife = {
+        name = "Make Stone Knife",
+        workshop = "primitive_workshop",
+        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="stone_knife", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 10,
+        automatic = false
+    },
+
+    -- Bronze Age Support
+    make_leather_sandals = {
+        name = "Make Leather Sandals",
+        workshop = "leatherworker",
+        inputs = { { item="leather", qty=1 } },
+        outputs = { { item="leather_sandals", qty=1 } },
+        skill = "Leatherworking",
+        difficulty = 16,
+        automatic = false
+    },
+    make_bronze_hammer = {
+        name = "Make Bronze Hammer",
+        workshop = "primitive_forge",
+        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="bronze_hammer", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 12,
+        automatic = false
+    },
+    make_bronze_axe = {
+        name = "Make Bronze Axe",
+        workshop = "primitive_forge",
+        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="bronze_axe", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 12,
+        automatic = false
+    },
+    make_bronze_pickaxe = {
+        name = "Make Bronze Pickaxe",
+        workshop = "primitive_forge",
+        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="bronze_pickaxe", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 12,
+        automatic = false
+    },
+    make_bronze_dagger = {
+        name = "Make Bronze Dagger",
+        workshop = "primitive_forge",
+        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="bronze_dagger", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 12,
+        automatic = false
+    },
+    make_bronze_sword = {
+        name = "Make Bronze Sword",
+        workshop = "primitive_forge",
+        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        outputs = { { item="bronze_sword", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 14,
+        automatic = false
+    },
+    make_bronze_ringmail = {
+        name = "Make Bronze Ringmail",
+        workshop = "primitive_workshop",
+        inputs = { { item="leather", qty=1 }, { item="bronze_bar", qtr=1 } },
+        outputs = { { item="bronze_ringmail", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 16,
+        automatic = false
+    },
+    make_bronze_breastplate = {
+        name = "Make Bronze Breastplate",
+        workshop = "primitive_workshop",
+        inputs = { { item="leather", qty=1 }, { item="bronze_bar", qtr=1 } },
+        outputs = { { item="bronze_breastplate", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 16,
+        automatic = false
+    },
+    make_bronze_cap = {
+        name = "Make Bronze Cap",
+        workshop = "primitive_workshop",
+        inputs = { { item="leather", qty=1 }, { item="bronze_bar", qtr=1 } },
+        outputs = { { item="bronze_cap", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 16,
+        automatic = false
+    },
+    make_bronze_helm = {
+        name = "Make Bronze Helm",
+        workshop = "primitive_workshop",
+        inputs = { { item="leather", qty=1 }, { item="bronze_bar", qtr=2 } },
+        outputs = { { item="bronze_helm", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 18,
+        automatic = false
+    },
+    make_bronze_leggings = {
+        name = "Make Bronze Leggings",
+        workshop = "primitive_workshop",
+        inputs = { { item="leather", qty=1 }, { item="bronze_bar", qtr=1 } },
+        outputs = { { item="bronze_leggings", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 16,
+        automatic = false
+    },
+    make_bronze_skirt = {
+        name = "Make Bronze Skirt",
+        workshop = "primitive_workshop",
+        inputs = { { item="leather", qty=1 }, { item="bronze_bar", qtr=1 } },
+        outputs = { { item="bronze_skirt", qty=1 } },
+        skill = "Metalworking",
         difficulty = 16,
         automatic = false
     },
