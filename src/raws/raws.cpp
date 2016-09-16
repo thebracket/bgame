@@ -948,3 +948,13 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
         ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
+
+void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc) {
+    auto finder = item_defs.find(tag);
+    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+
+    auto item = create_entity()
+        ->assign(item_carried_t{ loc, holder_id })
+        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+}

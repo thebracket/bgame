@@ -265,6 +265,16 @@ reactions = {
         automatic = false,
         power_drain = 20
     },
+    replicate_energy_cell = {
+        name = "Replicate Energy Cell",
+        workshop = "small_replicator",
+        inputs = {  },
+        outputs = { { item="energy_cell", qty=1 } },
+        skill = "Construction",
+        difficulty = 5,
+        automatic = false,
+        power_drain = 30
+    },
     make_wooden_club = {
         name = "Make Wooden Club",
         workshop = "carpenter",

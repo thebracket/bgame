@@ -406,6 +406,15 @@ items = {
 		background = colors['black'],
 		damage_mod=0, damage_stat="str", range=6, ammo="dart"
 	},
+	ray_pistol = {
+		name = "Ray Pistol",
+		description = "A tiny, one handed raygun, that looks suspiciously like a toy.",
+		itemtype = {"weapon-ranged"},
+		glyph = glyphs['axe'],
+		foreground = colors['wood_brown'],
+		background = colors['black'],
+		damage_mod=0, damage_stat="dex", range=4, ammo="cell"
+	},
 	wood_shortbow = {
 		name = "Wooden Shortbow",
 		description = "A simple wooden shortbow",
@@ -423,6 +432,15 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="dart"
+	},
+	energy_cell = {
+		name = "Energy Cell",
+		description = "A small energy cell, used for powering laser weaponry.",
+		itemtype = {"ammo"},
+		glyph = glyphs['axe'],
+		foreground = colors['red'],
+		background = colors['black'],
+		damage_n=1, damage_d=12, damage_mod=0, stack_size=20, ammo="cell"
 	},
 	wood_arrow = {
 		name = "Wooden Arrow",
