@@ -88,13 +88,15 @@ void sentient_ai_system::configure() {
                             }
                         }
                     } else if (ai.goal == SENTIENT_GOAL_KILL ) {
-                        if (pos == ai.current_path->destination) {
+                        if (!ai.current_path || pos == ai.current_path->destination || ai.current_path->steps.empty()) {
                             ai.current_path.reset();
                             ai.goal = SENTIENT_GOAL_IDLE;
                             ai.target = 0;
+                            return;
                         }
 
                         position_t next_step = ai.current_path->steps.front();
+                        ai.current_path->steps.pop_front();
                         if (current_region->solid[mapidx(next_step.x, next_step.y, next_step.z)]) {
                             ai.current_path.reset();
                             ai.goal = SENTIENT_GOAL_IDLE;
