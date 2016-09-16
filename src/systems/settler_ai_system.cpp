@@ -124,7 +124,9 @@ void settler_ai_system::configure() {
 				} else {
 					switch (current_schedule) {
 						case SLEEP_SHIFT : this->do_sleep_time(entity, ai, stats, species, pos, name); break;
-						case LEISURE_SHIFT : this->do_leisure_time(entity, ai, stats, species, pos, name); break;
+						//case LEISURE_SHIFT : this->do_leisure_time(entity, ai, stats, species, pos, name); break;
+						// Temporary - everyone works
+						case LEISURE_SHIFT : this->do_work_time(entity, ai, stats, species, pos, name); break;
 						case WORK_SHIFT : this->do_work_time(entity, ai, stats, species, pos, name); break;
 					}
 				}
@@ -1188,6 +1190,9 @@ void settler_ai_system::do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &
 			return;
 		}
 		// Travel to destination
+		if (!ai.current_path) {
+			cancel_action(e, ai, stats, species, pos, name, "No huntable targets");
+		}
 		position_t next_step = ai.current_path->steps.front();
 		move_to(e, pos, next_step);
 		ai.current_path->steps.pop_front();

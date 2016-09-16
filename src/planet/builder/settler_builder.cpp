@@ -198,5 +198,5 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	// Add a raygun and energey cells
 	auto plasteel = material_defs_idx.find("plasteel");
 	spawn_item_carried(settler->id, "ray_pistol", plasteel->second, EQUIP_RANGED);
-	spawn_item_carried(settler->id, "energy_cell", plasteel->second, EQUIP_AMMO);
+	spawn_item_carried(settler->id, "small_energy_cell", plasteel->second, EQUIP_AMMO);
 }

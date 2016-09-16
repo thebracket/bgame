@@ -265,11 +265,11 @@ reactions = {
         automatic = false,
         power_drain = 20
     },
-    replicate_energy_cell = {
-        name = "Replicate Energy Cell",
+    replicate_small_energy_cell = {
+        name = "Replicate Small Energy Cell",
         workshop = "small_replicator",
         inputs = {  },
-        outputs = { { item="energy_cell", qty=1 } },
+        outputs = { { item="small_energy_cell", qty=1 } },
         skill = "Construction",
         difficulty = 5,
         automatic = false,

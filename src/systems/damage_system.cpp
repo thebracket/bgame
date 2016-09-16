@@ -312,7 +312,10 @@ void damage_system::update(const double ms) {
         hour->pop();
 
         each<health_t>([] (entity_t &e, health_t &h) {
-            if (h.max_hitpoints > h.current_hitpoints) ++h.current_hitpoints;
+            if (h.max_hitpoints > h.current_hitpoints) {
+                ++h.current_hitpoints;
+                h.unconscious = false;
+            }
         });
     }
 }

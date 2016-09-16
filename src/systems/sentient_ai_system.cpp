@@ -48,12 +48,12 @@ void sentient_ai_system::configure() {
                     const float range = shooting_range(e, pos);
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
-						emit(settler_attack_message{e.id, closest_fear});
+						emit_deferred(settler_attack_message{e.id, closest_fear});
 					} else if ( range != -1 && range < terror_distance) {
 						// Shoot it
-						emit(settler_ranged_attack_message{e.id, closest_fear});
+						emit_deferred(settler_ranged_attack_message{e.id, closest_fear});
 					} else {
-                        emit(entity_wants_to_charge_message{e.id, closest_fear});
+                        emit_deferred(entity_wants_to_charge_message{e.id, closest_fear});
                         ai.goal = SENTIENT_GOAL_CHARGE;
 					}
 				} else {
@@ -88,7 +88,8 @@ void sentient_ai_system::configure() {
                             }
                         }
                     } else if (ai.goal == SENTIENT_GOAL_KILL ) {
-                        if (!ai.current_path || pos == ai.current_path->destination || ai.current_path->steps.empty()) {
+                        if (!ai.current_path) return;
+                        if (pos == ai.current_path->destination || ai.current_path->steps.empty()) {
                             ai.current_path.reset();
                             ai.goal = SENTIENT_GOAL_IDLE;
                             ai.target = 0;
@@ -96,7 +97,6 @@ void sentient_ai_system::configure() {
                         }
 
                         position_t next_step = ai.current_path->steps.front();
-                        ai.current_path->steps.pop_front();
                         if (current_region->solid[mapidx(next_step.x, next_step.y, next_step.z)]) {
                             ai.current_path.reset();
                             ai.goal = SENTIENT_GOAL_IDLE;
@@ -106,6 +106,7 @@ void sentient_ai_system::configure() {
                             ai.current_path->steps.pop_front();
                             emit_deferred(renderables_changed_message{});
                         }
+                        ai.current_path->steps.pop_front();
                     } else if (ai.goal == SENTIENT_GOAL_IDLE) {
                         // Otherwise we move randomly
                         emit_deferred(entity_wants_to_move_randomly_message{e.id});
