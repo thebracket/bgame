@@ -61,7 +61,7 @@ void sentient_ai_system::configure() {
                         ai.goal = SENTIENT_GOAL_IDLE;
                     }
 
-                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,5000)-1 <= ai.aggression) {
+                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai.aggression) {
                         // Look for a settler to kill
                         std::map<float, std::size_t> targets;
                         each<settler_ai_t, position_t>([&targets, &pos] (entity_t &se, settler_ai_t &settler_ai, position_t &spos) {
