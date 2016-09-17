@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 struct settlement_t {
     std::size_t civ_id;

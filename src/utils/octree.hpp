@@ -13,7 +13,6 @@ struct octree_t {
     int x, y, z;
     int w, h, d, n;
     int total_nodes = 0;
-    int half_w, half_h, half_d;
 
     std::array<std::unique_ptr<octree_t>, 8> children;
     std::vector<octree_location_t> contents;
@@ -22,6 +21,10 @@ struct octree_t {
     octree_t(const octree_t * parent, int section);
 
     inline int get_child_index(const octree_location_t &loc) {
+		const int half_w = x+(w/2);
+		const int half_h = y+(h/2);
+		const int half_d = z+(d/2);
+	
         if (loc.x < half_w && loc.x < half_h && loc.z < half_d) return 0; // Upper top-left
         if (loc.x > half_w && loc.x < half_h && loc.z < half_d) return 1; // Upper top-right
         if (loc.x < half_w && loc.x > half_h && loc.z < half_d) return 2; // Upper bottom-left

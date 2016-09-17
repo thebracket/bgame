@@ -5,9 +5,6 @@ octree_t::octree_t(const int &width, const int &height, const int &depth, const 
     x = 0;
     y = 0;
     z = 0;
-    half_w = w/2;
-    half_h = h/2;
-    half_d = d/2;
 }
 
 octree_t::octree_t(const octree_t * parent, int section) {

@@ -61,35 +61,23 @@
     <Filter Include="Header Files\planet\builder">
       <UniqueIdentifier>{2acad772-a365-4a76-aa38-6155272be51a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\main">
+      <UniqueIdentifier>{5f57c01a-62e8-4745-bd76-f9b7aaa87d17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main">
+      <UniqueIdentifier>{31a07e76-30fa-45c1-b5c5-b2347315f438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FastNoise">
+      <UniqueIdentifier>{c2a21790-1816-413b-ace4-408870f89a98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FastNoise">
+      <UniqueIdentifier>{dcfc5b07-bbae-4bcd-918e-83ce2219923e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\constants.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\game_globals.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main_menu.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\menu_helper.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\play_game.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\splash_screen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\world_gen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\planet\region.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\rltk\rltk\astar.hpp">
       <Filter>Header Files\rltk</Filter>
     </ClInclude>
@@ -402,24 +390,57 @@
     <ClInclude Include="..\src\systems\corpse_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\sentient_ai.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\history_builder.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\builder\sentient_builder.hpp">
+      <Filter>Header Files\planet\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\world_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\constants.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\game_globals.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\main_menu.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\menu_helper.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\play_game.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\splash_screen.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\world_gen.hpp">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\civilizations.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\planet\history.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FastNoise\FastNoise.h">
+      <Filter>Header Files\FastNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\weapons_helpers.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\sentient_ai_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main_menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\menu_helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\play_game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\splash_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\world_gen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\boost_filesystem.codecvt_error_category.cpp">
@@ -459,9 +480,6 @@
       <Filter>Source Files\rltk</Filter>
     </ClCompile>
     <ClCompile Include="..\src\rltk\rltk\gui.cpp">
-      <Filter>Source Files\rltk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\game_globals.cpp">
       <Filter>Source Files\rltk</Filter>
     </ClCompile>
     <ClCompile Include="..\src\rltk\rltk\gui_control_t.cpp">
@@ -621,6 +639,48 @@
       <Filter>Source Files\systems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\systems\corpse_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\builder\history_builder.cpp">
+      <Filter>Source Files\planet\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\builder\sentient_builder.cpp">
+      <Filter>Source Files\planet\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\world_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\game_globals.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\main_menu.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\menu_helper.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\play_game.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\splash_screen.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\world_gen.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\civilizations.cpp">
+      <Filter>Source Files\planet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\planet\history.cpp">
+      <Filter>Source Files\planet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FastNoise\FastNoise.cpp">
+      <Filter>Source Files\FastNoise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\weapons_helpers.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\sentient_ai_system.cpp">
       <Filter>Source Files\systems</Filter>
     </ClCompile>
   </ItemGroup>
