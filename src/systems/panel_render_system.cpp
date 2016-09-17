@@ -165,7 +165,7 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 		term(2)->print(28,1,"SPACE", YELLOW);
 		term(2)->print(33,1," Pause", WHITE, GREEN_BG);
 	}
-	term(2)->print(42,1,".",YELLOW);
+	term(2)->print(42,1,"/",YELLOW);
 	term(2)->print(43,1," One Step", WHITE, GREEN_BG);
 
 	// Mouse tips

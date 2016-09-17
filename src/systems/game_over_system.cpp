@@ -27,7 +27,7 @@ void game_over_system::update(const double ms) {
 		term(1)->print_center(20, "Press ESCAPE to quit.", rltk::colors::YELLOW);
 	}
 
-	if (is_window_focused() && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+	if (loss_mode > 0 && is_window_focused() && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 		quitting = true;
 	}
 }
