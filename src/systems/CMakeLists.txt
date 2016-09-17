@@ -26,4 +26,6 @@ add_library(systems
 	sentient_ai_system.cpp
 	world_system.cpp
 	weapons_helpers.cpp
+	game_over_system.cpp
 )
+target_link_libraries(systems rltk utils components raws)

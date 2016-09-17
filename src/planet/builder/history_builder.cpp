@@ -219,7 +219,7 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
                 birth_chance += age_bonus;
                 if (peep.married) birth_chance += 7;
                 if (rng.roll_dice(1,100) < birth_chance) {
-                    newborns.push_back({peep.civ_id, peep_id, peep.married_to});
+                    newborns.push_back(std::make_tuple(peep.civ_id, peep_id, peep.married_to));
                 }
             }
 

@@ -6,3 +6,5 @@ add_library(bfmain
 	play_game.cpp
 	game_globals.cpp
 )
+target_link_libraries(bfmain planet rltk components)
+

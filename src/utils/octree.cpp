@@ -1,4 +1,5 @@
 #include "octree.hpp"
+#include <algorithm>
 
 octree_t::octree_t(const int &width, const int &height, const int &depth, const int layer) : w(width), h(height), d(depth), n(layer) 
 {

@@ -11,3 +11,4 @@ add_library(planet
 	builder/history_builder.cpp
 	builder/sentient_builder.cpp
 )
+target_link_libraries(planet rltk raws FastNoise)
