@@ -438,6 +438,12 @@
     <ClInclude Include="..\src\systems\sentient_ai_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\messages\game_over_message.hpp">
+      <Filter>Header Files\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\game_over_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -681,6 +687,9 @@
       <Filter>Source Files\systems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\systems\sentient_ai_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\game_over_system.cpp">
       <Filter>Source Files\systems</Filter>
     </ClCompile>
   </ItemGroup>

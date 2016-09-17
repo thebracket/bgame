@@ -93,6 +93,7 @@ void play_game::init() {
 	add_system<panel_render_system>();
 	add_system<mode_units_system>();
 	add_system<mode_rogue_render_system>();
+	add_system<game_over_system>();
 
 	std::cout << "ECS Config\n";
 	ecs_configure();

@@ -43,5 +43,6 @@ void power_system::update(double time_ms) {
     }
     if (designations->current_power < 1) {
         std::cout << "TODO: Everyone just died.\n";
+		emit(game_over_message{2});
     }
 }

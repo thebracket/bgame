@@ -139,6 +139,7 @@ void settler_ai_system::configure() {
 
 		if (!found_settler) {
 			std::cout << "Game should end now - everyone died\n";
+			emit(game_over_message{1});
 		}
 	});
 }

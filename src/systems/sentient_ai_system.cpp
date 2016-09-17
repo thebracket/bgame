@@ -9,7 +9,7 @@ void sentient_ai_system::configure() {
     system_name = "Sentient AI";
 
     subscribe<tick_message>([this](tick_message &msg) {
-        parallel_each<sentient_ai, position_t, viewshed_t, health_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health) {
+        each<sentient_ai, position_t, viewshed_t, health_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health) {
             if (ai.initiative < 1) {
                 if (health.unconscious) {
                     ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
@@ -93,6 +93,7 @@ void sentient_ai_system::configure() {
                             ai.current_path.reset();
                             ai.goal = SENTIENT_GOAL_IDLE;
                             ai.target = 0;
+							ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
                             return;
                         }
 

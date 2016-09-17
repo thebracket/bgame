@@ -156,6 +156,7 @@
     <ClInclude Include="..\src\messages\build_request_message.hpp" />
     <ClInclude Include="..\src\messages\emit_particles_message.hpp" />
     <ClInclude Include="..\src\messages\entity_moved_message.hpp" />
+    <ClInclude Include="..\src\messages\game_over_message.hpp" />
     <ClInclude Include="..\src\messages\inflict_damage_message.hpp" />
     <ClInclude Include="..\src\messages\inputs.hpp" />
     <ClInclude Include="..\src\messages\inventory_changed_message.hpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="..\src\systems\camera_system.hpp" />
     <ClInclude Include="..\src\systems\corpse_system.hpp" />
     <ClInclude Include="..\src\systems\damage_system.hpp" />
+    <ClInclude Include="..\src\systems\game_over_system.hpp" />
     <ClInclude Include="..\src\systems\inventory_system.hpp" />
     <ClInclude Include="..\src\systems\keyboard_system.hpp" />
     <ClInclude Include="..\src\systems\lighting_system.hpp" />
@@ -288,6 +290,7 @@
     <ClCompile Include="..\src\systems\camera_system.cpp" />
     <ClCompile Include="..\src\systems\corpse_system.cpp" />
     <ClCompile Include="..\src\systems\damage_system.cpp" />
+    <ClCompile Include="..\src\systems\game_over_system.cpp" />
     <ClCompile Include="..\src\systems\inventory_system.cpp" />
     <ClCompile Include="..\src\systems\keyboard_system.cpp" />
     <ClCompile Include="..\src\systems\lighting_system.cpp" />
