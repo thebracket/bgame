@@ -300,3 +300,57 @@ std::size_t claim_item_by_tag(const std::string &tag) {
 void unclaim_by_id(const std::size_t &id) {
 	emit(item_claimed_message{id, false});	
 }
+
+bool is_better_armor(const std::string &item_tag, std::unordered_map<item_location_t, float> &ac_by_loc) {
+	auto finder = clothing_types.find(item_tag);
+	const float item_ac = finder->second.armor_class;
+	item_location_t loc = INVENTORY;
+	if (finder->second.slot == "head") loc = HEAD;
+	if (finder->second.slot == "torso") loc = TORSO;
+	if (finder->second.slot == "legs") loc = LEGS;
+	if (finder->second.slot == "shoes") loc = FEET;
+
+	auto tester = ac_by_loc.find(loc);
+	if (tester == ac_by_loc.end()) {
+		return true;
+	} else {
+		if (item_ac > tester->second) return true;
+	}
+
+	return false;
+}
+
+boost::optional<std::size_t> find_armor_upgrade(entity_t &E) {
+	boost::optional<std::size_t> result;
+
+	std::unordered_map<item_location_t, float> ac_by_loc;
+	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
+		if (c.carried_by == E.id && i.type == CLOTHING) {
+			auto finder = clothing_types.find(i.item_tag);
+			if (finder != clothing_types.end()) {
+				ac_by_loc[c.location] = finder->second.armor_class;
+			}
+		} 
+	});
+
+	// Loop over all items on the ground
+	each<item_t, position_t>([&result, &ac_by_loc] (entity_t &e, item_t &i, position_t &pos) {
+		if (!i.claimed && i.type == CLOTHING) {
+			if (is_better_armor(i.item_tag, ac_by_loc)) result = e.id;
+		}
+	});
+
+	// ditto for all items in containers
+	if (!result) {
+		each<item_t, item_stored_t>([&result, &ac_by_loc] (entity_t &e, item_t &i, item_stored_t &pos) {
+			if (!i.claimed && i.type == CLOTHING) {
+				if (is_better_armor(i.item_tag, ac_by_loc)) result = e.id;
+			}
+		});
+	}
+
+	if (result) {
+		entity(result.get())->component<item_t>()->claimed = true;
+	}
+	return result;
+}

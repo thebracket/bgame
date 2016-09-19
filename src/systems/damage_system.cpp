@@ -3,6 +3,7 @@
 #include "../components/components.hpp"
 #include "../main/game_globals.hpp"
 #include "movement_system.hpp"
+#include "weapons_helpers.hpp"
 #include <rltk.hpp>
 #include <iostream>
 #include <sstream>
@@ -78,8 +79,7 @@ void damage_system::update(const double ms) {
         ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";
         const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->dexterity);
         ss << "(Dice roll: " << die_roll << ") ";
-        // TODO: ARMOR CLASS
-        if (die_roll > 10) {
+        if (die_roll > calculate_armor_class(*defender)) {
             ss << "The attack hits, ";
             const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
             ss << "for " << damage << " points of damage.\n";
@@ -135,8 +135,7 @@ void damage_system::update(const double ms) {
         ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";
         const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->strength);
         ss << "(Dice roll: " << die_roll << ") ";
-        // TODO: ARMOR CLASS
-        if (die_roll > 10) {
+        if (die_roll > calculate_armor_class(*defender)) {
             ss << "The attack hits, ";
             const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
             ss << "for " << damage << " points of damage.\n";
@@ -173,8 +172,7 @@ void damage_system::update(const double ms) {
         for (const creature_attack_t &weapon : creature->second.attacks) {
             ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with its " << weapon.type << ".";
             const int hit_roll = rng.roll_dice(1,20) + weapon.hit_bonus;
-            // TODO: Armor!
-            const int target = 10 + stat_modifier(defender_stats->dexterity);
+            const int target = calculate_armor_class(*defender) + stat_modifier(defender_stats->dexterity);
             if (hit_roll < target) {
                 ss << " The attack misses (roll: " << hit_roll << ").\n";
             } else {

@@ -42,6 +42,7 @@ struct clothing_t {
 	std::vector<std::string> colors;
 	std::string slot;
 	std::string description;
+	float armor_class = 0.0F;
 };
 
 struct profession_t {

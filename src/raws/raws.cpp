@@ -78,6 +78,7 @@ void read_clothing(std::ofstream &tech_tree_file) {
             if (field == "name") c.name = lua_tostring(lua_state, -1);
             if (field == "slot") c.slot = lua_tostring(lua_state, -1);
             if (field == "description") c.description = lua_tostring(lua_state, -1);
+            if (field == "ac") c.armor_class = lua_tonumber(lua_state, -1);
             if (field == "colors") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);

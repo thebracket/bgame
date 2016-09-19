@@ -7,6 +7,7 @@
 #include "workflow_system.hpp"
 #include "wildlife_population_system.hpp"
 #include "weapons_helpers.hpp"
+#include "../components/item_carried.hpp"
 #include <iostream>
 #include <map>
 
@@ -418,7 +419,16 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			return;
 		}
 
-		// TODO: Look for upgrades for equipment and clothing at some point
+		// Look for improved armor
+		boost::optional<std::size_t> better_armor = find_armor_upgrade(entity);
+		if (better_armor) {
+			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
+			ai.job_type_major = JOB_EQUIP_ARMOR;
+			ai.job_type_minor = JM_FIND_ARMOR;
+			ai.target_id = better_armor.get();
+			change_job_status(ai, name, "Finding armor.");
+			return;
+		}
 
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
@@ -440,6 +450,9 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_EQUIP_AMMO) {
 		do_equip_ammo(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_EQUIP_ARMOR) {
+		do_equip_armor(entity, ai, stats, species, pos, name);
 		return;
 	} else if (ai.job_type_major == JOB_HUNT) {
 		do_hunting(entity, ai, stats, species, pos, name);
@@ -1144,6 +1157,59 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 		// Find the pick, remove any position or stored components, add a carried_by component
 		emit(pickup_item_message{ai.current_tool, e.id, EQUIP_AMMO});
 		ai.current_tool = 0;
+
+		become_idle(e, ai, name);
+		return;
+	}	
+}
+
+void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_FIND_ARMOR) {
+		position_t * axe_pos = get_item_location(ai.target_id);
+		ai.current_path = find_path(pos, *axe_pos);
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to available armor");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_ARMOR;
+		ai.target_x = axe_pos->x;
+		ai.target_y = axe_pos->y;
+		ai.target_z = axe_pos->z;
+		change_job_status(ai, name, "Traveling to armor");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_ARMOR) {
+		if (pos == ai.current_path->destination) {
+			// We're at the axe
+			ai.current_path.reset();
+			ai.job_type_minor = JM_COLLECT_ARMOR;
+			change_job_status(ai, name, "Collect armor");
+			return;
+		}
+		// Travel to axe
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
+		return;
+	}
+
+	if (ai.job_type_minor == JM_COLLECT_ARMOR) {
+		// Find the pick, remove any position or stored components, add a carried_by component
+		entity_t * armor = entity(ai.target_id);
+		item_t * item = armor->component<item_t>();
+		item_location_t loc = INVENTORY;
+		auto finder = clothing_types.find(item->item_tag);
+		if (finder->second.slot == "head") loc = HEAD;
+		if (finder->second.slot == "torso") loc = TORSO;
+		if (finder->second.slot == "legs") loc = LEGS;
+		if (finder->second.slot == "shoes") loc = FEET;
+		each<item_carried_t>([&e, &pos, &loc] (entity_t &E, item_carried_t &c) {
+			if (c.carried_by == e.id && c.location == loc) emit(drop_item_message{E.id, pos.x, pos.y, pos.z});
+		});
+		emit(pickup_item_message{ai.target_id, e.id, loc});
+		ai.current_tool = 0;
+
 
 		become_idle(e, ai, name);
 		return;

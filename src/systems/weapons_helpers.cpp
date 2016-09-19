@@ -1,6 +1,7 @@
 #include "weapons_helpers.hpp"
 #include "../components/components.hpp"
 #include "../messages/messages.hpp"
+#include "../raws/raws.hpp"
 
 bool has_melee_weapon(const entity_t &entity) 
 {
@@ -51,4 +52,29 @@ int shooting_range(const entity_t &entity, const position_t &pos)
 		});
 	}
 	return result;
+}
+
+int calculate_armor_class(entity_t &entity) {
+	float ac = 10.0;
+
+	// Is it a creature?
+	grazer_ai * grazer = entity.component<grazer_ai>();
+	if (grazer) {
+		species_t * species = entity.component<species_t>();
+		if (species) {
+			auto finder = creature_defs.find(species->tag);
+			if (finder != creature_defs.end()) return finder->second.armor_class;
+		} 
+	}
+
+	// Does it have any items that help?
+	each<item_carried_t, item_t>([&ac, &entity] (entity_t &e, item_carried_t &c, item_t &i) {
+		if (c.carried_by == entity.id && c.location != INVENTORY && i.type == CLOTHING) {
+			auto finder = clothing_types.find(i.item_tag);
+			if (finder != clothing_types.end()) ac += finder->second.armor_class;
+		}
+	});
+
+	std::cout << "Armour class: " << ac << "\n";
+	return ac;
 }
