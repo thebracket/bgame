@@ -108,7 +108,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They started with a population of " << n_peeps << "\n\n";
 
         planet.civs.civs.push_back(civ);
-        planet_display_update_zoomed(planet, starting_loc.first, starting_loc.second);
+        //planet_display_update_zoomed(planet, starting_loc.first, starting_loc.second);
     }
 
     std::cout << "Seeded the world with " << n_civs << " civilizations and " << planet.civs.unimportant_people.size() << " folk.\n";
