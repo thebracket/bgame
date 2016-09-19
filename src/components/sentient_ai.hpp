@@ -16,6 +16,7 @@ struct sentient_ai {
 	bool hostile = false;
 	sentient_goal_t goal = SENTIENT_GOAL_IDLE;
 	std::size_t target;
+	int days_since_arrival = 0;
 
 	// Not serialized
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
@@ -30,6 +31,7 @@ struct sentient_ai {
 		serialize(lbfile, hostile);
 		serialize(lbfile, goal);
 		serialize(lbfile, target);
+		serialize(lbfile, days_since_arrival);
 	}
 
 	static sentient_ai load(std::istream &lbfile) {
@@ -41,6 +43,7 @@ struct sentient_ai {
 		deserialize(lbfile, c.hostile);
 		deserialize(lbfile, c.goal);
 		deserialize(lbfile, c.target);
+		deserialize(lbfile, c.days_since_arrival);
 		return c;
 	}
 };

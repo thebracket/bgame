@@ -8,6 +8,12 @@
 void sentient_ai_system::configure() {
     system_name = "Sentient AI";
 
+    subscribe<day_elapsed_message>([] (day_elapsed_message &msg) {
+        each<sentient_ai>([] (entity_t &e, sentient_ai &ai) {
+            ++ai.days_since_arrival;
+        });
+    });
+
     subscribe<tick_message>([this](tick_message &msg) {
         each<sentient_ai, position_t, viewshed_t, health_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health) {
             if (ai.initiative < 1) {
@@ -61,7 +67,7 @@ void sentient_ai_system::configure() {
                         ai.goal = SENTIENT_GOAL_IDLE;
                     }
 
-                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai.aggression) {
+                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai.aggression && ai.days_since_arrival > 2) {
                         // Look for a settler to kill
                         std::map<float, std::size_t> targets;
                         each<settler_ai_t, position_t>([&targets, &pos] (entity_t &se, settler_ai_t &settler_ai, position_t &spos) {
