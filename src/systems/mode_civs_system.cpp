@@ -153,6 +153,16 @@ void render_civ_negotiate() {
             term(1)->print(box_left+1, y, "[End Negotiation]", GREEN, BLACK);
         }
         ++y; ++y;
+
+        if (terminal_y == y) {
+            term(1)->print(box_left+1, y, "[I hope you all die in a fire]", WHITE, RED);
+            if (get_mouse_button_state(rltk::button::LEFT)) {
+                game_master_mode = PLAY;
+                planet.civs.civs[negotiating_civ].cordex_feelings = -10;
+            }
+        } else {
+            term(1)->print(box_left+1, y, "[I hope you all die in a fire]", RED, BLACK);
+        }
     } else {
         term(1)->print(box_left+1, y, "We welcome your presence here.");
         y += 3;
