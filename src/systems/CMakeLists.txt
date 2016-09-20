@@ -27,5 +27,6 @@ add_library(systems
 	world_system.cpp
 	weapons_helpers.cpp
 	game_over_system.cpp
+	mode_civs_system.cpp
 )
 target_link_libraries(systems rltk utils components raws)

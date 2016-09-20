@@ -146,6 +146,23 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 		}
 	}
 
+	if (game_master_mode == CIVS || game_master_mode == CIV_NEGOTIATE) {
+		term(2)->print(29,1,"Civs", YELLOW, BLUE);
+		render_work_mode();
+	} else {
+		if (terminal_y == 1 && terminal_x > 28 && terminal_x < 35) {
+			term(2)->print(28,1,"Civs",GREEN,BLACK);
+			if (clicked) {
+				game_master_mode = CIVS;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(2)->print(28,1,"C", YELLOW, BLACK);
+			term(2)->print(29,1,"ivs", WHITE, BLACK);
+		}
+	}
+
 	if (game_master_mode == SETTLER) {
 		render_settler_mode();
 	}
@@ -159,14 +176,14 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 void panel_render_system::render_play_mode(const double duration_ms) {
 	// Controls Help
 	if (pause_mode == PAUSED) {
-		term(2)->print(28,1,"SPACE", YELLOW);
-		term(2)->print(33,1," Unpause", WHITE, GREEN_BG);
+		term(2)->print(34,1,"SPACE", YELLOW);
+		term(2)->print(39,1," Unpause", WHITE, GREEN_BG);
 	} else {
-		term(2)->print(28,1,"SPACE", YELLOW);
-		term(2)->print(33,1," Pause", WHITE, GREEN_BG);
+		term(2)->print(34,1,"SPACE", YELLOW);
+		term(2)->print(39,1," Pause", WHITE, GREEN_BG);
 	}
-	term(2)->print(42,1,"/",YELLOW);
-	term(2)->print(43,1," One Step", WHITE, GREEN_BG);
+	term(2)->print(47,1,"/",YELLOW);
+	term(2)->print(48,1," One Step", WHITE, GREEN_BG);
 
 	// Mouse tips
 	int mouse_x, mouse_y;

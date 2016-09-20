@@ -64,14 +64,16 @@ void keyboard_system::update(const double ms) {
                 game_master_mode = DESIGN;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
-            }
-            if (e.event.key.code == sf::Keyboard::U) {
+            } else if (e.event.key.code == sf::Keyboard::U) {
                 game_master_mode = UNITS;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
-            }
-            if (e.event.key.code == sf::Keyboard::W) {
+            } else if (e.event.key.code == sf::Keyboard::W) {
                 game_master_mode = WORKFLOW;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+            } else if (e.event.key.code == sf::Keyboard::C) {
+                game_master_mode = CIVS;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
             }
