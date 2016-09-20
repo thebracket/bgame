@@ -5,9 +5,14 @@
 #include "tile.hpp"
 #include "constants.hpp"
 #include "../utils/bitset8.hpp"
+#include "../components/position.hpp"
 
 constexpr std::size_t mapidx(const int x, const int y, const int z) { 
 	return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; 
+}
+
+inline std::size_t mapidx(const position_t &pos) {
+	return mapidx(pos.x, pos.y, pos.z);
 }
 
 inline std::tuple<int,int,int> idxmap(int idx) {

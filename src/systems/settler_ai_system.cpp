@@ -172,6 +172,13 @@ void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name)
 		}
 	}
 
+	if (ai.job_type_major == JOB_GUARD) {
+		const int idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
+		for (auto &g : designations->guard_points) {
+			if (mapidx(g.second) == idx) g.first = false;
+		}
+	}
+
 	ai.job_type_major = JOB_IDLE;
 	ai.target_x = 0; 
 	ai.target_y = 0; 
@@ -190,6 +197,12 @@ void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_
 		each<construct_provides_sleep_t, position_t>([&pos] (entity_t &e, construct_provides_sleep_t &bed, position_t &bed_pos) {
 			if (bed_pos == pos) bed.claimed = false;
 		});
+	}
+	if (ai.job_type_major == JOB_GUARD) {
+		const int idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
+		for (auto &g : designations->guard_points) {
+			if (mapidx(g.second) == idx) g.first = false;
+		}
 	}
 	// Drop tool
 	drop_current_tool(e, ai, pos);
@@ -316,6 +329,21 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		// Find something to do!
 		const int idx = mapidx(pos.x, pos.y, pos.z);
 		
+		if (ai.permitted_work[JOB_GUARDING] && !designations->guard_points.empty()) {
+			for (auto &g : designations->guard_points) {
+				if (!g.first) {
+					g.first = true;
+					ai.job_type_major = JOB_GUARD;
+					ai.job_type_minor = JM_FIND_GUARDPOST;
+					ai.target_x = g.second.x;
+					ai.target_y = g.second.y;
+					ai.target_z = g.second.z;
+					change_job_status(ai, name, "Travel to guard post.");
+					return;
+				}
+			}
+		}
+
 		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_MINE;
@@ -459,6 +487,9 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_BUTCHERING) {
 		do_butchering(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_GUARD) {
+		do_guard_duty(entity, ai, stats, species, pos, name);
 		return;
 	}
 	wander_randomly(entity, pos);
@@ -1357,6 +1388,35 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
 		become_idle(e, ai, name);
+		return;
+	}
+}
+
+void settler_ai_system::do_guard_duty(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_FIND_GUARDPOST) {
+		position_t guard_pos = position_t{ai.target_x, ai.target_y, ai.target_z};
+		ai.current_path = find_path(pos, guard_pos);
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to guard post");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_GUARDPOST;
+		change_job_status(ai, name, "Traveling to guard post.");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_GUARDPOST) {
+		if (pos == ai.current_path->destination) {
+			// We're at the axe
+			ai.current_path.reset();
+			ai.job_type_minor = JM_GUARD;
+			change_job_status(ai, name, "Guarding");
+			return;
+		}
+		// Travel to axe
+		position_t next_step = ai.current_path->steps.front();
+		move_to(e, pos, next_step);
+		ai.current_path->steps.pop_front();
 		return;
 	}
 }

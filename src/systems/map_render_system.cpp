@@ -99,6 +99,22 @@ vchar get_render_char_chopping(const int &x, const int &y) {
 	return result;
 }
 
+vchar get_render_char_guarding(const int &x, const int &y) {
+
+	vchar result = get_render_char(x,y);
+	const int idx = render_tiles[((term(1)->term_width * y) + x)];
+
+	for (const auto &g : designations->guard_points) {
+		if (mapidx(g.second) == idx) {
+			result.foreground = rltk::colors::CYAN;
+			result.background = rltk::colors::BLACK;
+			result.glyph = 'G';
+		}
+	}
+
+	return result;
+}
+
 vchar get_render_char_building(const int &x, const int &y) {
 
 	vchar result = get_render_char(x,y);
@@ -175,6 +191,7 @@ void map_render_system::update(const double duration_ms) {
 				case DIGGING : calculator = get_render_char_mining; break;
 				case CHOPPING : calculator = get_render_char_chopping; break;
 				case BUILDING : { building_possible = true; calculator = get_render_char_building; } break;
+				case GUARDPOINTS : calculator = get_render_char_guarding; break;
 			}
 		}
 

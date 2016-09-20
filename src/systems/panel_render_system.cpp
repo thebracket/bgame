@@ -605,18 +605,62 @@ void panel_render_system::render_design_mode() {
 				designations->chopping.erase(tree_id);
 				emit(map_dirty_message{});
 			}
-			
-		}
+		}			
 	} else {
 		if (terminal_y == 3 && terminal_x > 22 && terminal_x < 32) {
 			term(1)->print(22, 3, "Tree Cutting", GREEN);
 			if (clicked) {
 				game_design_mode = CHOPPING;
-                emit_deferred(map_dirty_message{});
+				emit_deferred(map_dirty_message{});
 			}
 		} else {
 			term(1)->print(22, 3, "Tree Cutting", WHITE);
 			term(1)->print(22, 3, "t", YELLOW);
+		}
+	}
+
+	if (game_design_mode == GUARDPOINTS) {
+		term(1)->print(35, 3, "Guard Posts", WHITE, GREEN);
+
+		int mouse_x, mouse_y;
+		int font_w, font_h;
+		std::tie(mouse_x, mouse_y) = get_mouse_position();
+		std::tie(font_w, font_h) = term(1)->get_font_size();
+		const int terminal_x = mouse_x / font_w;
+		const int terminal_y = mouse_y / font_h;
+
+		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 3 && terminal_y < term(1)->term_height) {
+			const int world_x = std::min(clip_left + terminal_x, REGION_WIDTH);
+			const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
+
+			const int idx = mapidx(world_x, world_y, camera_position->region_z);
+			if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+				if (get_mouse_button_state(rltk::button::LEFT)) {
+					bool found = false;
+					for (const auto &g : designations->guard_points) {
+						if (mapidx(g.second) == idx) found = true;
+					}
+					if (!found) designations->guard_points.push_back(std::make_pair(false, position_t{world_x, world_y, camera_position->region_z}));
+				} else if (get_mouse_button_state(rltk::button::RIGHT)) {
+					designations->guard_points.erase(std::remove_if(
+							designations->guard_points.begin(),
+							designations->guard_points.end(),
+							[&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
+						),
+						designations->guard_points.end());
+				}
+			}
+		}
+	} else {
+		if (terminal_y == 3 && terminal_x > 35 && terminal_x < 49) {
+			term(1)->print(35, 3, "Guard Posts", GREEN);
+			if (clicked) {
+				game_design_mode = GUARDPOINTS;
+                emit_deferred(map_dirty_message{});
+			}
+		} else {
+			term(1)->print(35, 3, "Guard Posts", WHITE);
+			term(1)->print(35, 3, "g", YELLOW);
 		}
 	}
 }

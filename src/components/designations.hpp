@@ -36,6 +36,7 @@ struct designations_t {
 	boost::container::flat_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
+	std::vector<std::pair<bool, position_t>> guard_points;
 	int current_power = 10;
 	uint64_t current_cash = 100;
 
@@ -100,6 +101,13 @@ struct designations_t {
 		for (const auto &order : build_orders) {
 			serialize(lbfile, order.first);
 			serialize(lbfile, order.second);
+		}
+
+		size = guard_points.size();
+		serialize(lbfile, size);
+		for (const auto &g : guard_points) {
+			serialize(lbfile, g.first);
+			serialize(lbfile, g.second);
 		}
 
 		serialize(lbfile, current_power);
@@ -173,6 +181,15 @@ struct designations_t {
 			deserialize(lbfile, build_qty);
 			deserialize(lbfile, build_name);
 			c.build_orders.push_back(std::make_pair(build_qty, build_name));
+		}
+
+		deserialize(lbfile, sz);
+		for (std::size_t i=0; i<sz; ++i) {
+			bool claimed;
+			position_t pos;
+			deserialize(lbfile, claimed);
+			deserialize(lbfile, pos);
+			c.guard_points.push_back(std::make_pair(claimed, pos));
 		}
 
 		deserialize(lbfile, c.current_power);
