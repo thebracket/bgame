@@ -330,15 +330,31 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 			}
 		}
 
-		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
-		int tt_x = terminal_x+2;
+		bool right_align = true;
+		if (terminal_x > term(1)->term_width/2 ) right_align = false;
 		int tt_y = terminal_y;
-		term(1)->set_char(terminal_x+1, terminal_y, vchar{27, color, BLACK});
-		term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, color);
-		++tt_y;
-		for (const std::string &s : lines) {
-			term(1)->print(tt_x+1, tt_y, s, color);
+		if (tt_y+lines.size() > term(1)->term_height-1) tt_y -= lines.size()+1;
+
+		if (right_align) {
+			auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
+			int tt_x = terminal_x+2;
+			term(1)->set_char(terminal_x+1, terminal_y, vchar{27, color, BLACK});
+			term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, color);
 			++tt_y;
+			for (const std::string &s : lines) {
+				term(1)->print(tt_x+1, tt_y, s, color);
+				++tt_y;
+			}
+		} else {
+			auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
+			int tt_x = terminal_x-3-longest;
+			term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, color);
+			++tt_y;
+			for (const std::string &s : lines) {
+				term(1)->print(tt_x+1, tt_y, s, color);
+				++tt_y;
+			}
+			term(1)->set_char(terminal_x-1, terminal_y, vchar{26, color, BLACK});
 		}
 	}
 }
