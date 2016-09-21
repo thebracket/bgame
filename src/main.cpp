@@ -37,6 +37,7 @@ void tick(double duration_ms) {
 					case 0 : { 
 						/* TODO: Play Game */ 
 						menu.destroy();
+						quitting = false;
 						mode = PLAY_GAME;
 						game.init();
 					} break;
