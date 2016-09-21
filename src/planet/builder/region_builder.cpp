@@ -398,7 +398,7 @@ inline void set_tree_foliage(region_t &region, const int x, const int y, const i
 
 inline void plant_tree_deciduous(region_t &region, const int x, const int y, const int z, random_number_generator &rng) {
 	// Trees get their own entity
-	const int tree_height = 1 + rng.roll_dice(3,6);
+	const int tree_height = 1 + rng.roll_dice(2,4);
 	for (int i=0; i<tree_height; ++i) {
 		set_tree_trunk(region, x, y, z+i, region.next_tree_id);
 		if ( i > tree_height/2) {
@@ -418,7 +418,7 @@ inline void plant_tree_deciduous(region_t &region, const int x, const int y, con
 
 inline void plant_tree_evergreen(region_t &region, const int x, const int y, const int z, random_number_generator &rng) {
 	// Trees get their own entity
-	const int tree_height = 1 + rng.roll_dice(2,4);
+	const int tree_height = 1 + rng.roll_dice(2,3);
 	for (int i=0; i<tree_height; ++i) {
 		set_tree_trunk(region, x, y, z+i, region.next_tree_id);
 		if ( i > 0) {
