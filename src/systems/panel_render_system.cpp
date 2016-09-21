@@ -202,7 +202,7 @@ void panel_render_system::render_play_mode(const double duration_ms) {
 	
 	if (terminal_x == last_mouse_x && terminal_y == last_mouse_y && world_y > 0) {
 		mouse_dwell_time += duration_ms;
-		if (mouse_dwell_time > 200.0 && tile_idx !=0 && current_region->revealed[tile_idx] ) tooltip = true;
+		if (mouse_dwell_time > 200.0 && tile_idx !=0 && current_region->revealed[tile_idx] && current_region->tile_type[tile_idx] != tile_type::OPEN_SPACE ) tooltip = true;
 	} else {
 		last_mouse_x = terminal_x;
 		last_mouse_y = terminal_y;
