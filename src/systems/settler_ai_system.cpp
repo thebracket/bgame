@@ -334,7 +334,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		// Find something to do!
 		const int idx = mapidx(pos.x, pos.y, pos.z);
 		
-		if (ai.permitted_work[JOB_GUARDING] && !designations->guard_points.empty()) {
+		if (ai.permitted_work[JOB_GUARDING] && !designations->guard_points.empty() && shooting_range(entity, pos)>0) {
 			for (auto &g : designations->guard_points) {
 				if (!g.first) {
 					g.first = true;
@@ -1423,5 +1423,9 @@ void settler_ai_system::do_guard_duty(entity_t &e, settler_ai_t &ai, game_stats_
 		move_to(e, pos, next_step);
 		ai.current_path->steps.pop_front();
 		return;
+	}
+
+	if (ai.job_type_minor == JM_GUARD) {
+		if (shooting_range(e, pos) == 0) cancel_action(e, ai, stats, species, pos, name, "No ammunition");
 	}
 }
