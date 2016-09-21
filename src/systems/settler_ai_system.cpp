@@ -858,7 +858,9 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_BUILDING) {
-		if (pos == ai.current_path->destination) {
+		const float distance = distance2d(pos.x, pos.y, ai.building_target.get().x, ai.building_target.get().y );
+		const bool same_z = pos.z == ai.building_target.get().z;
+		if (pos == ai.current_path->destination || (same_z && distance < 1.4F)) {
 			// We're at the site
 			ai.current_path.reset();
 			ai.job_type_minor = JM_DROP_COMPONENT;
