@@ -4,8 +4,8 @@ project("Black Future")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -Wpedantic -march=native -mtune=native -g -pthread")
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/opt/local/lib/lua-5.2 -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -march=native -mtune=native -pthread")
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/opt/local/lib/lua-5.2 -pthread -flto")
 
 include_directories(rltk/rltk)
 
@@ -63,7 +63,11 @@ if (APPLE)
 	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
 	set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2015-Present Bracket Productions")
 	set(MACOSX_BUNDLE_BUNDLE_NAME "Black Future")
-	add_executable(bf MACOSX_BUNDLE main.cpp)
+	set(MACOSX_BUNDLE_ICON_FILE "icon")
+	set(MACOSX_BUNDLE_BUNDLE_VERSION "0.10.0")
+	set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/../assets/icon.icns)
+	set_source_files_properties(${myApp_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+	add_executable(bf MACOSX_BUNDLE ${myApp_ICON} main.cpp)
 	target_link_libraries(bf)
 	target_link_libraries(bf rltk)
 	target_link_libraries(bf FastNoise)
@@ -85,7 +89,14 @@ if (APPLE)
 		COMMAND mkdir -p bf.app/Contents/MacOS/world
 		COMMAND mkdir -p bf.app/Contents/MacOS/world_defs
 		COMMAND mkdir -p bf.app/Contents/MacOS/rex
-		COMMAND cp -R ../assets/* bf.app/Contents/MacOS/assets
+		COMMAND rm -f bf.app/Contents/MacOS/world/*
+		COMMAND cp ../assets/fonts.json bf.app/Contents/MacOS/assets/
+		COMMAND cp ../assets/terminal8x8.png bf.app/Contents/MacOS/assets/
+		COMMAND cp ../assets/terminal16x16.png bf.app/Contents/MacOS/assets/
+		COMMAND cp ../assets/terminal32x32.png bf.app/Contents/MacOS/assets/
+		COMMAND cp ../assets/VGA8x16.png bf.app/Contents/MacOS/assets/
+		COMMAND cp ../assets/background_image.png bf.app/Contents/MacOS/assets/
+		COMMAND cp ../assets/gamelogo.png bf.app/Contents/MacOS/assets/
 		COMMAND cp -R ../world_defs/* bf.app/Contents/MacOS/world_defs
 		COMMAND cp -R ../rex/* bf.app/Contents/MacOS/rex
 	)
