@@ -1,301 +1,308 @@
 digraph G {
 "cut trees" -> wood_logs
-item_stone_block -> stone_stairs_down
-item_wood_door -> wood_door
-item_replicator_unit -> small_replicator
-item_wood_plank -> wood_floor
-item_wood_plank -> wood_stairs_down
-item_stone_block -> primitive_forge
-item_stone_block -> stone_stairs_up
-item_cryo_bed_kit -> cryo_bed
-item_wood_log -> sawmill
-item_stone_block -> stone_wall
-item_camp_fire_kit -> fake_camp_fire
-item_cordex_core -> cordex
-item_stone_block -> mason
-item_stone_boulder -> stonecutter
-item_refined_plutonium -> rtg
-item_battery_kit -> battery
-item_stone_block -> stone_stairs_updown
-item_personal_survival_shelter_kit -> personal_survival_shelter
-item_stone_block -> glass_furnace
-item_wood_plank -> wood_wall
-item_stone_door -> stone_door
-item_wood_table -> wood_table
-item_wood_plank -> carpenter
-item_wood_plank -> wood_stairs_updown
-item_stone_block -> smelter
-item_wood_plank -> wood_stairs_up
 item_solar_panel_kit -> solar_panel
-item_stone_chair -> stone_chair
-item_stone_table -> stone_table
-item_stone_block -> stone_ramp
-item_wood_plank -> charcoal_hut
-item_stone_block -> stone_floor
-item_stone_block -> primitive_workshop
+item_stone_block -> stone_stairs_updown
+item_wood_plank -> wood_stairs_up
+item_wood_log -> camp_fire
+item_wood_plank -> carpenter
+item_stone_block -> smelter
 item_wood_plank -> wood_ramp
-item_wood_chair -> wood_chair
+item_wood_log -> sawmill
+item_cryo_bed_kit -> cryo_bed
+item_wood_plank -> charcoal_hut
+item_stone_boulder -> stonecutter
+item_stone_table -> stone_table
+item_refined_plutonium -> rtg
+item_stone_block -> stone_stairs_down
+item_wood_plank -> tanner
+item_wood_plank -> wood_stairs_down
+item_wood_plank -> butcher
+item_cordex_core -> cordex
+item_stone_block -> stone_ramp
+item_stone_block -> primitive_forge
+item_wood_table -> wood_table
+item_stone_block -> glass_furnace
+item_wood_plank -> bonecarver
+item_wood_plank -> wood_floor
+item_stone_block -> primitive_workshop
+item_personal_survival_shelter_kit -> personal_survival_shelter
+item_storage_locker -> storage_locker
+item_replicator_unit -> small_replicator
+item_battery_kit -> battery
+item_stone_block -> stone_stairs_up
+item_stone_block -> stone_floor
+item_wood_plank -> wood_stairs_updown
+item_stone_block -> stone_wall
+item_wood_door -> wood_door
+item_wood_plank -> wood_wall
+item_wood_plank -> leatherworker
+item_stone_door -> stone_door
+item_stone_chair -> stone_chair
+item_stone_block -> mason
 item_stone_block -> silicon_refinery
 item_raw_glass -> silicon_refinery
-item_storage_locker -> storage_locker
-item_wood_waste -> charcoal_hut
-charcoal_hut -> item_charcoal
-charcoal_hut -> item_ash
-item_wood_plank -> carpenter
-carpenter -> item_wood_door
-item_wood_plank -> carpenter
-carpenter -> item_sword_hilt
-item_stone_block -> mason
-mason -> item_stone_door
-item_bronze_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_tin_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_lead_ore -> smelter
-smelter -> item_lead_bar
-small_replicator -> item_tea_replicated
-item_tin_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_zinc_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_copper_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_silver_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_stone_block -> mason
-mason -> item_stone_chair
-item_gold_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_iron_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_platinum_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_copper_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_chromium_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_chromium_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_raw_glass -> silicon_refinery
-silicon_refinery -> item_raw_silicon
-item_copper_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_aluminium_ore -> smelter
-smelter -> item_aluminium_bar
-item_aluminium_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_aluminium_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_bismuth_ore -> smelter
-item_copper_bar -> smelter
-smelter -> item_bronze_bar
-item_silver_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_stone_block -> mason
-mason -> item_club
-item_lead_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_copper_ore -> smelter
-smelter -> item_copper_bar
-small_replicator -> item_sandwich_replicated
-item_iron_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_zinc_ore -> smelter
-smelter -> item_zinc_bar
-item_gold_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_lead_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_platinum_bar -> primitive_forge
-primitive_forge -> item_sword_blade
-item_aluminium_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_tin_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_stone_boulder -> stonecutter
-stonecutter -> item_stone_block
-item_lead_bar -> primitive_forge
-primitive_forge -> item_axe_blade
+item_wood_chair -> wood_chair
+item_camp_fire_kit -> fake_camp_fire
 item_wood_plank -> carpenter
 carpenter -> item_wood_table
-item_zinc_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_iron_ore -> smelter
-smelter -> item_iron_bar
-fake_camp_fire -> item_tiny_marshmallow
-item_gold_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_iron_bar -> primitive_forge
-primitive_forge -> item_axe_blade
+small_replicator -> item_tea_replicated
+item_stone_block -> mason
+mason -> item_stone_chair
 item_charcoal -> glass_furnace
 item_sand -> glass_furnace
 glass_furnace -> item_raw_glass
-item_chromium_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_bronze_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_pickaxe_blade -> primitive_workshop
-item_axe_haft -> primitive_workshop
-primitive_workshop -> item_pickaxe
-item_chromium_ore -> smelter
-smelter -> item_chromium_bar
-item_stone_block -> mason
-mason -> item_stone_table
-item_platinum_bar -> primitive_forge
-primitive_forge -> item_axe_blade
-item_zinc_bar -> primitive_forge
-primitive_forge -> item_pickaxe_blade
-item_gold_ore -> smelter
-smelter -> item_gold_bar
-item_silver_bar -> primitive_forge
-primitive_forge -> item_axe_blade
+item_hide -> tanner
+tanner -> item_leather
+item_leather -> leatherworker
+leatherworker -> item_leather_sandals
+item_leather -> primitive_workshop
+item_bronze_bar -> primitive_workshop
+primitive_workshop -> item_bronze_skirt
+item_leather -> primitive_workshop
+item_bronze_bar -> primitive_workshop
+primitive_workshop -> item_bronze_leggings
 item_wood_log -> sawmill
 sawmill -> item_wood_plank
 sawmill -> item_wood_waste
-item_silver_ore -> smelter
-smelter -> item_silver_bar
-item_wood_plank -> carpenter
-carpenter -> item_axe_haft
-item_wood_plank -> carpenter
-carpenter -> item_club
+item_leather -> leatherworker
+leatherworker -> item_leather_pants
+item_stone_block -> mason
+mason -> item_stone_table
+item_leather -> primitive_workshop
+item_bronze_bar -> primitive_workshop
+primitive_workshop -> item_bronze_helm
+item_tin_bar -> smelter
+item_copper_bar -> smelter
+smelter -> item_bronze_bar
+item_leather -> primitive_workshop
+item_bronze_bar -> primitive_workshop
+primitive_workshop -> item_bronze_cap
+item_stone_block -> primitive_workshop
+item_wood_plank -> primitive_workshop
+primitive_workshop -> item_stone_knife
+item_leather -> primitive_workshop
+item_bronze_bar -> primitive_workshop
+primitive_workshop -> item_bronze_breastplate
 item_bronze_bar -> primitive_forge
-primitive_forge -> item_axe_blade
+item_wood_plank -> primitive_forge
+primitive_forge -> item_bronze_hammer
+item_iron_ore -> smelter
+smelter -> item_iron_bar
+item_stone_block -> primitive_workshop
+item_wood_plank -> primitive_workshop
+primitive_workshop -> item_stone_hammer
+item_leather -> leatherworker
+leatherworker -> item_hide_pants
+item_chromium_ore -> smelter
+smelter -> item_chromium_bar
+item_leather -> primitive_workshop
+item_bronze_bar -> primitive_workshop
+primitive_workshop -> item_bronze_ringmail
+item_wood_plank -> carpenter
+carpenter -> item_atlatl
+item_bronze_bar -> primitive_forge
+item_wood_plank -> primitive_forge
+primitive_forge -> item_bronze_sword
+item_leather -> leatherworker
+leatherworker -> item_hide_sandals
+item_bronze_bar -> primitive_forge
+item_wood_plank -> primitive_forge
+primitive_forge -> item_bronze_dagger
+item_bronze_bar -> primitive_forge
+item_wood_plank -> primitive_forge
+primitive_forge -> item_bronze_axe
+item_wood_waste -> charcoal_hut
+charcoal_hut -> item_charcoal
+charcoal_hut -> item_ash
+item_leather -> leatherworker
+leatherworker -> item_leather_tunic
+item_aluminium_ore -> smelter
+smelter -> item_aluminium_bar
+item_bronze_bar -> primitive_forge
+item_wood_plank -> primitive_forge
+primitive_forge -> item_bronze_pickaxe
+item_gold_ore -> smelter
+smelter -> item_gold_bar
+item_stone_boulder -> stonecutter
+stonecutter -> item_stone_block
+item_raw_glass -> silicon_refinery
+silicon_refinery -> item_raw_silicon
+item_leather -> leatherworker
+leatherworker -> item_hide_tunic
+item_leather -> leatherworker
+leatherworker -> item_boiled_leather_tunic
 item_platinum_ore -> smelter
 smelter -> item_platinum_bar
+item_tin_ore -> smelter
+smelter -> item_tin_bar
+item_wood_plank -> carpenter
+carpenter -> item_club
+item_leather -> leatherworker
+leatherworker -> item_leather_skirt
+item_stone_block -> primitive_workshop
+item_wood_plank -> primitive_workshop
+primitive_workshop -> item_stone_axe
+item_wood_plank -> carpenter
+carpenter -> item_wood_dart
+item_stone_block -> mason
+mason -> item_stone_door
+item_wood_plank -> carpenter
+carpenter -> item_pointy_stick
+small_replicator -> item_small_energy_cell
+fake_camp_fire -> item_tiny_marshmallow
+small_replicator -> item_sandwich_replicated
 item_wood_plank -> carpenter
 carpenter -> item_wood_chair
-microcline -> mining -> item_stone_boulder
-rhyolite -> mining -> item_stone_boulder
-bauxite -> mining -> item_aluminium_ore
-claystone -> mining -> item_stone_boulder
-bismunthine -> mining -> item_bismuth_ore
-chromite -> mining -> item_chromium_ore
-pyrolusite -> mining -> item_stone_boulder
-gypsum -> mining -> item_gypsum_powder
-phylite -> mining -> item_stone_boulder
-sphalerite_rock -> mining -> item_zinc_ore
-yellow_sand -> mining -> item_sand
-cinnabar -> mining -> item_mercury_ore
-basalt -> mining -> item_stone_boulder
-granite -> mining -> item_stone_boulder
-alunite -> mining -> item_stone_boulder
-platinum_rock -> mining -> item_platinum_ore
-alabaster -> mining -> item_alabaster_powder
-red_sand -> mining -> item_sand
-hematite_se -> mining -> item_iron_ore
-malachite -> mining -> item_copper_ore
-mudstone -> mining -> item_stone_boulder
-obsidian -> mining -> item_stone_boulder
-orthoclase -> mining -> item_stone_boulder
-white_sand -> mining -> item_sand
-bithumous_coal -> mining -> item_coal
-siltstone -> mining -> item_oil
-jet -> mining -> item_stone_boulder
-gold_rock -> mining -> item_gold_ore
-dacite -> mining -> item_stone_boulder
-lignite -> mining -> item_coal
-quartzite -> mining -> item_stone_boulder
-cobaltite -> mining -> item_stone_boulder
-loamy_sand -> mining -> item_topsoil
-andesite -> mining -> item_stone_boulder
-diorite -> mining -> item_stone_boulder
-cassiterite -> mining -> item_tin_ore
-tetrahedrite -> mining -> item_copper_ore
-tetrahedrite -> mining -> item_silver_ore
-clay_soil -> mining -> item_clay
-copper_rock -> mining -> item_copper_ore
-sandy_clay -> mining -> item_clay
-hematite_ig -> mining -> item_iron_ore
-silt -> mining -> item_topsoil
-black_sand -> mining -> item_sand
-sand -> mining -> item_sand
-hornblende -> mining -> item_stone_boulder
-silt_loam -> mining -> item_topsoil
-silty_clay_loam -> mining -> item_topsoil
-chert -> mining -> item_flint
-silty_clay -> mining -> item_clay
-dolomite -> mining -> item_stone_boulder
+item_bismuth_ore -> smelter
+item_copper_bar -> smelter
+smelter -> item_bronze_bar
+item_leather -> leatherworker
+leatherworker -> item_hide_skirt
+item_zinc_ore -> smelter
+smelter -> item_zinc_bar
+item_silver_ore -> smelter
+smelter -> item_silver_bar
+item_tin_ore -> smelter
+item_copper_ore -> smelter
+smelter -> item_bronze_bar
+item_lead_ore -> smelter
+smelter -> item_lead_bar
+item_wood_plank -> carpenter
+carpenter -> item_wood_door
+item_stone_block -> mason
+mason -> item_club
 realgar -> mining -> item_stone_boulder
-peat -> mining -> item_topsoil
-loam -> mining -> item_topsoil
-conglomerate -> mining -> item_stone_boulder
-stibnite -> mining -> item_stone_boulder
-clay_loam -> mining -> item_clay
-silver_rock -> mining -> item_silver_ore
-kaolinite -> mining -> item_stone_boulder
-chalk -> mining -> item_stone_boulder
-sandy_clay_loam -> mining -> item_topsoil
-sandy_clay_loam -> mining -> item_clay
-serpentine -> mining -> item_stone_boulder
-graphite -> mining -> item_stone_boulder
-limonite -> mining -> item_iron_ore
-rock_salt -> mining -> item_stone_boulder
-limestone -> mining -> item_stone_boulder
-brimstone -> mining -> item_sulphur
-saltpeter -> mining -> item_saltpeter_ore
-gabbro -> mining -> item_stone_boulder
-rutile -> mining -> item_uranium_ore
-shale -> mining -> item_oil
-pitchblende -> mining -> item_uranium_ore
-orpiment -> mining -> item_stone_boulder
-olivine -> mining -> item_stone_boulder
-gneiss -> mining -> item_stone_boulder
-marble -> mining -> item_stone_boulder
+phylite -> mining -> item_stone_boulder
+red_sand -> mining -> item_sand
 aluminium_rock -> mining -> item_aluminium_ore
-magnetite -> mining -> item_iron_ore
+white_sand -> mining -> item_sand
+saltpeter -> mining -> item_saltpeter_ore
+dacite -> mining -> item_stone_boulder
+pitchblende -> mining -> item_uranium_ore
+gneiss -> mining -> item_stone_boulder
+andesite -> mining -> item_stone_boulder
+silty_clay -> mining -> item_clay
+orthoclase -> mining -> item_stone_boulder
+granite -> mining -> item_stone_boulder
+shale -> mining -> item_oil
+black_sand -> mining -> item_sand
+graphite -> mining -> item_stone_boulder
 sandstone -> mining -> item_sand
+brimstone -> mining -> item_sulphur
+microcline -> mining -> item_stone_boulder
 galena -> mining -> item_lead_ore
 galena -> mining -> item_silver_ore
+cassiterite -> mining -> item_tin_ore
+cinnabar -> mining -> item_mercury_ore
+hornblende -> mining -> item_stone_boulder
+hematite_se -> mining -> item_iron_ore
+hematite_ig -> mining -> item_iron_ore
+sandy_clay_loam -> mining -> item_topsoil
+sandy_clay_loam -> mining -> item_clay
+gold_rock -> mining -> item_gold_ore
+claystone -> mining -> item_stone_boulder
+loamy_sand -> mining -> item_topsoil
+olivine -> mining -> item_stone_boulder
+malachite -> mining -> item_copper_ore
+rutile -> mining -> item_uranium_ore
+orpiment -> mining -> item_stone_boulder
+stibnite -> mining -> item_stone_boulder
+bismunthine -> mining -> item_bismuth_ore
+diorite -> mining -> item_stone_boulder
+basalt -> mining -> item_stone_boulder
+magnetite -> mining -> item_iron_ore
+mudstone -> mining -> item_stone_boulder
+copper_rock -> mining -> item_copper_ore
+siltstone -> mining -> item_oil
+rock_salt -> mining -> item_stone_boulder
+clay_loam -> mining -> item_clay
+gypsum -> mining -> item_gypsum_powder
+conglomerate -> mining -> item_stone_boulder
+sphalerite_rock -> mining -> item_zinc_ore
+silt_loam -> mining -> item_topsoil
+limonite -> mining -> item_iron_ore
+yellow_sand -> mining -> item_sand
+sand -> mining -> item_sand
+cobaltite -> mining -> item_stone_boulder
+gabbro -> mining -> item_stone_boulder
+silty_clay_loam -> mining -> item_topsoil
+bithumous_coal -> mining -> item_coal
+silt -> mining -> item_topsoil
+chert -> mining -> item_flint
+silver_rock -> mining -> item_silver_ore
+chromite -> mining -> item_chromium_ore
+kaolinite -> mining -> item_stone_boulder
+peat -> mining -> item_topsoil
+serpentine -> mining -> item_stone_boulder
+alunite -> mining -> item_stone_boulder
+quartzite -> mining -> item_stone_boulder
+lignite -> mining -> item_coal
+loam -> mining -> item_topsoil
+clay_soil -> mining -> item_clay
+marble -> mining -> item_stone_boulder
+sandy_clay -> mining -> item_clay
+rhyolite -> mining -> item_stone_boulder
+dolomite -> mining -> item_stone_boulder
+pyrolusite -> mining -> item_stone_boulder
+alabaster -> mining -> item_alabaster_powder
+tetrahedrite -> mining -> item_copper_ore
+tetrahedrite -> mining -> item_silver_ore
+bauxite -> mining -> item_aluminium_ore
+obsidian -> mining -> item_stone_boulder
+platinum_rock -> mining -> item_platinum_ore
+limestone -> mining -> item_stone_boulder
+jet -> mining -> item_stone_boulder
 garnierite -> mining -> item_lead_ore
 garnierite -> mining -> item_nickel_ore
-reeds -> farming -> item_thread
-cucumber -> farming -> item_cucumber_veg
-strawberry -> farming -> item_strawberry_fruit
-spinach -> farming -> item_spinach_veg
-chickpea -> farming -> item_chickpea_veg
-eggplant -> farming -> item_eggplant_veg
-carrot -> farming -> item_carrot_veg
-bambara_groundnut -> farming -> item_bambara_nut
-yam -> farming -> item_yam_veg
-onion -> farming -> item_onion_veg
-lettuce -> farming -> item_lettuce_veg
-sweet_potato -> farming -> item_sweet_potato_veg
+chalk -> mining -> item_stone_boulder
 asparagus -> farming -> item_asparagus_veg
-tomato -> farming -> item_tomato_fruit
 dummy_grass -> farming -> item_hay
-cabbage -> farming -> item_cabbage_veg
-beetroot -> farming -> item_beetroot_veg
-lavendar -> farming -> item_lavendar_herb
-caper -> farming -> item_caper_veg
-lentil -> farming -> item_lentil_veg
-goya -> farming -> item_goya_veg
-chickory -> farming -> item_chickory_herb
 grass_short -> farming -> item_hay
-grass_long -> farming -> item_hay
-garlic -> farming -> item_garlic_herb
-turnip -> farming -> item_turnip_veg
-celery -> farming -> item_celergy_veg
-sage -> farming -> item_sage_herb
-watermelon -> farming -> item_watermelon_veg
-red_bean -> farming -> item_red_bean_veg
-tomatillo -> farming -> item_tomatillo_veg
-squash -> farming -> item_squash_veg
-soybean -> farming -> item_soybean_veg
-parsnip -> farming -> item_parsnip_veg
-radish -> farming -> item_radish_veg
-potato -> farming -> item_potato_veg
-cress -> farming -> item_cress_veg
-peanut -> farming -> item_peanut_veg
-pepper -> farming -> item_pepper_veg
-broad_bean -> farming -> item_broad_bean_veg
-pea -> farming -> item_pea_veg
-artichoke -> farming -> item_artichoke_veg
-cassava -> farming -> item_cassava_veg
-rhubarb -> farming -> item_rhubarb_herb
-string_bean -> farming -> item_string_bean_veg
-leek -> farming -> item_leek_veg
 grass -> farming -> item_hay
-horned_melon -> farming -> item_melon_veg
+celery -> farming -> item_celergy_veg
+caper -> farming -> item_caper_veg
+onion -> farming -> item_onion_veg
+garlic -> farming -> item_garlic_herb
+tomato -> farming -> item_tomato_fruit
+cabbage -> farming -> item_cabbage_veg
+red_bean -> farming -> item_red_bean_veg
+spinach -> farming -> item_spinach_veg
+sage -> farming -> item_sage_herb
+peanut -> farming -> item_peanut_veg
+cassava -> farming -> item_cassava_veg
+turnip -> farming -> item_turnip_veg
+broad_bean -> farming -> item_broad_bean_veg
+goya -> farming -> item_goya_veg
+lavendar -> farming -> item_lavendar_herb
+strawberry -> farming -> item_strawberry_fruit
+potato -> farming -> item_potato_veg
+chickpea -> farming -> item_chickpea_veg
+grass_long -> farming -> item_hay
+yam -> farming -> item_yam_veg
+lettuce -> farming -> item_lettuce_veg
+string_bean -> farming -> item_string_bean_veg
+tomatillo -> farming -> item_tomatillo_veg
+reeds -> farming -> item_thread
+sweet_potato -> farming -> item_sweet_potato_veg
+rhubarb -> farming -> item_rhubarb_herb
+beetroot -> farming -> item_beetroot_veg
+squash -> farming -> item_squash_veg
 cowpea -> farming -> item_cowpea_veg
+radish -> farming -> item_radish_veg
 mung_bean -> farming -> item_mung_bean_veg
+pea -> farming -> item_pea_veg
+parsnip -> farming -> item_parsnip_veg
+horned_melon -> farming -> item_melon_veg
+pepper -> farming -> item_pepper_veg
+watermelon -> farming -> item_watermelon_veg
+carrot -> farming -> item_carrot_veg
+artichoke -> farming -> item_artichoke_veg
+leek -> farming -> item_leek_veg
+cress -> farming -> item_cress_veg
+eggplant -> farming -> item_eggplant_veg
+cucumber -> farming -> item_cucumber_veg
+soybean -> farming -> item_soybean_veg
+chickory -> farming -> item_chickory_herb
+lentil -> farming -> item_lentil_veg
+bambara_groundnut -> farming -> item_bambara_nut
 }
