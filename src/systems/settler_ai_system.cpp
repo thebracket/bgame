@@ -14,48 +14,10 @@
 using namespace rltk;
 
 void settler_ai_system::update(const double duration_ms) {
-}
-
-void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
-	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
-}
-
-void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	
-	renderable_t * render = entity.component<renderable_t>();
-	render->foreground = rltk::colors::YELLOW;
-	render->glyph = 1;
-	emit(entity_wants_to_move_randomly_message{entity.id});
-}
-
-bool settler_ai_system::butcher_exist() const {
-	bool butcher_exists = false;
-
-	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
-		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
-	});
-
-	return butcher_exists;
-}
-
-bool settler_ai_system::butcher_and_corpses_exist() const {
-	bool butcher_exists = false;
-	bool corpses_exist = false;
-
-	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
-		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
-	});
-	if (butcher_exists) {
-		each<corpse_harvestable>([&corpses_exist] (entity_t &e, corpse_harvestable &corpse) {
-			if (!corpse.claimed) corpses_exist = true;
-		});
-	}
-
-	return (butcher_exists && corpses_exist);
-}
-
-void settler_ai_system::configure() {
-	system_name = "Settler AI";
-	subscribe<tick_message>([this](tick_message &msg) {
+	std::queue<tick_message> * ticks = mbox<tick_message>();
+    while (!ticks->empty()) {
+        tick_message msg = ticks->front();
+        ticks->pop();
 
 		bool found_settler = false;
 		each<settler_ai_t, game_stats_t, species_t, position_t, name_t, health_t, viewshed_t>([this, &found_settler] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
@@ -71,7 +33,8 @@ void settler_ai_system::configure() {
 				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
 				const int map_index = mapidx(pos.x, pos.y, pos.z);
-				if (!current_region->tile_flags[map_index].test(CAN_GO_NORTH) &&
+				if ((map_index < 0 || map_index > (REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) ||
+					!current_region->tile_flags[map_index].test(CAN_GO_NORTH) &&
 					!current_region->tile_flags[map_index].test(CAN_GO_SOUTH) &&
 					!current_region->tile_flags[map_index].test(CAN_GO_EAST) &&
 					!current_region->tile_flags[map_index].test(CAN_GO_WEST) &&
@@ -111,12 +74,12 @@ void settler_ai_system::configure() {
 					const int range = shooting_range(entity, pos);
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
-						emit(settler_attack_message{entity.id, closest_fear});
+						emit_deferred(settler_attack_message{entity.id, closest_fear});
 					} else if (range != -1 && range < terror_distance) {
 						// Shoot it
-						emit(settler_ranged_attack_message{entity.id, closest_fear});
+						emit_deferred(settler_ranged_attack_message{entity.id, closest_fear});
 					} else {
-						emit(entity_wants_to_flee_message{entity.id, closest_fear});
+						emit_deferred(entity_wants_to_flee_message{entity.id, closest_fear});
 					}
 				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
 					|| ai.job_type_major == JOB_REACTION || ai.job_type_major == JOB_BUTCHER) {
@@ -140,13 +103,55 @@ void settler_ai_system::configure() {
 
 		if (!found_settler) {
 			std::cout << "Game should end now - everyone died\n";
-			emit(game_over_message{1});
+			emit_deferred(game_over_message{1});
 		}
+	}
+}
+
+void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
+	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
+}
+
+void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	
+	renderable_t * render = entity.component<renderable_t>();
+	render->foreground = rltk::colors::YELLOW;
+	render->glyph = 1;
+	emit_deferred(entity_wants_to_move_randomly_message{entity.id});
+}
+
+bool settler_ai_system::butcher_exist() const {
+	bool butcher_exists = false;
+
+	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
+		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
 	});
+
+	return butcher_exists;
+}
+
+bool settler_ai_system::butcher_and_corpses_exist() const {
+	bool butcher_exists = false;
+	bool corpses_exist = false;
+
+	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
+		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
+	});
+	if (butcher_exists) {
+		each<corpse_harvestable>([&corpses_exist] (entity_t &e, corpse_harvestable &corpse) {
+			if (!corpse.claimed) corpses_exist = true;
+		});
+	}
+
+	return (butcher_exists && corpses_exist);
+}
+
+void settler_ai_system::configure() {
+	subscribe_mbox<tick_message>();
+	system_name = "Settler AI";
 }
 
 void settler_ai_system::move_to(entity_t &e, position_t &pos, position_t &destination) {
-	emit(entity_wants_to_move_message{e.id, destination});
+	emit_deferred(entity_wants_to_move_message{e.id, destination});
 }
 
 void settler_ai_system::drop_current_tool(const entity_t &e, settler_ai_t &ai, const position_t &pos) {
@@ -160,7 +165,7 @@ void settler_ai_system::change_settler_glyph(entity_t &e, const vchar &render_as
 	render->foreground = render_as.foreground;
 	render->background = render_as.background;
 	render->glyph = render_as.glyph;
-	emit(renderables_changed_message{});
+	emit_deferred(renderables_changed_message{});
 }
 
 void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
@@ -272,7 +277,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 		position_t next_step = ai.current_path->steps.front();
 		move_to(entity, pos, next_step);
 		ai.current_path->steps.pop_front();
-		emit(renderables_changed_message{});
+		emit_deferred(renderables_changed_message{});
 		return;
 	}
 
@@ -291,7 +296,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 			++health->current_hitpoints;
 		}
 
-		emit(renderables_changed_message{});
+		emit_deferred(renderables_changed_message{});
 	}
 }
 
@@ -624,7 +629,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			return;
 		} else {
 			// Failed!
-			if (skill_check == CRITICAL_FAIL) emit(inflict_damage_message{e.id, 1, "Mining Accident"});
+			if (skill_check == CRITICAL_FAIL) emit_deferred(inflict_damage_message{e.id, 1, "Mining Accident"});
 			return;
 		}
 	}
@@ -781,13 +786,13 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			}
 
 			// Change status to drop axe
-			emit(map_dirty_message{});
-			emit(inventory_changed_message{});
+			emit_deferred(map_dirty_message{});
+			emit_deferred(inventory_changed_message{});
 			ai.job_type_minor = JM_DROP_AXE;
 			change_job_status(ai, name, "Dropping axe");
 		} else if (skill_check == CRITICAL_FAIL) {
 			// Damage yourself
-			emit(inflict_damage_message{e.id, 1, "Lumberjacking Accident"});
+			emit_deferred(inflict_damage_message{e.id, 1, "Lumberjacking Accident"});
 		}
 		return;
 	}
@@ -920,9 +925,9 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 				entity(ai.building_target.get().building_entity)->assign(smoke_emitter_t{});
 			}
 
-			emit(renderables_changed_message{});
-			emit(inventory_changed_message{});
-			emit(update_workflow_message{});
+			emit_deferred(renderables_changed_message{});
+			emit_deferred(inventory_changed_message{});
+			emit_deferred(update_workflow_message{});
 
 			// Become idle
 			become_idle(e, ai, name);

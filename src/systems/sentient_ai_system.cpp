@@ -14,7 +14,15 @@ void sentient_ai_system::configure() {
         });
     });
 
-    subscribe<tick_message>([this](tick_message &msg) {
+    subscribe_mbox<tick_message>();
+}
+
+void sentient_ai_system::update(const double ms) {
+    std::queue<tick_message> * ticks = mbox<tick_message>();
+    while (!ticks->empty()) {
+        tick_message msg = ticks->front();
+        ticks->pop();
+
         each<sentient_ai, position_t, viewshed_t, health_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health) {
             if (ai.initiative < 1) {
                 if (health.unconscious) {
@@ -67,7 +75,7 @@ void sentient_ai_system::configure() {
                         ai.goal = SENTIENT_GOAL_IDLE;
                     }
 
-                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai.aggression && ai.days_since_arrival > 0) {
+                    if (ai.goal == SENTIENT_GOAL_IDLE && ai.hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai.aggression && ai.days_since_arrival > 1) {
                         // Look for a settler to kill
                         std::map<float, std::size_t> targets;
                         each<settler_ai_t, position_t>([&targets, &pos] (entity_t &se, settler_ai_t &settler_ai, position_t &spos) {
@@ -105,12 +113,11 @@ void sentient_ai_system::configure() {
 
                         position_t next_step = ai.current_path->steps.front();
                         if (current_region->solid[mapidx(next_step.x, next_step.y, next_step.z)]) {
-                            ai.current_path.reset();
+                            if (ai.current_path) ai.current_path.reset();
                             ai.goal = SENTIENT_GOAL_IDLE;
                             ai.target = 0;
                         } else {
                             emit_deferred(entity_wants_to_move_message{e.id, next_step});
-                            ai.current_path->steps.pop_front();
                             emit_deferred(renderables_changed_message{});
                         }
                         ai.current_path->steps.pop_front();
@@ -125,9 +132,5 @@ void sentient_ai_system::configure() {
                 --ai.initiative;
             }
         });
-    });
-}
-
-void sentient_ai_system::update(const double ms) {
-
+    }
 }
