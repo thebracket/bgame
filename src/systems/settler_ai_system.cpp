@@ -1245,7 +1245,7 @@ void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats
 		each<item_carried_t>([&e, &pos, &loc] (entity_t &E, item_carried_t &c) {
 			if (c.carried_by == e.id && c.location == loc) emit(drop_item_message{E.id, pos.x, pos.y, pos.z});
 		});
-		emit(pickup_item_message{ai.target_id, e.id, loc});
+		emit(pickup_item_message{static_cast<std::size_t>(ai.target_id), e.id, loc});
 		ai.current_tool = 0;
 
 

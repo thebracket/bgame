@@ -119,6 +119,7 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
             }
         }
     }
+	return subregion_idx;
 }
 
 inline void zero_map(region_t &region) {
