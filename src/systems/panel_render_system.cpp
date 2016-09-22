@@ -540,9 +540,11 @@ void panel_render_system::render_design_mode() {
 		term(1)->print(tt_x+4, 5, "[Available Buildings]", WHITE, DARK_GREEN);
 
 		int y=7;
+		bool rendered_selected = false;
 		for (const available_building_t &building : available_buildings) {
 			if (build_mode_building && build_mode_building.get().tag == building.tag) {
 				term(1)->print(tt_x+1, y, building.get_name(), YELLOW, DARKEST_GREEN);
+				rendered_selected = true;
 			} else {
 				if (terminal_y == y && terminal_x > tt_x && terminal_x) {
 					term(1)->print(tt_x+1, y, building.get_name(), GREEN, GREEN_BG);
@@ -559,11 +561,13 @@ void panel_render_system::render_design_mode() {
 				const int selected_building = terminal_y - 7;
 				if (selected_building > -1 && selected_building < available_buildings.size()) {
 					build_mode_building = available_buildings[selected_building];
+					rendered_selected = true;
 				} else {
 					std::cout << "Error: index " << selected_building << " is out of range.\n";
 				}
 			}
 		}
+		if (!rendered_selected) build_mode_building.reset();
 	} else {
 		if (terminal_y == 3 && terminal_x > 12 && terminal_x < 22) {
 			term(1)->print(13, 3, "Building", GREEN);
