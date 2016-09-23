@@ -46,4 +46,16 @@ inline void try_path(const rltk::entity_t &e, const T &ai, position_t &pos,
     }
 }
 
+inline bool is_stuck_or_invalid(const position_t &pos) {
+    const int map_index = mapidx(pos.x, pos.y, pos.z);
+    return ((map_index < 0 || map_index > (REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) ||
+        !current_region->tile_flags[map_index].test(CAN_GO_NORTH) &&
+        !current_region->tile_flags[map_index].test(CAN_GO_SOUTH) &&
+        !current_region->tile_flags[map_index].test(CAN_GO_EAST) &&
+        !current_region->tile_flags[map_index].test(CAN_GO_WEST) &&
+        !current_region->tile_flags[map_index].test(CAN_GO_UP) &&
+        !current_region->tile_flags[map_index].test(CAN_GO_DOWN)
+    );
+}
+
 }

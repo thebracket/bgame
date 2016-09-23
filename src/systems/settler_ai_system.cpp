@@ -45,15 +45,7 @@ void settler_ai_system::update(const double duration_ms) {
 				const int hour_of_day = calendar->hour;
 				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
-				const int map_index = mapidx(pos.x, pos.y, pos.z);
-				if ((map_index < 0 || map_index > (REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) ||
-					!current_region->tile_flags[map_index].test(CAN_GO_NORTH) &&
-					!current_region->tile_flags[map_index].test(CAN_GO_SOUTH) &&
-					!current_region->tile_flags[map_index].test(CAN_GO_EAST) &&
-					!current_region->tile_flags[map_index].test(CAN_GO_WEST) &&
-					!current_region->tile_flags[map_index].test(CAN_GO_UP) &&
-					!current_region->tile_flags[map_index].test(CAN_GO_DOWN)
-				) {
+				if (tasks::is_stuck_or_invalid(pos)) {
 					std::cout << "Warning - settler is stuck; activating emergency teleport to bed!\n";
 					each<position_t, construct_provides_sleep_t>([this,&entity,&pos] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
 						move_to(entity, pos, P);
