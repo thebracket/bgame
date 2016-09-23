@@ -902,8 +902,11 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			// Destroy components
 			std::size_t material = 0;
 			for (auto &comp : ai.building_target.get().component_ids) {
-				material = entity(comp.first)->component<item_t>()->material;
-				delete_item(comp.first);
+				entity_t * component_ptr = entity(comp.first);
+				if (component_ptr) {
+					material = component_ptr->component<item_t>()->material;
+					delete_item(comp.first);
+				}
 			}
 
 			// Place the building, and assign any provide tags

@@ -41,7 +41,13 @@ struct navigator_t {
 };
 
 std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &start, const position_t &end, const bool find_adjacent) {
+	if (start.x < 1 || start.x > REGION_WIDTH-1 || start.y < 1 || start.y > REGION_HEIGHT-1 || start.z < 1 || start.z > REGION_DEPTH+1
+		|| end.x < 1 || end.x > REGION_WIDTH-1 || end.y < 1 || end.y > REGION_HEIGHT-1 || end.z < 1 || end.z > REGION_DEPTH+1) {
+			std::shared_ptr<rltk::navigation_path<position_t>> fail = std::make_shared<rltk::navigation_path<position_t>>();
+			fail->success = false;
+			return fail;
+		}
+
 	auto result = rltk::find_path<position_t, navigator_t>(start, end);
-	//std::cout << "Path found. " << result->success << ", " << result->steps.size() << "\n"; 
 	return result;
 }

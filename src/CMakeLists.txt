@@ -4,7 +4,7 @@ project("Black Future")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -march=native -mtune=native -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -march=native -mtune=native -pthread -g")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -L/opt/local/lib/lua-5.2 -pthread -flto")
 
 include_directories(rltk/rltk)
