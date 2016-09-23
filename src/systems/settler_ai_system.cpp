@@ -8,10 +8,23 @@
 #include "wildlife_population_system.hpp"
 #include "weapons_helpers.hpp"
 #include "../components/item_carried.hpp"
+#include "tasks/idle_mode.hpp"
+#include "tasks/settler_glyph.hpp"
+#include "tasks/settler_job_status.hpp"
+#include "tasks/settler_drop_tool.hpp"
+#include "tasks/settler_cancel_action.hpp"
+#include "tasks/pathfinding.hpp"
 #include <iostream>
 #include <map>
 
 using namespace rltk;
+using tasks::become_idle;
+using tasks::change_settler_glyph;
+using tasks::change_job_status;
+using tasks::drop_current_tool;
+using tasks::cancel_action;
+using tasks::follow_path;
+using tasks::follow_result_t;
 
 void settler_ai_system::update(const double duration_ms) {
 	std::queue<tick_message> * ticks = mbox<tick_message>();
@@ -154,70 +167,6 @@ void settler_ai_system::move_to(entity_t &e, position_t &pos, position_t &destin
 	emit_deferred(entity_wants_to_move_message{e.id, destination});
 }
 
-void settler_ai_system::drop_current_tool(const entity_t &e, settler_ai_t &ai, const position_t &pos) {
-	if (ai.current_tool == 0) return;
-	emit(drop_item_message{ ai.current_tool, pos.x, pos.y, pos.z });
-	ai.current_tool = 0;
-}
-
-void settler_ai_system::change_settler_glyph(entity_t &e, const vchar &render_as) {
-	renderable_t * render = e.component<renderable_t>();
-	render->foreground = render_as.foreground;
-	render->background = render_as.background;
-	render->glyph = render_as.glyph;
-	emit_deferred(renderables_changed_message{});
-}
-
-void settler_ai_system::become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
-	if (ai.job_type_major == JOB_BUTCHERING && ai.targeted_hostile>0) {
-		entity_t * body = entity(ai.targeted_hostile);
-		if (body) {
-			corpse_harvestable * corpse = body->component<corpse_harvestable>();
-			if (corpse) corpse->claimed = false;
-		}
-	}
-
-	if (ai.job_type_major == JOB_GUARD) {
-		const int idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
-		for (auto &g : designations->guard_points) {
-			if (mapidx(g.second) == idx) g.first = false;
-		}
-	}
-
-	ai.job_type_major = JOB_IDLE;
-	ai.target_x = 0; 
-	ai.target_y = 0; 
-	ai.target_z = 0;
-	change_settler_glyph(e, vchar{1, rltk::colors::YELLOW, rltk::colors::BLACK});
-	change_job_status(ai, name, "Idle");
-	if (ai.current_tool != 0) {
-		position_t * pos = e.component<position_t>();
-		drop_current_tool(e, ai, *pos);
-	}
-}
-
-void settler_ai_system::cancel_action(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
-	// Drop whatever we are doing!
-	if (ai.job_type_major == JOB_SLEEP) {
-		entity_t * bed_entity = entity(ai.target_id);
-		if (bed_entity) {
-			construct_provides_sleep_t * bed = bed_entity->component<construct_provides_sleep_t>();
-			if (bed) bed->claimed = false;
-		}
-	}
-	if (ai.job_type_major == JOB_GUARD) {
-		const int idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
-		for (auto &g : designations->guard_points) {
-			if (mapidx(g.second) == idx) g.first = false;
-		}
-	}
-	// Drop tool
-	drop_current_tool(e, ai, pos);
-
-	std::cout << name.first_name << " cancels action: " << reason << "\n";
-	become_idle(e, ai, name);
-}
-
 void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.current_tool != 0) drop_current_tool(entity, ai, pos);
 
@@ -273,23 +222,20 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_BED) {
-		if (!ai.current_path) {
-			ai.job_type_minor = JM_FIND_BED;
-			change_job_status(ai, name, "Looking for a bed");
-			std::cout << "No path to bed - we'll just sleep on the ground.\n";
-			rltk::entity(ai.target_id)->component<construct_provides_sleep_t>()->claimed = false;
-			ai.job_type_minor = JM_SLEEP;
-			return;
-		}
-		if (pos == ai.current_path->destination) {
-			ai.job_type_minor = JM_SLEEP;
-			change_job_status(ai, name, "Sleeping");
-			return;
-		}
-		position_t next_step = ai.current_path->steps.front();
-		move_to(entity, pos, next_step);
-		ai.current_path->steps.pop_front();
-		emit_deferred(renderables_changed_message{});
+		tasks::try_path(entity, ai, pos,
+			[] () {}, // Do nothing for success
+			[&ai, &name] () {
+				ai.job_type_minor = JM_SLEEP;
+				change_job_status(ai, name, "Sleeping");
+			}, // Arrived
+			[&ai, &name] () {
+				ai.job_type_minor = JM_FIND_BED;
+				change_job_status(ai, name, "Looking for a bed");
+				std::cout << "No path to bed - we'll just sleep on the ground.\n";
+				rltk::entity(ai.target_id)->component<construct_provides_sleep_t>()->claimed = false;
+				ai.job_type_minor = JM_SLEEP;
+			} // fail
+		);
 		return;
 	}
 
@@ -512,11 +458,6 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 	wander_randomly(entity, pos);
 }
 
-void settler_ai_system::change_job_status(settler_ai_t &ai, name_t &name, const std::string new_status) {
-	ai.job_status = new_status;
-	std::cout << name.first_name << " is now: " << new_status << "\n";
-}
-
 void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	//std::cout << name.first_name << ": " << ai.job_status << "\n";
 
@@ -542,17 +483,18 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_PICK) {
-		if (pos == ai.current_path->destination) {
-			// We're at the pick
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_PICK;
-			change_job_status(ai, name, "Collect digging tool");
-			return;
-		}
-		// Travel to pick
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_PICK;
+				change_job_status(ai, name, "Collect digging tool");
+			}, // On arrival
+			[&ai, &name, &e, &stats, &species, &pos] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No available pick");
+			}
+		);
 		return;
 	}
 
@@ -680,17 +622,18 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_AXE) {
-		if (pos == ai.current_path->destination) {
-			// We're at the axe
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_AXE;
-			change_job_status(ai, name, "Collect chopping tool");
-			return;
-		}
-		// Travel to axe
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_AXE;
+				change_job_status(ai, name, "Collect chopping tool");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to available axe");
+			}
+		);
 		return;
 	}
 
@@ -740,17 +683,18 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_TREE) {
-		if (pos == ai.current_path->destination) {
-			// We're at the tree
-			ai.current_path.reset();
-			ai.job_type_minor = JM_CHOP;
-			change_job_status(ai, name, "Chopping tree");
-			return;
-		}
-		// Travel to tree
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_CHOP;
+				change_job_status(ai, name, "Chopping tree");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to tree");
+			}
+		);
 		return;
 	}
 
@@ -845,17 +789,18 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_COMPONENT) {
-		if (pos == ai.current_path->destination) {
-			// We're at the component
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_COMPONENT;
-			change_job_status(ai, name, "Collect building component");
-			return;
-		}
-		// Travel to component
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_COMPONENT;
+				change_job_status(ai, name, "Collect building component");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to component");
+			}
+		);
 		return;
 	}
 
@@ -879,15 +824,15 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			change_job_status(ai, name, "Dropping building component");
 			return;
 		}
-		// Travel to site
-		if (ai.current_path->steps.empty()) {
-			// Oops - path doesn't actually work!
-			cancel_action(e, ai, stats, species, pos, name, "Broken path");
-			return;
-		}
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to building");
+			}
+		);
 		return;
 	}
 
@@ -988,17 +933,18 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_INPUT) {
-		if (pos == ai.current_path->destination) {
-			// We're at the component
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_INPUT;
-			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Collect)"));
-			return;
-		}
-		// Travel to component
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_INPUT;
+				change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Collect)"));
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to component");
+			}
+		);
 		return;
 	}
 
@@ -1014,17 +960,18 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_WORKSHOP) {
-		if (pos == ai.current_path->destination) {
-			// We're at the site
-			ai.current_path.reset();
-			ai.job_type_minor = JM_DROP_INPUT;
-			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Drop)"));
-			return;
-		}
-		// Travel to site
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_DROP_INPUT;
+				change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Drop)"));
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to workshop");
+			}
+		);
 		return;
 	}
 
@@ -1097,17 +1044,18 @@ void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_MELEE_WEAPON) {
-		if (pos == ai.current_path->destination) {
-			// We're at the axe
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_MELEE_WEAPON;
-			change_job_status(ai, name, "Collect melee weapon");
-			return;
-		}
-		// Travel to axe
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_MELEE_WEAPON;
+				change_job_status(ai, name, "Collect melee weapon");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to weapon");
+			}
+		);
 		return;
 	}
 
@@ -1144,17 +1092,18 @@ void settler_ai_system::do_equip_ranged(entity_t &e, settler_ai_t &ai, game_stat
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_RANGED_WEAPON) {
-		if (pos == ai.current_path->destination) {
-			// We're at the axe
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_RANGED_WEAPON;
-			change_job_status(ai, name, "Collect ranged weapon");
-			return;
-		}
-		// Travel to axe
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_RANGED_WEAPON;
+				change_job_status(ai, name, "Collect ranged weapon");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to weapon");
+			}
+		);
 		return;
 	}
 
@@ -1192,17 +1141,18 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_AMMO) {
-		if (pos == ai.current_path->destination) {
-			// We're at the axe
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_AMMO;
-			change_job_status(ai, name, "Collect ammo");
-			return;
-		}
-		// Travel to axe
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_AMMO;
+				change_job_status(ai, name, "Collect ammo");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to weapon");
+			}
+		);
 		return;
 	}
 
@@ -1233,17 +1183,18 @@ void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_ARMOR) {
-		if (pos == ai.current_path->destination) {
-			// We're at the axe
-			ai.current_path.reset();
-			ai.job_type_minor = JM_COLLECT_ARMOR;
-			change_job_status(ai, name, "Collect armor");
-			return;
-		}
-		// Travel to axe
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_COLLECT_ARMOR;
+				change_job_status(ai, name, "Collect armor");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				unclaim_by_id(ai.current_tool);
+				cancel_action(e, ai, stats, species, pos, name, "No route to armor");
+			}
+		);
 		return;
 	}
 
@@ -1348,17 +1299,17 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 	}
 
 	if (ai.job_type_minor == JM_BUTCHER_GO_TO_CORPSE) {
-		if (pos == ai.current_path->destination) {
-			// We're at the destination
-			ai.current_path.reset();
-			ai.job_type_minor = JM_BUTCHER_COLLECT_CORPSE;
-			change_job_status(ai, name, "Collecting corpse");
-			return;
-		}
-		// Travel to destination
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_BUTCHER_COLLECT_CORPSE;
+				change_job_status(ai, name, "Collecting corpse");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				cancel_action(e, ai, stats, species, pos, name, "No route to corpse");
+			}
+		);
 		return;
 	}
 
@@ -1378,20 +1329,17 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 	}
 
 	if (ai.job_type_minor == JM_BUTCHER_GO_TO_SHOP) {
-		if (pos == ai.current_path->destination) {
-			// We're at the destination
-			ai.current_path.reset();
-			ai.job_type_minor = JM_BUTCHER_CHOP;
-			change_job_status(ai, name, "Butchering corpse");
-			return;
-		}
-		// Travel to destination
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
-		entity(ai.targeted_hostile)->component<position_t>()->x = next_step.x;
-		entity(ai.targeted_hostile)->component<position_t>()->y = next_step.y;
-		entity(ai.targeted_hostile)->component<position_t>()->z = next_step.z;
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_BUTCHER_CHOP;
+				change_job_status(ai, name, "Butchering corpse");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				cancel_action(e, ai, stats, species, pos, name, "No route to butchers");
+			}
+		);
 		return;
 	}
 
@@ -1428,17 +1376,17 @@ void settler_ai_system::do_guard_duty(entity_t &e, settler_ai_t &ai, game_stats_
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_GUARDPOST) {
-		if (pos == ai.current_path->destination) {
-			// We're at the axe
-			ai.current_path.reset();
-			ai.job_type_minor = JM_GUARD;
-			change_job_status(ai, name, "Guarding");
-			return;
-		}
-		// Travel to axe
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_GUARD;
+				change_job_status(ai, name, "Guarding");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				cancel_action(e, ai, stats, species, pos, name, "No route to guardpost");
+			}
+		);
 		return;
 	}
 

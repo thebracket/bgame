@@ -28,5 +28,10 @@ add_library(systems
 	weapons_helpers.cpp
 	game_over_system.cpp
 	mode_civs_system.cpp
+	tasks/idle_mode.cpp
+	tasks/settler_glyph.cpp
+	tasks/settler_job_status.cpp
+	tasks/settler_drop_tool.cpp
+	tasks/settler_cancel_action.cpp
 )
 target_link_libraries(systems rltk utils components raws)

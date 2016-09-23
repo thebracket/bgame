@@ -4,6 +4,7 @@
 #include "../main/game_globals.hpp"
 #include "weapons_helpers.hpp"
 #include "path_finding.hpp"
+#include "tasks/pathfinding.hpp"
 
 void sentient_ai_system::configure() {
     system_name = "Sentient AI";
@@ -102,25 +103,22 @@ void sentient_ai_system::update(const double ms) {
                             }
                         }
                     } else if (ai.goal == SENTIENT_GOAL_KILL ) {
-                        if (!ai.current_path) return;
-                        if (pos == ai.current_path->destination || ai.current_path->steps.empty()) {
-                            ai.current_path.reset();
-                            ai.goal = SENTIENT_GOAL_IDLE;
-                            ai.target = 0;
-							ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
-                            return;
-                        }
-
-                        position_t next_step = ai.current_path->steps.front();
-                        if (current_region->solid[mapidx(next_step.x, next_step.y, next_step.z)]) {
-                            if (ai.current_path) ai.current_path.reset();
-                            ai.goal = SENTIENT_GOAL_IDLE;
-                            ai.target = 0;
-                        } else {
-                            emit_deferred(entity_wants_to_move_message{e.id, next_step});
-                            emit_deferred(renderables_changed_message{});
-                        }
-                        ai.current_path->steps.pop_front();
+                        tasks::try_path(e, ai, pos,
+                            [] () {}, // Nothing on success
+                            [&ai] () {
+                                ai.current_path.reset();
+                                ai.goal = SENTIENT_GOAL_IDLE;
+                                ai.target = 0;
+                                ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
+                            }, // On arrival
+                            [&ai] () {
+                                ai.current_path.reset();
+                                ai.goal = SENTIENT_GOAL_IDLE;
+                                ai.target = 0;
+                                ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
+                            } // On fail
+                        );
+                        return;
                     } else if (ai.goal == SENTIENT_GOAL_IDLE) {
                         // Otherwise we move randomly
                         emit_deferred(entity_wants_to_move_randomly_message{e.id});
