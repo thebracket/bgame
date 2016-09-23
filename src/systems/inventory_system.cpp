@@ -17,6 +17,7 @@ void inventory_system::configure() {
 
 	// Receive drop messages
 	subscribe<drop_item_message>([this](drop_item_message &msg) {
+		if (entity(msg.id) == nullptr) return;
 		emit(item_claimed_message{msg.id, false});
 		delete_component<item_carried_t>(msg.id);
 		entity(msg.id)->component<item_t>()->claimed = false;
@@ -27,6 +28,7 @@ void inventory_system::configure() {
 
 	// Receive pick-up messages
 	subscribe<pickup_item_message>([this](pickup_item_message &msg) {
+		if (entity(msg.id) == nullptr) return;
 		position_t * pos = entity(msg.id)->component<position_t>();
 		if (pos != nullptr) {
 			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
@@ -40,6 +42,7 @@ void inventory_system::configure() {
 
 	// Receive item destruction messages
 	subscribe<destroy_item_message>([this](destroy_item_message &msg) {
+		if (entity(msg.id) == nullptr) return;
 		position_t * pos = entity(msg.id)->component<position_t>();
 		if (pos != nullptr) {
 			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
