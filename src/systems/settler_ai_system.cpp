@@ -768,6 +768,8 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 					change_job_status(ai, name, "Traveling to building component");
 				} else {
 					cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
+					designations->buildings.push_back(*ai.building_target);
+					ai.building_target.reset();
 				}
 				return;
 			}
@@ -791,6 +793,8 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			[&e, &ai, &stats, &species, &pos, &name] () {
 				unclaim_by_id(ai.current_tool);
 				cancel_action(e, ai, stats, species, pos, name, "No route to component");
+				designations->buildings.push_back(*ai.building_target);
+				ai.building_target.reset();
 			}
 		);
 		return;
@@ -823,6 +827,8 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			[&e, &ai, &stats, &species, &pos, &name] () {
 				unclaim_by_id(ai.current_tool);
 				cancel_action(e, ai, stats, species, pos, name, "No route to building");
+				designations->buildings.push_back(*ai.building_target);
+				ai.building_target.reset();
 			}
 		);
 		return;
