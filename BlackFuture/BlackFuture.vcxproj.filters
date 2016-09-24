@@ -73,6 +73,12 @@
     <Filter Include="Source Files\FastNoise">
       <UniqueIdentifier>{dcfc5b07-bbae-4bcd-918e-83ce2219923e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\systems\tasks">
+      <UniqueIdentifier>{17d6d531-0c7e-4818-b95a-38d93f99b2e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems\tasks">
+      <UniqueIdentifier>{66ad085b-3f1a-4f46-959a-76fabcff9295}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -447,6 +453,24 @@
     <ClInclude Include="..\src\systems\mode_civs_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\idle_mode.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\pathfinding.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\settler_cancel_action.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\settler_drop_tool.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\settler_glyph.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\settler_job_status.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -697,6 +721,21 @@
     </ClCompile>
     <ClCompile Include="..\src\systems\mode_civs_system.cpp">
       <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\tasks\idle_mode.cpp">
+      <Filter>Source Files\systems\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\tasks\settler_cancel_action.cpp">
+      <Filter>Source Files\systems\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\tasks\settler_drop_tool.cpp">
+      <Filter>Source Files\systems\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\tasks\settler_glyph.cpp">
+      <Filter>Source Files\systems\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\tasks\settler_job_status.cpp">
+      <Filter>Source Files\systems\tasks</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
