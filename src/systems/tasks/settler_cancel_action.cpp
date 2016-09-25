@@ -11,7 +11,7 @@ void cancel_action(rltk::entity_t &e, settler_ai_t &ai, game_stats_t &stats, spe
 	if (ai.job_type_major == JOB_SLEEP) {
 		entity_t * bed_entity = entity(ai.target_id);
 		if (bed_entity) {
-			construct_provides_sleep_t * bed = bed_entity->component<construct_provides_sleep_t>();
+			auto bed = bed_entity->component<construct_provides_sleep_t>();
 			if (bed) bed->claimed = false;
 		}
 	}

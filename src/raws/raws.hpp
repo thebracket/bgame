@@ -40,8 +40,8 @@ struct tile_content_t {
 struct clothing_t {
 	std::string name= "";
 	std::vector<std::string> colors;
-	std::string slot;
-	std::string description;
+	std::string slot = "";
+	std::string description = "";
 	float armor_class = 0.0F;
 };
 

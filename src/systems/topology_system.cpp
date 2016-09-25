@@ -126,7 +126,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
     std::cout << "Tag: " << e.tag << "\n";
     std::cout << "Material: " << e.material << "\n";
 
-    position_t * construction_pos = entity(e.entity_id)->component<position_t>();
+    auto construction_pos = entity(e.entity_id)->component<position_t>();
     const int index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
     auto finder = building_defs.find(e.tag);
     for (const building_provides_t &provides : finder->second.provides) {

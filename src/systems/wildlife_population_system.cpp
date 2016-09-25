@@ -24,9 +24,9 @@ void wildlife_population_system::configure() {
                 std::size_t closest_fear = 0;
                 for (const std::size_t other_entity : view.visible_entities) {
                     if (entity(other_entity) == nullptr) break;
-                    if (entity(other_entity)->component<settler_ai_t>() != nullptr || entity(other_entity)->component<sentient_ai>() != nullptr) {
+                    if (entity(other_entity)->component<settler_ai_t>() || entity(other_entity)->component<sentient_ai>()) {
                         terrified = true;
-                        position_t * other_pos = entity(other_entity)->component<position_t>();
+                        auto other_pos = entity(other_entity)->component<position_t>();
                         const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
                         if (d < terror_distance) {
                             terror_distance = d;
@@ -46,8 +46,10 @@ void wildlife_population_system::configure() {
                     // Poor creature is scared!
                     if (terror_distance < 1.5F) {
                         // Attack the target
-                        health_t * health = entity(e.id)->component<health_t>();
-                        if (!health->unconscious) emit_deferred(creature_attack_message{e.id, closest_fear});
+                        auto health = entity(e.id)->component<health_t>();
+                        if (health) {
+                            if (!health->unconscious) emit_deferred(creature_attack_message{e.id, closest_fear});
+                        }
                     } else {
                         emit_deferred(entity_wants_to_flee_message{e.id, closest_fear});
                     }

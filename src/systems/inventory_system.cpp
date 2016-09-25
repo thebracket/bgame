@@ -29,8 +29,8 @@ void inventory_system::configure() {
 	// Receive pick-up messages
 	subscribe<pickup_item_message>([this](pickup_item_message &msg) {
 		if (entity(msg.id) == nullptr) return;
-		position_t * pos = entity(msg.id)->component<position_t>();
-		if (pos != nullptr) {
+		auto pos = entity(msg.id)->component<position_t>();
+		if (pos) {
 			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
 			delete_component<position_t>(msg.id);
 		}
@@ -43,8 +43,8 @@ void inventory_system::configure() {
 	// Receive item destruction messages
 	subscribe<destroy_item_message>([this](destroy_item_message &msg) {
 		if (entity(msg.id) == nullptr) return;
-		position_t * pos = entity(msg.id)->component<position_t>();
-		if (pos != nullptr) {
+		auto pos = entity(msg.id)->component<position_t>();
+		if (pos) {
 			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
 			delete_component<position_t>(msg.id);
 		}
@@ -56,7 +56,7 @@ void inventory_system::configure() {
 	subscribe<item_claimed_message>([] (item_claimed_message &msg) {
 		entity_t * e = entity(msg.id);
 		if (e) {
-			item_t * item = e->component<item_t>();
+			auto item = e->component<item_t>();
 			item->claimed = msg.claimed;
 		}
 	});
@@ -128,7 +128,7 @@ std::size_t claim_closest_item_by_category(const int &category, position_t &pos)
 
 	each<item_t>([&distance_sorted, &category, &pos] (entity_t &e, item_t &i) {
 		if (i.category.test(category) && i.claimed==false) {
-			position_t * p = get_item_location(e.id);
+			auto p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
 				distance_sorted[distance] = e.id;
@@ -150,7 +150,7 @@ std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::
 
 	each<item_t>([&distance_sorted, &category, &pos, &ammo_type] (entity_t &e, item_t &i) {
 		if (i.category.test(category) && i.claimed==false && item_defs.find(i.item_tag)->second.ammo == ammo_type) {
-			position_t * p = get_item_location(e.id);
+			auto p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
 				distance_sorted[distance] = e.id;
@@ -256,25 +256,34 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 	return result;
 }
 
-position_t * get_item_location(std::size_t id) {
-	entity_t * e = entity(id);
-	if (e == nullptr) return nullptr;
-	position_t * pos = e->component<position_t>();
+boost::optional<position_t&> get_item_location(std::size_t id) {
+	boost::optional<position_t&> result;
 
-	if (pos == nullptr) {
-		item_stored_t * stored = e->component<item_stored_t>();
+	entity_t * e = entity(id);
+	if (e == nullptr) return result;
+
+	auto pos = e->component<position_t>();
+	if (!pos)
+	{
+		auto stored = e->component<item_stored_t>();
 		if (stored) {
 			entity_t * container = entity(stored->stored_in);
-			pos = container->component<position_t>();
+			if (container) {
+				result = *container->component<position_t>();
+			}
 		} else {
-			item_carried_t * carried = e->component<item_carried_t>();
+			auto carried = e->component<item_carried_t>();
 			if (carried) {
 				entity_t * holder = entity(carried->carried_by);
-				pos = holder->component<position_t>();
+				if (holder) {
+					result = *holder->component<position_t>();
+				}
 			}
 		}
+	} else {
+		result = pos.get();
 	}
-	return pos;
+	return result;
 }
 
 void delete_item(const std::size_t &id) {

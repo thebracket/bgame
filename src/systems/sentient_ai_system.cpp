@@ -45,10 +45,10 @@ void sentient_ai_system::update(const double ms) {
                 std::size_t closest_fear = 0;
                 for (const std::size_t other_entity : view.visible_entities) {
 					entity_t * other_ptr = rltk::entity(other_entity);
-                    if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() != nullptr || 
-						(other_ptr->component<settler_ai_t>() != nullptr && ai.hostile))) {
+                    if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() || 
+						(other_ptr->component<settler_ai_t>() && ai.hostile))) {
                         terrified = true;
-                        position_t * other_pos = rltk::entity(other_entity)->component<position_t>();
+                        auto other_pos = rltk::entity(other_entity)->component<position_t>();
                         const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
                         if (d < terror_distance) {
                             terror_distance = d;

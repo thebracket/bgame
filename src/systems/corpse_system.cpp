@@ -13,7 +13,7 @@ void corpse_system::configure() {
             ++corpse.ticks_since_death;
             if (corpse.ticks_since_death > 5000) {
                 if (rng.roll_dice(1,6) < 3) {
-                    position_t * pos = e.component<position_t>();
+                    auto pos = e.component<position_t>();
                     emit_deferred(emit_particles_message{2, pos->x, pos->y, pos->z});
                 }
             }
@@ -26,7 +26,7 @@ void corpse_system::configure() {
             ++corpse.ticks_since_death;
             if (corpse.ticks_since_death > 5000) {
                 if (rng.roll_dice(1,6) < 3) {
-                    position_t * pos = e.component<position_t>();
+                    auto pos = e.component<position_t>();
                     emit_deferred(emit_particles_message{2, pos->x, pos->y, pos->z});
                 }
             }

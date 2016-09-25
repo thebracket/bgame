@@ -60,10 +60,10 @@ void settler_ai_system::update(const double duration_ms) {
 				if (ai.job_type_minor != JM_SLEEP) {
 					for (const std::size_t other_entity : view.visible_entities) {
 						entity_t * other_ptr = rltk::entity(other_entity);
-						if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() != nullptr || 
-							(other_ptr->component<sentient_ai>() != nullptr && other_ptr->component<sentient_ai>()->hostile))) {
+						if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() || 
+							(other_ptr->component<sentient_ai>() && other_ptr->component<sentient_ai>()->hostile))) {
 							terrified = true;
-							position_t * other_pos = rltk::entity(other_entity)->component<position_t>();
+							auto other_pos = rltk::entity(other_entity)->component<position_t>();
 							const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
 							if (d < terror_distance) {
 								terror_distance = d;
@@ -118,7 +118,7 @@ void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stat
 }
 
 void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	
-	renderable_t * render = entity.component<renderable_t>();
+	auto render = entity.component<renderable_t>();
 	render->foreground = rltk::colors::YELLOW;
 	render->glyph = 1;
 	emit_deferred(entity_wants_to_move_randomly_message{entity.id});
@@ -232,7 +232,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 	}
 
 	if (ai.job_type_minor == JM_SLEEP) {
-		renderable_t * render = entity.component<renderable_t>();
+		auto render = entity.component<renderable_t>();
 		render->foreground = rltk::colors::BLUE;
 
 		if (rng.roll_dice(1,6) < 3) {
@@ -241,7 +241,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 			render->glyph = 'Z';
 		}
 
-		health_t * health = entity.component<health_t>();
+		auto health = entity.component<health_t>();
 		if (health && health->current_hitpoints < health->max_hitpoints && rng.roll_dice(1,20) + stat_modifier(stats.constitution) > 12) {
 			++health->current_hitpoints;
 		}
@@ -459,7 +459,11 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			cancel_action(e, ai, stats, species, pos, name, "No available pick");
 			return;
 		}
-		position_t * pick_pos = get_item_location(pick);
+		auto pick_pos = get_item_location(pick);
+		if (!pick_pos) {
+			cancel_action(e, ai, stats, species, pos, name, "No available pick");
+			return;
+		}
 		ai.current_path = find_path(pos, *pick_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No available pick");
@@ -598,7 +602,11 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			cancel_action(e, ai, stats, species, pos, name, "No available axe");
 			return;
 		}
-		position_t * axe_pos = get_item_location(axe);
+		auto axe_pos = get_item_location(axe);
+		if (!axe_pos) {
+			cancel_action(e, ai, stats, species, pos, name, "No available axe");
+			return;
+		}
 		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available axe");
@@ -760,7 +768,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			if (!component.second) {
 				has_components = false;
 				ai.current_tool = component.first;
-				position_t * item_loc = get_item_location(ai.current_tool);
+				auto item_loc = get_item_location(ai.current_tool);
 				ai.current_path = find_path(pos, *item_loc);
 				if (ai.current_path->success) {
 					component.second = true;
@@ -898,7 +906,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_SELECT_INPUT) {
 		// If there are no inputs, go to the workshop
-		position_t * reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
+		auto reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
 		if (ai.reaction_target.get().components.empty() && ! (pos == *reactor_pos)) {
 			ai.job_type_minor = JM_GO_TO_WORKSHOP;
 			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
@@ -952,7 +960,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 		ai.job_type_minor = JM_GO_TO_WORKSHOP;
 		change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
-		position_t * reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
+		auto reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
 		ai.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
 		return;
 	}
@@ -1026,7 +1034,7 @@ void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats
 			cancel_action(e, ai, stats, species, pos, name, "No available melee weapon");
 			return;
 		}
-		position_t * axe_pos = get_item_location(axe);
+		auto axe_pos = get_item_location(axe);
 		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available melee weapon");
@@ -1074,7 +1082,7 @@ void settler_ai_system::do_equip_ranged(entity_t &e, settler_ai_t &ai, game_stat
 			cancel_action(e, ai, stats, species, pos, name, "No available ranged weapon");
 			return;
 		}
-		position_t * axe_pos = get_item_location(axe);
+		auto axe_pos = get_item_location(axe);
 		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available ranged weapon");
@@ -1123,7 +1131,7 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 			cancel_action(e, ai, stats, species, pos, name, "No available ammo");
 			return;
 		}
-		position_t * axe_pos = get_item_location(axe);
+		auto axe_pos = get_item_location(axe);
 		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available ammo");
@@ -1166,7 +1174,7 @@ void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_
 
 void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_FIND_ARMOR) {
-		position_t * axe_pos = get_item_location(ai.target_id);
+		auto axe_pos = get_item_location(ai.target_id);
 		ai.current_path = find_path(pos, *axe_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to available armor");
@@ -1199,7 +1207,7 @@ void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats
 	if (ai.job_type_minor == JM_COLLECT_ARMOR) {
 		// Find the pick, remove any position or stored components, add a carried_by component
 		entity_t * armor = entity(ai.target_id);
-		item_t * item = armor->component<item_t>();
+		auto item = armor->component<item_t>();
 		item_location_t loc = INVENTORY;
 		auto finder = clothing_types.find(item->item_tag);
 		if (finder->second.slot == "head") loc = HEAD;
@@ -1342,7 +1350,7 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 	}
 
 	if (ai.job_type_minor == JM_BUTCHER_CHOP) {
-		corpse_harvestable * corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
+		auto corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
 		auto mat_finder = material_defs_idx.find("organic");
 		const std::size_t organic_idx = mat_finder->second;
 

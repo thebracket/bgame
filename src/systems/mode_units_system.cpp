@@ -93,7 +93,7 @@ void mode_units_system::update(const double ms) {
                     game_master_mode = PLAY;
                     emit(map_dirty_message{});
                     emit(recalculate_mining_message{});
-                    position_t * pos = e.component<position_t>();
+                    auto pos = e.component<position_t>();
                     camera_position->region_x = pos->x;
                     camera_position->region_y = pos->y;
                     camera_position->region_z = pos->z;
@@ -109,7 +109,7 @@ void mode_units_system::update(const double ms) {
                     selected_settler = e.id;
                     emit(map_dirty_message{});
                     emit(recalculate_mining_message{});
-                    position_t * pos = e.component<position_t>();
+                    auto pos = e.component<position_t>();
                     camera_position->region_x = pos->x;
                     camera_position->region_y = pos->y;
                     camera_position->region_z = pos->z;
@@ -152,7 +152,7 @@ void mode_units_system::update(const double ms) {
                     game_master_mode = PLAY;
                     emit(map_dirty_message{});
                     emit(recalculate_mining_message{});
-                    position_t * pos = e.component<position_t>();
+                    auto pos = e.component<position_t>();
                     camera_position->region_x = pos->x;
                     camera_position->region_y = pos->y;
                     camera_position->region_z = pos->z;
@@ -190,7 +190,7 @@ void mode_units_system::update(const double ms) {
                     game_master_mode = PLAY;
                     emit(map_dirty_message{});
                     emit(recalculate_mining_message{});
-                    position_t * pos = e.component<position_t>();
+                    auto pos = e.component<position_t>();
                     camera_position->region_x = pos->x;
                     camera_position->region_y = pos->y;
                     camera_position->region_z = pos->z;

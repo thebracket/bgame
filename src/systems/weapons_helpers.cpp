@@ -58,9 +58,9 @@ int calculate_armor_class(entity_t &entity) {
 	float ac = 10.0;
 
 	// Is it a creature?
-	grazer_ai * grazer = entity.component<grazer_ai>();
+	auto grazer = entity.component<grazer_ai>();
 	if (grazer) {
-		species_t * species = entity.component<species_t>();
+		auto species = entity.component<species_t>();
 		if (species) {
 			auto finder = creature_defs.find(species->tag);
 			if (finder != creature_defs.end()) return finder->second.armor_class;

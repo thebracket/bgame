@@ -19,12 +19,12 @@ void mode_rogue_render_system::update(const double ms) {
         pause_mode = PAUSED;
         return;
     }
-    name_t * name = e->component<name_t>();
-	game_stats_t * stats = e->component<game_stats_t>();
-	species_t * species = e->component<species_t>();
-	settler_ai_t * ai = e->component<settler_ai_t>();
-	health_t * health = e->component<health_t>(); 
-    position_t * pos = e->component<position_t>();
+    auto name = e->component<name_t>();
+	auto stats = e->component<game_stats_t>();
+	auto species = e->component<species_t>();
+	auto ai = e->component<settler_ai_t>();
+	auto health = e->component<health_t>(); 
+    auto pos = e->component<position_t>();
 
     int y=5;
     term(2)->print(3, y, "Now controlling:"); ++y;
@@ -40,8 +40,8 @@ void mode_rogue_render_system::update(const double ms) {
         entity_t * hostile = entity(ai->targeted_hostile);
         
         if (hostile) {
-            position_t * hostile_pos = hostile->component<position_t>();
-            name_t * target_name = hostile->component<name_t>();
+            auto hostile_pos = hostile->component<position_t>();
+            auto target_name = hostile->component<name_t>();
             const float distance = distance3d(pos->x, pos->y, pos->z, hostile_pos->x, hostile_pos->y, hostile_pos->z);
             if (distance < 1.5F) {
                 if (has_melee_weapon(*e)) {

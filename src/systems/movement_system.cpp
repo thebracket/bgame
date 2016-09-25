@@ -13,7 +13,7 @@ void movement_system::configure() {
     subscribe_mbox<entity_wants_to_move_message>();
     subscribe<entity_wants_to_move_randomly_message>([] (entity_wants_to_move_randomly_message &msg) {
 
-        position_t * original = entity(msg.entity_id)->component<position_t>();
+        auto original = entity(msg.entity_id)->component<position_t>();
 
         position_t pos = *original;
         const int tile_index = mapidx(pos.x, pos.y, pos.z);
@@ -31,8 +31,8 @@ void movement_system::configure() {
         }
     });
     subscribe<entity_wants_to_flee_message>([] (entity_wants_to_flee_message &msg) {
-        position_t * pos = entity(msg.entity_id)->component<position_t>();
-        position_t * other_pos = entity(msg.flee_from_id)->component<position_t>();
+        auto pos = entity(msg.entity_id)->component<position_t>();
+        auto other_pos = entity(msg.flee_from_id)->component<position_t>();
 
         if (pos->x > other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_EAST)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x+1, pos->y, pos->z } });
@@ -47,8 +47,8 @@ void movement_system::configure() {
         }
     });
     subscribe<entity_wants_to_charge_message>([] (entity_wants_to_charge_message &msg) {
-        position_t * pos = entity(msg.entity_id)->component<position_t>();
-        position_t * other_pos = entity(msg.charge_to_id)->component<position_t>();
+        auto pos = entity(msg.entity_id)->component<position_t>();
+        auto other_pos = entity(msg.charge_to_id)->component<position_t>();
 
         if (pos->x > other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_WEST)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x-1, pos->y, pos->z } });
@@ -81,7 +81,7 @@ void movement_system::update(const double ms) {
 		movers->pop();
 
 	if (entity(msg.entity_id) == nullptr) break;
-        position_t * epos = entity(msg.entity_id)->component<position_t>();
+        auto epos = entity(msg.entity_id)->component<position_t>();
         position_t origin{epos->x, epos->y, epos->z};
         epos->x = msg.destination.x;
         epos->y = msg.destination.y;

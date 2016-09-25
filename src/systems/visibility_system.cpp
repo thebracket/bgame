@@ -113,9 +113,9 @@ void visibility_system::update(const double duration_ms) {
 		}
 
 		// What can we see? - Grazers, Sentients and Settlers only
-		grazer_ai * grazer = e.component<grazer_ai>();
-		settler_ai_t * settler = e.component<settler_ai_t>();
-		sentient_ai * sentient = e.component<sentient_ai>();		
+		auto grazer = e.component<grazer_ai>();
+		auto settler = e.component<settler_ai_t>();
+		auto sentient = e.component<sentient_ai>();		
 		if (grazer || settler || sentient) {
 			view.visible_entities.clear();
 			for (const int &idx : view.visible_cache) {

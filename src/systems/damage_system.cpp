@@ -28,14 +28,14 @@ void damage_system::update(const double ms) {
         std::stringstream ss;
         entity_t * attacker = entity(msg.attacker);
         entity_t * defender = entity(msg.victim);
-        game_stats_t * attacker_stats = attacker->component<game_stats_t>();
-        name_t * attacker_name = attacker->component<name_t>();
-        name_t * defender_name = defender->component<name_t>();
-        position_t * attacker_pos = attacker->component<position_t>();
-        position_t * defender_pos = defender->component<position_t>();
+        auto attacker_stats = attacker->component<game_stats_t>();
+        auto attacker_name = attacker->component<name_t>();
+        auto defender_name = defender->component<name_t>();
+        auto attacker_pos = attacker->component<position_t>();
+        auto defender_pos = defender->component<position_t>();
 
-        sentient_ai * victim_ai = defender->component<sentient_ai>();
-        if (victim_ai != nullptr) {
+        auto victim_ai = defender->component<sentient_ai>();
+        if (victim_ai) {
             if (planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings > -10) {
                 --planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings;
             }
@@ -52,8 +52,8 @@ void damage_system::update(const double ms) {
         int weapon_d = 4;
         int weapon_mod = 0;
         if (weapon_id != 0) {
-            item_t * weapon_component = entity(weapon_id)->component<item_t>();
-            if (weapon_component != nullptr) {
+            auto weapon_component = entity(weapon_id)->component<item_t>();
+            if (weapon_component) {
                 auto weapon_finder = item_defs.find(weapon_component->item_tag);
                 if (weapon_finder != item_defs.end()) {
                     weapon_name = weapon_finder->second.name;
@@ -61,8 +61,8 @@ void damage_system::update(const double ms) {
             }
         }
         if (ammo_id != 0) {
-            item_t * ammo_component = entity(ammo_id)->component<item_t>();
-            if (ammo_component != nullptr) {
+            auto ammo_component = entity(ammo_id)->component<item_t>();
+            if (ammo_component) {
                 auto ammo_finder = item_defs.find(ammo_component->item_tag);
                 if (ammo_finder != item_defs.end()) {
                     weapon_n = ammo_finder->second.damage_n;
@@ -101,12 +101,12 @@ void damage_system::update(const double ms) {
         entity_t * attacker = entity(msg.attacker);
         entity_t * defender = entity(msg.victim);
         if (attacker == nullptr || defender == nullptr) break;
-        game_stats_t * attacker_stats = attacker->component<game_stats_t>();
-        name_t * attacker_name = attacker->component<name_t>();
-        name_t * defender_name = defender->component<name_t>();
+        auto attacker_stats = attacker->component<game_stats_t>();
+        auto attacker_name = attacker->component<name_t>();
+        auto defender_name = defender->component<name_t>();
 
-        sentient_ai * victim_ai = defender->component<sentient_ai>();
-        if (victim_ai != nullptr) {
+        auto victim_ai = defender->component<sentient_ai>();
+        if (victim_ai) {
             if (planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings > -10) {
                 --planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings;
             }
@@ -121,8 +121,8 @@ void damage_system::update(const double ms) {
         int weapon_d = 4;
         int weapon_mod = 0;
         if (weapon_id != 0) {
-            item_t * weapon_component = entity(weapon_id)->component<item_t>();
-            if (weapon_component != nullptr) {
+            auto weapon_component = entity(weapon_id)->component<item_t>();
+            if (weapon_component) {
                 auto weapon_finder = item_defs.find(weapon_component->item_tag);
                 if (weapon_finder != item_defs.end()) {
                     weapon_name = weapon_finder->second.name;
@@ -157,14 +157,14 @@ void damage_system::update(const double ms) {
         std::stringstream ss;
         entity_t * attacker = entity(msg.attacker);
         if (attacker == nullptr) break;
-        species_t * attack_species = attacker->component<species_t>();
-        name_t * attacker_name = attacker->component<name_t>();
+        auto attack_species = attacker->component<species_t>();
+        auto attacker_name = attacker->component<name_t>();
         auto creature = creature_defs.find(attack_species->tag);
 
         entity_t * defender = entity(msg.victim);
         if (defender == nullptr) break;
-        name_t * defender_name = defender->component<name_t>();
-        game_stats_t * defender_stats = defender->component<game_stats_t>();
+        auto defender_name = defender->component<name_t>();
+        auto defender_stats = defender->component<game_stats_t>();
 
         if (creature == creature_defs.end()) {
             throw std::runtime_error("Undefined species - " + attack_species->tag);
@@ -191,10 +191,10 @@ void damage_system::update(const double ms) {
 	while (!damage->empty()) {
         inflict_damage_message msg = damage->front();
         if (entity(msg.victim) == nullptr) break;
-        health_t * h = entity(msg.victim)->component<health_t>();
-        name_t * name = entity(msg.victim)->component<name_t>();
+        auto h = entity(msg.victim)->component<health_t>();
+        auto name = entity(msg.victim)->component<name_t>();
 
-        if (h != nullptr) {
+        if (h) {
             h->current_hitpoints -= msg.damage_amount;
 
             int total_size = 0;
@@ -243,8 +243,10 @@ void damage_system::update(const double ms) {
                     }
                 }
             }
-            position_t * pos = entity(msg.victim)->component<position_t>();
-            current_region->blood_stains[mapidx(pos->x, pos->y, pos->z)] = true;
+            auto pos = entity(msg.victim)->component<position_t>();
+            if (pos) {
+                current_region->blood_stains[mapidx(pos->x, pos->y, pos->z)] = true;
+            }
 
         }
 
@@ -258,7 +260,7 @@ void damage_system::update(const double ms) {
 
         entity_t * victim = entity(msg.victim);
         if (victim == nullptr) break;
-        position_t * pos = victim->component<position_t>();
+        auto pos = victim->component<position_t>();
         // Any items carried are dropped
         each<item_carried_t>([&msg, pos] (entity_t &e, item_carried_t &item) {
             if (item.carried_by == msg.victim) {
@@ -267,19 +269,19 @@ void damage_system::update(const double ms) {
         });
                 
         // Spawn a body
-        if (victim->component<settler_ai_t>() != nullptr) {
+        if (victim->component<settler_ai_t>()) {
             // It's a dead settler, we create a special item
-            name_t * name = victim->component<name_t>();
+            auto name = victim->component<name_t>();
             auto corpse = create_entity()
                 ->assign(position_t{ pos->x, pos->y, pos->z })
                 ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
-        } else if (victim->component<sentient_ai>() != nullptr) {
+        } else if (victim->component<sentient_ai>()) {
             // It's a dead native
             planet.civs.unimportant_people[victim->component<sentient_ai>()->person_id].deceased = true;
-            name_t * name = victim->component<name_t>();
-            renderable_t * renderable = victim->component<renderable_t>();
+            auto name = victim->component<name_t>();
+            auto renderable = victim->component<renderable_t>();
             auto corpse = create_entity()
                 ->assign(position_t{ pos->x, pos->y, pos->z })
                 ->assign(renderable_t{ renderable->glyph, rltk::colors::YELLOW, rltk::colors::RED })
@@ -288,9 +290,9 @@ void damage_system::update(const double ms) {
         } else {
             // It's something else that died.
             std::string tag = "";
-            species_t * species = victim->component<species_t>();
+            auto species = victim->component<species_t>();
             if (species) tag = species->tag;
-            renderable_t * old_render = victim->component<renderable_t>();
+            auto old_render = victim->component<renderable_t>();
             if (old_render && tag != "") {
                 auto corpse = create_entity()
                     ->assign(position_t{ pos->x, pos->y, pos->z })

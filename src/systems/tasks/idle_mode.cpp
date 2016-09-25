@@ -11,7 +11,7 @@ void become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
 	if (ai.job_type_major == JOB_BUTCHERING && ai.targeted_hostile>0) {
 		entity_t * body = entity(ai.targeted_hostile);
 		if (body) {
-			corpse_harvestable * corpse = body->component<corpse_harvestable>();
+			auto corpse = body->component<corpse_harvestable>();
 			if (corpse) corpse->claimed = false;
 		}
 	}
@@ -30,7 +30,7 @@ void become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
 	change_settler_glyph(e, vchar{1, rltk::colors::YELLOW, rltk::colors::BLACK});
 	change_job_status(ai, name, "Idle");
 	if (ai.current_tool != 0) {
-		position_t * pos = e.component<position_t>();
+		auto pos = e.component<position_t>();
 		drop_current_tool(e, ai, *pos);
 	}
 }

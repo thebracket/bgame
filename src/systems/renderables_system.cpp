@@ -58,8 +58,8 @@ void renderables_system::update(const double time_elapsed) {
 
 		// If we're rogue mode, and have a path, display it
 		if (game_master_mode == ROGUE) {
-			entity_t * settler = entity(selected_settler);
-			settler_ai_t * ai = settler->component<settler_ai_t>();
+			auto settler = entity(selected_settler);
+			auto ai = settler->component<settler_ai_t>();
 			if (ai->current_path && ai->current_path->success) {
 				const float n_steps = ai->current_path->steps.size();
 				float i = 0;

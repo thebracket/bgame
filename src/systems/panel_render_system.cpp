@@ -689,11 +689,11 @@ void panel_render_system::render_settler_mode() {
 	term(1)->box(1, 2, 73, 60, WHITE, BLACK, true);
 	for (int i=3; i<60; ++i) term(1)->print(2, i, "                                                                        ");
 
-	name_t * name = entity(selected_settler)->component<name_t>();
-	game_stats_t * stats = entity(selected_settler)->component<game_stats_t>();
-	species_t * species = entity(selected_settler)->component<species_t>();
-	settler_ai_t * ai = entity(selected_settler)->component<settler_ai_t>();
-	health_t * health = entity(selected_settler)->component<health_t>();
+	auto name = entity(selected_settler)->component<name_t>();
+	auto stats = entity(selected_settler)->component<game_stats_t>();
+	auto species = entity(selected_settler)->component<species_t>();
+	auto ai = entity(selected_settler)->component<settler_ai_t>();
+	auto health = entity(selected_settler)->component<health_t>();
 
 	std::stringstream header;
 	header << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ")";
