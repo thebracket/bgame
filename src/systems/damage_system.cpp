@@ -26,8 +26,8 @@ void damage_system::update(const double ms) {
         rattack->pop();
 
         std::stringstream ss;
-        entity_t * attacker = entity(msg.attacker);
-        entity_t * defender = entity(msg.victim);
+        auto attacker = entity(msg.attacker);
+        auto defender = entity(msg.victim);
         auto attacker_stats = attacker->component<game_stats_t>();
         auto attacker_name = attacker->component<name_t>();
         auto defender_name = defender->component<name_t>();
@@ -98,9 +98,9 @@ void damage_system::update(const double ms) {
         sattack->pop();
 
         std::stringstream ss;
-        entity_t * attacker = entity(msg.attacker);
-        entity_t * defender = entity(msg.victim);
-        if (attacker == nullptr || defender == nullptr) break;
+        auto attacker = entity(msg.attacker);
+        auto defender = entity(msg.victim);
+        if (!attacker || !defender) break;
         auto attacker_stats = attacker->component<game_stats_t>();
         auto attacker_name = attacker->component<name_t>();
         auto defender_name = defender->component<name_t>();
@@ -155,14 +155,14 @@ void damage_system::update(const double ms) {
 
         // Start by determining the attack
         std::stringstream ss;
-        entity_t * attacker = entity(msg.attacker);
-        if (attacker == nullptr) break;
+        auto attacker = entity(msg.attacker);
+        if (!attacker) break;
         auto attack_species = attacker->component<species_t>();
         auto attacker_name = attacker->component<name_t>();
         auto creature = creature_defs.find(attack_species->tag);
 
-        entity_t * defender = entity(msg.victim);
-        if (defender == nullptr) break;
+        auto defender = entity(msg.victim);
+        if (!defender) break;
         auto defender_name = defender->component<name_t>();
         auto defender_stats = defender->component<game_stats_t>();
 
@@ -190,7 +190,7 @@ void damage_system::update(const double ms) {
     std::queue<inflict_damage_message> * damage = mbox<inflict_damage_message>();
 	while (!damage->empty()) {
         inflict_damage_message msg = damage->front();
-        if (entity(msg.victim) == nullptr) break;
+        if (!entity(msg.victim)) break;
         auto h = entity(msg.victim)->component<health_t>();
         auto name = entity(msg.victim)->component<name_t>();
 
@@ -258,8 +258,8 @@ void damage_system::update(const double ms) {
         entity_slain_message msg = deaths->front();
         deaths->pop();
 
-        entity_t * victim = entity(msg.victim);
-        if (victim == nullptr) break;
+        auto victim = entity(msg.victim);
+        if (!victim) break;
         auto pos = victim->component<position_t>();
         // Any items carried are dropped
         each<item_carried_t>([&msg, pos] (entity_t &e, item_carried_t &item) {

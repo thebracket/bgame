@@ -9,7 +9,7 @@ namespace tasks {
 
 void become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
 	if (ai.job_type_major == JOB_BUTCHERING && ai.targeted_hostile>0) {
-		entity_t * body = entity(ai.targeted_hostile);
+		auto body = entity(ai.targeted_hostile);
 		if (body) {
 			auto corpse = body->component<corpse_harvestable>();
 			if (corpse) corpse->claimed = false;

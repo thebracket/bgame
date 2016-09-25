@@ -15,8 +15,8 @@ void mode_rogue_system::configure() {
     subscribe<tick_message>([this](tick_message &msg) {
         if (game_master_mode != ROGUE) return;
 
-        entity_t * settler = entity(selected_settler);
-        if (settler == nullptr) {
+        auto settler = entity(selected_settler);
+        if (!settler) {
             // The settler has died!
             game_master_mode = PLAY;
             pause_mode = PAUSED;
@@ -79,7 +79,8 @@ void mode_rogue_system::update(const double ms) {
 	const int world_y = std::min(clip_top + terminal_y-2, REGION_HEIGHT);
 	const int tile_idx = mapidx( world_x, world_y, camera_position->region_z );
 
-    entity_t * settler = entity(selected_settler);
+    auto settler = entity(selected_settler);
+    if (!settler) return;
     auto ai = settler->component<settler_ai_t>();
     auto pos = settler->component<position_t>();
 

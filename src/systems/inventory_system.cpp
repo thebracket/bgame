@@ -17,7 +17,7 @@ void inventory_system::configure() {
 
 	// Receive drop messages
 	subscribe<drop_item_message>([this](drop_item_message &msg) {
-		if (entity(msg.id) == nullptr) return;
+		if (!entity(msg.id)) return;
 		emit(item_claimed_message{msg.id, false});
 		delete_component<item_carried_t>(msg.id);
 		entity(msg.id)->component<item_t>()->claimed = false;
@@ -28,7 +28,7 @@ void inventory_system::configure() {
 
 	// Receive pick-up messages
 	subscribe<pickup_item_message>([this](pickup_item_message &msg) {
-		if (entity(msg.id) == nullptr) return;
+		if (!entity(msg.id)) return;
 		auto pos = entity(msg.id)->component<position_t>();
 		if (pos) {
 			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
@@ -42,7 +42,7 @@ void inventory_system::configure() {
 
 	// Receive item destruction messages
 	subscribe<destroy_item_message>([this](destroy_item_message &msg) {
-		if (entity(msg.id) == nullptr) return;
+		if (!entity(msg.id)) return;
 		auto pos = entity(msg.id)->component<position_t>();
 		if (pos) {
 			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
@@ -54,7 +54,7 @@ void inventory_system::configure() {
 
 	// Receive claim messages - update an item as claimed/unclaimed
 	subscribe<item_claimed_message>([] (item_claimed_message &msg) {
-		entity_t * e = entity(msg.id);
+		auto e = entity(msg.id);
 		if (e) {
 			auto item = e->component<item_t>();
 			item->claimed = msg.claimed;
@@ -259,22 +259,22 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 boost::optional<position_t&> get_item_location(std::size_t id) {
 	boost::optional<position_t&> result;
 
-	entity_t * e = entity(id);
-	if (e == nullptr) return result;
+	auto e = entity(id);
+	if (!e) return result;
 
 	auto pos = e->component<position_t>();
 	if (!pos)
 	{
 		auto stored = e->component<item_stored_t>();
 		if (stored) {
-			entity_t * container = entity(stored->stored_in);
+			auto container = entity(stored->stored_in);
 			if (container) {
 				result = *container->component<position_t>();
 			}
 		} else {
 			auto carried = e->component<item_carried_t>();
 			if (carried) {
-				entity_t * holder = entity(carried->carried_by);
+				auto holder = entity(carried->carried_by);
 				if (holder) {
 					result = *holder->component<position_t>();
 				}

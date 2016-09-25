@@ -59,8 +59,8 @@ void settler_ai_system::update(const double duration_ms) {
 				std::size_t closest_fear = 0;
 				if (ai.job_type_minor != JM_SLEEP) {
 					for (const std::size_t other_entity : view.visible_entities) {
-						entity_t * other_ptr = rltk::entity(other_entity);
-						if (other_ptr != nullptr && (other_ptr->component<grazer_ai>() || 
+						auto other_ptr = rltk::entity(other_entity);
+						if (other_ptr && (other_ptr->component<grazer_ai>() || 
 							(other_ptr->component<sentient_ai>() && other_ptr->component<sentient_ai>()->hostile))) {
 							terrified = true;
 							auto other_pos = rltk::entity(other_entity)->component<position_t>();
@@ -865,7 +865,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			// Destroy components
 			std::size_t material = 0;
 			for (auto &comp : ai.building_target.get().component_ids) {
-				entity_t * component_ptr = entity(comp.first);
+				auto component_ptr = entity(comp.first);
 				if (component_ptr) {
 					material = component_ptr->component<item_t>()->material;
 					delete_item(comp.first);
@@ -1206,7 +1206,7 @@ void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats
 
 	if (ai.job_type_minor == JM_COLLECT_ARMOR) {
 		// Find the pick, remove any position or stored components, add a carried_by component
-		entity_t * armor = entity(ai.target_id);
+		auto armor = entity(ai.target_id);
 		auto item = armor->component<item_t>();
 		item_location_t loc = INVENTORY;
 		auto finder = clothing_types.find(item->item_tag);

@@ -12,8 +12,8 @@ void mode_rogue_render_system::update(const double ms) {
     if (game_master_mode != ROGUE) return;
     
     // Draw the current settlers info panel
-    entity_t * e = entity(selected_settler);
-    if (e == nullptr) {
+    auto e = entity(selected_settler);
+    if (!e) {
         // The settler has died!
         game_master_mode = PLAY;
         pause_mode = PAUSED;
@@ -37,7 +37,7 @@ void mode_rogue_render_system::update(const double ms) {
 
     term(2)->print(3, y, "Click on map to move/interact"); ++y;
     if (ai->targeted_hostile != 0) {
-        entity_t * hostile = entity(ai->targeted_hostile);
+        auto hostile = entity(ai->targeted_hostile);
         
         if (hostile) {
             auto hostile_pos = hostile->component<position_t>();
