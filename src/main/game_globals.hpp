@@ -14,6 +14,7 @@ struct config_t {
 	std::string gui_font = "8x16";
 	bool tooltip_fadein = true;
 	float tooltip_speed = 100.0;
+	int autosave_minutes = 5;
 };
 
 struct available_building_t {
