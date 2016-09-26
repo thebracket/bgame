@@ -147,6 +147,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
     }
     current_region->tile_material[index] = e.material;
 
+    current_region->tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
     for (int Z=-2; Z<3; ++Z) {
         for (int Y=-2; Y<3; ++Y) {
             for (int X=-2; X<3; ++X) {

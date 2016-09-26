@@ -123,14 +123,16 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 void region_t::tile_pathing(const int &x, const int &y, const int &z) {
 	const int idx = mapidx(x,y,z);
 
+	// Start with a clean slate
+	tile_flags[idx].reset(CAN_GO_NORTH);
+	tile_flags[idx].reset(CAN_GO_SOUTH);
+	tile_flags[idx].reset(CAN_GO_EAST);
+	tile_flags[idx].reset(CAN_GO_WEST);
+	tile_flags[idx].reset(CAN_GO_UP);
+	tile_flags[idx].reset(CAN_GO_DOWN);
+
 	if (solid[idx] || !tile_flags[idx].test(CAN_STAND_HERE)) {
 		// If you can't go there, it doesn't have any exits.
-		tile_flags[idx].reset(CAN_GO_NORTH);
-		tile_flags[idx].reset(CAN_GO_SOUTH);
-		tile_flags[idx].reset(CAN_GO_EAST);
-		tile_flags[idx].reset(CAN_GO_WEST);
-		tile_flags[idx].reset(CAN_GO_UP);
-		tile_flags[idx].reset(CAN_GO_DOWN);
 	} else {
 		if (x>0 && tile_flags[mapidx(x-1, y, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_WEST);
 		if (x<REGION_WIDTH-1 && tile_flags[mapidx(x+1, y, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_EAST);
