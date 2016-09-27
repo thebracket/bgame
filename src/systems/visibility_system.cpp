@@ -44,14 +44,14 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 					blocked = true;
 					//std::cout << "Ceiling block\n";
 				}
-			} else {
+			} else if (last_z < Z) {
 				if (current_region->tile_type[mapidx(X,Y,last_z)] == tile_type::FLOOR) {
 					blocked = true;
 					//std::cout << "Floor block\n";
 				}
 			}
 		}
-		if (!blocked) reveal(idx, view);
+		if (!blocked || last_z == Z) reveal(idx, view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {
 			return false;
