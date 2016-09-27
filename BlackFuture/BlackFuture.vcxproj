@@ -136,6 +136,7 @@
     <ClInclude Include="..\src\components\item_stored.hpp" />
     <ClInclude Include="..\src\components\lightsource.hpp" />
     <ClInclude Include="..\src\components\loader.hpp" />
+    <ClInclude Include="..\src\components\logger.hpp" />
     <ClInclude Include="..\src\components\name.hpp" />
     <ClInclude Include="..\src\components\position.hpp" />
     <ClInclude Include="..\src\components\renderable.hpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\src\messages\inflict_damage_message.hpp" />
     <ClInclude Include="..\src\messages\inputs.hpp" />
     <ClInclude Include="..\src\messages\inventory_changed_message.hpp" />
+    <ClInclude Include="..\src\messages\log_message.hpp" />
     <ClInclude Include="..\src\messages\map_dirty_message.hpp" />
     <ClInclude Include="..\src\messages\messages.hpp" />
     <ClInclude Include="..\src\messages\perform_construction.hpp" />
@@ -219,6 +221,7 @@
     <ClInclude Include="..\src\systems\inventory_system.hpp" />
     <ClInclude Include="..\src\systems\keyboard_system.hpp" />
     <ClInclude Include="..\src\systems\lighting_system.hpp" />
+    <ClInclude Include="..\src\systems\log_system.hpp" />
     <ClInclude Include="..\src\systems\map_render_system.hpp" />
     <ClInclude Include="..\src\systems\mining_system.hpp" />
     <ClInclude Include="..\src\systems\mode_civs_system.hpp" />
@@ -257,6 +260,7 @@
     <ClCompile Include="..\src\components\calendar.cpp" />
     <ClCompile Include="..\src\components\game_stats.cpp" />
     <ClCompile Include="..\src\components\loader.cpp" />
+    <ClCompile Include="..\src\components\logger.cpp" />
     <ClCompile Include="..\src\FastNoise\FastNoise.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\main\game_globals.cpp" />
@@ -302,6 +306,7 @@
     <ClCompile Include="..\src\systems\inventory_system.cpp" />
     <ClCompile Include="..\src\systems\keyboard_system.cpp" />
     <ClCompile Include="..\src\systems\lighting_system.cpp" />
+    <ClCompile Include="..\src\systems\log_system.cpp" />
     <ClCompile Include="..\src\systems\map_render_system.cpp" />
     <ClCompile Include="..\src\systems\mining_system.cpp" />
     <ClCompile Include="..\src\systems\mode_civs_system.cpp" />

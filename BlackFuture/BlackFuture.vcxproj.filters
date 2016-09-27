@@ -474,6 +474,15 @@
     <ClInclude Include="..\src\systems\tasks\initiative.hpp">
       <Filter>Header Files\systems\tasks</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\systems\log_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\log_message.hpp">
+      <Filter>Header Files\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\logger.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -739,6 +748,12 @@
     </ClCompile>
     <ClCompile Include="..\src\systems\tasks\settler_job_status.cpp">
       <Filter>Source Files\systems\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\log_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\logger.cpp">
+      <Filter>Source Files\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
