@@ -2,6 +2,7 @@
 #include "../messages/messages.hpp"
 #include "../components/components.hpp"
 #include "movement_system.hpp"
+#include <boost/container/flat_map.hpp>
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
@@ -169,7 +170,7 @@ std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::
 std::vector<available_building_t> get_available_buildings() {
 	std::vector<available_building_t> result;
 
-	std::unordered_map<std::string, int> existing_buildings;
+	boost::container::flat_map<std::string, int> existing_buildings;
 	each<building_t>([&existing_buildings] (entity_t &e, building_t &b) {
 		auto finder = existing_buildings.find(b.tag);
 		if (finder == existing_buildings.end()) {
@@ -313,7 +314,7 @@ void unclaim_by_id(const std::size_t &id) {
 	emit(item_claimed_message{id, false});	
 }
 
-bool is_better_armor(const std::string &item_tag, std::unordered_map<item_location_t, float> &ac_by_loc) {
+bool is_better_armor(const std::string &item_tag, boost::container::flat_map<item_location_t, float> &ac_by_loc) {
 	auto finder = clothing_types.find(item_tag);
 	const float item_ac = finder->second.armor_class;
 	item_location_t loc = INVENTORY;
@@ -335,7 +336,7 @@ bool is_better_armor(const std::string &item_tag, std::unordered_map<item_locati
 boost::optional<std::size_t> find_armor_upgrade(entity_t &E) {
 	boost::optional<std::size_t> result;
 
-	std::unordered_map<item_location_t, float> ac_by_loc;
+	boost::container::flat_map<item_location_t, float> ac_by_loc;
 	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
 		if (c.carried_by == E.id && i.type == CLOTHING) {
 			auto finder = clothing_types.find(i.item_tag);
