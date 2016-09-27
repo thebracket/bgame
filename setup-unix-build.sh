@@ -2,13 +2,11 @@
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+echo -e "${GREEN}Updating RLTK${NC}\n"
 git submodule init
+git submodule update
 echo -e "${GREEN}Creating build directory${NC}\n"
 mkdir build
-echo -e "${GREEN}Updating RLTK${NC}\n"
-pushd src/rltk
-git pull https://github.com/thebracket/rltk
-popd
 cd build
 echo -e "${GREEN}Setting up Makefiles${NC}\n"
 cmake -g"Unix Makefiles" ../src
