@@ -17,3 +17,4 @@
 #include "vegetation_damage_message.hpp"
 #include "inputs.hpp"
 #include "game_over_message.hpp"
+#include "log_message.hpp"

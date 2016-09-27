@@ -4,6 +4,8 @@
 #include "../main/game_globals.hpp"
 #include "movement_system.hpp"
 #include "weapons_helpers.hpp"
+#include "../messages/log_message.hpp"
+#include "../components/logger.hpp"
 #include <rltk.hpp>
 #include <iostream>
 #include <sstream>
@@ -25,7 +27,6 @@ void damage_system::update(const double ms) {
         settler_ranged_attack_message msg = rattack->front();
         rattack->pop();
 
-        std::stringstream ss;
         auto attacker = entity(msg.attacker);
         auto defender = entity(msg.victim);
         auto attacker_stats = attacker->component<game_stats_t>();
@@ -72,19 +73,17 @@ void damage_system::update(const double ms) {
                     defender_pos->x, defender_pos->y, defender_pos->z});
         }
 
-        ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";
+        LOG ss;
+        ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(rltk::colors::YELLOW)->text(weapon_name+std::string(". "))->col(rltk::colors::WHITE);
         const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->dexterity);
-        ss << "(Dice roll: " << die_roll << ") ";
         if (die_roll > calculate_armor_class(*defender)) {
-            ss << "The attack hits, ";
             const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
-            ss << "for " << damage << " points of damage.\n";
+            ss.text("The attack hits for "+std::to_string(damage)+" points of damage.");
             emit(inflict_damage_message{ msg.victim, damage, weapon_name });
         } else {
-            ss << "The attack misses.\n";
+            ss.text("The attack misses.");
         }
-
-        std::cout << ss.str();
+        emit_deferred(log_message{ss.chars});
     }
 
     // Settler attacks - Melee
@@ -93,7 +92,6 @@ void damage_system::update(const double ms) {
         settler_attack_message msg = sattack->front();
         sattack->pop();
 
-        std::stringstream ss;
         auto attacker = entity(msg.attacker);
         auto defender = entity(msg.victim);
         if (!attacker || !defender) break;
@@ -125,19 +123,19 @@ void damage_system::update(const double ms) {
                 }
             }
         }
-        ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with their " << weapon_name << ". ";
+
+        LOG ss;
+        ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(rltk::colors::YELLOW)->text(weapon_name + std::string(". "))->col(rltk::colors::WHITE);
         const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->strength);
-        ss << "(Dice roll: " << die_roll << ") ";
-        if (die_roll > calculate_armor_class(*defender)) {
-            ss << "The attack hits, ";
+        if (die_roll > calculate_armor_class(*defender)) {            
             const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
-            ss << "for " << damage << " points of damage.\n";
             emit(inflict_damage_message{ msg.victim, damage, weapon_name });
+            ss.text(std::string("The attack hits, for ")+std::to_string(damage)+std::string("."));
         } else {
-            ss << "The attack misses.\n";
+            ss.text("The attack misses.");
         }
 
-        std::cout << ss.str();
+        emit_deferred(log_message{ss.chars});
     }
 
     // Creature attacks
@@ -147,7 +145,6 @@ void damage_system::update(const double ms) {
         cattack->pop();
 
         // Start by determining the attack
-        std::stringstream ss;
         auto attacker = entity(msg.attacker);
         if (!attacker) break;
         auto attack_species = attacker->component<species_t>();
@@ -163,20 +160,19 @@ void damage_system::update(const double ms) {
             throw std::runtime_error("Undefined species - " + attack_species->tag);
         }
         for (const creature_attack_t &weapon : creature->second.attacks) {
-            ss << attacker_name->first_name << " attacks " << defender_name->first_name << " with its " << weapon.type << ".";
+            LOG ss;
+            ss.other_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with its ")->col(rltk::colors::YELLOW)->text(weapon.type)->col(rltk::colors::WHITE)->text(". ");
             const int hit_roll = rng.roll_dice(1,20) + weapon.hit_bonus;
             const int target = calculate_armor_class(*defender) + stat_modifier(defender_stats->dexterity);
             if (hit_roll < target) {
-                ss << " The attack misses (roll: " << hit_roll << ").\n";
+                ss.text("The attack misses.");
             } else {
                 const int damage = std::max(1,rng.roll_dice(weapon.damage_n_dice, weapon.damage_dice) + weapon.damage_mod);
-                ss << " The attack hits (roll: " << hit_roll << "), for " << damage << " points of damage.\n";
+                ss.text(std::string("The attack hits, for ")+std::to_string(damage)+std::string(" points of damage."));
                 emit(inflict_damage_message{ msg.victim, damage, weapon.type });
             }
-
+            emit_deferred(log_message{ss.chars});
         }
-
-        std::cout << ss.str();
     }
 
     // Apply damage
@@ -195,13 +191,13 @@ void damage_system::update(const double ms) {
                 total_size += p.size;
             }
 
-            std::cout << name->first_name << " suffers " << msg.damage_amount << " points of damage. Source: " << msg.damage_type << "\n";
+            emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(std::string(" suffers ") + std::to_string(msg.damage_amount) + std::string(" points of damage. Source: "+msg.damage_type))->chars});
             if (h->current_hitpoints < 1) {
                 if (h->current_hitpoints > -10) {
                     h->unconscious = true;
-                    std::cout << name->first_name << " is unconscious!\n";
+                    emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(" is unconscious!")->chars});
                 } else {
-                    std::cout << name->first_name << " is dead!\n";
+                    emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(" is dead!")->chars});
                     emit(entity_slain_message{msg.victim, msg.damage_type});
                 }
             }
@@ -222,16 +218,16 @@ void damage_system::update(const double ms) {
                 hit_part -> current_hitpoints -= msg.damage_amount;
                 if (hit_part->current_hitpoints < 0) {
                     if (hit_part->part == "head" && hit_part->current_hitpoints > -10) {
-                        std::cout << " - head trauma results in unconsciousness.\n";
+                        emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(" passes out from head trauma.")->chars});
                         h->unconscious = true;
                     } else if (hit_part->part == "head" && hit_part->current_hitpoints < -9) {
-                        std::cout << " - head trauma results in instant death!\n";
+                        emit_deferred(log_message{LOG{}.other_name(msg.victim)->text("'s head is knocked clean off! Death is the inevitable result.'")->chars});
                         emit(entity_slain_message{msg.victim, msg.damage_type});
                     } else if (hit_part->current_hitpoints > -10) {
-                        std::cout << " - the victim passes out from " << hit_part->part << " trauma.\n";
+                        emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(" passes out from ")->text(hit_part->part)->text(" trauma.")->chars});
                         h->unconscious = true;
                     } else {
-                        std::cout << " - the victim dies of " << hit_part->part << " trauma.\n";
+                        emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(" dies from ")->text(hit_part->part)->text(" trauma.")->chars});
                         emit(entity_slain_message{msg.victim, msg.damage_type});
                     }
                 }

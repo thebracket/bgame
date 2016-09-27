@@ -4,4 +4,5 @@ add_library(components
 	building.cpp
 	calendar.cpp
 	game_stats.cpp
+	logger.cpp
 )
