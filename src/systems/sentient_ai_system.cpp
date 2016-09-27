@@ -5,6 +5,9 @@
 #include "weapons_helpers.hpp"
 #include "path_finding.hpp"
 #include "tasks/pathfinding.hpp"
+#include "tasks/initiative.hpp"
+
+using tasks::calculate_initiative;
 
 void sentient_ai_system::configure() {
     system_name = "Sentient AI";
@@ -24,10 +27,12 @@ void sentient_ai_system::update(const double ms) {
         tick_message msg = ticks->front();
         ticks->pop();
 
-        each<sentient_ai, position_t, viewshed_t, health_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health) {
+        each<sentient_ai, position_t, viewshed_t, health_t, game_stats_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health, game_stats_t &stats) {
+            int initiative_penalty = 0 - ai.initiative_modifier;
+
             if (ai.initiative < 1) {
                 if (health.unconscious) {
-                    ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
+                    calculate_initiative(ai, stats, initiative_penalty);
                     return;
                 }
 
@@ -64,9 +69,11 @@ void sentient_ai_system::update(const double ms) {
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						emit_deferred(settler_attack_message{e.id, closest_fear});
+                        initiative_penalty += get_weapon_initiative_penalty(get_melee_id(e));
 					} else if ( range != -1 && range < terror_distance) {
 						// Shoot it
 						emit_deferred(settler_ranged_attack_message{e.id, closest_fear});
+                        initiative_penalty += get_weapon_initiative_penalty(get_ranged_and_ammo_id(e).first);
 					} else {
                         emit_deferred(entity_wants_to_charge_message{e.id, closest_fear});
                         ai.goal = SENTIENT_GOAL_CHARGE;
@@ -125,7 +132,7 @@ void sentient_ai_system::update(const double ms) {
                     }
                 }
 
-                ai.initiative = std::max(1, rng.roll_dice(1, 12) - ai.initiative_modifier);
+                calculate_initiative(ai, stats, initiative_penalty);
             } else {
                 --ai.initiative;
             }

@@ -8,7 +8,6 @@ public:
 	virtual void update(const double duration_ms) override final;
 	virtual void configure() override final;
 private:
-	void settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats);
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 

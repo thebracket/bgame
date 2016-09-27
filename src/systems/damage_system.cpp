@@ -41,12 +41,8 @@ void damage_system::update(const double ms) {
             }
         }
 
-        std::size_t weapon_id = 0;
-        std::size_t ammo_id = 0;
-        each<item_carried_t>([&msg, &weapon_id, &ammo_id] (entity_t &E, item_carried_t &item) {
-            if (item.carried_by == msg.attacker && item.location == EQUIP_RANGED) weapon_id = E.id;
-            if (item.carried_by == msg.attacker && item.location == EQUIP_AMMO) ammo_id = E.id;
-        });
+        std::size_t weapon_id, ammo_id;
+        std::tie(weapon_id, ammo_id) = get_ranged_and_ammo_id(msg.attacker);
         std::string weapon_name = "fists";
         int weapon_n = 1;
         int weapon_d = 4;
@@ -112,10 +108,7 @@ void damage_system::update(const double ms) {
             }
         }
 
-        std::size_t weapon_id = 0;
-        each<item_carried_t>([&msg, &weapon_id] (entity_t &E, item_carried_t &item) {
-            if (item.carried_by == msg.attacker && item.location == EQUIP_MELEE) weapon_id = E.id;
-        });
+        std::size_t weapon_id = get_melee_id(msg.attacker);
         std::string weapon_name = "fists";
         int weapon_n = 1;
         int weapon_d = 4;

@@ -78,3 +78,37 @@ int calculate_armor_class(entity_t &entity) {
 	std::cout << "Armour class: " << ac << "\n";
 	return ac;
 }
+
+std::size_t get_melee_id(const entity_t &entity) {
+	std::size_t weapon_id = 0;
+	each<item_carried_t>([&entity, &weapon_id] (entity_t &E, item_carried_t &item) {
+		if (item.carried_by == entity.id && item.location == EQUIP_MELEE) weapon_id = E.id;
+	});
+	return weapon_id;
+}
+
+std::pair<std::size_t, std::size_t> get_ranged_and_ammo_id(const entity_t &entity) {
+	std::size_t weapon_id = 0;
+	std::size_t ammo_id = 0;
+	each<item_carried_t>([&entity, &weapon_id, &ammo_id] (entity_t &E, item_carried_t &item) {
+		if (item.carried_by == entity.id && item.location == EQUIP_RANGED) weapon_id = E.id;
+		if (item.carried_by == entity.id && item.location == EQUIP_AMMO) ammo_id = E.id;
+	});
+	return std::make_pair(weapon_id, ammo_id);
+}
+
+int get_weapon_initiative_penalty(const std::size_t &weapon_id) {
+	if (weapon_id == 0) return 0;
+
+	auto weapon_entity = entity(weapon_id);
+	if (weapon_entity) {
+		auto weapon_component = weapon_entity->component<item_t>();
+		if (weapon_component) {
+			auto finder = item_defs.find(weapon_component->item_tag);
+			if (finder != item_defs.end()) {
+				return finder->second.initiative_penalty;
+			}
+		}
+	}
+	return 0;
+}

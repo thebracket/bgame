@@ -341,7 +341,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6
 	},
 	bronze_axe = {
 		name = "Bronze Axe",
@@ -350,7 +350,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
 	},
 	bronze_hammer = {
 		name = "Bronze Hammer",
@@ -359,7 +359,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
 	},
 	bronze_pickaxe = {
 		name = "Bronze Pickaxe",
@@ -368,7 +368,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
 	},
 	bronze_dagger = {
 		name = "Bronze Dagger",
@@ -377,7 +377,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 4
 	},
 	bronze_sword = {
 		name = "Bronze Sword",
@@ -386,7 +386,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
 	},
 	stone_knife = {
 		name = "Stone Knife",
@@ -395,7 +395,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6
 	},
 	atlatl = {
 		name = "Atlatl",
@@ -404,7 +404,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		damage_mod=0, damage_stat="str", range=6, ammo="dart"
+		damage_mod=0, damage_stat="str", range=6, ammo="dart", initiative_penalty = 6
 	},
 	ray_pistol = {
 		name = "Ray Pistol",
@@ -413,7 +413,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		damage_mod=0, damage_stat="dex", range=4, ammo="smallcell"
+		damage_mod=0, damage_stat="dex", range=4, ammo="smallcell", initiative_penalty = 4
 	},
 	wood_shortbow = {
 		name = "Wooden Shortbow",
@@ -422,7 +422,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		damage_mod=0, damage_stat="dex", range=4, ammo="arrow"
+		damage_mod=0, damage_stat="dex", range=4, ammo="arrow", initiative_penalty = 4
 	},
 	wood_dart = {
 		name = "Wooden Dart",

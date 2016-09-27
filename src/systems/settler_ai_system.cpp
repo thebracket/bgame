@@ -14,6 +14,7 @@
 #include "tasks/settler_drop_tool.hpp"
 #include "tasks/settler_cancel_action.hpp"
 #include "tasks/pathfinding.hpp"
+#include "tasks/initiative.hpp"
 #include <iostream>
 #include <map>
 
@@ -25,6 +26,7 @@ using tasks::drop_current_tool;
 using tasks::cancel_action;
 using tasks::follow_path;
 using tasks::follow_result_t;
+using tasks::calculate_initiative;
 
 void settler_ai_system::update(const double duration_ms) {
 	std::queue<tick_message> * ticks = mbox<tick_message>();
@@ -37,6 +39,8 @@ void settler_ai_system::update(const double duration_ms) {
 			species_t &species, position_t &pos, name_t &name, health_t &health, viewshed_t &view) 
 		{
 			found_settler = true;
+			int initiative_penalty = 0;
+
 			if (ai.initiative < 1) {
 				if (game_master_mode == ROGUE && entity.id == selected_settler) return; // We handle this in the rogue system
 				if (health.unconscious) return; // Do nothing - they passed out!
@@ -80,9 +84,11 @@ void settler_ai_system::update(const double duration_ms) {
 					if (terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						emit_deferred(settler_attack_message{entity.id, closest_fear});
+						initiative_penalty += get_weapon_initiative_penalty(get_melee_id(entity));
 					} else if (range != -1 && range < terror_distance) {
 						// Shoot it
 						emit_deferred(settler_ranged_attack_message{entity.id, closest_fear});
+						initiative_penalty += get_weapon_initiative_penalty(get_ranged_and_ammo_id(entity).first);
 					} else {
 						emit_deferred(entity_wants_to_flee_message{entity.id, closest_fear});
 					}
@@ -100,7 +106,7 @@ void settler_ai_system::update(const double duration_ms) {
 					}
 				}
 				
-				this->settler_calculate_initiative(ai, stats);
+				calculate_initiative(ai, stats, initiative_penalty);
 			} else {
 				--ai.initiative;
 			}
@@ -111,10 +117,6 @@ void settler_ai_system::update(const double duration_ms) {
 			emit_deferred(game_over_message{1});
 		}
 	}
-}
-
-void settler_ai_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
-	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
 }
 
 void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	

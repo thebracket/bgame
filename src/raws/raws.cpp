@@ -199,6 +199,7 @@ void read_items(std::ofstream &tech_tree_file) {
             if (field == "ammo") c.ammo = lua_tostring(lua_state, -1);
             if (field == "range") c.range = lua_tonumber(lua_state, -1);
             if (field == "stack_size") c.stack_size = lua_tonumber(lua_state, -1);
+            if (field == "initiative_penalty") c.initiative_penalty = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }

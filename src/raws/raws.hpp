@@ -78,6 +78,7 @@ struct item_def_t {
 	int range = 0;
 	std::string ammo;
 	int stack_size = 1;
+	int initiative_penalty = 0;
 };
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 
