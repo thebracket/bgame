@@ -471,6 +471,9 @@
     <ClInclude Include="..\src\systems\tasks\settler_job_status.hpp">
       <Filter>Header Files\systems\tasks</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\systems\tasks\initiative.hpp">
+      <Filter>Header Files\systems\tasks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">

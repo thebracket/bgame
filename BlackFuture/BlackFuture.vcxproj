@@ -235,6 +235,7 @@
     <ClInclude Include="..\src\systems\settler_ai_system.hpp" />
     <ClInclude Include="..\src\systems\systems.hpp" />
     <ClInclude Include="..\src\systems\tasks\idle_mode.hpp" />
+    <ClInclude Include="..\src\systems\tasks\initiative.hpp" />
     <ClInclude Include="..\src\systems\tasks\pathfinding.hpp" />
     <ClInclude Include="..\src\systems\tasks\settler_cancel_action.hpp" />
     <ClInclude Include="..\src\systems\tasks\settler_drop_tool.hpp" />
