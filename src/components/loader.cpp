@@ -30,5 +30,6 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 23  : entity(entity_id)->assign(corpse_harvestable::load(lbfile)); break;
 		case 24  : entity(entity_id)->assign(smoke_emitter_t::load(lbfile)); break;
 		case 25  : entity(entity_id)->assign(sentient_ai::load(lbfile)); break;
+		case 26  : entity(entity_id)->assign(logger_t::load(lbfile)); break;
 	}
 }

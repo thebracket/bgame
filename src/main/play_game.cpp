@@ -46,7 +46,6 @@ void play_game::init() {
 	{
 		const std::string save_filename = "world/savegame.dat";
 		std::fstream lbfile(save_filename, std::ios::in | std::ios::binary);
-		//Poco::InflatingInputStream inflate(lbfile, Poco::InflatingStreamBuf::STREAM_GZIP);
 		std::function<void(std::istream&,std::size_t,std::size_t)> helper(component_loader);
 		ecs_load(lbfile, helper);
 	}
@@ -55,13 +54,14 @@ void play_game::init() {
 	std::cout << "Storing important entity handles\n";
 
 	int region_x, region_y;
-	each<world_position_t, calendar_t, designations_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design) {
+	each<world_position_t, calendar_t, designations_t, logger_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design, logger_t &log) {
 		camera_entity = entity.id;
 		region_x = pos.world_x;
 		region_y = pos.world_y;
 		camera_position = &pos;
 		calendar = &cal;
 		designations = &design;
+		logger = &log;
 	});
 	std::cout << "Loading the region\n";
 	*current_region = load_region(region_x, region_y);

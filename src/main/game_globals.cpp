@@ -7,6 +7,7 @@ std::size_t camera_entity;
 world_position_t * camera_position;
 calendar_t * calendar;
 designations_t * designations;
+logger_t * logger;
 int clip_left = -1;
 int clip_right = -1;
 int clip_top = -1;

@@ -631,7 +631,8 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
     auto camera = create_entity()
 		->assign(world_position_t{region.region_x, region.region_y, crash_x, crash_y, crash_z+1})
 		->assign(std::move(calendar))
-		->assign(designations_t{});
+		->assign(designations_t{})
+        ->assign(logger_t{});
 }
 
 inline int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, region_t &region, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active) {
