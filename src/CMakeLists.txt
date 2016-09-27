@@ -57,7 +57,6 @@ add_subdirectory(utils)
 add_subdirectory(main)
 
 add_executable(bgame main.cpp)
-add_executable(png2rex png2rex/main.cpp png2rex/PngLoader.cpp png2rex/REXSpeeder.cpp)
 
 if (APPLE)
 	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
@@ -120,11 +119,5 @@ find_package(ZLIB REQUIRED)
 if (ZLIB_FOUND)
 	include_directories(${ZLIB_INCLUDE_DIRS})
 	target_link_libraries(rltk ${ZLIB_LIBRARIES})
-	target_link_libraries(png2rex ${ZLIB_LIBRARIES})
 endif()
-
-# We also depend upon libpng for the png tool
-find_package(PNG REQUIRED)
-include_directories(${PNG_INCLUDE_DIRS})
-target_link_libraries(png2rex ${PNG_LIBRARIES})
 
