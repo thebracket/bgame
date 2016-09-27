@@ -75,7 +75,6 @@ int calculate_armor_class(entity_t &entity) {
 		}
 	});
 
-	std::cout << "Armour class: " << ac << "\n";
 	return ac;
 }
 

@@ -1,5 +1,4 @@
 #include "logger.hpp"
-#include "name.hpp"
 #include "../main/game_globals.hpp"
 
 using rltk::serialize;
@@ -72,6 +71,13 @@ inline std::string log_display_name(const std::size_t &entity_id) {
 LOG * LOG::settler_name(const std::size_t &entity_id) {
     col(rltk::colors::GREEN);
     text(log_display_name(entity_id));
+    col(rltk::colors::WHITE);
+    return this;
+}
+
+LOG * LOG::settler_name_t(const name_t &name) {
+    col(rltk::colors::GREEN);
+    text(name.first_name + std::string(" ") + name.last_name);
     col(rltk::colors::WHITE);
     return this;
 }

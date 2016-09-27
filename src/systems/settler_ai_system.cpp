@@ -15,6 +15,8 @@
 #include "tasks/settler_cancel_action.hpp"
 #include "tasks/pathfinding.hpp"
 #include "tasks/initiative.hpp"
+#include "../messages/log_message.hpp"
+#include "../components/logger.hpp"
 #include <iostream>
 #include <map>
 
@@ -50,7 +52,7 @@ void settler_ai_system::update(const double duration_ms) {
 				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
 				if (tasks::is_stuck_or_invalid(pos)) {
-					std::cout << "Warning - settler is stuck; activating emergency teleport to bed!\n";
+					emit_deferred(log_message{LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars});
 					each<position_t, construct_provides_sleep_t>([this,&entity,&pos] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
 						move_to(entity, pos, P);
 						// This should use power
@@ -113,7 +115,6 @@ void settler_ai_system::update(const double duration_ms) {
 		});
 
 		if (!found_settler) {
-			std::cout << "Game should end now - everyone died\n";
 			emit_deferred(game_over_message{1});
 		}
 	}
@@ -184,12 +185,10 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 				if (find_path(pos, bed_pos)->success) {
 					bed_candidates[distance3d(pos.x, pos.y, pos.z, bed_pos.x, bed_pos.y, bed_pos.z)] = std::make_tuple(bed, bed_pos, e.id);
 				}
-			} else {
-				std::cout << "Bed is busy, trying next\n";
 			}
 		});
 		if (bed_candidates.empty()) {
-			std::cout << "No bed found - sleeping where I am\n";
+			emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
 			ai.job_type_minor = JM_SLEEP;
 			ai.target_id = 0;
 			return;
@@ -222,10 +221,10 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 				ai.job_type_minor = JM_SLEEP;
 				change_job_status(ai, name, "Sleeping");
 			}, // Arrived
-			[&ai, &name] () {
+			[&ai, &name, &entity] () {
 				ai.job_type_minor = JM_FIND_BED;
 				change_job_status(ai, name, "Looking for a bed");
-				std::cout << "No path to bed - we'll just sleep on the ground.\n";
+				emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
 				rltk::entity(ai.target_id)->component<construct_provides_sleep_t>()->claimed = false;
 				ai.job_type_minor = JM_SLEEP;
 			} // fail
@@ -453,7 +452,6 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 }
 
 void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
-	//std::cout << name.first_name << ": " << ai.job_status << "\n";
 
 	if (ai.job_type_minor == JM_FIND_PICK) {
 		auto pick = claim_closest_item_by_category(TOOL_DIGGING, pos);
@@ -596,7 +594,6 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 }
 
 void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
-	//std::cout << name.first_name << ": " << ai.job_status << "\n";
 
 	if (ai.job_type_minor == JM_FIND_AXE) {
 		auto axe = claim_closest_item_by_category(TOOL_CHOPPING, pos);
@@ -651,7 +648,6 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 	if (ai.job_type_minor == JM_FIND_TREE) {
 		position_t tree_pos = designations->chopping.begin()->second;
 		ai.target_id = designations->chopping.begin()->first;
-		std::cout << "Targeting tree #" << ai.target_id << "\n";
 
 		std::array<position_t, 4> target;
 		target[0] = position_t{ tree_pos.x, tree_pos.y-1, tree_pos.z };
@@ -728,7 +724,6 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 			// Spawn wooden logs
 			number_of_logs = (number_of_logs/20)+1;
-			//std::cout << "We should spawn " << number_of_logs << " logs.\n";
 			for (int i=0; i<number_of_logs; ++i) {
 				spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, "wood_log", get_material_by_tag("wood"));
 			}
@@ -875,7 +870,6 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			}
 
 			// Place the building, and assign any provide tags
-			std::cout << "Completing building # " << ai.building_target.get().building_entity << "\n";
 			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
 
 			for (const building_provides_t &provides : finder->second.provides) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "name.hpp"
 
 struct log_line_t {
     log_line_t() {}
@@ -27,6 +28,7 @@ struct LOG {
     LOG * text(const std::string &txt);
     inline LOG * col(const rltk::color_t &col) { fg = col; return this; }
     LOG * settler_name(const std::size_t &entity_id);
+    LOG * settler_name_t(const name_t &name);
     LOG * sentient_name(const std::size_t &entity_id);
     LOG * other_name(const std::size_t &entity_id);
     LOG * civ_name(const std::size_t &civ_id);
