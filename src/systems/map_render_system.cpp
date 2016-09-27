@@ -137,7 +137,11 @@ vchar get_render_char_building(const int &x, const int &y) {
 			result.glyph = 177;
 
 			if (!current_region->solid[idx] && current_region->tile_flags[idx].test(CAN_STAND_HERE)
-				&& !current_region->tile_flags[idx].test(CONSTRUCTION)) {
+				&& !current_region->tile_flags[idx].test(CONSTRUCTION) 
+				&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+			) {
 				result.foreground = rltk::colors::GREEN;
 			} else {
 				result.foreground = rltk::colors::RED;
