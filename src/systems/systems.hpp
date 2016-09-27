@@ -27,3 +27,4 @@
 #include "world_system.hpp"
 #include "game_over_system.hpp"
 #include "mode_civs_system.hpp"
+#include "log_system.hpp"

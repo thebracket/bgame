@@ -28,6 +28,7 @@ add_library(systems
 	weapons_helpers.cpp
 	game_over_system.cpp
 	mode_civs_system.cpp
+	log_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
