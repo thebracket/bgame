@@ -20,6 +20,18 @@ void damage_system::configure() {
     subscribe_mbox<hour_elapsed_message>();
 }
 
+inline void civ_dislike_attacker(boost::optional<entity_t &> &victim) {
+    if (!victim) return;
+    auto victim_ai = victim->component<sentient_ai>();
+    if (victim_ai) {
+        const std::size_t civ_id = planet.civs.unimportant_people[victim_ai->person_id].civ_id;
+        if (planet.civs.civs[civ_id].cordex_feelings > -10) {
+            --planet.civs.civs[civ_id].cordex_feelings;
+            emit_deferred(log_message{LOG{}.civ_name(civ_id)->text(" dislikes you more.")->chars});
+        }
+    }
+}
+
 void damage_system::settler_ranged_attacks() {
     std::queue<settler_ranged_attack_message> * rattack = mbox<settler_ranged_attack_message>();
     while (!rattack->empty()) {
@@ -32,12 +44,7 @@ void damage_system::settler_ranged_attacks() {
         auto attacker_pos = attacker->component<position_t>();
         auto defender_pos = defender->component<position_t>();
 
-        auto victim_ai = defender->component<sentient_ai>();
-        if (victim_ai) {
-            if (planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings > -10) {
-                --planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings;
-            }
-        }
+        civ_dislike_attacker(defender);
 
         std::size_t weapon_id, ammo_id;
         std::tie(weapon_id, ammo_id) = get_ranged_and_ammo_id(msg.attacker);
@@ -72,11 +79,14 @@ void damage_system::settler_ranged_attacks() {
 
         LOG ss;
         ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(rltk::colors::YELLOW)->text(weapon_name+std::string(". "))->col(rltk::colors::WHITE);
-        const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->dexterity);
-        if (die_roll > calculate_armor_class(*defender)) {
-            const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
+        const int skill_modifier = get_skill_modifier(*attacker_stats, "Ranged Attacks");
+        const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->dexterity + skill_modifier);
+        const int armor_class = calculate_armor_class(*defender);
+        if (die_roll > armor_class) {
+            const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
             ss.text("The attack hits for "+std::to_string(damage)+" points of damage.");
             emit(inflict_damage_message{ msg.victim, damage, weapon_name });
+            gain_skill_from_success(*attacker_stats, "Ranged Attacks", armor_class, rng);
         } else {
             ss.text("The attack misses.");
         }
@@ -95,12 +105,7 @@ void damage_system::settler_melee_attacks() {
         if (!attacker || !defender) break;
         auto attacker_stats = attacker->component<game_stats_t>();
 
-        auto victim_ai = defender->component<sentient_ai>();
-        if (victim_ai) {
-            if (planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings > -10) {
-                --planet.civs.civs[planet.civs.unimportant_people[victim_ai->person_id].civ_id].cordex_feelings;
-            }
-        }
+        civ_dislike_attacker(defender);
 
         std::size_t weapon_id = get_melee_id(msg.attacker);
         std::string weapon_name = "fists";
@@ -122,11 +127,14 @@ void damage_system::settler_melee_attacks() {
 
         LOG ss;
         ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(rltk::colors::YELLOW)->text(weapon_name + std::string(". "))->col(rltk::colors::WHITE);
-        const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->strength);
-        if (die_roll > calculate_armor_class(*defender)) {            
-            const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength));
+        const int skill_modifier = get_skill_modifier(*attacker_stats, "Melee Attacks");
+        const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->strength) + skill_modifier;
+        const int armor_class = calculate_armor_class(*defender);
+        if (die_roll > armor_class) {            
+            const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
             emit(inflict_damage_message{ msg.victim, damage, weapon_name });
             ss.text(std::string("The attack hits, for ")+std::to_string(damage)+std::string("."));
+            gain_skill_from_success(*attacker_stats, "Melee Attacks", armor_class, rng);
         } else {
             ss.text("The attack misses.");
         }
