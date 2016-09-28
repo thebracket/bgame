@@ -669,13 +669,28 @@ inline int build_building(xp::rex_sprite &sprite, const int x, const int y, cons
     return n_spawn;
 }
 
-void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active, std::vector<std::tuple<int,int,int>> &spawn_points) {
-    // Temporary code - we're just going to spawn mud huts with no regard to sanity. :-X
-    auto hut = xp::rex_sprite("rex/mud-hut.xp");
+xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet, rltk::random_number_generator &rng) {
+    const auto tech_level = planet.civs.civs[civ_id].tech_level;
+    std::vector<std::string> available_buildings;
 
-    xp::rex_sprite * building = &hut;
+    // Always available
+    available_buildings.push_back("rex/mud-hut.xp");
+    available_buildings.push_back("rex/hovel-wood.xp");
+    available_buildings.push_back("rex/longhall-wood.xp");
+    available_buildings.push_back("rex/henge-wood.xp");
 
+    const int roll = rng.roll_dice(1, available_buildings.size())-1;
+    const std::string building_template = available_buildings[roll];
+    std::cout << "Building: " << building_template << "\n";
+    return xp::rex_sprite(building_template);
+}
+
+void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active, 
+    std::vector<std::tuple<int,int,int>> &spawn_points, const std::size_t &civ_id, planet_t &planet) 
+{
     for (int i=0; i<n_buildings; ++i) {
+        auto hut = get_building_template(civ_id, planet, rng);
+        xp::rex_sprite * building = &hut;
         bool ok = false;
         int x,y,z;
         while (!ok) {
@@ -783,6 +798,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     bool has_settlement = false;
     bool settlement_active = false;
     int max_size = 0;
+    std::size_t civ_id;
     for (auto &town : planet.civs.settlements) {
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
@@ -793,6 +809,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
             has_settlement = true;
             if (town.status > 0) settlement_active = true;
             max_size += town.max_size;
+            civ_id = town.civ_id;
         }
     }
 
@@ -801,7 +818,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         const int n_buildings = max_size * 5;
         std::cout << "Spawning " << n_buildings << " buildings. \n";
         if (!settlement_active) std::cout << "The buildings are ruined.\n";
-        build_buildings(region, rng, n_buildings, settlement_active, spawn_points);
+        build_buildings(region, rng, n_buildings, settlement_active, spawn_points, civ_id, planet);
     }
 
     // Add anyone who is still here from world-gen
