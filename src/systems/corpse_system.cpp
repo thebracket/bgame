@@ -9,12 +9,12 @@ void corpse_system::configure() {
         std::vector<std::size_t> to_destroy;
         std::mutex destroy_guard;
 
-        parallel_each<corpse_settler>([&to_destroy] (entity_t &e, corpse_settler &corpse) {
+        each<corpse_settler>([&to_destroy] (entity_t &e, corpse_settler &corpse) {
             ++corpse.ticks_since_death;
             if (corpse.ticks_since_death > 5000) {
                 if (rng.roll_dice(1,6) < 3) {
                     auto pos = e.component<position_t>();
-                    emit_deferred(emit_particles_message{2, pos->x, pos->y, pos->z});
+                    if (pos) emit_deferred(emit_particles_message{2, pos->x, pos->y, pos->z});
                 }
             }
             if (corpse.ticks_since_death > 10000) {
@@ -22,12 +22,12 @@ void corpse_system::configure() {
             }
         });
 
-        parallel_each<corpse_harvestable>([&to_destroy, &destroy_guard] (entity_t &e, corpse_harvestable &corpse) {
+        each<corpse_harvestable>([&to_destroy, &destroy_guard] (entity_t &e, corpse_harvestable &corpse) {
             ++corpse.ticks_since_death;
             if (corpse.ticks_since_death > 5000) {
                 if (rng.roll_dice(1,6) < 3) {
                     auto pos = e.component<position_t>();
-                    emit_deferred(emit_particles_message{2, pos->x, pos->y, pos->z});
+                    if (pos) emit_deferred(emit_particles_message{2, pos->x, pos->y, pos->z});
                 }
             }
             if (corpse.ticks_since_death > 10000) {

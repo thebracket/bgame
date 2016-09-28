@@ -316,6 +316,8 @@ void unclaim_by_id(const std::size_t &id) {
 
 bool is_better_armor(const std::string &item_tag, boost::container::flat_map<item_location_t, float> &ac_by_loc) {
 	auto finder = clothing_types.find(item_tag);
+	if (finder == clothing_types.end()) return false;
+
 	const float item_ac = finder->second.armor_class;
 	item_location_t loc = INVENTORY;
 	if (finder->second.slot == "head") loc = HEAD;
