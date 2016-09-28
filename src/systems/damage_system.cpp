@@ -20,8 +20,7 @@ void damage_system::configure() {
     subscribe_mbox<hour_elapsed_message>();
 }
 
-void damage_system::update(const double ms) {
-    // Settler attacks - Ranged
+void damage_system::settler_ranged_attacks() {
     std::queue<settler_ranged_attack_message> * rattack = mbox<settler_ranged_attack_message>();
     while (!rattack->empty()) {
         settler_ranged_attack_message msg = rattack->front();
@@ -85,8 +84,9 @@ void damage_system::update(const double ms) {
         }
         emit_deferred(log_message{ss.chars});
     }
+}
 
-    // Settler attacks - Melee
+void damage_system::settler_melee_attacks() {
     std::queue<settler_attack_message> * sattack = mbox<settler_attack_message>();
     while (!sattack->empty()) {
         settler_attack_message msg = sattack->front();
@@ -137,8 +137,9 @@ void damage_system::update(const double ms) {
 
         emit_deferred(log_message{ss.chars});
     }
+}
 
-    // Creature attacks
+void damage_system::creature_attacks() {
     std::queue<creature_attack_message> * cattack = mbox<creature_attack_message>();
     while (!cattack->empty()) {
         creature_attack_message msg = cattack->front();
@@ -174,7 +175,9 @@ void damage_system::update(const double ms) {
             emit_deferred(log_message{ss.chars});
         }
     }
+}
 
+void damage_system::apply_damage() {
     // Apply damage
     std::queue<inflict_damage_message> * damage = mbox<inflict_damage_message>();
 	while (!damage->empty()) {
@@ -241,7 +244,9 @@ void damage_system::update(const double ms) {
 
 		damage->pop();
 	}
+}
 
+void damage_system::inflict_death() {
     std::queue<entity_slain_message> * deaths = mbox<entity_slain_message>();
 	while (!deaths->empty()) {
         entity_slain_message msg = deaths->front();
@@ -294,7 +299,9 @@ void damage_system::update(const double ms) {
         entity_octree.remove_node(octree_location_t{pos->x, pos->y, pos->z, msg.victim});
         delete_entity(msg.victim);
     }
+}
 
+void damage_system::heal_over_time() {
     std::queue<hour_elapsed_message> * hour = mbox<hour_elapsed_message>();
 	while (!hour->empty()) {
         hour_elapsed_message msg = hour->front();
@@ -307,4 +314,13 @@ void damage_system::update(const double ms) {
             }
         });
     }
+}
+
+void damage_system::update(const double ms) {
+    settler_ranged_attacks();
+    settler_melee_attacks();
+    creature_attacks();
+    apply_damage();
+    inflict_death();
+    heal_over_time();
 }
