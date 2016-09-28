@@ -1,4 +1,6 @@
 #include "game_stats.hpp"
+#include "../messages/log_message.hpp"
+#include "../components/logger.hpp"
 
 void game_stats_t::save(std::ostream &lbfile) {
     serialize(lbfile, profession_tag);
@@ -145,13 +147,13 @@ int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill) {
 	}
 }
 
-void gain_skill_from_success(game_stats_t &stats, const std::string &skill, const int &difficulty, rltk::random_number_generator &rng) {
+void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, const std::string &skill, const int &difficulty, rltk::random_number_generator &rng) {
 	auto finder = stats.skills.find(skill);
 	if (finder != stats.skills.end()) {
 		finder->second.experience_gained += difficulty;
 		const int gain_bonus_at = (finder->second.skill_level+1) * 100;
 		if (finder->second.experience_gained > gain_bonus_at) {
-			std::cout << "Skill improved!\n";
+			emit_deferred(log_message{LOG{}.settler_name(settler_id)->text(" has improved their skill in ")->text(skill)->chars});
 			finder->second.experience_gained = 0;
 			++finder->second.skill_level;
 
@@ -170,7 +172,7 @@ void gain_skill_from_success(game_stats_t &stats, const std::string &skill, cons
 						case ethics : attribute_target = stats.ethics; break;
 					}
 					if (stat_gain_roll < attribute_target) {
-						std::cout << "Attribute improved!\n";
+						emit_deferred(log_message{LOG{}.settler_name(settler_id)->text(" has gained an attribute point.")->chars});
 						switch (relevant_attribute->second) {
 							case strength : ++stats.strength; break;
 							case dexterity : ++stats.dexterity; break;
@@ -189,7 +191,7 @@ void gain_skill_from_success(game_stats_t &stats, const std::string &skill, cons
 	}
 }
 
-skill_roll_result_t skill_roll(game_stats_t &stats, rltk::random_number_generator &rng, const std::string skill_name, const int difficulty) {
+skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats, rltk::random_number_generator &rng, const std::string skill_name, const int difficulty) {
 	const int luck_component = rng.roll_dice( 1, 20 );
 	const int natural_ability = get_attribute_modifier_for_skill(stats, skill_name);
 	const int8_t person_skill = get_skill_modifier(stats, skill_name);
@@ -200,10 +202,10 @@ skill_roll_result_t skill_roll(game_stats_t &stats, rltk::random_number_generato
 	if (luck_component == 1) {
 		return CRITICAL_FAIL;
 	} else if (luck_component == 20) {
-		gain_skill_from_success(stats, skill_name, difficulty, rng);
+		gain_skill_from_success(settler_id, stats, skill_name, difficulty, rng);
 		return CRITICAL_SUCCESS;
 	} else if (total >= difficulty) {
-		gain_skill_from_success(stats, skill_name, difficulty, rng);
+		gain_skill_from_success(settler_id, stats, skill_name, difficulty, rng);
 		return SUCCESS;
 	} else {
 		return FAIL;

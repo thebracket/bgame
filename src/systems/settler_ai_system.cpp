@@ -561,7 +561,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	}
 
 	if (ai.job_type_minor == JM_DIG) {
-		auto skill_check = skill_roll(stats, rng, "Mining", DIFICULTY_TOUGH);
+		auto skill_check = skill_roll(e.id, stats, rng, "Mining", DIFICULTY_TOUGH);
 		if (skill_check >= SUCCESS) {
 			// Determine the digging target from here
 			// Make a skill roll, and if successful complete the action
@@ -698,7 +698,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 	if (ai.job_type_minor == JM_CHOP) {
 		// Chop down the tree
-		auto skill_check = skill_roll(stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
+		auto skill_check = skill_roll(e.id, stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
 
 		if (skill_check >= SUCCESS) {
 			// Tree is going down!
@@ -856,7 +856,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 		// Make a skill roll
 		const std::string skill = finder->second.skill.first;
 		const int difficulty = finder->second.skill.second;
-		auto skill_check = skill_roll(stats, rng, skill, difficulty);
+		auto skill_check = skill_roll(e.id, stats, rng, skill, difficulty);
 
 		if (skill_check >= SUCCESS) {
 			// Destroy components
@@ -989,7 +989,7 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 	if (ai.job_type_minor == JM_REACT) {
 		// Skill check, destroy inputs, create outputs
 		auto finder = reaction_defs.find(ai.reaction_target.get().reaction_tag);
-		auto skill_check = skill_roll(stats, rng, finder->second.skill, finder->second.difficulty);
+		auto skill_check = skill_roll(e.id, stats, rng, finder->second.skill, finder->second.difficulty);
 
 		if (skill_check >= SUCCESS) {
 			// Delete components

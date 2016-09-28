@@ -86,7 +86,7 @@ void damage_system::settler_ranged_attacks() {
             const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
             ss.text("The attack hits for "+std::to_string(damage)+" points of damage.");
             emit(inflict_damage_message{ msg.victim, damage, weapon_name });
-            gain_skill_from_success(*attacker_stats, "Ranged Attacks", armor_class, rng);
+            gain_skill_from_success(msg.attacker, *attacker_stats, "Ranged Attacks", armor_class, rng);
         } else {
             ss.text("The attack misses.");
         }
@@ -134,7 +134,7 @@ void damage_system::settler_melee_attacks() {
             const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
             emit(inflict_damage_message{ msg.victim, damage, weapon_name });
             ss.text(std::string("The attack hits, for ")+std::to_string(damage)+std::string("."));
-            gain_skill_from_success(*attacker_stats, "Melee Attacks", armor_class, rng);
+            gain_skill_from_success(msg.attacker, *attacker_stats, "Melee Attacks", armor_class, rng);
         } else {
             ss.text("The attack misses.");
         }

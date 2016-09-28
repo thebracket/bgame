@@ -75,5 +75,5 @@ constexpr int DIFFICULTY_NEARLY_IMPOSSIBLE = 40;
 
 int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::string &skill);
 int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill);
-void gain_skill_from_success(game_stats_t &stats, const std::string &skill, const int &difficulty, rltk::random_number_generator &rng);
-skill_roll_result_t skill_roll(game_stats_t &stats, rltk::random_number_generator &rng, const std::string skill_name, const int difficulty);
+void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, const std::string &skill, const int &difficulty, rltk::random_number_generator &rng);
+skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats, rltk::random_number_generator &rng, const std::string skill_name, const int difficulty);
