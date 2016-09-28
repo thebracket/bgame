@@ -29,8 +29,6 @@ void damage_system::settler_ranged_attacks() {
         auto attacker = entity(msg.attacker);
         auto defender = entity(msg.victim);
         auto attacker_stats = attacker->component<game_stats_t>();
-        auto attacker_name = attacker->component<name_t>();
-        auto defender_name = defender->component<name_t>();
         auto attacker_pos = attacker->component<position_t>();
         auto defender_pos = defender->component<position_t>();
 
@@ -96,8 +94,6 @@ void damage_system::settler_melee_attacks() {
         auto defender = entity(msg.victim);
         if (!attacker || !defender) break;
         auto attacker_stats = attacker->component<game_stats_t>();
-        auto attacker_name = attacker->component<name_t>();
-        auto defender_name = defender->component<name_t>();
 
         auto victim_ai = defender->component<sentient_ai>();
         if (victim_ai) {
@@ -149,12 +145,10 @@ void damage_system::creature_attacks() {
         auto attacker = entity(msg.attacker);
         if (!attacker) break;
         auto attack_species = attacker->component<species_t>();
-        auto attacker_name = attacker->component<name_t>();
         auto creature = creature_defs.find(attack_species->tag);
 
         auto defender = entity(msg.victim);
         if (!defender) break;
-        auto defender_name = defender->component<name_t>();
         auto defender_stats = defender->component<game_stats_t>();
 
         if (creature == creature_defs.end()) {
@@ -304,7 +298,6 @@ void damage_system::inflict_death() {
 void damage_system::heal_over_time() {
     std::queue<hour_elapsed_message> * hour = mbox<hour_elapsed_message>();
 	while (!hour->empty()) {
-        hour_elapsed_message msg = hour->front();
         hour->pop();
 
         each<health_t>([] (entity_t &e, health_t &h) {
