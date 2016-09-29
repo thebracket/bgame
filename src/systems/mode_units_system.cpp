@@ -16,18 +16,6 @@ void mode_units_system::configure() {
 void mode_units_system::update(const double ms) {
     if (game_master_mode != UNITS) return;
 
-    std::queue<key_pressed_t> * messages = mbox<key_pressed_t>();
-    while (!messages->empty()) {
-		key_pressed_t e = messages->front();
-		messages->pop();
-
-        if (e.event.key.code == sf::Keyboard::Escape) {
-            game_master_mode = PLAY;
-            emit(map_dirty_message{});
-            emit(recalculate_mining_message{});
-        }
-    }
-
     int font_width, font_height;
     std::tie(font_width, font_height) = term(1)->get_font_size();
     const int term_w = term(1)->term_width;

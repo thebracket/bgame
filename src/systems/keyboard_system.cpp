@@ -56,12 +56,12 @@ void keyboard_system::update(const double ms) {
         if (e.event.key.code == sf::Keyboard::Comma) {
             emit_deferred(camera_move_requested_message{6, 1}); 
         }
-	std::cout << e.event.key.code << "\n";
 
         // Mode changes
         if (game_master_mode == PLAY) {
             if (e.event.key.code == sf::Keyboard::D) {
                 game_master_mode = DESIGN;
+                game_design_mode = DIGGING;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
             } else if (e.event.key.code == sf::Keyboard::U) {
@@ -113,6 +113,24 @@ void keyboard_system::update(const double ms) {
                 emit_deferred(recalculate_mining_message{});
             }
         } else if (game_master_mode == ROGUE) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        } else if (game_master_mode == UNITS) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        } else if (game_master_mode == CIVS) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        } else if (game_master_mode == CIV_NEGOTIATE) {
             if (e.event.key.code == sf::Keyboard::Escape) {
                 game_master_mode = PLAY;
                 emit_deferred(map_dirty_message{});

@@ -18,21 +18,9 @@ void render_civ_negotiate();
 void mode_civs_system::update(const double ms) {
     if (game_master_mode != CIVS && game_master_mode != CIV_NEGOTIATE) return;
 
-    std::queue<key_pressed_t> * messages = mbox<key_pressed_t>();
-    while (!messages->empty()) {
-		key_pressed_t e = messages->front();
-		messages->pop();
-
-        if (e.event.key.code == sf::Keyboard::Escape) {
-            game_master_mode = PLAY;
-            emit(map_dirty_message{});
-            emit(recalculate_mining_message{});
-        }
-    }
-
     if (game_master_mode == CIVS) {
         render_civ_list();
-    } else {
+    } else if (game_master_mode == CIV_NEGOTIATE) {
         render_civ_negotiate();
     }
 }
