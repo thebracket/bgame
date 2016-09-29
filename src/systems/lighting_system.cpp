@@ -99,7 +99,7 @@ void lighting_system::update(double time_ms) {
 
         float sun_offset_x = 0.0F;
         if (calendar->hour > 5 && calendar->hour < 22) {
-            sun_offset_x = (1.0F - sun_arc) * (float)REGION_WIDTH/4.0F;
+            sun_offset_x = (1.0F - sun_arc) * (float)REGION_WIDTH;
             ambient = lerp(color_t{96,96,120}, color_t{127,127,125}, sun_arc);
             lit = lerp(color_t{192,192,240}, color_t{255,255,251}, sun_arc);
         }
@@ -127,6 +127,7 @@ void lighting_system::update(double time_ms) {
                         float light_x = (float)x;
                         float light_y = (float)y;
                         float light_z = (float)z;
+                        int last_z = std::floor(light_z);
                         bool done = false;
                         while (!done) {
                             if (current_region->solid[mapidx(light_x, light_y, light_z)]) {
@@ -136,6 +137,14 @@ void lighting_system::update(double time_ms) {
                                 light_x += sun_step_x;
                                 light_y += sun_step_y;
                                 light_z += sun_step_z;
+
+                                if (last_z != std::floor(light_z)) {
+                                    if (current_region->tile_type[mapidx(light_x, light_y, std::floor(light_z))] == tile_type::FLOOR) {
+                                        done = true;
+                                        shadowed = true;
+                                    }
+                                }
+                                last_z = std::floor(light_z);
 
                                 if (light_x > REGION_WIDTH || light_x < 0 || light_y > REGION_HEIGHT || light_y < 0 || light_z > REGION_DEPTH-1) {
                                     done = true;
