@@ -30,10 +30,10 @@ void play_game::init() {
 	const int window_height = window_size.y;
 
 	// Setup the display
-	gui->add_layer(MAP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_game_panel, true);
-	gui->add_layer(TOOLTIP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_game_panel, false);
+	gui->add_layer(MAP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, true);
+	gui->add_layer(TOOLTIP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, false);
 	gui->add_layer(GUI_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, false);
-	gui->add_layer(RIGHT_PANEL, 0, 0, window_width, window_height, game_config.gui_font, resize_game_panel, false);
+	gui->add_layer(RIGHT_PANEL, 0, 0, window_width, window_height, game_config.gui_font, resize_fullscreen, false);
 
 	term(TOOLTIP_LAYER)->clear();
 
@@ -69,6 +69,7 @@ void play_game::init() {
 	// Setup systems
 	std::cout << "Setting up systems\n";
 	add_system<keyboard_system>();
+	add_system<mouse_input_system>();
 	add_system<calendar_system>();
 	add_system<world_system>();
 	add_system<wildlife_population_system>();
@@ -90,12 +91,14 @@ void play_game::init() {
 	add_system<visibility_system>();
 	add_system<vegetation_system>();
 	add_system<map_render_system>();
+	add_system<hud_system>();
 	add_system<panel_render_system>();
 	add_system<mode_units_system>();
 	add_system<mode_rogue_render_system>();
 	add_system<game_over_system>();
 	add_system<mode_civs_system>();
 	add_system<log_system>();
+	add_system<gui_system>();
 
 	std::cout << "ECS Config\n";
 	ecs_configure();

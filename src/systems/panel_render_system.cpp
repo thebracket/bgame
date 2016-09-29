@@ -18,47 +18,12 @@ std::vector<available_building_t> available_buildings;
 
 const color_t GREEN_BG{0,32,0};
 
-void panel_render_system::render_header() {
-	term(2)->clear();
-	term(1)->print(0,0,calendar->get_date_time(), rltk::colors::WHITE);
-	if (pause_mode) term(1)->print(term(2)->term_width - 8, 1, "*PAUSED*", rltk::colors::WHITE, rltk::colors::BLUE);
-	float power_pct = (float)designations->current_power / (float) designations->total_capacity;
-    if (power_pct < 0.5) {
-        designations->alert_color = lerp(rltk::colors::RED, rltk::colors::ORANGE, power_pct*2.0F);
-    } else {
-        designations->alert_color = lerp(rltk::colors::ORANGE, rltk::colors::WHITE, (power_pct-0.5F)*2.0F);
-    }
-    std::stringstream power_ss;
-    power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
-
-	const int power_width = term(2)->term_width - 30;
-	const int power_pips_filled = (float)power_width * power_pct;
-	const float pct_per_pip = 1.0 / (float)designations->total_capacity;
-	for (int x=0; x<power_width; ++x) {
-		const color_t pip_color = lerp(rltk::colors::GREY, designations->alert_color, pct_per_pip * (float)x); 
-		if (x <= power_pips_filled) {
-			term(1)->set_char(x+15, 0, vchar{176, pip_color, rltk::colors::BLACK});
-		} else {
-			term(1)->set_char(x+15, 0, vchar{7, pip_color, rltk::colors::BLACK});			
-		}
-	}
-	const std::string power_str = power_ss.str();
-	const int power_x = ((term(1)->term_width-30)/2) - (power_str.size() / 2);
-	term(1)->print( power_x, 0, power_str, designations->alert_color );
-
-	std::stringstream cash_ss;
-	cash_ss << "Cash: " << designations->current_cash << " Mcr";
-	const std::string cash_str = cash_ss.str();
-	term(1)->print( term(2)->term_width - cash_str.size(), 0, cash_str, rltk::colors::YELLOW );
-}
-
 void panel_render_system::update(const double duration_ms) {
-	render_header();
+	term(2)->clear();
 
 	mouse_damper += duration_ms;
 
 	term(3)->clear();
-	//term(3)->box(DARKEST_GREEN);
 
 	render_mode_select(duration_ms);
 }
@@ -71,105 +36,15 @@ void panel_render_system::configure() {
 }
 
 void panel_render_system::render_mode_select(const double duration_ms) {
-	int mouse_x, mouse_y;
-	int font_w, font_h;
-	std::tie(mouse_x, mouse_y) = get_mouse_position();
-	std::tie(font_w, font_h) = term(1)->get_font_size();
-	const int terminal_x = mouse_x / font_w;
-	const int terminal_y = mouse_y / font_h;
-	const bool clicked = get_mouse_button_state(rltk::button::LEFT);
-
-	// Mode switch controls
-	if (game_master_mode == PLAY) {
-		term(2)->print(1,1,"Play", YELLOW, BLUE);
-		render_play_mode(duration_ms);
-	} else {
-		if (terminal_y == 1 && terminal_x > 0 && terminal_x < 5) {
-			term(2)->print(1,1,"Play", GREEN, BLACK);
-			if (clicked) {
-				game_master_mode = PLAY;
-                emit_deferred(map_dirty_message{});
-                emit_deferred(recalculate_mining_message{});
-			}
-		} else {
-			term(2)->print(1,1,"Play", WHITE, BLACK);
-		}
-	}
-
-	if (game_master_mode == DESIGN) {
-		term(2)->print(6,1,"Design", YELLOW, BLUE);
-		render_design_mode();
-	} else {
-		if (terminal_y == 1 && terminal_x > 5 && terminal_x < 13) {
-			term(2)->print(6,1,"Design", GREEN, BLACK);
-			if (clicked) {
-				game_master_mode = DESIGN;
-                pause_mode = PAUSED;
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(2)->print(6,1,"D", YELLOW, BLACK);
-			term(2)->print(7,1,"esign", WHITE, BLACK);
-		}
-	}
-
-	if (game_master_mode == UNITS) {
-		term(2)->print(13,1,"Units", YELLOW, BLUE);
-	} else {
-		if (terminal_y == 1 && terminal_x > 12 && terminal_x < 19) {
-			term(2)->print(13,1,"Units",GREEN,BLACK);
-			if (clicked) {
-				game_master_mode = UNITS;
-                pause_mode = PAUSED;
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(2)->print(13,1,"U", YELLOW, BLACK);
-			term(2)->print(14,1,"nits", WHITE, BLACK);
-		}
-	}
-
-	if (game_master_mode == WORKFLOW) {
-		term(2)->print(19,1,"Workflow", YELLOW, BLUE);
-		render_work_mode();
-	} else {
-		if (terminal_y == 1 && terminal_x > 18 && terminal_x < 27) {
-			term(2)->print(19,1,"Workflow",GREEN,BLACK);
-			if (clicked) {
-				game_master_mode = WORKFLOW;
-                pause_mode = PAUSED;
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(2)->print(19,1,"W", YELLOW, BLACK);
-			term(2)->print(20,1,"orkflow", WHITE, BLACK);
-		}
-	}
-
-	if (game_master_mode == CIVS || game_master_mode == CIV_NEGOTIATE) {
-		term(2)->print(29,1,"Civs", YELLOW, BLUE);
-		render_work_mode();
-	} else {
-		if (terminal_y == 1 && terminal_x > 28 && terminal_x < 35) {
-			term(2)->print(28,1,"Civs",GREEN,BLACK);
-			if (clicked) {
-				game_master_mode = CIVS;
-                pause_mode = PAUSED;
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(2)->print(28,1,"C", YELLOW, BLACK);
-			term(2)->print(29,1,"ivs", WHITE, BLACK);
-		}
-	}
-
-	if (game_master_mode == SETTLER) {
-		render_settler_mode();
-	}
-
-	if (game_master_mode == ROGUE) {
-		term(2)->print(28,1,"ESC", YELLOW);
-		term(2)->print(32,1,"Return to normal play", WHITE, GREEN_BG);
+	switch (game_master_mode) {
+		case PLAY : render_play_mode(duration_ms); break;
+		case DESIGN : render_design_mode(); break;
+		case WORKFLOW : render_work_mode(); break;
+		case SETTLER : render_settler_mode(); break;
+		case ROGUE : {
+			term(2)->print(28,1,"ESC", YELLOW);
+			term(2)->print(32,1,"Return to normal play", WHITE, GREEN_BG);
+		} break;
 	}
 }
 

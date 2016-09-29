@@ -23,12 +23,15 @@ add_library(systems
 	particle_system.cpp
 	vegetation_system.cpp
 	keyboard_system.cpp
+	mouse_input_system.cpp
 	sentient_ai_system.cpp
 	world_system.cpp
 	weapons_helpers.cpp
 	game_over_system.cpp
 	mode_civs_system.cpp
 	log_system.cpp
+	gui_system.cpp
+	hud_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp

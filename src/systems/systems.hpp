@@ -28,3 +28,6 @@
 #include "game_over_system.hpp"
 #include "mode_civs_system.hpp"
 #include "log_system.hpp"
+#include "mouse_input_system.hpp"
+#include "gui_system.hpp"
+#include "hud_system.hpp"

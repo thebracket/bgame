@@ -11,8 +11,6 @@ public:
 	virtual void update(const double duration_ms) override final;
 	virtual void configure() override final;
 private:
-	void render_header();
-
 	void render_mode_select(const double duration_ms);
 
 	void render_play_mode(const double duration_ms);
