@@ -529,7 +529,7 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood->second; 
-    }else if (type == "ship_up") {
+    } else if (type == "ship_up") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
@@ -544,6 +544,21 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel->second;    
+    } else if (type == "hut_upstairs") {
+        region.tile_type[idx] = tile_type::STAIRS_UP;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = wood->second;    
+    } else if (type == "hut_downstairs") {
+        region.tile_type[idx] = tile_type::STAIRS_DOWN;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = wood->second;    
+    } else if (type == "hut_updownstairs") {
+        region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
+        region.solid[idx] = false;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = wood->second;
     } else if (type == "cordex") {
         add_building("cordex", x, y, z);
     } else if (type == "solar_panel") {
@@ -653,6 +668,12 @@ inline int build_building(xp::rex_sprite &sprite, const int x, const int y, cons
                     add_construction(region, x+X, y+Y, z+layer, "hut_wall", true);
                 } else if (output->glyph == 176 || output->glyph == 197) {
                     add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                } else if (output->glyph == '<') {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_upstairs");
+                } else if (output->glyph == 'X') {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_updownstairs");
+                } else if (output->glyph == '>') {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_downstairs");
                 } else if (output->glyph == 's') {
                     add_construction(region, x+X, y+Y, z+layer, "hut_floor");
                     spawn_points.push_back(std::make_tuple(x+X, y+Y, z+layer));
@@ -673,11 +694,18 @@ xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet,
     const auto tech_level = planet.civs.civs[civ_id].tech_level;
     std::vector<std::string> available_buildings;
 
-    // Always available
-    available_buildings.push_back("rex/mud-hut.xp");
-    available_buildings.push_back("rex/hovel-wood.xp");
-    available_buildings.push_back("rex/longhall-wood.xp");
-    available_buildings.push_back("rex/henge-wood.xp");
+    // Stone Age
+    if (tech_level == TECH_AGE_STONE) {
+        available_buildings.push_back("rex/mud-hut.xp");
+        available_buildings.push_back("rex/hovel-wood.xp");
+        available_buildings.push_back("rex/longhall-wood.xp");
+        available_buildings.push_back("rex/henge-wood.xp");
+    } else {
+        // Bronze age and beyond
+        available_buildings.push_back("rex/mud-hut.xp");
+        available_buildings.push_back("rex/hovel-wood.xp");
+        available_buildings.push_back("rex/tower-wood.xp");
+    }
 
     const int roll = rng.roll_dice(1, available_buildings.size())-1;
     const std::string building_template = available_buildings[roll];
