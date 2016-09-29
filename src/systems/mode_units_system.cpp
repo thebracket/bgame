@@ -3,6 +3,7 @@
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/recalculate_mining_message.hpp"
 #include "../utils/string_utils.hpp"
+#include "gui_system.hpp"
 #include <rltk.hpp>
 
 using namespace rltk;
@@ -16,6 +17,29 @@ void mode_units_system::configure() {
 void mode_units_system::update(const double ms) {
     if (game_master_mode != UNITS) return;
 
+    const int term_w = rltk::term(3)->term_width;
+    const int term_h = rltk::term(3)->term_height;
+
+    const int box_left = 3;
+    const int box_right = term_w - 3;
+    const int box_top = 2;
+    const int box_bottom = term_h - 2;
+
+    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(" Active Units ", [] () { 
+        // On close
+        game_master_mode = PLAY;
+        emit_deferred(map_dirty_message{});
+        emit_deferred(recalculate_mining_message{});
+    });
+
+    // Tabs system
+    dialog->children.push_back(std::move(std::make_unique<gui_button>( box_left+1, box_top+2, "Settlers", [this] () { tab = 0; }, tab==0 )));
+    dialog->children.push_back(std::move(std::make_unique<gui_button>( box_left+12, box_top+2, "Creatures", [this] () { tab = 1; }, tab==1 )));
+    dialog->children.push_back(std::move(std::make_unique<gui_button>( box_left+24, box_top+2, "Natives", [this] () { tab = 2; }, tab==2 )));
+
+    add_gui_element(std::move(dialog));
+
+    /*
     int font_width, font_height;
     std::tie(font_width, font_height) = term(1)->get_font_size();
     const int term_w = term(1)->term_width;
@@ -194,4 +218,5 @@ void mode_units_system::update(const double ms) {
         term(1)->fill(box_left+23, box_top+3, box_left+36, box_top+3, ' ', BLACK, BLACK);
         term(1)->print(box_left+23, box_top+3, "Natives", DARK_GREEN, BLACK);
     }
+    */
 }

@@ -94,3 +94,63 @@ struct gui_menu_bar : public base_gui {
         }
     }
 };
+
+struct gui_button : public base_gui {
+    gui_button(const int &X, const int &Y, const std::string &t, const std::function<void()> click, bool highlight=false) 
+        : x(X), y(Y), title(t), on_click(click), active(highlight) {}
+
+    int x,y;
+    std::string title;
+    std::function<void()> on_click;
+    bool active;
+
+    virtual void render() override final {
+        const int length = title.size();
+        rltk::term(3)->box(x, y, length+2, 2, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+        if (mouse::term3x >= x && mouse::term3x <= x+length+1 && mouse::term3y >= y && mouse::term3y <= y+3) {
+            rltk::term(3)->print(x+1, y+1, title, rltk::colors::YELLOW, rltk::colors::GREEN);
+            if (mouse::clicked) on_click();
+        } else {
+            if (!active) {
+                rltk::term(3)->print(x+1, y+1, title, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+            } else {
+                rltk::term(3)->print(x+1, y+1, title, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
+            }
+        }
+    }
+};
+
+struct gui_dialog : public base_gui {
+    gui_dialog(const std::string &t, const std::function<void()> &close) : title(t), on_close(close) {}
+
+    std::string title;
+    std::function<void()> on_close;
+    std::vector<std::unique_ptr<base_gui>> children;
+
+    virtual void render() override final {
+        const int term_w = rltk::term(3)->term_width;
+        const int term_h = rltk::term(3)->term_height;
+
+        const int box_left = 3;
+        const int box_right = term_w - 3;
+        const int box_top = 2;
+        const int box_bottom = term_h - 2;
+
+        // Panel and header
+        rltk::term(3)->fill(box_left, box_top, box_right, box_bottom, 219, rltk::colors::DARKEST_GREEN);
+        rltk::term(3)->box(box_left, box_top, box_right-box_left, box_bottom-box_top-1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
+        rltk::term(3)->fill(box_left+1, box_top+1, box_right, box_top+2, 219, rltk::colors::DARK_GREEN, rltk::colors::DARK_GREEN);
+        rltk::term(3)->print_center(box_top+1, title, rltk::colors::WHITE, rltk::colors::GREEN);
+
+        // Close button
+        if (mouse::term3x >= box_left+1 && mouse::term3x < box_left + 4 && mouse::term3y == box_top) {
+            rltk::term(3)->print(box_left+1, box_top, "[X]", rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
+            if (mouse::clicked) on_close();
+        } else {
+            rltk::term(3)->print(box_left+1, box_top, "[X]", rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+        }
+
+        // Children
+        for (auto &g : children) g->render();
+    }
+};
