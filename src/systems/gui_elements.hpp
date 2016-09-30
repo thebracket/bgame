@@ -4,6 +4,7 @@
 #include <rltk.hpp>
 #include <functional>
 #include "mouse_input_system.hpp"
+#include "../utils/string_utils.hpp"
 
 struct base_gui {
     virtual void render()=0;
@@ -95,6 +96,36 @@ struct gui_menu_bar : public base_gui {
     }
 };
 
+struct gui_tab_set : public base_gui {
+    int x, y;
+    std::vector<std::pair<std::string, std::function<void()>>> tabs;
+    int current_tab;
+
+    gui_tab_set(const int &X, const int &Y, const std::vector<std::pair<std::string, std::function<void()>>> &TABS, const int &active) :
+        x(X), y(Y), tabs(TABS), current_tab(active) {}
+
+    virtual void render() override final {
+        int current_x = x;
+        int i=0;
+        for (const auto &tab : tabs) {
+            const std::size_t length = tab.first.size();
+            rltk::term(3)->box(current_x, y, length+1, 2, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+            if (mouse::term3x >= current_x && mouse::term3x <= current_x+length+1 && mouse::term3y >= y && mouse::term3y <= y+3) {
+                rltk::term(3)->print(current_x+1, y+1, tab.first, rltk::colors::YELLOW, rltk::colors::GREEN);
+                if (mouse::clicked) tab.second();
+            } else {
+                if (current_tab != i) {
+                    rltk::term(3)->print(current_x+1, y+1, tab.first, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+                } else {
+                    rltk::term(3)->print(current_x+1, y+1, tab.first, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
+                }
+            }
+            ++i;
+            current_x += length+2;
+        }
+    }
+};
+
 struct gui_button : public base_gui {
     gui_button(const int &X, const int &Y, const std::string &t, const std::function<void()> click, bool highlight=false) 
         : x(X), y(Y), title(t), on_click(click), active(highlight) {}
@@ -120,6 +151,79 @@ struct gui_button : public base_gui {
     }
 };
 
+struct gui_table_col {
+    int col_width;
+    virtual void render(const int &x, const int &y)=0;
+};
+
+struct gui_table_text : public gui_table_col {
+    gui_table_text(const int &w, const std::string &s) : text(s) {
+        col_width = w;
+    }
+
+    std::string text;
+    boost::optional<std::pair<rltk::color_t, rltk::color_t>> colors;
+
+    virtual void render(const int &x, const int &y) override final {
+        rltk::color_t fg = rltk::colors::WHITE;
+        rltk::color_t bg = rltk::colors::DARKEST_GREEN;
+        if (colors) {
+            fg = colors->first;
+            bg = colors->second;
+        }
+        rltk::term(3)->print(x, y, max_width_str(text, col_width), fg, bg);
+    }
+};
+
+struct gui_table_button : public gui_table_col {
+    gui_table_button(const int &w, const std::string &s, const std::function<void()> &click) : text(s), on_click(click) {
+        col_width = w;
+    }
+
+    std::string text;
+    boost::optional<std::pair<rltk::color_t, rltk::color_t>> colors;
+    std::function<void()> on_click;
+
+    virtual void render(const int &x, const int &y) override final {
+        rltk::color_t fg = rltk::colors::GREEN;
+        rltk::color_t bg = rltk::colors::DARKEST_GREEN;
+        if (colors) {
+            fg = colors->first;
+            bg = colors->second;
+        }
+        if (mouse::term3x >= x && mouse::term3x <= x+text.size() && mouse::term3y == y) {
+            rltk::term(3)->print(x, y, max_width_str(text, col_width), rltk::colors::WHITE, rltk::colors::GREEN);
+            if (mouse::clicked) on_click();
+        } else {
+            rltk::term(3)->print(x, y, max_width_str(text, col_width), fg, bg);
+        }
+    }
+};
+
+
+struct gui_table_row {
+    std::vector<std::unique_ptr<gui_table_col>> cols;
+};
+
+struct gui_table : public base_gui {
+    std::vector<gui_table_row> rows;
+    int x,y;
+
+    gui_table(const int &X, const int &Y) : x(X), y(Y) {} 
+
+    virtual void render() override final {
+        int current_y = y;
+        for (const auto &row : rows) {
+            int current_x = x;
+            for (const auto &col : row.cols) {
+                col->render(current_x, current_y);
+                current_x += col->col_width + 1;
+            }
+            ++current_y;
+        }
+    }
+};
+
 struct gui_dialog : public base_gui {
     gui_dialog(const std::string &t, const std::function<void()> &close) : title(t), on_close(close) {}
 
@@ -140,7 +244,7 @@ struct gui_dialog : public base_gui {
         rltk::term(3)->fill(box_left, box_top, box_right, box_bottom, 219, rltk::colors::DARKEST_GREEN);
         rltk::term(3)->box(box_left, box_top, box_right-box_left, box_bottom-box_top-1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
         rltk::term(3)->fill(box_left+1, box_top+1, box_right, box_top+2, 219, rltk::colors::DARK_GREEN, rltk::colors::DARK_GREEN);
-        rltk::term(3)->print_center(box_top+1, title, rltk::colors::WHITE, rltk::colors::GREEN);
+        rltk::term(3)->print_center(box_top+1, title, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
 
         // Close button
         if (mouse::term3x >= box_left+1 && mouse::term3x < box_left + 4 && mouse::term3y == box_top) {
