@@ -4,6 +4,7 @@
 #include "path_finding.hpp"
 #include "movement_system.hpp"
 #include "weapons_helpers.hpp"
+#include "mouse_input_system.hpp"
 #include <rltk.hpp>
 
 void mode_rogue_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
@@ -123,7 +124,7 @@ void mode_rogue_system::update(const double ms) {
         if (ai->targeted_hostile==0 && current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {
             ai->current_path.reset();
             ai->current_path = find_path(*pos, position_t{ world_x, world_y, camera_position->region_z });
-            if (get_mouse_button_state(rltk::button::LEFT)) {
+            if (mouse::clicked) {
                 ai->job_type_major = JOB_ROGUE_GOTO;
                 ai->job_status = "Travel";
                 emit(renderables_changed_message{});
