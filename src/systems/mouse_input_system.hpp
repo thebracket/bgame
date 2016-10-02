@@ -17,4 +17,5 @@ public:
 	virtual void update(const double duration_ms) override final;
 	virtual void configure() override final;
 private:
+	double mouse_damper = 100.0;
 };

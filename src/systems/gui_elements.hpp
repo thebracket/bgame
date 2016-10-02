@@ -85,7 +85,10 @@ struct gui_menu_bar : public base_gui {
         for (const auto &s : items) {
             if (mouse::term1y==y && mouse::term1x >= current_x && mouse::term1x <= current_x + s.size()) {
                 rltk::term(1)->print(current_x, y, s, rltk::colors::WHITE, rltk::colors::DARK_GREEN);
-                if (mouse::clicked) on_click(i);
+                if (mouse::clicked) {
+                    mouse::clicked = false;
+                    on_click(i);
+                }
             } else {
                 rltk::term(1)->set_char(current_x, y, rltk::vchar{s.at(0), rltk::colors::YELLOW, rltk::colors::BLACK});
                 rltk::term(1)->print(current_x + 1, y, s.substr(1));
@@ -160,6 +163,10 @@ struct gui_table_text : public gui_table_col {
     gui_table_text(const int &w, const std::string &s) : text(s) {
         col_width = w;
     }
+    gui_table_text(const int &w, const std::string &s, const rltk::color_t &FG, const rltk::color_t &BG) : text(s) {
+        col_width = w;
+        colors = std::make_pair(FG, BG);
+    }
 
     std::string text;
     boost::optional<std::pair<rltk::color_t, rltk::color_t>> colors;
@@ -193,7 +200,10 @@ struct gui_table_button : public gui_table_col {
         }
         if (mouse::term3x >= x && mouse::term3x <= x+text.size() && mouse::term3y == y) {
             rltk::term(3)->print(x, y, max_width_str(text, col_width), rltk::colors::WHITE, rltk::colors::GREEN);
-            if (mouse::clicked) on_click();
+            if (mouse::clicked) {
+                mouse::clicked = false;
+                on_click();
+            }
         } else {
             rltk::term(3)->print(x, y, max_width_str(text, col_width), fg, bg);
         }
@@ -249,7 +259,10 @@ struct gui_dialog : public base_gui {
         // Close button
         if (mouse::term3x >= box_left+1 && mouse::term3x < box_left + 4 && mouse::term3y == box_top) {
             rltk::term(3)->print(box_left+1, box_top, "[X]", rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
-            if (mouse::clicked) on_close();
+            if (mouse::clicked) {
+                mouse::clicked = false;
+                on_close();
+            }
         } else {
             rltk::term(3)->print(box_left+1, box_top, "[X]", rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
         }

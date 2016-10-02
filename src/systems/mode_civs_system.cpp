@@ -2,6 +2,8 @@
 #include "../main/game_globals.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/recalculate_mining_message.hpp"
+#include "../utils/string_utils.hpp"
+#include "gui_system.hpp"
 #include <sstream>
 
 using namespace rltk;
@@ -26,52 +28,56 @@ void mode_civs_system::update(const double ms) {
 }
 
 void render_civ_list() {
-    int font_width, font_height;
-    std::tie(font_width, font_height) = term(1)->get_font_size();
-    const int term_w = term(1)->term_width;
-    const int term_h = term(1)->term_height;
-
-    int mouse_x, mouse_y;
-	std::tie(mouse_x, mouse_y) = get_mouse_position();
-
-    const int terminal_x = mouse_x / font_width;
-    const int terminal_y = mouse_y / font_height;
+    const int term_w = rltk::term(3)->term_width;
+    const int term_h = rltk::term(3)->term_height;
 
     const int box_left = 3;
     const int box_right = term_w - 3;
     const int box_top = 2;
     const int box_bottom = term_h - 2;
 
-    // Panel and header
-    term(1)->fill(box_left, box_top, box_right, box_bottom, ' ');
-    term(1)->box(box_left, box_top, box_right-box_left, box_bottom-box_top-1, DARK_GREEN, BLACK, true);
-    term(1)->fill(box_left+1, box_top+1, box_right, box_top+2, ' ', WHITE, DARK_GREEN);
-    term(1)->print_center(box_top+1, " [Active Civilizations] ", WHITE, GREEN);
+    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(" Active Civilizations ", [] () { 
+        // On close
+        game_master_mode = PLAY;
+        emit_deferred(map_dirty_message{});
+        emit_deferred(recalculate_mining_message{});
+    });
 
-    int y = box_top + 3;
+    std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box_left+1, box_top+3);
     std::size_t civ_id = 0;
     for (civ_t &civ : planet.civs.civs) {
         if (civ.met_cordex) {
-            if (civ.cordex_feelings < 0) term(1)->print(box_left+2, y,  "  WAR   ", WHITE, RED);
-            if (civ.cordex_feelings == 0) term(1)->print(box_left+2, y, "NEUTRAL ", BLACK, CYAN);
-            if (civ.cordex_feelings > 0) term(1)->print(box_left+2, y,  "FRIENDLY", WHITE, GREEN);
+            gui_table_row row;
 
-            if (terminal_y == y && terminal_x > box_left + 10 && terminal_x < box_left + 15) {
-                term(1)->print(box_left+10, y, "Negotiate", WHITE, DARK_GREEN);
-                if (get_mouse_button_state(rltk::button::LEFT)) {
-                    game_master_mode = CIV_NEGOTIATE;
-                    negotiating_civ = civ_id;
-                }
+            // Civ feelings
+            std::unique_ptr<gui_table_text> c_feel;
+            if (civ.cordex_feelings < 0) {
+                c_feel = std::make_unique<gui_table_text>(8,"   WAR   ", WHITE, RED);
+            } else if (civ.cordex_feelings == 0) {
+                c_feel = std::make_unique<gui_table_text>(8, "NEUTRAL ", BLACK, CYAN);
             } else {
-                term(1)->print(box_left+10, y, "Negotiate", GREEN, BLACK);
+                c_feel = std::make_unique<gui_table_text>(8, "FRIENDLY", WHITE, GREEN);
             }
+            row.cols.push_back(std::move(c_feel));
 
-            term(1)->print(box_left+20, y, civ.name);
-            ++y;
+            // Negotiate button
+            std::unique_ptr<gui_table_button> go_btn = std::make_unique<gui_table_button>(9, "Negotiate", [civ_id] () {
+                game_master_mode = CIV_NEGOTIATE;
+                negotiating_civ = civ_id;
+            });
+            row.cols.push_back(std::move(go_btn));
+
+            // Civ name
+            std::unique_ptr<gui_table_text> c_name = std::make_unique<gui_table_text>(box_right - 19, civ.name);
+            row.cols.push_back(std::move(c_name));
+
+            table->rows.push_back(std::move(row));
         }
         ++civ_id;
     }
+    dialog->children.push_back(std::move(table));
 
+    add_gui_element(std::move(dialog));
 }
 
 void render_civ_negotiate() {
@@ -109,7 +115,7 @@ void render_civ_negotiate() {
         y += 3;
         if (terminal_y == y) {
             term(1)->print(box_left+1, y, "[Perhaps this donation of 50 Mcr will make you feel better]", WHITE, GREEN);
-            if (get_mouse_button_state(rltk::button::LEFT)) {
+            if (mouse::clicked) {
                 game_master_mode = PLAY;
                 planet.civs.civs[negotiating_civ].cordex_feelings = 0;
                 designations->current_cash -= 50;
@@ -121,7 +127,7 @@ void render_civ_negotiate() {
 
         if (terminal_y == y) {
             term(1)->print(box_left+1, y, "[I hope you all die in a fire]", WHITE, RED);
-            if (get_mouse_button_state(rltk::button::LEFT)) {
+            if (mouse::clicked) {
                 game_master_mode = PLAY;
                 planet.civs.civs[negotiating_civ].cordex_feelings = -10;
             }
@@ -134,7 +140,7 @@ void render_civ_negotiate() {
         y += 3;
         if (terminal_y == y) {
             term(1)->print(box_left+1, y, "[End Negotiation]", WHITE, GREEN);
-            if (get_mouse_button_state(rltk::button::LEFT)) {
+            if (mouse::clicked) {
                 game_master_mode = PLAY;
             }
         } else {
@@ -144,7 +150,7 @@ void render_civ_negotiate() {
 
         if (terminal_y == y) {
             term(1)->print(box_left+1, y, "[I hope you all die in a fire]", WHITE, RED);
-            if (get_mouse_button_state(rltk::button::LEFT)) {
+            if (mouse::clicked) {
                 game_master_mode = PLAY;
                 planet.civs.civs[negotiating_civ].cordex_feelings = -10;
             }
@@ -157,7 +163,7 @@ void render_civ_negotiate() {
 
         if (terminal_y == y) {
             term(1)->print(box_left+1, y, "[End negotiation]", WHITE, GREEN);
-            if (get_mouse_button_state(rltk::button::LEFT)) {
+            if (mouse::clicked) {
                 game_master_mode = PLAY;
             }
         } else {
