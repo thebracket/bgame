@@ -44,7 +44,7 @@ void mode_units_system::update(const double ms) {
     if (tab == 0) {
         // Render settler list
         std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box_left+1, box_top+6);
-        each<settler_ai_t, name_t, game_stats_t>([&table] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
+        each<settler_ai_t, name_t, game_stats_t>([&table, &box_right ] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
             gui_table_row row;
 
             // Go button
@@ -86,7 +86,7 @@ void mode_units_system::update(const double ms) {
             row.cols.push_back(std::move(c_prof));
 
             // Settler Status
-            std::unique_ptr<gui_table_text> c_status = std::make_unique<gui_table_text>(15, ai.job_status);
+            std::unique_ptr<gui_table_text> c_status = std::make_unique<gui_table_text>(box_right - 54, ai.job_status);
             row.cols.push_back(std::move(c_status));
 
             table->rows.push_back(std::move(row));

@@ -26,10 +26,11 @@ logger_t logger_t::load(std::istream &lbfile) {
     deserialize(lbfile, sz);
     for (std::size_t i=0; i<sz; ++i) {
         log_line_t line;
-        std::size_t lsz;
+
+		deserialize(lbfile, line.age);
+		std::size_t lsz;
         deserialize(lbfile, lsz);
         for (std::size_t j=0; j<lsz; ++j) {
-            deserialize(lbfile, line.age);
             rltk::vchar ch;
             deserialize(lbfile, ch.glyph);
             deserialize(lbfile, ch.foreground);

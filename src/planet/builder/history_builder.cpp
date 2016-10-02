@@ -43,7 +43,7 @@ std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
-    const int n_civs = WORLD_WIDTH*4;
+    const int n_civs = WORLD_WIDTH;
     for (int i=0; i<n_civs; ++i) {
         civ_t civ;
 
