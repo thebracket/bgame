@@ -1203,19 +1203,20 @@ void settler_ai_system::do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats
 	if (ai.job_type_minor == JM_COLLECT_ARMOR) {
 		// Find the pick, remove any position or stored components, add a carried_by component
 		auto armor = entity(ai.target_id);
-		auto item = armor->component<item_t>();
-		item_location_t loc = INVENTORY;
-		auto finder = clothing_types.find(item->item_tag);
-		if (finder->second.slot == "head") loc = HEAD;
-		if (finder->second.slot == "torso") loc = TORSO;
-		if (finder->second.slot == "legs") loc = LEGS;
-		if (finder->second.slot == "shoes") loc = FEET;
-		each<item_carried_t>([&e, &pos, &loc] (entity_t &E, item_carried_t &c) {
-			if (c.carried_by == e.id && c.location == loc) emit(drop_item_message{E.id, pos.x, pos.y, pos.z});
-		});
-		emit(pickup_item_message{static_cast<std::size_t>(ai.target_id), e.id, loc});
-		ai.current_tool = 0;
-
+		if (armor) {
+			auto item = armor->component<item_t>();
+			item_location_t loc = INVENTORY;
+			auto finder = clothing_types.find(item->item_tag);
+			if (finder->second.slot == "head") loc = HEAD;
+			if (finder->second.slot == "torso") loc = TORSO;
+			if (finder->second.slot == "legs") loc = LEGS;
+			if (finder->second.slot == "shoes") loc = FEET;
+			each<item_carried_t>([&e, &pos, &loc](entity_t &E, item_carried_t &c) {
+				if (c.carried_by == e.id && c.location == loc) emit(drop_item_message{ E.id, pos.x, pos.y, pos.z });
+			});
+			emit(pickup_item_message{ static_cast<std::size_t>(ai.target_id), e.id, loc });
+			ai.current_tool = 0;
+		}
 
 		become_idle(e, ai, name);
 		return;
