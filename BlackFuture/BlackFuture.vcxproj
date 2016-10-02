@@ -218,6 +218,9 @@
     <ClInclude Include="..\src\systems\corpse_system.hpp" />
     <ClInclude Include="..\src\systems\damage_system.hpp" />
     <ClInclude Include="..\src\systems\game_over_system.hpp" />
+    <ClInclude Include="..\src\systems\gui_elements.hpp" />
+    <ClInclude Include="..\src\systems\gui_system.hpp" />
+    <ClInclude Include="..\src\systems\hud_system.hpp" />
     <ClInclude Include="..\src\systems\inventory_system.hpp" />
     <ClInclude Include="..\src\systems\keyboard_system.hpp" />
     <ClInclude Include="..\src\systems\lighting_system.hpp" />
@@ -228,6 +231,7 @@
     <ClInclude Include="..\src\systems\mode_rogue_render_system.hpp" />
     <ClInclude Include="..\src\systems\mode_rogue_system.hpp" />
     <ClInclude Include="..\src\systems\mode_units_system.hpp" />
+    <ClInclude Include="..\src\systems\mouse_input_system.hpp" />
     <ClInclude Include="..\src\systems\movement_system.hpp" />
     <ClInclude Include="..\src\systems\panel_render_system.hpp" />
     <ClInclude Include="..\src\systems\particle_system.hpp" />
@@ -303,6 +307,8 @@
     <ClCompile Include="..\src\systems\corpse_system.cpp" />
     <ClCompile Include="..\src\systems\damage_system.cpp" />
     <ClCompile Include="..\src\systems\game_over_system.cpp" />
+    <ClCompile Include="..\src\systems\gui_system.cpp" />
+    <ClCompile Include="..\src\systems\hud_system.cpp" />
     <ClCompile Include="..\src\systems\inventory_system.cpp" />
     <ClCompile Include="..\src\systems\keyboard_system.cpp" />
     <ClCompile Include="..\src\systems\lighting_system.cpp" />
@@ -313,6 +319,7 @@
     <ClCompile Include="..\src\systems\mode_rogue_render_system.cpp" />
     <ClCompile Include="..\src\systems\mode_rogue_system.cpp" />
     <ClCompile Include="..\src\systems\mode_units_system.cpp" />
+    <ClCompile Include="..\src\systems\mouse_input_system.cpp" />
     <ClCompile Include="..\src\systems\movement_system.cpp" />
     <ClCompile Include="..\src\systems\panel_render_system.cpp" />
     <ClCompile Include="..\src\systems\particle_system.cpp" />
