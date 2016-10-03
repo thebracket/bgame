@@ -251,9 +251,9 @@ void panel_render_system::render_design_mode() {
 
 	if (game_design_mode == DIGGING) {		
 
-		int tt_x = term(1)->term_width - 21;
-		term(1)->box(tt_x, 4, 20, 10);
-		term(1)->print(tt_x+1, 5, "MINING MODE", WHITE, DARKEST_GREEN);
+		int tt_x = term(3)->term_width - 21;
+		term(3)->box(tt_x, 4, 20, 10);
+		term(3)->print(tt_x+1, 5, "MINING MODE", WHITE, DARKEST_GREEN);
 		term(1)->print(5, 3, "Digging", YELLOW);
 
 		if (is_window_focused()) {
@@ -267,109 +267,109 @@ void panel_render_system::render_design_mode() {
 		}
 
 		if (game_mining_mode == DIG) {
-			term(1)->print(tt_x+1, 7, "(d) Dig", YELLOW, DARKEST_GREEN);
+			term(3)->print(tt_x+1, 7, "(d) Dig", YELLOW, DARKEST_GREEN);
 		} else {
 			if (terminal_y == 7 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,7, "(d) Dig", GREEN, GREEN_BG);
+				term(3)->print(tt_x+1,7, "(d) Dig", GREEN, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = DIG;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG);
 			} 
 		}
-		term(1)->print(tt_x+2, 7, "d", YELLOW); 
+		term(3)->print(tt_x+2, 7, "d", YELLOW); 
 
 		if (game_mining_mode == CHANNEL) { 
-			term(1)->print(tt_x+1, 8, "(c) Channel", YELLOW, DARKEST_GREEN);			
+			term(3)->print(tt_x+1, 8, "(c) Channel", YELLOW, DARKEST_GREEN);			
 		} else { 
 			if (terminal_y == 8 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,8, "(c) Channel", GREEN, GREEN_BG);
+				term(3)->print(tt_x+1,8, "(c) Channel", GREEN, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = CHANNEL;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG);
 			} 
 		}
-		term(1)->print(tt_x+2, 8, "c", YELLOW); 
+		term(3)->print(tt_x+2, 8, "c", YELLOW); 
 
 		if (game_mining_mode == RAMP) { 
-			term(1)->print(tt_x+1, 9, "(r) Ramp", YELLOW, DARKEST_GREEN); 
+			term(3)->print(tt_x+1, 9, "(r) Ramp", YELLOW, DARKEST_GREEN); 
 		} else {
 			if (terminal_y == 9 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,9, "(r) Ramp", GREEN, GREEN_BG);
+				term(3)->print(tt_x+1,9, "(r) Ramp", GREEN, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = RAMP;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG);
 			} 
 		}
-		term(1)->print(tt_x+2, 9, "r", YELLOW); 
+		term(3)->print(tt_x+2, 9, "r", YELLOW); 
 
 		if (game_mining_mode == UP) { 
-			term(1)->print(tt_x+1, 10, "(u) Up Stairs", YELLOW, DARKEST_GREEN); 
+			term(3)->print(tt_x+1, 10, "(u) Up Stairs", YELLOW, DARKEST_GREEN); 
 		} else { 
 			if (terminal_y == 10 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,10, "(u) Up Stairs", GREEN, GREEN_BG);
+				term(3)->print(tt_x+1,10, "(u) Up Stairs", GREEN, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = UP;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG);
 			} 		
 		}
-		term(1)->print(tt_x+2, 10, "u", YELLOW); 
+		term(3)->print(tt_x+2, 10, "u", YELLOW); 
 
 		if (game_mining_mode == DOWN) { 
-			term(1)->print(tt_x+1, 11, "(j) Down Stairs", YELLOW, DARKEST_GREEN); 
+			term(3)->print(tt_x+1, 11, "(j) Down Stairs", YELLOW, DARKEST_GREEN); 
 		} else { 
 			if (terminal_y == 11 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,11, "(j) Down Stairs", GREEN, GREEN_BG);
+				term(3)->print(tt_x+1,11, "(j) Down Stairs", GREEN, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = DOWN;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG);
 			} 
 		}
-		term(1)->print(tt_x+2, 11, "j", YELLOW); 
+		term(3)->print(tt_x+2, 11, "j", YELLOW); 
 
 		if (game_mining_mode == UPDOWN) { 
-			term(1)->print(tt_x+1, 12, "(i) Up/Down Stairs", YELLOW, DARKEST_GREEN); 
+			term(3)->print(tt_x+1, 12, "(i) Up/Down Stairs", YELLOW, DARKEST_GREEN); 
 		} else { 
 			if (terminal_y == 12 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", GREEN, GREEN_BG);
+				term(3)->print(tt_x+1,12, "(i) Up/Down Stairs", GREEN, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = UPDOWN;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG);
 			} 
 		}
-		term(1)->print(tt_x+2, 12, "i", YELLOW); 
+		term(3)->print(tt_x+2, 12, "i", YELLOW); 
 
 		if (game_mining_mode == DELETE) { 
-			term(1)->print(tt_x+1 ,13, "(x) Clear", YELLOW, DARKEST_GREEN); 
+			term(3)->print(tt_x+1 ,13, "(x) Clear", YELLOW, DARKEST_GREEN); 
 		} else { 
 			if (terminal_y == 13 && terminal_x > tt_x+1 && terminal_x < tt_x+8) {
-				term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
 				if (clicked) {
 					game_mining_mode = DELETE;
 					return;
 				}
 			} else {
-				term(1)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
+				term(3)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
 			} 
 		}
-		term(1)->print(tt_x+2, 13, "x", YELLOW); 
+		term(3)->print(tt_x+2, 13, "x", YELLOW); 
 
 		if (terminal_x >= 0 && terminal_x < term(1)->term_width && terminal_y >= 3 && terminal_y < term(1)->term_height) {
 			if (get_mouse_button_state(rltk::button::LEFT)) {
