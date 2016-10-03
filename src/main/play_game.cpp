@@ -94,6 +94,7 @@ void play_game::init() {
 	add_system<map_render_system>();
 	add_system<hud_system>();
 	add_system<panel_render_system>();
+	add_system<mode_play_system>();
 	add_system<mode_units_system>();
 	add_system<mode_rogue_render_system>();
 	add_system<mode_settler_info_system>();

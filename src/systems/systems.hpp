@@ -32,3 +32,4 @@
 #include "gui_system.hpp"
 #include "hud_system.hpp"
 #include "mode_settler_info_system.hpp"
+#include "mode_play_system.hpp"
