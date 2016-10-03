@@ -25,6 +25,7 @@ std::chrono::high_resolution_clock::time_point last_save;
 void save_game() {
 	const std::string save_filename = "world/savegame.dat";
 	std::cout << "Saving game to " << save_filename << "\n";
+	if (boost::filesystem::exists(save_filename)) boost::filesystem::remove(save_filename);
 	std::fstream lbfile(save_filename, std::ios::out | std::ios::binary);
 	ecs_save(lbfile);
 	std::cout << "Saving region\n";

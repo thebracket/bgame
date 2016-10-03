@@ -88,7 +88,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         //std::cout << "They have founded the town, " << town.name << "\n";
 
         // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(5,10);
+        const int n_peeps = rng.roll_dice(5,20);
         for (int j=0; j<n_peeps; ++j) {
             unimportant_person_t peep;
             peep.civ_id = i;

@@ -15,7 +15,8 @@ void game_stats_t::save(std::ostream &lbfile) {
     serialize(lbfile, age);
     serialize(lbfile, skills.size());
     for (auto it=skills.begin(); it!=skills.end(); ++it) {
-        serialize(lbfile, it->first);
+        std::string skill_name = it->first;
+        serialize(lbfile, skill_name);
         serialize(lbfile, it->second.skill_level);
         serialize(lbfile, it->second.experience_gained);
     }
@@ -38,7 +39,7 @@ game_stats_t game_stats_t::load(std::istream &lbfile) {
     for (std::size_t i=0; i<number_of_skills; ++i) {
         std::string skill_name;
         int8_t skill_level;
-        uint8_t experience_gained;
+        uint16_t experience_gained;
 
         deserialize(lbfile, skill_name);
         deserialize(lbfile, skill_level);
