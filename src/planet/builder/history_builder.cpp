@@ -51,9 +51,13 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         civ.species_tag = random_species(rng);
         auto species = species_defs.find(civ.species_tag);
         if (species->second.alignment == align_evil) civ.cordex_feelings = -3;
-        civ.r = rng.roll_dice(1,255);
-        civ.g = rng.roll_dice(1,255);
-        civ.b = rng.roll_dice(1,255);
+        civ.r = rng.roll_dice(1,192);
+        civ.g = rng.roll_dice(1,192);
+        civ.b = rng.roll_dice(1,192);
+        if (species->second.alignment == align_evil) civ.r = 255;
+        if (species->second.alignment == align_neutral) civ.b = 255;
+        if (species->second.alignment == align_good) civ.g = 255;
+
         civ.gov_type = rng.roll_dice(1, MAX_GOV_TYPE);
         civ.name = civ_name_generator(planet, i, civ.species_tag, civ.gov_type, rng);
         //std::cout << civ.name << " - " << civ.species_tag << "\n";
