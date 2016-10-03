@@ -28,13 +28,7 @@ void mode_civs_system::update(const double ms) {
 }
 
 void render_civ_list() {
-    const int term_w = rltk::term(3)->term_width;
-    const int term_h = rltk::term(3)->term_height;
-
-    const int box_left = 3;
-    const int box_right = term_w - 3;
-    const int box_top = 2;
-    const int box_bottom = term_h - 2;
+    dialog_placement_t box{};
 
     std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(" Active Civilizations ", [] () { 
         // On close
@@ -43,7 +37,7 @@ void render_civ_list() {
         emit_deferred(recalculate_mining_message{});
     });
 
-    std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box_left+1, box_top+3);
+    std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box.left+1, box.top+3);
     std::size_t civ_id = 0;
     for (civ_t &civ : planet.civs.civs) {
         if (civ.met_cordex) {
@@ -68,7 +62,7 @@ void render_civ_list() {
             row.cols.push_back(std::move(go_btn));
 
             // Civ name
-            std::unique_ptr<gui_table_text> c_name = std::make_unique<gui_table_text>(box_right - 19, civ.name);
+            std::unique_ptr<gui_table_text> c_name = std::make_unique<gui_table_text>(box.right - 19, civ.name);
             row.cols.push_back(std::move(c_name));
 
             table->rows.push_back(std::move(row));
@@ -80,103 +74,83 @@ void render_civ_list() {
     add_gui_element(std::move(dialog));
 }
 
+void civs_add_text_line_to_table(const dialog_placement_t &box, std::unique_ptr<gui_table> &table, const int &w, const std::string &s)
+{
+    gui_table_row row;
+    std::unique_ptr<gui_table_text> c_line = std::make_unique<gui_table_text>(box.right - 2, s);
+    row.cols.push_back(std::move(c_line));
+    table->rows.push_back(std::move(row));
+}
+
+void civs_add_button_line_to_table(const dialog_placement_t &box, std::unique_ptr<gui_table> &table, const int &w, const std::string &s,
+    const std::function<void()> &on_click, const rltk::color_t &fg, const rltk::color_t &bg)
+{
+    gui_table_row row;
+    std::unique_ptr<gui_table_button> c_line = std::make_unique<gui_table_button>(box.right - 2, s, on_click);
+    c_line->colors = std::make_pair(fg, bg);
+    row.cols.push_back(std::move(c_line));
+    table->rows.push_back(std::move(row));
+}
+
 void render_civ_negotiate() {
-    int font_width, font_height;
-    std::tie(font_width, font_height) = term(1)->get_font_size();
-    const int term_w = term(1)->term_width;
-    const int term_h = term(1)->term_height;
+    dialog_placement_t box{};
 
-    int mouse_x, mouse_y;
-	std::tie(mouse_x, mouse_y) = get_mouse_position();
+    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(std::string(" [") + planet.civs.civs[negotiating_civ].name + std::string("] "), [] () { 
+        // On close
+        game_master_mode = PLAY;
+        emit_deferred(map_dirty_message{});
+        emit_deferred(recalculate_mining_message{});
+    });
 
-    const int terminal_x = mouse_x / font_width;
-    const int terminal_y = mouse_y / font_height;
+    std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box.left+1, box.top+3);
 
-    const int box_left = 3;
-    const int box_right = term_w - 3;
-    const int box_top = 2;
-    const int box_bottom = term_h - 2;
-
-    // Panel and header
-    term(1)->fill(box_left, box_top, box_right, box_bottom, ' ');
-    term(1)->box(box_left, box_top, box_right-box_left, box_bottom-box_top-1, DARK_GREEN, BLACK, true);
-    term(1)->fill(box_left+1, box_top+1, box_right, box_top+2, ' ', WHITE, DARK_GREEN);
-    term(1)->print_center(box_top+1, std::string(" [") + planet.civs.civs[negotiating_civ].name + std::string("] "), WHITE, GREEN);
-
-    int y = box_top + 3;
+    // Salutation
     std::stringstream ss;
     ss << "Greetings, Cordex. We are The " << planet.civs.civs[negotiating_civ].name << ".";
-    term(1)->print(box_left+1, y, ss.str());
-    ++y;
+    civs_add_text_line_to_table(box, table, box.w-2, ss.str());
+    civs_add_text_line_to_table(box, table, box.w-2, " ");
+
+    // Feelings line
+    std::string feelings;
+    bool show_bribe = false;
+    bool show_war = false;
 
     if (planet.civs.civs[negotiating_civ].cordex_feelings < 0) {
-        term(1)->print(box_left+1, y, "You have invaded our lands, harassed our people, and must die.");
-
-        y += 3;
-        if (terminal_y == y) {
-            term(1)->print(box_left+1, y, "[Perhaps this donation of 50 Mcr will make you feel better]", WHITE, GREEN);
-            if (mouse::clicked) {
-                game_master_mode = PLAY;
-                planet.civs.civs[negotiating_civ].cordex_feelings = 0;
-                designations->current_cash -= 50;
-            }
-        } else {
-            term(1)->print(box_left+1, y, "[Perhaps this donation of 50 Mcr will make you feel better]", GREEN, BLACK);
-        }
-        ++y; ++y;
-
-        if (terminal_y == y) {
-            term(1)->print(box_left+1, y, "[I hope you all die in a fire]", WHITE, RED);
-            if (mouse::clicked) {
-                game_master_mode = PLAY;
-                planet.civs.civs[negotiating_civ].cordex_feelings = -10;
-            }
-        } else {
-            term(1)->print(box_left+1, y, "[I hope you all die in a fire]", RED, BLACK);
-        }
-        ++y; ++y;
+        feelings = "You have invaded our lands, harassed our people, and must die.";
+        show_bribe = true;
     } else if (planet.civs.civs[negotiating_civ].cordex_feelings == 0) {
-        term(1)->print(box_left+1, y, "You have occupied our lands, but perhaps we can work something out?");
-        y += 3;
-        if (terminal_y == y) {
-            term(1)->print(box_left+1, y, "[End Negotiation]", WHITE, GREEN);
-            if (mouse::clicked) {
-                game_master_mode = PLAY;
-            }
-        } else {
-            term(1)->print(box_left+1, y, "[End Negotiation]", GREEN, BLACK);
-        }
-        ++y; ++y;
-
-        if (terminal_y == y) {
-            term(1)->print(box_left+1, y, "[I hope you all die in a fire]", WHITE, RED);
-            if (mouse::clicked) {
-                game_master_mode = PLAY;
-                planet.civs.civs[negotiating_civ].cordex_feelings = -10;
-            }
-        } else {
-            term(1)->print(box_left+1, y, "[I hope you all die in a fire]", RED, BLACK);
-        }
+        feelings = "You have occupied our lands, but perhaps we can work something out?";
+        show_bribe = true;
+        show_war = true;
     } else {
-        term(1)->print(box_left+1, y, "We welcome your presence here.");
-        y += 3;
-
-        if (terminal_y == y) {
-            term(1)->print(box_left+1, y, "[End negotiation]", WHITE, GREEN);
-            if (mouse::clicked) {
-                game_master_mode = PLAY;
-            }
-        } else {
-            term(1)->print(box_left+1, y, "[End negotiation]", GREEN, BLACK);
-        } 
-        ++y; ++y;
-
-        if (terminal_y == y) {
-            term(1)->print(box_left+1, y, "[Sorry, time to die!]", WHITE, RED);
-        } else {
-            term(1)->print(box_left+1, y, "[Sorry, time to die!]", RED, BLACK);
-        } 
-        ++y; ++y;
+        feelings = "We welcome your presence here.";
+        show_war = true;
     }
+    civs_add_text_line_to_table(box, table, box.w-2, feelings);
+    civs_add_text_line_to_table(box, table, box.w-2, " ");
 
+    if (show_bribe) {
+        civs_add_button_line_to_table(box, table, box.w-2, "<Maybe 50 Mcr will make you feel better?>", [] () {
+            game_master_mode = PLAY;
+            planet.civs.civs[negotiating_civ].cordex_feelings = 0;
+            designations->current_cash -= 50;
+        }, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+        civs_add_text_line_to_table(box, table, box.w-2, " ");
+    }
+    if (show_war) {
+        civs_add_button_line_to_table(box, table, box.w-2, "<I hope that you all die horribly in a fire!>", [] () {
+            game_master_mode = PLAY;
+            planet.civs.civs[negotiating_civ].cordex_feelings = -1;
+        }, rltk::colors::RED, rltk::colors::DARKEST_GREEN);
+        civs_add_text_line_to_table(box, table, box.w-2, " ");
+    }
+    // Show end negotiation
+    civs_add_button_line_to_table(box, table, box.w-2, "<That's all for now>", [] () {
+            game_master_mode = PLAY;
+        }, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
+    civs_add_text_line_to_table(box, table, box.w-2, " ");
+
+    dialog->children.push_back(std::move(table));
+
+    add_gui_element(std::move(dialog));
 }

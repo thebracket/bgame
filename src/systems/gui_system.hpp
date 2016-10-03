@@ -17,6 +17,21 @@ inline void add_gui_element(std::unique_ptr<C> &&element) {
 	gui_elements.push_back(std::move(element));
 }
 
+struct dialog_placement_t {
+	dialog_placement_t() : w(rltk::term(3)->term_width), h(rltk::term(3)->term_height),
+			left(3), right(rltk::term(3)->term_width-3), top(2), bottom(rltk::term(3)->term_height-2)
+	{		
+	}
+
+	const int w;
+	const int h;
+
+    const int left;
+    const int right;
+    const int top;
+    const int bottom;
+};
+
 class gui_system : public rltk::base_system {
 public:
 	virtual void update(const double duration_ms) override final;
