@@ -33,3 +33,4 @@
 #include "hud_system.hpp"
 #include "mode_settler_info_system.hpp"
 #include "mode_play_system.hpp"
+#include "mode_design_system.hpp"

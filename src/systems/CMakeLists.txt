@@ -21,6 +21,7 @@ add_library(systems
 	mode_rogue_render_system.cpp
 	mode_settler_info_system.cpp
 	mode_play_system.cpp
+	mode_design_system.cpp
 	corpse_system.cpp
 	particle_system.cpp
 	vegetation_system.cpp
