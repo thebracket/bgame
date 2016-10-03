@@ -219,7 +219,7 @@ void settler_ai_system::do_sleep_time(entity_t &entity, settler_ai_t &ai, game_s
 			[] () {}, // Do nothing for success
 			[&ai, &name] () {
 				ai.job_type_minor = JM_SLEEP;
-				change_job_status(ai, name, "Sleeping");
+				change_job_status(ai, name, "Sleeping", true);
 			}, // Arrived
 			[&ai, &name, &entity] () {
 				ai.job_type_minor = JM_FIND_BED;
@@ -294,7 +294,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 					ai.target_x = g.second.x;
 					ai.target_y = g.second.y;
 					ai.target_z = g.second.z;
-					change_job_status(ai, name, "Travel to guard post.");
+					change_job_status(ai, name, "starting guard duty.", true);
 					return;
 				}
 			}
@@ -304,14 +304,14 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_MINE;
 			ai.job_type_minor = JM_FIND_PICK;
-			change_job_status(ai, name, "Finding mining tools.");
+			change_job_status(ai, name, "doing some mining.", true);
 			return;
 		}
 		if (ai.permitted_work[JOB_CHOPPING] && designations->chopping.size() > 0 && is_item_category_available(TOOL_CHOPPING)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::Brown, rltk::colors::BLACK});
 			ai.job_type_major = JOB_CHOP;
 			ai.job_type_minor = JM_FIND_AXE;
-			change_job_status(ai, name, "Finding chopping tools.");
+			change_job_status(ai, name, "chopping down a tree.", true);
 			return;
 		}
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
@@ -324,7 +324,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 				change_settler_glyph(entity, vchar{1, rltk::colors::Pink, rltk::colors::BLACK});
 				ai.job_type_major = JOB_CONST;
 				ai.job_type_minor = JM_SELECT_COMPONENT;
-				change_job_status(ai, name, "Reading building plans.");
+				change_job_status(ai, name, "performing construction.", true);
 			}
 			return;
 		}
@@ -338,7 +338,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 				change_settler_glyph(entity, vchar{1, get_task_color(finder->second.skill), rltk::colors::BLACK});
 				ai.job_type_major = JOB_REACTION;
 				ai.job_type_minor = JM_SELECT_INPUT;
-				change_job_status(ai, name, autojob.get().job_name);
+				change_job_status(ai, name, autojob.get().job_name, true);
 				ai.reaction_target = autojob;
 				return;
 			}
@@ -351,7 +351,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, get_task_color(finder->second.skill), rltk::colors::BLACK});
 			ai.job_type_major = JOB_REACTION;
 			ai.job_type_minor = JM_SELECT_INPUT;
-			change_job_status(ai, name, autojob.get().job_name);
+			change_job_status(ai, name, autojob.get().job_name, true);
 			ai.reaction_target = autojob;
 			return;
 		}
@@ -362,7 +362,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_RANGED;
 			ai.job_type_minor = JM_FIND_RANGED_WEAPON;
-			change_job_status(ai, name, "Finding a ranged weapon.");
+			change_job_status(ai, name, "Finding a ranged weapon.", true);
 			return;
 		}
 
@@ -381,7 +381,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
 			ai.job_type_major = JOB_BUTCHERING;
 			ai.job_type_minor = JM_BUTCHER_FIND_CORPSE;
-			change_job_status(ai, name, "Finding corpse to butcher.");
+			change_job_status(ai, name, "Finding corpse to butcher.", true);
 			return;
 		}
 
@@ -390,7 +390,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
 			ai.job_type_major = JOB_HUNT;
 			ai.job_type_minor = JM_HUNT_FIND_TARGET;
-			change_job_status(ai, name, "Finding target to hunt.");
+			change_job_status(ai, name, "Finding target to hunt.", true);
 			return;
 		}
 
@@ -399,7 +399,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_MELEE;
 			ai.job_type_minor = JM_FIND_MELEE_WEAPON;
-			change_job_status(ai, name, "Finding a melee weapon.");
+			change_job_status(ai, name, "Finding a melee weapon.", true);
 			return;
 		}
 
@@ -410,7 +410,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			ai.job_type_major = JOB_EQUIP_ARMOR;
 			ai.job_type_minor = JM_FIND_ARMOR;
 			ai.target_id = better_armor.get();
-			change_job_status(ai, name, "Finding armor.");
+			change_job_status(ai, name, "Finding armor.", true);
 			return;
 		}
 
