@@ -49,8 +49,11 @@ void sentient_ai_system::update(const double ms) {
                 float terror_distance = 1000.0F;
                 std::size_t closest_fear = 0;
                 for (const std::size_t other_entity : view.visible_entities) {
+                    bool vegetarian = false;
+                    auto finder = species_defs.find(planet.civs.civs[planet.civs.unimportant_people[ai.person_id].civ_id].species_tag);
+                    if (finder != species_defs.end() && finder->second.diet == diet_herbivore) vegetarian = true;
 					auto other_ptr = rltk::entity(other_entity);
-                    if (other_ptr && (other_ptr->component<grazer_ai>() || 
+                    if ((other_ptr && (other_ptr->component<grazer_ai>() && !vegetarian) || 
 						(other_ptr->component<settler_ai_t>() && ai.hostile))) {
                         terrified = true;
                         auto other_pos = rltk::entity(other_entity)->component<position_t>();
