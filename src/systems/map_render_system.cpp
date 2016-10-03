@@ -66,8 +66,8 @@ vchar get_render_char_mining(const int &x, const int &y) {
 
 	auto mf = designations->mining.find(idx);
 	if (mf != designations->mining.end()) {
-		result.foreground = rltk::colors::BLACK;
-		result.background = rltk::colors::YELLOW;
+		result.foreground = rltk::colors::YELLOW;
+		result.background = rltk::colors::GREY;
 		switch (mf->second) {
 			case 1 : result.glyph = 177; break;
 			case 2 : result.glyph = 31; break;
