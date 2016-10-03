@@ -40,7 +40,6 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 		case PLAY : render_play_mode(duration_ms); break;
 		case DESIGN : render_design_mode(); break;
 		case WORKFLOW : render_work_mode(); break;
-		case SETTLER : render_settler_mode(); break;
 		case ROGUE : {
 			term(2)->print(28,1,"ESC", YELLOW);
 			term(2)->print(32,1,"Return to normal play", WHITE, GREEN_BG);
@@ -558,61 +557,6 @@ void panel_render_system::render_design_mode() {
 			term(1)->print(35, 3, "g", YELLOW);
 		}
 	}
-}
-
-void panel_render_system::render_settler_mode() {
-	term(1)->box(1, 2, 73, 60, WHITE, BLACK, true);
-	for (int i=3; i<60; ++i) term(1)->print(2, i, "                                                                        ");
-
-	auto name = entity(selected_settler)->component<name_t>();
-	auto stats = entity(selected_settler)->component<game_stats_t>();
-	auto species = entity(selected_settler)->component<species_t>();
-	auto ai = entity(selected_settler)->component<settler_ai_t>();
-	auto health = entity(selected_settler)->component<health_t>();
-
-	std::stringstream header;
-	header << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ")";
-	std::stringstream header2;
-	header2 << species->gender_str() << ", " << species->sexuality_str() << ", " << stats->age << " years old. "
-		<< species->height_feet() << ", " << species->weight_lbs();
-
-	term(1)->print(2, 4, header.str(), YELLOW, BLACK );
-	term(1)->print(2, 5, header2.str(), WHITE, BLACK );
-	term(1)->print(2, 6, ai->job_status);
-
-	term(1)->print(2, 8, "Hit Points: " + std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints));
-	int y = 9;
-	for (const health_part_t &part : health->parts) {
-		std::string part_state = "OK";
-		if (part.current_hitpoints < 1 && part.current_hitpoints > -10) part_state = "IMPAIRED";
-		if (part.current_hitpoints < -9 && part.current_hitpoints > -20) part_state = "BROKEN";
-		if (part.current_hitpoints < -19) part_state = "GONE";
-		term(1)->print(2,y, part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")"));
-		++y;
-	}
-
-	term(1)->print(30, 8, species->gender_pronoun() + std::string(" ") + stats->strength_str(), WHITE, BLACK);
-	term(1)->print(30, 9, species->gender_pronoun() + std::string(" ") + stats->dexterity_str(), WHITE, BLACK);
-	term(1)->print(30, 10, species->gender_pronoun() + std::string(" ") + stats->constitution_str(), WHITE, BLACK);
-	term(1)->print(30, 11, species->gender_pronoun() + std::string(" ") + stats->intelligence_str(), WHITE, BLACK);
-	term(1)->print(30, 12, species->gender_pronoun() + std::string(" ") + stats->wisdom_str(), WHITE, BLACK);
-	term(1)->print(30, 13, species->gender_pronoun() + std::string(" ") + stats->charisma_str(), WHITE, BLACK);
-	term(1)->print(30, 14, species->gender_pronoun() + std::string(" ") + stats->comeliness_str(), WHITE, BLACK);
-	term(1)->print(30, 15, species->gender_pronoun() + std::string(" ") + stats->ethics_str(), WHITE, BLACK);
-
-	y=17;
-	for (const auto &skill : stats->skills) {
-		term(1)->print(30, y, skill.first + std::string(" : ") + std::to_string(skill.second.skill_level));
-	}
-	++y;
-
-	each<item_t, item_carried_t>([&y, this] (entity_t &e, item_t &item, item_carried_t &carried) {
-		if (carried.carried_by == selected_settler) {
-			term(1)->print(30, y, item.item_name);
-			++y;
-		}
-	});
-
 }
 
 void panel_render_system::render_work_mode() {

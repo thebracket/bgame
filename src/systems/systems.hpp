@@ -31,3 +31,4 @@
 #include "mouse_input_system.hpp"
 #include "gui_system.hpp"
 #include "hud_system.hpp"
+#include "mode_settler_info_system.hpp"

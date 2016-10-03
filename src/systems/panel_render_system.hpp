@@ -16,7 +16,6 @@ private:
 	void render_play_mode(const double duration_ms);
 
 	void render_design_mode();
-	void render_settler_mode();
 	void render_work_mode();
 
 	double mouse_damper = 100.0;
