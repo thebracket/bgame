@@ -32,9 +32,7 @@ inline bool is_mining_designation_valid(const int &x, const int &y, const int &z
 
 void mode_design_system::digging() {
     int tt_x = term(3)->term_width - 21;
-    term(3)->box(tt_x, 4, 20, 10);
-    term(3)->print(tt_x+1, 5, "MINING MODE", WHITE, DARKEST_GREEN);
-    term(1)->print(5, 3, "Digging", YELLOW);
+    add_gui_element(std::make_unique<map_static_text>(5,4, "Digging mode - select digging type from the right panel, click to apply."));
 
     if (is_window_focused()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) game_mining_mode = DIG;
@@ -173,7 +171,7 @@ void mode_design_system::digging() {
 }
 
 void mode_design_system::building() {
-    term(1)->print(13, 3, "Building", YELLOW);
+    add_gui_element(std::make_unique<map_static_text>(5,4, "Building mode - select building type from the right panel, click to apply."));
 
     int tt_x = term(1)->term_width - 30;
     term(1)->box(tt_x, 4, 29, term(1)->term_height-5);
@@ -213,7 +211,7 @@ void mode_design_system::building() {
 }
 
 void mode_design_system::chopping() {
-    term(1)->print(22, 3, "Tree Cutting", YELLOW);
+    add_gui_element(std::make_unique<map_static_text>(5,4, "Tree cutting mode - click a tree to cut, right-click to clear designation."));
 
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
@@ -252,7 +250,7 @@ void mode_design_system::chopping() {
 }
 
 void mode_design_system::guardposts() {
-    term(1)->print(35, 3, "Guard Posts", WHITE, GREEN);
+    add_gui_element(std::make_unique<map_static_text>(5,4, "Guard mode - click a square to guard it, right-click to clear."));
 
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
@@ -284,64 +282,19 @@ void mode_design_system::update(const double duration_ms) {
     add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
     add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
 
-	if (game_design_mode == DIGGING) {	
-		digging();
-	} else {
-		if (mouse::term1y == 3 && mouse::term1x > 4 && mouse::term1x < 13) {
-			term(1)->print(5, 3, "Digging", GREEN);
-			if (mouse::clicked) {
-				game_design_mode = DIGGING;
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(1)->print(5, 3, "Digging", WHITE);
-			term(1)->print(5,3,"d", YELLOW);
-		}
-	}
+    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts"}, 5, 3, [] (int key) {
+        switch (key) {
+            case 0 : { game_design_mode = DIGGING; emit_deferred(map_dirty_message{}); } break;
+            case 1 : { game_design_mode = BUILDING; emit_deferred(refresh_available_buildings_message{}); emit_deferred(map_dirty_message{}); } break;
+            case 2 : { game_design_mode = CHOPPING; emit_deferred(map_dirty_message{}); } break;
+            case 3 : { game_design_mode = GUARDPOINTS; emit_deferred(map_dirty_message{}); } break;
+        }
+    });
 
-	if (game_design_mode == BUILDING) {
-        building();
-	} else {
-		if (mouse::term1y == 3 && mouse::term1x > 12 && mouse::term1x < 22) {
-			term(1)->print(13, 3, "Building", GREEN);
-			if (mouse::clicked) {
-				game_design_mode = BUILDING;
-                emit_deferred(refresh_available_buildings_message{});
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(1)->print(13, 3, "Building", WHITE);
-			term(1)->print(13, 3, "b", YELLOW);
-		}
-	}
-
-	if (game_design_mode == CHOPPING) {
-        chopping();
-	} else {
-		if (mouse::term1y == 3 && mouse::term1x > 22 && mouse::term1x < 32) {
-			term(1)->print(22, 3, "Tree Cutting", GREEN);
-			if (mouse::clicked) {
-				game_design_mode = CHOPPING;
-				emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(1)->print(22, 3, "Tree Cutting", WHITE);
-			term(1)->print(22, 3, "t", YELLOW);
-		}
-	}
-
-	if (game_design_mode == GUARDPOINTS) {
-        guardposts();
-	} else {
-		if (mouse::term1y == 3 && mouse::term1x > 35 && mouse::term1x < 49) {
-			term(1)->print(35, 3, "Guard Posts", GREEN);
-			if (mouse::clicked) {
-				game_design_mode = GUARDPOINTS;
-                emit_deferred(map_dirty_message{});
-			}
-		} else {
-			term(1)->print(35, 3, "Guard Posts", WHITE);
-			term(1)->print(35, 3, "g", YELLOW);
-		}
-	}
+    switch (game_design_mode) {
+        case DIGGING    : digging(); break;
+        case BUILDING   : building(); break;
+        case CHOPPING   : chopping(); break;
+        case GUARDPOINTS: guardposts(); break;
+    }
 }
