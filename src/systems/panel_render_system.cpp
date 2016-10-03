@@ -7,6 +7,7 @@
 #include "inventory_system.hpp"
 #include "camera_system.hpp"
 #include "../utils/string_utils.hpp"
+#include "mouse_input_system.hpp"
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -42,8 +43,8 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 }
 
 void panel_render_system::render_work_mode() {
-	term(1)->box(1, 2, 73, 60, WHITE, BLACK, true);
-	for (int i=3; i<60; ++i) term(1)->print(2, i, "                                                                        ");
+	term(3)->box(1, 2, 73, 40, WHITE, BLACK, true);
+	for (int i=3; i<40; ++i) term(1)->print(3, i, "                                                                        ");
 
 	// List queued jobs
 	int y = 3;
@@ -52,7 +53,7 @@ void panel_render_system::render_work_mode() {
 		auto finder = reaction_defs.find(order.second);
 		if (finder != reaction_defs.end()) {
 			ss << std::setw(4) << +order.first << "  " << finder->second.name;
-			term(1)->print(3, y, ss.str());
+			term(3)->print(3, y, ss.str());
 			++y;
 		}
 	}
@@ -63,20 +64,15 @@ void panel_render_system::render_work_mode() {
 	for (const auto &reaction : available_reactions) {
 		std::stringstream ss;
 		ss << "[+] " << reaction.second;
-		term(1)->print(40, y, ss.str());
+		term(3)->print(40, y, ss.str());
 		++y;
 	}
 
 	// Check for clicks to build
-	if (get_mouse_button_state(rltk::button::LEFT) && mouse_damper > 20.0) {
-		mouse_damper = 0.0;		
-		int mouse_x, mouse_y;
-		std::tie(mouse_x, mouse_y) = get_mouse_position();
-		int terminal_x = mouse_x/8;
-		int terminal_y = (mouse_y/8);
+	if (mouse::clicked) {
 
-		if (terminal_x > 40 && terminal_y > 2 && terminal_y << y && terminal_x < 45) {
-			const int selected_item = terminal_y - 3;
+		if (mouse::term3x > 40 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 45) {
+			const int selected_item = mouse::term3y - 3;
 			const std::string tag = available_reactions[selected_item].first;
 
 			bool found = false;
