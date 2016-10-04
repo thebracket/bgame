@@ -504,6 +504,9 @@
     <ClInclude Include="..\src\systems\mode_settler_info_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\systems\mode_standing_orders.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -792,6 +795,9 @@
       <Filter>Source Files\systems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\systems\mode_settler_info_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\mode_standing_orders.cpp">
       <Filter>Source Files\systems</Filter>
     </ClCompile>
   </ItemGroup>
