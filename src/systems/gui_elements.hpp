@@ -36,6 +36,41 @@ struct gui_static_text : public base_gui {
     }
 };
 
+struct gui_radio : public base_gui {
+    gui_radio(const int &X, const int &Y, const std::string &TITLE, const std::vector<std::string> &opts, const int &sel, const std::function<void(int)> &click) 
+        : x(X), y(Y), title(TITLE), options(opts), selected(sel), on_click(click) {}
+
+    int x,y;
+    std::string title;
+    std::vector<std::string> options;
+    int selected;
+    std::function<void(int)> on_click;
+
+    virtual void render() override final {
+        rltk::term(3)->print(x, y, title, rltk::colors::YELLOW, rltk::colors::DARKEST_GREEN);
+
+        int current_y = y+1;
+        int i=0;
+        for (const std::string &opt : options) {
+            rltk::color_t bg = rltk::colors::DARKEST_GREEN;
+            if (mouse::term3x >= x && mouse::term3x <= (x+opt.size()+4) && mouse::term3y == current_y) {
+                bg = rltk::colors::GREEN;
+            }
+
+            if (i == selected) {
+                rltk::term(3)->print(x, current_y, std::string("[*] ")+opt, rltk::colors::WHITE, bg);
+            } else {
+                rltk::term(3)->print(x, current_y, std::string("[ ] ")+opt, rltk::colors::WHITE, bg);
+            }
+            if (mouse::term3x >= x && mouse::term3x <= (x+opt.size()+4) && mouse::term3y == current_y && mouse::clicked) {
+                on_click(i);
+            }
+            ++i;
+            ++current_y;
+        }
+    }
+};
+
 struct gui_power_meter : public base_gui {
     int current_power;
     int total_capacity;

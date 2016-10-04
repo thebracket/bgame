@@ -76,6 +76,10 @@ void keyboard_system::update(const double ms) {
                 game_master_mode = CIVS;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
+            } else if (e.event.key.code == sf::Keyboard::S) {
+                game_master_mode = STANDING_ORDERS;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
             }
         } else if (game_master_mode == DESIGN) {
             if (e.event.key.code == sf::Keyboard::Escape) {

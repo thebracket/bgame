@@ -27,7 +27,7 @@ void hud_system::update(const double ms) {
 	add_gui_element<map_static_text>( term(2)->term_width - cash_str.size(), 0, cash_str, rltk::colors::YELLOW );
 
     // Setup the main menu
-    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Play", "Design", "Units", "Workflow", "Civs"}, 0, 1, [] (int key) {
+    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Play", "Design", "Units", "Workflow", "Civs", "Standing Orders"}, 0, 1, [] (int key) {
         switch(key) {
             case 0 : {
                 game_master_mode = PLAY;
@@ -54,6 +54,11 @@ void hud_system::update(const double ms) {
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
             } break;
+            case 5 : {
+                game_master_mode = STANDING_ORDERS;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+            }
         }
     });
 }

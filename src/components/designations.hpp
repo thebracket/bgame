@@ -30,6 +30,22 @@ struct reaction_task_t {
     std::vector<std::pair<std::size_t,bool>> components;
 };
 
+// Standing orders
+namespace standing_orders {
+
+constexpr uint8_t SO_IDLE_STATIC = 0;
+constexpr uint8_t SO_IDLE_WANDER = 1;
+constexpr uint8_t SO_IDLE_WANDER_CLOSE = 2;
+
+constexpr uint8_t SO_WILDLIFE_IGNORE = 0;
+constexpr uint8_t SO_WILDLIFE_KILL = 1;
+
+constexpr uint8_t SO_UPGRADE_NEVER = 0;
+constexpr uint8_t SO_UPGRADE_NEARBY = 1;
+constexpr uint8_t SO_UPGRADE_ALWAYS = 2;
+
+}
+
 struct designations_t {
 
 	boost::container::flat_map<int, uint8_t> mining;
@@ -39,6 +55,10 @@ struct designations_t {
 	std::vector<std::pair<bool, position_t>> guard_points;
 	int current_power = 10;
 	uint64_t current_cash = 100;
+
+	uint8_t standing_order_idle_move = 1;
+	uint8_t standing_order_wildlife_treatment = 1;
+	uint8_t standing_order_upgrade = 1;
 
 	// Not serialized
 	rltk::color_t alert_color = rltk::colors::WHITE;
@@ -112,6 +132,9 @@ struct designations_t {
 
 		serialize(lbfile, current_power);
 		serialize(lbfile, current_cash);
+		serialize(lbfile, standing_order_idle_move);
+		serialize(lbfile, standing_order_wildlife_treatment);
+		serialize(lbfile, standing_order_upgrade);
 	}
 
 	static designations_t load(std::istream &lbfile) {
@@ -194,6 +217,9 @@ struct designations_t {
 
 		deserialize(lbfile, c.current_power);
 		deserialize(lbfile, c.current_cash);
+		deserialize(lbfile, c.standing_order_idle_move);
+		deserialize(lbfile, c.standing_order_wildlife_treatment);
+		deserialize(lbfile, c.standing_order_upgrade);
 		return c;
 	}
 };

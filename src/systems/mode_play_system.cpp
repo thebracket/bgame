@@ -16,14 +16,14 @@ void mode_play_system::update(const double duration_ms) {
 
     // Controls Help
 	if (pause_mode == PAUSED) {
-        add_gui_element(std::make_unique<map_static_text>( 34, 1, "SPACE", YELLOW));
-        add_gui_element(std::make_unique<map_static_text>( 39, 1, "Unpause"));
+        add_gui_element(std::make_unique<map_static_text>( 54, 1, "SPACE", YELLOW));
+        add_gui_element(std::make_unique<map_static_text>( 60, 1, "Unpause"));
 	} else {
-        add_gui_element(std::make_unique<map_static_text>( 34, 1, "SPACE", YELLOW));
-        add_gui_element(std::make_unique<map_static_text>( 39, 1, "Pause"));
+        add_gui_element(std::make_unique<map_static_text>( 54, 1, "SPACE", YELLOW));
+        add_gui_element(std::make_unique<map_static_text>( 60, 1, "Pause"));
 	}
-    add_gui_element(std::make_unique<map_static_text>( 47, 1, "/", YELLOW));
-    add_gui_element(std::make_unique<map_static_text>( 39, 1, "One Step"));
+    add_gui_element(std::make_unique<map_static_text>( 68, 1, "/", YELLOW));
+    add_gui_element(std::make_unique<map_static_text>( 71, 1, "One Step"));
 
 	// Since we're using an 8x8, it's just a matter of dividing by 8 to find the terminal-character
 	// coordinates. There will be a helper function for this once we get into retained GUIs.

@@ -123,16 +123,16 @@ bool is_ammo_available(const std::string &ammo_type) {
 	return (result > 0);
 }
 
-std::size_t claim_closest_item_by_category(const int &category, position_t &pos) {
+std::size_t claim_closest_item_by_category(const int &category, position_t &pos, const int range) {
 	// We're taking advantage of map being sorted to find the closest here
 	std::map<float, std::size_t> distance_sorted; 
 
-	each<item_t>([&distance_sorted, &category, &pos] (entity_t &e, item_t &i) {
+	each<item_t>([&distance_sorted, &category, &pos, &range] (entity_t &e, item_t &i) {
 		if (i.category.test(category) && i.claimed==false) {
 			auto p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
-				distance_sorted[distance] = e.id;
+				if (range == -1 || distance < range) distance_sorted[distance] = e.id;
 			}
 		}
 	});
@@ -145,16 +145,16 @@ std::size_t claim_closest_item_by_category(const int &category, position_t &pos)
 	return closest_matching_id;
 }
 
-std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::string &ammo_type) {
+std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::string &ammo_type, const int range) {
 	// We're taking advantage of map being sorted to find the closest here
 	std::map<float, std::size_t> distance_sorted; 
 
-	each<item_t>([&distance_sorted, &category, &pos, &ammo_type] (entity_t &e, item_t &i) {
+	each<item_t>([&distance_sorted, &category, &pos, &ammo_type, &range] (entity_t &e, item_t &i) {
 		if (i.category.test(category) && i.claimed==false && item_defs.find(i.item_tag)->second.ammo == ammo_type) {
 			auto p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
-				distance_sorted[distance] = e.id;
+				if (range == -1 || distance < range) distance_sorted[distance] = e.id;
 			}
 		}
 	});
@@ -335,8 +335,11 @@ bool is_better_armor(const std::string &item_tag, boost::container::flat_map<ite
 	return false;
 }
 
-boost::optional<std::size_t> find_armor_upgrade(entity_t &E) {
+boost::optional<std::size_t> find_armor_upgrade(entity_t &E, const int range) {
 	boost::optional<std::size_t> result;
+
+	auto my_pos = E.component<position_t>();
+	if (range != -1 && !my_pos) return result;
 
 	boost::container::flat_map<item_location_t, float> ac_by_loc;
 	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
@@ -349,17 +352,18 @@ boost::optional<std::size_t> find_armor_upgrade(entity_t &E) {
 	});
 
 	// Loop over all items on the ground
-	each<item_t, position_t>([&result, &ac_by_loc] (entity_t &e, item_t &i, position_t &pos) {
+	each<item_t, position_t>([&result, &ac_by_loc, &my_pos, &range] (entity_t &e, item_t &i, position_t &pos) {
 		if (!i.claimed && i.type == CLOTHING) {
-			if (is_better_armor(i.item_tag, ac_by_loc)) result = e.id;
+			if (is_better_armor(i.item_tag, ac_by_loc) && (range==-1 || distance3d(my_pos->x, my_pos->y, my_pos->z, pos.x, pos.y, pos.z) < range)) result = e.id;
 		}
 	});
 
 	// ditto for all items in containers
 	if (!result) {
-		each<item_t, item_stored_t>([&result, &ac_by_loc] (entity_t &e, item_t &i, item_stored_t &pos) {
+		each<item_t, item_stored_t>([&result, &ac_by_loc, &my_pos, &range] (entity_t &e, item_t &i, item_stored_t &pos) {
 			if (!i.claimed && i.type == CLOTHING) {
-				if (is_better_armor(i.item_tag, ac_by_loc)) result = e.id;
+				auto POS = e.component<position_t>();				
+				if (is_better_armor(i.item_tag, ac_by_loc) && (range == -1 || (POS && distance3d(my_pos->x, my_pos->y, my_pos->z, POS->x, POS->y, POS->z) < range))) result = e.id;
 			}
 		});
 	}

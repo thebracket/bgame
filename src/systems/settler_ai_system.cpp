@@ -66,7 +66,7 @@ void settler_ai_system::update(const double duration_ms) {
 				if (ai.job_type_minor != JM_SLEEP) {
 					for (const std::size_t other_entity : view.visible_entities) {
 						auto other_ptr = rltk::entity(other_entity);
-						if (other_ptr && (other_ptr->component<grazer_ai>() || 
+						if (other_ptr && ((other_ptr->component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE ) || 
 							(other_ptr->component<sentient_ai>() && other_ptr->component<sentient_ai>()->hostile))) {
 							terrified = true;
 							auto other_pos = rltk::entity(other_entity)->component<position_t>();
@@ -120,7 +120,16 @@ void settler_ai_system::update(const double duration_ms) {
 	}
 }
 
-void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {	
+void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) {
+	// Never wander if it is prohibited
+	if (designations->standing_order_idle_move == standing_orders::SO_IDLE_STATIC) return;
+
+	// Don't wander far from Cordex if that is prohibited
+	if (designations->standing_order_idle_move == standing_orders::SO_IDLE_WANDER_CLOSE) {
+		const float distance = distance3d(original.x, original.y, original.z, REGION_WIDTH/2, REGION_HEIGHT/2, REGION_DEPTH/2);
+		if (distance > 15.0F) return;
+	}
+
 	auto render = entity.component<renderable_t>();
 	render->foreground = rltk::colors::YELLOW;
 	render->glyph = 1;
@@ -362,13 +371,13 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_RANGED;
 			ai.job_type_minor = JM_FIND_RANGED_WEAPON;
-			change_job_status(ai, name, "Finding a ranged weapon.", true);
+			change_job_status(ai, name, "Finding a ranged weapon.", false);
 			return;
 		}
 
 		// Likewise, search for ammo if available
 		bool has_ammo = has_appropriate_ammo(entity, ranged_status.second, pos);
-		if (ranged_status.first && !has_ammo && is_ammo_available(ranged_status.second)) {
+		if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER && ranged_status.first && !has_ammo && is_ammo_available(ranged_status.second)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_AMMO;
 			ai.job_type_minor = JM_FIND_AMMO;
@@ -395,23 +404,27 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		}
 
 		// If we don't have a melee weapon, and one is available, equip it
-		if (is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
+		if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER && is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_MELEE;
 			ai.job_type_minor = JM_FIND_MELEE_WEAPON;
-			change_job_status(ai, name, "Finding a melee weapon.", true);
+			change_job_status(ai, name, "Finding a melee weapon.", false);
 			return;
 		}
 
 		// Look for improved armor
-		boost::optional<std::size_t> better_armor = find_armor_upgrade(entity);
-		if (better_armor) {
-			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
-			ai.job_type_major = JOB_EQUIP_ARMOR;
-			ai.job_type_minor = JM_FIND_ARMOR;
-			ai.target_id = better_armor.get();
-			change_job_status(ai, name, "Finding armor.", true);
-			return;
+		if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER) {
+			int max_range = -1;
+			if (designations->standing_order_upgrade == standing_orders::SO_UPGRADE_NEARBY) max_range = 15;
+			boost::optional<std::size_t> better_armor = find_armor_upgrade(entity, max_range);
+			if (better_armor) {
+				change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
+				ai.job_type_major = JOB_EQUIP_ARMOR;
+				ai.job_type_minor = JM_FIND_ARMOR;
+				ai.target_id = better_armor.get();
+				change_job_status(ai, name, "Finding armor.", true);
+				return;
+			}
 		}
 
 	} else if (ai.job_type_major == JOB_MINE) {
@@ -1025,7 +1038,9 @@ void settler_ai_system::do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_FIND_MELEE_WEAPON) {
-		auto axe = claim_closest_item_by_category(WEAPON_MELEE, pos);
+		int max_range = -1;
+		if (designations->standing_order_upgrade == standing_orders::SO_UPGRADE_NEARBY) max_range = 15;
+		auto axe = claim_closest_item_by_category(WEAPON_MELEE, pos, max_range);
 		if (axe==0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available melee weapon");
 			return;
@@ -1073,7 +1088,9 @@ void settler_ai_system::do_equip_melee(entity_t &e, settler_ai_t &ai, game_stats
 
 void settler_ai_system::do_equip_ranged(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_FIND_RANGED_WEAPON) {
-		auto axe = claim_closest_item_by_category(WEAPON_RANGED, pos);
+		int max_range = -1;
+		if (designations->standing_order_upgrade == standing_orders::SO_UPGRADE_NEARBY) max_range = 15;
+		auto axe = claim_closest_item_by_category(WEAPON_RANGED, pos, max_range);
 		if (axe==0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available ranged weapon");
 			return;
@@ -1121,8 +1138,10 @@ void settler_ai_system::do_equip_ranged(entity_t &e, settler_ai_t &ai, game_stat
 
 void settler_ai_system::do_equip_ammo(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_FIND_AMMO) {
+		int max_range = -1;
+		if (designations->standing_order_upgrade == standing_orders::SO_UPGRADE_NEARBY) max_range = 15;
 		auto ranged_status = has_ranged_weapon(e);
-		auto axe = claim_closest_ammo(WEAPON_AMMO, pos, ranged_status.second);
+		auto axe = claim_closest_ammo(WEAPON_AMMO, pos, ranged_status.second, max_range);
 		if (axe==0) {
 			cancel_action(e, ai, stats, species, pos, name, "No available ammo");
 			return;
