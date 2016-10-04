@@ -49,13 +49,31 @@ void sentient_ai_system::update(const double ms) {
                 float terror_distance = 1000.0F;
                 std::size_t closest_fear = 0;
                 for (const std::size_t other_entity : view.visible_entities) {
-                    bool vegetarian = false;
-                    auto finder = species_defs.find(planet.civs.civs[planet.civs.unimportant_people[ai.person_id].civ_id].species_tag);
+
+                    bool vegetarian = false;                    
+                    auto finder = species_defs.find(planet.civs.unimportant_people[ai.person_id].species_tag);
                     if (finder != species_defs.end() && finder->second.diet == diet_herbivore) vegetarian = true;
+
 					auto other_ptr = rltk::entity(other_entity);
                     if (other_ptr) {
+
+                        bool hostile_sentient = false;
+                        auto other_sentient = other_ptr->component<sentient_ai>();
+                        if (other_sentient) {
+                            const std::size_t my_civ = planet.civs.unimportant_people[ai.person_id].civ_id;
+                            const std::size_t their_civ = planet.civs.unimportant_people[other_sentient->person_id].civ_id;
+                            if (my_civ != their_civ) {
+                                auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
+                                if (civfinder != planet.civs.civs[my_civ].relations.end()) {
+                                    if (civfinder->second < 0) hostile_sentient = true;
+                                }
+                            } 
+                        }
+
                         if ((other_ptr->component<grazer_ai>() && !vegetarian) || 
-                            (other_ptr->component<settler_ai_t>() && ai.hostile)) {
+                            (other_ptr->component<settler_ai_t>() && ai.hostile) ||
+                            hostile_sentient
+                            ) {
                             terrified = true;
                             auto other_pos = rltk::entity(other_entity)->component<position_t>();
                             if (other_pos) {
