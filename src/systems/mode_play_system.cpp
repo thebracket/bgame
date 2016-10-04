@@ -129,7 +129,22 @@ void mode_play_system::update(const double duration_ms) {
 
 		// Buildings
 		each<building_t, position_t>([&lines,&world_x, &world_y] (entity_t &building_entity, building_t &building, position_t &pos) {
-			if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+			bool on_building = false;
+
+			if (pos.z == camera_position->region_z) {
+				if (pos.x == world_x && pos.y == world_y) {
+					on_building = true;
+				} else {
+					// Special case because 3x3 use the mid-point as center
+					if (building.height == 3 && building.width == 3 && world_x >= pos.x-1 && world_x <= pos.x+1 && world_y >= pos.y-1 && world_y <= pos.y+1) {
+						on_building = true;
+					} else if (world_x >= pos.x && world_x <= pos.x + building.width && world_y >= pos.y && world_y <= pos.y + building.height) {
+						on_building = true;
+					}
+				}
+			}
+
+			if (on_building) {
 				// It's building and we can see it
 				auto finder = building_defs.find(building.tag);
 				std::string building_name = "Unknown Building";
