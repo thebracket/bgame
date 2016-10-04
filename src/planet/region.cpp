@@ -238,7 +238,7 @@ void region_t::calc_render(const int &idx) {
 			if (tile_material[idx] > material_defs.size()) {
 				glyph = ',';
 			} else if (material_defs[tile_material[idx]].spawn_type == sand) {
-				glyph = 247;
+				glyph = 126;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
 				glyph = 240;
 			} else {
