@@ -94,8 +94,9 @@ void world_system::update(const double ms) {
                         }
 
                         std::cout << "Spawning new arrivals (" << peep_id << ") on edge " << edge << "\n";
-                        for (int i=0; i<5; ++i)
-                            create_sentient(x,y,z,rng,planet,*current_region,peep_id);
+                        for (int i=0; i<5; ++i) {
+                            create_sentient(x,y,z,rng,planet,*current_region,peep_id,true);
+                        }
                     }
                 }
 

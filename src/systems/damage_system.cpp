@@ -174,7 +174,8 @@ void damage_system::creature_attacks() {
         auto defender_stats = defender->component<game_stats_t>();
 
         if (creature == creature_defs.end()) {
-            throw std::runtime_error("Undefined species - " + attack_species->tag);
+            std::cout << "Undefined species - " << attack_species->tag << "\n";
+            return;
         }
         for (const creature_attack_t &weapon : creature->second.attacks) {
             LOG ss;

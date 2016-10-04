@@ -2,6 +2,8 @@
 #include "../../raws/raws.hpp"
 #include "../../components/components.hpp"
 #include "../../raws/health_factory.hpp"
+#include "../../messages/log_message.hpp"
+#include "../../components/logger.hpp"
 
 int sentient_stat_mod(boost::container::flat_map<std::string, raw_species_t>::iterator &species, const std::string &stat) {
     auto finder = species->second.stat_mods.find(stat);
@@ -9,12 +11,14 @@ int sentient_stat_mod(boost::container::flat_map<std::string, raw_species_t>::it
     return finder->second;
 }
 
-void create_sentient(const int x, const int y, const int z, rltk::random_number_generator &rng, planet_t &planet, region_t &region, const std::size_t person_id) 
+void create_sentient(const int x, const int y, const int z, rltk::random_number_generator &rng, planet_t &planet, 
+        region_t &region, const std::size_t person_id, const bool announce) 
 {
     species_t species;
     game_stats_t stats;
 
     species.tag = planet.civs.unimportant_people[person_id].species_tag;
+    std::cout << species.tag << "\n";
     auto species_finder = species_defs.find(species.tag);
     if (species_finder == species_defs.end()) {
         std::cout << "WARNING: Could not find raws for [" << species.tag << "]\n";
@@ -62,6 +66,9 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ->assign(std::move(health))
         ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id, profession->second[profidx].aggression+5});
     std::cout << "Sentient #" << sentient->id << "\n";
+    if (announce) {
+        emit_deferred(log_message{LOG().col(rltk::colors::CYAN)->text(species_finder->second.name)->text(" ")->text(profession->second[profidx].name)->col(rltk::colors::WHITE)->text(" has arrived.")->chars});
+    }
 
     for (auto item : profession->second[profidx].starting_clothes) {
 		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
