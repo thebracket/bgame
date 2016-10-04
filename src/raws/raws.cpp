@@ -867,6 +867,141 @@ void read_native_population_types(std::ofstream &tech_tree_file) {
     }
 }
 
+void sanity_check_clothing() {
+    for (auto it = clothing_types.begin(); it != clothing_types.end(); ++it) {
+        if (it->first.empty()) std::cout << "WARNING: Empty clothing string\n";
+        if (it->second.name.empty()) std::cout << "WARNING: Empty clothing name\n";
+        if (it->second.colors.empty()) std::cout << "WARNING: " << it->first << " contains no color options\n";
+        if (it->second.slot.empty()) std::cout << "WARNING: " << it->first << " has no slot defined.\n";         
+    }
+}
+
+void sanity_check_professions() {
+    for (const auto &prof : starting_professions) {
+        if (prof.name.empty()) std::cout << "WARNING: Profession with no name\n";
+        for (const std::tuple< uint8_t, std::string, std::string > &cloth : prof.starting_clothes) {
+            if (std::get<0>(cloth) > 3) std::cout << "WARNING: " << prof.name << " clothing item has invalid gender tag\n";
+            if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes")
+                std::cout << "WARNING: " << prof.name << " has an invalid slot: " << std::get<1>(cloth) << "\n";
+            auto finder = clothing_types.find(std::get<2>(cloth));
+            if (finder == clothing_types.end()) std::cout << "WARNING: " << prof.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+        }
+    }
+}
+
+void sanity_check_items() {
+    for (auto it=item_defs.begin(); it!=item_defs.end(); ++it) {
+        if (it->first.empty()) std::cout << "WARNING: Item has no name\n";
+        if (it->second.tag.empty()) std::cout << "WARNING: Empty item tag\n";
+        if (it->second.name.empty()) std::cout << "WARNING: Empty item name, tag: " << it->second.tag << "\n";
+    }
+}
+
+void sanity_check_buildings() {
+    for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
+        if (it->first.empty()) std::cout << "WARNING: Empty building tag\n";
+        for (const std::string &comp : it->second.components) {
+            if (comp.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
+            auto finder = item_defs.find(comp);
+            if (finder == item_defs.end()) {
+                std::cout << "WARNING: No item definition for component " << comp << ", for building: " << it->first << "\n";
+            }
+        }
+    }
+}
+
+void sanity_check_reactions() {
+    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
+        if (it->first.empty()) std::cout << "WARNING: Empty reaction name\n";
+        if (it->second.tag.empty()) std::cout << "WARNING: Empty reaction tag\n";
+        if (it->second.name.empty()) std::cout << "WARNING: Empty reaction name, tag: " << it->first << "\n";
+        if (it->second.workshop.empty()) std::cout << "WARNING: Empty workshop name, tag: " << it->first << "\n";
+        auto bf = building_defs.find(it->second.workshop);
+        if (bf == building_defs.end()) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
+        for (const auto &input : it->second.inputs) {
+            auto finder = item_defs.find(input.first);
+            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.first << ", reaction tag: " << it->first << "\n";
+        }
+        for (const auto &output : it->second.outputs) {
+            auto finder = item_defs.find(output.first);
+            auto finder2 = clothing_types.find(output.first);
+            if (finder == item_defs.end() && finder2 == clothing_types.end()) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+        }
+    }
+}
+
+void sanity_check_materials() {
+    for (const auto &mat : material_defs) {
+        if (mat.tag.empty()) std::cout << "WARNING: Empty material tag\n";
+        if (mat.name.empty()) std::cout << "WARNING: Empty material name, tag: " << mat.tag << "\n";
+        if (!mat.mines_to_tag.empty()) {
+            auto finder = item_defs.find(mat.mines_to_tag);
+            if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag << ", tag: " << mat.tag << "\n";
+        }
+        if (!mat.mines_to_tag_second.empty()) {
+            auto finder = item_defs.find(mat.mines_to_tag_second);
+            if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag_second << ", tag: " << mat.tag << "\n";
+        }
+    }
+}
+
+void sanity_check_plants() {
+    for (const auto &p : plant_defs) {
+        if (p.name.empty()) std::cout << "WARNING: No plant name\n";
+    }
+}
+
+void sanity_check_biomes() {
+    for (const auto &b : biome_defs) {
+        if (b.name.empty()) std::cout << "WARNING: Empty biome name\n";
+        if (b.occurs.empty()) std::cout << "WARNING: Biome " << b.name << " has no occurences!\n";
+        for (const auto &o : b.occurs) {
+            if (o <1 || o > 10)  std::cout << "WARNING: Biome " << b.name << " has invalid occurs\n";
+        }
+        if (b.plants.empty()) std::cout << "WARNING: Biome " << b.name << " has no plants!\n";
+        for (const auto &p : b.plants) {
+            if (p.first == "none") break;
+            auto finder = plant_defs_idx.find(p.first);
+            if (finder == plant_defs_idx.end()) {
+                 std::cout << "WARNING: Biome " << b.name << " has invalid plant: " << p.first << "\n";
+            } else {
+                if (finder->second > plant_defs.size()) std::cout << "WARNING: Biome " << b.name << " has invalid plant: " << p.first << "\n";
+            }
+        }
+        if (b.wildlife.empty()) std::cout << "WARNING: Biome " << b.name << " has no wildlife.\n";
+        for (const auto &w : b.wildlife) {
+            auto finder = creature_defs.find(w);
+            if (finder == creature_defs.end()) std::cout << "WARNING: Biome " << b.name << " has invalid wildlife: " << w << "\n";
+        }
+    }
+}
+
+void sanity_check_species() {
+    // TODO
+}
+
+void sanity_check_creatures() {
+    // TODO
+}
+
+void sanity_check_natives() {
+    // TODO
+}
+
+void sanity_check_raws() {
+    sanity_check_clothing();
+    sanity_check_professions();
+    sanity_check_items();
+    sanity_check_buildings();
+    sanity_check_reactions();
+    sanity_check_materials();
+    sanity_check_plants();
+    sanity_check_biomes();
+    sanity_check_species();
+    sanity_check_creatures();
+    sanity_check_natives();
+}
+
 void load_game_tables() {
     std::ofstream tech_tree_file("tech_tree.gv");
     tech_tree_file << "digraph G {\n";
@@ -886,6 +1021,8 @@ void load_game_tables() {
 
     tech_tree_file << "}\n";
     tech_tree_file.close();
+
+    sanity_check_raws();
 }
 
 void load_raws() {

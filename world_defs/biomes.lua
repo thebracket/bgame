@@ -7,7 +7,8 @@ biome_types = {
     plateau=6,
     highlands=7,
     coast=8,
-    salt_marsh=9
+    salt_marsh=9,
+    coast=10
 }
 
 biomes = {

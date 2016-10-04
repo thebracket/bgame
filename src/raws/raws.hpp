@@ -110,8 +110,8 @@ struct reaction_t {
 	std::string workshop = "";
 	std::vector<std::pair<std::string, int>> inputs;
 	std::vector<std::pair<std::string, int>> outputs;
-	std::string skill;
-	int difficulty;
+	std::string skill = "";
+	int difficulty = 10;
 	bool automatic = false;
 	int power_drain = 0;
 	bool emits_smoke = false;
@@ -141,12 +141,12 @@ enum material_def_spawn_type_t { cluster_rock, rock, soil, sand };
 struct material_def_t {
 	std::string tag = "";
 	std::string name = "";
-	material_def_spawn_type_t spawn_type;
+	material_def_spawn_type_t spawn_type = rock;
 	std::string parent_material_tag = "";
 	uint8_t glyph;
 	rltk::color_t fg;
 	rltk::color_t bg;
-	uint8_t hit_points;
+	uint8_t hit_points = 0;
 	std::string mines_to_tag = "";
 	std::string mines_to_tag_second = "";
 	std::string layer = "";
