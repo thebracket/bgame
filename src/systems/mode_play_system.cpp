@@ -3,6 +3,7 @@
 #include "gui_system.hpp"
 #include "mouse_input_system.hpp"
 #include "gui_system.hpp"
+#include "../messages/build_request_message.hpp"
 #include <rltk.hpp>
 
 using namespace rltk;
@@ -231,6 +232,42 @@ void mode_play_system::show_tilemenu() {
 				game_master_mode = SETTLER;
 			};
 			menu->options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
+		}
+	});
+
+	each<building_t, position_t>([&menu] (entity_t &building_entity, building_t &building, position_t &pos) {
+		bool on_building = false;
+
+		if (pos.z == selected_tile_z) {
+			if (pos.x == selected_tile_x && pos.y == selected_tile_y) {
+				on_building = true;
+			} else {
+				// Special case because 3x3 use the mid-point as center
+				if (building.height == 3 && building.width == 3 && selected_tile_x >= pos.x-1 && selected_tile_x <= pos.x+1 && selected_tile_y >= pos.y-1 && selected_tile_y <= pos.y+1) {
+					on_building = true;
+				} else if (selected_tile_x >= pos.x && selected_tile_x <= pos.x + building.width && selected_tile_y >= pos.y && selected_tile_y <= pos.y + building.height) {
+					on_building = true;
+				}
+			}
+		}
+
+		if (on_building) {
+			// It's building and we can see it
+			auto finder = building_defs.find(building.tag);
+			std::string building_name = "Unknown Building";
+			if (finder != building_defs.end()) {
+				if (building.complete) {
+					building_name = finder->second.name;
+					// TODO: Offer options for the building
+				} else {
+					building_name = finder->second.name;
+					boost::optional<std::function<void()>> on_click{};
+					on_click = [&building_entity] () {
+						emit(cancel_build_request_message{building_entity.id});
+					};
+					menu->options.push_back(std::make_pair(std::string("Cancel construction of ")+building_name, on_click));
+				}
+			}
 		}
 	});
 

@@ -101,6 +101,50 @@ void inventory_system::configure() {
 			}
 		}
 	});
+
+	subscribe<cancel_build_request_message>([this] (cancel_build_request_message &msg) {
+		if (msg.building_entity == 0) return;
+
+		// Unclaim components
+		for (auto &d : designations->buildings) {
+			if (d.building_entity == msg.building_entity) {
+				for (auto &c : d.component_ids) {
+					unclaim_by_id(c.first);
+					each<position_t, item_carried_t>([&c] (entity_t &carrier, position_t &pos, item_carried_t &carried) {
+						if (carrier.id == c.first) {
+							emit(drop_item_message{c.first, pos.x, pos.y, pos.z});
+						}
+					});
+				}
+			}
+		}
+
+		// Remove any settler references to the building
+		each<settler_ai_t>([&msg] (entity_t &e, settler_ai_t &ai) {
+			if (ai.job_type_major == JOB_CONST && ai.building_target && ai.building_target->building_entity == msg.building_entity) {
+				for (auto &c : ai.building_target->component_ids) {
+					unclaim_by_id(c.first);
+					each<position_t, item_carried_t>([&c] (entity_t &carrier, position_t &pos, item_carried_t &carried) {
+						if (carrier.id == c.first) {
+							emit(drop_item_message{c.first, pos.x, pos.y, pos.z});
+						}
+					});
+				}
+				ai.job_type_major = JOB_IDLE;
+				ai.job_status = "Idle";
+			}
+		});
+
+		// Erase from vector
+		designations->buildings.erase(std::remove_if(
+			designations->buildings.begin(),
+			designations->buildings.end(),
+			[&msg] (building_designation_t a) { return a.building_entity == msg.building_entity; }
+		), designations->buildings.end());
+
+		// Delete entity
+		delete_entity(msg.building_entity);
+	});
 }
 
 int item_category_available(const int &category) {
