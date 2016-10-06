@@ -140,6 +140,12 @@ void keyboard_system::update(const double ms) {
                 emit_deferred(map_dirty_message{});
                 emit_deferred(recalculate_mining_message{});
             }
+        } else if (game_master_mode == TILEMENU) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
         }
 	messages->pop();
 	}

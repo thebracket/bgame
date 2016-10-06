@@ -33,7 +33,6 @@ void panel_render_system::configure() {
 
 void panel_render_system::render_mode_select(const double duration_ms) {
 	switch (game_master_mode) {
-		//case DESIGN : render_design_mode(); break;
 		case WORKFLOW : render_work_mode(); break;
 		case ROGUE : {
 			term(2)->print(28,1,"ESC", YELLOW);

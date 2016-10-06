@@ -33,7 +33,7 @@ struct available_building_t {
 };
 
 enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };
-enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, CIV_NEGOTIATE, STANDING_ORDERS };
+enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, CIV_NEGOTIATE, STANDING_ORDERS, TILEMENU };
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING, GUARDPOINTS };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, DELETE };
 
@@ -58,3 +58,6 @@ extern boost::optional<available_building_t> build_mode_building;
 extern std::size_t selected_settler;
 extern bool quitting;
 extern std::size_t negotiating_civ;
+extern int selected_tile_x;
+extern int selected_tile_y;
+extern int selected_tile_z;

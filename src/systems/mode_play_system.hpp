@@ -10,4 +10,9 @@ private:
     int last_mouse_x = 0;
 	int last_mouse_y = 0;
 	double mouse_dwell_time = 0.0;
+
+	int menu_x,menu_y;
+
+	void show_tooltip(const int world_x, const int world_y, const int tile_idx);
+	void show_tilemenu();
 };

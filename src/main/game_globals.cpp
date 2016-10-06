@@ -21,3 +21,6 @@ boost::optional<available_building_t> build_mode_building;
 std::size_t selected_settler;
 std::size_t negotiating_civ;
 bool quitting = false;
+int selected_tile_x;
+int selected_tile_y;
+int selected_tile_z;

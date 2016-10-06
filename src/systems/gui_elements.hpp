@@ -306,3 +306,40 @@ struct gui_dialog : public base_gui {
         for (auto &g : children) g->render();
     }
 };
+
+struct gui_popup_menu : public base_gui {
+    gui_popup_menu(const int &X, const int &Y, const bool &left, const bool &down) : x(X), y(Y), face_left(left), face_down(down) {}
+
+    int x,y;
+    bool face_left;
+    bool face_down;
+    std::vector<std::pair<std::string, boost::optional<std::function<void()>>>> options;
+
+    virtual void render() override final {
+        int width = 0;
+        for (const auto &opt : options) {
+            if (width < opt.first.size()) width = opt.first.size(); 
+        }
+
+        int box_left = x;
+        int box_right = x + width + 3;
+        int box_top = y;
+        int box_bottom = y + options.size() + 1;
+
+        rltk::term(1)->fill(box_left+1, box_top, box_right+1, box_bottom, 219, rltk::colors::DARKEST_GREEN, rltk::colors::DARKEST_GREEN);
+        rltk::term(1)->box(box_left+1, box_top, width+1, options.size()+1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
+
+        int current_y = box_top+1;
+        for (const auto &opt : options) {
+            if (mouse::term1y == current_y && mouse::term1x > box_left+1 && mouse::term1x < box_right) {
+                rltk::term(1)->print(box_left + 2, current_y, opt.first, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
+                if (mouse::clicked && opt.second) {
+                    std::function<void()> on_click = opt.second.get();
+                    on_click();
+                }
+            } else {
+                rltk::term(1)->print(box_left + 2, current_y, opt.first, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+            }
+        }
+    }
+};
