@@ -173,20 +173,20 @@ struct raw_species_t {
 	std::string description = "";
 	boost::container::flat_map<std::string,int> stat_mods;
 	std::vector<std::tuple<std::string, int, int>> body_parts;
-	diet_t diet;
-	alignment_t alignment;
-	int max_age;
-	int infant_age;
-	int child_age;
-	uint8_t glyph;
+	diet_t diet = diet_omnivore;
+	alignment_t alignment = align_neutral;
+	int max_age = 90;
+	int infant_age = 5;
+	int child_age = 12;
+	uint8_t glyph = '@';
 };
 
 struct creature_attack_t {
-	std::string type;
-	int hit_bonus;
-	int damage_n_dice;
-	int damage_dice;
-	int damage_mod;
+	std::string type = "";
+	int hit_bonus = 0;
+	int damage_n_dice = 1;
+	int damage_dice = 6;
+	int damage_mod = 0;
 };
 
 enum creature_ai_t { creature_grazer };
@@ -200,7 +200,7 @@ struct raw_creature_t {
 	std::string description = "";
 	boost::container::flat_set<std::pair<std::string,int>> stats;
 	std::vector<std::tuple<std::string, int, int>> body_parts;
-	int armor_class;
+	int armor_class=10;
 	std::vector<creature_attack_t> attacks;
 	int yield_hide=0;
 	int yield_meat=0;

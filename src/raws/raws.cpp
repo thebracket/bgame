@@ -977,15 +977,50 @@ void sanity_check_biomes() {
 }
 
 void sanity_check_species() {
-    // TODO
+    for (auto s = species_defs.begin(); s!=species_defs.end(); ++s) {
+        if (s->first.empty()) std::cout << "WARNING: Species with no tag.\n";
+        if (s->second.name.empty()) std::cout << "WARNING: Species has no name: " << s->second.tag << "\n";
+        if (s->second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s->second.tag << "\n";
+        if (s->second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s->second.tag << "\n";
+        if (s->second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s->second.tag << "\n";
+        if (s->second.stat_mods.empty()) std::cout << "WARNING: Species has no stat modifiers: " << s->second.tag << "\n";
+        if (s->second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s->second.tag << "\n";
+    }
 }
 
 void sanity_check_creatures() {
-    // TODO
+    for (auto s = creature_defs.begin(); s!=creature_defs.end(); ++s) {
+        if (s->first.empty()) std::cout << "WARNING: Species with no tag.\n";
+        if (s->second.name.empty()) std::cout << "WARNING: Species has no name: " << s->second.tag << "\n";
+        if (s->second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s->second.tag << "\n";
+        if (s->second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s->second.tag << "\n";
+        if (s->second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s->second.tag << "\n";
+        if (s->second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s->second.tag << "\n";
+        if (s->second.attacks.empty()) std::cout << "WARNING: Species has no attacks: " << s->second.tag << "\n";
+        for (const auto &a : s->second.attacks) {
+            if (a.type.empty()) std::cout << "WARNING: Species attack with no name: " << s->second.tag << "\n";
+        }
+    }
 }
 
 void sanity_check_natives() {
-    // TODO
+    for (auto it = native_pop_defs.begin(); it != native_pop_defs.end(); ++it) {
+        for (const auto &n : it->second) {
+            if (n.name.empty()) std::cout << "WARNING: Native pop type with no name\n";
+            for (const std::tuple< uint8_t, std::string, std::string > &cloth : n.starting_clothes) {
+                if (std::get<0>(cloth) > 3) std::cout << "WARNING: " << n.name << " clothing item has invalid gender tag\n";
+                if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes")
+                    std::cout << "WARNING: " << n.name << " has an invalid slot: " << std::get<1>(cloth) << "\n";
+                auto finder = clothing_types.find(std::get<2>(cloth));
+                if (finder == clothing_types.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+            }
+
+            if (n.melee.empty()) std::cout << "WARNING: " << n.name << " has no melee weapon.\n";
+            if (!n.melee.empty() && item_defs.find(n.melee) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid melee weapon, " << n.melee << ".\n";
+            if (!n.ranged.empty() && item_defs.find(n.ranged) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid ranged weapon, " << n.ranged << ".\n";
+            if (!n.ammo.empty() && item_defs.find(n.ammo) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid ammunition, " << n.ammo << ".\n";
+        }
+    }
 }
 
 void sanity_check_raws() {
