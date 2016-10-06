@@ -258,7 +258,9 @@ void mode_play_system::show_tilemenu() {
 			if (finder != building_defs.end()) {
 				if (building.complete) {
 					building_name = finder->second.name;
+					boost::optional<std::function<void()>> on_click{};
 					// TODO: Offer options for the building
+					menu->options.push_back(std::make_pair(std::string("Deconstruct ")+building_name, on_click));
 				} else {
 					building_name = finder->second.name;
 					boost::optional<std::function<void()>> on_click{};
