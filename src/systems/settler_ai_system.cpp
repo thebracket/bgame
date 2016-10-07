@@ -1573,18 +1573,24 @@ void settler_ai_system::do_demolition(entity_t &e, settler_ai_t &ai, game_stats_
 		auto skill_check = skill_roll(e.id, stats, rng, skill, difficulty);
 		if (skill_check >= SUCCESS) {
 			current_region->tile_type[ai.target_id] = tile_type::OPEN_SPACE;
+			current_region->solid[ai.target_id] = false;
 			current_region->tile_flags[ai.target_id].reset(CONSTRUCTION);
-			// Regain materials?
+			current_region->tile_flags[ai.target_id].reset(CAN_STAND_HERE);
+			spawn_item_on_ground(pos.x, pos.y, pos.z, "block", current_region->tile_material[ai.target_id]);
+			current_region->revealed[ai.target_id] = true;
+			current_region->revealed[mapidx(ai.target_x, ai.target_y, ai.target_z-1)] = true;
 			become_idle(e, ai, name);
 			// Update pathing
-			for (int Z=-2; Z<10; ++Z) {
-				for (int Y=-10; Y<10; ++Y) {
-					for (int X=-10; X<10; ++X) {
-						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
-						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+			for (int i=0; i<2; ++i) {
+				for (int Z=-2; Z<4; ++Z) {
+					for (int Y=-10; Y<10; ++Y) {
+						for (int X=-10; X<10; ++X) {
+							current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+						}
 					}
 				}
 			}
+			
 			return;
 		} else {
 			// Failed!

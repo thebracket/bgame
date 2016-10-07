@@ -3,7 +3,7 @@ reactions = {
         name = "Cut Wooden Planks",
         workshop = "sawmill",
         inputs = { { item="wood_log", qty=1 } },
-        outputs = { { item="wood_plank", qty=4 }, { item="wood_waste", qty=2} },
+        outputs = { { item="block", qty=4 }, { item="wood_waste", qty=2} },
         skill = "Carpentry",
         difficulty = 10,
         automatic = true
@@ -50,7 +50,7 @@ reactions = {
         name = "Cut Stone Blocks",
         workshop = "stonecutter",
         inputs = { { item="stone_boulder", qty=1 } },
-        outputs = { { item="stone_block", qty=4 } },
+        outputs = { { item="block", qty=4 } },
         skill = "Masonry",
         difficulty = 10,
         automatic = true
@@ -58,7 +58,7 @@ reactions = {
     make_wooden_table = {
         name = "Make Wooden Table",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="wood_table", qty=1 } },
         skill = "Carpentry",
         difficulty = 10,
@@ -67,7 +67,7 @@ reactions = {
     make_stone_table = {
         name = "Make Stone Table",
         workshop = "mason",
-        inputs = { { item="stone_block", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="stone_table", qty=1 } },
         skill = "Masonry",
         difficulty = 10,
@@ -76,7 +76,7 @@ reactions = {
     make_wooden_chair = {
         name = "Make Wooden Chair",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="wood_chair", qty=1 } },
         skill = "Carpentry",
         difficulty = 10,
@@ -85,7 +85,7 @@ reactions = {
     make_stone_chair = {
         name = "Make Stone Chair",
         workshop = "mason",
-        inputs = { { item="stone_block", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="stone_chair", qty=1 } },
         skill = "Masonry",
         difficulty = 10,
@@ -94,7 +94,7 @@ reactions = {
     make_wooden_door = {
         name = "Make Wooden Door",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="wood_door", qty=1 } },
         skill = "Carpentry",
         difficulty = 12,
@@ -103,7 +103,7 @@ reactions = {
     make_stone_door = {
         name = "Make Stone Door",
         workshop = "mason",
-        inputs = { { item="stone_block", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="stone_door", qty=1 } },
         skill = "Masonry",
         difficulty = 12,
@@ -278,7 +278,7 @@ reactions = {
     make_wooden_club = {
         name = "Make Wooden Club",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="club", qty=1 } },
         skill = "Carpentry",
         difficulty = 10,
@@ -287,7 +287,7 @@ reactions = {
     make_pointy_stick = {
         name = "Make Wooden Pointy Stick",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="pointy_stick", qty=1 } },
         skill = "Carpentry",
         difficulty = 7,
@@ -296,7 +296,7 @@ reactions = {
     make_atlatl = {
         name = "Make Atlatl",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="atlatl", qty=1 } },
         skill = "Carpentry",
         difficulty = 15,
@@ -305,7 +305,7 @@ reactions = {
     make_wood_dart= {
         name = "Make Wooden Dart",
         workshop = "carpenter",
-        inputs = { { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="wood_dart", qty=1 } },
         skill = "Carpentry",
         difficulty = 12,
@@ -388,7 +388,7 @@ reactions = {
     make_stone_club = {
         name = "Make Stone Club",
         workshop = "mason",
-        inputs = { { item="stone_block", qty=1 } },
+        inputs = { { item="block", qty=1 } },
         outputs = { { item="club", qty=1 } },
         skill = "Masonry",
         difficulty = 10,
@@ -397,7 +397,7 @@ reactions = {
     make_stone_hammer = {
         name = "Make Stone Hammer",
         workshop = "primitive_workshop",
-        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="stone_hammer", qty=1 } },
         skill = "Metalworking",
         difficulty = 10,
@@ -406,7 +406,7 @@ reactions = {
     make_stone_axe = {
         name = "Make Stone Axe",
         workshop = "primitive_workshop",
-        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="stone_axe", qty=1 } },
         skill = "Metalworking",
         difficulty = 10,
@@ -415,7 +415,7 @@ reactions = {
     make_stone_knife = {
         name = "Make Stone Knife",
         workshop = "primitive_workshop",
-        inputs = { { item="stone_block", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="block", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="stone_knife", qty=1 } },
         skill = "Metalworking",
         difficulty = 10,
@@ -435,7 +435,7 @@ reactions = {
     make_bronze_hammer = {
         name = "Make Bronze Hammer",
         workshop = "primitive_forge",
-        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="bronze_bar", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="bronze_hammer", qty=1 } },
         skill = "Metalworking",
         difficulty = 12,
@@ -444,7 +444,7 @@ reactions = {
     make_bronze_axe = {
         name = "Make Bronze Axe",
         workshop = "primitive_forge",
-        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="bronze_bar", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="bronze_axe", qty=1 } },
         skill = "Metalworking",
         difficulty = 12,
@@ -453,7 +453,7 @@ reactions = {
     make_bronze_pickaxe = {
         name = "Make Bronze Pickaxe",
         workshop = "primitive_forge",
-        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="bronze_bar", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="bronze_pickaxe", qty=1 } },
         skill = "Metalworking",
         difficulty = 12,
@@ -462,7 +462,7 @@ reactions = {
     make_bronze_dagger = {
         name = "Make Bronze Dagger",
         workshop = "primitive_forge",
-        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="bronze_bar", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="bronze_dagger", qty=1 } },
         skill = "Metalworking",
         difficulty = 12,
@@ -471,7 +471,7 @@ reactions = {
     make_bronze_sword = {
         name = "Make Bronze Sword",
         workshop = "primitive_forge",
-        inputs = { { item="bronze_bar", qty=1 }, { item="wood_plank", qty=1 } },
+        inputs = { { item="bronze_bar", qty=1 }, { item="block", qty=1 } },
         outputs = { { item="bronze_sword", qty=1 } },
         skill = "Metalworking",
         difficulty = 14,

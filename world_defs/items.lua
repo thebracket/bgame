@@ -179,14 +179,6 @@ items = {
 		name = "Topsoil", description = "A lump of rich topsoil",
 		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['brown'], background = colors['black']
 	},
-	wood_plank = {
-		name = "Wood Plank",
-		description = "Wood, cut into a convenient shape",
-		itemtype = {"component"},
-		glyph = glyphs['single_wall_ew'],
-		foreground = colors['wood_brown'],
-		background = colors['black']
-	},
 	charcoal = {
 		name = "Charcoal",
 		description = "Wood, processed to burn at high temperature",
@@ -227,9 +219,9 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
-	stone_block = {
-		name = "Stone Block",
-		description = "Stone, cut into a convenient building block",
+	block = {
+		name = "Block",
+		description = "A convenient building block",
 		itemtype = {"component"},
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['grey'],

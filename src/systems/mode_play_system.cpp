@@ -222,7 +222,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 }
 
 void mode_play_system::show_tilemenu() {
-	std::unique_ptr<gui_popup_menu> menu = std::make_unique<gui_popup_menu>(menu_x, menu_y, true, true);
+	std::unique_ptr<gui_popup_menu> menu = std::make_unique<gui_popup_menu>(menu_x, menu_y, true, true, [] () { game_master_mode=PLAY; });
 
 	each<name_t, position_t, settler_ai_t>([&menu] (entity_t &entity, name_t &name, position_t &pos, settler_ai_t &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {

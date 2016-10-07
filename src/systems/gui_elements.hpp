@@ -308,12 +308,14 @@ struct gui_dialog : public base_gui {
 };
 
 struct gui_popup_menu : public base_gui {
-    gui_popup_menu(const int &X, const int &Y, const bool &left, const bool &down) : x(X), y(Y), face_left(left), face_down(down) {}
+    gui_popup_menu(const int &X, const int &Y, const bool &left, const bool &down, const std::function<void()> cancel) 
+        : x(X), y(Y), face_left(left), face_down(down), on_cancel(cancel) {}
 
     int x,y;
     bool face_left;
     bool face_down;
     std::vector<std::pair<std::string, boost::optional<std::function<void()>>>> options;
+    std::function<void()> on_cancel;
 
     virtual void render() override final {
         int width = 0;
@@ -340,6 +342,10 @@ struct gui_popup_menu : public base_gui {
             } else {
                 rltk::term(1)->print(box_left + 2, current_y, opt.first, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
             }
+        }
+
+        if (mouse::clicked && (mouse::term1x < box_left || mouse::term1x > box_right || mouse::term1y < box_top || mouse::term1y > box_bottom)) {
+            on_cancel();
         }
     }
 };
