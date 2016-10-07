@@ -346,6 +346,13 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 				ai.job_type_major = JOB_DECONSTRUCT;
 				ai.job_type_minor = JM_FIND_DECONSTRUCT;
 				change_job_status(ai, name, "performing demolition.", true);
+			} else {
+				std::cout << building.building_id << "\n";
+				ai.target_id = building.building_id;
+				change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
+				ai.job_type_major = JOB_DEMOLISH;
+				ai.job_type_minor = JM_FIND_DEMOLISH;
+				change_job_status(ai, name, "performing structural demolition.", true);
 			}
 			return;
 		}
@@ -474,6 +481,9 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_DECONSTRUCT) {
 		do_deconstruction(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_DEMOLISH) {
+		do_demolition(entity, ai, stats, species, pos, name);
 		return;
 	}
 	wander_randomly(entity, pos);
@@ -1504,4 +1514,82 @@ void settler_ai_system::do_deconstruction(entity_t &e, settler_ai_t &ai, game_st
 			return;
 		}
 	}	
+}
+
+void settler_ai_system::do_demolition(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_FIND_DEMOLISH) {
+		std::tie(ai.target_x, ai.target_y, ai.target_z) = idxmap(ai.target_id);
+
+		int x = ai.target_x;
+		int y = ai.target_y;
+		int z = ai.target_z;
+
+		if (current_region->tile_flags[mapidx(x-1,y,z)].test(CAN_STAND_HERE)) {
+			x=x-1;
+		} else if (current_region->tile_flags[mapidx(x+1,y,z)].test(CAN_STAND_HERE)) {
+			x=x+1;
+		} else if (current_region->tile_flags[mapidx(x,y-1,z)].test(CAN_STAND_HERE)) {
+			y=y-1;
+		} else if (current_region->tile_flags[mapidx(x,y+1,z)].test(CAN_STAND_HERE)) {
+			y=y+1;
+		} else if (current_region->tile_flags[mapidx(x,y,z-1)].test(CAN_STAND_HERE)) {
+			z=z-1;
+		} else if (current_region->tile_flags[mapidx(x,y,z+1)].test(CAN_STAND_HERE)) {
+			z=z+1;
+		} else {
+			cancel_action(e, ai, stats, species, pos, name, "No route to demolition");
+			return;
+		}
+
+		ai.current_path = find_path(pos, position_t{x, y, z});
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to demolition");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_DEMOLISH;
+		change_job_status(ai, name, "Traveling to demolition.");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_DEMOLISH) {
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_DEMOLISH;
+				change_job_status(ai, name, "Performing demolition");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				cancel_action(e, ai, stats, species, pos, name, "No route to deconstruction");
+			}
+		);
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DEMOLISH) {
+		// Make a skill roll
+		const std::string skill = "Construction";
+		const int difficulty = 15;
+		auto skill_check = skill_roll(e.id, stats, rng, skill, difficulty);
+		if (skill_check >= SUCCESS) {
+			current_region->tile_type[ai.target_id] = tile_type::OPEN_SPACE;
+			current_region->tile_flags[ai.target_id].reset(CONSTRUCTION);
+			// Regain materials?
+			become_idle(e, ai, name);
+			// Update pathing
+			for (int Z=-2; Z<10; ++Z) {
+				for (int Y=-10; Y<10; ++Y) {
+					for (int X=-10; X<10; ++X) {
+						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+						current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+					}
+				}
+			}
+			return;
+		} else {
+			// Failed!
+			if (skill_check == CRITICAL_FAIL) emit_deferred(inflict_damage_message{e.id, 1, "Demolition Accident"});
+			return;
+		}
+	}
 }

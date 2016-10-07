@@ -309,6 +309,19 @@ void mode_play_system::show_tilemenu() {
 		}
 	});
 
+	const int idx = mapidx(selected_tile_x, selected_tile_y, selected_tile_z);
+	if ((current_region->tile_type[idx] == tile_type::WALL || current_region->tile_type[idx] == tile_type::FLOOR 
+		|| current_region->tile_type[idx] == tile_type::STAIRS_DOWN || current_region->tile_type[idx] == tile_type::STAIRS_UP 
+		|| current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN) && current_region->tile_flags[idx].test(CONSTRUCTION) )
+	{
+		boost::optional<std::function<void()>> on_click{};
+		on_click = [idx] () {
+			designations->deconstructions.push_back(unbuild_t{false,static_cast<std::size_t>(idx)});
+			game_master_mode = PLAY;
+		};
+		menu->options.push_back(std::make_pair("Demolish Structure", on_click));
+	}
+
 	if (menu->options.empty()) {
 		game_master_mode = PLAY;
 	} else {
