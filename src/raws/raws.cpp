@@ -438,7 +438,17 @@ void read_material_types(std::ofstream &tech_tree_file) {
             if (field == "hit_points") m.hit_points = lua_tonumber(lua_state, -1);
             if (field == "mines_to") m.mines_to_tag = lua_tostring(lua_state, -1);
             if (field == "mines_to_also") m.mines_to_tag_second = lua_tostring(lua_state, -1);
-            if (field == "layer") m.layer = lua_tostring(lua_state, -1);           
+            if (field == "layer") m.layer = lua_tostring(lua_state, -1);
+            if (field == "ore_materials") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string metal = lua_tostring(lua_state, -1);
+                    std::cout << metal << "\n";
+                    m.smelts_to.push_back(metal);
+                    lua_pop(lua_state, 1);
+                }
+            }         
 
             lua_pop(lua_state, 1);
         }
@@ -941,6 +951,10 @@ void sanity_check_materials() {
         if (!mat.mines_to_tag_second.empty()) {
             auto finder = item_defs.find(mat.mines_to_tag_second);
             if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag_second << ", tag: " << mat.tag << "\n";
+        }
+        for (const std::string &metal : mat.smelts_to) {
+            auto finder = material_defs_idx.find(metal);
+            if (finder == material_defs_idx.end()) std::cout << "WARNING: " << mat.tag << " smelts into an unknown metal: " << metal << "\n"; 
         }
     }
 }

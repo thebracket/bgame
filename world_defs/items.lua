@@ -43,101 +43,13 @@ items = {
 		name = "Stone Boulder",	description = "A large stone boulder",
 		itemtype = {"component"}, glyph = glyphs['small_circle'], foreground = colors['grey'], background = colors['black']
 	},
-	aluminium_ore = {
-		name = "Aluminium Ore", description = "A lump of unrefined aluminium",
+	ore = {
+		name = "Unsmelted Ore", description = "A lump of unrefined metal",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['aluminium_blue'], background = colors['black']
 	},
-	aluminium_bar = {
-		name = "Aluminium Bars", description = "Aluminium Bars",
+	bar = {
+		name = "Metal Bars", description = "Metal Bars",
 		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['aluminium_blue'], background = colors['black']
-	},
-	bismuth_ore = {
-		name = "Bismuth Ore", description = "A lump of unrefined bismuth",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['bismuth_yellow'], background = colors['black']
-	},
-	bronze_bar = {
-		name = "Bronze Bars", description = "Bronze Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['bismuth_yellow'], background = colors['black']
-	},
-	tin_ore = {
-		name = "Tin Ore", description = "A lump of unrefined tin",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['tin_blue'], background = colors['black']
-	},
-	tin_bar = {
-		name = "Tin Bars", description = "Tin Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['tin_blue'], background = colors['black']
-	},
-	chromium_ore = {
-		name = "Chromium Ore", description = "A lump of unrefined chromium",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['chromium_blue'], background = colors['black']
-	},
-	chromium_bar = {
-		name = "Chromium Bars", description = "Chromium Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['chromium_blue'], background = colors['black']
-	},
-	mercury_ore = {
-		name = "Mercury Ore", description = "A lump of unrefined mercury",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['grey'], background = colors['black']
-	},
-	copper_ore = {
-		name = "Copper Ore", description = "A lump of unrefined copper",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['copper'], background = colors['black']
-	},
-	copper_bar = {
-		name = "Copper Bars", description = "Copper Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['copper'], background = colors['black']
-	},
-	lead_ore = {
-		name = "Lead Ore", description = "A lump of unrefined lead",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['grey'], background = colors['black']
-	},
-	lead_bar = {
-		name = "Lead Bars", description = "Lead Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['grey'], background = colors['black']
-	},
-	gold_ore = {
-		name = "Gold Ore", description = "A lump of unrefined gold",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['yellow'], background = colors['black']
-	},
-	gold_bar = {
-		name = "Gold Bars", description = "Gold Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['yellow'], background = colors['black']
-	},
-	iron_ore = {
-		name = "Iron Ore", description = "A lump of unrefined iron",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['dark_red'], background = colors['black']
-	},
-	iron_bar = {
-		name = "Iron Bars", description = "Iron Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['grey'], background = colors['black']
-	},
-	uranium_ore = {
-		name = "Uranium Ore", description = "A lump of unrefined uranium",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['green'], background = colors['black']
-	},
-	platinum_ore = {
-		name = "Platinum Ore", description = "A lump of unrefined platinum",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black']
-	},
-	platinum_bar = {
-		name = "Platinum Bars", description = "Platinum Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['white'], background = colors['black']
-	},
-	silver_ore = {
-		name = "Silver Ore", description = "A lump of unrefined silver",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black']
-	},
-	silver_bar = {
-		name = "Silver Bars", description = "Silver Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['white'], background = colors['black']
-	},
-	zinc_ore = {
-		name = "Zinc Ore", description = "A lump of unrefined zinc",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['zinc'], background = colors['black']
-	},
-	zinc_bar = {
-		name = "Zinc Bars", description = "Zinc Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['zinc'], background = colors['black']
 	},
 	saltpeter_ore = {
 		name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",

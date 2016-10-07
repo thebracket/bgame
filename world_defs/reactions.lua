@@ -109,132 +109,16 @@ reactions = {
         difficulty = 12,
         automatic = false
     },
-    smelt_aluminium = {
-        name = "Smelt Aluminium",
+    smelt_ore = {
+        name = "Smelt Ore",
         workshop = "smelter",
-        inputs = { { item="aluminium_ore", qty=1 } },
-        outputs = { { item="aluminium_bar", qty=2 } },
+        inputs = { { item="ore", qty=1 } },
+        outputs = { { item="bar", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
         automatic = true
     },
-    smelt_tin = {
-        name = "Smelt Tin",
-        workshop = "smelter",
-        inputs = { { item="tin_ore", qty=1 } },
-        outputs = { { item="tin_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true
-    },
-    smelt_chromium = {
-        name = "Smelt Chromium",
-        workshop = "smelter",
-        inputs = { { item="chromium_ore", qty=1 } },
-        outputs = { { item="chromium_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true
-    },
-    smelt_tin = {
-        name = "Smelt Copper",
-        workshop = "smelter",
-        inputs = { { item="tin_ore", qty=1 } },
-        outputs = { { item="tin_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true
-    },
-    smelt_lead = {
-        name = "Smelt Lead",
-        workshop = "smelter",
-        inputs = { { item="lead_ore", qty=1 } },
-        outputs = { { item="lead_bar", qty=2 } },
-        skill = "Masonry",
-        difficulty = 12,
-        automatic = true,
-        emits_smoke = true
-    },
-    smelt_gold = {
-        name = "Smelt Gold",
-        workshop = "smelter",
-        inputs = { { item="gold_ore", qty=1 } },
-        outputs = { { item="gold_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true,
-        emits_smoke = true
-    },
-    smelt_platinum = {
-        name = "Smelt Platinum",
-        workshop = "smelter",
-        inputs = { { item="platinum_ore", qty=1 } },
-        outputs = { { item="platinum_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true,
-        emits_smoke = true
-    },
-    smelt_silver = {
-        name = "Smelt Silver",
-        workshop = "smelter",
-        inputs = { { item="silver_ore", qty=1 } },
-        outputs = { { item="silver_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true,
-        emits_smoke = true
-    },
-    smelt_zinc = {
-        name = "Smelt Zinc",
-        workshop = "smelter",
-        inputs = { { item="zinc_ore", qty=1 } },
-        outputs = { { item="zinc_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true,
-        emits_smoke = true
-    },
-    smelt_iron = {
-        name = "Smelt Iron",
-        workshop = "smelter",
-        inputs = { { item="iron_ore", qty=1 } },
-        outputs = { { item="iron_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 12,
-        automatic = true,
-        emits_smoke = true
-    },
-    make_bronze_ore = {
-        name = "Smelt Bronze Alloy (Ore)",
-        workshop = "smelter",
-        inputs = { { item="tin_ore", qty=1 }, { item="copper_ore", qty=1} },
-        outputs = { { item="bronze_bar", qty=1 } },
-        skill = "Furnace Operation",
-        difficulty = 14,
-        automatic = true,
-        emits_smoke = true
-    },
-    make_bronze_bar = {
-        name = "Smelt Bronze Alloy (Bar)",
-        workshop = "smelter",
-        inputs = { { item="tin_bar", qty=1 }, { item="copper_bar", qty=1} },
-        outputs = { { item="bronze_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 14,
-        automatic = true,
-        emits_smoke = true
-    },
-    make_bismuth_bronze = {
-        name = "Smelt Bronze Alloy (Bismuth)",
-        workshop = "smelter",
-        inputs = { { item="bismuth_ore", qty=1 }, { item="copper_bar", qty=1} },
-        outputs = { { item="bronze_bar", qty=2 } },
-        skill = "Furnace Operation",
-        difficulty = 14,
-        automatic = true,
-        emits_smoke = true
-    },
+    -- TODO: Handle alloys
     replicate_tiny_marshmallow = {
         name = "Replicate Tiny Marshmallow",
         workshop = "fake_camp_fire",
