@@ -10,6 +10,12 @@ void building_t::save(std::ostream &lbfile) {
     for (const rltk::vchar &glyph : glyphs) {
         serialize(lbfile, glyph);
     }
+    sz = built_with.size();
+    serialize(lbfile, sz);
+    for (const auto &c : built_with) {
+        serialize(lbfile, c.first);
+        serialize(lbfile, c.second);
+    }
 }
 
 building_t building_t::load(std::istream &lbfile) {
@@ -24,6 +30,14 @@ building_t building_t::load(std::istream &lbfile) {
         rltk::vchar glyph;
         deserialize(lbfile, glyph);
         c.glyphs.push_back(glyph);
+    }
+    deserialize(lbfile, sz);
+    for (std::size_t i=0; i<sz; ++i) {
+        std::string component;
+        std::size_t material;
+        deserialize(lbfile, component);
+        deserialize(lbfile, material);
+        c.built_with.push_back(std::make_pair(component, material));
     }
     return c;
 }

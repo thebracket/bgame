@@ -252,15 +252,46 @@ void mode_play_system::show_tilemenu() {
 		}
 
 		if (on_building) {
-			// It's building and we can see it
+			// It's building and we can see it			
 			auto finder = building_defs.find(building.tag);
 			std::string building_name = "Unknown Building";
 			if (finder != building_defs.end()) {
+
 				if (building.complete) {
+					bool is_being_removed = false;
+					for (const auto &d : designations->deconstructions) {
+						if (d.building_id == building_entity.id) is_being_removed = true;
+					}
 					building_name = finder->second.name;
-					boost::optional<std::function<void()>> on_click{};
-					// TODO: Offer options for the building
-					menu->options.push_back(std::make_pair(std::string("Deconstruct ")+building_name, on_click));
+
+					if (!is_being_removed) {
+						boost::optional<std::function<void()>> on_click{};
+						on_click = [&building_entity] () {
+							designations->deconstructions.push_back(unbuild_t{true, building_entity.id});
+							game_master_mode = PLAY;
+						};
+						menu->options.push_back(std::make_pair(std::string("Deconstruct ")+building_name, on_click));
+					} else {
+						boost::optional<std::function<void()>> on_click{};
+						on_click = [&building_entity] () {
+							designations->deconstructions.erase(
+								// Remove from designations
+								std::remove_if(designations->deconstructions.begin(),
+									designations->deconstructions.end(),
+									[&building_entity] (unbuild_t u) { return (u.is_building == true && u.building_id == building_entity.id); }),
+								designations->deconstructions.end()
+							);
+
+							// See if there is a settler trying to do this task
+							each<settler_ai_t>([&building_entity] (entity_t &E, settler_ai_t &ai) {
+								if (ai.job_type_major == JM_DECONSTRUCT && ai.target_id == building_entity.id) {
+									ai.job_type_major = JOB_IDLE;
+								}
+							});
+							game_master_mode = PLAY;
+						};
+						menu->options.push_back(std::make_pair(std::string("Cancel removal of ")+building_name, on_click));
+					}
 				} else {
 					building_name = finder->second.name;
 					boost::optional<std::function<void()>> on_click{};

@@ -46,6 +46,11 @@ constexpr uint8_t SO_UPGRADE_ALWAYS = 2;
 
 }
 
+struct unbuild_t {
+	bool is_building = true;
+	std::size_t building_id;
+};
+
 struct designations_t {
 
 	boost::container::flat_map<int, uint8_t> mining;
@@ -53,6 +58,7 @@ struct designations_t {
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	std::vector<std::pair<bool, position_t>> guard_points;
+	std::vector<unbuild_t> deconstructions;
 	int current_power = 10;
 	uint64_t current_cash = 100;
 
@@ -128,6 +134,13 @@ struct designations_t {
 		for (const auto &g : guard_points) {
 			serialize(lbfile, g.first);
 			serialize(lbfile, g.second);
+		}
+
+		size = deconstructions.size();
+		serialize(lbfile, size);
+		for (const auto &u : deconstructions) {
+			serialize(lbfile, u.is_building);
+			serialize(lbfile, u.building_id);
 		}
 
 		serialize(lbfile, current_power);
@@ -213,6 +226,14 @@ struct designations_t {
 			deserialize(lbfile, claimed);
 			deserialize(lbfile, pos);
 			c.guard_points.push_back(std::make_pair(claimed, pos));
+		}
+
+		deserialize(lbfile, sz);
+		for (std::size_t i=0; i<sz; ++i) {
+			unbuild_t u;
+			deserialize(lbfile, u.is_building);
+			deserialize(lbfile, u.building_id);
+			c.deconstructions.push_back(u);
 		}
 
 		deserialize(lbfile, c.current_power);

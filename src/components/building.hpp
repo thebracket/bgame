@@ -13,6 +13,7 @@ struct building_t {
     int width, height;
     std::vector<rltk::vchar> glyphs;
     bool complete = false;
+    std::vector<std::pair<std::string, std::size_t>> built_with;
 
 	building_t() {}
 

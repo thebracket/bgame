@@ -95,7 +95,7 @@ void settler_ai_system::update(const double duration_ms) {
 						emit_deferred(entity_wants_to_flee_message{entity.id, closest_fear});
 					}
 				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
-					|| ai.job_type_major == JOB_REACTION || ai.job_type_major == JOB_BUTCHER) {
+					|| ai.job_type_major == JOB_REACTION || ai.job_type_major == JOB_BUTCHER || ai.job_type_major == JOB_DECONSTRUCT) {
 						// If we have a job to do - keep doing it
 						this->do_work_time(entity, ai, stats, species, pos, name);
 				} else {
@@ -337,6 +337,18 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 			}
 			return;
 		}
+		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->deconstructions.size() > 0) {
+			unbuild_t building = designations->deconstructions.back();
+			designations->deconstructions.pop_back();
+			if (building.is_building) {
+				ai.target_id = building.building_id;
+				change_settler_glyph(entity, vchar{1, rltk::colors::Pink, rltk::colors::BLACK});
+				ai.job_type_major = JOB_DECONSTRUCT;
+				ai.job_type_minor = JM_FIND_DECONSTRUCT;
+				change_job_status(ai, name, "performing demolition.", true);
+			}
+			return;
+		}
 
 		// Look for a queued order to perform
 		if (!designations->build_orders.empty()) {
@@ -459,6 +471,9 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 		return;
 	} else if (ai.job_type_major == JOB_GUARD) {
 		do_guard_duty(entity, ai, stats, species, pos, name);
+		return;
+	} else if (ai.job_type_major == JOB_DECONSTRUCT) {
+		do_deconstruction(entity, ai, stats, species, pos, name);
 		return;
 	}
 	wander_randomly(entity, pos);
@@ -877,8 +892,10 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 			for (auto &comp : ai.building_target.get().component_ids) {
 				auto component_ptr = entity(comp.first);
 				if (component_ptr) {
+					std::string comptag = component_ptr->component<item_t>()->item_tag;
 					material = component_ptr->component<item_t>()->material;
 					delete_item(comp.first);
+					entity(ai.building_target.get().building_entity)->component<building_t>()->built_with.push_back(std::make_pair(comptag, material));
 				}
 			}
 
@@ -1415,4 +1432,76 @@ void settler_ai_system::do_guard_duty(entity_t &e, settler_ai_t &ai, game_stats_
 	if (ai.job_type_minor == JM_GUARD) {
 		if (shooting_range(e, pos) == 0) cancel_action(e, ai, stats, species, pos, name, "No ammunition");
 	}
+}
+
+void settler_ai_system::do_deconstruction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
+	if (ai.job_type_minor == JM_FIND_DECONSTRUCT) {
+		std::cout << "find\n";
+		auto target_building = entity(ai.target_id);
+		if (!target_building) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to deconstruction");
+			return;
+		}
+		auto target_pos = target_building->component<position_t>();
+		if (!target_pos) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to deconstruction");
+			return;
+		}
+		ai.target_x = target_pos->x;
+		ai.target_y = target_pos->y;
+		ai.target_z = target_pos->z;
+		ai.current_path = find_path(pos, target_pos.get());
+		if (!ai.current_path->success) {
+			cancel_action(e, ai, stats, species, pos, name, "No route to deconstruction");
+			return;
+		}
+		ai.job_type_minor = JM_GO_TO_DECONSTRUCT;
+		change_job_status(ai, name, "Traveling to demolition.");
+		return;
+	}
+
+	if (ai.job_type_minor == JM_GO_TO_DECONSTRUCT) {
+		tasks::try_path(e, ai, pos,
+			[] () {}, // Do nothing on success
+			[&ai, &name] () {
+				ai.current_path.reset();
+				ai.job_type_minor = JM_DECONSTRUCT;
+				change_job_status(ai, name, "Performing demolition");
+			}, // On arrival
+			[&e, &ai, &stats, &species, &pos, &name] () {
+				cancel_action(e, ai, stats, species, pos, name, "No route to deconstruction");
+			}
+		);
+		return;
+	}
+
+	if (ai.job_type_minor == JM_DECONSTRUCT) {
+		// Make a skill roll
+		const std::string skill = "Construction";
+		const int difficulty = 10;
+		auto skill_check = skill_roll(e.id, stats, rng, skill, difficulty);
+		if (skill_check >= SUCCESS) {
+			auto building_entity = entity(ai.target_id);
+			if (building_entity) {
+				auto building_comp = building_entity->component<building_t>();
+				auto building_pos = building_entity->component<position_t>();
+				if (building_comp && building_pos) {
+					auto finder = building_defs.find(building_comp->tag);
+					if (finder != building_defs.end()) {
+						for (const std::pair<std::string, std::size_t> &component : building_comp->built_with) {
+							spawn_item_on_ground(building_pos->x, building_pos->y, building_pos->z, component.first, component.second);
+						}
+						delete_entity(ai.target_id);
+						ai.target_id = 0;
+					}
+				}
+			}
+			become_idle(e, ai, name);
+			return;
+		} else {
+			// Failed!
+			if (skill_check == CRITICAL_FAIL) emit_deferred(inflict_damage_message{e.id, 1, "Demolition Accident"});
+			return;
+		}
+	}	
 }
