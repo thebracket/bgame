@@ -44,7 +44,7 @@ items = {
 		itemtype = {"component"}, glyph = glyphs['small_circle'], foreground = colors['grey'], background = colors['black']
 	},
 	ore = {
-		name = "Unsmelted Ore", description = "A lump of unrefined metal",
+		name = "Metal Ore", description = "A lump of unrefined metal",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['aluminium_blue'], background = colors['black']
 	},
 	bar = {

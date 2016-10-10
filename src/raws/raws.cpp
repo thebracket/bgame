@@ -443,12 +443,20 @@ void read_material_types(std::ofstream &tech_tree_file) {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
+<<<<<<< Updated upstream
                     std::string metal = lua_tostring(lua_state, -1);
                     std::cout << metal << "\n";
                     m.smelts_to.push_back(metal);
                     lua_pop(lua_state, 1);
                 }
             }         
+=======
+                    const std::string metal_name = lua_tostring(lua_state, -1);
+                    m.ore_materials.push_back(metal_name);
+                    lua_pop(lua_state, 1);
+                }
+            }        
+>>>>>>> Stashed changes
 
             lua_pop(lua_state, 1);
         }
@@ -952,9 +960,11 @@ void sanity_check_materials() {
             auto finder = item_defs.find(mat.mines_to_tag_second);
             if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag_second << ", tag: " << mat.tag << "\n";
         }
-        for (const std::string &metal : mat.smelts_to) {
-            auto finder = material_defs_idx.find(metal);
-            if (finder == material_defs_idx.end()) std::cout << "WARNING: " << mat.tag << " smelts into an unknown metal: " << metal << "\n"; 
+        if (!mat.ore_materials.empty()) {
+            for (const std::string &metal : mat.ore_materials) {
+                auto finder = material_defs_idx.find(metal);
+                if (finder == material_defs_idx.end()) std::cout << "WARNING: Substance " << mat.tag << " produces a non-existent ore: " << metal << "\n";
+            }
         }
     }
 }
@@ -1123,7 +1133,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 
     auto item = create_entity()
         ->assign(position_t{ x,y,z })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
@@ -1133,7 +1143,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     auto item = create_entity()
         ->assign(item_stored_t{ container_id })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
@@ -1143,6 +1153,6 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 
     auto item = create_entity()
         ->assign(item_carried_t{ loc, holder_id })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }

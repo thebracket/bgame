@@ -150,7 +150,7 @@ struct material_def_t {
 	std::string mines_to_tag = "";
 	std::string mines_to_tag_second = "";
 	std::string layer = "";
-	std::vector<std::string> smelts_to;
+	std::vector<std::string> ore_materials; 
 };
 
 struct plant_t {

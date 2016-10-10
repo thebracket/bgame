@@ -110,4 +110,6 @@ colors = {
 	copper = { r=205, g=153, b=153 },
 	zinc = { r=186, g=196, b=200 },
 	firelight = { r=255, g=255, b=192 },
+	silver = { r=192, g=192, b=192 },
+	gold = { r=255, g=215, b=0 }
 }

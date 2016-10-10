@@ -118,7 +118,36 @@ reactions = {
         difficulty = 12,
         automatic = true
     },
-    -- TODO: Handle alloys
+    make_bronze_ore = {
+        name = "Smelt Bronze Alloy (Ore)",
+        workshop = "smelter",
+        inputs = { { item="tin_ore", qty=1 }, { item="copper_ore", qty=1} },
+        outputs = { { item="bronze_bar", qty=1 } },
+        skill = "Furnace Operation",
+        difficulty = 14,
+        automatic = true,
+        emits_smoke = true
+    },
+    make_bronze_bar = {
+        name = "Smelt Bronze Alloy (Bar)",
+        workshop = "smelter",
+        inputs = { { item="tin_bar", qty=1 }, { item="copper_bar", qty=1} },
+        outputs = { { item="bronze_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 14,
+        automatic = true,
+        emits_smoke = true
+    },
+    make_bismuth_bronze = {
+        name = "Smelt Bronze Alloy (Bismuth)",
+        workshop = "smelter",
+        inputs = { { item="bismuth_ore", qty=1 }, { item="copper_bar", qty=1} },
+        outputs = { { item="bronze_bar", qty=2 } },
+        skill = "Furnace Operation",
+        difficulty = 14,
+        automatic = true,
+        emits_smoke = true
+    },
     replicate_tiny_marshmallow = {
         name = "Replicate Tiny Marshmallow",
         workshop = "fake_camp_fire",

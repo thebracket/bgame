@@ -104,7 +104,15 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
     auto finder = item_defs.find(tag);
     if (finder != item_defs.end()) {
         //std::cout << "Topology system - producing a [" << tag << "]";
-        spawn_item_on_ground(e.x, e.y, e.z, tag, current_region->tile_material[e.target_idx]);
+        std::size_t material = current_region->tile_material[e.target_idx];
+        for (const std::string &metal : material_defs[material].ore_materials) {
+            auto metal_finder = material_defs_idx.find(metal);
+            if (metal_finder != material_defs_idx.end()) {
+                spawn_item_on_ground(e.x, e.y, e.z, tag, metal_finder->second);
+            } else {
+                std::cout << "WARNING: Tried to spawn " << metal << ", but it has no material definition\n";
+            }
+        }
     } else {
         std::cout << "Topology system - don't know how to spawn a [" << tag << "]\n";
     }
