@@ -113,7 +113,7 @@ reactions = {
         name = "Smelt Ore",
         workshop = "smelter",
         inputs = { { item="ore", qty=1 } },
-        outputs = { { item="bar", qty=2 } },
+        outputs = { { item="block", qty=2 } },
         skill = "Furnace Operation",
         difficulty = 12,
         automatic = true

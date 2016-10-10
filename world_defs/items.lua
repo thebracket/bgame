@@ -47,10 +47,6 @@ items = {
 		name = "Metal Ore", description = "A lump of unrefined metal",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['aluminium_blue'], background = colors['black']
 	},
-	bar = {
-		name = "Metal Bars", description = "Metal Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['aluminium_blue'], background = colors['black']
-	},
 	saltpeter_ore = {
 		name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black']

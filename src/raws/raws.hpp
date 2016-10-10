@@ -136,7 +136,7 @@ struct biome_type_t {
 	int evergreen_tree_chance = 0;
 };
 
-enum material_def_spawn_type_t { cluster_rock, rock, soil, sand };
+enum material_def_spawn_type_t { cluster_rock, rock, soil, sand, metal, synthetic, organic };
 
 struct material_def_t {
 	std::string tag = "";

@@ -426,10 +426,24 @@ void read_material_types(std::ofstream &tech_tree_file) {
             if (field == "name") m.name = lua_tostring(lua_state, -1);
             if (field == "type") {
                 std::string type_s = lua_tostring(lua_state, -1);
-                if (type_s == "cluster_rock") m.spawn_type = cluster_rock;
-                if (type_s == "rock") m.spawn_type = rock;
-                if (type_s == "soil") m.spawn_type = soil;
-                if (type_s == "sand") m.spawn_type = sand;
+                if (type_s == "cluster_rock") {
+                    m.spawn_type = cluster_rock;
+                } else if (type_s == "rock") {
+                    m.spawn_type = rock;
+                } else if (type_s == "soil") {
+                    m.spawn_type = soil;
+                } else if (type_s == "sand") {
+                    m.spawn_type = sand;
+                } else if (type_s == "metal") {
+                    m.spawn_type = metal;
+                } else if (type_s == "synthetic") {
+                    m.spawn_type = synthetic;
+                } else if (type_s == "organic") {
+                    m.spawn_type = organic;
+                } else {
+                    std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+                }
+
             }
             if (field == "parent") m.parent_material_tag = lua_tostring(lua_state, -1);
             if (field == "glyph") m.glyph = lua_tonumber(lua_state, -1);
@@ -443,20 +457,11 @@ void read_material_types(std::ofstream &tech_tree_file) {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-<<<<<<< Updated upstream
-                    std::string metal = lua_tostring(lua_state, -1);
-                    std::cout << metal << "\n";
-                    m.smelts_to.push_back(metal);
-                    lua_pop(lua_state, 1);
-                }
-            }         
-=======
                     const std::string metal_name = lua_tostring(lua_state, -1);
                     m.ore_materials.push_back(metal_name);
                     lua_pop(lua_state, 1);
                 }
             }        
->>>>>>> Stashed changes
 
             lua_pop(lua_state, 1);
         }
