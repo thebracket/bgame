@@ -232,9 +232,52 @@ void read_buildings(std::ofstream &tech_tree_file) {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string comp_key = lua_tostring(lua_state, -1);
-                    c.components.push_back(comp_key);
-                    tech_tree_file << "item_" << comp_key << " -> " <<  key << "\n";
+
+                    lua_pushnil(lua_state);
+                    lua_gettable(lua_state, -2);
+
+                    reaction_input_t comp;
+                    comp.required_material = boost::optional<std::size_t>{};
+                    comp.required_material_type = boost::optional<material_def_spawn_type_t>{};
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string f = lua_tostring(lua_state, -2);
+
+                        if (f == "item") comp.tag = lua_tostring(lua_state, -1);
+                        if (f == "qty") comp.quantity = lua_tonumber(lua_state, -1);
+                        if (f == "material") {
+                            std::string mat_name = lua_tostring(lua_state, -1);
+                            auto matfinder = material_defs_idx.find(mat_name);
+                            if (matfinder == material_defs_idx.end()) {
+                                std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
+                            } else {
+                                comp.required_material = matfinder->second;
+                            }
+                        }
+                        if (f == "mat_type") {
+                            std::string type_s = lua_tostring(lua_state, -1);
+                            if (type_s == "cluster_rock") {
+                                comp.required_material_type = cluster_rock;
+                            } else if (type_s == "rock") {
+                                comp.required_material_type = rock;
+                            } else if (type_s == "soil") {
+                                comp.required_material_type = soil;
+                            } else if (type_s == "sand") {
+                                comp.required_material_type = sand;
+                            } else if (type_s == "metal") {
+                                comp.required_material_type = metal;
+                            } else if (type_s == "synthetic") {
+                                comp.required_material_type = synthetic;
+                            } else if (type_s == "organic") {
+                                comp.required_material_type = organic;
+                            } else {
+                                std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+                            }
+                        }
+                        lua_pop(lua_state, 1);
+                    }
+
+                    c.components.push_back(comp);
+                    tech_tree_file << "item_" << comp.tag << " -> " <<  key << "\n";
                     lua_pop(lua_state, 1);
                 }
             }
@@ -326,7 +369,6 @@ void read_buildings(std::ofstream &tech_tree_file) {
             lua_pop(lua_state, 1);
         }
         building_defs[key] = c;
-
         lua_pop(lua_state, 1);
     }
 }
@@ -358,14 +400,46 @@ void read_reactions(std::ofstream &tech_tree_file) {
                 while (lua_next(lua_state, -2) != 0) {
                     lua_pushnil(lua_state);
                     lua_gettable(lua_state, -2);
-                    std::pair<std::string, int> comp;
+
+                    reaction_input_t input;
+                    input.required_material = boost::optional<std::size_t>{};
+                    input.required_material_type = boost::optional<material_def_spawn_type_t>{};
                     while (lua_next(lua_state, -2) != 0) {
                         std::string f = lua_tostring(lua_state, -2);
-                        if (f == "item") comp.first = lua_tostring(lua_state, -1);
-                        if (f == "qty") comp.second = lua_tonumber(lua_state, -1);
+                        if (f == "item") input.tag = lua_tostring(lua_state, -1);
+                        if (f == "qty") input.quantity = lua_tonumber(lua_state, -1);
+                        if (f == "material") {
+                            std::string mat_name = lua_tostring(lua_state, -1);
+                            auto matfinder = material_defs_idx.find(mat_name);
+                            if (matfinder == material_defs_idx.end()) {
+                                std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
+                            } else {
+                                input.required_material = matfinder->second;
+                            }
+                        }
+                        if (f == "mat_type") {
+                            std::string type_s = lua_tostring(lua_state, -1);
+                            if (type_s == "cluster_rock") {
+                                input.required_material_type = cluster_rock;
+                            } else if (type_s == "rock") {
+                                input.required_material_type = rock;
+                            } else if (type_s == "soil") {
+                                input.required_material_type = soil;
+                            } else if (type_s == "sand") {
+                                input.required_material_type = sand;
+                            } else if (type_s == "metal") {
+                                input.required_material_type = metal;
+                            } else if (type_s == "synthetic") {
+                                input.required_material_type = synthetic;
+                            } else if (type_s == "organic") {
+                                input.required_material_type = organic;
+                            } else {
+                                std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+                            }
+                        }
                         lua_pop(lua_state, 1);
                     }
-                    c.inputs.push_back(comp);
+                    c.inputs.push_back(input);
 
                     lua_pop(lua_state, 1);
                 }
@@ -397,7 +471,7 @@ void read_reactions(std::ofstream &tech_tree_file) {
         reaction_defs[key] = c;
         reaction_building_defs[c.workshop].push_back(key);
         for (const auto &input : c.inputs) {
-            tech_tree_file << "item_" << input.first << " -> " << c.workshop << "\n";
+            tech_tree_file << "item_" << input.tag << " -> " << c.workshop << "\n";
         }
         for (const auto &output : c.outputs) {
             tech_tree_file << c.workshop << " -> item_" << output.first << "\n";
@@ -923,11 +997,11 @@ void sanity_check_items() {
 void sanity_check_buildings() {
     for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
         if (it->first.empty()) std::cout << "WARNING: Empty building tag\n";
-        for (const std::string &comp : it->second.components) {
-            if (comp.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
-            auto finder = item_defs.find(comp);
+        for (const reaction_input_t &comp : it->second.components) {
+            if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
+            auto finder = item_defs.find(comp.tag);
             if (finder == item_defs.end()) {
-                std::cout << "WARNING: No item definition for component " << comp << ", for building: " << it->first << "\n";
+                std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it->first << "\n";
             }
         }
     }
@@ -942,8 +1016,8 @@ void sanity_check_reactions() {
         auto bf = building_defs.find(it->second.workshop);
         if (bf == building_defs.end()) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
         for (const auto &input : it->second.inputs) {
-            auto finder = item_defs.find(input.first);
-            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.first << ", reaction tag: " << it->first << "\n";
+            auto finder = item_defs.find(input.tag);
+            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
         }
         for (const auto &output : it->second.outputs) {
             auto finder = item_defs.find(output.first);

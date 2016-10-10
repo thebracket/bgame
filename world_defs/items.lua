@@ -120,7 +120,7 @@ items = {
 		background = colors['black']
 	},
 	wood_waste = {
-		name = "Wood Offcuts",
+		name = "Offcuts",
 		description = "Wood off-cuts",
 		itemtype = {"component"},
 		glyph = glyphs['three_bar'],
@@ -135,52 +135,28 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black']
 	},
-	wood_table = {
-		name = "Wooden Table",
-		description = "A wooden picnic table",
+	table = {
+		name = "Table",
+		description = "A table",
 		itemtype = {"furniture"},
 		glyph = glyphs['table'],
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
-	stone_table = {
-		name = "Stone Table",
-		description = "A stone picnic table",
-		itemtype = {"furniture"},
-		glyph = glyphs['table'],
-		foreground = colors['grey'],
-		background = colors['black']
-	},
-	wood_chair = {
-		name = "Wooden Chair",
-		description = "A wooden picnic chair",
+	chair = {
+		name = "Chair",
+		description = "A chair",
 		itemtype = {"furniture"},
 		glyph = glyphs['chair'],
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
-	stone_chair = {
-		name = "Stone Chair",
-		description = "A stone picnic chair",
-		itemtype = {"furniture"},
-		glyph = glyphs['chair'],
-		foreground = colors['grey'],
-		background = colors['black']
-	},
-	wood_door = {
-		name = "Wooden Door",
-		description = "A simple wooden door",
+	door = {
+		name = "Door",
+		description = "A simple door",
 		itemtype = {"component"},
 		glyph = glyphs['door'],
 		foreground = colors['wood_brown'],
-		background = colors['black']
-	},
-	stone_door = {
-		name = "Stone Door",
-		description = "A simple stone door",
-		itemtype = {"component"},
-		glyph = glyphs['door'],
-		foreground = colors['grey'],
 		background = colors['black']
 	},
 	tiny_marshmallow = {

@@ -8,6 +8,7 @@
 #include <rltk.hpp>
 #include <bitset>
 #include "../components/item_carried.hpp"
+#include "reaction_input.hpp"
 
 struct string_table_t {
 	std::vector<std::string> strings;
@@ -95,7 +96,7 @@ struct building_provides_t {
 struct building_def_t {
 	std::string tag = "";
 	std::string name = "";
-	std::vector<std::string> components;
+	std::vector<reaction_input_t> components;
 	std::pair<std::string, int> skill;
 	std::vector<building_provides_t> provides;	
 	int width = 1;
@@ -104,11 +105,12 @@ struct building_def_t {
 	bool emits_smoke = false;
 };
 
+
 struct reaction_t {
 	std::string tag = "";
 	std::string name = "";
 	std::string workshop = "";
-	std::vector<std::pair<std::string, int>> inputs;
+	std::vector<reaction_input_t> inputs;
 	std::vector<std::pair<std::string, int>> outputs;
 	std::string skill = "";
 	int difficulty = 10;
@@ -135,8 +137,6 @@ struct biome_type_t {
 	int deciduous_tree_chance = 0;
 	int evergreen_tree_chance = 0;
 };
-
-enum material_def_spawn_type_t { cluster_rock, rock, soil, sand, metal, synthetic, organic };
 
 struct material_def_t {
 	std::string tag = "";

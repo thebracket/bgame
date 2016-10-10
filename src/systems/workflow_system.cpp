@@ -82,12 +82,12 @@ boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t
                         bool available = true;
                         std::vector<std::pair<std::size_t,bool>> components;
                         for (auto &input : reaction->second.inputs) {
-                            const int n_available = available_items_by_tag(input.first);
-                            if (n_available < input.second) {
+                            const int n_available = available_items_by_reaction_input(input);
+                            if (n_available < input.quantity) {
                                 available = false;
                             } else {
                                 // Claim an item and push its # to the list
-                                std::size_t item_id = claim_item_by_tag(input.first);
+                                std::size_t item_id = claim_item_by_reaction_input(input);
                                 components.push_back(std::make_pair(item_id,false));
                             }
                         }
@@ -145,12 +145,12 @@ boost::optional<reaction_task_t> find_queued_reaction_task(const settler_ai_t &a
             bool available = true;
             std::vector<std::pair<std::size_t,bool>> components;
             for (auto &input : reaction->second.inputs) {
-                const int n_available = available_items_by_tag(input.first);
-                if (n_available < input.second) {
+                const int n_available = available_items_by_reaction_input(input);
+                if (n_available < input.quantity) {
                     available = false;
                 } else {
                     // Claim an item and push its # to the list
-                    std::size_t item_id = claim_item_by_tag(input.first);
+                    std::size_t item_id = claim_item_by_reaction_input(input);
                     components.push_back(std::make_pair(item_id,false));
                 }
             }

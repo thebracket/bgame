@@ -26,7 +26,9 @@ std::vector<available_building_t> get_available_buildings();
 std::vector<std::pair<std::string, std::string>> get_available_reactions();
 
 int available_items_by_tag(const std::string &tag);
+int available_items_by_reaction_input(const reaction_input_t &input);
 std::size_t claim_item_by_tag(const std::string &tag);
+std::size_t claim_item_by_reaction_input(const reaction_input_t &input);
 void unclaim_by_id(const std::size_t &id);
 
 void delete_item(const std::size_t &id);

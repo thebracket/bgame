@@ -1,14 +1,14 @@
 buildings = {
 	cordex = {
 		name = "Cordex",
-		components = { "cordex_core" },
+		components = { { item="cordex_core", qty=1} },
 		skill = { name="Construction", difficulty=25 },
 		render_rex = "cordex.xp"
 	},
 
 	solar_panel = {
 		name = "Solar Panel",
-		components = { "solar_panel_kit" },
+		components = { { item="solar_panel_kit", qty=1} },
 		skill = { name="Construction", difficulty=15 },
 		provides = { generator={energy_cost=10} },
 		render = {
@@ -20,7 +20,7 @@ buildings = {
 
 	cryo_bed = {
 		name = "Cryogenic Bed",
-		components = { "cryo_bed_kit" },
+		components = { { item="cryo_bed_kit", qty=1} },
 		skill = { name="Construction", difficulty=10 },
 		provides = { sleep={energy_cost=0} },
 		render = {
@@ -32,7 +32,7 @@ buildings = {
 
 	battery = {
 		name = "A battery bank",
-		components = { "battery_kit" },
+		components = { { item="battery_kit", qty=1} },
 		skill = { name="Construction", difficulty=10 },
 		provides = { power_storage={energy_cost=20} },
 		render = {
@@ -44,7 +44,7 @@ buildings = {
 
 	storage_locker = {
 		name = "A storage locker",
-		components = { "storage_locker" },
+		components = { { item="storage_locker", qty=1} },
 		skill = { name="Construction", difficulty=10 },
 		provides = { storage={energy_cost=0} },
 		render = {
@@ -56,7 +56,7 @@ buildings = {
 
 	small_replicator = {
 		name = "A small replicator",
-		components = { "replicator_unit" },
+		components = { { item="replicator_unit", qty=1} },
 		skill = { name="Construction", difficulty=10 },
 		provides = { storage={energy_cost=0} },
 		render = {
@@ -68,7 +68,7 @@ buildings = {
 
 	rtg = {
 		name = "A small nuclear power generator",
-		components = { "refined_plutonium" },
+		components = { {item="refined_plutonium", qty=1} },
 		skill = { name="Construction", difficulty=15 },
 		provides = { storage={energy_cost=0} },
 		render = {
@@ -80,7 +80,7 @@ buildings = {
 
 	personal_survival_shelter = {
 		name = "Tent",
-		components = { "personal_survival_shelter_kit" },
+		components = { { item="personal_survival_shelter_kit", qty=1 } },
 		skill = { name="Construction", difficulty=5 },
 		provides = { sleep={energy_cost=0} },
 		render = {
@@ -92,7 +92,7 @@ buildings = {
 
 	fake_camp_fire = {
 		name = "Nuclear Camp Fire",
-		components = { "camp_fire_kit" },
+		components = { { item="camp_fire_kit", qty=1 } },
 		skill = { name="Construction", difficulty=5 },
 		provides = { light={radius=5, color = colors['yellow']} },
 		render = {
@@ -105,7 +105,7 @@ buildings = {
 
 	camp_fire = {
 		name = "Camp Fire",
-		components = { "wood_log" },
+		components = { { item="wood_log", qty=1 } },
 		skill = { name="Construction", difficulty=5 },
 		provides = { light={radius=5, color = colors['yellow']} },
 		render = {
@@ -118,105 +118,104 @@ buildings = {
 
 	sawmill = {
 		name = "Sawmill",
-		components = { "wood_log" },
+		components = { { item="wood_log", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "sawmill.xp"
 	},
 
 	butcher = {
 		name = "Butcher",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "butchershop.xp"
 	},
 
 	tanner = {
 		name = "Tanner",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "tanner.xp"
 	},
 
 	leatherworker = {
 		name = "Leatherworker",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "leatherworker.xp"
 	},
 
 	bonecarver = {
 		name = "Bonecarver",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "bonecarver.xp"
 	},
 
 	stonecutter = {
 		name = "Stonecutters",
-		components = { "stone_boulder" },
+		components = { { item="stone_boulder", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "stonecutter.xp"
 	},
 
 	carpenter = {
 		name = "Carpentry Workshop",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "carpenter.xp"
 	},
 
 	charcoal_hut = {
 		name = "Charcoal Burner",
-		components = { "block" },
+		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "charcoal_hut.xp"
 	},
 
 	smelter = {
 		name = "Smelter",
-		components = { "block" },
+		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "smelter.xp"
 	},
 
 	glass_furnace = {
 		name = "Glass Furnace",
-		components = { "block" },
+		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "glass_furnace.xp"
 	},
 
 	silicon_refinery = {
-		name = "Silicon Refinery",
-		components = { "block", "raw_glass" },
+		components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "silicon_refinery.xp"
 	},
 
 	primitive_forge = {
 		name = "Primitive Forge",
-		components = { "block" },
+		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=15 },
 		render_rex = "primitive_forge.xp"
 	},
 
 	primitive_workshop = {
 		name = "Primitive Workshop",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=15 },
 		render_rex = "primitive_workshop.xp"
 	},
 
 	mason = {
 		name = "Masonry",
-		components = { "block" },
+		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "mason.xp"
 	},
 
-	stone_table = {
-		name = "Stone Table",
-		components = { "stone_table" },
+	table = {
+		name = "Table",
+		components = { { item="table", qty=1 } },
 		skill = { name="Construction", difficulty=5 },
 		provides = { table={energy_cost=0} },
 		render = {
@@ -226,21 +225,9 @@ buildings = {
 		}
 	},
 
-	wood_table = {
-		name = "Wooden Table",
-		components = { "wood_table" },
-		skill = { name="Construction", difficulty=5 },
-		provides = { table={energy_cost=0} },
-		render = {
-			width=1, height=1, tiles= {
-				{glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']}
-			}
-		}
-	},
-
-	stone_chair = {
-		name = "Stone Chair",
-		components = { "stone_chair" },
+	chair = {
+		name = "Chair",
+		components = { { item="chair", qty=1 } },
 		skill = { name="Construction", difficulty=5 },
 		provides = { table={energy_cost=0} },
 		render = {
@@ -250,9 +237,9 @@ buildings = {
 		}
 	},
 
-	stone_door = {
-		name = "Stone Dooor",
-		components = { "stone_door" },
+	door = {
+		name = "Dooor",
+		components = { { item="door", qty=1 } },
 		skill = { name="Construction", difficulty=10 },
 		provides = { door={energy_cost=0} },
 		render = {
@@ -262,52 +249,28 @@ buildings = {
 		}
 	},
 
-	wood_chair = {
-		name = "Wooden Chair",
-		components = { "wood_chair" },
-		skill = { name="Construction", difficulty=5 },
-		provides = { table={energy_cost=0} },
-		render = {
-			width=1, height=1, tiles= {
-				{glyph= glyphs['chair'], foreground = colors['wood_brown'], background = colors['black']}
-			}
-		}
-	},
-
-	wood_door = {
-		name = "Wooden Door",
-		components = { "wood_door" },
-		skill = { name="Construction", difficulty=10 },
-		provides = { door={energy_cost=0} },
-		render = {
-			width=1, height=1, tiles= {
-				{glyph= glyphs['door'], foreground = colors['wood_brown'], background = colors['black']}
-			}
-		}
-	},
-
 	wall = {
-		name = "Wall", components = { "block" }, skill = { name="Construction", difficulty=10 },
+		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
 		provides = { wall={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} }
 	},
 	floor = {
-		name = "Floor", components = { "block" }, skill = { name="Construction", difficulty=10 },
+		name = "Floor", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
 		provides = { floor={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	stairs_up = {
-		name = "Up Stairs", components = { "block" }, skill = { name="Construction", difficulty=10 },
+		name = "Up Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
 		provides = { stairs_up={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['less_than'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	stairs_down = {
-		name = "Down Stairs", components = { "block" }, skill = { name="Construction", difficulty=10 },
+		name = "Down Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
 		provides = { stairs_down={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['greater_than'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	stairs_updown = {
-		name = "Spiral Stairs", components = { "block" }, skill = { name="Construction", difficulty=10 },
+		name = "Spiral Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
 		provides = { stairs_updown={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['X'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	ramp = {
-		name = "Ramp", components = { "block" }, skill = { name="Construction", difficulty=10 },
+		name = "Ramp", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
 		provides = { ramp={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['ramp_up'], foreground = colors['wood_brown'], background = colors['black']} } }
 	}
 }

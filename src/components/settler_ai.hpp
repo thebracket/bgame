@@ -102,8 +102,18 @@ struct settler_ai_t {
 			}
 			sz = building_target.get().components.size();
 			serialize(lbfile, sz);
-			for (const std::string &comp : building_target.get().components) {
-				serialize(lbfile, comp);
+			for (const reaction_input_t &comp : building_target.get().components) {
+				serialize(lbfile, comp.tag);
+				serialize(lbfile, comp.quantity);
+				bool has_material = true; 
+				if (!comp.required_material) has_material = false;
+				serialize(lbfile, has_material);				
+				if (has_material) serialize(lbfile, comp.required_material.get());
+
+				bool has_mat_type = true;
+				if (!comp.required_material_type) has_mat_type = false;
+				serialize(lbfile, has_mat_type);
+				if (has_mat_type) serialize(lbfile, comp.required_material_type.get());
 			}
 			sz = building_target.get().glyphs.size();
 			serialize(lbfile, sz);
@@ -170,8 +180,24 @@ struct settler_ai_t {
 			}
 			deserialize(lbfile, sz);
 			for (std::size_t i=0; i<sz; ++i) {
-				std::string comp;
-				deserialize(lbfile, comp);
+				reaction_input_t comp;
+				deserialize(lbfile, comp.tag);
+				deserialize(lbfile, comp.quantity);
+				bool has_material;
+				deserialize(lbfile, has_material);
+				if (has_material) {
+					std::size_t mat;
+					deserialize(lbfile, mat);
+					comp.required_material = mat;
+				}
+				bool has_mat_type;
+				deserialize(lbfile, has_mat_type);
+				if (has_mat_type) {
+					material_def_spawn_type_t tmp;
+					deserialize(lbfile, tmp);
+					comp.required_material_type = tmp;
+				}
+
 				b.components.push_back(comp);
 			}
 			deserialize(lbfile, sz);
