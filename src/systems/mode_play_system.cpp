@@ -44,7 +44,7 @@ void mode_play_system::update(const double duration_ms) {
 		mouse_dwell_time = 0.0;
 	}
 
-	if (mouse::clicked) {
+	if (mouse::clicked && game_master_mode == PLAY) {
 		pause_mode = PAUSED;
 		game_master_mode = TILEMENU;
 		selected_tile_x = world_x;
@@ -63,6 +63,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	{
 		std::stringstream ss;
 		if (current_region->solid[tile_idx]) ss << "Solid-";
+		if (current_region->opaque[tile_idx]) ss << "Opaque-";
 		if (current_region->tile_flags[tile_idx].test(CAN_GO_DOWN)) ss << "Down-";
 		if (current_region->tile_flags[tile_idx].test(CAN_GO_UP)) ss << "Up-";
 		if (current_region->tile_flags[tile_idx].test(CAN_GO_NORTH)) ss << "North-";

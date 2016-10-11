@@ -21,7 +21,7 @@ vchar greyscale(vchar target) {
 	const color_t grey_fg = greyscale(target.foreground);
 	const color_t grey_bg = greyscale(target.background);
 
-	target.foreground = lerp(target.foreground, grey_fg, 0.5);
+	target.foreground = lerp(target.foreground, grey_fg, 0.7);
 	target.background = lerp(target.background, grey_bg, 0.5);
 	return target;
 }
