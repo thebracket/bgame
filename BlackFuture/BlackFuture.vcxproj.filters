@@ -507,6 +507,9 @@
     <ClInclude Include="..\src\systems\mode_standing_orders.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\raws\reaction_input.hpp">
+      <Filter>Header Files\raws</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">

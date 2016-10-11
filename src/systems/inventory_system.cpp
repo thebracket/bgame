@@ -81,9 +81,9 @@ void inventory_system::configure() {
     	designate.height = building.height;
     	designate.glyphs = building.glyphs;
 
-		for (const std::string &requested_component : building.components) {
-			const std::size_t component_id = claim_item_by_tag(requested_component);
-			std::cout << "Component [" << requested_component << "] #" << component_id << "\n";
+		for (const auto &requested_component : building.components) {
+			const std::size_t component_id = claim_item_by_reaction_input(requested_component);
+			std::cout << "Component [" << requested_component.tag << "] #" << component_id << "\n";
 			designate.component_ids.push_back(std::make_pair(component_id, false));
 		}
 
@@ -229,11 +229,11 @@ std::vector<available_building_t> get_available_buildings() {
 
 		// Evaluate the required components and see if they are available
 		boost::container::flat_map<std::string, std::pair<int,int>> requirements;
-		for (const std::string &require : it->second.components) {
-			auto finder = requirements.find(require);
+		for (const auto &require : it->second.components) {
+			auto finder = requirements.find(require.tag);
 			if (finder == requirements.end()) {
-				const int available_item_count = available_items_by_tag(require);
-				requirements[require] = std::make_pair( 1, available_item_count );
+				const int available_item_count = available_items_by_reaction_input(require);
+				requirements[require.tag] = std::make_pair( require.quantity, available_item_count );
 				if (available_item_count < 1) possible = false;
 			} else {
 				++finder->second.first;
@@ -279,14 +279,14 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 			// Do the components exist, and are unclaimed?
 			if (possible) {
 				boost::container::flat_map<std::string, std::pair<int,int>> requirements;
-				for (const std::pair<std::string,int> &require : it->second.inputs) {
-					auto finder = requirements.find(require.first);
+				for (const reaction_input_t &require : it->second.inputs) {
+					auto finder = requirements.find(require.tag);
 					if (finder == requirements.end()) {
-						const int available_components = available_items_by_tag(require.first);
-						requirements[require.first] = std::make_pair(require.second, available_components);
-						if (require.second > available_components) possible = false;
+						const int available_components = available_items_by_reaction_input(require);
+						requirements[require.tag] = std::make_pair(require.quantity, available_components);
+						if (require.quantity > available_components) possible = false;
 					} else {
-						finder->second.first += require.second;
+						finder->second.first += require.quantity;
 						if (finder->second.first > finder->second.second) possible = false;
 					}
 				}
@@ -343,10 +343,47 @@ int available_items_by_tag(const std::string &tag) {
 	return result;
 }
 
+int available_items_by_reaction_input(const reaction_input_t &input) {
+	int result = 0;
+	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
+		if (i.item_tag == input.tag && i.claimed == false) {
+			bool ok = true;
+			if (input.required_material) {
+				if (i.material != input.required_material.get()) ok=false;
+			}
+			if (input.required_material_type) {
+				if (material_defs[i.material].spawn_type != input.required_material_type.get()) ok = false;
+			}
+			if (ok) ++result;
+		}
+	});
+	return result;
+}
+
 std::size_t claim_item_by_tag(const std::string &tag) {
 	std::size_t result = 0;
 	each<item_t>([&result, &tag] (entity_t &e, item_t &i) {
 		if (i.item_tag == tag && i.claimed == false) result = e.id;
+	});
+	if (result != 0) {
+		emit(item_claimed_message{result, true});
+	}
+	return result;
+}
+
+std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
+	std::size_t result = 0;
+	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
+		if (i.item_tag == input.tag && i.claimed == false) {
+			bool ok = true;
+			if (input.required_material) {
+				if (i.material != input.required_material.get()) ok=false;
+			}
+			if (input.required_material_type) {
+				if (material_defs[i.material].spawn_type != input.required_material_type.get()) ok = false;
+			}
+			if (ok) result = e.id;
+		}
 	});
 	if (result != 0) {
 		emit(item_claimed_message{result, true});

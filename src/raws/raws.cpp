@@ -232,9 +232,54 @@ void read_buildings(std::ofstream &tech_tree_file) {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string comp_key = lua_tostring(lua_state, -1);
-                    c.components.push_back(comp_key);
-                    tech_tree_file << "item_" << comp_key << " -> " <<  key << "\n";
+
+                    lua_pushnil(lua_state);
+                    lua_gettable(lua_state, -2);
+
+                    reaction_input_t comp;
+                    comp.required_material = boost::optional<std::size_t>{};
+                    comp.required_material_type = boost::optional<material_def_spawn_type_t>{};
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string f = lua_tostring(lua_state, -2);
+
+                        if (f == "item") comp.tag = lua_tostring(lua_state, -1);
+                        if (f == "qty") comp.quantity = lua_tonumber(lua_state, -1);
+                        if (f == "material") {
+                            std::string mat_name = lua_tostring(lua_state, -1);
+                            auto matfinder = material_defs_idx.find(mat_name);
+                            if (matfinder == material_defs_idx.end()) {
+                                std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
+                            } else {
+                                comp.required_material = matfinder->second;
+                            }
+                        }
+                        if (f == "mat_type") {
+                            std::string type_s = lua_tostring(lua_state, -1);
+                            if (type_s == "cluster_rock") {
+                                comp.required_material_type = cluster_rock;
+                            } else if (type_s == "rock") {
+                                comp.required_material_type = rock;
+                            } else if (type_s == "soil") {
+                                comp.required_material_type = soil;
+                            } else if (type_s == "sand") {
+                                comp.required_material_type = sand;
+                            } else if (type_s == "metal") {
+                                comp.required_material_type = metal;
+                            } else if (type_s == "synthetic") {
+                                comp.required_material_type = synthetic;
+                            } else if (type_s == "organic") {
+                                comp.required_material_type = organic;
+                            } else if (type_s == "leather") {
+                                comp.required_material_type = leather;
+                            } else {
+                                std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+                            }
+                        }
+                        lua_pop(lua_state, 1);
+                    }
+
+                    c.components.push_back(comp);
+                    tech_tree_file << "item_" << comp.tag << " -> " <<  key << "\n";
                     lua_pop(lua_state, 1);
                 }
             }
@@ -326,7 +371,6 @@ void read_buildings(std::ofstream &tech_tree_file) {
             lua_pop(lua_state, 1);
         }
         building_defs[key] = c;
-
         lua_pop(lua_state, 1);
     }
 }
@@ -358,14 +402,48 @@ void read_reactions(std::ofstream &tech_tree_file) {
                 while (lua_next(lua_state, -2) != 0) {
                     lua_pushnil(lua_state);
                     lua_gettable(lua_state, -2);
-                    std::pair<std::string, int> comp;
+
+                    reaction_input_t input;
+                    input.required_material = boost::optional<std::size_t>{};
+                    input.required_material_type = boost::optional<material_def_spawn_type_t>{};
                     while (lua_next(lua_state, -2) != 0) {
                         std::string f = lua_tostring(lua_state, -2);
-                        if (f == "item") comp.first = lua_tostring(lua_state, -1);
-                        if (f == "qty") comp.second = lua_tonumber(lua_state, -1);
+                        if (f == "item") input.tag = lua_tostring(lua_state, -1);
+                        if (f == "qty") input.quantity = lua_tonumber(lua_state, -1);
+                        if (f == "material") {
+                            std::string mat_name = lua_tostring(lua_state, -1);
+                            auto matfinder = material_defs_idx.find(mat_name);
+                            if (matfinder == material_defs_idx.end()) {
+                                std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
+                            } else {
+                                input.required_material = matfinder->second;
+                            }
+                        }
+                        if (f == "mat_type") {
+                            std::string type_s = lua_tostring(lua_state, -1);
+                            if (type_s == "cluster_rock") {
+                                input.required_material_type = cluster_rock;
+                            } else if (type_s == "rock") {
+                                input.required_material_type = rock;
+                            } else if (type_s == "soil") {
+                                input.required_material_type = soil;
+                            } else if (type_s == "sand") {
+                                input.required_material_type = sand;
+                            } else if (type_s == "metal") {
+                                input.required_material_type = metal;
+                            } else if (type_s == "synthetic") {
+                                input.required_material_type = synthetic;
+                            } else if (type_s == "organic") {
+                                input.required_material_type = organic;
+                            } else if (type_s == "leather") {
+                                input.required_material_type = leather;
+                            } else {
+                                std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+                            }
+                        }
                         lua_pop(lua_state, 1);
                     }
-                    c.inputs.push_back(comp);
+                    c.inputs.push_back(input);
 
                     lua_pop(lua_state, 1);
                 }
@@ -397,7 +475,7 @@ void read_reactions(std::ofstream &tech_tree_file) {
         reaction_defs[key] = c;
         reaction_building_defs[c.workshop].push_back(key);
         for (const auto &input : c.inputs) {
-            tech_tree_file << "item_" << input.first << " -> " << c.workshop << "\n";
+            tech_tree_file << "item_" << input.tag << " -> " << c.workshop << "\n";
         }
         for (const auto &output : c.outputs) {
             tech_tree_file << c.workshop << " -> item_" << output.first << "\n";
@@ -426,10 +504,26 @@ void read_material_types(std::ofstream &tech_tree_file) {
             if (field == "name") m.name = lua_tostring(lua_state, -1);
             if (field == "type") {
                 std::string type_s = lua_tostring(lua_state, -1);
-                if (type_s == "cluster_rock") m.spawn_type = cluster_rock;
-                if (type_s == "rock") m.spawn_type = rock;
-                if (type_s == "soil") m.spawn_type = soil;
-                if (type_s == "sand") m.spawn_type = sand;
+                if (type_s == "cluster_rock") {
+                    m.spawn_type = cluster_rock;
+                } else if (type_s == "rock") {
+                    m.spawn_type = rock;
+                } else if (type_s == "soil") {
+                    m.spawn_type = soil;
+                } else if (type_s == "sand") {
+                    m.spawn_type = sand;
+                } else if (type_s == "metal") {
+                    m.spawn_type = metal;
+                } else if (type_s == "synthetic") {
+                    m.spawn_type = synthetic;
+                } else if (type_s == "organic") {
+                    m.spawn_type = organic;
+                } else if (type_s == "leather") {
+                    m.spawn_type = leather;
+                } else {
+                    std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+                }
+
             }
             if (field == "parent") m.parent_material_tag = lua_tostring(lua_state, -1);
             if (field == "glyph") m.glyph = lua_tonumber(lua_state, -1);
@@ -438,7 +532,16 @@ void read_material_types(std::ofstream &tech_tree_file) {
             if (field == "hit_points") m.hit_points = lua_tonumber(lua_state, -1);
             if (field == "mines_to") m.mines_to_tag = lua_tostring(lua_state, -1);
             if (field == "mines_to_also") m.mines_to_tag_second = lua_tostring(lua_state, -1);
-            if (field == "layer") m.layer = lua_tostring(lua_state, -1);           
+            if (field == "layer") m.layer = lua_tostring(lua_state, -1);
+            if (field == "ore_materials") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    const std::string metal_name = lua_tostring(lua_state, -1);
+                    m.ore_materials.push_back(metal_name);
+                    lua_pop(lua_state, 1);
+                }
+            }        
 
             lua_pop(lua_state, 1);
         }
@@ -900,11 +1003,11 @@ void sanity_check_items() {
 void sanity_check_buildings() {
     for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
         if (it->first.empty()) std::cout << "WARNING: Empty building tag\n";
-        for (const std::string &comp : it->second.components) {
-            if (comp.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
-            auto finder = item_defs.find(comp);
+        for (const reaction_input_t &comp : it->second.components) {
+            if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
+            auto finder = item_defs.find(comp.tag);
             if (finder == item_defs.end()) {
-                std::cout << "WARNING: No item definition for component " << comp << ", for building: " << it->first << "\n";
+                std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it->first << "\n";
             }
         }
     }
@@ -919,8 +1022,8 @@ void sanity_check_reactions() {
         auto bf = building_defs.find(it->second.workshop);
         if (bf == building_defs.end()) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
         for (const auto &input : it->second.inputs) {
-            auto finder = item_defs.find(input.first);
-            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.first << ", reaction tag: " << it->first << "\n";
+            auto finder = item_defs.find(input.tag);
+            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
         }
         for (const auto &output : it->second.outputs) {
             auto finder = item_defs.find(output.first);
@@ -941,6 +1044,12 @@ void sanity_check_materials() {
         if (!mat.mines_to_tag_second.empty()) {
             auto finder = item_defs.find(mat.mines_to_tag_second);
             if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag_second << ", tag: " << mat.tag << "\n";
+        }
+        if (!mat.ore_materials.empty()) {
+            for (const std::string &metal : mat.ore_materials) {
+                auto finder = material_defs_idx.find(metal);
+                if (finder == material_defs_idx.end()) std::cout << "WARNING: Substance " << mat.tag << " produces a non-existent ore: " << metal << "\n";
+            }
         }
     }
 }
@@ -1009,27 +1118,64 @@ void sanity_check_natives() {
             if (n.name.empty()) std::cout << "WARNING: Native pop type with no name\n";
             for (const std::tuple< uint8_t, std::string, std::string > &cloth : n.starting_clothes) {
                 if (std::get<0>(cloth) > 3) std::cout << "WARNING: " << n.name << " clothing item has invalid gender tag\n";
-                if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes")
+                if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes") {
                     std::cout << "WARNING: " << n.name << " has an invalid slot: " << std::get<1>(cloth) << "\n";
-                auto finder = clothing_types.find(std::get<2>(cloth));
-                if (finder == clothing_types.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+                }
+
+                if (!str_contains(std::get<2>(cloth), "/")) {
+                    std::cout << "WARNING: No material specified for clothing belonging to " << n.name << "\n";
+                } else {
+                    auto cs = split(std::get<2>(cloth), '/');
+
+                    auto finder = clothing_types.find(cs[0]);
+                    if (finder == clothing_types.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+
+                    auto finder2 = material_defs_idx.find(cs[1]);
+                    if (finder2 == material_defs_idx.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing material: " << cs[1] << "\n";
+                }
             }
 
             if (n.melee.empty()) std::cout << "WARNING: " << n.name << " has no melee weapon.\n";
-            if (!n.melee.empty() && item_defs.find(n.melee) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid melee weapon, " << n.melee << ".\n";
-            if (!n.ranged.empty() && item_defs.find(n.ranged) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid ranged weapon, " << n.ranged << ".\n";
-            if (!n.ammo.empty() && item_defs.find(n.ammo) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid ammunition, " << n.ammo << ".\n";
+            if (!n.melee.empty()) {
+                auto cs = split(n.melee, '/');
+                if (item_defs.find(cs[0]) == item_defs.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid melee weapon, " << n.melee << ".\n";
+                }
+                if (material_defs_idx.find(cs[1])==material_defs_idx.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid melee material, " << n.melee << ".\n";
+                }
+            }
+
+            if (!n.ranged.empty()) {
+                auto cs = split(n.ranged, '/');
+                if (item_defs.find(cs[0]) == item_defs.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ranged weapon, " << n.ranged << ".\n";
+                }
+                if (material_defs_idx.find(cs[1])==material_defs_idx.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ranged material, " << n.ranged << ".\n";
+                }
+            }
+
+            if (!n.ammo.empty()) {
+                auto cs = split(n.ammo, '/');
+                if (item_defs.find(cs[0]) == item_defs.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ammo weapon, " << n.ammo << ".\n";
+                }
+                if (material_defs_idx.find(cs[1])==material_defs_idx.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ammo material, " << n.ammo << ".\n";
+                }
+            }
         }
     }
 }
 
 void sanity_check_raws() {
+    sanity_check_materials();
     sanity_check_clothing();
     sanity_check_professions();
     sanity_check_items();
     sanity_check_buildings();
     sanity_check_reactions();
-    sanity_check_materials();
     sanity_check_plants();
     sanity_check_biomes();
     sanity_check_species();
@@ -1042,12 +1188,12 @@ void load_game_tables() {
     tech_tree_file << "digraph G {\n";
     tech_tree_file << "\"cut trees\" -> wood_logs\n";
 
+    read_material_types(tech_tree_file);
     read_clothing(tech_tree_file);
     read_professions(tech_tree_file);
     read_items(tech_tree_file);
     read_buildings(tech_tree_file);
     read_reactions(tech_tree_file);
-    read_material_types(tech_tree_file);
     read_plant_types(tech_tree_file);
     read_biome_types(tech_tree_file);
     read_species_types(tech_tree_file);
@@ -1109,7 +1255,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 
     auto item = create_entity()
         ->assign(position_t{ x,y,z })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
@@ -1119,7 +1265,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     auto item = create_entity()
         ->assign(item_stored_t{ container_id })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
@@ -1129,6 +1275,6 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 
     auto item = create_entity()
         ->assign(item_carried_t{ loc, holder_id })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.fg, finder->second.bg })
+        ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }

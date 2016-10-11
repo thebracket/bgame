@@ -43,101 +43,9 @@ items = {
 		name = "Stone Boulder",	description = "A large stone boulder",
 		itemtype = {"component"}, glyph = glyphs['small_circle'], foreground = colors['grey'], background = colors['black']
 	},
-	aluminium_ore = {
-		name = "Aluminium Ore", description = "A lump of unrefined aluminium",
+	ore = {
+		name = "Metal Ore", description = "A lump of unrefined metal",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['aluminium_blue'], background = colors['black']
-	},
-	aluminium_bar = {
-		name = "Aluminium Bars", description = "Aluminium Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['aluminium_blue'], background = colors['black']
-	},
-	bismuth_ore = {
-		name = "Bismuth Ore", description = "A lump of unrefined bismuth",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['bismuth_yellow'], background = colors['black']
-	},
-	bronze_bar = {
-		name = "Bronze Bars", description = "Bronze Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['bismuth_yellow'], background = colors['black']
-	},
-	tin_ore = {
-		name = "Tin Ore", description = "A lump of unrefined tin",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['tin_blue'], background = colors['black']
-	},
-	tin_bar = {
-		name = "Tin Bars", description = "Tin Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['tin_blue'], background = colors['black']
-	},
-	chromium_ore = {
-		name = "Chromium Ore", description = "A lump of unrefined chromium",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['chromium_blue'], background = colors['black']
-	},
-	chromium_bar = {
-		name = "Chromium Bars", description = "Chromium Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['chromium_blue'], background = colors['black']
-	},
-	mercury_ore = {
-		name = "Mercury Ore", description = "A lump of unrefined mercury",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['grey'], background = colors['black']
-	},
-	copper_ore = {
-		name = "Copper Ore", description = "A lump of unrefined copper",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['copper'], background = colors['black']
-	},
-	copper_bar = {
-		name = "Copper Bars", description = "Copper Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['copper'], background = colors['black']
-	},
-	lead_ore = {
-		name = "Lead Ore", description = "A lump of unrefined lead",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['grey'], background = colors['black']
-	},
-	lead_bar = {
-		name = "Lead Bars", description = "Lead Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['grey'], background = colors['black']
-	},
-	gold_ore = {
-		name = "Gold Ore", description = "A lump of unrefined gold",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['yellow'], background = colors['black']
-	},
-	gold_bar = {
-		name = "Gold Bars", description = "Gold Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['yellow'], background = colors['black']
-	},
-	iron_ore = {
-		name = "Iron Ore", description = "A lump of unrefined iron",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['dark_red'], background = colors['black']
-	},
-	iron_bar = {
-		name = "Iron Bars", description = "Iron Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['grey'], background = colors['black']
-	},
-	uranium_ore = {
-		name = "Uranium Ore", description = "A lump of unrefined uranium",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['green'], background = colors['black']
-	},
-	platinum_ore = {
-		name = "Platinum Ore", description = "A lump of unrefined platinum",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black']
-	},
-	platinum_bar = {
-		name = "Platinum Bars", description = "Platinum Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['white'], background = colors['black']
-	},
-	silver_ore = {
-		name = "Silver Ore", description = "A lump of unrefined silver",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black']
-	},
-	silver_bar = {
-		name = "Silver Bars", description = "Silver Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['white'], background = colors['black']
-	},
-	zinc_ore = {
-		name = "Zinc Ore", description = "A lump of unrefined zinc",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['zinc'], background = colors['black']
-	},
-	zinc_bar = {
-		name = "Zinc Bars", description = "Zinc Bars",
-		itemtype = {"component"}, glyph = glyphs['three_bar'], foreground = colors['zinc'], background = colors['black']
 	},
 	saltpeter_ore = {
 		name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",
@@ -212,7 +120,7 @@ items = {
 		background = colors['black']
 	},
 	wood_waste = {
-		name = "Wood Offcuts",
+		name = "Offcuts",
 		description = "Wood off-cuts",
 		itemtype = {"component"},
 		glyph = glyphs['three_bar'],
@@ -227,52 +135,28 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black']
 	},
-	wood_table = {
-		name = "Wooden Table",
-		description = "A wooden picnic table",
+	table = {
+		name = "Table",
+		description = "A table",
 		itemtype = {"furniture"},
 		glyph = glyphs['table'],
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
-	stone_table = {
-		name = "Stone Table",
-		description = "A stone picnic table",
-		itemtype = {"furniture"},
-		glyph = glyphs['table'],
-		foreground = colors['grey'],
-		background = colors['black']
-	},
-	wood_chair = {
-		name = "Wooden Chair",
-		description = "A wooden picnic chair",
+	chair = {
+		name = "Chair",
+		description = "A chair",
 		itemtype = {"furniture"},
 		glyph = glyphs['chair'],
 		foreground = colors['wood_brown'],
 		background = colors['black']
 	},
-	stone_chair = {
-		name = "Stone Chair",
-		description = "A stone picnic chair",
-		itemtype = {"furniture"},
-		glyph = glyphs['chair'],
-		foreground = colors['grey'],
-		background = colors['black']
-	},
-	wood_door = {
-		name = "Wooden Door",
-		description = "A simple wooden door",
+	door = {
+		name = "Door",
+		description = "A simple door",
 		itemtype = {"component"},
 		glyph = glyphs['door'],
 		foreground = colors['wood_brown'],
-		background = colors['black']
-	},
-	stone_door = {
-		name = "Stone Door",
-		description = "A simple stone door",
-		itemtype = {"component"},
-		glyph = glyphs['door'],
-		foreground = colors['grey'],
 		background = colors['black']
 	},
 	tiny_marshmallow = {
@@ -317,77 +201,68 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
-	stone_hammer = {
-		name = "Stone Hammer",
-		description = "A simple hammer with a stone head",
+	warhammer = {
+		name = "Warhammer",
+		description = "A heavy hammer design for bashing people",
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
-	stone_axe = {
-		name = "Stone Axe",
-		description = "A simple axe with a stone head",
+	battleaxe = {
+		name = "Battle Axe",
+		description = "A large axe, designed for chopping people rather than trees",
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6
+		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 6
 	},
-	bronze_axe = {
-		name = "Bronze Axe",
-		description = "A socketed bronze axe",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	bronze_hammer = {
-		name = "Bronze Hammer",
-		description = "A socketed bronze hammer",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	bronze_pickaxe = {
-		name = "Bronze Pickaxe",
-		description = "A socketed bronze pickaxe",
-		itemtype = {"weapon-melee", "tool-digging"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	bronze_dagger = {
-		name = "Bronze Dagger",
-		description = "A bronze dagger",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 4
-	},
-	bronze_sword = {
-		name = "Bronze Sword",
-		description = "A bronze sword",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	stone_knife = {
-		name = "Stone Knife",
-		description = "A simple knife with a stone head",
+	handaxe = {
+		name = "Hand Axe",
+		description = "A small axe, optimized for hitting people quickly",
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 6
+	},
+	shortsword = {
+		name = "Short Sword",
+		description = "A short sword, designed for thrusting",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
+	},
+	longsword = {
+		name = "Long Sword",
+		description = "A long sword, designed for slashing",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
+	},
+	knife = {
+		name = "Knife",
+		description = "A simple knife",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=3, damage_mod=0, damage_stat="str", initiative_penalty = 2
+	},
+	dagger = {
+		name = "Dagger",
+		description = "A simple dagger",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 2
 	},
 	atlatl = {
 		name = "Atlatl",
@@ -407,18 +282,18 @@ items = {
 		background = colors['black'],
 		damage_mod=0, damage_stat="dex", range=4, ammo="smallcell", initiative_penalty = 4
 	},
-	wood_shortbow = {
-		name = "Wooden Shortbow",
-		description = "A simple wooden shortbow",
+	shortbow = {
+		name = "Shortbow",
+		description = "A simple shortbow",
 		itemtype = {"weapon-ranged"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_mod=0, damage_stat="dex", range=4, ammo="arrow", initiative_penalty = 4
 	},
-	wood_dart = {
-		name = "Wooden Dart",
-		description = "A simple wooden dart",
+	dart = {
+		name = "Dart",
+		description = "A simple dart",
 		itemtype = {"ammo"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
@@ -434,9 +309,9 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="smallcell"
 	},
-	wood_arrow = {
-		name = "Wooden Arrow",
-		description = "A simple wooden arrow",
+	arrow = {
+		name = "Arrow",
+		description = "A simple arrow",
 		itemtype = {"ammo"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],

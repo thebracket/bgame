@@ -4,6 +4,7 @@
 #include "../../raws/health_factory.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
+#include "../../utils/string_utils.hpp"
 
 int sentient_stat_mod(boost::container::flat_map<std::string, raw_species_t>::iterator &species, const std::string &stat) {
     auto finder = species->second.stat_mods.find(stat);
@@ -56,7 +57,6 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
     }
     const int profidx = rng.roll_dice(1,profession->second.size())-1;    
 
-    //std::cout << species_finder->second.glyph << "\n";
     auto sentient = create_entity()
         ->assign(position_t{x,y,z})
         ->assign(name_t{ species_finder->second.name, profession->second[profidx].name })
@@ -71,42 +71,58 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
     }
 
     for (auto item : profession->second[profidx].starting_clothes) {
-		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
+		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {            
 			std::string item_name = std::get<2>(item);
 			std::string slot_name = std::get<1>(item);
+            auto cs = split(item_name, '/');
 			item_location_t position = INVENTORY;
 			if (slot_name == "head") position = HEAD;
 			if (slot_name == "torso") position = TORSO;
 			if (slot_name == "legs") position = LEGS;
 			if (slot_name == "shoes") position = FEET;
             std::cout << "Created " << item_name << "\n";
-			create_entity()->assign(item_t{item_name})->assign(item_carried_t{position, sentient->id});
+            item_t clothing{cs[0]};
+            clothing.material = material_defs_idx[cs[1]];
+            clothing.item_name = material_defs[clothing.material].name + std::string(" ") + clothing.item_name;
+			create_entity()->assign(std::move(clothing))->assign(item_carried_t{position, sentient->id});
 		}
 	}
 
     if (profession->second[profidx].melee != "") {
-        const std::string item_name = profession->second[profidx].melee;
+        auto cs = split(profession->second[profidx].melee, '/');
+        const std::string item_name = cs[0];
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
-        auto weapon = create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_MELEE, sentient->id});
+        item_t w{item_name};
+        w.material = material_defs_idx[cs[1]];
+        w.item_name = material_defs[w.material].name + std::string(" ") + w.item_name;
+        auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_MELEE, sentient->id});
         weapon->component<item_t>()->stack_size = finder->second.stack_size;
         weapon->component<item_t>()->category = finder->second.categories;
         weapon->component<item_t>()->claimed = true;
     }
     if (profession->second[profidx].ranged != "") {
-        const std::string item_name = profession->second[profidx].ranged;
+        auto cs = split(profession->second[profidx].ranged, '/');
+        const std::string item_name = cs[0];
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
-        auto weapon = create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_RANGED, sentient->id});
+        item_t w{item_name};
+        w.material = material_defs_idx[cs[1]];
+        w.item_name = material_defs[w.material].name + std::string(" ") + w.item_name;
+        auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_RANGED, sentient->id});
         weapon->component<item_t>()->stack_size = finder->second.stack_size;
         weapon->component<item_t>()->category = finder->second.categories;
         weapon->component<item_t>()->claimed = true;
     }
     if (profession->second[profidx].ammo != "") {
-        const std::string item_name = profession->second[profidx].ammo;
+        auto cs = split(profession->second[profidx].ammo, '/');
+        const std::string item_name = cs[0];
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
-        auto ammo = create_entity()->assign(item_t{item_name})->assign(item_carried_t{EQUIP_AMMO, sentient->id});
+        item_t w{item_name};
+        w.material = material_defs_idx[cs[1]];
+        w.item_name = material_defs[w.material].name + std::string(" ") + w.item_name;
+        auto ammo = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_AMMO, sentient->id});
         ammo->component<item_t>()->stack_size = finder->second.stack_size;
         ammo->component<item_t>()->category = finder->second.categories;
         ammo->component<item_t>()->claimed = true;

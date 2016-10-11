@@ -35,3 +35,9 @@ std::string str_replace(std::string &s, const std::string &toReplace, const std:
 {
     return(s.replace(s.find(toReplace), toReplace.length(), replaceWith));
 }
+
+bool str_contains(const std::string &s, const std::string &search_for) {
+    auto finder = s.find(search_for);
+    if (finder == std::string::npos) return false;
+    return true;
+}

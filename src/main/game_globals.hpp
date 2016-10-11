@@ -3,6 +3,7 @@
 #include "../planet/planet.hpp"
 #include "../planet/region.hpp"
 #include "../components/components.hpp"
+#include "../raws/reaction_input.hpp"
 #include <rltk.hpp>
 #include <boost/optional.hpp>
 #include <memory>
@@ -22,7 +23,7 @@ struct available_building_t {
 
 	std::string name;
 	std::string tag;
-	std::vector<std::string> components;
+	std::vector<reaction_input_t> components;
     int width;
     int height;
     std::vector<rltk::vchar> glyphs;
