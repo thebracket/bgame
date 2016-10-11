@@ -1118,16 +1118,53 @@ void sanity_check_natives() {
             if (n.name.empty()) std::cout << "WARNING: Native pop type with no name\n";
             for (const std::tuple< uint8_t, std::string, std::string > &cloth : n.starting_clothes) {
                 if (std::get<0>(cloth) > 3) std::cout << "WARNING: " << n.name << " clothing item has invalid gender tag\n";
-                if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes")
+                if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes") {
                     std::cout << "WARNING: " << n.name << " has an invalid slot: " << std::get<1>(cloth) << "\n";
-                auto finder = clothing_types.find(std::get<2>(cloth));
-                if (finder == clothing_types.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+                }
+
+                if (!str_contains(std::get<2>(cloth), "/")) {
+                    std::cout << "WARNING: No material specified for clothing belonging to " << n.name << "\n";
+                } else {
+                    auto cs = split(std::get<2>(cloth), '/');
+
+                    auto finder = clothing_types.find(cs[0]);
+                    if (finder == clothing_types.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+
+                    auto finder2 = material_defs_idx.find(cs[1]);
+                    if (finder2 == material_defs_idx.end()) std::cout << "WARNING: " << n.name << " has non-existent clothing material: " << cs[1] << "\n";
+                }
             }
 
             if (n.melee.empty()) std::cout << "WARNING: " << n.name << " has no melee weapon.\n";
-            if (!n.melee.empty() && item_defs.find(n.melee) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid melee weapon, " << n.melee << ".\n";
-            if (!n.ranged.empty() && item_defs.find(n.ranged) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid ranged weapon, " << n.ranged << ".\n";
-            if (!n.ammo.empty() && item_defs.find(n.ammo) == item_defs.end()) std::cout << "WARNING: " << n.name << " has an invalid ammunition, " << n.ammo << ".\n";
+            if (!n.melee.empty()) {
+                auto cs = split(n.melee, '/');
+                if (item_defs.find(cs[0]) == item_defs.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid melee weapon, " << n.melee << ".\n";
+                }
+                if (material_defs_idx.find(cs[1])==material_defs_idx.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid melee material, " << n.melee << ".\n";
+                }
+            }
+
+            if (!n.ranged.empty()) {
+                auto cs = split(n.ranged, '/');
+                if (item_defs.find(cs[0]) == item_defs.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ranged weapon, " << n.ranged << ".\n";
+                }
+                if (material_defs_idx.find(cs[1])==material_defs_idx.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ranged material, " << n.ranged << ".\n";
+                }
+            }
+
+            if (!n.ammo.empty()) {
+                auto cs = split(n.ammo, '/');
+                if (item_defs.find(cs[0]) == item_defs.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ammo weapon, " << n.ammo << ".\n";
+                }
+                if (material_defs_idx.find(cs[1])==material_defs_idx.end()) {
+                    std::cout << "WARNING: " << n.name << " has an invalid ammo material, " << n.ammo << ".\n";
+                }
+            }
         }
     }
 }

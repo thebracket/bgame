@@ -1,38 +1,38 @@
 stone_age_default = {
-    both = { torso="tunic", shoes="sandals" },
-    male = { legs="britches" },
-    female = { legs="skirt_simple" }
+    both = { torso="tunic/hide", shoes="sandals/hide" },
+    male = { legs="britches/hide" },
+    female = { legs="skirt_simple/hide" }
 }
 stone_age_leather = {
-    both = { torso="tunic", shoes="sandals", head="cap" },
-    male = { legs="britches" },
-    female = { legs="skirt_simple" }
+    both = { torso="tunic/leather", shoes="sandals/leather", head="cap/leather" },
+    male = { legs="britches/leather" },
+    female = { legs="skirt_simple/leather" }
 }
 stone_age_boiled_leather = {
-    both = { torso="tunic", shoes="sandals", head="cap" },
-    male = { legs="britches" },
-    female = { legs="skirt_simple" }
+    both = { torso="tunic/boiled_leather", shoes="sandals/boiled_leather", head="cap/boiled_leather" },
+    male = { legs="britches/boiled_leather" },
+    female = { legs="skirt_simple/boiled_leather" }
 }
 
 bronze_age_default = {
-    both = { torso="tunic", shoes="sandals" },
-    male = { legs="britches" },
-    female = { legs="skirt_simple" }
+    both = { torso="tunic/leather", shoes="sandals/leather" },
+    male = { legs="britches/leather" },
+    female = { legs="skirt_simple/leather" }
 }
 bronze_age_light = {
-    both = { torso="ringmail", shoes="sandals", head="cap" },
-    male = { legs="britches" },
-    female = { legs="skirt_simple" }
+    both = { torso="ringmail/bronze", shoes="sandals/leather", head="cap/leather" },
+    male = { legs="britches/leather" },
+    female = { legs="skirt_simple/leather" }
 }
 bronze_age_medium = {
-    both = { torso="ringmail", shoes="sandals", head="cap" },
-    male = { legs="britches" },
-    female = { legs="skirt_simple" }
+    both = { torso="ringmail/bronze", shoes="sandals/leather", head="cap/leather" },
+    male = { legs="britches/leather" },
+    female = { legs="skirt_simple/leather" }
 }
 bronze_age_heavy = {
-    both = { torso="breastplate", shoes="sandals", head="helm" },
-    male = { legs="leggings" },
-    female = { legs="skirt_simple" }
+    both = { torso="breastplate/bronze", shoes="sandals/bronze", head="helm/bronze" },
+    male = { legs="leggings/bronze" },
+    female = { legs="skirt_simple/bone" }
 }
 
 native_populations = {
@@ -41,180 +41,180 @@ native_populations = {
         {
             title = "Builder", aggression=2, modifiers = { str = 2, int = -1 },
             clothing = stone_age_default,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         },
         {
             title = "Woodworker", aggression=3, modifiers = { str = 2, int = -1 },
             clothing = stone_age_default,
-            melee = "handaxe"
+            melee = "handaxe/granite"
         }
     },
     farmer_1 = {
         {
             title = "Gatherer", aggression=1, modifiers = { con = 1, int = -1 },
             clothing = stone_age_default,
-            melee = "pointy_stick"
+            melee = "pointy_stick/wood"
         }
     },
     herbalist_1 = {
         {
             title = "Gatherer", aggression=1, modifiers = { con = 1, int = -1 },
             clothing = stone_age_default,
-            melee = "pointy_stick"
+            melee = "pointy_stick/wood"
         }
     },
     metalworker_1 = {
         {
             title = "Crafter", aggression=1, modifiers = { dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         }
     },
     stoneworker_1 = {
         {
             title = "Crafter", aggression=1, modifiers = { dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         }
     },
     woodworker_1 = {
         {
             title = "Woodcrafter", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "battleaxe"
+            melee = "battleaxe/granite"
         }
     },
     cook_1 = {
         {
             title = "Cook", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "knife"
+            melee = "knife/granite"
         }
     },
     hunter_1 = {
         {
             title = "Bow Hunter", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/granite", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Atlatl Hunter", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "dagger", ranged = "atlatl", ammo = "wood_dart"
+            melee = "dagger/granite", ranged = "atlatl/wood", ammo = "dart/wood"
         }
     },
     skirmisher_1 = {
         {
             title = "Bow Hunter", aggression=4, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/granite", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Atlatl Hunter", aggression=4, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "dagger", ranged = "atlatl", ammo = "wood_dart"
+            melee = "dagger/granite", ranged = "atlatl/wood", ammo = "dart/wood"
         }
     },
     lightinfantry_1 = {
         {
             title = "Archer", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/granite", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "battleaxe"
+            melee = "battleaxe/granite"
         },
         {
             title = "Hammerman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         }
     },
     infantry_1 = {
         {
             title = "Archer", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_leather,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/granite", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_leather,
-            melee = "battleaxe"
+            melee = "battleaxe/granite"
         },
         {
             title = "Hammerman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_leather,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         }
     },
     heavyinfantry_1 = {
         {
             title = "Archer", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_boiled_leather,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/obsidian", ranged = "shortbow/bone", ammo = "arrow/bone"
         },
         {
             title = "Axeman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_boiled_leather,
-            melee = "battleaxe"
+            melee = "battleaxe/obsidian"
         },
         {
             title = "Hammerman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_boiled_leather,
-            melee = "warhammer"
+            melee = "warhammer/obsidian"
         }
     },
     lightcavalry_1 = {
         {
             title = "Archer", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/granite", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "battleaxe"
+            melee = "battleaxe/granite"
         },
         {
             title = "Hammerman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_default,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         }
     },
     mediumcavalry_1 = {
         {
             title = "Archer", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_leather,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/granite", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_leather,
-            melee = "battleaxe"
+            melee = "battleaxe/granite"
         },
         {
             title = "Hammerman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_leather,
-            melee = "warhammer"
+            melee = "warhammer/granite"
         }
     },
     heavycavalry_1 = {
         {
             title = "Archer", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_boiled_leather,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/obsidian", ranged = "shortbow/bone", ammo = "arrow/bone"
         },
         {
             title = "Axeman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_boiled_leather,
-            melee = "battleaxe"
+            melee = "battleaxe/obsidian"
         },
         {
             title = "Hammerman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = stone_age_boiled_leather,
-            melee = "warhammer"
+            melee = "warhammer/obsidian"
         }
     },
 
@@ -223,190 +223,190 @@ native_populations = {
         {
             title = "Builder", aggression=2, modifiers = { str = 2, int = -1 },
             clothing = bronze_age_default,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         },
         {
             title = "Woodworker", aggression=3, modifiers = { str = 2, int = -1 },
             clothing = bronze_age_default,
-            melee = "handaxe"
+            melee = "handaxe/bronze"
         },
         {
             title = "Miner", aggression=4, modifiers = { str = 2, int = -1 },
             clothing = bronze_age_default,
-            melee = "pickaxe"
+            melee = "pickaxe/bronze"
         }
     },
     farmer_2 = {
         {
             title = "Gatherer", aggression=1, modifiers = { con = 1, int = -1 },
             clothing = bronze_age_default,
-            melee = "knife"
+            melee = "knife/bronze"
         }
     },
     herbalist_2 = {
         {
             title = "Herbalist", aggression=1, modifiers = { wis = 1, int = -1 },
             clothing = bronze_age_default,
-            melee = "dagger"
+            melee = "dagger/bronze"
         }
     },
     metalworker_2 = {
         {
             title = "Smith", aggression=1, modifiers = { str = 2, int = 1 },
             clothing = bronze_age_default,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         }
     },
     stoneworker_2 = {
         {
             title = "Mason", aggression=1, modifiers = { dex = 1, str = 1 },
             clothing = bronze_age_default,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         }
     },
     woodworker_2 = {
         {
             title = "Woodcrafter", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_default,
-            melee = "handaxe"
+            melee = "handaxe/bronze"
         }
     },
     cook_2 = {
         {
             title = "Cook", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_default,
-            melee = "knife"
+            melee = "knife/bronze"
         }
     },
     hunter_2 = {
         {
             title = "Bow Hunter", aggression=1, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_default,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         }
     },
     skirmisher_2 = {
         {
             title = "Scout", aggression=4, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         }
     },
     lightinfantry_2 = {
         {
             title = "Archer", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "battleaxe"
+            melee = "battleaxe/bronze"
         },
         {
             title = "Hammerman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         },
         {
             title = "Swordsman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "shortsword"
+            melee = "shortsword/bronze"
         }
     },
     infantry_2 = {
         {
             title = "Archer", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_medium,
-            melee = "battleaxe"
+            melee = "battleaxe/bronze"
         },
         {
             title = "Hammerman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_medium,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         },
         {
             title = "Swordsman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_medium,
-            melee = "longsword"
+            melee = "longsword/bronze"
         }
     },
     heavyinfantry_2 = {
         {
             title = "Archer", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "battleaxe"
+            melee = "battleaxe/bronze"
         },
         {
             title = "Hammerman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         },
         {
             title = "Swordsman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "longsword"
+            melee = "longsword/bronze"
         }
     },
     lightcavalry_2 = {
         {
             title = "Archer", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "battleaxe"
+            melee = "battleaxe/bronze"
         },
         {
             title = "Hammerman", aggression=5, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_light,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         }
     },
     mediumcavalry_2 = {
         {
             title = "Archer", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_medium,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_medium,
-            melee = "battleaxe"
+            melee = "battleaxe/bronze"
         },
         {
             title = "Hammerman", aggression=6, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_medium,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         }
     },
     heavycavalry_2 = {
         {
             title = "Archer", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "dagger", ranged = "wood_shortbow", ammo = "wood_arrow"
+            melee = "dagger/bronze", ranged = "shortbow/wood", ammo = "arrow/wood"
         },
         {
             title = "Axeman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "battleaxe"
+            melee = "battleaxe/bronze"
         },
         {
             title = "Hammerman", aggression=7, modifiers = { str = 1, dex = 1, int = 1 },
             clothing = bronze_age_heavy,
-            melee = "warhammer"
+            melee = "warhammer/bronze"
         }
     },
 }

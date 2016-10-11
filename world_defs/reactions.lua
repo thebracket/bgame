@@ -216,7 +216,7 @@ reactions = {
         name = "Make Wooden Dart",
         workshop = "carpenter",
         inputs = { { item="block", qty=1, material="wood" } },
-        outputs = { { item="wood_dart", qty=1 } },
+        outputs = { { item="dart", qty=1 } },
         skill = "Carpentry",
         difficulty = 12,
         automatic = false

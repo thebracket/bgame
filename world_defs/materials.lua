@@ -330,6 +330,10 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 10
     },
+    bone = { name = "Organic", type="organic", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
+        hit_points = 10
+    },
     hide = { name = "Hide", type="leather", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 10
@@ -352,6 +356,10 @@ materials = {
 -- Metals
     aluminium = { name = "Aluminium", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['aluminium_blue'], bg=colors['black'],
+        hit_points = 200
+    },
+    bronze = { name = "Bronze", type="metal", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['bronze'], bg=colors['black'],
         hit_points = 200
     },
     copper = { name = "Copper", type="metal", 

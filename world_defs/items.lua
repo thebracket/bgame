@@ -282,18 +282,18 @@ items = {
 		background = colors['black'],
 		damage_mod=0, damage_stat="dex", range=4, ammo="smallcell", initiative_penalty = 4
 	},
-	wood_shortbow = {
-		name = "Wooden Shortbow",
-		description = "A simple wooden shortbow",
+	shortbow = {
+		name = "Shortbow",
+		description = "A simple shortbow",
 		itemtype = {"weapon-ranged"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_mod=0, damage_stat="dex", range=4, ammo="arrow", initiative_penalty = 4
 	},
-	wood_dart = {
-		name = "Wooden Dart",
-		description = "A simple wooden dart",
+	dart = {
+		name = "Dart",
+		description = "A simple dart",
 		itemtype = {"ammo"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
@@ -309,9 +309,9 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="smallcell"
 	},
-	wood_arrow = {
-		name = "Wooden Arrow",
-		description = "A simple wooden arrow",
+	arrow = {
+		name = "Arrow",
+		description = "A simple arrow",
 		itemtype = {"ammo"},
 		glyph = glyphs['axe'],
 		foreground = colors['wood_brown'],
