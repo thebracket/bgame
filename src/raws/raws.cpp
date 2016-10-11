@@ -541,7 +541,9 @@ void read_material_types(std::ofstream &tech_tree_file) {
                     m.ore_materials.push_back(metal_name);
                     lua_pop(lua_state, 1);
                 }
-            }        
+            }    
+            if (field == "damage_bonus") m.damage_bonus = lua_tonumber(lua_state, -1);
+            if (field == "ac_bonus") m.ac_bonus = lua_tonumber(lua_state, -1);    
 
             lua_pop(lua_state, 1);
         }

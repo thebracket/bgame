@@ -169,7 +169,7 @@ materials = {
     },
     obsidian = { name="Marble", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['black'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder", damage_bonus=1
     },
     olivine = { name="Olivine", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['dark_green'], bg=colors['grey'],
@@ -332,19 +332,19 @@ materials = {
     },
     bone = { name = "Organic", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
-        hit_points = 10
+        hit_points = 10, damage_bonus=1
     },
     hide = { name = "Hide", type="leather", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
-        hit_points = 10
+        hit_points = 10, ac_bonus = 0.5
     },
     leather = { name = "Leather", type="leather", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
-        hit_points = 10
+        hit_points = 10, ac_bonus = 0.75
     },
     boiled_leather = { name = "Boiled Leather", type="leather", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
-        hit_points = 10
+        hit_points = 10, ac_bonus = 1.0
     },
 
 -- Synthetic Materials - only occur after refining
@@ -356,54 +356,58 @@ materials = {
 -- Metals
     aluminium = { name = "Aluminium", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['aluminium_blue'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=-1, ac_bonus=0.5
     },
     bronze = { name = "Bronze", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['bronze'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=2, ac_bonus=1.0
     },
     copper = { name = "Copper", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['copper'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=1, ac_bonus=0.5
     },
     chromium = { name = "Chromium", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['chromium_blue'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=3, ac_bonus=1.0
     },
     gold = { name = "Gold", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['gold'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=1, ac_bonus=0.5
     },
     iron = { name = "Iron", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=3, ac_bonus=2.0
+    },
+    steel = { name = "Steel", type="metal", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
+        hit_points = 200, damage_bonus=4, ac_bonus=3.0
     },
     lead = { name = "Lead", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=-1, ac_bonus=0.5
     },
     nickel = { name = "Nickel", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=-1, ac_bonus=0.5
     },
     platinum = { name = "Lead", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['silver'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=1, ac_bonus=1.0
     },
     silver = { name = "Silver", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['silver'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=1, ac_bonus=1.0
     },
     tin = { name = "Tin", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['tin_blue'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=-1, ac_bonus=0.5
     },
     uranium = { name = "Uranium", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['green'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=4, ac_bonus=4.0
     },
     zinc = { name = "Zinc", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['tin_blue'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200, damage_bonus=-1, ac_bonus=0.5
     },
 }

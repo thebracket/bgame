@@ -150,7 +150,9 @@ struct material_def_t {
 	std::string mines_to_tag = "";
 	std::string mines_to_tag_second = "";
 	std::string layer = "";
-	std::vector<std::string> ore_materials; 
+	std::vector<std::string> ore_materials;
+	int damage_bonus = 0;
+	float ac_bonus = 0.0F;
 };
 
 struct plant_t {
