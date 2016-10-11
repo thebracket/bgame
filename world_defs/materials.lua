@@ -326,6 +326,10 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['black'],
         hit_points = 20
     },
+    brick = { name = "Brick", type="synthetic", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['black'],
+        hit_points = 100
+    },
     organic = { name = "Organic", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 10

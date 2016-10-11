@@ -209,7 +209,7 @@ biomes = {
         name = "Savannah Plateau", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plateau"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['arch'], color=colors['earth_brown'] },
-        plants = { none=2, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, bambara_groundnut=1, goya=1, cabbage=1, caper=1, celery=1, chickpea=1, chickory=1, cucumber=1, eggplan=1, horned_melon=1, lentil=1, onion=1, soybean=1, tomatillo=1 },
+        plants = { none=2, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, bambara_groundnut=1, goya=1, cabbage=1, caper=1, celery=1, chickpea=1, chickory=1, cucumber=1, eggplant=1, horned_melon=1, lentil=1, onion=1, soybean=1, tomatillo=1 },
         trees = { deciduous = 25, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","antelope"}
     },

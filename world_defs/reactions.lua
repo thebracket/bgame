@@ -8,6 +8,15 @@ reactions = {
         difficulty = 10,
         automatic = true
     },
+    bake_bricks = {
+        name = "Bake Clay into Bricks",
+        workshop = "kiln",
+        inputs = { { item="charcoal", qty=1 }, { item="clay", qty=1 } },
+        outputs = { { item="block", qty=4 } },
+        skill = "Carpentry",
+        difficulty = 10,
+        automatic = true
+    },
     charcoal_waste = {
         name = "Make Charcoal from Waste",
         workshop = "charcoal_hut",

@@ -1005,6 +1005,7 @@ void sanity_check_items() {
 void sanity_check_buildings() {
     for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
         if (it->first.empty()) std::cout << "WARNING: Empty building tag\n";
+        if (it->second.name.empty()) std::cout << "WARNING: Building " << it->first << " has no name.\n";
         for (const reaction_input_t &comp : it->second.components) {
             if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
             auto finder = item_defs.find(comp.tag);

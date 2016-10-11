@@ -187,9 +187,17 @@ buildings = {
 	},
 
 	silicon_refinery = {
+		name = "Silicon Refinery",
 		components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render_rex = "silicon_refinery.xp"
+	},
+
+	kiln = {
+		name = "Kiln",
+		components = { { item="clay", qty=1 } },
+		skill = { name="Construction", difficulty=12 },
+		render_rex = "kiln.xp"
 	},
 
 	primitive_forge = {
