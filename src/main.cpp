@@ -89,7 +89,15 @@ void tick(double duration_ms) {
 				menu.init();
 			} else if (game_config.autosave_minutes > 0) {
 				double duration_minutes = static_cast<double>(std::chrono::duration_cast<std::chrono::minutes>(std::chrono::high_resolution_clock::now() - last_save).count());
-				if (duration_minutes > game_config.autosave_minutes) save_game();
+				if (duration_minutes >= game_config.autosave_minutes) {
+					term(1)->clear();
+					term(2)->clear();
+					term(3)->clear();
+					term(1)->print_center(10, "Auto-saving game - please wait");
+					gui->render(*get_window());
+					get_window()->display();
+					save_game();
+				}
 			}
 		} break;
 	}
