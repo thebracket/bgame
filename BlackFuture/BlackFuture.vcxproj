@@ -189,6 +189,7 @@
     <ClInclude Include="..\src\raws\health_factory.hpp" />
     <ClInclude Include="..\src\raws\lua_bridge.hpp" />
     <ClInclude Include="..\src\raws\raws.hpp" />
+    <ClInclude Include="..\src\raws\reaction_input.hpp" />
     <ClInclude Include="..\src\raws\tile_material.hpp" />
     <ClInclude Include="..\src\rltk\rltk\astar.hpp" />
     <ClInclude Include="..\src\rltk\rltk\bitmap_font.hpp" />
