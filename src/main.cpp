@@ -30,6 +30,8 @@ void save_game() {
 	ecs_save(lbfile);
 	std::cout << "Saving region\n";
 	save_region(*current_region);
+	std::cout << "Saving planet\n";
+	save_planet(planet);
 	last_save = std::chrono::high_resolution_clock::now();
 }
 
