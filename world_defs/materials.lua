@@ -330,6 +330,18 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 10
     },
+    hide = { name = "Hide", type="leather", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
+        hit_points = 10
+    },
+    leather = { name = "Leather", type="leather", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
+        hit_points = 10
+    },
+    boiled_leather = { name = "Boiled Leather", type="leather", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
+        hit_points = 10
+    },
 
 -- Synthetic Materials - only occur after refining
     plasteel = { name = "Plasteel", type="synthetic", 
@@ -380,6 +392,10 @@ materials = {
     },
     uranium = { name = "Uranium", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['green'], bg=colors['black'],
+        hit_points = 200
+    },
+    zinc = { name = "Zinc", type="metal", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['tin_blue'], bg=colors['black'],
         hit_points = 200
     },
 }

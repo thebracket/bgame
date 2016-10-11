@@ -155,139 +155,69 @@ clothing = {
 	},
 
 	-- Stone-age clothing
-	hide_tunic = {
-		name = "Hide Tunic",
+	tunic = {
+		name = "Tunic",
 		slot = "torso",
 		colors = {"brown", "black", "grey"},
-		description = "A simple tunic made from animal hides.",
+		description = "A simple tunic.",
 		ac = 1.0
 	},
-	hide_pants = {
-		name = "Hide Pants",
+	britches = {
+		name = "Britches",
 		slot = "legs",
 		colors = {"brown", "black", "grey"},
-		description = "A simple pair of pants made from animal hides.",
+		description = "A simple pair of pants.",
 		ac = 1.0
 	},
-	hide_skirt = {
-		name = "Hide Skirt",
+	skirt_simple = {
+		name = "Simple Skirt",
 		slot = "legs",
 		colors = {"brown", "black", "grey"},
-		description = "A simple skirt made from animal hides.",
+		description = "A simple skirt.",
 		ac = 1.0
 	},
-	hide_sandals = {
-		name = "Hide Sandals",
+	sandals = {
+		name = "Sandals",
 		slot = "torso",
 		colors = {"brown", "black", "grey"},
-		description = "A simple pair of sandals made from animal hides.",
+		description = "A simple pair of sandals.",
 		ac = 1.0
 	},
-	leather_tunic = {
-		name = "Leather Tunic",
-		slot = "torso",
-		colors = {"brown", "black", "grey"},
-		description = "A padded leather tunic made from animal hides.",
-		ac = 1.5
-	},
-	leather_cap = {
-		name = "Leather Cap",
+	cap = {
+		name = "Armored Cap",
 		slot = "head",
 		colors = {"brown", "black", "grey"},
-		description = "A padded leather cap, offering minimal head protection.",
+		description = "An armored cap, offering minimal head protection.",
 		ac = 1.5
-	},
-	leather_pants = {
-		name = "Leather Pants",
-		slot = "legs",
-		colors = {"brown", "black", "grey"},
-		description = "Padded leather pants, offering some leg protection or just a cool look at parties.",
-		ac = 1.5
-	},
-	leather_skirt = {
-		name = "Leather Skirt",
-		slot = "legs",
-		colors = {"brown", "black", "grey"},
-		description = "Padded leather skirt, offering some leg protection or just a cool look at parties.",
-		ac = 1.5
-	},
-	boiled_leather_tunic = {
-		name = "Boiled Leather Tunic",
-		slot = "torso",
-		colors = {"brown", "black", "grey"},
-		description = "A boiled leather tunic made from animal hides.",
-		ac = 2.0
 	},
 
 	-- Bronze age clothing
-	cloth_tunic = {
-		name = "Cloth Tunic",
+	ringmail = {
+		name = "Ringmail",
 		slot = "torso",
 		colors = {"brown", "black", "grey", "red", "blue", "green"},
-		description = "A simple tunic made from spun thread.",
-		ac = 0.5
-	},
-	cloth_pants = {
-		name = "Cloth Pants",
-		slot = "legs",
-		colors = {"brown", "black", "grey", "red", "blue", "green"},
-		description = "A simple pair of pants made from spun thread.",
-		ac = 0.5
-	},
-	cloth_skirt = {
-		name = "Cloth Skirt",
-		slot = "legs",
-		colors = {"brown", "black", "grey", "red", "blue", "green"},
-		description = "A simple skirt made from spun thread.",
-		ac = 0.5
-	},
-	leather_sandals = {
-		name = "Leather Sandals",
-		slot = "torso",
-		colors = {"brown", "black", "grey"},
-		description = "A simple pair of sandals made from tanned leather.",
-		ac = 0.5
-	},
-	bronze_ringmail = {
-		name = "Bronze Ringmail",
-		slot = "torso",
-		colors = {"brown", "black", "grey", "red", "blue", "green"},
-		description = "A leather tunic with rings of bronze attached.",
+		description = "A leather tunic with rings of metal attached for protection.",
 		ac = 2.0
 	},
-	bronze_cap = {
-		name = "Bronze Cap",
+	helm = {
+		name = "Helm",
 		slot = "head",
 		colors = {"brown", "black", "yellow"},
-		description = "A bronze cap, offering some head protection.",
-		ac = 2.0
-	},
-	bronze_helm = {
-		name = "Bronze Helm",
-		slot = "head",
-		colors = {"brown", "black", "yellow"},
-		description = "A full-face bronze helmet.",
+		description = "A full-face helmet.",
 		ac = 2.5
 	},
-	bronze_breastplate = {
+	breastplate = {
 		name = "Bronze Breastplate",
 		slot = "torso",
 		colors = {"yellow"},
-		description = "A hard bronze breastplate, backed by hardened leather.",
+		description = "A hard metal breastplate, backed by hardened leather.",
 		ac = 2.5
 	},
-	bronze_leggings = {
-		name = "Bronze Leggings",
+	leggings = {
+		name = "Armored Leggings",
 		slot = "legs",
 		colors = {"brown", "yellw"},
-		description = "Leather leggings, covered in bronze rings for added protection.",
+		description = "Leggings, covered in metal rings for added protection.",
 		ac = 2.0
-	},
-	bronze_skirt = {
-		name = "Bronze Skirt",
-		slot = "legs",
-		colors = {"brown", "yellow"},
-		description = "A leather skirt, covered in bronze rings for added protection.",
-		ac = 2.0
-	},
+	}
 }

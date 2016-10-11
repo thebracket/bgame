@@ -269,6 +269,8 @@ void read_buildings(std::ofstream &tech_tree_file) {
                                 comp.required_material_type = synthetic;
                             } else if (type_s == "organic") {
                                 comp.required_material_type = organic;
+                            } else if (type_s == "leather") {
+                                comp.required_material_type = leather;
                             } else {
                                 std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                             }
@@ -433,6 +435,8 @@ void read_reactions(std::ofstream &tech_tree_file) {
                                 input.required_material_type = synthetic;
                             } else if (type_s == "organic") {
                                 input.required_material_type = organic;
+                            } else if (type_s == "leather") {
+                                input.required_material_type = leather;
                             } else {
                                 std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                             }
@@ -514,6 +518,8 @@ void read_material_types(std::ofstream &tech_tree_file) {
                     m.spawn_type = synthetic;
                 } else if (type_s == "organic") {
                     m.spawn_type = organic;
+                } else if (type_s == "leather") {
+                    m.spawn_type = leather;
                 } else {
                     std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                 }
@@ -1127,12 +1133,12 @@ void sanity_check_natives() {
 }
 
 void sanity_check_raws() {
+    sanity_check_materials();
     sanity_check_clothing();
     sanity_check_professions();
     sanity_check_items();
     sanity_check_buildings();
     sanity_check_reactions();
-    sanity_check_materials();
     sanity_check_plants();
     sanity_check_biomes();
     sanity_check_species();
@@ -1145,12 +1151,12 @@ void load_game_tables() {
     tech_tree_file << "digraph G {\n";
     tech_tree_file << "\"cut trees\" -> wood_logs\n";
 
+    read_material_types(tech_tree_file);
     read_clothing(tech_tree_file);
     read_professions(tech_tree_file);
     read_items(tech_tree_file);
     read_buildings(tech_tree_file);
     read_reactions(tech_tree_file);
-    read_material_types(tech_tree_file);
     read_plant_types(tech_tree_file);
     read_biome_types(tech_tree_file);
     read_species_types(tech_tree_file);

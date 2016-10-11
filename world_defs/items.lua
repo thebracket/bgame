@@ -201,77 +201,68 @@ items = {
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
-	stone_hammer = {
-		name = "Stone Hammer",
-		description = "A simple hammer with a stone head",
+	warhammer = {
+		name = "Warhammer",
+		description = "A heavy hammer design for bashing people",
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
 	},
-	stone_axe = {
-		name = "Stone Axe",
-		description = "A simple axe with a stone head",
+	battleaxe = {
+		name = "Battle Axe",
+		description = "A large axe, designed for chopping people rather than trees",
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6
+		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 6
 	},
-	bronze_axe = {
-		name = "Bronze Axe",
-		description = "A socketed bronze axe",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	bronze_hammer = {
-		name = "Bronze Hammer",
-		description = "A socketed bronze hammer",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	bronze_pickaxe = {
-		name = "Bronze Pickaxe",
-		description = "A socketed bronze pickaxe",
-		itemtype = {"weapon-melee", "tool-digging"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	bronze_dagger = {
-		name = "Bronze Dagger",
-		description = "A bronze dagger",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 4
-	},
-	bronze_sword = {
-		name = "Bronze Sword",
-		description = "A bronze sword",
-		itemtype = {"weapon-melee"},
-		glyph = glyphs['axe'],
-		foreground = colors['bismuth_yellow'],
-		background = colors['black'],
-		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
-	},
-	stone_knife = {
-		name = "Stone Knife",
-		description = "A simple knife with a stone head",
+	handaxe = {
+		name = "Hand Axe",
+		description = "A small axe, optimized for hitting people quickly",
 		itemtype = {"weapon-melee"},
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 6
+	},
+	shortsword = {
+		name = "Short Sword",
+		description = "A short sword, designed for thrusting",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
+	},
+	longsword = {
+		name = "Long Sword",
+		description = "A long sword, designed for slashing",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['bismuth_yellow'],
+		background = colors['black'],
+		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5
+	},
+	knife = {
+		name = "Knife",
+		description = "A simple knife",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=3, damage_mod=0, damage_stat="str", initiative_penalty = 2
+	},
+	dagger = {
+		name = "Dagger",
+		description = "A simple dagger",
+		itemtype = {"weapon-melee"},
+		glyph = glyphs['axe'],
+		foreground = colors['grey'],
+		background = colors['black'],
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 2
 	},
 	atlatl = {
 		name = "Atlatl",
