@@ -6,6 +6,7 @@
 #include "../main/game_globals.hpp"
 #include "../components/components.hpp"
 #include <boost/container/flat_map.hpp>
+#include "visibility_system.hpp"
 
 using namespace rltk;
 
@@ -36,7 +37,9 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 		if (distance > dist_square) {
 			return false;
 		}
-		return !(current_region->opaque[idx]);
+        bool blocked = current_region->opaque[idx];
+        if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
+		return !blocked;
 	});
 }
 

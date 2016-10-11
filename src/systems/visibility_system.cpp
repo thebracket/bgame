@@ -6,6 +6,8 @@
 
 using namespace rltk;
 
+boost::container::flat_set<std::size_t> blocked_visibility;
+
 std::mutex update_guard;
 
 inline void reveal(const int &idx, viewshed_t &view) {
@@ -36,6 +38,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 		if (X < 1 || X > REGION_WIDTH || Y < 1 || Y > REGION_HEIGHT || Z < 1 || Z > REGION_DEPTH) return false;
 		const int idx = mapidx(X, Y, Z);
 		bool blocked = current_region->opaque[idx];
+		if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
 		if (!blocked && last_z != Z) {
 			//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
 			// Check for ceilings and floors
@@ -88,7 +91,38 @@ void update_normal_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 	}
 }
 
+void calculate_building_opacity() {
+	blocked_visibility.clear();
+	each<building_t, position_t>([] (entity_t &e, building_t &b, position_t &pos) {
+		if (!b.complete) return;
+		if (b.height==1 && b.width==1) {
+			blocked_visibility.insert(mapidx(pos.x, pos.y, pos.z));
+		} else if (b.height == 3 && b.width == 3) {
+			blocked_visibility.insert(mapidx(pos.x-1, pos.y-1, pos.z));
+			blocked_visibility.insert(mapidx(pos.x, pos.y-1, pos.z));
+			blocked_visibility.insert(mapidx(pos.x+1, pos.y-1, pos.z));
+			blocked_visibility.insert(mapidx(pos.x-1, pos.y, pos.z));
+			blocked_visibility.insert(mapidx(pos.x, pos.y, pos.z));
+			blocked_visibility.insert(mapidx(pos.x+1, pos.y, pos.z));
+			blocked_visibility.insert(mapidx(pos.x-1, pos.y+1, pos.z));
+			blocked_visibility.insert(mapidx(pos.x, pos.y+1, pos.z));
+			blocked_visibility.insert(mapidx(pos.x+1, pos.y+1, pos.z));
+		} else {
+			for (int y = pos.y; y<pos.y+b.height; ++y) {
+				for (int x = pos.x; x<pos.x+b.width; ++x) {
+					blocked_visibility.insert(mapidx(x,y,pos.z));
+				}
+			}	
+		}
+	});
+}
+
 void visibility_system::update(const double duration_ms) {
+	if (opacity_dirty) {
+		calculate_building_opacity();
+		opacity_dirty = false;
+	}
+	
 	if (!dirty) return;
 
 	// Apply to map - first clear everything
@@ -137,5 +171,8 @@ void visibility_system::configure() {
 	subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
 		dirty_entities.insert(msg.entity_id);
 		dirty = true;
+	});
+	subscribe<opacity_changed_message>([this] (opacity_changed_message &msg) {
+		opacity_dirty = true;
 	});
 }

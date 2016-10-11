@@ -911,6 +911,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 
 			// Place the building, and assign any provide tags
 			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
+			emit(opacity_changed_message{});
 
 			for (const building_provides_t &provides : finder->second.provides) {
 				if (provides.provides == provides_sleep) {
@@ -1507,6 +1508,7 @@ void settler_ai_system::do_deconstruction(entity_t &e, settler_ai_t &ai, game_st
 				}
 			}
 			become_idle(e, ai, name);
+			emit(opacity_changed_message{});
 			return;
 		} else {
 			// Failed!

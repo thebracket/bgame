@@ -2,6 +2,7 @@
 
 #include <rltk.hpp>
 #include <unordered_set>
+#include "boost/container/flat_map.hpp"
 
 class visibility_system : public rltk::base_system {
 public:
@@ -10,5 +11,7 @@ public:
 private:
 	std::unordered_set<std::size_t> dirty_entities;
 	bool dirty = true;
+	bool opacity_dirty = true;
 };
 
+extern boost::container::flat_set<std::size_t> blocked_visibility;
