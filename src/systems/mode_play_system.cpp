@@ -15,7 +15,7 @@ void mode_play_system::configure() {
 
 void mode_play_system::update(const double duration_ms) {
 	if (game_master_mode == TILEMENU) show_tilemenu();
-    if (game_master_mode != PLAY) return;
+    if (game_master_mode != PLAY && game_master_mode != ROGUE) return;
 
     // Controls Help
 	if (pause_mode == PAUSED) {
