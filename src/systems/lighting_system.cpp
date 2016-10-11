@@ -36,7 +36,7 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 		if (distance > dist_square) {
 			return false;
 		}
-		return !(current_region->solid[idx]);
+		return !(current_region->opaque[idx]);
 	});
 }
 
@@ -130,7 +130,7 @@ void lighting_system::update(double time_ms) {
                         int last_z = std::floor(light_z);
                         bool done = false;
                         while (!done) {
-                            if (current_region->solid[mapidx(light_x, light_y, light_z)]) {
+                            if (current_region->opaque[mapidx(light_x, light_y, light_z)]) {
                                 done = true;
                                 shadowed = true;
                             } else {

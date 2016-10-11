@@ -83,8 +83,14 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 	
 	// Solidity and first-pass standability
 	if (tile_type[idx] == tile_type::SEMI_MOLTEN_ROCK || tile_type[idx] == tile_type::SOLID 
-			|| tile_type[idx] == tile_type::WALL || tile_type[idx] == tile_type::TREE_TRUNK || tile_type[idx] == tile_type::TREE_LEAF) {
+			|| tile_type[idx] == tile_type::WALL || tile_type[idx] == tile_type::TREE_TRUNK || tile_type[idx] == tile_type::TREE_LEAF
+			|| tile_type[idx] == tile_type::WINDOW) {
 		solid[idx] = true;
+		if (tile_type[idx] == tile_type::WINDOW) {
+			opaque[idx] = false;
+		} else {
+			opaque[idx] = true;
+		}
 		tile_flags[idx].reset(CAN_STAND_HERE);
 	} else {
 		solid[idx] = false;
@@ -207,6 +213,10 @@ void region_t::calc_render(const int &idx) {
 			}
 			fg = material_defs[tile_material[idx]].fg;
 			//bg = material_defs[tile_material[idx]].bg;
+		} break;
+		case tile_type::WINDOW : {
+			glyph = 176;
+			fg = rltk::colors::CYAN;
 		} break;
 		case tile_type::RAMP : {
 			glyph = 30;

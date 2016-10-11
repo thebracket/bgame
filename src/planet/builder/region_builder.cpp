@@ -512,21 +512,31 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     if (type == "ship_wall") {
         region.tile_type[idx] = tile_type::WALL;
         region.solid[idx] = true;
+        region.opaque[idx] = true;
+        region.tile_flags[idx].set(CONSTRUCTION);
+        region.tile_material[idx] = plasteel->second;
+    } else if (type == "ship_window") {
+        region.tile_type[idx] = tile_type::WINDOW;
+        region.solid[idx] = true;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel->second;
     } else if (type == "ship_floor") {
         region.tile_type[idx] = tile_type::FLOOR;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel->second;    
     } else if (type == "hut_wall") {
         region.tile_type[idx] = tile_type::WALL;
         region.solid[idx] = true;
+        region.opaque[idx] = true;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood->second;
     } else if (type == "hut_floor") {
         region.tile_type[idx] = tile_type::FLOOR;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood->second; 
     } else if (type == "ship_up") {
@@ -537,26 +547,31 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     } else if (type == "ship_down") {
         region.tile_type[idx] = tile_type::STAIRS_DOWN;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel->second;    
     } else if (type == "ship_updown") {
         region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel->second;    
     } else if (type == "hut_upstairs") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood->second;    
     } else if (type == "hut_downstairs") {
         region.tile_type[idx] = tile_type::STAIRS_DOWN;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood->second;    
     } else if (type == "hut_updownstairs") {
         region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
         region.solid[idx] = false;
+        region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood->second;
     } else if (type == "cordex") {
@@ -592,8 +607,10 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
 
                 const vchar * output = ship.get_tile(layer,X,Y);
 				if (output != nullptr && !xp::is_transparent(output)) {
-                    if (output->glyph == 219 || output->glyph == 177) {
+                    if (output->glyph == 219) {
                         add_construction(region, x, y, z, "ship_wall", true);
+                    } else if (output->glyph == 177) {
+                        add_construction(region, x, y, z, "ship_window", true);
                     } else if (output->glyph == 176 || output->glyph == 197) {
                         add_construction(region, x, y, z, "ship_floor");
                     } else if (output->glyph == 'X') {

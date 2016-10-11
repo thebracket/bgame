@@ -35,7 +35,7 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square, &last_z] (int X, int Y, int Z) {
 		if (X < 1 || X > REGION_WIDTH || Y < 1 || Y > REGION_HEIGHT || Z < 1 || Z > REGION_DEPTH) return false;
 		const int idx = mapidx(X, Y, Z);
-		bool blocked = current_region->solid[idx];
+		bool blocked = current_region->opaque[idx];
 		if (!blocked && last_z != Z) {
 			//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
 			// Check for ceilings and floors

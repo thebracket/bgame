@@ -88,6 +88,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
 			case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
 			case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
+			case tile_type::WINDOW : ss << "Window"; break;
 			default : ss << "Unknown!";
 		}
 		lines.push_back(ss.str());
