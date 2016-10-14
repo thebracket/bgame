@@ -2,8 +2,9 @@
 
 #include <rltk.hpp>
 #include <boost/container/flat_map.hpp>
+#include <vector>
 
-extern boost::container::flat_map<int, rltk::vchar> renderables;
+extern boost::container::flat_map<int, std::vector<rltk::vchar>> renderables;
 
 class renderables_system : public rltk::base_system {
 public:

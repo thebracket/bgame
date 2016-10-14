@@ -2,14 +2,20 @@
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/inputs.hpp"
 #include "renderables_system.hpp"
+#include "../messages/tick_message.hpp"
 
 std::vector<int> render_tiles;
+
+uint32_t camera_glyph_cycle = 0;
 
 void camera_system::configure() {
 	system_name = "Camera";
 	dirty = true;
 	subscribe_mbox<camera_move_requested_message>();
 	subscribe_mbox<map_dirty_message>();
+	subscribe<slow_tick_message>([this](slow_tick_message &msg) {
+        ++camera_glyph_cycle;
+    });
 }
 
 void camera_system::update(const double duration_ms) {
@@ -124,7 +130,7 @@ int camera_system::deep_dive(const int &x, const int &y, const int &z) {
 
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
-			result = rf->second;
+			result = rf->second[camera_glyph_cycle % rf->second.size()];
 		} else {
 			result = current_region->render_cache[idx];
 		}

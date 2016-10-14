@@ -10,6 +10,8 @@
 using namespace rltk;
 using namespace map_render_sys;
 
+uint32_t glyph_cycle = 0;
+
 namespace map_render_sys {
 	bool mouse_in_terminal = false;
 	int mouse_term_x = 0;
@@ -34,7 +36,7 @@ vchar get_render_char(const int &x, const int &y) {
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};	
 	auto rf = renderables.find(idx);
 	if (rf != renderables.end()) {
-		result = rf->second;
+		result = rf->second[glyph_cycle % rf->second.size()];
 		if (!current_region->visible[idx]) result = greyscale(result);
 	} else {
 		result = current_region->render_cache[idx];
@@ -159,6 +161,9 @@ void map_render_system::configure() {
 	dirty = true;
 	subscribe_mbox<key_pressed_t>();
 	subscribe_mbox<map_rerender_message>();
+	subscribe<slow_tick_message>([this](slow_tick_message &msg) {
+        ++glyph_cycle;
+    });
 }
 
 void map_render_system::update(const double duration_ms) {

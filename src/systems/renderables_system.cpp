@@ -10,7 +10,7 @@
 
 using namespace rltk;
 
-boost::container::flat_map<int, rltk::vchar> renderables;
+boost::container::flat_map<int, std::vector<rltk::vchar>> renderables;
 
 void renderables_system::configure() {
     system_name = "Renderables System";
@@ -38,8 +38,10 @@ void renderables_system::update(const double time_elapsed) {
 			for (int y = 0; y<b.height; ++y) {
 				for (int x=0; x<b.width; ++x) {
 					const int idx = mapidx(pos.x+x+offset_x, pos.y+y+offset_y, pos.z);
-					renderables[idx] = b.glyphs[glyph_idx];
-					if (!b.complete) renderables[idx].foreground = rltk::colors::GREY;
+					rltk::vchar glyph;
+					glyph = b.glyphs[glyph_idx];
+					if (!b.complete) glyph.foreground = rltk::colors::GREY;
+					renderables[idx].push_back(glyph);
 					++glyph_idx;
 				}
 			}
@@ -47,13 +49,13 @@ void renderables_system::update(const double time_elapsed) {
 
 		// Add other entities
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[mapidx(pos.x, pos.y, pos.z)] = rltk::vchar{render.glyph, render.foreground, render.background};
+			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(rltk::vchar{render.glyph, render.foreground, render.background});
 		});
 
 		// Add particles
 		for (const particle_t &p : particles) {
 			const int idx = mapidx(p.x, p.y, p.z);
-			renderables[idx] = p.glyph;
+			renderables[idx].push_back(p.glyph);
 		}
 
 		// If we're rogue mode, and have a path, display it
@@ -66,7 +68,7 @@ void renderables_system::update(const double time_elapsed) {
 				for (auto step : ai->current_path->steps) {
 					const float lerp_amount = i / n_steps;
 					const int idx = mapidx(step.x, step.y, step.z);
-					renderables[idx] = rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK };
+					renderables[idx].push_back(rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK });
 					++i;
 				}
 			}
