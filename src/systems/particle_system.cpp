@@ -32,7 +32,7 @@ void particle_system::update(const double ms) {
         }
 	}
 
-    subscribe<tick_message>([this](tick_message &msg) {
+    subscribe<slow_tick_message>([this](slow_tick_message &msg) {
         tick = true;
     });
 
