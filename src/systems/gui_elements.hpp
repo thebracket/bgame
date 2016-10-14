@@ -342,6 +342,7 @@ struct gui_popup_menu : public base_gui {
             } else {
                 rltk::term(1)->print(box_left + 2, current_y, opt.first, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
             }
+            ++current_y;
         }
 
         if (mouse::clicked && (mouse::term1x < box_left || mouse::term1x > box_right || mouse::term1y < box_top || mouse::term1y > box_bottom)) {

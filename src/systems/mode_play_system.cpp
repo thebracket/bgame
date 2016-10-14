@@ -156,7 +156,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 				// Special case because 3x3 use the mid-point as center
 				if (building.height == 3 && building.width == 3 && world_x >= pos.x-1 && world_x <= pos.x+1 && world_y >= pos.y-1 && world_y <= pos.y+1) {
 					on_building = true;
-				} else if (world_x >= pos.x && world_x <= pos.x + building.width && world_y >= pos.y && world_y <= pos.y + building.height) {
+				} else if (building.height != 1 && building.width != 1 && world_x >= pos.x && world_x <= pos.x + building.width && world_y >= pos.y && world_y <= pos.y + building.height) {
 					on_building = true;
 				}
 			}
@@ -237,6 +237,28 @@ void mode_play_system::show_tilemenu() {
 		}
 	});
 
+	each<name_t, position_t, sentient_ai>([&menu] (entity_t &entity, name_t &name, position_t &pos, sentient_ai &settler) {
+		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
+			boost::optional<std::function<void()>> on_click{};
+			on_click = [&entity] () {
+				selected_settler = entity.id;
+				game_master_mode = SENTIENT_INFO;
+			};
+			menu->options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
+		}
+	});
+
+	each<name_t, position_t, grazer_ai>([&menu] (entity_t &entity, name_t &name, position_t &pos, grazer_ai &settler) {
+		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
+			boost::optional<std::function<void()>> on_click{};
+			on_click = [&entity] () {
+				selected_settler = entity.id;
+				game_master_mode = GRAZER_INFO;
+			};
+			menu->options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
+		}
+	});
+
 	each<building_t, position_t>([&menu] (entity_t &building_entity, building_t &building, position_t &pos) {
 		bool on_building = false;
 
@@ -247,7 +269,7 @@ void mode_play_system::show_tilemenu() {
 				// Special case because 3x3 use the mid-point as center
 				if (building.height == 3 && building.width == 3 && selected_tile_x >= pos.x-1 && selected_tile_x <= pos.x+1 && selected_tile_y >= pos.y-1 && selected_tile_y <= pos.y+1) {
 					on_building = true;
-				} else if (selected_tile_x >= pos.x && selected_tile_x <= pos.x + building.width && selected_tile_y >= pos.y && selected_tile_y <= pos.y + building.height) {
+				} else if (building.height != 1 && building.width !=1 && selected_tile_x >= pos.x && selected_tile_x <= pos.x + building.width && selected_tile_y >= pos.y && selected_tile_y <= pos.y + building.height) {
 					on_building = true;
 				}
 			}

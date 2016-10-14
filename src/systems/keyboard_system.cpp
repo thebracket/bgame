@@ -140,7 +140,7 @@ void keyboard_system::update(const double ms) {
                 emit_deferred(map_dirty_message{});
                 emit_deferred(recalculate_mining_message{});
             }
-        } else if (game_master_mode == TILEMENU) {
+        } else if (game_master_mode == TILEMENU || game_master_mode == SENTIENT_INFO || game_master_mode == GRAZER_INFO) {
             if (e.event.key.code == sf::Keyboard::Escape) {
                 game_master_mode = PLAY;
                 emit_deferred(map_dirty_message{});

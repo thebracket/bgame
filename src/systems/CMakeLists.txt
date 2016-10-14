@@ -23,6 +23,7 @@ add_library(systems
 	mode_play_system.cpp
 	mode_design_system.cpp
 	mode_standing_orders.cpp
+	mode_sentient_info_system.cpp
 	corpse_system.cpp
 	particle_system.cpp
 	vegetation_system.cpp

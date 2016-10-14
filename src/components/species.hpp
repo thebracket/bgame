@@ -30,6 +30,7 @@ struct species_t {
 			case MALE : return "Male";
 			case FEMALE : return "Female";
 			case HERMAPHRODITE : return "Hermaphrodite";
+			default : return "Male";
 		}
 	}
 
@@ -78,6 +79,7 @@ struct species_t {
 		serialize(lbfile, height_cm);
 		serialize(lbfile, weight_kg);
 		serialize(lbfile, bearded);
+		serialize(lbfile, tag);
 	}
 
 	static species_t load(std::istream &lbfile) {
@@ -90,6 +92,7 @@ struct species_t {
 		deserialize(lbfile, c.height_cm);
 		deserialize(lbfile, c.weight_kg);
 		deserialize(lbfile, c.bearded);
+		deserialize(lbfile, c.tag);
 		return c;
 	}
 };

@@ -34,7 +34,8 @@ struct available_building_t {
 };
 
 enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };
-enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, CIV_NEGOTIATE, STANDING_ORDERS, TILEMENU };
+enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, CIV_NEGOTIATE, 
+	STANDING_ORDERS, TILEMENU, SENTIENT_INFO, GRAZER_INFO };
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING, GUARDPOINTS };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, DELETE };
 
