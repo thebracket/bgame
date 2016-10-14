@@ -233,6 +233,7 @@
     <ClInclude Include="..\src\systems\mode_play_system.hpp" />
     <ClInclude Include="..\src\systems\mode_rogue_render_system.hpp" />
     <ClInclude Include="..\src\systems\mode_rogue_system.hpp" />
+    <ClInclude Include="..\src\systems\mode_sentient_info_system.hpp" />
     <ClInclude Include="..\src\systems\mode_settler_info_system.hpp" />
     <ClInclude Include="..\src\systems\mode_standing_orders.hpp" />
     <ClInclude Include="..\src\systems\mode_units_system.hpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="..\src\systems\mode_play_system.cpp" />
     <ClCompile Include="..\src\systems\mode_rogue_render_system.cpp" />
     <ClCompile Include="..\src\systems\mode_rogue_system.cpp" />
+    <ClCompile Include="..\src\systems\mode_sentient_info_system.cpp" />
     <ClCompile Include="..\src\systems\mode_settler_info_system.cpp" />
     <ClCompile Include="..\src\systems\mode_standing_orders.cpp" />
     <ClCompile Include="..\src\systems\mode_units_system.cpp" />

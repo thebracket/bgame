@@ -510,6 +510,9 @@
     <ClInclude Include="..\src\raws\reaction_input.hpp">
       <Filter>Header Files\raws</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\systems\mode_sentient_info_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -801,6 +804,9 @@
       <Filter>Source Files\systems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\systems\mode_standing_orders.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\mode_sentient_info_system.cpp">
       <Filter>Source Files\systems</Filter>
     </ClCompile>
   </ItemGroup>
