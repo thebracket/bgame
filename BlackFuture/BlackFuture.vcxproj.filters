@@ -192,9 +192,6 @@
     <ClInclude Include="..\src\components\renderable.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\rltk\rltk\serialization_utils.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\components\name.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
@@ -304,9 +301,6 @@
       <Filter>Header Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="..\src\utils\octree.hpp">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utils\string_utils.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="..\src\raws\health_factory.hpp">
@@ -513,8 +507,14 @@
     <ClInclude Include="..\src\systems\mode_sentient_info_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\utils\serialization_utils.hpp">
+    <ClInclude Include="..\src\utils\string_utils.hpp">
       <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utils\serialization_wrapper.hpp">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rltk\rltk\serialization_utils.hpp">
+      <Filter>Header Files\rltk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

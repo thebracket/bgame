@@ -2,7 +2,7 @@
 
 #include <rltk.hpp>
 #include <vector>
-#include "../utils/serialization_utils.hpp"
+#include "../utils/serialization_wrapper.hpp"
 
 using namespace rltk;
 

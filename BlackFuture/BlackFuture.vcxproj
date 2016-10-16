@@ -263,7 +263,7 @@
     <ClInclude Include="..\src\systems\world_system.hpp" />
     <ClInclude Include="..\src\utils\bitset8.hpp" />
     <ClInclude Include="..\src\utils\octree.hpp" />
-    <ClInclude Include="..\src\utils\serialization_utils.hpp" />
+    <ClInclude Include="..\src\utils\serialization_wrapper.hpp" />
     <ClInclude Include="..\src\utils\string_utils.hpp" />
   </ItemGroup>
   <ItemGroup>

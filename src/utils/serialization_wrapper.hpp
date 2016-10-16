@@ -33,6 +33,39 @@ namespace s_detail {
 }
 
 template<typename T>
+inline void primitive_serialize(std::ostream &f, T &val) {
+	std::cout << "Serialize primitive - passed on\n";
+	rltk::serialize(f, val);
+}
+
+template<typename T>
+inline void primitive_serialize(std::ostream &f, std::vector<T> &val) {
+	std::cout << "Serialize vector\n";
+	std::size_t sz = val.size();
+	rltk::serialize(f, sz);
+	for (T &e : val) {
+		Serialize(f, e);
+	}
+}
+
+template<typename T>
+inline void primitive_deserialize(std::istream &f, T &val) {
+	rltk::deserialize(f, val);
+}
+
+template<typename T>
+inline void primitive_deserialize(std::istream &f, std::vector<T> &val) {
+	std::size_t sz;
+	rltk::deserialize(f, sz);
+	val.clear();
+	for (std::size_t i = 0; i < sz; ++i) {
+		T e;
+		rltk::deserialize(f, e);
+		val.push_back(e);
+	}
+}
+
+template<typename T>
 struct _Serializer {
 
 	template<typename T>
@@ -44,28 +77,7 @@ struct _Serializer {
 	template<typename T>
 	typename std::enable_if< !s_detail::has_member_function_save<T, void>::value, void>::type
 	Serialize(std::ostream &f, T &val) {
-		rltk::serialize(f, val);
-	}
-
-	template<typename T>
-	void Serialize(std::ostream &f, std::vector<T> &val) {
-		std::size_t sz = val.size();
-		rltk::serialize(f, sz);
-		for (T & element : val) {
-			Serialize(f, element);
-		}
-	}
-
-	template<typename T>
-	void Deserialize(std::ostream &f, std::vector<T> &val) {
-		std::size_t sz;
-		rltk::deserialize(f, sz);
-		val.clear();
-		for (std::size_t i = 0; i < sz; ++i) {
-			T element;
-			Deserialize(f, element);
-			val.push_back(element);
-		}
+		primitive_serialize(f, val);
 	}
 
 	template<typename T>
@@ -77,7 +89,7 @@ struct _Serializer {
 	template<typename T>
 	typename std::enable_if< !s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
 	Deserialize(std::istream &f, T &val) {
-		rltk::deserialize(f, val);
+		primitive_deserialize(f, val);
 	}
 };
 
@@ -98,12 +110,12 @@ inline void _Deserialize(std::istream &f, T &val) {
  * the caller do Serialize(file, one, two, three) for a very obvious serialization order.
  */
 template<typename... T>
-inline void _Serialize(std::ostream &f, std::tuple<T...> &vals) {
+inline void _Serialize(std::ostream &f, std::tuple<T&...> &vals) {
 	for_each(vals, [&f] (auto &t) { _Serialize(f, t); });
 }
 
 template<typename ...T>
-inline void _Deserialize(std::istream &f, std::tuple<T...> &vals) {
+inline void _Deserialize(std::istream &f, std::tuple<T&...> &vals) {
 	for_each(vals, [&f] (auto &t) { _Deserialize(f, t); });
 }
 

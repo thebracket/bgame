@@ -1,7 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../utils/serialization_utils.hpp"
+#include "../utils/serialization_wrapper.hpp"
 
 using namespace rltk;
 

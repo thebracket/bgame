@@ -2,15 +2,15 @@
 
 #include <rltk.hpp>
 #include <vector>
-#include "../utils/serialization_utils.hpp"
+#include "../utils/serialization_wrapper.hpp"
 
 using namespace rltk;
 
 struct health_part_t {
-	std::string part;
-	int max_hitpoints;
-	int current_hitpoints;
-	int size;
+	std::string part = "";
+	int max_hitpoints = 0;
+	int current_hitpoints = 0;
+	int size = 0;
 
 	void save(std::ostream &f) {
 		Serialize(f, part, max_hitpoints, current_hitpoints, size);
