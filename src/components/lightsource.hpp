@@ -2,6 +2,7 @@
 
 #include <rltk.hpp>
 #include <vector>
+#include "../utils/serialization_utils.hpp"
 
 using namespace rltk;
 
@@ -20,16 +21,20 @@ struct lightsource_t {
 	std::size_t serialization_identity = 19;
 
 	void save(std::ostream &lbfile) {
-		serialize(lbfile, radius);
+		/*serialize(lbfile, radius);
 		serialize(lbfile, color);
-		serialize(lbfile, alert_status);
+		serialize(lbfile, alert_status);*/
+		Serialize(lbfile, std::make_tuple(radius, color, alert_status));
 	}
 
 	static lightsource_t load(std::istream &lbfile) {
 		lightsource_t c;
+		Deserialize(lbfile, std::make_tuple(c.radius, c.color, c.alert_status));
+		/*
 		deserialize(lbfile, c.radius);
 		deserialize(lbfile, c.color);
 		deserialize(lbfile, c.alert_status);
+		*/
 		return c;
 	}
 };

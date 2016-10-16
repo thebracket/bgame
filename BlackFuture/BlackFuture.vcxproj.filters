@@ -513,6 +513,9 @@
     <ClInclude Include="..\src\systems\mode_sentient_info_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\utils\serialization_utils.hpp">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
