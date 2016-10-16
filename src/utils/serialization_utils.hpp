@@ -75,11 +75,21 @@ inline void _Deserialize(std::istream &f, T &val) {
  * the caller do Serialize(file, one, two, three) for a very obvious serialization order.
  */
 template<typename... T>
-inline void Serialize(std::ostream &f, std::tuple<T...> &vals) {
+inline void _Serialize(std::ostream &f, std::tuple<T...> &vals) {
 	for_each(vals, [&f] (auto &t) { _Serialize(f, t); });
 }
 
 template<typename ...T>
-inline void Deserialize(std::istream &f, std::tuple<T...> &vals) {
+inline void _Deserialize(std::istream &f, std::tuple<T...> &vals) {
 	for_each(vals, [&f] (auto &t) { _Deserialize(f, t); });
+}
+
+template<typename ...T>
+inline void Serialize(std::ostream &f, T&... vals) {
+	_Serialize(f, std::make_tuple<T&...>(vals...));
+}
+
+template<typename ...T>
+inline void Deserialize(std::istream &f, T&... vals) {
+	_Deserialize(f, std::make_tuple<T&...>(vals...));
 }

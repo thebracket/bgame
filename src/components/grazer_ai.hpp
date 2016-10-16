@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "../utils/serialization_utils.hpp"
 
 using namespace rltk;
 
@@ -13,14 +14,12 @@ struct grazer_ai {
 	std::size_t serialization_identity = 20;
 
 	void save(std::ostream &lbfile) {
-		serialize(lbfile, initiative);
-		serialize(lbfile, initiative_modifier);
+		Serialize(lbfile, initiative, initiative_modifier);
 	}
 
 	static grazer_ai load(std::istream &lbfile) {
 		grazer_ai c;
-		deserialize(lbfile, c.initiative);
-		deserialize(lbfile, c.initiative_modifier);
+		Deserialize(lbfile, c.initiative, c.initiative_modifier);
 		return c;
 	}
 };
