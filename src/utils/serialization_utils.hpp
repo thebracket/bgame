@@ -36,10 +36,20 @@ template<typename T>
 struct _Serializer {
 
 	template<typename T>
+	void Serialize(std::ostream &f, std::vector<T> &val) {
+		std::size_t sz = val.size();
+		rltk::serialize(f, sz);
+		for (T & element : val) {
+			Serialize(f, element);
+		}
+	}
+
+	template<typename T>
 	typename std::enable_if< s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
 	Serialize(std::ostream &f, T &val) {
 		val.save(f);
 	}
+
 	template<typename T>
 	typename std::enable_if< !s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
 	Serialize(std::ostream &f, T &val) {
@@ -47,10 +57,23 @@ struct _Serializer {
 	}
 
 	template<typename T>
+	void Deserialize(std::ostream &f, std::vector<T> &val) {
+		std::size_t sz;
+		rltk::deserialize(f, sz);
+		val.clear();
+		for (std::size_t i = 0; i < sz; ++i) {
+			T element;
+			Deserialize(f, element);
+			val.push_back(element);
+		}
+	}
+
+	template<typename T>
 	typename std::enable_if< s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
 	Deserialize(std::istream &f, T &val) {
 		val.load(f);
 	}
+
 	template<typename T>
 	typename std::enable_if< !s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
 	Deserialize(std::istream &f, T &val) {
