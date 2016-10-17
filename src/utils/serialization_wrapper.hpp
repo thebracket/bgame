@@ -6,6 +6,8 @@
 #include <boost/optional.hpp>
 #include <string>
 
+constexpr bool serialize_debug_mode = false;
+
 /**** Forward declarations ****/
 template <typename... T> void Serialize(std::ostream &f, T&... args);
 template <typename... T> void Deserialize(std::istream &f, T&... args);
@@ -18,7 +20,7 @@ template <typename... T> void Deserialize(std::istream &f, T&... args);
  */
 template <typename T>
 inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
-	std::cout << "Serialize: vector case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: vector case\n";
 	int canary = 10001;
 	rltk::serialize(f, canary);
 
@@ -27,7 +29,7 @@ inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
 	for (std::size_t i=0; i<sz; ++i) {
 		Serialize<T>(f, arg[i], canary);
 	}
-	std::cout << "Serialize: end vector case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: end vector case\n";
 }
 
 /*
@@ -35,14 +37,14 @@ inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
  */
 template <typename K, typename V>
 inline void __Serialize(std::ostream &f, std::vector<std::pair<K,V>> &arg) {
-	std::cout << "Serialize: vector pair case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: vector pair case\n";
 	std::size_t sz = arg.size();;
 	rltk::serialize(f, sz);
 	for (std::pair<K,V>& e : arg) {
 		Serialize<K>(f, e.first);
 		Serialize<V>(f, e.second);
 	}
-	std::cout << "Serialize: end vector case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: end vector case\n";
 }
 
 /*
@@ -50,20 +52,20 @@ inline void __Serialize(std::ostream &f, std::vector<std::pair<K,V>> &arg) {
  */
 template <typename K, typename V>
 inline void __Serialize(std::ostream &f, boost::container::flat_map<K,V> &arg) {
-	std::cout << "Serialize: boost::flat_map\n";
+	if (serialize_debug_mode) std::cout << "Serialize: boost::flat_map\n";
 	std::size_t sz = arg.size();
 	rltk::serialize(f, sz);
 	for (std::pair<K,V>& e : arg) {
 		Serialize<K>(f, e.first);
 		Serialize<V>(f, e.second);
 	}
-	std::cout << "Serialize: end boost::flat_map case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: end boost::flat_map case\n";
 }
 
 /* Support for boost::optional */
 template <typename T>
 inline void __Serialize(std::ostream &f, boost::optional<T> &arg) {
-	std::cout << "Serialize: boost::optional\n";
+	if (serialize_debug_mode) std::cout << "Serialize: boost::optional\n";
 	bool has_data = false;
 	if (arg) has_data = true;
 	Serialize(f, has_data);
@@ -73,13 +75,13 @@ inline void __Serialize(std::ostream &f, boost::optional<T> &arg) {
 /* Support for boost::container::flat_set */
 template <typename T>
 inline void __Serialize(std::ostream &f, boost::container::flat_set<T> &arg) {
-	std::cout << "Serialize: boost::flat_set case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: boost::flat_set case\n";
 	std::size_t sz = arg.size();
 	rltk::serialize(f, sz);
 	for (T& e : arg) {
 		Serialize<T>(f, e);
 	}
-	std::cout << "Serialize: end flat_set case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: end flat_set case\n";
 }
 
 /*
@@ -88,7 +90,7 @@ inline void __Serialize(std::ostream &f, boost::container::flat_set<T> &arg) {
 template <typename T>
 inline void __Serialize(std::ostream &f, T& arg) {
 	int canary = 999;
-	std::cout << "Serialize: base case\n";
+	if (serialize_debug_mode) std::cout << "Serialize: base case\n";
 	rltk::serialize(f, arg);
 	rltk::serialize(f, canary);
 }
@@ -99,7 +101,7 @@ template <typename T>
 inline void __Deserialize(std::istream &f, T& arg) {
 	int canary;
 	const int canary_val = 999;
-	std::cout << "Deserialize: base case\n";
+	if (serialize_debug_mode) std::cout << "Deserialize: base case\n";
 	rltk::deserialize(f, arg);
 	rltk::deserialize(f, canary);
 	assert(canary == canary_val);
@@ -107,7 +109,7 @@ inline void __Deserialize(std::istream &f, T& arg) {
 
 template <typename T>
 inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
-	std::cout << "Deserialize: vector case\n";
+	if (serialize_debug_mode) std::cout << "Deserialize: vector case\n";
 	const int canary_val = 10001;
 	int canary = 0;
 
@@ -127,7 +129,7 @@ inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
 
 template <typename K, typename V>
 inline void __Deserialize(std::istream &f, std::vector<std::pair<K,V>> &arg) {
-	std::cout << "Deserialize: vector pair case\n";
+	if (serialize_debug_mode) std::cout << "Deserialize: vector pair case\n";
 	std::size_t sz;
 	rltk::deserialize(f, sz);
 	arg.clear();
@@ -141,7 +143,7 @@ inline void __Deserialize(std::istream &f, std::vector<std::pair<K,V>> &arg) {
 
 template <typename K, typename V>
 inline void __Deserialize(std::istream &f, boost::container::flat_map<K,V> &arg) {
-	std::cout << "Deserialize: flat_map case\n";
+	if (serialize_debug_mode) std::cout << "Deserialize: flat_map case\n";
 	std::size_t sz;
 	rltk::deserialize(f, sz);
 	arg.clear();
@@ -155,7 +157,7 @@ inline void __Deserialize(std::istream &f, boost::container::flat_map<K,V> &arg)
 
 template <typename T>
 inline void __Deserialize(std::istream &f, boost::optional<T> &arg) {
-	std::cout << "Serialize: boost::optional\n";
+	if (serialize_debug_mode) std::cout << "Serialize: boost::optional\n";
 	bool has_data = false;
 	Deserialize(f, has_data);
 	if (arg) {
@@ -167,7 +169,7 @@ inline void __Deserialize(std::istream &f, boost::optional<T> &arg) {
 
 template <typename T>
 inline void __Deserialize(std::istream &f, boost::container::flat_set<T> &arg) {
-	std::cout << "Deserialize: boost::container::flat_set case\n";
+	if (serialize_debug_mode) std::cout << "Deserialize: boost::container::flat_set case\n";
 	std::size_t sz;
 	rltk::deserialize(f, sz);
 	arg.clear();
@@ -213,16 +215,16 @@ struct _Serialize_check_for_save
 	typename std::enable_if< has_save_method<Q>::value, void >::type
     test(std::ostream &f, Q &arg)
     {
-        std::cout << "Serialize: struct has a save method\n";
+        if (serialize_debug_mode) std::cout << "Serialize: struct has a save method\n";
 		arg.save(f);
-		std::cout << "END save method\n";
+		if (serialize_debug_mode) std::cout << "END save method\n";
     }
 
     template<class Q = T>
 	typename std::enable_if< !has_save_method<Q>::value, void >::type
     test(std::ostream &f, Q &arg)
     {
-		std::cout << "Serialize: no save method\n";
+		if (serialize_debug_mode) std::cout << "Serialize: no save method\n";
         __Serialize(f, arg);
     }
 };
@@ -236,9 +238,9 @@ struct _Deserialize_check_for_load
 	typename std::enable_if< has_load_method<Q>::value, void >::type
     test(std::istream &f, Q &arg)
     {
-        std::cout << "Deserialize: struct has a load method\n";
+        if (serialize_debug_mode) std::cout << "Deserialize: struct has a load method\n";
 		arg.load(f);
-		std::cout << "END load method\n";
+		if (serialize_debug_mode) std::cout << "END load method\n";
     }
 
     template<class Q = T>
@@ -281,7 +283,7 @@ void _Deserialize(std::istream &f, First& arg, Rest&... args) {
  */
 template <typename... T>
 inline void Serialize(const std::string what, std::ostream &f, T&... args) {
-	std::cout << "Serializing: " << what << "\n";
+	if (serialize_debug_mode) std::cout << "Serializing: " << what << "\n";
 	_Serialize(f, args...);
 }
 
@@ -291,7 +293,7 @@ inline void Serialize(const std::string what, std::ostream &f, T&... args) {
  */
 template <typename... T>
 inline void Deserialize(const std::string what, std::istream &f, T&... args) {
-	std::cout << "Deserializing: " << what << "\n";
+	if (serialize_debug_mode) std::cout << "Deserializing: " << what << "\n";
 	_Deserialize(f, args...);
 }
 
