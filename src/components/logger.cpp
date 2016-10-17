@@ -6,20 +6,20 @@ using rltk::serialize;
 using rltk::deserialize;
 
 void log_line_t::save(std::ostream &f) {
-    Serialize(f, age, chars);
+    Serialize("log_line_t", f, age, chars);
 }
 
 void log_line_t::load(std::istream &f) {
-    Deserialize(f, age, chars);
+    Deserialize("log_line_t", f, age, chars);
 }
 
 void logger_t::save(std::ostream &lbfile) {
-    Serialize(lbfile, lines);
+    Serialize("logger_t", lbfile, lines);
 }
 
 logger_t logger_t::load(std::istream &lbfile) {
     logger_t c;
-    Deserialize(lbfile, c.lines);
+    Deserialize("logger_t", lbfile, c.lines);
     return c;
 }
 

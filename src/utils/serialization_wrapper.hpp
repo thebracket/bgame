@@ -4,6 +4,7 @@
 #include <boost/container/flat_map.hpp>
 #include <boost/container/flat_set.hpp>
 #include <boost/optional.hpp>
+#include <string>
 
 /**** Forward declarations ****/
 template <typename... T> void Serialize(std::ostream &f, T&... args);
@@ -18,10 +19,13 @@ template <typename... T> void Deserialize(std::istream &f, T&... args);
 template <typename T>
 inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
 	std::cout << "Serialize: vector case\n";
-	std::size_t sz;
+	int canary = 10001;
+	rltk::serialize(f, canary);
+
+	std::size_t sz = arg.size();
 	rltk::serialize(f, sz);
-	for (T& e : arg) {
-		Serialize<T>(f, e);
+	for (std::size_t i=0; i<sz; ++i) {
+		Serialize<T>(f, arg[i], canary);
 	}
 	std::cout << "Serialize: end vector case\n";
 }
@@ -32,7 +36,7 @@ inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
 template <typename K, typename V>
 inline void __Serialize(std::ostream &f, std::vector<std::pair<K,V>> &arg) {
 	std::cout << "Serialize: vector pair case\n";
-	std::size_t sz;
+	std::size_t sz = arg.size();;
 	rltk::serialize(f, sz);
 	for (std::pair<K,V>& e : arg) {
 		Serialize<K>(f, e.first);
@@ -47,7 +51,7 @@ inline void __Serialize(std::ostream &f, std::vector<std::pair<K,V>> &arg) {
 template <typename K, typename V>
 inline void __Serialize(std::ostream &f, boost::container::flat_map<K,V> &arg) {
 	std::cout << "Serialize: boost::flat_map\n";
-	std::size_t sz;
+	std::size_t sz = arg.size();
 	rltk::serialize(f, sz);
 	for (std::pair<K,V>& e : arg) {
 		Serialize<K>(f, e.first);
@@ -70,7 +74,7 @@ inline void __Serialize(std::ostream &f, boost::optional<T> &arg) {
 template <typename T>
 inline void __Serialize(std::ostream &f, boost::container::flat_set<T> &arg) {
 	std::cout << "Serialize: boost::flat_set case\n";
-	std::size_t sz;
+	std::size_t sz = arg.size();
 	rltk::serialize(f, sz);
 	for (T& e : arg) {
 		Serialize<T>(f, e);
@@ -83,27 +87,40 @@ inline void __Serialize(std::ostream &f, boost::container::flat_set<T> &arg) {
  */
 template <typename T>
 inline void __Serialize(std::ostream &f, T& arg) {
+	int canary = 999;
 	std::cout << "Serialize: base case\n";
 	rltk::serialize(f, arg);
+	rltk::serialize(f, canary);
 }
 
 /**** Specific implementations of Deserialize ****/
 
 template <typename T>
 inline void __Deserialize(std::istream &f, T& arg) {
+	int canary;
+	const int canary_val = 999;
 	std::cout << "Deserialize: base case\n";
 	rltk::deserialize(f, arg);
+	rltk::deserialize(f, canary);
+	assert(canary == canary_val);
 }
 
 template <typename T>
 inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
 	std::cout << "Deserialize: vector case\n";
+	const int canary_val = 10001;
+	int canary = 0;
+
+	rltk::deserialize(f, canary);
+	assert(canary == canary_val);
+
 	std::size_t sz;
 	rltk::deserialize(f, sz);
 	arg.clear();
 	for (std::size_t i=0; i<sz; ++i) {
 		T tmp;
-		Deserialize<T>(f, tmp);
+		Deserialize<T>(f, tmp, canary);
+		assert(canary == canary_val);
 		arg.push_back(tmp);
 	}
 }
@@ -263,7 +280,8 @@ void _Deserialize(std::istream &f, First& arg, Rest&... args) {
  * The args are passed in as a parameter pack of references, so it runs without a copy.
  */
 template <typename... T>
-inline void Serialize(std::ostream &f, T&... args) {
+inline void Serialize(const std::string what, std::ostream &f, T&... args) {
+	std::cout << "Serializing: " << what << "\n";
 	_Serialize(f, args...);
 }
 
@@ -272,6 +290,19 @@ inline void Serialize(std::ostream &f, T&... args) {
  * The args are passed in as a parameter pack of references, so it loads in-place.
  */
 template <typename... T>
-inline void Deserialize(std::istream &f, T&... args) {
+inline void Deserialize(const std::string what, std::istream &f, T&... args) {
+	std::cout << "Deserializing: " << what << "\n";
 	_Deserialize(f, args...);
+}
+
+/* Cases where string isn't available */
+
+template <typename... T>
+inline void Serialize(std::ostream &f, T&... args) {
+	Serialize("Unspecified - inner?", f, args...);
+}
+
+template <typename... T>
+inline void Deserialize(std::istream &f, T&... args) {
+	Deserialize("Unspecified - inner?", f, args...);
 }

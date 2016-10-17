@@ -34,12 +34,12 @@ void calendar_t::next_minute() {
 }
 
 void calendar_t::save(std::ostream &lbfile) {
-    Serialize(lbfile, year, month, day, hour, minute, second, defined_shifts);
+    Serialize("calendar_t", lbfile, year, month, day, hour, minute, second, defined_shifts);
 }
 
 calendar_t calendar_t::load(std::istream &lbfile) {
     calendar_t c;
-    Deserialize(lbfile, c.year, c.month, c.day, c.hour, c.minute, c.second, c.defined_shifts);
+    Deserialize("calendar_t", lbfile, c.year, c.month, c.day, c.hour, c.minute, c.second, c.defined_shifts);
 
     return c;
 }

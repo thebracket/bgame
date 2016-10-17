@@ -2,12 +2,12 @@
 #include "../utils/serialization_wrapper.hpp"
 
 void species_t::save(std::ostream &lbfile) {
-    Serialize(lbfile, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, tag);
+    Serialize("species_t", lbfile, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, tag);
 }
 
 species_t species_t::load(std::istream &lbfile) {
     species_t c;
-    Deserialize(lbfile, c.gender, c.sexuality, c.hair_color, c.hair_style, c.skin_color, c.height_cm, c.weight_kg, c.bearded, c.tag);
+    Deserialize("species_t", lbfile, c.gender, c.sexuality, c.hair_color, c.hair_style, c.skin_color, c.height_cm, c.weight_kg, c.bearded, c.tag);
     return c;
 }
 

@@ -14,10 +14,10 @@ struct reaction_input_t {
 	int quantity = 0;
 
 	void save(std::ostream &f) {
-		Serialize(f, tag, required_material, required_material_type, quantity);
+		Serialize("reaction_input_t", f, tag, required_material, required_material_type, quantity);
 	}
 
 	void load(std::istream f) {
-		Deserialize(f, tag, required_material, required_material_type, quantity);
+		Deserialize("reaction_input_t", f, tag, required_material, required_material_type, quantity);
 	}
 };

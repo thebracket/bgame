@@ -2,11 +2,11 @@
 #include "../utils/serialization_wrapper.hpp"
 
 void wildlife_group::save(std::ostream &lbfile) {
-    Serialize(lbfile, group_id);
+    Serialize("wildlife_group", lbfile, group_id);
 }
 
 wildlife_group wildlife_group::load(std::istream &lbfile) {
     wildlife_group c;
-    Deserialize(lbfile, c.group_id);
+    Deserialize("wildlife_group", lbfile, c.group_id);
     return c;
 }

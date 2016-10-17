@@ -4,12 +4,12 @@
 #include "../utils/serialization_wrapper.hpp"
 
 void game_stats_t::save(std::ostream &lbfile) {
-    Serialize(lbfile, profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma, comeliness, ethics, age, skills);
+    Serialize("game_stats_t", lbfile, profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma, comeliness, ethics, age, skills);
 }
 
 game_stats_t game_stats_t::load(std::istream &lbfile) {
     game_stats_t c;
-    Deserialize(lbfile, c.profession_tag, c.strength, c.dexterity, c.constitution, c.intelligence, c.wisdom, c.charisma, c.comeliness, c.ethics, c.age, c.skills);
+    Deserialize("game_stats_t", lbfile, c.profession_tag, c.strength, c.dexterity, c.constitution, c.intelligence, c.wisdom, c.charisma, c.comeliness, c.ethics, c.age, c.skills);
     return c;
 }
 
