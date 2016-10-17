@@ -1,7 +1,6 @@
 #include "workflow_system.hpp"
 #include "../messages/messages.hpp"
 #include "../raws/raws.hpp"
-#include "../components/components.hpp"
 #include <boost/container/flat_map.hpp>
 #include <boost/container/flat_set.hpp>
 #include "inventory_system.hpp"

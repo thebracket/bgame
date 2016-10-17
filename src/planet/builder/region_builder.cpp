@@ -3,9 +3,18 @@
 #include "../constants.hpp"
 #include "../planet_builder.hpp"
 #include "noise_helper.hpp"
-#include "../../components/components.hpp"
 #include "settler_builder.hpp"
 #include "sentient_builder.hpp"
+#include "../../components/building.hpp"
+#include "../../components/viewshed.hpp"
+#include "../../components/lightsource.hpp"
+#include "../../components/construct_power.hpp"
+#include "../../components/construct_provides_sleep.hpp"
+#include "../../components/smoke_emitter.hpp"
+#include "../../components/calendar.hpp"
+#include "../../components/world_position.hpp"
+#include "../../components/logger.hpp"
+#include "../../components/designations.hpp"
 #include <rltk.hpp>
 
 using namespace rltk;

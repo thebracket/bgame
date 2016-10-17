@@ -1,11 +1,19 @@
 #include "sentient_ai_system.hpp"
-#include "../components/components.hpp"
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
 #include "weapons_helpers.hpp"
 #include "path_finding.hpp"
 #include "tasks/pathfinding.hpp"
 #include "tasks/initiative.hpp"
+#include "../components/sentient_ai.hpp"
+#include "../components/position.hpp"
+#include "../components/viewshed.hpp"
+#include "../components/health.hpp"
+#include "../components/game_stats.hpp"
+#include "../components/settler_ai.hpp"
+#include "../components/grazer_ai.hpp"
+#include "../components/species.hpp"
+#include "../raws/raws.hpp"
 
 using tasks::calculate_initiative;
 

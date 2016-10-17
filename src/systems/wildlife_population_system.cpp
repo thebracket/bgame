@@ -1,9 +1,17 @@
 #include "wildlife_population_system.hpp"
 #include "../raws/raws.hpp"
 #include "../main/game_globals.hpp"
-#include "../components/components.hpp"
 #include "../raws/health_factory.hpp"
 #include "../messages/messages.hpp"
+#include "../components/position.hpp"
+#include "../components/species.hpp"
+#include "../components/wildlife_group.hpp"
+#include "../components/game_stats.hpp"
+#include "../components/grazer_ai.hpp"
+#include "../components/viewshed.hpp"
+#include "../components/settler_ai.hpp"
+#include "../components/sentient_ai.hpp"
+#include "../components/renderable.hpp"
 #include <array>
 
 std::array<uint8_t, 4> group_populations;

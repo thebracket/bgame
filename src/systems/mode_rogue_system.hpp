@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../components/components.hpp"
 #include <rltk.hpp>
+#include "../components/settler_ai.hpp"
+#include "../components/game_stats.hpp"
 
 class mode_rogue_system : public rltk::base_system {
 public:

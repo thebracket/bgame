@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../components/components.hpp"
 #include <rltk.hpp>
 #include <vector>
 

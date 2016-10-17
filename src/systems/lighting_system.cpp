@@ -4,9 +4,9 @@
 #include "../messages/entity_moved_message.hpp"
 #include "../messages/power_changed_message.hpp"
 #include "../main/game_globals.hpp"
-#include "../components/components.hpp"
 #include <boost/container/flat_map.hpp>
 #include "visibility_system.hpp"
+#include "../components/lightsource.hpp"
 
 using namespace rltk;
 

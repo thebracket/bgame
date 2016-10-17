@@ -1,5 +1,6 @@
 #include "health_factory.hpp"
 #include "../main/game_globals.hpp"
+#include "raws.hpp"
 
 health_t create_health_component_sentient(const std::string &tag, const int base_hp) {
     health_t result;

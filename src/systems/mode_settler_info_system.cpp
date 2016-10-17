@@ -3,6 +3,11 @@
 #include "gui_system.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/recalculate_mining_message.hpp"
+#include "../components/health.hpp"
+#include "../components/game_stats.hpp"
+#include "../components/species.hpp"
+#include "../components/settler_ai.hpp"
+#include "../components/item.hpp"
 
 void mode_settler_info_system::configure() {
     system_name = "Settler Info";

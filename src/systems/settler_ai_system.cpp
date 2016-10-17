@@ -17,6 +17,16 @@
 #include "tasks/initiative.hpp"
 #include "../messages/log_message.hpp"
 #include "../components/logger.hpp"
+#include "../components/health.hpp"
+#include "../components/renderable.hpp"
+#include "../components/corpse_harvestable.hpp"
+#include "../components/construct_provides_sleep.hpp"
+#include "../components/viewshed.hpp"
+#include "../components/smoke_emitter.hpp"
+#include "../components/grazer_ai.hpp"
+#include "../components/sentient_ai.hpp"
+#include "../components/lightsource.hpp"
+
 #include <iostream>
 #include <map>
 

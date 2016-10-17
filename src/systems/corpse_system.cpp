@@ -1,7 +1,8 @@
 #include "corpse_system.hpp"
-#include "../components/components.hpp"
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
+#include "../components/corpse_settler.hpp"
+#include "../components/corpse_harvestable.hpp"
 
 void corpse_system::configure() {
     system_name = "Corpse Handler";

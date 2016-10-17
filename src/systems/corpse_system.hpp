@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../components/components.hpp"
 #include <rltk.hpp>
 
 class corpse_system : public rltk::base_system {

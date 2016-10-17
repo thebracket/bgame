@@ -2,6 +2,7 @@
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
 #include <sstream>
+#include "../components/construct_power.hpp"
 
 void power_system::calculate(int consumption) {
     designations->total_capacity = 0;

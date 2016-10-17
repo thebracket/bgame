@@ -5,6 +5,14 @@
 #include "gui_system.hpp"
 #include "../messages/build_request_message.hpp"
 #include <rltk.hpp>
+#include "../components/building.hpp"
+#include "../components/settler_ai.hpp"
+#include "../components/sentient_ai.hpp"
+#include "../components/grazer_ai.hpp"
+#include "../components/item.hpp"
+#include "../components/construct_container.hpp"
+#include "../components/item_stored.hpp"
+#include "../raws/raws.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;

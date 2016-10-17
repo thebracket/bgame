@@ -1,7 +1,7 @@
 #include "particle_system.hpp"
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
-#include "../components/components.hpp"
+#include "../components/smoke_emitter.hpp"
 #include <rltk.hpp>
 #include <algorithm>
 

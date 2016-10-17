@@ -1,8 +1,9 @@
 #include "play_game.hpp"
 #include "game_globals.hpp"
 #include "../components/loader.hpp"
-#include "../components/components.hpp"
 #include "../systems/systems.hpp"
+#include "../components/calendar.hpp"
+#include "../components/designations.hpp"
 
 #include <rltk.hpp>
 #include <iostream>

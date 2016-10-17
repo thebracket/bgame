@@ -1,10 +1,12 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../components/components.hpp"
 #include "../raws/raws.hpp"
 #include "../main/game_globals.hpp"
 #include <boost/optional.hpp>
+#include "../components/item.hpp"
+#include "../components/building.hpp"
+#include "../raws/reaction_input.hpp"
 
 class inventory_system : public rltk::base_system {
 public:

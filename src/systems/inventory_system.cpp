@@ -1,7 +1,9 @@
 #include "inventory_system.hpp"
 #include "../messages/messages.hpp"
-#include "../components/components.hpp"
 #include "movement_system.hpp"
+#include "../components/item_stored.hpp"
+#include "../components/settler_ai.hpp"
+
 #include <boost/container/flat_map.hpp>
 
 void inventory_system::update(const double duration_ms) {

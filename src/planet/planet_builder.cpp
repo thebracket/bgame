@@ -1,5 +1,4 @@
 #include "planet_builder.hpp"
-#include "../components/components.hpp"
 #include "../raws/raws.hpp"
 #include "builder/settler_builder.hpp"
 #include "builder/map_builder.hpp"

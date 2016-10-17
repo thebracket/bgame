@@ -1,7 +1,14 @@
 #include "settler_builder.hpp"
-#include "../../components/components.hpp"
+#include "../../components/settler_ai.hpp"
+#include "../../components/species.hpp"
+#include "../../components/game_stats.hpp"
+#include "../../components/name.hpp"
+#include "../../components/viewshed.hpp"
+#include "../../components/renderable.hpp"
+#include "../../components/item.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../raws/health_factory.hpp"
+#include "../../raws/raws.hpp"
 
 using namespace rltk;
 

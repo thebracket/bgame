@@ -1,10 +1,17 @@
 #include "sentient_builder.hpp"
 #include "../../raws/raws.hpp"
-#include "../../components/components.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../utils/string_utils.hpp"
+#include "../../components/sentient_ai.hpp"
+#include "../../components/species.hpp"
+#include "../../components/name.hpp"
+#include "../../components/game_stats.hpp"
+#include "../../components/item.hpp"
+#include "../../components/renderable.hpp"
+#include "../../components/viewshed.hpp"
+#include "../../components/position.hpp"
 
 int sentient_stat_mod(boost::container::flat_map<std::string, raw_species_t>::iterator &species, const std::string &stat) {
     auto finder = species->second.stat_mods.find(stat);

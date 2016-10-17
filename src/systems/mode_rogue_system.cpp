@@ -5,6 +5,9 @@
 #include "movement_system.hpp"
 #include "weapons_helpers.hpp"
 #include "mouse_input_system.hpp"
+#include "../components/health.hpp"
+#include "../components/grazer_ai.hpp"
+#include "../components/sentient_ai.hpp"
 #include <rltk.hpp>
 
 void mode_rogue_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {

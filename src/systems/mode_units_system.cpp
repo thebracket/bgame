@@ -4,6 +4,10 @@
 #include "../messages/recalculate_mining_message.hpp"
 #include "../utils/string_utils.hpp"
 #include "gui_system.hpp"
+#include "../components/settler_ai.hpp"
+#include "../components/game_stats.hpp"
+#include "../components/sentient_ai.hpp"
+#include "../components/grazer_ai.hpp"
 #include <rltk.hpp>
 
 using namespace rltk;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../components/components.hpp"
 #include <rltk.hpp>
 
 class keyboard_system : public rltk::base_system {

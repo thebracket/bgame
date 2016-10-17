@@ -7,6 +7,8 @@
 #include "../planet/region.hpp"
 #include "../main/game_globals.hpp"
 #include "particle_system.hpp"
+#include "../components/settler_ai.hpp"
+
 
 using namespace rltk;
 

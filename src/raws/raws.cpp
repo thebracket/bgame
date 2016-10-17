@@ -1,7 +1,11 @@
 #include "raws.hpp"
 #include "lua_bridge.hpp"
-#include "../components/components.hpp"
 #include "../utils/string_utils.hpp"
+#include "../components/species.hpp"
+#include "../components/position.hpp"
+#include "../components/renderable.hpp"
+#include "../components/item.hpp"
+#include "../components/item_stored.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>

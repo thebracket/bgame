@@ -3,6 +3,13 @@
 #include "../main/game_globals.hpp"
 #include <rltk.hpp>
 #include "weapons_helpers.hpp"
+#include "../components/health.hpp"
+#include "../components/settler_ai.hpp"
+#include "../components/grazer_ai.hpp"
+#include "../components/sentient_ai.hpp"
+#include "../components/species.hpp"
+#include "../components/position.hpp"
+#include "../components/game_stats.hpp"
 
 void mode_rogue_render_system::configure() {
     system_name = "Rogue Render System";
