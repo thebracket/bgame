@@ -1,130 +1,166 @@
 #pragma once
 
 #include <rltk.hpp>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <boost/tti/has_member_function.hpp>
 
-// for-each for tuples
-template <typename Tuple, typename F, std::size_t ...Indices>
-void for_each_impl(Tuple&& tuple, F&& f, std::index_sequence<Indices...>) {
-	using swallow = int[];
-	(void)swallow {
-		1,
-			(f(std::get<Indices>(std::forward<Tuple>(tuple))), void(), int{})...
-	};
-}
+/**** Forward declarations ****/
+template <typename... T> void Serialize(std::ostream &f, T&... args);
+template <typename... T> void Deserialize(std::istream &f, T&... args);
 
-template <typename Tuple, typename F>
-void for_each(Tuple&& tuple, F&& f) {
-	constexpr std::size_t N = std::tuple_size<std::remove_reference_t<Tuple>>::value;
-	for_each_impl(std::forward<Tuple>(tuple), std::forward<F>(f),
-		std::make_index_sequence<N>{});
+/**** Specific implementations of Serialize ****/
+
+/*
+ * Vector case for a primitive; save the size and then call Serialize for each element in the container
+ * in turn.
+ */
+template <typename T>
+inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
+	std::cout << "Serialize: vector case\n";
+	std::size_t sz;
+	rltk::serialize(f, sz);
+	for (T& e : arg) {
+		Serialize<T>(f, e);
+	}
+	std::cout << "Serialize: end vector case\n";
 }
 
 /*
- * Specialized serialize to handle multiple types.
+ * Base case for a primitive; in this case, send it through to the RLTK serialization code.
  */
-
-namespace s_detail {
-	BOOST_TTI_HAS_MEMBER_FUNCTION(save)
-	BOOST_TTI_HAS_MEMBER_FUNCTION(load)
+template <typename T>
+inline void __Serialize(std::ostream &f, T& arg) {
+	std::cout << "Serialize: base case\n";
 }
 
-template<typename T>
-inline void primitive_serialize(std::ostream &f, T &val) {
-	std::cout << "Serialize primitive - passed on\n";
-	rltk::serialize(f, val);
-}
+/**** Specific implementations of Deserialize ****/
 
-template<typename T>
-inline void primitive_serialize(std::ostream &f, std::vector<T> &val) {
-	std::cout << "Serialize vector\n";
-	std::size_t sz = val.size();
-	rltk::serialize(f, sz);
-	for (T &e : val) {
-		Serialize(f, e);
-	}
+template <typename T>
+inline void __Deserialize(std::istream &f, T& arg) {
+	std::cout << "Deserialize: base case\n";
 }
-
-template<typename T>
-inline void primitive_deserialize(std::istream &f, T &val) {
-	rltk::deserialize(f, val);
-}
-
-template<typename T>
-inline void primitive_deserialize(std::istream &f, std::vector<T> &val) {
+template <typename T>
+inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
+	std::cout << "Deserialize: vector case\n";
 	std::size_t sz;
 	rltk::deserialize(f, sz);
-	val.clear();
-	for (std::size_t i = 0; i < sz; ++i) {
-		T e;
-		rltk::deserialize(f, e);
-		val.push_back(e);
+	arg.clear();
+	for (std::size_t i=0; i<sz; ++i) {
+		T tmp;
+		Deserialize<T>(f, tmp);
+		arg.push_back(tmp);
 	}
 }
 
-template<typename T>
-struct _Serializer {
+/* Helper functions. These use SFINAE to detect whether a struct/class has a load or save method. */
 
-	template<typename T>
-	typename std::enable_if< s_detail::has_member_function_save<T, void>::value, void>::type
-	Serialize(std::ostream &f, T &val) {
-		val.save(f);
-	}
+template< class T >
+struct has_save_method
+{
+    typedef char(&YesType)[1];
+    typedef char(&NoType)[2];
+    template< class, class > struct Sfinae;
 
-	template<typename T>
-	typename std::enable_if< !s_detail::has_member_function_save<T, void>::value, void>::type
-	Serialize(std::ostream &f, T &val) {
-		primitive_serialize(f, val);
-	}
-
-	template<typename T>
-	typename std::enable_if< s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
-	Deserialize(std::istream &f, T &val) {
-		val.load(f);
-	}
-
-	template<typename T>
-	typename std::enable_if< !s_detail::has_member_function_save<T, std::ofstream>::value, void>::type
-	Deserialize(std::istream &f, T &val) {
-		primitive_deserialize(f, val);
-	}
+    template< class T2 > static YesType Test( Sfinae<T2, decltype(std::declval<T2>().save( std::declval<std::ostream&>() ))> * );
+    template< class T2 > static NoType  Test( ... );
+    static const bool value = sizeof(Test<T>(0))==sizeof(YesType);
 };
 
-template<typename T>
-inline void _Serialize(std::ostream &f, T &val) {
-	_Serializer<T> s;
-	s.Serialize(f, val);
-}
+template< class T >
+struct has_load_method
+{
+    typedef char(&YesType)[1];
+    typedef char(&NoType)[2];
+    template< class, class > struct Sfinae;
+
+    template< class T2 > static YesType Test( Sfinae<T2, decltype(std::declval<T2>().load( std::declval<std::istream&>() ))> * );
+    template< class T2 > static NoType  Test( ... );
+    static const bool value = sizeof(Test<T>(0))==sizeof(YesType);
+};
+
+/* Uses enable_if to determine if it should call a struct's save method, or just pass through to
+ * a more specific Serialize */
+template<class T>
+struct _Serialize_check_for_save
+{
+	template<class Q = T>
+	typename std::enable_if< has_save_method<Q>::value, void >::type
+    test(std::ostream &f, Q &arg)
+    {
+        std::cout << "Serialize: struct has a save method\n";
+		arg.save(f);
+		std::cout << "END save method\n";
+    }
+
+    template<class Q = T>
+	typename std::enable_if< !has_save_method<Q>::value, void >::type
+    test(std::ostream &f, Q &arg)
+    {
+		std::cout << "Serialize: no save method\n";
+        __Serialize(f, arg);
+    }
+};
+
+/* Uses enable_if to determine if it should call a struct's load method, or just pass through to
+ * a more specific Deserialize */
+template<class T>
+struct _Deserialize_check_for_load
+{
+    template<class Q = T>
+	typename std::enable_if< has_load_method<Q>::value, void >::type
+    test(std::istream &f, Q &arg)
+    {
+        std::cout << "Deserialize: struct has a load method\n";
+		arg.load(f);
+		std::cout << "END load method\n";
+    }
+
+    template<class Q = T>
+	typename std::enable_if< !has_load_method<Q>::value, void >::type
+    test(std::istream &f, Q &arg)
+    {
+        __Deserialize(f, arg);
+    }
+};
+
+/**** Parameter pack expansion templates; recursively call Serialize(f, element) on each element in the parameter pack with no copy. ***/
 
 template<typename T>
-inline void _Deserialize(std::istream &f, T &val) {
-	_Serializer<T> s;
-	s.Deserialize(f, val);
+void _Serialize(std::ostream &f, T &arg) {
+	_Serialize_check_for_save<T> temp;
+	temp.test(f, arg);
+}
+
+template <typename First, typename... Rest>
+void _Serialize(std::ostream &f, First& arg, Rest&... args) {
+	_Serialize(f, arg);
+	_Serialize(f, args...);
+}
+
+template <typename T>
+void _Deserialize(std::istream &f, T &arg) {
+	_Deserialize_check_for_load<T> temp;
+	temp.test(f, arg);
+}
+
+template <typename First, typename... Rest>
+void _Deserialize(std::istream &f, First& arg, Rest&... args) {
+	_Deserialize(f, arg);
+	_Deserialize(f, args...);
 }
 
 /*
- * Call Serialize on every element of a variadic pack of parameters. The idea here is to let
- * the caller do Serialize(file, one, two, three) for a very obvious serialization order.
+ * Base Serialize template: use as Serialize(file, as, many, args, as, you, want)
+ * The args are passed in as a parameter pack of references, so it runs without a copy.
  */
-template<typename... T>
-inline void _Serialize(std::ostream &f, std::tuple<T&...> &vals) {
-	for_each(vals, [&f] (auto &t) { _Serialize(f, t); });
+template <typename... T>
+inline void Serialize(std::ostream &f, T&... args) {
+	_Serialize(f, args...);
 }
 
-template<typename ...T>
-inline void _Deserialize(std::istream &f, std::tuple<T&...> &vals) {
-	for_each(vals, [&f] (auto &t) { _Deserialize(f, t); });
-}
-
-template<typename ...T>
-inline void Serialize(std::ostream &f, T&... vals) {
-	_Serialize(f, std::make_tuple<T&...>(vals...));
-}
-
-template<typename ...T>
-inline void Deserialize(std::istream &f, T&... vals) {
-	_Deserialize(f, std::make_tuple<T&...>(vals...));
+/*
+ * Base Deserialize template: use as Serialize(file, as, many, args, as, you, want)
+ * The args are passed in as a parameter pack of references, so it loads in-place.
+ */
+template <typename... T>
+inline void Deserialize(std::istream &f, T&... args) {
+	_Deserialize(f, args...);
 }
