@@ -15,17 +15,6 @@ struct position_t {
 
 	std::size_t serialization_identity = 2;
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, x);
-		serialize(lbfile, y);
-		serialize(lbfile, z);
-	}
-
-	static position_t load(std::istream &lbfile) {
-		position_t c;
-		deserialize(lbfile, c.x);
-		deserialize(lbfile, c.y);
-		deserialize(lbfile, c.z);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	void load(std::istream &lbfile);
 };

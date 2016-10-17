@@ -2,17 +2,10 @@
 
 #include <rltk.hpp>
 #include <string>
-#include <array>
 #include <vector>
+#include "helpers/shift.hpp"
 
 using namespace rltk;
-
-enum shift_type_t { SLEEP_SHIFT, LEISURE_SHIFT, WORK_SHIFT };
-
-struct shift_t {
-	std::string shift_name;
-	std::array<shift_type_t, 24> hours;
-};
 
 struct calendar_t {
 	std::size_t serialization_identity = 3;

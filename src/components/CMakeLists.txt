@@ -3,6 +3,32 @@ add_library(components
     loader.cpp
 	building.cpp
 	calendar.cpp
+	construct_power.cpp
+	construct_provides_sleep.cpp
+	corpse_harvestable.cpp
+	corpse_settler.cpp
+	designations.cpp
 	game_stats.cpp
+	grazer_ai.cpp
+	health.cpp
+	item.cpp
+	item_carried.cpp
+	item_stored.cpp
+	lightsource.cpp
 	logger.cpp
+	name.cpp
+	position.cpp
+	renderable.cpp
+	sentient_ai.cpp
+	settler_ai.cpp
+	species.cpp
+	viewshed.cpp
+	wildlife_group.cpp
+	world_position.cpp
+	helpers/shift.cpp
+	helpers/building_designation_t.cpp
+	helpers/health_part_t.cpp
+	helpers/reaction_task_t.cpp
+	helpers/skill_t.cpp
+	helpers/unbuild_t.cpp
 )

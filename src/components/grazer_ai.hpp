@@ -13,13 +13,6 @@ struct grazer_ai {
 
 	std::size_t serialization_identity = 20;
 
-	void save(std::ostream &lbfile) {
-		Serialize(lbfile, initiative, initiative_modifier);
-	}
-
-	static grazer_ai load(std::istream &lbfile) {
-		grazer_ai c;
-		Deserialize(lbfile, c.initiative, c.initiative_modifier);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static grazer_ai load(std::istream &lbfile);
 };

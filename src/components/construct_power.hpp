@@ -14,17 +14,6 @@ struct construct_power_t {
 
 	std::size_t serialization_identity = 15;
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, storage_capacity);
-		serialize(lbfile, generation_always);
-		serialize(lbfile, generation_solar);
-	}
-
-	static construct_power_t load(std::istream &lbfile) {
-		construct_power_t c;
-		deserialize(lbfile, c.storage_capacity);
-		deserialize(lbfile, c.generation_always);
-		deserialize(lbfile, c.generation_solar);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static construct_power_t load(std::istream &lbfile);
 };

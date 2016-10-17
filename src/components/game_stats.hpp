@@ -3,6 +3,7 @@
 #include <rltk.hpp>
 #include <vector>
 #include <unordered_map>
+#include "helpers/skill_t.hpp"
 
 using namespace rltk;
 
@@ -12,13 +13,6 @@ inline short stat_modifier(const short &stat)
 		return -5;
 	return ((stat - 1) / 2) - 4;
 }
-
-struct skill_t {
-	skill_t() {}
-	skill_t(const int8_t lvl, const uint16_t &xp) : skill_level(lvl), experience_gained(xp) {}
-	int8_t skill_level = 0;
-	uint16_t experience_gained = 0;
-};
 
 struct game_stats_t {
 

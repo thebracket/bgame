@@ -1,51 +1,15 @@
 #include "game_stats.hpp"
 #include "../messages/log_message.hpp"
 #include "../components/logger.hpp"
+#include "../utils/serialization_wrapper.hpp"
 
 void game_stats_t::save(std::ostream &lbfile) {
-    serialize(lbfile, profession_tag);
-    serialize(lbfile, strength);
-    serialize(lbfile, dexterity);
-    serialize(lbfile, constitution);
-    serialize(lbfile, intelligence);
-    serialize(lbfile, wisdom);
-    serialize(lbfile, charisma);
-    serialize(lbfile, comeliness);
-    serialize(lbfile, ethics);
-    serialize(lbfile, age);
-    serialize(lbfile, skills.size());
-    for (auto it=skills.begin(); it!=skills.end(); ++it) {
-        std::string skill_name = it->first;
-        serialize(lbfile, skill_name);
-        serialize(lbfile, it->second.skill_level);
-        serialize(lbfile, it->second.experience_gained);
-    }
+    Serialize(lbfile, profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma, comeliness, ethics, age, skills);
 }
 
 game_stats_t game_stats_t::load(std::istream &lbfile) {
     game_stats_t c;
-    deserialize(lbfile, c.profession_tag);
-    deserialize(lbfile, c.strength);
-    deserialize(lbfile, c.dexterity);
-    deserialize(lbfile, c.constitution);
-    deserialize(lbfile, c.intelligence);
-    deserialize(lbfile, c.wisdom);
-    deserialize(lbfile, c.charisma);
-    deserialize(lbfile, c.comeliness);
-    deserialize(lbfile, c.ethics);
-    deserialize(lbfile, c.age);
-    std::size_t number_of_skills;
-    deserialize(lbfile, number_of_skills);
-    for (std::size_t i=0; i<number_of_skills; ++i) {
-        std::string skill_name;
-        int8_t skill_level;
-        uint16_t experience_gained;
-
-        deserialize(lbfile, skill_name);
-        deserialize(lbfile, skill_level);
-        deserialize(lbfile, experience_gained);
-        c.skills[skill_name] = skill_t{skill_level, experience_gained};
-    }
+    Deserialize(lbfile, c.profession_tag, c.strength, c.dexterity, c.constitution, c.intelligence, c.wisdom, c.charisma, c.comeliness, c.ethics, c.age, c.skills);
     return c;
 }
 

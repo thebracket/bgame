@@ -31,15 +31,6 @@ struct item_carried_t {
 
 	std::size_t serialization_identity = 10;
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, location);
-		serialize(lbfile, carried_by);
-	}
-
-	static item_carried_t load(std::istream &lbfile) {
-		item_carried_t c;
-		deserialize(lbfile, c.location);
-		deserialize(lbfile, c.carried_by);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static item_carried_t load(std::istream &lbfile);
 };

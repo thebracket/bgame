@@ -13,17 +13,6 @@ struct renderable_t {
 	renderable_t() {}
 	renderable_t(const uint8_t ch, const color_t fg, const color_t bg) : glyph(ch), foreground(fg), background(bg) {}
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, glyph);
-		serialize(lbfile, foreground);
-		serialize(lbfile, background);
-	}
-
-	static renderable_t load(std::istream &lbfile) {
-		renderable_t c;
-		deserialize(lbfile, c.glyph);
-		deserialize(lbfile, c.foreground);
-		deserialize(lbfile, c.background);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static renderable_t load(std::istream &lbfile);
 };

@@ -20,13 +20,6 @@ struct lightsource_t {
 
 	std::size_t serialization_identity = 19;
 
-	void save(std::ostream &lbfile) {
-		Serialize(lbfile, radius, color, alert_status);
-	}
-
-	static lightsource_t load(std::istream &lbfile) {
-		lightsource_t c;
-		Deserialize(lbfile, c.radius, c.color, c.alert_status);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static lightsource_t load(std::istream &lbfile);
 };

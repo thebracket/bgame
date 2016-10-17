@@ -12,13 +12,6 @@ struct item_stored_t {
 
 	std::size_t serialization_identity = 12;
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, stored_in);
-	}
-
-	static item_stored_t load(std::istream &lbfile) {
-		item_stored_t c;
-		deserialize(lbfile, c.stored_in);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static item_stored_t load(std::istream &lbfile);
 };

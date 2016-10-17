@@ -2,24 +2,9 @@
 
 #include <rltk.hpp>
 #include <vector>
-#include "../utils/serialization_wrapper.hpp"
+#include "helpers/health_part_t.hpp"
 
 using namespace rltk;
-
-struct health_part_t {
-	std::string part = "";
-	int max_hitpoints = 0;
-	int current_hitpoints = 0;
-	int size = 0;
-
-	void save(std::ostream &f) {
-		Serialize(f, part, max_hitpoints, current_hitpoints, size);
-	}
-
-	void load(std::istream &f) {
-		Deserialize(f, part, max_hitpoints, current_hitpoints, size);
-	}
-};
 
 struct health_t {
 	int max_hitpoints;
@@ -35,13 +20,6 @@ struct health_t {
 
 	std::size_t serialization_identity = 7;
 
-	void save(std::ostream &lbfile) {
-		Serialize(lbfile, max_hitpoints, current_hitpoints, unconscious, blind, immobile, slow, no_grasp, parts);
-	}
-
-	static health_t load(std::istream &lbfile) {
-		health_t c;
-		Deserialize(lbfile, c.max_hitpoints, c.current_hitpoints, c.unconscious, c.blind, c.immobile, c.slow, c.no_grasp, c.parts);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static health_t load(std::istream &lbfile);
 };

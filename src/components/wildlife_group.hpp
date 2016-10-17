@@ -11,13 +11,6 @@ struct wildlife_group {
 
 	std::size_t serialization_identity = 21;
 
-	void save(std::ostream &lbfile) {
-        serialize(lbfile, group_id);
-	}
-
-	static wildlife_group load(std::istream &lbfile) {
-		wildlife_group c;
-        deserialize(lbfile, c.group_id);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static wildlife_group load(std::istream &lbfile);
 };

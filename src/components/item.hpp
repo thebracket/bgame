@@ -41,25 +41,6 @@ struct item_t {
 
 	std::size_t serialization_identity = 9;
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, item_name);
-		serialize(lbfile, item_tag);
-		serialize(lbfile, category);
-		serialize(lbfile, type);
-		serialize(lbfile, material);
-		serialize(lbfile, claimed);
-		serialize(lbfile, stack_size);
-	}
-
-	static item_t load(std::istream &lbfile) {
-		item_t c;
-		deserialize(lbfile, c.item_name);
-		deserialize(lbfile, c.item_tag);
-		deserialize(lbfile, c.category);
-		deserialize(lbfile, c.type);
-		deserialize(lbfile, c.material);
-		deserialize(lbfile, c.claimed);
-		deserialize(lbfile, c.stack_size);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static item_t load(std::istream &lbfile);
 };

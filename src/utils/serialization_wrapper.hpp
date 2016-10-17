@@ -1,6 +1,9 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <boost/container/flat_map.hpp>
+#include <boost/container/flat_set.hpp>
+#include <boost/optional.hpp>
 
 /**** Forward declarations ****/
 template <typename... T> void Serialize(std::ostream &f, T&... args);
@@ -24,6 +27,58 @@ inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
 }
 
 /*
+ * Vector case for a pair
+ */
+template <typename K, typename V>
+inline void __Serialize(std::ostream &f, std::vector<std::pair<K,V>> &arg) {
+	std::cout << "Serialize: vector pair case\n";
+	std::size_t sz;
+	rltk::serialize(f, sz);
+	for (std::pair<K,V>& e : arg) {
+		Serialize<K>(f, e.first);
+		Serialize<V>(f, e.second);
+	}
+	std::cout << "Serialize: end vector case\n";
+}
+
+/*
+ * boost::flat_map case
+ */
+template <typename K, typename V>
+inline void __Serialize(std::ostream &f, boost::container::flat_map<K,V> &arg) {
+	std::cout << "Serialize: boost::flat_map\n";
+	std::size_t sz;
+	rltk::serialize(f, sz);
+	for (std::pair<K,V>& e : arg) {
+		Serialize<K>(f, e.first);
+		Serialize<V>(f, e.second);
+	}
+	std::cout << "Serialize: end boost::flat_map case\n";
+}
+
+/* Support for boost::optional */
+template <typename T>
+inline void __Serialize(std::ostream &f, boost::optional<T> &arg) {
+	std::cout << "Serialize: boost::optional\n";
+	bool has_data = false;
+	if (arg) has_data = true;
+	Serialize(f, has_data);
+	if (arg) Serialize<T>(f, arg.get());
+}
+
+/* Support for boost::container::flat_set */
+template <typename T>
+inline void __Serialize(std::ostream &f, boost::container::flat_set<T> &arg) {
+	std::cout << "Serialize: boost::flat_set case\n";
+	std::size_t sz;
+	rltk::serialize(f, sz);
+	for (T& e : arg) {
+		Serialize<T>(f, e);
+	}
+	std::cout << "Serialize: end flat_set case\n";
+}
+
+/*
  * Base case for a primitive; in this case, send it through to the RLTK serialization code.
  */
 template <typename T>
@@ -39,6 +94,7 @@ inline void __Deserialize(std::istream &f, T& arg) {
 	std::cout << "Deserialize: base case\n";
 	rltk::deserialize(f, arg);
 }
+
 template <typename T>
 inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
 	std::cout << "Deserialize: vector case\n";
@@ -49,6 +105,59 @@ inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
 		T tmp;
 		Deserialize<T>(f, tmp);
 		arg.push_back(tmp);
+	}
+}
+
+template <typename K, typename V>
+inline void __Deserialize(std::istream &f, std::vector<std::pair<K,V>> &arg) {
+	std::cout << "Deserialize: vector pair case\n";
+	std::size_t sz;
+	rltk::deserialize(f, sz);
+	arg.clear();
+	for (std::size_t i=0; i<sz; ++i) {
+		std::pair<K,V> tmp;
+		Deserialize<K>(f, tmp.first);
+		Deserialize<V>(f, tmp.second);
+		arg.push_back(tmp);
+	}
+}
+
+template <typename K, typename V>
+inline void __Deserialize(std::istream &f, boost::container::flat_map<K,V> &arg) {
+	std::cout << "Deserialize: flat_map case\n";
+	std::size_t sz;
+	rltk::deserialize(f, sz);
+	arg.clear();
+	for (std::size_t i=0; i<sz; ++i) {
+		std::pair<K,V> tmp;
+		Deserialize<K>(f, tmp.first);
+		Deserialize<V>(f, tmp.second);
+		arg.insert(tmp);
+	}
+}
+
+template <typename T>
+inline void __Deserialize(std::istream &f, boost::optional<T> &arg) {
+	std::cout << "Serialize: boost::optional\n";
+	bool has_data = false;
+	Deserialize(f, has_data);
+	if (arg) {
+		T real_data;
+		Deserialize<T>(f, real_data);
+		arg = real_data;
+	}
+}
+
+template <typename T>
+inline void __Deserialize(std::istream &f, boost::container::flat_set<T> &arg) {
+	std::cout << "Deserialize: boost::container::flat_set case\n";
+	std::size_t sz;
+	rltk::deserialize(f, sz);
+	arg.clear();
+	for (std::size_t i=0; i<sz; ++i) {
+		T tmp;
+		Deserialize<T>(f, tmp);
+		arg.insert(tmp);
 	}
 }
 

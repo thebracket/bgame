@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "position.hpp"
 
 using namespace rltk;
 
@@ -23,27 +24,6 @@ struct sentient_ai {
 
 	std::size_t serialization_identity = 25;
 
-	void save(std::ostream &lbfile) {
-		serialize(lbfile, initiative);
-		serialize(lbfile, initiative_modifier);
-        serialize(lbfile, person_id);
-		serialize(lbfile, aggression);
-		serialize(lbfile, hostile);
-		serialize(lbfile, goal);
-		serialize(lbfile, target);
-		serialize(lbfile, days_since_arrival);
-	}
-
-	static sentient_ai load(std::istream &lbfile) {
-		sentient_ai c;
-		deserialize(lbfile, c.initiative);
-		deserialize(lbfile, c.initiative_modifier);
-        deserialize(lbfile, c.person_id);
-		deserialize(lbfile, c.aggression);
-		deserialize(lbfile, c.hostile);
-		deserialize(lbfile, c.goal);
-		deserialize(lbfile, c.target);
-		deserialize(lbfile, c.days_since_arrival);
-		return c;
-	}
+	void save(std::ostream &lbfile);
+	static sentient_ai load(std::istream &lbfile);
 };

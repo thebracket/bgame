@@ -9,6 +9,9 @@ struct log_line_t {
 
     int age = 0;
     std::vector<rltk::vchar> chars;
+
+    void save(std::ostream &f);
+    void load(std::istream &f);
 };
 
 struct logger_t {
