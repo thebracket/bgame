@@ -119,17 +119,8 @@ void read_config() {
 	}
 }
 
-#include "components/health.hpp"
-#include "utils/serialization_wrapper.hpp"
-
 int main(int argc, char* argv[])
 {
-	std::cout << "Test has_save: " << has_save_method<health_part_t>::value << "\n";
-	std::cout << "Int has_save: " << has_save_method<int>::value << "\n";
-	std::fstream deleteme("deleteme", std::ios::out | std::ios::binary);
-	health_part_t temp;
-	Serialize(deleteme, temp);
-
 #ifndef WIN32
 
 	fs::path full_path( fs::initial_path<fs::path>() );

@@ -29,6 +29,7 @@ inline void __Serialize(std::ostream &f, std::vector<T> &arg) {
 template <typename T>
 inline void __Serialize(std::ostream &f, T& arg) {
 	std::cout << "Serialize: base case\n";
+	rltk::serialize(f, arg);
 }
 
 /**** Specific implementations of Deserialize ****/
@@ -36,6 +37,7 @@ inline void __Serialize(std::ostream &f, T& arg) {
 template <typename T>
 inline void __Deserialize(std::istream &f, T& arg) {
 	std::cout << "Deserialize: base case\n";
+	rltk::deserialize(f, arg);
 }
 template <typename T>
 inline void __Deserialize(std::istream &f, std::vector<T> &arg) {
