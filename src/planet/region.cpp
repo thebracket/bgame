@@ -299,8 +299,13 @@ void region_t::calc_render(const int &idx) {
 			case 10 : glyph = '0'; break;
 			default : glyph = '~';
 		}
-		fg = rltk::colors::Blue;
-		bg = rltk::colors::DarkBlue;
+		if (water_moved[idx]) {
+			fg = rltk::colors::Blue;
+			bg = rltk::colors::Cyan;
+		} else {
+			fg = rltk::colors::Blue;
+			bg = rltk::colors::DarkBlue;
+		}
 	}
 
 	// Apply it

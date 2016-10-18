@@ -43,6 +43,7 @@ struct region_t {
 		tile_flags.resize(REGION_TILES_COUNT);
 		render_cache.resize(REGION_TILES_COUNT);
 		water_level.resize(REGION_TILES_COUNT);
+		water_moved.resize(REGION_TILES_COUNT);
 		above_ground.resize(REGION_TILES_COUNT);
 		blood_stains.resize(REGION_TILES_COUNT);
 	}
@@ -63,6 +64,7 @@ struct region_t {
 	std::vector<bitset8> tile_flags;
 	std::vector<rltk::vchar> render_cache;
 	std::vector<uint8_t> water_level;
+	std::vector<bool> water_moved;
 	std::vector<bool> above_ground;
 	std::vector<bool> blood_stains;
 

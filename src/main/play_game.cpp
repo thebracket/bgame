@@ -74,6 +74,7 @@ void play_game::init() {
 	add_system<mouse_input_system>();
 	add_system<calendar_system>();
 	add_system<world_system>();
+	add_system<fluid_system>();
 	add_system<wildlife_population_system>();
 	add_system<sentient_ai_system>();
 	add_system<corpse_system>();

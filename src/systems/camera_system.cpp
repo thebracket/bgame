@@ -57,13 +57,13 @@ void camera_system::update(const double duration_ms) {
 		}
 		if (e.direction == 5) {
 			camera_position->region_z -= e.step;
-			if (camera_position->region_z < 0) camera_position->region_z = 0;
+			if (camera_position->region_z < 1) camera_position->region_z = 1;
 			dirty = true;
 			update_clipping_rectangle();
 		}
 		if (e.direction == 6) {
 			camera_position->region_z += e.step;
-			if (camera_position->region_z > REGION_DEPTH) camera_position->region_z = REGION_DEPTH;
+			if (camera_position->region_z > REGION_DEPTH-1) camera_position->region_z = REGION_DEPTH-1;
 			dirty = true;
 			update_clipping_rectangle();
 		}

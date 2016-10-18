@@ -37,6 +37,7 @@ add_library(systems
 	log_system.cpp
 	gui_system.cpp
 	hud_system.cpp
+	fluid_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
