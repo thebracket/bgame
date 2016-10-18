@@ -79,6 +79,12 @@
     <Filter Include="Source Files\systems\tasks">
       <UniqueIdentifier>{66ad085b-3f1a-4f46-959a-76fabcff9295}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\components\helpers">
+      <UniqueIdentifier>{32ce4b0b-d47c-41fa-b250-46816ad149b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\helpers">
+      <UniqueIdentifier>{8310cf20-a87c-48f4-848c-cfb80ab9f393}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -148,9 +154,6 @@
       <Filter>Header Files\rltk</Filter>
     </ClInclude>
     <ClInclude Include="..\src\components\calendar.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\components.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\src\components\position.hpp">
@@ -516,6 +519,36 @@
     <ClInclude Include="..\src\rltk\rltk\serialization_utils.hpp">
       <Filter>Header Files\rltk</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\helpers\building_designation_t.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\helpers\health_part_t.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\helpers\reaction_task_t.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\helpers\shift.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\helpers\skill_t.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\helpers\standing_orders.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\helpers\unbuild_t.hpp">
+      <Filter>Header Files\components\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\corpse_harvestable.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\corpse_settler.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\smoke_emitter.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -811,6 +844,84 @@
     </ClCompile>
     <ClCompile Include="..\src\systems\mode_sentient_info_system.cpp">
       <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\helpers\building_designation_t.cpp">
+      <Filter>Source Files\components\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\helpers\health_part_t.cpp">
+      <Filter>Source Files\components\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\helpers\reaction_task_t.cpp">
+      <Filter>Source Files\components\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\helpers\shift.cpp">
+      <Filter>Source Files\components\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\helpers\skill_t.cpp">
+      <Filter>Source Files\components\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\helpers\unbuild_t.cpp">
+      <Filter>Source Files\components\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\construct_power.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\construct_provides_sleep.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\corpse_harvestable.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\corpse_settler.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\designations.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\grazer_ai.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\health.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\item.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\item_carried.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\item_stored.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\lightsource.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\name.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\position.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\renderable.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\sentient_ai.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\settler_ai.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\species.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\viewshed.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\wildlife_group.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\world_position.cpp">
+      <Filter>Source Files\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
