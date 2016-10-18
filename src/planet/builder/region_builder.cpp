@@ -900,15 +900,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         ++peep_id;
     }
 
-    /*
-    // Temporarily add a layer of water near the top!
-    for (int y=1; y<REGION_HEIGHT-1; ++y) {
-        for (int x=1; x<REGION_WIDTH-1; ++x) {
-            region.water_level[mapidx(x,y,REGION_DEPTH-2)] = 3;
-        }
-    }
-    */
-
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");
     region.tile_recalc_all();
