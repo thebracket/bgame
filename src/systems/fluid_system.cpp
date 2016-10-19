@@ -1,6 +1,8 @@
 #include "fluid_system.hpp"
 #include "../messages/tick_message.hpp"
 #include "../main/game_globals.hpp"
+#include "../components/water_spawner.hpp"
+#include "../components/position.hpp"
 #include <algorithm>
 
 namespace fluids {
@@ -139,5 +141,11 @@ void fluid_system::update(const double ms) {
 		ticks->pop();
         std::fill(current_region->water_moved.begin(), current_region->water_moved.end(), false);
         fluids::do_fluids();
+
+        each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
+            const int idx = mapidx(pos.x, pos.y, pos.z);
+            // TODO: When rainfall is implemented, type 1 only spawns when it rains
+            if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;
+        });
 	}
 }

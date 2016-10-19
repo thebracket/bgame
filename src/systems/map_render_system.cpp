@@ -37,6 +37,7 @@ vchar get_render_char(const int &x, const int &y) {
 	auto rf = renderables.find(idx);
 	if (rf != renderables.end()) {
 		result = rf->second[glyph_cycle % rf->second.size()];
+		if (current_region->water_level[idx] > 0) result.background = rltk::colors::Blue;
 		if (!current_region->visible[idx]) result = greyscale(result);
 	} else {
 		result = current_region->render_cache[idx];

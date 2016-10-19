@@ -23,6 +23,7 @@ add_library(components
 	settler_ai.cpp
 	species.cpp
 	viewshed.cpp
+	water_spawner.cpp
 	wildlife_group.cpp
 	world_position.cpp
 	helpers/shift.cpp

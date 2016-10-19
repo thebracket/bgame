@@ -26,7 +26,7 @@ void movement_system::configure() {
             case 5 : if (current_region->tile_flags[tile_index].test(CAN_GO_EAST)) pos.x++; break;
             case 6 : if (current_region->tile_flags[tile_index].test(CAN_GO_WEST)) pos.x--; break;
         }
-        if (!current_region->solid[tile_index]) { 
+        if (!current_region->solid[tile_index] && current_region->water_level[tile_index]<3) { 
             emit(entity_wants_to_move_message{msg.entity_id, pos});
         }
     });

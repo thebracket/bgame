@@ -15,6 +15,7 @@
 #include "../../components/world_position.hpp"
 #include "../../components/logger.hpp"
 #include "../../components/designations.hpp"
+#include "../../components/water_spawner.hpp"
 #include <rltk.hpp>
 
 using namespace rltk;
@@ -77,9 +78,10 @@ inline void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &no
     }
 }
 
-inline std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng) {
-    const int n_subregions = 64 + rng.roll_dice(1,20);
+inline std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, std::size_t>> &water_spawners) {
     const int region_variance = planet.landblocks[planet.idx(region.region_x, region.region_y)].variance;
+    const int n_subregions = 64 + rng.roll_dice(1,20) + (region_variance * 4);
+    const int rainfall = planet.landblocks[planet.idx(region.region_x, region.region_y)].rainfall;
 
     set_worldgen_status("Finding sub-biomes");
     std::vector<std::pair<int,int>> centroids(n_subregions);
@@ -111,7 +113,9 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
     for (int i=0; i<n_subregions; ++i) {
         const int up_variance = rng.roll_dice(1, 2)-1;
         const int down_variance = rng.roll_dice(1, 2)-1;
-        variance.push_back( up_variance - down_variance );
+        int amount = up_variance - down_variance;
+        if (rng.roll_dice(1,500) < rainfall) amount = -10;
+        variance.push_back( amount );
     }
 
     set_worldgen_status("Applying sub-biomes");
@@ -122,13 +126,26 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
             const int sub_idx = subregion_idx[tile_idx];
             const int delta_z = variance[sub_idx];
             if (distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2) > 20) {
-                heightmap[tile_idx] += delta_z;
+                if (delta_z == -10) {
+                    // Murky Pool
+                    pooled_water[tile_idx] = 10;
+                    heightmap[tile_idx] -= 2;
+                    water_spawners.push_back({1, tile_idx}); // Murky pool spawner
+                } else {
+                    heightmap[tile_idx] += delta_z;
+                }
             } else {
                 heightmap[tile_idx] = heightmap[ ( REGION_HEIGHT/2 * REGION_WIDTH) + ((REGION_WIDTH/2) - 20) ];
+                if (heightmap[tile_idx] < 7) heightmap[tile_idx] = 7;
             }
         }
     }
 	return subregion_idx;
+}
+
+inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, std::size_t>> &water_spawners) {
+    std::cout << "Rainfall: " << +biome.first.mean_rainfall << "\n";
+    set_worldgen_status("Just add water...");
 }
 
 inline void zero_map(region_t &region) {
@@ -241,7 +258,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     return result;
 }
 
-void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng) {
+void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, std::size_t>> &water_spawners) {
     // For vegetation
     int max_veg_probability = 0;
     for (const auto &vegprob : biome.second.plants) max_veg_probability += vegprob.second;
@@ -286,24 +303,42 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             if (wet) {
                 region.water_level[mapidx(x,y,z-1)] = 10; // Below the water line; flood it!
             } else {
-                region.water_level[mapidx(x,y,z-1)] = 0;
-                
-                // Surface coverage
-                std::string veg_type = "";
-                int die_roll = rng.roll_dice(1, max_veg_probability);
-                for (const auto &veg : biome.second.plants) {
-                    die_roll -= veg.second;
-                    if (die_roll < 1) {
-                        veg_type = veg.first;
-                        break;
-                    }
-                }
-                if (veg_type == "") veg_type = "none";
+                if (pools[cell_idx]>0) {
+                    int w = pools[cell_idx];
+                    int Z = z-1;
 
-                if (veg_type != "none") {
-                    auto finder = plant_defs_idx.find(veg_type);
-                    region.tile_vegetation_type[mapidx(x,y,z-1)] = finder->second;
-                    region.tile_hit_points[mapidx(x,y,z-1)] = 10;
+                    for (const auto &ws : water_spawners) {
+                        if (ws.first == cell_idx) {
+                            create_entity()->assign(position_t{x,y,Z})->assign(water_spawner_t{ws.second});
+                        }
+                    }
+
+                    while (w > 0) {
+                        region.water_level[mapidx(x,y,Z)] = 10;
+                        w -= 10;
+                        ++Z;
+                    }
+                } else {
+
+                    region.water_level[mapidx(x,y,z-1)] = 0;
+                    
+                    // Surface coverage
+                    std::string veg_type = "";
+                    int die_roll = rng.roll_dice(1, max_veg_probability);
+                    for (const auto &veg : biome.second.plants) {
+                        die_roll -= veg.second;
+                        if (die_roll < 1) {
+                            veg_type = veg.first;
+                            break;
+                        }
+                    }
+                    if (veg_type == "") veg_type = "none";
+
+                    if (veg_type != "none") {
+                        auto finder = plant_defs_idx.find(veg_type);
+                        region.tile_vegetation_type[mapidx(x,y,z-1)] = finder->second;
+                        region.tile_hit_points[mapidx(x,y,z-1)] = 10;
+                    }
                 }
             }
 
@@ -686,8 +721,8 @@ inline int build_building(xp::rex_sprite &sprite, const int x, const int y, cons
                 if (output->foreground.r == 102 && output->foreground.g == 82 && output->foreground.b == 51) {
                     material = 1; // Wood
                 } else {
-                    if (output->foreground.r != 0 && output->foreground.g != 0 && output->foreground.b != 0)
-                        std::cout << +output->foreground.r << "," << +output->foreground.g << "," << +output->foreground.b << "\n";
+                    //if (output->foreground.r != 0 && output->foreground.g != 0 && output->foreground.b != 0)
+                    //    std::cout << +output->foreground.r << "," << +output->foreground.g << "," << +output->foreground.b << "\n";
                 }
 
                 if (output->glyph == 219 || output->glyph == 177) {
@@ -744,10 +779,12 @@ xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet,
 void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active, 
     std::vector<std::tuple<int,int,int>> &spawn_points, const std::size_t &civ_id, planet_t &planet) 
 {
-    for (int i=0; i<n_buildings; ++i) {
+    int i=0;
+    while (i<n_buildings) {
         auto hut = get_building_template(civ_id, planet, rng);
         xp::rex_sprite * building = &hut;
         bool ok = false;
+        int tries = 0;
         int x,y,z;
         while (!ok) {
             ok = true;
@@ -777,11 +814,16 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
 
             // Not too close to the escape pod!
             if (distance2d(x,y, REGION_WIDTH/2, REGION_HEIGHT/2) < 15.0F) ok = false;
+
+            if (!ok) ++tries;
+            if (tries > 50) ok = true;
         }
 
         // Spawn the hut
-        const int n_spawn = build_building(*building, x, y, z, region, spawn_points, active);
-        i += (n_spawn -1);
+        if (tries < 51) {
+            const int n_spawn = build_building(*building, x, y, z, region, spawn_points, active);
+            i += (n_spawn -1);
+        }
     }
 }
 
@@ -803,8 +845,17 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     build_heightmap_from_noise(target_region, noise, heightmap, planet);
     const int water_level = 5;
 
+    // Wet places
+    std::vector<uint8_t> pooled_water;
+    pooled_water.resize(REGION_HEIGHT * REGION_WIDTH);
+    std::fill(pooled_water.begin(), pooled_water.end(), 0);
+    std::vector<std::pair<int, std::size_t>> water_spawners;
+
     // Sub-biome map
-    auto subregions = create_subregions(planet, region, heightmap, biome, rng);
+    auto subregions = create_subregions(planet, region, heightmap, biome, rng, pooled_water, water_spawners);
+
+    // Hydrology
+    just_add_water(planet, region, pooled_water, heightmap, biome, rng, noise, water_spawners);
 
     // Strata map
     set_worldgen_status("Dividing strata");
@@ -813,7 +864,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
     zero_map(region);
-    lay_strata(region, heightmap, biome, strata, rng);
+    lay_strata(region, heightmap, biome, strata, rng, pooled_water, water_spawners);
 
     // Build ramps and beaches
     build_ramps(region);

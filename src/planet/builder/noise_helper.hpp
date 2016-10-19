@@ -9,7 +9,7 @@ inline uint8_t noise_to_planet_height(const double &n) {
 	return (n + 1.0F) * 150.0;
 }
 
-constexpr double NOISE_SIZE = 256.0F;
+constexpr double NOISE_SIZE = 384.0F;
 
 inline double noise_x(const int world_x, const int region_x) {
 	const double big_x = (world_x * WORLD_WIDTH) + region_x;
