@@ -43,6 +43,18 @@ struct biome_t {
 	int center_y = 0;
 };
 
+struct river_step_t {
+	int x=0;
+	int y=0;
+};
+
+struct river_t {
+	std::string name = "A river that will one day have a name";
+	int start_x=0;
+	int start_y=0;
+	std::vector<river_step_t> steps;
+};
+
 struct planet_t {
 	std::string name = "Test World";
 
@@ -55,6 +67,7 @@ struct planet_t {
 
 	std::vector<block_t> landblocks;
 	std::vector<biome_t> biomes;
+	std::vector<river_t> rivers;
 	inline int idx(const int x, const int y) { return y*WORLD_WIDTH + x; }
 	civ_holder_t civs;
 	history_t history;

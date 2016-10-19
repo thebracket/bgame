@@ -29,6 +29,16 @@ inline bool has_civilization(planet_t &planet, const int &x, const int &y) {
     return false;
 }
 
+inline bool has_river(planet_t &planet, const int &x, const int &y) {
+    for (const river_t &river : planet.rivers) {
+        if (river.start_x == x && river.start_y == y) return true;
+        for (const river_step_t &s : river.steps) {
+            if (s.x == x && s.y == y) return true;
+        }
+    }
+    return false;
+}
+
 std::pair<int,int> builder_select_starting_region(planet_t &planet) {
     std::pair<int,int> coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
 
@@ -38,6 +48,7 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet) {
         if (planet.landblocks[planet.idx(coords.first, coords.second)].type == block_type::WATER) ok = false;
         if (planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude < planet.water_height+2) ok = false;
         if (!has_civilization(planet, coords.first, coords.second)) ok = false;
+        if (!has_river(planet, coords.first, coords.second)) ok = false;
 
         if (!ok) {
             --coords.first;
@@ -146,6 +157,151 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
 inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, std::size_t>> &water_spawners) {
     std::cout << "Rainfall: " << +biome.first.mean_rainfall << "\n";
     set_worldgen_status("Just add water...");
+
+    bool river_starts_here = false;
+    bool river_terminates_here = false;
+    bool has_river = false;
+
+    std::array<int, 4> river_entry;
+    int river_exit = 0;
+    std::fill(river_entry.begin(), river_entry.end(), 0);
+
+    for (const river_t &river : planet.rivers) {
+        if (river.start_x == region.region_x && river.start_y == region.region_y) {
+            river_starts_here = true;
+            has_river = true;
+        }
+
+        int last_x = river.start_x;
+        int last_y = river.start_y;
+
+        std::size_t i=0;
+        for (const river_step_t &s : river.steps) {
+            if (s.x == region.region_x && s.y == region.region_y) {
+                std::cout << "A river runs through here\n";
+                has_river = true;
+
+                if (last_x < s.x) { std::cout << "Entering from the west\n"; ++river_entry[0]; }
+                if (last_x > s.x) { std::cout << "Entering from the east\n"; ++river_entry[1]; }
+                if (last_y < s.y) { std::cout << "Entering from the north\n"; ++river_entry[2]; }
+                if (last_y > s.y) { std::cout << "Entering from the south\n"; ++river_entry[3]; }
+
+                if (i+1 < river.steps.size()) {
+                    const int next_x = river.steps[i+1].x;
+                    const int next_y = river.steps[i+1].y;
+
+                    if (next_x < s.x) { std::cout << "Exiting to the west\n"; river_exit = 1; }
+                    if (next_x > s.x) { std::cout << "Exiting to the east\n"; river_exit = 2; }
+                    if (next_y < s.y) { std::cout << "Exiting to the north\n"; river_exit = 3; }
+                    if (next_y > s.y) { std::cout << "Exiting to the south\n"; river_exit = 4; }
+                } else {
+                    river_terminates_here = true;
+                }
+            }
+            last_x = s.x;
+            last_y = s.y;
+            ++i;
+        }
+    }
+
+    if (river_starts_here) std::cout << "There is a spring here\n";
+    if (river_terminates_here) std::cout << "River terminates here\n";
+
+    if (!has_river) return;
+
+    // Determine a confluence point - mid-point for the rivers
+    bool mid_ok = false;
+    int midpoint_x, midpoint_y;
+    while (!mid_ok) {
+        midpoint_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
+        midpoint_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
+        const float d = distance2d(midpoint_x, midpoint_y, REGION_WIDTH/2, REGION_HEIGHT/2);
+        if (d > 15.0f) mid_ok = true;
+    }
+
+    // Run rivers to the confluence
+    std::set<int> already_dug;
+    auto dig_river = [&heightmap, &pooled_water, &already_dug] (int X, int Y) {
+        for (int y = -2; y<2; ++y) {
+            for (int x = -2; x<2; ++x) {
+                const int actual_x = X+x;
+                const int actual_y = Y+y;
+                if (actual_x > 0 && actual_x < REGION_WIDTH && actual_y > 0 && actual_y < REGION_HEIGHT) {
+                    const int idx = (actual_y * REGION_WIDTH) + actual_x;
+                    if (already_dug.find(idx) == already_dug.end()) {
+                        if (x ==0 || y == 0) {
+                            heightmap[idx] -= 4;
+                            pooled_water[idx] = 20;
+                        } else {
+                            heightmap[idx] -= 3;
+                            pooled_water[idx] = 10;
+                        }
+                        already_dug.insert(idx);
+                    }
+                }
+            }
+        }
+    };
+    auto dig_exit_river = [&heightmap, &pooled_water, &already_dug] (int X, int Y) {
+        for (int y = -3; y<3; ++y) {
+            for (int x = -3; x<3; ++x) {
+                const int actual_x = X+x;
+                const int actual_y = Y+y;
+                if (actual_x > 0 && actual_x < REGION_WIDTH && actual_y > 0 && actual_y < REGION_HEIGHT) {
+                    const int idx = (actual_y * REGION_WIDTH) + actual_x;
+                    if (already_dug.find(idx) == already_dug.end()) {
+                        if (x ==0 || y == 0) {
+                            heightmap[idx] -= 5;
+                            pooled_water[idx] = 20;
+                        } else {
+                            heightmap[idx] -= 4;
+                            pooled_water[idx] = 10;
+                        }
+                        already_dug.insert(idx);
+                    }
+                }
+            }
+        }
+    };
+
+    for (int i=0; i<river_entry[0]; ++i) {
+        std::cout << "Running easterly river\n";
+        int start_x = 0;
+        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
+        line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
+        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+    }
+    for (int i=0; i<river_entry[1]; ++i) {
+        std::cout << "Running westerly river\n";
+        int start_x = REGION_WIDTH;
+        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
+        line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
+        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+    }
+    for (int i=0; i<river_entry[2]; ++i) {
+        std::cout << "Running southerly river\n";
+        int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
+        int start_y = 0;
+        line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
+        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+    }
+    for (int i=0; i<river_entry[3]; ++i) {
+        std::cout << "Running northerly river\n";
+        int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
+        int start_y = REGION_HEIGHT;
+        line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
+        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+    }
+
+    // Run confluence to the exit
+    if (!river_terminates_here) {
+        int end_x, end_y;
+        if (river_exit == 1) { end_x = 0; end_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4; }
+        if (river_exit == 2) { end_x = REGION_WIDTH; end_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4; }
+        if (river_exit == 3) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = 0; }
+        if (river_exit == 4) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = REGION_HEIGHT; }
+        line_func(midpoint_x, midpoint_y, end_x, end_y, dig_exit_river);
+    }
 }
 
 inline void zero_map(region_t &region) {

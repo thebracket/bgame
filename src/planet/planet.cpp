@@ -46,6 +46,18 @@ void save_planet(const planet_t &planet) {
 		serialize(deflate, biome.center_y);
 	}
 
+	serialize(deflate, planet.rivers.size());
+	for (const river_t &river : planet.rivers) {
+		serialize(deflate, river.name);
+		serialize(deflate, river.start_x);
+		serialize(deflate, river.start_y);
+		serialize(deflate, river.steps.size());
+		for (const river_step_t &s : river.steps) {
+			serialize(deflate, s.x);
+			serialize(deflate, s.y);
+		}
+	}
+
 	planet.civs.save(deflate);
 	planet.history.save(deflate);
 }
@@ -98,6 +110,25 @@ planet_t load_planet() {
 		deserialize(inflate, biome.center_y);
 
 		planet.biomes[i] = biome;
+	}
+
+	std::size_t n_rivers;
+	deserialize(inflate, n_rivers);
+	planet.rivers.resize(n_rivers);
+	for (std::size_t i=0; i<n_rivers; ++i) {
+		river_t river;
+		deserialize(inflate, river.name);
+		deserialize(inflate, river.start_x);
+		deserialize(inflate, river.start_y);
+		std::size_t n_steps;
+		deserialize(inflate, n_steps);
+		for (std::size_t j=0; j<n_steps; ++j) {
+			river_step_t s;
+			deserialize(inflate, s.x);
+			deserialize(inflate, s.y);
+			river.steps.push_back(s);
+		}
+		planet.rivers[i] = river;
 	}
 
 	planet.civs.load(inflate);

@@ -36,7 +36,7 @@ void setup_build_planet(int width, int height) {
 	std::fill(planet_builder_display->begin(), planet_builder_display->end(), vchar{0, WHITE, BLACK});
 }
 
-inline void set_planet_display_char(const int &block_idx, const int &idx, const planet_t &planet) {
+inline void set_planet_display_char(const int &block_idx, const int &idx, planet_t &planet) {
 	double hotness = ((double)planet.landblocks[block_idx].temperature_c + 88.0) / 146.0;
 	const color_t temperature = lerp(BLUE, RED, hotness);
 	uint8_t col = planet.landblocks[block_idx].height;
@@ -69,6 +69,17 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, const 
 		(*planet_builder_display.get())[idx] = rltk::vchar{247, color_t{zero, col, zero}, bg};
 	} else {
 		(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{col, col, col}, bg};
+	}
+
+	for (const river_t &r : planet.rivers) {
+		if (planet.idx(r.start_x, r.start_y) == block_idx) {
+			(*planet_builder_display.get())[idx] = rltk::vchar{'%', color_t{0, 0, 255}, bg};
+		}
+		for (const river_step_t &s : r.steps) {
+			if (planet.idx(s.x, s.y) == block_idx) {
+				(*planet_builder_display.get())[idx] = rltk::vchar{'%', color_t{0, 0, 255}, bg};
+			}
+		}
 	}
 }
 
@@ -178,6 +189,9 @@ void build_planet() {
 
 	// Make a biome map
 	build_biomes(planet, rng);
+
+	// Run rivers
+	planet_rivers(planet, rng);
 
 	// Run history
 	planet_build_initial_civs(planet, rng);
