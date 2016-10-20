@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include "helpers/skill_t.hpp"
+#include <boost/container/flat_map.hpp>
 
 using namespace rltk;
 
@@ -26,7 +27,7 @@ struct game_stats_t {
 	short comeliness;
 	short ethics;
 	int age;
-	std::unordered_map<std::string, skill_t> skills;
+	boost::container::flat_map<std::string, skill_t> skills;
 
 	game_stats_t() {}
 

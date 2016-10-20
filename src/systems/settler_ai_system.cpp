@@ -622,7 +622,11 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 				emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], pos.x, pos.y, pos.z});
 				designations->mining.erase(target_idx);
 			}
-			ai.job_type_minor = JM_DROP_PICK;
+			if (designations->mining.empty()) {
+				ai.job_type_minor = JM_DROP_PICK;
+			} else {
+				ai.job_type_minor = JM_GO_TO_SITE;
+			}
 			change_job_status(ai, name, "Dropping digging tools - work complete");
 			return;
 		} else {
