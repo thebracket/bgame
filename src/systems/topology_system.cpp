@@ -53,9 +53,11 @@ void topology_system::channel(const perform_mining_message &e) {
     
     // Add ramp
     const int below = e.target_idx - (REGION_WIDTH * REGION_HEIGHT);
-    current_region->solid[below]=false;
-    current_region->tile_type[below] = tile_type::RAMP;
-    current_region->tile_flags[below].set(CAN_STAND_HERE);
+    if (current_region->solid[below]) {
+        current_region->solid[below]=false;
+        current_region->tile_type[below] = tile_type::RAMP;
+        current_region->tile_flags[below].set(CAN_STAND_HERE);
+    }
 }
 
 void topology_system::ramp(const perform_mining_message &e) {
@@ -64,9 +66,11 @@ void topology_system::ramp(const perform_mining_message &e) {
     current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
 
     const int above = e.target_idx + (REGION_WIDTH * REGION_HEIGHT);
-    current_region->solid[above]=false;
-    current_region->tile_type[above] = tile_type::OPEN_SPACE;
-    current_region->tile_flags[above].set(CAN_STAND_HERE);
+    if (current_region->solid[above]) {
+        current_region->solid[above]=false;
+        current_region->tile_type[above] = tile_type::OPEN_SPACE;
+        current_region->tile_flags[above].set(CAN_STAND_HERE);
+    }
 }
 
 void topology_system::stairs_up(const perform_mining_message &e) {

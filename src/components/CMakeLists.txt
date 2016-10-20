@@ -8,6 +8,7 @@ add_library(components
 	corpse_harvestable.cpp
 	corpse_settler.cpp
 	designations.cpp
+	falling.cpp
 	game_stats.cpp
 	grazer_ai.cpp
 	health.cpp

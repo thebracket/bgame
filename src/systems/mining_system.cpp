@@ -44,13 +44,21 @@ void make_mining_map() {
 						starting_points.push_back(std::make_tuple(x,y-1,z,idx));
 						starting_points.push_back(std::make_tuple(x,y+1,z,idx));
 					} else if (mf->second==2) {					
-						// Channeling - can stand on the square or the square below
+						// Channeling - can stand on the square or the square below or a spot neighboring the top
 						starting_points.push_back(std::make_tuple(x,y,z,idx));
 						starting_points.push_back(std::make_tuple(x,y,z-1,idx));
+						starting_points.push_back(std::make_tuple(x-1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x+1,y,z,idx));
+						starting_points.push_back(std::make_tuple(x,y-1,z,idx));
+						starting_points.push_back(std::make_tuple(x,y+1,z,idx));
 					} else if (mf->second==3) {					
-						// Ramping - can stand on the square or the square above
+						// Ramping - can stand on the square or the square above or a spot neighboring the bottom
 						starting_points.push_back(std::make_tuple(x,y,z,idx));
 						starting_points.push_back(std::make_tuple(x,y,z+1,idx));
+						starting_points.push_back(std::make_tuple(x-1,y,z-1,idx));
+						starting_points.push_back(std::make_tuple(x+1,y,z-1,idx));
+						starting_points.push_back(std::make_tuple(x,y-1,z-1,idx));
+						starting_points.push_back(std::make_tuple(x,y+1,z-1,idx));
 					} else if (mf->second==4) {	
 						// Up stairs - can stand on the square or the square above
 						starting_points.push_back(std::make_tuple(x,y,z,idx));

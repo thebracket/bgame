@@ -37,3 +37,4 @@
 #include "mode_standing_orders.hpp"
 #include "mode_sentient_info_system.hpp"
 #include "fluid_system.hpp"
+#include "gravity_system.hpp"

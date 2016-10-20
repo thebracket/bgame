@@ -26,6 +26,7 @@
 #include "../components/grazer_ai.hpp"
 #include "../components/sentient_ai.hpp"
 #include "../components/lightsource.hpp"
+#include "../components/falling.hpp"
 
 #include <iostream>
 #include <map>
@@ -52,6 +53,11 @@ void settler_ai_system::update(const double duration_ms) {
 		{
 			found_settler = true;
 			int initiative_penalty = 0;
+
+			if (entity.component<falling_t>()) {
+				emit_deferred(LOG{}.settler_name(entity.id)->text(" says 'arrrghh'"));
+				return;
+			}
 
 			if (ai.initiative < 1) {
 				if (game_master_mode == ROGUE && entity.id == selected_settler) return; // We handle this in the rogue system
