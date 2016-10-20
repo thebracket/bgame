@@ -180,7 +180,6 @@ void add_dig_target(int X, int Y, int radius, int depth, boost::container::flat_
 
 
 inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) {
-    std::cout << "Rainfall: " << +biome.first.mean_rainfall << "\n";
     set_worldgen_status("Just add water...");
 
     bool river_starts_here = false;
@@ -203,7 +202,6 @@ inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8
         std::size_t i=0;
         for (const river_step_t &s : river.steps) {
             if (s.x == region.region_x && s.y == region.region_y) {
-                std::cout << "A river runs through here\n";
                 has_river = true;
 
                 if (last_x < s.x) { ++river_entry[0]; }
@@ -284,6 +282,7 @@ inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8
         if (river_exit == 3) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = 0; }
         if (river_exit == 4) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = REGION_HEIGHT; }
         line_func(midpoint_x, midpoint_y, end_x, end_y, dig_exit_river);
+        water_spawners.push_back({3, (end_y * REGION_WIDTH) + end_x});
     }
 
     // Actually dig out the rivers

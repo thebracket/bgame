@@ -144,8 +144,13 @@ void fluid_system::update(const double ms) {
 
         each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
             const int idx = mapidx(pos.x, pos.y, pos.z);
-            // TODO: When rainfall is implemented, type 1 only spawns when it rains
-            if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;
+            if (w.spawner_type == 1 || w.spawner_type == 2) {
+                // TODO: When rainfall is implemented, type 1 only spawns when it rains
+                if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;
+            } else {
+                // Type 3 removes water - used to make rivers flow downhill
+                if (current_region->water_level[idx] > 0) current_region->water_level[idx] = 0;
+            }
         });
 	}
 }
