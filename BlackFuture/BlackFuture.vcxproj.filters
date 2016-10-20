@@ -549,6 +549,12 @@
     <ClInclude Include="..\src\components\smoke_emitter.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\water_spawner.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\systems\fluid_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -922,6 +928,12 @@
     </ClCompile>
     <ClCompile Include="..\src\components\world_position.cpp">
       <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\water_spawner.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\fluid_system.cpp">
+      <Filter>Source Files\systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -153,6 +153,7 @@
     <ClInclude Include="..\src\components\smoke_emitter.hpp" />
     <ClInclude Include="..\src\components\species.hpp" />
     <ClInclude Include="..\src\components\viewshed.hpp" />
+    <ClInclude Include="..\src\components\water_spawner.hpp" />
     <ClInclude Include="..\src\components\wildlife_group.hpp" />
     <ClInclude Include="..\src\components\world_position.hpp" />
     <ClInclude Include="..\src\FastNoise\FastNoise.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="..\src\systems\camera_system.hpp" />
     <ClInclude Include="..\src\systems\corpse_system.hpp" />
     <ClInclude Include="..\src\systems\damage_system.hpp" />
+    <ClInclude Include="..\src\systems\fluid_system.hpp" />
     <ClInclude Include="..\src\systems\game_over_system.hpp" />
     <ClInclude Include="..\src\systems\gui_elements.hpp" />
     <ClInclude Include="..\src\systems\gui_system.hpp" />
@@ -305,6 +307,7 @@
     <ClCompile Include="..\src\components\settler_ai.cpp" />
     <ClCompile Include="..\src\components\species.cpp" />
     <ClCompile Include="..\src\components\viewshed.cpp" />
+    <ClCompile Include="..\src\components\water_spawner.cpp" />
     <ClCompile Include="..\src\components\wildlife_group.cpp" />
     <ClCompile Include="..\src\components\world_position.cpp" />
     <ClCompile Include="..\src\FastNoise\FastNoise.cpp" />
@@ -348,6 +351,7 @@
     <ClCompile Include="..\src\systems\camera_system.cpp" />
     <ClCompile Include="..\src\systems\corpse_system.cpp" />
     <ClCompile Include="..\src\systems\damage_system.cpp" />
+    <ClCompile Include="..\src\systems\fluid_system.cpp" />
     <ClCompile Include="..\src\systems\game_over_system.cpp" />
     <ClCompile Include="..\src\systems\gui_system.cpp" />
     <ClCompile Include="..\src\systems\hud_system.cpp" />

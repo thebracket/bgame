@@ -89,7 +89,7 @@ inline void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &no
     }
 }
 
-inline std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, std::size_t>> &water_spawners) {
+inline std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, uint8_t>> &water_spawners) {
     const int region_variance = planet.landblocks[planet.idx(region.region_x, region.region_y)].variance;
     const int n_subregions = 64 + rng.roll_dice(1,20) + (region_variance * 4);
     const int rainfall = planet.landblocks[planet.idx(region.region_x, region.region_y)].rainfall;
@@ -154,7 +154,7 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
 	return subregion_idx;
 }
 
-inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, std::size_t>> &water_spawners) {
+inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) {
     std::cout << "Rainfall: " << +biome.first.mean_rainfall << "\n";
     set_worldgen_status("Just add water...");
 
@@ -414,7 +414,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     return result;
 }
 
-void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, std::size_t>> &water_spawners) {
+void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, uint8_t>> &water_spawners) {
     // For vegetation
     int max_veg_probability = 0;
     for (const auto &vegprob : biome.second.plants) max_veg_probability += vegprob.second;
@@ -1005,7 +1005,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     std::vector<uint8_t> pooled_water;
     pooled_water.resize(REGION_HEIGHT * REGION_WIDTH);
     std::fill(pooled_water.begin(), pooled_water.end(), 0);
-    std::vector<std::pair<int, std::size_t>> water_spawners;
+    std::vector<std::pair<int, uint8_t>> water_spawners;
 
     // Sub-biome map
     auto subregions = create_subregions(planet, region, heightmap, biome, rng, pooled_water, water_spawners);
