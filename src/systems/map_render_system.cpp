@@ -144,6 +144,17 @@ vchar get_render_char_building(const int &x, const int &y) {
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+				|| (build_mode_building.get().tag == "floor" 
+					&& !current_region->tile_flags[idx].test(CONSTRUCTION)&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+					&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+					&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+					&& ( current_region->tile_flags[idx].test(CAN_STAND_HERE) || 
+						current_region->tile_flags[idx-1].test(CAN_STAND_HERE) ||
+						current_region->tile_flags[idx+1].test(CAN_STAND_HERE) ||
+						current_region->tile_flags[idx-REGION_WIDTH].test(CAN_STAND_HERE) ||
+						current_region->tile_flags[idx+REGION_WIDTH].test(CAN_STAND_HERE) 
+					)
+				)
 			) {
 				result.foreground = rltk::colors::GREEN;
 			} else {

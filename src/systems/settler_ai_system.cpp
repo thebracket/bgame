@@ -814,7 +814,7 @@ void settler_ai_system::do_building(entity_t &e, settler_ai_t &ai, game_stats_t 
 				has_components = false;
 				ai.current_tool = component.first;
 				auto item_loc = get_item_location(ai.current_tool);
-				ai.current_path = find_path(pos, *item_loc);
+				ai.current_path = find_path(pos, *item_loc, true);
 				if (ai.current_path->success) {
 					component.second = true;
 					ai.job_type_minor = JM_GO_TO_COMPONENT;
