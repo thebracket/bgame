@@ -804,6 +804,7 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
                 const int y = Y-11+crash_y;
 
                 const vchar * output = ship.get_tile(layer,X,Y);
+                if (output != nullptr && output->glyph != 32) region.revealed[mapidx(x,y, z)] = true;
 				if (output != nullptr && !xp::is_transparent(output)) {
                     if (output->glyph == 219) {
                         add_construction(region, x, y, z, "ship_wall", true);
