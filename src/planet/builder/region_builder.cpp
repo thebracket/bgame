@@ -125,7 +125,7 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
         const int up_variance = rng.roll_dice(1, 2)-1;
         const int down_variance = rng.roll_dice(1, 2)-1;
         int amount = up_variance - down_variance;
-        if (rng.roll_dice(1,500) < rainfall) amount = -10;
+        if (rng.roll_dice(1,1000) < rainfall) amount = -10;
         variance.push_back( amount );
     }
 
@@ -154,6 +154,31 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
 	return subregion_idx;
 }
 
+struct region_water_feature_tile {
+    int idx;
+    bool has_water_already = false;
+    int depth = 0;
+    int altitude = REGION_DEPTH;
+};
+
+void add_dig_target(int X, int Y, int radius, int depth, boost::container::flat_map<int, region_water_feature_tile> &dig_targets, 
+    std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap) {
+    for (int y=0-radius; y<radius; ++y) {
+        for (int x=0-radius; x<radius; ++x) {
+            const int actual_x = X+x;
+            const int actual_y = Y+y;
+            if (actual_x > 0 && actual_x < REGION_WIDTH && actual_y > 0 && actual_y < REGION_HEIGHT) {
+                const int idx = (actual_y * REGION_WIDTH) + actual_x;                
+                if (dig_targets.find(idx) == dig_targets.end()) {
+                    const bool has_water = pooled_water[idx] > 0;
+                    dig_targets[idx] = { idx, has_water, depth, heightmap[idx] };
+                }
+            }
+        }
+    }
+}
+
+
 inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) {
     std::cout << "Rainfall: " << +biome.first.mean_rainfall << "\n";
     set_worldgen_status("Just add water...");
@@ -181,19 +206,19 @@ inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8
                 std::cout << "A river runs through here\n";
                 has_river = true;
 
-                if (last_x < s.x) { std::cout << "Entering from the west\n"; ++river_entry[0]; }
-                if (last_x > s.x) { std::cout << "Entering from the east\n"; ++river_entry[1]; }
-                if (last_y < s.y) { std::cout << "Entering from the north\n"; ++river_entry[2]; }
-                if (last_y > s.y) { std::cout << "Entering from the south\n"; ++river_entry[3]; }
+                if (last_x < s.x) { ++river_entry[0]; }
+                if (last_x > s.x) { ++river_entry[1]; }
+                if (last_y < s.y) { ++river_entry[2]; }
+                if (last_y > s.y) { ++river_entry[3]; }
 
                 if (i+1 < river.steps.size()) {
                     const int next_x = river.steps[i+1].x;
                     const int next_y = river.steps[i+1].y;
 
-                    if (next_x < s.x) { std::cout << "Exiting to the west\n"; river_exit = 1; }
-                    if (next_x > s.x) { std::cout << "Exiting to the east\n"; river_exit = 2; }
-                    if (next_y < s.y) { std::cout << "Exiting to the north\n"; river_exit = 3; }
-                    if (next_y > s.y) { std::cout << "Exiting to the south\n"; river_exit = 4; }
+                    if (next_x < s.x) { river_exit = 1; }
+                    if (next_x > s.x) { river_exit = 2; }
+                    if (next_y < s.y) { river_exit = 3; }
+                    if (next_y > s.y) { river_exit = 4; }
                 } else {
                     river_terminates_here = true;
                 }
@@ -203,9 +228,6 @@ inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8
             ++i;
         }
     }
-
-    if (river_starts_here) std::cout << "There is a spring here\n";
-    if (river_terminates_here) std::cout << "River terminates here\n";
 
     if (!has_river) return;
 
@@ -220,73 +242,34 @@ inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8
     }
 
     // Run rivers to the confluence
-    std::set<int> already_dug;
-    auto dig_river = [&heightmap, &pooled_water, &already_dug] (int X, int Y) {
-        for (int y = -2; y<2; ++y) {
-            for (int x = -2; x<2; ++x) {
-                const int actual_x = X+x;
-                const int actual_y = Y+y;
-                if (actual_x > 0 && actual_x < REGION_WIDTH && actual_y > 0 && actual_y < REGION_HEIGHT) {
-                    const int idx = (actual_y * REGION_WIDTH) + actual_x;
-                    if (already_dug.find(idx) == already_dug.end()) {
-                        if (x ==0 || y == 0) {
-                            heightmap[idx] -= 4;
-                            pooled_water[idx] = 20;
-                        } else {
-                            heightmap[idx] -= 3;
-                            pooled_water[idx] = 10;
-                        }
-                        already_dug.insert(idx);
-                    }
-                }
-            }
-        }
+    boost::container::flat_map<int, region_water_feature_tile> dig_targets;
+
+    auto dig_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
+        add_dig_target(X, Y, 3, 2, dig_targets, pooled_water, heightmap);
     };
-    auto dig_exit_river = [&heightmap, &pooled_water, &already_dug] (int X, int Y) {
-        for (int y = -3; y<3; ++y) {
-            for (int x = -3; x<3; ++x) {
-                const int actual_x = X+x;
-                const int actual_y = Y+y;
-                if (actual_x > 0 && actual_x < REGION_WIDTH && actual_y > 0 && actual_y < REGION_HEIGHT) {
-                    const int idx = (actual_y * REGION_WIDTH) + actual_x;
-                    if (already_dug.find(idx) == already_dug.end()) {
-                        if (x ==0 || y == 0) {
-                            heightmap[idx] -= 5;
-                            pooled_water[idx] = 20;
-                        } else {
-                            heightmap[idx] -= 4;
-                            pooled_water[idx] = 10;
-                        }
-                        already_dug.insert(idx);
-                    }
-                }
-            }
-        }
+    auto dig_exit_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
+        add_dig_target(X, Y, 4, 3, dig_targets, pooled_water, heightmap);
     };
 
     for (int i=0; i<river_entry[0]; ++i) {
-        std::cout << "Running easterly river\n";
         int start_x = 0;
         int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[1]; ++i) {
-        std::cout << "Running westerly river\n";
         int start_x = REGION_WIDTH;
         int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[2]; ++i) {
-        std::cout << "Running southerly river\n";
         int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
         int start_y = 0;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[3]; ++i) {
-        std::cout << "Running northerly river\n";
         int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
         int start_y = REGION_HEIGHT;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
@@ -301,6 +284,22 @@ inline void just_add_water(planet_t &planet, region_t &region, std::vector<uint8
         if (river_exit == 3) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = 0; }
         if (river_exit == 4) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = REGION_HEIGHT; }
         line_func(midpoint_x, midpoint_y, end_x, end_y, dig_exit_river);
+    }
+
+    // Actually dig out the rivers
+
+    // 1 - Find the lowest point on the river network
+    int min_altitude = REGION_DEPTH;
+    for (const auto &t : dig_targets) {
+        if (t.second.altitude < min_altitude) min_altitude = t.second.altitude;
+    }
+
+    // 2 - Dig down - the rivers are (lowest-point - depth)
+    for (const auto &t : dig_targets) {
+        if (!t.second.has_water_already) {
+            heightmap[t.first] = min_altitude - t.second.depth;
+            pooled_water[t.first] = (t.second.depth-1)*10;
+        }
     }
 }
 
