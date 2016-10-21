@@ -45,11 +45,17 @@ void topology_system::dig(const perform_mining_message &e) {
     current_region->solid[e.target_idx]=false;
     current_region->tile_type[e.target_idx] = tile_type::FLOOR;
     current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
+    int x,y,z;
+    std::tie(x,y,z) = idxmap(e.target_idx);
+    emit_deferred(tile_removed_message{x,y,z});
 }
 
 void topology_system::channel(const perform_mining_message &e) {
     current_region->solid[e.target_idx]=false;
     current_region->tile_type[e.target_idx] = tile_type::OPEN_SPACE;
+    int x,y,z;
+    std::tie(x,y,z) = idxmap(e.target_idx);
+    emit_deferred(tile_removed_message{x,y,z});
     
     // Add ramp
     const int below = e.target_idx - (REGION_WIDTH * REGION_HEIGHT);

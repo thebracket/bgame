@@ -50,10 +50,13 @@ std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &s
 
 	auto result = rltk::find_path<position_t, navigator_t>(start, end);
 	if (find_adjacent && result->success == false) {
-		std::array<position_t, 4> candidates { position_t{end.x-1, end.y, end.z}, 
+		std::array<position_t, 6> candidates { 
+			position_t{end.x-1, end.y, end.z}, 
 			position_t{end.x+1, end.y, end.z}, 
 			position_t{end.x, end.y-1, end.z}, 
-			position_t{end.x, end.y+1, end.z} 
+			position_t{end.x, end.y+1, end.z},
+			position_t{end.x, end.y, end.z-1},
+			position_t{end.x, end.y, end.z+1} 
 		};
 		for (int i=0; i<4; ++i) {
 			result.reset();

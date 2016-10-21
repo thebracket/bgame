@@ -1612,6 +1612,7 @@ void settler_ai_system::do_demolition(entity_t &e, settler_ai_t &ai, game_stats_
 					}
 				}
 			}
+			emit_deferred(tile_removed_message{ai.target_x, ai.target_y, ai.target_z});
 			
 			return;
 		} else {

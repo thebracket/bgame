@@ -431,8 +431,13 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             int z = 1;
             while (z < altitude) {
                 // Place Lava area - SMR for now
-                region.tile_type[mapidx(x,y,z)] = tile_type::SEMI_MOLTEN_ROCK;
-                region.tile_material[mapidx(x,y,z)] = 0;
+                if (x==0 || x==REGION_WIDTH-1 || y==0 || y==REGION_HEIGHT-1) {
+                    region.tile_type[mapidx(x,y,z)] = tile_type::SEMI_MOLTEN_ROCK;
+                } else {
+                    region.tile_type[mapidx(x,y,z)] = tile_type::OPEN_SPACE;
+                    region.tile_material[mapidx(x,y,z)] = 0;
+                    // TODO: Just add magma
+                }
                 ++z;
             }
 
