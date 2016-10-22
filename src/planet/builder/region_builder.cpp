@@ -155,6 +155,8 @@ inline std::vector<int> create_subregions(planet_t &planet, region_t &region, st
 }
 
 struct region_water_feature_tile {
+	region_water_feature_tile() {}
+	region_water_feature_tile(int IDX, bool hasw, int d, int a) : idx(IDX), has_water_already(hasw), depth(d), altitude(a) {}
     int idx;
     bool has_water_already = false;
     int depth = 0;
@@ -171,7 +173,7 @@ void add_dig_target(int X, int Y, int radius, int depth, boost::container::flat_
                 const int idx = (actual_y * REGION_WIDTH) + actual_x;                
                 if (dig_targets.find(idx) == dig_targets.end()) {
                     const bool has_water = pooled_water[idx] > 0;
-                    dig_targets[idx] = { idx, has_water, depth, heightmap[idx] };
+                    dig_targets[idx] = region_water_feature_tile{ idx, has_water, depth, heightmap[idx] };
                 }
             }
         }

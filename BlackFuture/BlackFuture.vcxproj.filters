@@ -555,6 +555,12 @@
     <ClInclude Include="..\src\systems\fluid_system.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\systems\gravity_system.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\falling.hpp">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -934,6 +940,12 @@
     </ClCompile>
     <ClCompile Include="..\src\systems\fluid_system.cpp">
       <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\systems\gravity_system.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\falling.cpp">
+      <Filter>Source Files\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
