@@ -2,7 +2,7 @@
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}Updating RLTK${NC}\n"
+echo -e "${GREEN}Updating External Libraries${NC}\n"
 git submodule init
 git submodule update
 echo -e "${GREEN}Creating build directory${NC}\n"
