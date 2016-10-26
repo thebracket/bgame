@@ -239,10 +239,10 @@ void mode_design_system::chopping() {
                 --lowest_z;
             }
 
-            designations->chopping[tree_id] = tree_pos;
+            designations->chopping[(int)tree_id] = tree_pos;
             emit(map_dirty_message{});
         } else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
-            designations->chopping.erase(tree_id);
+            designations->chopping.erase((int)tree_id);
             emit(map_dirty_message{});
         }
     }			

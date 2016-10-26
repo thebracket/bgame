@@ -8,8 +8,8 @@
 #include <sstream>
 
 const std::string random_species(rltk::random_number_generator &rng) {
-    const std::size_t n_species = species_defs.size();
-    int roll = rng.roll_dice(1, n_species)-1;
+    const auto n_species = species_defs.size();
+    int roll = rng.roll_dice(1, (int)n_species)-1;
     auto it = species_defs.begin();
     for (int i=0; i<roll; ++i) ++it;
     return it->first;
@@ -182,7 +182,7 @@ inline void planet_build_run_movement(planet_t &planet, rltk::random_number_gene
         if (peep.world_x < WORLD_WIDTH-2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x+1, peep.world_y));
 
         if (!candidates.empty()) {
-            const int roll = rng.roll_dice(1, candidates.size())-1;
+            const int roll = rng.roll_dice(1, (int)candidates.size())-1;
             const int destination = candidates[roll];
             peep.world_x = destination % WORLD_WIDTH;
             peep.world_y = destination / WORLD_WIDTH;
@@ -246,9 +246,9 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
             }
 
             // Registration - civ pop
-            auto civpopfinder = civpops.find(peep.civ_id);
+            auto civpopfinder = civpops.find((int)peep.civ_id);
             if (civpopfinder == civpops.end()) {
-                civpops[peep.civ_id] = 1;
+                civpops[(int)peep.civ_id] = 1;
             } else {
                 ++civpopfinder->second;
             }
@@ -297,7 +297,7 @@ inline void planet_build_run_relocations(planet_t &planet, rltk::random_number_g
 inline void planet_build_run_extinctions(planet_t &planet, boost::container::flat_map<int, int> &civpops, rltk::random_number_generator &rng) {
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
-            if (civpops.find(i) == civpops.end()) {
+            if (civpops.find((int)i) == civpops.end()) {
                 planet.civs.civs[i].extinct = true;
                 for (auto &town : planet.civs.settlements) {
                     if (town.civ_id == i) town.status = 0;
@@ -563,7 +563,7 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
     for (auto &id : peep_killer) {
         planet.civs.unimportant_people[id].deceased = true;
         if (planet.civs.unimportant_people[id].married) {
-            int married_to = planet.civs.unimportant_people[id].married_to;
+            const auto married_to = planet.civs.unimportant_people[id].married_to;
             if (!planet.civs.unimportant_people[married_to].deceased) planet.civs.unimportant_people[married_to].married = false;
         }
     }
@@ -585,9 +585,9 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
             ++dead;
         } else {
             ++living;
-            auto finder = civpops.find(peep.civ_id);
+            auto finder = civpops.find((int)peep.civ_id);
             if (finder == civpops.end()) {
-                civpops[peep.civ_id] = 1;
+                civpops[(int)peep.civ_id] = 1;
             } else {
                 ++finder->second;
             }
@@ -597,7 +597,7 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
             std::cout << "Civ " << planet.civs.civs[i].name << " : " << GOVERNMENT_NAMES[planet.civs.civs[i].gov_type] << " (" << planet.civs.civs[i].species_tag << "): ";
-            auto finder = civpops.find(i);
+            auto finder = civpops.find((int)i);
             if (finder == civpops.end()) {
                 std::cout << "Bordering on extinct\n";
             } else {

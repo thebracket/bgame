@@ -96,6 +96,7 @@ int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::strin
 			case wisdom : return stat_modifier(stats.wisdom);
 			case charisma : return stat_modifier(stats.charisma);
 			case ethics : return stat_modifier(stats.ethics);
+			default: return 0;
 		}
 	} else {
 		std::cout << "Warning: unknown skill [" << skill << "]\n";

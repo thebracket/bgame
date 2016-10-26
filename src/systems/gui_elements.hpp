@@ -89,8 +89,8 @@ struct gui_power_meter : public base_gui {
         power_ss << " Power: " << current_power << "/" << total_capacity << " ";
 
         const int power_width = rltk::term(2)->term_width - 30;
-        const int power_pips_filled = (float)power_width * power_pct;
-        const float pct_per_pip = 1.0 / (float)total_capacity;
+        const int power_pips_filled = static_cast<int>((float)power_width * power_pct);
+        const float pct_per_pip = 1.0F / (float)total_capacity;
         for (int x=0; x<power_width; ++x) {
             const rltk::color_t pip_color = lerp(rltk::colors::GREY, alert_color, pct_per_pip * (float)x); 
             if (x <= power_pips_filled) {
@@ -100,7 +100,7 @@ struct gui_power_meter : public base_gui {
             }
         }
         const std::string power_str = power_ss.str();
-        const int power_x = ((rltk::term(1)->term_width-30)/2) - (power_str.size() / 2);
+        const int power_x = ((rltk::term(1)->term_width-30)/2) - ((int)power_str.size() / 2);
         rltk::term(1)->print( power_x, 0, power_str, alert_color );	
     }
 };
@@ -128,7 +128,7 @@ struct gui_menu_bar : public base_gui {
                 rltk::term(1)->set_char(current_x, y, rltk::vchar{s.at(0), rltk::colors::YELLOW, rltk::colors::BLACK});
                 rltk::term(1)->print(current_x + 1, y, s.substr(1));
             }
-            current_x += s.size()+1;
+            current_x += (int)s.size()+1;
             ++i;
         }
     }
@@ -146,8 +146,8 @@ struct gui_tab_set : public base_gui {
         int current_x = x;
         int i=0;
         for (const auto &tab : tabs) {
-            const std::size_t length = tab.first.size();
-            rltk::term(3)->box(current_x, y, length+1, 2, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+            const auto length = tab.first.size();
+            rltk::term(3)->box(current_x, y, (int)length+1, 2, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
             if (mouse::term3x >= current_x && mouse::term3x <= current_x+length+1 && mouse::term3y >= y && mouse::term3y <= y+3) {
                 rltk::term(3)->print(current_x+1, y+1, tab.first, rltk::colors::YELLOW, rltk::colors::GREEN);
                 if (mouse::clicked) tab.second();
@@ -159,7 +159,7 @@ struct gui_tab_set : public base_gui {
                 }
             }
             ++i;
-            current_x += length+2;
+            current_x += (int)length+2;
         }
     }
 };
@@ -174,7 +174,7 @@ struct gui_button : public base_gui {
     bool active;
 
     virtual void render() override final {
-        const int length = title.size();
+        const int length = (int)title.size();
         rltk::term(3)->box(x, y, length+2, 2, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
         if (mouse::term3x >= x && mouse::term3x <= x+length+1 && mouse::term3y >= y && mouse::term3y <= y+3) {
             rltk::term(3)->print(x+1, y+1, title, rltk::colors::YELLOW, rltk::colors::GREEN);
@@ -320,16 +320,16 @@ struct gui_popup_menu : public base_gui {
     virtual void render() override final {
         int width = 0;
         for (const auto &opt : options) {
-            if (width < opt.first.size()) width = opt.first.size(); 
+            if (width < opt.first.size()) width = (int)opt.first.size(); 
         }
 
         int box_left = x;
         int box_right = x + width + 3;
         int box_top = y;
-        int box_bottom = y + options.size() + 1;
+        int box_bottom = y + (int)options.size() + 1;
 
         rltk::term(1)->fill(box_left+1, box_top, box_right+1, box_bottom, 219, rltk::colors::DARKEST_GREEN, rltk::colors::DARKEST_GREEN);
-        rltk::term(1)->box(box_left+1, box_top, width+1, options.size()+1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
+        rltk::term(1)->box(box_left+1, box_top, width+1, (int)options.size()+1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
 
         int current_y = box_top+1;
         for (const auto &opt : options) {

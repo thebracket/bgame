@@ -28,7 +28,7 @@ inline void reveal(const int &idx, lightsource_t &view) {
 }
 
 inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
-	const float dist_square = view.radius * view.radius;
+	const float dist_square = (float)(view.radius * view.radius);
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
 		const auto idx = mapidx(X, Y, Z);
@@ -130,10 +130,10 @@ void lighting_system::update(double time_ms) {
                         float light_x = (float)x;
                         float light_y = (float)y;
                         float light_z = (float)z;
-                        int last_z = std::floor(light_z);
+                        int last_z = (int)std::floor(light_z);
                         bool done = false;
                         while (!done) {
-                            if (current_region->opaque[mapidx(light_x, light_y, light_z)]) {
+                            if (current_region->opaque[mapidx((int)light_x, (int)light_y, (int)light_z)]) {
                                 done = true;
                                 shadowed = true;
                             } else {

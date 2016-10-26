@@ -23,8 +23,8 @@ vchar greyscale(vchar target) {
 	const color_t grey_fg = greyscale(target.foreground);
 	const color_t grey_bg = greyscale(target.background);
 
-	target.foreground = lerp(target.foreground, grey_fg, 0.7);
-	target.background = lerp(target.background, grey_bg, 0.5);
+	target.foreground = lerp(target.foreground, grey_fg, 0.7F);
+	target.background = lerp(target.background, grey_bg, 0.5F);
 	return target;
 }
 
@@ -87,11 +87,11 @@ vchar get_render_char_mining(const int &x, const int &y) {
 vchar get_render_char_chopping(const int &x, const int &y) {
 
 	vchar result = get_render_char(x,y);
-	const int idx = render_tiles[((term(1)->term_width * y) + x)];
+	const auto idx = render_tiles[((term(1)->term_width * y) + x)];
 
-	const int tree_id = current_region->tree_id[idx];
+	const auto tree_id = current_region->tree_id[idx];
 	if (tree_id > 0) {
-		auto mf = designations->chopping.find(tree_id);
+		auto mf = designations->chopping.find((int)tree_id);
 		if (mf != designations->chopping.end()) {
 			result.foreground = rltk::colors::BLACK;
 			result.background = rltk::colors::RED;

@@ -18,8 +18,8 @@ health_t create_health_component_sentient(const std::string &tag, const int base
                 float hitpoints = static_cast<float>(base_hp) * pct;
                 if (hitpoints < 1.0F) hitpoints = 1.0F;
                 p.part = std::get<0>(part);
-                p.max_hitpoints = hitpoints;
-                p.current_hitpoints = hitpoints;
+                p.max_hitpoints = (int)hitpoints;
+                p.current_hitpoints = (int)hitpoints;
                 p.size = std::get<2>(part);
                 result.parts.push_back(p);
             }
@@ -50,8 +50,8 @@ health_t create_health_component_creature(const std::string &tag) {
                 float hitpoints = static_cast<float>(base_hp) * pct;
                 if (hitpoints < 1.0F) hitpoints = 1.0F;
                 p.part = std::get<0>(part);
-                p.max_hitpoints = hitpoints;
-                p.current_hitpoints = hitpoints;
+                p.max_hitpoints = (int)hitpoints;
+                p.current_hitpoints = (int)hitpoints;
                 p.size = std::get<2>(part);
                 result.parts.push_back(p);
             }

@@ -16,7 +16,7 @@ inline void copy_fluids_to_local() {
 
 inline void copy_local_to_fluids() {
     current_region->water_level = water_level;
-    for (std::size_t i=0; i<REGION_TILES_COUNT; ++i) {
+    for (auto i=0; i<REGION_TILES_COUNT; ++i) {
         current_region->calc_render(i);
     }
 }
@@ -44,9 +44,9 @@ inline void do_water_spread(const int &x, const int &y, const int &z, const int 
     std::map<int, int> candidates;
     const int water_here = water_level[idx];
 
-    const std::array<std::size_t, 8> directions = { mapidx(x-1, y, z), mapidx(x+1, y, z), mapidx(x, y-1, z), mapidx(x, y+1, z) };
+    const std::array<int, 8> directions = { mapidx(x-1, y, z), mapidx(x+1, y, z), mapidx(x, y-1, z), mapidx(x, y+1, z) };
 
-    for (const std::size_t &dir : directions) {
+    for (const auto &dir : directions) {
         if (!current_region->solid[dir] && water_level[dir]<10 && water_level[dir] < water_here) candidates.insert({rng.roll_dice(1,20), dir});
     }
 
