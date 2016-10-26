@@ -343,11 +343,11 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
         if (it->spawn_type == rock && it->layer == "igneous") igneouses.push_back(i);
         ++i;
     }
-    std:: cout << soils.size() << "/" << sands.size() << "/" << sedimintaries.size() << "/" << igneouses.size() << "\n";
 
     set_worldgen_status("Locating strata");
     const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
     result.material_idx.resize(n_strata);
+    std::fill(result.material_idx.begin(), result.material_idx.end(), 1);
     result.counts.resize(n_strata);
 
     FastNoise biome_noise(planet.perlin_seed + (region.region_y * REGION_WIDTH ) + region.region_x);
@@ -389,22 +389,22 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
                 int roll = rng.roll_dice(1,100);
                 if (roll < biome.second.soil_pct) {
                     const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
-                    //std::cout << material_defs[soils[soil_idx]].name << "\n";
+                    std::cout << material_defs[soils[soil_idx]].name << "\n";
                     result.material_idx[i] = soils[soil_idx];
                 } else {
                     const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
-                    //std::cout << material_defs[sands[sand_idx]].name << "\n";
+                    std::cout << material_defs[sands[sand_idx]].name << "\n";
                     result.material_idx[i] = sands[sand_idx];
                 }
             } else if (z>(altitude_at_center-10)/2) {
                 // Sedimentary
                 const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
-                //std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
+                std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
                 result.material_idx[i] = sedimintaries[sed_idx];
             } else {
                 // Igneous
                 const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
-                //std::cout << material_defs[igneouses[ig_idx]].name << "\n";
+                std::cout << material_defs[igneouses[ig_idx]].name << "\n";
                 result.material_idx[i] = igneouses[ig_idx];
             }
         }
@@ -423,7 +423,8 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
     for (int y=0; y<REGION_HEIGHT; ++y) {
         for (int x=0; x<REGION_WIDTH; ++x) {
             const int cell_idx = (y * REGION_WIDTH) + x;
-            const uint8_t altitude = heightmap[cell_idx];
+            uint8_t altitude = heightmap[cell_idx];
+            if (altitude > REGION_DEPTH-10) altitude = REGION_DEPTH-1;
             bool wet = false;
             if (altitude < 5) wet = true;
 

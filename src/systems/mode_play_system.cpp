@@ -87,14 +87,14 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 		std::stringstream ss;
 		switch (current_region->tile_type[tile_idx]) {
 			case tile_type::SEMI_MOLTEN_ROCK : ss << "Magma"; break;
-			case tile_type::SOLID : ss << "Solid Rock (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+			case tile_type::SOLID : ss << "Solid Rock (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
 			case tile_type::OPEN_SPACE : ss << "Open Space"; break;
-			case tile_type::WALL : ss << "Wall (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
-			case tile_type::RAMP : ss << "Ramp (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
-			case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
-			case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
-			case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
-			case tile_type::FLOOR : ss << "Floor (" << material_defs[current_region->tile_material[tile_idx]].name << ")"; break;
+			case tile_type::WALL : ss << "Wall (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::RAMP : ss << "Ramp (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::FLOOR : ss << "Floor (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
 			case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
 			case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
 			case tile_type::WINDOW : ss << "Window"; break;

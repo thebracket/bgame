@@ -180,7 +180,11 @@ void region_t::calc_render(const int &idx) {
 				fg = material_defs[tile_material[idx]].fg;
 				bg = material_defs[tile_material[idx]].bg;
 			} else {
-				std::cout << "Warning - material not found!\n";
+				//std::cout << "Warning - material not found (" << idx << ")!\n";
+				tile_material[idx] = 1;
+				glyph = material_defs[tile_material[idx]].glyph;
+				fg = material_defs[tile_material[idx]].fg;
+				bg = material_defs[tile_material[idx]].bg;
 			}
 		} break;
 		case tile_type::OPEN_SPACE : {

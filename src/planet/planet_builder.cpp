@@ -84,6 +84,7 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
 }
 
 void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y) {
+	planet_builder_lock.lock();
 	const int half_term_x = planet_build_term_width / 2;
 	const int half_term_y = planet_build_term_height / 2;
 
@@ -131,6 +132,7 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 		}
 		++Y;
 	}
+	planet_builder_lock.unlock();
 }
 
 void planet_display_update_altitude(planet_t &planet) {

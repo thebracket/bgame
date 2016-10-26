@@ -29,6 +29,7 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 	constexpr float half_planet_height = WORLD_HEIGHT / 2.0F;
 
 	// Determine height of the region block as an average of the containing tiles
+	#pragma omp parallel for
 	for (int y=0; y<WORLD_HEIGHT; ++y) {
 		const int distance_from_equator = std::abs((WORLD_HEIGHT/2)-y);
 		const float temp_range_pct = 1.0F - ((float)distance_from_equator / half_planet_height);
@@ -100,7 +101,9 @@ void planet_base_type_allocation(planet_t &planet) {
 
 	std::cout << "Heights (water/plains/hills): " << +planet.water_height << " / " << +planet.plains_height << " / " << +planet.hills_height << "\n";
 
-	for (block_t &block : planet.landblocks) {
+	#pragma omp parallel for
+	for (auto i=0; i<planet.landblocks.size(); ++i) {
+		auto &block = planet.landblocks.at(i);
 		if (block.height <= planet.water_height) {
 			block.type = block_type::WATER;
 			block.rainfall = 10;
@@ -130,6 +133,7 @@ void planet_base_type_allocation(planet_t &planet) {
 
 void planet_mark_coastlines(planet_t &planet) {
 	set_worldgen_status("Crinkling the coastlines");
+	#pragma omp parallel for
 	for (int y=1; y<WORLD_HEIGHT-1; ++y) {
 		for (int x=1; x<WORLD_WIDTH-1; ++x) {
 			if (planet.landblocks[planet.idx(x,y)].type > block_type::WATER) {
@@ -154,6 +158,7 @@ void planet_mark_coastlines(planet_t &planet) {
 
 void planet_rainfall(planet_t &planet) {
 	set_worldgen_status("Adjusting rain map");
+	#pragma omp parallel for
 	for (int y=0; y<WORLD_HEIGHT; ++y) {
 
 		int rain_amount = 10;
@@ -183,9 +188,6 @@ void planet_rivers(planet_t &planet, rltk::random_number_generator &rng) {
 	std::set<int> used_starts;
 
 	for (int i=0; i<n_rivers; ++i) {
-		std::stringstream ss;
-		ss << "Running rivers and lakes: " << i << "/" << n_rivers;
-		set_worldgen_status(ss.str());
 		river_t river;
 
 		bool start_ok = false;
@@ -231,13 +233,12 @@ void planet_rivers(planet_t &planet, rltk::random_number_generator &rng) {
 						used_steps.insert(planet.idx(step.x, step.y));
 						x = step.x;
 						y = step.y;
-						planet_display_update_zoomed(planet, x, y);
 					}
-					planet_display_update_zoomed(planet, x, y);
 				}
-				}
+			}
 		}
 
+		planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
 		planet.rivers.push_back(river);
 	}
 }

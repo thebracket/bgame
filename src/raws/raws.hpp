@@ -273,3 +273,8 @@ inline std::size_t get_material_by_tag(const std::string &tag) {
 	auto finder = material_defs_idx.find(tag);
 	return finder->second;
 }
+
+inline std::string material_name(const std::size_t &id) {
+	if (id < material_defs.size()) return material_defs[id].name;
+	return std::string("Unknown material: ") + std::to_string(id);
+}
