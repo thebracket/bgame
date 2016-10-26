@@ -1,5 +1,4 @@
-
-add_library(components 	
+add_library(components STATIC
     loader.cpp
 	building.cpp
 	calendar.cpp
@@ -34,3 +33,5 @@ add_library(components
 	helpers/skill_t.cpp
 	helpers/unbuild_t.cpp
 )
+target_link_libraries(components rltk)
+target_link_libraries(components planet)

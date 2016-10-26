@@ -1,4 +1,4 @@
-add_library(planet
+add_library(planet STATIC
     planet.cpp
 	civilizations.cpp
 	history.cpp

@@ -1,4 +1,4 @@
-add_library(systems 
+add_library(systems STATIC
 	map_render_system.cpp
 	calendar_system.cpp
 	settler_ai_system.cpp
