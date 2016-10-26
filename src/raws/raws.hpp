@@ -251,8 +251,6 @@ extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
 extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 extern std::vector<biome_type_t> biome_defs;
-extern boost::container::flat_map<std::string, std::size_t> material_defs_idx;
-extern std::vector<material_def_t> material_defs;
 extern boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 extern std::vector<plant_t> plant_defs;
 
@@ -269,12 +267,8 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
 
-inline std::size_t get_material_by_tag(const std::string &tag) {
-	auto finder = material_defs_idx.find(tag);
-	return finder->second;
-}
-
-inline std::string material_name(const std::size_t &id) {
-	if (id < material_defs.size()) return material_defs[id].name;
-	return std::string("Unknown material: ") + std::to_string(id);
-}
+std::size_t get_material_by_tag(const std::string &tag);
+material_def_t& get_material(const std::size_t &idx);
+std::string material_name(const std::size_t &id);
+void get_strata_materials(std::vector<std::size_t> &soils, std::vector<std::size_t> &sedimintaries, std::vector<std::size_t> &igneouses, std::vector<std::size_t> &sands);
+bool is_material_idx_valid(const std::size_t &id);

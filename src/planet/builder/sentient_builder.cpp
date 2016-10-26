@@ -90,8 +90,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 			if (slot_name == "shoes") position = FEET;
             std::cout << "Created " << item_name << "\n";
             item_t clothing{cs[0]};
-            clothing.material = material_defs_idx[cs[1]];
-            clothing.item_name = material_defs[clothing.material].name + std::string(" ") + clothing.item_name;
+            clothing.material = get_material_by_tag(cs[1]);
+            clothing.item_name = material_name(clothing.material) + std::string(" ") + clothing.item_name;
 			create_entity()->assign(std::move(clothing))->assign(item_carried_t{position, sentient->id});
 		}
 	}
@@ -102,8 +102,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
-        w.material = material_defs_idx[cs[1]];
-        w.item_name = material_defs[w.material].name + std::string(" ") + w.item_name;
+        w.material = get_material_by_tag(cs[1]);
+        w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_MELEE, sentient->id});
         weapon->component<item_t>()->stack_size = finder->second.stack_size;
         weapon->component<item_t>()->category = finder->second.categories;
@@ -115,8 +115,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
-        w.material = material_defs_idx[cs[1]];
-        w.item_name = material_defs[w.material].name + std::string(" ") + w.item_name;
+        w.material = get_material_by_tag(cs[1]);
+        w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_RANGED, sentient->id});
         weapon->component<item_t>()->stack_size = finder->second.stack_size;
         weapon->component<item_t>()->category = finder->second.categories;
@@ -128,8 +128,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
-        w.material = material_defs_idx[cs[1]];
-        w.item_name = material_defs[w.material].name + std::string(" ") + w.item_name;
+        w.material = get_material_by_tag(cs[1]);
+        w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto ammo = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_AMMO, sentient->id});
         ammo->component<item_t>()->stack_size = finder->second.stack_size;
         ammo->component<item_t>()->category = finder->second.categories;

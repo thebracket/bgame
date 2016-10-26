@@ -354,7 +354,7 @@ int available_items_by_reaction_input(const reaction_input_t &input) {
 				if (i.material != input.required_material.get()) ok=false;
 			}
 			if (input.required_material_type) {
-				if (material_defs[i.material].spawn_type != input.required_material_type.get()) ok = false;
+				if (get_material(i.material).spawn_type != input.required_material_type.get()) ok = false;
 			}
 			if (ok) ++result;
 		}
@@ -382,7 +382,7 @@ std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
 				if (i.material != input.required_material.get()) ok=false;
 			}
 			if (input.required_material_type) {
-				if (material_defs[i.material].spawn_type != input.required_material_type.get()) ok = false;
+				if (get_material(i.material).spawn_type != input.required_material_type.get()) ok = false;
 			}
 			if (ok) result = e.id;
 		}

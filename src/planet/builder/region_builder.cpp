@@ -335,14 +335,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     std::vector<std::size_t> igneouses;
     std::vector<std::size_t> sands;
 
-    std::size_t i = 0;
-    for (auto it=material_defs.begin(); it != material_defs.end(); ++it) {
-        if (it->spawn_type == soil) soils.push_back(i);
-        if (it->spawn_type == sand) sands.push_back(i);
-        if (it->spawn_type == rock && it->layer == "sedimentary") sedimintaries.push_back(i);
-        if (it->spawn_type == rock && it->layer == "igneous") igneouses.push_back(i);
-        ++i;
-    }
+    get_strata_materials(soils, sedimintaries, igneouses, sands);
 
     set_worldgen_status("Locating strata");
     const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
@@ -389,24 +382,27 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
                 int roll = rng.roll_dice(1,100);
                 if (roll < biome.second.soil_pct) {
                     const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
-                    std::cout << material_defs[soils[soil_idx]].name << "\n";
+                    //std::cout << material_name(soils[soil_idx]) << "\n";
                     result.material_idx[i] = soils[soil_idx];
                 } else {
                     const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
-                    std::cout << material_defs[sands[sand_idx]].name << "\n";
+                    //std::cout << material_name(sands[sand_idx]) << "\n";
                     result.material_idx[i] = sands[sand_idx];
                 }
             } else if (z>(altitude_at_center-10)/2) {
                 // Sedimentary
                 const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
-                std::cout << material_defs[sedimintaries[sed_idx]].name << "\n";
+                //std::cout << material_name(sedimintaries[sed_idx]) << "\n";
                 result.material_idx[i] = sedimintaries[sed_idx];
             } else {
                 // Igneous
                 const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
-                std::cout << material_defs[igneouses[ig_idx]].name << "\n";
+                //std::cout << material_name(igneouses[ig_idx]) << "\n";
                 result.material_idx[i] = igneouses[ig_idx];
             }
+        } else {
+            std::cout << "Warning - we didn't think this strata was in use!\n";
+            result.material_idx[i] = 1;
         }
     }
     std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
@@ -449,13 +445,12 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                 // Place rock and soil
                 region.tile_type[mapidx(x,y,z)] = tile_type::SOLID;
                 const int strata_idx = strata.strata_map[mapidx(x,y,z)];
-                const std::size_t material_idx = strata.material_idx[strata_idx];
-                region.tile_material[mapidx(x,y,z)] = material_idx;
-                if (material_idx < material_defs.size()) {
-                    region.tile_hit_points[mapidx(x,y,z)] = material_defs[material_idx].hit_points;
-                } else {
-                    region.tile_hit_points[mapidx(x,y,z)] = 10;
+                std::size_t material_idx = strata.material_idx[strata_idx];
+                if (!is_material_idx_valid(material_idx)) {
+                    material_idx = 1;
                 }
+                region.tile_material[mapidx(x,y,z)] = material_idx;
+                region.tile_hit_points[mapidx(x,y,z)] = get_material(material_idx).hit_points;
                 ++z;
             }
             
@@ -565,7 +560,7 @@ void build_debris_trail(region_t &region, const int crash_x, const int crash_y) 
 }
 
 void build_beaches(region_t &region) {
-    auto finder = material_defs_idx.find("yellow_sand");
+    const auto sand = get_material_by_tag("yellow_sand");
     for (int y=1; y<WORLD_HEIGHT-1; ++y) {
         for (int x=1; x<WORLD_WIDTH; ++x) {
             const int z = get_ground_z(region,x,y);
@@ -577,7 +572,7 @@ void build_beaches(region_t &region) {
                 if (region.water_level[mapidx(x+1,y,z-1)] > 0) is_beach = true;
 
                 if (is_beach) {
-                    region.tile_material[mapidx(x,y,z)] = finder->second;
+                    region.tile_material[mapidx(x,y,z)] = sand;
                     region.tile_vegetation_type[mapidx(x,y,z)] = 0;
                 }
             }
@@ -708,78 +703,77 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     region.solid[idx] = false;
     region.tile_type[idx] = tile_type::FLOOR;
     region.tile_flags[idx].set(CONSTRUCTION);
-    auto plasteel = material_defs_idx.find("plasteel");
-    if (plasteel == material_defs_idx.end()) std::cout << "Warning: Unable to locate plasteel\n";
-    region.tile_material[idx] = plasteel->second;
+    const auto plasteel = get_material_by_tag("plasteel");
+    region.tile_material[idx] = plasteel;
     region.tile_vegetation_type[idx] = 0;
 
-    auto wood = material_defs_idx.find("wood");
+    const auto wood = get_material_by_tag("wood");
 
     if (type == "ship_wall") {
         region.tile_type[idx] = tile_type::WALL;
         region.solid[idx] = true;
         region.opaque[idx] = true;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel->second;
+        region.tile_material[idx] = plasteel;
     } else if (type == "ship_window") {
         region.tile_type[idx] = tile_type::WINDOW;
         region.solid[idx] = true;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel->second;
+        region.tile_material[idx] = plasteel;
     } else if (type == "ship_floor") {
         region.tile_type[idx] = tile_type::FLOOR;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel->second;    
+        region.tile_material[idx] = plasteel;    
     } else if (type == "hut_wall") {
         region.tile_type[idx] = tile_type::WALL;
         region.solid[idx] = true;
         region.opaque[idx] = true;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood->second;
+        region.tile_material[idx] = wood;
     } else if (type == "hut_floor") {
         region.tile_type[idx] = tile_type::FLOOR;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood->second; 
+        region.tile_material[idx] = wood; 
     } else if (type == "ship_up") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel->second;    
+        region.tile_material[idx] = plasteel;    
     } else if (type == "ship_down") {
         region.tile_type[idx] = tile_type::STAIRS_DOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel->second;    
+        region.tile_material[idx] = plasteel;    
     } else if (type == "ship_updown") {
         region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel->second;    
+        region.tile_material[idx] = plasteel;    
     } else if (type == "hut_upstairs") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood->second;    
+        region.tile_material[idx] = wood;    
     } else if (type == "hut_downstairs") {
         region.tile_type[idx] = tile_type::STAIRS_DOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood->second;    
+        region.tile_material[idx] = wood;    
     } else if (type == "hut_updownstairs") {
         region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood->second;
+        region.tile_material[idx] = wood;
     } else if (type == "cordex") {
         add_building("cordex", x, y, z);
     } else if (type == "solar_panel") {

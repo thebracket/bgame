@@ -90,7 +90,7 @@ void damage_system::settler_ranged_attacks() {
                 auto ammo_finder = item_defs.find(ammo_component->item_tag);
                 if (ammo_finder != item_defs.end()) {
                     weapon_n = ammo_finder->second.damage_n;
-                    weapon_d = ammo_finder->second.damage_d + material_defs[ammo_component->material].damage_bonus;
+                    weapon_d = ammo_finder->second.damage_d + get_material(ammo_component->material).damage_bonus;
                     weapon_mod = ammo_finder->second.damage_mod;                    
                 }
                 --ammo_component->stack_size;
@@ -143,7 +143,7 @@ void damage_system::settler_melee_attacks() {
                     weapon_name = weapon_finder->second.name;
                     weapon_n = weapon_finder->second.damage_n;
                     weapon_d = weapon_finder->second.damage_d;
-                    weapon_mod = weapon_finder->second.damage_mod + material_defs[weapon_component->material].damage_bonus;;
+                    weapon_mod = weapon_finder->second.damage_mod + get_material(weapon_component->material).damage_bonus;;
                 }
             }
         }

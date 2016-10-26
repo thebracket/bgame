@@ -175,16 +175,16 @@ void region_t::calc_render(const int &idx) {
 			bg = rltk::colors::YELLOW;
 		} break;
 		case tile_type::SOLID : {
-			if (idx < tile_material.size() && tile_material[idx] < material_defs.size()) {
-				glyph = material_defs[tile_material[idx]].glyph;
-				fg = material_defs[tile_material[idx]].fg;
-				bg = material_defs[tile_material[idx]].bg;
+			if (idx < tile_material.size()) {
+				glyph = get_material(tile_material[idx]).glyph;
+				fg = get_material(tile_material[idx]).fg;
+				bg = get_material(tile_material[idx]).bg;
 			} else {
 				//std::cout << "Warning - material not found (" << idx << ")!\n";
 				tile_material[idx] = 1;
-				glyph = material_defs[tile_material[idx]].glyph;
-				fg = material_defs[tile_material[idx]].fg;
-				bg = material_defs[tile_material[idx]].bg;
+				glyph = get_material(tile_material[idx]).glyph;
+				fg = get_material(tile_material[idx]).fg;
+				bg = get_material(tile_material[idx]).bg;
 			}
 		} break;
 		case tile_type::OPEN_SPACE : {
@@ -220,7 +220,7 @@ void region_t::calc_render(const int &idx) {
 					glyph = 79;
 				}
 			}
-			fg = material_defs[tile_material[idx]].fg;
+			fg = get_material(tile_material[idx]).fg;
 			//bg = material_defs[tile_material[idx]].bg;
 		} break;
 		case tile_type::WINDOW : {
@@ -229,8 +229,8 @@ void region_t::calc_render(const int &idx) {
 		} break;
 		case tile_type::RAMP : {
 			glyph = 30;
-			if (tile_material[idx] > 0 && tile_material[idx]<material_defs.size()) {
-				fg = material_defs[tile_material[idx]].fg;
+			if (tile_material[idx] > 0) {
+				fg = get_material(tile_material[idx]).fg;
 			} else {
 				fg = rltk::colors::GREY;
 			} 
@@ -243,20 +243,18 @@ void region_t::calc_render(const int &idx) {
 		} break;
 		case tile_type::STAIRS_UP : {
 			glyph = '<';
-			fg = material_defs[tile_material[idx]].fg;
+			fg = get_material(tile_material[idx]).fg;
 		} break;
 		case tile_type::STAIRS_DOWN : {
 			glyph = '>';
-			fg = material_defs[tile_material[idx]].fg;
+			fg = get_material(tile_material[idx]).fg;
 		} break;
 		case tile_type::STAIRS_UPDOWN : {
 			glyph = 'X';
-			fg = material_defs[tile_material[idx]].fg;
+			fg = get_material(tile_material[idx]).fg;
 		} break;
 		case tile_type::FLOOR : {
-			if (tile_material[idx] > material_defs.size()) {
-				glyph = ',';
-			} else if (material_defs[tile_material[idx]].spawn_type == sand) {
+			if (get_material(tile_material[idx]).spawn_type == sand) {
 				glyph = 126;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
 				glyph = 240;
@@ -264,11 +262,7 @@ void region_t::calc_render(const int &idx) {
 				glyph = ',';
 			}
 
-			if (tile_material[idx] > material_defs.size()) {
-				fg = rltk::colors::WHITE;
-			} else {
-				fg = material_defs[tile_material[idx]].fg;
-			}
+			fg = get_material(tile_material[idx]).fg;
 
 			if (tile_vegetation_type[idx]>0) {
 				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";

@@ -1285,3 +1285,35 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
         ->assign(renderable_t{ finder->second.glyph, material_defs[material].fg, material_defs[material].bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
+
+material_def_t& get_material(const std::size_t &idx) {
+    assert(idx < material_defs.size());
+	return material_defs[idx];
+}
+
+std::string material_name(const std::size_t &id) {
+	if (id < material_defs.size()) return material_defs[id].name;
+	return std::string("Unknown material: ") + std::to_string(id);
+}
+
+std::size_t get_material_by_tag(const std::string &tag) {
+	auto finder = material_defs_idx.find(tag);
+    if (finder == material_defs_idx.end()) throw std::runtime_error(std::string("Unknown material: ") + tag);
+	return finder->second;
+}
+
+void get_strata_materials(std::vector<std::size_t> &soils, std::vector<std::size_t> &sedimintaries, std::vector<std::size_t> &igneouses, std::vector<std::size_t> &sands) {
+    std::size_t i = 0;
+    for (auto it=material_defs.begin(); it != material_defs.end(); ++it) {
+        if (it->spawn_type == soil) soils.push_back(i);
+        if (it->spawn_type == sand) sands.push_back(i);
+        if (it->spawn_type == rock && it->layer == "sedimentary") sedimintaries.push_back(i);
+        if (it->spawn_type == rock && it->layer == "igneous") igneouses.push_back(i);
+        ++i;
+    }
+}
+
+bool is_material_idx_valid(const std::size_t &id) {
+    if (id > material_defs.size()) return false;
+    return true;
+}

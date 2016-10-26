@@ -1414,8 +1414,7 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 
 	if (ai.job_type_minor == JM_BUTCHER_CHOP) {
 		auto corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
-		auto mat_finder = material_defs_idx.find("organic");
-		const std::size_t organic_idx = mat_finder->second;
+		const auto organic_idx = get_material_by_tag("organic");
 
 		auto finder = creature_defs.find(corpse->creature_tag);
 		if (finder != creature_defs.end()) {

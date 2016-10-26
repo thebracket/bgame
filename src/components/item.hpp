@@ -36,7 +36,7 @@ struct item_t {
 	item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats, 
 		const std::size_t mat, int stack=1) : 
 		item_name(name), item_tag(tag), category(cats), type(ITEM), material(mat), stack_size(stack) {
-			item_name = material_defs[mat].name + std::string(" ") + item_name;
+			item_name = material_name(mat) + std::string(" ") + item_name;
 		}
 
 	std::size_t serialization_identity = 9;
