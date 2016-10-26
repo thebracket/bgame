@@ -44,7 +44,6 @@ using tasks::calculate_initiative;
 void settler_ai_system::update(const double duration_ms) {
 	std::queue<tick_message> * ticks = mbox<tick_message>();
     while (!ticks->empty()) {
-        tick_message msg = ticks->front();
         ticks->pop();
 
 		bool found_settler = false;

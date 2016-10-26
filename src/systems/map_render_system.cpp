@@ -139,11 +139,11 @@ vchar get_render_char_building(const int &x, const int &y) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;
 
-			if (!current_region->solid[idx] && current_region->tile_flags[idx].test(CAN_STAND_HERE)
+			if ((!current_region->solid[idx] && current_region->tile_flags[idx].test(CAN_STAND_HERE)
 				&& !current_region->tile_flags[idx].test(CONSTRUCTION) 
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
-				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN))
 				|| (build_mode_building.get().tag == "floor" 
 					&& !current_region->tile_flags[idx].test(CONSTRUCTION)&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
 					&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
@@ -200,7 +200,6 @@ void map_render_system::update(const double duration_ms) {
 
 	if (dirty) {
 		term(1)->clear();
-		const int camera_z = camera_position->region_z;
 
 		std::function<vchar(int,int)> calculator;
 		if (game_master_mode == PLAY) {
