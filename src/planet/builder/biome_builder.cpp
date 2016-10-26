@@ -149,7 +149,7 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 				for (const auto &possible : possible_types) {
 					max_roll += possible.first;
 				}
-				int dice_roll = rng.roll_dice(1, max_roll);
+				int dice_roll = rng.roll_dice(1, (int)max_roll);
 				for (const auto &possible : possible_types) {
 					dice_roll -= possible.first;
 					if (dice_roll < 0) {

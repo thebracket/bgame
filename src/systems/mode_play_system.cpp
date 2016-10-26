@@ -341,7 +341,7 @@ void mode_play_system::show_tilemenu() {
 		}
 	});
 
-	const int idx = mapidx(selected_tile_x, selected_tile_y, selected_tile_z);
+	const auto idx = mapidx(selected_tile_x, selected_tile_y, selected_tile_z);
 	if ((current_region->tile_type[idx] == tile_type::WALL || current_region->tile_type[idx] == tile_type::FLOOR 
 		|| current_region->tile_type[idx] == tile_type::STAIRS_DOWN || current_region->tile_type[idx] == tile_type::STAIRS_UP 
 		|| current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN) && current_region->tile_flags[idx].test(CONSTRUCTION) )

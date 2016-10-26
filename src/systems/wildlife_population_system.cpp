@@ -44,7 +44,7 @@ void wildlife_population_system::configure() {
                 }
                 if (!terrified) {
                     // Handle the AI here
-                    const int idx = mapidx(pos.x, pos.y, pos.z);
+                    const auto idx = mapidx(pos.x, pos.y, pos.z);
                     if (current_region->tile_vegetation_type[idx] > 0) {
                         if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});                         
                     } else {
@@ -102,7 +102,7 @@ void wildlife_population_system::spawn_wildlife() {
                     case 3 : { base_x = REGION_WIDTH-2; base_y = REGION_HEIGHT/2; } break;
                 }
                 base_z = get_ground_z(*current_region, base_x, base_y);
-                const int idx = mapidx(base_x, base_y, base_z);
+                const auto idx = mapidx(base_x, base_y, base_z);
                 if (current_region->water_level[idx] > 0) {
                     ++try_count;
                     edge = rng.roll_dice(1,4)-1;

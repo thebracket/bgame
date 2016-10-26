@@ -561,6 +561,9 @@
     <ClInclude Include="..\src\components\falling.hpp">
       <Filter>Header Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\planet\region.hpp">
+      <Filter>Header Files\planet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">

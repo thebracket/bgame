@@ -16,7 +16,7 @@ void cancel_action(rltk::entity_t &e, settler_ai_t &ai, game_stats_t &stats, spe
 		}
 	}
 	if (ai.job_type_major == JOB_GUARD) {
-		const int idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
+		const auto idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
 		for (auto &g : designations->guard_points) {
 			if (mapidx(g.second) == idx) g.first = false;
 		}

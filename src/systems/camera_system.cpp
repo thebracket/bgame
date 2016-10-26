@@ -125,7 +125,7 @@ int camera_system::deep_dive(const int &x, const int &y, const int &z) {
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
 
 	while (dive_depth < max_dive_depth && result.glyph == ' ') {
-		const int idx = mapidx(x, y, z-dive_depth);
+		const auto idx = mapidx(x, y, z-dive_depth);
 		//if (!current_region->revealed[idx]) return 0;
 
 		auto rf = renderables.find(idx);

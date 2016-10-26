@@ -31,7 +31,7 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 	const float dist_square = view.radius * view.radius;
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
-		const int idx = mapidx(X, Y, Z);
+		const auto idx = mapidx(X, Y, Z);
 		reveal(idx, view);
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {

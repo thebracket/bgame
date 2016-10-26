@@ -7,11 +7,11 @@
 #include "../utils/bitset8.hpp"
 #include "../components/position.hpp"
 
-constexpr std::size_t mapidx(const int x, const int y, const int z) { 
+constexpr int mapidx(const int x, const int y, const int z) { 
 	return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; 
 }
 
-inline std::size_t mapidx(const position_t &pos) {
+inline int mapidx(const position_t &pos) {
 	return mapidx(pos.x, pos.y, pos.z);
 }
 
@@ -83,7 +83,7 @@ inline int get_ground_z(region_t &region, const int x, const int y) {
 	int z = REGION_DEPTH-1;
 	bool hit_ground = false;
 	while (!hit_ground) {
-		const int idx = mapidx(x, y, z);
+		const auto idx = mapidx(x, y, z);
 		if (region.tile_type[idx] == tile_type::SOLID) {
 			hit_ground = true;
 			++z;

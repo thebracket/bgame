@@ -111,7 +111,7 @@ void gravity_system::update(const double ms) {
 
         each<position_t, falling_t>([&falling_entities] (entity_t &e, position_t &pos, falling_t &fall) {
             falling_entities.insert(e.id);
-            const int idx = mapidx(pos.x, pos.y, pos.z);
+            const auto idx = mapidx(pos.x, pos.y, pos.z);
 
             if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
                 // We hit the ground
@@ -129,8 +129,8 @@ void gravity_system::update(const double ms) {
         // See if any entities need to fall
         each<position_t>([&falling_entities] (entity_t &e, position_t &pos) {
             if (falling_entities.find(e.id) == falling_entities.end()) { // Ignore entities that are already falling
-                const int idx = mapidx(pos.x, pos.y, pos.z);
-                const int idx_below = mapidx(pos.x, pos.y, pos.z);
+                const auto idx = mapidx(pos.x, pos.y, pos.z);
+                const auto idx_below = mapidx(pos.x, pos.y, pos.z);
 
                 bool is_falling = true;
 

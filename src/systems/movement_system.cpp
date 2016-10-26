@@ -90,7 +90,7 @@ void movement_system::update(const double ms) {
         // Do vegetation damage
         if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH || msg.destination.y < 1 || msg.destination.y > REGION_HEIGHT
             || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH) break;
-        const int idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
+        const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
         if (current_region->tile_vegetation_type[idx] > 0) {
             emit_deferred(vegetation_damage_message{idx, 1});
         }

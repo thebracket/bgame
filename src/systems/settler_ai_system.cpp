@@ -308,7 +308,7 @@ void settler_ai_system::do_work_time(entity_t &entity, settler_ai_t &ai, game_st
 	}
 	if (ai.job_type_major == JOB_IDLE) {
 		// Find something to do!
-		const int idx = mapidx(pos.x, pos.y, pos.z);
+		const auto idx = mapidx(pos.x, pos.y, pos.z);
 		
 		if (ai.permitted_work[JOB_GUARDING] && !designations->guard_points.empty() && shooting_range(entity, pos)>0) {
 			for (auto &g : designations->guard_points) {
@@ -558,7 +558,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_SITE) {
-		const int idx = mapidx(pos.x, pos.y, pos.z);
+		const auto idx = mapidx(pos.x, pos.y, pos.z);
 		if (mining_map[idx]==0) {
 			// We're at a diggable site
 			ai.job_type_minor = JM_DIG;
@@ -620,7 +620,7 @@ void settler_ai_system::do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &s
 			// Determine the digging target from here
 			// Make a skill roll, and if successful complete the action
 			// When complete, move to dropping the pick
-			const int idx = mapidx(pos.x, pos.y, pos.z);
+			const auto idx = mapidx(pos.x, pos.y, pos.z);
 			const int target_idx = mining_targets[idx];
 			const int target_operation = designations->mining[target_idx];
 			
@@ -764,7 +764,7 @@ void settler_ai_system::do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t 
 			for (int z=0; z<REGION_DEPTH; ++z) {
 				for (int y=0; y<REGION_HEIGHT; ++y) {
 					for (int x=0; x<REGION_WIDTH; ++x) {
-						const int idx = mapidx(x,y,z);
+						const auto idx = mapidx(x,y,z);
 						if (current_region->tree_id[idx] == ai.target_id) {
 							current_region->solid[idx]=false;
 							current_region->tile_flags[idx].reset(CAN_STAND_HERE);

@@ -76,7 +76,7 @@ void region_t::tile_recalc_all() {
 }
 
 void region_t::tile_calculate(const int &x, const int &y, const int &z) {
-	const int idx = mapidx(x,y,z);
+	const auto idx = mapidx(x,y,z);
 
 	// Calculate render characteristics
 	calc_render(idx);
@@ -100,7 +100,7 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 		if (tile_type[idx] == tile_type::OPEN_SPACE) tile_flags[idx].reset(CAN_STAND_HERE);
 
 		if (z>0) {
-			const int idx_below = mapidx(x,y,z-1);
+			const auto idx_below = mapidx(x,y,z-1);
 
 			// Can stand on the tile above walls, ramps and up stairs
 			if (tile_type[idx] == tile_type::FLOOR) tile_flags[idx].set(CAN_STAND_HERE);
@@ -127,7 +127,7 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 }
 
 void region_t::tile_pathing(const int &x, const int &y, const int &z) {
-	const int idx = mapidx(x,y,z);
+	const auto idx = mapidx(x,y,z);
 
 	// Start with a clean slate
 	tile_flags[idx].reset(CAN_GO_NORTH);

@@ -200,6 +200,7 @@
     <ClInclude Include="..\src\planet\history.hpp" />
     <ClInclude Include="..\src\planet\planet.hpp" />
     <ClInclude Include="..\src\planet\planet_builder.hpp" />
+    <ClInclude Include="..\src\planet\region.hpp" />
     <ClInclude Include="..\src\planet\tile.hpp" />
     <ClInclude Include="..\src\raws\health_factory.hpp" />
     <ClInclude Include="..\src\raws\lua_bridge.hpp" />

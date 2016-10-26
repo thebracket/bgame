@@ -66,7 +66,7 @@ inline void do_water_spread(const int &x, const int &y, const int &z, const int 
 inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bool &did_something) {
     std::vector<int> spread_candidates;
     
-    const int idx_below = mapidx(x,y,z-1);
+    const auto idx_below = mapidx(x,y,z-1);
     if (!current_region->solid[idx_below] && current_region->tile_type[idx]!=tile_type::FLOOR && water_level[idx_below] < 11) {
         for (uint8_t i=0; i<current_region->water_level[idx]; ++i) {
             do_falling_water(x, y, z, idx, idx_below, did_something);
@@ -81,7 +81,7 @@ inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bo
 inline void do_layer(const int &z, bool &did_something) {
     for (int y=1; y<REGION_HEIGHT-1; ++y) {
         for (int x=1; x<REGION_WIDTH-1; ++x) {
-            const int idx = mapidx(x,y,z);
+            const auto idx = mapidx(x,y,z);
             if (water_level[idx]>0) {
                 do_cell(x, y, z, idx, did_something);
             }
@@ -143,7 +143,7 @@ void fluid_system::update(const double ms) {
         fluids::do_fluids();
 
         each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
-            const int idx = mapidx(pos.x, pos.y, pos.z);
+            const auto idx = mapidx(pos.x, pos.y, pos.z);
             if (w.spawner_type == 1 || w.spawner_type == 2) {
                 // TODO: When rainfall is implemented, type 1 only spawns when it rains
                 if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;

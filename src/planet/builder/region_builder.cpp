@@ -526,7 +526,7 @@ void build_ramps(region_t &region) {
                 if (region.tile_type[mapidx(x+1,y,z+1)] == tile_type::FLOOR) is_ramp = true;
 
                 if (is_ramp) {
-                    const int idx = mapidx(x,y,z);
+                    const auto idx = mapidx(x,y,z);
                     region.tile_type[idx]=tile_type::RAMP;
                     region.revealed[idx] = true;
                 }
@@ -586,7 +586,7 @@ void build_beaches(region_t &region) {
 
 inline void set_tree_trunk(region_t &region, const int x, const int y, const int z, const int tree_id) {
 	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-2) {
-		const int idx = mapidx(x,y,z);
+		const auto idx = mapidx(x,y,z);
         region.tile_type[idx] = tile_type::TREE_TRUNK;
         region.tree_id[idx] = tree_id;
         region.solid[idx] = true;
@@ -649,7 +649,7 @@ void build_trees(region_t &region, std::pair<biome_t, biome_type_t> &biome, rand
     for (int y=10; y<REGION_HEIGHT-10; ++y) {
         for (int x=10; x<REGION_WIDTH-10; ++x) {
             const int z = get_ground_z(region,x,y);
-            const int idx = mapidx(x,y,z);
+            const auto idx = mapidx(x,y,z);
             const int crash_distance = distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2);
             if (crash_distance > 20 && region.tile_type[idx] == tile_type::FLOOR && region.water_level[idx]==0) {
                 int dice_roll = rng.roll_dice(1,1000);
@@ -702,7 +702,7 @@ void add_building(std::string tag, const int x, const int y, const int z) {
 }
 
 void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
-    const int idx = mapidx(x,y,z);
+    const auto idx = mapidx(x,y,z);
     region.water_level[idx] = 0;
     region.solid[idx] = false;
     region.tile_type[idx] = tile_type::FLOOR;
@@ -966,7 +966,7 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
             for (int Y=0; Y < building->get_height(); ++Y) {
                 for (int X = 0; X < building->get_width(); ++X) {
                     for (int Z = 0; Z < building->get_num_layers(); ++Z) {
-                        const int idx = mapidx(X+x, Y+y, Z+z);
+                        const auto idx = mapidx(X+x, Y+y, Z+z);
                         if (region.solid[idx]) ok = false;
                         if (region.water_level[idx] > 0) ok = false;
                         if (region.tile_type[idx] == tile_type::SOLID) ok = false;

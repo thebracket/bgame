@@ -152,7 +152,7 @@ void mode_design_system::digging() {
         if (get_mouse_button_state(rltk::button::LEFT)) {
             const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
             const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
-            const int idx = mapidx(world_x, world_y, camera_position->region_z);
+            const auto idx = mapidx(world_x, world_y, camera_position->region_z);
             if (is_mining_designation_valid(world_x, world_y, camera_position->region_z, game_mining_mode)) {
                 switch (game_mining_mode) {
                     case DIG : designations->mining[idx] = 1; break;
@@ -216,8 +216,8 @@ void mode_design_system::chopping() {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
         const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
 
-        const int idx = mapidx(world_x, world_y, camera_position->region_z);
-        const int tree_id = current_region->tree_id[idx];
+        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
+        const auto tree_id = current_region->tree_id[idx];
 
         if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
             // Naieve search for the base of the tree; this could be optimized a LOT
@@ -255,7 +255,7 @@ void mode_design_system::guardposts() {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
         const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
 
-        const int idx = mapidx(world_x, world_y, camera_position->region_z);
+        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
         if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
             if (get_mouse_button_state(rltk::button::LEFT)) {
                 bool found = false;
