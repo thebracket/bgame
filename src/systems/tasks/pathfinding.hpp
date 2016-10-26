@@ -12,7 +12,7 @@ namespace tasks {
 enum follow_result_t { SUCCESS, AT_DESTINATION, FAIL };
 
 inline bool can_enter_tile(const position_t &pos) {
-    const int idx = mapidx(pos);
+    const auto idx = mapidx(pos);
     return current_region->tile_flags[idx].test(CAN_STAND_HERE);
 }
 

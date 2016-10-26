@@ -51,9 +51,9 @@ boost::optional<std::unordered_map<uint8_t, double>> biome_membership(planet_t &
 	planet.biomes[idx].center_x = total_x / n_cells;
 	planet.biomes[idx].center_y = total_y / n_cells;
 
-	const int distance_from_pole = std::min( rltk::distance2d(planet.biomes[idx].center_x,planet.biomes[idx].center_y, WORLD_WIDTH/2, 0), 
-		rltk::distance2d(planet.biomes[idx].center_x, planet.biomes[idx].center_y, WORLD_WIDTH/2, WORLD_HEIGHT) );
-	const int distance_from_center = rltk::distance2d(planet.biomes[idx].center_x,planet.biomes[idx].center_y, WORLD_WIDTH/2, WORLD_HEIGHT/2);
+	const int distance_from_pole = static_cast<int>(std::min( rltk::distance2d(planet.biomes[idx].center_x,planet.biomes[idx].center_y, WORLD_WIDTH/2, 0), 
+		rltk::distance2d(planet.biomes[idx].center_x, planet.biomes[idx].center_y, WORLD_WIDTH/2, WORLD_HEIGHT) ));
+	const int distance_from_center = static_cast<int>(rltk::distance2d(planet.biomes[idx].center_x,planet.biomes[idx].center_y, WORLD_WIDTH/2, WORLD_HEIGHT/2));
 
 	if (distance_from_pole > 200) {
 		planet.biomes[idx].warp_mutation = 0;
@@ -149,9 +149,9 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 				for (const auto &possible : possible_types) {
 					max_roll += possible.first;
 				}
-				int dice_roll = rng.roll_dice(1, max_roll);
+				int dice_roll = rng.roll_dice(1, (int)max_roll);
 				for (const auto &possible : possible_types) {
-					dice_roll -= possible.first;
+					dice_roll -= (int)possible.first;
 					if (dice_roll < 0) {
 						biome.type = possible.second;
 						break;

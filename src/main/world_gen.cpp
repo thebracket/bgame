@@ -33,7 +33,7 @@ void world_gen::tick(const double duration_ms) {
 	planet_builder_lock.lock();
 	for (int y=0; y<term(WORLD_LAYER)->term_height; ++y) {
 		for (int x=0; x<term(WORLD_LAYER)->term_width; ++x) {
-			const int idx = term(WORLD_LAYER)->at(x, y);
+			const auto idx = term(WORLD_LAYER)->at(x, y);
 			term(WORLD_LAYER)->set_char(idx, (*planet_builder_display.get())[idx]);
 		}
 	}

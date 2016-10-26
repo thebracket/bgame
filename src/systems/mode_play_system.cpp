@@ -44,7 +44,7 @@ void mode_play_system::update(const double duration_ms) {
 	bool tooltip = false;
 	
 	if (mouse::term1x == last_mouse_x && mouse::term1y == last_mouse_y && world_y > 0) {
-		mouse_dwell_time += duration_ms;
+		mouse_dwell_time += (float)duration_ms;
 		if (mouse_dwell_time > 200.0 && tile_idx !=0 && current_region->revealed[tile_idx] ) tooltip = true;
 	} else {
 		last_mouse_x = mouse::term1x;
@@ -187,18 +187,18 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 
 	int longest = 0;
 	for (const std::string &s : lines) {
-		if (s.size() > longest) longest = s.size();
+		if (s.size() > longest) longest = (int)s.size();
 	}
 
 	// TODO - dynamic placement
-	float revealed_pct = mouse_dwell_time - 200.0;
+	float revealed_pct = mouse_dwell_time - 200.0F;
 	revealed_pct /= game_config.tooltip_speed;
-	if (revealed_pct > 1.0) revealed_pct = 1.0;
-	if (!game_config.tooltip_fadein) revealed_pct = 1.0;
+	if (revealed_pct > 1.0) revealed_pct = 1.0F;
+	if (!game_config.tooltip_fadein) revealed_pct = 1.0F;
 
 	if (revealed_pct < 1.0) {
 		for (std::string &s : lines) {
-			int n_garbled = s.size() - ((float)s.size() * (revealed_pct/2.0));
+			int n_garbled = static_cast<int>(s.size() - ((float)s.size() * (revealed_pct/2.0F)));
 			for (int i=0; i<n_garbled; ++i) s[i] = static_cast<uint8_t>(rng.roll_dice(1,255));
 		}
 	}
@@ -206,13 +206,13 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	bool right_align = true;
 	if (mouse::term1x > term(1)->term_width/2 ) right_align = false;
 	int tt_y = mouse::term1y;
-	if (tt_y+lines.size() > term(1)->term_height-1) tt_y -= lines.size()+1;
+	if (tt_y+lines.size() > term(1)->term_height-1) tt_y -= (int)lines.size()+1;
 
 	if (right_align) {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
 		int tt_x = mouse::term1x+2;
 		term(1)->set_char(mouse::term1x+1, mouse::term1y, vchar{27, color, BLACK});
-		term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, color);
+		term(1)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
 			term(1)->print(tt_x+1, tt_y, s, color);
@@ -221,7 +221,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	} else {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
 		int tt_x = mouse::term1x-3-longest;
-		term(1)->box(tt_x, tt_y, longest+1, lines.size()+1, color);
+		term(1)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
 			term(1)->print(tt_x+1, tt_y, s, color);
@@ -341,7 +341,7 @@ void mode_play_system::show_tilemenu() {
 		}
 	});
 
-	const int idx = mapidx(selected_tile_x, selected_tile_y, selected_tile_z);
+	const auto idx = mapidx(selected_tile_x, selected_tile_y, selected_tile_z);
 	if ((current_region->tile_type[idx] == tile_type::WALL || current_region->tile_type[idx] == tile_type::FLOOR 
 		|| current_region->tile_type[idx] == tile_type::STAIRS_DOWN || current_region->tile_type[idx] == tile_type::STAIRS_UP 
 		|| current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN) && current_region->tile_flags[idx].test(CONSTRUCTION) )

@@ -39,7 +39,7 @@ void renderables_system::update(const double time_elapsed) {
 
 			for (int y = 0; y<b.height; ++y) {
 				for (int x=0; x<b.width; ++x) {
-					const int idx = mapidx(pos.x+x+offset_x, pos.y+y+offset_y, pos.z);
+					const auto idx = mapidx(pos.x+x+offset_x, pos.y+y+offset_y, pos.z);
 					rltk::vchar glyph;
 					glyph = b.glyphs[glyph_idx];
 					if (!b.complete) glyph.foreground = rltk::colors::GREY;
@@ -56,7 +56,7 @@ void renderables_system::update(const double time_elapsed) {
 
 		// Add particles
 		for (const particle_t &p : particles) {
-			const int idx = mapidx(p.x, p.y, p.z);
+			const auto idx = mapidx(p.x, p.y, p.z);
 			renderables[idx].push_back(p.glyph);
 		}
 
@@ -69,7 +69,7 @@ void renderables_system::update(const double time_elapsed) {
 				float i = 0;
 				for (auto step : ai->current_path->steps) {
 					const float lerp_amount = i / n_steps;
-					const int idx = mapidx(step.x, step.y, step.z);
+					const auto idx = mapidx(step.x, step.y, step.z);
 					renderables[idx].push_back(rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK });
 					++i;
 				}

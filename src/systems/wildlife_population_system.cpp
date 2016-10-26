@@ -44,7 +44,7 @@ void wildlife_population_system::configure() {
                 }
                 if (!terrified) {
                     // Handle the AI here
-                    const int idx = mapidx(pos.x, pos.y, pos.z);
+                    const auto idx = mapidx(pos.x, pos.y, pos.z);
                     if (current_region->tile_vegetation_type[idx] > 0) {
                         if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});                         
                     } else {
@@ -83,7 +83,7 @@ void wildlife_population_system::spawn_wildlife() {
         if (group_populations[i] == 0) {
             const std::size_t biome_type = planet.biomes[current_region->biome_idx].type;
             const std::size_t n_critters = biome_defs[biome_type].wildlife.size();
-            const std::size_t critter_idx = rng.roll_dice(1, n_critters)-1;
+            const std::size_t critter_idx = rng.roll_dice(1, (int)n_critters)-1;
             const std::string critter_tag = biome_defs[biome_type].wildlife[critter_idx];
             auto critter_def = creature_defs.find( critter_tag );
             if (critter_def == creature_defs.end()) throw std::runtime_error("Could not find " + biome_defs[biome_type].wildlife[critter_idx]);
@@ -102,7 +102,7 @@ void wildlife_population_system::spawn_wildlife() {
                     case 3 : { base_x = REGION_WIDTH-2; base_y = REGION_HEIGHT/2; } break;
                 }
                 base_z = get_ground_z(*current_region, base_x, base_y);
-                const int idx = mapidx(base_x, base_y, base_z);
+                const auto idx = mapidx(base_x, base_y, base_z);
                 if (current_region->water_level[idx] > 0) {
                     ++try_count;
                     edge = rng.roll_dice(1,4)-1;
@@ -187,7 +187,7 @@ std::map<int, position_t> get_hunting_candidates(position_t &hunter_pos) {
     std::map<int, position_t> result;
 
     each<grazer_ai, position_t>([&result, &hunter_pos] (entity_t &e, grazer_ai &ai, position_t &pos) {
-        result[distance3d_squared(hunter_pos.x, hunter_pos.y, hunter_pos.z, pos.x, pos.y, pos.z)] = pos;
+        result[(int)distance3d_squared(hunter_pos.x, hunter_pos.y, hunter_pos.z, pos.x, pos.y, pos.z)] = pos;
     });
 
     return result;

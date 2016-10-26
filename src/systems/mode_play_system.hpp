@@ -9,7 +9,7 @@ public:
 private:
     int last_mouse_x = 0;
 	int last_mouse_y = 0;
-	double mouse_dwell_time = 0.0;
+	float mouse_dwell_time = 0.0F;
 
 	int menu_x,menu_y;
 
