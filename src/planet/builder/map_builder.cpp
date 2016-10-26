@@ -204,23 +204,38 @@ void planet_rivers(planet_t &planet, rltk::random_number_generator &rng) {
 		while (!done) {
 			std::map<uint8_t, std::pair<int,int>> candidates;
 			if (x > 0 && used_steps.find(planet.idx(x-1, y))==used_steps.end()) candidates.insert({planet.landblocks[planet.idx(x-1, y)].height, {x-1, y}});
-			if (x < WORLD_WIDTH && used_steps.find(planet.idx(x+1, y))==used_steps.end()) candidates.insert({planet.landblocks[planet.idx(x+1, y)].height, {x+1, y}});
+			if (x < WORLD_WIDTH-1 && used_steps.find(planet.idx(x+1, y))==used_steps.end()) candidates.insert({planet.landblocks[planet.idx(x+1, y)].height, {x+1, y}});
 			if (y > 0 && used_steps.find(planet.idx(x, y-1))==used_steps.end()) candidates.insert({planet.landblocks[planet.idx(x, y-1)].height, {x, y-1}});
-			if (y < WORLD_HEIGHT && used_steps.find(planet.idx(x, y+1))==used_steps.end()) candidates.insert({planet.landblocks[planet.idx(x, y+1)].height, {x, y+1}});
+			if (y < WORLD_HEIGHT-1 && used_steps.find(planet.idx(x, y+1))==used_steps.end()) candidates.insert({planet.landblocks[planet.idx(x, y+1)].height, {x, y+1}});
 			river_step_t step;
-			step.x = candidates.begin()->second.first;
-			step.y = candidates.begin()->second.second;
-
-			if (planet.landblocks[planet.idx(x,y)].type == block_type::WATER || x == 0 || x == WORLD_WIDTH || y ==0 || y==WORLD_HEIGHT) {
+			if (candidates.empty()) {
 				done = true;
 			} else {
-				river.steps.push_back(step);
-				used_steps.insert(planet.idx(step.x, step.y));
-				x = step.x;
-				y = step.y;
-				planet_display_update_zoomed(planet, x, y);
-			}
-			planet_display_update_zoomed(planet, x, y);
+
+				for (const auto &test : planet.rivers) {
+					if (!done) {
+						for (const auto &step : test.steps) {
+							if (x==step.x && y==step.y) { done=true; break; }
+						}
+					}
+				}
+
+				if (!done) {
+					step.x = candidates.begin()->second.first;
+					step.y = candidates.begin()->second.second;
+
+					if (planet.landblocks[planet.idx(x,y)].type == block_type::WATER || x == 0 || x == WORLD_WIDTH || y ==0 || y==WORLD_HEIGHT) {
+						done = true;
+					} else {
+						river.steps.push_back(step);
+						used_steps.insert(planet.idx(step.x, step.y));
+						x = step.x;
+						y = step.y;
+						planet_display_update_zoomed(planet, x, y);
+					}
+					planet_display_update_zoomed(planet, x, y);
+				}
+				}
 		}
 
 		planet.rivers.push_back(river);
