@@ -16,5 +16,6 @@ add_library(planet STATIC
 	builder/regions/water_features.cpp
 	builder/regions/strata.cpp
 	builder/regions/decorators.cpp
+	builder/regions/trees.cpp
 )
 target_link_libraries(planet rltk raws FastNoise)
