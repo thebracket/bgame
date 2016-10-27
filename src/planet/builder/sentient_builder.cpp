@@ -58,27 +58,24 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
     const std::string profession_tag = OCCUPATION_TAGS[planet.civs.unimportant_people[person_id].occupation] + std::string("_") + 
         std::to_string(techlevel);
     std::cout << profession_tag << "\n";
-    auto profession = native_pop_defs.find(profession_tag);
-    if (profession == native_pop_defs.end()) {
-        throw std::runtime_error(std::string("Cannot find ") + profession_tag);
-    }
-    const int profidx = rng.roll_dice(1,profession->second.size())-1;    
+    auto profession = get_native_professions(profession_tag);
+    const int profidx = rng.roll_dice(1,profession.size())-1;    
 
     auto sentient = create_entity()
         ->assign(position_t{x,y,z})
-        ->assign(name_t{ species_finder->second.name, profession->second[profidx].name })
+        ->assign(name_t{ species_finder->second.name, profession[profidx].name })
         ->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
         ->assign(viewshed_t{ 6, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
-        ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id, profession->second[profidx].aggression+5})
+        ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id, profession[profidx].aggression+5})
         ->assign(std::move(species));
     std::cout << "Sentient #" << sentient->id << "\n";
     if (announce) {
-        emit_deferred(log_message{LOG().col(rltk::colors::CYAN)->text(species_finder->second.name)->text(" ")->text(profession->second[profidx].name)->col(rltk::colors::WHITE)->text(" has arrived.")->chars});
+        emit_deferred(log_message{LOG().col(rltk::colors::CYAN)->text(species_finder->second.name)->text(" ")->text(profession[profidx].name)->col(rltk::colors::WHITE)->text(" has arrived.")->chars});
     }
 
-    for (auto item : profession->second[profidx].starting_clothes) {
+    for (auto item : profession[profidx].starting_clothes) {
 		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {            
 			std::string item_name = std::get<2>(item);
 			std::string slot_name = std::get<1>(item);
@@ -96,8 +93,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 		}
 	}
 
-    if (profession->second[profidx].melee != "") {
-        auto cs = split(profession->second[profidx].melee, '/');
+    if (profession[profidx].melee != "") {
+        auto cs = split(profession[profidx].melee, '/');
         const std::string item_name = cs[0];
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
@@ -109,8 +106,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         weapon->component<item_t>()->category = finder->second.categories;
         weapon->component<item_t>()->claimed = true;
     }
-    if (profession->second[profidx].ranged != "") {
-        auto cs = split(profession->second[profidx].ranged, '/');
+    if (profession[profidx].ranged != "") {
+        auto cs = split(profession[profidx].ranged, '/');
         const std::string item_name = cs[0];
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";
@@ -122,8 +119,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         weapon->component<item_t>()->category = finder->second.categories;
         weapon->component<item_t>()->claimed = true;
     }
-    if (profession->second[profidx].ammo != "") {
-        auto cs = split(profession->second[profidx].ammo, '/');
+    if (profession[profidx].ammo != "") {
+        auto cs = split(profession[profidx].ammo, '/');
         const std::string item_name = cs[0];
         auto finder = item_defs.find(item_name);
         std::cout << "Created " << item_name << "\n";

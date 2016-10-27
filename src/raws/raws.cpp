@@ -1317,3 +1317,12 @@ bool is_material_idx_valid(const std::size_t &id) {
     if (id > material_defs.size()) return false;
     return true;
 }
+
+std::vector<native_population_t>& get_native_professions(const std::string &tag) {
+    auto finder = native_pop_defs.find(tag);
+    if (finder == native_pop_defs.end()) {
+        throw std::runtime_error(std::string("Cannot find ") + tag);
+    } else {
+        return finder->second;
+    }
+}

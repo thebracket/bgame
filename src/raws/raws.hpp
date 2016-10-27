@@ -257,8 +257,6 @@ extern std::vector<plant_t> plant_defs;
 extern boost::container::flat_map<std::string, raw_species_t> species_defs;
 extern boost::container::flat_map<std::string, raw_creature_t> creature_defs;
 
-extern boost::container::flat_map<std::string, std::vector<native_population_t>> native_pop_defs;
-
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);
 uint16_t get_tile_contents_index(const std::string name);
@@ -267,8 +265,12 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
 
+// Material accessors
 std::size_t get_material_by_tag(const std::string &tag);
 material_def_t& get_material(const std::size_t &idx);
 std::string material_name(const std::size_t &id);
 void get_strata_materials(std::vector<std::size_t> &soils, std::vector<std::size_t> &sedimintaries, std::vector<std::size_t> &igneouses, std::vector<std::size_t> &sands);
 bool is_material_idx_valid(const std::size_t &id);
+
+// Native population definition accessors
+std::vector<native_population_t>& get_native_professions(const std::string &tag);
