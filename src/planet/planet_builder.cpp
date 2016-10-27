@@ -208,7 +208,7 @@ void build_planet() {
 
 	// Materialize this region
 	build_region(planet, crash_site, rng, noise);
-	builder_save_planet(planet);
+	save_planet(planet);
 
 	planet_build_done.store(true);
 }

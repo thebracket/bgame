@@ -326,8 +326,9 @@ struct strata_t {
     std::vector<std::tuple<int,int,int,int>> counts;
 };
 
-strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
-    strata_t result;
+std::unique_ptr<strata_t> build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
+    std::unique_ptr<strata_t> result_ptr = std::make_unique<strata_t>();
+    strata_t result = *result_ptr;
     result.strata_map.resize(REGION_TILES_COUNT);
 
     std::vector<std::size_t> soils;
@@ -339,6 +340,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
 
     set_worldgen_status("Locating strata");
     const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
+    result.strata_map.resize(n_strata);
     result.material_idx.resize(n_strata);
     std::fill(result.material_idx.begin(), result.material_idx.end(), 1);
     result.counts.resize(n_strata);
@@ -407,7 +409,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     }
     std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
 
-    return result;
+    return result_ptr;
 }
 
 void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, uint8_t>> &water_spawners) {
@@ -444,9 +446,16 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             while(z < std::min(altitude + 64, REGION_DEPTH-20)) {
                 // Place rock and soil
                 region.tile_type[mapidx(x,y,z)] = tile_type::SOLID;
-                const int strata_idx = strata.strata_map[mapidx(x,y,z)];
-                std::size_t material_idx = strata.material_idx[strata_idx];
-                if (!is_material_idx_valid(material_idx)) {
+                std::size_t material_idx;
+                const int idx = mapidx(x,y,z);
+                if (idx < strata.strata_map.size()) { 
+                    const int strata_idx = strata.strata_map[mapidx(x,y,z)];
+                    if (strata_idx < strata.material_idx.size()) {
+                        material_idx = strata.material_idx[strata_idx];
+                    } else {
+                        material_idx = 1;
+                    }
+                } else {
                     material_idx = 1;
                 }
                 region.tile_material[mapidx(x,y,z)] = material_idx;
@@ -1021,7 +1030,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
     zero_map(region);
-    lay_strata(region, heightmap, biome, strata, rng, pooled_water, water_spawners);
+    lay_strata(region, heightmap, biome, *strata, rng, pooled_water, water_spawners);
 
     // Build ramps and beaches
     build_ramps(region);
