@@ -39,6 +39,7 @@ add_library(systems STATIC
 	hud_system.cpp
 	fluid_system.cpp
 	gravity_system.cpp
+	gui_elements.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
