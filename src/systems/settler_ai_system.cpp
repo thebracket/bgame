@@ -1416,13 +1416,11 @@ void settler_ai_system::do_butchering(entity_t &e, settler_ai_t &ai, game_stats_
 		auto corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
 		const auto organic_idx = get_material_by_tag("organic");
 
-		auto finder = creature_defs.find(corpse->creature_tag);
-		if (finder != creature_defs.end()) {
-			for (int i=0; i<finder->second.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
-			for (int i=0; i<finder->second.yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
-			for (int i=0; i<finder->second.yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", organic_idx);
-			for (int i=0; i<finder->second.yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
-		}
+		auto finder = get_creature_def(corpse->creature_tag);
+		for (int i=0; i<finder.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
+		for (int i=0; i<finder.yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
+		for (int i=0; i<finder.yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", organic_idx);
+		for (int i=0; i<finder.yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
 		become_idle(e, ai, name);

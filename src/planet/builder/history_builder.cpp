@@ -8,11 +8,9 @@
 #include <sstream>
 
 const std::string random_species(rltk::random_number_generator &rng) {
-    const auto n_species = species_defs.size();
-    int roll = rng.roll_dice(1, (int)n_species)-1;
-    auto it = species_defs.begin();
-    for (int i=0; i<roll; ++i) ++it;
-    return it->first;
+    const auto n_species = get_species_defs_size();
+    const int roll = rng.roll_dice(1, n_species)-1;
+    return get_species_nth_tag(roll);
 }
 
 std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag, uint8_t gov_type, rltk::random_number_generator &rng) {
@@ -33,8 +31,8 @@ std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag
         case GOV_THEOCRACY : format = "Holy {NOUN} of {SPECIES}"; break;
         default : format = "The {SPECIES} of {NOUN}";
     }
-    auto species = species_defs.find(species_tag);
-    str_replace(format, "{SPECIES}", species->second.collective_name);
+    auto species = get_species_def(species_tag);
+    str_replace(format, "{SPECIES}", species.collective_name);
     str_replace(format, "{NOUN}", to_proper_noun_case(last_names.random_entry(rng)));
 
     return format;
@@ -49,14 +47,14 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         // Define the initial species
         civ.species_tag = random_species(rng);
-        auto species = species_defs.find(civ.species_tag);
-        if (species->second.alignment == align_evil) civ.cordex_feelings = -3;
+        auto species = get_species_def(civ.species_tag);
+        if (species.alignment == align_evil) civ.cordex_feelings = -3;
         civ.r = rng.roll_dice(1,192);
         civ.g = rng.roll_dice(1,192);
         civ.b = rng.roll_dice(1,192);
-        if (species->second.alignment == align_evil) civ.r = 255;
-        if (species->second.alignment == align_neutral) civ.b = 255;
-        if (species->second.alignment == align_good) civ.g = 255;
+        if (species.alignment == align_evil) civ.r = 255;
+        if (species.alignment == align_neutral) civ.b = 255;
+        if (species.alignment == align_good) civ.g = 255;
 
         civ.gov_type = rng.roll_dice(1, MAX_GOV_TYPE);
         civ.name = civ_name_generator(planet, i, civ.species_tag, civ.gov_type, rng);
@@ -150,10 +148,10 @@ inline void planet_build_evaluate_move_option(std::vector<int> &candidates, plan
 }
 
 inline void planet_build_run_movement(planet_t &planet, rltk::random_number_generator &rng,
-    unimportant_person_t &peep, std::size_t &peep_id, boost::container::flat_map<std::string, raw_species_t>::iterator &species)
+    unimportant_person_t &peep, std::size_t &peep_id, raw_species_t &species)
 {
     // No movement for kids
-    if (peep.age < species->second.child_age) return;
+    if (peep.age < species.child_age) return;
 
     int chance_of_movement = 5;
     switch (peep.occupation) {
@@ -200,11 +198,11 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased) {
             // Lookups
-            auto species = species_defs.find(peep.species_tag);
+            auto species = get_species_def(peep.species_tag);
 
             // Age and natural death
             ++peep.age;
-            if (peep.age > species->second.max_age) {
+            if (peep.age > species.max_age) {
                 peep.deceased = true;
                 peep_killer.push_back(peep_id);
             }
@@ -216,9 +214,9 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
             }
 
             // Births
-            if (!peep.deceased && !peep.male && peep.age > species->second.child_age) {
+            if (!peep.deceased && !peep.male && peep.age > species.child_age) {
                 int birth_chance = 7 - planet.civs.civs[peep.civ_id].tech_level/2;
-                int max_age = species->second.max_age;
+                int max_age = species.max_age;
                 int age_bonus = std::max(10-max_age/30, 5);
                 birth_chance += age_bonus;
                 if (peep.married) birth_chance += 7;
@@ -231,11 +229,11 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
             planet_build_run_movement(planet, rng, peep, peep_id, species);
 
             // Marriages
-            if (!peep.deceased && peep.age > species->second.child_age && peep.married == false && rng.roll_dice(1,10)>7) {
+            if (!peep.deceased && peep.age > species.child_age && peep.married == false && rng.roll_dice(1,10)>7) {
                 int peep2_id = 0;
                 for (auto &peep2 : planet.civs.unimportant_people) {
                     if (!peep2.deceased && peep.male == !peep2.male && !peep2.married && peep.world_x == peep2.world_x 
-                        && peep.world_y == peep2.world_y && peep2.age > species->second.child_age) {
+                        && peep.world_y == peep2.world_y && peep2.age > species.child_age) {
                         peep.married = true;
                         peep2.married = true;
                         peep2.married_to = peep_id;
@@ -277,8 +275,8 @@ inline void planet_build_run_relocations(planet_t &planet, rltk::random_number_g
                 peep.world_y = planet.civs.unimportant_people[peep.married_to].world_y;
             }
         } else if (!peep.deceased) {
-            auto species = species_defs.find(peep.species_tag);
-            if (peep.age < species->second.child_age) {
+            auto species = get_species_def(peep.species_tag);
+            if (peep.age < species.child_age) {
                 if (!planet.civs.unimportant_people[peep.mother_id].deceased) {
                     peep.world_x = planet.civs.unimportant_people[peep.mother_id].world_x;
                     peep.world_y = planet.civs.unimportant_people[peep.mother_id].world_y;
@@ -387,10 +385,10 @@ inline void planet_build_run_empty_settlements(planet_t &planet, boost::containe
 inline int planet_build_ethics_difference(planet_t &planet, const int civ1, const int civ2) {
     const std::string species1 = planet.civs.civs[civ1].species_tag;
     const std::string species2 = planet.civs.civs[civ2].species_tag;
-    auto s1 = species_defs.find(species1);
-    auto s2 = species_defs.find(species2);
+    auto s1 = get_species_def(species1);
+    auto s2 = get_species_def(species2);
 
-    if (s1->second.alignment == s2->second.alignment) return 3;
+    if (s1.alignment == s2.alignment) return 3;
     return -10;
 }
 

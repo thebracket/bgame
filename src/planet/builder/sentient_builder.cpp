@@ -13,9 +13,9 @@
 #include "../../components/viewshed.hpp"
 #include "../../components/position.hpp"
 
-int sentient_stat_mod(boost::container::flat_map<std::string, raw_species_t>::iterator &species, const std::string &stat) {
-    auto finder = species->second.stat_mods.find(stat);
-    if (finder == species->second.stat_mods.end()) return 0;
+int sentient_stat_mod(raw_species_t &species, const std::string &stat) {
+    auto finder = species.stat_mods.find(stat);
+    if (finder == species.stat_mods.end()) return 0;
     return finder->second;
 }
 
@@ -27,11 +27,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 
     species.tag = planet.civs.unimportant_people[person_id].species_tag;
     std::cout << species.tag << "\n";
-    auto species_finder = species_defs.find(species.tag);
-    if (species_finder == species_defs.end()) {
-        std::cout << "WARNING: Could not find raws for [" << species.tag << "]\n";
-        return;
-    }
+    auto species_finder = get_species_def(species.tag);
     if (planet.civs.unimportant_people[person_id].male) {
         species.gender = MALE;
     } else {
@@ -63,8 +59,8 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 
     auto sentient = create_entity()
         ->assign(position_t{x,y,z})
-        ->assign(name_t{ species_finder->second.name, profession[profidx].name })
-        ->assign(renderable_t{ species_finder->second.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
+        ->assign(name_t{ species_finder.name, profession[profidx].name })
+        ->assign(renderable_t{ species_finder.glyph ,rltk::colors::WHITE, rltk::colors::BLACK })
         ->assign(viewshed_t{ 6, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
@@ -72,7 +68,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ->assign(std::move(species));
     std::cout << "Sentient #" << sentient->id << "\n";
     if (announce) {
-        emit_deferred(log_message{LOG().col(rltk::colors::CYAN)->text(species_finder->second.name)->text(" ")->text(profession[profidx].name)->col(rltk::colors::WHITE)->text(" has arrived.")->chars});
+        emit_deferred(log_message{LOG().col(rltk::colors::CYAN)->text(species_finder.name)->text(" ")->text(profession[profidx].name)->col(rltk::colors::WHITE)->text(" has arrived.")->chars});
     }
 
     for (auto item : profession[profidx].starting_clothes) {

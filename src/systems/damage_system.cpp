@@ -176,17 +176,13 @@ void damage_system::creature_attacks() {
         auto attacker = entity(msg.attacker);
         if (!attacker) break;
         auto attack_species = attacker->component<species_t>();
-        auto creature = creature_defs.find(attack_species->tag);
+        auto creature = get_creature_def(attack_species->tag);
 
         auto defender = entity(msg.victim);
         if (!defender) break;
         auto defender_stats = defender->component<game_stats_t>();
 
-        if (creature == creature_defs.end()) {
-            std::cout << "Undefined species - " << attack_species->tag << "\n";
-            return;
-        }
-        for (const creature_attack_t &weapon : creature->second.attacks) {
+        for (const creature_attack_t &weapon : creature.attacks) {
             LOG ss;
             ss.other_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with its ")->col(rltk::colors::YELLOW)->text(weapon.type)->col(rltk::colors::WHITE)->text(". ");
             const int hit_roll = rng.roll_dice(1,20) + weapon.hit_bonus;

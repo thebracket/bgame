@@ -64,8 +64,8 @@ int calculate_armor_class(entity_t &entity) {
 	if (grazer) {
 		auto species = entity.component<species_t>();
 		if (species) {
-			auto finder = creature_defs.find(species->tag);
-			if (finder != creature_defs.end()) return finder->second.armor_class;
+			auto finder = get_creature_def(species->tag);
+			return finder.armor_class;
 		} 
 	}
 

@@ -254,9 +254,6 @@ extern std::vector<biome_type_t> biome_defs;
 extern boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 extern std::vector<plant_t> plant_defs;
 
-extern boost::container::flat_map<std::string, raw_species_t> species_defs;
-extern boost::container::flat_map<std::string, raw_creature_t> creature_defs;
-
 void load_raws();
 uint8_t get_tile_type_index(const std::string name);
 uint16_t get_tile_contents_index(const std::string name);
@@ -274,3 +271,9 @@ bool is_material_idx_valid(const std::size_t &id);
 
 // Native population definition accessors
 std::vector<native_population_t>& get_native_professions(const std::string &tag);
+
+// Creature defs accessors
+raw_species_t& get_species_def(const std::string &tag);
+raw_creature_t& get_creature_def(const std::string &tag);
+std::size_t get_species_defs_size();
+std::string get_species_nth_tag(const int &n);

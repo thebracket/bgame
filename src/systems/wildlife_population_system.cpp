@@ -85,9 +85,8 @@ void wildlife_population_system::spawn_wildlife() {
             const std::size_t n_critters = biome_defs[biome_type].wildlife.size();
             const std::size_t critter_idx = rng.roll_dice(1, (int)n_critters)-1;
             const std::string critter_tag = biome_defs[biome_type].wildlife[critter_idx];
-            auto critter_def = creature_defs.find( critter_tag );
-            if (critter_def == creature_defs.end()) throw std::runtime_error("Could not find " + biome_defs[biome_type].wildlife[critter_idx]);
-            const int n_spawn = rng.roll_dice(critter_def->second.group_size_n_dice, critter_def->second.group_size_dice) + critter_def->second.group_size_mod;
+            auto critter_def = get_creature_def( critter_tag );
+            const int n_spawn = rng.roll_dice(critter_def.group_size_n_dice, critter_def.group_size_dice) + critter_def.group_size_mod;
 
             int edge = rng.roll_dice(1,4)-1;
             int base_x, base_y, base_z;
@@ -120,22 +119,22 @@ void wildlife_population_system::spawn_wildlife() {
                 if (rng.roll_dice(1,4)<=2) male = false;
 
                 position_t pos{base_x, base_y, base_z};
-                renderable_t render{ critter_def->second.glyph, critter_def->second.fg, rltk::colors::BLACK };
+                renderable_t render{ critter_def.glyph, critter_def.fg, rltk::colors::BLACK };
                 name_t name{};
-                name.first_name = critter_def->second.name;
+                name.first_name = critter_def.name;
                 if (male) {
-                    name.last_name = critter_def->second.male_name;
+                    name.last_name = critter_def.male_name;
                 } else {
-                    name.last_name = critter_def->second.female_name;
+                    name.last_name = critter_def.female_name;
                 }
                 species_t species{};
-                species.tag = critter_def->second.tag;
+                species.tag = critter_def.tag;
                 if (male) { species.gender = MALE; } else { species.gender = FEMALE; }
 
                 game_stats_t stats;
                 stats.profession_tag = "Wildlife";
                 stats.age = 1;
-                for (auto it=critter_def->second.stats.begin(); it!=critter_def->second.stats.end(); ++it) {
+                for (auto it=critter_def.stats.begin(); it!=critter_def.stats.end(); ++it) {
                     if (it->first == "str") stats.strength = it->second;
                     if (it->first == "dex") stats.dexterity = it->second;
                     if (it->first == "con") stats.constitution = it->second;
@@ -144,13 +143,13 @@ void wildlife_population_system::spawn_wildlife() {
                     if (it->first == "cha") stats.charisma = it->second;
                 }
 
-                if (critter_def->second.ai == creature_grazer) {
+                if (critter_def.ai == creature_grazer) {
                     auto critter = create_entity()
                         ->assign(std::move(pos))
                         ->assign(std::move(render))
                         ->assign(std::move(name))
                         ->assign(std::move(species))
-                        ->assign(std::move(create_health_component_creature(critter_def->second.tag)))
+                        ->assign(std::move(create_health_component_creature(critter_def.tag)))
                         ->assign(grazer_ai{ stat_modifier(stats.dexterity) })
                         ->assign(std::move(stats))
                         ->assign(viewshed_t(6, false, false))

@@ -59,8 +59,8 @@ void sentient_ai_system::update(const double ms) {
                 for (const std::size_t other_entity : view.visible_entities) {
 
                     bool vegetarian = false;                    
-                    auto finder = species_defs.find(planet.civs.unimportant_people[ai.person_id].species_tag);
-                    if (finder != species_defs.end() && finder->second.diet == diet_herbivore) vegetarian = true;
+                    auto finder = get_species_def(planet.civs.unimportant_people[ai.person_id].species_tag);
+                    if (finder.diet == diet_herbivore) vegetarian = true;
 
 					auto other_ptr = rltk::entity(other_entity);
                     if (other_ptr) {

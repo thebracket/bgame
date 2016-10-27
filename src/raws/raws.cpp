@@ -1326,3 +1326,31 @@ std::vector<native_population_t>& get_native_professions(const std::string &tag)
         return finder->second;
     }
 }
+
+raw_species_t& get_species_def(const std::string &tag) {
+    auto finder = species_defs.find(tag);
+    if (finder == species_defs.end()) {
+        throw std::runtime_error(std::string("Cannot find ") + tag);
+    } else {
+        return finder->second;
+    }
+}
+
+raw_creature_t& get_creature_def(const std::string &tag) {
+    auto finder = creature_defs.find(tag);
+    if (finder == creature_defs.end()) {
+        throw std::runtime_error(std::string("Cannot find ") + tag);
+    } else {
+        return finder->second;
+    }
+}
+
+std::size_t get_species_defs_size() {
+    return species_defs.size();
+}
+
+std::string get_species_nth_tag(const int &roll) {
+    auto it = species_defs.begin();
+    for (int i=0; i<roll; ++i) ++it;
+    return it->first;
+}

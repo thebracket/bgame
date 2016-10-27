@@ -20,14 +20,13 @@ void display_sentient_info() {
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = species_defs.find(species->tag);
-    if (species_finder == species_defs.end()) std::cout << "WARNING: Could not find tag for species: " << species->tag << "\n";
+    auto species_finder = get_species_def(species->tag);
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;
 
     std::stringstream header2;
-    header2 << species->gender_str() << " " << species_finder->second.name;
+    header2 << species->gender_str() << " " << species_finder.name;
 
     std::stringstream header3;
     header3 << "Member of: " << planet.civs.civs[planet.civs.unimportant_people[ai->person_id].civ_id].name;
@@ -47,7 +46,7 @@ void display_sentient_info() {
         emit_deferred(recalculate_mining_message{});
     });
     dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+2, header2.str(), rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+3, species_finder->second.description, rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
+    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+3, species_finder.description, rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
     dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+4, header3.str(), rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
 
     // Display health
@@ -87,14 +86,13 @@ void display_grazer_info() {
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = creature_defs.find(species->tag);
-    if (species_finder == creature_defs.end()) std::cout << "WARNING: Could not find tag for species: " << species->tag << "\n";
+    auto species_finder = get_species_def(species->tag);
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;
 
     std::stringstream header2;
-    header2 << species->gender_str() << " " << species_finder->second.name;
+    header2 << species->gender_str() << " " << species_finder.name;
 
     std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(header.str(), [] () { 
         // On close
@@ -103,7 +101,7 @@ void display_grazer_info() {
         emit_deferred(recalculate_mining_message{});
     });
     dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+2, header2.str(), rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+3, species_finder->second.description, rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
+    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+3, species_finder.description, rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
 
     // Display health
     int y = box.top+6;
