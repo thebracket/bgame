@@ -5,6 +5,7 @@
 #include "builder/biome_builder.hpp"
 #include "builder/region_builder.hpp"
 #include "builder/history_builder.hpp"
+#include "builder/river_builder.hpp"
 #include "../FastNoise/FastNoise.h"
 
 #include <atomic>
