@@ -80,7 +80,7 @@ std::vector<std::pair<double,std::size_t>> find_possible_biomes(std::unordered_m
 	std::vector<std::pair<double,std::size_t>> result;
 
 	std::size_t idx = 0;
-	for (const biome_type_t &bt : biome_defs) {
+	for (const biome_type_t &bt : get_biome_defs()) {
 		if (biome.mean_temperature >= bt.min_temp && biome.mean_temperature <= bt.max_temp 
 			&& biome.mean_rainfall >= bt.min_rain && biome.mean_rainfall <= bt.max_rain
 			&& biome.warp_mutation >= bt.min_mutation && biome.warp_mutation <= bt.max_mutation) {

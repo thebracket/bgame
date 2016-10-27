@@ -236,9 +236,10 @@ void region_t::calc_render(const int &idx) {
 			} 
 
 			if (tile_vegetation_type[idx]>0) {
-				const float damage_pct = (float)tile_hit_points[idx] / 10.0F;				
-				fg = lerp(fg, plant_defs[tile_vegetation_type[idx]].fg, damage_pct);
-				bg = plant_defs[tile_vegetation_type[idx]].bg;
+				const float damage_pct = (float)tile_hit_points[idx] / 10.0F;
+				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);				
+				fg = lerp(fg, plant.fg, damage_pct);
+				bg = plant.bg;
 			}
 		} break;
 		case tile_type::STAIRS_UP : {
@@ -266,9 +267,10 @@ void region_t::calc_render(const int &idx) {
 
 			if (tile_vegetation_type[idx]>0) {
 				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
-				glyph = plant_defs[tile_vegetation_type[idx]].glyph;
-				fg = plant_defs[tile_vegetation_type[idx]].fg;
-				bg = plant_defs[tile_vegetation_type[idx]].bg;
+				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
+				glyph = plant.glyph;
+				fg = plant.fg;
+				bg = plant.bg;
 			}
 		} break;
 		case tile_type::TREE_TRUNK : {

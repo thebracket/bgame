@@ -82,9 +82,9 @@ void wildlife_population_system::spawn_wildlife() {
     for (uint8_t i=0; i<4; ++i) {
         if (group_populations[i] == 0) {
             const std::size_t biome_type = planet.biomes[current_region->biome_idx].type;
-            const std::size_t n_critters = biome_defs[biome_type].wildlife.size();
+            const std::size_t n_critters = get_biome_def(biome_type).wildlife.size();
             const std::size_t critter_idx = rng.roll_dice(1, (int)n_critters)-1;
-            const std::string critter_tag = biome_defs[biome_type].wildlife[critter_idx];
+            const std::string critter_tag = get_biome_def(biome_type).wildlife[critter_idx];
             auto critter_def = get_creature_def( critter_tag );
             const int n_spawn = rng.roll_dice(critter_def.group_size_n_dice, critter_def.group_size_dice) + critter_def.group_size_mod;
 

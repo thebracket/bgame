@@ -104,7 +104,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	}
 	if (current_region->tile_type[tile_idx] == tile_type::FLOOR && !current_region->tile_flags[tile_idx].test(CONSTRUCTION)) {
 		if (current_region->tile_vegetation_type[tile_idx] > 0) {
-			lines.push_back(plant_defs[current_region->tile_vegetation_type[tile_idx]].name);
+			lines.push_back(get_plant_def(current_region->tile_vegetation_type[tile_idx]).name);
 		}
 	}
 

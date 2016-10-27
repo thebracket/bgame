@@ -245,10 +245,6 @@ extern boost::container::flat_map<std::string, building_def_t> building_defs;
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
 extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
-extern std::vector<biome_type_t> biome_defs;
-extern boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
-extern std::vector<plant_t> plant_defs;
-
 // Initializer
 void load_raws();
 
@@ -276,3 +272,10 @@ raw_species_t& get_species_def(const std::string &tag);
 raw_creature_t& get_creature_def(const std::string &tag);
 std::size_t get_species_defs_size();
 std::string get_species_nth_tag(const int &n);
+
+// Biome accessors
+biome_type_t& get_biome_def(const std::size_t &index);
+std::size_t get_plant_idx(const std::string &tag);
+plant_t& get_plant_def(const std::size_t &index);
+std::vector<plant_t>& get_plant_defs();
+std::vector<biome_type_t>& get_biome_defs();

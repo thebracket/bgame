@@ -19,7 +19,7 @@ using namespace rltk;
 inline std::pair<biome_t, biome_type_t> get_biome_for_region(planet_t &planet, const std::pair<int,int> &region) {
     const int idx = planet.idx(region.first, region.second);
     const int biome_idx = planet.landblocks[idx].biome_idx;
-    return std::make_pair( planet.biomes[biome_idx], biome_defs[planet.biomes[biome_idx].type] );
+    return std::make_pair( planet.biomes[biome_idx], get_biome_def(planet.biomes[biome_idx].type) );
 }
 
 inline void zero_map(region_t &region) {

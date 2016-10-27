@@ -1354,3 +1354,28 @@ std::string get_species_nth_tag(const int &roll) {
     for (int i=0; i<roll; ++i) ++it;
     return it->first;
 }
+
+biome_type_t& get_biome_def(const std::size_t &index) {
+    return biome_defs[index];
+}
+
+std::size_t get_plant_idx(const std::string &tag) {
+    auto finder = plant_defs_idx.find(tag);
+    if (finder == plant_defs_idx.end()) {
+        throw std::runtime_error(std::string("Cannot find ") + tag);
+    } else {
+        return finder->second;
+    }
+}
+
+plant_t& get_plant_def(const std::size_t &index) {
+    return plant_defs[index];
+}
+
+std::vector<plant_t>& get_plant_defs() {
+    return plant_defs;
+}
+
+std::vector<biome_type_t>& get_biome_defs() {
+    return biome_defs;
+}
