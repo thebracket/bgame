@@ -237,11 +237,6 @@ extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
 
-extern boost::container::flat_map<uint8_t, tile_type_t> tile_types;
-extern boost::container::flat_map<std::string, uint8_t> tile_type_index;
-extern boost::container::flat_map<uint16_t, tile_content_t> tile_contents;
-extern boost::container::flat_map<std::string, uint16_t> tile_contents_index;
-
 extern boost::container::flat_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;
 
@@ -254,10 +249,14 @@ extern std::vector<biome_type_t> biome_defs;
 extern boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 extern std::vector<plant_t> plant_defs;
 
+// Initializer
 void load_raws();
+
+// Tile accessors
 uint8_t get_tile_type_index(const std::string name);
 uint16_t get_tile_contents_index(const std::string name);
 
+// Item creation
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material);
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
