@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 
+# Boost
+include(${PROJECT_SOURCE_DIR}/../cmake_modules/utils.cmake)
+include(${PROJECT_SOURCE_DIR}/../cmake_modules/add_boost.cmake)
 
 # Build Lua
 add_subdirectory(lua)
@@ -9,9 +12,11 @@ add_subdirectory(sfml)
 
 # Build Zlib
 add_subdirectory(zlib)
+set_target_properties(example PROPERTIES EXCLUDE_FROM_ALL 1)
+set_target_properties(minigzip PROPERTIES EXCLUDE_FROM_ALL 1)
 
 # Build RLTK
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${BoostSourceDir})
 add_library(rltk rltk/rltk/rltk.cpp
 	rltk/rltk/texture_resources.cpp
 	rltk/rltk/color_t.cpp
@@ -28,10 +33,9 @@ add_library(rltk rltk/rltk/rltk.cpp
 	rltk/rltk/perlin_noise.cpp
 	rltk/rltk/rexspeeder.cpp
 	)
-target_link_libraries(rltk ${Boost_LIBRARIES})
-target_link_libraries(rltk ${ZLIB_LIBRARIES})
+target_link_libraries(rltk ${BoostSystemLibs} ${BoostFilesystemLibs} ${BoostContainerLibs})
 target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)
-target_link_libraries(rltk zlib)
+target_link_libraries(rltk zlibstatic)
 
 # Build FastNoise
 add_library(FastNoise FastNoise/FastNoise.cpp)

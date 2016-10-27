@@ -7,22 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -Wpedantic -march=native -mtune=native -pthread -g -fopenmp")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -pthread -flto")
 
+option(USE_BOOST_CACHE "If ON, try to download, extract and build boost to a single cache directory for all MaidSafe clones" ON)
+option(BOOST_DISABLE_ASSERTS "If ON, all BOOST_ASSERTs and BOOST_VERIFYs are disabled" OFF)
+
 include_directories(external/sfml/include)
 include_directories(external/rltk/rltk)
 include_directories(external/FastNoise)
 include_directories(external/lua/src)
 include_directories(external)
 
-# Require Boost
-set(Boost_USE_STATIC_LIBS      OFF) # only find static libs
-set(Boost_USE_MULTITHREADED    ON)
-set(Boost_USE_STATIC_RUNTIME   OFF)
-find_package(Boost COMPONENTS filesystem system iostreams REQUIRED)
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
-
 add_subdirectory(external)
+include_directories(${BoostSourceDir})
 
 add_subdirectory(components)
 add_subdirectory(planet)
