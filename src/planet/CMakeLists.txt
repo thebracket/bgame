@@ -13,5 +13,6 @@ add_library(planet STATIC
 	builder/river_builder.cpp
 	builder/regions/starting_point.cpp
 	builder/regions/heightmap.cpp
+	builder/regions/water_features.cpp
 )
 target_link_libraries(planet rltk raws FastNoise)
