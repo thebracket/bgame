@@ -46,6 +46,7 @@ add_library(systems STATIC
 	tasks/settler_job_status.cpp
 	tasks/settler_drop_tool.cpp
 	tasks/settler_cancel_action.cpp
+	tasks/settler_sleep.cpp
 	tasks/threat_scanner.cpp
 	tasks/world_queries.cpp
 )
