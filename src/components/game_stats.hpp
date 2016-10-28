@@ -55,7 +55,8 @@ const std::unordered_map<std::string, attributes_t> skill_table {
 	{ "Masonry", strength },
 	{ "Furnace Operation", dexterity },
 	{ "Glassmaking", dexterity },
-	{ "Metalworking", strength }
+	{ "Metalworking", strength },
+	{ "Swimming", strength }
 };
 
 enum skill_roll_result_t { CRITICAL_FAIL, FAIL, SUCCESS, CRITICAL_SUCCESS };

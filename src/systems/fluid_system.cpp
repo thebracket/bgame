@@ -3,6 +3,9 @@
 #include "../main/game_globals.hpp"
 #include "../components/water_spawner.hpp"
 #include "../components/position.hpp"
+#include "../components/health.hpp"
+#include "../components/game_stats.hpp"
+#include "../messages/inflict_damage_message.hpp"
 #include <algorithm>
 
 namespace fluids {
@@ -107,6 +110,7 @@ void do_fluids()
         case 3 : { start_z = THREE_QUARTERS; end_z = REGION_DEPTH-1; } break;
     }
 
+    #pragma omp parallel for
     for (int z=start_z; z<end_z; ++z) {
         do_layer(z, did_something);
     }
@@ -134,6 +138,24 @@ void fluid_system::update(const double ms) {
         for (std::size_t i=0; i<REGION_TILES_COUNT; ++i) {
             if (current_region->water_level[i] == 1 && rng.roll_dice(1,6)==6) current_region->water_level[i] = 0;
         }
+
+        parallel_each<position_t>([] (entity_t &e, position_t &pos) {
+            if (current_region->water_level[mapidx(pos)] > 7) {
+                bool is_drowning = true;
+
+                auto stats = e.component<game_stats_t>();
+                if (stats) {
+                    if (skill_roll(e.id, stats.get(), rng, "Swimming", DIFFICULTY_AVERAGE) > FAIL) is_drowning = false;
+                }
+
+                if (is_drowning) {
+                    auto health = e.component<health_t>();
+                    if (health) {
+                        emit_deferred(inflict_damage_message{e.id, rng.roll_dice(1,4), "Drowning"});
+                    }
+                }
+            }
+        });
     }
 
     std::queue<tick_message> * ticks = mbox<tick_message>();
@@ -142,7 +164,7 @@ void fluid_system::update(const double ms) {
         std::fill(current_region->water_moved.begin(), current_region->water_moved.end(), false);
         fluids::do_fluids();
 
-        each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
+        parallel_each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
             const auto idx = mapidx(pos.x, pos.y, pos.z);
             if (w.spawner_type == 1 || w.spawner_type == 2) {
                 // TODO: When rainfall is implemented, type 1 only spawns when it rains
@@ -151,6 +173,6 @@ void fluid_system::update(const double ms) {
                 // Type 3 removes water - used to make rivers flow downhill
                 if (current_region->water_level[idx] > 0) current_region->water_level[idx] = 0;
             }
-        });
+        });        
 	}
 }
