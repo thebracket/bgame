@@ -85,6 +85,8 @@ void tick(double duration_ms) {
 			if (quitting) {
 				save_game();
 				game.destroy();
+				delete_all_entities();
+				delete_all_systems();
 				mode = MAIN_MENU;
 				menu.init();
 			} else if (game_config.autosave_minutes > 0) {
