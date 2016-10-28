@@ -191,11 +191,16 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 				}
 			}
 
-			// Change status to drop axe
-			emit_deferred(map_dirty_message{});
-			emit_deferred(inventory_changed_message{});
-			ai.job_type_minor = JM_DROP_AXE;
-			change_job_status(ai, name, "Dropping axe");
+			// Change status to drop axe or continue
+			if (designations->chopping.empty()) {
+				emit_deferred(map_dirty_message{});
+				emit_deferred(inventory_changed_message{});
+				ai.job_type_minor = JM_DROP_AXE;
+				change_job_status(ai, name, "Dropping axe");
+			} else {
+				ai.job_type_minor = JM_FIND_TREE;
+				change_job_status(ai, name, "Pathing to chopping site");
+			}
 		} else if (skill_check == CRITICAL_FAIL) {
 			// Damage yourself
 			emit_deferred(inflict_damage_message{e.id, 1, "Lumberjacking Accident"});
