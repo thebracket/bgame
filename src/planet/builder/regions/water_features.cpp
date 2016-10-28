@@ -9,7 +9,7 @@ void add_dig_target(int X, int Y, int radius, int depth, boost::container::flat_
         for (int x=0-radius; x<radius; ++x) {
             const int actual_x = X+x;
             const int actual_y = Y+y;
-            if (actual_x > 0 && actual_x < REGION_WIDTH && actual_y > 0 && actual_y < REGION_HEIGHT) {
+            if (actual_x > -1 && actual_x < REGION_WIDTH && actual_y > -1 && actual_y < REGION_HEIGHT) {
                 const int idx = (actual_y * REGION_WIDTH) + actual_x;                
                 if (dig_targets.find(idx) == dig_targets.end()) {
                     const bool has_water = pooled_water[idx] > 0;
@@ -85,7 +85,7 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
     boost::container::flat_map<int, region_water_feature_tile> dig_targets;
 
     auto dig_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
-        add_dig_target(X, Y, 3, 2, dig_targets, pooled_water, heightmap);
+        add_dig_target(X, Y, 3, 3, dig_targets, pooled_water, heightmap);
     };
     auto dig_exit_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
         add_dig_target(X, Y, 4, 3, dig_targets, pooled_water, heightmap);
@@ -93,25 +93,25 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
 
     for (int i=0; i<river_entry[0]; ++i) {
         int start_x = 0;
-        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
+        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4 -1;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[1]; ++i) {
-        int start_x = REGION_WIDTH;
-        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
+        int start_x = REGION_WIDTH-1;
+        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4 -1;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[2]; ++i) {
-        int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
+        int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4-1;
         int start_y = 0;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[3]; ++i) {
-        int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
-        int start_y = REGION_HEIGHT;
+        int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4-1;
+        int start_y = REGION_HEIGHT-1;
         line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }
