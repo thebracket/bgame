@@ -75,7 +75,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
     zero_map(region);
-    lay_strata(region, heightmap, biome, *strata, rng, pooled_water, water_spawners);
+    lay_strata(region, heightmap, biome, strata, rng, pooled_water, water_spawners);
 
     // Build ramps and beaches
     build_ramps(region);

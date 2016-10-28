@@ -2,9 +2,8 @@
 #include "../../planet_builder.hpp"
 #include "../../components/water_spawner.hpp"
 
-std::unique_ptr<strata_t> build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
-    std::unique_ptr<strata_t> result_ptr = std::make_unique<strata_t>();
-    strata_t result = *result_ptr;
+strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
+    strata_t result;
     result.strata_map.resize(REGION_TILES_COUNT);
 
     std::vector<std::size_t> soils;
@@ -16,9 +15,11 @@ std::unique_ptr<strata_t> build_strata(region_t &region, std::vector<uint8_t> &h
 
     set_worldgen_status("Locating strata");
     const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
-    result.strata_map.resize(n_strata);
+    result.strata_map.resize(REGION_TILES_COUNT);
     result.material_idx.resize(n_strata);
+    std::fill(result.strata_map.begin(), result.strata_map.end(), 1);
     std::fill(result.material_idx.begin(), result.material_idx.end(), 1);
+    std::fill(result.counts.begin(), result.counts.end(), std::make_tuple<int,int,int,int>(0,0,0,0));
     result.counts.resize(n_strata);
 
     FastNoise biome_noise(planet.perlin_seed + (region.region_y * REGION_WIDTH ) + region.region_x);
@@ -30,15 +31,18 @@ std::unique_ptr<strata_t> build_strata(region_t &region, std::vector<uint8_t> &h
             const float Y = (float)y*8.0F;
             for (int x=0; x<REGION_HEIGHT; ++x) {
                 const float X = (float)x*8.0F;
-                const float biome_ramp = (biome_noise.GetCellular(X,Y,Z) + 1.0F)/2.0F;
-                int biome_idx = biome_ramp * n_strata;
+                const float cell_noise = biome_noise.GetCellular(X,Y,Z);
+                const float biome_ramp = (cell_noise + 2.0F)/4.0F;
+                assert(biome_ramp > 0.0F);
+                assert(biome_ramp < 1.0F);
+                int biome_idx = static_cast<int>(biome_ramp * (float)n_strata);
                 ++std::get<0>(result.counts[biome_idx]);
                 std::get<1>(result.counts[biome_idx]) += x;
                 std::get<2>(result.counts[biome_idx]) += y;
                 std::get<3>(result.counts[biome_idx]) += z;
                 const int map_idx = mapidx(x,y,z);
                 result.strata_map[map_idx] = biome_idx;
-                //std::cout << x << "/" << y << "/" << z << " : " << X << "/" << Y << "/" << Z << " = " << biome_ramp << " : " << biome_idx << "\n";
+                //std::cout << x << "/" << y << "/" << z << " : " << X << "/" << Y << "/" << Z << " = " << cell_noise << "/" << biome_ramp << " : " << biome_idx << "\n";
             }
         }
     }
@@ -79,13 +83,13 @@ std::unique_ptr<strata_t> build_strata(region_t &region, std::vector<uint8_t> &h
                 result.material_idx[i] = igneouses[ig_idx];
             }
         } else {
-            std::cout << "Warning - we didn't think this strata was in use!\n";
+            //std::cout << "Warning - we didn't think this strata was in use!\n";
             result.material_idx[i] = 1;
         }
     }
     std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
 
-    return result_ptr;
+    return result;
 }
 
 void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, uint8_t>> &water_spawners) {
@@ -130,8 +134,10 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                         material_idx = strata.material_idx[strata_idx];
                     } else {
                         material_idx = 1;
+                        std::cout << "Warning - exceeded strata_material size\n";
                     }
                 } else {
+                    std::cout << "Warning - exceeded strata_map size (" << strata.strata_map.size() << ")\n";
                     material_idx = 1;
                 }
                 region.tile_material[mapidx(x,y,z)] = material_idx;
