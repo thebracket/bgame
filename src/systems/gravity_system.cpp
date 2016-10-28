@@ -127,7 +127,7 @@ void gravity_system::update(const double ms) {
         });
 
         // See if any entities need to fall
-        each<position_t>([&falling_entities] (entity_t &e, position_t &pos) {
+        parallel_each<position_t>([&falling_entities] (entity_t &e, position_t &pos) {
             if (falling_entities.find(e.id) == falling_entities.end()) { // Ignore entities that are already falling
                 const auto idx = mapidx(pos.x, pos.y, pos.z);
                 const auto idx_below = mapidx(pos.x, pos.y, pos.z);
