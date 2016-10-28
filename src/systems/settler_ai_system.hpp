@@ -15,9 +15,6 @@ private:
 	void move_to(entity_t &e, position_t &pos, position_t &destination);
 	void wander_randomly(entity_t &entity, position_t &pos);
 
-	bool butcher_exist() const;
-	bool butcher_and_corpses_exist() const;
-
 	void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 	void do_leisure_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 	void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);

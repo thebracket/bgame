@@ -47,5 +47,6 @@ add_library(systems STATIC
 	tasks/settler_drop_tool.cpp
 	tasks/settler_cancel_action.cpp
 	tasks/threat_scanner.cpp
+	tasks/world_queries.cpp
 )
 target_link_libraries(systems rltk utils components raws)

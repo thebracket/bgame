@@ -28,6 +28,7 @@
 #include "../components/lightsource.hpp"
 #include "../components/falling.hpp"
 #include "tasks/threat_scanner.hpp"
+#include "tasks/world_queries.hpp"
 
 #include <iostream>
 #include <map>
@@ -143,32 +144,6 @@ void settler_ai_system::wander_randomly(entity_t &entity, position_t &original) 
 	render->foreground = rltk::colors::YELLOW;
 	render->glyph = 1;
 	emit_deferred(entity_wants_to_move_randomly_message{entity.id});
-}
-
-bool settler_ai_system::butcher_exist() const {
-	bool butcher_exists = false;
-
-	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
-		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
-	});
-
-	return butcher_exists;
-}
-
-bool settler_ai_system::butcher_and_corpses_exist() const {
-	bool butcher_exists = false;
-	bool corpses_exist = false;
-
-	each<building_t>([&butcher_exists] (entity_t &e, building_t &b) {
-		if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
-	});
-	if (butcher_exists) {
-		each<corpse_harvestable>([&corpses_exist] (entity_t &e, corpse_harvestable &corpse) {
-			if (!corpse.claimed) corpses_exist = true;
-		});
-	}
-
-	return (butcher_exists && corpses_exist);
 }
 
 void settler_ai_system::configure() {
