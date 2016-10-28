@@ -14,6 +14,7 @@
 #include "../components/grazer_ai.hpp"
 #include "../components/species.hpp"
 #include "../raws/raws.hpp"
+#include "tasks/threat_scanner.hpp"
 
 using tasks::calculate_initiative;
 
@@ -53,62 +54,48 @@ void sentient_ai_system::update(const double ms) {
                 }
 
                 // Look for immediate threats
-                bool terrified = false;
-                float terror_distance = 1000.0F;
-                std::size_t closest_fear = 0;
-                for (const std::size_t other_entity : view.visible_entities) {
+                bool vegetarian = false;                    
+                auto finder = get_species_def(planet.civs.unimportant_people[ai.person_id].species_tag);
+                if (finder.diet == diet_herbivore) vegetarian = true;
 
-                    bool vegetarian = false;                    
-                    auto finder = get_species_def(planet.civs.unimportant_people[ai.person_id].species_tag);
-                    if (finder.diet == diet_herbivore) vegetarian = true;
-
-					auto other_ptr = rltk::entity(other_entity);
-                    if (other_ptr) {
-
-                        bool hostile_sentient = false;
-                        auto other_sentient = other_ptr->component<sentient_ai>();
-                        if (other_sentient) {
-                            const std::size_t my_civ = planet.civs.unimportant_people[ai.person_id].civ_id;
-                            const std::size_t their_civ = planet.civs.unimportant_people[other_sentient->person_id].civ_id;
-                            if (my_civ != their_civ) {
-                                auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
-                                if (civfinder != planet.civs.civs[my_civ].relations.end()) {
-                                    if (civfinder->second < 0) hostile_sentient = true;
-                                }
-                            } 
-                        }
-
-                        if ((other_ptr->component<grazer_ai>() && !vegetarian) || 
-                            (other_ptr->component<settler_ai_t>() && ai.hostile) ||
-                            hostile_sentient
-                            ) {
-                            terrified = true;
-                            auto other_pos = rltk::entity(other_entity)->component<position_t>();
-                            if (other_pos) {
-                                const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
-                                if (d < terror_distance) {
-                                    terror_distance = d;
-                                    closest_fear = other_entity;
-                                }
+                auto hostile = tasks::can_see_hostile(e, pos, view, [&vegetarian, &ai] (entity_t &other) {
+                    bool hostile_sentient = false;
+                    auto other_sentient = other.component<sentient_ai>();
+                    if (other_sentient) {
+                        const std::size_t my_civ = planet.civs.unimportant_people[ai.person_id].civ_id;
+                        const std::size_t their_civ = planet.civs.unimportant_people[other_sentient->person_id].civ_id;
+                        if (my_civ != their_civ) {
+                            auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
+                            if (civfinder != planet.civs.civs[my_civ].relations.end()) {
+                                if (civfinder->second < 0) hostile_sentient = true;
                             }
-                        }
+                        } 
                     }
-                }
 
-                if (terrified) {
+                    if ((other.component<grazer_ai>() && !vegetarian) || 
+                        (other.component<settler_ai_t>() && ai.hostile) ||
+                        hostile_sentient) 
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                if (hostile.terrified) {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
                     const float range = shooting_range(e, pos);
-					if (terror_distance < 1.5F) {
+					if (hostile.terror_distance < 1.5F) {
 						// Hit it with melee weapon
-						emit_deferred(settler_attack_message{e.id, closest_fear});
+						emit_deferred(settler_attack_message{e.id, hostile.closest_fear});
                         initiative_penalty += get_weapon_initiative_penalty(get_melee_id(e));
-					} else if ( range != -1 && range < terror_distance) {
+					} else if ( range != -1 && range < hostile.terror_distance) {
 						// Shoot it
-						emit_deferred(settler_ranged_attack_message{e.id, closest_fear});
+						emit_deferred(settler_ranged_attack_message{e.id, hostile.closest_fear});
                         initiative_penalty += get_weapon_initiative_penalty(get_ranged_and_ammo_id(e).first);
 					} else {
-                        emit_deferred(entity_wants_to_charge_message{e.id, closest_fear});
+                        emit_deferred(entity_wants_to_charge_message{e.id, hostile.closest_fear});
                         ai.goal = SENTIENT_GOAL_CHARGE;
 					}
 				} else {

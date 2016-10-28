@@ -6,6 +6,7 @@
 #include "../components/sentient_ai.hpp"
 #include "../components/renderable.hpp"
 #include "../components/health.hpp"
+#include "tasks/threat_scanner.hpp"
 
 using namespace rltk;
 
@@ -26,22 +27,15 @@ void grazer_ai_system::update(const double ms) {
         parallel_each<grazer_ai, position_t, viewshed_t>([this] (entity_t &e, grazer_ai &ai, position_t &pos, viewshed_t &view) {
             if (ai.initiative < 1) {
                 // Can we see anything scary?
-                bool terrified = false;
-                float terror_distance = 1000.0F;
-                std::size_t closest_fear = 0;
-                for (const std::size_t other_entity : view.visible_entities) {
-                    if (!entity(other_entity)) break;
-                    if (entity(other_entity)->component<settler_ai_t>() || entity(other_entity)->component<sentient_ai>()) {
-                        terrified = true;
-                        auto other_pos = entity(other_entity)->component<position_t>();
-                        const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
-                        if (d < terror_distance) {
-                            terror_distance = d;
-                            closest_fear = other_entity;
-                        }
-                    }
-                }
-                if (!terrified) {
+                auto hostile = tasks::can_see_hostile(e, pos, view, [] (entity_t &other) {
+                  if (other.component<settler_ai_t>() || other.component<sentient_ai>()) {
+                      return true;
+                  } else {
+                      return false;
+                  }
+                });
+
+                if (!hostile.terrified) {
                     // Handle the AI here
                     const auto idx = mapidx(pos.x, pos.y, pos.z);
                     if (current_region->tile_vegetation_type[idx] > 0) {
@@ -51,14 +45,14 @@ void grazer_ai_system::update(const double ms) {
                     }
                 } else {
                     // Poor creature is scared!
-                    if (terror_distance < 1.5F) {
+                    if (hostile.terror_distance < 1.5F) {
                         // Attack the target
                         auto health = entity(e.id)->component<health_t>();
                         if (health) {
-                            if (!health->unconscious) emit_deferred(creature_attack_message{e.id, closest_fear});
+                            if (!health->unconscious) emit_deferred(creature_attack_message{e.id, hostile.closest_fear});
                         }
                     } else {
-                        emit_deferred(entity_wants_to_flee_message{e.id, closest_fear});
+                        emit_deferred(entity_wants_to_flee_message{e.id, hostile.closest_fear});
                     }
                 }
 

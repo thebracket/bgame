@@ -27,6 +27,7 @@
 #include "../components/sentient_ai.hpp"
 #include "../components/lightsource.hpp"
 #include "../components/falling.hpp"
+#include "tasks/threat_scanner.hpp"
 
 #include <iostream>
 #include <map>
@@ -79,39 +80,28 @@ void settler_ai_system::update(const double duration_ms) {
 				}
 
 				// Do we have any hostiles to worry about?
-				bool terrified = false;
-				float terror_distance = 1000.0F;
-				std::size_t closest_fear = 0;
-				if (ai.job_type_minor != JM_SLEEP) {
-					for (const std::size_t other_entity : view.visible_entities) {
-						auto other_ptr = rltk::entity(other_entity);
-						if (other_ptr && ((other_ptr->component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE ) || 
-							(other_ptr->component<sentient_ai>() && other_ptr->component<sentient_ai>()->hostile))) {
-							terrified = true;
-							auto other_pos = rltk::entity(other_entity)->component<position_t>();
-							const float d = distance3d(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
-							if (d < terror_distance) {
-								terror_distance = d;
-								closest_fear = other_entity;
-							}
-						}
-					}
-				}
+				auto hostile = tasks::can_see_hostile(entity, pos, view, [&ai] (entity_t &other) {
+					if (ai.job_type_minor == JM_SLEEP) return false; // We don't spot anyone when sleeping
+					if (other.component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE) return true;
+					auto sentient = other.component<sentient_ai>();
+					if (sentient && sentient->hostile) return true;
+					return false;
+				});
 
-				if (terrified) {
+				if (hostile.terrified) {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
 					const int range = shooting_range(entity, pos);
-					if (terror_distance < 1.5F) {
+					if (hostile.terror_distance < 1.5F) {
 						// Hit it with melee weapon
-						emit_deferred(settler_attack_message{entity.id, closest_fear});
+						emit_deferred(settler_attack_message{entity.id, hostile.closest_fear});
 						initiative_penalty += get_weapon_initiative_penalty(get_melee_id(entity));
-					} else if (range != -1 && range < terror_distance) {
+					} else if (range != -1 && range < hostile.terror_distance) {
 						// Shoot it
-						emit_deferred(settler_ranged_attack_message{entity.id, closest_fear});
+						emit_deferred(settler_ranged_attack_message{entity.id, hostile.closest_fear});
 						initiative_penalty += get_weapon_initiative_penalty(get_ranged_and_ammo_id(entity).first);
 					} else {
-						emit_deferred(entity_wants_to_flee_message{entity.id, closest_fear});
+						emit_deferred(entity_wants_to_flee_message{entity.id, hostile.closest_fear});
 					}
 				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
 					|| ai.job_type_major == JOB_REACTION || ai.job_type_major == JOB_BUTCHER || ai.job_type_major == JOB_DECONSTRUCT) {
