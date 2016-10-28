@@ -40,6 +40,7 @@ add_library(systems STATIC
 	fluid_system.cpp
 	gravity_system.cpp
 	gui_elements.cpp
+	grazer_ai_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp

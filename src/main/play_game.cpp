@@ -78,6 +78,7 @@ void play_game::init() {
 	add_system<gravity_system>();
 	add_system<wildlife_population_system>();
 	add_system<sentient_ai_system>();
+	add_system<grazer_ai_system>();
 	add_system<corpse_system>();
 	add_system<particle_system>();
 	add_system<renderables_system>();

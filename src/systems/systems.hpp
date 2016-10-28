@@ -38,3 +38,4 @@
 #include "mode_sentient_info_system.hpp"
 #include "fluid_system.hpp"
 #include "gravity_system.hpp"
+#include "grazer_ai_system.hpp"
