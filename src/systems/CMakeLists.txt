@@ -46,8 +46,21 @@ add_library(systems STATIC
 	tasks/settler_job_status.cpp
 	tasks/settler_drop_tool.cpp
 	tasks/settler_cancel_action.cpp
+	tasks/settler_leisure.cpp
 	tasks/settler_sleep.cpp
 	tasks/threat_scanner.cpp
+	tasks/settler_wander.cpp
+	tasks/settler_work_time.cpp
 	tasks/world_queries.cpp
+	tasks/work_types/building_work.cpp
+	tasks/work_types/mining_work.cpp
+	tasks/work_types/chopping_work.cpp
+	tasks/work_types/reaction_work.cpp
+	tasks/work_types/equip_melee_work.cpp
+	tasks/work_types/equip_ranged_work.cpp
+	tasks/work_types/equip_armor_work.cpp
+	tasks/work_types/hunting_work.cpp
+	tasks/work_types/guard_duty.cpp
+	tasks/work_types/demolition_work.cpp
 )
 target_link_libraries(systems rltk utils components raws)
