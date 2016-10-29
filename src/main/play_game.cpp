@@ -107,6 +107,7 @@ void play_game::init() {
 	add_system<mode_civs_system>();
 	add_system<mode_standing_orders>();
 	add_system<mode_sentient_info_system>();
+	add_system<wish_system>();
 	add_system<log_system>();
 	add_system<gui_system>();
 

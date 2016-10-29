@@ -2,9 +2,67 @@
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
 
+bool collect_text = false;
+std::string input_text;
+
 void keyboard_system::configure() {
     system_name = "Keyboard Handler";
 	subscribe_mbox<key_pressed_t>();
+}
+
+void keyboard_system::process_input(sf::Event &e) {
+    char pressed=0;
+    switch (e.key.code) {
+        case sf::Keyboard::A : pressed = 'A'; break;
+        case sf::Keyboard::B : pressed = 'B'; break;
+        case sf::Keyboard::C : pressed = 'C'; break;
+        case sf::Keyboard::D : pressed = 'D'; break;
+        case sf::Keyboard::E : pressed = 'E'; break;
+        case sf::Keyboard::F : pressed = 'F'; break;
+        case sf::Keyboard::G : pressed = 'G'; break;
+        case sf::Keyboard::H : pressed = 'H'; break;
+        case sf::Keyboard::I : pressed = 'I'; break;
+        case sf::Keyboard::J : pressed = 'J'; break;
+        case sf::Keyboard::K : pressed = 'K'; break;
+        case sf::Keyboard::L : pressed = 'L'; break;
+        case sf::Keyboard::M : pressed = 'M'; break;
+        case sf::Keyboard::N : pressed = 'N'; break;
+        case sf::Keyboard::O : pressed = 'O'; break;
+        case sf::Keyboard::P : pressed = 'P'; break;
+        case sf::Keyboard::Q : pressed = 'Q'; break;
+        case sf::Keyboard::R : pressed = 'R'; break;
+        case sf::Keyboard::S : pressed = 'S'; break;
+        case sf::Keyboard::T : pressed = 'T'; break;
+        case sf::Keyboard::U : pressed = 'U'; break;
+        case sf::Keyboard::V : pressed = 'V'; break;
+        case sf::Keyboard::W : pressed = 'W'; break;
+        case sf::Keyboard::X : pressed = 'X'; break;
+        case sf::Keyboard::Y : pressed = 'Y'; break;
+        case sf::Keyboard::Z : pressed = 'Z'; break;
+        case sf::Keyboard::Num0 : pressed = '0'; break;
+        case sf::Keyboard::Num1 : pressed = '1'; break;
+        case sf::Keyboard::Num2 : pressed = '2'; break;
+        case sf::Keyboard::Num3 : pressed = '3'; break;
+        case sf::Keyboard::Num4 : pressed = '4'; break;
+        case sf::Keyboard::Num5 : pressed = '5'; break;
+        case sf::Keyboard::Num6 : pressed = '6'; break;
+        case sf::Keyboard::Num7 : pressed = '7'; break;
+        case sf::Keyboard::Num8 : pressed = '8'; break;
+        case sf::Keyboard::Num9 : pressed = '9'; break;
+        case sf::Keyboard::Space : pressed = ' '; break;
+        case sf::Keyboard::BackSpace : pressed = 1; break;
+        case sf::Keyboard::Return : pressed = 2; break;
+    }
+
+    if (pressed == 1 && !input_text.empty()) {
+        input_text = input_text.substr(0, input_text.size()-1);
+    }
+
+    if (pressed>='A' && pressed <='Z' && !e.key.shift) pressed += 32;
+
+    if (pressed == 2) collect_text = false;
+
+    if (pressed > 2) input_text += pressed;
 }
 
 void keyboard_system::update(const double ms) {
@@ -13,18 +71,8 @@ void keyboard_system::update(const double ms) {
     while (!messages->empty()) {
 		key_pressed_t e = messages->front();
 
-         // Test features - will be replaced by make a wish
-        if (game_master_mode == PLAY) {
-            if (e.event.key.code == sf::Keyboard::R && e.event.key.shift) {
-                std::cout << "Let it rain!\n";
-                for (int y=1; y<REGION_HEIGHT-1; ++y) {
-                    for (int x=1; x<REGION_WIDTH-1; ++x) {
-                        current_region->water_level[mapidx(x,y,REGION_DEPTH-2)] = 3;
-                    }
-                }
-            }
-        }
-
+        if (collect_text) process_input(e.event);
+        
         // Global commands
         if (e.event.key.code == sf::Keyboard::Q) quitting = true;
         if (e.event.key.code == sf::Keyboard::F1) std::cout << ecs_profile_dump() << "\n";
@@ -80,7 +128,7 @@ void keyboard_system::update(const double ms) {
                 game_master_mode = UNITS;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
-            } else if (e.event.key.code == sf::Keyboard::W) {
+            } else if (e.event.key.code == sf::Keyboard::W && !e.event.key.control) {
                 game_master_mode = WORKFLOW;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
@@ -92,6 +140,12 @@ void keyboard_system::update(const double ms) {
                 game_master_mode = STANDING_ORDERS;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
+            } else if (e.event.key.code == sf::Keyboard::W && e.event.key.control) {
+                game_master_mode = WISHMODE;
+                pause_mode = PAUSED;
+                emit_deferred(map_dirty_message{});
+                collect_text = true;
+                input_text = "";
             }
         } else if (game_master_mode == DESIGN) {
             if (e.event.key.code == sf::Keyboard::Escape) {
@@ -158,7 +212,13 @@ void keyboard_system::update(const double ms) {
                 emit_deferred(map_dirty_message{});
                 emit_deferred(recalculate_mining_message{});
             }
-        }       
+        } else if (game_master_mode == WISHMODE) {
+            if (e.event.key.code == sf::Keyboard::Escape) {
+                game_master_mode = PLAY;
+                emit_deferred(map_dirty_message{});
+                emit_deferred(recalculate_mining_message{});
+            }
+        }
 	messages->pop();
 	}
 }

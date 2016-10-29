@@ -39,3 +39,4 @@
 #include "fluid_system.hpp"
 #include "gravity_system.hpp"
 #include "grazer_ai_system.hpp"
+#include "wish_system.hpp"
