@@ -11,6 +11,7 @@
 #include "../components/grazer_ai.hpp"
 #include "../components/item.hpp"
 #include "../components/construct_container.hpp"
+#include "../components/construct_provides_door.hpp"
 #include "../components/item_stored.hpp"
 #include "../raws/raws.hpp"
 
@@ -328,6 +329,24 @@ void mode_play_system::show_tilemenu() {
 							game_master_mode = PLAY;
 						};
 						menu->options.push_back(std::make_pair(std::string("Cancel removal of ")+building_name, on_click));
+					}
+
+					// Doors
+					auto door = building_entity.component<construct_door_t>();
+					if (door && building.civ_owner == 0) {
+						boost::optional<std::function<void()>> on_lock{};
+						on_lock = [&building_entity] () {
+							building_entity.component<construct_door_t>()->locked = true;
+						};
+						boost::optional<std::function<void()>> on_unlock{};
+						on_unlock = [&building_entity] () {
+							building_entity.component<construct_door_t>()->locked = false;
+						};
+						if (!door->locked) {
+							menu->options.push_back(std::make_pair(std::string("Lock ")+building_name, on_lock));
+						} else {
+							menu->options.push_back(std::make_pair(std::string("Unlock ")+building_name, on_unlock));
+						}
 					}
 				} else {
 					building_name = finder->second.name;

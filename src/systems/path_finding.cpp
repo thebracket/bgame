@@ -2,8 +2,47 @@
 #include <rltk.hpp>
 #include "../planet/region.hpp"
 #include "../main/game_globals.hpp"
+#include "../components/construct_provides_door.hpp"
+#include "../components/building.hpp"
+
+std::size_t civ_id = 0;
 
 struct navigator_t {
+	static void test_direction(const position_t &pos, const position_t &dest, std::vector<position_t> &successors) {
+		bool can_go = false;
+		const int idx = mapidx(pos);
+		const int destidx = mapidx(dest);
+		if (pos.x < dest.x && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
+			can_go = true;
+		} else if (pos.x > dest.x && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
+			can_go = true;
+		} else if (pos.y < dest.y && current_region->tile_flags[idx].test(CAN_GO_NORTH)) {
+			can_go = true;
+		} else if (pos.y > dest.y && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) {
+			can_go = true;
+		} else if (pos.z < dest.z && current_region->tile_flags[idx].test(CAN_GO_UP)) {
+			can_go = true;
+		} else if (pos.z > dest.z && current_region->tile_flags[idx].test(CAN_GO_DOWN)) {
+			can_go = true;
+		}
+
+		if (can_go) {
+			// Check for water level
+			if (current_region->water_level[destidx] > 3) {
+				if (current_region->water_level[idx] < 4) can_go = false;
+			}
+
+			// Check for doors
+			each<building_t, construct_door_t, position_t>([&can_go, &dest] (entity_t &e, building_t &building, construct_door_t &door, position_t &doorpos) {
+				if (dest.x == doorpos.x && dest.y == doorpos.y && dest.z == doorpos.z && door.locked && building.civ_owner != civ_id) can_go = false;
+			});
+
+			if (can_go) {
+				successors.push_back(dest);
+			}
+		}
+	}
+
 	static float get_distance_estimate(position_t &pos, position_t &goal) {
 		const float d = distance3d_squared(pos.x, pos.y, pos.z, goal.x, goal.y, goal.z);
 		return d;
@@ -16,13 +55,12 @@ struct navigator_t {
 	// This is where we calculate where you can go from a given tile. In this case, we check
 	// all 8 directions, and if the destination is walkable return it as an option.
 	static bool get_successors(position_t pos, std::vector<position_t> &successors) {
-		const auto idx = mapidx(pos.x, pos.y, pos.z);
-		if (current_region->tile_flags[idx].test(CAN_GO_NORTH) && current_region->water_level[mapidx(pos.x, pos.y-1, pos.z)]<3) successors.push_back(position_t(pos.x, pos.y-1, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_SOUTH) && current_region->water_level[mapidx(pos.x, pos.y+1, pos.z)]<3) successors.push_back(position_t(pos.x, pos.y+1, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_EAST) && current_region->water_level[mapidx(pos.x+1, pos.y, pos.z)]<3) successors.push_back(position_t(pos.x+1, pos.y, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_WEST) && current_region->water_level[mapidx(pos.x-1, pos.y, pos.z)]<3) successors.push_back(position_t(pos.x-1, pos.y, pos.z));
-		if (current_region->tile_flags[idx].test(CAN_GO_UP) && current_region->water_level[mapidx(pos.x, pos.y, pos.z+1)]<3) successors.push_back(position_t(pos.x, pos.y, pos.z+1));
-		if (current_region->tile_flags[idx].test(CAN_GO_DOWN) && current_region->water_level[mapidx(pos.x, pos.y, pos.z-1)]<3) successors.push_back(position_t(pos.x, pos.y, pos.z-1));
+		test_direction(pos, position_t{pos.x, pos.y-1, pos.z}, successors);
+		test_direction(pos, position_t{pos.x, pos.y+1, pos.z}, successors);
+		test_direction(pos, position_t{pos.x+1, pos.y, pos.z}, successors);
+		test_direction(pos, position_t{pos.x-1, pos.y, pos.z}, successors);
+		test_direction(pos, position_t{pos.x, pos.y, pos.z-1}, successors);
+		test_direction(pos, position_t{pos.x, pos.y, pos.z+1}, successors);
 
 		return true;
 	}
@@ -40,13 +78,15 @@ struct navigator_t {
 	}
 };
 
-std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &start, const position_t &end, const bool find_adjacent) {
+std::shared_ptr<rltk::navigation_path<position_t>> find_path(const position_t &start, const position_t &end, const bool find_adjacent, const std::size_t civ) {
 	if (start.x < 1 || start.x > REGION_WIDTH-1 || start.y < 1 || start.y > REGION_HEIGHT-1 || start.z < 1 || start.z > REGION_DEPTH+1
 		|| end.x < 1 || end.x > REGION_WIDTH-1 || end.y < 1 || end.y > REGION_HEIGHT-1 || end.z < 1 || end.z > REGION_DEPTH+1) {
 			std::shared_ptr<rltk::navigation_path<position_t>> fail = std::make_shared<rltk::navigation_path<position_t>>();
 			fail->success = false;
 			return fail;
 		}
+
+	civ_id = civ;
 
 	auto result = rltk::find_path<position_t, navigator_t>(start, end);
 	if (find_adjacent && result->success == false) {

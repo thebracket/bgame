@@ -60,6 +60,17 @@ inline void plant_tree_evergreen(region_t &region, const int x, const int y, con
 	++region.next_tree_id;
 }
 
+bool can_see_sky(region_t &region, const int &x, const int &y, const int &z) {
+	bool result = true;
+
+	int Z = z;
+	while (Z < REGION_DEPTH) {
+		if (region.solid[mapidx(x,y,Z)]) result = false;
+		Z++;
+	}
+	return result;
+}
+
 void build_trees(region_t &region, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng) {
     const int d_chance = biome.second.deciduous_tree_chance;
     const int e_chance = biome.second.evergreen_tree_chance;
@@ -69,7 +80,7 @@ void build_trees(region_t &region, std::pair<biome_t, biome_type_t> &biome, rand
             const int z = get_ground_z(region,x,y);
             const auto idx = mapidx(x,y,z);
             const int crash_distance = distance2d(x,y,REGION_WIDTH/2,REGION_HEIGHT/2);
-            if (crash_distance > 20 && region.tile_type[idx] == tile_type::FLOOR && region.water_level[idx]==0) {
+            if (crash_distance > 20 && region.tile_type[idx] == tile_type::FLOOR && region.water_level[idx]==0 && can_see_sky(region, x,y,z)) {
                 int dice_roll = rng.roll_dice(1,1000);
                 if (dice_roll <= d_chance) {
                     // Grow a decidous tree

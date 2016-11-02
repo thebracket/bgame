@@ -28,6 +28,7 @@
 #include "../../../components/sentient_ai.hpp"
 #include "../../../components/lightsource.hpp"
 #include "../../../components/falling.hpp"
+#include "../../../components/construct_provides_door.hpp"
 #include "../world_queries.hpp"
 #include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
@@ -168,6 +169,8 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 					entity(ai.building_target.get().building_entity)->assign(construct_provides_sleep_t{});
 				} else if (provides.provides == provides_light) {
 					entity(ai.building_target.get().building_entity)->assign(lightsource_t{provides.radius, provides.color});
+				} else if (provides.provides == provides_door) {
+					entity(ai.building_target.get().building_entity)->assign(construct_door_t{0});
 				} else if (provides.provides == provides_wall || provides.provides == provides_floor 
 						|| provides.provides == provides_stairs_up
 						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 

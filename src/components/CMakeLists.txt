@@ -3,6 +3,7 @@ add_library(components STATIC
 	building.cpp
 	calendar.cpp
 	construct_power.cpp
+	construct_provides_door.cpp
 	construct_provides_sleep.cpp
 	corpse_harvestable.cpp
 	corpse_settler.cpp

@@ -198,7 +198,9 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 			if (slot_name == "torso") position = TORSO;
 			if (slot_name == "legs") position = LEGS;
 			if (slot_name == "shoes") position = FEET;
-			create_entity()->assign(item_t{item_name})->assign(item_carried_t{position, settler->id});
+			item_t item{item_name};
+			item.material = get_material_by_tag("cloth");
+			create_entity()->assign(std::move(item))->assign(item_carried_t{position, settler->id});
 		}
 	}
 

@@ -27,6 +27,7 @@
 #include "logger.hpp"
 #include "water_spawner.hpp"
 #include "falling.hpp"
+#include "construct_provides_door.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -59,8 +60,9 @@ void component_loader(std::istream &lbfile, std::size_t type_id, std::size_t ent
 		case 24  : entity(entity_id)->assign(smoke_emitter_t::load(lbfile)); break;
 		case 25  : entity(entity_id)->assign(sentient_ai::load(lbfile)); break;
 		case 26  : entity(entity_id)->assign(logger_t::load(lbfile)); break;
-		case 27  : entity(entity_id)->assign(water_spawner_t::load(lbfile));
-		case 28  : entity(entity_id)->assign(falling_t::load(lbfile));
+		case 27  : entity(entity_id)->assign(water_spawner_t::load(lbfile)); break;
+		case 28  : entity(entity_id)->assign(falling_t::load(lbfile)); break;
+		case 29  : entity(entity_id)->assign(construct_door_t::load(lbfile)); break;
 		default : throw std::runtime_error("Unknown component type, "+std::to_string(type_id));
 	}
 }

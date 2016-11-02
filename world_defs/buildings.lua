@@ -246,13 +246,25 @@ buildings = {
 	},
 
 	door = {
-		name = "Dooor",
+		name = "Door",
 		components = { { item="door", qty=1 } },
 		skill = { name="Construction", difficulty=10 },
 		provides = { door={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['door'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
+	energy_door = {
+		name = "Force Door",
+		components = { { item="door", qty=1 } },
+		skill = { name="Construction", difficulty=10 },
+		provides = { door={energy_cost=10} },
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['door'], foreground = colors['cyan'], background = colors['black']}
 			}
 		}
 	},

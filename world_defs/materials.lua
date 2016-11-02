@@ -356,6 +356,10 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200
     },
+    cloth = { name = "Cloth", type="organic", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
+        hit_points = 10, ac_bonus = 0.0
+    },
 
 -- Metals
     aluminium = { name = "Aluminium", type="metal", 

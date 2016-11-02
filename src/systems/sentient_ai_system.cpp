@@ -115,7 +115,7 @@ void sentient_ai_system::update(const double ms) {
                             auto it = targets.begin();
                             ai.target = 0;
                             while (ai.target == 0 && it != targets.end()) {
-                                ai.current_path = find_path(pos, *entity(it->second)->component<position_t>());
+                                ai.current_path = find_path(pos, *entity(it->second)->component<position_t>(), false, planet.civs.unimportant_people[ai.person_id].civ_id);
                                 if (ai.current_path->success) {
                                     ai.target = it->second;
                                 }

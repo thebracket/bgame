@@ -82,8 +82,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     build_beaches(region);
 
     // Plant trees
-    set_worldgen_status("Planting trees");
-    build_trees(region, biome, rng);    
+    set_worldgen_status("Planting trees");     
 
     // Determine crash site
     set_worldgen_status("Crashing the ship");
@@ -161,6 +160,8 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         }
         ++peep_id;
     }
+
+    build_trees(region, biome, rng);
 
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");

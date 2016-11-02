@@ -4,6 +4,7 @@
 #include "../../../components/lightsource.hpp"
 #include "../../../components/construct_power.hpp"
 #include "../../../components/construct_provides_sleep.hpp"
+#include "../../../components/construct_provides_door.hpp"
 #include "../../../components/smoke_emitter.hpp"
 #include "../../../components/calendar.hpp"
 #include "../../../components/world_position.hpp"
@@ -11,13 +12,13 @@
 #include "../../../components/designations.hpp"
 #include "../../../raws/raws.hpp"
 
-void add_building(std::string tag, const int x, const int y, const int z) {
+void add_building(std::string tag, const int x, const int y, const int z, const std::size_t civ_owner) {
     auto building = building_defs.find(tag);
     if (building == building_defs.end()) std::cout << "Warning: do not know how to build " << tag << "\n";
 
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
-        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, true });
+        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, true, civ_owner });
 
     for (const building_provides_t &provides : building->second.provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
@@ -42,10 +43,12 @@ void add_building(std::string tag, const int x, const int y, const int z) {
     } else if (tag == "camp_fire") {
         new_building->assign(lightsource_t{5, rltk::colors::YELLOW});
         new_building->assign(smoke_emitter_t{});
+    } else if (tag == "energy_door" || tag == "door") {
+        new_building->assign(construct_door_t{0});
     }
 }
 
-void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid=false) {
+void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid, std::size_t civ_owner) {
     const auto idx = mapidx(x,y,z);
     region.water_level[idx] = 0;
     region.solid[idx] = false;
@@ -123,22 +126,26 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood;
     } else if (type == "cordex") {
-        add_building("cordex", x, y, z);
+        add_building("cordex", x, y, z, civ_owner);
     } else if (type == "solar_panel") {
-        add_building("solar_panel", x, y, z);
+        add_building("solar_panel", x, y, z, civ_owner);
     } else if (type == "cryo_bed") {
         region.tile_flags[idx].reset(CONSTRUCTION);
-        add_building("cryo_bed", x, y, z);
+        add_building("cryo_bed", x, y, z, civ_owner);
     } else if (type == "storage_locker") {
-        add_building("storage_locker", x, y, z);
+        add_building("storage_locker", x, y, z, civ_owner);
     } else if (type == "battery") {
-        add_building("battery", x, y, z);
+        add_building("battery", x, y, z, civ_owner);
     } else if (type == "rtg") {
-        add_building("rtg", x, y, z);
+        add_building("rtg", x, y, z, civ_owner);
     } else if (type == "small_replicator") {
-        add_building("small_replicator", x, y, z);
+        add_building("small_replicator", x, y, z, civ_owner);
     } else if (type == "campfire") {
-        add_building("camp_fire", x, y, z);
+        add_building("camp_fire", x, y, z, civ_owner);
+    } else if (type == "ship_door") {
+        add_building("energy_door", x, y, z, civ_owner);
+    } else if (type == "door") {
+        add_building("door", x, y, z, civ_owner);
     } else {
         std::cout << "Don't know how to build a " << type << "\n";
     }
@@ -160,7 +167,7 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
                         add_construction(region, x, y, z, "ship_wall", true);
                     } else if (output->glyph == 177) {
                         add_construction(region, x, y, z, "ship_window", true);
-                    } else if (output->glyph == 176 || output->glyph == 197) {
+                    } else if (output->glyph == 176) {
                         add_construction(region, x, y, z, "ship_floor");
                     } else if (output->glyph == 'X') {
                         add_construction(region, x, y, z, "ship_updown");
@@ -186,6 +193,8 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
                         add_construction(region, x, y, z, "small_replicator");
                     } else if (output->glyph == 232) {
                         add_construction(region, x, y, z, "rtg");
+                    } else if (output->glyph == 197) {
+                        add_construction(region, x, y, z, "ship_door");
                     } else {
                         if (output->glyph != 32)
                             std::cout << "Warning: No handler for " << (char)output->glyph << " (" << +output->glyph << ")\n";
@@ -216,7 +225,7 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
         ->assign(logger_t{});
 }
 
-int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, region_t &region, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active) {
+int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, region_t &region, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t civ) {
     int n_spawn = 0;
     for (int layer = 0; layer < sprite.get_num_layers(); ++layer) {
         for (int Y=0; Y < sprite.get_height(); ++Y) {
@@ -231,23 +240,25 @@ int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z
                 }
 
                 if (output->glyph == 219 || output->glyph == 177) {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_wall", true);
-                } else if (output->glyph == 176 || output->glyph == 197) {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                    add_construction(region, x+X, y+Y, z+layer, "hut_wall", true, civ);
+                } else if (output->glyph == 176) {
+                    add_construction(region, x+X, y+Y, z+layer, "hut_floor", civ);
+                } else if (output->glyph == 197) {
+                    add_construction(region, x+X, y+Y, z+layer, "door", civ);
                 } else if (output->glyph == '<') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_upstairs");
+                    add_construction(region, x+X, y+Y, z+layer, "hut_upstairs", civ);
                 } else if (output->glyph == 'X') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_updownstairs");
+                    add_construction(region, x+X, y+Y, z+layer, "hut_updownstairs", civ);
                 } else if (output->glyph == '>') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_downstairs");
+                    add_construction(region, x+X, y+Y, z+layer, "hut_downstairs", civ);
                 } else if (output->glyph == 's') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                    add_construction(region, x+X, y+Y, z+layer, "hut_floor", civ);
                     spawn_points.push_back(std::make_tuple(x+X, y+Y, z+layer));
                     ++n_spawn;
                 } else if (output->glyph == 234) {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_floor");
+                    add_construction(region, x+X, y+Y, z+layer, "hut_floor", civ);
                     if (active) {
-                        add_construction(region, x+X, y+Y, z+layer, "campfire");
+                        add_construction(region, x+X, y+Y, z+layer, "campfire", civ);
                     }
                 }
             }
@@ -326,7 +337,7 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
 
         // Spawn the hut
         if (tries < 51) {
-            const int n_spawn = build_building(*building, x, y, z, region, spawn_points, active);
+            const int n_spawn = build_building(*building, x, y, z, region, spawn_points, active, civ_id);
             i += (n_spawn -1);
         }
     }
