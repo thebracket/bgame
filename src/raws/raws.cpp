@@ -117,7 +117,7 @@ void read_life_events(std::ofstream &tech_tree_file) {
         while (lua_next(lua_state, -2) != 0) {
             std::string field = lua_tostring(lua_state, -2);
             if (field == "min_age") le.min_age = lua_tonumber(lua_state, -1);
-            if (field == "max_age") le.min_age = lua_tonumber(lua_state, -1);
+            if (field == "max_age") le.max_age = lua_tonumber(lua_state, -1);
             if (field == "weight") le.weight = lua_tonumber(lua_state, -1);
             if (field == "description") le.description = lua_tostring(lua_state, -1);
 

@@ -17,7 +17,7 @@ std::vector<std::string> get_event_candidates(const int &age) {
 	std::vector<std::string> result;
 
 	for (auto it=life_event_defs.begin(); it!=life_event_defs.end(); ++it) {
-		if (it->second.min_age >= age && it->second.max_age <= age) {
+		if (age >= it->second.min_age && age <= it->second.max_age) {
 			for (int i=0; i<it->second.weight; ++i) {
 				result.push_back(it->first);
 			}
@@ -195,21 +195,31 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		if (!candidates.empty()) {
 			const std::size_t idx = rng.roll_dice(1, candidates.size())-1;
 			const std::string event_name = candidates[idx];
-			auto finder = planet.history.settler_life_events.find(settler->id);
-			const life_event_t event{ year, event_name };
-			if (finder == planet.history.settler_life_events.end()) {
-				planet.history.settler_life_events[settler->id] = std::vector<life_event_t>{ event };
-			} else {
-				planet.history.settler_life_events[settler->id].push_back(event);
-			}
 			auto ledef = life_event_defs.find(event_name);
-			stats.strength += ledef->second.strength;
-			stats.dexterity += ledef->second.dexterity;
-			stats.constitution += ledef->second.constitution;
-			stats.intelligence += ledef->second.intelligence;
-			stats.wisdom += ledef->second.wisdom;
-			stats.charisma += ledef->second.charisma;
-			std::cout << ledef->second.description << "\n";
+
+			bool has_effect = false;
+			if (ledef->second.strength != 0) has_effect = true;
+			if (ledef->second.dexterity != 0) has_effect = true;
+			if (ledef->second.constitution != 0) has_effect = true;
+			if (ledef->second.intelligence != 0) has_effect = true;
+			if (ledef->second.wisdom != 0) has_effect = true;
+			if (ledef->second.charisma != 0) has_effect = true;
+
+			if (has_effect) {
+				auto finder = planet.history.settler_life_events.find(settler->id);
+				const life_event_t event{ year, event_name };
+				if (finder == planet.history.settler_life_events.end()) {
+					planet.history.settler_life_events[settler->id] = std::vector<life_event_t>{ event };
+				} else {
+					planet.history.settler_life_events[settler->id].push_back(event);
+				}
+				stats.strength += ledef->second.strength;
+				stats.dexterity += ledef->second.dexterity;
+				stats.constitution += ledef->second.constitution;
+				stats.intelligence += ledef->second.intelligence;
+				stats.wisdom += ledef->second.wisdom;
+				stats.charisma += ledef->second.charisma;
+			}
 		}
 
 		++year;
