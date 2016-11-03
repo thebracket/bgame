@@ -4,8 +4,6 @@
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/vegetation_damage_message.hpp"
 #include "../main/game_globals.hpp"
-#include "../components/construct_provides_door.hpp"
-#include "../components/building.hpp"
 #include <rltk.hpp>
 
 octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};
@@ -34,9 +32,6 @@ void movement_system::configure() {
 
             if (current_region->water_level[dest]>2 && current_region->water_level[tile_index]<3) can_go = false;
 
-            each<construct_door_t, position_t>([&can_go, &pos] (entity_t &e, construct_door_t &door, position_t &doorpos) {
-				if (pos.x == doorpos.x && pos.y == doorpos.y && pos.z == doorpos.z && door.locked) can_go = false;
-			});
             if (can_go) emit(entity_wants_to_move_message{msg.entity_id, pos});
         }
     });

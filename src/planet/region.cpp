@@ -84,7 +84,7 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 	// Solidity and first-pass standability
 	if (tile_type[idx] == tile_type::SEMI_MOLTEN_ROCK || tile_type[idx] == tile_type::SOLID 
 			|| tile_type[idx] == tile_type::WALL || tile_type[idx] == tile_type::TREE_TRUNK || tile_type[idx] == tile_type::TREE_LEAF
-			|| tile_type[idx] == tile_type::WINDOW) {
+			|| tile_type[idx] == tile_type::WINDOW || tile_type[idx] == tile_type::CLOSED_DOOR) {
 		solid[idx] = true;
 		if (tile_type[idx] == tile_type::WINDOW) {
 			opaque[idx] = false;
@@ -254,7 +254,26 @@ void region_t::calc_render(const int &idx) {
 			glyph = 'X';
 			fg = get_material(tile_material[idx]).fg;
 		} break;
-		case tile_type::FLOOR : {
+		case tile_type::FLOOR: {
+			if (get_material(tile_material[idx]).spawn_type == sand) {
+				glyph = 126;
+			} else if (tile_flags[idx].test(CONSTRUCTION)) {
+				glyph = 240;
+			} else {
+				glyph = ',';
+			}
+
+			fg = get_material(tile_material[idx]).fg;
+
+			if (tile_vegetation_type[idx]>0) {
+				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
+				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
+				glyph = plant.glyph;
+				fg = plant.fg;
+				bg = plant.bg;
+			}
+		} break;
+		case tile_type::CLOSED_DOOR : {
 			if (get_material(tile_material[idx]).spawn_type == sand) {
 				glyph = 126;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {

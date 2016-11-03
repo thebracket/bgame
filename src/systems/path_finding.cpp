@@ -2,13 +2,11 @@
 #include <rltk.hpp>
 #include "../planet/region.hpp"
 #include "../main/game_globals.hpp"
-#include "../components/construct_provides_door.hpp"
-#include "../components/building.hpp"
 
 std::size_t civ_id = 0;
 
 struct navigator_t {
-	static void test_direction(const position_t &pos, const position_t &dest, std::vector<position_t> &successors) {
+	inline static void test_direction(const position_t &pos, const position_t &dest, std::vector<position_t> &successors) {
 		bool can_go = false;
 		const int idx = mapidx(pos);
 		const int destidx = mapidx(dest);
@@ -31,11 +29,6 @@ struct navigator_t {
 			if (current_region->water_level[destidx] > 3) {
 				if (current_region->water_level[idx] < 4) can_go = false;
 			}
-
-			// Check for doors
-			each<building_t, construct_door_t, position_t>([&can_go, &dest] (entity_t &e, building_t &building, construct_door_t &door, position_t &doorpos) {
-				if (dest.x == doorpos.x && dest.y == doorpos.y && dest.z == doorpos.z && door.locked && building.civ_owner != civ_id) can_go = false;
-			});
 
 			if (can_go) {
 				successors.push_back(dest);

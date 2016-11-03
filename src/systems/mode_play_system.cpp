@@ -99,6 +99,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
 			case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
 			case tile_type::WINDOW : ss << "Window"; break;
+			case tile_type::CLOSED_DOOR : ss << "Closed Door (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
 			default : ss << "Unknown!";
 		}
 		lines.push_back(ss.str());
@@ -337,10 +338,12 @@ void mode_play_system::show_tilemenu() {
 						boost::optional<std::function<void()>> on_lock{};
 						on_lock = [&building_entity] () {
 							building_entity.component<construct_door_t>()->locked = true;
+							emit_deferred(door_changed_message{});
 						};
 						boost::optional<std::function<void()>> on_unlock{};
 						on_unlock = [&building_entity] () {
 							building_entity.component<construct_door_t>()->locked = false;
+							emit_deferred(door_changed_message{});
 						};
 						if (!door->locked) {
 							menu->options.push_back(std::make_pair(std::string("Lock ")+building_name, on_lock));

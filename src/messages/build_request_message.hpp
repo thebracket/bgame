@@ -17,3 +17,6 @@ struct cancel_build_request_message : public rltk::base_message_t {
     cancel_build_request_message() {}
     cancel_build_request_message(const std::size_t &id) : building_entity(id) {}
 };
+
+struct door_changed_message : public rltk::base_message_t {  
+};

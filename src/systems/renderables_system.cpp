@@ -8,7 +8,7 @@
 #include "../main/game_globals.hpp"
 #include "particle_system.hpp"
 #include "../components/settler_ai.hpp"
-
+#include "../components/construct_provides_door.hpp"
 
 using namespace rltk;
 
@@ -43,6 +43,8 @@ void renderables_system::update(const double time_elapsed) {
 					rltk::vchar glyph;
 					glyph = b.glyphs[glyph_idx];
 					if (!b.complete) glyph.foreground = rltk::colors::GREY;
+					auto door = entity.component<construct_door_t>();
+					if (door && door->locked) glyph.background = rltk::colors::GREY;
 					renderables[idx].push_back(glyph);
 					++glyph_idx;
 				}

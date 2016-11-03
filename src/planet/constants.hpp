@@ -30,4 +30,5 @@ constexpr uint8_t FLOOR = 8;
 constexpr uint8_t TREE_TRUNK = 9;
 constexpr uint8_t TREE_LEAF = 10;
 constexpr uint8_t WINDOW = 11;
+constexpr uint8_t CLOSED_DOOR = 12;
 }

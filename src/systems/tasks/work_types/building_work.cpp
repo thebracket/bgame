@@ -170,7 +170,7 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 				} else if (provides.provides == provides_light) {
 					entity(ai.building_target.get().building_entity)->assign(lightsource_t{provides.radius, provides.color});
 				} else if (provides.provides == provides_door) {
-					entity(ai.building_target.get().building_entity)->assign(construct_door_t{0});
+					entity(ai.building_target.get().building_entity)->assign(construct_door_t{});
 				} else if (provides.provides == provides_wall || provides.provides == provides_floor 
 						|| provides.provides == provides_stairs_up
 						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 

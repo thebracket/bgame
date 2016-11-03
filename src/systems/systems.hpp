@@ -40,3 +40,4 @@
 #include "gravity_system.hpp"
 #include "grazer_ai_system.hpp"
 #include "wish_system.hpp"
+#include "door_system.hpp"

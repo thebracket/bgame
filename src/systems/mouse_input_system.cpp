@@ -24,7 +24,7 @@ void mouse_input_system::update(const double ms) {
 	mouse::term3y = mouse::y / mouse::font3_h;
 	mouse::clicked = false;
 	mouse_damper += ms;
-	if (rltk::get_mouse_button_state(rltk::button::LEFT) && mouse_damper > 100.0) {
+	if (rltk::get_mouse_button_state(rltk::button::LEFT) && mouse_damper > 500.0) {
 		mouse::clicked = true;
 		mouse_damper = 0;
 	}

@@ -72,6 +72,7 @@ void play_game::init() {
 	std::cout << "Setting up systems\n";
 	add_system<keyboard_system>();
 	add_system<mouse_input_system>();
+	add_system<door_system>();
 	add_system<calendar_system>();
 	add_system<world_system>();
 	add_system<fluid_system>();

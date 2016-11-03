@@ -108,6 +108,17 @@ void do_deconstruction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, speci
 						ai.target_id = 0;
 					}
 				}
+				emit_deferred(door_changed_message{});
+				// Update pathing
+				for (int i=0; i<2; ++i) {
+					for (int Z=-2; Z<4; ++Z) {
+						for (int Y=-10; Y<10; ++Y) {
+							for (int X=-10; X<10; ++X) {
+								current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+							}
+						}
+					}
+				}
 			}
 			become_idle(e, ai, name);
 			emit(opacity_changed_message{});
@@ -195,6 +206,7 @@ void do_demolition(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 				}
 			}
 			emit_deferred(tile_removed_message{ai.target_x, ai.target_y, ai.target_z});
+			emit_deferred(door_changed_message{});
 			
 			return;
 		} else {
