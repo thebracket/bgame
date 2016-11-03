@@ -37,5 +37,8 @@ target_link_libraries(rltk ${BoostSystemLibs} ${BoostFilesystemLibs} ${BoostCont
 target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)
 target_link_libraries(rltk zlibstatic)
 
+# Build sqlite
+add_library(sqlite sqlite/sqlite3.c)
+
 # Build FastNoise
 add_library(FastNoise FastNoise/FastNoise.cpp)
