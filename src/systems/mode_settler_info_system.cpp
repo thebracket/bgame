@@ -46,6 +46,7 @@ void mode_settler_info_system::update(const double ms) {
             {"Profile", [this] () { tab = 0; }},  
             {"Skills", [this] () { tab = 1; }},  
             {"Inventory", [this] () { tab = 2; }},  
+            {"History", [this] () { tab = 3; }}
         }, tab
     )));
 
@@ -91,6 +92,18 @@ void mode_settler_info_system::update(const double ms) {
                 ++y;
             }
 	    });
+    } else if (tab == 3) {
+        int y = box.top + 8;
+        for (const life_event_t &le : planet.history.settler_life_events[selected_settler]) {
+            auto finder = life_event_defs.find(le.type);
+            if (finder != life_event_defs.end()) {
+                const std::string line = std::to_string(le.year) + std::string(" : ") + finder->second.description;
+                dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left + 2, y, line, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN)));
+                ++y;
+            } else {
+                std::cout << "Warning: " << le.type << " life event not found\n";
+            }
+        }
     }
 
     add_gui_element(std::move(dialog));

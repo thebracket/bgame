@@ -9,10 +9,25 @@
 #include "../../utils/string_utils.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../raws/raws.hpp"
+#include "../planet.hpp"
 
 using namespace rltk;
 
-void create_settler(const int x, const int y, const int z, random_number_generator &rng, int shift_id) {
+std::vector<std::string> get_event_candidates(const int &age) {
+	std::vector<std::string> result;
+
+	for (auto it=life_event_defs.begin(); it!=life_event_defs.end(); ++it) {
+		if (it->second.min_age >= age && it->second.max_age <= age) {
+			for (int i=0; i<it->second.weight; ++i) {
+				result.push_back(it->first);
+			}
+		}
+	}
+
+	return result;
+}
+
+void create_settler(planet_t &planet, const int x, const int y, const int z, random_number_generator &rng, int shift_id) {
 	species_t species;
 	game_stats_t stats;	
 
@@ -170,6 +185,37 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	stats.ethics = rng.roll_dice(3,6)  + starting_professions[selected_profession].ethics;
 	stats.age = 15 + rng.roll_dice(3,6);
 
+	auto settler = create_entity();
+
+	// Life events
+	int year = 2525 - stats.age;
+	int age = 0;
+	while (year < 2525) {
+		std::vector<std::string> candidates = get_event_candidates(age);
+		if (!candidates.empty()) {
+			const std::size_t idx = rng.roll_dice(1, candidates.size())-1;
+			const std::string event_name = candidates[idx];
+			auto finder = planet.history.settler_life_events.find(settler->id);
+			const life_event_t event{ year, event_name };
+			if (finder == planet.history.settler_life_events.end()) {
+				planet.history.settler_life_events[settler->id] = std::vector<life_event_t>{ event };
+			} else {
+				planet.history.settler_life_events[settler->id].push_back(event);
+			}
+			auto ledef = life_event_defs.find(event_name);
+			stats.strength += ledef->second.strength;
+			stats.dexterity += ledef->second.dexterity;
+			stats.constitution += ledef->second.constitution;
+			stats.intelligence += ledef->second.intelligence;
+			stats.wisdom += ledef->second.wisdom;
+			stats.charisma += ledef->second.charisma;
+			std::cout << ledef->second.description << "\n";
+		}
+
+		++year;
+		++age;
+	}
+
 	int base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
 	if (base_hp < 1) base_hp = 1;
 	health_t health = create_health_component_sentient("human", base_hp);
@@ -177,8 +223,7 @@ void create_settler(const int x, const int y, const int z, random_number_generat
 	settler_ai_t ai;
 	ai.shift_id = shift_id;
 
-	auto settler = create_entity()
-		->assign(position_t{ x,y,z })
+	settler->assign(position_t{ x,y,z })
 		->assign(renderable_t{ 1,rltk::colors::YELLOW, rltk::colors::BLACK })
 		->assign(name_t{ first_name, last_name })
 		->assign(std::move(species))

@@ -41,6 +41,8 @@ boost::container::flat_map<std::string, raw_creature_t> creature_defs;
 
 boost::container::flat_map<std::string, std::vector<native_population_t>> native_pop_defs;
 
+boost::container::flat_map<std::string, life_event_template> life_event_defs;
+
 void load_string_table(const std::string filename, string_table_t &target) {
 	std::ifstream f(filename);
 	std::string line;
@@ -97,6 +99,49 @@ void read_clothing(std::ofstream &tech_tree_file) {
         }
         clothing_types[key] = c;
 
+        lua_pop(lua_state, 1);
+    }
+}
+
+void read_life_events(std::ofstream &tech_tree_file) {
+    lua_getglobal(lua_state, "life_events");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+        life_event_template le;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+            if (field == "min_age") le.min_age = lua_tonumber(lua_state, -1);
+            if (field == "max_age") le.min_age = lua_tonumber(lua_state, -1);
+            if (field == "weight") le.weight = lua_tonumber(lua_state, -1);
+            if (field == "description") le.description = lua_tostring(lua_state, -1);
+
+            if (field == "modifiers") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string stat = lua_tostring(lua_state, -2);
+                    int modifier = lua_tonumber(lua_state, -1);
+                    if (stat == "str") le.strength = modifier;
+                    if (stat == "dex") le.dexterity = modifier;
+                    if (stat == "con") le.constitution = modifier;
+                    if (stat == "int") le.intelligence = modifier;
+                    if (stat == "wis") le.wisdom = modifier;
+                    if (stat == "cha") le.charisma = modifier;
+                    if (stat == "com") le.comeliness = modifier;
+                    if (stat == "eth") le.ethics = modifier;
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+        life_event_defs[key] = le;
         lua_pop(lua_state, 1);
     }
 }
@@ -1197,6 +1242,7 @@ void load_game_tables() {
 
     read_material_types(tech_tree_file);
     read_clothing(tech_tree_file);
+    read_life_events(tech_tree_file);
     read_professions(tech_tree_file);
     read_items(tech_tree_file);
     read_buildings(tech_tree_file);

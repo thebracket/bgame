@@ -233,6 +233,21 @@ struct native_population_t {
 	std::string ammo = "";
 };
 
+struct life_event_template {
+	int min_age = 0;
+	int max_age = 0;
+	std::string description = "";
+	int weight = 0;
+	short strength = 0;
+	short dexterity = 0;
+	short constitution = 0;
+	short intelligence = 0;
+	short wisdom = 0;
+	short charisma = 0;
+	short comeliness = 0;
+	short ethics = 0;
+};
+
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
@@ -244,6 +259,8 @@ extern boost::container::flat_map<std::string, item_def_t> item_defs;
 extern boost::container::flat_map<std::string, building_def_t> building_defs;
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
 extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
+
+extern boost::container::flat_map<std::string, life_event_template> life_event_defs;
 
 // Initializer
 void load_raws();

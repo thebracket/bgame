@@ -100,16 +100,16 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     build_escape_pod(region, crash_x, crash_y, crash_z);
 
     // Add settlers
-    create_settler(crash_x - 3, crash_y - 2, crash_z+1, rng, 0);
-	create_settler(crash_x - 2, crash_y - 2, crash_z+1, rng, 0);
-	create_settler(crash_x - 1, crash_y - 2, crash_z+1, rng, 0);
-	create_settler(crash_x, crash_y - 2, crash_z+1, rng, 1);
-	create_settler(crash_x + 1, crash_y - 2, crash_z+1, rng, 1);
-	create_settler(crash_x - 3, crash_y, crash_z+1, rng, 1);
-	create_settler(crash_x - 2, crash_y, crash_z+1, rng, 1);
-	create_settler(crash_x - 1, crash_y, crash_z+1, rng, 2);
-	create_settler(crash_x, crash_y, crash_z+1, rng, 2);
-	create_settler(crash_x + 1, crash_y, crash_z+1, rng, 2);
+    create_settler(planet, crash_x - 3, crash_y - 2, crash_z+1, rng, 0);
+	create_settler(planet, crash_x - 2, crash_y - 2, crash_z+1, rng, 0);
+	create_settler(planet, crash_x - 1, crash_y - 2, crash_z+1, rng, 0);
+	create_settler(planet, crash_x, crash_y - 2, crash_z+1, rng, 1);
+	create_settler(planet, crash_x + 1, crash_y - 2, crash_z+1, rng, 1);
+	create_settler(planet, crash_x - 3, crash_y, crash_z+1, rng, 1);
+	create_settler(planet, crash_x - 2, crash_y, crash_z+1, rng, 1);
+	create_settler(planet, crash_x - 1, crash_y, crash_z+1, rng, 2);
+	create_settler(planet, crash_x, crash_y, crash_z+1, rng, 2);
+	create_settler(planet, crash_x + 1, crash_y, crash_z+1, rng, 2);
 
     // Add features
     bool has_settlement = false;

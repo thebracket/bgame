@@ -4,6 +4,7 @@ vegetation.lua
 clothing.lua
 species.lua
 creatures.lua
+life_events.lua
 starting_professions.lua
 items.lua
 buildings.lua
