@@ -204,6 +204,8 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 			if (ledef->second.intelligence != 0) has_effect = true;
 			if (ledef->second.wisdom != 0) has_effect = true;
 			if (ledef->second.charisma != 0) has_effect = true;
+			if (ledef->second.comeliness != 0) has_effect = true;
+			if (ledef->second.ethics != 0) has_effect = true;
 
 			if (has_effect) {
 				auto finder = planet.history.settler_life_events.find(settler->id);
@@ -219,6 +221,8 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 				stats.intelligence += ledef->second.intelligence;
 				stats.wisdom += ledef->second.wisdom;
 				stats.charisma += ledef->second.charisma;
+				stats.comeliness += ledef->second.comeliness;
+				stats.ethics += ledef->second.ethics;
 			}
 		}
 
