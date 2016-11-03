@@ -215,14 +215,16 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 				} else {
 					planet.history.settler_life_events[settler->id].push_back(event);
 				}
-				stats.strength += ledef->second.strength;
-				stats.dexterity += ledef->second.dexterity;
-				stats.constitution += ledef->second.constitution;
-				stats.intelligence += ledef->second.intelligence;
-				stats.wisdom += ledef->second.wisdom;
-				stats.charisma += ledef->second.charisma;
-				stats.comeliness += ledef->second.comeliness;
-				stats.ethics += ledef->second.ethics;
+				if (rng.roll_dice(1,6)>3) {
+					stats.strength += ledef->second.strength;
+					stats.dexterity += ledef->second.dexterity;
+					stats.constitution += ledef->second.constitution;
+					stats.intelligence += ledef->second.intelligence;
+					stats.wisdom += ledef->second.wisdom;
+					stats.charisma += ledef->second.charisma;
+					stats.comeliness += ledef->second.comeliness;
+					stats.ethics += ledef->second.ethics;
+				}
 			}
 		}
 
