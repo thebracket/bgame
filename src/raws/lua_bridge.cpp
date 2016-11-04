@@ -31,3 +31,67 @@ void load_lua_script(const std::string filename) {
 		std::cout << lua_tostring(lua_state, -1) << "\n";
 	}
 }
+
+inline void call_functor_key(const lua_parser &parser, const std::string &field, const std::string &table) {
+    auto finder = parser.find(field);
+    if (finder != parser.end()) {
+        const auto functor = finder->second;
+        functor();
+    } else {
+        throw std::runtime_error(std::string("Lua - no known parser for [") + field + std::string("] in table: " + table));
+    }    
+}
+
+void read_lua_table(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser)    
+{
+    lua_getglobal(lua_state, table.c_str());
+    lua_pushnil(lua_state);
+    while(lua_next(lua_state, -2) != 0)
+    {
+        const std::string key = lua_tostring(lua_state, -2);
+
+        on_start(key);
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            const std::string field = lua_tostring(lua_state, -2);
+            call_functor_key(parser, field, table);
+            lua_pop(lua_state, 1);
+        }
+        on_end(key);
+
+        lua_pop(lua_state, 1);
+    }
+}
+
+void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &functor) 
+{
+    lua_pushstring(lua_state, table.c_str());
+    lua_gettable(lua_state, -2);
+    while (lua_next(lua_state, -2) != 0) {
+        const std::string s = lua_tostring(lua_state, -1);
+        functor(s);
+        lua_pop(lua_state, 1);
+    }
+}
+
+void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser)    
+{
+    lua_pushstring(lua_state, table.c_str());
+    lua_gettable(lua_state, -2);
+    while (lua_next(lua_state, -2) != 0) {
+        const std::string key = lua_tostring(lua_state, -2);
+
+        on_start(key);
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            const std::string field = lua_tostring(lua_state, -2);
+            call_functor_key(parser, field, table);
+            lua_pop(lua_state, 1);
+        }
+        on_end(key);
+
+        lua_pop(lua_state, 1);
+    }
+}

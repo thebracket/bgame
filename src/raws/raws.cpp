@@ -67,145 +67,79 @@ rltk::color_t read_lua_color(std::string field) {
 }
 
 void read_clothing(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "clothing");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-        clothing_t c;
-
-        std::string key = lua_tostring(lua_state, -2);
-
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-
-            if (field == "name") c.name = lua_tostring(lua_state, -1);
-            if (field == "slot") c.slot = lua_tostring(lua_state, -1);
-            if (field == "description") c.description = lua_tostring(lua_state, -1);
-            if (field == "ac") c.armor_class = lua_tonumber(lua_state, -1);
-            if (field == "colors") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string color = lua_tostring(lua_state, -1);
-                    c.colors.push_back(color);
-                    lua_pop(lua_state, 1);
-                }
-            }
-
-            lua_pop(lua_state, 1);
+    std::string tag = "";
+    clothing_t c;
+    read_lua_table("clothing", 
+        [&c, &tag] (const auto &key) { tag = key; c = clothing_t{}; },
+        [&c, &tag] (const auto &key) { clothing_types[key] = c; }, 
+        lua_parser{
+            {"name",        [&c] () { c.name = lua_str(); }},
+            {"slot",        [&c] () { c.slot = lua_str(); }},
+            {"description", [&c] () { c.description = lua_str(); }},
+            {"ac",          [&c] () { c.armor_class = lua_float(); }},
+            {"colors",      [&c] () {
+                read_lua_table_inner( "colors", [&c] (auto col) { c.colors.push_back(col); });
+            }}
         }
-        clothing_types[key] = c;
+    );
+}
 
-        lua_pop(lua_state, 1);
-    }
+template<class T>
+void read_stat_modifiers(const std::string &table, T &obj) {
+    read_lua_table_inner( "modifiers", [&obj] (auto stat) {
+        if (stat == "str") obj.strength = lua_int();
+        if (stat == "dex") obj.dexterity = lua_int();
+        if (stat == "con") obj.constitution = lua_int();
+        if (stat == "int") obj.intelligence = lua_int();
+        if (stat == "wis") obj.wisdom = lua_int();
+        if (stat == "cha") obj.charisma = lua_int();
+        if (stat == "com") obj.comeliness = lua_int();
+        if (stat == "eth") obj.ethics = lua_int();
+    });
 }
 
 void read_life_events(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "life_events");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-        std::string key = lua_tostring(lua_state, -2);
-        life_event_template le;
-
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-            if (field == "min_age") le.min_age = lua_tonumber(lua_state, -1);
-            if (field == "max_age") le.max_age = lua_tonumber(lua_state, -1);
-            if (field == "weight") le.weight = lua_tonumber(lua_state, -1);
-            if (field == "description") le.description = lua_tostring(lua_state, -1);
-
-            if (field == "modifiers") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string stat = lua_tostring(lua_state, -2);
-                    int modifier = lua_tonumber(lua_state, -1);
-                    if (stat == "str") le.strength = modifier;
-                    if (stat == "dex") le.dexterity = modifier;
-                    if (stat == "con") le.constitution = modifier;
-                    if (stat == "int") le.intelligence = modifier;
-                    if (stat == "wis") le.wisdom = modifier;
-                    if (stat == "cha") le.charisma = modifier;
-                    if (stat == "com") le.comeliness = modifier;
-                    if (stat == "eth") le.ethics = modifier;
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "skills") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    le.skills.push_back(lua_tostring(lua_state, -1));
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "requires") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    le.requires_event.push_back(lua_tostring(lua_state, -1));
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "precludes") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    le.precludes_event.push_back(lua_tostring(lua_state, -1));
-                    lua_pop(lua_state, 1);
-                }
-            }
-
-            lua_pop(lua_state, 1);
-        }
-        life_event_defs[key] = le;
-        lua_pop(lua_state, 1);
-    }
+    std::string tag = "";
+    life_event_template le;
+    read_lua_table("life_events",
+        [&le, &tag] (const auto &key) { tag = key; le = life_event_template{}; },
+        [&le, &tag] (const auto &key) { life_event_defs[tag] = le; },
+        lua_parser{
+            {"min_age", [&le] ()        { le.min_age = lua_int(); }},
+            {"max_age", [&le] ()        { le.max_age = lua_int(); }},
+            {"weight", [&le] ()         { le.weight = lua_int(); }},
+            {"description", [&le] ()    { le.description = lua_str(); }},
+            {"modifiers", [&le] ()     {
+                read_stat_modifiers("modifiers", le);
+            }},
+            {"skills",      [&le] () {
+                read_lua_table_inner( "skills", [&le] (auto s) { le.skills.push_back(s); });
+            }},
+            {"requires",      [&le] () {
+                read_lua_table_inner( "requires", [&le] (auto s) { le.requires_event.push_back(s); });
+            }},
+            {"precludes",      [&le] () {
+                read_lua_table_inner( "precludes", [&le] (auto s) { le.precludes_event.push_back(s); });
+            }}
+        } 
+    );
 }
 
 void read_professions(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "starting_professions");
-    lua_pushnil(lua_state);
 
-    while(lua_next(lua_state, -2) != 0)
-    {
-        std::string key = lua_tostring(lua_state, -2);
-        profession_t p;
+    std::string tag;
+    profession_t p;
 
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-            if (field == "name") p.name = lua_tostring(lua_state, -1);
-            // Stat mods
-            if (field == "modifiers") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string stat = lua_tostring(lua_state, -2);
-                    int modifier = lua_tonumber(lua_state, -1);
-                    if (stat == "str") p.strength = modifier;
-                    if (stat == "dex") p.dexterity = modifier;
-                    if (stat == "con") p.constitution = modifier;
-                    if (stat == "int") p.intelligence = modifier;
-                    if (stat == "wis") p.wisdom = modifier;
-                    if (stat == "cha") p.charisma = modifier;
-                    if (stat == "com") p.comeliness = modifier;
-                    if (stat == "eth") p.ethics = modifier;
-                    lua_pop(lua_state, 1);
-                }
-            }
-
-            // Starting clothes
-            if (field == "clothing") {
-                lua_pushstring(lua_state, field.c_str());
+    read_lua_table("starting_professions",
+        [&p, &tag] (const auto &key) { tag = key; p = profession_t{}; },
+        [&p, &tag] (const auto &key) { starting_professions.push_back(p); },
+        lua_parser{
+            {"name", [&p] () { p.name = lua_str(); }},
+            {"modifiers", [&p] ()     {
+                read_stat_modifiers("modifiers", p);
+            }},
+            {"clothing", [&p] ()      {
+                lua_pushstring(lua_state, "clothing");
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     const std::string gender_specifier = lua_tostring(lua_state, -2);
@@ -222,65 +156,45 @@ void read_professions(std::ofstream &tech_tree_file) {
                     }
                     lua_pop(lua_state, 1);
                 }
-            }
-
-            lua_pop(lua_state, 1);
+            }}
         }
-        starting_professions.push_back(p);
-        lua_pop(lua_state, 1);
-    }
+    );
 }
 
 void read_items(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "items");
-    lua_pushnil(lua_state);
 
-    while(lua_next(lua_state, -2) != 0)
-    {
-        item_def_t c;
+    std::string tag;
+    item_def_t c;
 
-        std::string key = lua_tostring(lua_state, -2);
-        c.tag = key;
-
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-
-            if (field == "name") c.name = lua_tostring(lua_state, -1);
-            if (field == "description") c.description = lua_tostring(lua_state, -1);
-            if (field == "background") c.bg = read_lua_color("background");
-            if (field == "foreground") c.fg = read_lua_color("foreground");
-            if (field == "glyph") c.glyph = lua_tonumber(lua_state, -1);
-            if (field == "itemtype") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string type = lua_tostring(lua_state, -1);
+    read_lua_table("items",
+        [&c, &tag] (const auto &key) { tag=key; c=item_def_t{}; c.tag = tag; },
+        [&c, &tag] (const auto &key) { item_defs[tag] = c; },
+        lua_parser{
+            { "name", [&c] ()           { c.name = lua_str(); }},
+            { "description", [&c] ()    { c.description = lua_str(); }},
+            { "background", [&c] ()     { c.bg = read_lua_color("background"); }},
+            { "foreground", [&c] ()     { c.bg = read_lua_color("foreground"); }},
+            { "glyph", [&c] ()          { c.glyph = lua_int(); }},
+            { "damage_n", [&c] ()       { c.damage_n = lua_int(); }},
+            { "damage_d", [&c] ()       { c.damage_d = lua_int(); }},
+            { "damage_mod", [&c] ()     { c.damage_mod = lua_int(); }},
+            { "damage_stat", [&c] ()    { c.damage_stat = lua_str(); }},
+            { "ammo", [&c] ()           { c.ammo = lua_str(); }},
+            { "range", [&c] ()          { c.range = lua_int(); }},
+            { "stack_size", [&c] ()     { c.stack_size = lua_int(); }},
+            { "initiative_penalty", [&c] ()    { c.initiative_penalty = lua_int(); }},
+            { "itemtype", [&c] () {
+                read_lua_table_inner( "itemtype", [&c] (auto type) { 
                     if (type == "component") c.categories.set(COMPONENT);
                     if (type == "tool-chopping") c.categories.set(TOOL_CHOPPING);
                     if (type == "tool-digging") c.categories.set(TOOL_DIGGING);
                     if (type == "weapon-melee") c.categories.set(WEAPON_MELEE);
                     if (type == "weapon-ranged") c.categories.set(WEAPON_RANGED);
                     if (type == "ammo") c.categories.set(WEAPON_AMMO);
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "damage_n") c.damage_n = lua_tonumber(lua_state, -1);
-            if (field == "damage_d") c.damage_d = lua_tonumber(lua_state, -1);
-            if (field == "damage_mod") c.damage_mod = lua_tonumber(lua_state, -1);
-            if (field == "ammo") c.ammo = lua_tostring(lua_state, -1);
-            if (field == "range") c.range = lua_tonumber(lua_state, -1);
-            if (field == "stack_size") c.stack_size = lua_tonumber(lua_state, -1);
-            if (field == "initiative_penalty") c.initiative_penalty = lua_tonumber(lua_state, -1);
-
-            lua_pop(lua_state, 1);
+                 });
+            }}
         }
-        item_defs[key] = c;
-        //tech_tree_file << "\"" << key << "\"\n";
-
-        lua_pop(lua_state, 1);
-    }
+    );
 }
 
 void read_buildings(std::ofstream &tech_tree_file) {

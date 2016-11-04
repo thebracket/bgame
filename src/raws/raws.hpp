@@ -80,6 +80,7 @@ struct item_def_t {
 	std::string ammo;
 	int stack_size = 1;
 	int initiative_penalty = 0;
+	std::string damage_stat = "";
 };
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 
