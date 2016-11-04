@@ -10,17 +10,17 @@ struct navigator_t {
 		bool can_go = false;
 		const int idx = mapidx(pos);
 		const int destidx = mapidx(dest);
-		if (pos.x < dest.x && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
+		if (dest.x > pos.x && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
 			can_go = true;
-		} else if (pos.x > dest.x && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
+		} else if (dest.x < pos.x && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
 			can_go = true;
-		} else if (pos.y < dest.y && current_region->tile_flags[idx].test(CAN_GO_NORTH)) {
+		} else if (dest.y < pos.y && current_region->tile_flags[idx].test(CAN_GO_NORTH)) {
 			can_go = true;
-		} else if (pos.y > dest.y && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) {
+		} else if (dest.y > pos.y && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) {
 			can_go = true;
-		} else if (pos.z < dest.z && current_region->tile_flags[idx].test(CAN_GO_UP)) {
+		} else if (dest.z > pos.z && current_region->tile_flags[idx].test(CAN_GO_UP)) {
 			can_go = true;
-		} else if (pos.z > dest.z && current_region->tile_flags[idx].test(CAN_GO_DOWN)) {
+		} else if (dest.z < pos.z && current_region->tile_flags[idx].test(CAN_GO_DOWN)) {
 			can_go = true;
 		}
 
