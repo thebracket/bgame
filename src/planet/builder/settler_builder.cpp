@@ -13,14 +13,41 @@
 
 using namespace rltk;
 
-std::vector<std::string> get_event_candidates(const int &age) {
+std::vector<std::string> get_event_candidates(const int &age, const std::vector<std::string> &past) {
 	std::vector<std::string> result;
+
+	std::set<std::string> unavailable;
+	for (const std::string &le : past) {
+		auto lefinder = life_event_defs.find(le);
+		for (const std::string &no : lefinder->second.precludes_event) {
+			unavailable.insert(no);
+		}
+	}
 
 	for (auto it=life_event_defs.begin(); it!=life_event_defs.end(); ++it) {
 		if (age >= it->second.min_age && age <= it->second.max_age) {
-			for (int i=0; i<it->second.weight; ++i) {
-				result.push_back(it->first);
+			bool available = true;
+
+			auto nope_check = unavailable.find(it->first);
+			if (nope_check != unavailable.end()) {
+				available = false;
 			}
+
+			if (available && !it->second.requires_event.empty()) {
+				available = false;
+				for (const auto &req : it->second.requires_event) {
+					for (const auto &p : past) {
+						if (p == req) available = true;
+					}
+				}
+			}
+
+			if (available) {
+				for (int i=0; i<it->second.weight; ++i) {
+					result.push_back(it->first);
+				}
+			}
+
 		}
 	}
 
@@ -193,11 +220,14 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	// Life events
 	int year = 2525 - stats.age;
 	int age = 0;
-	while (year < 2525) {
-		std::vector<std::string> candidates = get_event_candidates(age);
+	std::vector<std::string> event_buffer;
+
+	while (year < 2522) {
+		std::vector<std::string> candidates = get_event_candidates(age, event_buffer);
 		if (!candidates.empty()) {
 			const std::size_t idx = rng.roll_dice(1, candidates.size())-1;
 			const std::string event_name = candidates[idx];
+			event_buffer.push_back(event_name);
 			auto ledef = life_event_defs.find(event_name);
 
 			bool has_effect = false;
@@ -209,8 +239,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 			if (ledef->second.charisma != 0) has_effect = true;
 			if (ledef->second.comeliness != 0) has_effect = true;
 			if (ledef->second.ethics != 0) has_effect = true;
+			if (!ledef->second.skills.empty()) has_effect = true;
 
-			if (has_effect) {
+			if (age==0 || has_effect) {
 				auto finder = planet.history.settler_life_events.find(settler->id);
 				const life_event_t event{ year, event_name };
 				if (finder == planet.history.settler_life_events.end()) {
@@ -218,7 +249,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 				} else {
 					planet.history.settler_life_events[settler->id].push_back(event);
 				}
-				if (rng.roll_dice(1,6)>3) {
+				if (rng.roll_dice(1,10)>7) {
 					stats.strength += ledef->second.strength;
 					stats.dexterity += ledef->second.dexterity;
 					stats.constitution += ledef->second.constitution;
@@ -228,12 +259,22 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 					stats.comeliness += ledef->second.comeliness;
 					stats.ethics += ledef->second.ethics;
 				}
+				for (const std::string &skill : ledef->second.skills) {
+					auto skillfinder = stats.skills.find(skill);
+					if (skillfinder == stats.skills.end()) {
+						stats.skills[skill] = skill_t{1,0};
+					} else {
+						++stats.skills[skill].skill_level;
+					}
+				}
 			}
 		}
 
 		++year;
 		++age;
 	}
+	planet.history.settler_life_events[settler->id].push_back(life_event_t{2524, "ark_b"});
+	planet.history.settler_life_events[settler->id].push_back(life_event_t{2525, "planetfall"});
 
 	int base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
 	if (base_hp < 1) base_hp = 1;

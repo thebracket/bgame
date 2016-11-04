@@ -246,6 +246,9 @@ struct life_event_template {
 	short charisma = 0;
 	short comeliness = 0;
 	short ethics = 0;
+	std::vector<std::string> skills;
+	std::vector<std::string> requires_event;
+	std::vector<std::string> precludes_event;
 };
 
 extern string_table_t first_names_male;

@@ -138,6 +138,30 @@ void read_life_events(std::ofstream &tech_tree_file) {
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "skills") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    le.skills.push_back(lua_tostring(lua_state, -1));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "requires") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    le.requires_event.push_back(lua_tostring(lua_state, -1));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "precludes") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    le.precludes_event.push_back(lua_tostring(lua_state, -1));
+                    lua_pop(lua_state, 1);
+                }
+            }
 
             lua_pop(lua_state, 1);
         }
