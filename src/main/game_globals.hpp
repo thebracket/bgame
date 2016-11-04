@@ -20,6 +20,7 @@ struct config_t {
 	bool tooltip_fadein = true;
 	float tooltip_speed = 100.0;
 	int autosave_minutes = 5;
+	bool fullscreen = false;
 };
 
 struct available_building_t {

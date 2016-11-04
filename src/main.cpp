@@ -118,6 +118,7 @@ void read_config() {
 		if (split_line[0] == "tooltip_fadein" && split_line[1] != "yes") game_config.tooltip_fadein = false;
 		if (split_line[0] == "tooltip_speed") game_config.tooltip_speed = std::stof(split_line[1]);
 		if (split_line[0] == "autosave_minutes") game_config.autosave_minutes = std::stoi(split_line[1]);
+		if (split_line[0] == "fullscreen" && split_line[1]=="1") game_config.fullscreen = true;
 	}
 }
 
@@ -132,7 +133,7 @@ int main(int argc, char* argv[])
 #endif // !WIN32
 
 	read_config();
-	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future"));
+	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
 	splash.init();
     run(tick);
 }
