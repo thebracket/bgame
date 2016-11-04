@@ -97,7 +97,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		}
 	}
 
-	const int hair_color_roll = rng.roll_dice(1, 4);
+	const int hair_color_roll = rng.roll_dice(1, 5);
 	switch (hair_color_roll)
 	{
 	case 1:
@@ -111,6 +111,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		break;
 	case 4:
 		species.hair_color = WHITE_HAIR;
+		break;
+	case 5:
+		species.hair_color = RED_HAIR;
 		break;
 	}
 

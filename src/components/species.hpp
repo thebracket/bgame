@@ -8,7 +8,7 @@ using namespace rltk;
 
 enum gender_t { MALE, FEMALE, HERMAPHRODITE };
 enum sexuality_t { HETEROSEXUAL, HOMOSEXUAL, BISEXUAL, ASEXUAL };
-enum hair_color_t { WHITE_HAIR, BROWN_HAIR, BLACK_HAIR, BLONDE_HAIR };
+enum hair_color_t { WHITE_HAIR, BROWN_HAIR, BLACK_HAIR, BLONDE_HAIR, RED_HAIR };
 enum hair_style_t { BALD, SHORT, LONG, PIGTAILS, MOHAWK, BALDING, TRIANGLE };
 enum skin_color_t { CAUCASIAN, ASIAN, INDIAN, AFRICAN };
 
@@ -30,6 +30,9 @@ struct species_t {
 	std::string sexuality_str();
 	std::string height_feet();
 	std::string weight_lbs();
+	std::string ethnicity();
+	std::string hair_color_str();
+	std::string hair_style_str();
 	
 	std::size_t serialization_identity = 6;
 

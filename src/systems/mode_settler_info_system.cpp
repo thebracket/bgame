@@ -76,6 +76,11 @@ void mode_settler_info_system::update(const double ms) {
         dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, species->gender_pronoun() + std::string(" ") + stats->charisma_str(), rltk::colors::WHITE, rltk::colors::DARKEST_GREEN))); ++y;
         dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, species->gender_pronoun() + std::string(" ") + stats->comeliness_str(), rltk::colors::WHITE, rltk::colors::DARKEST_GREEN))); ++y;
         dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, species->gender_pronoun() + std::string(" ") + stats->ethics_str(), rltk::colors::WHITE, rltk::colors::DARKEST_GREEN))); ++y;
+
+        ++y;
+        dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, species->gender_pronoun() + std::string(" is of ") + species->ethnicity() + std::string(" descent."), rltk::colors::WHITE, rltk::colors::DARKEST_GREEN))); ++y;
+        dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, species->gender_pronoun() + std::string(" has ") + species->hair_color_str() + std::string(" hair, ") + species->hair_style_str(), rltk::colors::WHITE, rltk::colors::DARKEST_GREEN))); ++y;
+        
     } else if (tab == 1) {
         int y = box.top + 8;
 

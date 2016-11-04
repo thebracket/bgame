@@ -53,3 +53,34 @@ std::string species_t::weight_lbs() {
     result << std::fixed << weight_lbs << " lbs";
     return result.str();
 }
+
+std::string species_t::ethnicity() {
+    switch (skin_color) {
+        case CAUCASIAN : return "caucasian";
+        case ASIAN : return "asian";
+        case INDIAN : return "middle-eastern";
+        case AFRICAN : return "african";
+    }
+}
+
+std::string species_t::hair_color_str() {
+    switch (hair_color) {
+        case WHITE_HAIR : return "white";
+        case BROWN_HAIR : return "brown";
+        case BLACK_HAIR : return "black";
+        case BLONDE_HAIR : return "blonde";
+        case RED_HAIR : return "red";
+    }
+}
+
+std::string species_t::hair_style_str() {
+    switch (hair_style) {
+        case BALD : return "bald";
+        case SHORT : return "cropped short";
+        case LONG : return "long";
+        case PIGTAILS : return "in pigtails";
+        case MOHAWK : return "in a mowhawk";
+        case BALDING : return "balding";
+        case TRIANGLE : return "cut into a triangle shape";
+    }
+}
