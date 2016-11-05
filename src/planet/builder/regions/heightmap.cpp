@@ -60,7 +60,8 @@ std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vect
         const int up_variance = rng.roll_dice(1, 2)-1;
         const int down_variance = rng.roll_dice(1, 2)-1;
         int amount = up_variance - down_variance;
-        if (rng.roll_dice(1,1000) < rainfall) amount = -10;
+        // Disable murky pools for now
+        //if (rng.roll_dice(1,100000) < rainfall) amount = -10;
         variance.push_back( amount );
     }
 
