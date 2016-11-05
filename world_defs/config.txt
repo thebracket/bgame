@@ -5,4 +5,4 @@ gui_font=8x16
 tooltip_fadein=yes
 tooltip_speed=100.0
 autosave_minutes=5
-fullscreen=0
+fullscreen=1
