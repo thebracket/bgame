@@ -1,11 +1,10 @@
 #pragma once
 
 extern "C" {
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
+//#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 }
-
 #include <string>
 #include <unordered_map>
 #include <functional>

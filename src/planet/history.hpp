@@ -6,6 +6,8 @@
 #include <rltk.hpp>
 
 struct life_event_t {
+	life_event_t() {}
+	life_event_t(const int &YEAR, const std::string &TYPE) : year(YEAR), type(TYPE) {}
     int year = 0;
     std::string type = "";
 };

@@ -6,18 +6,20 @@ include(${PROJECT_SOURCE_DIR}/../cmake_modules/add_boost.cmake)
 
 # Build Lua
 add_subdirectory(lua)
+include_directories(${lua_BINARY_DIR})
 
 # Build SFML
 add_subdirectory(sfml)
 
 # Build Zlib
 add_subdirectory(zlib)
+include_directories(${zlib_BINARY_DIR})
 set_target_properties(example PROPERTIES EXCLUDE_FROM_ALL 1)
 set_target_properties(minigzip PROPERTIES EXCLUDE_FROM_ALL 1)
 
 # Build RLTK
 include_directories(${BoostSourceDir})
-add_library(rltk rltk/rltk/rltk.cpp
+add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/texture_resources.cpp
 	rltk/rltk/color_t.cpp
 	rltk/rltk/virtual_terminal.cpp
@@ -38,7 +40,7 @@ target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfm
 target_link_libraries(rltk zlibstatic)
 
 # Build sqlite
-add_library(sqlite sqlite/sqlite3.c)
+add_library(sqlite STATIC sqlite/sqlite3.c)
 
 # Build FastNoise
-add_library(FastNoise FastNoise/FastNoise.cpp)
+add_library(FastNoise STATIC FastNoise/FastNoise.cpp)
