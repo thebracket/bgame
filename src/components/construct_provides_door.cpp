@@ -1,12 +1,9 @@
 #include "construct_provides_door.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void construct_door_t::save(std::ostream &lbfile) {
-    Serialize("construct_provides_door", lbfile, locked);
+void construct_door_t::to_xml(xml_node * c) {
+    component_to_xml(c, std::make_pair("locked", locked));
 }
 
-construct_door_t construct_door_t::load(std::istream &lbfile) {
-    construct_door_t c;
-    Deserialize("construct_provides_door", lbfile, c.locked);
-    return c;
+void construct_door_t::from_xml(xml_node * c) {
+    locked = c->val<bool>("locked");
 }

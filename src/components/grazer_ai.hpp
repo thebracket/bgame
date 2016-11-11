@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../utils/serialization_wrapper.hpp"
 
 using namespace rltk;
 
@@ -11,8 +10,8 @@ struct grazer_ai {
 	int initiative = 0;
 	int initiative_modifier = 0;
 
-	std::size_t serialization_identity = 20;
+	std::string xml_identity = "grazer_ai";
 
-	void save(std::ostream &lbfile);
-	static grazer_ai load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

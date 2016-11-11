@@ -1,12 +1,19 @@
 #include "viewshed.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void viewshed_t::save(std::ostream &lbfile) {
-    Serialize("viewshed_t", lbfile, viewshed_radius, penetrating, good_guy_visibility, visible_entities);
+void viewshed_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("viewshed_radius", viewshed_radius),
+        std::make_pair("penetrating", penetrating),
+        std::make_pair("good_guy_visibility", good_guy_visibility),
+        std::make_pair("visible_entities", visible_entities)
+    );
 }
 
-viewshed_t viewshed_t::load(std::istream &lbfile) {
-    viewshed_t c;
-    Deserialize("viewshed_t", lbfile, c.viewshed_radius, c.penetrating, c.good_guy_visibility, c.visible_entities);
-    return c;
+void viewshed_t::from_xml(xml_node * c) {
+    viewshed_radius = c->val<int>("viewshed_radius");
+    penetrating = c->val<bool>("penetrating");
+    good_guy_visibility = c->val<bool>("good_guy_visibility");
+    c->iterate_child("visible_entities", [this] (xml_node * ch) {
+        // TODO
+    });
 }

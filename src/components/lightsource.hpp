@@ -2,7 +2,6 @@
 
 #include <rltk.hpp>
 #include <vector>
-#include "../utils/serialization_wrapper.hpp"
 
 using namespace rltk;
 
@@ -18,8 +17,8 @@ struct lightsource_t {
 	// Non-persistent
 	std::vector<int> lit_cache;
 
-	std::size_t serialization_identity = 19;
+	std::string xml_identity = "lightsource_t";
 
-	void save(std::ostream &lbfile);
-	static lightsource_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

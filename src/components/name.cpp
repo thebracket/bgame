@@ -1,12 +1,15 @@
 #include "name.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void name_t::save(std::ostream &lbfile) {
-    Serialize("name_t", lbfile, first_name, last_name);
+void name_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("first_name", first_name),
+        std::make_pair("last_name", last_name)
+    );
 }
 
-name_t name_t::load(std::istream &lbfile) {
-    name_t c;
-    Deserialize("name_t", lbfile, c.first_name, c.last_name);
-    return c;
+void name_t::from_xml(xml_node * c) {
+    std::stringstream ss;
+
+    first_name = c->val<std::string>("first_name");
+    last_name = c->val<std::string>("last_name");
 }

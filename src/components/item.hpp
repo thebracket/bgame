@@ -39,8 +39,8 @@ struct item_t {
 			item_name = material_name(mat) + std::string(" ") + item_name;
 		}
 
-	std::size_t serialization_identity = 9;
+	std::string xml_identity = "item_t";
 
-	void save(std::ostream &lbfile);
-	static item_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

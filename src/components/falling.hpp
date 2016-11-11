@@ -9,8 +9,8 @@ struct falling_t {
     falling_t(const int &d) : distance(d) {}
     int distance = 0;
 
-	std::size_t serialization_identity = 28;
+	std::string xml_identity = "falling_t";
 
-	void save(std::ostream &lbfile);
-	static falling_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

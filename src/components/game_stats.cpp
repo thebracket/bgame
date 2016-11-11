@@ -1,16 +1,39 @@
 #include "game_stats.hpp"
 #include "../messages/log_message.hpp"
 #include "../components/logger.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void game_stats_t::save(std::ostream &lbfile) {
-    Serialize("game_stats_t", lbfile, profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma, comeliness, ethics, age, skills);
+void game_stats_t::to_xml(xml_node * c) {
+	component_to_xml(c,
+		std::make_pair("profession_tag", profession_tag),
+		std::make_pair("strength", strength),
+		std::make_pair("dexterity", dexterity),
+		std::make_pair("constitution", constitution),
+		std::make_pair("intelligence", intelligence),
+		std::make_pair("wisdom", wisdom),
+		std::make_pair("charisma", charisma),
+		std::make_pair("comeliness", comeliness),
+		std::make_pair("ethics", ethics),
+		std::make_pair("age", age),
+		std::make_pair("skills", skills)
+	);
 }
 
-game_stats_t game_stats_t::load(std::istream &lbfile) {
-    game_stats_t c;
-    Deserialize("game_stats_t", lbfile, c.profession_tag, c.strength, c.dexterity, c.constitution, c.intelligence, c.wisdom, c.charisma, c.comeliness, c.ethics, c.age, c.skills);
-    return c;
+void game_stats_t::from_xml(xml_node * c) {
+	profession_tag = c->val<std::string>("profession_tag");
+	strength = c->val<short>("strength");
+	dexterity = c->val<short>("dexterity");
+	constitution = c->val<short>("constitution");
+	intelligence = c->val<short>("intelligence");
+	wisdom = c->val<short>("wisdom");
+	charisma = c->val<short>("charisma");
+	comeliness = c->val<short>("comeliness");
+	ethics = c->val<short>("ethics");
+	age = c->val<short>("age");
+	c->iterate_child("skills", [this] (xml_node * child) {
+		skill_t skill;
+		skill.from_xml(child);
+		skills[child->val<std::string>("key")] = skill;
+	});
 }
 
 std::string game_stats_t::strength_str() {

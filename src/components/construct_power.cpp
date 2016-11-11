@@ -1,12 +1,15 @@
 #include "construct_power.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void construct_power_t::save(std::ostream &lbfile) {
-    Serialize("construct_power_t", lbfile, storage_capacity, generation_always, generation_solar);
+void construct_power_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("storage_capacity", storage_capacity), 
+        std::make_pair("generation_always", generation_always), 
+        std::make_pair("generation_solar", generation_solar)
+    );
 }
 
-construct_power_t construct_power_t::load(std::istream &lbfile) {
-    construct_power_t c;
-    Deserialize("construct_power_t", lbfile, c.storage_capacity, c.generation_always, c.generation_solar);
-    return c;
+void construct_power_t::from_xml(xml_node * c) {
+    storage_capacity = c->val<int>("storage_capacity");
+    generation_always = c->val<int>("generation_always");
+    generation_solar = c->val<int>("generation_solar");
 }

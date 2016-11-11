@@ -1,16 +1,18 @@
 #include "shift.hpp"
-#include "../../utils/serialization_wrapper.hpp"
 
-void shift_t::save(std::ostream &f) {
-    Serialize("shift_t", f, shift_name);
+using namespace rltk;
+
+void shift_t::to_xml(xml_node * c) {
+    c->add_value("name", shift_name);
     for (int i=0; i<24; ++i) {
-        Serialize("shift_t_hr", f, hours[i]);
+        c->add_value(std::to_string(i), std::to_string(hours[i]));
     }
 }
 
-void shift_t::load(std::istream &f) {
-    Deserialize("shift_t", f, shift_name);
+void shift_t::from_xml(xml_node * c) {
+    shift_name = c->val<std::string>("name");
     for (int i=0; i<24; ++i) {
-        Deserialize("shift_t_hr", f, hours[i]);
+        int h = c->val<int>(std::to_string(i));
+        hours[i] = (shift_type_t)h;
     }
 }

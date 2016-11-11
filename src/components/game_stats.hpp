@@ -31,10 +31,10 @@ struct game_stats_t {
 
 	game_stats_t() {}
 
-	std::size_t serialization_identity = 8;
+	std::string xml_identity = "game_stats_t";
 
-	void save(std::ostream &lbfile);
-	static game_stats_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 	std::string strength_str();
 	std::string dexterity_str();
 	std::string constitution_str();

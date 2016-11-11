@@ -32,6 +32,7 @@ add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/gui_control_t.cpp
 	rltk/rltk/virtual_terminal_sparse.cpp
 	rltk/rltk/ecs.cpp
+	rltk/rltk/xml.cpp
 	rltk/rltk/perlin_noise.cpp
 	rltk/rltk/rexspeeder.cpp
 	)

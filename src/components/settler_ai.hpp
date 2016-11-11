@@ -64,8 +64,8 @@ struct settler_ai_t {
 		std::fill(permitted_work.begin(), permitted_work.end(), true);
 	}
 
-	std::size_t serialization_identity = 11;
+	std::string xml_identity = "settler_ai_t";
 
-	void save(std::ostream &lbfile);
-	static settler_ai_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

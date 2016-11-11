@@ -3,6 +3,7 @@
 #include <istream>
 #include <ostream>
 #include <vector>
+#include <rltk.hpp>
 
 struct reaction_task_t {
     reaction_task_t() {}
@@ -13,6 +14,6 @@ struct reaction_task_t {
 	std::string reaction_tag;
     std::vector<std::pair<std::size_t,bool>> components;
 
-    void save(std::ostream &f);
-    void load(std::istream &f);
+    void to_xml(rltk::xml_node * c);
+    void from_xml(rltk::xml_node * c);
 };

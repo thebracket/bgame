@@ -10,18 +10,18 @@ struct log_line_t {
     int age = 0;
     std::vector<rltk::vchar> chars;
 
-    void save(std::ostream &f);
-    void load(std::istream &f);
+    void to_xml(rltk::xml_node * c);
+    void from_xml(rltk::xml_node * c);
 };
 
 struct logger_t {
 	logger_t() {}
     std::vector<log_line_t> lines;
 
-	std::size_t serialization_identity = 26;
+    std::string xml_identity = "logger_t";
 
-	void save(std::ostream &lbfile);
-	static logger_t load(std::istream &lbfile);
+    void to_xml(xml_node * c);
+    void from_xml(xml_node * c);
 };
 
 struct LOG {

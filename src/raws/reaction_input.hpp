@@ -3,7 +3,7 @@
 #include <istream>
 #include <ostream>
 #include <boost/optional.hpp>
-#include "../utils/serialization_wrapper.hpp"
+#include <rltk.hpp>
 
 enum material_def_spawn_type_t { cluster_rock, rock, soil, sand, metal, synthetic, organic, leather };
 
@@ -13,11 +13,20 @@ struct reaction_input_t {
 	boost::optional<material_def_spawn_type_t> required_material_type;
 	int quantity = 0;
 
-	void save(std::ostream &f) {
-		Serialize("reaction_input_t", f, tag, required_material, required_material_type, quantity);
+	void to_xml(rltk::xml_node * c) {
+		rltk::component_to_xml(c,
+			std::make_pair("tag", tag),
+			std::make_pair("required_material", required_material),
+			std::make_pair("required_material_type", required_material_type),
+			std::make_pair("quantity", quantity)
+		);
 	}
 
-	void load(std::istream f) {
-		Deserialize("reaction_input_t", f, tag, required_material, required_material_type, quantity);
+	void from_xml(rltk::xml_node * c) {
+		tag = c->val<std::string>("tag");
+		required_material = c->val<std::size_t>("required_material");
+		required_material_type = (material_def_spawn_type_t)c->val<int>("required_material_type");
+		quantity = c->val<int>("quantity");
 	}
+
 };

@@ -10,8 +10,8 @@ struct item_stored_t {
 	item_stored_t() {}
 	item_stored_t(const std::size_t carrier) : stored_in(carrier) {}
 
-	std::size_t serialization_identity = 12;
+	std::string xml_identity = "item_stored_t";
 
-	void save(std::ostream &lbfile);
-	static item_stored_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

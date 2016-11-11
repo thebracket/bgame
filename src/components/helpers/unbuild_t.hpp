@@ -2,6 +2,7 @@
 
 #include <istream>
 #include <ostream>
+#include <rltk.hpp>
 
 struct unbuild_t {
 	unbuild_t() {}
@@ -9,6 +10,6 @@ struct unbuild_t {
 	bool is_building = true;
 	std::size_t building_id;
 
-    void save(std::ostream &f);
-    void load(std::istream &f);
+	void to_xml(rltk::xml_node * c);
+	void from_xml(rltk::xml_node * c);
 };

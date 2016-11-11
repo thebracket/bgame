@@ -9,8 +9,8 @@ struct wildlife_group {
 	wildlife_group(uint8_t &id) : group_id(id) {}
     uint8_t group_id;
 
-	std::size_t serialization_identity = 21;
+	std::string xml_identity = "wildlife_group";
 
-	void save(std::ostream &lbfile);
-	static wildlife_group load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

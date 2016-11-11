@@ -7,13 +7,8 @@ using namespace rltk;
 struct construct_container_t {
 	construct_container_t() {}
 
-	std::size_t serialization_identity = 14;
+	std::string xml_identity = "construct_container_t";
 
-	void save(std::ostream &lbfile) {
-	}
-
-	static construct_container_t load(std::istream &lbfile) {
-		construct_container_t c;
-		return c;
-	}
+	void to_xml(xml_node * c) {}
+	void from_xml(xml_node * c) {}
 };

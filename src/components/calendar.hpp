@@ -8,7 +8,7 @@
 using namespace rltk;
 
 struct calendar_t {
-	std::size_t serialization_identity = 3;
+	std::string xml_identity = "calendar_t";
 
 	uint16_t year = 2525;
 	uint8_t month = 0;
@@ -21,8 +21,8 @@ struct calendar_t {
 
 	std::string get_date_time() const;
 	void next_minute();
-	void save(std::ostream &lbfile);
-	static calendar_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 
 	inline float sun_arc_percent() { 
 		if (hour < 12) {

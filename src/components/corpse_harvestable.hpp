@@ -11,8 +11,8 @@ struct corpse_harvestable {
     std::string creature_tag = "";
 	bool claimed = false;
 
-	std::size_t serialization_identity = 23;
+	std::string xml_identity = "corpse_harvestable";
 
-	void save(std::ostream &lbfile);
-	static corpse_harvestable load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

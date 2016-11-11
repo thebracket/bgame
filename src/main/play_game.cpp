@@ -47,9 +47,9 @@ void play_game::init() {
 	std::cout << "Loading game state\n";
 	{
 		const std::string save_filename = "world/savegame.dat";
-		std::fstream lbfile(save_filename, std::ios::in | std::ios::binary);
-		std::function<void(std::istream&,std::size_t,std::size_t)> helper(component_loader);
-		ecs_load(lbfile, helper);
+		std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
+		std::function<void(xml_node *, std::size_t, std::string)> loader(component_loader_xml);
+		ecs_load(std::move(lbfile), loader);
 	}
 
 	// Load the current region - check the camera for the world position

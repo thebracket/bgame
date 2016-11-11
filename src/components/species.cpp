@@ -1,14 +1,29 @@
 #include "species.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void species_t::save(std::ostream &lbfile) {
-    Serialize("species_t", lbfile, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, tag);
+void species_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("gender", gender),
+        std::make_pair("sexuality", sexuality),
+        std::make_pair("hair_color", hair_color),
+        std::make_pair("hair_style", hair_style),
+        std::make_pair("skin_color", skin_color),
+        std::make_pair("height_cm", height_cm),
+        std::make_pair("weight_kg", weight_kg),
+        std::make_pair("bearded", bearded),
+        std::make_pair("tag", tag)
+    );
 }
 
-species_t species_t::load(std::istream &lbfile) {
-    species_t c;
-    Deserialize("species_t", lbfile, c.gender, c.sexuality, c.hair_color, c.hair_style, c.skin_color, c.height_cm, c.weight_kg, c.bearded, c.tag);
-    return c;
+void species_t::from_xml(xml_node * c) {
+    gender = (gender_t)c->val<int>("gender");
+    sexuality = (sexuality_t)c->val<int>("sexuality");
+    hair_color = (hair_color_t)c->val<int>("hair_color");
+    hair_style = (hair_style_t)c->val<int>("hair_style");
+    skin_color = (skin_color_t)c->val<int>("skin_color");
+    height_cm = c->val<float>("height_cm");
+    weight_kg = c->val<float>("weight_kg");
+    bearded = c->val<bool>("bearded");
+    tag = c->val<std::string>("height_cm");
 }
 
 std::string species_t::gender_str() {

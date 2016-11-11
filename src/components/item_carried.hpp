@@ -29,8 +29,8 @@ struct item_carried_t {
 	item_carried_t() {}
 	item_carried_t(const item_location_t loc, const std::size_t carrier) : location(loc), carried_by(carrier) {}
 
-	std::size_t serialization_identity = 10;
+	std::string xml_identity = "item_carried_t";
 
-	void save(std::ostream &lbfile);
-	static item_carried_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

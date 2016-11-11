@@ -1,10 +1,15 @@
 #include "position.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void position_t::save(std::ostream &lbfile) {
-    Serialize("position_t", lbfile, x, y, z);
+void position_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("x", x), 
+        std::make_pair("y", y), 
+        std::make_pair("z", z)
+    );
 }
 
-void position_t::load(std::istream &lbfile) {
-    Deserialize("position_t", lbfile, x, y, z);
+void position_t::from_xml(xml_node * c) {
+    x = c->val<int>("x");
+    y = c->val<int>("y");
+    z = c->val<int>("z");
 }

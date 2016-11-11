@@ -18,6 +18,6 @@ struct building_designation_t {
     std::vector<rltk::vchar> glyphs;
 	std::size_t building_entity = 0;
 
-	void save(std::ostream &f);
-    void load(std::istream &f);
+	void to_xml(rltk::xml_node * c);
+    void from_xml(rltk::xml_node * c);
 };

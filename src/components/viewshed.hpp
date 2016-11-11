@@ -18,8 +18,8 @@ struct viewshed_t {
 	// Non-persistent
 	std::vector<int> visible_cache;
 
-	std::size_t serialization_identity = 17;
+	std::string xml_identity = "viewshed_t";
 
-	void save(std::ostream &lbfile);
-	static viewshed_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

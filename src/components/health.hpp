@@ -18,8 +18,8 @@ struct health_t {
 
 	health_t() {}
 
-	std::size_t serialization_identity = 7;
+	std::string xml_identity = "health_t";
 
-	void save(std::ostream &lbfile);
-	static health_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

@@ -1,12 +1,9 @@
 #include "falling.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void falling_t::save(std::ostream &lbfile) {
-    Serialize(lbfile, distance);
-};
+void falling_t::to_xml(xml_node * c) {
+    component_to_xml(c, std::make_pair("distance", distance));
+}
 
-falling_t falling_t::load(std::istream &lbfile) {
-    falling_t c;
-    Deserialize(lbfile, c.distance);
-    return c;
-};
+void falling_t::from_xml(xml_node * c) {
+    distance = c->val<int>("distance");
+}

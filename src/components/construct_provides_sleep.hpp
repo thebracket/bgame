@@ -9,8 +9,8 @@ struct construct_provides_sleep_t {
 
 	construct_provides_sleep_t() {}
 
-	std::size_t serialization_identity = 16;
+	std::string xml_identity = "construct_provides_sleep_t";
 
-	void save(std::ostream &lbfile);
-	static construct_provides_sleep_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

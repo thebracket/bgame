@@ -22,8 +22,8 @@ struct sentient_ai {
 	// Not serialized
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
 
-	std::size_t serialization_identity = 25;
+	std::string xml_identity = "sentient_ai";
 
-	void save(std::ostream &lbfile);
-	static sentient_ai load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

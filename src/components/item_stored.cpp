@@ -1,12 +1,11 @@
 #include "item_stored.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void item_stored_t::save(std::ostream &lbfile) {
-    Serialize("item_stored_t", lbfile, stored_in);
+void item_stored_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("stored_in", stored_in)
+    );
 }
 
-item_stored_t item_stored_t::load(std::istream &lbfile) {
-    item_stored_t c;
-    Deserialize("item_stored_t", lbfile, c.stored_in);
-    return c;
+void item_stored_t::from_xml(xml_node * c) {
+    stored_in = c->val<std::size_t>("stored_in");
 }

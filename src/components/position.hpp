@@ -13,8 +13,8 @@ struct position_t {
 	position_t(const int X, const int Y, const int Z) : x(X), y(Y), z(Z) {}
 	bool operator==(position_t &rhs) { return (x==rhs.x && y==rhs.y && z==rhs.z); }
 
-	std::size_t serialization_identity = 2;
+	std::string xml_identity = "position_t";
 
-	void save(std::ostream &lbfile);
-	void load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };

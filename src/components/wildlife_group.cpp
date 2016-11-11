@@ -1,12 +1,9 @@
 #include "wildlife_group.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void wildlife_group::save(std::ostream &lbfile) {
-    Serialize("wildlife_group", lbfile, group_id);
+void wildlife_group::to_xml(xml_node * c) {
+    component_to_xml(c, std::make_pair("group_id", group_id));
 }
 
-wildlife_group wildlife_group::load(std::istream &lbfile) {
-    wildlife_group c;
-    Deserialize("wildlife_group", lbfile, c.group_id);
-    return c;
+void wildlife_group::from_xml(xml_node * c) {
+    group_id = c->val<uint8_t>("group_id");
 }

@@ -1,26 +1,33 @@
 #include "logger.hpp"
 #include "../main/game_globals.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
 using rltk::serialize;
 using rltk::deserialize;
 
-void log_line_t::save(std::ostream &f) {
-    Serialize("log_line_t", f, age, chars);
+void log_line_t::to_xml(rltk::xml_node * c) {
+    rltk::component_to_xml(c,
+        std::make_pair("age", age),
+        std::make_pair("chars", chars)
+    );
 }
 
-void log_line_t::load(std::istream &f) {
-    Deserialize("log_line_t", f, age, chars);
+void log_line_t::from_xml(xml_node * c) {
+    age = c->val<int>("age");
+    c->iterate_child("chars", [this] (xml_node * ch) {
+        chars.push_back(ch->vchar());
+    });
 }
 
-void logger_t::save(std::ostream &lbfile) {
-    Serialize("logger_t", lbfile, lines);
+void logger_t::to_xml(xml_node * c) {
+    component_to_xml(c, std::make_pair("lines", lines));
 }
 
-logger_t logger_t::load(std::istream &lbfile) {
-    logger_t c;
-    Deserialize("logger_t", lbfile, c.lines);
-    return c;
+void logger_t::from_xml(xml_node * c) {
+    c->iterate_child("lines", [this] (xml_node * ch) {
+        log_line_t l;
+        l.from_xml(ch);
+        lines.push_back(l);
+    });
 }
 
 LOG * LOG::text(const std::string &txt) {

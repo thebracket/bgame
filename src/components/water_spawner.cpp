@@ -1,12 +1,11 @@
 #include "water_spawner.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void water_spawner_t::save(std::ostream &lbfile) {
-    Serialize(lbfile, spawner_type);
+void water_spawner_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("spawner_type", spawner_type)
+    );
 }
 
-water_spawner_t water_spawner_t::load(std::istream &lbfile) {
-    water_spawner_t c;
-    Deserialize(lbfile, c.spawner_type);
-    return c;
+void water_spawner_t::from_xml(xml_node * c) {
+    spawner_type = c->val<uint8_t>("spawner_type");
 }

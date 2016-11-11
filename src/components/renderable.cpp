@@ -1,12 +1,15 @@
 #include "renderable.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void renderable_t::save(std::ostream &lbfile) {
-    Serialize("renderable_t", lbfile, glyph, foreground, background);
+void renderable_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("glyph", glyph),
+        std::make_pair("foreground", foreground),
+        std::make_pair("background", background)
+    );
 }
 
-renderable_t renderable_t::load(std::istream &lbfile) {
-    renderable_t c;
-    Deserialize("renderable_t", lbfile, c.glyph, c.foreground, c.background);
-    return c;
+void renderable_t::from_xml(xml_node * c) {
+    glyph = c->val<uint8_t>("glyph");
+    foreground = c->color("foreground");
+    background = c->color("background");
 }

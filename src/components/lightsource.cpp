@@ -1,12 +1,15 @@
 #include "lightsource.hpp"
-#include "../utils/serialization_wrapper.hpp"
 
-void lightsource_t::save(std::ostream &lbfile) {
-    Serialize("lightsource_t", lbfile, radius, color, alert_status);
+void lightsource_t::to_xml(xml_node * c) {
+    component_to_xml(c,
+        std::make_pair("radius", radius),
+        std::make_pair("color", color),
+        std::make_pair("alert_status", alert_status)
+    );
 }
 
-lightsource_t lightsource_t::load(std::istream &lbfile) {
-    lightsource_t c;
-    Deserialize("lightsource_t", lbfile, c.radius, c.color, c.alert_status);
-    return c;
+void lightsource_t::from_xml(xml_node * c) {
+    radius = c->val<int>("radius");
+    color = c->color("color");
+    alert_status = c->val<bool>("alert_status");
 }

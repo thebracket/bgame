@@ -2,6 +2,7 @@
 
 #include <istream>
 #include <ostream>
+#include <rltk.hpp>
 
 struct health_part_t {
 	std::string part = "";
@@ -9,6 +10,6 @@ struct health_part_t {
 	int current_hitpoints = 0;
 	int size = 0;
 
-	void save(std::ostream &f);
-	void load(std::istream &f);
+	void to_xml(rltk::xml_node * c);
+	void from_xml(rltk::xml_node * c);
 };

@@ -9,8 +9,8 @@ struct construct_door_t {
 
 	construct_door_t() {}
 
-	std::size_t serialization_identity = 29;
+	std::string xml_identity = "construct_door_t";
 
-	void save(std::ostream &lbfile);
-	static construct_door_t load(std::istream &lbfile);
+	void to_xml(xml_node * c);
+	void from_xml(xml_node * c);
 };
