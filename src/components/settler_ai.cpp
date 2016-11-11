@@ -42,4 +42,8 @@ void settler_ai_t::from_xml(xml_node * c) {
         r.from_xml(c->find("reaction_target"));
         reaction_target = r;
     }
+    for (int i=0; i<NUMBER_OF_JOB_CATEGORIES; ++i) {
+        const std::string key = std::string("permitted_work_") + std::to_string(i);
+        permitted_work[i] = c->val<bool>(key);
+    }
 }

@@ -3,9 +3,10 @@
 using namespace rltk;
 
 void shift_t::to_xml(xml_node * c) {
-    c->add_value("name", shift_name);
+    xml_node * s = c->add_node("shift");
+    s->add_value("name", shift_name);
     for (int i=0; i<24; ++i) {
-        c->add_value(std::to_string(i), std::to_string(hours[i]));
+        s->add_value(std::to_string(i), std::to_string(hours[i]));
     }
 }
 
