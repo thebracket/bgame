@@ -88,13 +88,17 @@ void movement_system::update(const double ms) {
 	if (!entity(msg.entity_id)) break;
         auto epos = entity(msg.entity_id)->component<position_t>();
         position_t origin{epos->x, epos->y, epos->z};
+
+        // Bounds check
+        if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH-1 || msg.destination.y < 1 || msg.destination.y > REGION_HEIGHT-1
+            || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH-1) break;
+
+        // Move
         epos->x = msg.destination.x;
         epos->y = msg.destination.y;
         epos->z = msg.destination.z;
 
         // Do vegetation damage
-        if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH || msg.destination.y < 1 || msg.destination.y > REGION_HEIGHT
-            || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH) break;
         const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
         if (current_region->tile_vegetation_type[idx] > 0) {
             emit_deferred(vegetation_damage_message{idx, 1});
@@ -107,7 +111,7 @@ void movement_system::update(const double ms) {
     std::queue<entity_moved_message> * moved = mbox<entity_moved_message>();
     while (!moved->empty()) {
         entity_moved_message msg = moved->front();
-        moved->pop();
+        moved->pop();        
 
         octree_location_t start = octree_location_t{msg.origin.x, msg.origin.y, msg.origin.z, msg.entity_id};
         octree_location_t end = octree_location_t{msg.destination.x, msg.destination.y, msg.destination.z, msg.entity_id};

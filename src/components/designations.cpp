@@ -18,7 +18,7 @@ void designations_t::to_xml(xml_node * c) {
 
 void designations_t::from_xml(xml_node * c) {
     c->iterate_child("mining", [this] (xml_node *ch) {
-        mining[ ch->val<int>("key") ] = ch->val<uint8_t>("value");
+        mining[ ch->val<int>("key") ] = ch->val<uint8_t>("v");
     });
     c->iterate_child("chopping", [this] (xml_node *ch) {
         position_t pos;
@@ -34,7 +34,13 @@ void designations_t::from_xml(xml_node * c) {
         // TODO
     });
     c->iterate_child("guard_points", [this] (xml_node *ch) {
-        // TODO
+        position_t pos;
+        pos.from_xml(ch->find("guard_points_second"));
+        std::pair<bool, position_t> gp{
+            ch->find("guard_points_first")->val<bool>("guard_points"),
+            pos
+        };
+        guard_points.push_back(gp);
     });
     c->iterate_child("deconstructions", [this] (xml_node *ch) {
         unbuild_t u;

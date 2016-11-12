@@ -366,6 +366,10 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['aluminium_blue'], bg=colors['black'],
         hit_points = 200, damage_bonus=-1, ac_bonus=0.5
     },
+    bismuth = { name = "Bismuth", type="metal", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['bronze'], bg=colors['black'],
+        hit_points = 200, damage_bonus=1, ac_bonus=0.5
+    },
     bronze = { name = "Bronze", type="metal", 
         glyph = glyphs['one_quarter_solid'], fg=colors['bronze'], bg=colors['black'],
         hit_points = 200, damage_bonus=2, ac_bonus=1.0

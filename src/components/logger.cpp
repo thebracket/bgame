@@ -5,7 +5,8 @@ using rltk::serialize;
 using rltk::deserialize;
 
 void log_line_t::to_xml(rltk::xml_node * c) {
-    rltk::component_to_xml(c,
+    xml_node * l = c->add_node("line");
+    rltk::component_to_xml(l,
         std::make_pair("age", age),
         std::make_pair("chars", chars)
     );
