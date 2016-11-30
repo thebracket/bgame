@@ -1,5 +1,6 @@
 #include "wildlife_population_system.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/creatures.hpp"
 #include "../main/game_globals.hpp"
 #include "../raws/health_factory.hpp"
 #include "../messages/messages.hpp"
@@ -35,7 +36,7 @@ void wildlife_population_system::spawn_wildlife() {
             const std::size_t n_critters = get_biome_def(biome_type).wildlife.size();
             const std::size_t critter_idx = rng.roll_dice(1, (int)n_critters)-1;
             const std::string critter_tag = get_biome_def(biome_type).wildlife[critter_idx];
-            auto critter_def = get_creature_def( critter_tag );
+            auto critter_def = get_creature_def( critter_tag ).get();
             const int n_spawn = rng.roll_dice(critter_def.group_size_n_dice, critter_def.group_size_dice) + critter_def.group_size_mod;
 
             int edge = rng.roll_dice(1,4)-1;

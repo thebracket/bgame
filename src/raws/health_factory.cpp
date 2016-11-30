@@ -1,6 +1,7 @@
 #include "health_factory.hpp"
 #include "../main/game_globals.hpp"
 #include "raws.hpp"
+#include "creatures.hpp"
 
 health_t create_health_component_sentient(const std::string &tag, const int base_hp) {
     health_t result;
@@ -30,7 +31,7 @@ health_t create_health_component_sentient(const std::string &tag, const int base
 health_t create_health_component_creature(const std::string &tag) {
     health_t result;
 
-    auto species = get_creature_def(tag);
+    auto species = get_creature_def(tag).get();
     int base_hp = rng.roll_dice( species.hp_n, species.hp_dice ) + species.hp_mod;
     if (base_hp < 0) base_hp = 1;
 

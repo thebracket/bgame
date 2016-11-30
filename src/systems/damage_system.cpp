@@ -16,6 +16,7 @@
 #include "../components/species.hpp"
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
+#include "../raws/creatures.hpp"
 #include <rltk.hpp>
 #include <iostream>
 #include <sstream>
@@ -177,7 +178,7 @@ void damage_system::creature_attacks() {
         auto attacker = entity(msg.attacker);
         if (!attacker) break;
         auto attack_species = attacker->component<species_t>();
-        auto creature = get_creature_def(attack_species->tag);
+        auto creature = get_creature_def(attack_species->tag).get();
 
         auto defender = entity(msg.victim);
         if (!defender) break;

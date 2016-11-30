@@ -140,38 +140,6 @@ struct raw_species_t {
 	uint8_t glyph = '@';
 };
 
-struct creature_attack_t {
-	std::string type = "";
-	int hit_bonus = 0;
-	int damage_n_dice = 1;
-	int damage_dice = 6;
-	int damage_mod = 0;
-};
-
-enum creature_ai_t { creature_grazer };
-
-struct raw_creature_t {
-	std::string tag = "";
-	std::string name = "";
-	std::string male_name = "";
-	std::string female_name = "";
-	std::string collective_name = "";
-	std::string description = "";
-	boost::container::flat_set<std::pair<std::string,int>> stats;
-	std::vector<std::tuple<std::string, int, int>> body_parts;
-	int armor_class=10;
-	std::vector<creature_attack_t> attacks;
-	int yield_hide=0;
-	int yield_meat=0;
-	int yield_bone=0;
-	int yield_skull=0;
-	creature_ai_t ai;
-	uint8_t glyph;
-	rltk::color_t fg;
-	int hp_n, hp_dice, hp_mod;
-	int group_size_n_dice, group_size_dice, group_size_mod;
-};
-
 struct life_event_template {
 	int min_age = 0;
 	int max_age = 0;
@@ -210,7 +178,6 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 
 // Creature defs accessors
 raw_species_t& get_species_def(const std::string &tag);
-raw_creature_t& get_creature_def(const std::string &tag);
 std::size_t get_species_defs_size();
 std::string get_species_nth_tag(const int &n);
 

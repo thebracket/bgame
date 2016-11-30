@@ -1,14 +1,8 @@
 #include "hunting_work.hpp"
-#include "../settler_work_time.hpp"
-#include "../../../messages/messages.hpp"
-#include "../../../main/game_globals.hpp"
 #include "../../path_finding.hpp"
-#include "../../mining_system.hpp"
 #include "../../inventory_system.hpp"
-#include "../../workflow_system.hpp"
 #include "../../wildlife_population_system.hpp"
 #include "../../weapons_helpers.hpp"
-#include "../../components/item_carried.hpp"
 #include "../idle_mode.hpp"
 #include "../settler_glyph.hpp"
 #include "../settler_job_status.hpp"
@@ -16,22 +10,9 @@
 #include "../settler_cancel_action.hpp"
 #include "../pathfinding.hpp"
 #include "../initiative.hpp"
-#include "../../../messages/log_message.hpp"
-#include "../../../components/logger.hpp"
-#include "../../../components/health.hpp"
-#include "../../../components/renderable.hpp"
 #include "../../../components/corpse_harvestable.hpp"
-#include "../../../components/construct_provides_sleep.hpp"
-#include "../../../components/viewshed.hpp"
-#include "../../../components/smoke_emitter.hpp"
-#include "../../../components/grazer_ai.hpp"
-#include "../../../components/sentient_ai.hpp"
-#include "../../../components/lightsource.hpp"
-#include "../../../components/falling.hpp"
-#include "../world_queries.hpp"
-#include "../settler_sleep.hpp"
-#include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
+#include "../../../raws/creatures.hpp"
 
 #include <iostream>
 #include <map>
@@ -174,10 +155,10 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 		const auto organic_idx = get_material_by_tag("organic").get();
 
 		auto finder = get_creature_def(corpse->creature_tag);
-		for (int i=0; i<finder.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
-		for (int i=0; i<finder.yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
-		for (int i=0; i<finder.yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", organic_idx);
-		for (int i=0; i<finder.yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
+		for (int i=0; i<finder->yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
+		for (int i=0; i<finder->yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
+		for (int i=0; i<finder->yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", organic_idx);
+		for (int i=0; i<finder->yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
 		become_idle(e, ai, name);

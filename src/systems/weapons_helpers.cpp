@@ -1,6 +1,7 @@
 #include "weapons_helpers.hpp"
 #include "../messages/messages.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/creatures.hpp"
 #include "../components/item.hpp"
 #include "../components/species.hpp"
 #include "../components/grazer_ai.hpp"
@@ -65,7 +66,7 @@ int calculate_armor_class(entity_t &entity) {
 		auto species = entity.component<species_t>();
 		if (species) {
 			auto finder = get_creature_def(species->tag);
-			return finder.armor_class;
+			return finder->armor_class;
 		} 
 	}
 
