@@ -45,9 +45,9 @@ void gravity_system::update(const double ms) {
                 if (z == 0) {
                     connected[idx] = true;
                     if (x>0) targets.push_back(mapidx(x-1,y,z));
-                    if (x<REGION_WIDTH) targets.push_back(mapidx(x+1,y,z));
+                    if (x<REGION_WIDTH-1) targets.push_back(mapidx(x+1,y,z));
                     if (y>0) targets.push_back(mapidx(x,y-1,z));
-                    if (y<REGION_WIDTH) targets.push_back(mapidx(x,y+1,z));
+                    if (y<REGION_WIDTH-1) targets.push_back(mapidx(x,y+1,z));
                     if (z<REGION_DEPTH-1) targets.push_back(mapidx(x,y,z+1));
                     //std::cout << "Connected " << x << "," << y << "," << z << ", type " << +current_region->tile_type[idx] << "\n";
                 } else {
@@ -55,9 +55,9 @@ void gravity_system::update(const double ms) {
                         connected[idx] = true;
                         //std::cout << "Connected " << x << "," << y << "," << z << ", type " << +current_region->tile_type[idx] << "\n";
                         if (x>0) targets.push_back(mapidx(x-1,y,z));
-                        if (x<REGION_WIDTH) targets.push_back(mapidx(x+1,y,z));
+                        if (x<REGION_WIDTH-1) targets.push_back(mapidx(x+1,y,z));
                         if (y>0) targets.push_back(mapidx(x,y-1,z));
-                        if (y<REGION_WIDTH) targets.push_back(mapidx(x,y+1,z));
+                        if (y<REGION_HEIGHT-1) targets.push_back(mapidx(x,y+1,z));
                         if (z<REGION_DEPTH-1) targets.push_back(mapidx(x,y,z+1));
                         if (z>0) targets.push_back(mapidx(x,y,z-1));               
                     }

@@ -6,27 +6,7 @@
 #include "constants.hpp"
 #include "../utils/bitset8.hpp"
 #include "../components/position.hpp"
-
-constexpr int mapidx(const int x, const int y, const int z) { 
-	return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x; 
-}
-
-inline int mapidx(const position_t &pos) {
-	return mapidx(pos.x, pos.y, pos.z);
-}
-
-inline std::tuple<int,int,int> idxmap(int idx) {
-	// idx = (z*H*W) + (y*W) + x
-	int z = idx / (REGION_HEIGHT * REGION_WIDTH);
-	idx -= (z * REGION_WIDTH * REGION_HEIGHT);
-
-	int y = idx / REGION_WIDTH;
-	idx -= (y * REGION_WIDTH);
-
-	int x = idx;
-
-	return std::make_tuple(x,y,z);
-}
+#include "indices.hpp"
 
 struct region_t {
 	region_t() { 
