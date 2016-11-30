@@ -4,6 +4,7 @@ add_library(raws STATIC
 	health_factory.cpp
 	string_table.cpp
     materials.cpp
+    native_population.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

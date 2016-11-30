@@ -172,23 +172,6 @@ struct raw_creature_t {
 	int group_size_n_dice, group_size_dice, group_size_mod;
 };
 
-struct native_population_t {
-	std::string name = "";
-	short aggression = 0;
-	short strength = 0;
-	short dexterity = 0;
-	short constitution = 0;
-	short intelligence = 0;
-	short wisdom = 0;
-	short charisma = 0;
-	short comeliness = 0;
-	short ethics = 0;
-	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
-	std::string melee = "";
-	std::string ranged = "";
-	std::string ammo = "";
-};
-
 struct life_event_template {
 	int min_age = 0;
 	int max_age = 0;
@@ -224,9 +207,6 @@ void load_raws();
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material);
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
-
-// Native population definition accessors
-std::vector<native_population_t>& get_native_professions(const std::string &tag);
 
 // Creature defs accessors
 raw_species_t& get_species_def(const std::string &tag);

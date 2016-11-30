@@ -1,6 +1,7 @@
 #include "sentient_builder.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
+#include "../../raws/native_population.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
@@ -55,7 +56,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
     const std::string profession_tag = OCCUPATION_TAGS[planet.civs.unimportant_people[person_id].occupation] + std::string("_") + 
         std::to_string(techlevel);
     std::cout << profession_tag << "\n";
-    auto profession = get_native_professions(profession_tag);
+    auto profession = get_native_professions(profession_tag).get();
     const int profidx = rng.roll_dice(1,profession.size())-1;    
 
     auto sentient = create_entity()
