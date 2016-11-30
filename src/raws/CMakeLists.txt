@@ -12,6 +12,7 @@ add_library(raws STATIC
     life_events.cpp
     clothing.cpp
     profession.cpp
+    items.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

@@ -3,6 +3,7 @@
 #include "../messages/recalculate_mining_message.hpp"
 #include "../messages/renderables_changed_message.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/items.hpp"
 #include "../raws/materials.hpp"
 #include "../main/game_globals.hpp"
 

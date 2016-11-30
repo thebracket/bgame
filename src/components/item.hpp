@@ -5,6 +5,7 @@
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
 #include "../raws/clothing.hpp"
+#include "../raws/items.hpp"
 
 using namespace rltk;
 

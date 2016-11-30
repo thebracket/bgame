@@ -10,30 +10,6 @@
 #include "../components/item_carried.hpp"
 #include "reaction_input.hpp"
 
-constexpr int NUMBER_OF_ITEM_CATEGORIES = 6;
-constexpr int COMPONENT = 0;
-constexpr int TOOL_CHOPPING = 1;
-constexpr int TOOL_DIGGING = 2;
-constexpr int WEAPON_MELEE = 3;
-constexpr int WEAPON_RANGED = 4;
-constexpr int WEAPON_AMMO = 5;
-
-struct item_def_t {
-	std::string tag = "";
-	std::string name = "";
-	std::string description = "";
-	std::bitset<NUMBER_OF_ITEM_CATEGORIES> categories;
-	uint8_t glyph;
-	rltk::color_t fg;
-	rltk::color_t bg;
-	int damage_n=0, damage_d=0, damage_mod=0;
-	int range = 0;
-	std::string ammo;
-	int stack_size = 1;
-	int initiative_penalty = 0;
-	std::string damage_stat = "";
-};
-
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door, 
 		provides_wall, provides_floor, provides_stairs_up, provides_stairs_down, provides_stairs_updown,
 		provides_ramp, provides_light };
@@ -71,7 +47,6 @@ struct reaction_t {
 	bool emits_smoke = false;
 };
 
-extern boost::container::flat_map<std::string, item_def_t> item_defs;
 extern boost::container::flat_map<std::string, building_def_t> building_defs;
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
 extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
