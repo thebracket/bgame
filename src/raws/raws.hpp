@@ -237,10 +237,6 @@ extern boost::container::flat_map<std::string, life_event_template> life_event_d
 // Initializer
 void load_raws();
 
-// Tile accessors
-uint8_t get_tile_type_index(const std::string name);
-uint16_t get_tile_contents_index(const std::string name);
-
 // Item creation
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material);
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
