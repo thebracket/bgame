@@ -37,9 +37,27 @@ struct raw_species_t {
     uint8_t glyph = '@';
 };
 
+/*
+ * Retrieve a species by tag.
+ */
 boost::optional<raw_species_t> get_species_def(const std::string &tag) noexcept;
+
+/*
+ * Retrieve the size of the species list.
+ */
 std::size_t get_species_defs_size() noexcept;
+
+/*
+ * Retrieve the nth species in the list (used in popgen).
+ */
 std::string get_species_nth_tag(const int &n) noexcept;
 
+/*
+ * Linter for the loader.
+ */
 void sanity_check_species() noexcept ;
+
+/*
+ * Lua loader, used in raws loader.
+ */
 void read_species_types(std::ofstream &tech_tree_file) noexcept;
