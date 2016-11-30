@@ -6,16 +6,13 @@
 #include "../components/renderable.hpp"
 #include "../components/item.hpp"
 #include "../components/item_stored.hpp"
+#include "string_table.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <memory>
 
 std::unique_ptr<lua_lifecycle> lua_handle;
-
-string_table_t first_names_male;
-string_table_t first_names_female;
-string_table_t last_names;
 
 boost::container::flat_map<uint8_t, tile_type_t> tile_types;
 boost::container::flat_map<std::string, uint8_t> tile_type_index;
@@ -42,15 +39,6 @@ boost::container::flat_map<std::string, raw_creature_t> creature_defs;
 boost::container::flat_map<std::string, std::vector<native_population_t>> native_pop_defs;
 
 boost::container::flat_map<std::string, life_event_template> life_event_defs;
-
-void load_string_table(const std::string filename, string_table_t &target) {
-	std::ifstream f(filename);
-	std::string line;
-	while (getline(f, line))
-	{
-		target.strings.push_back(line);
-	}
-}
 
 rltk::color_t read_lua_color(std::string field) {
 	rltk::color_t col;

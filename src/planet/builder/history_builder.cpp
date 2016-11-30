@@ -1,6 +1,7 @@
 #include "history_builder.hpp"
 #include "../planet_builder.hpp"
 #include "../../raws/raws.hpp"
+#include "../../raws/string_table.hpp"
 #include "../constants.hpp"
 #include "../../utils/string_utils.hpp"
 #include <boost/container/flat_map.hpp>

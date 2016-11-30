@@ -10,15 +10,6 @@
 #include "../components/item_carried.hpp"
 #include "reaction_input.hpp"
 
-struct string_table_t {
-	std::vector<std::string> strings;
-
-	inline std::string random_entry(rltk::random_number_generator rng=rltk::random_number_generator()) {
-		const int position = rng.roll_dice(1, static_cast<int>(strings.size())) - 1;
-		return strings[position];
-	}
-};
-
 struct tile_type_t {
 	std::string name = "";
 	std::string nice_name = "";
@@ -251,10 +242,6 @@ struct life_event_template {
 	std::vector<std::string> requires_event;
 	std::vector<std::string> precludes_event;
 };
-
-extern string_table_t first_names_male;
-extern string_table_t first_names_female;
-extern string_table_t last_names;
 
 extern boost::container::flat_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;

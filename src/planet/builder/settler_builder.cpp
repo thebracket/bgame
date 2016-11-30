@@ -9,6 +9,7 @@
 #include "../../utils/string_utils.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../raws/raws.hpp"
+#include "../../raws/string_table.hpp"
 #include "../planet.hpp"
 
 using namespace rltk;
