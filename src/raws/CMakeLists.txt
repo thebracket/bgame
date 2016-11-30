@@ -9,6 +9,7 @@ add_library(raws STATIC
     species.cpp
     biomes.cpp
     plants.cpp
+    life_events.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

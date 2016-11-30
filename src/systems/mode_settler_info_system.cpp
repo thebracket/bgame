@@ -8,6 +8,7 @@
 #include "../components/species.hpp"
 #include "../components/settler_ai.hpp"
 #include "../components/item.hpp"
+#include "../raws/life_events.hpp"
 
 void mode_settler_info_system::configure() {
     system_name = "Settler Info";

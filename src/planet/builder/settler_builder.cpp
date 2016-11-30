@@ -8,9 +8,8 @@
 #include "../../components/item.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../raws/health_factory.hpp"
-#include "../../raws/materials.hpp"
 #include "../../raws/string_table.hpp"
-#include "../planet.hpp"
+#include "../../raws/life_events.hpp"
 
 using namespace rltk;
 

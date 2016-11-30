@@ -36,3 +36,17 @@ inline std::string lua_str() { return lua_tostring(lua_state, -1); }
 inline int lua_int() { return lua_tonumber(lua_state, -1); }
 inline float lua_float() { return lua_tonumber(lua_state, -1); }
 rltk::color_t read_lua_color(std::string field);
+
+template<class T>
+void read_stat_modifiers(const std::string &table, T &obj) {
+    read_lua_table_inner( "modifiers", [&obj] (auto stat) {
+        if (stat == "str") obj.strength = lua_int();
+        if (stat == "dex") obj.dexterity = lua_int();
+        if (stat == "con") obj.constitution = lua_int();
+        if (stat == "int") obj.intelligence = lua_int();
+        if (stat == "wis") obj.wisdom = lua_int();
+        if (stat == "cha") obj.charisma = lua_int();
+        if (stat == "com") obj.comeliness = lua_int();
+        if (stat == "eth") obj.ethics = lua_int();
+    });
+}

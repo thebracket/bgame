@@ -13,6 +13,7 @@
 #include "species.hpp"
 #include "biomes.hpp"
 #include "plants.hpp"
+#include "life_events.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -27,8 +28,6 @@ boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<std::string, building_def_t> building_defs;
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
-
-boost::container::flat_map<std::string, life_event_template> life_event_defs;
 
 void read_clothing(std::ofstream &tech_tree_file) {
     std::string tag = "";
@@ -45,47 +44,6 @@ void read_clothing(std::ofstream &tech_tree_file) {
                 read_lua_table_inner( "colors", [&c] (auto col) { c.colors.push_back(col); });
             }}
         }
-    );
-}
-
-template<class T>
-void read_stat_modifiers(const std::string &table, T &obj) {
-    read_lua_table_inner( "modifiers", [&obj] (auto stat) {
-        if (stat == "str") obj.strength = lua_int();
-        if (stat == "dex") obj.dexterity = lua_int();
-        if (stat == "con") obj.constitution = lua_int();
-        if (stat == "int") obj.intelligence = lua_int();
-        if (stat == "wis") obj.wisdom = lua_int();
-        if (stat == "cha") obj.charisma = lua_int();
-        if (stat == "com") obj.comeliness = lua_int();
-        if (stat == "eth") obj.ethics = lua_int();
-    });
-}
-
-void read_life_events(std::ofstream &tech_tree_file) {
-    std::string tag = "";
-    life_event_template le;
-    read_lua_table("life_events",
-        [&le, &tag] (const auto &key) { tag = key; le = life_event_template{}; },
-        [&le, &tag] (const auto &key) { life_event_defs[tag] = le; },
-        lua_parser{
-            {"min_age", [&le] ()        { le.min_age = lua_int(); }},
-            {"max_age", [&le] ()        { le.max_age = lua_int(); }},
-            {"weight", [&le] ()         { le.weight = lua_int(); }},
-            {"description", [&le] ()    { le.description = lua_str(); }},
-            {"modifiers", [&le] ()     {
-                read_stat_modifiers("modifiers", le);
-            }},
-            {"skills",      [&le] () {
-                read_lua_table_inner( "skills", [&le] (auto s) { le.skills.push_back(s); });
-            }},
-            {"requires",      [&le] () {
-                read_lua_table_inner( "requires", [&le] (auto s) { le.requires_event.push_back(s); });
-            }},
-            {"precludes",      [&le] () {
-                read_lua_table_inner( "precludes", [&le] (auto s) { le.precludes_event.push_back(s); });
-            }}
-        } 
     );
 }
 
