@@ -9,20 +9,6 @@
 #include <bitset>
 #include "../components/item_carried.hpp"
 #include "reaction_input.hpp"
-#include "clothing.hpp"
-
-struct profession_t {
-	std::string name = "";	
-	short strength = 0;
-	short dexterity = 0;
-	short constitution = 0;
-	short intelligence = 0;
-	short wisdom = 0;
-	short charisma = 0;
-	short comeliness = 0;
-	short ethics = 0;
-	std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
-};
 
 constexpr int NUMBER_OF_ITEM_CATEGORIES = 6;
 constexpr int COMPONENT = 0;
@@ -84,8 +70,6 @@ struct reaction_t {
 	int power_drain = 0;
 	bool emits_smoke = false;
 };
-
-extern std::vector<profession_t> starting_professions;
 
 extern boost::container::flat_map<std::string, item_def_t> item_defs;
 extern boost::container::flat_map<std::string, building_def_t> building_defs;

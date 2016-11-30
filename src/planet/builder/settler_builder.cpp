@@ -10,6 +10,7 @@
 #include "../../raws/health_factory.hpp"
 #include "../../raws/string_table.hpp"
 #include "../../raws/life_events.hpp"
+#include "../../raws/profession.hpp"
 
 using namespace rltk;
 
