@@ -14,6 +14,7 @@
 #include "../components/construct_provides_door.hpp"
 #include "../components/item_stored.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/plants.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;

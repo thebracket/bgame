@@ -2,6 +2,7 @@
 #include "../../planet_builder.hpp"
 #include "../../components/water_spawner.hpp"
 #include "../../raws/materials.hpp"
+#include "../../raws/plants.hpp"
 
 strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
     strata_t result;
@@ -184,7 +185,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                     if (veg_type == "") veg_type = "none";
 
                     if (veg_type != "none") {
-                        auto finder = get_plant_idx(veg_type);
+                        auto finder = get_plant_idx(veg_type).get();
                         region.tile_vegetation_type[mapidx(x,y,z-1)] = finder;
                         region.tile_hit_points[mapidx(x,y,z-1)] = 10;
                     }

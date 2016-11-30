@@ -12,6 +12,7 @@
 #include "creatures.hpp"
 #include "species.hpp"
 #include "biomes.hpp"
+#include "plants.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -26,9 +27,6 @@ boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<std::string, building_def_t> building_defs;
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
-
-boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
-std::vector<plant_t> plant_defs;
 
 boost::container::flat_map<std::string, life_event_template> life_event_defs;
 
@@ -438,42 +436,6 @@ void read_reactions(std::ofstream &tech_tree_file) {
     }
 }
 
-void read_plant_types(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "vegetation");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-        std::string key = lua_tostring(lua_state, -2);
-
-        plant_t p;
-        p.tag = key;
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while(lua_next(lua_state, -2) != 0)
-        {
-            std::string field = lua_tostring(lua_state, -2);
-            if (field == "name") p.name = lua_tostring(lua_state, -1);
-            if (field == "glyph") p.glyph = lua_tonumber(lua_state, -1);
-            if (field == "fg") p.fg = read_lua_color("fg");
-            if (field == "bg") p.bg = read_lua_color("bg");
-            if (field == "provides") p.provides = lua_tostring(lua_state, -1);
-
-            lua_pop(lua_state, 1);
-        }
-        plant_defs.push_back(p);
-        if (p.provides.size() > 1) {
-            tech_tree_file << key << " -> farming -> item_" << p.provides << "\n";
-        }
-        lua_pop(lua_state, 1);
-    }
-
-    std::sort(plant_defs.begin(), plant_defs.end(), [] (plant_t a, plant_t b) { return a.tag < b.tag; });
-    for (std::size_t i=0; i<plant_defs.size(); ++i) {
-        plant_defs_idx[plant_defs[i].tag] = i;
-    }
-}
-
 void sanity_check_clothing() {
     for (auto it = clothing_types.begin(); it != clothing_types.end(); ++it) {
         if (it->first.empty()) std::cout << "WARNING: Empty clothing string\n";
@@ -535,12 +497,6 @@ void sanity_check_reactions() {
             auto finder2 = clothing_types.find(output.first);
             if (finder == item_defs.end() && finder2 == clothing_types.end()) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
         }
-    }
-}
-
-void sanity_check_plants() {
-    for (const auto &p : plant_defs) {
-        if (p.name.empty()) std::cout << "WARNING: No plant name\n";
     }
 }
 
@@ -639,21 +595,4 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
         ->assign(item_carried_t{ loc, holder_id })
         ->assign(renderable_t{ finder->second.glyph, mat.get().fg, mat.get().bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
-}
-
-std::size_t get_plant_idx(const std::string &tag) {
-    auto finder = plant_defs_idx.find(tag);
-    if (finder == plant_defs_idx.end()) {
-        throw std::runtime_error(std::string("Cannot find ") + tag);
-    } else {
-        return finder->second;
-    }
-}
-
-plant_t& get_plant_def(const std::size_t &index) {
-    return plant_defs[index];
-}
-
-std::vector<plant_t>& get_plant_defs() {
-    return plant_defs;
 }

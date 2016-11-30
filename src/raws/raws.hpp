@@ -92,15 +92,6 @@ struct reaction_t {
 	bool emits_smoke = false;
 };
 
-struct plant_t {
-	std::string tag = "";
-	std::string name = "";
-	uint8_t glyph;
-	rltk::color_t fg;
-	rltk::color_t bg;
-	std::string provides = "";
-};
-
 struct life_event_template {
 	int min_age = 0;
 	int max_age = 0;
@@ -136,8 +127,3 @@ void load_raws();
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material);
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
-
-// Biome accessors
-std::size_t get_plant_idx(const std::string &tag);
-plant_t& get_plant_def(const std::size_t &index);
-std::vector<plant_t>& get_plant_defs();

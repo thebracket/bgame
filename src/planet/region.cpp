@@ -3,6 +3,7 @@
 #include <string>
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
+#include "../raws/plants.hpp"
 
 using namespace rltk;
 
@@ -239,7 +240,7 @@ void region_t::calc_render(const int &idx) {
 
 			if (tile_vegetation_type[idx]>0) {
 				const float damage_pct = (float)tile_hit_points[idx] / 10.0F;
-				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);				
+				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
 				fg = lerp(fg, plant.fg, damage_pct);
 				bg = plant.bg;
 			}
