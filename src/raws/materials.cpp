@@ -1,6 +1,7 @@
 #include "materials.hpp"
 #include "lua_bridge.hpp"
 #include <boost/container/flat_map.hpp>
+#include "apihelper.hpp"
 
 using namespace rltk;
 
@@ -33,12 +34,10 @@ boost::optional<std::size_t> get_material_by_tag(const std::string &tag) noexcep
     boost::optional<std::size_t> result;
 
     auto finder = material_defs_idx.find(tag);
-    if (finder == material_defs_idx.end()) {
-        return result;
-    } else {
+    if (finder != material_defs_idx.end()) {
         result = finder->second;
-        return result;
     }
+    return result;
 }
 
 /*

@@ -1,6 +1,7 @@
 #include "history_builder.hpp"
 #include "../planet_builder.hpp"
 #include "../../raws/raws.hpp"
+#include "../../raws/species.hpp"
 #include "../../raws/string_table.hpp"
 #include "../constants.hpp"
 #include "../../utils/string_utils.hpp"
@@ -32,7 +33,7 @@ std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag
         case GOV_THEOCRACY : format = "Holy {NOUN} of {SPECIES}"; break;
         default : format = "The {SPECIES} of {NOUN}";
     }
-    auto species = get_species_def(species_tag);
+    auto species = get_species_def(species_tag).get();
     str_replace(format, "{SPECIES}", species.collective_name);
     str_replace(format, "{NOUN}", to_proper_noun_case(last_names.random_entry(rng)));
 
@@ -48,7 +49,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         // Define the initial species
         civ.species_tag = random_species(rng);
-        auto species = get_species_def(civ.species_tag);
+        auto species = get_species_def(civ.species_tag).get();
         if (species.alignment == align_evil) civ.cordex_feelings = -3;
         civ.r = rng.roll_dice(1,192);
         civ.g = rng.roll_dice(1,192);
@@ -199,7 +200,7 @@ inline void planet_build_run_people(planet_t &planet, rltk::random_number_genera
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased) {
             // Lookups
-            auto species = get_species_def(peep.species_tag);
+            auto species = get_species_def(peep.species_tag).get();
 
             // Age and natural death
             ++peep.age;
@@ -276,7 +277,7 @@ inline void planet_build_run_relocations(planet_t &planet, rltk::random_number_g
                 peep.world_y = planet.civs.unimportant_people[peep.married_to].world_y;
             }
         } else if (!peep.deceased) {
-            auto species = get_species_def(peep.species_tag);
+            auto species = get_species_def(peep.species_tag).get();
             if (peep.age < species.child_age) {
                 if (!planet.civs.unimportant_people[peep.mother_id].deceased) {
                     peep.world_x = planet.civs.unimportant_people[peep.mother_id].world_x;
@@ -386,8 +387,8 @@ inline void planet_build_run_empty_settlements(planet_t &planet, boost::containe
 inline int planet_build_ethics_difference(planet_t &planet, const int civ1, const int civ2) {
     const std::string species1 = planet.civs.civs[civ1].species_tag;
     const std::string species2 = planet.civs.civs[civ2].species_tag;
-    auto s1 = get_species_def(species1);
-    auto s2 = get_species_def(species2);
+    auto s1 = get_species_def(species1).get();
+    auto s2 = get_species_def(species2).get();
 
     if (s1.alignment == s2.alignment) return 3;
     return -10;

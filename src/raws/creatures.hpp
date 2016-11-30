@@ -49,9 +49,9 @@ struct raw_creature_t {
 };
 
 /*
- * Retrieve a creature definition by tag. Note that it's an optional reference - you get the original.
+ * Retrieve a creature definition by tag.
  */
-boost::optional<raw_creature_t &> get_creature_def(const std::string &tag) noexcept;
+boost::optional<raw_creature_t> get_creature_def(const std::string &tag) noexcept;
 
 /*
  * Linter for creature definitions.

@@ -14,6 +14,7 @@
 #include "../components/grazer_ai.hpp"
 #include "../components/species.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/species.hpp"
 #include "tasks/threat_scanner.hpp"
 
 using tasks::calculate_initiative;
@@ -55,7 +56,7 @@ void sentient_ai_system::update(const double ms) {
 
                 // Look for immediate threats
                 bool vegetarian = false;                    
-                auto finder = get_species_def(planet.civs.unimportant_people[ai.person_id].species_tag);
+                auto finder = get_species_def(planet.civs.unimportant_people[ai.person_id].species_tag).get();
                 if (finder.diet == diet_herbivore) vegetarian = true;
 
                 auto hostile = tasks::can_see_hostile(e, pos, view, [&vegetarian, &ai] (entity_t &other) {

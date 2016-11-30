@@ -10,6 +10,7 @@
 #include "materials.hpp"
 #include "native_population.hpp"
 #include "creatures.hpp"
+#include "species.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -28,8 +29,6 @@ boost::container::flat_map<std::string, std::vector<std::string>> reaction_build
 std::vector<biome_type_t> biome_defs;
 boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
-
-boost::container::flat_map<std::string, raw_species_t> species_defs;
 
 boost::container::flat_map<std::string, life_event_template> life_event_defs;
 
@@ -567,89 +566,6 @@ void read_biome_types(std::ofstream &tech_tree_file) {
     }
 }
 
-void read_species_types(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "species_sentient");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-        raw_species_t s;
-        std::string key = lua_tostring(lua_state, -2);
-        s.tag = key;
-
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-
-            if (field == "name") s.name = lua_tostring(lua_state, -1);
-            if (field == "male_name") s.male_name = lua_tostring(lua_state, -1);
-            if (field == "female_name") s.female_name = lua_tostring(lua_state, -1);
-            if (field == "group_name") s.collective_name = lua_tostring(lua_state, -1);
-            if (field == "description") s.description = lua_tostring(lua_state, -1);
-            if (field == "stat_mods") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string subfield = lua_tostring(lua_state, -2);
-                    int value = lua_tonumber(lua_state, -1);
-                    s.stat_mods.insert(std::make_pair(subfield, value));
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "ethics") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string subfield = lua_tostring(lua_state, -2);
-                    if (subfield == "diet") {
-                        std::string diet_type = lua_tostring(lua_state, -1);
-                        if (diet_type == "omnivore") s.diet = diet_omnivore;
-                        if (diet_type == "herbivore") s.diet = diet_herbivore;
-                        if (diet_type == "carnivore") s.diet = diet_carnivore;
-                    }
-                    if (subfield == "alignment") {
-                        std::string alignment_type = lua_tostring(lua_state, -1);
-                        if (alignment_type == "good") s.alignment = align_good;
-                        if (alignment_type == "neutral") s.alignment = align_neutral;
-                        if (alignment_type == "evil") s.alignment = align_evil;
-                    }
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "parts") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string part_name = lua_tostring(lua_state, -2);
-                    std::tuple<std::string, int, int> part;
-                    std::get<0>(part) = part_name;
-                    lua_pushstring(lua_state, part_name.c_str());
-                    lua_gettable(lua_state, -2);
-                    while (lua_next(lua_state, -2) != 0) {
-                        std::string part_field = lua_tostring(lua_state, -2);
-                        if (part_field == "qty") std::get<1>(part) = lua_tonumber(lua_state, -1);
-                        if (part_field == "size") std::get<2>(part) = lua_tonumber(lua_state, -1);
-                        lua_pop(lua_state, 1);
-                    }
-                    s.body_parts.push_back(part);
-
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "max_age") s.max_age = lua_tonumber(lua_state, -1);
-            if (field == "infant_age") s.infant_age = lua_tonumber(lua_state, -1);
-            if (field == "child_age") s.child_age = lua_tonumber(lua_state, -1);
-            if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
-
-            lua_pop(lua_state, 1);
-        }
-        species_defs[key] = s;
-
-        lua_pop(lua_state, 1);
-    }
-}
-
 void sanity_check_clothing() {
     for (auto it = clothing_types.begin(); it != clothing_types.end(); ++it) {
         if (it->first.empty()) std::cout << "WARNING: Empty clothing string\n";
@@ -741,18 +657,6 @@ void sanity_check_biomes() {
         for (const auto &w : b.wildlife) {
             if (!get_creature_def(w)) std::cout << "WARNING: Biome " << b.name << " has invalid wildlife: " << w << "\n";
         }
-    }
-}
-
-void sanity_check_species() {
-    for (auto s = species_defs.begin(); s!=species_defs.end(); ++s) {
-        if (s->first.empty()) std::cout << "WARNING: Species with no tag.\n";
-        if (s->second.name.empty()) std::cout << "WARNING: Species has no name: " << s->second.tag << "\n";
-        if (s->second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s->second.tag << "\n";
-        if (s->second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s->second.tag << "\n";
-        if (s->second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s->second.tag << "\n";
-        if (s->second.stat_mods.empty()) std::cout << "WARNING: Species has no stat modifiers: " << s->second.tag << "\n";
-        if (s->second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s->second.tag << "\n";
     }
 }
 
@@ -851,25 +755,6 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
         ->assign(item_carried_t{ loc, holder_id })
         ->assign(renderable_t{ finder->second.glyph, mat.get().fg, mat.get().bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
-}
-
-raw_species_t& get_species_def(const std::string &tag) {
-    auto finder = species_defs.find(tag);
-    if (finder == species_defs.end()) {
-        throw std::runtime_error(std::string("Cannot find ") + tag);
-    } else {
-        return finder->second;
-    }
-}
-
-std::size_t get_species_defs_size() {
-    return species_defs.size();
-}
-
-std::string get_species_nth_tag(const int &roll) {
-    auto it = species_defs.begin();
-    for (int i=0; i<roll; ++i) ++it;
-    return it->first;
 }
 
 biome_type_t& get_biome_def(const std::size_t &index) {

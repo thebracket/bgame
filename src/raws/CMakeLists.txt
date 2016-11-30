@@ -6,6 +6,7 @@ add_library(raws STATIC
     materials.cpp
     native_population.cpp
     creatures.cpp
+    species.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

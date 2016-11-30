@@ -120,26 +120,6 @@ struct plant_t {
 	std::string provides = "";
 };
 
-enum diet_t { diet_omnivore, diet_herbivore, diet_carnivore };
-enum alignment_t { align_good, align_neutral, align_evil };
-
-struct raw_species_t {
-	std::string tag = "";
-	std::string name = "";
-	std::string male_name = "";
-	std::string female_name = "";
-	std::string collective_name = "";
-	std::string description = "";
-	boost::container::flat_map<std::string,int> stat_mods;
-	std::vector<std::tuple<std::string, int, int>> body_parts;
-	diet_t diet = diet_omnivore;
-	alignment_t alignment = align_neutral;
-	int max_age = 90;
-	int infant_age = 5;
-	int child_age = 12;
-	uint8_t glyph = '@';
-};
-
 struct life_event_template {
 	int min_age = 0;
 	int max_age = 0;
@@ -175,11 +155,6 @@ void load_raws();
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material);
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material);
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
-
-// Creature defs accessors
-raw_species_t& get_species_def(const std::string &tag);
-std::size_t get_species_defs_size();
-std::string get_species_nth_tag(const int &n);
 
 // Biome accessors
 biome_type_t& get_biome_def(const std::size_t &index);

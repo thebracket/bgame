@@ -3,6 +3,7 @@
 #include "../../raws/materials.hpp"
 #include "../../raws/native_population.hpp"
 #include "../../raws/health_factory.hpp"
+#include "../../raws/species.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../utils/string_utils.hpp"
@@ -29,7 +30,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 
     species.tag = planet.civs.unimportant_people[person_id].species_tag;
     std::cout << species.tag << "\n";
-    auto species_finder = get_species_def(species.tag);
+    auto species_finder = get_species_def(species.tag).get();
     if (planet.civs.unimportant_people[person_id].male) {
         species.gender = MALE;
     } else {

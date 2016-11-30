@@ -1,6 +1,7 @@
 #include "mode_sentient_info_system.hpp"
 #include "../main/game_globals.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/species.hpp"
 #include "gui_system.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/recalculate_mining_message.hpp"
@@ -20,7 +21,7 @@ void display_sentient_info() {
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = get_species_def(species->tag);
+    auto species_finder = get_species_def(species->tag).get();
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;
@@ -86,7 +87,7 @@ void display_grazer_info() {
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = get_species_def(species->tag);
+    auto species_finder = get_species_def(species->tag).get();
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;
