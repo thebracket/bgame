@@ -14,11 +14,6 @@
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
-boost::container::flat_map<uint8_t, tile_type_t> tile_types;
-boost::container::flat_map<std::string, uint8_t> tile_type_index;
-boost::container::flat_map<uint16_t, tile_content_t> tile_contents;
-boost::container::flat_map<std::string, uint16_t> tile_contents_index;
-
 boost::container::flat_map<std::string, clothing_t> clothing_types;
 std::vector<profession_t> starting_professions;
 
@@ -1206,26 +1201,6 @@ void load_raws() {
 
     // Quit LUA
     lua_handle.reset();
-}
-
-uint8_t get_tile_type_index(const std::string name) {
-	auto finder = tile_type_index.find(name);
-	if (finder != tile_type_index.end()) {
-		return finder->second;
-	} else {
-		throw std::runtime_error("Unknown tile type: " + name);
-	}
-}
-
-uint16_t get_tile_contents_index(const std::string name) {
-    //std::cout << "Tile type: " << name;
-	auto finder = tile_contents_index.find(name);
-	if (finder != tile_contents_index.end()) {
-        //std::cout << " = " << finder->second << "\n";
-		return finder->second;
-	} else {
-		throw std::runtime_error("Unknown tile contents: " + name);
-	}
 }
 
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {

@@ -10,25 +10,6 @@
 #include "../components/item_carried.hpp"
 #include "reaction_input.hpp"
 
-struct tile_type_t {
-	std::string name = "";
-	std::string nice_name = "";
-	int index;
-	uint8_t glyph;
-	rltk::color_t fg;
-	rltk::color_t bg;
-};
-
-struct tile_content_t {
-	std::string name = "";
-	std::string nice_name = "";
-	int index;
-	uint8_t glyph;
-	rltk::color_t fg;
-	rltk::color_t bg;
-	uint8_t stairs = 0;
-};
-
 struct clothing_t {
 	std::string name= "";
 	std::vector<std::string> colors;
