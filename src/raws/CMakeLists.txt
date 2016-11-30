@@ -13,6 +13,7 @@ add_library(raws STATIC
     clothing.cpp
     profession.cpp
     items.cpp
+    buildings.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

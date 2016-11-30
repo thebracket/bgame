@@ -6,6 +6,7 @@
 #include "../raws/items.hpp"
 #include "../raws/materials.hpp"
 #include "../main/game_globals.hpp"
+#include "../raws/buildings.hpp"
 
 void topology_system::update(const double duration_ms) {
     std::queue<perform_mining_message> * messages = mbox<perform_mining_message>();

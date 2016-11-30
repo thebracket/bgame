@@ -13,7 +13,7 @@
 #include "../components/construct_container.hpp"
 #include "../components/construct_provides_door.hpp"
 #include "../components/item_stored.hpp"
-#include "../raws/raws.hpp"
+#include "../raws/buildings.hpp"
 #include "../raws/plants.hpp"
 
 using namespace rltk;

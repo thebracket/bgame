@@ -12,6 +12,7 @@
 #include "../../../components/designations.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
+#include "../../../raws/buildings.hpp"
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
     auto building = building_defs.find(tag);

@@ -5,6 +5,7 @@
 #include "../components/settler_ai.hpp"
 #include "../raws/clothing.hpp"
 #include <boost/container/flat_map.hpp>
+#include "../raws/buildings.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
