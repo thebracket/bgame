@@ -11,6 +11,7 @@
 #include "native_population.hpp"
 #include "creatures.hpp"
 #include "species.hpp"
+#include "biomes.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -26,7 +27,6 @@ boost::container::flat_map<std::string, building_def_t> building_defs;
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
-std::vector<biome_type_t> biome_defs;
 boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
 
@@ -474,98 +474,6 @@ void read_plant_types(std::ofstream &tech_tree_file) {
     }
 }
 
-void read_biome_types(std::ofstream &tech_tree_file) {
-    lua_getglobal(lua_state, "biomes");
-    lua_pushnil(lua_state);
-
-    while(lua_next(lua_state, -2) != 0)
-    {
-        std::string key = lua_tostring(lua_state, -2);
-
-        biome_type_t b;
-
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-
-            if (field == "name") b.name = lua_tostring(lua_state, -1);
-            if (field == "min_temp") b.min_temp = lua_tonumber(lua_state, -1);
-            if (field == "max_temp") b.max_temp = lua_tonumber(lua_state, -1);
-            if (field == "min_rain") b.min_rain = lua_tonumber(lua_state, -1);
-            if (field == "max_rain") b.max_rain = lua_tonumber(lua_state, -1);
-            if (field == "min_mutation") b.min_mutation = lua_tonumber(lua_state, -1);
-            if (field == "max_mutation") b.max_mutation = lua_tonumber(lua_state, -1);
-            if (field == "soils") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string soil_type = lua_tostring(lua_state, -2);
-                    if (soil_type == "soil" ) b.soil_pct = lua_tonumber(lua_state, -1);
-                    if (soil_type == "sand" ) b.soil_pct = lua_tonumber(lua_state, -1);
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "occurs") {
-                // List of biome type indices
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    b.occurs.push_back(lua_tonumber(lua_state, -1));
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "worldgen_render") {
-                // Load glyph and color
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string sub_field = lua_tostring(lua_state, -2);
-                    if (sub_field == "glyph") b.worldgen_glyph = lua_tonumber(lua_state, -1);
-                    if (sub_field == "color") b.worldgen_color = read_lua_color("color");
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "plants") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string plant_name = lua_tostring(lua_state, -2);
-                    int frequency = lua_tonumber(lua_state, -1);
-                    b.plants.push_back(std::make_pair(plant_name, frequency));
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "trees") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string tree_type = lua_tostring(lua_state, -2);
-                    int frequency = lua_tonumber(lua_state, -1);
-                    if (tree_type == "deciduous") b.deciduous_tree_chance = frequency;
-                    if (tree_type == "evergreen") b.evergreen_tree_chance = frequency;
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "wildlife") {
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string critter = lua_tostring(lua_state, -1);
-                    b.wildlife.push_back(critter);
-                    lua_pop(lua_state, 1);
-                }
-            }
-
-            lua_pop(lua_state, 1);
-        }
-
-        biome_defs.push_back(b);
-
-        lua_pop(lua_state, 1);
-    }
-}
-
 void sanity_check_clothing() {
     for (auto it = clothing_types.begin(); it != clothing_types.end(); ++it) {
         if (it->first.empty()) std::cout << "WARNING: Empty clothing string\n";
@@ -633,30 +541,6 @@ void sanity_check_reactions() {
 void sanity_check_plants() {
     for (const auto &p : plant_defs) {
         if (p.name.empty()) std::cout << "WARNING: No plant name\n";
-    }
-}
-
-void sanity_check_biomes() {
-    for (const auto &b : biome_defs) {
-        if (b.name.empty()) std::cout << "WARNING: Empty biome name\n";
-        if (b.occurs.empty()) std::cout << "WARNING: Biome " << b.name << " has no occurences!\n";
-        for (const auto &o : b.occurs) {
-            if (o <1 || o > 10)  std::cout << "WARNING: Biome " << b.name << " has invalid occurs\n";
-        }
-        if (b.plants.empty()) std::cout << "WARNING: Biome " << b.name << " has no plants!\n";
-        for (const auto &p : b.plants) {
-            if (p.first == "none") break;
-            auto finder = plant_defs_idx.find(p.first);
-            if (finder == plant_defs_idx.end()) {
-                 std::cout << "WARNING: Biome " << b.name << " has invalid plant: " << p.first << "\n";
-            } else {
-                if (finder->second > plant_defs.size()) std::cout << "WARNING: Biome " << b.name << " has invalid plant: " << p.first << "\n";
-            }
-        }
-        if (b.wildlife.empty()) std::cout << "WARNING: Biome " << b.name << " has no wildlife.\n";
-        for (const auto &w : b.wildlife) {
-            if (!get_creature_def(w)) std::cout << "WARNING: Biome " << b.name << " has invalid wildlife: " << w << "\n";
-        }
     }
 }
 
@@ -757,10 +641,6 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
-biome_type_t& get_biome_def(const std::size_t &index) {
-    return biome_defs[index];
-}
-
 std::size_t get_plant_idx(const std::string &tag) {
     auto finder = plant_defs_idx.find(tag);
     if (finder == plant_defs_idx.end()) {
@@ -776,8 +656,4 @@ plant_t& get_plant_def(const std::size_t &index) {
 
 std::vector<plant_t>& get_plant_defs() {
     return plant_defs;
-}
-
-std::vector<biome_type_t>& get_biome_defs() {
-    return biome_defs;
 }

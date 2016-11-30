@@ -1,5 +1,6 @@
 #include "region_builder.hpp"
 #include "../../raws/raws.hpp"
+#include "../../raws/biomes.hpp"
 #include "../constants.hpp"
 #include "../planet_builder.hpp"
 #include "settler_builder.hpp"

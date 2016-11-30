@@ -1,6 +1,7 @@
 #include "biome_builder.hpp"
 #include "../planet_builder.hpp"
 #include "../../raws/raws.hpp"
+#include "../../raws/biomes.hpp"
 #include <unordered_map>
 #include <boost/optional.hpp>
 

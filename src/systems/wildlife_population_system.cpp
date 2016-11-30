@@ -1,5 +1,6 @@
 #include "wildlife_population_system.hpp"
 #include "../raws/raws.hpp"
+#include "../raws/biomes.hpp"
 #include "../raws/creatures.hpp"
 #include "../main/game_globals.hpp"
 #include "../raws/health_factory.hpp"

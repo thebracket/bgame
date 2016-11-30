@@ -7,6 +7,7 @@ add_library(raws STATIC
     native_population.cpp
     creatures.cpp
     species.cpp
+    biomes.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

@@ -4,6 +4,7 @@
 #include "../../planet.hpp"
 #include "../../region.hpp"
 #include "../../../raws/raws.hpp"
+#include "../../../raws/biomes.hpp"
 #include <FastNoise/FastNoise.h>
 #include <vector>
 

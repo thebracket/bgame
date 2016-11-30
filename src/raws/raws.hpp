@@ -92,25 +92,6 @@ struct reaction_t {
 	bool emits_smoke = false;
 };
 
-struct biome_type_t {
-	std::string name = "";
-	int8_t min_rain = 0;
-	int8_t max_rain = 100;
-	int8_t min_temp = -100;
-	int8_t max_temp = 100;
-	uint8_t min_mutation = 0;
-	uint8_t max_mutation = 100;
-	uint8_t soil_pct = 50;
-	uint8_t sand_pct = 50;
-	std::vector<uint8_t> occurs;
-	uint8_t worldgen_glyph;
-	rltk::color_t worldgen_color;
-	std::vector<std::pair<std::string,int>> plants;
-	std::vector<std::string> wildlife;
-	int deciduous_tree_chance = 0;
-	int evergreen_tree_chance = 0;
-};
-
 struct plant_t {
 	std::string tag = "";
 	std::string name = "";
@@ -157,8 +138,6 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc);
 
 // Biome accessors
-biome_type_t& get_biome_def(const std::size_t &index);
 std::size_t get_plant_idx(const std::string &tag);
 plant_t& get_plant_def(const std::size_t &index);
 std::vector<plant_t>& get_plant_defs();
-std::vector<biome_type_t>& get_biome_defs();

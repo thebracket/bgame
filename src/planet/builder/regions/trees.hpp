@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../raws/raws.hpp"
+#include "../../../raws/biomes.hpp"
 #include <rltk.hpp>
 #include "../../region.hpp"
 #include "../../planet.hpp"
