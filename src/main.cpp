@@ -124,6 +124,7 @@ void read_config() {
 
 int main(int argc, char* argv[])
 {
+    /*
 #ifndef WIN32
 
 	fs::path full_path( fs::initial_path<fs::path>() );
@@ -131,6 +132,7 @@ int main(int argc, char* argv[])
 	fs::current_path(full_path.parent_path());
 
 #endif // !WIN32
+     */
 
 	read_config();
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));

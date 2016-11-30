@@ -31,7 +31,10 @@ void designations_t::from_xml(xml_node * c) {
         buildings.push_back(b);
     });
     c->iterate_child("build_orders", [this] (xml_node *ch) {
-        // TODO
+        std::pair<uint8_t, std::string> bo{
+            ch->find("build_orders_first")->val<uint8_t>("build_orders"),
+            ch->find("build_orders_second")->val<std::string>("build_orders")
+        };
     });
     c->iterate_child("guard_points", [this] (xml_node *ch) {
         position_t pos;

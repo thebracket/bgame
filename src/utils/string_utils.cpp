@@ -2,7 +2,7 @@
 #include <sstream>
 #include <cctype>
 
-std::vector<std::string> split ( const std::string str, const char delimiter )
+std::vector<std::string> split ( const std::string &str, const char &delimiter )
 {
      std::vector<std::string> internal;
      std::stringstream ss ( str ); // Turn the string into a stream.
@@ -26,7 +26,7 @@ std::string to_proper_noun_case(const std::string &original)
     return result;
 }
 
-std::string max_width_str(const std::string original, const int width) {
+std::string max_width_str(const std::string &original, const int &width) {
 	if (original.size() <= width) return original;
 	return original.substr(0,width);
 }
