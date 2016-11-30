@@ -28,6 +28,7 @@
 #include "../../../components/sentient_ai.hpp"
 #include "../../../components/lightsource.hpp"
 #include "../../../components/falling.hpp"
+#include "../../../raws/clothing.hpp"
 #include "../world_queries.hpp"
 #include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
@@ -84,11 +85,11 @@ void do_equip_armor(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_
 		if (armor) {
 			auto item = armor->component<item_t>();
 			item_location_t loc = INVENTORY;
-			auto finder = clothing_types.find(item->item_tag);
-			if (finder->second.slot == "head") loc = HEAD;
-			if (finder->second.slot == "torso") loc = TORSO;
-			if (finder->second.slot == "legs") loc = LEGS;
-			if (finder->second.slot == "shoes") loc = FEET;
+			auto finder = get_clothing_by_tag(item->item_tag);
+			if (finder->slot == "head") loc = HEAD;
+			if (finder->slot == "torso") loc = TORSO;
+			if (finder->slot == "legs") loc = LEGS;
+			if (finder->slot == "shoes") loc = FEET;
 			each<item_carried_t>([&e, &pos, &loc](entity_t &E, item_carried_t &c) {
 				if (c.carried_by == e.id && c.location == loc) emit(drop_item_message{ E.id, pos.x, pos.y, pos.z });
 			});

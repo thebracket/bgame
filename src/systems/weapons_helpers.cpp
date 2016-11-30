@@ -2,6 +2,7 @@
 #include "../messages/messages.hpp"
 #include "../raws/raws.hpp"
 #include "../raws/creatures.hpp"
+#include "../raws/clothing.hpp"
 #include "../components/item.hpp"
 #include "../components/species.hpp"
 #include "../components/grazer_ai.hpp"
@@ -73,9 +74,9 @@ int calculate_armor_class(entity_t &entity) {
 	// Does it have any items that help?
 	each<item_carried_t, item_t>([&ac, &entity] (entity_t &e, item_carried_t &c, item_t &i) {
 		if (c.carried_by == entity.id && c.location != INVENTORY && i.type == CLOTHING) {
-			auto finder = clothing_types.find(i.item_tag);
-			if (finder != clothing_types.end()) {
-				ac += finder->second.armor_class + get_material(i.material)->ac_bonus;
+			auto finder = get_clothing_by_tag(i.item_tag);
+			if (finder) {
+				ac += finder->armor_class + get_material(i.material)->ac_bonus;
 			}
 		}
 	});

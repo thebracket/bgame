@@ -3,7 +3,7 @@
 #include "movement_system.hpp"
 #include "../components/item_stored.hpp"
 #include "../components/settler_ai.hpp"
-
+#include "../raws/clothing.hpp"
 #include <boost/container/flat_map.hpp>
 
 void inventory_system::update(const double duration_ms) {
@@ -398,15 +398,15 @@ void unclaim_by_id(const std::size_t &id) {
 }
 
 bool is_better_armor(const std::string &item_tag, boost::container::flat_map<item_location_t, float> &ac_by_loc) {
-	auto finder = clothing_types.find(item_tag);
-	if (finder == clothing_types.end()) return false;
+	auto finder = get_clothing_by_tag(item_tag);
+	if (!finder) return false;
 
-	const float item_ac = finder->second.armor_class;
+	const float item_ac = finder->armor_class;
 	item_location_t loc = INVENTORY;
-	if (finder->second.slot == "head") loc = HEAD;
-	if (finder->second.slot == "torso") loc = TORSO;
-	if (finder->second.slot == "legs") loc = LEGS;
-	if (finder->second.slot == "shoes") loc = FEET;
+	if (finder->slot == "head") loc = HEAD;
+	if (finder->slot == "torso") loc = TORSO;
+	if (finder->slot == "legs") loc = LEGS;
+	if (finder->slot == "shoes") loc = FEET;
 
 	auto tester = ac_by_loc.find(loc);
 	if (tester == ac_by_loc.end()) {
@@ -427,9 +427,9 @@ boost::optional<std::size_t> find_armor_upgrade(entity_t &E, const int range) {
 	boost::container::flat_map<item_location_t, float> ac_by_loc;
 	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
 		if (c.carried_by == E.id && i.type == CLOTHING) {
-			auto finder = clothing_types.find(i.item_tag);
-			if (finder != clothing_types.end()) {
-				ac_by_loc[c.location] = finder->second.armor_class;
+			auto finder = get_clothing_by_tag(i.item_tag);
+			if (finder) {
+				ac_by_loc[c.location] = finder->armor_class;
 			}
 		} 
 	});

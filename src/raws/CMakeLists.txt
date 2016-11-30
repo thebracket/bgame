@@ -10,6 +10,7 @@ add_library(raws STATIC
     biomes.cpp
     plants.cpp
     life_events.cpp
+    clothing.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

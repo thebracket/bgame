@@ -9,14 +9,7 @@
 #include <bitset>
 #include "../components/item_carried.hpp"
 #include "reaction_input.hpp"
-
-struct clothing_t {
-	std::string name= "";
-	std::vector<std::string> colors;
-	std::string slot = "";
-	std::string description = "";
-	float armor_class = 0.0F;
-};
+#include "clothing.hpp"
 
 struct profession_t {
 	std::string name = "";	
@@ -92,7 +85,6 @@ struct reaction_t {
 	bool emits_smoke = false;
 };
 
-extern boost::container::flat_map<std::string, clothing_t> clothing_types;
 extern std::vector<profession_t> starting_professions;
 
 extern boost::container::flat_map<std::string, item_def_t> item_defs;

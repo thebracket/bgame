@@ -4,6 +4,7 @@
 #include <string>
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
+#include "../raws/clothing.hpp"
 
 using namespace rltk;
 
@@ -25,9 +26,9 @@ struct item_t {
 		if (finder != item_defs.end()) {
 			item_name = finder->second.name;
 		} else {
-			auto finder2 = clothing_types.find(item_tag);
-			if (finder2 != clothing_types.end()) {
-				item_name = finder2->second.name;
+			auto finder2 = get_clothing_by_tag(item_tag);
+			if (finder2) {
+				item_name = finder2->name;
 			} else {
 				item_name = "ERROR";
 				std::cout << item_tag << " not found!\n";

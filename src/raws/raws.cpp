@@ -14,38 +14,19 @@
 #include "biomes.hpp"
 #include "plants.hpp"
 #include "life_events.hpp"
+#include "clothing.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <memory>
 
 std::unique_ptr<lua_lifecycle> lua_handle;
-
-boost::container::flat_map<std::string, clothing_t> clothing_types;
 std::vector<profession_t> starting_professions;
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<std::string, building_def_t> building_defs;
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
-
-void read_clothing(std::ofstream &tech_tree_file) {
-    std::string tag = "";
-    clothing_t c;
-    read_lua_table("clothing", 
-        [&c, &tag] (const auto &key) { tag = key; c = clothing_t{}; },
-        [&c, &tag] (const auto &key) { clothing_types[key] = c; }, 
-        lua_parser{
-            {"name",        [&c] () { c.name = lua_str(); }},
-            {"slot",        [&c] () { c.slot = lua_str(); }},
-            {"description", [&c] () { c.description = lua_str(); }},
-            {"ac",          [&c] () { c.armor_class = lua_float(); }},
-            {"colors",      [&c] () {
-                read_lua_table_inner( "colors", [&c] (auto col) { c.colors.push_back(col); });
-            }}
-        }
-    );
-}
 
 void read_professions(std::ofstream &tech_tree_file) {
 
@@ -394,15 +375,6 @@ void read_reactions(std::ofstream &tech_tree_file) {
     }
 }
 
-void sanity_check_clothing() {
-    for (auto it = clothing_types.begin(); it != clothing_types.end(); ++it) {
-        if (it->first.empty()) std::cout << "WARNING: Empty clothing string\n";
-        if (it->second.name.empty()) std::cout << "WARNING: Empty clothing name\n";
-        if (it->second.colors.empty()) std::cout << "WARNING: " << it->first << " contains no color options\n";
-        if (it->second.slot.empty()) std::cout << "WARNING: " << it->first << " has no slot defined.\n";         
-    }
-}
-
 void sanity_check_professions() {
     for (const auto &prof : starting_professions) {
         if (prof.name.empty()) std::cout << "WARNING: Profession with no name\n";
@@ -410,8 +382,8 @@ void sanity_check_professions() {
             if (std::get<0>(cloth) > 3) std::cout << "WARNING: " << prof.name << " clothing item has invalid gender tag\n";
             if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes")
                 std::cout << "WARNING: " << prof.name << " has an invalid slot: " << std::get<1>(cloth) << "\n";
-            auto finder = clothing_types.find(std::get<2>(cloth));
-            if (finder == clothing_types.end()) std::cout << "WARNING: " << prof.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
+            auto finder = get_clothing_by_tag(std::get<2>(cloth));
+            if (!finder) std::cout << "WARNING: " << prof.name << " has non-existent clothing type: " << std::get<2>(cloth) << "\n";
         }
     }
 }
@@ -452,8 +424,8 @@ void sanity_check_reactions() {
         }
         for (const auto &output : it->second.outputs) {
             auto finder = item_defs.find(output.first);
-            auto finder2 = clothing_types.find(output.first);
-            if (finder == item_defs.end() && finder2 == clothing_types.end()) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+            auto finder2 = get_clothing_by_tag(output.first);
+            if (finder == item_defs.end() && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
         }
     }
 }
