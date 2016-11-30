@@ -67,7 +67,11 @@ int calculate_armor_class(entity_t &entity) {
 		auto species = entity.component<species_t>();
 		if (species) {
 			auto finder = get_creature_def(species->tag);
-			return finder->armor_class;
+			if (!finder) {
+				std::cout << "WARNING: Unable to find " << species->tag << "\n";
+			} else {
+				return finder->armor_class;
+			}
 		} 
 	}
 

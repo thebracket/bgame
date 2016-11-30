@@ -178,7 +178,12 @@ void damage_system::creature_attacks() {
         auto attacker = entity(msg.attacker);
         if (!attacker) break;
         auto attack_species = attacker->component<species_t>();
-        auto creature = get_creature_def(attack_species->tag).get();
+        auto creaturefinder = get_creature_def(attack_species->tag);
+        if (!creaturefinder) {
+            std::cout << "Unable to find creature: " << attack_species->tag << "\n";
+            break;
+        }
+        auto creature = creaturefinder.get();
 
         auto defender = entity(msg.victim);
         if (!defender) break;
