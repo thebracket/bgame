@@ -1,6 +1,7 @@
 #include "strata.hpp"
 #include "../../planet_builder.hpp"
 #include "../../components/water_spawner.hpp"
+#include "../../raws/materials.hpp"
 
 strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
     strata_t result;
@@ -141,7 +142,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                     material_idx = 1;
                 }
                 region.tile_material[mapidx(x,y,z)] = material_idx;
-                region.tile_hit_points[mapidx(x,y,z)] = get_material(material_idx).hit_points;
+                region.tile_hit_points[mapidx(x,y,z)] = get_material(material_idx)->hit_points;
                 ++z;
             }
             

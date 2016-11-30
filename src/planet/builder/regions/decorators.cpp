@@ -1,5 +1,5 @@
 #include "decorators.hpp"
-#include "../../../raws/raws.hpp"
+#include "../../../raws/materials.hpp"
 #include "../../planet_builder.hpp"
 
 void build_ramps(region_t &region) {
@@ -64,7 +64,7 @@ void build_beaches(region_t &region) {
                 if (region.water_level[mapidx(x+1,y,z-1)] > 0) is_beach = true;
 
                 if (is_beach) {
-                    region.tile_material[mapidx(x,y,z)] = sand;
+                    region.tile_material[mapidx(x,y,z)] = sand.get();
                     region.tile_vegetation_type[mapidx(x,y,z)] = 0;
                 }
             }

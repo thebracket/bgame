@@ -74,7 +74,7 @@ int calculate_armor_class(entity_t &entity) {
 		if (c.carried_by == entity.id && c.location != INVENTORY && i.type == CLOTHING) {
 			auto finder = clothing_types.find(i.item_tag);
 			if (finder != clothing_types.end()) {
-				ac += finder->second.armor_class + get_material(i.material).ac_bonus;
+				ac += finder->second.armor_class + get_material(i.material)->ac_bonus;
 			}
 		}
 	});

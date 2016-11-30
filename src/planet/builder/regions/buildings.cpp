@@ -11,6 +11,7 @@
 #include "../../../components/logger.hpp"
 #include "../../../components/designations.hpp"
 #include "../../../raws/raws.hpp"
+#include "../../../raws/materials.hpp"
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
     auto building = building_defs.find(tag);
@@ -25,12 +26,12 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     }
 
     if (tag == "storage_locker") {
-        spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"));
+        spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel").get());
+		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel").get());
+		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel").get());
+		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel").get());
+		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel").get());
+		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel").get());
     } else if (tag == "cordex") {
         new_building->assign(viewshed_t{16, false})
             ->assign(lightsource_t{16, rltk::colors::WHITE, true});
@@ -55,11 +56,11 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     region.solid[idx] = false;
     region.tile_type[idx] = tile_type::FLOOR;
     region.tile_flags[idx].set(CONSTRUCTION);
-    const auto plasteel = get_material_by_tag("plasteel");
+    const auto plasteel = get_material_by_tag("plasteel").get();
     region.tile_material[idx] = plasteel;
     region.tile_vegetation_type[idx] = 0;
 
-    const auto wood = get_material_by_tag("wood");
+    const auto wood = get_material_by_tag("wood").get();
 
     if (type == "ship_wall") {
         region.tile_type[idx] = tile_type::WALL;

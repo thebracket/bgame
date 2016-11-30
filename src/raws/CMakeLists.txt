@@ -3,6 +3,7 @@ add_library(raws STATIC
 	lua_bridge.cpp
 	health_factory.cpp
 	string_table.cpp
+    materials.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)

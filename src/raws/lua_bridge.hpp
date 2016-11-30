@@ -1,19 +1,21 @@
 #pragma once
 
+#include <rltk.hpp>
+
 extern "C" {
 //#include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 }
+#include <functional>
 #include <string>
 #include <unordered_map>
-#include <functional>
 
 extern lua_State* lua_state;
 
 void init_lua();
 void exit_lua();
-void load_lua_script(const std::string filename);
+void load_lua_script(std::string filename);
 
 struct lua_lifecycle {
 	lua_lifecycle() {
@@ -33,4 +35,4 @@ void read_lua_table_inner(const std::string &table, const std::function<void(std
 inline std::string lua_str() { return lua_tostring(lua_state, -1); }
 inline int lua_int() { return lua_tonumber(lua_state, -1); }
 inline float lua_float() { return lua_tonumber(lua_state, -1); }
-
+rltk::color_t read_lua_color(std::string field);

@@ -171,7 +171,7 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 
 	if (ai.job_type_minor == JM_BUTCHER_CHOP) {
 		auto corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
-		const auto organic_idx = get_material_by_tag("organic");
+		const auto organic_idx = get_material_by_tag("organic").get();
 
 		auto finder = get_creature_def(corpse->creature_tag);
 		for (int i=0; i<finder.yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);

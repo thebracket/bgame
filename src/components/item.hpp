@@ -3,6 +3,7 @@
 #include <rltk.hpp>
 #include <string>
 #include "../raws/raws.hpp"
+#include "../raws/materials.hpp"
 
 using namespace rltk;
 
