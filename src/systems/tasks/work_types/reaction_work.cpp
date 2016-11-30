@@ -32,6 +32,7 @@
 #include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
+#include "../../../raws/reactions.hpp"
 
 #include <iostream>
 #include <map>

@@ -14,6 +14,7 @@ add_library(raws STATIC
     profession.cpp
     items.cpp
     buildings.cpp
+    reactions.cpp
 )
 target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)
