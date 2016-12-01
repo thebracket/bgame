@@ -24,7 +24,7 @@ struct reaction_input_t {
 	}
 
 	void from_xml(rltk::xml_node * c) {
-		std::cout << c->dump() << "\n";
+		//std::cout << c->dump() << "\n";
 		tag = c->val<std::string>("tag");
         quantity = c->val<int>("quantity");
 
