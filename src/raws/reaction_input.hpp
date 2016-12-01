@@ -14,7 +14,8 @@ struct reaction_input_t {
 	int quantity = 0;
 
 	void to_xml(rltk::xml_node * c) {
-		rltk::component_to_xml(c,
+        rltk::xml_node * ch = c->add_node("reaction_input");
+		rltk::component_to_xml(ch,
 			std::make_pair("tag", tag),
 			std::make_pair("required_material", required_material),
 			std::make_pair("required_material_type", required_material_type),
@@ -23,10 +24,18 @@ struct reaction_input_t {
 	}
 
 	void from_xml(rltk::xml_node * c) {
+		std::cout << c->dump() << "\n";
 		tag = c->val<std::string>("tag");
-		required_material = c->val<std::size_t>("required_material");
-		required_material_type = (material_def_spawn_type_t)c->val<int>("required_material_type");
-		quantity = c->val<int>("quantity");
+        quantity = c->val<int>("quantity");
+
+        rltk::xml_node * rm = c->find("required_material");
+        if (rm && rm->val<std::string>("initialized")!="no") {
+            required_material = rm->val<std::size_t>("required_material");
+        }
+        rltk::xml_node * rmt = c->find("required_material_type");
+        if (rmt && rmt->val<std::string>("initialized")!="no") {
+            required_material_type = (material_def_spawn_type_t) rmt->val<int>("required_material_type");
+        }
 	}
 
 };
