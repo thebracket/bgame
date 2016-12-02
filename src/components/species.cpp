@@ -23,7 +23,7 @@ void species_t::from_xml(xml_node * c) {
     height_cm = c->val<float>("height_cm");
     weight_kg = c->val<float>("weight_kg");
     bearded = c->val<bool>("bearded");
-    tag = c->val<std::string>("height_cm");
+    tag = c->val<std::string>("tag");
 }
 
 std::string species_t::gender_str() {
