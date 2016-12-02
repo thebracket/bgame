@@ -42,6 +42,7 @@ void mode_play_system::update(const double duration_ms) {
 	// coordinates. There will be a helper function for this once we get into retained GUIs.
 	const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
 	const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+    if (world_x < 0 || world_x > REGION_WIDTH-1 || world_y < 0 || world_y > REGION_HEIGHT-1) return;
 	const int tile_idx = mapidx( world_x, world_y, camera_position->region_z );
 	bool tooltip = false;
 	

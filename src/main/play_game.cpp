@@ -70,12 +70,12 @@ void play_game::init() {
 
 	// Setup systems
 	std::cout << "Setting up systems\n";
+    add_system<fluid_system>();
 	add_system<keyboard_system>();
 	add_system<mouse_input_system>();
 	add_system<door_system>();
 	add_system<calendar_system>();
 	add_system<world_system>();
-	add_system<fluid_system>();
 	add_system<gravity_system>();
 	add_system<wildlife_population_system>();
 	add_system<sentient_ai_system>();
@@ -111,6 +111,8 @@ void play_game::init() {
 	add_system<wish_system>();
 	add_system<log_system>();
 	add_system<gui_system>();
+	add_system<fluid_system_end>();
+
 
 	std::cout << "ECS Config\n";
 	ecs_configure();

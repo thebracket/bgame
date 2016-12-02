@@ -2,16 +2,18 @@
 #include "../messages/tick_message.hpp"
 #include "../main/game_globals.hpp"
 #include "../components/water_spawner.hpp"
-#include "../components/position.hpp"
 #include "../components/health.hpp"
 #include "../components/game_stats.hpp"
 #include "../messages/inflict_damage_message.hpp"
 #include <algorithm>
+#include <memory>
+#include <thread>
 
 namespace fluids {
 
 int cycle = 0;
 std::vector<uint8_t> water_level;
+std::unique_ptr<std::thread> fluid_thread;
 
 inline void copy_fluids_to_local() {
     water_level = current_region->water_level;
@@ -37,8 +39,6 @@ inline void do_falling_water(const int &x, const int &y, const int &z, const int
     if (water_level[idx_bottom]<10) {
         --water_level[idx];
         ++water_level[idx_bottom];
-        current_region->water_moved[idx] = true;
-        current_region->water_moved[idx_bottom] = true;
         did_something = true;
     }
 }
@@ -47,10 +47,10 @@ inline void do_water_spread(const int &x, const int &y, const int &z, const int 
     std::map<int, int> candidates;
     const int water_here = water_level[idx];
 
-    const std::array<int, 8> directions = { mapidx(x-1, y, z), mapidx(x+1, y, z), mapidx(x, y-1, z), mapidx(x, y+1, z) };
+    const std::array<int, 4> directions = { mapidx(x-1, y, z), mapidx(x+1, y, z), mapidx(x, y-1, z), mapidx(x, y+1, z) };
 
     for (const auto &dir : directions) {
-        if (!current_region->solid[dir] && water_level[dir]<10 && water_level[dir] < water_here) candidates.insert({rng.roll_dice(1,20), dir});
+        if (!current_region->solid[dir] && water_level[dir]<10 && water_level[dir] < water_here) candidates.insert({water_level[dir], dir});
     }
 
     if (!candidates.empty()) {
@@ -58,8 +58,6 @@ inline void do_water_spread(const int &x, const int &y, const int &z, const int 
             if (water_level[idx] > 0) {
                 --water_level[idx];
                 ++water_level[it->second];
-                current_region->water_moved[idx] = true;
-                current_region->water_moved[it->second] = true;
                 did_something = true;
             }
         }
@@ -94,7 +92,6 @@ inline void do_layer(const int &z, bool &did_something) {
 
 void do_fluids() 
 {
-    copy_fluids_to_local();
     bool did_something = false;
 
     int start_z, end_z;
@@ -110,7 +107,6 @@ void do_fluids()
         case 3 : { start_z = THREE_QUARTERS; end_z = REGION_DEPTH-1; } break;
     }
 
-    #pragma omp parallel for
     for (int z=start_z; z<end_z; ++z) {
         do_layer(z, did_something);
     }
@@ -120,6 +116,17 @@ void do_fluids()
     }
 
     ++cycle;
+
+    each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
+        const auto idx = mapidx(pos.x, pos.y, pos.z);
+        if (w.spawner_type == 1 || w.spawner_type == 2) {
+            // TODO: When rainfall is implemented, type 1 only spawns when it rains
+            if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;
+        } else {
+            // Type 3 removes water - used to make rivers flow downhill
+            if (current_region->water_level[idx] > 0) current_region->water_level[idx] = 0;
+        }
+    });
 }
 
 }
@@ -139,7 +146,7 @@ void fluid_system::update(const double ms) {
             if (current_region->water_level[i] == 1 && rng.roll_dice(1,6)==6) current_region->water_level[i] = 0;
         }
 
-        parallel_each<position_t>([] (entity_t &e, position_t &pos) {
+        each<position_t>([] (entity_t &e, position_t &pos) {
             if (current_region->water_level[mapidx(pos)] > 7) {
                 bool is_drowning = true;
 
@@ -161,18 +168,16 @@ void fluid_system::update(const double ms) {
     std::queue<tick_message> * ticks = mbox<tick_message>();
 	while (!ticks->empty()) {
 		ticks->pop();
-        std::fill(current_region->water_moved.begin(), current_region->water_moved.end(), false);
-        fluids::do_fluids();
-
-        parallel_each<water_spawner_t, position_t>([] (entity_t &e, water_spawner_t &w, position_t &pos) {
-            const auto idx = mapidx(pos.x, pos.y, pos.z);
-            if (w.spawner_type == 1 || w.spawner_type == 2) {
-                // TODO: When rainfall is implemented, type 1 only spawns when it rains
-                if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;
-            } else {
-                // Type 3 removes water - used to make rivers flow downhill
-                if (current_region->water_level[idx] > 0) current_region->water_level[idx] = 0;
-            }
-        });        
+        fluids::copy_fluids_to_local();
+        fluids::fluid_thread = std::make_unique<std::thread>(fluids::do_fluids);
 	}
+}
+
+void fluid_system_end::configure() {}
+
+void fluid_system_end::update(const double duration_ms) {
+    if (fluids::fluid_thread) {
+        fluids::fluid_thread->join();
+        fluids::fluid_thread.reset();
+    }
 }

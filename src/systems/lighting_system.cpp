@@ -141,17 +141,18 @@ void lighting_system::update(double time_ms) {
                                 light_y += sun_step_y;
                                 light_z += sun_step_z;
 
-                                if (last_z != std::floor(light_z)) {
+                                last_z = std::floor(light_z);
+
+                                if (light_x > REGION_WIDTH || light_x < 0 || light_y > REGION_HEIGHT || light_y < 0 || light_z > REGION_DEPTH-1) {
+                                    done = true;
+                                }
+
+                                if (!done && last_z != std::floor(light_z)) {
                                     if (current_region->tile_type[mapidx(light_x, light_y, std::floor(light_z))] == tile_type::FLOOR) {
                                         done = true;
                                         shadowed = true;
                                     }
                                 }
-                                last_z = std::floor(light_z);
-
-                                if (light_x > REGION_WIDTH || light_x < 0 || light_y > REGION_HEIGHT || light_y < 0 || light_z > REGION_DEPTH-1) {
-                                    done = true;
-                                }                                
                             }
                         }
 

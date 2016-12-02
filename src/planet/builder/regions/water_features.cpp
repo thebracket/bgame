@@ -85,10 +85,10 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
     boost::container::flat_map<int, region_water_feature_tile> dig_targets;
 
     auto dig_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
-        add_dig_target(X, Y, 3, 3, dig_targets, pooled_water, heightmap);
+        add_dig_target(X, Y, 2, 2, dig_targets, pooled_water, heightmap);
     };
     auto dig_exit_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
-        add_dig_target(X, Y, 4, 3, dig_targets, pooled_water, heightmap);
+        add_dig_target(X, Y, 2, 2, dig_targets, pooled_water, heightmap);
     };
 
     for (int i=0; i<river_entry[0]; ++i) {
