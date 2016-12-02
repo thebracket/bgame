@@ -82,8 +82,15 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
 				ai.job_type_minor = JM_FIND_BED;
 				change_job_status(ai, name, "Looking for a bed");
 				emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
-				rltk::entity(ai.target_id)->component<construct_provides_sleep_t>()->claimed = false;
-				ai.job_type_minor = JM_SLEEP;
+
+                auto sleep_entity = rltk::entity(ai.target_id);
+                if (sleep_entity) {
+                    auto sleep_component = sleep_entity->component<construct_provides_sleep_t>();
+                    if (sleep_component) {
+                        sleep_component->claimed = false;
+                        ai.job_type_minor = JM_SLEEP;
+                    }
+                }
 			} // fail
 		);
 		return;
