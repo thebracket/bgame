@@ -58,7 +58,7 @@ void gravity_system::update(const double ms) {
                         if (x<REGION_WIDTH-1) targets.push_back(mapidx(x+1,y,z));
                         if (y>0) targets.push_back(mapidx(x,y-1,z));
                         if (y<REGION_HEIGHT-1) targets.push_back(mapidx(x,y+1,z));
-                        if (z<REGION_DEPTH-1 && current_region->tile_type[idx] != tile_type::FLOOR) targets.push_back(mapidx(x,y,z+1));
+                        if (z<REGION_DEPTH-1 && current_region->tile_type[idx] != tile_type::FLOOR && current_region->tile_type[idx] != tile_type::RAMP) targets.push_back(mapidx(x,y,z+1));
                         if (z>0) targets.push_back(mapidx(x,y,z-1));               
                     }
                 }
