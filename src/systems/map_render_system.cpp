@@ -36,9 +36,14 @@ vchar get_render_char(const int &x, const int &y) {
 	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};	
 	auto rf = renderables.find(idx);
 	if (rf != renderables.end()) {
-		result = rf->second[glyph_cycle % rf->second.size()];
-		if (current_region->water_level[idx] > 0) result.background = rltk::colors::Blue;
-		if (!current_region->visible[idx]) result = greyscale(result);
+        result = current_region->render_cache[idx];
+        if (!current_region->visible[idx]) result = greyscale(result);
+
+
+		rltk::vchar renderable = rf->second[glyph_cycle % rf->second.size()];
+		if (current_region->water_level[idx] > 0) renderable.background = rltk::colors::Blue;
+		if (!current_region->visible[idx]) renderable = greyscale(result);
+        sterm(5)->add(xchar{static_cast<int>(renderable.glyph), renderable.foreground, static_cast<float>(x), static_cast<float>(y+2)});
 	} else {
 		result = current_region->render_cache[idx];
 		if (!current_region->visible[idx]) result = greyscale(result);
@@ -200,6 +205,8 @@ void map_render_system::update(const double duration_ms) {
 
 	if (dirty) {
 		term(1)->clear();
+        sterm(5)->clear();
+        sterm(6)->clear();
 
 		std::function<vchar(int,int)> calculator;
 		if (game_master_mode == PLAY) {

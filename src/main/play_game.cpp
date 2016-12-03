@@ -15,6 +15,8 @@ constexpr int MAP_LAYER=1;
 constexpr int GUI_LAYER=2;
 constexpr int RIGHT_PANEL = 3;
 constexpr int TOOLTIP_LAYER = 4;
+constexpr int RENDERABLES_LAYER = 5;
+constexpr int VEG_LAYER=6;
 
 void play_game::tick(const double duration_ms) {
 	ecs_tick(duration_ms);
@@ -32,6 +34,8 @@ void play_game::init() {
 
 	// Setup the display
 	gui->add_layer(MAP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, true);
+    gui->add_sparse_layer(RENDERABLES_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen);
+    gui->add_sparse_layer(VEG_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen);
 	gui->add_layer(TOOLTIP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, false);
 	gui->add_layer(GUI_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, true);
 	gui->add_layer(RIGHT_PANEL, 0, 0, window_width, window_height, game_config.gui_font, resize_fullscreen, true);
@@ -124,4 +128,6 @@ void play_game::destroy() {
 	gui->delete_layer(TOOLTIP_LAYER);
 	gui->delete_layer(GUI_LAYER);
 	gui->delete_layer(RIGHT_PANEL);
+    gui->delete_layer(RENDERABLES_LAYER);
+    gui->delete_layer(VEG_LAYER);
 }
