@@ -12,7 +12,7 @@
 struct plant_t {
     std::string tag = "";
     std::string name = "";
-    uint8_t glyph;
+    uint16_t glyph;
     rltk::color_t fg;
     rltk::color_t bg;
     std::string provides = "";
