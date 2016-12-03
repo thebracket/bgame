@@ -168,6 +168,7 @@ void region_t::calc_render(const int &idx) {
 	uint8_t glyph;
 	color_t fg;
 	color_t bg = rltk::colors::BLACK;
+    veg_cache[idx] = boost::optional<rltk::vchar>();
 
 	// Start with the basic tile_type; this hard-sets some glyphs.
 	switch (tile_type[idx]) {
@@ -271,9 +272,11 @@ void region_t::calc_render(const int &idx) {
 			if (tile_vegetation_type[idx]>0) {
 				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
 				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
-				glyph = plant.glyph;
-				fg = plant.fg;
-				bg = plant.bg;
+                rltk::vchar plant_render;
+                plant_render.glyph = plant.glyph;
+                plant_render.foreground = plant.fg;
+                plant_render.background = plant.bg;
+                veg_cache[idx] = plant_render;
 			}
 		} break;
 		case tile_type::CLOSED_DOOR : {

@@ -49,6 +49,11 @@ vchar get_render_char(const int &x, const int &y) {
 		if (!current_region->visible[idx]) result = greyscale(result);
 	}
 
+    if (current_region->veg_cache[idx]) {
+        rltk::vchar plant = current_region->veg_cache[idx].get();
+        sterm(6)->add(xchar{static_cast<int>(plant.glyph), plant.foreground, static_cast<float>(x), static_cast<float>(y+2)});
+    }
+
 	// Apply lighting
 	result.foreground = lerp(result.foreground, light_map[((term(1)->term_width * y) + x)], 0.5);
 
