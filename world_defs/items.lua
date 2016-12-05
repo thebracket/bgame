@@ -35,13 +35,13 @@ items = {
 		name = "Wood Log",
 		description = "Wood from a felled tree",
 		itemtype = {"component"},
-		glyph = glyphs['double_wall_ew'],
-		foreground = colors['wood_brown'],
+		glyph = glyphs['wood_log'],
+		foreground = colors['white'],
 		background = colors['black']
 	},
 	stone_boulder = {
 		name = "Stone Boulder",	description = "A large stone boulder",
-		itemtype = {"component"}, glyph = glyphs['small_circle'], foreground = colors['grey'], background = colors['black']
+		itemtype = {"component"}, glyph = glyphs['boulder'], foreground = colors['white'], background = colors['black']
 	},
 	ore = {
 		name = "Metal Ore", description = "A lump of unrefined metal",

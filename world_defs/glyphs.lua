@@ -73,7 +73,17 @@ glyphs = {
 	circle = 248,
 	square_root = 251,
 	squared = 253,
-	inset_square = 254
+	inset_square = 254,
+	grass = 272,
+	grass_sparse = 273,
+	reeds = 274,
+	grass_long = 275,
+	flower_yellow = 276,
+	flower_purple = 277,
+	bush = 278,
+	flower_small = 279,
+	wood_log = 304,
+	boulder = 305
 }
 
 colors = {

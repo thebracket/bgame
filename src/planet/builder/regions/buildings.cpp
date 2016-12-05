@@ -133,9 +133,9 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     } else if (type == "solar_panel") {
         add_building("solar_panel", x, y, z, civ_owner);
     } else if (type == "cryo_bed") {
-        region.tile_flags[idx].reset(CONSTRUCTION);
         add_building("cryo_bed", x, y, z, civ_owner);
     } else if (type == "storage_locker") {
+        region.tile_flags[idx].set(CONSTRUCTION);
         add_building("storage_locker", x, y, z, civ_owner);
     } else if (type == "battery") {
         add_building("battery", x, y, z, civ_owner);

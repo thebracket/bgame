@@ -42,7 +42,7 @@ void log_system::update(const double ms) {
                 int X = 2;
 
                 for (const rltk::vchar &c : line.chars) {
-                    term(1)->set_char(X, Y, c);
+                    term(4)->set_char(X, Y, c);
                     ++X;
                     if (X > (max_x -1)) {
                         X = 6;

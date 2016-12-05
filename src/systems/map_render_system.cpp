@@ -32,30 +32,25 @@ vchar get_render_char(const int &x, const int &y) {
 	const int idx = render_tiles[((term(1)->term_width * y) + x)];
 	if (idx == 0) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 	if (!current_region->revealed[idx]) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
-	
-	vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};	
-	auto rf = renderables.find(idx);
-	if (rf != renderables.end()) {
-        result = current_region->render_cache[idx];
-        if (!current_region->visible[idx]) result = greyscale(result);
-
-
-		rltk::vchar renderable = rf->second[glyph_cycle % rf->second.size()];
-		if (current_region->water_level[idx] > 0) renderable.background = rltk::colors::Blue;
-		if (!current_region->visible[idx]) renderable = greyscale(result);
-        sterm(5)->add(xchar{static_cast<int>(renderable.glyph), renderable.foreground, static_cast<float>(x), static_cast<float>(y+2)});
-	} else {
-		result = current_region->render_cache[idx];
-		if (!current_region->visible[idx]) result = greyscale(result);
-	}
 
     if (current_region->veg_cache[idx]) {
         rltk::vchar plant = current_region->veg_cache[idx].get();
-        sterm(6)->add(xchar{static_cast<int>(plant.glyph), plant.foreground, static_cast<float>(x), static_cast<float>(y+2)});
+        sterm(6)->add(xchar{static_cast<int>(plant.glyph), lerp(plant.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
     }
 
+    vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
+    result = current_region->render_cache[idx];
+    if (!current_region->visible[idx]) result = greyscale(result);
+	auto rf = renderables.find(idx);
+	if (rf != renderables.end()) {
+		rltk::vchar renderable = rf->second[glyph_cycle % rf->second.size()];
+		//if (current_region->water_level[idx] > 0) renderable.background = rltk::colors::Blue;
+		//if (!current_region->visible[idx]) renderable = greyscale(result);
+        sterm(5)->add(xchar{static_cast<int>(renderable.glyph), lerp(renderable.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
+	}
+
 	// Apply lighting
-	result.foreground = lerp(result.foreground, light_map[((term(1)->term_width * y) + x)], 0.5);
+	result.foreground = lerp(result.foreground, light_map[((term(1)->term_width * y) + x)], 0.75);
 
 	// Apply blood stains!
 	if (current_region->blood_stains[idx]) result.background = color_t{138,7,7};

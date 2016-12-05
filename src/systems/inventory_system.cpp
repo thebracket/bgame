@@ -98,10 +98,17 @@ void inventory_system::configure() {
 
 		designations->buildings.push_back(designate);
 
-		for (int x = designate.x; x < designate.x + designate.width; ++x) {
-			for (int y=designate.y; y < designate.y + designate.height; ++y) {
+        int sx = designate.x;
+        int sy = designate.y;
+        if (designate.width == 3) --sx;
+        if (designate.height == 3) --sy;
+
+		for (int x = sx; x < sx + designate.width; ++x) {
+			for (int y=sy; y < sy + designate.height; ++y) {
 				const auto idx = mapidx(x,y,camera_position->region_z);
 				current_region->tile_flags[idx].set(CONSTRUCTION);
+				current_region->tile_vegetation_type[idx] = 0;
+                current_region->calc_render(idx);
 			}
 		}
 	});

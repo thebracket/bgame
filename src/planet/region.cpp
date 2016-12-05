@@ -165,7 +165,7 @@ void region_t::tile_pathing(const int &x, const int &y, const int &z) {
 }
 
 void region_t::calc_render(const int &idx) {
-	uint8_t glyph;
+	uint16_t glyph;
 	color_t fg;
 	color_t bg = rltk::colors::BLACK;
     veg_cache[idx] = boost::optional<rltk::vchar>();
@@ -260,11 +260,11 @@ void region_t::calc_render(const int &idx) {
 		} break;
 		case tile_type::FLOOR: {
 			if (get_material(tile_material[idx])->spawn_type == sand) {
-				glyph = 126;
+				glyph = 258;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
-				glyph = 240;
+				glyph = 256;
 			} else {
-				glyph = ',';
+				glyph = 257;
 			}
 
 			fg = get_material(tile_material[idx])->fg;
@@ -299,13 +299,14 @@ void region_t::calc_render(const int &idx) {
 			}
 		} break;
 		case tile_type::TREE_TRUNK : {
-			glyph = 10;
-			fg = rltk::colors::Brown;
+			glyph = 257;
+			fg = get_material(tile_material[idx])->fg;
 			bg = rltk::colors::Black;
+            veg_cache[idx] = vchar{259, rltk::colors::WHITE, rltk::colors::BLACK};
 		} break;
 		case tile_type::TREE_LEAF : {
-			glyph = 177;
-			fg = rltk::colors::Green;
+			glyph = 278;
+			fg = rltk::colors::White;
 			bg = rltk::colors::Black;
 		} break;
 	}

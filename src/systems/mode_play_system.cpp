@@ -24,6 +24,7 @@ void mode_play_system::configure() {
 }
 
 void mode_play_system::update(const double duration_ms) {
+    term(4)->clear();
 	if (game_master_mode == TILEMENU) show_tilemenu();
     if (game_master_mode != PLAY && game_master_mode != ROGUE) return;
 
@@ -208,30 +209,30 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	}
 
 	bool right_align = true;
-	if (mouse::term1x > term(1)->term_width/2 ) right_align = false;
+	if (mouse::term1x > term(4)->term_width/2 ) right_align = false;
 	int tt_y = mouse::term1y;
-	if (tt_y+lines.size() > term(1)->term_height-1) tt_y -= (int)lines.size()+1;
+	if (tt_y+lines.size() > term(4)->term_height-1) tt_y -= (int)lines.size()+1;
 
 	if (right_align) {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
 		int tt_x = mouse::term1x+2;
-		term(1)->set_char(mouse::term1x+1, mouse::term1y, vchar{27, color, BLACK});
-		term(1)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
+		term(4)->set_char(mouse::term1x+1, mouse::term1y, vchar{27, color, BLACK});
+		term(4)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
-			term(1)->print(tt_x+1, tt_y, s, color);
+			term(4)->print(tt_x+1, tt_y, s, color);
 			++tt_y;
 		}
 	} else {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
 		int tt_x = mouse::term1x-3-longest;
-		term(1)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
+		term(4)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
-			term(1)->print(tt_x+1, tt_y, s, color);
+			term(4)->print(tt_x+1, tt_y, s, color);
 			++tt_y;
 		}
-		term(1)->set_char(mouse::term1x-1, mouse::term1y, vchar{26, color, BLACK});
+		term(4)->set_char(mouse::term1x-1, mouse::term1y, vchar{26, color, BLACK});
 	}
 }
 
