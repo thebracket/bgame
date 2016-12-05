@@ -83,7 +83,9 @@ glyphs = {
 	bush = 278,
 	flower_small = 279,
 	wood_log = 304,
-	boulder = 305
+	boulder = 305,
+	ore = 306,
+	oil = 307
 }
 
 colors = {

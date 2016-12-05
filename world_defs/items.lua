@@ -45,7 +45,7 @@ items = {
 	},
 	ore = {
 		name = "Metal Ore", description = "A lump of unrefined metal",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['aluminium_blue'], background = colors['black']
+		itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['white'], background = colors['black']
 	},
 	saltpeter_ore = {
 		name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",
@@ -61,7 +61,7 @@ items = {
 	},
 	coal = {
 		name = "Coal", description = "A lump of unrefined coal",
-		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['dark_grey'], background = colors['black']
+		itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['dark_grey'], background = colors['black']
 	},
 	sulphur = {
 		name = "Sulphur", description = "A lump of sulphur",
@@ -77,7 +77,7 @@ items = {
 	},
 	oil = {
 		name = "Oil", description = "A blob of viscous oil",
-		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['dark_grey'], background = colors['black']
+		itemtype = {"component"}, glyph = glyphs['oil'], foreground = colors['white'], background = colors['black']
 	},
 	clay = {
 		name = "Clay", description = "A blob of clay",
