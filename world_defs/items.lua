@@ -131,7 +131,7 @@ items = {
 		name = "Block",
 		description = "A convenient building block",
 		itemtype = {"component"},
-		glyph = glyphs['single_wall_ew'],
+		glyph = glyphs['block'],
 		foreground = colors['grey'],
 		background = colors['black']
 	},

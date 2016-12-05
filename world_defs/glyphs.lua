@@ -85,7 +85,10 @@ glyphs = {
 	wood_log = 304,
 	boulder = 305,
 	ore = 306,
-	oil = 307
+	oil = 307,
+	block = 308,
+	base_male = 352,
+	base_female = 353
 }
 
 colors = {

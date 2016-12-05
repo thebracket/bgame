@@ -44,8 +44,6 @@ vchar get_render_char(const int &x, const int &y) {
 	auto rf = renderables.find(idx);
 	if (rf != renderables.end()) {
 		rltk::vchar renderable = rf->second[glyph_cycle % rf->second.size()];
-		//if (current_region->water_level[idx] > 0) renderable.background = rltk::colors::Blue;
-		//if (!current_region->visible[idx]) renderable = greyscale(result);
         sterm(5)->add(xchar{static_cast<int>(renderable.glyph), lerp(renderable.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
 	}
 
