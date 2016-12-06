@@ -25,7 +25,7 @@ buildings = {
 		provides = { sleep={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['zero'], foreground = colors['white'], background = colors['black']}
+				{glyph=glyphs['cryo_bed'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -49,7 +49,7 @@ buildings = {
 		provides = { storage={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['infinity'], foreground = colors['white'], background = colors['black']}
+				{glyph=glyphs['storage_locker'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},

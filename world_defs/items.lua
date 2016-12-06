@@ -19,7 +19,7 @@ items = {
 		name = "Fire Axe",
 		description = "A simple axe. It has the word FIRE burned into it.",
 		itemtype = {"tool-chopping"},
-		glyph = glyphs['paragraph'],
+		glyph = glyphs['axe_chopping'],
 		foreground = colors['white'],
 		background = colors['black']
 	},
@@ -27,7 +27,7 @@ items = {
 		name = "Pickaxe",
 		description = "A simple pickaxe, ideal for digging holes.",
 		itemtype = {"tool-digging"},
-		glyph = glyphs['pick'],
+		glyph = glyphs['axe_pickaxe'],
 		foreground = colors['white'],
 		background = colors['black']
 	},
