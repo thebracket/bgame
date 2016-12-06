@@ -4,7 +4,7 @@
 #include "../../components/game_stats.hpp"
 #include "../../components/name.hpp"
 #include "../../components/viewshed.hpp"
-#include "../../components/renderable.hpp"
+#include "../../components/renderable_composite.hpp"
 #include "../../components/item.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../raws/health_factory.hpp"
@@ -285,7 +285,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	ai.shift_id = shift_id;
 
 	settler->assign(position_t{ x,y,z })
-		->assign(renderable_t{ 1,rltk::colors::YELLOW, rltk::colors::BLACK })
+		->assign(renderable_composite_t{ RENDER_SETTLER })
 		->assign(name_t{ first_name, last_name })
 		->assign(std::move(species))
 		->assign(std::move(health))

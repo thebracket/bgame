@@ -20,6 +20,7 @@ add_library(components STATIC
 	name.cpp
 	position.cpp
 	renderable.cpp
+	renderable_composite.cpp
 	sentient_ai.cpp
 	settler_ai.cpp
 	species.cpp

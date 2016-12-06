@@ -2,6 +2,7 @@
 #include "../messages/renderables_changed_message.hpp"
 #include "../messages/map_dirty_message.hpp"
 #include "../components/renderable.hpp"
+#include "../components/renderable_composite.hpp"
 #include "../components/position.hpp"
 #include "../components/building.hpp"
 #include "../planet/region.hpp"
@@ -13,6 +14,7 @@
 using namespace rltk;
 
 boost::container::flat_map<int, std::vector<rltk::vchar>> renderables;
+boost::container::flat_map<int, std::vector<std::size_t>> composite_renderables;
 
 void renderables_system::configure() {
     system_name = "Renderables System";
@@ -28,6 +30,7 @@ void renderables_system::update(const double time_elapsed) {
 
     if (renderables_changed) {
 		renderables.clear();
+        composite_renderables.clear();
 
 		// Add buildings to renderables
 		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
@@ -55,6 +58,11 @@ void renderables_system::update(const double time_elapsed) {
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
 			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK});
 		});
+
+        // Add composite renderables
+        each<renderable_composite_t, position_t>([] (entity_t &entity, renderable_composite_t &render, position_t &pos) {
+            composite_renderables[mapidx(pos.x, pos.y, pos.z)].push_back(entity.id);
+        });
 
 		// Add particles
 		for (const particle_t &p : particles) {

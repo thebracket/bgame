@@ -88,7 +88,13 @@ glyphs = {
 	oil = 307,
 	block = 308,
 	base_male = 352,
-	base_female = 353
+	base_female = 353,
+	short_hair = 354,
+	long_hair = 355,
+	pigtails = 356,
+	mohawk = 357,
+	balding = 358,
+	triangle_hair = 359
 }
 
 colors = {

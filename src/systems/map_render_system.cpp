@@ -5,6 +5,8 @@
 #include "renderables_system.hpp"
 #include "camera_system.hpp"
 #include "lighting_system.hpp"
+#include "../components/renderable_composite.hpp"
+#include "../components/species.hpp"
 #include <iostream>
 
 using namespace rltk;
@@ -28,6 +30,60 @@ vchar greyscale(vchar target) {
 	return target;
 }
 
+inline void render_composite(const std::size_t &id, const int &idx, const int &x, const int &y) {
+    auto compr = entity(id)->component<renderable_composite_t>();
+    if (!compr) return;
+
+    const float X = static_cast<float>(x);
+    const float Y = static_cast<float>(y+2);
+    const color_t lighting = light_map[((term(1)->term_width * y) + x)];
+
+    if (compr->render_mode == RENDER_SETTLER) {
+        auto species = entity(id)->component<species_t>();
+        if (!species) return;
+
+        // Render the base person glyph
+        color_t skin_color;
+        switch (species->skin_color) {
+            case CAUCASIAN : skin_color = color_t(255,219,172); break;
+            case ASIAN : skin_color = color_t(224,172,105); break;
+            case INDIAN : skin_color = color_t(198,134,66); break;
+            case AFRICAN : skin_color = color_t(141,85,36); break;
+        }
+
+        if (species->gender == MALE) {
+            sterm(6)->add(xchar{352, skin_color, X, Y});
+        } else {
+            sterm(6)->add(xchar{353, skin_color, X, Y});
+        }
+
+        // Render hair and beard
+        if (species->hair_style != BALD) {
+            color_t hair_color;
+            switch (species->hair_color) {
+                case WHITE_HAIR : hair_color = color_t(250, 250, 250); break;
+                case BROWN_HAIR : hair_color = color_t(141,85,36); break;
+                case BLACK_HAIR : hair_color = color_t(50, 50, 64); break;
+                case BLONDE_HAIR : hair_color = color_t(216, 192, 120); break;
+                case RED_HAIR : hair_color = color_t(181, 82, 57); break;
+            }
+
+            int hair_glyph = 0;
+            switch (species->hair_style) {
+                case SHORT : hair_glyph = 354; break;
+                case LONG : hair_glyph = 355; break;
+                case PIGTAILS : hair_glyph = 356; break;
+                case MOHAWK : hair_glyph = 357; break;
+                case BALDING : hair_glyph = 358; break;
+                case TRIANGLE : hair_glyph = 359; break;
+            }
+            if (hair_glyph != 0) sterm(6)->add(xchar{hair_glyph, hair_color, X, Y});
+        }
+
+        // Render clothes
+    }
+}
+
 vchar get_render_char(const int &x, const int &y) {
 	const int idx = render_tiles[((term(1)->term_width * y) + x)];
 	if (idx == 0) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
@@ -46,6 +102,12 @@ vchar get_render_char(const int &x, const int &y) {
 		rltk::vchar renderable = rf->second[glyph_cycle % rf->second.size()];
         sterm(5)->add(xchar{static_cast<int>(renderable.glyph), lerp(renderable.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
 	}
+
+    auto crf = composite_renderables.find(idx);
+    if (crf != composite_renderables.end()) {
+        std::size_t id = crf->second[glyph_cycle % crf->second.size()];
+        render_composite(id, idx, x, y);
+    }
 
 	// Apply lighting
 	result.foreground = lerp(result.foreground, light_map[((term(1)->term_width * y) + x)], 0.75);

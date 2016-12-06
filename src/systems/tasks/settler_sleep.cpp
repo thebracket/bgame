@@ -97,14 +97,6 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
 	}
 
 	if (ai.job_type_minor == JM_SLEEP) {
-		auto render = entity.component<renderable_t>();
-		render->foreground = rltk::colors::BLUE;
-
-		if (rng.roll_dice(1,6) < 3) {
-			render->glyph = 1;
-		} else {
-			render->glyph = 'Z';
-		}
 
 		auto health = entity.component<health_t>();
 		if (health && health->current_hitpoints < health->max_hitpoints && rng.roll_dice(1,20) + stat_modifier(stats.constitution) > 12) {

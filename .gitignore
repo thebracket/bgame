@@ -7,4 +7,6 @@ artwork/
 .vscode/
 .DS_Store
 world/
+.idea/
+cmake-build-debug/
 

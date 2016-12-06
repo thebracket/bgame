@@ -13,8 +13,5 @@ void wander_randomly(entity_t &entity, position_t &original) {
 		if (distance > 15.0F) return;
 	}
 
-	auto render = entity.component<renderable_t>();
-	render->foreground = rltk::colors::YELLOW;
-	render->glyph = 1;
 	emit_deferred(entity_wants_to_move_randomly_message{entity.id});
 }
