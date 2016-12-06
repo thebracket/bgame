@@ -94,7 +94,25 @@ glyphs = {
 	pigtails = 356,
 	mohawk = 357,
 	balding = 358,
-	triangle_hair = 359
+	triangle_hair = 359,
+	beard = 360,
+	clothing_batman = 368,
+	clothing_policehat = 369,
+	cat_ears = 370,
+	tiara = 371,
+	formal_shirt = 372,
+	formal_blouse = 373,
+	bathrobe = 374,
+	spandex_shirt = 375,
+	spandex_blouse = 376,
+	sports_shirt = 377,
+	tshirt = 378,
+	cargo_pants = 379,
+	long_skirt = 380,
+	shorts = 381,
+	miniskirt = 382,
+	spandex_pants = 383,
+	shoes = 384
 }
 
 colors = {

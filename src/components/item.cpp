@@ -8,7 +8,9 @@ void item_t::to_xml(xml_node * c) {
         std::make_pair("type", type),
         std::make_pair("material", material),
         std::make_pair("claimed", claimed),
-        std::make_pair("stack_size", stack_size)
+        std::make_pair("stack_size", stack_size),
+        std::make_pair("clothing_glyph", clothing_glyph),
+        std::make_pair("clothing_color", clothing_color)
     );
 }
 
@@ -20,5 +22,7 @@ void item_t::from_xml(xml_node * c) {
     type = (item_type_t)c->val<int>("type");
     material = c->val<std::size_t>("material");
     claimed = c->val<bool>("claimed");
-    stack_size = c->val<int>("stack_size");    
+    stack_size = c->val<int>("stack_size");
+    clothing_glyph = c->val<uint16_t>("clothing_glyph");
+    clothing_color = c->color("clothing_color");
 }

@@ -32,6 +32,7 @@ void read_clothing(std::ofstream &tech_tree_file) noexcept
                            {"slot",        [&c] () { c.slot = lua_str(); }},
                            {"description", [&c] () { c.description = lua_str(); }},
                            {"ac",          [&c] () { c.armor_class = lua_float(); }},
+                           {"glyph",       [&c] () { c.clothing_glyph = lua_int(); }},
                            {"colors",      [&c] () {
                                read_lua_table_inner( "colors", [&c] (auto col) { c.colors.push_back(col); });
                            }}
