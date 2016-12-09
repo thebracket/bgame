@@ -3,7 +3,7 @@ items = {
 		name = "Personal Survival Shelter Kit",
 		description = "A folded-up personal shelter kit, known in non-corporate parlance as a camping set: a tent, bedroll and sleeping bag.",
 		itemtype = {"component"},
-		glyph = glyphs['kit'],
+		glyph = glyphs['tent_kit'],
 		foreground = colors['green'],
 		background = colors['black']
 	},
@@ -11,7 +11,7 @@ items = {
 		name = "Camping Fire Kit",
 		description = "A plastic campfire, powered by a tiny nuclear reactor. Ideal for your off-world vacation.",
 		itemtype = {"component"},
-		glyph = glyphs['kit'],
+		glyph = glyphs['campfire_kit'],
 		foreground = colors['red'],
 		background = colors['black']
 	},
