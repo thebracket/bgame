@@ -44,15 +44,28 @@ void particle_system::update(const double ms) {
             // Smoke and miasma
             p.lifespan--;
             if (p.lifespan < 0) p.deleteme = true;
-            if (p.z < REGION_DEPTH-1 && !current_region->solid[mapidx(p.x, p.y, p.z+1)]) {
-                ++p.z;
+            if (p.x < 1 || p.x > REGION_WIDTH-1 || p.y < 1 || p.y > REGION_HEIGHT-1 || p.z < 1 || p.z > REGION_DEPTH-1) {
+                p.deleteme = true;
             }
-            int direction = rng.roll_dice(1,6);
-            switch (direction) {
-                case 1 : if (p.x > 1 && !current_region->solid[mapidx(p.x-1, p.y, p.z)]) --p.x; break; 
-                case 2 : if (p.x < REGION_WIDTH-1 && !current_region->solid[mapidx(p.x+1, p.y, p.z)]) ++p.x; break; 
-                case 3 : if (p.y > 1 && !current_region->solid[mapidx(p.x, p.y-1, p.z)]) --p.y; break; 
-                case 4 : if (p.y < REGION_HEIGHT-1 && !current_region->solid[mapidx(p.x, p.y+1, p.z)]) ++p.x; break; 
+            if (!p.deleteme) {
+                if (p.z < REGION_DEPTH - 2 && !current_region->solid[mapidx(p.x, p.y, p.z + 1)]) {
+                    ++p.z;
+                }
+                int direction = rng.roll_dice(1, 6);
+                switch (direction) {
+                    case 1 :
+                        if (p.x > 1 && !current_region->solid[mapidx(p.x - 1, p.y, p.z)]) --p.x;
+                        break;
+                    case 2 :
+                        if (p.x < REGION_WIDTH - 2 && !current_region->solid[mapidx(p.x + 1, p.y, p.z)]) ++p.x;
+                        break;
+                    case 3 :
+                        if (p.y > 1 && !current_region->solid[mapidx(p.x, p.y - 1, p.z)]) --p.y;
+                        break;
+                    case 4 :
+                        if (p.y < REGION_HEIGHT - 2 && !current_region->solid[mapidx(p.x, p.y + 1, p.z)]) ++p.x;
+                        break;
+                }
             }
         } else if (p.mode == 3) {
             // Projectiles move towards their target
