@@ -194,24 +194,24 @@ void gui_popup_menu::render() {
     int box_top = y;
     int box_bottom = y + (int)options.size() + 1;
 
-    rltk::term(1)->fill(box_left+1, box_top, box_right+1, box_bottom, 219, rltk::colors::DARKEST_GREEN, rltk::colors::DARKEST_GREEN);
-    rltk::term(1)->box(box_left+1, box_top, width+1, (int)options.size()+1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
+    rltk::term(4)->fill(box_left+1, box_top, box_right+1, box_bottom, 219, rltk::colors::DARKEST_GREEN, rltk::colors::DARKEST_GREEN);
+    rltk::term(4)->box(box_left+1, box_top, width+1, (int)options.size()+1, rltk::colors::DARK_GREEN, rltk::colors::DARKEST_GREEN, true);
 
     int current_y = box_top+1;
     for (const auto &opt : options) {
-        if (mouse::term1y == current_y && mouse::term1x > box_left+1 && mouse::term1x < box_right) {
-            rltk::term(1)->print(box_left + 2, current_y, opt.first, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
+        if (mouse::term4y == current_y && mouse::term4x > box_left+1 && mouse::term4x < box_right) {
+            rltk::term(4)->print(box_left + 2, current_y, opt.first, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
             if (mouse::clicked && opt.second) {
                 std::function<void()> on_click = opt.second.get();
                 on_click();
             }
         } else {
-            rltk::term(1)->print(box_left + 2, current_y, opt.first, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
+            rltk::term(4)->print(box_left + 2, current_y, opt.first, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
         }
         ++current_y;
     }
 
-    if (mouse::clicked && (mouse::term1x < box_left || mouse::term1x > box_right || mouse::term1y < box_top || mouse::term1y > box_bottom)) {
+    if (mouse::clicked && (mouse::term4x < box_left || mouse::term4x > box_right || mouse::term4y < box_top || mouse::term4y > box_bottom)) {
         on_cancel();
     }
 }

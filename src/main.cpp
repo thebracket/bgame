@@ -114,6 +114,7 @@ void read_config() {
 		if (split_line[0] == "window_width") game_config.window_width = std::stoi(split_line[1]);
 		if (split_line[0] == "window_height") game_config.window_height = std::stoi(split_line[1]);
 		if (split_line[0] == "game_font") game_config.game_font = split_line[1];
+		if (split_line[0] == "game_font_small") game_config.game_font_small = split_line[1];
 		if (split_line[0] == "gui_font") game_config.gui_font = split_line[1];
 		if (split_line[0] == "tooltip_fadein" && split_line[1] != "yes") game_config.tooltip_fadein = false;
 		if (split_line[0] == "tooltip_speed") game_config.tooltip_speed = std::stof(split_line[1]);

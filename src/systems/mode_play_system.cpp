@@ -62,8 +62,8 @@ void mode_play_system::update(const double duration_ms) {
 		selected_tile_x = world_x;
 		selected_tile_y = world_y;
 		selected_tile_z = camera_position->region_z;
-		menu_x = mouse::term1x;
-		menu_y = mouse::term1y;
+		menu_x = mouse::term4x;
+		menu_y = mouse::term4y;
 	} else if (tooltip) {
 		show_tooltip(world_x, world_y, tile_idx);
 	}
@@ -209,14 +209,14 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	}
 
 	bool right_align = true;
-	if (mouse::term1x > term(4)->term_width/2 ) right_align = false;
-	int tt_y = mouse::term1y;
+	if (mouse::term1x > term(1)->term_width/2 ) right_align = false;
+	int tt_y = mouse::term4y;
 	if (tt_y+lines.size() > term(4)->term_height-1) tt_y -= (int)lines.size()+1;
 
 	if (right_align) {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
-		int tt_x = mouse::term1x+2;
-		term(4)->set_char(mouse::term1x+1, mouse::term1y, vchar{27, color, BLACK});
+		int tt_x = mouse::term4x+2;
+		term(4)->set_char(mouse::term4x+1, mouse::term4y, vchar{27, color, DARKEST_GREEN});
 		term(4)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
@@ -225,14 +225,14 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 		}
 	} else {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
-		int tt_x = mouse::term1x-3-longest;
+		int tt_x = mouse::term4x-3-longest;
 		term(4)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
 		++tt_y;
 		for (const std::string &s : lines) {
 			term(4)->print(tt_x+1, tt_y, s, color);
 			++tt_y;
 		}
-		term(4)->set_char(mouse::term1x-1, mouse::term1y, vchar{26, color, BLACK});
+		term(4)->set_char(mouse::term4x-1, mouse::term4y, vchar{26, color, DARKEST_GREEN});
 	}
 }
 

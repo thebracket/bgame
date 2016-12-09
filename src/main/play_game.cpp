@@ -36,7 +36,7 @@ void play_game::init() {
 	gui->add_layer(MAP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, true);
     gui->add_sparse_layer(VEG_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen);
     gui->add_sparse_layer(RENDERABLES_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen);
-	gui->add_layer(TOOLTIP_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, false);
+	gui->add_layer(TOOLTIP_LAYER, 0, 0, window_width, window_height, game_config.game_font_small, resize_fullscreen, true);
 	gui->add_layer(GUI_LAYER, 0, 0, window_width, window_height, game_config.game_font, resize_fullscreen, true);
 	gui->add_layer(RIGHT_PANEL, 0, 0, window_width, window_height, game_config.gui_font, resize_fullscreen, true);
 	term(RIGHT_PANEL)->set_alpha(220);

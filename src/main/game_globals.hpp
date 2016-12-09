@@ -17,6 +17,7 @@ struct config_t {
 	int window_height = 600;
 	std::string game_font = "8x8";
 	std::string gui_font = "8x16";
+	std::string game_font_small = "8x8";
 	bool tooltip_fadein = true;
 	float tooltip_speed = 100.0;
 	int autosave_minutes = 5;
