@@ -1,7 +1,7 @@
 #include "gui_elements.hpp"
 
 void map_static_text::render() {
-    rltk::term(1)->print(x,y,text,fg,bg);
+    rltk::term(3)->print(x,y,text,fg,bg);
 }
 
 void gui_static_text::render() {
@@ -42,35 +42,35 @@ void gui_power_meter::render() {
     std::stringstream power_ss;
     power_ss << " Power: " << current_power << "/" << total_capacity << " ";
 
-    const int power_width = rltk::term(2)->term_width - 30;
+    const int power_width = rltk::term(3)->term_width - 30;
     const int power_pips_filled = static_cast<int>((float)power_width * power_pct);
     const float pct_per_pip = 1.0F / (float)total_capacity;
     for (int x=0; x<power_width; ++x) {
         const rltk::color_t pip_color = lerp(rltk::colors::GREY, alert_color, pct_per_pip * (float)x); 
         if (x <= power_pips_filled) {
-            rltk::term(1)->set_char(x+15, 0, rltk::vchar{176, pip_color, rltk::colors::BLACK});
+            rltk::term(3)->set_char(x+15, 0, rltk::vchar{176, pip_color, rltk::colors::BLACK});
         } else {
-            rltk::term(1)->set_char(x+15, 0, rltk::vchar{7, pip_color, rltk::colors::BLACK});			
+            rltk::term(3)->set_char(x+15, 0, rltk::vchar{7, pip_color, rltk::colors::BLACK});
         }
     }
     const std::string power_str = power_ss.str();
-    const int power_x = ((rltk::term(1)->term_width-30)/2) - ((int)power_str.size() / 2);
-    rltk::term(1)->print( power_x, 0, power_str, alert_color );	
+    const int power_x = ((rltk::term(3)->term_width-30)/2) - ((int)power_str.size() / 2);
+    rltk::term(3)->print( power_x, 0, power_str, alert_color );
 }
 
 void gui_menu_bar::render() {
     int current_x = x;
     int i=0;
     for (const auto &s : items) {
-        if (mouse::term1y==y && mouse::term1x >= current_x && mouse::term1x <= current_x + s.size()) {
-            rltk::term(1)->print(current_x, y, s, rltk::colors::WHITE, rltk::colors::DARK_GREEN);
+        if (mouse::term3y==y && mouse::term3x >= current_x && mouse::term3x <= current_x + s.size()) {
+            rltk::term(3)->print(current_x, y, s, rltk::colors::WHITE, rltk::colors::DARK_GREEN);
             if (mouse::clicked) {
                 mouse::clicked = false;
                 on_click(i);
             }
         } else {
-            rltk::term(1)->set_char(current_x, y, rltk::vchar{s.at(0), rltk::colors::YELLOW, rltk::colors::BLACK});
-            rltk::term(1)->print(current_x + 1, y, s.substr(1));
+            rltk::term(3)->set_char(current_x, y, rltk::vchar{s.at(0), rltk::colors::YELLOW, rltk::colors::BLACK});
+            rltk::term(3)->print(current_x + 1, y, s.substr(1));
         }
         current_x += (int)s.size()+1;
         ++i;
