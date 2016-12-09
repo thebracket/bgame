@@ -13,7 +13,7 @@ buildings = {
 		provides = { generator={energy_cost=10} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['one_quarter_solid'], foreground = colors['cyan'], background = colors['white']}
+				{glyph=glyphs['solar_panel'], foreground = colors['cyan'], background = colors['white']}
 			}
 		}
 	},
@@ -37,7 +37,7 @@ buildings = {
 		provides = { power_storage={energy_cost=20} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['plus_minus'], foreground = colors['white'], background = colors['black']}
+				{glyph=glyphs['battery'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -61,7 +61,7 @@ buildings = {
 		provides = { storage={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['square_root'], foreground = colors['white'], background = colors['black']}
+				{glyph=glyphs['replicator_small'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -73,7 +73,7 @@ buildings = {
 		provides = { storage={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['double_pillar'], foreground = colors['white'], background = colors['black']}
+				{glyph=glyphs['rtg'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -85,7 +85,7 @@ buildings = {
 		provides = { sleep={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
-				{glyph=glyphs['arch'], foreground = colors['green'], background = colors['black']}
+				{glyph=glyphs['tent'], foreground = colors['green'], background = colors['black']}
 			}
 		}
 	},
@@ -97,7 +97,7 @@ buildings = {
 		provides = { light={radius=5, color = colors['yellow']} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['sun'], foreground = colors['firelight'], background = colors['yellow']}
+				{glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
 			}
 		},
         emits_smoke = true
@@ -110,7 +110,7 @@ buildings = {
 		provides = { light={radius=5, color = colors['yellow']} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['sun'], foreground = colors['firelight'], background = colors['yellow']}
+				{glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
 			}
 		},
         emits_smoke = true
