@@ -78,6 +78,7 @@ void play_game::init() {
 	add_system<keyboard_system>();
 	add_system<mouse_input_system>();
 	add_system<door_system>();
+    add_system<pause_system>();
 	add_system<calendar_system>();
 	add_system<world_system>();
 	add_system<gravity_system>();

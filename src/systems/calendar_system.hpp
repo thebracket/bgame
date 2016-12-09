@@ -10,7 +10,5 @@ public:
 	virtual void update(const double duration_ms) override final;
 private:
 	double time_count = 100.0;
-	bool requested_pause = false;
-	bool requested_step = false;
 	int slow_tick_count = 0;
 };

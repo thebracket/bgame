@@ -43,6 +43,7 @@ add_library(systems STATIC
 	grazer_ai_system.cpp
 	wish_system.cpp
 	door_system.cpp
+	pause_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
