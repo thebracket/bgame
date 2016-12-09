@@ -6,6 +6,7 @@
 
 constexpr int MAX_LOG_AGE = 200;
 constexpr int MAX_LOG_LINES = 10;
+constexpr int LOG_TERM = 3;
 
 void log_system::configure() {
     system_name = "Log System";
@@ -32,8 +33,8 @@ void log_system::update(const double ms) {
 
     // Render on screen for now
     if (game_master_mode == PLAY) {
-        const int max_x = term(1)->term_width;
-        const int max_y = term(1)->term_height;
+        const int max_x = term(LOG_TERM)->term_width;
+        const int max_y = term(LOG_TERM)->term_height;
 
         int Y = max_y - 2;
         int i=0;
@@ -42,7 +43,7 @@ void log_system::update(const double ms) {
                 int X = 2;
 
                 for (const rltk::vchar &c : line.chars) {
-                    term(4)->set_char(X, Y, c);
+                    term(LOG_TERM)->set_char(X, Y, c);
                     ++X;
                     if (X > (max_x -1)) {
                         X = 6;
