@@ -14,13 +14,15 @@ spotted_hostile_t can_see_hostile(const rltk::entity_t &e, const position_t &pos
             break;
         }
 
-        if (test(other.get())) {
+        if (other && test(other.get())) {
             result.terrified = true;
             const auto other_pos = other->component<position_t>();
-            const float d = distance3d_squared(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
-            if (d < result.terror_distance) {
-                result.terror_distance = d;
-                result.closest_fear = other_entity;
+            if (other_pos) {
+                const float d = distance3d_squared(pos.x, pos.y, pos.z, other_pos->x, other_pos->y, other_pos->z);
+                if (d < result.terror_distance) {
+                    result.terror_distance = d;
+                    result.closest_fear = other_entity;
+                }
             }
         }
     }
