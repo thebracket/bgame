@@ -172,23 +172,23 @@ void mode_design_system::digging() {
 void mode_design_system::building() {
     add_gui_element(std::make_unique<map_static_text>(5,4, "Building mode - select building type from the right panel, click to apply."));
 
-    int tt_x = term(1)->term_width - 30;
-    term(1)->box(tt_x, 4, 29, term(1)->term_height-5);
-    term(1)->fill(tt_x+1, 5, tt_x+29, term(1)->term_height-2, ' ');
-    term(1)->fill(tt_x+1, 5, tt_x+29, 6, ' ', WHITE, DARK_GREEN);
-    term(1)->print(tt_x+4, 5, "[Available Buildings]", WHITE, DARK_GREEN);
+    int tt_x = term(3)->term_width - 30;
+    term(3)->box(tt_x, 4, 29, term(3)->term_height-5);
+    term(3)->fill(tt_x+1, 5, tt_x+29, term(3)->term_height-2, ' ');
+    term(3)->fill(tt_x+1, 5, tt_x+29, 6, ' ', WHITE, DARK_GREEN);
+    term(3)->print(tt_x+4, 5, "[Available Buildings]", WHITE, DARK_GREEN);
 
     int y=7;
     bool rendered_selected = false;
     for (const available_building_t &building : available_buildings) {
         if (build_mode_building && build_mode_building.get().tag == building.tag) {
-            term(1)->print(tt_x+1, y, building.get_name(), YELLOW, DARKEST_GREEN);
+            term(3)->print(tt_x+1, y, building.get_name(), YELLOW, DARKEST_GREEN);
             rendered_selected = true;
         } else {
-            if (mouse::term1y == y && mouse::term1x > tt_x && mouse::term1x) {
-                term(1)->print(tt_x+1, y, building.get_name(), GREEN, GREEN_BG);
+            if (mouse::term3y == y && mouse::term3x > tt_x && mouse::term3x) {
+                term(3)->print(tt_x+1, y, building.get_name(), GREEN, GREEN_BG);
             } else {
-                term(1)->print(tt_x+1, y, building.get_name(), WHITE, GREEN_BG);
+                term(3)->print(tt_x+1, y, building.get_name(), WHITE, GREEN_BG);
             }
         }
         ++y;
@@ -196,8 +196,8 @@ void mode_design_system::building() {
 
     if (get_mouse_button_state(rltk::button::LEFT)) {
         
-        if (mouse::term1y > 6 && mouse::term1y < 7+available_buildings.size() && mouse::term1x > tt_x+1) {
-            const int selected_building = mouse::term1y - 7;
+        if (mouse::term3y > 6 && mouse::term3y < 7+available_buildings.size() && mouse::term3x > tt_x+1) {
+            const int selected_building = mouse::term3y - 7;
             if (selected_building > -1 && selected_building < available_buildings.size()) {
                 build_mode_building = available_buildings[selected_building];
                 rendered_selected = true;
