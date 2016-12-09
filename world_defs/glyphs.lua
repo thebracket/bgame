@@ -124,7 +124,16 @@ glyphs = {
 	shorts = 381,
 	miniskirt = 382,
 	spandex_pants = 383,
-	shoes = 384
+	shoes = 384,
+	sawmill_1 = 432,
+	sawmill_2 = 433,
+	sawmill_3 = 434,
+	sawmill_4 = 448,
+	sawmill_5 = 449,
+	sawmill_6 = 450,
+	sawmill_7 = 464,
+	sawmill_8 = 465,
+	sawmill_9 = 466
 }
 
 colors = {
