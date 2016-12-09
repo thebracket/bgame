@@ -9,7 +9,7 @@ void renderable_t::to_xml(xml_node * c) {
 }
 
 void renderable_t::from_xml(xml_node * c) {
-    glyph = c->val<uint8_t>("glyph");
+    glyph = c->val<uint16_t>("glyph");
     foreground = c->color("foreground");
     background = c->color("background");
 }

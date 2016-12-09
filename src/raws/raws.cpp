@@ -105,6 +105,8 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     auto mat = get_material(material);
 
+    std::cout << "Spawning [" << tag << "], glyph " << +finder->second.glyph << "\n";
+
     create_entity()
         ->assign(item_stored_t{ container_id })
         ->assign(renderable_t{ finder->second.glyph, mat.get().fg, mat.get().bg })
