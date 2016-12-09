@@ -9,6 +9,7 @@
 #include "../components/species.hpp"
 #include "../components/item.hpp"
 #include "../components/item_carried.hpp"
+#include "mouse_input_system.hpp"
 #include <iostream>
 
 using namespace rltk;
@@ -244,7 +245,7 @@ void map_render_system::update(const double duration_ms) {
 
 		dirty = false;
 		if (game_master_mode == DESIGN && game_design_mode == BUILDING) {
-			if (mouse_in_terminal && (mouse_x / font_w) > term(1)->term_width-30) mouse_in_terminal = false;
+			if (mouse_in_terminal && (mouse_x / mouse::font3_w) > term(3)->term_width-30) mouse_in_terminal = false;
 			dirty = true;
 			if (get_mouse_button_state(rltk::button::LEFT) && mouse_in_terminal && building_possible && mouse_y / font_h>3) {
 				emit(build_request_message{mouse_term_x, mouse_term_y, camera_position->region_z, build_mode_building});
