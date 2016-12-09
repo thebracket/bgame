@@ -126,7 +126,7 @@ void renderables_system::update(const double time_elapsed) {
 
 		// Add particles
 		for (const particle_t &p : particles) {
-            if (p.x > 0 && p.x < REGION_WIDTH-1 && p.y > 0 && p.y < REGION_HEIGHT-1 && p.z > 0 && P.z < REGION_DEPTH-1) {
+            if (p.x > 0 && p.x < REGION_WIDTH-1 && p.y > 0 && p.y < REGION_HEIGHT-1 && p.z > 0 && p.z < REGION_DEPTH-1) {
                 const auto idx = mapidx(p.x, p.y, p.z);
                 renderables[idx].push_back(p.glyph);
             }
