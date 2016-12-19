@@ -17,6 +17,7 @@
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
 #include "../raws/creatures.hpp"
+#include "tasks/civ_dislike.hpp"
 #include <rltk.hpp>
 #include <iostream>
 #include <sstream>
@@ -29,32 +30,6 @@ void damage_system::configure() {
     subscribe_mbox<creature_attack_message>();
     subscribe_mbox<entity_slain_message>();
     subscribe_mbox<hour_elapsed_message>();
-}
-
-inline void civ_dislike_attacker(boost::optional<entity_t &> &victim) {
-    if (!victim) return;
-    auto victim_ai = victim->component<sentient_ai>();
-    if (victim_ai) {
-        const std::size_t civ_id = planet.civs.unimportant_people[victim_ai->person_id].civ_id;
-        if (planet.civs.civs[civ_id].cordex_feelings > -10) {
-            --planet.civs.civs[civ_id].cordex_feelings;
-            emit_deferred(log_message{LOG{}.civ_name(civ_id)->text(" dislikes you more.")->chars});
-        }
-
-        for (auto &relation : planet.civs.civs[civ_id].relations) {
-            if (relation.first == civ_id && relation.second <0) {
-                const std::size_t other_civ_id = relation.first;
-                if (!planet.civs.civs[other_civ_id].extinct) {
-                    for (auto &rel2 : planet.civs.civs[other_civ_id].relations) {
-                        if (rel2.first == civ_id && rel2.second < 0) {
-                            ++planet.civs.civs[other_civ_id].cordex_feelings;
-                            emit_deferred(log_message{LOG{}.civ_name(other_civ_id)->text(" is grateful for your assistance against ")->civ_name(civ_id)->chars});
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 void damage_system::settler_ranged_attacks() {
