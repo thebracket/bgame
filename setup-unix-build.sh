@@ -9,7 +9,7 @@ echo -e "${GREEN}Creating build directory${NC}\n"
 mkdir build
 cd build
 echo -e "${GREEN}Setting up Makefiles${NC}\n"
-cmake -g"Unix Makefiles" ../src
+cmake -g"Unix Makefiles" ../src || exit 1
 echo -e "${GREEN}Making symbolic links${NC}\n"
 ln -s ../world_defs .
 ln -s ../assets .
