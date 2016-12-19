@@ -124,14 +124,10 @@ void wildlife_population_system::update(const double ms) {
         first_run = false;
     }
 
-    std::queue<hour_elapsed_message> * hour = mbox<hour_elapsed_message>();
-	while (!hour->empty()) {
-        hour_elapsed_message msg = hour->front();
-        hour->pop();
-
+    each_mbox<hour_elapsed_message>([this] (const hour_elapsed_message &msg) {
         count_wildlife_populations();
         spawn_wildlife();
-    }
+    });
 }
 
 std::map<int, position_t> get_hunting_candidates(position_t &hunter_pos) {
