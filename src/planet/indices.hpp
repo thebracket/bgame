@@ -23,7 +23,7 @@ inline int mapidx(const int &x, const int &y, const int &z) noexcept {
  * Calculate the array index of a position component
  */
 inline int mapidx(const position_t &pos) noexcept {
-    return mapidx(pos.x, pos.y, pos.z);
+    return mapidx(static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z);
 }
 
 /*

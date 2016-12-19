@@ -166,7 +166,7 @@ void do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &sp
 			const int target_operation = designations->mining[target_idx];
 			
 			if (target_operation > 0) {
-				emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], pos.x, pos.y, pos.z});
+				emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z});
 				designations->mining.erase(target_idx);
 			}
 			if (designations->mining.empty()) {

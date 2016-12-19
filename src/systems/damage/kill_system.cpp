@@ -57,7 +57,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
     }
 
     // Remove the entity
-    entity_octree.remove_node(octree_location_t{pos->x, pos->y, pos->z, msg.victim});
+    entity_octree.remove_node(octree_location_t{static_cast<int>(pos->x), static_cast<int>(pos->y), pos->z, msg.victim});
     delete_entity(msg.victim);
 }
 

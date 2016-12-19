@@ -76,7 +76,7 @@ void movement_system::update(const double ms) {
     // If the octree is empty, fill it
     if (entity_octree.total_nodes == 0) {
         each<position_t>([] (entity_t &e, position_t &pos) {
-            entity_octree.add_node(octree_location_t{pos.x, pos.y, pos.z, e.id});
+            entity_octree.add_node(octree_location_t{static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z, e.id});
         });
     }
 
@@ -113,8 +113,8 @@ void movement_system::update(const double ms) {
         entity_moved_message msg = moved->front();
         moved->pop();        
 
-        octree_location_t start = octree_location_t{msg.origin.x, msg.origin.y, msg.origin.z, msg.entity_id};
-        octree_location_t end = octree_location_t{msg.destination.x, msg.destination.y, msg.destination.z, msg.entity_id};
+        octree_location_t start = octree_location_t{static_cast<int>(msg.origin.x), static_cast<int>(msg.origin.y), msg.origin.z, msg.entity_id};
+        octree_location_t end = octree_location_t{static_cast<int>(msg.destination.x), static_cast<int>(msg.destination.y), msg.destination.z, msg.entity_id};
         entity_octree.remove_node(start);
         entity_octree.add_node(end);
     }

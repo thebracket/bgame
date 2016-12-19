@@ -5,7 +5,6 @@
 #include "../raws/reaction_input.hpp"
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
-#include "../components/position.hpp"
 #include "../components/logger.hpp"
 #include "../components/world_position.hpp"
 #include <rltk.hpp>

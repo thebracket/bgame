@@ -9,7 +9,7 @@ void position_t::to_xml(xml_node * c) {
 }
 
 void position_t::from_xml(xml_node * c) {
-    x = c->val<int>("x");
-    y = c->val<int>("y");
+    x = c->val<float>("x");
+    y = c->val<float>("y");
     z = c->val<int>("z");
 }

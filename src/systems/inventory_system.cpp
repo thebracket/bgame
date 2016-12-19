@@ -36,7 +36,7 @@ void inventory_system::configure() {
 		if (!entity(msg.id)) return;
 		auto pos = entity(msg.id)->component<position_t>();
 		if (pos) {
-			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
+			entity_octree.remove_node(octree_location_t{static_cast<int>(pos->x), static_cast<int>(pos->y), pos->z,msg.id});
 			delete_component<position_t>(msg.id);
 		}
 		delete_component<item_stored_t>(msg.id);
@@ -50,7 +50,7 @@ void inventory_system::configure() {
 		if (!entity(msg.id)) return;
 		auto pos = entity(msg.id)->component<position_t>();
 		if (pos) {
-			entity_octree.remove_node(octree_location_t{pos->x,pos->y, pos->z,msg.id});
+			entity_octree.remove_node(octree_location_t{static_cast<int>(pos->x), static_cast<int>(pos->y), pos->z,msg.id});
 			delete_component<position_t>(msg.id);
 		}
 
