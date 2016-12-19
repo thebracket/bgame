@@ -1,12 +1,11 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "../../messages/messages.hpp"
 
-class settler_ranged_attack_system : public rltk::base_system {
+class settler_ranged_attack_system : public rltk::mailbox_system<settler_ranged_attack_message> {
 public:
-    virtual void update(const double duration_ms) override final;
-    virtual void configure() override final;
-private:
-    void settler_ranged_attacks();
+    settler_ranged_attack_system() { system_name = "Settler Ranged"; }
+    virtual void on_message(const settler_ranged_attack_message &msg) override final;
 };
 

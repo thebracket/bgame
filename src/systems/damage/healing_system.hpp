@@ -1,11 +1,10 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "../../messages/messages.hpp"
 
-class healing_system : public rltk::base_system {
+class healing_system : public rltk::mailbox_system<hour_elapsed_message> {
 public:
-    virtual void update(const double duration_ms) override final;
-    virtual void configure() override final;
-private:
-    void heal_over_time();
+    healing_system() { system_name = "Healing"; }
+    virtual void on_message(const hour_elapsed_message &msg) override final;
 };

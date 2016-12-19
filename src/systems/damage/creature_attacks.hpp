@@ -1,11 +1,10 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "../../messages/messages.hpp"
 
-class creature_attacks_system : public rltk::base_system {
+class creature_attacks_system : public rltk::mailbox_system<creature_attack_message> {
 public:
-    virtual void update(const double duration_ms) override final;
-    virtual void configure() override final;
-private:
-    void creature_attacks();
+    creature_attacks_system() { system_name = "Creature Attacks"; }
+    void on_message(const creature_attack_message &msg);
 };

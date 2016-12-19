@@ -1,11 +1,10 @@
 #pragma once
 
 #include <rltk.hpp>
+#include "../messages/messages.hpp"
 
-class damage_system : public rltk::base_system {
+class damage_system : public rltk::mailbox_system<inflict_damage_message> {
 public:
-	virtual void update(const double duration_ms) override final;
-	virtual void configure() override final;
-private:
-	void apply_damage();
+	damage_system() { system_name = "Damage"; }
+	void on_message(const inflict_damage_message &msg);
 };
