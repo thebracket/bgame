@@ -1,9 +1,9 @@
 #include "settler_ranged_attack.hpp"
-#include "../messages/messages.hpp"
-#include "tasks/civ_dislike.hpp"
-#include "../components/game_stats.hpp"
-#include "weapons_helpers.hpp"
-#include "../components/item.hpp"
+#include "../../messages/messages.hpp"
+#include "../tasks/civ_dislike.hpp"
+#include "../../components/game_stats.hpp"
+#include "../weapons_helpers.hpp"
+#include "../../components/item.hpp"
 
 using namespace rltk;
 

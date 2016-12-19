@@ -1,7 +1,7 @@
 add_library(systems STATIC
 	map_render_system.cpp
 	calendar_system.cpp
-	settler_ai_system.cpp
+        damage/settler_ai_system.cpp
 	panel_render_system.cpp
 	mining_system.cpp
 	inventory_system.cpp
@@ -13,7 +13,7 @@ add_library(systems STATIC
 	renderables_system.cpp
 	lighting_system.cpp
 	power_system.cpp
-	damage_system.cpp
+        damage/damage_system.cpp
 	wildlife_population_system.cpp
 	movement_system.cpp
 	mode_units_system.cpp
@@ -44,11 +44,11 @@ add_library(systems STATIC
 	wish_system.cpp
 	door_system.cpp
 	pause_system.cpp
-    settler_ranged_attack.cpp
-    settler_melee_attacks.cpp
-    creature_attacks.cpp
-    kill_system.cpp
-    healing_system.cpp
+    damage/settler_ranged_attack.cpp
+    damage/settler_melee_attacks.cpp
+    damage/creature_attacks.cpp
+    damage/kill_system.cpp
+    damage/healing_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
@@ -71,5 +71,6 @@ add_library(systems STATIC
 	tasks/work_types/hunting_work.cpp
 	tasks/work_types/guard_duty.cpp
 	tasks/work_types/demolition_work.cpp
+    systems.cpp
 )
 target_link_libraries(systems rltk utils components raws)

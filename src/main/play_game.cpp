@@ -74,55 +74,7 @@ void play_game::init() {
 
 	// Setup systems
 	std::cout << "Setting up systems\n";
-    add_system<fluid_system>();
-	add_system<keyboard_system>();
-	add_system<mouse_input_system>();
-	add_system<door_system>();
-    add_system<pause_system>();
-	add_system<calendar_system>();
-	add_system<world_system>();
-	add_system<gravity_system>();
-	add_system<wildlife_population_system>();
-	add_system<sentient_ai_system>();
-	add_system<grazer_ai_system>();
-	add_system<corpse_system>();
-	add_system<particle_system>();
-	add_system<renderables_system>();
-	add_system<camera_system>();
-	add_system<lighting_system>();
-	add_system<mining_system>();
-	add_system<inventory_system>();
-	add_system<power_system>();
-	add_system<workflow_system>();
-	add_system<settler_ai_system>();
-	add_system<mode_rogue_system>();
-	add_system<movement_system>();
-	add_system<settler_ranged_attack_system>();
-    add_system<settler_melee_attacks_system>();
-    add_system<creature_attacks_system>();
-	add_system<damage_system>();
-    add_system<kill_system>();
-    add_system<healing_system>();
-	add_system<topology_system>();
-	add_system<visibility_system>();
-	add_system<vegetation_system>();
-	add_system<map_render_system>();
-	add_system<hud_system>();
-	add_system<panel_render_system>();
-	add_system<mode_play_system>();
-	add_system<mode_design_system>();
-	add_system<mode_units_system>();
-	add_system<mode_rogue_render_system>();
-	add_system<mode_settler_info_system>();
-	add_system<game_over_system>();
-	add_system<mode_civs_system>();
-	add_system<mode_standing_orders>();
-	add_system<mode_sentient_info_system>();
-	add_system<wish_system>();
-	add_system<log_system>();
-	add_system<gui_system>();
-	add_system<fluid_system_end>();
-
+    add_systems_to_ecs();
 
 	std::cout << "ECS Config\n";
 	ecs_configure();
