@@ -1,12 +1,12 @@
 #include "grazer_ai_system.hpp"
-#include "../messages/messages.hpp"
-#include "../components/grazer_ai.hpp"
-#include "../components/viewshed.hpp"
-#include "../components/settler_ai.hpp"
-#include "../components/sentient_ai.hpp"
-#include "../components/renderable.hpp"
-#include "../components/health.hpp"
-#include "tasks/threat_scanner.hpp"
+#include "../../messages/messages.hpp"
+#include "../../components/grazer_ai.hpp"
+#include "../../components/viewshed.hpp"
+#include "../../components/settler_ai.hpp"
+#include "../../components/sentient_ai.hpp"
+#include "../../components/renderable.hpp"
+#include "../../components/health.hpp"
+#include "../tasks/threat_scanner.hpp"
 
 using namespace rltk;
 

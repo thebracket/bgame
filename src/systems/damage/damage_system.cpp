@@ -2,7 +2,7 @@
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
 #include "../movement_system.hpp"
-#include "../weapons_helpers.hpp"
+#include "weapons_helpers.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../components/sentient_ai.hpp"

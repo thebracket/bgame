@@ -1,11 +1,11 @@
 #include "weapons_helpers.hpp"
-#include "../messages/messages.hpp"
-#include "../raws/raws.hpp"
-#include "../raws/creatures.hpp"
-#include "../raws/clothing.hpp"
-#include "../components/item.hpp"
-#include "../components/species.hpp"
-#include "../components/grazer_ai.hpp"
+#include "../../messages/messages.hpp"
+#include "../../raws/raws.hpp"
+#include "../../raws/creatures.hpp"
+#include "../../raws/clothing.hpp"
+#include "../../components/item.hpp"
+#include "../../components/species.hpp"
+#include "../../components/grazer_ai.hpp"
 
 bool has_melee_weapon(const entity_t &entity) 
 {

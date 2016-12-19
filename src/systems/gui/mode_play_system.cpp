@@ -1,7 +1,7 @@
 #include "mode_play_system.hpp"
 #include "../../main/game_globals.hpp"
 #include "gui_system.hpp"
-#include "../mouse_input_system.hpp"
+#include "../input/mouse_input_system.hpp"
 #include "gui_system.hpp"
 #include "../../messages/build_request_message.hpp"
 #include <rltk.hpp>

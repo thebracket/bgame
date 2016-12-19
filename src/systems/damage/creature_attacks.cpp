@@ -2,7 +2,7 @@
 #include "../../messages/messages.hpp"
 #include "../tasks/civ_dislike.hpp"
 #include "../../components/game_stats.hpp"
-#include "../weapons_helpers.hpp"
+#include "weapons_helpers.hpp"
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../raws/creatures.hpp"

@@ -1,17 +1,17 @@
 #include "gravity_system.hpp"
-#include "../messages/tick_message.hpp"
-#include "../messages/entity_moved_message.hpp"
-#include "../messages/inflict_damage_message.hpp"
-#include "../messages/map_dirty_message.hpp"
-#include "../components/falling.hpp"
-#include "../components/building.hpp"
-#include "../main/game_globals.hpp"
-#include "../messages/emit_particles_message.hpp"
-#include "../raws/raws.hpp"
+#include "../../messages/tick_message.hpp"
+#include "../../messages/entity_moved_message.hpp"
+#include "../../messages/inflict_damage_message.hpp"
+#include "../../messages/map_dirty_message.hpp"
+#include "../../components/falling.hpp"
+#include "../../components/building.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../messages/emit_particles_message.hpp"
+#include "../../raws/raws.hpp"
 #include <deque>
 #include <array>
-#include "../messages/recalculate_mining_message.hpp"
-#include "../messages/perform_mining.hpp"
+#include "../../messages/recalculate_mining_message.hpp"
+#include "../../messages/perform_mining.hpp"
 
 void gravity_system::configure() {
     system_name = "Gravity System";

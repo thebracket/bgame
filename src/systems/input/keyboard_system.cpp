@@ -1,6 +1,6 @@
 #include "keyboard_system.hpp"
-#include "../messages/messages.hpp"
-#include "../main/game_globals.hpp"
+#include "../../messages/messages.hpp"
+#include "../../main/game_globals.hpp"
 
 bool collect_text = false;
 std::string input_text;

@@ -7,7 +7,7 @@
 #include "../components/building.hpp"
 #include "../planet/region.hpp"
 #include "../main/game_globals.hpp"
-#include "particle_system.hpp"
+#include "gui/particle_system.hpp"
 #include "../components/settler_ai.hpp"
 #include "../components/construct_provides_door.hpp"
 #include "../components/species.hpp"

@@ -9,7 +9,7 @@
 #include "../components/species.hpp"
 #include "../components/item.hpp"
 #include "../components/item_carried.hpp"
-#include "mouse_input_system.hpp"
+#include "input/mouse_input_system.hpp"
 #include <iostream>
 
 using namespace rltk;

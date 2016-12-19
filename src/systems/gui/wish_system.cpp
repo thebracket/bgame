@@ -1,6 +1,6 @@
 #include "wish_system.hpp"
 #include "../../main/game_globals.hpp"
-#include "../keyboard_system.hpp"
+#include "../input/keyboard_system.hpp"
 #include "../../messages/messages.hpp"
 
 using namespace rltk;

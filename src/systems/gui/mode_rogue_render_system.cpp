@@ -2,7 +2,7 @@
 
 #include "../../main/game_globals.hpp"
 #include <rltk.hpp>
-#include "../weapons_helpers.hpp"
+#include "../damage/weapons_helpers.hpp"
 #include "../../components/health.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/grazer_ai.hpp"

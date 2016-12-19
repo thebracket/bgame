@@ -2,8 +2,8 @@
 
 #include <rltk.hpp>
 #include <boost/optional.hpp>
-#include "../components/settler_ai.hpp"
-#include "../components/designations.hpp"
+#include "../../components/settler_ai.hpp"
+#include "../../components/designations.hpp"
 
 class workflow_system : public rltk::base_system {
 public:

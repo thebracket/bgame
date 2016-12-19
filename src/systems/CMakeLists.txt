@@ -1,20 +1,20 @@
 add_library(systems STATIC
 	map_render_system.cpp
 	calendar_system.cpp
-        damage/settler_ai_system.cpp
-	panel_render_system.cpp
+        ai/settler_ai_system.cpp
+        gui/panel_render_system.cpp
 	mining_system.cpp
 	inventory_system.cpp
 	path_finding.cpp
 	visibility_system.cpp
-	workflow_system.cpp
+        ai/workflow_system.cpp
 	topology_system.cpp
 	camera_system.cpp
 	renderables_system.cpp
 	lighting_system.cpp
 	power_system.cpp
         damage/damage_system.cpp
-	wildlife_population_system.cpp
+        ai/wildlife_population_system.cpp
 	movement_system.cpp
         gui/mode_units_system.cpp
         gui/mode_rogue_system.cpp
@@ -25,22 +25,22 @@ add_library(systems STATIC
         gui/mode_standing_orders.cpp
         gui/mode_sentient_info_system.cpp
 	corpse_system.cpp
-	particle_system.cpp
+        gui/particle_system.cpp
 	vegetation_system.cpp
-	keyboard_system.cpp
-	mouse_input_system.cpp
-	sentient_ai_system.cpp
+        input/keyboard_system.cpp
+        input/mouse_input_system.cpp
+        ai/sentient_ai_system.cpp
 	world_system.cpp
-	weapons_helpers.cpp
+        damage/weapons_helpers.cpp
         gui/game_over_system.cpp
         gui/mode_civs_system.cpp
 	log_system.cpp
         gui/gui_system.cpp
         gui/hud_system.cpp
-	fluid_system.cpp
-	gravity_system.cpp
+        physics/fluid_system.cpp
+        physics/gravity_system.cpp
         gui/gui_elements.cpp
-	grazer_ai_system.cpp
+        ai/grazer_ai_system.cpp
         gui/wish_system.cpp
 	door_system.cpp
 	pause_system.cpp

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../components/position.hpp"
+#include "../../components/position.hpp"
 #include <string>
 
 bool has_melee_weapon(const entity_t &entity);

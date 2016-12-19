@@ -3,7 +3,7 @@
 #include <sstream>
 #include <rltk.hpp>
 #include <functional>
-#include "../mouse_input_system.hpp"
+#include "../input/mouse_input_system.hpp"
 #include "../../utils/string_utils.hpp"
 
 struct base_gui {

@@ -1,10 +1,10 @@
 #include "workflow_system.hpp"
-#include "../messages/messages.hpp"
-#include "../raws/raws.hpp"
-#include "../raws/reactions.hpp"
+#include "../../messages/messages.hpp"
+#include "../../raws/raws.hpp"
+#include "../../raws/reactions.hpp"
 #include <boost/container/flat_map.hpp>
 #include <boost/container/flat_set.hpp>
-#include "inventory_system.hpp"
+#include "../inventory_system.hpp"
 
 boost::container::flat_map<std::size_t, std::vector<std::string>> automatic_reactions;
 boost::container::flat_set<std::size_t> workshop_claimed;

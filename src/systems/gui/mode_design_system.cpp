@@ -1,6 +1,6 @@
 #include "mode_design_system.hpp"
 #include "gui_system.hpp"
-#include "../mouse_input_system.hpp"
+#include "../input/mouse_input_system.hpp"
 #include "../../main/game_globals.hpp"
 #include "../../raws/raws.hpp"
 #include "../../messages/messages.hpp"
