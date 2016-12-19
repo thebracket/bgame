@@ -27,6 +27,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../components/lightsource.hpp"
 #include "../../components/falling.hpp"
+#include "../../components/initiative.hpp"
 #include "../tasks/threat_scanner.hpp"
 #include "../tasks/world_queries.hpp"
 #include "../tasks/settler_sleep.hpp"
@@ -48,90 +49,89 @@ using tasks::follow_result_t;
 using tasks::calculate_initiative;
 
 void settler_ai_system::update(const double duration_ms) {
-	each_mbox<tick_message>([this] (const tick_message &msg) {
-		bool found_settler = false;
-		each<settler_ai_t, game_stats_t, species_t, position_t, name_t, health_t, viewshed_t>([this, &found_settler] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
-			species_t &species, position_t &pos, name_t &name, health_t &health, viewshed_t &view) 
-		{
-			found_settler = true;
-			int initiative_penalty = 0;
+	each_mbox<action_available_message>([this] (const action_available_message &msg) {
 
-			if (entity.component<falling_t>()) {
-				emit_deferred(LOG{}.settler_name(entity.id)->text(" says 'arrrghh'"));
-				return;
-			}
+        auto e = entity(msg.entity_id);
+        auto ai = e->component<settler_ai_t>();
+        if (!ai) return;
+        auto stats = e->component<game_stats_t>();
+        auto species = e->component<species_t>();
+        auto pos = e->component<position_t>();
+        auto name = e->component<name_t>();
+        auto health = e->component<health_t>();
+        auto view = e->component<viewshed_t>();
+        auto initiative = e->component<initiative_t>();
 
-			if (ai.initiative < 1) {
-				if (game_master_mode == ROGUE && entity.id == selected_settler) return; // We handle this in the rogue system
-				if (health.unconscious) return; // Do nothing - they passed out!
+        if (!stats || !species || !pos || !name || !health || !view) return;
 
-				const int shift_id = ai.shift_id;
-				const int hour_of_day = calendar->hour;
-				const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
+        // Is the settler falling?
+        if (e->component<falling_t>()) {
+            emit_deferred(LOG{}.settler_name(e->id)->text(" says 'arrrghh'"));
+            return;
+        }
 
-				if (tasks::is_stuck_or_invalid(pos)) {
-					emit_deferred(log_message{LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars});
-					bool done = false;
-					each<position_t, construct_provides_sleep_t>([this,&entity,&pos,&done] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
-						if (!done) {
-							move_to(entity, pos, P);
-							done = true;
-							// This should use power
-						}
-					});
-				}
+        if (game_master_mode == ROGUE && e->id == selected_settler) return; // We handle this in the rogue system
+        if (health->unconscious) return; // Do nothing - they passed out!
 
-				// Do we have any hostiles to worry about?
-				auto hostile = tasks::can_see_hostile(entity, pos, view, [&ai] (entity_t &other) {
-					if (ai.job_type_minor == JM_SLEEP) return false; // We don't spot anyone when sleeping
-					if (other.component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE) return true;
-					auto sentient = other.component<sentient_ai>();
-					if (sentient && sentient->hostile) return true;
-					return false;
-				});
+        const int shift_id = ai->shift_id;
+        const int hour_of_day = calendar->hour;
+        const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
-				if (hostile.terrified) {
-					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
-					// is implemented it's a good idea not to run away from your target.
-					const int range = shooting_range(entity, pos);
-					if (hostile.terror_distance < 1.5F) {
-						// Hit it with melee weapon
-						emit_deferred(settler_attack_message{entity.id, hostile.closest_fear});
-						initiative_penalty += get_weapon_initiative_penalty(get_melee_id(entity));
-					} else if (range != -1 && range < hostile.terror_distance) {
-						// Shoot it
-						emit_deferred(settler_ranged_attack_message{entity.id, hostile.closest_fear});
-						initiative_penalty += get_weapon_initiative_penalty(get_ranged_and_ammo_id(entity).first);
-					} else {
-						emit_deferred(entity_wants_to_flee_message{entity.id, hostile.closest_fear});
-					}
-				} else if (ai.job_type_major == JOB_MINE || ai.job_type_major == JOB_CHOP || ai.job_type_major == JOB_CONST
-					|| ai.job_type_major == JOB_REACTION || ai.job_type_major == JOB_BUTCHER || ai.job_type_major == JOB_DECONSTRUCT) {
-						// If we have a job to do - keep doing it
-						do_work_time(entity, ai, stats, species, pos, name);
-				} else {
-					switch (current_schedule) {
-						case SLEEP_SHIFT : do_sleep_time(entity, ai, stats, species, pos, name); break;
-						//case LEISURE_SHIFT : do_leisure_time(entity, ai, stats, species, pos, name); break;
-						// Temporary - everyone works
-						case LEISURE_SHIFT : do_work_time(entity, ai, stats, species, pos, name); break;
-						case WORK_SHIFT : do_work_time(entity, ai, stats, species, pos, name); break;
-					}
-				}
-				
-				calculate_initiative(ai, stats, initiative_penalty);
-			} else {
-				--ai.initiative;
-			}
-		});
+        if (tasks::is_stuck_or_invalid(*pos)) {
+            emit_deferred(log_message{LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars});
+            bool done = false;
+            each<position_t, construct_provides_sleep_t>([this,&e,&pos,&done] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
+                if (!done) {
+                    move_to(*e, *pos, P);
+                    done = true;
+                    // This should use power
+                }
+            });
+        }
 
-		if (!found_settler) {
-			emit_deferred(game_over_message{1});
-		}
+        // Do we have any hostiles to worry about?
+        auto hostile = tasks::can_see_hostile(*e, *pos, *view, [&ai] (entity_t &other) {
+            if (ai->job_type_minor == JM_SLEEP) return false; // We don't spot anyone when sleeping
+            if (other.component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE) return true;
+            auto sentient = other.component<sentient_ai>();
+            if (sentient && sentient->hostile) return true;
+            return false;
+        });
+
+        if (hostile.terrified) {
+            // Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
+            // is implemented it's a good idea not to run away from your target.
+            const int range = shooting_range(*e, *pos);
+            if (hostile.terror_distance < 1.5F) {
+                // Hit it with melee weapon
+                emit_deferred(settler_attack_message{e->id, hostile.closest_fear});
+                initiative->initiative_modifier += get_weapon_initiative_penalty(get_melee_id(*e));
+            } else if (range != -1 && range < hostile.terror_distance) {
+                // Shoot it
+                emit_deferred(settler_ranged_attack_message{e->id, hostile.closest_fear});
+                initiative->initiative_modifier += get_weapon_initiative_penalty(get_ranged_and_ammo_id(*e).first);
+            } else {
+                emit_deferred(entity_wants_to_flee_message{e->id, hostile.closest_fear});
+            }
+        } else if (ai->job_type_major == JOB_MINE || ai->job_type_major == JOB_CHOP || ai->job_type_major == JOB_CONST
+                   || ai->job_type_major == JOB_REACTION || ai->job_type_major == JOB_BUTCHER || ai->job_type_major == JOB_DECONSTRUCT) {
+            // If we have a job to do - keep doing it
+            do_work_time(*e, *ai, *stats, *species, *pos, *name);
+        } else {
+            switch (current_schedule) {
+                case SLEEP_SHIFT : do_sleep_time(*e, *ai, *stats, *species, *pos, *name); break;
+                    //case LEISURE_SHIFT : do_leisure_time(entity, ai, stats, species, pos, name); break;
+                    // Temporary - everyone works
+                case LEISURE_SHIFT : do_work_time(*e, *ai, *stats, *species, *pos, *name); break;
+                case WORK_SHIFT : do_work_time(*e, *ai, *stats, *species, *pos, *name); break;
+            }
+        }
 	});
+
+    // TODO: Check for living settlers
 }
 
 void settler_ai_system::configure() {
-	subscribe_mbox<tick_message>();
+	subscribe_mbox<action_available_message>();
 	system_name = "Settler AI";
 }

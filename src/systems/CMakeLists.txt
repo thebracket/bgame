@@ -13,35 +13,35 @@ add_library(systems STATIC
 	renderables_system.cpp
 	lighting_system.cpp
 	power_system.cpp
-        damage/damage_system.cpp
-        ai/wildlife_population_system.cpp
+	damage/damage_system.cpp
+	ai/wildlife_population_system.cpp
 	movement_system.cpp
-        gui/mode_units_system.cpp
-        gui/mode_rogue_system.cpp
-        gui/mode_rogue_render_system.cpp
-        gui/mode_settler_info_system.cpp
-        gui/mode_play_system.cpp
-        gui/mode_design_system.cpp
-        gui/mode_standing_orders.cpp
-        gui/mode_sentient_info_system.cpp
+	gui/mode_units_system.cpp
+	gui/mode_rogue_system.cpp
+	gui/mode_rogue_render_system.cpp
+	gui/mode_settler_info_system.cpp
+	gui/mode_play_system.cpp
+	gui/mode_design_system.cpp
+	gui/mode_standing_orders.cpp
+	gui/mode_sentient_info_system.cpp
 	corpse_system.cpp
-        gui/particle_system.cpp
+	gui/particle_system.cpp
 	vegetation_system.cpp
-        input/keyboard_system.cpp
-        input/mouse_input_system.cpp
-        ai/sentient_ai_system.cpp
+	input/keyboard_system.cpp
+	input/mouse_input_system.cpp
+	ai/sentient_ai_system.cpp
 	world_system.cpp
-        damage/weapons_helpers.cpp
-        gui/game_over_system.cpp
-        gui/mode_civs_system.cpp
+	damage/weapons_helpers.cpp
+	gui/game_over_system.cpp
+	gui/mode_civs_system.cpp
 	log_system.cpp
-        gui/gui_system.cpp
-        gui/hud_system.cpp
-        physics/fluid_system.cpp
-        physics/gravity_system.cpp
-        gui/gui_elements.cpp
-        ai/grazer_ai_system.cpp
-        gui/wish_system.cpp
+	gui/gui_system.cpp
+	gui/hud_system.cpp
+	physics/fluid_system.cpp
+	physics/gravity_system.cpp
+	gui/gui_elements.cpp
+	ai/grazer_ai_system.cpp
+	gui/wish_system.cpp
 	door_system.cpp
 	pause_system.cpp
     damage/settler_ranged_attack.cpp
@@ -49,6 +49,7 @@ add_library(systems STATIC
     damage/creature_attacks.cpp
     damage/kill_system.cpp
     damage/healing_system.cpp
+	initiative_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp

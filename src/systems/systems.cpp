@@ -47,6 +47,7 @@
 #include "damage/creature_attacks.hpp"
 #include "damage/kill_system.hpp"
 #include "damage/healing_system.hpp"
+#include "initiative_system.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -55,6 +56,7 @@ void add_systems_to_ecs() {
     add_system<door_system>();
     add_system<pause_system>();
     add_system<calendar_system>();
+    add_system<initiative_system>();
     add_system<world_system>();
     add_system<gravity_system>();
     add_system<wildlife_population_system>();

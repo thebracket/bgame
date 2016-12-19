@@ -2,7 +2,6 @@
 
 void settler_ai_t::to_xml(xml_node * c) {
     component_to_xml(c,
-        std::make_pair("initiative", initiative),
         std::make_pair("shift_id", shift_id),
         std::make_pair("job_type_major", job_type_major),
         std::make_pair("job_status", job_status),
@@ -22,7 +21,6 @@ void settler_ai_t::to_xml(xml_node * c) {
 }
 
 void settler_ai_t::from_xml(xml_node * c) {
-    initiative = c->val<int>("initiative");
     shift_id = c->val<int>("shift_id");
     job_type_major = (job_major_t)c->val<int>("job_type_major");
     job_status = c->val<std::string>("job_status");

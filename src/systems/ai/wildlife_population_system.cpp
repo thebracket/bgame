@@ -14,6 +14,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/renderable.hpp"
+#include "../../components/initiative.hpp"
 #include <array>
 
 std::array<uint8_t, 4> group_populations;
@@ -102,10 +103,11 @@ void wildlife_population_system::spawn_wildlife() {
                         ->assign(std::move(name))
                         ->assign(std::move(species))
                         ->assign(std::move(create_health_component_creature(critter_def.tag)))
-                        ->assign(grazer_ai{ stat_modifier(stats.dexterity) })
+                        ->assign(grazer_ai{ })
                         ->assign(std::move(stats))
                         ->assign(viewshed_t(6, false, false))
-                        ->assign(wildlife_group{i});
+                        ->assign(wildlife_group{i})
+                        ->assign(initiative_t{});
                         std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                     }
                 }

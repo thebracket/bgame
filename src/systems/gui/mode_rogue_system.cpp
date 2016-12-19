@@ -10,13 +10,9 @@
 #include "../../components/sentient_ai.hpp"
 #include <rltk.hpp>
 
-void mode_rogue_system::settler_calculate_initiative(settler_ai_t &ai, game_stats_t &stats) {
-	ai.initiative = std::max(1, rng.roll_dice(1, 12) - stat_modifier(stats.dexterity));
-}
-
 void mode_rogue_system::configure() {
     system_name = "Rogue Mode System";
-    subscribe<tick_message>([this](tick_message &msg) {
+    subscribe<action_available_message>([this](action_available_message &msg) {
         if (game_master_mode != ROGUE) return;
 
         auto settler = entity(selected_settler);
@@ -30,42 +26,36 @@ void mode_rogue_system::configure() {
         auto health = settler->component<health_t>();
         auto stats = settler->component<game_stats_t>();
 
-        if (ai->initiative < 1) {
-            if (ai->job_type_major == JOB_IDLE) {
-                // We're waiting for input
-                pause_mode = PAUSED;
-            } else {
-                // Perform the in-progress job
-                if (health->unconscious) {
-                    pause_mode = RUNNING;
-                    return;
-                } else if (ai->job_type_major == JOB_ROGUE_GOTO) {
-                    if (!ai->current_path || ai->current_path->success == false || ai->current_path->steps.size() == 0) {
-                        ai->job_type_major = JOB_IDLE;
-                        ai->job_status = "Idle";
-                        pause_mode = PAUSED;
-                        return;
-                    }
-                    position_t next_step = ai->current_path->steps.front();
-                    emit(entity_wants_to_move_message{settler->id, next_step});
-                    ai->current_path->steps.pop_front();
-
-                } else if (ai->job_type_major == JOB_ROGUE_BASH) {
-                    emit(settler_attack_message{settler->id, ai->targeted_hostile});
-                    ai->job_type_major = JOB_IDLE;
-                    ai->job_status = "Idle";
-                    pause_mode = PAUSED;
-                } else if (ai->job_type_major == JOB_ROGUE_SHOOT) {
-                    emit(settler_ranged_attack_message{settler->id, ai->targeted_hostile});
-                    ai->job_type_major = JOB_IDLE;
-                    ai->job_status = "Idle";
-                    pause_mode = PAUSED;
-                }
-
-                settler_calculate_initiative(*ai, *stats);
-            }
+        if (ai->job_type_major == JOB_IDLE) {
+            // We're waiting for input
+            pause_mode = PAUSED;
         } else {
-            --ai->initiative;
+            // Perform the in-progress job
+            if (health->unconscious) {
+                pause_mode = RUNNING;
+                return;
+            } else if (ai->job_type_major == JOB_ROGUE_GOTO) {
+                if (!ai->current_path || ai->current_path->success == false || ai->current_path->steps.size() == 0) {
+                    ai->job_type_major = JOB_IDLE;
+                    ai->job_status = "Idle";
+                    pause_mode = PAUSED;
+                    return;
+                }
+                position_t next_step = ai->current_path->steps.front();
+                emit(entity_wants_to_move_message{settler->id, next_step});
+                ai->current_path->steps.pop_front();
+
+            } else if (ai->job_type_major == JOB_ROGUE_BASH) {
+                emit(settler_attack_message{settler->id, ai->targeted_hostile});
+                ai->job_type_major = JOB_IDLE;
+                ai->job_status = "Idle";
+                pause_mode = PAUSED;
+            } else if (ai->job_type_major == JOB_ROGUE_SHOOT) {
+                emit(settler_ranged_attack_message{settler->id, ai->targeted_hostile});
+                ai->job_type_major = JOB_IDLE;
+                ai->job_status = "Idle";
+                pause_mode = PAUSED;
+            }
         }
     });
 }

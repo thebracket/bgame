@@ -15,6 +15,7 @@
 #include "../../components/renderable.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../components/position.hpp"
+#include "../../components/initiative.hpp"
 
 int sentient_stat_mod(raw_species_t &species, const std::string &stat) {
     auto finder = species.stat_mods.find(stat);
@@ -67,8 +68,9 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ->assign(viewshed_t{ 6, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
-        ->assign(sentient_ai{stat_modifier(stats.dexterity), person_id, profession[profidx].aggression+5})
-        ->assign(std::move(species));
+        ->assign(sentient_ai{person_id, profession[profidx].aggression+5})
+        ->assign(std::move(species))
+        ->assign(initiative_t{});
     std::cout << "Sentient #" << sentient->id << "\n";
     if (announce) {
         emit_deferred(log_message{LOG().col(rltk::colors::CYAN)->text(species_finder.name)->text(" ")->text(profession[profidx].name)->col(rltk::colors::WHITE)->text(" has arrived.")->chars});

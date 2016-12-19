@@ -41,7 +41,6 @@ enum job_minor_t {
 
 struct settler_ai_t {
 
-	int initiative = 0;
 	std::array<bool, NUMBER_OF_JOB_CATEGORIES> permitted_work;
 	int shift_id = 0;
 

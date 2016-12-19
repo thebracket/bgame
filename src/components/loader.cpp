@@ -29,6 +29,7 @@
 #include "falling.hpp"
 #include "construct_provides_door.hpp"
 #include "renderable_composite.hpp"
+#include "initiative.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -101,6 +102,8 @@ void component_loader_xml(rltk::xml_node * node, std::size_t entity_id, std::str
 		inner_loader<health_t>(node, entity_id);
 	} else if (xml_identity == "renderable_composite_t") {
 		inner_loader<renderable_composite_t>(node, entity_id);
+	} else if (xml_identity == "initiative_t") {
+		inner_loader<initiative_t>(node, entity_id);
 	} else {
 		throw std::runtime_error("Unknown component type, "+xml_identity);
 	}

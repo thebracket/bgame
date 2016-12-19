@@ -9,9 +9,7 @@ enum sentient_goal_t { SENTIENT_GOAL_IDLE, SENTIENT_GOAL_FLEE, SENTIENT_GOAL_CHA
 
 struct sentient_ai {
 	sentient_ai() {}
-	sentient_ai(const int init_mod, const std::size_t pid, const int aggro) : initiative_modifier(init_mod), aggression(aggro), person_id(pid) {}
-	int initiative = 0;
-	int initiative_modifier = 0;
+	sentient_ai(const std::size_t pid, const int aggro) : aggression(aggro), person_id(pid) {}
 	int aggression = 0;
     std::size_t person_id;
 	bool hostile = false;

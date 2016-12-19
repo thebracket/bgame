@@ -12,6 +12,7 @@ add_library(components STATIC
 	game_stats.cpp
 	grazer_ai.cpp
 	health.cpp
+    initiative.cpp
 	item.cpp
 	item_carried.cpp
 	item_stored.cpp
