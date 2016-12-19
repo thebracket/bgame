@@ -44,6 +44,7 @@ add_library(systems STATIC
 	wish_system.cpp
 	door_system.cpp
 	pause_system.cpp
+    settler_ranged_attack.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
@@ -54,6 +55,7 @@ add_library(systems STATIC
 	tasks/threat_scanner.cpp
 	tasks/settler_wander.cpp
 	tasks/settler_work_time.cpp
+    tasks/civ_dislike.cpp
 	tasks/world_queries.cpp
 	tasks/work_types/building_work.cpp
 	tasks/work_types/mining_work.cpp

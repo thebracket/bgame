@@ -1,4 +1,11 @@
 #include "civ_dislike.hpp"
+#include "../../planet/planet.hpp"
+#include "../../messages/log_message.hpp"
+#include "../../components/logger.hpp"
+#include "../../components/sentient_ai.hpp"
+#include "../../main/game_globals.hpp"
+
+using namespace rltk;
 
 void civ_dislike_attacker(boost::optional<entity_t &> &victim) {
     if (!victim) return;

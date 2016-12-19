@@ -7,7 +7,6 @@ public:
 	virtual void update(const double duration_ms) override final;
 	virtual void configure() override final;
 private:
-	void settler_ranged_attacks();
 	void settler_melee_attacks();
 	void creature_attacks();
 	void apply_damage();
