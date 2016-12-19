@@ -48,10 +48,7 @@ using tasks::follow_result_t;
 using tasks::calculate_initiative;
 
 void settler_ai_system::update(const double duration_ms) {
-	std::queue<tick_message> * ticks = mbox<tick_message>();
-    while (!ticks->empty()) {
-        ticks->pop();
-
+	each_mbox<tick_message>([this] (const tick_message &msg) {
 		bool found_settler = false;
 		each<settler_ai_t, game_stats_t, species_t, position_t, name_t, health_t, viewshed_t>([this, &found_settler] (entity_t &entity, settler_ai_t &ai, game_stats_t &stats, 
 			species_t &species, position_t &pos, name_t &name, health_t &health, viewshed_t &view) 
@@ -131,7 +128,7 @@ void settler_ai_system::update(const double duration_ms) {
 		if (!found_settler) {
 			emit_deferred(game_over_message{1});
 		}
-	}
+	});
 }
 
 void settler_ai_system::configure() {
