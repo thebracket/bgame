@@ -45,6 +45,8 @@ add_library(systems STATIC
 	door_system.cpp
 	pause_system.cpp
     settler_ranged_attack.cpp
+    settler_melee_attacks.cpp
+    creature_attacks.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp

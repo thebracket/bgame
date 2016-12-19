@@ -98,6 +98,8 @@ void play_game::init() {
 	add_system<mode_rogue_system>();
 	add_system<movement_system>();
 	add_system<settler_ranged_attack_system>();
+    add_system<settler_melee_attacks_system>();
+    add_system<creature_attacks_system>();
 	add_system<damage_system>();
 	add_system<topology_system>();
 	add_system<visibility_system>();

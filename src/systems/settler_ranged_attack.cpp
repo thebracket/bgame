@@ -8,7 +8,7 @@
 using namespace rltk;
 
 void settler_ranged_attack_system::configure() {
-    system_name = "Damage System";
+    system_name = "Settler Ranged System";
     subscribe_mbox<settler_ranged_attack_message>();
 }
 

@@ -25,98 +25,9 @@
 void damage_system::configure() {
     system_name = "Damage System";
     subscribe_mbox<inflict_damage_message>();
-    subscribe_mbox<settler_attack_message>();
-    subscribe_mbox<settler_ranged_attack_message>();
     subscribe_mbox<creature_attack_message>();
     subscribe_mbox<entity_slain_message>();
     subscribe_mbox<hour_elapsed_message>();
-}
-
-void damage_system::settler_melee_attacks() {
-    std::queue<settler_attack_message> * sattack = mbox<settler_attack_message>();
-    while (!sattack->empty()) {
-        settler_attack_message msg = sattack->front();
-        sattack->pop();
-
-        auto attacker = entity(msg.attacker);
-        auto defender = entity(msg.victim);
-        if (!attacker || !defender) break;
-        auto attacker_stats = attacker->component<game_stats_t>();
-
-        civ_dislike_attacker(defender);
-
-        std::size_t weapon_id = get_melee_id(msg.attacker);
-        std::string weapon_name = "fists";
-        int weapon_n = 1;
-        int weapon_d = 4;
-        int weapon_mod = 0;
-        if (weapon_id != 0) {
-            auto weapon_component = entity(weapon_id)->component<item_t>();
-            if (weapon_component) {
-                auto weapon_finder = item_defs.find(weapon_component->item_tag);
-                if (weapon_finder != item_defs.end()) {
-                    weapon_name = weapon_finder->second.name;
-                    weapon_n = weapon_finder->second.damage_n;
-                    weapon_d = weapon_finder->second.damage_d;
-                    weapon_mod = weapon_finder->second.damage_mod + get_material(weapon_component->material)->damage_bonus;;
-                }
-            }
-        }
-
-        LOG ss;
-        ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(rltk::colors::YELLOW)->text(weapon_name + std::string(". "))->col(rltk::colors::WHITE);
-        const int skill_modifier = get_skill_modifier(*attacker_stats, "Melee Attacks");
-        const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->strength) + skill_modifier;
-        const int armor_class = calculate_armor_class(*defender);
-        if (die_roll > armor_class) {            
-            const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
-            emit(inflict_damage_message{ msg.victim, damage, weapon_name });
-            ss.text(std::string("The attack hits, for ")+std::to_string(damage)+std::string("."));
-            gain_skill_from_success(msg.attacker, *attacker_stats, "Melee Attacks", armor_class, rng);
-        } else {
-            ss.text("The attack misses.");
-        }
-
-        emit_deferred(log_message{ss.chars});
-    }
-}
-
-void damage_system::creature_attacks() {
-    std::queue<creature_attack_message> * cattack = mbox<creature_attack_message>();
-    while (!cattack->empty()) {
-        creature_attack_message msg = cattack->front();
-        cattack->pop();
-
-        // Start by determining the attack
-        auto attacker = entity(msg.attacker);
-        if (!attacker) break;
-        auto attack_species = attacker->component<species_t>();
-        auto creaturefinder = get_creature_def(attack_species->tag);
-        if (!creaturefinder) {
-            std::cout << "Unable to find creature: " << attack_species->tag << "\n";
-            break;
-        }
-        auto creature = creaturefinder.get();
-
-        auto defender = entity(msg.victim);
-        if (!defender) break;
-        auto defender_stats = defender->component<game_stats_t>();
-
-        for (const creature_attack_t &weapon : creature.attacks) {
-            LOG ss;
-            ss.other_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with its ")->col(rltk::colors::YELLOW)->text(weapon.type)->col(rltk::colors::WHITE)->text(". ");
-            const int hit_roll = rng.roll_dice(1,20) + weapon.hit_bonus;
-            const int target = calculate_armor_class(*defender) + stat_modifier(defender_stats->dexterity);
-            if (hit_roll < target) {
-                ss.text("The attack misses.");
-            } else {
-                const int damage = std::max(1,rng.roll_dice(weapon.damage_n_dice, weapon.damage_dice) + weapon.damage_mod);
-                ss.text(std::string("The attack hits, for ")+std::to_string(damage)+std::string(" points of damage."));
-                emit(inflict_damage_message{ msg.victim, damage, weapon.type });
-            }
-            emit_deferred(log_message{ss.chars});
-        }
-    }
 }
 
 void damage_system::apply_damage() {
@@ -258,8 +169,6 @@ void damage_system::heal_over_time() {
 }
 
 void damage_system::update(const double ms) {
-    settler_melee_attacks();
-    creature_attacks();
     apply_damage();
     inflict_death();
     heal_over_time();

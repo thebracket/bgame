@@ -43,3 +43,5 @@
 #include "door_system.hpp"
 #include "pause_system.hpp"
 #include "settler_ranged_attack.hpp"
+#include "settler_melee_attacks.hpp"
+#include "creature_attacks.hpp"
