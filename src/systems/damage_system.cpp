@@ -25,8 +25,6 @@
 void damage_system::configure() {
     system_name = "Damage System";
     subscribe_mbox<inflict_damage_message>();
-    subscribe_mbox<creature_attack_message>();
-    subscribe_mbox<entity_slain_message>();
     subscribe_mbox<hour_elapsed_message>();
 }
 
@@ -99,77 +97,6 @@ void damage_system::apply_damage() {
 	}
 }
 
-void damage_system::inflict_death() {
-    std::queue<entity_slain_message> * deaths = mbox<entity_slain_message>();
-	while (!deaths->empty()) {
-        entity_slain_message msg = deaths->front();
-        deaths->pop();
-
-        auto victim = entity(msg.victim);
-        if (!victim) break;
-        auto pos = victim->component<position_t>();
-        // Any items carried are dropped
-        each<item_carried_t>([&msg, pos] (entity_t &e, item_carried_t &item) {
-            if (item.carried_by == msg.victim) {
-                emit(drop_item_message{e.id, pos->x, pos->y, pos->z});
-            }
-        });
-                
-        // Spawn a body
-        if (victim->component<settler_ai_t>()) {
-            // It's a dead settler, we create a special item
-            auto name = victim->component<name_t>();
-            auto corpse = create_entity()
-                ->assign(position_t{ pos->x, pos->y, pos->z })
-                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
-                ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
-                ->assign(corpse_settler{msg.cause_of_death});
-        } else if (victim->component<sentient_ai>()) {
-            // It's a dead native
-            planet.civs.unimportant_people[victim->component<sentient_ai>()->person_id].deceased = true;
-            auto name = victim->component<name_t>();
-            auto renderable = victim->component<renderable_t>();
-            auto corpse = create_entity()
-                ->assign(position_t{ pos->x, pos->y, pos->z })
-                ->assign(renderable_t{ renderable->glyph, rltk::colors::YELLOW, rltk::colors::RED })
-                ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
-                ->assign(corpse_settler{msg.cause_of_death});
-        } else {
-            // It's something else that died.
-            std::string tag = "";
-            auto species = victim->component<species_t>();
-            if (species) tag = species->tag;
-            auto old_render = victim->component<renderable_t>();
-            if (old_render && tag != "") {
-                auto corpse = create_entity()
-                    ->assign(position_t{ pos->x, pos->y, pos->z })
-                    ->assign(renderable_t{ old_render->glyph, rltk::colors::GREY, rltk::colors::BLACK })
-                    ->assign(corpse_harvestable{tag});
-            }
-        }
-
-        // Remove the entity
-        entity_octree.remove_node(octree_location_t{pos->x, pos->y, pos->z, msg.victim});
-        delete_entity(msg.victim);
-    }
-}
-
-void damage_system::heal_over_time() {
-    std::queue<hour_elapsed_message> * hour = mbox<hour_elapsed_message>();
-	while (!hour->empty()) {
-        hour->pop();
-
-        each<health_t>([] (entity_t &e, health_t &h) {
-            if (h.max_hitpoints > h.current_hitpoints) {
-                ++h.current_hitpoints;
-                h.unconscious = false;
-            }
-        });
-    }
-}
-
 void damage_system::update(const double ms) {
     apply_damage();
-    inflict_death();
-    heal_over_time();
 }

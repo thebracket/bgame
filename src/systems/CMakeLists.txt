@@ -47,6 +47,8 @@ add_library(systems STATIC
     settler_ranged_attack.cpp
     settler_melee_attacks.cpp
     creature_attacks.cpp
+    kill_system.cpp
+    healing_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp

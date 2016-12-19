@@ -45,3 +45,6 @@
 #include "settler_ranged_attack.hpp"
 #include "settler_melee_attacks.hpp"
 #include "creature_attacks.hpp"
+#include "kill_system.hpp"
+#include "healing_system.hpp"
+

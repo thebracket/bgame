@@ -101,6 +101,8 @@ void play_game::init() {
     add_system<settler_melee_attacks_system>();
     add_system<creature_attacks_system>();
 	add_system<damage_system>();
+    add_system<kill_system>();
+    add_system<healing_system>();
 	add_system<topology_system>();
 	add_system<visibility_system>();
 	add_system<vegetation_system>();
