@@ -15,8 +15,8 @@
 
 using namespace rltk;
 
-boost::container::flat_map<int, std::vector<rltk::vchar>> renderables;
-boost::container::flat_map<int, std::vector<std::vector<rltk::vchar>>> composite_renderables;
+boost::container::flat_map<int, std::vector<screen_render_t>> renderables;
+boost::container::flat_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
 
 void renderables_system::configure() {
     system_name = "Renderables System";
@@ -25,7 +25,8 @@ void renderables_system::configure() {
 
 inline void add_render_composite(const std::size_t &id, const int &idx) {
     auto compr = entity(id)->component<renderable_composite_t>();
-    if (!compr) return;
+    auto pos = entity(id)->component<position_t>();
+    if (!compr || !pos) return;
 
     std::vector<rltk::vchar> layers;
 
@@ -77,7 +78,11 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
                 layers.push_back(vchar{i.clothing_glyph, i.clothing_color, rltk::colors::BLACK});
             }
         });
-        composite_renderables[idx].push_back(layers);
+        std::vector<screen_render_t> tmp;
+        for (const vchar &c : layers) {
+            tmp.push_back(screen_render_t{pos->x, pos->y, c});
+        }
+        composite_renderables[idx].push_back(tmp);
     }
 }
 
@@ -108,7 +113,7 @@ void renderables_system::update(const double time_elapsed) {
 					if (!b.complete) glyph.foreground = rltk::colors::GREY;
 					auto door = entity.component<construct_door_t>();
 					if (door && door->locked) glyph.background = rltk::colors::GREY;
-					renderables[idx].push_back(glyph);
+					renderables[idx].push_back(screen_render_t{pos.x, pos.y, glyph});
 					++glyph_idx;
 				}
 			}
@@ -116,7 +121,7 @@ void renderables_system::update(const double time_elapsed) {
 
 		// Add other entities
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK});
+			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(screen_render_t{pos.x, pos.y, rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK}});
 		});
 
         // Add composite renderables
@@ -128,7 +133,7 @@ void renderables_system::update(const double time_elapsed) {
 		for (const particle_t &p : particles) {
             if (p.x > 0 && p.x < REGION_WIDTH-1 && p.y > 0 && p.y < REGION_HEIGHT-1 && p.z > 0 && p.z < REGION_DEPTH-1) {
                 const auto idx = mapidx(p.x, p.y, p.z);
-                renderables[idx].push_back(p.glyph);
+                renderables[idx].push_back(screen_render_t{p.x, p.y, p.glyph});
             }
 		}
 
@@ -142,7 +147,7 @@ void renderables_system::update(const double time_elapsed) {
 				for (auto step : ai->current_path->steps) {
 					const float lerp_amount = i / n_steps;
 					const auto idx = mapidx(step.x, step.y, step.z);
-					renderables[idx].push_back(rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK });
+					renderables[idx].push_back(screen_render_t{step.x, step.y, rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK }});
 					++i;
 				}
 			}

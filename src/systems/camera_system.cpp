@@ -130,7 +130,7 @@ int camera_system::deep_dive(const int &x, const int &y, const int &z) {
 
 		auto rf = renderables.find(idx);
 		if (rf != renderables.end()) {
-			result = rf->second[camera_glyph_cycle % rf->second.size()];
+			result = rf->second[camera_glyph_cycle % rf->second.size()].c;
 		} else {
 			result = current_region->render_cache[idx];
 		}

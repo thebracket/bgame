@@ -11,6 +11,7 @@
 #include "../components/item_carried.hpp"
 #include "input/mouse_input_system.hpp"
 #include <iostream>
+#include <cmath>
 
 using namespace rltk;
 using namespace map_render_sys;
@@ -33,8 +34,15 @@ vchar greyscale(vchar target) {
 	return target;
 }
 
+float get_fraction(const float &f) {
+    return f - std::floor(f);
+}
+
 vchar get_render_char(const int &x, const int &y) {
 	const int idx = render_tiles[((term(1)->term_width * y) + x)];
+    //int world_x, world_y, world_z;
+    //std::tie(world_x, world_y, world_z) = idxmap(idx);
+
 	if (idx == 0) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 	if (!current_region->revealed[idx]) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 
@@ -48,14 +56,22 @@ vchar get_render_char(const int &x, const int &y) {
     if (!current_region->visible[idx]) result = greyscale(result);
 	auto rf = renderables.find(idx);
 	if (rf != renderables.end()) {
-		rltk::vchar renderable = rf->second[glyph_cycle % rf->second.size()];
-        sterm(5)->add(xchar{static_cast<int>(renderable.glyph), lerp(renderable.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
+		screen_render_t renderable = rf->second[glyph_cycle % rf->second.size()];
+        sterm(5)->add(xchar{
+				static_cast<int>(renderable.c.glyph),
+                lerp(renderable.c.foreground, light_map[((term(1)->term_width * y) + x)], 0.75),
+                static_cast<float>(x + get_fraction(renderable.x)),
+                static_cast<float>(y+2 + get_fraction(renderable.y))});
 	}
 
     auto crf = composite_renderables.find(idx);
     if (crf != composite_renderables.end()) {
-        for (const vchar &vc : crf->second[glyph_cycle % crf->second.size()]) {
-            sterm(5)->add(xchar{static_cast<int>(vc.glyph), vc.foreground, static_cast<float>(x), static_cast<float>(y+2)});
+        for (const screen_render_t &vc : crf->second[glyph_cycle % crf->second.size()]) {
+            sterm(5)->add(xchar{
+                    static_cast<int>(vc.c.glyph),
+                    vc.c.foreground,
+                    static_cast<float>(x+get_fraction(vc.x)),
+                    static_cast<float>(y+2+get_fraction(vc.y))});
         }
     }
 
