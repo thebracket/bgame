@@ -20,7 +20,6 @@
 using tasks::calculate_initiative;
 
 void sentient_ai_system::configure() {
-    system_name = "Sentient AI";
 
     subscribe<day_elapsed_message>([] (day_elapsed_message &msg) {
         each<sentient_ai>([] (entity_t &e, sentient_ai &ai) {
@@ -32,11 +31,7 @@ void sentient_ai_system::configure() {
 }
 
 void sentient_ai_system::update(const double ms) {
-    std::queue<tick_message> * ticks = mbox<tick_message>();
-    while (!ticks->empty()) {
-        tick_message msg = ticks->front();
-        ticks->pop();
-
+    each_mbox<tick_message>([this] (const tick_message &msg) {
         each<sentient_ai, position_t, viewshed_t, health_t, game_stats_t>([] (entity_t &e, sentient_ai &ai, position_t &pos, viewshed_t &view, health_t &health, game_stats_t &stats) {
             int initiative_penalty = 0 - ai.initiative_modifier;
 
@@ -158,5 +153,5 @@ void sentient_ai_system::update(const double ms) {
                 --ai.initiative;
             }
         });
-    }
+    });
 }
