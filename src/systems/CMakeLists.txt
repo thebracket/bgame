@@ -16,14 +16,14 @@ add_library(systems STATIC
         damage/damage_system.cpp
 	wildlife_population_system.cpp
 	movement_system.cpp
-	mode_units_system.cpp
-	mode_rogue_system.cpp
-	mode_rogue_render_system.cpp
-	mode_settler_info_system.cpp
-	mode_play_system.cpp
-	mode_design_system.cpp
-	mode_standing_orders.cpp
-	mode_sentient_info_system.cpp
+        gui/mode_units_system.cpp
+        gui/mode_rogue_system.cpp
+        gui/mode_rogue_render_system.cpp
+        gui/mode_settler_info_system.cpp
+        gui/mode_play_system.cpp
+        gui/mode_design_system.cpp
+        gui/mode_standing_orders.cpp
+        gui/mode_sentient_info_system.cpp
 	corpse_system.cpp
 	particle_system.cpp
 	vegetation_system.cpp
@@ -32,16 +32,16 @@ add_library(systems STATIC
 	sentient_ai_system.cpp
 	world_system.cpp
 	weapons_helpers.cpp
-	game_over_system.cpp
-	mode_civs_system.cpp
+        gui/game_over_system.cpp
+        gui/mode_civs_system.cpp
 	log_system.cpp
-	gui_system.cpp
-	hud_system.cpp
+        gui/gui_system.cpp
+        gui/hud_system.cpp
 	fluid_system.cpp
 	gravity_system.cpp
-	gui_elements.cpp
+        gui/gui_elements.cpp
 	grazer_ai_system.cpp
-	wish_system.cpp
+        gui/wish_system.cpp
 	door_system.cpp
 	pause_system.cpp
     damage/settler_ranged_attack.cpp
