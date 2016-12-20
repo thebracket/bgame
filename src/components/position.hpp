@@ -5,9 +5,12 @@
 using namespace rltk;
 
 struct position_t {
-	float x=0;
-	float y=0;
+	int x=0;
+	int y=0;
 	int z=0;
+    float offsetX = 0;
+    float offsetY = 0;
+    float offsetZ = 0;
 
 	position_t() {}
 	position_t(const int &X, const int &Y, const int &Z) : x(static_cast<float>(X)), y(static_cast<float>(Y)), z(Z) {}

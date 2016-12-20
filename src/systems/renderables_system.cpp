@@ -80,7 +80,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         });
         std::vector<screen_render_t> tmp;
         for (const vchar &c : layers) {
-            tmp.push_back(screen_render_t{pos->x, pos->y, c});
+            tmp.push_back(screen_render_t{(float)pos->x + pos->offsetX, (float)pos->y + pos->offsetY, c});
         }
         composite_renderables[idx].push_back(tmp);
     }
@@ -121,7 +121,8 @@ void renderables_system::update(const double time_elapsed) {
 
 		// Add other entities
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(screen_render_t{pos.x, pos.y, rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK}});
+			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(
+                    screen_render_t{(float)pos.x + pos.offsetX, (float)pos.y + pos.offsetY, rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK}});
 		});
 
         // Add composite renderables
