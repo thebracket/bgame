@@ -17,7 +17,7 @@
 #include "ai/wildlife_population_system.hpp"
 #include "movement_system.hpp"
 #include "gui/mode_units_system.hpp"
-#include "gui/mode_rogue_system.hpp"
+#include "ai/mode_rogue_system.hpp"
 #include "gui/mode_rogue_render_system.hpp"
 #include "corpse_system.hpp"
 #include "gui/particle_system.hpp"

@@ -17,7 +17,7 @@ add_library(systems STATIC
 	ai/wildlife_population_system.cpp
 	movement_system.cpp
 	gui/mode_units_system.cpp
-	gui/mode_rogue_system.cpp
+        ai/mode_rogue_system.cpp
 	gui/mode_rogue_render_system.cpp
 	gui/mode_settler_info_system.cpp
 	gui/mode_play_system.cpp

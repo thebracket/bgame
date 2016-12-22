@@ -107,15 +107,6 @@ void movement_system::update(const double ms) {
         const float deltaY = (float)dY / (float)initiative->initiative;
         const float deltaZ = (float)dZ / (float)initiative->initiative;
 
-        if (msg.entity_id == 126) {
-            std::cout << "Moving from " << epos->x << "," << epos->y << " .. to .. " << msg.destination.x << ","
-                      << msg.destination.y << "\n";
-            std::cout << "Deltas: " << dX << "," << dY << " (" << initiative->initiative << " steps)\n";
-            std::cout << "X/Y becomes " << msg.destination.x << "," << msg.destination.y
-                      << ", offset (to be at original) " << epos->offsetX << "," << epos->offsetY << "\n";
-            std::cout << "Each tick, we add " << deltaX << "," << deltaY << " to that offset.\n\n";
-        }
-
         if (!slide && initiative) {
             entity(msg.entity_id)->assign(slidemove_t{deltaX, deltaY, deltaZ, initiative->initiative});
         } else if (slide && initiative) {

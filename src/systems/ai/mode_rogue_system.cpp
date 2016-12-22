@@ -14,6 +14,7 @@ void mode_rogue_system::configure() {
     system_name = "Rogue Mode System";
     subscribe<action_available_message>([this](action_available_message &msg) {
         if (game_master_mode != ROGUE) return;
+        if (msg.entity_id != selected_settler) return;
 
         auto settler = entity(selected_settler);
         if (!settler) {

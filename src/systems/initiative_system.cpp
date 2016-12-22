@@ -59,12 +59,6 @@ void initiative_system::on_message(const tick_message &msg) {
             auto slide = e.component<slidemove_t>();
             auto pos = e.component<position_t>();
             if (slide && pos && slide->lifespan > 0) {
-                if (e.id == 126) {
-                    std::cout << "Slide life " << slide->lifespan << " (entity " << e.id << ")\n";
-                    std::cout << "X:" << pos->x << " + " << pos->offsetX << " / " << slide->offsetX << "\n";
-                    std::cout << "Y:" << pos->y << " + " << pos->offsetY << " / " << slide->offsetY << "\n\n";
-                }
-
                 pos->offsetX += slide->offsetX;
                 pos->offsetY += slide->offsetY;
                 pos->offsetZ += slide->offsetZ;
