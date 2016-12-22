@@ -8,6 +8,7 @@
 #include "../inventory_system.hpp"
 #include "../camera_system.hpp"
 #include "../../utils/string_utils.hpp"
+#include "../../components/stockpile.hpp"
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -275,18 +276,92 @@ void mode_design_system::guardposts() {
     }
 }
 
+void mode_design_system::stockpiles() {
+    add_gui_element(std::make_unique<map_static_text>(5,4, "Stockpiles - select a stockpile from the right panel, click to add, right click to remove."));
+
+    int tt_x = term(3)->term_width - 30;
+    term(3)->box(tt_x, 4, 29, term(3)->term_height-5);
+    term(3)->fill(tt_x+1, 5, tt_x+29, term(3)->term_height-2, ' ');
+    term(3)->fill(tt_x+1, 5, tt_x+29, 6, ' ', WHITE, DARK_GREEN);
+    term(3)->print(tt_x+4, 6, "Add Stockpile", WHITE, GREEN);
+    term(3)->print(tt_x+4, 7, "[Available Stockpiles]", WHITE, DARK_GREEN);
+
+    // TODO: Render list of stockpiles
+    int y = 16;
+    each<stockpile_t>([this, &y, &tt_x] (entity_t &e, stockpile_t &sp) {
+        if (e.id == current_stockpile) {
+            term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), YELLOW, DARK_GREEN);
+
+            if (sp.category.test(COMPONENT)) {
+                term(3)->print(tt_x + 4, 9, "Store Components", YELLOW, DARK_GREEN);
+            } else {
+                term(3)->print(tt_x + 4, 9, "Store Components", RED, DARK_GREEN);
+            }
+            if (sp.category.test(TOOL_CHOPPING)) {
+                term(3)->print(tt_x + 4, 10, "Chopping Tools", YELLOW, DARK_GREEN);
+            } else {
+                term(3)->print(tt_x + 4, 10, "Chopping Tools", RED, DARK_GREEN);
+            }
+            if (sp.category.test(TOOL_DIGGING)) {
+                term(3)->print(tt_x + 4, 11, "Digging Tools", YELLOW, DARK_GREEN);
+            } else {
+                term(3)->print(tt_x + 4, 11, "Digging Tools", RED, DARK_GREEN);
+            }
+            if (sp.category.test(WEAPON_MELEE)) {
+                term(3)->print(tt_x + 4, 12, "Melee Weapons", YELLOW, DARK_GREEN);
+            } else {
+                term(3)->print(tt_x + 4, 12, "Melee Weapons", RED, DARK_GREEN);
+            }
+            if (sp.category.test(WEAPON_RANGED)) {
+                term(3)->print(tt_x + 4, 13, "Ranged Weapons", YELLOW, DARK_GREEN);
+            } else {
+                term(3)->print(tt_x + 4, 13, "Ranged Weapons", RED, DARK_GREEN);
+            }
+            if (sp.category.test(WEAPON_AMMO)) {
+                term(3)->print(tt_x + 4, 14, "Ammunition", YELLOW, DARK_GREEN);
+            } else {
+                term(3)->print(tt_x + 4, 14, "Ammunition", RED, DARK_GREEN);
+            }
+        } else {
+            term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), WHITE, DARK_GREEN);
+            if (mouse::clicked && mouse::term3x > tt_x+3 && mouse::term3y == y) current_stockpile = e.id;
+        }
+       ++y;
+    });
+
+    // Capture mouse and add/remove stockpiles
+    if (mouse::term3x > tt_x+3 && mouse::term3y == 6 && mouse::clicked) {
+        create_entity()->assign(stockpile_t{});
+    }
+
+    if (current_stockpile>0 && mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
+        const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
+        const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+
+        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
+        if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+            if (get_mouse_button_state(rltk::button::LEFT)) {
+                current_region->stockpile_id[idx] = current_stockpile;
+            } else if (get_mouse_button_state(rltk::button::RIGHT)) {
+                current_region->stockpile_id[idx] = 0;
+            }
+        }
+    }
+}
+
 void mode_design_system::update(const double duration_ms) {
     if (game_master_mode != DESIGN) return;
 
     add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
     add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
 
-    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts"}, 5, 3, [] (int key) {
+    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles"}, 5, 3, [] (int key) {
         switch (key) {
             case 0 : { game_design_mode = DIGGING; emit_deferred(map_dirty_message{}); } break;
             case 1 : { game_design_mode = BUILDING; emit_deferred(refresh_available_buildings_message{}); emit_deferred(map_dirty_message{}); } break;
             case 2 : { game_design_mode = CHOPPING; emit_deferred(map_dirty_message{}); } break;
             case 3 : { game_design_mode = GUARDPOINTS; emit_deferred(map_dirty_message{}); } break;
+            case 4 : { game_design_mode = STOCKPILES; emit_deferred(map_dirty_message{}); } break;
         }
     });
 
@@ -295,5 +370,6 @@ void mode_design_system::update(const double duration_ms) {
         case BUILDING   : building(); break;
         case CHOPPING   : chopping(); break;
         case GUARDPOINTS: guardposts(); break;
+        case STOCKPILES : stockpiles(); break;
     }
 }

@@ -26,6 +26,7 @@ add_library(components STATIC
 	settler_ai.cpp
     slidemove.cpp
 	species.cpp
+	stockpile.cpp
 	viewshed.cpp
 	water_spawner.cpp
 	wildlife_group.cpp

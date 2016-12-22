@@ -29,6 +29,7 @@ void save_region(const region_t &region) {
 	deflate.serialize(region.tile_flags);
 	deflate.serialize(region.water_level);
 	deflate.serialize_vector_bool(region.blood_stains);
+	deflate.serialize(region.stockpile_id);
 }
 
 region_t load_region(const int region_x, const int region_y) {
@@ -54,6 +55,7 @@ region_t load_region(const int region_x, const int region_y) {
 	inflate.deserialize(region.tile_flags);
 	inflate.deserialize(region.water_level);
 	inflate.deserialize(region.blood_stains);
+	inflate.deserialize(region.stockpile_id);
 
 	std::cout << "Recalculating region paths\n";
 	region.tile_recalc_all();
@@ -169,6 +171,13 @@ void region_t::calc_render(const int &idx) {
 	color_t fg;
 	color_t bg = rltk::colors::BLACK;
     veg_cache[idx] = boost::optional<rltk::vchar>();
+
+    if (stockpile_id[idx] > 0) {
+        // Stockpiles are always grey floors
+        glyph = 256;
+        render_cache[idx] = vchar{glyph, rltk::colors::DARK_GREY, rltk::colors::BLACK};
+        return;
+    }
 
 	// Start with the basic tile_type; this hard-sets some glyphs.
 	switch (tile_type[idx]) {

@@ -27,6 +27,7 @@ struct region_t {
 		above_ground.resize(REGION_TILES_COUNT);
 		blood_stains.resize(REGION_TILES_COUNT);
         veg_cache.resize(REGION_TILES_COUNT);
+        stockpile_id.resize(REGION_TILES_COUNT);
 	}
 
 	int region_x, region_y, biome_idx;
@@ -42,6 +43,7 @@ struct region_t {
 	std::vector<std::size_t> building_id;
 	std::vector<std::size_t> tree_id;
 	std::vector<std::size_t> tile_vegetation_type;
+	std::vector<std::size_t> stockpile_id;
 	std::vector<bitset8> tile_flags;
 	std::vector<rltk::vchar> render_cache;
     std::vector<boost::optional<rltk::vchar>> veg_cache;

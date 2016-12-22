@@ -31,6 +31,7 @@
 #include "renderable_composite.hpp"
 #include "initiative.hpp"
 #include "slidemove.hpp"
+#include "stockpile.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -107,6 +108,8 @@ void component_loader_xml(rltk::xml_node * node, std::size_t entity_id, std::str
 		inner_loader<initiative_t>(node, entity_id);
 	} else if (xml_identity == "slidemove_t") {
         inner_loader<slidemove_t>(node, entity_id);
+	} else if (xml_identity == "stockpile_t") {
+		inner_loader<stockpile_t>(node, entity_id);
     } else {
 		throw std::runtime_error("Unknown component type, "+xml_identity);
 	}

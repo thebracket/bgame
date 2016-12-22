@@ -150,6 +150,16 @@ vchar get_render_char_guarding(const int &x, const int &y) {
 	return result;
 }
 
+vchar get_render_char_stockpiles(const int &x, const int &y) {
+
+    vchar result = get_render_char(x,y);
+    const int idx = render_tiles[((term(1)->term_width * y) + x)];
+
+    // TODO: Render current stockpile
+
+    return result;
+}
+
 vchar get_render_char_building(const int &x, const int &y) {
 
 	vchar result = get_render_char(x,y);
@@ -246,6 +256,7 @@ void map_render_system::update(const double duration_ms) {
 				case CHOPPING : calculator = get_render_char_chopping; break;
 				case BUILDING : { building_possible = true; calculator = get_render_char_building; } break;
 				case GUARDPOINTS : calculator = get_render_char_guarding; break;
+                case STOCKPILES : calculator = get_render_char_stockpiles; break;
 			}
 		}
 

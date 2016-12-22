@@ -24,3 +24,4 @@ bool quitting = false;
 int selected_tile_x;
 int selected_tile_y;
 int selected_tile_z;
+std::size_t current_stockpile=0;

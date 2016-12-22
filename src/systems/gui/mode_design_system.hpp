@@ -11,4 +11,5 @@ private:
     void building();
     void chopping();
     void guardposts();
+	void stockpiles();
 };
