@@ -156,11 +156,18 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		if (skill_check >= SUCCESS) {
 			// Tree is going down!
 			int number_of_logs = 0;
+            int tree_idx = 0;
+            int lowest_z = 1000;
 			for (int z=0; z<REGION_DEPTH; ++z) {
 				for (int y=0; y<REGION_HEIGHT; ++y) {
 					for (int x=0; x<REGION_WIDTH; ++x) {
 						const auto idx = mapidx(x,y,z);
 						if (current_region->tree_id[idx] == ai.target_id) {
+                            if (z < lowest_z) {
+                                lowest_z = z;
+                                tree_idx = idx;
+                            }
+
 							current_region->solid[idx]=false;
 							current_region->tile_flags[idx].reset(CAN_STAND_HERE);
 							current_region->tree_id[idx] = 0;
@@ -171,8 +178,8 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 					}
 				}
 			}
-			const int tree_idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
 			current_region->tile_type[tree_idx] = tile_type::FLOOR;
+            current_region->tile_flags[tree_idx].set(CAN_STAND_HERE);
 			current_region->tile_calculate(ai.target_x, ai.target_y, ai.target_z);			
 
 			// Spawn wooden logs
