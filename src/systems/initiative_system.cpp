@@ -7,11 +7,27 @@
 #include "../components/grazer_ai.hpp"
 #include "tasks/initiative.hpp"
 #include "../main/game_globals.hpp"
+#include "../components/slidemove.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {
        --i.initiative;
-        if ( i.initiative < 1) {
+        if ( i.initiative + i.initiative_modifier < 1) {
+            // Remove any sliding
+            auto pos = e.component<position_t>();
+            if (pos) {
+                pos->offsetX = 0.0F;
+                pos->offsetY = 0.0F;
+                pos->offsetZ = 0.0F;
+            }
+            auto slide = e.component<slidemove_t>();
+            if (slide) {
+                slide->offsetX = 0.0F;
+                slide->offsetY = 0.0F;
+                slide->offsetZ = 0.0F;
+                slide->lifespan = 0;
+            }
+
             // Emit a message that it's the entity's turn
             emit_deferred(action_available_message{e.id});
 
@@ -39,6 +55,22 @@ void initiative_system::on_message(const tick_message &msg) {
 
             // Reset modifiers
             i.initiative_modifier = 0;
+        } else {
+            auto slide = e.component<slidemove_t>();
+            auto pos = e.component<position_t>();
+            if (slide && pos && slide->lifespan > 0) {
+                if (e.id == 126) {
+                    std::cout << "Slide life " << slide->lifespan << " (entity " << e.id << ")\n";
+                    std::cout << "X:" << pos->x << " + " << pos->offsetX << " / " << slide->offsetX << "\n";
+                    std::cout << "Y:" << pos->y << " + " << pos->offsetY << " / " << slide->offsetY << "\n\n";
+                }
+
+                pos->offsetX += slide->offsetX;
+                pos->offsetY += slide->offsetY;
+                pos->offsetZ += slide->offsetZ;
+                --slide->lifespan;
+            }
         }
     });
+    emit(renderables_changed_message{});
 }

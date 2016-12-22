@@ -80,7 +80,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         });
         std::vector<screen_render_t> tmp;
         for (const vchar &c : layers) {
-            tmp.push_back(screen_render_t{(float)pos->x + pos->offsetX, (float)pos->y + pos->offsetY, c});
+            tmp.push_back(screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY, c});
         }
         composite_renderables[idx].push_back(tmp);
     }
@@ -92,6 +92,7 @@ void renderables_system::update(const double time_elapsed) {
 		renderables_changed = true;
 		render_change->pop();
 	}
+    renderables_changed = true;
 
     if (renderables_changed) {
 		renderables.clear();
@@ -107,13 +108,13 @@ void renderables_system::update(const double time_elapsed) {
 
 			for (int y = 0; y<b.height; ++y) {
 				for (int x=0; x<b.width; ++x) {
-					const auto idx = mapidx(pos.x+x+offset_x, pos.y+y+offset_y, pos.z);
+					const auto idx = mapidx(pos.x, pos.y, pos.z);
 					rltk::vchar glyph;
 					glyph = b.glyphs[glyph_idx];
 					if (!b.complete) glyph.foreground = rltk::colors::GREY;
 					auto door = entity.component<construct_door_t>();
 					if (door && door->locked) glyph.background = rltk::colors::GREY;
-					renderables[idx].push_back(screen_render_t{pos.x, pos.y, glyph});
+					renderables[idx].push_back(screen_render_t{pos.x, pos.y, pos.offsetX, pos.offsetY, glyph});
 					++glyph_idx;
 				}
 			}
@@ -122,7 +123,7 @@ void renderables_system::update(const double time_elapsed) {
 		// Add other entities
 		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
 			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(
-                    screen_render_t{(float)pos.x + pos.offsetX, (float)pos.y + pos.offsetY, rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK}});
+                    screen_render_t{(float)pos.x, (float)pos.y, pos.offsetX, pos.offsetY, rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK}});
 		});
 
         // Add composite renderables
@@ -134,7 +135,7 @@ void renderables_system::update(const double time_elapsed) {
 		for (const particle_t &p : particles) {
             if (p.x > 0 && p.x < REGION_WIDTH-1 && p.y > 0 && p.y < REGION_HEIGHT-1 && p.z > 0 && p.z < REGION_DEPTH-1) {
                 const auto idx = mapidx(p.x, p.y, p.z);
-                renderables[idx].push_back(screen_render_t{p.x, p.y, p.glyph});
+                renderables[idx].push_back(screen_render_t{p.x, p.y, 0, 0, p.glyph});
             }
 		}
 
@@ -148,7 +149,7 @@ void renderables_system::update(const double time_elapsed) {
 				for (auto step : ai->current_path->steps) {
 					const float lerp_amount = i / n_steps;
 					const auto idx = mapidx(step.x, step.y, step.z);
-					renderables[idx].push_back(screen_render_t{step.x, step.y, rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK }});
+					renderables[idx].push_back(screen_render_t{step.x, step.y, 0, 0, rltk::vchar{ 177, lerp(rltk::colors::DARK_GREEN, rltk::colors::LIGHTEST_GREEN, lerp_amount), rltk::colors::BLACK }});
 					++i;
 				}
 			}

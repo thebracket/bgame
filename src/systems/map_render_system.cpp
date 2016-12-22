@@ -35,7 +35,8 @@ vchar greyscale(vchar target) {
 }
 
 float get_fraction(const float &f) {
-    return f - std::floor(f);
+    double ignore_me;
+    return std::modf(f, &ignore_me);
 }
 
 vchar get_render_char(const int &x, const int &y) {
@@ -60,8 +61,8 @@ vchar get_render_char(const int &x, const int &y) {
         sterm(5)->add(xchar{
 				static_cast<int>(renderable.c.glyph),
                 lerp(renderable.c.foreground, light_map[((term(1)->term_width * y) + x)], 0.75),
-                static_cast<float>(x + get_fraction(renderable.x)),
-                static_cast<float>(y+2 + get_fraction(renderable.y))});
+                static_cast<float>(x + renderable.offsetX),
+                static_cast<float>(y+2 + renderable.offsetY)});
 	}
 
     auto crf = composite_renderables.find(idx);
@@ -70,8 +71,8 @@ vchar get_render_char(const int &x, const int &y) {
             sterm(5)->add(xchar{
                     static_cast<int>(vc.c.glyph),
                     vc.c.foreground,
-                    static_cast<float>(x+get_fraction(vc.x)),
-                    static_cast<float>(y+2+get_fraction(vc.y))});
+                    (float)x+vc.offsetX,
+                    (float)y+2.0F+vc.offsetY});
         }
     }
 

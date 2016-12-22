@@ -4,6 +4,8 @@
 #include "../messages/map_dirty_message.hpp"
 #include "../messages/vegetation_damage_message.hpp"
 #include "../main/game_globals.hpp"
+#include "../components/slidemove.hpp"
+#include "../components/initiative.hpp"
 #include <rltk.hpp>
 
 octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};
@@ -93,10 +95,43 @@ void movement_system::update(const double ms) {
         if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH-1 || msg.destination.y < 1 || msg.destination.y > REGION_HEIGHT-1
             || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH-1) break;
 
+        // Add sliding effect
+        auto slide = entity(msg.entity_id)->component<slidemove_t>();
+        auto initiative = entity(msg.entity_id)->component<initiative_t>();
+
+        const int dX = msg.destination.x - epos->x;
+        const int dY = msg.destination.y - epos->y;
+        const int dZ = msg.destination.z - epos->z;
+
+        const float deltaX = (float)dX / (float)initiative->initiative;
+        const float deltaY = (float)dY / (float)initiative->initiative;
+        const float deltaZ = (float)dZ / (float)initiative->initiative;
+
+        if (msg.entity_id == 126) {
+            std::cout << "Moving from " << epos->x << "," << epos->y << " .. to .. " << msg.destination.x << ","
+                      << msg.destination.y << "\n";
+            std::cout << "Deltas: " << dX << "," << dY << " (" << initiative->initiative << " steps)\n";
+            std::cout << "X/Y becomes " << msg.destination.x << "," << msg.destination.y
+                      << ", offset (to be at original) " << epos->offsetX << "," << epos->offsetY << "\n";
+            std::cout << "Each tick, we add " << deltaX << "," << deltaY << " to that offset.\n\n";
+        }
+
+        if (!slide && initiative) {
+            entity(msg.entity_id)->assign(slidemove_t{deltaX, deltaY, deltaZ, initiative->initiative});
+        } else if (slide && initiative) {
+            slide->offsetX = deltaX;
+            slide->offsetY = deltaY;
+            slide->offsetZ = deltaZ;
+            slide->lifespan = initiative->initiative;
+        }
+
         // Move
         epos->x = msg.destination.x;
         epos->y = msg.destination.y;
         epos->z = msg.destination.z;
+        epos->offsetX = 0.0F - (float)dX;
+        epos->offsetY = 0.0F - (float)dY;
+        epos->offsetZ = 0.0F - (float)dZ;
 
         // Do vegetation damage
         const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);

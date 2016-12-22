@@ -5,9 +5,11 @@
 #include <vector>
 
 struct screen_render_t {
-    screen_render_t(const float &X, const float &Y, const rltk::vchar &C) : x(X), y(Y), c(C) {}
+    screen_render_t(const float &X, const float &Y, const float &ofX, const float &ofY, const rltk::vchar &C) : x(X), y(Y), offsetX(ofX), offsetY(ofY), c(C) {}
     float x;
     float y;
+	float offsetX;
+	float offsetY;
     rltk::vchar c;
 };
 

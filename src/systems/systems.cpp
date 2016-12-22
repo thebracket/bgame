@@ -64,7 +64,6 @@ void add_systems_to_ecs() {
     add_system<grazer_ai_system>();
     add_system<corpse_system>();
     add_system<particle_system>();
-    add_system<renderables_system>();
     add_system<camera_system>();
     add_system<lighting_system>();
     add_system<mining_system>();
@@ -83,6 +82,7 @@ void add_systems_to_ecs() {
     add_system<topology_system>();
     add_system<visibility_system>();
     add_system<vegetation_system>();
+    add_system<renderables_system>();
     add_system<map_render_system>();
     add_system<hud_system>();
     add_system<panel_render_system>();

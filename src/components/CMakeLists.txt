@@ -24,6 +24,7 @@ add_library(components STATIC
 	renderable_composite.cpp
 	sentient_ai.cpp
 	settler_ai.cpp
+    slidemove.cpp
 	species.cpp
 	viewshed.cpp
 	water_spawner.cpp
