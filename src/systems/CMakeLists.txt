@@ -44,6 +44,7 @@ add_library(systems STATIC
 	gui/wish_system.cpp
 	door_system.cpp
 	pause_system.cpp
+	stockpile_system.cpp
     damage/settler_ranged_attack.cpp
     damage/settler_melee_attacks.cpp
     damage/creature_attacks.cpp
@@ -72,6 +73,7 @@ add_library(systems STATIC
 	tasks/work_types/hunting_work.cpp
 	tasks/work_types/guard_duty.cpp
 	tasks/work_types/demolition_work.cpp
+	tasks/work_types/hauling_work.cpp
     systems.cpp
 )
 target_link_libraries(systems rltk utils components raws)

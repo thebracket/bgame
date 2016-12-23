@@ -9,6 +9,7 @@
 #include "work_types/hunting_work.hpp"
 #include "work_types/guard_duty.hpp"
 #include "work_types/demolition_work.hpp"
+#include "work_types/hauling_work.hpp"
 
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
@@ -43,6 +44,7 @@
 #include "settler_wander.hpp"
 #include "settler_move_to.hpp"
 #include "../../raws/reactions.hpp"
+#include "../stockpile_system.hpp"
 
 #include <iostream>
 #include <map>
@@ -218,6 +220,16 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 			}
 		}
 
+		// Look for stockpile/tidy tasks
+        if (ai.permitted_work[JOB_HAULING] && !stockpile_sys::storable_items.empty()) {
+            ai.job_type_major = JOB_TIDY;
+            ai.job_type_minor = JM_FIND_TIDY;
+            storable_item_t item = stockpile_sys::storable_items[0];
+            stockpile_sys::storable_items.erase(stockpile_sys::storable_items.begin(), stockpile_sys::storable_items.begin()+1);
+            ai.target_id = item.item_id;
+            std::tie(ai.target_x, ai.target_y, ai.target_z) = idxmap(item.dest_tile);
+        }
+
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
 		return;
@@ -257,6 +269,9 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 	} else if (ai.job_type_major == JOB_DEMOLISH) {
 		do_demolition(entity, ai, stats, species, pos, name);
 		return;
-	}
+	} else if (ai.job_type_major == JOB_TIDY) {
+        do_hauling(entity, ai, stats, species, pos, name);
+        return;
+    }
 	wander_randomly(entity, pos);
 }

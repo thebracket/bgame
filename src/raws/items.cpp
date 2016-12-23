@@ -3,6 +3,7 @@
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
+int clothing_stockpile = 0;
 
 void sanity_check_items() noexcept
 {
@@ -59,7 +60,7 @@ void read_stockpiles() noexcept
 
     read_lua_table("stockpiles",
                    [&tag, &name, &c] (const auto &key) { tag=key; c=stockpile_def_t{}; c.tag = key; },
-                   [&tag, &name, &c] (const auto &key) { stockpile_defs[c.index] = c; },
+                   [&tag, &name, &c] (const auto &key) { stockpile_defs[c.index] = c; if (c.tag == "clothing") clothing_stockpile = c.index; },
                    lua_parser{
                            { "name", [&c] ()         { c.name = lua_str(); }},
                            { "id", [&c] ()           { c.index = lua_int(); }}

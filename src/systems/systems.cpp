@@ -48,6 +48,7 @@
 #include "damage/kill_system.hpp"
 #include "damage/healing_system.hpp"
 #include "initiative_system.hpp"
+#include "stockpile_system.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -68,6 +69,7 @@ void add_systems_to_ecs() {
     add_system<lighting_system>();
     add_system<mining_system>();
     add_system<inventory_system>();
+    add_system<stockpile_system>();
     add_system<power_system>();
     add_system<workflow_system>();
     add_system<settler_ai_system>();
