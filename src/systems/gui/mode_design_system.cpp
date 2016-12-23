@@ -292,7 +292,24 @@ void mode_design_system::stockpiles() {
         if (e.id == current_stockpile) {
             term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), YELLOW, DARK_GREEN);
 
-            // TODO: Stockpile settings
+            int panel_x = tt_x - 21;
+            term(3)->box(panel_x, 4, 20, term(3)->term_height-5);
+            term(3)->fill(panel_x+1, 5, panel_x+19, term(3)->term_height-2, ' ');
+            term(3)->fill(tt_x+1, 5, panel_x+19, 6, ' ', WHITE, DARK_GREEN);
+            term(3)->print(panel_x+1, 6, "Stockpile Settings", WHITE, DARK_GREEN);
+
+            int Y = 9;
+            for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
+                if (sp.category.test(it->second.index)) {
+                    term(3)->print(panel_x + 1, Y, it->second.name, WHITE, DARK_GREEN);
+                } else {
+                    term(3)->print(panel_x + 1, Y, it->second.name, RED, DARK_GREEN);
+                }
+                if (mouse::clicked && mouse::term3x > panel_x && mouse::term3x < tt_x && mouse::term3y == Y) {
+                    sp.category.flip(it->second.index);
+                }
+                ++Y;
+            }
         } else {
             term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), WHITE, DARK_GREEN);
             if (mouse::clicked && mouse::term3x > tt_x+3 && mouse::term3y == y) current_stockpile = e.id;
