@@ -38,6 +38,7 @@ void sanity_check_raws() {
     sanity_check_species();
     sanity_check_creatures();
     sanity_check_natives();
+    sanity_check_stockpiles();
 }
 
 void load_game_tables() {
@@ -49,6 +50,7 @@ void load_game_tables() {
     read_clothing(tech_tree_file);
     read_life_events(tech_tree_file);
     read_professions(tech_tree_file);
+    read_stockpiles();
     read_items(tech_tree_file);
     read_buildings(tech_tree_file);
     read_reactions(tech_tree_file);

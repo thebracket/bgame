@@ -2,6 +2,7 @@
 #include "lua_bridge.hpp"
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
+boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
 
 void sanity_check_items() noexcept
 {
@@ -35,6 +36,7 @@ void read_items(std::ofstream &tech_tree_file) noexcept
                            { "range", [&c] ()          { c.range = lua_int(); }},
                            { "stack_size", [&c] ()     { c.stack_size = lua_int(); }},
                            { "initiative_penalty", [&c] ()    { c.initiative_penalty = lua_int(); }},
+                           { "stockpile", [&c] ()      { c.stockpile_idx = lua_int(); }},
                            { "itemtype", [&c] () {
                                read_lua_table_inner( "itemtype", [&c] (auto type) {
                                    if (type == "component") c.categories.set(COMPONENT);
@@ -47,4 +49,25 @@ void read_items(std::ofstream &tech_tree_file) noexcept
                            }}
                    }
     );
+}
+
+void read_stockpiles() noexcept
+{
+    std::string tag;
+    std::string name;
+    stockpile_def_t c;
+
+    read_lua_table("stockpiles",
+                   [&tag, &name, &c] (const auto &key) { tag=key; c=stockpile_def_t{}; c.tag = key; },
+                   [&tag, &name, &c] (const auto &key) { stockpile_defs[c.index] = c; },
+                   lua_parser{
+                           { "name", [&c] ()         { c.name = lua_str(); }},
+                           { "id", [&c] ()           { c.index = lua_int(); }}
+                   }
+    );
+}
+
+void sanity_check_stockpiles() noexcept
+{
+
 }

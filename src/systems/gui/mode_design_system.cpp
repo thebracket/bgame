@@ -287,51 +287,33 @@ void mode_design_system::stockpiles() {
     term(3)->print(tt_x+4, 7, "[Available Stockpiles]", WHITE, DARK_GREEN);
 
     // TODO: Render list of stockpiles
-    int y = 16;
+    int y = 17;
     each<stockpile_t>([this, &y, &tt_x] (entity_t &e, stockpile_t &sp) {
         if (e.id == current_stockpile) {
             term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), YELLOW, DARK_GREEN);
 
-            if (sp.category.test(COMPONENT)) {
-                term(3)->print(tt_x + 4, 9, "Store Components", YELLOW, DARK_GREEN);
-            } else {
-                term(3)->print(tt_x + 4, 9, "Store Components", RED, DARK_GREEN);
-            }
-            if (sp.category.test(TOOL_CHOPPING)) {
-                term(3)->print(tt_x + 4, 10, "Chopping Tools", YELLOW, DARK_GREEN);
-            } else {
-                term(3)->print(tt_x + 4, 10, "Chopping Tools", RED, DARK_GREEN);
-            }
-            if (sp.category.test(TOOL_DIGGING)) {
-                term(3)->print(tt_x + 4, 11, "Digging Tools", YELLOW, DARK_GREEN);
-            } else {
-                term(3)->print(tt_x + 4, 11, "Digging Tools", RED, DARK_GREEN);
-            }
-            if (sp.category.test(WEAPON_MELEE)) {
-                term(3)->print(tt_x + 4, 12, "Melee Weapons", YELLOW, DARK_GREEN);
-            } else {
-                term(3)->print(tt_x + 4, 12, "Melee Weapons", RED, DARK_GREEN);
-            }
-            if (sp.category.test(WEAPON_RANGED)) {
-                term(3)->print(tt_x + 4, 13, "Ranged Weapons", YELLOW, DARK_GREEN);
-            } else {
-                term(3)->print(tt_x + 4, 13, "Ranged Weapons", RED, DARK_GREEN);
-            }
-            if (sp.category.test(WEAPON_AMMO)) {
-                term(3)->print(tt_x + 4, 14, "Ammunition", YELLOW, DARK_GREEN);
-            } else {
-                term(3)->print(tt_x + 4, 14, "Ammunition", RED, DARK_GREEN);
-            }
+            // TODO: Stockpile settings
         } else {
             term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), WHITE, DARK_GREEN);
             if (mouse::clicked && mouse::term3x > tt_x+3 && mouse::term3y == y) current_stockpile = e.id;
         }
        ++y;
     });
+    term(3)->print(tt_x+4, y, "Remove Stockpile", WHITE, GREEN);
+    if (mouse::clicked && mouse::term3x>tt_x+3 && mouse::term3y == y) {
+        delete_entity(current_stockpile);
+        for (auto &id : current_region->stockpile_id) {
+            if (id == current_stockpile) {
+                id = 0;
+            }
+        }
+        current_stockpile = 0;
+    }
 
     // Capture mouse and add/remove stockpiles
     if (mouse::term3x > tt_x+3 && mouse::term3y == 6 && mouse::clicked) {
-        create_entity()->assign(stockpile_t{});
+        auto sp = create_entity()->assign(stockpile_t{});
+        current_stockpile = sp->id;
     }
 
     if (current_stockpile>0 && mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
@@ -341,9 +323,17 @@ void mode_design_system::stockpiles() {
         const auto idx = mapidx(world_x, world_y, camera_position->region_z);
         if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
             if (get_mouse_button_state(rltk::button::LEFT)) {
-                current_region->stockpile_id[idx] = current_stockpile;
+                if (current_region->stockpile_id[idx]==0) {
+                    current_region->stockpile_id[idx] = current_stockpile;
+                    current_region->calc_render(idx);
+                    emit(map_dirty_message{});
+                } else {
+                    current_stockpile = current_region->stockpile_id[idx];
+                }
             } else if (get_mouse_button_state(rltk::button::RIGHT)) {
                 current_region->stockpile_id[idx] = 0;
+                current_region->calc_render(idx);
+                emit(map_dirty_message{});
             }
         }
     }

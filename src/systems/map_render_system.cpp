@@ -155,7 +155,9 @@ vchar get_render_char_stockpiles(const int &x, const int &y) {
     vchar result = get_render_char(x,y);
     const int idx = render_tiles[((term(1)->term_width * y) + x)];
 
-    // TODO: Render current stockpile
+    if (current_stockpile > 0 && current_region->stockpile_id[idx]==current_stockpile) {
+        result.foreground = rltk::colors::MAGENTA;
+    }
 
     return result;
 }

@@ -189,6 +189,9 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			lines.push_back(building_name);
 		}
 	});
+	if (current_region->stockpile_id[mapidx(world_x, world_y, camera_position->region_z)]>0) {
+        lines.push_back(std::string("Stockpile #")+std::to_string(current_region->stockpile_id[mapidx(world_x, world_y, camera_position->region_z)]));
+    }
 
 	int longest = 0;
 	for (const std::string &s : lines) {

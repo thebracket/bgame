@@ -1,6 +1,7 @@
 glyphs.lua
 materials.lua
 vegetation.lua
+stockpiles.lua
 clothing.lua
 species.lua
 creatures.lua

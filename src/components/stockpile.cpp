@@ -8,5 +8,5 @@ void stockpile_t::to_xml(xml_node *c) {
 
 void stockpile_t::from_xml(xml_node *c) {
     std::string cats = c->val<std::string>("category");
-    category = std::bitset<NUMBER_OF_ITEM_CATEGORIES>(cats);
+    category = std::bitset<128>(cats);
 }
