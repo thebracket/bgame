@@ -16,6 +16,9 @@ namespace stockpile_sys {
 using namespace stockpile_sys;
 
 void stockpile_system::on_message(const tick_message &msg) {
+    stockpiles.clear();
+    stockpile_targets.clear();
+    storable_items.clear();
 
     bool has_stockpiles = false;
     // Build a list of stockpiles and their targets
