@@ -30,7 +30,6 @@ std::string species_t::gender_str() {
     switch (gender) {
         case MALE : return "Male";
         case FEMALE : return "Female";
-        case HERMAPHRODITE : return "Hermaphrodite";
         default : return "Male";
     }
 }
@@ -39,7 +38,6 @@ std::string species_t::gender_pronoun() {
     switch (gender) {
         case MALE : return "He";
         case FEMALE : return "She";
-        case HERMAPHRODITE : return "Hir";
     }
 }
 
@@ -48,7 +46,6 @@ std::string species_t::sexuality_str() {
         case HETEROSEXUAL : return "Heterosexual";
         case HOMOSEXUAL : return "Homosexual";
         case BISEXUAL : return "Bi-sexual";
-        case ASEXUAL : return "A-sexual";
     }
 }
 

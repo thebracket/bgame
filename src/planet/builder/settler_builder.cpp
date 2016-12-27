@@ -63,27 +63,22 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	species.tag = "human";
 
 	// Gender
-	int gender_roll = rng.roll_dice(1, 21);
-	if (gender_roll < 10) {
+	int gender_roll = rng.roll_dice(1, 20);
+	if (gender_roll < 11) {
 		species.gender = MALE;
-	} else if (gender_roll < 20) {
-		species.gender = FEMALE;
 	} else {
-		species.gender = HERMAPHRODITE;
+		species.gender = FEMALE;
 	}
-
 	// Sexuality
-	int sex_roll = rng.roll_dice(1,11);
+	int sex_roll = rng.roll_dice(1,10);
 	if (sex_roll < 9) {
 		species.sexuality = HETEROSEXUAL;
-	} else if (sex_roll < 10) {
+	} else  {
 		species.sexuality = HOMOSEXUAL;
-	} else {
-		species.sexuality = ASEXUAL;
 	}
 
 	// Height/Weight
-	if (species.gender == MALE || species.gender == HERMAPHRODITE)
+	if (species.gender == MALE)
 	{
 		species.height_cm = 147.0F + (rng.roll_dice(2, 10) * 2.5F);
 		species.weight_kg = 54.0F + (rng.roll_dice(2, 8) * 0.45);

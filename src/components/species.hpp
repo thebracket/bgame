@@ -6,8 +6,8 @@
 
 using namespace rltk;
 
-enum gender_t { MALE, FEMALE, HERMAPHRODITE };
-enum sexuality_t { HETEROSEXUAL, HOMOSEXUAL, BISEXUAL, ASEXUAL };
+enum gender_t { MALE, FEMALE };
+enum sexuality_t { HETEROSEXUAL, HOMOSEXUAL, BISEXUAL };
 enum hair_color_t { WHITE_HAIR, BROWN_HAIR, BLACK_HAIR, BLONDE_HAIR, RED_HAIR };
 enum hair_style_t { BALD, SHORT, LONG, PIGTAILS, MOHAWK, BALDING, TRIANGLE };
 enum skin_color_t { CAUCASIAN, ASIAN, INDIAN, AFRICAN };
