@@ -1,6 +1,11 @@
 #include "keyboard_system.hpp"
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
+#include <sstream>
+#include "boost/date_time/posix_time/posix_time.hpp"
+
+using namespace boost::posix_time;
+using namespace boost::gregorian;
 
 bool collect_text = false;
 std::string input_text;
@@ -76,6 +81,15 @@ void keyboard_system::update(const double ms) {
         // Global commands
         if (e.event.key.code == sf::Keyboard::Q) quitting = true;
         if (e.event.key.code == sf::Keyboard::F1) std::cout << ecs_profile_dump() << "\n";
+        if (e.event.key.code == sf::Keyboard::F10) {
+            // Take a screenshot
+            ptime now = second_clock::local_time();
+            date today = now.date();
+            std::stringstream ss;
+            ss << "screenshot_" << today.year() << "_" << today.month() << "_" << today.day() << "-" << now.time_of_day().hours() << "-" << now.time_of_day().minutes() << "-" << now.time_of_day().seconds() << ".png";
+            std::cout << "Taking screenshot: " << ss.str() << "\n";
+            rltk::request_screenshot(ss.str());
+        }
 
         // Pause control
         if (e.event.key.code == sf::Keyboard::Space) emit_deferred(pause_requested_message{});
