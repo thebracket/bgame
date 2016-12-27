@@ -24,9 +24,8 @@ std::string calendar_t::get_date_time() const {
 }
 
 void calendar_t::next_minute() {
-    second += 30;
-    if (second > 60) { second = 0; ++minute; }
-    if (minute > 60) { minute = 0; ++hour; }
+    minute+=2;
+    if (minute > 59) { minute = 0; ++hour; }
     if (hour > 23) { hour = 0; ++day; }
     if (day > 30) { day = 0; ++month; }
     if (month > 11) { month = 0; ++year; }
