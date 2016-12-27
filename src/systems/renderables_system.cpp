@@ -108,15 +108,19 @@ void renderables_system::update(const double time_elapsed) {
 
 			for (int y = 0; y<b.height; ++y) {
 				for (int x=0; x<b.width; ++x) {
-					const auto idx = mapidx(pos.x, pos.y, pos.z);
+					const auto idx = mapidx(pos.x + offset_x, pos.y + offset_y, pos.z);
 					rltk::vchar glyph;
 					glyph = b.glyphs[glyph_idx];
 					if (!b.complete) glyph.foreground = rltk::colors::GREY;
 					auto door = entity.component<construct_door_t>();
 					if (door && door->locked) glyph.background = rltk::colors::GREY;
-					renderables[idx].push_back(screen_render_t{pos.x, pos.y, pos.offsetX, pos.offsetY, glyph});
+					renderables[idx].push_back(screen_render_t{pos.x + offset_x, pos.y + offset_y, pos.offsetX, pos.offsetY, glyph});
 					++glyph_idx;
+                    ++offset_x;
 				}
+                offset_x = 0;
+                if (b.width == 3) offset_x = -1;
+                ++offset_y;
 			}
 		});
 
