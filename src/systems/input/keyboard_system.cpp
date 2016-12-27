@@ -170,7 +170,7 @@ void keyboard_system::update(const double ms) {
                 game_design_mode = GUARDPOINTS;
                 emit_deferred(map_dirty_message{});
             }
-            if (e.event.key.code == sf::Keyboard::G) {
+            if (e.event.key.code == sf::Keyboard::S) {
                 game_design_mode = STOCKPILES;
                 emit_deferred(map_dirty_message{});
             }
