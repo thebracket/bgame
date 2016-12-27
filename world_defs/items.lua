@@ -6,7 +6,7 @@ items = {
 		glyph = glyphs['tent_kit'],
 		foreground = colors['green'],
 		background = colors['black'],
-		stockpile = stockpiles['kit']
+		stockpile = stockpiles['kit'].id
 	},
 	camp_fire_kit = {
 		name = "Camping Fire Kit",
@@ -15,7 +15,7 @@ items = {
 		glyph = glyphs['campfire_kit'],
 		foreground = colors['red'],
 		background = colors['black'],
-		stockpile = stockpiles['kit']
+		stockpile = stockpiles['kit'].id
 	},
 	fire_axe = {
 		name = "Fire Axe",
@@ -24,7 +24,7 @@ items = {
 		glyph = glyphs['axe_chopping'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['tool']
+		stockpile = stockpiles['tool'].id
 	},
 	pickaxe = {
 		name = "Pickaxe",
@@ -33,7 +33,7 @@ items = {
 		glyph = glyphs['axe_pickaxe'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['tool']
+		stockpile = stockpiles['tool'].id
 	},
 	wood_log = {
 		name = "Wood Log",
@@ -42,68 +42,67 @@ items = {
 		glyph = glyphs['wood_log'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['wood']
+		stockpile = stockpiles['wood'].id
 	},
 	stone_boulder = {
 		name = "Stone Boulder",	description = "A large stone boulder",
 		itemtype = {"component"}, glyph = glyphs['boulder'], foreground = colors['white'], background = colors['black'],
-		stockpile = stockpiles['stone']
+		stockpile = stockpiles['stone'].id
 	},
 	ore = {
 		name = "Metal Ore", description = "A lump of unrefined metal",
 		itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['white'], background = colors['black'],
-		stockpile = stockpiles['ore']
+		stockpile = stockpiles['ore'].id
 	},
 	saltpeter_ore = {
 		name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",
 		itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black'],
-		stockpile = stockpiles['ore']
+		stockpile = stockpiles['ore'].id
 	},
 	alabaster_powder = {
 		name = "Alabaster Powder", description = "A lump of unrefined alabaster powder",
 		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['white'], background = colors['black'],
-		stockpile = stockpiles['powder']
+		stockpile = stockpiles['powder'].id
 	},
 	gypsum_powder = {
 		name = "Gypsum Powder", description = "A lump of unrefined gypsum powder",
 		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['white'], background = colors['black'],
-		stockpile = stockpiles['powder']
+		stockpile = stockpiles['powder'].id
 	},
 	coal = {
 		name = "Coal", description = "A lump of unrefined coal",
 		itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['dark_grey'], background = colors['black'],
-		stockpile = stockpiles['stone']
+		stockpile = stockpiles['stone'].id
 	},
 	sulphur = {
 		name = "Sulphur", description = "A lump of sulphur",
 		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['yellow'], background = colors['black'],
-		stockpile = stockpiles['stone']
+		stockpile = stockpiles['stone'].id
 	},
 	flint = {
 		name = "Flint", description = "A piece of flint",
 		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['brown'], background = colors['black'],
-		stockpile = stockpiles['stone']
+		stockpile = stockpiles['stone'].id
 	},
 	sand = {
 		name = "Sand", description = "A lump of raw sand",
 		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['yellow'], background = colors['black'],
-		stockpile = stockpiles['sand'],
-		stockpile = stockpiles['sand']
+		stockpile = stockpiles['sand'].id
 	},
 	oil = {
 		name = "Oil", description = "A blob of viscous oil",
 		itemtype = {"component"}, glyph = glyphs['oil'], foreground = colors['white'], background = colors['black'],
-		stockpile = stockpiles['oil']
+		stockpile = stockpiles['oil'].id
 	},
 	clay = {
 		name = "Clay", description = "A blob of clay",
 		itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['dark_red'], background = colors['black'],
-		stockpile = stockpiles['stone']
+		stockpile = stockpiles['stone'].id
 	},
 	topsoil = {
 		name = "Topsoil", description = "A lump of rich topsoil",
 		itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['brown'], background = colors['black'],
-		stockpile = stockpiles['soil']
+		stockpile = stockpiles['soil'].id
 	},
 	charcoal = {
 		name = "Charcoal",
@@ -112,7 +111,7 @@ items = {
 		glyph = glyphs['inset_square'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['fuel']
+		stockpile = stockpiles['fuel'].id
 	},
 	ash = {
 		name = "Ash",
@@ -121,7 +120,7 @@ items = {
 		glyph = glyphs['one_quarter_solid'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		stockpile = stockpiles['powder']
+		stockpile = stockpiles['powder'].id
 	},
 	raw_glass = {
 		name = "Raw Glass",
@@ -130,7 +129,7 @@ items = {
 		glyph = glyphs['inset_square'],
 		foreground = colors['green'],
 		background = colors['black'],
-		stockpile = stockpiles['glass']
+		stockpile = stockpiles['glass'].id
 	},
 	raw_silicon = {
 		name = "Raw Silicon",
@@ -139,7 +138,7 @@ items = {
 		glyph = glyphs['inset_square'],
 		foreground = colors['green'],
 		background = colors['black'],
-		stockpile = stockpiles['silicon']
+		stockpile = stockpiles['silicon'].id
 	},
 	wood_waste = {
 		name = "Offcuts",
@@ -148,7 +147,7 @@ items = {
 		glyph = glyphs['three_bar'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['waste']
+		stockpile = stockpiles['waste'].id
 	},
 	block = {
 		name = "Block",
@@ -157,7 +156,7 @@ items = {
 		glyph = glyphs['block'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		stockpile = stockpiles['block']
+		stockpile = stockpiles['block'].id
 	},
 	table = {
 		name = "Table",
@@ -166,7 +165,7 @@ items = {
 		glyph = glyphs['table'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['furniture']
+		stockpile = stockpiles['furniture'].id
 	},
 	chair = {
 		name = "Chair",
@@ -175,7 +174,7 @@ items = {
 		glyph = glyphs['chair'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['furniture']
+		stockpile = stockpiles['furniture'].id
 	},
 	door = {
 		name = "Door",
@@ -184,7 +183,7 @@ items = {
 		glyph = glyphs['door'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['furniture']
+		stockpile = stockpiles['furniture'].id
 	},
 	tiny_marshmallow = {
 		name = "Tiny Marshmallow",
@@ -193,7 +192,7 @@ items = {
 		glyph = glyphs['squared'],
 		foreground = colors['magenta'],
 		background = colors['black'],
-		stockpile = stockpiles['food']
+		stockpile = stockpiles['food'].id
 	},
 	tea_replicated = {
 		name = "Tea, Earl-Grey Lukewarm",
@@ -202,7 +201,7 @@ items = {
 		glyph = glyphs['squared'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['food']
+		stockpile = stockpiles['food'].id
 	},
 	sandwich_replicated = {
 		name = "Stale-tasting sandwich",
@@ -211,7 +210,7 @@ items = {
 		glyph = glyphs['squared'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['food']
+		stockpile = stockpiles['food'].id
 	},
 	club = {
 		name = "Club",
@@ -220,7 +219,8 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['white'],
 		background = colors['black'],
-		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str"
+		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
+		stockpile = stockpiles['weapon'].id
 	},
 	pointy_stick = {
 		name = "Pointy Stick",
@@ -230,7 +230,7 @@ items = {
 		foreground = colors['white'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	warhammer = {
 		name = "Warhammer",
@@ -240,7 +240,7 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	battleaxe = {
 		name = "Battle Axe",
@@ -250,7 +250,7 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	handaxe = {
 		name = "Hand Axe",
@@ -260,7 +260,7 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	shortsword = {
 		name = "Short Sword",
@@ -270,7 +270,7 @@ items = {
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
 		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	longsword = {
 		name = "Long Sword",
@@ -280,7 +280,7 @@ items = {
 		foreground = colors['bismuth_yellow'],
 		background = colors['black'],
 		damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	knife = {
 		name = "Knife",
@@ -290,7 +290,7 @@ items = {
 		foreground = colors['grey'],
 		background = colors['black'],
 		damage_n=1, damage_d=3, damage_mod=0, damage_stat="str", initiative_penalty = 2,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	dagger = {
 		name = "Dagger",
@@ -320,7 +320,7 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_mod=0, damage_stat="dex", range=4, ammo="smallcell", initiative_penalty = 4,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	shortbow = {
 		name = "Shortbow",
@@ -330,7 +330,7 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_mod=0, damage_stat="dex", range=4, ammo="arrow", initiative_penalty = 4,
-		stockpile = stockpiles['weapon']
+		stockpile = stockpiles['weapon'].id
 	},
 	dart = {
 		name = "Dart",
@@ -340,7 +340,7 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="dart",
-		stockpile = stockpiles['ammo']
+		stockpile = stockpiles['ammo'].id
 	},
 	small_energy_cell = {
 		name = "Energy Cell",
@@ -350,7 +350,7 @@ items = {
 		foreground = colors['red'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="smallcell",
-		stockpile = stockpiles['ammo']
+		stockpile = stockpiles['ammo'].id
 	},
 	arrow = {
 		name = "Arrow",
@@ -360,7 +360,7 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="arrow",
-		stockpile = stockpiles['ammo']
+		stockpile = stockpiles['ammo'].id
 	},
 	axe_blade = {
 		name = "Axe Blade",
@@ -369,7 +369,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['component']
+		stockpile = stockpiles['component'].id
 	},
 	forge_parts = {
 		name = "Forge Parts",
@@ -378,7 +378,7 @@ items = {
 		glyph = glyphs['axe'],
 		foreground = colors['grey'],
 		background = colors['black'],
-		stockpile = stockpiles['component']
+		stockpile = stockpiles['component'].id
 	},
 
 	bone = {
@@ -388,7 +388,7 @@ items = {
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['bone']
+		stockpile = stockpiles['bone'].id
 	},
 	hide = {
 		name = "Hide",
@@ -397,7 +397,7 @@ items = {
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['leather']
+		stockpile = stockpiles['leather'].id
 	},
 	meat = {
 		name = "Meat",
@@ -406,7 +406,7 @@ items = {
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['red'],
 		background = colors['black'],
-		stockpile = stockpiles['food']
+		stockpile = stockpiles['food'].id
 	},
 	skull = {
 		name = "Skull",
@@ -415,7 +415,7 @@ items = {
 		glyph = glyphs['happy_face'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['bone']
+		stockpile = stockpiles['bone'].id
 	},
 	leather = {
 		name = "Leather",
@@ -424,6 +424,6 @@ items = {
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['wood_brown'],
 		background = colors['black'],
-		stockpile = stockpiles['leather']
+		stockpile = stockpiles['leather'].id
 	}
 }

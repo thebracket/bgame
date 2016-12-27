@@ -21,7 +21,7 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
             return;
         }
         ai.job_type_minor = JM_GO_TO_TIDY;
-        change_job_status(ai, name, "Find item to haul");
+        change_job_status(ai, name, "Find item to haul", true);
         return;
     }
 
@@ -31,7 +31,7 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
                         [&ai, &name] () {
                             ai.current_path.reset();
                             ai.job_type_minor = JM_COLLECT_TIDY;
-                            change_job_status(ai, name, "Collect item to haul");
+                            change_job_status(ai, name, "Collect item to haul", true);
                         }, // On arrival
                         [&E, &ai, &stats, &species, &pos, &name] () {
                             unclaim_by_id(ai.current_tool);
@@ -45,7 +45,7 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
         emit(pickup_item_message{ai.target_id, E.id});
 
         ai.job_type_minor = JM_FIND_STOCKPILE;
-        change_job_status(ai, name, "Pathing to stockpile");
+        change_job_status(ai, name, "Pathing to stockpile", true);
         return;
     }
 
@@ -56,7 +56,7 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
             return;
         }
         ai.job_type_minor = JM_GO_TO_STOCKPILE;
-        change_job_status(ai, name, "Find appropriate stockpile");
+        change_job_status(ai, name, "Find appropriate stockpile", true);
         return;
     }
 
@@ -66,7 +66,7 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
                         [&ai, &name] () {
                             ai.current_path.reset();
                             ai.job_type_minor = JM_STORE_ITEM;
-                            change_job_status(ai, name, "Hauling");
+                            change_job_status(ai, name, "Hauling", true);
                         }, // On arrival
                         [&E, &ai, &stats, &species, &pos, &name] () {
                             unclaim_by_id(ai.current_tool);
@@ -77,7 +77,8 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
     }
 
     if (ai.job_type_minor == JM_STORE_ITEM) {
-        emit(drop_item_message{ai.target_id, ai.target_x, ai.target_y, ai.target_y});
+        change_job_status(ai, name, "Dropping item", true);
+        emit(drop_item_message{ai.target_id, ai.target_x, ai.target_y, ai.target_z});
         become_idle(E, ai, name);
         return;
     }
