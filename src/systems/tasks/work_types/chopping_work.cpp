@@ -169,6 +169,7 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
                             }
 
 							current_region->solid[idx]=false;
+							current_region->opaque[idx]=false;
 							current_region->tile_flags[idx].reset(CAN_STAND_HERE);
 							current_region->tree_id[idx] = 0;
 							current_region->tile_type[idx] = tile_type::OPEN_SPACE;
