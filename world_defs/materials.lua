@@ -334,6 +334,14 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 10
     },
+    food = { name = "Food:", type="food", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
+        hit_points = 10
+    },
+    spice = { name = "Spice:", type="spice", 
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
+        hit_points = 10
+    },
     bone = { name = "Organic", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 10, damage_bonus=1

@@ -6,13 +6,15 @@
 #include <boost/container/flat_map.hpp>
 #include <fstream>
 
-constexpr int NUMBER_OF_ITEM_CATEGORIES = 6;
+constexpr int NUMBER_OF_ITEM_CATEGORIES = 8;
 constexpr int COMPONENT = 0;
 constexpr int TOOL_CHOPPING = 1;
 constexpr int TOOL_DIGGING = 2;
 constexpr int WEAPON_MELEE = 3;
 constexpr int WEAPON_RANGED = 4;
 constexpr int WEAPON_AMMO = 5;
+constexpr int ITEM_FOOD = 6;
+constexpr int ITEM_SPICE = 7;
 
 struct stockpile_def_t {
     int index = 0;

@@ -142,15 +142,25 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		if (skill_check >= SUCCESS) {
 			// Delete components
 			std::size_t material = get_material_by_tag("plasteel").get();
+            std::string mat_names = "";
 			for (auto comp : ai.reaction_target.get().components) {
 				material = entity(comp.first)->component<item_t>()->material;
+                mat_names += entity(comp.first)->component<item_t>()->item_name + " ";
 				delete_item(comp.first);
 			}
 
 			// Spawn results
 			for (auto &output : finder->second.outputs) {
 				for (int i=0; i<output.second; ++i) {
-					spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
+					if (!finder->second.specials.test(special_reaction_cooking)) {
+                        spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
+                    } else {
+                        // This is more complicated, we have to make a special item from the components.
+                        // The idea is to get something like Roast Asparagus
+                        auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material);
+                        auto i = new_item->component<item_t>();
+                        i->item_name = mat_names + i->item_name;
+                    }
 				}
 			}
 

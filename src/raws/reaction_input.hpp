@@ -5,7 +5,7 @@
 #include <boost/optional.hpp>
 #include <rltk.hpp>
 
-enum material_def_spawn_type_t { cluster_rock, rock, soil, sand, metal, synthetic, organic, leather };
+enum material_def_spawn_type_t { cluster_rock, rock, soil, sand, metal, synthetic, organic, leather, food, spice };
 
 struct reaction_input_t {
 	std::string tag = "";

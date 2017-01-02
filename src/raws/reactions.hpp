@@ -4,7 +4,10 @@
 #include <vector>
 #include <utility>
 #include <boost/container/flat_map.hpp>
+#include <bitset>
 #include "reaction_input.hpp"
+
+constexpr int special_reaction_cooking = 0;
 
 struct reaction_t {
     std::string tag = "";
@@ -17,6 +20,7 @@ struct reaction_t {
     bool automatic = false;
     int power_drain = 0;
     bool emits_smoke = false;
+    std::bitset<1> specials;
 };
 
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;

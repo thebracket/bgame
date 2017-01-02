@@ -101,6 +101,19 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
+entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
+    auto finder = item_defs.find(tag);
+    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+
+    auto mat = get_material(material);
+
+    auto entity = create_entity()
+            ->assign(position_t{ x,y,z })
+            ->assign(renderable_t{ finder->second.glyph, mat.get().fg, mat.get().bg })
+            ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+    return entity;
+}
+
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material) {
     auto finder = item_defs.find(tag);
     if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);

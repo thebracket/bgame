@@ -91,7 +91,13 @@ void do_harvesting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
         const plant_t plant = get_plant_def(current_region->tile_vegetation_type[idx]);
         const std::string result = plant.provides[current_region->tile_vegetation_lifecycle[idx]];
         if (result != "none") {
-            spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, result, get_material_by_tag("organic").get());
+            std::string mat_type = "organic";
+            auto item_finder = item_defs.find(result);
+            if (item_finder != item_defs.end()) {
+                if (item_finder->second.categories.test(ITEM_FOOD)) mat_type="food";
+                if (item_finder->second.categories.test(ITEM_SPICE)) mat_type="spice";
+            }
+            spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, result, get_material_by_tag(mat_type).get());
         }
 
         // Knock tile back to germination

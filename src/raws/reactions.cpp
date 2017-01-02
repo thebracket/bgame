@@ -71,6 +71,10 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
                                 input.required_material_type = organic;
                             } else if (type_s == "leather") {
                                 input.required_material_type = leather;
+                            } else if (type_s == "food") {
+                                input.required_material_type = food;
+                            } else if (type_s == "spice") {
+                                input.required_material_type = spice;
                             } else {
                                 std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                             }
@@ -93,6 +97,10 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
                         std::string f = lua_tostring(lua_state, -2);
                         if (f == "item") comp.first = lua_tostring(lua_state, -1);
                         if (f == "qty") comp.second = lua_tonumber(lua_state, -1);
+                        if (f == "special") {
+                            const std::string special = lua_tostring(lua_state, -1);
+                            if (special == "cooking") c.specials.set(special_reaction_cooking);
+                        }
                         lua_pop(lua_state, 1);
                     }
                     c.outputs.push_back(comp);

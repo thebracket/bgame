@@ -46,6 +46,8 @@ void read_items(std::ofstream &tech_tree_file) noexcept
                                    if (type == "weapon-melee") c.categories.set(WEAPON_MELEE);
                                    if (type == "weapon-ranged") c.categories.set(WEAPON_RANGED);
                                    if (type == "ammo") c.categories.set(WEAPON_AMMO);
+                                   if (type == "food") c.categories.set(ITEM_FOOD);
+                                   if (type == "spice") c.categories.set(ITEM_SPICE);
                                });
                            }}
                    }

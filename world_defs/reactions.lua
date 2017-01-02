@@ -450,5 +450,34 @@ reactions = {
         difficulty = 16,
         automatic = false
     },
+
+    -- Cooking
+    roast_food_on_fire = {
+        name = "Roast simple meal",
+        workshop = "camp_fire",
+        inputs = { { item="any", qty=1, mat_type="food" }  },
+        outputs = { { item="roast_simple", qty=1, special="cooking" } },
+        skill = "Cooking",
+        difficulty = 5,
+        automatic = false
+    },
+    roast_combined_food_on_fire = {
+        name = "Roast normal meal",
+        workshop = "camp_fire",
+        inputs = { { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }  },
+        outputs = { { item="roast_simple", qty=1, special="cooking" } },
+        skill = "Cooking",
+        difficulty = 10,
+        automatic = false
+    },
+    roast_lavish_meal_on_fire = {
+        name = "Roast lavish meal",
+        workshop = "camp_fire",
+        inputs = { { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="spice" }  },
+        outputs = { { item="roast_simple", qty=1, special="cooking" } },
+        skill = "Cooking",
+        difficulty = 15,
+        automatic = false
+    },
 }
 

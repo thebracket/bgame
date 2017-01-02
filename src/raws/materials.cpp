@@ -131,6 +131,10 @@ void read_material_types(std::ofstream &tech_tree_file) noexcept
                     m.spawn_type = organic;
                 } else if (type_s == "leather") {
                     m.spawn_type = leather;
+                } else if (type_s == "food") {
+                    m.spawn_type = food;
+                } else if (type_s == "spice") {
+                    m.spawn_type == spice;
                 } else {
                     std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                 }

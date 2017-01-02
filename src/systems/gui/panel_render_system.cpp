@@ -61,16 +61,17 @@ void panel_render_system::render_work_mode() {
 	y = 3;
 	auto available_reactions = get_available_reactions();
 	for (const auto &reaction : available_reactions) {
+		//std::cout << reaction.second << "\n";
 		std::stringstream ss;
 		ss << "[+] " << reaction.second;
-		term(3)->print(40, y, ss.str());
+		term(3)->print(25, y, ss.str());
 		++y;
 	}
 
 	// Check for clicks to build
 	if (mouse::clicked) {
 
-		if (mouse::term3x > 40 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 45) {
+		if (mouse::term3x > 25 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 30) {
 			const int selected_item = mouse::term3y - 3;
 			const std::string tag = available_reactions[selected_item].first;
 

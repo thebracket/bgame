@@ -764,4 +764,13 @@ items = {
 		foreground=colors['green'], background=colors['black'], 
 		stockpile=stockpiles['food'] 
 	},
+
+	-- Cooked Food
+	roast_simple = { 
+		name="Roasted", 
+		description = "Roasted food", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['brown'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
 }
