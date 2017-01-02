@@ -64,14 +64,14 @@ void panel_render_system::render_work_mode() {
 		//std::cout << reaction.second << "\n";
 		std::stringstream ss;
 		ss << "[+] " << reaction.second;
-		term(3)->print(25, y, ss.str());
+		term(3)->print(20, y, ss.str());
 		++y;
 	}
 
 	// Check for clicks to build
 	if (mouse::clicked) {
 
-		if (mouse::term3x > 25 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 30) {
+		if (mouse::term3x > 20 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 30) {
 			const int selected_item = mouse::term3y - 3;
 			const std::string tag = available_reactions[selected_item].first;
 
