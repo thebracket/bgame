@@ -35,6 +35,8 @@ inline void zero_map(region_t &region) {
     std::fill(region.building_id.begin(), region.building_id.end(), 0);
     std::fill(region.tree_id.begin(), region.tree_id.end(), 0);
     std::fill(region.tile_vegetation_type.begin(), region.tile_vegetation_type.end(), 0);
+    std::fill(region.tile_vegetation_ticker.begin(), region.tile_vegetation_ticker.end(), 0);
+    std::fill(region.tile_vegetation_lifecycle.begin(), region.tile_vegetation_lifecycle.end(), 0);
     std::fill(region.water_level.begin(), region.water_level.end(), 0);
     std::fill(region.blood_stains.begin(), region.blood_stains.end(), false);
     std::fill(region.stockpile_id.begin(), region.stockpile_id.end(), 0);

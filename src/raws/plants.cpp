@@ -11,6 +11,8 @@ boost::optional<std::size_t> get_plant_idx(const std::string &tag) noexcept
     auto finder = plant_defs_idx.find(tag);
     if (finder != plant_defs_idx.end()) {
         result = finder->second;
+    } else {
+        std::cout << "WARNING: Cannot find plant - " << tag << "\n";
     }
     return result;
 }
@@ -33,6 +35,34 @@ void sanity_check_plants() noexcept
 
 void read_plant_types(std::ofstream &tech_tree_file) noexcept
 {
+    plant_t p;
+    std::string tag;
+
+    read_lua_table("vegetation",
+                   [&p, &tag] (const auto &key) { tag=key; p=plant_t{}; p.tag = tag; },
+                   [&p, &tag] (const auto &key) { plant_defs.push_back(p); },
+                   lua_parser{
+                           {"name",    [&p]() { p.name = lua_str(); }},
+                           {"cycles",  [&p]() {
+                               read_lua_table_inner("cycles",
+                                                    [&p](auto cycle) { p.lifecycle.push_back(std::stoi(cycle)); });
+                           }},
+                           {"glyphs",  [&p]() {
+                               read_lua_table_inner("glyphs", [&p](auto g) { p.glyphs.push_back(std::stoi(g)); });
+                           }},
+                           {"harvest", [&p]() {
+                               read_lua_table_inner("harvest", [&p](auto h) { p.provides.push_back(h); });
+                           }},
+                           {"tags",    [&p]() {
+                               read_lua_table_inner("tags", [&p](auto t) {
+                                   if (t == "spread") p.tags.set(PLANT_SPREADS);
+                                   if (t == "annual") p.tags.set(PLANT_ANNUAL);
+                               });
+                           }}
+                   }
+    );
+
+    /*
     lua_getglobal(lua_state, "vegetation");
     lua_pushnil(lua_state);
 
@@ -60,7 +90,7 @@ void read_plant_types(std::ofstream &tech_tree_file) noexcept
             tech_tree_file << key << " -> farming -> item_" << p.provides << "\n";
         }
         lua_pop(lua_state, 1);
-    }
+    }*/
 
     std::sort(plant_defs.begin(), plant_defs.end(), [] (plant_t a, plant_t b) { return a.tag < b.tag; });
     for (std::size_t i=0; i<plant_defs.size(); ++i) {

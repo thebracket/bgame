@@ -9,7 +9,6 @@ struct navigator_t {
 	inline static void test_direction(const position_t &pos, const position_t &dest, std::vector<position_t> &successors) {
 		bool can_go = false;
 		const int idx = mapidx(pos);
-		const int destidx = mapidx(dest);
 		if (dest.x > pos.x && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
 			can_go = true;
 		} else if (dest.x < pos.x && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
@@ -25,6 +24,7 @@ struct navigator_t {
 		}
 
 		if (can_go) {
+			const int destidx = mapidx(dest);
 			// Check for water level
 			if (current_region->water_level[destidx] > 3) {
 				if (current_region->water_level[idx] < 4) can_go = false;

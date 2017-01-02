@@ -5,6 +5,10 @@
 #include <fstream>
 #include <vector>
 #include <boost/optional.hpp>
+#include <bitset>
+
+constexpr int PLANT_SPREADS = 0;
+constexpr int PLANT_ANNUAL = 1;
 
 /*
  * Defines a plant template.
@@ -12,10 +16,10 @@
 struct plant_t {
     std::string tag = "";
     std::string name = "";
-    uint16_t glyph;
-    rltk::color_t fg;
-    rltk::color_t bg;
-    std::string provides = "";
+    std::vector<int> lifecycle;
+    std::vector<uint16_t> glyphs;
+    std::vector<std::string> provides;
+    std::bitset<2> tags;
 };
 
 /*

@@ -4,14 +4,17 @@
 #include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"
 
+std::vector<std::size_t> soils;
+std::vector<std::size_t> sands;
+
 strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
     strata_t result;
     result.strata_map.resize(REGION_TILES_COUNT);
 
-    std::vector<std::size_t> soils;
     std::vector<std::size_t> sedimintaries;
     std::vector<std::size_t> igneouses;
-    std::vector<std::size_t> sands;
+    soils.clear();
+    sands.clear();
 
     get_strata_materials(soils, sedimintaries, igneouses, sands);
 
@@ -171,7 +174,19 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                 } else {
 
                     region.water_level[mapidx(x,y,z-1)] = 0;
-                    
+
+                    // Soil/sand
+                    int roll = rng.roll_dice(1,100);
+                    if (roll < biome.second.soil_pct) {
+                        const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
+                        //std::cout << material_name(soils[soil_idx]) << "\n";
+                        region.tile_material[mapidx(x,y,z-1)] = soils[soil_idx];
+                    } else {
+                        const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+                        //std::cout << material_name(sands[sand_idx]) << "\n";
+                        region.tile_material[mapidx(x,y,z-1)] = sands[sand_idx];
+                    }
+
                     // Surface coverage
                     std::string veg_type = "";
                     int die_roll = rng.roll_dice(1, max_veg_probability);
@@ -188,6 +203,8 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                         auto finder = get_plant_idx(veg_type).get();
                         region.tile_vegetation_type[mapidx(x,y,z-1)] = finder;
                         region.tile_hit_points[mapidx(x,y,z-1)] = 10;
+                        region.tile_vegetation_ticker[mapidx(x,y,z-1)] = 1;
+                        region.tile_vegetation_lifecycle[mapidx(x,y,z-1)] = rng.roll_dice(1,4);
                     }
                 }
             }

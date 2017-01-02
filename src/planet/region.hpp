@@ -21,6 +21,8 @@ struct region_t {
 		building_id.resize(REGION_TILES_COUNT);
 		tree_id.resize(REGION_TILES_COUNT);
 		tile_vegetation_type.resize(REGION_TILES_COUNT);
+        tile_vegetation_ticker.resize(REGION_TILES_COUNT);
+        tile_vegetation_lifecycle.resize(REGION_TILES_COUNT);
 		tile_flags.resize(REGION_TILES_COUNT);
 		render_cache.resize(REGION_TILES_COUNT);
 		water_level.resize(REGION_TILES_COUNT);
@@ -43,6 +45,8 @@ struct region_t {
 	std::vector<std::size_t> building_id;
 	std::vector<std::size_t> tree_id;
 	std::vector<std::size_t> tile_vegetation_type;
+	std::vector<uint16_t> tile_vegetation_ticker;
+    std::vector<uint8_t> tile_vegetation_lifecycle;
 	std::vector<std::size_t> stockpile_id;
 	std::vector<bitset8> tile_flags;
 	std::vector<rltk::vchar> render_cache;

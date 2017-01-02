@@ -26,6 +26,8 @@ void save_region(const region_t &region) {
 	deflate.serialize(region.building_id);
 	deflate.serialize(region.tree_id);
 	deflate.serialize(region.tile_vegetation_type);
+	deflate.serialize(region.tile_vegetation_ticker);
+    deflate.serialize(region.tile_vegetation_lifecycle);
 	deflate.serialize(region.tile_flags);
 	deflate.serialize(region.water_level);
 	deflate.serialize_vector_bool(region.blood_stains);
@@ -52,6 +54,8 @@ region_t load_region(const int region_x, const int region_y) {
 	inflate.deserialize(region.building_id);
 	inflate.deserialize(region.tree_id);
 	inflate.deserialize(region.tile_vegetation_type);
+    inflate.deserialize(region.tile_vegetation_ticker);
+    inflate.deserialize(region.tile_vegetation_lifecycle);
 	inflate.deserialize(region.tile_flags);
 	inflate.deserialize(region.water_level);
 	inflate.deserialize(region.blood_stains);
@@ -248,12 +252,6 @@ void region_t::calc_render(const int &idx) {
 				fg = rltk::colors::GREY;
 			} 
 
-			if (tile_vegetation_type[idx]>0) {
-				const float damage_pct = (float)tile_hit_points[idx] / 10.0F;
-				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
-				fg = lerp(fg, plant.fg, damage_pct);
-				bg = plant.bg;
-			}
 		} break;
 		case tile_type::STAIRS_UP : {
 			glyph = '<';
@@ -281,10 +279,9 @@ void region_t::calc_render(const int &idx) {
 			if (tile_vegetation_type[idx]>0) {
 				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
 				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
+                const uint8_t lifecycle = tile_vegetation_lifecycle[idx];
                 rltk::vchar plant_render;
-                plant_render.glyph = plant.glyph;
-                plant_render.foreground = plant.fg;
-                plant_render.background = plant.bg;
+                plant_render.glyph = plant.glyphs[lifecycle];
                 veg_cache[idx] = plant_render;
 			}
 		} break;
@@ -299,13 +296,6 @@ void region_t::calc_render(const int &idx) {
 
 			fg = get_material(tile_material[idx])->fg;
 
-			if (tile_vegetation_type[idx]>0) {
-				//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
-				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
-				glyph = plant.glyph;
-				fg = plant.fg;
-				bg = plant.bg;
-			}
 		} break;
 		case tile_type::TREE_TRUNK : {
 			glyph = 257;

@@ -17,7 +17,7 @@ biomes = {
         name = "Frozen Ocean", min_temp = -100, max_temp = -5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["ocean"], biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2 },
+        plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -25,7 +25,7 @@ biomes = {
         name = "Icy Ocean", min_temp = -10, max_temp = 10, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["ocean"], biome_types["coast"], soils = { soil=50, sand=50 } },
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['cyan'] },
-        plants = { none=10, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, potato=1, radish=1, turnip=1 },
+        plants = { none=10, grass=20, lavendar=1, daisy=1, reeds=2, potato=1, radish=1, turnip=1 },
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer"}
     },
@@ -33,7 +33,7 @@ biomes = {
         name = "Ocean", min_temp = 0, max_temp = 30, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["ocean"], biome_types["coast"], soils = { soil=50, sand=50 } },
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['blue'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, cabbage=1, caper=1, celery=1, leek=1, lentil=1, onion=1, parsnip=1, potato=1, radish=1, red_bean=1, soybean=1, spinach=1, turnip=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, cabbage=1, caper=1, celery=1, leek=1, lentil=1, onion=1, parsnip=1, potato=1, radish=1, red_bean=1, soybean=1, spinach=1, turnip=1 },
         trees = { deciduous = 5, evergreen = 5 },
         wildlife = { "deer","boar"}
     },
@@ -41,7 +41,7 @@ biomes = {
         name = "Tropical Ocean", min_temp = 30, max_temp = 100, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["ocean"], biome_types["coast"], soils = { soil=50, sand=50 } },
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['blue'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, goya=1, cabbage=1, caper=1, cassava=1, celery=1, horned_melon=1, lentil=1, onion=1, parsnip=1, soybean=1, yam=1 },
+        plants = { none=5, grass=20, reeds_giant=2, reeds_paper=2, sage=1, daisy=1, reeds=2, strawberry=1, goya=1, cabbage=1, caper=1, cassava=1, celery=1, horned_melon=1, lentil=1, onion=1, parsnip=1, soybean=1, yam=1 },
         trees = { deciduous = 10, evergreen = 0 },
         wildlife = { "deer","armadillo","antelope"}
     },
@@ -51,7 +51,7 @@ biomes = {
         name = "Arctic Coast", min_temp = -100, max_temp = -5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -59,7 +59,7 @@ biomes = {
         name = "Cold Coast", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['cyan'] },
-        plants = { none=10, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2, cabbage=1, cress=1, garlic=1, leek=1, onion=1, parsnip=1, potato=1, radish=1, turnip=1 },
+        plants = { none=10, grass=20, lavendar=1, daisy=1, reeds=2, heather=2, cabbage=1, cress=1, garlic=1, leek=1, onion=1, parsnip=1, potato=1, radish=1, turnip=1 },
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer","boar" }
     },
@@ -67,7 +67,7 @@ biomes = {
         name = "Temperate Coast", min_temp = 5, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, beetroot=1, cabbage=1, cress=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, beetroot=1, cabbage=1, cress=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1 },
         trees = { deciduous = 5, evergreen = 5 },
         wildlife = { "deer","badger","boar","antelope"}
     },
@@ -75,7 +75,7 @@ biomes = {
         name = "Tropical Coast", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['light_green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, goya=1, cabbage=1, caper=1, cassava=1, horned_melon=1, lentil=1, lettuce=1, onion=1, parsnip=1, soybean=1, watermelon=1, yam=1 },
+        plants = { none=5, grass=20, reeds_paper=2, reeds_giant=2, sage=1, daisy=1, reeds=2, strawberry=1, goya=1, cabbage=1, caper=1, cassava=1, horned_melon=1, lentil=1, lettuce=1, onion=1, parsnip=1, soybean=1, watermelon=1, yam=1 },
         trees = { deciduous = 10, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","antelope"}
     },
@@ -85,7 +85,7 @@ biomes = {
         name = "Arctic Coast", min_temp = -100, max_temp = -5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["salt_marsh"] }, soils = { soil=70, sand=30 },
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2 },
+        plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer","mammoth"}
     },
@@ -93,7 +93,7 @@ biomes = {
         name = "Cold Coast", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["salt_marsh"] }, soils = { soil=70, sand=30 },
         worldgen_render = { glyph=glyphs['double_wave'], color=colors['cyan'] },
-        plants = { none=10, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, cabbage=1, cress=1 },
+        plants = { none=10, grass=20, lavendar=1, daisy=1, reeds=2, cabbage=1, cress=1 },
         trees = { deciduous = 3, evergreen = 10 },
         wildlife = { "deer","mammoth"}
     },
@@ -117,7 +117,7 @@ biomes = {
         name = "Permafrost Plain", min_temp = -100, max_temp = 3, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plains"], biome_types["coast"], biome_types["marsh"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer","mammoth"}
     },
@@ -125,7 +125,7 @@ biomes = {
         name = "Rocky Plain", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plains"], biome_types["coast"], biome_types["marsh"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['grey'] },
-        plants = { none=25, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, cabbage=1, leek=1 },
+        plants = { none=25, grass=20, sage=1, daisy=1, reeds=2, cabbage=1, leek=1 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -133,7 +133,7 @@ biomes = {
         name = "Grass Plain", min_temp = 0, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plains"], biome_types["coast"], biome_types["marsh"] }, soils = { soil=75, sand=25 },
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['green'] },
-        plants = { none=3, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1, asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cucumber=1, cress=1, garlic=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1 },
+        plants = { none=3, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1, asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cucumber=1, cress=1, garlic=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1 },
         trees = { deciduous = 20, evergreen = 3 },
         wildlife = { "deer","boar","hedgehog"}
     },
@@ -141,7 +141,7 @@ biomes = {
         name = "Savannah Plain", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plains"], biome_types["coast"], biome_types["marsh"] }, soils = { soil=25, sand=75 },
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['earth_brown'] },
-        plants = { none=3, grass=10, grass_long=10, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1,asparagus=1, string_bean=1, broad_bean=1, caper=1, carrot=1, cassava=1, celery=1, chickpea=1, chickory=1, cowpea=1, cucumber=1, eggplant=1, garlic=1, horned_melon=1, lentil=1, lettuce=1, mung_bean=1, onion=1, parsnip=1, peanut=1, pepper=1, soybean=1, spinach=1, squash=1, sweet_potato=1, tomatillo=1, watermelon=1, yam=1 },
+        plants = { none=3, grass=25, reeds_giant=2, sage=1, daisy=1, reeds=2, strawberry=1,asparagus=1, string_bean=1, broad_bean=1, caper=1, carrot=1, cassava=1, celery=1, chickpea=1, chickory=1, cowpea=1, cucumber=1, eggplant=1, garlic=1, horned_melon=1, lentil=1, lettuce=1, mung_bean=1, onion=1, parsnip=1, peanut=1, pepper=1, soybean=1, spinach=1, squash=1, sweet_potato=1, tomatillo=1, watermelon=1, yam=1, reeds_paper=2 },
         trees = { deciduous = 20, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","elephant","antelope"}
     },
@@ -151,7 +151,7 @@ biomes = {
         name = "Permafrost Hills", min_temp = -100, max_temp = 3, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["hills"], biome_types["highlands"] }, soils = { soil=80, sand=20 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer","mammoth"}
     },
@@ -159,7 +159,7 @@ biomes = {
         name = "Rocky Hills", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["hills"], biome_types["highlands"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['grey'] },
-        plants = { none=30, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2, cabbage=1, parsnip=1 },
+        plants = { none=30, grass=20, lavendar=1, daisy=1, reeds=2, heather=2, cabbage=1, parsnip=1 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = {"deer"}
     },
@@ -167,7 +167,7 @@ biomes = {
         name = "Grass Hills", min_temp = 0, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["hills"], biome_types["highlands"] }, soils = { soil=75, sand=25 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1,asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cress=1, garlic=1, lentil=1, onion=1, parsnip=1, pea=1, soybean=1, turnip=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1,asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cress=1, garlic=1, lentil=1, onion=1, parsnip=1, pea=1, soybean=1, turnip=1 },
         trees = { deciduous = 5, evergreen = 3 },
         wildlife = { "deer","boar"}
     },
@@ -175,7 +175,7 @@ biomes = {
         name = "Savannah Hills", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["hills"], biome_types["highlands"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['earth_brown'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2,asparagus=1, cabbage=1, caper=1, carrot=1, celery=1, chickpea=1, chickory=1, eggplant=1, lentil=1, onion=1, peanut=1, pepper=1, soybean=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2,asparagus=1, cabbage=1, caper=1, carrot=1, celery=1, chickpea=1, chickory=1, eggplant=1, lentil=1, onion=1, peanut=1, pepper=1, soybean=1 },
         trees = { deciduous = 10, evergreen = 0 },
         wildlife = { "deer","boar","elephant","antelope"}
     },
@@ -185,7 +185,7 @@ biomes = {
         name = "Permafrost Plateau", min_temp = -100, max_temp = 3, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plateau"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['arch'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -193,7 +193,7 @@ biomes = {
         name = "Rocky Plateau", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plateau"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['arch'], color=colors['grey'] },
-        plants = { none=15, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, cabbage=1 },
+        plants = { none=15, grass=20, sage=1, daisy=1, reeds=2, cabbage=1 },
         trees = { deciduous = 0, evergreen = 3 },
         wildlife = {"deer"}
     },
@@ -201,7 +201,7 @@ biomes = {
         name = "Grass Plateau", min_temp = 0, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plateau"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['arch'], color=colors['green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, beetroot=1, cabbage=1, celery=1, chickpea=1, chickory=1, cucumber=1, lentil=1, garlic=1, onion=1, soybean=1, turnip=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, beetroot=1, cabbage=1, celery=1, chickpea=1, chickory=1, cucumber=1, lentil=1, garlic=1, onion=1, soybean=1, turnip=1 },
         trees = { deciduous = 20, evergreen = 5 },
         wildlife = { "deer","badger","boar"}
     },
@@ -209,7 +209,7 @@ biomes = {
         name = "Savannah Plateau", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plateau"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['arch'], color=colors['earth_brown'] },
-        plants = { none=2, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, bambara_groundnut=1, goya=1, cabbage=1, caper=1, celery=1, chickpea=1, chickory=1, cucumber=1, eggplant=1, horned_melon=1, lentil=1, onion=1, soybean=1, tomatillo=1 },
+        plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, bambara_groundnut=1, goya=1, cabbage=1, caper=1, celery=1, chickpea=1, chickory=1, cucumber=1, eggplant=1, horned_melon=1, lentil=1, onion=1, soybean=1, tomatillo=1 },
         trees = { deciduous = 25, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","antelope"}
     },
@@ -226,7 +226,7 @@ biomes = {
         name = "Permafrost Highlands", min_temp = -100, max_temp = 3, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["highlands"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['white'] },
-        plants = { none=20, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=20, grass=10, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -234,7 +234,7 @@ biomes = {
         name = "Rocky Highlands", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["highlands"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['grey'] },
-        plants = { none=25, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, cabbage=1 },
+        plants = { none=25, grass=10, sage=1, daisy=1, reeds=2, cabbage=1 },
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer","boar"}
     },
@@ -242,7 +242,7 @@ biomes = {
         name = "Grass Highlands", min_temp = 0, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["highlands"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, cabbage=1, onion=1, turnip=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, cabbage=1, onion=1, turnip=1 },
         trees = { deciduous = 10, evergreen = 3 },
         wildlife = { "deer","badger","boar"}
     },
@@ -250,7 +250,7 @@ biomes = {
         name = "Savannah Highlands", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["highlands"] }, soils = { soil=25, sand=75 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['earth_brown'] },
-        plants = { none=2, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, goya=1, cabbage=1 },
+        plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, goya=1, cabbage=1 },
         trees = { deciduous = 20, evergreen = 1 },
         wildlife = { "deer","armadillo","boar"}
     },
@@ -267,7 +267,7 @@ biomes = {
         name = "Permafrost Mountains", min_temp = -100, max_temp = 3, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["mountains"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['white'] },
-        plants = { none=40, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=40, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -275,7 +275,7 @@ biomes = {
         name = "Rocky Mountains", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["mountains"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['grey'] },
-        plants = { none=25, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2 },
+        plants = { none=25, grass=20, sage=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -283,7 +283,7 @@ biomes = {
         name = "Grass Mountains", min_temp = 0, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["mountains"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer","boar"}
     },
@@ -291,7 +291,7 @@ biomes = {
         name = "Savannah Mountains", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["mountains"] }, soils = { soil=25, sand=75 },
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['earth_brown'] },
-        plants = { none=2, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, goya=1 },
+        plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, goya=1 },
         trees = { deciduous = 3, evergreen = 0 },
         wildlife = { "deer","armadillo","boar"}
     },
@@ -308,7 +308,7 @@ biomes = {
         name = "Tundra", min_temp = -100, max_temp = 3, min_rain = 0, max_rain = 10, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plains"], biome_types["hills"], biome_types["highlands"], biome_types["plateau"], biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['tilde'], color=colors['white'] },
-        plants = { none=40, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=40, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -316,7 +316,7 @@ biomes = {
         name = "Cold Desert", min_temp = 1, max_temp = 10, min_rain = 0, max_rain = 10, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plains"], biome_types["hills"], biome_types["highlands"], biome_types["plateau"], biome_types["coast"] }, soils = { soil=15, sand=85 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['white'] },
-        plants = { none=40, grass=10, grass_long=5, grass_short=5, lavendar=1, daisy=1, reeds=2, heather=2 },
+        plants = { none=40, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}
     },
@@ -340,7 +340,7 @@ biomes = {
         name = "Deciduous Broadleaf", min_temp = 5, max_temp = 34, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        
         occurs = { biome_types["plains"], biome_types["hills"], biome_types["coast"] }, soils = { soil=80, sand=20 },
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, bambara_groundnut=1, strawberry=1, cucumber=1, eggplant=1, garlic=1, tomato=1, tomatillo=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, bambara_groundnut=1, strawberry=1, cucumber=1, eggplant=1, garlic=1, tomato=1, tomatillo=1 },
         trees = { deciduous = 100, evergreen = 0 },
         wildlife = { "deer","badger","boar","hedgehog","antelope"}
     },
@@ -348,7 +348,7 @@ biomes = {
         name = "Deciduous Needleleaf", min_temp = 5, max_temp = 34, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        
         occurs = { biome_types["highlands"], biome_types["hills"], biome_types["plateau"] }, soils = { soil=80, sand=20 },
         worldgen_render = { glyph=glyphs['clubs'], color=colors['tree_green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, cucumber=1, garlic=1, tomato=1, tomatillo=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, cucumber=1, garlic=1, tomato=1, tomatillo=1 },
         trees = { deciduous = 100, evergreen = 5 },
         wildlife = { "deer","badger","boar","hedgehog","antelope"}
     },
@@ -356,7 +356,7 @@ biomes = {
         name = "Evergreen Broadleaf", min_temp = -5, max_temp = 20, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        
         occurs = { biome_types["highlands"], biome_types["hills"], biome_types["plateau"] }, soils = { soil=80, sand=20 },
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, garlic=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, garlic=1 },
         trees = { deciduous = 0, evergreen = 100 },
         wildlife = { "deer","badger","boar","hedgehog"}
     },
@@ -364,7 +364,7 @@ biomes = {
         name = "Evergreen Broadleaf", min_temp = -15, max_temp = 30, min_rain = 15, max_rain = 100, min_mutation = 0, max_mutation = 100,        
         occurs = { biome_types["highlands"], biome_types["mountains"], biome_types["plateau"] }, soils = { soil=80, sand=20 },
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
-        plants = { none=5, grass=10, grass_long=5, grass_short=5, sage=1, daisy=1, reeds=2, garlic=1 },
+        plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, garlic=1 },
         trees = { deciduous = 5, evergreen = 100 },
         wildlife = { "deer","badger","boar"}
     },
