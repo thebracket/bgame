@@ -425,5 +425,343 @@ items = {
 		foreground = colors['wood_brown'],
 		background = colors['black'],
 		stockpile = stockpiles['leather'].id
-	}
+	},
+
+	-- Vegetation items
+	hay = { 
+		name="Hay", 
+		description = "Dried grass, suitable for animal fodder", 
+		itemtype = { "feed" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['yellow'], background=colors['black'], 
+		stockpile=stockpiles['fodder'] 
+	},
+	reed_thread = { 
+		name="Reed Fiber", 
+		description = "Fibers from a reed, suitable for use in cloth or wicker", 
+		itemtype = { "thread" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['white'], background=colors['black'], 
+		stockpile=stockpiles['thread'] 
+	},
+	reed_paper = { 
+		name="Reed Papyrus", 
+		description = "Fibers from a reed, suitable for making paper", 
+		itemtype = { "thread" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['white'], background=colors['black'], 
+		stockpile=stockpiles['thread'] 
+	},
+	artichoke_veg = { 
+		name="Raw Artichoke", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	asparagus_veg = { 
+		name="Raw Asparagus", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	string_bean_veg = { 
+		name="Raw String Bean", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	broad_bean_veg = { 
+		name="Raw Broad Bean", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	beetroot_veg = { 
+		name="Raw Beetroot", 
+		description = "A root vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['purple'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	goya_veg = { 
+		name="Raw Goya", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	cabbage_veg = { 
+		name="Raw Cabbage", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	caper_veg = { 
+		name="Raw Caper", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	carrot_veg = { 
+		name="Raw Carrot", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['orange'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	cassava_veg = { 
+		name="Raw Cassava", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	celery_veg = { 
+		name="Raw Celery", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	chickpea_veg = { 
+		name="Raw Chickpea", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	cowpea_veg = { 
+		name="Raw Cowpea", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	cucumber_veg = { 
+		name="Raw Cucumber", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	eggplant_veg = { 
+		name="Raw Eggplant", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	cress_veg = { 
+		name="Raw Cress", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	melon_veg = { 
+		name="Raw Melon", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	leek_veg = { 
+		name="Raw Leek", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	lentil_veg = { 
+		name="Raw Lentils", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	lettuce_veg = { 
+		name="Raw Lettuce", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	mung_bean_veg = { 
+		name="Raw Mung Bean", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	onion_veg = { 
+		name="Raw Onion", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	parsnip_veg = { 
+		name="Raw Parsnip", 
+		description = "A root vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	pea_veg = { 
+		name="Raw Peas", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	pepper_veg = { 
+		name="Raw Bell Pepper", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	potato_veg = { 
+		name="Raw Potato", 
+		description = "A root vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	radish_veg = { 
+		name="Raw Radish", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	red_bean_veg = { 
+		name="Raw Red Beans", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	spinach_veg = { 
+		name="Raw Spinach", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	soybean_veg = { 
+		name="Raw Soy", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	squash_veg = { 
+		name="Raw Squash", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	sweet_potato_veg = { 
+		name="Raw Sweet Potato", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['orange'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	tomato_veg = { 
+		name="Raw Tomato", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['red'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	tomatillo_veg = { 
+		name="Raw Tomatillo", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	turnip_veg = { 
+		name="Raw Turnip", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	watermelon_veg = { 
+		name="Raw Watermelon", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	yam_veg = { 
+		name="Raw Yam", 
+		description = "A green vegetable", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['yellow'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	strawberry_fruit = { 
+		name="Raw Strawberry", 
+		description = "A red fruit", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['red'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	bambara_nut = { 
+		name="Bambara Nut", 
+		description = "A tasty nut", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['red'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	peanut_nut = { 
+		name="Peanut", 
+		description = "A tasty nut", 
+		itemtype = { "food" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['brown'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	chickory_herb = { 
+		name="Raw Chickory", 
+		description = "A tasty herb", 
+		itemtype = { "spice" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['brown'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	garlic_herb = { 
+		name="Raw Garlic", 
+		description = "A tasty herb", 
+		itemtype = { "spice" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['brown'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	rhubarb_herb = { 
+		name="Raw Rhubarb", 
+		description = "A tasty herb", 
+		itemtype = { "spice" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['brown'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	lavendar_herb = { 
+		name="Raw Lavendar", 
+		description = "A tasty herb", 
+		itemtype = { "spice" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['purple'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
+	sage_herb = { 
+		name="Raw Sage", 
+		description = "A tasty herb", 
+		itemtype = { "spice" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
 }

@@ -204,7 +204,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                         region.tile_vegetation_type[mapidx(x,y,z-1)] = finder;
                         region.tile_hit_points[mapidx(x,y,z-1)] = 10;
                         region.tile_vegetation_ticker[mapidx(x,y,z-1)] = 1;
-                        region.tile_vegetation_lifecycle[mapidx(x,y,z-1)] = rng.roll_dice(1,4);
+                        region.tile_vegetation_lifecycle[mapidx(x,y,z-1)] = rng.roll_dice(1,4)-1;
                     }
                 }
             }

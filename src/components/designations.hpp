@@ -20,6 +20,7 @@ struct designations_t {
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	std::vector<std::pair<bool, position_t>> guard_points;
 	std::vector<unbuild_t> deconstructions;
+	std::vector<std::pair<bool, position_t>> harvest;
 	int current_power = 10;
 	uint64_t current_cash = 100;
 

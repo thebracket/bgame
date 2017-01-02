@@ -109,7 +109,20 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	}
 	if (current_region->tile_type[tile_idx] == tile_type::FLOOR && !current_region->tile_flags[tile_idx].test(CONSTRUCTION)) {
 		if (current_region->tile_vegetation_type[tile_idx] > 0) {
-			lines.push_back(get_plant_def(current_region->tile_vegetation_type[tile_idx]).name);
+			std::stringstream ss;
+            plant_t plant = get_plant_def(current_region->tile_vegetation_type[tile_idx]);
+            ss << plant.name << " (";
+            switch (current_region->tile_vegetation_lifecycle[tile_idx]) {
+                case 0 : ss << "Germinating"; break;
+                case 1 : ss << "Sprouting"; break;
+                case 2 : ss << "Growing"; break;
+                case 3 : ss << "Flowering"; break;
+                default : ss << "Unknown - error!";
+            }
+            const std::string harvest_to = plant.provides[current_region->tile_vegetation_lifecycle[tile_idx]];
+            if (harvest_to != "none") ss << " - " << harvest_to;
+            ss << ")";
+			lines.push_back(ss.str());
 		}
 	}
 

@@ -9,6 +9,7 @@
 #include "../camera_system.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../components/stockpile.hpp"
+#include "../../raws/plants.hpp"
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -276,6 +277,42 @@ void mode_design_system::guardposts() {
     }
 }
 
+void mode_design_system::harvest() {
+    add_gui_element(std::make_unique<map_static_text>(5,4, "Harvest mode - click a square to harvest it, right-click to clear."));
+    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
+        const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
+        const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+
+        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
+        bool ok = true;
+        if (current_region->tile_vegetation_type[idx]==0) ok = false;
+        if (ok) {
+            plant_t p = get_plant_def(current_region->tile_vegetation_type[idx]);
+            const std::string harvests_to = p.provides[current_region->tile_vegetation_lifecycle[idx]];
+            if (harvests_to == "none") ok=false;
+        }
+
+        if (ok && current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+            if (get_mouse_button_state(rltk::button::LEFT)) {
+                bool found = false;
+                for (const auto &g : designations->harvest) {
+                    if (mapidx(g.second) == idx) found = true;
+                }
+                if (!found) {
+                    designations->harvest.push_back(std::make_pair(false, position_t{world_x, world_y, camera_position->region_z}));
+                }
+            } else if (get_mouse_button_state(rltk::button::RIGHT)) {
+                designations->harvest.erase(std::remove_if(
+                        designations->harvest.begin(),
+                        designations->harvest.end(),
+                        [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
+                                                 ),
+                                                 designations->harvest.end());
+            }
+        }
+    }
+}
+
 void mode_design_system::stockpiles() {
     add_gui_element(std::make_unique<map_static_text>(5,4, "Stockpiles - select a stockpile from the right panel, click to add, right click to remove."));
 
@@ -362,13 +399,14 @@ void mode_design_system::update(const double duration_ms) {
     add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
     add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
 
-    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles"}, 5, 3, [] (int key) {
+    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles", "Harvest"}, 5, 3, [] (int key) {
         switch (key) {
             case 0 : { game_design_mode = DIGGING; emit_deferred(map_dirty_message{}); } break;
             case 1 : { game_design_mode = BUILDING; emit_deferred(refresh_available_buildings_message{}); emit_deferred(map_dirty_message{}); } break;
             case 2 : { game_design_mode = CHOPPING; emit_deferred(map_dirty_message{}); } break;
             case 3 : { game_design_mode = GUARDPOINTS; emit_deferred(map_dirty_message{}); } break;
             case 4 : { game_design_mode = STOCKPILES; emit_deferred(map_dirty_message{}); } break;
+            case 5 : { game_design_mode = HARVEST; emit_deferred(map_dirty_message{}); } break;
         }
     });
 
@@ -378,5 +416,6 @@ void mode_design_system::update(const double duration_ms) {
         case CHOPPING   : chopping(); break;
         case GUARDPOINTS: guardposts(); break;
         case STOCKPILES : stockpiles(); break;
+        case HARVEST : harvest(); break;
     }
 }

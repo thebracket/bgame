@@ -45,6 +45,7 @@ glyphs = {
 	v = 118,
 	tilde = 126,
 	ukp = 156,
+	inv_exclaim = 173,
 	three_quarters_solid = 178,
 	one_half_solid = 177,
 	one_quarter_solid = 176,
@@ -173,5 +174,6 @@ colors = {
 	firelight = { r=255, g=255, b=192 },
 	silver = { r=192, g=192, b=192 },
 	gold = { r=255, g=215, b=0 },
-	bronze = { r=205, g=127, b=50 }
+	bronze = { r=205, g=127, b=50 },
+	purple = { r=128, g=0, b=128 }
 }

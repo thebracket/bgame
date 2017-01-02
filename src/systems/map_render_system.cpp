@@ -150,6 +150,22 @@ vchar get_render_char_guarding(const int &x, const int &y) {
 	return result;
 }
 
+vchar get_render_char_harvest(const int &x, const int &y) {
+
+	vchar result = get_render_char(x,y);
+	const int idx = render_tiles[((term(1)->term_width * y) + x)];
+
+	for (const auto &g : designations->harvest) {
+		if (mapidx(g.second) == idx) {
+			result.foreground = rltk::colors::CYAN;
+			result.background = rltk::colors::BLACK;
+			result.glyph = 'H';
+		}
+	}
+
+	return result;
+}
+
 vchar get_render_char_stockpiles(const int &x, const int &y) {
 
     vchar result = get_render_char(x,y);
@@ -259,6 +275,7 @@ void map_render_system::update(const double duration_ms) {
 				case BUILDING : { building_possible = true; calculator = get_render_char_building; } break;
 				case GUARDPOINTS : calculator = get_render_char_guarding; break;
                 case STOCKPILES : calculator = get_render_char_stockpiles; break;
+                case HARVEST : calculator = get_render_char_harvest; break;
 			}
 		}
 

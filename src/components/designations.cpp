@@ -8,6 +8,7 @@ void designations_t::to_xml(xml_node * c) {
         std::make_pair("build_orders", build_orders),
         std::make_pair("guard_points", guard_points),
         std::make_pair("deconstructions", deconstructions),
+        std::make_pair("harvest", harvest),
         std::make_pair("current_power", current_power),
         std::make_pair("current_cash", current_cash),
         std::make_pair("standing_order_idle_move", standing_order_idle_move),
@@ -44,6 +45,15 @@ void designations_t::from_xml(xml_node * c) {
             pos
         };
         guard_points.push_back(gp);
+    });
+    c->iterate_child("harvest", [this] (xml_node *ch) {
+        position_t pos;
+        pos.from_xml(ch->find("harvest_second"));
+        std::pair<bool, position_t> gp{
+                ch->find("harvest_first")->val<bool>("harvest"),
+                pos
+        };
+        harvest.push_back(gp);
     });
     c->iterate_child("deconstructions", [this] (xml_node *ch) {
         unbuild_t u;

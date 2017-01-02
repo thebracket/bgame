@@ -12,4 +12,5 @@ private:
     void chopping();
     void guardposts();
 	void stockpiles();
+	void harvest();
 };
