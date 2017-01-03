@@ -479,5 +479,14 @@ reactions = {
         difficulty = 15,
         automatic = false
     },
+
+    -- Booze!
+    make_booze = {
+        name = "Ferment Alcoholic Beverage", workshop = "still", 
+        inputs = { { item="any", qty=1, mat_type="food" } }, 
+        outputs = { { item="wine", qty=1, special="cooking" } },
+        skill = "Brewing", difficulty = 16, automatic = false
+    },
+
 }
 

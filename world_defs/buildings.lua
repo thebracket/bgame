@@ -135,6 +135,20 @@ buildings = {
 		},
 	},
 
+	still = {
+		name = "Distillery",
+		components = { { item="block", qty=2 } },
+		skill = { name="Construction", difficulty=12 },
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['still_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['still_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['still_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['still_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
+	},
+
 	butcher = {
 		name = "Butcher",
 		components = { { item="block", qty=1 } },

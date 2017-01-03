@@ -773,4 +773,11 @@ items = {
 		foreground=colors['brown'], background=colors['black'], 
 		stockpile=stockpiles['food'] 
 	},
+	wine = { 
+		name="Alcoholic Beverage", 
+		description = "Fermented food", 
+		itemtype = { "drink" }, glyph = glyphs["inv_exclaim"], 
+		foreground=colors['green'], background=colors['black'], 
+		stockpile=stockpiles['food'] 
+	},
 }

@@ -83,6 +83,7 @@ glyphs = {
 	flower_purple = 277,
 	bush = 278,
 	flower_small = 279,
+	tilled = 280,
 	wood_log = 304,
 	boulder = 305,
 	ore = 306,
@@ -135,7 +136,10 @@ glyphs = {
 	sawmill_7 = 464,
 	sawmill_8 = 465,
 	sawmill_9 = 466,
-	tilled = 280
+	still_1 = 400,
+	still_2 = 401,
+	still_3 = 416,
+	still_4 = 417
 }
 
 colors = {

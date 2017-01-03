@@ -43,7 +43,7 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 
 void panel_render_system::render_work_mode() {
 	term(3)->box(1, 2, 73, 40, WHITE, BLACK, true);
-	for (int i=3; i<40; ++i) term(1)->print(3, i, "                                                                        ");
+	//for (int i=3; i<40; ++i) term(1)->print(3, i, "                                                                        ");
 
 	// List queued jobs
 	int y = 3;
@@ -64,14 +64,14 @@ void panel_render_system::render_work_mode() {
 		//std::cout << reaction.second << "\n";
 		std::stringstream ss;
 		ss << "[+] " << reaction.second;
-		term(3)->print(20, y, ss.str());
+		term(3)->print(10, y, ss.str());
 		++y;
 	}
 
 	// Check for clicks to build
 	if (mouse::clicked) {
 
-		if (mouse::term3x > 20 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 30) {
+		if (mouse::term3x > 10 && mouse::term3y > 2 && mouse::term3y << y && mouse::term3x < 20) {
 			const int selected_item = mouse::term3y - 3;
 			const std::string tag = available_reactions[selected_item].first;
 
