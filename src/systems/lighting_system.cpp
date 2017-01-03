@@ -94,8 +94,8 @@ void lighting_system::update(double time_ms) {
         std::fill(light_map.begin(), light_map.end(), color_t{0,0,0});
 
         const float sun_arc = calendar->sun_arc_percent();
-        color_t ambient{40,40,50};;
-        color_t lit{127,127,135};
+        color_t ambient{80,80,90};
+        color_t lit{170,170,196};
 
         const float latitude = ((float)current_region->region_y - ((float)WORLD_HEIGHT/2.0F)) * 90.0F;
         const float sun_offset_y = latitude * (float)REGION_HEIGHT;
@@ -103,7 +103,7 @@ void lighting_system::update(double time_ms) {
         float sun_offset_x = 0.0F;
         if (calendar->hour > 5 && calendar->hour < 22) {
             sun_offset_x = (1.0F - sun_arc) * (float)REGION_WIDTH;
-            ambient = lerp(color_t{50,50,60}, color_t{127,127,125}, sun_arc);
+            ambient = lerp(color_t{80,80,90}, color_t{170,170,165}, sun_arc);
             lit = lerp(color_t{192,192,240}, color_t{255,255,251}, sun_arc);
         }
         if (calendar->hour > 12) sun_offset_x = 0.0F - sun_offset_x;
