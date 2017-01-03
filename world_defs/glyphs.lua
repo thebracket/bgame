@@ -135,7 +135,7 @@ glyphs = {
 	sawmill_7 = 464,
 	sawmill_8 = 465,
 	sawmill_9 = 466,
-	tilled = 240
+	tilled = 280
 }
 
 colors = {

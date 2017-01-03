@@ -80,6 +80,7 @@ if (APPLE)
 		COMMAND cp ../assets/terminal8x8.png bf.app/Contents/MacOS/assets/
 		COMMAND cp ../assets/terminal16x16.png bf.app/Contents/MacOS/assets/
 		COMMAND cp ../assets/terminal32x32.png bf.app/Contents/MacOS/assets/
+        COMMAND cp ../assets/Nagidal24x24shade.png bf.app/Contents/MacOS/assets/
 		COMMAND cp ../assets/VGA8x16.png bf.app/Contents/MacOS/assets/
 		COMMAND cp ../assets/background_image.png bf.app/Contents/MacOS/assets/
 		COMMAND cp ../assets/gamelogo.png bf.app/Contents/MacOS/assets/
