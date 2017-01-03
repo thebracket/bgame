@@ -138,7 +138,7 @@ void visibility_system::update(const double duration_ms) {
 	// Apply to map - first clear everything
 	std::fill(current_region->visible.begin(), current_region->visible.end(), false);
 
-	parallel_each<position_t, viewshed_t>([this] (entity_t &e, position_t &pos, viewshed_t &view) {
+	each<position_t, viewshed_t>([this] (entity_t &e, position_t &pos, viewshed_t &view) {
 		// Create viewsheds if needed
 		if (view.visible_cache.empty() || dirty_entities.find(e.id) != dirty_entities.end()) {
 			// The entity needs a viewshed!

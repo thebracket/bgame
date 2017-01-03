@@ -94,6 +94,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
+    if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
     create_entity()
         ->assign(position_t{ x,y,z })
@@ -106,6 +107,7 @@ entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const
     if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
+    if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
     auto entity = create_entity()
             ->assign(position_t{ x,y,z })

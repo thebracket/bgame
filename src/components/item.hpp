@@ -62,7 +62,9 @@ struct item_t {
 	item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats, 
 		const std::size_t mat, int stack=1) : 
 		item_name(name), item_tag(tag), category(cats), type(ITEM), material(mat), stack_size(stack) {
-			item_name = material_name(mat) + std::string(" ") + item_name;
+		    if (!cats.test(ITEM_FOOD) && !cats.test(ITEM_SPICE)) {
+                item_name = material_name(mat) + std::string(" ") + item_name;
+            }
 		}
 
 	std::string xml_identity = "item_t";

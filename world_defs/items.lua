@@ -36,7 +36,7 @@ items = {
 		stockpile = stockpiles['tool'].id
 	},
 	wood_log = {
-		name = "Wood Log",
+		name = "Log",
 		description = "Wood from a felled tree",
 		itemtype = {"component"},
 		glyph = glyphs['wood_log'],
@@ -45,12 +45,12 @@ items = {
 		stockpile = stockpiles['wood'].id
 	},
 	stone_boulder = {
-		name = "Stone Boulder",	description = "A large stone boulder",
+		name = "Boulder",	description = "A large stone boulder",
 		itemtype = {"component"}, glyph = glyphs['boulder'], foreground = colors['white'], background = colors['black'],
 		stockpile = stockpiles['stone'].id
 	},
 	ore = {
-		name = "Metal Ore", description = "A lump of unrefined metal",
+		name = "Ore", description = "A lump of unrefined metal",
 		itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['white'], background = colors['black'],
 		stockpile = stockpiles['ore'].id
 	},
@@ -402,7 +402,7 @@ items = {
 	meat = {
 		name = "Meat",
 		description = "Raw Meat",
-		itemtype = {"component"},
+		itemtype = {"food"},
 		glyph = glyphs['single_wall_ew'],
 		foreground = colors['red'],
 		background = colors['black'],

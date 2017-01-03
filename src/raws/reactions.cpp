@@ -16,6 +16,7 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
     while(lua_next(lua_state, -2) != 0)
     {
         reaction_t c;
+        c.specials.reset();
 
         std::string key = lua_tostring(lua_state, -2);
         c.tag = key;

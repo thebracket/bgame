@@ -188,6 +188,10 @@ void keyboard_system::update(const double ms) {
                 game_design_mode = STOCKPILES;
                 emit_deferred(map_dirty_message{});
             }
+            if (e.event.key.code == sf::Keyboard::H) {
+                game_design_mode = HARVEST;
+                emit_deferred(map_dirty_message{});
+            }
         } else if (game_master_mode == SETTLER) {
             if (e.event.key.code == sf::Keyboard::Escape) {
                 game_master_mode = PLAY;

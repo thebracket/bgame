@@ -87,8 +87,9 @@ void movement_system::update(const double ms) {
         entity_wants_to_move_message msg = movers->front();
 		movers->pop();
 
-	if (!entity(msg.entity_id)) break;
+	    if (!entity(msg.entity_id)) break;
         auto epos = entity(msg.entity_id)->component<position_t>();
+        if (!epos) break;
         position_t origin{epos->x, epos->y, epos->z};
 
         // Bounds check

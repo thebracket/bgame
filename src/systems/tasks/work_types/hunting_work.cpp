@@ -68,8 +68,9 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 			return;
 		}
 		// Travel to destination
-		if (!ai.current_path) {
+		if (!ai.current_path || ai.current_path->steps.empty()) {
 			cancel_action(e, ai, stats, species, pos, name, "No huntable targets");
+			return;
 		}
 		position_t next_step = ai.current_path->steps.front();
 		move_to(e, pos, next_step);
@@ -153,11 +154,22 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 	if (ai.job_type_minor == JM_BUTCHER_CHOP) {
 		auto corpse = entity(ai.targeted_hostile)->component<corpse_harvestable>();
 		const auto organic_idx = get_material_by_tag("organic").get();
+        const auto food_idx = get_material_by_tag("food").get();
 
 		auto finder = get_creature_def(corpse->creature_tag);
 		for (int i=0; i<finder->yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
 		for (int i=0; i<finder->yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
-		for (int i=0; i<finder->yield_meat; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "meat", organic_idx);
+		for (int i=0; i<finder->yield_meat; ++i) {
+            auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "meat", food_idx);
+            const std::string corpse_type = corpse->creature_tag;
+            if (corpse_type != "") {
+                auto creature_def = get_creature_def(corpse_type);
+                auto item = new_entity->component<item_t>();
+                if (creature_def && item) {
+                    item->item_name = creature_def->name + std::string(" ") + "Meat";
+                }
+            }
+        }
 		for (int i=0; i<finder->yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
