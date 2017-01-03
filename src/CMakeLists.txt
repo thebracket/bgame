@@ -18,6 +18,8 @@ endif()
 option(USE_BOOST_CACHE "If ON, try to download, extract and build boost to a single cache directory for all MaidSafe clones" ON)
 option(BOOST_DISABLE_ASSERTS "If ON, all BOOST_ASSERTs and BOOST_VERIFYs are disabled" OFF)
 
+include(cotire)
+
 # Windows shims
 if (WIN32)
 	include_directories(external/fixwindows)
@@ -52,6 +54,7 @@ if (APPLE)
 	set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/../assets/icon.icns)
 	set_source_files_properties(${myApp_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 	add_executable(bf MACOSX_BUNDLE ${myApp_ICON} main.cpp)
+    cotire(bf)
 	target_link_libraries(bf)
 	target_link_libraries(bf rltk)
 	target_link_libraries(bf FastNoise)
@@ -95,3 +98,5 @@ target_link_libraries(bgame bfmain)
 target_link_libraries(bgame utils)
 target_link_libraries(bgame systems)
 target_link_libraries(bgame sqlite)
+
+cotire(bgame)
