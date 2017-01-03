@@ -134,7 +134,7 @@ void read_material_types(std::ofstream &tech_tree_file) noexcept
                 } else if (type_s == "food") {
                     m.spawn_type = food;
                 } else if (type_s == "spice") {
-                    m.spawn_type == spice;
+                    m.spawn_type = spice;
                 } else {
                     std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                 }

@@ -48,11 +48,13 @@ void kill_system::on_message(const entity_slain_message &msg) {
         auto species = victim->component<species_t>();
         if (species) tag = species->tag;
         auto old_render = victim->component<renderable_t>();
+        auto name = victim->component<name_t>();
         if (old_render && tag != "") {
             auto corpse = create_entity()
                     ->assign(position_t{ pos->x, pos->y, pos->z })
                     ->assign(renderable_t{ old_render->glyph, rltk::colors::GREY, rltk::colors::BLACK })
-                    ->assign(corpse_harvestable{tag});
+                    ->assign(corpse_harvestable{tag})
+                    ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") });
         }
     }
 

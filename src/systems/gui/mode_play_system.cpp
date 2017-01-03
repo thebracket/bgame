@@ -206,7 +206,6 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	if (current_region->stockpile_id[mapidx(world_x, world_y, camera_position->region_z)]>0) {
         lines.push_back(std::string("Stockpile #")+std::to_string(current_region->stockpile_id[mapidx(world_x, world_y, camera_position->region_z)]));
     }
-	lines.push_back(std::string("Huntable distance: ") + std::to_string(huntables_map.distance_map[mapidx(world_x, world_y, camera_position->region_z)]));
 
 	int longest = 0;
 	for (const std::string &s : lines) {
