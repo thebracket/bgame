@@ -22,9 +22,14 @@ void inventory_system::configure() {
 
 	// Receive drop messages
 	subscribe<drop_item_message>([this](drop_item_message &msg) {
-		if (!entity(msg.id)) return;
+        auto E = entity(msg.id);
+		if (!E) return;
 		emit(item_claimed_message{msg.id, false});
+
 		delete_component<item_carried_t>(msg.id);
+
+        auto item = E->component<item_t>();
+        if (!item) return;
 		entity(msg.id)->component<item_t>()->claimed = false;
 		entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
 		entity_octree.add_node(octree_location_t{msg.x,msg.y,msg.z,msg.id});
@@ -62,7 +67,7 @@ void inventory_system::configure() {
 		auto e = entity(msg.id);
 		if (e) {
 			auto item = e->component<item_t>();
-			item->claimed = msg.claimed;
+			if (item) item->claimed = msg.claimed;
 		}
 	});
 

@@ -14,6 +14,7 @@
 #include "../settler_move_to.hpp"
 #include "../../../raws/creatures.hpp"
 #include "../../distance_map_system.hpp"
+#include "../../../messages/messages.hpp"
 
 #include <iostream>
 #include <map>
@@ -58,50 +59,56 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 }
 
 void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
-	if (ai.job_type_minor == JM_BUTCHER_FIND_CORPSE) {
-		std::map<int, std::pair<std::size_t, position_t>> corpse_map;
-		each<corpse_harvestable, position_t>([&corpse_map, &pos] (entity_t &E, corpse_harvestable &corpse, position_t &cpos) {
-			if (!corpse.claimed) {
-				corpse_map[distance3d_squared(pos.x, pos.y, pos.z, cpos.x, cpos.y, cpos.z)] = std::make_pair(E.id, cpos);
-			}
-		});
+    const int idx = mapidx(pos);
 
-		ai.current_path.reset();
-		auto it = corpse_map.begin();
-		while (it != corpse_map.end() && !ai.current_path) {
-			ai.current_path = find_path(pos, it->second.second);
-			if (!ai.current_path) ++it;
-		}
-		if (!ai.current_path) {
-			cancel_action(e, ai, stats, species, pos, name, "No butcherable targets");
-			return;
-		} else {
-			ai.job_type_minor = JM_BUTCHER_GO_TO_CORPSE;
-			ai.job_status = "Travel to corpse";
-			entity(it->second.first)->component<corpse_harvestable>()->claimed = true;
-			ai.targeted_hostile = it->second.first;
-			return;
-		}		
+	if (ai.job_type_minor == JM_BUTCHER_FIND_CORPSE) {
+        if (butcherables_map.distance_map[idx] > MAX_DIJSTRA_DISTANCE-1) {
+            cancel_action(e, ai, stats, species, pos, name, "No butcherable targets");
+            return;
+        }
+        ai.job_type_minor = JM_BUTCHER_GO_TO_CORPSE;
+        ai.job_status = "Travel to corpse";
+        return;
 	}
 
 	if (ai.job_type_minor == JM_BUTCHER_GO_TO_CORPSE) {
-		tasks::try_path(e, ai, pos,
-			[] () {}, // Do nothing on success
-			[&ai, &name] () {
-				ai.current_path.reset();
-				ai.job_type_minor = JM_BUTCHER_COLLECT_CORPSE;
-				change_job_status(ai, name, "Collecting corpse");
-			}, // On arrival
-			[&e, &ai, &stats, &species, &pos, &name] () {
-				cancel_action(e, ai, stats, species, pos, name, "No route to corpse");
-			}
-		);
+        if (butcherables_map.distance_map[idx] > MAX_DIJSTRA_DISTANCE-1) {
+            cancel_action(e, ai, stats, species, pos, name, "No butcherable targets");
+            return;
+        }
+        if (butcherables_map.distance_map[idx] == 0) {
+            ai.job_type_minor = JM_BUTCHER_COLLECT_CORPSE;
+            ai.job_status = "Collecting corpse";
+            std::cout << "Collecting corpse\n";
+        } else {
+            // Keep moving
+            position_t destination = butcherables_map.find_destination(pos);
+            move_to(e, pos, destination);
+        }
 		return;
 	}
 
 	if (ai.job_type_minor == JM_BUTCHER_COLLECT_CORPSE) {
 		ai.job_type_minor = JM_BUTCHER_GO_TO_SHOP;
 		ai.job_status = "Carrying corpse to butcher";
+
+        // Find the corpse!
+        ai.targeted_hostile = 0;
+        each<corpse_harvestable, position_t>([&ai, &pos] (entity_t &E, corpse_harvestable &corpse, position_t &cpos) {
+            if (cpos == pos) {
+                ai.targeted_hostile = E.id;
+            }
+        });
+        if (ai.targeted_hostile == 0) {
+            cancel_action(e, ai, stats, species, pos, name, "Unable to find corpse");
+        }
+
+        // Pick up the corpse
+        emit_deferred(pickup_item_message{ai.targeted_hostile, e.id});
+        ai.current_tool = ai.targeted_hostile; // To ensure that it is dropped on cancellation
+        emit_deferred(butcherable_moved_message{});
+
+        // Find the butcher's shop and go there
 		position_t butcher_pos;
 		each<building_t, position_t>([&butcher_pos] (entity_t &E, building_t &b, position_t &p) {
 			if (b.complete == true && b.tag == "butcher") butcher_pos = p;
@@ -111,6 +118,8 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 			cancel_action(e, ai, stats, species, pos, name, "Unable to find butcher shop");
 			return;
 		}
+        ai.job_type_minor = JM_BUTCHER_GO_TO_SHOP;
+        ai.job_status = "Carrying corpse to butcher";
 		return;
 	}
 
@@ -121,8 +130,10 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 				ai.current_path.reset();
 				ai.job_type_minor = JM_BUTCHER_CHOP;
 				change_job_status(ai, name, "Butchering corpse");
+                std::cout << "Arrived at butcher shop\n";
 			}, // On arrival
 			[&e, &ai, &stats, &species, &pos, &name] () {
+                std::cout << "Cancelled - can't find route to butcher shop\n";
 				cancel_action(e, ai, stats, species, pos, name, "No route to butchers");
 			}
 		);
@@ -151,6 +162,7 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 		for (int i=0; i<finder->yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
+        emit_deferred(butcherable_moved_message{});
 		become_idle(e, ai, name);
 		return;
 	}

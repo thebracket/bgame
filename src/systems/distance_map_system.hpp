@@ -5,6 +5,7 @@
 #include "../components/position.hpp"
 
 extern dijkstra_map huntables_map;
+extern dijkstra_map butcherables_map;
 
 class distance_map_system : public rltk::base_system {
 public:
@@ -12,4 +13,5 @@ public:
     virtual void configure() override final;
 private:
     bool update_huntables = true;
+    bool update_butcherables = true;
 };

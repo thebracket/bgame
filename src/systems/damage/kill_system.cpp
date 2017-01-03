@@ -55,6 +55,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
                     ->assign(renderable_t{ old_render->glyph, rltk::colors::GREY, rltk::colors::BLACK })
                     ->assign(corpse_harvestable{tag})
                     ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") });
+            emit_deferred(butcherable_moved_message{});
         }
     }
 

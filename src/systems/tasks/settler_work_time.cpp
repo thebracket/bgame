@@ -196,7 +196,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		}
 
 		// Butcher corpses
-		if (ai.permitted_work[JOB_BUTCHER] && butcher_and_corpses_exist()) {
+		if (ai.permitted_work[JOB_BUTCHER] && butcher_exist() && butcherables_map.distance_map[mapidx(pos.x, pos.y, pos.z)]<MAX_DIJSTRA_DISTANCE) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
 			ai.job_type_major = JOB_BUTCHERING;
 			ai.job_type_minor = JM_BUTCHER_FIND_CORPSE;
