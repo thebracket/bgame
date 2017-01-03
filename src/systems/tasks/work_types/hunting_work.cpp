@@ -36,9 +36,9 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 		cancel_action(e, ai, stats, species, pos, name, "Out of ammo");
 		return;
 	}
-	
+
+    const int idx = mapidx(pos);
 	if (ai.job_type_minor == JM_HUNT_FIND_TARGET) {
-        const int idx = mapidx(pos);
         const auto distance = huntables_map.distance_map[idx];
         if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
             cancel_action(e, ai, stats, species, pos, name, "No hunting target");
@@ -51,6 +51,12 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 	}
 
 	if (ai.job_type_minor == JM_HUNT) {
+        const auto distance = huntables_map.distance_map[idx];
+        if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
+            cancel_action(e, ai, stats, species, pos, name, "No hunting target");
+            return;
+        }
+
 		// Pick the destination from the Dikstra map
         position_t destination = huntables_map.find_destination(pos);
         move_to(e, pos, destination);
