@@ -110,6 +110,7 @@ void wildlife_population_system::spawn_wildlife() {
                         ->assign(initiative_t{});
                         std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                     }
+                    emit_deferred(huntable_moved_message{});
                 }
         }
     }
@@ -130,14 +131,4 @@ void wildlife_population_system::update(const double ms) {
         count_wildlife_populations();
         spawn_wildlife();
     });
-}
-
-std::map<int, position_t> get_hunting_candidates(position_t &hunter_pos) {
-    std::map<int, position_t> result;
-
-    each<grazer_ai, position_t>([&result, &hunter_pos] (entity_t &e, grazer_ai &ai, position_t &pos) {
-        result[(int)distance3d_squared(hunter_pos.x, hunter_pos.y, hunter_pos.z, pos.x, pos.y, pos.z)] = pos;
-    });
-
-    return result;
 }

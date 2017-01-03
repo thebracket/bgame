@@ -37,3 +37,5 @@ struct entity_moved_message : public rltk::base_message_t {
 	position_t origin;
 	position_t destination;
 };
+
+struct huntable_moved_message : public rltk::base_message_t {};

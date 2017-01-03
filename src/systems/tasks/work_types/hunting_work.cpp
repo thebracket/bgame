@@ -13,6 +13,7 @@
 #include "../../../components/corpse_harvestable.hpp"
 #include "../settler_move_to.hpp"
 #include "../../../raws/creatures.hpp"
+#include "../../distance_map_system.hpp"
 
 #include <iostream>
 #include <map>
@@ -36,45 +37,22 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 	}
 	
 	if (ai.job_type_minor == JM_HUNT_FIND_TARGET) {
-		auto hunting_targets = get_hunting_candidates(pos);
-		if (hunting_targets.empty()) {
-			cancel_action(e, ai, stats, species, pos, name, "No huntable targets");
-			return;
-		}
+        const int idx = mapidx(pos);
+        const auto distance = huntables_map.distance_map[idx];
+        if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
+            cancel_action(e, ai, stats, species, pos, name, "No hunting target");
+            return;
+        }
 
-		ai.current_path.reset();
-		auto it = hunting_targets.begin();
-		while (it != hunting_targets.end() && !ai.current_path) {
-			ai.current_path = find_path(pos, it->second);
-			if (!ai.current_path) ++it;
-		}
-
-		if (ai.current_path) {
-			ai.target_x = ai.current_path->destination.x;
-			ai.target_y = ai.current_path->destination.y;
-			ai.target_z = ai.current_path->destination.z;
-			ai.job_type_minor = JM_HUNT;
-			ai.job_status = "Hunting";
-			return;
-		}
+        ai.job_type_minor = JM_HUNT;
+        ai.job_status = "Hunting";
+        return;
 	}
 
 	if (ai.job_type_minor == JM_HUNT) {
-		if (pos == ai.current_path->destination) {
-			// We're at the destination
-			ai.current_path.reset();
-			ai.job_type_minor = JM_HUNT_FIND_TARGET;
-			change_job_status(ai, name, "Finding hunting targets");
-			return;
-		}
-		// Travel to destination
-		if (!ai.current_path || ai.current_path->steps.empty()) {
-			cancel_action(e, ai, stats, species, pos, name, "No huntable targets");
-			return;
-		}
-		position_t next_step = ai.current_path->steps.front();
-		move_to(e, pos, next_step);
-		ai.current_path->steps.pop_front();
+		// Pick the destination from the Dikstra map
+        position_t destination = huntables_map.find_destination(pos);
+        move_to(e, pos, destination);
 		return;
 	}
 }

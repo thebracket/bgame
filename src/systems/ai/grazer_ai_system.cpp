@@ -5,6 +5,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../components/health.hpp"
 #include "../tasks/threat_scanner.hpp"
+#include "../../messages/entity_moved_message.hpp"
 
 using namespace rltk;
 
@@ -36,6 +37,7 @@ void grazer_ai_system::on_message(const action_available_message &msg) {
             if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
         } else {
             this->wander_randomly(e.get(), pos.get());
+            emit_deferred(huntable_moved_message{});
         }
     } else {
         // Poor creature is scared!
@@ -43,10 +45,14 @@ void grazer_ai_system::on_message(const action_available_message &msg) {
             // Attack the target
             auto health = entity(e->id)->component<health_t>();
             if (health) {
-                if (!health->unconscious) emit_deferred(creature_attack_message{e->id, hostile.closest_fear});
+                if (!health->unconscious) {
+                    emit_deferred(creature_attack_message{e->id, hostile.closest_fear});
+                    emit_deferred(huntable_moved_message{});
+                }
             }
         } else {
             emit_deferred(entity_wants_to_flee_message{e->id, hostile.closest_fear});
+            emit_deferred(huntable_moved_message{});
         }
     }
 }

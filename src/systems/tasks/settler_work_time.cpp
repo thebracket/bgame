@@ -46,6 +46,7 @@
 #include "settler_move_to.hpp"
 #include "../../raws/reactions.hpp"
 #include "../stockpile_system.hpp"
+#include "../distance_map_system.hpp"
 
 #include <iostream>
 #include <map>
@@ -204,7 +205,8 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		}
 
 		// Hunt
-		if (butcher_exist() && ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo && !get_hunting_candidates(pos).empty()) {
+		if (butcher_exist() && ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo &&
+				huntables_map.distance_map[mapidx(pos)]>0 && huntables_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
 			ai.job_type_major = JOB_HUNT;
 			ai.job_type_minor = JM_HUNT_FIND_TARGET;

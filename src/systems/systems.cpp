@@ -49,6 +49,7 @@
 #include "damage/healing_system.hpp"
 #include "initiative_system.hpp"
 #include "stockpile_system.hpp"
+#include "distance_map_system.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -60,6 +61,7 @@ void add_systems_to_ecs() {
     add_system<initiative_system>();
     add_system<world_system>();
     add_system<gravity_system>();
+    add_system<distance_map_system>();
     add_system<wildlife_population_system>();
     add_system<sentient_ai_system>();
     add_system<grazer_ai_system>();

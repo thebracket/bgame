@@ -13,5 +13,3 @@ private:
     void count_wildlife_populations();
     void spawn_wildlife();
 };
-
-std::map<int, position_t> get_hunting_candidates(position_t &hunter_pos);

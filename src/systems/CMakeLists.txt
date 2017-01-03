@@ -51,6 +51,7 @@ add_library(systems STATIC
     damage/kill_system.cpp
     damage/healing_system.cpp
 	initiative_system.cpp
+	distance_map_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
