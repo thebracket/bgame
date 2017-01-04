@@ -5,6 +5,17 @@ using namespace rltk;
 
 void add_dig_target(int X, int Y, int radius, int depth, boost::container::flat_map<int, region_water_feature_tile> &dig_targets, 
     std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap) {
+
+    int min_altitude = REGION_DEPTH;
+    for (int y=0-radius; y<radius; ++y) {
+        for (int x = 0 - radius; x < radius; ++x) {
+            const int actual_x = X + x;
+            const int actual_y = Y + y;
+            const int idx = (actual_y * REGION_WIDTH) + actual_x;
+            if (heightmap[idx] < min_altitude) min_altitude = heightmap[idx];
+        }
+    }
+
     for (int y=0-radius; y<radius; ++y) {
         for (int x=0-radius; x<radius; ++x) {
             const int actual_x = X+x;
@@ -138,7 +149,7 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
     // 2 - Dig down - the rivers are (lowest-point - depth)
     for (const auto &t : dig_targets) {
         if (!t.second.has_water_already) {
-            heightmap[t.first] = min_altitude - t.second.depth;
+            heightmap[t.first] = t.second.altitude - t.second.depth;
             pooled_water[t.first] = (t.second.depth-1)*10;
         }
     }
