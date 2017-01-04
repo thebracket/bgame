@@ -121,16 +121,11 @@ buildings = {
 		components = { { item="wood_log", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
 		render = {
-			width=3, height=3, tiles= {
+			width=2, height=2, tiles= {
 				{glyph= glyphs['sawmill_1'], foreground = colors['white'], background = colors['black']},
 				{glyph= glyphs['sawmill_2'], foreground = colors['white'], background = colors['black']},
 				{glyph= glyphs['sawmill_3'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['sawmill_4'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['sawmill_5'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['sawmill_6'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['sawmill_7'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['sawmill_8'], foreground = colors['white'], background = colors['black']},
-				{glyph= glyphs['sawmill_9'], foreground = colors['white'], background = colors['black']}
+				{glyph= glyphs['sawmill_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
 	},
