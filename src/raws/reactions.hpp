@@ -8,6 +8,7 @@
 #include "reaction_input.hpp"
 
 constexpr int special_reaction_cooking = 0;
+constexpr int special_reaction_tanning = 1;
 
 struct reaction_t {
     std::string tag = "";
@@ -20,7 +21,7 @@ struct reaction_t {
     bool automatic = false;
     int power_drain = 0;
     bool emits_smoke = false;
-    std::bitset<1> specials;
+    std::bitset<2> specials;
 };
 
 extern boost::container::flat_map<std::string, reaction_t> reaction_defs;

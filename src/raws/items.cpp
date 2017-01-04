@@ -49,6 +49,10 @@ void read_items(std::ofstream &tech_tree_file) noexcept
                                    if (type == "food") c.categories.set(ITEM_FOOD);
                                    if (type == "spice") c.categories.set(ITEM_SPICE);
                                    if (type == "drink") c.categories.set(ITEM_DRINK);
+                                   if (type == "hide") c.categories.set(ITEM_HIDE);
+                                   if (type == "bone") c.categories.set(ITEM_BONE);
+                                   if (type == "skull") c.categories.set(ITEM_SKULL);
+                                   if (type == "leather") c.categories.set(ITEM_LEATHER);
                                });
                            }}
                    }

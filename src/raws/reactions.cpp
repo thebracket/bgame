@@ -101,6 +101,7 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
                         if (f == "special") {
                             const std::string special = lua_tostring(lua_state, -1);
                             if (special == "cooking") c.specials.set(special_reaction_cooking);
+                            if (special == "tanning") c.specials.set(special_reaction_tanning);
                         }
                         lua_pop(lua_state, 1);
                     }

@@ -152,16 +152,32 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			// Spawn results
 			for (auto &output : finder->second.outputs) {
 				for (int i=0; i<output.second; ++i) {
-					if (!finder->second.specials.test(special_reaction_cooking)) {
-						std::cout << "Reaction - spawning " << output.first << "/" << material << "\n";
-                        spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
-                    } else {
+                    bool done = false;
+
+                    if (!done && finder->second.specials.test(special_reaction_cooking)) {
                         // This is more complicated, we have to make a special item from the components.
                         // The idea is to get something like Roast Asparagus
                         std::cout << "Cooking Reaction - spawning " << output.first << "/" << material << "\n";
                         auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material);
                         auto item = new_item->component<item_t>();
                         item->item_name = mat_names + item->item_name;
+                        done = true;
+                    }
+
+                    if (!done && finder->second.specials.test(special_reaction_tanning)) {
+                        // This is more complicated, we have to make a special item from the components.
+                        // The idea is to get something like Roast Asparagus
+                        std::cout << "Tanning Reaction - spawning " << output.first << "/" << material << "\n";
+                        auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material);
+                        auto item = new_item->component<item_t>();
+                        item->item_name = mat_names + item->item_name;
+                        done = true;
+                    }
+
+                    if (!done) {
+                        std::cout << "Reaction - spawning " << output.first << "/" << material << "\n";
+                        spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
+                        done = true;
                     }
 				}
 			}

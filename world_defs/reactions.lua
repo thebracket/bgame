@@ -31,7 +31,7 @@ reactions = {
         name = "Tan Leather",
         workshop = "tanner",
         inputs = { { item="hide", qty=1 } },
-        outputs = { { item="leather", qty=2 } },
+        outputs = { { item="leather", qty=2, special="tanning" } },
         skill = "Tanning",
         difficulty = 10,
         automatic = true

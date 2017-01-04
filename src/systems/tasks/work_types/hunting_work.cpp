@@ -152,9 +152,34 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
         const auto food_idx = get_material_by_tag("food").get();
 
 		auto finder = get_creature_def(corpse->creature_tag);
-		for (int i=0; i<finder->yield_bone; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "bone", organic_idx);
-		for (int i=0; i<finder->yield_hide; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "hide", organic_idx);
-		for (int i=0; i<finder->yield_meat; ++i) {
+        // Spawn bones
+		for (int i=0; i<finder->yield_bone; ++i) {
+            auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "bone", food_idx);
+            const std::string corpse_type = corpse->creature_tag;
+            if (corpse_type != "") {
+                auto creature_def = get_creature_def(corpse_type);
+                auto item = new_entity->component<item_t>();
+                if (creature_def && item) {
+                    item->item_name = creature_def->name + std::string(" ") + "Bone";
+                }
+            }
+        }
+
+        // Spawn hide
+		for (int i=0; i<finder->yield_hide; ++i) {
+            auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "hide", food_idx);
+            const std::string corpse_type = corpse->creature_tag;
+            if (corpse_type != "") {
+                auto creature_def = get_creature_def(corpse_type);
+                auto item = new_entity->component<item_t>();
+                if (creature_def && item) {
+                    item->item_name = creature_def->name + std::string(" ") + "Hide";
+                }
+            }
+        }
+
+        // Spawn meat
+        for (int i=0; i<finder->yield_meat; ++i) {
             auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "meat", food_idx);
             const std::string corpse_type = corpse->creature_tag;
             if (corpse_type != "") {
@@ -165,7 +190,19 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
                 }
             }
         }
-		for (int i=0; i<finder->yield_skull; ++i) spawn_item_on_ground(pos.x, pos.y, pos.z, "skull", organic_idx);
+
+        // Spawn skulls
+		for (int i=0; i<finder->yield_skull; ++i) {
+            auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "skull", food_idx);
+            const std::string corpse_type = corpse->creature_tag;
+            if (corpse_type != "") {
+                auto creature_def = get_creature_def(corpse_type);
+                auto item = new_entity->component<item_t>();
+                if (creature_def && item) {
+                    item->item_name = creature_def->name + std::string(" ") + "Skull";
+                }
+            }
+        }
 
 		delete_entity(ai.targeted_hostile); // Destroy the corpse
         emit_deferred(butcherable_moved_message{});
