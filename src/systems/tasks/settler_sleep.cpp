@@ -10,6 +10,9 @@
 #include "settler_glyph.hpp"
 #include "../messages/messages.hpp"
 #include "pathfinding.hpp"
+#include "../distance_map_system.hpp"
+#include "settler_move_to.hpp"
+#include "../../messages/entity_moved_message.hpp"
 
 using namespace rltk;
 using tasks::change_settler_glyph;
@@ -26,6 +29,7 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
 		cancel_action(entity, ai, stats, species, pos, name, "Bed time!");
 		return;
 	}
+
 	if (ai.job_type_major == JOB_IDLE) {
 		ai.job_type_major = JOB_SLEEP;
 		ai.job_type_minor = JM_FIND_BED;
@@ -34,66 +38,55 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
 	}
 	if (ai.job_type_major != JOB_SLEEP) throw std::runtime_error("Sleep mode, but shouldn't have made it to here.\n");
 
+    const int idx = mapidx(pos);
 	if (ai.job_type_minor == JM_FIND_BED) {
-		// Find nearest unclaimed bed
-		std::map<float, std::tuple<construct_provides_sleep_t,position_t,std::size_t>> bed_candidates;
-		each<construct_provides_sleep_t, position_t>([&bed_candidates, &pos] (entity_t &e, construct_provides_sleep_t &bed, position_t &bed_pos) {
-			if (!bed.claimed) {
-				if (find_path(pos, bed_pos)->success) {
-					bed_candidates[distance3d(pos.x, pos.y, pos.z, bed_pos.x, bed_pos.y, bed_pos.z)] = std::make_tuple(bed, bed_pos, e.id);
-				}
-			}
-		});
-		if (bed_candidates.empty()) {
-			emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
-			ai.job_type_minor = JM_SLEEP;
-			ai.target_id = 0;
-			return;
-		}
-
-		// Claim it
-		ai.target_x = std::get<1>(bed_candidates.begin()->second).x;
-		ai.target_y = std::get<1>(bed_candidates.begin()->second).y;
-		ai.target_z = std::get<1>(bed_candidates.begin()->second).z;
-		ai.target_id = std::get<2>(bed_candidates.begin()->second);
-		rltk::entity(ai.target_id)->component<construct_provides_sleep_t>()->claimed = true;
-
-		// Set the path
-		ai.current_path = find_path(pos, position_t{ai.target_x, ai.target_y, ai.target_z});
-		if (!ai.current_path->success) {
-			std::cout << "Warning: no path to bed found.\n";
-			ai.current_path.reset();
-			rltk::entity(ai.target_id)->component<construct_provides_sleep_t>()->claimed = false;
-			return;
-		}
-		ai.job_type_minor = JM_GO_TO_BED;
-		change_job_status(ai, name, "Going to bed");
-		return;
+        const int16_t distance = bed_map.distance_map[idx];
+        if (distance > MAX_DIJSTRA_DISTANCE) {
+            // There is no bed available - sleep rough!
+            // TODO: Bad thoughts!
+            emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
+            ai.job_type_minor = JM_SLEEP;
+            ai.job_status = "Sleeping";
+            ai.target_id = 0;
+            return;
+        } else {
+            ai.job_type_minor = JM_GO_TO_BED;
+            change_job_status(ai, name, "Going to bed");
+            return;
+        }
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_BED) {
-		tasks::try_path(entity, ai, pos,
-			[] () {}, // Do nothing for success
-			[&ai, &name] () {
-				ai.job_type_minor = JM_SLEEP;
-				change_job_status(ai, name, "Sleeping", true);
-			}, // Arrived
-			[&ai, &name, &entity] () {
-				ai.job_type_minor = JM_FIND_BED;
-				change_job_status(ai, name, "Looking for a bed");
-				emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
-
-                auto sleep_entity = rltk::entity(ai.target_id);
-                if (sleep_entity) {
-                    auto sleep_component = sleep_entity->component<construct_provides_sleep_t>();
-                    if (sleep_component) {
-                        sleep_component->claimed = false;
-                        ai.job_type_minor = JM_SLEEP;
-                    }
+        const int16_t distance = bed_map.distance_map[idx];
+        if (distance == 0) {
+            std::size_t bed_id = 0;
+            each<construct_provides_sleep_t, position_t>([&bed_id, &pos] (entity_t &e, construct_provides_sleep_t &sleep, position_t &bpos) {
+                if (pos == bpos) bed_id = e.id;
+            });
+            if (bed_id > 0) {
+                auto bed = rltk::entity(bed_id);
+                if (bed) {
+                    bed->component<construct_provides_sleep_t>()->claimed = true;
+                    ai.target_id = bed_id;
+                    emit(bed_changed_message{});
                 }
-			} // fail
-		);
-		return;
+            }
+            ai.job_type_minor = JM_SLEEP;
+            ai.job_status = "Sleeping";
+            return;
+        } else if (distance > MAX_DIJSTRA_DISTANCE) {
+            // There is no bed available - sleep rough!
+            // TODO: Bad thoughts!
+            emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
+            ai.job_type_minor = JM_SLEEP;
+            ai.job_status = "Sleeping";
+            ai.target_id = 0;
+            return;
+        } else {
+            position_t destination = bed_map.find_destination(pos);
+            move_to(entity, pos, destination);
+            return;
+        }
 	}
 
 	if (ai.job_type_minor == JM_SLEEP) {

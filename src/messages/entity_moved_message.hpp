@@ -40,3 +40,4 @@ struct entity_moved_message : public rltk::base_message_t {
 
 struct huntable_moved_message : public rltk::base_message_t {};
 struct butcherable_moved_message : public rltk::base_message_t {};
+struct bed_changed_message : public rltk::base_message_t {};

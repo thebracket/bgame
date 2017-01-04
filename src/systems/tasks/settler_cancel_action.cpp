@@ -8,7 +8,7 @@ namespace tasks {
 
 void cancel_action(rltk::entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
 	// Drop whatever we are doing!
-	if (ai.job_type_major == JOB_SLEEP) {
+	if (ai.job_type_major == JOB_SLEEP && ai.target_id > 0) {
 		auto bed_entity = entity(ai.target_id);
 		if (bed_entity) {
 			auto bed = bed_entity->component<construct_provides_sleep_t>();
