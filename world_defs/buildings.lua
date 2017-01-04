@@ -162,35 +162,70 @@ buildings = {
 		name = "Tanner",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "tanner.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['tanner_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['tanner_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['tanner_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['tanner_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	leatherworker = {
 		name = "Leatherworker",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "leatherworker.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['leatherworker_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['leatherworker_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['leatherworker_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['leatherworker_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	bonecarver = {
 		name = "Bonecarver",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "bonecarver.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['bonecarver_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['bonecarver_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['bonecarver_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	stonecutter = {
 		name = "Stonecutters",
 		components = { { item="stone_boulder", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "stonecutter.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['stonecutter_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['stonecutter_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['stonecutter_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['stonecutter_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	carpenter = {
 		name = "Carpentry Workshop",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "carpenter.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['carpenter_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['carpenter_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['carpenter_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['carpenter_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	charcoal_hut = {
