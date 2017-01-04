@@ -7,6 +7,7 @@
 extern dijkstra_map huntables_map;
 extern dijkstra_map butcherables_map;
 extern dijkstra_map bed_map;
+extern dijkstra_map settler_map;
 
 class distance_map_system : public rltk::base_system {
 public:
@@ -16,4 +17,5 @@ private:
     bool update_huntables = true;
     bool update_butcherables = true;
     bool update_bed_map = true;
+    bool update_settler_map = true;
 };

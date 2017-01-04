@@ -6,6 +6,7 @@
 #include "../main/game_globals.hpp"
 #include "../components/slidemove.hpp"
 #include "../components/initiative.hpp"
+#include "../components/settler_ai.hpp"
 #include <rltk.hpp>
 
 octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};
@@ -144,5 +145,10 @@ void movement_system::update(const double ms) {
         octree_location_t end = octree_location_t{static_cast<int>(msg.destination.x), static_cast<int>(msg.destination.y), msg.destination.z, msg.entity_id};
         entity_octree.remove_node(start);
         entity_octree.add_node(end);
+
+        auto e = entity(msg.entity_id);
+        if (e && e->component<settler_ai_t>()) {
+            emit(settler_moved_message{});
+        }
     }
 }

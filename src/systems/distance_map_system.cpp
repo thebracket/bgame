@@ -6,10 +6,12 @@
 #include "../planet/region.hpp"
 #include "../messages/entity_moved_message.hpp"
 #include "../components/construct_provides_sleep.hpp"
+#include "../components/settler_ai.hpp"
 
 dijkstra_map huntables_map;
 dijkstra_map butcherables_map;
 dijkstra_map bed_map;
+dijkstra_map settler_map;
 
 using namespace rltk;
 
@@ -18,12 +20,14 @@ void distance_map_system::configure() {
     subscribe_mbox<huntable_moved_message>();
     subscribe_mbox<butcherable_moved_message>();
     subscribe_mbox<bed_changed_message>();
+    subscribe_mbox<settler_moved_message>();
 }
 
 void distance_map_system::update(const double duration_ms) {
     each_mbox<huntable_moved_message>([this] (const huntable_moved_message &msg) { update_huntables = true; });
     each_mbox<butcherable_moved_message>([this] (const butcherable_moved_message &msg) { update_butcherables = true; });
     each_mbox<bed_changed_message>([this] (const bed_changed_message &msg) { update_bed_map = true; });
+    each_mbox<settler_moved_message>([this] (const settler_moved_message &msg) { update_settler_map = true; });
 
     if (update_huntables) {
         std::vector<int> huntables;
@@ -55,5 +59,15 @@ void distance_map_system::update(const double duration_ms) {
         bed_map.update(beds);
 
         update_bed_map = false;
+    }
+
+    if (update_settler_map) {
+        std::vector<int> settlers;
+        each<settler_ai_t, position_t>([&settlers] (entity_t &e, settler_ai_t &settler, position_t &pos) {
+            settlers.emplace_back(mapidx(pos));
+        });
+        settler_map.update(settlers);
+
+        update_settler_map = false;
     }
 }

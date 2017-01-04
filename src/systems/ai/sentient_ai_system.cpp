@@ -17,6 +17,7 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
 #include "../tasks/threat_scanner.hpp"
+#include "../distance_map_system.hpp"
 
 using tasks::calculate_initiative;
 
@@ -106,45 +107,31 @@ void sentient_ai_system::update(const double ms) {
             }
 
             if (ai->goal == SENTIENT_GOAL_IDLE && ai->hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai->aggression && ai->days_since_arrival > 1) {
-                // Look for a settler to kill
-                std::map<float, std::size_t> targets;
-                each<settler_ai_t, position_t>([&targets, &pos] (entity_t &se, settler_ai_t &settler_ai, position_t &spos) {
-                    const float distance = distance3d(pos->x, pos->y, pos->z, spos.x, spos.y, spos.z);
-                    targets[distance] = se.id;
-                });
-
-                if (!targets.empty()) {
-                    auto it = targets.begin();
-                    ai->target = 0;
-                    while (ai->target == 0 && it != targets.end()) {
-                        ai->current_path = find_path(*pos, *entity(it->second)->component<position_t>(), false, planet.civs.unimportant_people[ai->person_id].civ_id);
-                        if (ai->current_path->success) {
-                            ai->target = it->second;
-                        }
-
-                        ++it;
-                    }
-
-                    if (ai->target == 0) {
-                        ai->current_path.reset();
-                    } else {
-                        ai->goal = SENTIENT_GOAL_KILL;
-                    }
+                // Can we get to a settler?
+                const int idx = mapidx(pos.get());
+                const int distance = settler_map.distance_map[idx];
+                if (distance >= MAX_DIJSTRA_DISTANCE) {
+                    // Nobody to attack!
+                    ai->goal = SENTIENT_GOAL_IDLE;
+                } else {
+                    // Close for the kill...
+                    ai->goal = SENTIENT_GOAL_KILL;
                 }
             } else if (ai->goal == SENTIENT_GOAL_KILL ) {
-                tasks::try_path(*e, *ai, *pos,
-                    [] () {}, // Nothing on success
-                    [&ai] () {
-                        ai->current_path.reset();
-                        ai->goal = SENTIENT_GOAL_IDLE;
-                        ai->target = 0;
-                    }, // On arrival
-                    [&ai] () {
-                        ai->current_path.reset();
-                        ai->goal = SENTIENT_GOAL_IDLE;
-                        ai->target = 0;
-                    } // On fail
-                );
+                const int idx = mapidx(pos.get());
+                const int distance = settler_map.distance_map[idx];
+                if (distance >= MAX_DIJSTRA_DISTANCE) {
+                    // Nobody to attack!
+                    ai->goal = SENTIENT_GOAL_IDLE;
+                } else if (distance < 1) {
+                    // We've arrived - the combat code should kick in on its own if applicable
+                    ai->goal = SENTIENT_GOAL_IDLE;
+                } else {
+                    // Close for the kill...
+                    position_t destination = settler_map.find_destination(pos.get());
+                    emit_deferred(entity_wants_to_move_message{e->id, destination});
+                    emit_deferred(renderables_changed_message{});
+                }
                 return;
             } else if (ai->goal == SENTIENT_GOAL_IDLE) {
                 // Otherwise we move randomly
