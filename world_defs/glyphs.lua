@@ -134,7 +134,11 @@ glyphs = {
 	still_1 = 400,
 	still_2 = 401,
 	still_3 = 416,
-	still_4 = 417
+	still_4 = 417,
+	butcher_1 = 404,
+	butcher_2 = 405,
+	butcher_3 = 420,
+	butcher_4 = 421
 }
 
 colors = {

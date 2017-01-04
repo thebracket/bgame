@@ -148,7 +148,14 @@ buildings = {
 		name = "Butcher",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "butchershop.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['butcher_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['butcher_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['butcher_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	tanner = {
