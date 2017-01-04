@@ -232,56 +232,97 @@ buildings = {
 		name = "Charcoal Burner",
 		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "charcoal_hut.xp"
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['charcoal_hut'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	smelter = {
 		name = "Smelter",
 		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "smelter.xp"
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	glass_furnace = {
 		name = "Glass Furnace",
 		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "glass_furnace.xp"
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['glass_furnace'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	silicon_refinery = {
 		name = "Silicon Refinery",
 		components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "silicon_refinery.xp"
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['silicon_refinery'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	kiln = {
 		name = "Kiln",
 		components = { { item="clay", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "kiln.xp"
+		render = {
+			width=1, height=1, tiles= {
+				{glyph= glyphs['kiln'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	primitive_forge = {
 		name = "Primitive Forge",
 		components = { { item="block", qty=1, mat_type="rock" } },
 		skill = { name="Construction", difficulty=15 },
-		render_rex = "primitive_forge.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['forge_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['forge_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['forge_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['forge_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	primitive_workshop = {
 		name = "Primitive Workshop",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=15 },
-		render_rex = "primitive_workshop.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['workshop_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['workshop_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['workshop_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	mason = {
 		name = "Masonry",
 		components = { { item="block", qty=1 } },
 		skill = { name="Construction", difficulty=12 },
-		render_rex = "mason.xp"
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['mason_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['mason_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['mason_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['mason_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
 	},
 
 	table = {

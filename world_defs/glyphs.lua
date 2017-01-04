@@ -158,7 +158,24 @@ glyphs = {
 	carpenter_1 = 414,
 	carpenter_2 = 415,
 	carpenter_3 = 430,
-	carpenter_4 = 431
+	carpenter_4 = 431,
+	charcoal_hut = 432,
+	smelter = 433,
+	glass_furnace = 434,
+	silicon_refinery = 435,
+	kiln = 436,
+	forge_1 = 448,
+	forge_2 = 449,
+	forge_3 = 464,
+	forge_4 = 465,
+	workshop_1 = 450,
+	workshop_2 = 451,
+	workshop_3 = 466,
+	workshop_4 = 467,
+	mason_1 = 452,
+	mason_2 = 453,
+	mason_3 = 468,
+	mason_4 = 469
 }
 
 colors = {
