@@ -5,6 +5,7 @@
 #include "../../utils/string_utils.hpp"
 #include "gui_system.hpp"
 #include <sstream>
+#include "../../external/imgui-sfml/imgui-SFML.h"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -27,51 +28,45 @@ void mode_civs_system::update(const double ms) {
     }
 }
 
+int selected_civ = 0;
+
 void render_civ_list() {
-    dialog_placement_t box{};
-
-    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(" Active Civilizations ", [] () { 
-        // On close
-        game_master_mode = PLAY;
-        emit_deferred(map_dirty_message{});
-        emit_deferred(recalculate_mining_message{});
-    });
-
-    std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box.left+1, box.top+3);
+    std::vector<std::pair<std::size_t, std::string>> civs;
     std::size_t civ_id = 0;
     for (civ_t &civ : planet.civs.civs) {
         if (civ.met_cordex) {
-            gui_table_row row;
-
-            // Civ feelings
-            std::unique_ptr<gui_table_text> c_feel;
+            std::string line = civ.name + std::string(" ");
             if (civ.cordex_feelings < 0) {
-                c_feel = std::make_unique<gui_table_text>(8,"   WAR   ", WHITE, RED);
+                line += "(WAR)";
             } else if (civ.cordex_feelings == 0) {
-                c_feel = std::make_unique<gui_table_text>(8, "NEUTRAL ", BLACK, CYAN);
+                line += "(NEUTRAL)";
             } else {
-                c_feel = std::make_unique<gui_table_text>(8, "FRIENDLY", WHITE, GREEN);
+                line += "(FRIENDLY)";
             }
-            row.cols.push_back(std::move(c_feel));
-
-            // Negotiate button
-            std::unique_ptr<gui_table_button> go_btn = std::make_unique<gui_table_button>(9, "Negotiate", [civ_id] () {
-                game_master_mode = CIV_NEGOTIATE;
-                negotiating_civ = civ_id;
-            });
-            row.cols.push_back(std::move(go_btn));
-
-            // Civ name
-            std::unique_ptr<gui_table_text> c_name = std::make_unique<gui_table_text>(box.right - 19, civ.name);
-            row.cols.push_back(std::move(c_name));
-
-            table->rows.push_back(std::move(row));
+            civs.emplace_back(std::make_pair(civ_id, line));
         }
         ++civ_id;
     }
-    dialog->children.push_back(std::move(table));
+    const char* civ_listbox_items[civs.size()];
+    for (int i=0; i<civs.size(); ++i) {
+        civ_listbox_items[i] = civs[i].second.c_str();
+    }
+    ImGui::Begin("Other Civilizations", nullptr, ImVec2{600,400}, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::ListBox("", &selected_civ, civ_listbox_items, civs.size(), 10);
 
-    add_gui_element(std::move(dialog));
+    if (ImGui::Button("Negotiate")) {
+        negotiating_civ = civs[selected_civ].first;
+        game_master_mode = CIV_NEGOTIATE;
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Close")) {
+        game_master_mode = PLAY;
+        emit_deferred(map_dirty_message{});
+        emit_deferred(recalculate_mining_message{});
+    }
+
+    ImGui::End();
 }
 
 void civs_add_text_line_to_table(const dialog_placement_t &box, std::unique_ptr<gui_table> &table, const int &w, const std::string &s)

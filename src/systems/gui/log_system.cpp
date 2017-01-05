@@ -34,7 +34,7 @@ void log_system::update(const double ms) {
 
     if (game_master_mode == PLAY) {
         if (first_run) {
-            ImGui::SetNextWindowPos(ImVec2(5, get_window()->getSize().y - 105), ImGuiSetCond_Always);
+            ImGui::SetNextWindowPos(ImVec2(5, get_window()->getSize().y - 125), ImGuiSetCond_Always);
             first_run = false;
         }
         ImGui::Begin("Log", nullptr, ImVec2{600,100}, ImGuiWindowFlags_AlwaysAutoResize);

@@ -44,7 +44,7 @@ void tick(double duration_ms) {
     // Initial ImGui call
     if (!has_init) {
         ImGui::SFML::Init(*rltk::get_window());
-        ImGui::SetupImGuiStyle(true, 0.8f);
+        ImGui::SetupImGuiStyle(false, 0.8f);
         has_init = true;
     }
     ImGui::SFML::Update(*rltk::get_window(), deltaClock.restart());
