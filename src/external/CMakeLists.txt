@@ -45,3 +45,12 @@ add_library(sqlite STATIC sqlite/sqlite3.c)
 
 # Build FastNoise
 add_library(FastNoise STATIC FastNoise/FastNoise.cpp)
+
+# Build imgui
+add_library(imgui STATIC imgui/imgui.cpp imgui/imgui_draw.cpp)
+
+# Build imgi-sfml
+include_directories(imgui)
+include_directories(imgui-sfml)
+add_library(imgui-sfml STATIC imgui-sfml/imgui-SFML.cpp )
+target_link_libraries(imgui-sfml imgui)

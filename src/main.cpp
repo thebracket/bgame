@@ -5,6 +5,7 @@
 #include "main/play_game.hpp"
 #include "main/game_globals.hpp"
 #include "utils/string_utils.hpp"
+#include "external/imgui-sfml/imgui-SFML.h"
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <chrono>
@@ -35,7 +36,17 @@ void save_game() {
 	last_save = std::chrono::high_resolution_clock::now();
 }
 
+bool has_init = false;
+sf::Clock deltaClock;
+
 void tick(double duration_ms) {
+    // Initial ImGui call
+    if (!has_init) {
+        ImGui::SFML::Init(*rltk::get_window());
+        has_init = true;
+    }
+    ImGui::SFML::Update(*rltk::get_window(), deltaClock.restart());
+
 	switch (mode) {
 		case SPLASH : {
 			splash.tick(duration_ms);
@@ -135,8 +146,29 @@ int main(int argc, char* argv[])
 #endif // !WIN32
      */
 
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontDefault();
+
 	read_config();
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
 	splash.init();
+
+    // ImGui hooks
+    std::function<bool(sf::Event)> on_message = [] (sf::Event e) {
+        ImGui::SFML::ProcessEvent(e);
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureKeyboard || io.WantCaptureMouse) {
+            return false;
+        }
+        return true;
+    };
+    rltk::optional_event_hook = on_message;
+
+    std::function<void()> on_display = [] () {
+        ImGui::Render();
+    };
+    rltk::optional_display_hook = on_display;
+
+    // Main loop - hand over to RLTK
     run(tick);
 }
