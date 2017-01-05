@@ -34,7 +34,7 @@ add_library(systems STATIC
 	damage/weapons_helpers.cpp
 	gui/game_over_system.cpp
 	gui/mode_civs_system.cpp
-	log_system.cpp
+        gui/log_system.cpp
 	gui/gui_system.cpp
 	gui/hud_system.cpp
 	physics/fluid_system.cpp

@@ -27,7 +27,7 @@
 #include "world_system.hpp"
 #include "gui/game_over_system.hpp"
 #include "gui/mode_civs_system.hpp"
-#include "log_system.hpp"
+#include "gui/log_system.hpp"
 #include "input/mouse_input_system.hpp"
 #include "gui/gui_system.hpp"
 #include "gui/hud_system.hpp"

@@ -1,8 +1,9 @@
 #include "log_system.hpp"
-#include "../main/game_globals.hpp"
-#include "../messages/log_message.hpp"
-#include "../messages/tick_message.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../messages/log_message.hpp"
+#include "../../messages/tick_message.hpp"
 #include <algorithm>
+#include "../../external/imgui-sfml/imgui-SFML.h"
 
 constexpr int MAX_LOG_AGE = 200;
 constexpr int MAX_LOG_LINES = 10;
@@ -31,31 +32,19 @@ void log_system::update(const double ms) {
     // Cull older log entries
     logger->lines.erase(std::remove_if(logger->lines.begin(), logger->lines.end(), [] (auto &l) { return l.age>MAX_LOG_AGE; }), logger->lines.end());
 
-    // Render on screen for now
     if (game_master_mode == PLAY) {
-        const int max_x = term(LOG_TERM)->term_width;
-        const int max_y = term(LOG_TERM)->term_height;
-
-        int Y = max_y - 2;
-        int i=0;
-        for (const auto &line : logger->lines) {
-            if (i < MAX_LOG_LINES) {
-                int X = 2;
-
-                for (const rltk::vchar &c : line.chars) {
-                    term(LOG_TERM)->set_char(X, Y, c);
-                    ++X;
-                    if (X > (max_x -1)) {
-                        X = 6;
-                        --Y;
-                    }
-                }
-                --Y;
-
-            } else {
-                break;
-            }
-            ++i;
+        if (first_run) {
+            ImGui::SetNextWindowPos(ImVec2(5, get_window()->getSize().y - 105), ImGuiSetCond_Always);
+            first_run = false;
         }
+        ImGui::Begin("Log", nullptr, ImVec2{600,100}, ImGuiWindowFlags_AlwaysAutoResize);
+        for (const auto &line : logger->lines) {
+            std::string output;
+            for (const rltk::vchar &c : line.chars) {
+                output += c.glyph;
+            }
+            ImGui::Text("%s", output.c_str());
+        }
+        ImGui::End();
     }
 }
