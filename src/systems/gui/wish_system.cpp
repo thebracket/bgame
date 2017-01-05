@@ -34,6 +34,7 @@ void wish_system::update(const double ms) {
         std::string wishstring(wish_command);
         make_wish(wishstring);
     }
+    ImGui::SameLine();
     if (ImGui::Button("Close")) {
         game_master_mode = PLAY;
         emit_deferred(map_dirty_message{});

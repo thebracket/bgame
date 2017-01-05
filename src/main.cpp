@@ -4,6 +4,7 @@
 #include "main/world_gen.hpp"
 #include "main/play_game.hpp"
 #include "main/game_globals.hpp"
+#include "main/guitheme.hpp"
 #include "utils/string_utils.hpp"
 #include "external/imgui-sfml/imgui-SFML.h"
 #include <boost/filesystem/operations.hpp>
@@ -43,6 +44,7 @@ void tick(double duration_ms) {
     // Initial ImGui call
     if (!has_init) {
         ImGui::SFML::Init(*rltk::get_window());
+        ImGui::SetupImGuiStyle(false, 1.0f);
         has_init = true;
     }
     ImGui::SFML::Update(*rltk::get_window(), deltaClock.restart());

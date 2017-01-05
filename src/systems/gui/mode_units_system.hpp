@@ -8,4 +8,11 @@ public:
 	virtual void configure() override final;
 private:
     int tab=0;
+	int current_settler=0;
+    int current_critter=0;
+    int current_native=0;
+
+    void render_settlers();
+    void render_creatures();
+    void render_natives();
 };
