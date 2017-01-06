@@ -13,6 +13,7 @@
 #include <sstream>
 #include <iomanip>
 #include <map>
+#include "../../external/imgui-sfml/imgui-SFML.h"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -251,7 +252,10 @@ void mode_design_system::chopping() {
 }
 
 void mode_design_system::guardposts() {
-    add_gui_element(std::make_unique<map_static_text>(5,4, "Guard mode - click a square to guard it, right-click to clear."));
+    //add_gui_element(std::make_unique<map_static_text>(5,4, "Guard mode - click a square to guard it, right-click to clear."));
+    ImGui::Begin("Guardposts");
+    ImGui::Text("Click a tile to guard it, right click to remove guard status.");
+    ImGui::End();
 
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
@@ -278,7 +282,11 @@ void mode_design_system::guardposts() {
 }
 
 void mode_design_system::harvest() {
-    add_gui_element(std::make_unique<map_static_text>(5,4, "Harvest mode - click a square to harvest it, right-click to clear."));
+    //add_gui_element(std::make_unique<map_static_text>(5,4, "Harvest mode - click a square to harvest it, right-click to clear."));
+    ImGui::Begin("Harvest");
+    ImGui::Text("Click a tile to harvest it, right click to remove harvest status.");
+    ImGui::End();
+
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
         const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
