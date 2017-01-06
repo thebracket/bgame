@@ -16,4 +16,6 @@ private:
 	void render_work_mode();
 
 	double mouse_damper = 100.0;
+	int selected_work_item = 0;
+    int selected_build_item = 0;
 };
