@@ -33,9 +33,7 @@ inline bool is_mining_designation_valid(const int &x, const int &y, const int &z
 }
 
 void mode_design_system::digging() {
-    int tt_x = term(3)->term_width - 21;
-    add_gui_element(std::make_unique<map_static_text>(5,4, "Digging mode - select digging type from the right panel, click to apply."));
-
+    // Keyboard handler
     if (is_window_focused()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) game_mining_mode = DIG;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) game_mining_mode = CHANNEL;
@@ -45,111 +43,6 @@ void mode_design_system::digging() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) game_mining_mode = UPDOWN;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) game_mining_mode = DELETE;
     }
-
-    if (game_mining_mode == DIG) {
-        term(3)->print(tt_x+1, 7, "(d) Dig", YELLOW, DARKEST_GREEN);
-    } else {
-        if (mouse::term1y == 7 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,7, "(d) Dig", GREEN, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = DIG;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,7, "(d) Dig", WHITE, GREEN_BG);
-        } 
-    }
-    term(3)->print(tt_x+2, 7, "d", YELLOW); 
-
-    if (game_mining_mode == CHANNEL) { 
-        term(3)->print(tt_x+1, 8, "(c) Channel", YELLOW, DARKEST_GREEN);			
-    } else { 
-        if (mouse::term1y == 8 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,8, "(c) Channel", GREEN, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = CHANNEL;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,8, "(c) Channel", WHITE, GREEN_BG);
-        } 
-    }
-    term(3)->print(tt_x+2, 8, "c", YELLOW); 
-
-    if (game_mining_mode == RAMP) { 
-        term(3)->print(tt_x+1, 9, "(r) Ramp", YELLOW, DARKEST_GREEN); 
-    } else {
-        if (mouse::term1y == 9 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,9, "(r) Ramp", GREEN, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = RAMP;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,9, "(r) Ramp", WHITE, GREEN_BG);
-        } 
-    }
-    term(3)->print(tt_x+2, 9, "r", YELLOW); 
-
-    if (game_mining_mode == UP) { 
-        term(3)->print(tt_x+1, 10, "(u) Up Stairs", YELLOW, DARKEST_GREEN); 
-    } else { 
-        if (mouse::term1y == 10 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,10, "(u) Up Stairs", GREEN, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = UP;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,10, "(u) Up Stairs", WHITE, GREEN_BG);
-        } 		
-    }
-    term(3)->print(tt_x+2, 10, "u", YELLOW); 
-
-    if (game_mining_mode == DOWN) { 
-        term(3)->print(tt_x+1, 11, "(j) Down Stairs", YELLOW, DARKEST_GREEN); 
-    } else { 
-        if (mouse::term1y == 11 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,11, "(j) Down Stairs", GREEN, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = DOWN;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,11, "(j) Down Stairs", WHITE, GREEN_BG);
-        } 
-    }
-    term(3)->print(tt_x+2, 11, "j", YELLOW); 
-
-    if (game_mining_mode == UPDOWN) { 
-        term(3)->print(tt_x+1, 12, "(i) Up/Down Stairs", YELLOW, DARKEST_GREEN); 
-    } else { 
-        if (mouse::term1y == 12 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,12, "(i) Up/Down Stairs", GREEN, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = UPDOWN;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,12, "(i) Up/Down Stairs", WHITE, GREEN_BG);
-        } 
-    }
-    term(3)->print(tt_x+2, 12, "i", YELLOW); 
-
-    if (game_mining_mode == DELETE) { 
-        term(3)->print(tt_x+1 ,13, "(x) Clear", YELLOW, DARKEST_GREEN); 
-    } else { 
-        if (mouse::term1y == 13 && mouse::term1x > tt_x+1 && mouse::term1x < tt_x+8) {
-            term(3)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
-            if (mouse::clicked) {
-                game_mining_mode = DELETE;
-                return;
-            }
-        } else {
-            term(3)->print(tt_x+1,13, "(x) Clear", WHITE, GREEN_BG);
-        } 
-    }
-    term(3)->print(tt_x+2, 13, "x", YELLOW); 
 
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         if (get_mouse_button_state(rltk::button::LEFT)) {
@@ -170,9 +63,52 @@ void mode_design_system::digging() {
             }
         }
     }
+
+    ImGui::Begin("Mining");
+    switch (game_mining_mode) {
+        case DIG : ImGui::Text("Currently: DIGGING"); break;
+        case CHANNEL : ImGui::Text("Currently: CHANNELING"); break;
+        case RAMP : ImGui::Text("Currently: RAMPING"); break;
+        case UP : ImGui::Text("Currently: Carving UP stairs"); break;
+        case DOWN : ImGui::Text("Currently: Carving DOWN stairs"); break;
+        case UPDOWN : ImGui::Text("Currently: Carving UP/DOWN stairs"); break;
+        case DELETE : ImGui::Text("Currently: Removing designations"); break;
+    }
+    if (ImGui::Button("Dig (d)")) game_mining_mode = DIG;
+    if (ImGui::Button("Channel (c)")) game_mining_mode = CHANNEL;
+    if (ImGui::Button("Ramp (r)")) game_mining_mode = RAMP;
+    if (ImGui::Button("Up Stair (u)")) game_mining_mode = UP;
+    if (ImGui::Button("Down Stair (j)")) game_mining_mode = DOWN;
+    if (ImGui::Button("Up/Down Stair (i)")) game_mining_mode = UPDOWN;
+    if (ImGui::Button("Clear Designation (x)")) game_mining_mode = DELETE;
+    ImGui::End();
 }
 
-void mode_design_system::building() {
+void mode_design_system::building()
+{
+    std::vector<std::pair<std::string, std::string>> buildings;
+    bool rendered_selected = false;
+    for (const available_building_t &building : available_buildings) {
+        if (build_mode_building && build_mode_building->tag == building.tag) rendered_selected = true;
+        buildings.emplace_back(std::make_pair(building.tag, building.get_name()));
+    }
+    const char* building_listbox_items[buildings.size()];
+    for (int i=0; i<buildings.size(); ++i) {
+        building_listbox_items[i] = buildings[i].second.c_str();
+    }
+
+    ImGui::Begin("Buildings");
+    ImGui::ListBox("", &selected_building, building_listbox_items, buildings.size(), 10);
+    ImGui::End();
+
+    if (!rendered_selected) {
+        build_mode_building.reset();
+    }
+    if (buildings.size() > 0) {
+        build_mode_building = available_buildings[selected_building];
+    }
+
+    /*
     add_gui_element(std::make_unique<map_static_text>(5,4, "Building mode - select building type from the right panel, click to apply."));
 
     int tt_x = term(3)->term_width - 30;
@@ -209,11 +145,14 @@ void mode_design_system::building() {
             }
         }
     }
-    if (!rendered_selected) build_mode_building.reset();
+    if (!rendered_selected) build_mode_building.reset();*/
 }
 
 void mode_design_system::chopping() {
-    add_gui_element(std::make_unique<map_static_text>(5,4, "Tree cutting mode - click a tree to cut, right-click to clear designation."));
+    //add_gui_element(std::make_unique<map_static_text>(5,4, "Tree cutting mode - click a tree to cut, right-click to clear designation."));
+    ImGui::Begin("Lumberjacking");
+    ImGui::Text("Click a tree to cut it down, right-click to clear designation.");
+    ImGui::End();
 
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);

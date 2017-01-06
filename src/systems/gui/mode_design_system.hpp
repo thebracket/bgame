@@ -13,4 +13,5 @@ private:
     void guardposts();
 	void stockpiles();
 	void harvest();
+	int selected_building = 0;
 };
