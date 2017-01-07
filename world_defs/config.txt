@@ -8,4 +8,4 @@ tooltip_speed=100.0
 autosave_minutes=0
 fullscreen=0
 gui_ttf=DroidSans.ttf
-gui_ttf_size=24
+gui_ttf_size=10
