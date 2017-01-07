@@ -21,6 +21,8 @@ struct config_t {
 	float tooltip_speed = 100.0;
 	int autosave_minutes = 5;
 	bool fullscreen = false;
+	std::string gui_ttf = "DroidSans.ttf";
+	int gui_ttf_size = 24;
 };
 
 struct available_building_t {

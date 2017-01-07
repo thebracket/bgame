@@ -107,45 +107,6 @@ void mode_design_system::building()
     if (buildings.size() > 0) {
         build_mode_building = available_buildings[selected_building];
     }
-
-    /*
-    add_gui_element(std::make_unique<map_static_text>(5,4, "Building mode - select building type from the right panel, click to apply."));
-
-    int tt_x = term(3)->term_width - 30;
-    term(3)->box(tt_x, 4, 29, term(3)->term_height-5);
-    term(3)->fill(tt_x+1, 5, tt_x+29, term(3)->term_height-2, ' ');
-    term(3)->fill(tt_x+1, 5, tt_x+29, 6, ' ', WHITE, DARK_GREEN);
-    term(3)->print(tt_x+4, 5, "[Available Buildings]", WHITE, DARK_GREEN);
-
-    int y=7;
-    bool rendered_selected = false;
-    for (const available_building_t &building : available_buildings) {
-        if (build_mode_building && build_mode_building.get().tag == building.tag) {
-            term(3)->print(tt_x+1, y, building.get_name(), YELLOW, DARKEST_GREEN);
-            rendered_selected = true;
-        } else {
-            if (mouse::term3y == y && mouse::term3x > tt_x && mouse::term3x) {
-                term(3)->print(tt_x+1, y, building.get_name(), GREEN, GREEN_BG);
-            } else {
-                term(3)->print(tt_x+1, y, building.get_name(), WHITE, GREEN_BG);
-            }
-        }
-        ++y;
-    }
-
-    if (get_mouse_button_state(rltk::button::LEFT)) {
-        
-        if (mouse::term3y > 6 && mouse::term3y < 7+available_buildings.size() && mouse::term3x > tt_x+1) {
-            const int selected_building = mouse::term3y - 7;
-            if (selected_building > -1 && selected_building < available_buildings.size()) {
-                build_mode_building = available_buildings[selected_building];
-                rendered_selected = true;
-            } else {
-                std::cout << "Error: index " << selected_building << " is out of range.\n";
-            }
-        }
-    }
-    if (!rendered_selected) build_mode_building.reset();*/
 }
 
 void mode_design_system::chopping() {

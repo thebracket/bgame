@@ -44,6 +44,9 @@ void tick(double duration_ms) {
     // Initial ImGui call
     if (!has_init) {
         ImGui::SFML::Init(*rltk::get_window());
+        ImGuiIO& io = ImGui::GetIO();
+		const std::string font_path = std::string("assets/") + game_config.gui_ttf;
+        io.Fonts->AddFontFromFileTTF(font_path.c_str(), game_config.gui_ttf_size);
         ImGui::SetupImGuiStyle(false, 0.8f);
         has_init = true;
     }
@@ -133,6 +136,9 @@ void read_config() {
 		if (split_line[0] == "tooltip_speed") game_config.tooltip_speed = std::stof(split_line[1]);
 		if (split_line[0] == "autosave_minutes") game_config.autosave_minutes = std::stoi(split_line[1]);
 		if (split_line[0] == "fullscreen" && split_line[1]=="1") game_config.fullscreen = true;
+		if (split_line[0] == "gui_ttf" && split_line[1]=="1") game_config.gui_ttf = split_line[1];
+		if (split_line[0] == "gui_ttf_size" && split_line[1]=="1") game_config.gui_ttf_size = std::stoi(split_line[1]);
+
 	}
 }
 
@@ -147,9 +153,6 @@ int main(int argc, char* argv[])
 
 #endif // !WIN32
      */
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontDefault();
 
 	read_config();
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
