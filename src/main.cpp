@@ -49,7 +49,7 @@ void tick(double duration_ms) {
         std::cout << "Loading " << font_path << ", at size " << game_config.gui_ttf_size << " pixels\n";
         ImFont * my_font = io.Fonts->AddFontFromFileTTF(font_path.c_str(), game_config.gui_ttf_size);
         ImGui::SFML::Init(*rltk::get_window());
-        ImGui::SetupImGuiStyle(true, 0.8f);
+        ImGui::SetupImGuiStyle();
         has_init = true;
     }
     ImGui::SFML::Update(*rltk::get_window(), deltaClock.restart());

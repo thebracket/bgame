@@ -88,64 +88,46 @@ void civs_add_button_line_to_table(const dialog_placement_t &box, std::unique_pt
 }
 
 void render_civ_negotiate() {
-    dialog_placement_t box{};
-
-    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(std::string(" [") + planet.civs.civs[negotiating_civ].name + std::string("] "), [] () { 
-        // On close
-        game_master_mode = PLAY;
-        emit_deferred(map_dirty_message{});
-        emit_deferred(recalculate_mining_message{});
-    });
-
-    std::unique_ptr<gui_table> table = std::make_unique<gui_table>(box.left+1, box.top+3);
-
-    // Salutation
-    std::stringstream ss;
-    ss << "Greetings, Cordex. We are The " << planet.civs.civs[negotiating_civ].name << ".";
-    civs_add_text_line_to_table(box, table, box.w-2, ss.str());
-    civs_add_text_line_to_table(box, table, box.w-2, " ");
-
-    // Feelings line
+    const std::string title = std::string("Negotiations with ") + planet.civs.civs[negotiating_civ].name;
+    const std::string salutation = std::string("Greeting, Cordex. We are The ") + planet.civs.civs[negotiating_civ].name;
     std::string feelings;
+    ImVec4 feelings_color{1.0f, 1.0f, 1.0f, 1.0f};
     bool show_bribe = false;
     bool show_war = false;
 
     if (planet.civs.civs[negotiating_civ].cordex_feelings < 0) {
         feelings = "You have invaded our lands, harassed our people, and must die.";
+        feelings_color = ImVec4{1.0f, 0.0f, 0.0f, 1.0f};
         show_bribe = true;
     } else if (planet.civs.civs[negotiating_civ].cordex_feelings == 0) {
         feelings = "You have occupied our lands, but perhaps we can work something out?";
+        feelings_color = ImVec4{1.0f, 1.0f, 0.0f, 1.0f};
         show_bribe = true;
         show_war = true;
     } else {
-        feelings = "We welcome your presence here.";
+        feelings = "We welcome your presence here, and look forward to working with you.";
+        feelings_color = ImVec4{0.0f, 1.0f, 0.0f, 1.0f};
         show_war = true;
     }
-    civs_add_text_line_to_table(box, table, box.w-2, feelings);
-    civs_add_text_line_to_table(box, table, box.w-2, " ");
 
+    ImGui::Begin(title.c_str());
+    ImGui::Text(salutation.c_str());
+    ImGui::TextColored(feelings_color, feelings.c_str());
     if (show_bribe) {
-        civs_add_button_line_to_table(box, table, box.w-2, "<Maybe 50 Mcr will make you feel better?>", [] () {
+        if (ImGui::Button("Maybe 50 Mcr will make you feel better?")) {
             game_master_mode = PLAY;
             planet.civs.civs[negotiating_civ].cordex_feelings = 0;
             designations->current_cash -= 50;
-        }, rltk::colors::GREEN, rltk::colors::DARKEST_GREEN);
-        civs_add_text_line_to_table(box, table, box.w-2, " ");
+        }
     }
     if (show_war) {
-        civs_add_button_line_to_table(box, table, box.w-2, "<I hope that you all die horribly in a fire!>", [] () {
+        if (ImGui::Button("I hope that you all die horribly in a fire!")) {
             game_master_mode = PLAY;
             planet.civs.civs[negotiating_civ].cordex_feelings = -1;
-        }, rltk::colors::RED, rltk::colors::DARKEST_GREEN);
-        civs_add_text_line_to_table(box, table, box.w-2, " ");
+        }
     }
-    // Show end negotiation
-    civs_add_button_line_to_table(box, table, box.w-2, "<That's all for now>", [] () {
-            game_master_mode = PLAY;
-        }, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
-    civs_add_text_line_to_table(box, table, box.w-2, " ");
-
-    dialog->children.push_back(std::move(table));
-
-    add_gui_element(std::move(dialog));
+    if (ImGui::Button("End Negotiation")) {
+        game_master_mode = PLAY;
+    }
+    ImGui::End();
 }

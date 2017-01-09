@@ -6,26 +6,26 @@ namespace ImGui
 {
 
 
-    inline void SetupImGuiStyle( bool bStyleDark_, float alpha_  )
+    inline void SetupImGuiStyle()
     {
         ImGuiStyle& style = ImGui::GetStyle();
 
         // light style from Pacôme Danhiez (user itamago) https://github.com/ocornut/imgui/pull/511#issuecomment-175719267
         style.Alpha = 1.0f;
         style.FrameRounding = 3.0f;
-        style.Colors[ImGuiCol_Text]                  = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+        style.Colors[ImGuiCol_Text]                  = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
         style.Colors[ImGuiCol_TextDisabled]          = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
-        style.Colors[ImGuiCol_WindowBg]              = ImVec4(0.94f, 0.94f, 0.94f, 0.94f);
-        style.Colors[ImGuiCol_ChildWindowBg]         = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+        style.Colors[ImGuiCol_WindowBg]              = ImVec4(0.01f, 0.10f, 0.01f, 0.94f);
+        style.Colors[ImGuiCol_ChildWindowBg]         = ImVec4(0.00f, 0.05f, 0.00f, 0.00f);
         style.Colors[ImGuiCol_PopupBg]               = ImVec4(1.00f, 1.00f, 1.00f, 0.94f);
         style.Colors[ImGuiCol_Border]                = ImVec4(0.00f, 0.00f, 0.00f, 0.39f);
         style.Colors[ImGuiCol_BorderShadow]          = ImVec4(1.00f, 1.00f, 1.00f, 0.10f);
-        style.Colors[ImGuiCol_FrameBg]               = ImVec4(1.00f, 1.00f, 1.00f, 0.94f);
-        style.Colors[ImGuiCol_FrameBgHovered]        = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
-        style.Colors[ImGuiCol_FrameBgActive]         = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-        style.Colors[ImGuiCol_TitleBg]               = ImVec4(0.96f, 0.96f, 0.96f, 1.00f);
+        style.Colors[ImGuiCol_FrameBg]               = ImVec4(0.00f, 0.40f, 0.00f, 0.94f);
+        style.Colors[ImGuiCol_FrameBgHovered]        = ImVec4(0.26f, 0.49f, 0.98f, 0.40f);
+        style.Colors[ImGuiCol_FrameBgActive]         = ImVec4(0.00f, 0.49f, 0.00f, 0.67f);
+        style.Colors[ImGuiCol_TitleBg]               = ImVec4(0.01f, 0.5f, 0.01f, 1.00f);
         style.Colors[ImGuiCol_TitleBgCollapsed]      = ImVec4(1.00f, 1.00f, 1.00f, 0.51f);
-        style.Colors[ImGuiCol_TitleBgActive]         = ImVec4(0.82f, 0.82f, 0.82f, 1.00f);
+        style.Colors[ImGuiCol_TitleBgActive]         = ImVec4(0.01f, 0.6f, 0.01f, 1.00f);
         style.Colors[ImGuiCol_MenuBarBg]             = ImVec4(0.86f, 0.86f, 0.86f, 1.00f);
         style.Colors[ImGuiCol_ScrollbarBg]           = ImVec4(0.98f, 0.98f, 0.98f, 0.53f);
         style.Colors[ImGuiCol_ScrollbarGrab]         = ImVec4(0.69f, 0.69f, 0.69f, 1.00f);
@@ -57,39 +57,6 @@ namespace ImGui
         style.Colors[ImGuiCol_TextSelectedBg]        = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
         style.Colors[ImGuiCol_ModalWindowDarkening]  = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 
-        if( bStyleDark_ )
-        {
-            for (int i = 0; i <= ImGuiCol_COUNT; i++)
-            {
-                ImVec4& col = style.Colors[i];
-                float H, S, V;
-                ImGui::ColorConvertRGBtoHSV( col.x, col.y, col.z, H, S, V );
-
-                if( S < 0.1f )
-                {
-                    V = 1.0f - V;
-                }
-                ImGui::ColorConvertHSVtoRGB( H, S, V, col.x, col.y, col.z );
-                if( col.w < 1.00f )
-                {
-                    col.w *= alpha_;
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i <= ImGuiCol_COUNT; i++)
-            {
-                ImVec4& col = style.Colors[i];
-                if( col.w < 1.00f )
-                {
-                    col.x *= alpha_;
-                    col.y *= alpha_;
-                    col.z *= alpha_;
-                    col.w *= alpha_;
-                }
-            }
-        }
     }
 
 
