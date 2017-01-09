@@ -39,11 +39,36 @@ void log_system::update(const double ms) {
         }
         ImGui::Begin("Log", nullptr, ImVec2{600,100}, ImGuiWindowFlags_AlwaysAutoResize);
         for (const auto &line : logger->lines) {
-            std::string output;
-            for (const rltk::vchar &c : line.chars) {
-                output += c.glyph;
+            if (!line.chars.empty()) {
+                std::string output;
+                rltk::color_t current = line.chars[0].foreground;
+                bool first = true;
+                for (const rltk::vchar &c : line.chars) {
+                    if (c.foreground == current) {
+                        output += c.glyph;
+                    } else {
+                        if (!first) {
+                            ImGui::SameLine();
+                        } else {
+                            first = false;
+                        }
+                        ImVec4 col{static_cast<float>(current.r)/255.0f, static_cast<float>(current.g)/255.0f, static_cast<float>(current.b)/255.0f, 1.0f};
+                        ImGui::TextColored(col, "%s", output.c_str());
+                        output = "";
+                        current = c.foreground;
+                    }
+                }
+                if (!output.empty()) {
+                    if (!first) {
+                        ImGui::SameLine();
+                    } else {
+                        first = false;
+                    }
+                    ImVec4 col{static_cast<float>(current.r)/255.0f, static_cast<float>(current.g)/255.0f, static_cast<float>(current.b)/255.0f, 1.0f};
+                    ImGui::TextColored(col, "%s", output.c_str());
+                    output = "";
+                }
             }
-            ImGui::Text("%s", output.c_str());
         }
         ImGui::End();
     }
