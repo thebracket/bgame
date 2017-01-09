@@ -7,6 +7,8 @@
 
 #include <rltk.hpp>
 #include <iostream>
+#include <thread>
+#include <atomic>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -18,13 +20,71 @@ constexpr int TOOLTIP_LAYER = 4;
 constexpr int RENDERABLES_LAYER = 5;
 constexpr int VEG_LAYER=6;
 
+std::atomic<bool> loaded(false);
+std::unique_ptr<std::thread> loader_thread;
+
+void loader_tick() {
+    term(GUI_LAYER)->clear();
+    term(GUI_LAYER)->print_center(4, "Loading game - please wait.", YELLOW, BLACK);
+}
+
 void play_game::tick(const double duration_ms) {
-	ecs_tick(duration_ms);
+    if (loaded) {
+        ecs_tick(duration_ms);
+    } else {
+        loader_tick();
+        if (loaded) {
+            loader_thread->join();
+            loader_thread.reset();
+        }
+
+    }
 }
 
 void resize_game_panel(rltk::layer_t * l, int w, int h) {
 	l->w = w;
 	l->h = h;
+}
+
+void do_load_game() {
+    // Load the game
+    std::cout << "Loading the planet\n";
+    planet = load_planet();
+
+    // Load the ECS
+    std::cout << "Loading game state\n";
+    {
+        const std::string save_filename = "world/savegame.dat";
+        std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
+        std::function<void(xml_node *, std::size_t, std::string)> loader(component_loader_xml);
+        ecs_load(std::move(lbfile), loader);
+    }
+
+    // Load the current region - check the camera for the world position
+    std::cout << "Storing important entity handles\n";
+
+    int region_x, region_y;
+    each<world_position_t, calendar_t, designations_t, logger_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design, logger_t &log) {
+        camera_entity = entity.id;
+        region_x = pos.world_x;
+        region_y = pos.world_y;
+        camera_position = &pos;
+        calendar = &cal;
+        designations = &design;
+        logger = &log;
+    });
+    std::cout << "Loading the region\n";
+    *current_region = load_region(region_x, region_y);
+
+    // Setup systems
+    std::cout << "Setting up systems\n";
+    add_systems_to_ecs();
+
+    std::cout << "ECS Config\n";
+    ecs_configure();
+    std::cout << "Go!\n";
+
+    loaded = true;
 }
 
 void play_game::init() {
@@ -43,42 +103,7 @@ void play_game::init() {
 
 	term(TOOLTIP_LAYER)->clear();
 
-	// Load the game
-	std::cout << "Loading the planet\n";
-	planet = load_planet();
-
-	// Load the ECS
-	std::cout << "Loading game state\n";
-	{
-		const std::string save_filename = "world/savegame.dat";
-		std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
-		std::function<void(xml_node *, std::size_t, std::string)> loader(component_loader_xml);
-		ecs_load(std::move(lbfile), loader);
-	}
-
-	// Load the current region - check the camera for the world position
-	std::cout << "Storing important entity handles\n";
-
-	int region_x, region_y;
-	each<world_position_t, calendar_t, designations_t, logger_t>([&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design, logger_t &log) {
-		camera_entity = entity.id;
-		region_x = pos.world_x;
-		region_y = pos.world_y;
-		camera_position = &pos;
-		calendar = &cal;
-		designations = &design;
-		logger = &log;
-	});
-	std::cout << "Loading the region\n";
-	*current_region = load_region(region_x, region_y);
-
-	// Setup systems
-	std::cout << "Setting up systems\n";
-    add_systems_to_ecs();
-
-	std::cout << "ECS Config\n";
-	ecs_configure();
-	std::cout << "Go!\n";	
+    loader_thread = std::make_unique<std::thread>(do_load_game);
 }
 
 void play_game::destroy() {

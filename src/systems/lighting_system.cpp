@@ -21,6 +21,8 @@ void lighting_system::configure() {
     subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
 		lighting_changed = true;
 	});
+    light_map.resize(REGION_TILES_COUNT);
+    std::fill(light_map.begin(), light_map.end(), rltk::colors::WHITE);
 }
 
 inline void reveal(const int &idx, lightsource_t &view) {
