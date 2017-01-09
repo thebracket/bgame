@@ -9,14 +9,16 @@
 #include "../../components/species.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/item.hpp"
+#include "../../external/imgui-sfml/imgui-SFML.h"
+#include "../../components/grazer_ai.hpp"
+#include "../../raws/creatures.hpp"
 
 void mode_sentient_info_system::configure() { 
     system_name = "Creature Info System";   
 }
 
-void display_sentient_info() {
-    dialog_placement_t box{};
-
+void display_sentient_info()
+{
     auto name = entity(selected_settler)->component<name_t>();
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
@@ -39,99 +41,73 @@ void display_sentient_info() {
         header3 << " (FRIENDLY)";
     }
     header3 << ".";
+    const std::string hitpoints = "Hit Points: " + std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints);
 
-    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(header.str(), [] () { 
-        // On close
-        game_master_mode = PLAY;
-        emit_deferred(map_dirty_message{});
-        emit_deferred(recalculate_mining_message{});
-    });
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+2, header2.str(), rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+3, species_finder.description, rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+4, header3.str(), rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-
-    // Display health
-    int y = box.top+6;
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, y, "Hit Points: " + std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints), rltk::colors::RED, rltk::colors::DARKEST_GREEN)));
-    ++y;
+    ImGui::Begin(header.str().c_str());
+    ImGui::Text(header2.str().c_str());
+    ImGui::Text(species_finder.description.c_str());
+    ImGui::Text(header3.str().c_str());
+    ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, hitpoints.c_str());
     for (const health_part_t &part : health->parts) {
         if (part.current_hitpoints != part.max_hitpoints) {
             std::string part_state = "OK";
             if (part.current_hitpoints < 1 && part.current_hitpoints > -10) part_state = "IMPAIRED";
             if (part.current_hitpoints < -9 && part.current_hitpoints > -20) part_state = "BROKEN";
             if (part.current_hitpoints < -19) part_state = "GONE";
-            term(1)->print(2,y, part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")"));
-            dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")"),      
-                rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-            ++y;
+            const std::string part_info = part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")");
+            ImGui::Text(part_info.c_str());
         }
     }
-    ++y;
-
-    // Display inventory
-    each<item_t, item_carried_t>([&y, &dialog, &box] (entity_t &e, item_t &item, item_carried_t &carried) {
+    ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "Inventory:");
+    each<item_t, item_carried_t>([] (entity_t &e, item_t &item, item_carried_t &carried) {
         if (carried.carried_by == selected_settler) {
-            const std::string item_info = item.item_name + std::string(" (") + item_loc_name(carried.location) + std::string(")"); 
-            dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left + 2, y, item_info, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN)));
-            ++y;
+            const std::string item_info = item.item_name + std::string(" (") + item_loc_name(carried.location) + std::string(")");
+            ImGui::Text(item_info.c_str());
         }
     });
-
-    add_gui_element(std::move(dialog));
+    if (ImGui::Button("Close")) {
+        game_master_mode = PLAY;
+        emit_deferred(map_dirty_message{});
+        emit_deferred(recalculate_mining_message{});
+    }
+    ImGui::End();
 }
 
 void display_grazer_info() {
-    dialog_placement_t box{};
-
     auto name = entity(selected_settler)->component<name_t>();
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = get_species_def(species->tag).get();
+    auto species_finder = get_creature_def(species->tag).get();
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;
 
     std::stringstream header2;
-    header2 << species->gender_str() << " " << species_finder.name;
+    header2 << species_finder.name;
 
-    std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(header.str(), [] () { 
-        // On close
-        game_master_mode = PLAY;
-        emit_deferred(map_dirty_message{});
-        emit_deferred(recalculate_mining_message{});
-    });
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+2, header2.str(), rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, box.top+3, species_finder.description, rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
+    const std::string hitpoints = "Hit Points: " + std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints);
 
-    // Display health
-    int y = box.top+6;
-    dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+2, y, "Hit Points: " + std::to_string(health->current_hitpoints) + std::string("/") + std::to_string(health->max_hitpoints), rltk::colors::RED, rltk::colors::DARKEST_GREEN)));
-    ++y;
+    ImGui::Begin(header.str().c_str());
+    ImGui::Text(header2.str().c_str());
+    ImGui::Text(species_finder.description.c_str());
+    ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, hitpoints.c_str());
     for (const health_part_t &part : health->parts) {
         if (part.current_hitpoints != part.max_hitpoints) {
             std::string part_state = "OK";
             if (part.current_hitpoints < 1 && part.current_hitpoints > -10) part_state = "IMPAIRED";
             if (part.current_hitpoints < -9 && part.current_hitpoints > -20) part_state = "BROKEN";
             if (part.current_hitpoints < -19) part_state = "GONE";
-            term(1)->print(2,y, part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")"));
-            dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left+30, y, part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")"),      
-                rltk::colors::MAGENTA, rltk::colors::DARKEST_GREEN)));
-            ++y;
+            const std::string part_info = part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")");
+            ImGui::Text(part_info.c_str());
         }
     }
-    ++y;
-
-    // Display inventory
-    each<item_t, item_carried_t>([&y, &dialog, &box] (entity_t &e, item_t &item, item_carried_t &carried) {
-        if (carried.carried_by == selected_settler) {
-            const std::string item_info = item.item_name + std::string(" (") + item_loc_name(carried.location) + std::string(")"); 
-            dialog->children.push_back(std::move(std::make_unique<gui_static_text>(box.left + 2, y, item_info, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN)));
-            ++y;
-        }
-    });
-
-    add_gui_element(std::move(dialog));
+    if (ImGui::Button("Close")) {
+        game_master_mode = PLAY;
+        emit_deferred(map_dirty_message{});
+        emit_deferred(recalculate_mining_message{});
+    }
+    ImGui::End();
 }
 
 void mode_sentient_info_system::update(const double ms) {
