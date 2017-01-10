@@ -21,7 +21,7 @@ constexpr int RENDERABLES_LAYER = 5;
 constexpr int VEG_LAYER=6;
 
 std::atomic<bool> loaded(false);
-std::unique_ptr<std::thread> loader_thread;
+std::thread * loader_thread = nullptr;
 
 void loader_tick() {
     term(GUI_LAYER)->clear();
@@ -38,7 +38,8 @@ void play_game::tick(const double duration_ms) {
         loader_tick();
         if (loaded) {
             loader_thread->join();
-            loader_thread.reset();
+            delete loader_thread;
+            loader_thread = nullptr;
         }
 
     }
@@ -106,7 +107,7 @@ void play_game::init() {
 
 	term(TOOLTIP_LAYER)->clear();
 
-    loader_thread = std::make_unique<std::thread>(do_load_game);
+    loader_thread = new std::thread(do_load_game);
 }
 
 void play_game::destroy() {
