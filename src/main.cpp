@@ -140,8 +140,9 @@ void read_config() {
 		if (split_line[0] == "fullscreen" && split_line[1]=="1") game_config.fullscreen = true;
 		if (split_line[0] == "gui_ttf") game_config.gui_ttf = split_line[1];
 		if (split_line[0] == "gui_ttf_size") game_config.gui_ttf_size = std::stoi(split_line[1]);
-
+		if (split_line[0] == "scale_factor") game_config.scale_factor = std::stof(split_line[1]);
 	}
+	rltk::scale_factor = game_config.scale_factor;
 }
 
 int main(int argc, char* argv[])

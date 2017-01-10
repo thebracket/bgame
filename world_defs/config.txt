@@ -9,3 +9,4 @@ autosave_minutes=0
 fullscreen=0
 gui_ttf=DroidSans.ttf
 gui_ttf_size=18
+scale_factor=1.0

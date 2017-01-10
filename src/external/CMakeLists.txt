@@ -35,6 +35,7 @@ add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/xml.cpp
 	rltk/rltk/perlin_noise.cpp
 	rltk/rltk/rexspeeder.cpp
+	rltk/rltk/scaling.cpp
 	)
 target_link_libraries(rltk ${BoostSystemLibs} ${BoostFilesystemLibs} ${BoostContainerLibs})
 target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)

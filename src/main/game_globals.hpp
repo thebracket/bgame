@@ -23,6 +23,7 @@ struct config_t {
 	bool fullscreen = false;
 	std::string gui_ttf = "DroidSans.ttf";
 	int gui_ttf_size = 24;
+	float scale_factor = 1.0f;
 };
 
 struct available_building_t {
