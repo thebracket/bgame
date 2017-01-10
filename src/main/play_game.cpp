@@ -25,6 +25,9 @@ std::unique_ptr<std::thread> loader_thread;
 
 void loader_tick() {
     term(GUI_LAYER)->clear();
+    term(MAP_LAYER)->clear();
+    term(RIGHT_PANEL)->clear();
+    term(TOOLTIP_LAYER)->clear();
     term(GUI_LAYER)->print_center(4, "Loading game - please wait.", YELLOW, BLACK);
 }
 
