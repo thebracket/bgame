@@ -63,11 +63,13 @@ void mode_settler_info_system::update(const double ms) {
         ImGui::Text(skill_display.c_str());
     }
     ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "Inventory:");
-    each<item_t, item_carried_t>([] (entity_t &e, item_t &item, item_carried_t &carried) {
-        if (carried.carried_by == selected_settler) {
+    each_if<item_t, item_carried_t>(
+            [] (entity_t &e, item_t &item, item_carried_t &carried) {
+                return carried.carried_by == selected_settler;
+            },
+            [] (entity_t &e, item_t &item, item_carried_t &carried) {
             const std::string item_info = item.item_name + std::string(" (") + item_loc_name(carried.location) + std::string(")");
             ImGui::Text(item_info.c_str());
-        }
     });
     ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "History:");
     for (const life_event_t &le : planet.history.settler_life_events[selected_settler]) {
