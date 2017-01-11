@@ -181,12 +181,14 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			}
 			current_region->tile_type[tree_idx] = tile_type::FLOOR;
             current_region->tile_flags[tree_idx].set(CAN_STAND_HERE);
-			current_region->tile_calculate(ai.target_x, ai.target_y, ai.target_z);			
+			current_region->tile_calculate(ai.target_x, ai.target_y, ai.target_z);
+			int tx,ty,tz;
+			std::tie(tx,ty,tz) = idxmap(tree_idx);
 
 			// Spawn wooden logs
 			number_of_logs = (number_of_logs/20)+1;
 			for (int i=0; i<number_of_logs; ++i) {
-				spawn_item_on_ground(ai.target_x, ai.target_y, ai.target_z, "wood_log", get_material_by_tag("wood").get());
+				spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood").get());
 			}
 
 			// Update pathing
