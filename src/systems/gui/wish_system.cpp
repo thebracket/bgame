@@ -2,6 +2,7 @@
 #include "../../main/game_globals.hpp"
 #include "../input/keyboard_system.hpp"
 #include "../../messages/messages.hpp"
+#include "../distance_map_system.hpp"
 #include <../../external/imgui-sfml/imgui-SFML.h>
 
 using namespace rltk;
@@ -18,6 +19,8 @@ void wish_system::make_wish(const std::string &wish) {
                 current_region->water_level[mapidx(x,y,REGION_DEPTH-2)] = 3;
             }
         }
+    } else if (wish == "show distance") {
+        dijkstra_debug = !dijkstra_debug;
     }
 
     game_master_mode = PLAY;

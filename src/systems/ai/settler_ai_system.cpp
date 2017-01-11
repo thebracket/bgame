@@ -79,6 +79,7 @@ void settler_ai_system::update(const double duration_ms) {
 
         if (tasks::is_stuck_or_invalid(*pos)) {
             emit_deferred(log_message{LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars});
+            std::cout << "Warning - stuck settler!\n";
             bool done = false;
             each<position_t, construct_provides_sleep_t>([this,&e,&pos,&done] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
                 if (!done) {

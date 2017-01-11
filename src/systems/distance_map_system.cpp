@@ -19,6 +19,7 @@ dijkstra_map bed_map;
 dijkstra_map settler_map;
 dijkstra_map architecure_map;
 dijkstra_map blocks_map;
+bool dijkstra_debug = false;
 
 using namespace rltk;
 

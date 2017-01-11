@@ -10,6 +10,7 @@ extern dijkstra_map bed_map;
 extern dijkstra_map settler_map;
 extern dijkstra_map architecure_map;
 extern dijkstra_map blocks_map;
+extern bool dijkstra_debug;
 
 class distance_map_system : public rltk::base_system {
 public:

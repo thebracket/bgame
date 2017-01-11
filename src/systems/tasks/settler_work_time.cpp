@@ -177,11 +177,11 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		}
 
         // Architect work
-        if (ai.permitted_work[JOB_CONSTRUCTION] && architecure_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE
-            && blocks_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE && !designations->architecture.empty()) {
+        if (ai.permitted_work[JOB_CONSTRUCTION] && architecure_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE-1
+            && blocks_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE-1 && !designations->architecture.empty()) {
+            change_job_status(ai, name, "collecting block for architecture", true);
             ai.job_type_major = JOB_ARCHITECT;
             ai.job_type_minor = JM_ARCHITECT_GOTOBLOCK;
-            change_job_status(ai, name, "building architecture", true);
             return;
         }
 

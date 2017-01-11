@@ -109,6 +109,12 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		if (!ai.current_path) {
             ai.current_path = find_path(pos, position_t{ai.building_target.get().x, ai.building_target.get().y, ai.building_target.get().z}, true);
         }
+        if (!ai.current_path->success) {
+            unclaim_by_id(ai.current_tool);
+            cancel_action(e, ai, stats, species, pos, name, "No route to building");
+            designations->buildings.push_back(*ai.building_target);
+            ai.building_target.reset();
+        }
 		const float distance = distance2d(pos.x, pos.y, ai.building_target.get().x, ai.building_target.get().y );
 		const bool same_z = pos.z == ai.building_target.get().z;
 		if (pos == ai.current_path->destination || (same_z && distance < 1.4F)) {

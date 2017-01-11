@@ -31,7 +31,8 @@ void mode_units_system::render_settlers() {
     // Build settler data structures
     std::vector<std::pair<std::size_t, std::string>> settlers;
     each<settler_ai_t, name_t, game_stats_t>([&settlers] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
-        settlers.emplace_back(std::make_pair(e.id, name.first_name + std::string(" ") + name.last_name + std::string(" (") + stats.profession_tag + std::string(")") ));
+        settlers.emplace_back(std::make_pair(e.id,
+          name.first_name + std::string(" ") + name.last_name + std::string(" (") + stats.profession_tag + std::string(") : ") + ai.job_status ));
     });
     const char* settler_listbox_items[settlers.size()];
     for (int i=0; i<settlers.size(); ++i) {
