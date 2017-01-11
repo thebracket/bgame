@@ -192,6 +192,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			free_workshop(ai.reaction_target.get().building_id);
 			emit(renderables_changed_message{});
 			emit(inventory_changed_message{});
+			emit(blocks_changed_message{});
 
 			// Become idle
 			become_idle(e, ai, name);

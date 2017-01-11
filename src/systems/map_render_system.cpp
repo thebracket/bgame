@@ -10,6 +10,7 @@
 #include "../components/item.hpp"
 #include "../components/item_carried.hpp"
 #include "input/mouse_input_system.hpp"
+#include "gui/mode_design_system.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -178,6 +179,82 @@ vchar get_render_char_stockpiles(const int &x, const int &y) {
     return result;
 }
 
+vchar get_render_char_architecture(const int &x, const int &y) {
+
+    vchar result = get_render_char(x,y);
+    const int idx = render_tiles[((term(1)->term_width * y) + x)];
+
+    auto mf = designations->architecture.find(idx);
+    if (mf != designations->architecture.end()) {
+        result.foreground = rltk::colors::YELLOW;
+        result.background = rltk::colors::GREY;
+        switch (mf->second) {
+            case 0 : result.glyph = '#'; break;
+            case 1 : result.glyph = '.'; break;
+            case 2 : result.glyph = '<'; break;
+            case 3 : result.glyph = '>'; break;
+            case 4 : result.glyph = 'X'; break;
+            case 5 : result.glyph = '^'; break;
+            case 6 : result.glyph = '='; break;
+        }
+    }
+
+    if (arch_available && mouse_in_terminal) {
+        const int building_left_x = mouse_term_x;
+        const int building_top_y = mouse_term_y;
+        const int building_right_x = mouse_term_x + arch_width;
+        const int building_bottom_y = mouse_term_y + arch_height;
+        arch_x = mouse_term_x;
+        arch_y = mouse_term_y;
+
+        if (arch_filled) {
+            if (x + clip_left >= building_left_x && x + clip_left < building_right_x &&
+                y + clip_top >= building_top_y && y + clip_top < building_bottom_y) {
+                result.background = rltk::colors::BLACK;
+                result.glyph = 177;
+
+                if (arch_possible && !current_region->solid[idx] &&
+                    !current_region->tile_flags[idx].test(CONSTRUCTION)) {
+                    result.foreground = rltk::colors::GREEN;
+                } else {
+                    arch_possible = false;
+                    result.foreground = rltk::colors::RED;
+                }
+            }
+        } else {
+            if (x + clip_left >= building_left_x && x + clip_left < building_right_x &&
+                y + clip_top >= building_top_y && y + clip_top < building_bottom_y) {
+                bool interior = false;
+                if (arch_width > 2 && x+clip_left >= building_left_x+1 && x+clip_left < building_right_x-1 ) {
+                    interior = true;
+                }
+                if (arch_height > 2 && y+clip_top >= building_top_y+1 && y+clip_top < building_bottom_y-1) {
+                    interior = true;
+                }
+                if (x+clip_left == building_left_x) interior=false;
+                if (x+clip_left == building_right_x-1) interior = false;
+                if (y+clip_top == building_top_y) interior = false;
+                if (y+clip_top == building_bottom_y-1) interior = false;
+
+                if (!interior) {
+                    result.background = rltk::colors::BLACK;
+                    result.glyph = 177;
+
+                    if (arch_possible && !current_region->solid[idx] &&
+                        !current_region->tile_flags[idx].test(CONSTRUCTION)) {
+                        result.foreground = rltk::colors::GREEN;
+                    } else {
+                        arch_possible = false;
+                        result.foreground = rltk::colors::RED;
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 vchar get_render_char_building(const int &x, const int &y) {
 
 	vchar result = get_render_char(x,y);
@@ -276,6 +353,7 @@ void map_render_system::update(const double duration_ms) {
 				case GUARDPOINTS : calculator = get_render_char_guarding; break;
                 case STOCKPILES : calculator = get_render_char_stockpiles; break;
                 case HARVEST : calculator = get_render_char_harvest; break;
+                case ARCHITECTURE : calculator = get_render_char_architecture; break;
 			}
 		}
 

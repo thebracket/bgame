@@ -34,6 +34,7 @@ void inventory_system::configure() {
 		entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
 		entity_octree.add_node(octree_location_t{msg.x,msg.y,msg.z,msg.id});
 		dirty = true;
+        emit(blocks_changed_message{});
 	});
 
 	// Receive pick-up messages
@@ -48,6 +49,7 @@ void inventory_system::configure() {
 		entity(msg.id)->assign(item_carried_t{ msg.loc, msg.collector });
 		dirty = true;
 		emit(renderables_changed_message{});
+        emit(blocks_changed_message{});
 	});
 
 	// Receive item destruction messages
@@ -60,6 +62,7 @@ void inventory_system::configure() {
 		}
 
 		delete_entity(msg.id);
+        emit(blocks_changed_message{});
 	});
 
 	// Receive claim messages - update an item as claimed/unclaimed
@@ -69,6 +72,7 @@ void inventory_system::configure() {
 			auto item = e->component<item_t>();
 			if (item) item->claimed = msg.claimed;
 		}
+        emit(blocks_changed_message{});
 	});
 
 	// Receive build requests - claim components and add to the designations list.
@@ -171,6 +175,14 @@ int item_category_available(const int &category) {
 	return result;
 }
 
+int blocks_available() {
+    int result = 0;
+    each<item_t>([&result] (entity_t &e, item_t &i) {
+        if (i.item_tag == "block" && i.claimed == false) ++result;
+    });
+    return result;
+}
+
 bool is_item_category_available(const int &category) {
 	return (item_category_available(category)>0);
 }
@@ -259,6 +271,7 @@ std::vector<available_building_t> get_available_buildings() {
 
 		if (possible) {
 			available_building_t building{it->second.name, it->second.tag};
+			if (it->second.structure) building.structure = true;
 			auto finder = existing_buildings.find(it->second.tag);
 			if (finder == existing_buildings.end()) {
 				building.n_existing = 0;

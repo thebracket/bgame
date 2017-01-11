@@ -15,6 +15,7 @@ using namespace rltk;
 struct designations_t {
 
 	boost::container::flat_map<int, uint8_t> mining;
+	boost::container::flat_map<int, uint8_t> architecture;
 	boost::container::flat_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;

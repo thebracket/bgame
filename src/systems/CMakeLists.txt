@@ -76,6 +76,7 @@ add_library(systems STATIC
 	tasks/work_types/demolition_work.cpp
 	tasks/work_types/hauling_work.cpp
 	tasks/work_types/harvest_work.cpp
+	tasks/work_types/architecture_work.cpp
     systems.cpp
 )
 target_link_libraries(systems rltk utils components raws)

@@ -29,6 +29,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions();
 
 int available_items_by_tag(const std::string &tag);
 int available_items_by_reaction_input(const reaction_input_t &input);
+int blocks_available();
 std::size_t claim_item_by_tag(const std::string &tag);
 std::size_t claim_item_by_reaction_input(const reaction_input_t &input);
 void unclaim_by_id(const std::size_t &id);

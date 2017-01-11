@@ -7,11 +7,18 @@
 #include "../messages/entity_moved_message.hpp"
 #include "../components/construct_provides_sleep.hpp"
 #include "../components/settler_ai.hpp"
+#include "../messages/messages.hpp"
+#include "../main/game_globals.hpp"
+#include "../components/item.hpp"
+#include "inventory_system.hpp"
+#include <unordered_set>
 
 dijkstra_map huntables_map;
 dijkstra_map butcherables_map;
 dijkstra_map bed_map;
 dijkstra_map settler_map;
+dijkstra_map architecure_map;
+dijkstra_map blocks_map;
 
 using namespace rltk;
 
@@ -21,6 +28,8 @@ void distance_map_system::configure() {
     subscribe_mbox<butcherable_moved_message>();
     subscribe_mbox<bed_changed_message>();
     subscribe_mbox<settler_moved_message>();
+    subscribe_mbox<architecture_changed_message>();
+    subscribe_mbox<blocks_changed_message>();
 }
 
 void distance_map_system::update(const double duration_ms) {
@@ -28,6 +37,8 @@ void distance_map_system::update(const double duration_ms) {
     each_mbox<butcherable_moved_message>([this] (const butcherable_moved_message &msg) { update_butcherables = true; });
     each_mbox<bed_changed_message>([this] (const bed_changed_message &msg) { update_bed_map = true; });
     each_mbox<settler_moved_message>([this] (const settler_moved_message &msg) { update_settler_map = true; });
+    each_mbox<architecture_changed_message>([this] (const architecture_changed_message &msg) { update_architecture_map = true; });
+    each_mbox<blocks_changed_message>([this] (const blocks_changed_message &msg) { update_blocks_map = true; });
 
     if (update_huntables) {
         std::vector<int> huntables;
@@ -69,5 +80,34 @@ void distance_map_system::update(const double duration_ms) {
         settler_map.update(settlers);
 
         update_settler_map = false;
+    }
+
+    if (update_architecture_map) {
+        std::vector<int> targets;
+        for (auto it = designations->architecture.begin(); it != designations->architecture.end(); ++it) {
+            targets.emplace_back(it->first);
+        }
+        architecure_map.update(targets);
+        update_architecture_map = false;
+    }
+
+    if (update_blocks_map) {
+        std::unordered_set<int> used;
+        std::vector<int> targets;
+
+        each_if<item_t>([] (entity_t &e, item_t &i) { return i.claimed == false && i.item_tag == "block"; },
+                        [&used, &targets] (entity_t &e, item_t &i) {
+                            auto pos = get_item_location(e.id);
+                            if (pos) {
+                                const int idx = mapidx(pos.get());
+                                if (used.find(idx)==used.end()) {
+                                    used.insert(idx);
+                                    targets.emplace_back(idx);
+                                }
+                            }
+                        }
+        );
+        blocks_map.update(targets);
+        update_blocks_map = false;
     }
 }

@@ -135,7 +135,7 @@ void lighting_system::update(double time_ms) {
                         int last_z = (int)std::floor(light_z);
                         bool done = false;
                         while (!done) {
-                            if (current_region->opaque[mapidx((int)light_x, (int)light_y, (int)light_z)]) {
+                            if (!(light_x < 0 || light_x > REGION_WIDTH-1 || light_y < 0 || light_y > REGION_HEIGHT-1) && current_region->opaque[mapidx((int)light_x, (int)light_y, (int)light_z)]) {
                                 done = true;
                                 shadowed = true;
                             } else {

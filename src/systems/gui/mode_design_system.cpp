@@ -21,6 +21,15 @@ using namespace rltk::colors;
 std::vector<available_building_t> available_buildings;
 const color_t GREEN_BG{0,32,0};
 
+int architecture_mode = 0;
+int arch_width = 1;
+int arch_height = 1;
+bool arch_filled = true;
+bool arch_available = false;
+bool arch_possible = true;
+int arch_x = 0;
+int arch_y = 0;
+
 void mode_design_system::configure() {
     system_name = "Design Mode";
     subscribe<refresh_available_buildings_message>([this] (refresh_available_buildings_message &msg) {
@@ -87,10 +96,14 @@ void mode_design_system::digging() {
 void mode_design_system::building()
 {
     std::vector<std::pair<std::string, std::string>> buildings;
+
     bool rendered_selected = false;
     for (const available_building_t &building : available_buildings) {
         if (build_mode_building && build_mode_building->tag == building.tag) rendered_selected = true;
-        buildings.emplace_back(std::make_pair(building.tag, building.get_name()));
+
+        if (!building.structure) {
+            buildings.emplace_back(std::make_pair(building.tag, building.get_name()));
+        }
     }
     const char* building_listbox_items[buildings.size()];
     for (int i=0; i<buildings.size(); ++i) {
@@ -107,6 +120,99 @@ void mode_design_system::building()
     if (buildings.size() > 0) {
         build_mode_building = available_buildings[selected_building];
     }
+}
+
+int calc_required_blocks(const int &w, const int &h, const bool &filled) {
+    if (!filled) {
+        return w*h;
+    } else {
+        return (w * 2) + (h * 2) - 4;
+    }
+}
+
+void mode_design_system::architecture() {
+    const int available_blocks = blocks_available() - designations->architecture.size();
+    const int required_blocks = calc_required_blocks(arch_width, arch_height, arch_filled);
+    const bool materials_available = (required_blocks <= available_blocks);
+    const std::string block_availability = std::string("Available building blocks: ") + std::to_string(available_blocks) +
+                                           std::string(" (Required: ") + std::to_string(required_blocks) + std::string(")");
+
+    ImGui::Begin("Architecture");
+    if (materials_available) {
+        ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s%", block_availability.c_str());
+    } else {
+        ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, "%s%", block_availability.c_str());
+    }
+    ImGui::Text("Left click to build, right click to clear tile");
+
+    // Options for wall/floor/up/down/updown/ramp/bridge
+    ImGui::RadioButton("Wall", &architecture_mode, 0); ImGui::SameLine();
+    ImGui::RadioButton("Floor", &architecture_mode, 1); ImGui::SameLine();
+    ImGui::RadioButton("Up", &architecture_mode, 2); ImGui::SameLine();
+    ImGui::RadioButton("Down", &architecture_mode, 3);
+    ImGui::RadioButton("Up/Down", &architecture_mode, 4); ImGui::SameLine();
+    ImGui::RadioButton("Ramp", &architecture_mode, 5); ImGui::SameLine();
+    ImGui::RadioButton("Bridge", &architecture_mode, 6);
+
+    // Size options
+    if (architecture_mode==0 || architecture_mode==1 || architecture_mode==6) {
+        ImGui::InputInt("Width", &arch_width);
+        ImGui::InputInt("Height", &arch_height);
+        if (architecture_mode != 6) {
+            ImGui::Checkbox("Filled?", &arch_filled);
+        }
+    } else {
+        arch_width = 1;
+        arch_height = 1;
+        arch_filled = true;
+    }
+    ImGui::End();
+
+    // Pass through to render system
+    arch_available = true; // We're always allowing this to enable future planning mode
+
+    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
+        const int world_x = arch_x;
+        const int world_y = arch_y;
+
+        if (mouse::clicked && arch_possible) {
+            // Build!
+            for (int y=world_y; y<world_y+arch_height; ++y) {
+                for (int x = world_x; x < world_x + arch_width; ++x) {
+                    if (arch_filled) {
+                        const int idx = mapidx(x,y,camera_position->region_z);
+                        designations->architecture[idx] = architecture_mode;
+                        emit(map_dirty_message{});
+                        emit(architecture_changed_message{});
+                    } else {
+                        bool interior = false;
+                        if (x>world_x && x<world_x+arch_width && y>world_y && y<world_y+arch_height) interior = true;
+                        if (x==world_x) interior=false;
+                        if (x==world_x+arch_width-1) interior = false;
+                        if (y==world_y) interior = false;
+                        if (y==world_y+arch_height-1) interior = false;
+                        if (!interior) {
+                            const int idx = mapidx(x,y,camera_position->region_z);
+                            designations->architecture[idx] = architecture_mode;
+                            emit(map_dirty_message{});
+                            emit(architecture_changed_message{});
+                        }
+                    }
+                }
+            }
+        }
+        if (get_mouse_button_state(rltk::button::RIGHT)) {
+            // Erase
+            const int idx = mapidx(world_x, world_y, camera_position->region_z);
+            auto finder = designations->architecture.find(idx);
+            if (finder != designations->architecture.end()) {
+                designations->architecture.erase(idx);
+                emit(map_dirty_message{});
+                emit(architecture_changed_message{});
+            }
+        }
+    }
+    arch_possible = true;
 }
 
 void mode_design_system::chopping() {
@@ -307,7 +413,7 @@ void mode_design_system::update(const double duration_ms) {
     add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
     add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
 
-    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles", "Harvest"}, 5, 3, [] (int key) {
+    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles", "Harvest", "Architecture"}, 5, 3, [] (int key) {
         switch (key) {
             case 0 : { game_design_mode = DIGGING; emit_deferred(map_dirty_message{}); } break;
             case 1 : { game_design_mode = BUILDING; emit_deferred(refresh_available_buildings_message{}); emit_deferred(map_dirty_message{}); } break;
@@ -315,6 +421,7 @@ void mode_design_system::update(const double duration_ms) {
             case 3 : { game_design_mode = GUARDPOINTS; emit_deferred(map_dirty_message{}); } break;
             case 4 : { game_design_mode = STOCKPILES; emit_deferred(map_dirty_message{}); } break;
             case 5 : { game_design_mode = HARVEST; emit_deferred(map_dirty_message{}); } break;
+            case 6 : { game_design_mode = ARCHITECTURE; emit_deferred(map_dirty_message{}); } break;
         }
     });
 
@@ -325,5 +432,6 @@ void mode_design_system::update(const double duration_ms) {
         case GUARDPOINTS: guardposts(); break;
         case STOCKPILES : stockpiles(); break;
         case HARVEST : harvest(); break;
+        case ARCHITECTURE : architecture(); break;
     }
 }

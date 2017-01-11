@@ -5,6 +5,11 @@
 struct map_dirty_message : public rltk::base_message_t {
 };
 
+struct architecture_changed_message : public rltk::base_message_t {
+};
+
+struct blocks_changed_message : public rltk::base_message_t {
+};
 
 struct map_rerender_message : public rltk::base_message_t {
 };

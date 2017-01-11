@@ -40,6 +40,7 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
             std::string field = lua_tostring(lua_state, -2);
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "structure") c.structure = true;
             if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
             if (field == "components") {
                 lua_pushstring(lua_state, field.c_str());

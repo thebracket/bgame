@@ -27,6 +27,7 @@ struct building_def_t {
     int height = 1;
     std::vector<rltk::vchar> glyphs;
     bool emits_smoke = false;
+    bool structure = false;
 };
 
 extern boost::container::flat_map<std::string, building_def_t> building_defs;

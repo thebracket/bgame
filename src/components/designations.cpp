@@ -3,6 +3,7 @@
 void designations_t::to_xml(xml_node * c) {
     component_to_xml(c,
         std::make_pair("mining", mining),
+        std::make_pair("architecture", architecture),
         std::make_pair("chopping", chopping),
         std::make_pair("buildings", buildings),
         std::make_pair("build_orders", build_orders),
@@ -20,6 +21,9 @@ void designations_t::to_xml(xml_node * c) {
 void designations_t::from_xml(xml_node * c) {
     c->iterate_child("mining", [this] (xml_node *ch) {
         mining[ ch->val<int>("key") ] = ch->val<uint8_t>("v");
+    });
+    c->iterate_child("architecture", [this] (xml_node *ch) {
+        architecture[ ch->val<int>("key") ] = ch->val<uint8_t>("v");
     });
     c->iterate_child("chopping", [this] (xml_node *ch) {
         position_t pos;
