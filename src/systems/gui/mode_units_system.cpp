@@ -25,8 +25,8 @@ void mode_units_system::configure() {
 void mode_units_system::update(const double ms) {
     if (game_master_mode != UNITS) return;
 
-    ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    if (ImGui::CollapsingHeader(win_settler_list.c_str())) {
+    ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+    if (ImGui::CollapsingHeader(win_settler_list.c_str()), ImGuiTreeNodeFlags_DefaultOpen) {
         render_settlers();
     }
     if (ImGui::CollapsingHeader(win_wildlife_list.c_str())) {

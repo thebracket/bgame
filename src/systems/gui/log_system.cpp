@@ -4,6 +4,7 @@
 #include "../../messages/tick_message.hpp"
 #include <algorithm>
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "imgui_helper.hpp"
 
 constexpr int MAX_LOG_AGE = 200;
 constexpr int MAX_LOG_LINES = 10;
@@ -34,10 +35,10 @@ void log_system::update(const double ms) {
 
     if (game_master_mode == PLAY) {
         if (first_run) {
-            ImGui::SetNextWindowPos(ImVec2(5, get_window()->getSize().y - 125), ImGuiSetCond_Always);
+            ImGui::SetNextWindowPos(ImVec2(5, get_window()->getSize().y - 150), ImGuiSetCond_Always);
             first_run = false;
         }
-        ImGui::Begin("Log", nullptr, ImVec2{600,100}, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Begin(win_log.c_str(), nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
         for (const auto &line : logger->lines) {
             if (!line.chars.empty()) {
                 std::string output;
