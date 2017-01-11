@@ -11,6 +11,8 @@
 #include <rltk.hpp>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../main/IconsFontAwesome.h"
+#include "imgui_helper.hpp"
+#include "../../components/species.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -23,17 +25,26 @@ void mode_units_system::configure() {
 void mode_units_system::update(const double ms) {
     if (game_master_mode != UNITS) return;
 
-    render_settlers();
-    render_creatures();
-    render_natives();
+    ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    if (ImGui::CollapsingHeader(win_settler_list.c_str())) {
+        render_settlers();
+    }
+    if (ImGui::CollapsingHeader(win_wildlife_list.c_str())) {
+        render_creatures();
+    }
+    if (ImGui::CollapsingHeader(win_natives_list.c_str())) {
+        render_natives();
+    }
+    ImGui::End();
 }
 
 void mode_units_system::render_settlers() {
     // Build settler data structures
     std::vector<std::pair<std::size_t, std::string>> settlers;
-    each<settler_ai_t, name_t, game_stats_t>([&settlers] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats) {
-        settlers.emplace_back(std::make_pair(e.id,
-          name.first_name + std::string(" ") + name.last_name + std::string(" (") + stats.profession_tag + std::string(") : ") + ai.job_status ));
+    each<settler_ai_t, name_t, game_stats_t, species_t>([&settlers] (entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species) {
+        const std::string gender = ( species.gender == MALE ) ? std::string(ICON_FA_MALE) : std::string(ICON_FA_FEMALE);
+        const std::string display = gender + std::string(" ") + name.first_name + std::string(" ") + name.last_name + std::string(" (") + stats.profession_tag + std::string(") : ") + ai.job_status;
+        settlers.emplace_back(std::make_pair(e.id, display ));
     });
     const char* settler_listbox_items[settlers.size()];
     for (int i=0; i<settlers.size(); ++i) {
@@ -41,8 +52,9 @@ void mode_units_system::render_settlers() {
     }
 
     // Render the settlers window
-    ImGui::Begin("Settlers");
-    ImGui::ListBox("", &current_settler, settler_listbox_items, settlers.size(), 10);
+    //ImGui::Begin(win_settler_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## Settlers", &current_settler, settler_listbox_items, settlers.size(), 10);
     const std::string btn_view = std::string(ICON_FA_USER_CIRCLE) + " View";
     if (ImGui::Button(btn_view.c_str())) {
         game_master_mode = SETTLER;
@@ -51,7 +63,7 @@ void mode_units_system::render_settlers() {
         emit_deferred(recalculate_mining_message{});
     }
     ImGui::SameLine();
-    if (ImGui::Button("Go To")) {
+    if (ImGui::Button(btn_goto.c_str())) {
         selected_settler = settlers[current_settler].first;
         auto the_settler = entity(selected_settler);
         if (the_settler) {
@@ -65,7 +77,7 @@ void mode_units_system::render_settlers() {
         emit_deferred(recalculate_mining_message{});
     }
     ImGui::SameLine();
-    if (ImGui::Button("Control (Rogue Mode)")) {
+    if (ImGui::Button(btn_rogue.c_str())) {
         selected_settler = settlers[current_settler].first;
         auto the_settler = entity(selected_settler);
         if (the_settler) {
@@ -84,12 +96,12 @@ void mode_units_system::render_settlers() {
         game_master_mode = ROGUE;
     }
     ImGui::SameLine();
-    if (ImGui::Button("Close")) {
+    if (ImGui::Button(btn_close.c_str())) {
         game_master_mode = PLAY;
         emit_deferred(map_dirty_message{});
         emit_deferred(recalculate_mining_message{});
     }
-    ImGui::End();
+    //ImGui::End();
 }
 
 void mode_units_system::render_creatures() {
@@ -101,9 +113,10 @@ void mode_units_system::render_creatures() {
     for (int i=0; i<critters.size(); ++i) {
         creature_listbox_items[i] = critters[i].second.c_str();
     }
-    ImGui::Begin("Wildlife");
-    ImGui::ListBox("", &current_critter, creature_listbox_items, critters.size(), 10);
-    if (ImGui::Button("Go To")) {
+    //ImGui::Begin(win_wildlife_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## Critters", &current_critter, creature_listbox_items, critters.size(), 10);
+    if (ImGui::Button(btn_goto.c_str())) {
         auto selected_critter = critters[current_settler].first;
         auto the_critter = entity(selected_critter);
         if (the_critter) {
@@ -117,12 +130,12 @@ void mode_units_system::render_creatures() {
         emit_deferred(recalculate_mining_message{});
     }
     ImGui::SameLine();
-    if (ImGui::Button("Close")) {
+    if (ImGui::Button(btn_close.c_str())) {
         game_master_mode = PLAY;
         emit_deferred(map_dirty_message{});
         emit_deferred(recalculate_mining_message{});
     }
-    ImGui::End();
+    //ImGui::End();
 }
 
 void mode_units_system::render_natives() {
@@ -134,9 +147,10 @@ void mode_units_system::render_natives() {
     for (int i=0; i<natives.size(); ++i) {
         native_listbox_items[i] = natives[i].second.c_str();
     }
-    ImGui::Begin("Natives");
-    ImGui::ListBox("", &current_native, native_listbox_items, natives.size(), 10);
-    if (ImGui::Button("Go To")) {
+    //ImGui::Begin(win_natives_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## Natives", &current_native, native_listbox_items, natives.size(), 10);
+    if (ImGui::Button(btn_goto.c_str())) {
         auto selected_critter = natives[current_settler].first;
         auto the_critter = entity(selected_critter);
         if (the_critter) {
@@ -155,5 +169,5 @@ void mode_units_system::render_natives() {
         emit_deferred(map_dirty_message{});
         emit_deferred(recalculate_mining_message{});
     }
-    ImGui::End();
+    //ImGui::End();
 }
