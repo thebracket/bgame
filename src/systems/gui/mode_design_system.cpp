@@ -100,10 +100,7 @@ void mode_design_system::building()
     bool rendered_selected = false;
     for (const available_building_t &building : available_buildings) {
         if (build_mode_building && build_mode_building->tag == building.tag) rendered_selected = true;
-
-        if (!building.structure) {
             buildings.emplace_back(std::make_pair(building.tag, building.get_name()));
-        }
     }
     const char* building_listbox_items[buildings.size()];
     for (int i=0; i<buildings.size(); ++i) {
