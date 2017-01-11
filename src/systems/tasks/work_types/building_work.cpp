@@ -190,6 +190,7 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			emit_deferred(renderables_changed_message{});
 			emit_deferred(inventory_changed_message{});
 			emit_deferred(update_workflow_message{});
+			emit(map_changed_message{});
 
 			// Become idle
 			become_idle(e, ai, name);

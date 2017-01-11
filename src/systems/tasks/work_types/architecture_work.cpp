@@ -167,6 +167,7 @@ void do_architecture(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species
             designations->architecture.erase(bidx);
             emit(architecture_changed_message{});
             emit(renderables_changed_message{});
+            emit(map_changed_message{});
         } else {
             cancel_action(e, ai, stats, species, pos, name, "Task not found");
             return;

@@ -27,6 +27,7 @@ void topology_system::update(const double duration_ms) {
         recalculate(e);
         emit(map_dirty_message{});
         emit(recalculate_mining_message{});
+        emit(map_changed_message{});
     }
 
     std::queue<perform_construction_message> * cmessages = mbox<perform_construction_message>();
@@ -195,4 +196,5 @@ void topology_system::build_construction(const perform_construction_message &e) 
     delete_entity(e.entity_id);
     std::cout << "Deleted entity\n";
     emit(renderables_changed_message{});
+    emit(map_changed_message{});
 }

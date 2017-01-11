@@ -30,6 +30,7 @@ void distance_map_system::configure() {
     subscribe_mbox<settler_moved_message>();
     subscribe_mbox<architecture_changed_message>();
     subscribe_mbox<blocks_changed_message>();
+    subscribe_mbox<map_changed_message>();
 }
 
 void distance_map_system::update(const double duration_ms) {
@@ -39,6 +40,14 @@ void distance_map_system::update(const double duration_ms) {
     each_mbox<settler_moved_message>([this] (const settler_moved_message &msg) { update_settler_map = true; });
     each_mbox<architecture_changed_message>([this] (const architecture_changed_message &msg) { update_architecture_map = true; });
     each_mbox<blocks_changed_message>([this] (const blocks_changed_message &msg) { update_blocks_map = true; });
+    each_mbox<map_changed_message>([this] (const map_changed_message &msg) {
+        update_huntables = true;
+        update_butcherables = true;
+        update_bed_map = true;
+        update_settler_map = true;
+        update_architecture_map = true;
+        update_blocks_map = true;
+    });
 
     if (update_huntables) {
         std::vector<int> huntables;
