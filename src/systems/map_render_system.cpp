@@ -199,13 +199,18 @@ vchar get_render_char_architecture(const int &x, const int &y) {
         }
     }
 
-    if (arch_available && mouse_in_terminal) {
+    if (mouse_in_terminal) {
+        arch_x = mouse_term_x;
+        arch_y = mouse_term_y;
+    }
+
+    if (arch_available && mouse_in_terminal
+        && designations->architecture.find(mapidx(mouse_term_x, mouse_term_y, camera_position->region_z))==designations->architecture.end())
+    {
         const int building_left_x = mouse_term_x;
         const int building_top_y = mouse_term_y;
         const int building_right_x = mouse_term_x + arch_width;
         const int building_bottom_y = mouse_term_y + arch_height;
-        arch_x = mouse_term_x;
-        arch_y = mouse_term_y;
 
         if (arch_filled) {
             if (x + clip_left >= building_left_x && x + clip_left < building_right_x &&
