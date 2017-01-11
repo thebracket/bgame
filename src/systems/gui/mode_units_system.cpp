@@ -10,6 +10,7 @@
 #include "../../components/grazer_ai.hpp"
 #include <rltk.hpp>
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "../../main/IconsFontAwesome.h"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -42,7 +43,8 @@ void mode_units_system::render_settlers() {
     // Render the settlers window
     ImGui::Begin("Settlers");
     ImGui::ListBox("", &current_settler, settler_listbox_items, settlers.size(), 10);
-    if (ImGui::Button("View")) {
+    const std::string btn_view = std::string(ICON_FA_USER_CIRCLE) + " View";
+    if (ImGui::Button(btn_view.c_str())) {
         game_master_mode = SETTLER;
         selected_settler = settlers[current_settler].first;
         emit_deferred(map_dirty_message{});
