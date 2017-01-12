@@ -15,6 +15,7 @@ private:
 	void harvest();
 	void architecture();
 	int selected_building = 0;
+	int selected_stockpile = 0;
 };
 
 extern int architecture_mode;

@@ -14,6 +14,7 @@
 #include <iomanip>
 #include <map>
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "imgui_helper.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -73,7 +74,7 @@ void mode_design_system::digging() {
         }
     }
 
-    ImGui::Begin("Mining");
+    ImGui::Begin(win_mining.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     switch (game_mining_mode) {
         case DIG : ImGui::Text("Currently: DIGGING"); break;
         case CHANNEL : ImGui::Text("Currently: CHANNELING"); break;
@@ -107,7 +108,7 @@ void mode_design_system::building()
         building_listbox_items[i] = buildings[i].second.c_str();
     }
 
-    ImGui::Begin("Buildings");
+    ImGui::Begin(win_building.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     ImGui::ListBox("", &selected_building, building_listbox_items, buildings.size(), 10);
     ImGui::End();
 
@@ -134,7 +135,7 @@ void mode_design_system::architecture() {
     const std::string block_availability = std::string("Available building blocks: ") + std::to_string(available_blocks) +
                                            std::string(" (Required: ") + std::to_string(required_blocks) + std::string(")");
 
-    ImGui::Begin("Architecture");
+    ImGui::Begin(win_architect.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     if (materials_available) {
         ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s%", block_availability.c_str());
     } else {
@@ -214,7 +215,7 @@ void mode_design_system::architecture() {
 
 void mode_design_system::chopping() {
     //add_gui_element(std::make_unique<map_static_text>(5,4, "Tree cutting mode - click a tree to cut, right-click to clear designation."));
-    ImGui::Begin("Lumberjacking");
+    ImGui::Begin(win_chopping.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     ImGui::Text("Click a tree to cut it down, right-click to clear designation.");
     ImGui::End();
 
@@ -256,7 +257,7 @@ void mode_design_system::chopping() {
 
 void mode_design_system::guardposts() {
     //add_gui_element(std::make_unique<map_static_text>(5,4, "Guard mode - click a square to guard it, right-click to clear."));
-    ImGui::Begin("Guardposts");
+    ImGui::Begin(win_guard.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     ImGui::Text("Click a tile to guard it, right click to remove guard status.");
     ImGui::End();
 
@@ -286,7 +287,7 @@ void mode_design_system::guardposts() {
 
 void mode_design_system::harvest() {
     //add_gui_element(std::make_unique<map_static_text>(5,4, "Harvest mode - click a square to harvest it, right-click to clear."));
-    ImGui::Begin("Harvest");
+    ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     ImGui::Text("Click a tile to harvest it, right click to remove harvest status.");
     ImGui::End();
 
@@ -325,47 +326,27 @@ void mode_design_system::harvest() {
 }
 
 void mode_design_system::stockpiles() {
-    add_gui_element(std::make_unique<map_static_text>(5,4, "Stockpiles - select a stockpile from the right panel, click to add, right click to remove."));
-
-    int tt_x = term(3)->term_width - 30;
-    term(3)->box(tt_x, 4, 29, term(3)->term_height-5);
-    term(3)->fill(tt_x+1, 5, tt_x+29, term(3)->term_height-2, ' ');
-    term(3)->fill(tt_x+1, 5, tt_x+29, 6, ' ', WHITE, DARK_GREEN);
-    term(3)->print(tt_x+4, 6, "Add Stockpile", WHITE, GREEN);
-    term(3)->print(tt_x+4, 7, "[Available Stockpiles]", WHITE, DARK_GREEN);
-
-    // TODO: Render list of stockpiles
-    int y = 17;
-    each<stockpile_t>([this, &y, &tt_x] (entity_t &e, stockpile_t &sp) {
-        if (e.id == current_stockpile) {
-            term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), YELLOW, DARK_GREEN);
-
-            int panel_x = tt_x - 21;
-            term(3)->box(panel_x, 4, 20, term(3)->term_height-5);
-            term(3)->fill(panel_x+1, 5, panel_x+19, term(3)->term_height-2, ' ');
-            term(3)->fill(tt_x+1, 5, panel_x+19, 6, ' ', WHITE, DARK_GREEN);
-            term(3)->print(panel_x+1, 6, "Stockpile Settings", WHITE, DARK_GREEN);
-
-            int Y = 9;
-            for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
-                if (sp.category.test(it->second.index)) {
-                    term(3)->print(panel_x + 1, Y, it->second.name, WHITE, DARK_GREEN);
-                } else {
-                    term(3)->print(panel_x + 1, Y, it->second.name, RED, DARK_GREEN);
-                }
-                if (mouse::clicked && mouse::term3x > panel_x && mouse::term3x < tt_x && mouse::term3y == Y) {
-                    sp.category.flip(it->second.index);
-                }
-                ++Y;
-            }
-        } else {
-            term(3)->print(tt_x + 4, y, std::string("Stockpile #") + std::to_string(e.id), WHITE, DARK_GREEN);
-            if (mouse::clicked && mouse::term3x > tt_x+3 && mouse::term3y == y) current_stockpile = e.id;
-        }
-       ++y;
+    std::vector<std::pair<std::size_t, std::string>> stockpiles;
+    each<stockpile_t>([&stockpiles] (entity_t &e, stockpile_t &sp) {
+        stockpiles.emplace_back(std::make_pair( e.id, std::string("Stockpile #" + std::to_string(e.id)) ));
     });
-    term(3)->print(tt_x+4, y, "Remove Stockpile", WHITE, GREEN);
-    if (mouse::clicked && mouse::term3x>tt_x+3 && mouse::term3y == y) {
+    const char* stockpile_listbox_items[stockpiles.size()];
+    for (int i=0; i<stockpiles.size(); ++i) {
+        stockpile_listbox_items[i] = stockpiles[i].second.c_str();
+        if (i == selected_stockpile) current_stockpile = stockpiles[i].first;
+    }
+
+    // Stockpiles list
+    ImGui::Begin(win_stockpiles.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+    ImGui::TextWrapped("Stockpiles - select a stockpile from the right panel, click to add, right click to remove.");
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## Stockpiles", &selected_stockpile, stockpile_listbox_items, stockpiles.size(), 10);
+    if (ImGui::Button("+ Add Stockpile")) {
+        auto sp = create_entity()->assign(stockpile_t{});
+        current_stockpile = sp->id;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("- Remove Stockpile")) {
         delete_entity(current_stockpile);
         for (auto &id : current_region->stockpile_id) {
             if (id == current_stockpile) {
@@ -373,13 +354,30 @@ void mode_design_system::stockpiles() {
             }
         }
         current_stockpile = 0;
+        selected_stockpile = 0;
     }
-
-    // Capture mouse and add/remove stockpiles
-    if (mouse::term3x > tt_x+3 && mouse::term3y == 6 && mouse::clicked) {
-        auto sp = create_entity()->assign(stockpile_t{});
-        current_stockpile = sp->id;
+    if (current_stockpile != 0) {
+        auto sp_entity = entity(current_stockpile);
+        if (sp_entity) {
+            auto sp = sp_entity->component<stockpile_t>();
+            if (sp) {
+                for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
+                    if (sp->category.test(it->second.index)) {
+                        const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->second.name;
+                        if (ImGui::Button(sp_label.c_str())) {
+                            sp->category.reset(it->second.index);
+                        }
+                    } else {
+                        const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->second.name;
+                        if (ImGui::Button(sp_label.c_str())) {
+                            sp->category.set(it->second.index);
+                        }
+                    }
+                }
+            }
+        }
     }
+    ImGui::End();
 
     if (current_stockpile>0 && mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
