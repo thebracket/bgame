@@ -6,6 +6,7 @@
 #include "gui_system.hpp"
 #include <sstream>
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "imgui_helper.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -51,8 +52,9 @@ void render_civ_list() {
     for (int i=0; i<civs.size(); ++i) {
         civ_listbox_items[i] = civs[i].second.c_str();
     }
-    ImGui::Begin("Other Civilizations", nullptr, ImVec2{600,400}, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::ListBox("", &selected_civ, civ_listbox_items, civs.size(), 10);
+    ImGui::Begin(win_civs_list.c_str(), nullptr, ImVec2{600,400}, 0.9f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## ", &selected_civ, civ_listbox_items, civs.size(), 10);
 
     if (ImGui::Button("Negotiate")) {
         negotiating_civ = civs[selected_civ].first;
