@@ -36,6 +36,7 @@
 #include "../../../raws/plants.hpp"
 #include "../../distance_map_system.hpp"
 #include "../settler_move_to.hpp"
+#include "../../../components/bridge.hpp"
 
 using namespace rltk;
 using tasks::become_idle;
@@ -94,24 +95,26 @@ void do_architecture(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species
             cancel_action(e, ai, stats, species, pos, name, "No available task");
             return;
         }
-        if (distance == 0) {
+        if (distance < 2) {
             ai.job_type_minor = JM_ARCHITECT_BUILD;
             ai.job_status = "Building";
             return;
         }
-        ai.target_x = pos.x;
-        ai.target_y = pos.y;
-        ai.target_z = pos.z;
         position_t destination = architecure_map.find_destination(pos);
         move_to(e, pos, destination);
         return;
     }
 
     if (ai.job_type_minor == JM_ARCHITECT_BUILD) {
-        const int bidx = mapidx(pos);
-        pos.x = ai.target_x;
-        pos.y = ai.target_y;
-        pos.z = ai.target_z;
+        int bidx = 0;
+
+        // Are we standing on the build site, adjacent to it?
+        if (designations->architecture.find(mapidx(pos)) != designations->architecture.end()) bidx = mapidx(pos);
+        if (bidx == 0 && designations->architecture.find(mapidx(pos.x-1, pos.y, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x-1, pos.y, pos.z);
+        if (bidx == 0 && designations->architecture.find(mapidx(pos.x+1, pos.y, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x+1, pos.y, pos.z);
+        if (bidx == 0 && designations->architecture.find(mapidx(pos.x, pos.y-1, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x, pos.y-1, pos.z);
+        if (bidx == 0 && designations->architecture.find(mapidx(pos.x, pos.y+1, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x, pos.y+1, pos.z);
+
         auto finder = designations->architecture.find(bidx);
         if (finder != designations->architecture.end()) {
             uint8_t build_type = finder->second;
@@ -150,7 +153,20 @@ void do_architecture(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species
                 // Ramp
                 current_region->tile_type[bidx] = tile_type::RAMP;
             } else if (build_type == 6) {
-                // TODO: Bridge
+                current_region->tile_type[bidx] = tile_type::FLOOR;
+                // We need to iterate through the bridge tiles and see if it is done yet.
+                const auto bridge_id = current_region->bridge_id[bidx];
+                bool complete = true;
+                int bridge_idx = 0;
+                for (auto &id : current_region->bridge_id) {
+                    if (id == bridge_id && bridge_idx != bidx && designations->architecture.find(bridge_idx) != designations->architecture.end()) {
+                        complete = false;
+                    }
+                    ++bridge_idx;
+                }
+                if (complete) {
+                    entity(bridge_id)->component<bridge_t>()->complete = true;
+                }
             }
 
             int cx, cy, cz;

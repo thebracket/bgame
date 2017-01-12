@@ -13,6 +13,7 @@
 #include "../../components/construct_container.hpp"
 #include "../../components/construct_provides_door.hpp"
 #include "../../components/item_stored.hpp"
+#include "../../components/bridge.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/plants.hpp"
 #include "../distance_map_system.hpp"
@@ -211,6 +212,19 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
                 architecure_map.distance_map[mapidx(world_x, world_y, camera_position->region_z)]));
         lines.push_back(std::string("Blocks Distance: ") +
                         std::to_string(blocks_map.distance_map[mapidx(world_x, world_y, camera_position->region_z)]));
+    }
+	if (current_region->bridge_id[mapidx(world_x, world_y, camera_position->region_z)]>0) {
+        auto be = entity(current_region->bridge_id[mapidx(world_x, world_y, camera_position->region_z)]);
+        if (be) {
+            auto bc = be->component<bridge_t>();
+            if (bc) {
+                if (bc->complete) {
+                    lines.push_back("Bridge");
+                } else {
+                    lines.push_back("... Bridge");
+                }
+            }
+        }
     }
 
 	int longest = 0;

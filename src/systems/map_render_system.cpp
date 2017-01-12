@@ -219,7 +219,7 @@ vchar get_render_char_architecture(const int &x, const int &y) {
                 result.glyph = 177;
 
                 if (arch_possible && !current_region->solid[idx] &&
-                    !current_region->tile_flags[idx].test(CONSTRUCTION)) {
+                    !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
                     result.foreground = rltk::colors::GREEN;
                 } else {
                     arch_possible = false;
@@ -246,7 +246,7 @@ vchar get_render_char_architecture(const int &x, const int &y) {
                     result.glyph = 177;
 
                     if (arch_possible && !current_region->solid[idx] &&
-                        !current_region->tile_flags[idx].test(CONSTRUCTION)) {
+                        !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
                         result.foreground = rltk::colors::GREEN;
                     } else {
                         arch_possible = false;

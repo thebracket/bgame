@@ -97,7 +97,7 @@ void distance_map_system::update(const double duration_ms) {
         for (auto it = designations->architecture.begin(); it != designations->architecture.end(); ++it) {
             targets.emplace_back(it->first);
         }
-        architecure_map.update(targets);
+        architecure_map.update_architecture(targets);
         update_architecture_map = false;
     }
 

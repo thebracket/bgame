@@ -15,6 +15,7 @@
 #include <map>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
+#include "../../components/bridge.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -177,9 +178,15 @@ void mode_design_system::architecture() {
             // Build!
             for (int y=world_y; y<world_y+arch_height; ++y) {
                 for (int x = world_x; x < world_x + arch_width; ++x) {
+                    std::size_t bridge_id = 0;
+                    if (architecture_mode == 6) {
+                        auto new_bridge = create_entity()->assign(bridge_t{});
+                        bridge_id = new_bridge->id;
+                    }
                     if (arch_filled) {
                         const int idx = mapidx(x,y,camera_position->region_z);
                         designations->architecture[idx] = architecture_mode;
+                        if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
                         emit(map_dirty_message{});
                         emit(architecture_changed_message{});
                     } else {
@@ -192,6 +199,7 @@ void mode_design_system::architecture() {
                         if (!interior) {
                             const int idx = mapidx(x,y,camera_position->region_z);
                             designations->architecture[idx] = architecture_mode;
+                            if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
                             emit(map_dirty_message{});
                             emit(architecture_changed_message{});
                         }
@@ -204,6 +212,20 @@ void mode_design_system::architecture() {
             const int idx = mapidx(world_x, world_y, camera_position->region_z);
             auto finder = designations->architecture.find(idx);
             if (finder != designations->architecture.end()) {
+                if (finder->second == 6) {
+                    // Bridge - remove all of it
+                    const std::size_t bridge_id = current_region->bridge_id[idx];
+                    if (bridge_id > 0) {
+                        for (auto &id : current_region->bridge_id) {
+                            if (id == bridge_id) id=0;
+                        }
+                    }
+                    for (auto it=designations->architecture.begin(); it!=designations->architecture.end(); ++it) {
+                        if (it->second == 6 && current_region->bridge_id[it->first] == bridge_id) {
+                            designations->architecture.erase(it->first);
+                        }
+                    }
+                }
                 designations->architecture.erase(idx);
                 emit(map_dirty_message{});
                 emit(architecture_changed_message{});

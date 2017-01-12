@@ -1,5 +1,6 @@
 add_library(components STATIC
     loader.cpp
+	bridge.cpp
 	building.cpp
 	calendar.cpp
 	construct_power.cpp

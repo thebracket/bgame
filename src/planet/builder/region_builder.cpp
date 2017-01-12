@@ -40,6 +40,7 @@ inline void zero_map(region_t &region) {
     std::fill(region.water_level.begin(), region.water_level.end(), 0);
     std::fill(region.blood_stains.begin(), region.blood_stains.end(), false);
     std::fill(region.stockpile_id.begin(), region.stockpile_id.end(), 0);
+    std::fill(region.bridge_id.begin(), region.bridge_id.end(), 0);
 }
 
 void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::random_number_generator &rng, FastNoise &noise) {
