@@ -102,5 +102,4 @@ void add_systems_to_ecs() {
     add_system<wish_system>();
     add_system<log_system>();
     add_system<gui_system>();
-    add_system<fluid_system_end>();
 }

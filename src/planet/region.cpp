@@ -4,6 +4,7 @@
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
 #include "../raws/plants.hpp"
+#include "../systems/physics/fluid_system.hpp"
 
 using namespace rltk;
 
@@ -134,6 +135,7 @@ void region_t::tile_calculate(const int &x, const int &y, const int &z) {
 	}
 
 	tile_pathing(x,y,z);
+	water_stable[mapidx(x,y,z)] = false;
 }
 
 void region_t::tile_pathing(const int &x, const int &y, const int &z) {

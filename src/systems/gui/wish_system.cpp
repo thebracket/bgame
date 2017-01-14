@@ -4,6 +4,7 @@
 #include "../../messages/messages.hpp"
 #include "../distance_map_system.hpp"
 #include <../../external/imgui-sfml/imgui-SFML.h>
+#include "../physics/fluid_system.hpp"
 
 using namespace rltk;
 
@@ -17,6 +18,7 @@ void wish_system::make_wish(const std::string &wish) {
         for (int y=1; y<REGION_HEIGHT-1; ++y) {
             for (int x=1; x<REGION_WIDTH-1; ++x) {
                 current_region->water_level[mapidx(x,y,REGION_DEPTH-2)] = 3;
+                water_stable[mapidx(x,y,REGION_DEPTH-2)]=false;
             }
         }
     } else if (wish == "show distance") {
