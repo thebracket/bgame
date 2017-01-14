@@ -9,6 +9,13 @@ dijkstra_map::dijkstra_map() {
     std::fill(distance_map.begin(), distance_map.end(), MAX_DIJSTRA_DISTANCE);
 }
 
+inline void dm_add_candidate(std::queue<std::pair<int,int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
+    const int idx = mapidx(x,y,z);
+    if (current_region->water_level[idx] < 4) {
+        open_nodes.emplace(std::make_pair(idx, distance));
+    }
+}
+
 void dijkstra_map::update(const std::vector<int> &starting_points)
 {
     std::fill(distance_map.begin(), distance_map.end(), MAX_DIJSTRA_DISTANCE);
@@ -32,22 +39,23 @@ void dijkstra_map::update(const std::vector<int> &starting_points)
             std::tie(x,y,z) = idxmap(open_node.first);
 
             if (x < REGION_WIDTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_EAST)) {
-                open_nodes.emplace(std::make_pair(mapidx(x+1, y, z), open_node.second+1));
+                dm_add_candidate(open_nodes, x+1, y, z, open_node.second+1);
             }
             if (x > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_WEST)) {
-                open_nodes.emplace(std::make_pair(mapidx(x-1, y, z), open_node.second+1));
+                dm_add_candidate(open_nodes, x-1, y, z, open_node.second+1);
             }
             if (y < REGION_WIDTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_SOUTH)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y+1, z), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y+1, z, open_node.second+1);
             }
             if (y > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_WEST)) {
+                dm_add_candidate(open_nodes, x, y-1, z, open_node.second+1);
                 open_nodes.emplace(std::make_pair(mapidx(x, y-1, z), open_node.second+1));
             }
             if (z > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_DOWN)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y, z-1), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y, z-1, open_node.second+1);
             }
             if (z < REGION_DEPTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_UP)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y, z+1), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y, z+1, open_node.second+1);
             }
         }
     }
@@ -76,22 +84,23 @@ void dijkstra_map::update_architecture(const std::vector<int> &starting_points)
             std::tie(x,y,z) = idxmap(open_node.first);
 
             if (x < REGION_WIDTH-1 && (current_region->tile_flags[open_node.first].test(CAN_GO_EAST) || open_node.second == 0)) {
-                open_nodes.emplace(std::make_pair(mapidx(x+1, y, z), open_node.second+1));
+                dm_add_candidate(open_nodes, x+1, y, z, open_node.second+1);
             }
             if (x > 0 && (current_region->tile_flags[open_node.first].test(CAN_GO_WEST) || open_node.second == 0)) {
+                dm_add_candidate(open_nodes, x-1, y, z, open_node.second+1);
                 open_nodes.emplace(std::make_pair(mapidx(x-1, y, z), open_node.second+1));
             }
             if (y < REGION_WIDTH-1 && (current_region->tile_flags[open_node.first].test(CAN_GO_SOUTH) || open_node.second == 0)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y+1, z), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y+1, z, open_node.second+1);
             }
             if (y > 0 && (current_region->tile_flags[open_node.first].test(CAN_GO_WEST) || open_node.second == 0)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y-1, z), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y-1, z, open_node.second+1);
             }
             if (z > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_DOWN)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y, z-1), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y, z-1, open_node.second+1);
             }
             if (z < REGION_DEPTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_UP)) {
-                open_nodes.emplace(std::make_pair(mapidx(x, y, z+1), open_node.second+1));
+                dm_add_candidate(open_nodes, x, y, z+1, open_node.second+1);
             }
         }
     }
