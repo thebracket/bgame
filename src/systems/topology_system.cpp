@@ -115,6 +115,9 @@ void topology_system::recalculate(const perform_mining_message &e) {
 void topology_system::spawn_mining_result_impl(const perform_mining_message &e, std::string tag) {
     if (tag == "") return;
 
+    int X,Y,Z;
+    std::tie(X,Y,Z) = idxmap(e.target_idx);
+
     auto finder = item_defs.find(tag);
     if (finder != item_defs.end()) {
         //std::cout << "Topology system - producing a [" << tag << "]";
@@ -122,10 +125,10 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
         if (tag == "ore") {
             for (const std::string &metal : get_material(material).get().ore_materials) {
                 const auto metal_finder = get_material_by_tag(metal).get();
-                spawn_item_on_ground(e.x, e.y, e.z, tag, metal_finder);                
+                spawn_item_on_ground(X, Y, Z, tag, metal_finder);
             }
         } else {
-            spawn_item_on_ground(e.x, e.y, e.z, tag, material);
+            spawn_item_on_ground(X, Y, Z, tag, material);
         }
     } else {
         std::cout << "Topology system - don't know how to spawn a [" << tag << "]\n";
