@@ -20,6 +20,8 @@ void save_planet(const planet_t &planet) {
 	serialize(deflate, planet.water_height);
 	serialize(deflate, planet.plains_height);
 	serialize(deflate, planet.hills_height);
+	serialize(deflate, planet.remaining_settlers);
+	serialize(deflate, planet.migrant_counter);
 
 	serialize(deflate, planet.landblocks.size());
 	for (const block_t &block : planet.landblocks) {
@@ -75,6 +77,8 @@ planet_t load_planet() {
 	deserialize(inflate, planet.water_height);
 	deserialize(inflate, planet.plains_height);
 	deserialize(inflate, planet.hills_height);
+	deserialize(inflate, planet.remaining_settlers);
+	deserialize(inflate, planet.migrant_counter);
 
 	std::size_t n_blocks;
 

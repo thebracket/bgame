@@ -2,6 +2,7 @@
 #include "../messages/messages.hpp"
 #include "../main/game_globals.hpp"
 #include "../planet/builder/sentient_builder.hpp"
+#include "../planet/builder/settler_builder.hpp"
 
 void world_system::configure() {
     system_name = "Background World";
@@ -35,6 +36,32 @@ void world_system::update(const double ms) {
 	while (!day->empty()) {
         day_elapsed_message msg = day->front();
         day->pop();
+
+        // New arrivals
+        if (planet.remaining_settlers > 0) {
+            ++planet.migrant_counter;
+            if (planet.migrant_counter > 14 + rng.roll_dice(1,4)) {
+                planet.migrant_counter = 0;
+                const int new_settler_count = std::min(planet.remaining_settlers, 2+rng.roll_dice(1,4));
+                std::cout << new_settler_count << " new settlers have beamed down!\n";
+                planet.remaining_settlers -= new_settler_count;
+                    const int crash_x = REGION_WIDTH / 2;
+                    const int crash_y = REGION_HEIGHT / 2;
+	                const int crash_z = get_ground_z(*current_region, crash_x, crash_y);
+
+                    create_settler(planet, crash_x - 3, crash_y - 2, crash_z+1, rng, 0);
+                    if (new_settler_count > 1) create_settler(planet, crash_x - 2, crash_y - 2, crash_z+1, rng, 0);
+                    if (new_settler_count > 2) create_settler(planet, crash_x - 1, crash_y - 2, crash_z+1, rng, 0);
+                    if (new_settler_count > 3) create_settler(planet, crash_x, crash_y - 2, crash_z+1, rng, 1);
+                    if (new_settler_count > 4) create_settler(planet, crash_x + 1, crash_y - 2, crash_z+1, rng, 1);
+                    if (new_settler_count > 5) create_settler(planet, crash_x - 3, crash_y, crash_z+1, rng, 1);
+                    if (new_settler_count > 6) create_settler(planet, crash_x - 2, crash_y, crash_z+1, rng, 1);
+                    if (new_settler_count > 7) create_settler(planet, crash_x - 1, crash_y, crash_z+1, rng, 2);
+                    if (new_settler_count > 8) create_settler(planet, crash_x, crash_y, crash_z+1, rng, 2);
+                    if (new_settler_count > 9) create_settler(planet, crash_x + 1, crash_y, crash_z+1, rng, 2);
+
+            }
+        }
 
         std::cout << "A new day has dawned\n";
         std::size_t peep_id = 0;

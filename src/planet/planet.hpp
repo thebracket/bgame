@@ -60,6 +60,8 @@ struct planet_t {
 
 	int rng_seed;
 	int perlin_seed;
+	int remaining_settlers;
+	int migrant_counter;
 
 	uint8_t water_height;
 	uint8_t plains_height;
