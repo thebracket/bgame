@@ -53,6 +53,16 @@ vchar get_render_char(const int &x, const int &y) {
         sterm(6)->add(xchar{static_cast<int>(plant.glyph), lerp(plant.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
     }
 
+    // Apply blood stains!
+    if (current_region->blood_stains[idx]) {
+        sterm(5)->add(xchar{
+                static_cast<int>(340),
+                rltk::colors::WHITE,
+                (float)x,
+                (float)y+2.0F});
+    }
+
+    // Apply regular render items
     vchar result{' ', rltk::colors::GREY, rltk::colors::BLACK};
     result = current_region->render_cache[idx];
     if (!current_region->visible[idx]) result = greyscale(result);
@@ -66,7 +76,8 @@ vchar get_render_char(const int &x, const int &y) {
                 static_cast<float>(y+2 + renderable.offsetY)});
 	}
 
-    auto crf = composite_renderables.find(idx);
+    // Apply composite render - settlers
+	auto crf = composite_renderables.find(idx);
     if (crf != composite_renderables.end()) {
         for (const screen_render_t &vc : crf->second[glyph_cycle % crf->second.size()]) {
             sterm(5)->add(xchar{
@@ -79,9 +90,6 @@ vchar get_render_char(const int &x, const int &y) {
 
 	// Apply lighting
 	result.foreground = lerp(result.foreground, light_map[((term(1)->term_width * y) + x)], 0.75);
-
-	// Apply blood stains!
-	if (current_region->blood_stains[idx]) result.background = color_t{138,7,7};
 
 	const int visible_z = idx / ( REGION_WIDTH * REGION_HEIGHT);
 	if (visible_z == camera_position->region_z) {

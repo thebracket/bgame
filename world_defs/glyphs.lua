@@ -109,6 +109,7 @@ glyphs = {
 	status_mine = 337,
 	status_chop = 338,
 	status_build = 339,
+	bloodstain = 340,
 	base_male = 352,
 	base_female = 353,
 	short_hair = 354,
