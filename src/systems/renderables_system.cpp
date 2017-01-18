@@ -78,6 +78,24 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
                 layers.push_back(vchar{i.clothing_glyph, i.clothing_color, rltk::colors::BLACK});
             }
         });
+
+        // Optionally render a status flag
+        auto ai = entity(id)->component<settler_ai_t>();
+        if (ai) {
+            if (ai->job_type_major == JOB_SLEEP && ai->job_type_minor==JM_SLEEP) {
+                layers.push_back(vchar{336, rltk::colors::WHITE, rltk::colors::BLACK});
+            }
+            if (ai->job_type_major == JOB_MINE) {
+                layers.push_back(vchar{337, rltk::colors::WHITE, rltk::colors::BLACK});
+            }
+            if (ai->job_type_major == JOB_CHOP) {
+                layers.push_back(vchar{338, rltk::colors::WHITE, rltk::colors::BLACK});
+            }
+            if (ai->job_type_major == JOB_CONSTRUCTION || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
+                layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
+            }
+        }
+
         std::vector<screen_render_t> tmp;
         for (const vchar &c : layers) {
             tmp.push_back(screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY, c});
