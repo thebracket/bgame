@@ -35,6 +35,9 @@ inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bo
         const int idx_east = mapidx(x+1,y,z);
         const int idx_north = mapidx(x,y-1,z);
         const int idx_south = mapidx(x,y+1,z);
+        const int idx_above = mapidx(x,y,z+1);
+        const int neighbor_level = my_water_level + current_region->water_level[idx_west] + current_region->water_level[idx_east] +
+                                    current_region->water_level[idx_north] + current_region->water_level[idx_south];
         if (x>0 && !current_region->solid[idx_west] && current_region->water_level[idx_west]<my_water_level && current_region->water_level[idx_west]<10) {
             ++current_region->water_level[idx_west];
             --current_region->water_level[idx];

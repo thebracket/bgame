@@ -1,13 +1,13 @@
 add_library(systems STATIC
 	map_render_system.cpp
 	calendar_system.cpp
-        ai/settler_ai_system.cpp
-        gui/panel_render_system.cpp
+	ai/settler_ai_system.cpp
+	gui/panel_render_system.cpp
 	mining_system.cpp
 	inventory_system.cpp
 	path_finding.cpp
 	visibility_system.cpp
-        ai/workflow_system.cpp
+	ai/workflow_system.cpp
 	topology_system.cpp
 	camera_system.cpp
 	renderables_system.cpp
@@ -17,7 +17,7 @@ add_library(systems STATIC
 	ai/wildlife_population_system.cpp
 	movement_system.cpp
 	gui/mode_units_system.cpp
-        ai/mode_rogue_system.cpp
+	ai/mode_rogue_system.cpp
 	gui/mode_rogue_render_system.cpp
 	gui/mode_settler_info_system.cpp
 	gui/mode_play_system.cpp
@@ -34,7 +34,7 @@ add_library(systems STATIC
 	damage/weapons_helpers.cpp
 	gui/game_over_system.cpp
 	gui/mode_civs_system.cpp
-        gui/log_system.cpp
+	gui/log_system.cpp
 	gui/gui_system.cpp
 	gui/hud_system.cpp
 	physics/fluid_system.cpp
@@ -52,6 +52,7 @@ add_library(systems STATIC
     damage/healing_system.cpp
 	initiative_system.cpp
 	distance_map_system.cpp
+	settler_spawner_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp
