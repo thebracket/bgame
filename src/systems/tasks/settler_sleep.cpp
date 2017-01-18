@@ -41,7 +41,7 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
     const int idx = mapidx(pos);
 	if (ai.job_type_minor == JM_FIND_BED) {
         const int16_t distance = bed_map.distance_map[idx];
-        if (distance > MAX_DIJSTRA_DISTANCE) {
+        if (distance >= MAX_DIJSTRA_DISTANCE) {
             // There is no bed available - sleep rough!
             // TODO: Bad thoughts!
             emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
@@ -74,7 +74,7 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
             ai.job_type_minor = JM_SLEEP;
             ai.job_status = "Sleeping";
             return;
-        } else if (distance > MAX_DIJSTRA_DISTANCE) {
+        } else if (distance >= MAX_DIJSTRA_DISTANCE) {
             // There is no bed available - sleep rough!
             // TODO: Bad thoughts!
             emit_deferred(log_message{LOG{}.settler_name(entity.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
