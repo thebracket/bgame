@@ -225,13 +225,14 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		}
 
 		// If we don't have a melee weapon, and one is available, equip it
-		if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER && is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
+		// TODO: This needs fixing - it gets stuck, commented out for now.
+		/*if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER && is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_EQUIP_MELEE;
 			ai.job_type_minor = JM_FIND_MELEE_WEAPON;
 			change_job_status(ai, name, "Finding a melee weapon.", false);
 			return;
-		}
+		}*/
 
 		// Look for improved armor
 		if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER) {
