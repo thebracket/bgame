@@ -116,7 +116,7 @@ void mode_design_system::building()
     if (!rendered_selected) {
         build_mode_building.reset();
     }
-    if (buildings.size() > 0) {
+    if (buildings.size() > 0 && selected_building < available_buildings.size()) {
         build_mode_building = available_buildings[selected_building];
     }
 }

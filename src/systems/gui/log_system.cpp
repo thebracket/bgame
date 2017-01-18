@@ -55,7 +55,7 @@ void log_system::update(const double ms) {
                         }
                         ImVec4 col{static_cast<float>(current.r)/255.0f, static_cast<float>(current.g)/255.0f, static_cast<float>(current.b)/255.0f, 1.0f};
                         ImGui::TextColored(col, "%s", output.c_str());
-                        output = "";
+                        output = c.glyph;
                         current = c.foreground;
                     }
                 }
