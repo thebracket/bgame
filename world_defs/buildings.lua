@@ -414,10 +414,21 @@ buildings = {
 		name = "Stonefall Trap",
 		components = { { item="stone_boulder", qty=1}, { item="mechanism", qty=1 } },
 		skill = { name="Construction", difficulty=10 },
-		provides = { cage_trap={energy_cost=0} },
+		provides = { stonefall_trap={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['small_circle'], foreground = colors['red'], background = colors['black']}
+			}
+		}
+	},
+	weapon_trap = {
+		name = "Blade Trap",
+		components = { { item="trap_blade", qty=1}, { item="mechanism", qty=1 } },
+		skill = { name="Construction", difficulty=10 },
+		provides = { blade_trap={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['clubs'], foreground = colors['red'], background = colors['black']}
 			}
 		}
 	},

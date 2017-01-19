@@ -101,6 +101,19 @@ void trigger_system::update(const double duration_ms) {
                                 // Remove the trap
                                 delete_entity(finder->second);
                                 emit(triggers_changes_message{});
+                            } else if (trigger_def->type == trigger_blade && (grazer || (sentient && sentient->hostile) )) {
+                                std::cout << "Blade trap triggered\n";
+                                // Blades only affect hostiles, and don't auto-destruct
+                                auto name = target_entity->component<name_t>();
+                                if (name) {
+                                    LOG ss;
+                                    ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
+                                    emit_deferred(log_message{ss.chars});
+                                }
+
+                                // TODO: Add a random chance with some dex involved
+                                // Spawn some damage!
+                                emit(inflict_damage_message{msg.entity_id, rng.roll_dice(3,8), "spinning blades"});
                             }
                         }
                     }

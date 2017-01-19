@@ -63,7 +63,12 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			if (!component.second) {
 				has_components = false;
 				ai.current_tool = component.first;
-				ai.current_path = find_path(pos, *get_item_location(ai.current_tool));
+                auto item_loc = get_item_location(ai.current_tool);
+                if (!item_loc) {
+                    cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
+                    return;
+                }
+				ai.current_path = find_path(pos, *item_loc);
 				if (ai.current_path->success) {
 					component.second = true;
 					ai.job_type_minor = JM_GO_TO_INPUT;
@@ -144,6 +149,14 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			std::size_t material = get_material_by_tag("plasteel").get();
             std::string mat_names = "";
 			for (auto comp : ai.reaction_target.get().components) {
+                if (!entity(comp.first)) {
+                    cancel_action(e, ai, stats, species, pos, name, "Component error");
+                    return;
+                }
+                if (!entity(comp.first)->component<item_t>()) {
+                    cancel_action(e, ai, stats, species, pos, name, "Component error");
+                    return;
+                }
 				material = entity(comp.first)->component<item_t>()->material;
                 mat_names += entity(comp.first)->component<item_t>()->item_name + " ";
 				delete_item(comp.first);

@@ -198,6 +198,13 @@ void topology_system::build_construction(const perform_construction_message &e) 
             std::tie(x,y,z) = idxmap(index);
             auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_stonefall});
             emit(triggers_changes_message{});
+        } else if (provides.provides == provides_blades_trap) {
+            // Create a new entity for the trap
+            // Add an entry_trigger and a position to it
+            int x,y,z;
+            std::tie(x,y,z) = idxmap(index);
+            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_blade});
+            emit(triggers_changes_message{});
         }
     }
     current_region->tile_material[index] = e.material;

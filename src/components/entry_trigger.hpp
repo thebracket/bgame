@@ -4,7 +4,7 @@
 
 using namespace rltk;
 
-enum trigger_type { trigger_cage, trigger_stonefall };
+enum trigger_type { trigger_cage, trigger_stonefall, trigger_blade };
 
 struct entry_trigger_t {
     bool active = true;

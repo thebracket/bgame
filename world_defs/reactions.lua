@@ -165,10 +165,19 @@ reactions = {
     },
     make_cage = {
         name = "Make Cage",
-        workshop = "primitive_workshop",
+        workshop = "carpenter",
         inputs = { { item="block", qty=1} },
         outputs = { { item="cage", qty=1 } },
         skill = "Mechanics",
+        difficulty = 10,
+        automatic = false
+    },
+    make_trap_blade = {
+        name = "Make Trap Blades",
+        workshop = "primitive_forge",
+        inputs = { { item="block", qty=1, mat_type="metal" } },
+        outputs = { { item="trap_blade", qty=1 } },
+        skill = "Metalworking",
         difficulty = 10,
         automatic = false
     },

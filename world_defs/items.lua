@@ -167,6 +167,15 @@ items = {
 		background = colors['black'],
 		stockpile = stockpiles['furniture'].id
 	},
+	trap_blade = {
+		name = "Trap Blades",
+		description = "A set of blades designed for integration into a weapon trap",
+		itemtype = {"component"},
+		glyph = glyphs['clubs'],
+		foreground = colors['white'],
+		background = colors['black'],
+		stockpile = stockpiles['furniture'].id
+	},
 	wood_waste = {
 		name = "Offcuts",
 		description = "Wood off-cuts",
