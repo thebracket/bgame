@@ -257,12 +257,17 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 					stats.ethics += ledef->second.ethics;
 				}
 				for (const std::string &skill : ledef->second.skills) {
-					auto skillfinder = stats.skills.find(skill);
-					if (skillfinder == stats.skills.end()) {
-						stats.skills[skill] = skill_t{1,0};
-					} else {
-						++stats.skills[skill].skill_level;
-					}
+                    if (rng.roll_dice(1,10)>7) {
+                        auto skillfinder = stats.skills.find(skill);
+                        if (skillfinder == stats.skills.end()) {
+                            stats.skills[skill] = skill_t{1, 0};
+                        } else {
+                            if (stats.skills[skill].skill_level < 3) {
+                                ++stats.skills[skill].skill_level;
+                                std::cout << "Raised skill in " << skill << " to " << +stats.skills[skill].skill_level << "\n";
+                            }
+                        }
+                    }
 				}
 			}
 		}
