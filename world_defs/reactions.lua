@@ -145,6 +145,15 @@ reactions = {
         difficulty = 12,
         automatic = false
     },
+    make_simple_bed = {
+        name = "Make Simple Bed",
+        workshop = "carpenter",
+        inputs = { { item="block", material="wood", qty=1} },
+        outputs = { { item="bed_item", qty=1 } },
+        skill = "Carpentry",
+        difficulty = 10,
+        automatic = false
+    },
     smelt_ore = {
         name = "Smelt Ore",
         workshop = "smelter",

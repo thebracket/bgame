@@ -426,6 +426,15 @@ items = {
 		background = colors['black'],
 		stockpile = stockpiles['leather'].id
 	},
+	bed_item = {
+		name = "Bed",
+		description = "A simple bed",
+		itemtype = {"component"},
+		glyph = glyphs['cryo_bed'],
+		foreground = colors['white'],
+		background = colors['black'],
+		stockpile = stockpiles['furniture']
+	},
 
 	-- Vegetation items
 	hay = { 

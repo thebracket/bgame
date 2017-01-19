@@ -373,6 +373,18 @@ buildings = {
 		}
 	},
 
+	bed_simple = {
+		name = "Simple Bed",
+		components = { { item="bed_item", qty=1} },
+		skill = { name="Construction", difficulty=10 },
+		provides = { sleep={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['cryo_bed'], foreground = colors['white'], background = colors['black']}
+			}
+		}
+	},
+
 	wall = {
 		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
 		provides = { wall={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} }
