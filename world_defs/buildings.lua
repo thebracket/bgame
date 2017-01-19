@@ -325,6 +325,20 @@ buildings = {
 		},
 	},
 
+	mechanic = {
+		name = "Mechanic Workshop",
+		components = { { item="block", qty=1 } },
+		skill = { name="Construction", difficulty=12 },
+		render = {
+			width=2, height=2, tiles= {
+				{glyph= glyphs['mechanic_1'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['mechanic_2'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['mechanic_3'], foreground = colors['white'], background = colors['black']},
+				{glyph= glyphs['mechanic_4'], foreground = colors['white'], background = colors['black']}
+			}
+		},
+	},
+
 	table = {
 		name = "Table",
 		components = { { item="table", qty=1 } },

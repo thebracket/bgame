@@ -154,6 +154,24 @@ reactions = {
         difficulty = 10,
         automatic = false
     },
+    make_simple_mechanism = {
+        name = "Make Simple Mechanism",
+        workshop = "mechanic",
+        inputs = { { item="block", qty=1} },
+        outputs = { { item="mechanism", qty=1 } },
+        skill = "Mechanics",
+        difficulty = 10,
+        automatic = false
+    },
+    make_simple_circuit = {
+        name = "Make Simple Circuit",
+        workshop = "mechanic",
+        inputs = { { item="raw_silicon", qty=1}, { item="block", mat_type="metal", qty=1 } },
+        outputs = { { item="mechanism", qty=1 } },
+        skill = "Mechanics",
+        difficulty = 10,
+        automatic = false
+    },
     smelt_ore = {
         name = "Smelt Ore",
         workshop = "smelter",

@@ -140,6 +140,24 @@ items = {
 		background = colors['black'],
 		stockpile = stockpiles['silicon'].id
 	},
+	mechanism = {
+		name = "Simple Mechanism",
+		description = "A collection of gears and connectors",
+		itemtype = {"component"},
+		glyph = glyphs['mechanism_simple'],
+		foreground = colors['green'],
+		background = colors['black'],
+		stockpile = stockpiles['furniture'].id
+	},
+	circuit = {
+		name = "Simple Circuit",
+		description = "A simple cooper/silicon circuit",
+		itemtype = {"component"},
+		glyph = glyphs['circuit_simple'],
+		foreground = colors['green'],
+		background = colors['black'],
+		stockpile = stockpiles['furniture'].id
+	},
 	wood_waste = {
 		name = "Offcuts",
 		description = "Wood off-cuts",
@@ -433,7 +451,7 @@ items = {
 		glyph = glyphs['cryo_bed'],
 		foreground = colors['white'],
 		background = colors['black'],
-		stockpile = stockpiles['furniture']
+		stockpile = stockpiles['furniture'].id
 	},
 
 	-- Vegetation items

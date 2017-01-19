@@ -105,6 +105,8 @@ glyphs = {
 	campfire = 318,
 	tent_kit = 319,
 	campfire_kit = 320,
+	circuit_simple = 321,
+	mechanism_simple = 322,
 	status_sleep = 336,
 	status_mine = 337,
 	status_chop = 338,
@@ -184,7 +186,11 @@ glyphs = {
 	mason_1 = 452,
 	mason_2 = 453,
 	mason_3 = 468,
-	mason_4 = 469
+	mason_4 = 469,
+	mechanic_1 = 454,
+	mechanic_2 = 455,
+	mechanic_3 = 470,
+	mechanic_4 = 471
 }
 
 colors = {
