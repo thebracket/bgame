@@ -86,16 +86,18 @@ void movement_system::update(const double ms) {
     std::queue<entity_wants_to_move_message> * movers = mbox<entity_wants_to_move_message>();
 	while (!movers->empty()) {
         entity_wants_to_move_message msg = movers->front();
-		movers->pop();
+        movers->pop();
 
-	    if (!entity(msg.entity_id)) break;
+        if (!entity(msg.entity_id)) break;
         auto epos = entity(msg.entity_id)->component<position_t>();
         if (!epos) break;
         position_t origin{epos->x, epos->y, epos->z};
 
         // Bounds check
-        if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH-1 || msg.destination.y < 1 || msg.destination.y > REGION_HEIGHT-1
-            || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH-1) break;
+        if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH - 1 || msg.destination.y < 1 ||
+            msg.destination.y > REGION_HEIGHT - 1
+            || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH - 1)
+            break;
 
         // Add sliding effect
         auto slide = entity(msg.entity_id)->component<slidemove_t>();
@@ -105,17 +107,19 @@ void movement_system::update(const double ms) {
         const int dY = msg.destination.y - epos->y;
         const int dZ = msg.destination.z - epos->z;
 
-        const float deltaX = (float)dX / (float)initiative->initiative;
-        const float deltaY = (float)dY / (float)initiative->initiative;
-        const float deltaZ = (float)dZ / (float)initiative->initiative;
+        if (initiative) {
+            const float deltaX = (float) dX / (float) initiative->initiative;
+            const float deltaY = (float) dY / (float) initiative->initiative;
+            const float deltaZ = (float) dZ / (float) initiative->initiative;
 
-        if (!slide && initiative) {
-            entity(msg.entity_id)->assign(slidemove_t{deltaX, deltaY, deltaZ, initiative->initiative});
-        } else if (slide && initiative) {
-            slide->offsetX = deltaX;
-            slide->offsetY = deltaY;
-            slide->offsetZ = deltaZ;
-            slide->lifespan = initiative->initiative;
+            if (!slide && initiative) {
+                entity(msg.entity_id)->assign(slidemove_t{deltaX, deltaY, deltaZ, initiative->initiative});
+            } else if (slide && initiative) {
+                slide->offsetX = deltaX;
+                slide->offsetY = deltaY;
+                slide->offsetZ = deltaZ;
+                slide->lifespan = initiative->initiative;
+            }
         }
 
         // Move

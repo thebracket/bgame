@@ -107,6 +107,7 @@ glyphs = {
 	campfire_kit = 320,
 	circuit_simple = 321,
 	mechanism_simple = 322,
+	cage = 323,
 	status_sleep = 336,
 	status_mine = 337,
 	status_chop = 338,

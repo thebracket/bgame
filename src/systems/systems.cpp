@@ -51,6 +51,7 @@
 #include "stockpile_system.hpp"
 #include "distance_map_system.hpp"
 #include "settler_spawner_system.hpp"
+#include "trigger_system.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -79,6 +80,7 @@ void add_systems_to_ecs() {
     add_system<settler_ai_system>();
     add_system<mode_rogue_system>();
     add_system<movement_system>();
+    add_system<trigger_system>();
     add_system<settler_ranged_attack_system>();
     add_system<settler_melee_attacks_system>();
     add_system<creature_attacks_system>();

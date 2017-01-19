@@ -399,6 +399,29 @@ buildings = {
 		}
 	},
 
+	cage_trap = {
+		name = "Cage Trap",
+		components = { { item="cage", qty=1}, { item="mechanism", qty=1 } },
+		skill = { name="Construction", difficulty=10 },
+		provides = { cage_trap={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['cage'], foreground = colors['green'], background = colors['black']}
+			}
+		}
+	},
+	stonefall_trap = {
+		name = "Stonefall Trap",
+		components = { { item="stone_boulder", qty=1}, { item="mechanism", qty=1 } },
+		skill = { name="Construction", difficulty=10 },
+		provides = { cage_trap={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['small_circle'], foreground = colors['red'], background = colors['black']}
+			}
+		}
+	},
+
 	wall = {
 		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
 		provides = { wall={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} }

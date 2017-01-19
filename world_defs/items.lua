@@ -158,6 +158,15 @@ items = {
 		background = colors['black'],
 		stockpile = stockpiles['furniture'].id
 	},
+	cage = {
+		name = "Simple Cage",
+		description = "A cage, designed to hold a normal humanoid sized prisoner",
+		itemtype = {"component"},
+		glyph = glyphs['cage'],
+		foreground = colors['white'],
+		background = colors['black'],
+		stockpile = stockpiles['furniture'].id
+	},
 	wood_waste = {
 		name = "Offcuts",
 		description = "Wood off-cuts",

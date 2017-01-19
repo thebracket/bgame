@@ -7,6 +7,7 @@
 #include "../raws/materials.hpp"
 #include "../main/game_globals.hpp"
 #include "../raws/buildings.hpp"
+#include "../components/entry_trigger.hpp"
 
 void topology_system::update(const double duration_ms) {
     std::queue<perform_mining_message> * messages = mbox<perform_mining_message>();
@@ -183,6 +184,13 @@ void topology_system::build_construction(const perform_construction_message &e) 
             current_region->tile_type[index] = tile_type::STAIRS_UPDOWN;
         } else if (provides.provides == provides_ramp) {
             current_region->tile_type[index] = tile_type::RAMP;
+        } else if (provides.provides == provides_cage_trap) {
+            // Create a new entity for the trap
+            // Add an entry_trigger and a position to it
+            int x,y,z;
+            std::tie(x,y,z) = idxmap(index);
+            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_cage});
+            emit(triggers_changes_message{});
         }
     }
     current_region->tile_material[index] = e.material;

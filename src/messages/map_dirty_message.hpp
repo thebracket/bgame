@@ -11,6 +11,10 @@ struct architecture_changed_message : public rltk::base_message_t {
 struct blocks_changed_message : public rltk::base_message_t {
 };
 
+struct triggers_changes_message : public rltk::base_message_t {
+};
+
+
 struct map_changed_message : public rltk::base_message_t {
 };
 

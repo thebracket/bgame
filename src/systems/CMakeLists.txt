@@ -53,6 +53,7 @@ add_library(systems STATIC
 	initiative_system.cpp
 	distance_map_system.cpp
 	settler_spawner_system.cpp
+	trigger_system.cpp
 	tasks/idle_mode.cpp
 	tasks/settler_glyph.cpp
 	tasks/settler_job_status.cpp

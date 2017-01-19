@@ -9,6 +9,7 @@ add_library(components STATIC
 	corpse_harvestable.cpp
 	corpse_settler.cpp
 	designations.cpp
+	entry_trigger.cpp
 	falling.cpp
 	game_stats.cpp
 	grazer_ai.cpp

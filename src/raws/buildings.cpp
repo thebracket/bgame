@@ -125,6 +125,8 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                     if (type == "stairs_updown") provisions.provides = provides_stairs_updown;
                     if (type == "ramp") provisions.provides = provides_ramp;
                     if (type == "light") provisions.provides = provides_light;
+                    if (type == "cage_trap") provisions.provides = provides_cage_trap;
+                    if (type == "stonefall_trap") provisions.provides = provides_stonefall_trap;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);

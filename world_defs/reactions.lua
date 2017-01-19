@@ -163,6 +163,15 @@ reactions = {
         difficulty = 10,
         automatic = false
     },
+    make_cage = {
+        name = "Make Cage",
+        workshop = "primitive_workshop",
+        inputs = { { item="block", qty=1} },
+        outputs = { { item="cage", qty=1 } },
+        skill = "Mechanics",
+        difficulty = 10,
+        automatic = false
+    },
     make_simple_circuit = {
         name = "Make Simple Circuit",
         workshop = "mechanic",
