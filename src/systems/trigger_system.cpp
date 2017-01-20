@@ -24,28 +24,32 @@ void trigger_system::configure() {
 
 void trigger_system::update(const double duration_ms) {
     each_mbox<triggers_changes_message>([this] (const triggers_changes_message &msg) {
-        dirty = true;
+        std::cout << "Received trigger notification\n";
+        this->dirty = true;
     });
 
     if (dirty) {
+        std::cout << "Rebuilding trigger list\n";
         triggers.clear();
         each<entry_trigger_t, position_t>([this] (entity_t &e, entry_trigger_t &trigger, position_t &pos) {
+            std::cout << "Found a trigger!\n";
             triggers.insert(std::make_pair(mapidx(pos), e.id));
         });
         dirty = false;
     }
 
     each_mbox<entity_moved_message>([this] (const entity_moved_message &msg) {
+        //std::cout << "Received an entity move message. There are " << triggers.size() << " triggers.\n";
         const int tile_index = mapidx(msg.destination);
         auto finder = triggers.find(tile_index);
         if (finder != triggers.end()) {
-            std::cout << "Found a trigger\n";
+            //std::cout << "Found a trigger\n";
             auto trigger_entity = entity(finder->second);
             if (trigger_entity) {
                 auto trigger_def = trigger_entity->component<entry_trigger_t>();
                 if (trigger_def) {
                     if (trigger_def->active) {
-                        std::cout << "Trigger is active\n";
+                        //std::cout << "Trigger is active\n";
                         // Does the trigger apply to the entity type
                         auto target_entity = entity(msg.entity_id);
                         if (target_entity) {
@@ -53,13 +57,13 @@ void trigger_system::update(const double duration_ms) {
                             auto sentient = target_entity->component<sentient_ai>();
                             auto settler = target_entity->component<settler_ai_t>();
 
-                            if (grazer) std::cout << "Target grazes\n";
-                            if (settler) std::cout << "Target is sentient\n";
-                            if (sentient) std::cout << "Target a settler - probably ignored\n";
+                            //if (grazer) std::cout << "Target grazes\n";
+                            //if (sentient) std::cout << "Target is sentient\n";
+                            //if (settler) std::cout << "Target a settler - probably ignored\n";
 
                             // Cages only affect hostiles and beasts
                             if (trigger_def->type == trigger_cage && (grazer || (sentient && sentient->hostile) )) {
-                                std::cout << "Cage triggered\n";
+                                //std::cout << "Cage triggered\n";
                                 auto name = target_entity->component<name_t>();
                                 if (name) {
                                     LOG ss;
@@ -84,8 +88,8 @@ void trigger_system::update(const double duration_ms) {
                                 // Remove the trap
                                 delete_entity(finder->second);
                                 emit(triggers_changes_message{});
-                            } else if (trigger_def->type == trigger_cage && (grazer || (sentient && sentient->hostile) )) {
-                                std::cout << "Stonefall triggered\n";
+                            } else if (trigger_def->type == trigger_stonefall && (grazer || (sentient && sentient->hostile) )) {
+                                //std::cout << "Stonefall triggered\n";
                                 // Stonefalls only affect hostiles
                                 auto name = target_entity->component<name_t>();
                                 if (name) {
@@ -102,7 +106,7 @@ void trigger_system::update(const double duration_ms) {
                                 delete_entity(finder->second);
                                 emit(triggers_changes_message{});
                             } else if (trigger_def->type == trigger_blade && (grazer || (sentient && sentient->hostile) )) {
-                                std::cout << "Blade trap triggered\n";
+                                //std::cout << "Blade trap triggered\n";
                                 // Blades only affect hostiles, and don't auto-destruct
                                 auto name = target_entity->component<name_t>();
                                 if (name) {

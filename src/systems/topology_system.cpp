@@ -152,6 +152,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
     std::cout << "Tag: " << e.tag << "\n";
     std::cout << "Material: " << e.material << "\n";
 
+    bool entity_should_be_deleted = true;
     auto construction_pos = entity(e.entity_id)->component<position_t>();
     const int index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
     auto finder = building_defs.find(e.tag);
@@ -190,21 +191,24 @@ void topology_system::build_construction(const perform_construction_message &e) 
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
             auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_cage});
-            emit(triggers_changes_message{});
+            emit_deferred(triggers_changes_message{});
+            entity_should_be_deleted = false;
         } else if (provides.provides == provides_stonefall_trap) {
             // Create a new entity for the trap
             // Add an entry_trigger and a position to it
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
             auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_stonefall});
-            emit(triggers_changes_message{});
+            emit_deferred(triggers_changes_message{});
+            entity_should_be_deleted = false;
         } else if (provides.provides == provides_blades_trap) {
             // Create a new entity for the trap
             // Add an entry_trigger and a position to it
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
             auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_blade});
-            emit(triggers_changes_message{});
+            emit_deferred(triggers_changes_message{});
+            entity_should_be_deleted = false;
         }
     }
     current_region->tile_material[index] = e.material;
@@ -218,8 +222,10 @@ void topology_system::build_construction(const perform_construction_message &e) 
         }
     }
 
-    delete_entity(e.entity_id);
-    std::cout << "Deleted entity\n";
+    if (entity_should_be_deleted) {
+        delete_entity(e.entity_id);
+        std::cout << "Deleted entity\n";
+    }
     emit(renderables_changed_message{});
     emit(map_changed_message{});
 }
