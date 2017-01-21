@@ -37,3 +37,15 @@ struct destroy_item_message : public rltk::base_message_t {
 	destroy_item_message(const std::size_t ID) : id(ID) {}
 	std::size_t id;
 };
+
+struct request_lever_pull_message : public rltk::base_message_t {
+	request_lever_pull_message() {}
+	request_lever_pull_message(const std::size_t &lid) : lever_id(lid) {}
+	std::size_t lever_id;
+};
+
+struct trigger_details_requested : public rltk::base_message_t {
+    trigger_details_requested() {}
+    trigger_details_requested(const std::size_t &lid) : lever_id(lid) {}
+    std::size_t lever_id;
+};

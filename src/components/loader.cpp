@@ -34,6 +34,8 @@
 #include "stockpile.hpp"
 #include "bridge.hpp"
 #include "entry_trigger.hpp"
+#include "receives_signal.hpp"
+#include "lever.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -116,6 +118,10 @@ void component_loader_xml(rltk::xml_node * node, std::size_t entity_id, std::str
 		inner_loader<bridge_t>(node, entity_id);
 	} else if (xml_identity == "entry_trigger_t") {
 		inner_loader<entry_trigger_t>(node, entity_id);
+    } else if (xml_identity == "receives_signal_t") {
+        inner_loader<receives_signal_t>(node, entity_id);
+    } else if (xml_identity == "lever_t") {
+        inner_loader<lever_t>(node, entity_id);
     } else {
 		throw std::runtime_error("Unknown component type, "+xml_identity);
 	}

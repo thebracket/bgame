@@ -4,6 +4,7 @@
 #include "../input/mouse_input_system.hpp"
 #include "gui_system.hpp"
 #include "../../messages/build_request_message.hpp"
+#include "../../messages/inventory_changed_message.hpp"
 #include <rltk.hpp>
 #include "../../components/building.hpp"
 #include "../../components/settler_ai.hpp"
@@ -17,6 +18,7 @@
 #include "../../raws/buildings.hpp"
 #include "../../raws/plants.hpp"
 #include "../distance_map_system.hpp"
+#include "../../components/lever.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -391,6 +393,23 @@ void mode_play_system::show_tilemenu() {
 							menu->options.push_back(std::make_pair(std::string("Unlock ")+building_name, on_unlock));
 						}
 					}
+
+					// Levers and other triggers
+					auto lever = building_entity.component<lever_t>();
+                    if (lever && building.civ_owner == 0) {
+                        boost::optional<std::function<void()>> on_pull{};
+                        on_pull = [&building_entity] () {
+                            // Emit a pull lever message
+                            emit_deferred(request_lever_pull_message{building_entity.id});
+                        };
+                        boost::optional<std::function<void()>> on_settings{};
+                        on_settings = [&building_entity] () {
+                            // Go to lever settings mode
+                            emit_deferred(trigger_details_requested{building_entity.id});
+                        };
+                        menu->options.push_back(std::make_pair(std::string("Pull Lever"), on_pull));
+                        menu->options.push_back(std::make_pair(std::string("Lever Settings"), on_settings));
+                    }
 				} else {
 					building_name = finder->second.name;
 					boost::optional<std::function<void()>> on_click{};

@@ -178,7 +178,16 @@ reactions = {
         inputs = { { item="block", qty=1, mat_type="metal" } },
         outputs = { { item="trap_blade", qty=1 } },
         skill = "Metalworking",
-        difficulty = 10,
+        difficulty = 12,
+        automatic = false
+    },
+    make_retractable_spikes = {
+        name = "Make Retractable Spikes",
+        workshop = "primitive_forge",
+        inputs = { { item="block", qty=1, mat_type="metal" } },
+        outputs = { { item="retractable_spike", qty=1 } },
+        skill = "Metalworking",
+        difficulty = 15,
         automatic = false
     },
     make_simple_circuit = {

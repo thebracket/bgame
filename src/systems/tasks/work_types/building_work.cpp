@@ -185,7 +185,8 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 						|| provides.provides == provides_stairs_up
 						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 
 						|| provides.provides == provides_ramp || provides.provides == provides_stonefall_trap
-						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap)
+						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap
+                        || provides.provides == provides_spikes || provides.provides == provides_lever)
 				{					
 					emit(perform_construction_message{ai.building_target.get().building_entity, tag, material});
 				}

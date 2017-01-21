@@ -12,6 +12,7 @@ struct entry_trigger_t {
 
     entry_trigger_t() {}
     entry_trigger_t(const trigger_type &t) : type(t) {}
+    entry_trigger_t(const trigger_type &t, const bool &enabled) : type(t), active(enabled) {}
 
     std::string xml_identity = "entry_trigger_t";
 

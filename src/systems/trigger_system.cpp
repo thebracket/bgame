@@ -14,12 +14,15 @@
 #include "../components/logger.hpp"
 #include "../raws/materials.hpp"
 #include "../messages/inflict_damage_message.hpp"
+#include "../messages/inventory_changed_message.hpp"
 #include "../main/game_globals.hpp"
 
 void trigger_system::configure() {
     system_name = "Trigger System";
     subscribe_mbox<triggers_changes_message>();
     subscribe_mbox<entity_moved_message>();
+    subscribe_mbox<request_lever_pull_message>();
+    subscribe_mbox<trigger_details_requested>();
 }
 
 void trigger_system::update(const double duration_ms) {
@@ -37,6 +40,15 @@ void trigger_system::update(const double duration_ms) {
         });
         dirty = false;
     }
+
+    each_mbox<request_lever_pull_message>([this] (const request_lever_pull_message &msg) {
+        // Add to the to-do list!
+    });
+
+    each_mbox<trigger_details_requested>([this] (const trigger_details_requested &msg) {
+        trigger_id = msg.lever_id;
+        pause_mode = PAUSED;
+    });
 
     each_mbox<entity_moved_message>([this] (const entity_moved_message &msg) {
         //std::cout << "Received an entity move message. There are " << triggers.size() << " triggers.\n";

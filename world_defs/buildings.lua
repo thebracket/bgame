@@ -432,6 +432,28 @@ buildings = {
 			}
 		}
 	},
+	spike_trap = {
+		name = "Retractable Spikes",
+		components = { { item="retractable_spike", qty=1}, { item="mechanism", qty=1 } },
+		skill = { name="Construction", difficulty=12 },
+		provides = { spike_trap={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['spikes_retracted'], foreground = colors['red'], background = colors['black']}
+			}
+		}
+	},
+	lever = {
+		name = "Lever",
+		components = { { item="mechanism", qty=1 } },
+		skill = { name="Construction", difficulty=12 },
+		provides = { lever={energy_cost=0} },
+		render = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['lever_off'], foreground = colors['red'], background = colors['black']}
+			}
+		}
+	},
 
 	wall = {
 		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,

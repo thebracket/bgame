@@ -176,6 +176,15 @@ items = {
 		background = colors['black'],
 		stockpile = stockpiles['furniture'].id
 	},
+	retractable_spike = {
+		name = "Retractable Trap Spikes",
+		description = "A set of retractable spikes designed for integration into a weapon trap",
+		itemtype = {"component"},
+		glyph = glyphs['three_bar'],
+		foreground = colors['white'],
+		background = colors['black'],
+		stockpile = stockpiles['furniture'].id
+	},
 	wood_waste = {
 		name = "Offcuts",
 		description = "Wood off-cuts",

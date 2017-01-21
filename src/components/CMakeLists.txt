@@ -18,10 +18,12 @@ add_library(components STATIC
 	item.cpp
 	item_carried.cpp
 	item_stored.cpp
+    lever.cpp
 	lightsource.cpp
 	logger.cpp
 	name.cpp
 	position.cpp
+    receives_signal.cpp
 	renderable.cpp
 	renderable_composite.cpp
 	sentient_ai.cpp
