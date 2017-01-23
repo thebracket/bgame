@@ -15,8 +15,8 @@
 
 using namespace rltk;
 
-boost::container::flat_map<int, std::vector<screen_render_t>> renderables;
-boost::container::flat_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
+std::unordered_map<int, std::vector<screen_render_t>> renderables;
+std::unordered_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
 
 void renderables_system::configure() {
     system_name = "Renderables System";

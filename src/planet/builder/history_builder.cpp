@@ -5,7 +5,7 @@
 #include "../../raws/string_table.hpp"
 #include "../constants.hpp"
 #include "../../utils/string_utils.hpp"
-#include <boost/container/flat_map.hpp>
+#include <unordered_map>
 #include <iostream>
 #include <sstream>
 
@@ -192,8 +192,7 @@ inline void planet_build_run_movement(planet_t &planet, rltk::random_number_gene
 
 inline void planet_build_run_people(planet_t &planet, rltk::random_number_generator &rng, 
     std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> &newborns,
-    boost::container::flat_map<int, std::vector<int>> &civlocs,
-    boost::container::flat_map<int, int> &civpops,
+    std::unordered_map<int, std::vector<int>> &civlocs, std::unordered_map<int, int> &civpops,
     std::vector<std::size_t> &peep_killer) 
 {
     std::size_t peep_id = 0;
@@ -294,7 +293,7 @@ inline void planet_build_run_relocations(planet_t &planet, rltk::random_number_g
     }
 }
 
-inline void planet_build_run_extinctions(planet_t &planet, boost::container::flat_map<int, int> &civpops, rltk::random_number_generator &rng) {
+inline void planet_build_run_extinctions(planet_t &planet, std::unordered_map<int, int> &civpops, rltk::random_number_generator &rng) {
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
             if (civpops.find((int)i) == civpops.end()) {
@@ -327,7 +326,7 @@ inline void planet_build_run_extinctions(planet_t &planet, boost::container::fla
     }
 }
 
-inline void planet_build_run_settlements(planet_t &planet, boost::container::flat_map<int, std::vector<int>> &civlocs) {
+inline void planet_build_run_settlements(planet_t &planet, std::unordered_map<int, std::vector<int>> &civlocs) {
     for (auto it=civlocs.begin(); it!=civlocs.end(); ++it) {
         bool settlement_here = false;
         std::vector<std::size_t> deletable_settlements;
@@ -370,7 +369,7 @@ inline void planet_build_run_settlements(planet_t &planet, boost::container::fla
     }
 }
 
-inline void planet_build_run_empty_settlements(planet_t &planet, boost::container::flat_map<int, std::vector<int>> &civlocs) {
+inline void planet_build_run_empty_settlements(planet_t &planet, std::unordered_map<int, std::vector<int>> &civlocs) {
     for (auto &town : planet.civs.settlements) {
         const int map_index = planet.idx(town.world_x, town.world_y);
         auto finder = civlocs.find(map_index);
@@ -394,8 +393,8 @@ inline int planet_build_ethics_difference(planet_t &planet, const int civ1, cons
     return -10;
 }
 
-inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_generator &rng, 
-    boost::container::flat_map<int, std::vector<int>> &civlocs, std::vector<std::size_t> &peep_killer)
+inline void planet_build_run_interactions(planet_t &planet, rltk::random_number_generator &rng,
+                                          std::unordered_map<int, std::vector<int>> &civlocs, std::vector<std::size_t> &peep_killer)
 {
     // Check for interactions
     for (auto it=civlocs.begin(); it!=civlocs.end(); ++it) {
@@ -531,8 +530,8 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
     set_worldgen_status("Running Year " + std::to_string(year));
 
     std::vector<std::tuple<std::size_t, std::size_t, std::size_t>> newborns;
-    boost::container::flat_map<int, std::vector<int>> civlocs;
-    boost::container::flat_map<int, int> civpops;
+    std::unordered_map<int, std::vector<int>> civlocs;
+    std::unordered_map<int, int> civpops;
     std::vector<std::size_t> peep_killer;
 
     // Technological advancement
@@ -577,7 +576,7 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
         planet_build_run_year(year, planet, rng);
     }
 
-    boost::container::flat_map<int, int> civpops;
+    std::unordered_map<int, int> civpops;
     int living=0;
     int dead=0;
     for (const auto &peep : planet.civs.unimportant_people) {

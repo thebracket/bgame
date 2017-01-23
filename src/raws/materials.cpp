@@ -5,7 +5,7 @@
 
 using namespace rltk;
 
-boost::container::flat_map<std::string, std::size_t> material_defs_idx;
+std::unordered_map<std::string, std::size_t> material_defs_idx;
 std::vector<material_def_t> material_defs;
 
 /*

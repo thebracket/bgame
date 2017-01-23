@@ -24,8 +24,8 @@ struct reaction_t {
     std::bitset<2> specials;
 };
 
-extern boost::container::flat_map<std::string, reaction_t> reaction_defs;
-extern boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
+extern std::unordered_map<std::string, reaction_t> reaction_defs;
+extern std::unordered_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 void sanity_check_reactions() noexcept;
 void read_reactions(std::ofstream &tech_tree_file) noexcept;

@@ -22,8 +22,8 @@ struct storable_item_t {
 };
 
 namespace stockpile_sys {
-    extern boost::container::flat_map<std::size_t, stockpile_info_t> stockpiles;
-    extern boost::container::flat_map<int, std::vector<std::size_t>> stockpile_targets;
+    extern std::unordered_map<std::size_t, stockpile_info_t> stockpiles;
+    extern std::unordered_map<int, std::vector<std::size_t>> stockpile_targets;
     extern std::vector<storable_item_t> storable_items;
 }
 

@@ -3,7 +3,7 @@
 #include "lua_bridge.hpp"
 #include <iostream>
 
-boost::container::flat_map<std::string, clothing_t> clothing_types;
+std::unordered_map<std::string, clothing_t> clothing_types;
 
 boost::optional<clothing_t> get_clothing_by_tag(const std::string &tag) noexcept
 {

@@ -1,7 +1,7 @@
 #include "life_events.hpp"
 #include "lua_bridge.hpp"
 
-boost::container::flat_map<std::string, life_event_template> life_event_defs;
+std::unordered_map<std::string, life_event_template> life_event_defs;
 
 void read_life_events(std::ofstream &tech_tree_file) noexcept
 {

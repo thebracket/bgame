@@ -44,8 +44,8 @@ struct item_def_t {
     int stockpile_idx = 0;
 };
 
-extern boost::container::flat_map<std::string, item_def_t> item_defs;
-extern boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
+extern std::unordered_map<std::string, item_def_t> item_defs;
+extern std::unordered_map<int, stockpile_def_t> stockpile_defs;
 extern int clothing_stockpile;
 
 void read_items(std::ofstream &tech_tree_file) noexcept;

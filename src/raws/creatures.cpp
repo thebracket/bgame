@@ -4,7 +4,7 @@
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 
-boost::container::flat_map<std::string, raw_creature_t> creature_defs;
+std::unordered_map<std::string, raw_creature_t> creature_defs;
 
 boost::optional<raw_creature_t> get_creature_def(const std::string &tag) noexcept
 {

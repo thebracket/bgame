@@ -1,8 +1,8 @@
 #include "items.hpp"
 #include "lua_bridge.hpp"
 
-boost::container::flat_map<std::string, item_def_t> item_defs;
-boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
+std::unordered_map<std::string, item_def_t> item_defs;
+std::unordered_map<int, stockpile_def_t> stockpile_defs;
 int clothing_stockpile = 0;
 
 void sanity_check_items() noexcept

@@ -13,8 +13,8 @@ struct screen_render_t {
     rltk::vchar c;
 };
 
-extern boost::container::flat_map<int, std::vector<screen_render_t>> renderables;
-extern boost::container::flat_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
+extern std::unordered_map<int, std::vector<screen_render_t>> renderables;
+extern std::unordered_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
 
 class renderables_system : public rltk::base_system {
 public:

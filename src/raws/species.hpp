@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <boost/container/flat_map.hpp>
+#include <unordered_map>
 #include <vector>
 #include <tuple>
 #include <fstream>
@@ -27,7 +27,7 @@ struct raw_species_t {
     std::string female_name = "";
     std::string collective_name = "";
     std::string description = "";
-    boost::container::flat_map<std::string,int> stat_mods;
+    std::unordered_map<std::string,int> stat_mods;
     std::vector<std::tuple<std::string, int, int>> body_parts;
     diet_t diet = diet_omnivore;
     alignment_t alignment = align_neutral;

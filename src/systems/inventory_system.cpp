@@ -242,7 +242,7 @@ std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::
 std::vector<available_building_t> get_available_buildings() {
 	std::vector<available_building_t> result;
 
-	boost::container::flat_map<std::string, int> existing_buildings;
+	std::unordered_map<std::string, int> existing_buildings;
 	each<building_t>([&existing_buildings] (entity_t &e, building_t &b) {
 		auto finder = existing_buildings.find(b.tag);
 		if (finder == existing_buildings.end()) {
@@ -256,7 +256,7 @@ std::vector<available_building_t> get_available_buildings() {
 		bool possible = true;
 
 		// Evaluate the required components and see if they are available
-		boost::container::flat_map<std::string, std::pair<int,int>> requirements;
+		std::unordered_map<std::string, std::pair<int,int>> requirements;
 		for (const auto &require : it->second.components) {
 			auto finder = requirements.find(require.tag);
 			if (finder == requirements.end()) {
@@ -307,7 +307,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 
 			// Do the components exist, and are unclaimed?
 			if (possible) {
-				boost::container::flat_map<std::string, std::pair<int,int>> requirements;
+				std::unordered_map<std::string, std::pair<int,int>> requirements;
 				for (const reaction_input_t &require : it->second.inputs) {
 					auto finder = requirements.find(require.tag);
 					if (finder == requirements.end()) {
@@ -424,7 +424,7 @@ void unclaim_by_id(const std::size_t &id) {
 	emit(item_claimed_message{id, false});	
 }
 
-bool is_better_armor(const std::string &item_tag, boost::container::flat_map<item_location_t, float> &ac_by_loc) {
+bool is_better_armor(const std::string &item_tag, std::unordered_map<item_location_t, float> &ac_by_loc) {
 	auto finder = get_clothing_by_tag(item_tag);
 	if (!finder) return false;
 
@@ -451,7 +451,7 @@ boost::optional<std::size_t> find_armor_upgrade(entity_t &E, const int range) {
 	auto my_pos = E.component<position_t>();
 	if (range != -1 && !my_pos) return result;
 
-	boost::container::flat_map<item_location_t, float> ac_by_loc;
+	std::unordered_map<item_location_t, float> ac_by_loc;
 	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
 		if (c.carried_by == E.id && i.type == CLOTHING) {
 			auto finder = get_clothing_by_tag(i.item_tag);

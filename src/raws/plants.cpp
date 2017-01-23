@@ -2,7 +2,7 @@
 #include "lua_bridge.hpp"
 #include <boost/container/flat_map.hpp>
 
-boost::container::flat_map<std::string, std::size_t> plant_defs_idx;
+std::unordered_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
 
 boost::optional<std::size_t> get_plant_idx(const std::string &tag) noexcept

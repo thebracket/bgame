@@ -3,7 +3,7 @@
 #include "lua_bridge.hpp"
 #include "../utils/string_utils.hpp"
 
-boost::container::flat_map<std::string, std::vector<native_population_t>> native_pop_defs;
+std::unordered_map<std::string, std::vector<native_population_t>> native_pop_defs;
 
 /*
  * Retrieve a list of native populations matching a given tag

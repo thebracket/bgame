@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <boost/container/flat_map.hpp>
+#include <unordered_map>
 
 /*
  * Defines a template for events that can happen to a settler during character generation.
@@ -33,4 +33,4 @@ void read_life_events(std::ofstream &tech_tree_file) noexcept;
 /*
  * TODO: Make this non-global!
  */
-extern boost::container::flat_map<std::string, life_event_template> life_event_defs;
+extern std::unordered_map<std::string, life_event_template> life_event_defs;

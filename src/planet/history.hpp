@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <vector>
-#include <boost/container/flat_map.hpp>
+#include <unordered_map>
 #include <rltk.hpp>
 
 struct life_event_t {
@@ -13,7 +13,7 @@ struct life_event_t {
 };
 
 struct history_t {
-    boost::container::flat_map<std::size_t, std::vector<life_event_t>> settler_life_events;
+    std::unordered_map<std::size_t, std::vector<life_event_t>> settler_life_events;
 
     void save(std::fstream &deflate) const;
     void load(std::fstream &inflate);

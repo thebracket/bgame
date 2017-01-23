@@ -31,7 +31,7 @@ struct building_def_t {
     bool structure = false;
 };
 
-extern boost::container::flat_map<std::string, building_def_t> building_defs;
+extern std::unordered_map<std::string, building_def_t> building_defs;
 
 void read_buildings(std::ofstream &tech_tree_file) noexcept;
 void sanity_check_buildings() noexcept;

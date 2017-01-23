@@ -9,6 +9,6 @@ public:
     virtual void configure() override final;
 private:
     bool dirty = true;
-    boost::container::flat_map<int, std::size_t> triggers;
+    std::unordered_map<int, std::size_t> triggers;
     std::size_t trigger_id = 0;
 };

@@ -5,7 +5,7 @@
 
 using namespace rltk;
 
-boost::container::flat_map<std::string, building_def_t> building_defs;
+std::unordered_map<std::string, building_def_t> building_defs;
 
 void sanity_check_buildings() noexcept
 {

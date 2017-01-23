@@ -8,8 +8,8 @@
 #include "../raws/items.hpp"
 
 namespace stockpile_sys {
-    boost::container::flat_map<std::size_t, stockpile_info_t> stockpiles;
-    boost::container::flat_map<int, std::vector<std::size_t>> stockpile_targets;
+    std::unordered_map<std::size_t, stockpile_info_t> stockpiles;
+    std::unordered_map<int, std::vector<std::size_t>> stockpile_targets;
     std::vector<storable_item_t> storable_items;
 }
 

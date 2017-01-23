@@ -5,8 +5,8 @@
 #include "items.hpp"
 #include "clothing.hpp"
 
-boost::container::flat_map<std::string, reaction_t> reaction_defs;
-boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
+std::unordered_map<std::string, reaction_t> reaction_defs;
+std::unordered_map<std::string, std::vector<std::string>> reaction_building_defs;
 
 void read_reactions(std::ofstream &tech_tree_file) noexcept
 {

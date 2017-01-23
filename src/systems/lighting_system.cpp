@@ -11,7 +11,7 @@
 using namespace rltk;
 
 std::vector<color_t> light_map;
-boost::container::flat_map<int, color_t> lit_tiles;
+std::unordered_map<int, color_t> lit_tiles;
 
 void lighting_system::configure() {
     system_name = "Lighting System";

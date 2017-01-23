@@ -2,7 +2,7 @@
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 
-boost::container::flat_map<std::string, raw_species_t> species_defs;
+std::unordered_map<std::string, raw_species_t> species_defs;
 
 boost::optional<raw_species_t> get_species_def(const std::string &tag) noexcept
 {

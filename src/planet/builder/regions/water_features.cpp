@@ -3,7 +3,7 @@
 
 using namespace rltk;
 
-void add_dig_target(int X, int Y, int radius, int depth, boost::container::flat_map<int, region_water_feature_tile> &dig_targets, 
+void add_dig_target(int X, int Y, int radius, int depth, std::unordered_map<int, region_water_feature_tile> &dig_targets,
     std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap) {
 
     int min_altitude = REGION_DEPTH;
@@ -93,7 +93,7 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
     }
 
     // Run rivers to the confluence
-    boost::container::flat_map<int, region_water_feature_tile> dig_targets;
+    std::unordered_map<int, region_water_feature_tile> dig_targets;
 
     auto dig_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
         add_dig_target(X, Y, 2, 2, dig_targets, pooled_water, heightmap);
