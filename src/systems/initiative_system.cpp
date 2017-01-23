@@ -40,12 +40,12 @@ void initiative_system::on_message(const tick_message &msg) {
             if (settler_ai_v) {
                 auto stats = e.component<game_stats_t>();
                 if (stats) {
-                    tasks::calculate_initiative(i, stats.get());
+                    tasks::calculate_initiative(i, *stats);
                 }
             } else if (sentient_ai_v) {
                 auto stats = e.component<game_stats_t>();
                 if (stats) {
-                    tasks::calculate_initiative(i, stats.get());
+                    tasks::calculate_initiative(i, *stats);
                 }
             } else if (grazer_ai_v) {
                 i.initiative = std::max(1, rng.roll_dice(1, 12) - i.initiative_modifier);

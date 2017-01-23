@@ -156,7 +156,7 @@ void fluid_system::update(const double ms) {
 
                 auto stats = e.component<game_stats_t>();
                 if (stats) {
-                    if (skill_roll(e.id, stats.get(), rng, "Swimming", DIFFICULTY_AVERAGE) > FAIL) is_drowning = false;
+                    if (skill_roll(e.id, *stats, rng, "Swimming", DIFFICULTY_AVERAGE) > FAIL) is_drowning = false;
                 }
 
                 if (is_drowning) {

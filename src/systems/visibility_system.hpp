@@ -2,7 +2,6 @@
 
 #include <rltk.hpp>
 #include <unordered_set>
-#include "boost/container/flat_map.hpp"
 
 class visibility_system : public rltk::base_system {
 public:
@@ -14,4 +13,4 @@ private:
 	bool opacity_dirty = true;
 };
 
-extern boost::container::flat_set<std::size_t> blocked_visibility;
+extern std::unordered_set<std::size_t> blocked_visibility;

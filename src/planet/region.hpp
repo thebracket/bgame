@@ -7,6 +7,7 @@
 #include "../utils/bitset8.hpp"
 #include "../components/position.hpp"
 #include "indices.hpp"
+#include <boost/optional/optional_io.hpp>
 #include <boost/optional.hpp>
 
 struct region_t {

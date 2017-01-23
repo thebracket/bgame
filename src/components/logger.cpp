@@ -38,7 +38,7 @@ LOG * LOG::text(const std::string &txt) {
     return this;
 }
 
-inline boost::optional<name_t &> get_name_component(const std::size_t &entity_id) {
+inline name_t * get_name_component(const std::size_t &entity_id) {
     auto e = entity(entity_id);
     if (e) {
         auto name = e->component<name_t>();
@@ -46,7 +46,7 @@ inline boost::optional<name_t &> get_name_component(const std::size_t &entity_id
             return name;
         }
     }
-    return boost::optional<name_t &>();
+    return nullptr;
 }
 
 inline std::string log_display_name(const std::size_t &entity_id) {

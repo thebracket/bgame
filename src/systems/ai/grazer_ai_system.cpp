@@ -36,7 +36,7 @@ void grazer_ai_system::on_message(const action_available_message &msg) {
         if (current_region->tile_vegetation_type[idx] > 0) {
             if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
         } else {
-            this->wander_randomly(e.get(), pos.get());
+            this->wander_randomly(*e, *pos);
             emit_deferred(huntable_moved_message{});
         }
     } else {

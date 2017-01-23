@@ -107,7 +107,7 @@ void gravity_system::update(const double ms) {
 		ticks->pop();
 
         // Entities that are currently falling
-        boost::container::flat_set<std::size_t> falling_entities;
+        std::unordered_set<std::size_t> falling_entities;
 
         each<position_t, falling_t>([&falling_entities] (entity_t &e, position_t &pos, falling_t &fall) {
             falling_entities.insert(e.id);

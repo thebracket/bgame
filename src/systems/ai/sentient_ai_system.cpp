@@ -108,7 +108,7 @@ void sentient_ai_system::update(const double ms) {
 
             if (ai->goal == SENTIENT_GOAL_IDLE && ai->hostile && rng.roll_dice(1,500)-1+(0-feelings) <= ai->aggression && ai->days_since_arrival > 1) {
                 // Can we get to a settler?
-                const int idx = mapidx(pos.get());
+                const int idx = mapidx(*pos);
                 const int distance = settler_map.distance_map[idx];
                 if (distance >= MAX_DIJSTRA_DISTANCE) {
                     // Nobody to attack!
@@ -118,7 +118,7 @@ void sentient_ai_system::update(const double ms) {
                     ai->goal = SENTIENT_GOAL_KILL;
                 }
             } else if (ai->goal == SENTIENT_GOAL_KILL ) {
-                const int idx = mapidx(pos.get());
+                const int idx = mapidx(*pos);
                 const int distance = settler_map.distance_map[idx];
                 if (distance >= MAX_DIJSTRA_DISTANCE) {
                     // Nobody to attack!
@@ -128,7 +128,7 @@ void sentient_ai_system::update(const double ms) {
                     ai->goal = SENTIENT_GOAL_IDLE;
                 } else {
                     // Close for the kill...
-                    position_t destination = settler_map.find_destination(pos.get());
+                    position_t destination = settler_map.find_destination(*pos);
                     emit_deferred(entity_wants_to_move_message{e->id, destination});
                     emit_deferred(renderables_changed_message{});
                 }

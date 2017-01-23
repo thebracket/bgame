@@ -1,7 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
-#include <boost/container/flat_map.hpp>
+#include <unordered_map>
 #include "../planet/region.hpp"
 #include "position.hpp"
 #include "helpers/building_designation_t.hpp"
@@ -14,9 +14,9 @@ using namespace rltk;
 
 struct designations_t {
 
-	boost::container::flat_map<int, uint8_t> mining;
-	boost::container::flat_map<int, uint8_t> architecture;
-	boost::container::flat_map<int, position_t> chopping;
+	std::unordered_map<int, uint8_t> mining;
+	std::unordered_map<int, uint8_t> architecture;
+	std::unordered_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	std::vector<std::pair<bool, position_t>> guard_points;

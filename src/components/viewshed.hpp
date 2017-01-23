@@ -2,7 +2,7 @@
 
 #include <rltk.hpp>
 #include <vector>
-#include "boost/container/flat_set.hpp"
+#include <unordered_set>
 
 using namespace rltk;
 
@@ -13,7 +13,7 @@ struct viewshed_t {
 	int viewshed_radius = 0;
 	bool penetrating = false;
 	bool good_guy_visibility = true;
-	boost::container::flat_set<std::size_t> visible_entities;
+	std::unordered_set<std::size_t> visible_entities;
 
 	// Non-persistent
 	std::vector<int> visible_cache;

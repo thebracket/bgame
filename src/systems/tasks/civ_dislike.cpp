@@ -7,7 +7,7 @@
 
 using namespace rltk;
 
-void civ_dislike_attacker(boost::optional<entity_t &> &victim) {
+void civ_dislike_attacker(entity_t * victim) {
     if (!victim) return;
     auto victim_ai = victim->component<sentient_ai>();
     if (victim_ai) {

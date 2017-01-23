@@ -12,7 +12,7 @@
 
 using namespace rltk;
 
-boost::container::flat_set<std::size_t> blocked_visibility;
+std::unordered_set<std::size_t> blocked_visibility;
 
 std::mutex update_guard;
 

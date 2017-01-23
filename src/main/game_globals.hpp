@@ -8,6 +8,7 @@
 #include "../components/logger.hpp"
 #include "../components/world_position.hpp"
 #include <rltk.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/optional.hpp>
 #include <memory>
 

@@ -355,7 +355,7 @@ boost::optional<position_t&> get_item_location(std::size_t id) {
 			}
 		}
 	} else {
-		result = pos.get();
+		result = *pos;
 	}
 	return result;
 }

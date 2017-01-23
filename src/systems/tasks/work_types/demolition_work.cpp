@@ -64,7 +64,7 @@ void do_deconstruction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, speci
 		ai.target_x = target_pos->x;
 		ai.target_y = target_pos->y;
 		ai.target_z = target_pos->z;
-		ai.current_path = find_path(pos, target_pos.get());
+		ai.current_path = find_path(pos, *target_pos);
 		if (!ai.current_path->success) {
 			cancel_action(e, ai, stats, species, pos, name, "No route to deconstruction");
 			return;

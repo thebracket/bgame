@@ -14,7 +14,7 @@ spotted_hostile_t can_see_hostile(const rltk::entity_t &e, const position_t &pos
             break;
         }
 
-        if (other && test(other.get())) {
+        if (other && test(*other)) {
             result.terrified = true;
             const auto other_pos = other->component<position_t>();
             if (other_pos) {

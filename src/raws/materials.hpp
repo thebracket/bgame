@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <rltk.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/optional.hpp>
 #include "reaction_input.hpp"
 
