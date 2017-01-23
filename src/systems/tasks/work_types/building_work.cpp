@@ -34,6 +34,7 @@
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../components/receives_signal.hpp"
 
 #include <iostream>
 #include <map>
@@ -189,7 +190,9 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
                         || provides.provides == provides_spikes || provides.provides == provides_lever)
 				{					
 					emit(perform_construction_message{ai.building_target.get().building_entity, tag, material});
-				}
+				} else if (provides.provides == provides_signal_recipient) {
+                    entity(ai.building_target.get().building_entity)->assign(receives_signal_t{});
+                }
 			}
 			if (finder->second.emits_smoke) {
 				entity(ai.building_target.get().building_entity)->assign(smoke_emitter_t{});

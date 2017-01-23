@@ -37,6 +37,7 @@
 #include "../../distance_map_system.hpp"
 #include "../settler_move_to.hpp"
 #include "../../../components/bridge.hpp"
+#include "../../../components/receives_signal.hpp"
 
 using namespace rltk;
 using tasks::become_idle;
@@ -166,6 +167,7 @@ void do_architecture(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species
                 }
                 if (complete) {
                     entity(bridge_id)->component<bridge_t>()->complete = true;
+                    entity(bridge_id)->assign(receives_signal_t{});
                 }
             }
 

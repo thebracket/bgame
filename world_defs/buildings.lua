@@ -367,7 +367,7 @@ buildings = {
 		name = "Door",
 		components = { { item="door", qty=1 } },
 		skill = { name="Construction", difficulty=10 },
-		provides = { door={energy_cost=0} },
+		provides = { door={energy_cost=0}, signal={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['door'], foreground = colors['white'], background = colors['black']}

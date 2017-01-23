@@ -130,6 +130,7 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                     if (type == "blade_trap") provisions.provides = provides_blades_trap;
                     if (type == "spike_trap") provisions.provides = provides_spikes;
                     if (type == "lever") provisions.provides = provides_lever;
+                    if (type == "signal") provisions.provides = provides_signal_recipient;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
