@@ -2,7 +2,7 @@
 
 #include <boost/optional.hpp>
 #include <string>
-#include <boost/container/flat_set.hpp>
+#include <unordered_set>
 #include <vector>
 #include <tuple>
 #include <rltk.hpp>
@@ -33,7 +33,7 @@ struct raw_creature_t {
     std::string female_name = "";
     std::string collective_name = "";
     std::string description = "";
-    boost::container::flat_set<std::pair<std::string,int>> stats;
+    std::unordered_map<std::string,int> stats;
     std::vector<std::tuple<std::string, int, int>> body_parts;
     int armor_class=10;
     std::vector<creature_attack_t> attacks;
