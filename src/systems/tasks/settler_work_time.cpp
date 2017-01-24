@@ -240,12 +240,12 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER) {
 			int max_range = -1;
 			if (designations->standing_order_upgrade == standing_orders::SO_UPGRADE_NEARBY) max_range = 15;
-			boost::optional<std::size_t> better_armor = find_armor_upgrade(entity, max_range);
-			if (better_armor) {
+			std::size_t better_armor = find_armor_upgrade(entity, max_range);
+			if (better_armor>0) {
 				change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 				ai.job_type_major = JOB_EQUIP_ARMOR;
 				ai.job_type_minor = JM_FIND_ARMOR;
-				ai.target_id = better_armor.get();
+				ai.target_id = better_armor;
 				change_job_status(ai, name, "Finding armor.", true);
 				return;
 			}

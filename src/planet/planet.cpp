@@ -11,9 +11,6 @@ const std::string planet_filename = "world/planet.dat";
 
 void save_planet(const planet_t &planet) {
 	std::fstream deflate(planet_filename, std::ios::out | std::ios::binary);
-	//boost::iostreams::filtering_stream<boost::iostreams::output> deflate;
-	//deflate.push(boost::iostreams::zlib_compressor());
-    //deflate.push(lbfile);
 	serialize(deflate, planet.name);
 	serialize(deflate, planet.rng_seed);
 	serialize(deflate, planet.perlin_seed);
@@ -68,9 +65,6 @@ planet_t load_planet() {
 	planet_t planet;
 
 	std::fstream inflate(planet_filename, std::ios::in | std::ios::binary);
-	//boost::iostreams::filtering_stream<boost::iostreams::input> inflate;
-	//inflate.push(boost::iostreams::zlib_decompressor());
-    //inflate.push(lbfile);
 	deserialize(inflate, planet.name);
 	deserialize(inflate, planet.rng_seed);
 	deserialize(inflate, planet.perlin_seed);
