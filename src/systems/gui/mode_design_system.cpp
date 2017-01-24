@@ -101,7 +101,7 @@ void mode_design_system::building()
 
     bool rendered_selected = false;
     for (const available_building_t &building : available_buildings) {
-        if (build_mode_building && build_mode_building->tag == building.tag) rendered_selected = true;
+        if (has_build_mode_building && build_mode_building.tag == building.tag) rendered_selected = true;
             buildings.emplace_back(std::make_pair(building.tag, building.get_name()));
     }
     const char* building_listbox_items[buildings.size()];
@@ -114,10 +114,11 @@ void mode_design_system::building()
     ImGui::End();
 
     if (!rendered_selected) {
-        build_mode_building.reset();
+        has_build_mode_building = false;
     }
     if (buildings.size() > 0 && selected_building < available_buildings.size()) {
         build_mode_building = available_buildings[selected_building];
+        has_build_mode_building = true;
     }
 }
 

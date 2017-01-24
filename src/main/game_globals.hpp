@@ -8,8 +8,6 @@
 #include "../components/logger.hpp"
 #include "../components/world_position.hpp"
 #include <rltk.hpp>
-#include <boost/optional/optional_io.hpp>
-#include <boost/optional.hpp>
 #include <memory>
 
 struct config_t {
@@ -67,7 +65,8 @@ extern pause_mode_t pause_mode;
 extern game_master_mode_t game_master_mode;
 extern game_design_mode_t game_design_mode;
 extern game_mining_mode_t game_mining_mode;
-extern boost::optional<available_building_t> build_mode_building;
+extern bool has_build_mode_building;
+extern available_building_t build_mode_building;
 extern std::size_t selected_settler;
 extern std::size_t current_stockpile;
 extern bool quitting;

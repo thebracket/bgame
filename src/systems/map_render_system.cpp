@@ -274,17 +274,17 @@ vchar get_render_char_building(const int &x, const int &y) {
 	const int idx = render_tiles[((term(1)->term_width * y) + x)];
 
 	// Build designations go here
-	if (build_mode_building && mouse_in_terminal) {
+	if (has_build_mode_building && mouse_in_terminal) {
 		int offset_x = 0;
 		int offset_y = 0;
 
-		if (build_mode_building.get().width == 3) offset_x = -1;
-		if (build_mode_building.get().height == 3) offset_y = -1;
+		if (build_mode_building.width == 3) offset_x = -1;
+		if (build_mode_building.height == 3) offset_y = -1;
 
 		const int building_left_x = mouse_term_x + offset_x;
 		const int building_top_y = mouse_term_y + offset_y;
-		const int building_right_x = mouse_term_x + build_mode_building.get().width + offset_x;
-		const int building_bottom_y = mouse_term_y + build_mode_building.get().height + offset_y;
+		const int building_right_x = mouse_term_x + build_mode_building.width + offset_x;
+		const int building_bottom_y = mouse_term_y + build_mode_building.height + offset_y;
 		if (x+clip_left >= building_left_x && x+clip_left < building_right_x && y+clip_top>= building_top_y && y+clip_top < building_bottom_y) {
 			result.background = rltk::colors::BLACK;
 			result.glyph = 177;
@@ -294,7 +294,7 @@ vchar get_render_char_building(const int &x, const int &y) {
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
 				&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN))
-				|| (build_mode_building.get().tag == "floor" 
+				|| (build_mode_building.tag == "floor"
 					&& !current_region->tile_flags[idx].test(CONSTRUCTION)&& !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
 					&& !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
 					&& !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
@@ -386,7 +386,7 @@ void map_render_system::update(const double duration_ms) {
 			if (mouse_in_terminal && (mouse_x / mouse::font3_w) > term(3)->term_width-30) mouse_in_terminal = false;
 			dirty = true;
 			if (get_mouse_button_state(rltk::button::LEFT) && mouse_in_terminal && building_possible && mouse_y / font_h>3) {
-				emit(build_request_message{mouse_term_x, mouse_term_y, camera_position->region_z, *build_mode_building});
+				emit(build_request_message{mouse_term_x, mouse_term_y, camera_position->region_z, build_mode_building});
 				emit(refresh_available_buildings_message{});
 				emit(map_dirty_message{});
 				emit(renderables_changed_message{});
