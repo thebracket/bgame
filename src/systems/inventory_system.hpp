@@ -3,7 +3,6 @@
 #include <rltk.hpp>
 #include "../raws/raws.hpp"
 #include "../main/game_globals.hpp"
-#include <boost/optional.hpp>
 #include "../components/item.hpp"
 #include "../components/building.hpp"
 #include "../raws/reaction_input.hpp"
@@ -21,8 +20,8 @@ bool is_item_category_available(const int &category);
 bool is_ammo_available(const std::string &ammo_type);
 std::size_t claim_closest_item_by_category(const int &category, position_t &pos, const int range=-1);
 std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::string &ammo_type, const int range=-1);
-boost::optional<position_t&> get_item_location(std::size_t id);
-boost::optional<std::size_t> find_armor_upgrade(entity_t &entity, const int range=-1);
+position_t * get_item_location(std::size_t id);
+std::size_t find_armor_upgrade(entity_t &entity, const int range=-1);
 
 std::vector<available_building_t> get_available_buildings();
 std::vector<std::pair<std::string, std::string>> get_available_reactions();

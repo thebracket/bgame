@@ -328,11 +328,9 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 	return result;
 }
 
-boost::optional<position_t&> get_item_location(std::size_t id) {
-	boost::optional<position_t&> result;
-
+position_t * get_item_location(std::size_t id) {
 	auto e = entity(id);
-	if (!e) return result;
+	if (!e) return nullptr;
 
 	auto pos = e->component<position_t>();
 	if (!pos)
@@ -341,21 +339,21 @@ boost::optional<position_t&> get_item_location(std::size_t id) {
 		if (stored) {
 			auto container = entity(stored->stored_in);
 			if (container) {
-				result = *container->component<position_t>();
+				return container->component<position_t>();
 			}
 		} else {
 			auto carried = e->component<item_carried_t>();
 			if (carried) {
 				auto holder = entity(carried->carried_by);
 				if (holder) {
-					result = *holder->component<position_t>();
+					return holder->component<position_t>();
 				}
 			}
 		}
 	} else {
-		result = *pos;
+		return pos;
 	}
-	return result;
+	return nullptr;
 }
 
 void delete_item(const std::size_t &id) {
@@ -443,11 +441,10 @@ bool is_better_armor(const std::string &item_tag, std::unordered_map<int, float>
 	return false;
 }
 
-boost::optional<std::size_t> find_armor_upgrade(entity_t &E, const int range) {
-	boost::optional<std::size_t> result;
-
+std::size_t find_armor_upgrade(entity_t &E, const int range) {
 	auto my_pos = E.component<position_t>();
-	if (range != -1 && !my_pos) return result;
+	if (range != -1 && !my_pos) return 0;
+	std::size_t result = 0;
 
 	std::unordered_map<int, float> ac_by_loc;
 	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
@@ -476,8 +473,8 @@ boost::optional<std::size_t> find_armor_upgrade(entity_t &E, const int range) {
 		});
 	}
 
-	if (result) {
-		entity(result.get())->component<item_t>()->claimed = true;
+	if (result != 0) {
+		entity(result)->component<item_t>()->claimed = true;
 	}
 	return result;
 }

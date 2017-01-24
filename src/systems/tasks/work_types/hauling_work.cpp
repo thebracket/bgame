@@ -15,7 +15,7 @@ void do_hauling(entity_t &E, settler_ai_t &ai, game_stats_t &stats, species_t &s
 {
     if (ai.job_type_minor == JM_FIND_TIDY) {
         emit(item_claimed_message{(std::size_t)ai.target_id, true}); // Claim the item
-        ai.current_path = find_path(pos, get_item_location(ai.target_id).get());
+        ai.current_path = find_path(pos, *get_item_location(ai.target_id));
         if (!ai.current_path->success) {
             cancel_action(E, ai, stats, species, pos, name, "No route to item");
             return;

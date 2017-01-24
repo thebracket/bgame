@@ -109,7 +109,7 @@ void distance_map_system::update(const double duration_ms) {
                         [&used, &targets] (entity_t &e, item_t &i) {
                             auto pos = get_item_location(e.id);
                             if (pos) {
-                                const int idx = mapidx(pos.get());
+                                const int idx = mapidx(*pos);
                                 if (used.find(idx)==used.end()) {
                                     used.insert(idx);
                                     targets.emplace_back(idx);
