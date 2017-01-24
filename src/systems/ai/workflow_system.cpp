@@ -56,10 +56,10 @@ void workflow_system::configure() {
 	});
 }
 
-boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t &ai) {
-    if (automatic_reactions.empty()) return boost::optional<reaction_task_t>{};
+std::unique_ptr<reaction_task_t> find_automatic_reaction_task(const settler_ai_t &ai) {
+    if (automatic_reactions.empty()) return std::unique_ptr<reaction_task_t>{};
 
-    boost::optional<reaction_task_t> result;
+    std::unique_ptr<reaction_task_t> result;
 
     // Iterate through available reactions
     for (auto outerit=automatic_reactions.begin(); outerit != automatic_reactions.end(); ++outerit) {
@@ -94,7 +94,7 @@ boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t
 
                         if (available) {
                             // Components are available, build job and return it
-                            result = reaction_task_t{outerit->first, reaction->second.name, reaction->second.tag, components};
+                            result = std::make_unique<reaction_task_t>(outerit->first, reaction->second.name, reaction->second.tag, components);
                             workshop_claimed.insert(outerit->first);
                             return result;
                         } else {
@@ -111,10 +111,10 @@ boost::optional<reaction_task_t> find_automatic_reaction_task(const settler_ai_t
     return result;
 }
 
-boost::optional<reaction_task_t> find_queued_reaction_task(const settler_ai_t &ai) {
-    if (designations->build_orders.empty()) return boost::optional<reaction_task_t>{};
+std::unique_ptr<reaction_task_t> find_queued_reaction_task(const settler_ai_t &ai) {
+    if (designations->build_orders.empty()) return std::unique_ptr<reaction_task_t>();
 
-    boost::optional<reaction_task_t> result;
+    std::unique_ptr<reaction_task_t> result;
 
     // Iterate through queued jobs
     for (std::pair<uint8_t,std::string> &order : designations->build_orders) {
@@ -157,7 +157,7 @@ boost::optional<reaction_task_t> find_queued_reaction_task(const settler_ai_t &a
 
             if (available) {
                 // Components are available, build job and return it
-                result = reaction_task_t{workshop_id, reaction->second.name, reaction->second.tag, components};
+                result = std::make_unique<reaction_task_t>(workshop_id, reaction->second.name, reaction->second.tag, components);
                 workshop_claimed.insert(workshop_id);
                 --order.first;
                 emit(update_workflow_message{});
