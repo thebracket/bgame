@@ -3,6 +3,7 @@
 #include "../../main/game_globals.hpp"
 #include <sstream>
 #include <chrono>
+#include <ctime>
 
 bool collect_text = false;
 std::string input_text;
@@ -82,8 +83,11 @@ void keyboard_system::update(const double ms) {
             // Take a screenshot
             auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             auto localtime = std::localtime(&now);
+	    char time[32];
+            strftime(time, sizeof(time), "%Y_%m_%j-%H-%M-%S", localtime);
             std::stringstream ss;
-            ss << "screenshot_" << std::put_time(localtime, "%Y_%m_%j-%H-%M-%S") << ".png";
+            //ss << "screenshot_" << std::put_time(localtime, "%Y_%m_%j-%H-%M-%S") << ".png";
+	    ss << "screenshot_" << time << ".png";
             std::cout << "Taking screenshot: " << ss.str() << "\n";
             rltk::request_screenshot(ss.str());
         }
