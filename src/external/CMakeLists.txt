@@ -37,7 +37,7 @@ add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/rexspeeder.cpp
 	rltk/rltk/scaling.cpp
 	)
-target_link_libraries(rltk ${BoostSystemLibs} ${BoostFilesystemLibs} ${BoostContainerLibs})
+target_link_libraries(rltk ${BoostSystemLibs})
 target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)
 target_link_libraries(rltk zlibstatic)
 

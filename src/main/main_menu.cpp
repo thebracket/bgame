@@ -1,6 +1,6 @@
 #include "main_menu.hpp"
 #include <rltk.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem.hpp>
 #include <algorithm>
 #include "menu_helper.hpp"
 #include "constants.hpp"
@@ -48,7 +48,7 @@ void main_menu::init() {
 	gui->add_owner_layer(BACKDROP_LAYER, 0, 0, window_width, window_height, resize_fullscreen, draw_splash_backdrop);
 	gui->add_layer(LOG_LAYER, 0, 0, window_width, window_height, game_config.gui_font, resize_fullscreen, false);
 
-	if (boost::filesystem::exists("world/savegame.dat")) {
+	if (exists("world/savegame.dat")) {
 		world_exists = true;
 		selected = 0;
 	}
