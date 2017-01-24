@@ -50,16 +50,16 @@ using tasks::calculate_initiative;
 void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_SELECT_INPUT) {
 		// If there are no inputs, go to the workshop
-		auto reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
-		if (ai.reaction_target.get().components.empty() && ! (pos == *reactor_pos)) {
+		auto reactor_pos = entity(ai.reaction_target.building_id)->component<position_t>();
+		if (ai.reaction_target.components.empty() && ! (pos == *reactor_pos)) {
 			ai.job_type_minor = JM_GO_TO_WORKSHOP;
-			change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
+			change_job_status(ai, name, ai.reaction_target.job_name + std::string(" (Travel)"));
 			ai.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
 			return;
 		}
 
 		bool has_components = true;
-		for (std::pair<std::size_t, bool> &component : ai.reaction_target.get().components) {
+		for (std::pair<std::size_t, bool> &component : ai.reaction_target.components) {
 			if (!component.second) {
 				has_components = false;
 				ai.current_tool = component.first;
@@ -72,7 +72,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 				if (ai.current_path->success) {
 					component.second = true;
 					ai.job_type_minor = JM_GO_TO_INPUT;
-					change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
+					change_job_status(ai, name, ai.reaction_target.job_name + std::string(" (Travel)"));
 				} else {
 					cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
 				}
@@ -82,7 +82,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 
 		if (has_components) {
 			ai.job_type_minor = JM_REACT;
-			change_job_status(ai, name, ai.reaction_target.get().job_name);
+			change_job_status(ai, name, ai.reaction_target.job_name);
 		}
 		return;
 	}
@@ -93,7 +93,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			[&ai, &name] () {
 				ai.current_path.reset();
 				ai.job_type_minor = JM_COLLECT_INPUT;
-				change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Collect)"));
+				change_job_status(ai, name, ai.reaction_target.job_name + std::string(" (Collect)"));
 			}, // On arrival
 			[&e, &ai, &stats, &species, &pos, &name] () {
 				unclaim_by_id(ai.current_tool);
@@ -108,8 +108,8 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		emit(pickup_item_message{ai.current_tool, e.id});
 
 		ai.job_type_minor = JM_GO_TO_WORKSHOP;
-		change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Travel)"));
-		auto reactor_pos = entity(ai.reaction_target.get().building_id)->component<position_t>();
+		change_job_status(ai, name, ai.reaction_target.job_name + std::string(" (Travel)"));
+		auto reactor_pos = entity(ai.reaction_target.building_id)->component<position_t>();
 		ai.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
 		return;
 	}
@@ -120,7 +120,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			[&ai, &name] () {
 				ai.current_path.reset();
 				ai.job_type_minor = JM_DROP_INPUT;
-				change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Drop)"));
+				change_job_status(ai, name, ai.reaction_target.job_name + std::string(" (Drop)"));
 			}, // On arrival
 			[&e, &ai, &stats, &species, &pos, &name] () {
 				unclaim_by_id(ai.current_tool);
@@ -135,20 +135,20 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		drop_current_tool(e, ai, pos);
 		ai.current_tool = 0;
 		ai.job_type_minor = JM_SELECT_INPUT;
-		change_job_status(ai, name, ai.reaction_target.get().job_name + std::string(" (Planning)"));
+		change_job_status(ai, name, ai.reaction_target.job_name + std::string(" (Planning)"));
 		return;
 	}
 
 	if (ai.job_type_minor == JM_REACT) {
 		// Skill check, destroy inputs, create outputs
-		auto finder = reaction_defs.find(ai.reaction_target.get().reaction_tag);
+		auto finder = reaction_defs.find(ai.reaction_target.reaction_tag);
 		auto skill_check = skill_roll(e.id, stats, rng, finder->second.skill, finder->second.difficulty);
 
 		if (skill_check >= SUCCESS) {
 			// Delete components
 			std::size_t material = get_material_by_tag("plasteel").get();
             std::string mat_names = "";
-			for (auto comp : ai.reaction_target.get().components) {
+			for (auto comp : ai.reaction_target.components) {
                 if (!entity(comp.first)) {
                     cancel_action(e, ai, stats, species, pos, name, "Component error");
                     return;
@@ -202,7 +202,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			if (finder->second.power_drain != 0) emit(power_consumed_message{finder->second.power_drain});
 
 			// Finish
-			free_workshop(ai.reaction_target.get().building_id);
+			free_workshop(ai.reaction_target.building_id);
 			emit(renderables_changed_message{});
 			emit(inventory_changed_message{});
 			emit(blocks_changed_message{});

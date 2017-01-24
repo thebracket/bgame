@@ -139,8 +139,8 @@ void inventory_system::configure() {
 
 		// Remove any settler references to the building
 		each<settler_ai_t>([&msg] (entity_t &e, settler_ai_t &ai) {
-			if (ai.job_type_major == JOB_CONST && ai.building_target && ai.building_target->building_entity == msg.building_entity) {
-				for (auto &c : ai.building_target->component_ids) {
+			if (ai.job_type_major == JOB_CONST && ai.has_building_target && ai.building_target.building_entity == msg.building_entity) {
+				for (auto &c : ai.building_target.component_ids) {
 					unclaim_by_id(c.first);
 					each<position_t, item_carried_t>([&c] (entity_t &carrier, position_t &pos, item_carried_t &carried) {
 						if (carrier.id == c.first) {

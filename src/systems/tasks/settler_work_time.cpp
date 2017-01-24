@@ -116,12 +116,13 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 			return;
 		}
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
-			ai.building_target.reset();
+			ai.has_building_target = false;
 
 			ai.building_target = (designations->buildings.back());
+			ai.has_building_target = true;
 			designations->buildings.pop_back();
 
-			if (ai.building_target) {
+			if (ai.has_building_target) {
 				change_settler_glyph(entity, vchar{1, rltk::colors::Pink, rltk::colors::BLACK});
 				ai.job_type_major = JOB_CONST;
 				ai.job_type_minor = JM_SELECT_COMPONENT;
@@ -160,6 +161,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 				ai.job_type_minor = JM_SELECT_INPUT;
 				change_job_status(ai, name, autojob->job_name, true);
 				ai.reaction_target = *autojob;
+                ai.has_reaction_target = true;
 				return;
 			}
 		}

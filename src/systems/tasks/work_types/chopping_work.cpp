@@ -99,6 +99,12 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 	}
 
 	if (ai.job_type_minor == JM_FIND_TREE) {
+		if (designations == nullptr) std::cout << "Warning - no designations!\n";
+        if (designations->chopping.empty()) {
+            std::cout << "Warning - chopping designations are empty!\n";
+            cancel_action(e, ai, stats, species, pos, name, "No route to available axe");
+            return;
+        }
 		position_t tree_pos = designations->chopping.begin()->second;
 		ai.target_id = designations->chopping.begin()->first;
 

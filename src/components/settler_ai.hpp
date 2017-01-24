@@ -2,7 +2,6 @@
 
 #include <rltk.hpp>
 #include <array>
-#include <boost/optional.hpp>
 #include "position.hpp"
 #include "designations.hpp"
 
@@ -56,8 +55,10 @@ struct settler_ai_t {
 	int target_y = 0;
 	int target_z = 0;
 	int target_id = 0;
-	boost::optional<building_designation_t> building_target;
-	boost::optional<reaction_task_t> reaction_target;
+	bool has_building_target = false;
+	building_designation_t building_target;
+	bool has_reaction_target = false;
+	reaction_task_t reaction_target;
 	std::size_t current_tool = 0;
 
 	// Non-persistent

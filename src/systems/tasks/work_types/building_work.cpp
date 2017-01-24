@@ -52,7 +52,7 @@ using tasks::calculate_initiative;
 void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
 	if (ai.job_type_minor == JM_SELECT_COMPONENT) {
 		bool has_components = true;
-		for (std::pair<std::size_t, bool> &component : ai.building_target.get().component_ids) {
+		for (std::pair<std::size_t, bool> &component : ai.building_target.component_ids) {
 			if (!component.second) {
 				has_components = false;
 				ai.current_tool = component.first;
@@ -64,8 +64,8 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 					change_job_status(ai, name, "Traveling to building component");
 				} else {
 					cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
-					designations->buildings.push_back(*ai.building_target);
-					ai.building_target.reset();
+					designations->buildings.push_back(ai.building_target);
+					ai.has_building_target = false;
 				}
 				return;
 			}
@@ -89,8 +89,8 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			[&e, &ai, &stats, &species, &pos, &name] () {
 				unclaim_by_id(ai.current_tool);
 				cancel_action(e, ai, stats, species, pos, name, "No route to component");
-				designations->buildings.push_back(*ai.building_target);
-				ai.building_target.reset();
+				designations->buildings.push_back(ai.building_target);
+				ai.has_building_target = false;
 			}
 		);
 		return;
@@ -102,22 +102,22 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 
 		ai.job_type_minor = JM_GO_TO_BUILDING;
 		change_job_status(ai, name, "Going to building site");
-		ai.current_path = find_path(pos, position_t{ai.building_target.get().x, ai.building_target.get().y, ai.building_target.get().z}, true);
+		ai.current_path = find_path(pos, position_t{ai.building_target.x, ai.building_target.y, ai.building_target.z}, true);
 		return;
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_BUILDING) {
 		if (!ai.current_path) {
-            ai.current_path = find_path(pos, position_t{ai.building_target.get().x, ai.building_target.get().y, ai.building_target.get().z}, true);
+            ai.current_path = find_path(pos, position_t{ai.building_target.x, ai.building_target.y, ai.building_target.z}, true);
         }
         if (!ai.current_path->success) {
             unclaim_by_id(ai.current_tool);
             cancel_action(e, ai, stats, species, pos, name, "No route to building");
-            designations->buildings.push_back(*ai.building_target);
-            ai.building_target.reset();
+            designations->buildings.push_back(ai.building_target);
+            ai.has_building_target = false;
         }
-		const float distance = distance2d(pos.x, pos.y, ai.building_target.get().x, ai.building_target.get().y );
-		const bool same_z = pos.z == ai.building_target.get().z;
+		const float distance = distance2d(pos.x, pos.y, ai.building_target.x, ai.building_target.y );
+		const bool same_z = pos.z == ai.building_target.z;
 		if (pos == ai.current_path->destination || (same_z && distance < 1.4F)) {
 			// We're at the site
 			ai.current_path.reset();
@@ -132,8 +132,8 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			[&e, &ai, &stats, &species, &pos, &name] () {
 				unclaim_by_id(ai.current_tool);
 				cancel_action(e, ai, stats, species, pos, name, "No route to building");
-				designations->buildings.push_back(*ai.building_target);
-				ai.building_target.reset();
+				designations->buildings.push_back(ai.building_target);
+				ai.has_building_target = false;
 			}
 		);
 		return;
@@ -149,7 +149,7 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 	}
 
 	if (ai.job_type_minor == JM_ASSEMBLE) {
-		std::string tag = ai.building_target.get().tag;
+		std::string tag = ai.building_target.tag;
 		auto finder = building_defs.find(tag);
 		if (finder == building_defs.end()) throw std::runtime_error("Building tag unknown!");
 
@@ -161,27 +161,27 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		if (skill_check >= SUCCESS) {
 			// Destroy components
 			std::size_t material = 0;
-			for (auto &comp : ai.building_target.get().component_ids) {
+			for (auto &comp : ai.building_target.component_ids) {
 				auto component_ptr = entity(comp.first);
 				if (component_ptr) {
 					std::string comptag = component_ptr->component<item_t>()->item_tag;
 					material = component_ptr->component<item_t>()->material;
 					delete_item(comp.first);
-					entity(ai.building_target.get().building_entity)->component<building_t>()->built_with.push_back(std::make_pair(comptag, material));
+					entity(ai.building_target.building_entity)->component<building_t>()->built_with.push_back(std::make_pair(comptag, material));
 				}
 			}
 
 			// Place the building, and assign any provide tags
-			entity(ai.building_target.get().building_entity)->component<building_t>()->complete = true;
+			entity(ai.building_target.building_entity)->component<building_t>()->complete = true;
 			emit(opacity_changed_message{});
 
 			for (const building_provides_t &provides : finder->second.provides) {
 				if (provides.provides == provides_sleep) {
-					entity(ai.building_target.get().building_entity)->assign(construct_provides_sleep_t{});
+					entity(ai.building_target.building_entity)->assign(construct_provides_sleep_t{});
 				} else if (provides.provides == provides_light) {
-					entity(ai.building_target.get().building_entity)->assign(lightsource_t{provides.radius, provides.color});
+					entity(ai.building_target.building_entity)->assign(lightsource_t{provides.radius, provides.color});
 				} else if (provides.provides == provides_door) {
-					entity(ai.building_target.get().building_entity)->assign(construct_door_t{});
+					entity(ai.building_target.building_entity)->assign(construct_door_t{});
 				} else if (provides.provides == provides_wall || provides.provides == provides_floor 
 						|| provides.provides == provides_stairs_up
 						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 
@@ -189,13 +189,13 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap
                         || provides.provides == provides_spikes || provides.provides == provides_lever)
 				{					
-					emit(perform_construction_message{ai.building_target.get().building_entity, tag, material});
+					emit(perform_construction_message{ai.building_target.building_entity, tag, material});
 				} else if (provides.provides == provides_signal_recipient) {
-                    entity(ai.building_target.get().building_entity)->assign(receives_signal_t{});
+                    entity(ai.building_target.building_entity)->assign(receives_signal_t{});
                 }
 			}
 			if (finder->second.emits_smoke) {
-				entity(ai.building_target.get().building_entity)->assign(smoke_emitter_t{});
+				entity(ai.building_target.building_entity)->assign(smoke_emitter_t{});
 			}
 
 			emit_deferred(renderables_changed_message{});
