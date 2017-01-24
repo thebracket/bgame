@@ -58,7 +58,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
     const std::string profession_tag = OCCUPATION_TAGS[planet.civs.unimportant_people[person_id].occupation] + std::string("_") + 
         std::to_string(techlevel);
     std::cout << profession_tag << "\n";
-    auto profession = get_native_professions(profession_tag).get();
+    auto profession = *get_native_professions(profession_tag);
     const int profidx = rng.roll_dice(1,profession.size())-1;    
 
     auto sentient = create_entity()

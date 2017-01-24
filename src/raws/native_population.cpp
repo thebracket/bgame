@@ -8,15 +8,13 @@ std::unordered_map<std::string, std::vector<native_population_t>> native_pop_def
 /*
  * Retrieve a list of native populations matching a given tag
  */
-boost::optional<std::vector<native_population_t> &> get_native_professions(const std::string &tag) noexcept
+std::vector<native_population_t> * get_native_professions(const std::string &tag) noexcept
 {
-    boost::optional<std::vector<native_population_t> &> result;
-
     auto finder = native_pop_defs.find(tag);
     if (finder != native_pop_defs.end()) {
-        result = finder->second;
+        return &finder->second;
     }
-    return result;
+    return nullptr;
 }
 
 void read_native_population_types(std::ofstream &tech_tree_file) noexcept {

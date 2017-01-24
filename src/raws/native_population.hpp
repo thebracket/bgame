@@ -4,7 +4,6 @@
 #include <fstream>
 #include <vector>
 #include <tuple>
-#include <boost/optional.hpp>
 
 /*
  * Defines a group of natives who live on the planet.
@@ -27,9 +26,9 @@ struct native_population_t {
 };
 
 /*
- * Gets a list of all native types matching a given tag. Returns a REFERENCE.
+ * Gets a list of all native types matching a given tag. Returns a pointer or nullptr if invalid.
  */
-boost::optional<std::vector<native_population_t> &> get_native_professions(const std::string &tag) noexcept;
+std::vector<native_population_t> * get_native_professions(const std::string &tag) noexcept;
 
 /*
  * Load the natives from Lua
