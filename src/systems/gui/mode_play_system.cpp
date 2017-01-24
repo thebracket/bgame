@@ -280,7 +280,7 @@ void mode_play_system::show_tilemenu() {
 
 	each<name_t, position_t, settler_ai_t>([&menu] (entity_t &entity, name_t &name, position_t &pos, settler_ai_t &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
-			boost::optional<std::function<void()>> on_click{};
+			std::function<void()> on_click{};
 			on_click = [&entity] () {
 				selected_settler = entity.id;
 				game_master_mode = SETTLER;
@@ -291,7 +291,7 @@ void mode_play_system::show_tilemenu() {
 
 	each<name_t, position_t, sentient_ai>([&menu] (entity_t &entity, name_t &name, position_t &pos, sentient_ai &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
-			boost::optional<std::function<void()>> on_click{};
+			std::function<void()> on_click{};
 			on_click = [&entity] () {
 				selected_settler = entity.id;
 				game_master_mode = SENTIENT_INFO;
@@ -302,7 +302,7 @@ void mode_play_system::show_tilemenu() {
 
 	each<name_t, position_t, grazer_ai>([&menu] (entity_t &entity, name_t &name, position_t &pos, grazer_ai &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
-			boost::optional<std::function<void()>> on_click{};
+			std::function<void()> on_click{};
 			on_click = [&entity] () {
 				selected_settler = entity.id;
 				game_master_mode = GRAZER_INFO;
@@ -344,7 +344,7 @@ void mode_play_system::show_tilemenu() {
 					building_name = finder->second.name;
 
 					if (!is_being_removed) {
-						boost::optional<std::function<void()>> on_click{};
+						std::function<void()> on_click{};
 						on_click = [&building_entity] () {
 							designations->deconstructions.push_back(unbuild_t{true, building_entity.id});
 							game_master_mode = PLAY;
@@ -353,7 +353,7 @@ void mode_play_system::show_tilemenu() {
 							menu->options.push_back(std::make_pair(std::string("Deconstruct ")+building_name, on_click));
 						}
 					} else {
-						boost::optional<std::function<void()>> on_click{};
+						std::function<void()> on_click{};
 						on_click = [&building_entity] () {
 							designations->deconstructions.erase(
 								// Remove from designations
@@ -377,12 +377,12 @@ void mode_play_system::show_tilemenu() {
 					// Doors
 					auto door = building_entity.component<construct_door_t>();
 					if (door && building.civ_owner == 0) {
-						boost::optional<std::function<void()>> on_lock{};
+						std::function<void()> on_lock{};
 						on_lock = [&building_entity] () {
 							building_entity.component<construct_door_t>()->locked = true;
 							emit_deferred(door_changed_message{});
 						};
-						boost::optional<std::function<void()>> on_unlock{};
+						std::function<void()> on_unlock{};
 						on_unlock = [&building_entity] () {
 							building_entity.component<construct_door_t>()->locked = false;
 							emit_deferred(door_changed_message{});
@@ -397,12 +397,12 @@ void mode_play_system::show_tilemenu() {
 					// Levers and other triggers
 					auto lever = building_entity.component<lever_t>();
                     if (lever && building.civ_owner == 0) {
-                        boost::optional<std::function<void()>> on_pull{};
+                        std::function<void()> on_pull{};
                         on_pull = [&building_entity] () {
                             // Emit a pull lever message
                             emit_deferred(request_lever_pull_message{building_entity.id});
                         };
-                        boost::optional<std::function<void()>> on_settings{};
+                        std::function<void()> on_settings{};
                         on_settings = [&building_entity] () {
                             // Go to lever settings mode
                             emit_deferred(trigger_details_requested{building_entity.id});
@@ -412,7 +412,7 @@ void mode_play_system::show_tilemenu() {
                     }
 				} else {
 					building_name = finder->second.name;
-					boost::optional<std::function<void()>> on_click{};
+					std::function<void()> on_click{};
 					on_click = [&building_entity] () {
 						emit(cancel_build_request_message{building_entity.id});
 					};
@@ -427,7 +427,7 @@ void mode_play_system::show_tilemenu() {
 		|| current_region->tile_type[idx] == tile_type::STAIRS_DOWN || current_region->tile_type[idx] == tile_type::STAIRS_UP 
 		|| current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN) && current_region->tile_flags[idx].test(CONSTRUCTION) )
 	{
-		boost::optional<std::function<void()>> on_click{};
+		std::function<void()> on_click{};
 		on_click = [idx] () {
 			designations->deconstructions.push_back(unbuild_t{false,static_cast<std::size_t>(idx)});
 			game_master_mode = PLAY;

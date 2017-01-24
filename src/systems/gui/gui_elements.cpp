@@ -116,9 +116,9 @@ void gui_button::render() {
 void gui_table_text::render(const int &x, const int &y) {
     rltk::color_t fg = rltk::colors::WHITE;
     rltk::color_t bg = rltk::colors::DARKEST_GREEN;
-    if (colors) {
-        fg = colors->first;
-        bg = colors->second;
+    if (! (colors.first == rltk::colors::BLACK)) {
+        fg = colors.first;
+        bg = colors.second;
     }
     rltk::term(3)->print(x, y, max_width_str(text, col_width), fg, bg);
 }
@@ -126,9 +126,9 @@ void gui_table_text::render(const int &x, const int &y) {
 void gui_table_button::render(const int &x, const int &y) {
     rltk::color_t fg = rltk::colors::GREEN;
     rltk::color_t bg = rltk::colors::DARKEST_GREEN;
-    if (colors) {
-        fg = colors->first;
-        bg = colors->second;
+    if (! (colors.first == rltk::colors::BLACK)) {
+        fg = colors.first;
+        bg = colors.second;
     }
     if (mouse::term3x >= x && mouse::term3x <= x+text.size() && mouse::term3y == y) {
         rltk::term(3)->print(x, y, max_width_str(text, col_width), rltk::colors::WHITE, rltk::colors::GREEN);
@@ -202,7 +202,7 @@ void gui_popup_menu::render() {
         if (mouse::term4y == current_y && mouse::term4x > box_left+1 && mouse::term4x < box_right) {
             rltk::term(4)->print(box_left + 2, current_y, opt.first, rltk::colors::WHITE, rltk::colors::DARKEST_GREEN);
             if (mouse::clicked && opt.second) {
-                std::function<void()> on_click = opt.second.get();
+                std::function<void()> on_click = opt.second;
                 on_click();
             }
         } else {

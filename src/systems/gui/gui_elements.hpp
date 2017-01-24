@@ -105,7 +105,7 @@ struct gui_table_text : public gui_table_col {
     }
 
     std::string text;
-    boost::optional<std::pair<rltk::color_t, rltk::color_t>> colors;
+    std::pair<rltk::color_t, rltk::color_t> colors{rltk::colors::BLACK, rltk::colors::BLACK};
 
     virtual void render(const int &x, const int &y) override final;
 };
@@ -116,7 +116,7 @@ struct gui_table_button : public gui_table_col {
     }
 
     std::string text;
-    boost::optional<std::pair<rltk::color_t, rltk::color_t>> colors;
+    std::pair<rltk::color_t, rltk::color_t> colors{rltk::colors::BLACK, rltk::colors::BLACK};
     std::function<void()> on_click;
 
     virtual void render(const int &x, const int &y) override final;
@@ -153,7 +153,7 @@ struct gui_popup_menu : public base_gui {
     int x,y;
     bool face_left;
     bool face_down;
-    std::vector<std::pair<std::string, boost::optional<std::function<void()>>>> options;
+    std::vector<std::pair<std::string, std::function<void()>>> options;
     std::function<void()> on_cancel;
 
     virtual void render() override final;
