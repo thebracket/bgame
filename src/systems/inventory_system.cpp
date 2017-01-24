@@ -424,7 +424,7 @@ void unclaim_by_id(const std::size_t &id) {
 	emit(item_claimed_message{id, false});	
 }
 
-bool is_better_armor(const std::string &item_tag, std::unordered_map<item_location_t, float> &ac_by_loc) {
+bool is_better_armor(const std::string &item_tag, std::unordered_map<int, float> &ac_by_loc) {
 	auto finder = get_clothing_by_tag(item_tag);
 	if (!finder) return false;
 
@@ -451,7 +451,7 @@ boost::optional<std::size_t> find_armor_upgrade(entity_t &E, const int range) {
 	auto my_pos = E.component<position_t>();
 	if (range != -1 && !my_pos) return result;
 
-	std::unordered_map<item_location_t, float> ac_by_loc;
+	std::unordered_map<int, float> ac_by_loc;
 	each<item_t, item_carried_t>([&ac_by_loc, &result, &E] (entity_t &e, item_t &i, item_carried_t &c) {
 		if (c.carried_by == E.id && i.type == CLOTHING) {
 			auto finder = get_clothing_by_tag(i.item_tag);

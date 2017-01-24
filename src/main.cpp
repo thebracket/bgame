@@ -8,13 +8,11 @@
 #include "utils/string_utils.hpp"
 #include "main/IconsFontAwesome.h"
 #include "external/imgui-sfml/imgui-SFML.h"
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <chrono>
+#include <filesystem.hpp>
 
 using namespace rltk;
 using namespace rltk::colors;
-namespace fs = boost::filesystem;
 
 enum game_mode_t { SPLASH, MAIN_MENU, WORLD_GEN, PLAY_GAME };
 game_mode_t mode = SPLASH;
@@ -28,7 +26,7 @@ std::chrono::high_resolution_clock::time_point last_save;
 void save_game() {
 	const std::string save_filename = "world/savegame.dat";
 	std::cout << "Saving game to " << save_filename << "\n";
-	if (boost::filesystem::exists(save_filename)) boost::filesystem::remove(save_filename);
+	if (exists(save_filename)) std::remove(save_filename.c_str());
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
 	ecs_save(std::move(lbfile));
 	std::cout << "Saving region\n";
