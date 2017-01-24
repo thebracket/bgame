@@ -375,11 +375,11 @@ int available_items_by_reaction_input(const reaction_input_t &input) {
 	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
 		if ((input.tag=="any" || i.item_tag == input.tag) && i.claimed == false) {
 			bool ok = true;
-			if (input.required_material) {
-				if (i.material != input.required_material.get()) ok=false;
+			if (input.required_material != 0) {
+				if (i.material != input.required_material) ok=false;
 			}
-			if (input.required_material_type) {
-				if (get_material(i.material)->spawn_type != input.required_material_type.get()) ok = false;
+			if (input.required_material_type != no_spawn_type) {
+				if (get_material(i.material)->spawn_type != input.required_material_type) ok = false;
 			}
 			if (ok) ++result;
 		}
@@ -403,11 +403,11 @@ std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
 	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
 		if ((input.tag == "any" || i.item_tag == input.tag) && i.claimed == false) {
 			bool ok = true;
-			if (input.required_material) {
-				if (i.material != input.required_material.get()) ok=false;
+			if (input.required_material != 0) {
+				if (i.material != input.required_material) ok=false;
 			}
-			if (input.required_material_type) {
-				if (get_material(i.material)->spawn_type != input.required_material_type.get()) ok = false;
+			if (input.required_material_type != no_spawn_type) {
+				if (get_material(i.material)->spawn_type != input.required_material_type) ok = false;
 			}
 			if (ok) result = e.id;
 		}

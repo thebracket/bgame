@@ -2,15 +2,14 @@
 
 #include <istream>
 #include <ostream>
-#include <boost/optional.hpp>
 #include <rltk.hpp>
 
-enum material_def_spawn_type_t { cluster_rock, rock, soil, sand, metal, synthetic, organic, leather, food, spice };
+enum material_def_spawn_type_t { no_spawn_type, cluster_rock, rock, soil, sand, metal, synthetic, organic, leather, food, spice };
 
 struct reaction_input_t {
 	std::string tag = "";
-	boost::optional<std::size_t> required_material;
-	boost::optional<material_def_spawn_type_t> required_material_type;
+	std::size_t required_material = 0;
+	material_def_spawn_type_t required_material_type = no_spawn_type;
 	int quantity = 0;
 
 	void to_xml(rltk::xml_node * c) {

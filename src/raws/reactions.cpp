@@ -39,8 +39,8 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
                     lua_gettable(lua_state, -2);
 
                     reaction_input_t input;
-                    input.required_material = boost::optional<std::size_t>{};
-                    input.required_material_type = boost::optional<material_def_spawn_type_t>{};
+                    input.required_material = 0;
+                    input.required_material_type = no_spawn_type;
                     while (lua_next(lua_state, -2) != 0) {
                         std::string f = lua_tostring(lua_state, -2);
                         if (f == "item") input.tag = lua_tostring(lua_state, -1);
