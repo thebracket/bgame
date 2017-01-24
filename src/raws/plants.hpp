@@ -4,7 +4,6 @@
 #include <rltk.hpp>
 #include <fstream>
 #include <vector>
-#include <boost/optional.hpp>
 #include <bitset>
 
 constexpr int PLANT_SPREADS = 0;
@@ -25,7 +24,7 @@ struct plant_t {
 /*
  * Retrieve the index of a plant by tag.
  */
-boost::optional<std::size_t> get_plant_idx(const std::string &tag) noexcept;
+std::size_t get_plant_idx(const std::string &tag) noexcept;
 
 /*
  * Retrieve a plant definition by index.

@@ -200,7 +200,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                     if (veg_type == "") veg_type = "none";
 
                     if (veg_type != "none") {
-                        auto finder = get_plant_idx(veg_type).get();
+                        auto finder = get_plant_idx(veg_type);
                         region.tile_vegetation_type[mapidx(x,y,z-1)] = finder;
                         region.tile_hit_points[mapidx(x,y,z-1)] = 10;
                         region.tile_vegetation_ticker[mapidx(x,y,z-1)] = 1;

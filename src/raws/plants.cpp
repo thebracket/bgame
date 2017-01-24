@@ -5,16 +5,15 @@
 std::unordered_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
 
-boost::optional<std::size_t> get_plant_idx(const std::string &tag) noexcept
+std::size_t get_plant_idx(const std::string &tag) noexcept
 {
-    boost::optional<std::size_t> result;
     auto finder = plant_defs_idx.find(tag);
     if (finder != plant_defs_idx.end()) {
-        result = finder->second;
+        return finder->second;
     } else {
         std::cout << "WARNING: Cannot find plant - " << tag << "\n";
     }
-    return result;
+    return 0;
 }
 
 plant_t& get_plant_def(const std::size_t &index) noexcept
