@@ -3,9 +3,8 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/biomes.hpp"
 #include <unordered_map>
-#include <boost/optional.hpp>
 
-boost::optional<std::unordered_map<uint8_t, double>> biome_membership(planet_t &planet, const std::size_t &idx) {
+std::unordered_map<uint8_t, double> biome_membership(planet_t &planet, const std::size_t &idx) {
 	std::unordered_map<uint8_t, double> percents;
 	std::unordered_map<uint8_t, long> counts;
 	long n_cells = 0L;
@@ -42,7 +41,7 @@ boost::optional<std::unordered_map<uint8_t, double>> biome_membership(planet_t &
 	}
 
 	// Calculate the averages
-	if (n_cells == 0) return boost::optional<std::unordered_map<uint8_t, double>>();
+	if (n_cells == 0) std::unordered_map<uint8_t, double>();
 
 	double counter = static_cast<double>(n_cells);
 	planet.biomes[idx].mean_altitude = static_cast<uint8_t>((double)total_height / counter);
@@ -142,8 +141,8 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 	std::size_t no_match = 0;
 	for (biome_t &biome : planet.biomes) {
 		auto membership_count = biome_membership(planet, count);
-		if (membership_count) {
-			auto possible_types = find_possible_biomes(membership_count.get(), biome);
+		if (!membership_count.empty()) {
+			auto possible_types = find_possible_biomes(membership_count, biome);
 			if (!possible_types.empty()) {
 
 				double max_roll = 0.0;
