@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rltk.hpp>
-#include <boost/container/flat_map.hpp>
 #include <vector>
 
 struct screen_render_t {

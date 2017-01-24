@@ -4,7 +4,6 @@
 #include "../components/item_stored.hpp"
 #include "../components/settler_ai.hpp"
 #include "../raws/clothing.hpp"
-#include <boost/container/flat_map.hpp>
 #include "../raws/buildings.hpp"
 #include "../raws/reactions.hpp"
 

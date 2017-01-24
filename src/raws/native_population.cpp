@@ -1,5 +1,4 @@
 #include "native_population.hpp"
-#include <boost/container/flat_map.hpp>
 #include "lua_bridge.hpp"
 #include "../utils/string_utils.hpp"
 

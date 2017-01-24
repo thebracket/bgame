@@ -3,7 +3,6 @@
 #include <rltk.hpp>
 #include <string>
 #include <vector>
-#include <boost/container/flat_map.hpp>
 #include "reaction_input.hpp"
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door,

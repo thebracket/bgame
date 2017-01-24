@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "boost/container/flat_map.hpp"
 
 class trigger_system : public rltk::base_system {
 public:

@@ -8,7 +8,6 @@
 #include <FastNoise/FastNoise.h>
 #include <vector>
 #include <utility>
-#include <boost/container/flat_map.hpp>
 
 struct region_water_feature_tile {
 	region_water_feature_tile() {}

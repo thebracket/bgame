@@ -1,6 +1,5 @@
 #include "stockpile_system.hpp"
 #include "../components/stockpile.hpp"
-#include <boost/container/flat_map.hpp>
 #include <vector>
 #include <unordered_set>
 #include "../main/game_globals.hpp"

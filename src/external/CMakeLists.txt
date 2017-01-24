@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-# Boost
-include(${PROJECT_SOURCE_DIR}/../cmake_modules/utils.cmake)
-include(${PROJECT_SOURCE_DIR}/../cmake_modules/add_boost.cmake)
-
 # Build Lua
 add_subdirectory(lua)
 include_directories(${lua_BINARY_DIR})
@@ -18,7 +14,6 @@ set_target_properties(example PROPERTIES EXCLUDE_FROM_ALL 1)
 set_target_properties(minigzip PROPERTIES EXCLUDE_FROM_ALL 1)
 
 # Build RLTK
-include_directories(${BoostSourceDir})
 add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/texture_resources.cpp
 	rltk/rltk/color_t.cpp
@@ -37,7 +32,6 @@ add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/rexspeeder.cpp
 	rltk/rltk/scaling.cpp
 	)
-target_link_libraries(rltk ${BoostSystemLibs})
 target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)
 target_link_libraries(rltk zlibstatic)
 

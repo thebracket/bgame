@@ -15,9 +15,6 @@ if (WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
 endif()
 
-option(USE_BOOST_CACHE "If ON, try to download, extract and build boost to a single cache directory for all MaidSafe clones" ON)
-option(BOOST_DISABLE_ASSERTS "If ON, all BOOST_ASSERTs and BOOST_VERIFYs are disabled" OFF)
-
 include(cotire)
 
 # Windows shims
@@ -34,7 +31,6 @@ include_directories(external/zlib)
 include_directories(external)
 
 add_subdirectory(external)
-include_directories(${BoostSourceDir})
 
 add_subdirectory(components)
 add_subdirectory(planet)

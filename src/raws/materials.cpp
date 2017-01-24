@@ -1,6 +1,5 @@
 #include "materials.hpp"
 #include "lua_bridge.hpp"
-#include <boost/container/flat_map.hpp>
 #include "apihelper.hpp"
 
 using namespace rltk;

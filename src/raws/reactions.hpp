@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <utility>
-#include <boost/container/flat_map.hpp>
 #include <bitset>
 #include "reaction_input.hpp"
 

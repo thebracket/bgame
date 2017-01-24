@@ -3,7 +3,6 @@
 #include <string>
 #include <bitset>
 #include <rltk.hpp>
-#include <boost/container/flat_map.hpp>
 #include <fstream>
 
 constexpr int NUMBER_OF_ITEM_CATEGORIES = 64;
