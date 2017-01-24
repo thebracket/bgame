@@ -28,16 +28,17 @@ struct config_t {
 };
 
 struct available_building_t {
+	available_building_t() {}
 	available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
 
-	std::string name;
-	std::string tag;
+	std::string name = "";
+	std::string tag = "";
 	std::vector<reaction_input_t> components;
-    int width;
-    int height;
+    int width = 0;
+    int height = 0;
     std::vector<rltk::vchar> glyphs;
 	int n_existing = 0;
-	std::string get_name() const  {
+	std::string get_name() const noexcept {
 		return name + std::string(" (") + std::to_string(n_existing) + std::string(")");
 	}
     bool structure = false;
