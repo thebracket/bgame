@@ -178,7 +178,7 @@ void region_t::calc_render(const int &idx) {
 	uint16_t glyph;
 	color_t fg;
 	color_t bg = rltk::colors::BLACK;
-    veg_cache[idx] = boost::optional<rltk::vchar>();
+    veg_cache[idx] = rltk::vchar{0, rltk::colors::BLACK, rltk::colors::BLACK};
 
     if (stockpile_id[idx] > 0) {
         // Stockpiles are always grey floors

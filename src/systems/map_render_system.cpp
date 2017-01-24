@@ -48,8 +48,8 @@ vchar get_render_char(const int &x, const int &y) {
 	if (idx == 0) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 	if (!current_region->revealed[idx]) return vchar{' ', rltk::colors::BLACK, rltk::colors::BLACK};
 
-    if (current_region->veg_cache[idx]) {
-        rltk::vchar plant = current_region->veg_cache[idx].get();
+    if (current_region->veg_cache[idx].glyph != 0) {
+        rltk::vchar plant = current_region->veg_cache[idx];
         sterm(6)->add(xchar{static_cast<int>(plant.glyph), lerp(plant.foreground, light_map[((term(1)->term_width * y) + x)], 0.75), static_cast<float>(x), static_cast<float>(y+2)});
     }
 

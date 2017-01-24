@@ -7,8 +7,6 @@
 #include "../utils/bitset8.hpp"
 #include "../components/position.hpp"
 #include "indices.hpp"
-#include <boost/optional/optional_io.hpp>
-#include <boost/optional.hpp>
 
 struct region_t {
 	region_t() { 
@@ -53,7 +51,7 @@ struct region_t {
 	std::vector<std::size_t> stockpile_id;
 	std::vector<bitset8> tile_flags;
 	std::vector<rltk::vchar> render_cache;
-    std::vector<boost::optional<rltk::vchar>> veg_cache;
+    std::vector<rltk::vchar> veg_cache;
 	std::vector<uint8_t> water_level;
 	std::vector<bool> above_ground;
 	std::vector<bool> blood_stains;
