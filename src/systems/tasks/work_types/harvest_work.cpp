@@ -97,7 +97,7 @@ void do_harvesting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
                 if (item_finder->second.categories.test(ITEM_FOOD)) mat_type="food";
                 if (item_finder->second.categories.test(ITEM_SPICE)) mat_type="spice";
             }
-            auto item = spawn_item_on_ground_ret(ai.target_x, ai.target_y, ai.target_z, result, get_material_by_tag(mat_type).get());
+            auto item = spawn_item_on_ground_ret(ai.target_x, ai.target_y, ai.target_z, result, get_material_by_tag(mat_type));
             item->component<item_t>()->item_name = plant.name;
         }
 

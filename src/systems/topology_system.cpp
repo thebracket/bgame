@@ -126,8 +126,8 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
         //std::cout << "Topology system - producing a [" << tag << "]";
         std::size_t material = current_region->tile_material[e.target_idx];
         if (tag == "ore") {
-            for (const std::string &metal : get_material(material).get().ore_materials) {
-                const auto metal_finder = get_material_by_tag(metal).get();
+            for (const std::string &metal : get_material(material)->ore_materials) {
+                const auto metal_finder = get_material_by_tag(metal);
                 spawn_item_on_ground(X, Y, Z, tag, metal_finder);
             }
         } else {
@@ -139,8 +139,8 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
 }
 
 void topology_system::spawn_mining_result(const perform_mining_message &e) {
-    const std::string mining_result = get_material(current_region->tile_material[e.target_idx]).get().mines_to_tag;
-    const std::string mining_result2 = get_material(current_region->tile_material[e.target_idx]).get().mines_to_tag_second;
+    const std::string mining_result = get_material(current_region->tile_material[e.target_idx])->mines_to_tag;
+    const std::string mining_result2 = get_material(current_region->tile_material[e.target_idx])->mines_to_tag_second;
 
     //std::cout << "Topology - mines to [" << mining_result << "], [" << mining_result2 << "]";
 

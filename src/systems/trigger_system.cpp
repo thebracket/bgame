@@ -86,7 +86,7 @@ void trigger_system::update(const double duration_ms) {
                                 // TODO: Add a random chance with some dex involved
                                 // Spawn a cage object
                                 auto building = trigger_entity->component<building_t>();
-                                std::size_t material = get_material_by_tag(building->built_with[0].first).get();
+                                std::size_t material = get_material_by_tag(building->built_with[0].first);
                                 int x,y,z;
                                 std::tie(x,y,z) = idxmap(tile_index);
                                 auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material);

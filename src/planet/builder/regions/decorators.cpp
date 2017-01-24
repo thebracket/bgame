@@ -64,7 +64,7 @@ void build_beaches(region_t &region) {
                 if (region.water_level[mapidx(x+1,y,z-1)] > 0) is_beach = true;
 
                 if (is_beach) {
-                    region.tile_material[mapidx(x,y,z)] = sand.get();
+                    region.tile_material[mapidx(x,y,z)] = sand;
                     region.tile_vegetation_type[mapidx(x,y,z)] = 0;
                 }
             }

@@ -307,13 +307,13 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 			if (slot_name == "legs") position = LEGS;
 			if (slot_name == "shoes") position = FEET;
 			item_t item{item_name};
-			item.material = get_material_by_tag("cloth").get();
+			item.material = get_material_by_tag("cloth");
 			create_entity()->assign(std::move(item))->assign(item_carried_t{position, settler->id});
 		}
 	}
 
 	// Add a raygun and energey cells
-	auto plasteel = get_material_by_tag("plasteel").get();
+	auto plasteel = get_material_by_tag("plasteel");
 	spawn_item_carried(settler->id, "ray_pistol", plasteel, EQUIP_RANGED);
 	spawn_item_carried(settler->id, "small_energy_cell", plasteel, EQUIP_AMMO);
 }

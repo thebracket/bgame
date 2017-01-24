@@ -146,7 +146,7 @@ void do_reaction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 
 		if (skill_check >= SUCCESS) {
 			// Delete components
-			std::size_t material = get_material_by_tag("plasteel").get();
+			std::size_t material = get_material_by_tag("plasteel");
             std::string mat_names = "";
 			for (auto comp : ai.reaction_target.components) {
                 if (!entity(comp.first)) {

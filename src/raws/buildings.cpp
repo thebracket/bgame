@@ -61,10 +61,10 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                         if (f == "material") {
                             std::string mat_name = lua_tostring(lua_state, -1);
                             auto matfinder = get_material_by_tag(mat_name);
-                            if (!matfinder) {
+                            if (matfinder == 0) {
                                 std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
                             } else {
-                                comp.required_material = matfinder.get();
+                                comp.required_material = matfinder;
                             }
                         }
                         if (f == "mat_type") {

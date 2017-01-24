@@ -4,8 +4,6 @@
 #include <vector>
 #include <fstream>
 #include <rltk.hpp>
-#include <boost/optional/optional_io.hpp>
-#include <boost/optional.hpp>
 #include "reaction_input.hpp"
 
 /*
@@ -31,12 +29,12 @@ struct material_def_t {
 /*
  * Retrieve a material by tag.
  */
-boost::optional<std::size_t> get_material_by_tag(const std::string &tag) noexcept;
+std::size_t get_material_by_tag(const std::string &tag) noexcept;
 
 /*
- * Retrieve a material by index (it returns a reference; you have the original)
+ * Retrieve a material by index (it returns a pointer to the original)
  */
-boost::optional<material_def_t &> get_material(const std::size_t &idx) noexcept;
+material_def_t * get_material(const std::size_t &idx) noexcept;
 
 /*
  * Retrieves the material name.

@@ -11,12 +11,11 @@ std::vector<material_def_t> material_defs;
 /*
  * Retrieve a material by ID
  */
-boost::optional<material_def_t &> get_material(const std::size_t &idx) noexcept {
-    boost::optional<material_def_t &> result;
+material_def_t * get_material(const std::size_t &idx) noexcept {
     if (idx < material_defs.size()) {
-        result = material_defs[idx];
+        return &material_defs[idx];
     }
-    return result;
+    return nullptr;
 }
 
 /*
@@ -30,14 +29,12 @@ std::string material_name(const std::size_t &id) noexcept {
 /*
  * Retrieve a material by tag
  */
-boost::optional<std::size_t> get_material_by_tag(const std::string &tag) noexcept {
-    boost::optional<std::size_t> result;
-
+std::size_t get_material_by_tag(const std::string &tag) noexcept {
     auto finder = material_defs_idx.find(tag);
     if (finder != material_defs_idx.end()) {
-        result = finder->second;
+        return finder->second;
     }
-    return result;
+    return 0;
 }
 
 /*

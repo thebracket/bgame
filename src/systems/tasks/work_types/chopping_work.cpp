@@ -194,7 +194,7 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 			// Spawn wooden logs
 			number_of_logs = (number_of_logs/20)+1;
 			for (int i=0; i<number_of_logs; ++i) {
-				spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood").get());
+				spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"));
 			}
 
 			// Update pathing

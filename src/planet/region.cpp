@@ -197,15 +197,15 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::SOLID : {
 			auto mat = get_material(tile_material[idx]);
 			if (idx < tile_material.size()) {
-				glyph = mat.get().glyph;
-				fg = mat.get().fg;
-				bg = mat.get().bg;
+				glyph = mat->glyph;
+				fg = mat->fg;
+				bg = mat->bg;
 			} else {
 				//std::cout << "Warning - material not found (" << idx << ")!\n";
 				tile_material[idx] = 1;
-				glyph = mat.get().glyph;
-				fg = mat.get().fg;
-				bg = mat.get().bg;
+				glyph = mat->glyph;
+				fg = mat->fg;
+				bg = mat->bg;
 			}
 		} break;
 		case tile_type::OPEN_SPACE : {
