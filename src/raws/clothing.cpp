@@ -5,9 +5,9 @@
 
 std::unordered_map<std::string, clothing_t> clothing_types;
 
-boost::optional<clothing_t> get_clothing_by_tag(const std::string &tag) noexcept
+const clothing_t * get_clothing_by_tag(const std::string &tag) noexcept
 {
-    return api_search(clothing_types, tag);
+    return api_search<clothing_t>(clothing_types, tag);
 }
 
 void sanity_check_clothing() noexcept

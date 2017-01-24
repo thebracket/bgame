@@ -23,7 +23,7 @@ void display_sentient_info()
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = get_species_def(species->tag).get();
+    auto species_finder = *get_species_def(species->tag);
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;
@@ -78,7 +78,7 @@ void display_grazer_info() {
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
     auto health = entity(selected_settler)->component<health_t>();
-    auto species_finder = get_creature_def(species->tag).get();
+    auto species_finder = *get_creature_def(species->tag);
 
 	std::stringstream header;
 	header << " " << name->first_name << " " << name->last_name;

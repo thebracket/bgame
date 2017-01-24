@@ -1,14 +1,13 @@
 #include "creatures.hpp"
-#include <boost/container/flat_map.hpp>
 #include <iostream>
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 
 std::unordered_map<std::string, raw_creature_t> creature_defs;
 
-boost::optional<raw_creature_t> get_creature_def(const std::string &tag) noexcept
+const raw_creature_t * get_creature_def(const std::string &tag) noexcept
 {
-    return api_search(creature_defs, tag);
+    return api_search<raw_creature_t>(creature_defs, tag);
 }
 
 void sanity_check_creatures() noexcept

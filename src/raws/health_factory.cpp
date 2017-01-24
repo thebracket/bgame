@@ -10,7 +10,7 @@ health_t create_health_component_sentient(const std::string &tag, const int base
     result.max_hitpoints = base_hp;
     result.current_hitpoints = base_hp;
 
-    auto species = get_species_def(tag).get();
+    auto species = *get_species_def(tag);
     for (const auto &part : species.body_parts) {
         const int n_parts = std::get<1>(part);
         for (int i=0; i<n_parts; ++i) {
@@ -32,7 +32,7 @@ health_t create_health_component_sentient(const std::string &tag, const int base
 health_t create_health_component_creature(const std::string &tag) {
     health_t result;
 
-    auto species = get_creature_def(tag).get();
+    auto species = *get_creature_def(tag);
     int base_hp = rng.roll_dice( species.hp_n, species.hp_dice ) + species.hp_mod;
     if (base_hp < 0) base_hp = 1;
 

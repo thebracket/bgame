@@ -31,7 +31,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 
     species.tag = planet.civs.unimportant_people[person_id].species_tag;
     std::cout << species.tag << "\n";
-    auto species_finder = get_species_def(species.tag).get();
+    auto species_finder = *get_species_def(species.tag);
     if (planet.civs.unimportant_people[person_id].male) {
         species.gender = MALE;
     } else {

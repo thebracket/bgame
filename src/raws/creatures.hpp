@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/optional.hpp>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -51,7 +50,7 @@ struct raw_creature_t {
 /*
  * Retrieve a creature definition by tag.
  */
-boost::optional<raw_creature_t> get_creature_def(const std::string &tag) noexcept;
+const raw_creature_t * get_creature_def(const std::string &tag) noexcept;
 
 /*
  * Linter for creature definitions.

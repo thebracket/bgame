@@ -5,7 +5,6 @@
 #include <vector>
 #include <tuple>
 #include <fstream>
-#include <boost/optional.hpp>
 
 /*
  * Defines species dietary preferences
@@ -40,7 +39,7 @@ struct raw_species_t {
 /*
  * Retrieve a species by tag.
  */
-boost::optional<raw_species_t> get_species_def(const std::string &tag) noexcept;
+const raw_species_t * get_species_def(const std::string &tag) noexcept;
 
 /*
  * Retrieve the size of the species list.

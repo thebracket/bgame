@@ -19,7 +19,7 @@ void creature_attacks_system::on_message(const creature_attack_message &msg) {
         std::cout << "Unable to find creature: " << attack_species->tag << "\n";
         return;
     }
-    auto creature = creaturefinder.get();
+    auto creature = *creaturefinder;
 
     auto defender = entity(msg.victim);
     if (!defender) return;

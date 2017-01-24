@@ -4,9 +4,9 @@
 
 std::unordered_map<std::string, raw_species_t> species_defs;
 
-boost::optional<raw_species_t> get_species_def(const std::string &tag) noexcept
+const raw_species_t * get_species_def(const std::string &tag) noexcept
 {
-    return api_search(species_defs, tag);
+    return api_search<raw_species_t>(species_defs, tag);
 }
 
 std::size_t get_species_defs_size() noexcept

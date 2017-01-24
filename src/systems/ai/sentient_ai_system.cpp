@@ -58,7 +58,7 @@ void sentient_ai_system::update(const double ms) {
 
         // Look for immediate threats
         bool vegetarian = false;
-        auto finder = get_species_def(planet.civs.unimportant_people[ai->person_id].species_tag).get();
+        auto finder = *get_species_def(planet.civs.unimportant_people[ai->person_id].species_tag);
         if (finder.diet == diet_herbivore) vegetarian = true;
 
         auto hostile = tasks::can_see_hostile(*e, *pos, *view, [&vegetarian, &ai] (entity_t &other) {
