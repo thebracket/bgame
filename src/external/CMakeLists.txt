@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-# Build Lua
-add_subdirectory(lua)
-include_directories(${lua_BINARY_DIR})
-
 # We depend upon zlib
 find_package(ZLIB REQUIRED)
 if (ZLIB_FOUND)

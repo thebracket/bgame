@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project("Black Future")
 
-if (APPLE)
-    #set(SFML_STATIC_LIBRARIES TRUE)
-    set(SFML_ROOT ${PROJECT_SOURCE_DIR}/external/osx/SFML)
-    message("Forcing SFML root to " ${SFML_ROOT})
-endif()
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
@@ -22,9 +17,12 @@ endif()
 
 include(cotire)
 
+# Require Lua
+find_package(Lua 5.1 REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
+
 # Require SFML
 find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
-message(${SFML_INCLUDE_DIR})
 include_directories(${SFML_INCLUDE_DIR})
 
 # Require OpenGL
@@ -40,8 +38,6 @@ else()
 endif()
 include_directories(external/rltk/rltk)
 include_directories(external/FastNoise)
-include_directories(external/lua/src)
-include_directories(external/zlib)
 include_directories(external)
 
 add_subdirectory(external)
@@ -69,5 +65,6 @@ target_link_libraries(bgame systems)
 target_link_libraries(bgame sqlite)
 target_link_libraries(bgame imgui)
 target_link_libraries(bgame imgui-sfml)
+target_link_libraries(bgame ${LUA_LIBRARIES})
 
 cotire(bgame)

@@ -16,7 +16,6 @@ add_library(raws STATIC
     buildings.cpp
     reactions.cpp
 )
-target_link_libraries(raws liblua)
 target_link_libraries(raws rltk)
 target_link_libraries(raws utils)
 target_link_libraries(raws components)
