@@ -1,9 +1,6 @@
 [submodule "src/external/rltk"]
 	path = src/external/rltk
 	url = https://github.com/thebracket/rltk
-[submodule "src/external/sfml"]
-	path = src/external/sfml
-	url = https://github.com/SFML/SFML
 [submodule "src/external/lua"]
 	path = src/external/lua
 	url = https://github.com/LuaDist/lua
