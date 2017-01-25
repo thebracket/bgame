@@ -7,11 +7,11 @@ include_directories(${lua_BINARY_DIR})
 # Build SFML
 add_subdirectory(sfml)
 
-# Build Zlib
-add_subdirectory(zlib)
-include_directories(${zlib_BINARY_DIR})
-set_target_properties(example PROPERTIES EXCLUDE_FROM_ALL 1)
-set_target_properties(minigzip PROPERTIES EXCLUDE_FROM_ALL 1)
+# We depend upon zlib
+find_package(ZLIB REQUIRED)
+if (ZLIB_FOUND)
+        include_directories(${ZLIB_INCLUDE_DIRS})
+endif()
 
 # Build RLTK
 add_library(rltk STATIC rltk/rltk/rltk.cpp
@@ -33,7 +33,7 @@ add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/scaling.cpp
 	)
 target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)
-target_link_libraries(rltk zlibstatic)
+target_link_libraries(rltk ${ZLIB_LIBRARIES})
 
 # Build sqlite
 add_library(sqlite STATIC sqlite/sqlite3.c)
