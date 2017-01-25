@@ -4,9 +4,6 @@ cmake_minimum_required(VERSION 3.1)
 add_subdirectory(lua)
 include_directories(${lua_BINARY_DIR})
 
-# Build SFML
-add_subdirectory(sfml)
-
 # Build Zlib
 add_subdirectory(zlib)
 include_directories(${zlib_BINARY_DIR})
@@ -32,7 +29,7 @@ add_library(rltk STATIC rltk/rltk/rltk.cpp
 	rltk/rltk/rexspeeder.cpp
 	rltk/rltk/scaling.cpp
 	)
-target_link_libraries(rltk sfml-system sfml-graphics sfml-audio sfml-network sfml-window)
+target_link_libraries(rltk ${SFML_LIBRARIES})
 target_link_libraries(rltk zlibstatic)
 
 # Build sqlite
@@ -43,9 +40,11 @@ add_library(FastNoise STATIC FastNoise/FastNoise.cpp)
 
 # Build imgui
 add_library(imgui STATIC imgui/imgui.cpp imgui/imgui_draw.cpp)
+target_link_libraries(imgui ${SFML_LIBRARIES})
 
 # Build imgi-sfml
 include_directories(imgui)
 include_directories(imgui-sfml)
 add_library(imgui-sfml STATIC imgui-sfml/imgui-SFML.cpp )
+target_link_libraries(imgui-sfml ${SFML_LIBRARIES})
 target_link_libraries(imgui-sfml imgui)
