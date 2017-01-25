@@ -7,7 +7,7 @@ if (ZLIB_FOUND)
 endif()
 
 # Build RLTK
-add_library(rltk STATIC rltk/rltk/rltk.cpp
+add_library(rltk rltk/rltk/rltk.cpp
 	rltk/rltk/texture_resources.cpp
 	rltk/rltk/color_t.cpp
 	rltk/rltk/virtual_terminal.cpp
@@ -41,7 +41,7 @@ target_link_libraries(imgui ${SFML_LIBRARIES})
 # Build imgi-sfml
 include_directories(imgui)
 include_directories(imgui-sfml)
-add_library(imgui-sfml STATIC imgui-sfml/imgui-SFML.cpp )
+add_library(imgui-sfml imgui-sfml/imgui-SFML.cpp )
 target_link_libraries(imgui-sfml ${SFML_LIBRARIES})
 target_link_libraries(imgui-sfml imgui)
 target_link_libraries(imgui-sfml ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
