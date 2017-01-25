@@ -33,15 +33,7 @@ cp $GAMEBASE/world_defs/* world_defs
 cp $GAMEBASE/rex/* rex
 
 echo "5 - copying dependencies"
-#deps=$(ldd bgame | awk 'BEGIN{ORS=" "}$1\
-#~/^\//{print $1}$3~/^\//{print $3}'\
-# | sed 's/,$/\n/')
-#
-#for dep in $deps
-#do
-#	echo "Copying $dep to distribution folder"
-#	cp "$dep" .
-#done
+cp /mingw64/bin/sfml*.dll .
 
 echo "4 - stripping binaries"
 strip $tempfolder/bgame.exe
