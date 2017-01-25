@@ -34,6 +34,8 @@ cp $GAMEBASE/rex/* rex
 
 echo "5 - copying dependencies"
 cp /mingw64/bin/sfml*.dll .
+cp /mingw64/bin/libwinpthread-1.dll .
+
 
 echo "4 - stripping binaries"
 strip $tempfolder/bgame.exe
