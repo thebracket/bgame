@@ -1,9 +1,3 @@
 [submodule "src/external/rltk"]
 	path = src/external/rltk
 	url = https://github.com/thebracket/rltk
-[submodule "src/external/imgui"]
-	path = src/external/imgui
-	url = https://github.com/ocornut/imgui
-[submodule "src/external/imgui-sfml"]
-	path = src/external/imgui-sfml
-	url = https://github.com/thebracket/imgui-sfml
