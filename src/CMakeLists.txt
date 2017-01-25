@@ -65,4 +65,3 @@ target_link_libraries(bgame imgui)
 target_link_libraries(bgame imgui-sfml)
 target_link_libraries(bgame ${LUA_LIBRARIES})
 
-cotire(bgame)
