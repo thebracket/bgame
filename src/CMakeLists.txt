@@ -28,18 +28,12 @@ find_package(OpenGL REQUIRED)
 #find_package(GLUT REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS})
 
-# Windows shims
-#if (WIN32)
-#	include_directories(external/fixwindows)
-#else()
-#	include_directories(external/fixothers)
-#endif()
+# Require RLTK, FastNoise
 include_directories(external/rltk/rltk)
 include_directories(external/FastNoise)
 include_directories(external)
 
 add_subdirectory(external)
-include_directories(${SFML_INCLUDE_DIR})
 
 add_subdirectory(components)
 add_subdirectory(planet)
