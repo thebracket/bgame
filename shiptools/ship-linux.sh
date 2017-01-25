@@ -4,7 +4,7 @@ GAMEBASE=/home/herbert/Development/github/bgame
 echo "1 - Pulling latest source and building"
 pushd $GAMEBASE/build
 git pull
-make
+make -j4
 
 now=`date +"%Y_%m_%d"`
 tempfolder="/tmp/blackfuture_linux_nightly_$now"
