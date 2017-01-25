@@ -39,7 +39,6 @@ include_directories(external/FastNoise)
 include_directories(external)
 
 add_subdirectory(external)
-include_directories(${SFML_INCLUDE_DIR})
 
 add_subdirectory(components)
 add_subdirectory(planet)
