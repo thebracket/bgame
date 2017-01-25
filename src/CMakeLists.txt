@@ -15,10 +15,8 @@ if (WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
 endif()
 
-include(cotire)
-
 # Require Lua
-find_package(Lua 5.1 REQUIRED)
+find_package(Lua 5 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 
 # Require SFML
