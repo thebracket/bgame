@@ -22,10 +22,15 @@ endif()
 
 include(cotire)
 
-# Build SFML
+# Require SFML
 find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
 message(${SFML_INCLUDE_DIR})
 include_directories(${SFML_INCLUDE_DIR})
+
+# Require OpenGL
+find_package(OpenGL REQUIRED)
+#find_package(GLUT REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS})
 
 # Windows shims
 if (WIN32)

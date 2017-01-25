@@ -48,4 +48,5 @@ include_directories(imgui-sfml)
 add_library(imgui-sfml STATIC imgui-sfml/imgui-SFML.cpp )
 target_link_libraries(imgui-sfml ${SFML_LIBRARIES})
 target_link_libraries(imgui-sfml imgui)
+target_link_libraries(imgui-sfml ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 
