@@ -19,6 +19,7 @@ dijkstra_map bed_map;
 dijkstra_map settler_map;
 dijkstra_map architecure_map;
 dijkstra_map blocks_map;
+dijkstra_map levers_map;
 bool dijkstra_debug = false;
 
 using namespace rltk;
@@ -32,6 +33,7 @@ void distance_map_system::configure() {
     subscribe_mbox<architecture_changed_message>();
     subscribe_mbox<blocks_changed_message>();
     subscribe_mbox<map_changed_message>();
+    subscribe_mbox<leverpull_changed_message>();
 }
 
 void distance_map_system::update(const double duration_ms) {
@@ -41,6 +43,7 @@ void distance_map_system::update(const double duration_ms) {
     each_mbox<settler_moved_message>([this] (const settler_moved_message &msg) { update_settler_map = true; });
     each_mbox<architecture_changed_message>([this] (const architecture_changed_message &msg) { update_architecture_map = true; });
     each_mbox<blocks_changed_message>([this] (const blocks_changed_message &msg) { update_blocks_map = true; });
+    each_mbox<leverpull_changed_message>([this] (const leverpull_changed_message &msg) { update_levers_map = true; });
     each_mbox<map_changed_message>([this] (const map_changed_message &msg) {
         update_huntables = true;
         update_butcherables = true;
@@ -48,6 +51,7 @@ void distance_map_system::update(const double duration_ms) {
         update_settler_map = true;
         update_architecture_map = true;
         update_blocks_map = true;
+        update_levers_map = true;
     });
 
     if (update_huntables) {
@@ -119,5 +123,19 @@ void distance_map_system::update(const double duration_ms) {
         );
         blocks_map.update(targets);
         update_blocks_map = false;
+    }
+
+    if (update_levers_map) {
+        std::vector<int> targets;
+        for (auto it = designations->levers_to_pull.begin(); it != designations->levers_to_pull.end(); ++it) {
+            auto lever_id = *it;
+            auto lever_entity = entity(lever_id);
+            if (!lever_entity) break;
+            auto lever_pos = lever_entity->component<position_t>();
+            if (!lever_pos) break;
+            targets.emplace_back(mapidx(*lever_pos));
+        }
+        levers_map.update(targets);
+        update_levers_map = false;
     }
 }

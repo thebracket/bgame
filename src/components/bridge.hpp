@@ -6,6 +6,7 @@ using namespace rltk;
 
 struct bridge_t {
     bool complete = false;
+    bool retracted = false;
 
     bridge_t() {}
 

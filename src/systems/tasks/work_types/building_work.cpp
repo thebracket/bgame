@@ -58,6 +58,11 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 				has_components = false;
 				ai.current_tool = component.first;
 				auto item_loc = get_item_location(ai.current_tool);
+                if (!item_loc) {
+                    cancel_action(e, ai, stats, species, pos, name, "Component unavailable");
+                    designations->buildings.push_back(ai.building_target);
+                    ai.has_building_target = false;
+                }
 				ai.current_path = find_path(pos, *item_loc, true);
 				if (ai.current_path->success) {
 					component.second = true;

@@ -14,7 +14,8 @@ void designations_t::to_xml(xml_node * c) {
         std::make_pair("current_cash", current_cash),
         std::make_pair("standing_order_idle_move", standing_order_idle_move),
         std::make_pair("standing_order_wildlife_treatment", standing_order_wildlife_treatment),
-        std::make_pair("standing_order_upgrade", standing_order_upgrade)
+        std::make_pair("standing_order_upgrade", standing_order_upgrade),
+        std::make_pair("levers_to_pull", levers_to_pull)
     );
 }
 

@@ -12,6 +12,7 @@
 #include "work_types/hauling_work.hpp"
 #include "work_types/harvest_work.hpp"
 #include "work_types/architecture_work.hpp"
+#include "work_types/lever_work.hpp"
 
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
@@ -70,7 +71,14 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 	if (ai.job_type_major == JOB_IDLE) {
 		// Find something to do!
 		const auto idx = mapidx(pos.x, pos.y, pos.z);
-		
+
+		if (!designations->levers_to_pull.empty() && levers_map.distance_map[mapidx(pos)] < MAX_DIJSTRA_DISTANCE-1) {
+            ai.job_type_major = JOB_PULL_LEVER;
+            ai.job_type_minor = JM_GO_TO_LEVER;
+            change_job_status(ai, name, "pulling a lever", true);
+            return;
+        }
+
 		if (ai.permitted_work[JOB_GUARDING] && !designations->guard_points.empty() && shooting_range(entity, pos)>0) {
 			for (auto &g : designations->guard_points) {
 				if (!g.first) {
@@ -308,6 +316,9 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
         return;
     } else if (ai.job_type_major == JOB_ARCHITECT) {
         do_architecture(entity, ai, stats, species, pos, name);
+        return;
+    } else if (ai.job_type_major == JOB_PULL_LEVER) {
+        do_lever_pull(entity, ai, stats, species, pos, name);
         return;
     }
 	wander_randomly(entity, pos);

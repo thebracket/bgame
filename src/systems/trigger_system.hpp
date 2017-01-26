@@ -17,4 +17,5 @@ private:
     void edit_triggers();
     void pull_levers();
     void entry_trigger_firing();
+    void pulled_levers();
 };

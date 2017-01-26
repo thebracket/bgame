@@ -44,6 +44,12 @@ struct request_lever_pull_message : public rltk::base_message_t {
 	std::size_t lever_id;
 };
 
+struct lever_pulled_message : public rltk::base_message_t {
+    lever_pulled_message() {}
+    lever_pulled_message(const std::size_t &lid) : lever_id(lid) {}
+    std::size_t lever_id;
+};
+
 struct trigger_details_requested : public rltk::base_message_t {
     trigger_details_requested() {}
     trigger_details_requested(const std::size_t &lid) : lever_id(lid) {}

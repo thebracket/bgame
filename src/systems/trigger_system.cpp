@@ -23,6 +23,8 @@
 #include "../raws/buildings.hpp"
 #include "../components/construct_provides_door.hpp"
 #include "../components/receives_signal.hpp"
+#include "../components/renderable.hpp"
+#include "../messages/messages.hpp"
 
 void trigger_system::configure() {
     system_name = "Trigger System";
@@ -30,6 +32,7 @@ void trigger_system::configure() {
     subscribe_mbox<entity_moved_message>();
     subscribe_mbox<request_lever_pull_message>();
     subscribe_mbox<trigger_details_requested>();
+    subscribe_mbox<lever_pulled_message>();
 }
 
 void trigger_system::update(const double duration_ms) {
@@ -37,6 +40,7 @@ void trigger_system::update(const double duration_ms) {
     pull_levers();
     edit_triggers();
     entry_trigger_firing();
+    pulled_levers();
 }
 
 void trigger_system::manage_triggers() {
@@ -58,7 +62,8 @@ void trigger_system::manage_triggers() {
 
 void trigger_system::pull_levers() {
     each_mbox<request_lever_pull_message>([this] (const request_lever_pull_message &msg) {
-        // Add to the to-do list!
+        designations->levers_to_pull.emplace_back(msg.lever_id);
+        emit_deferred(leverpull_changed_message{});
     });
 }
 
@@ -238,3 +243,55 @@ void trigger_system::entry_trigger_firing() {
     });
 }
 
+void trigger_system::pulled_levers() {
+    each_mbox<lever_pulled_message>(
+            [] (const lever_pulled_message &msg) {
+                auto lever_entity = entity(msg.lever_id);
+                if (!lever_entity) return;
+                auto lever_component = lever_entity->component<lever_t>();
+                if (!lever_component) return;
+                auto renderable = lever_entity->component<renderable_t>();
+
+                lever_component->active = !lever_component->active;
+                if (renderable) {
+                    switch (lever_component->active) {
+                        case false : renderable->glyph = 326; break;
+                        case true : renderable->glyph = 327; break;
+                    }
+                }
+
+                for (const auto &id : lever_component->targets) {
+                    auto target_entity = entity(id);
+                    if (!target_entity) break;
+                    emit(power_consumed_message{10});
+                    auto target_door = target_entity->component<construct_door_t>();
+                    auto target_bridge = target_entity->component<bridge_t>();
+
+                    if (target_door) {
+                        target_door->locked = !target_door->locked;
+                        emit(map_changed_message{});
+                    }
+                    if (target_bridge) {
+                        target_bridge->retracted = !target_bridge->retracted;
+                        if (target_bridge->retracted) {
+                            // Retract the bridge
+                            for (int i=0; i<REGION_TILES_COUNT; ++i) {
+                                if (current_region->bridge_id[i] == id) {
+                                    current_region->tile_type[i] = tile_type::OPEN_SPACE;
+                                }
+                            }
+                        } else {
+                            // Extend the bridge!
+                            for (int i=0; i<REGION_TILES_COUNT; ++i) {
+                                if (current_region->bridge_id[i] == id) {
+                                    current_region->tile_type[i] = tile_type::FLOOR;
+                                }
+                            }
+                        }
+                        current_region->tile_recalc_all();
+                        emit_deferred(map_changed_message{});
+                    }
+                }
+            }
+    );
+}
