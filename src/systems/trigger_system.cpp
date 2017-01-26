@@ -25,6 +25,8 @@
 #include "../components/receives_signal.hpp"
 #include "../components/renderable.hpp"
 #include "../messages/messages.hpp"
+#include "../systems/movement_system.hpp"
+#include "../components/health.hpp"
 
 void trigger_system::configure() {
     system_name = "Trigger System";
@@ -133,7 +135,8 @@ void trigger_system::edit_triggers() {
         if (already_linked.find(e.id) != already_linked.end()) return;
         if (e.component<bridge_t>()) stem = "Bridge";
         if (e.component<construct_door_t>()) stem = "Door";
-        // TODO: Spikes
+        if (building_component && building_component->tag == "spike_trap") stem = "Spikes";
+
         const std::string target_info = stem + std::string(" #") + std::to_string(e.id);
         can_link_to.emplace_back(std::make_pair(e.id, target_info));
     });
@@ -268,10 +271,12 @@ void trigger_system::pulled_levers() {
                     emit(power_consumed_message{10});
                     auto target_door = target_entity->component<construct_door_t>();
                     auto target_bridge = target_entity->component<bridge_t>();
+                    auto target_building = target_entity->component<building_t>();
 
                     if (target_door) {
                         target_door->locked = !target_door->locked;
                         emit(map_changed_message{});
+                        emit(door_changed_message{});
                     }
                     if (target_bridge) {
                         target_bridge->retracted = !target_bridge->retracted;
@@ -292,6 +297,32 @@ void trigger_system::pulled_levers() {
                         }
                         current_region->tile_recalc_all();
                         emit_deferred(map_changed_message{});
+                    }
+                    if (target_building && target_building->tag == "spike_trap") {
+                        auto receiver = target_entity->component<receives_signal_t>();
+                        auto renderable = target_entity->component<renderable_t>();
+                        auto target_pos = target_entity->component<position_t>();
+                        if (receiver && renderable && target_pos) {
+                            receiver->active = !receiver->active;
+                            if (receiver->active) {
+                                renderable->glyph = 325;
+                                // Attack everything in the tile
+                                int x,y,z;
+                                std::tie(x,y,z) = idxmap(mapidx(*target_pos));
+                                std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
+                                for (const auto &v : visible_here) {
+                                    auto victim_entity = entity(v);
+                                    if (victim_entity) {
+                                        auto health = victim_entity->component<health_t>();
+                                        if (health) {
+                                            emit_deferred(inflict_damage_message{v, rng.roll_dice(2,8), "floor spikes"});
+                                        }
+                                    }
+                                }
+                            } else {
+                                renderable->glyph = 324;
+                            }
+                        }
                     }
                 }
             }
