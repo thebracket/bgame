@@ -61,7 +61,7 @@ void do_lever_pull(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
             return;
         }
         if (distance == 0) {
-            ai.job_type_minor = JM_ARCHITECT_COLLECTBLOCK;
+            ai.job_type_minor = JM_PULLIT;
             ai.job_status = "Pulling lever";
             return;
         }
@@ -75,6 +75,7 @@ void do_lever_pull(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
         each<lever_t, position_t>([&lever_id, &pos] (entity_t &E, lever_t &l, position_t &p) {
             if (p == pos) lever_id = E.id;
         });
+        if (lever_id == 0) throw std::runtime_error("Unidentified lever!");
 
         // Remove from designations
         designations->levers_to_pull.erase(std::remove_if(
@@ -91,5 +92,6 @@ void do_lever_pull(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 
         // Idle
         become_idle(e, ai, name);
+        return;
     }
 }

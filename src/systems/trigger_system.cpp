@@ -246,11 +246,13 @@ void trigger_system::entry_trigger_firing() {
 void trigger_system::pulled_levers() {
     each_mbox<lever_pulled_message>(
             [] (const lever_pulled_message &msg) {
+                std::cout << "Lever pulled: " << msg.lever_id << "\n";
                 auto lever_entity = entity(msg.lever_id);
                 if (!lever_entity) return;
                 auto lever_component = lever_entity->component<lever_t>();
                 if (!lever_component) return;
                 auto renderable = lever_entity->component<renderable_t>();
+                std::cout << "All good on lever\n";
 
                 lever_component->active = !lever_component->active;
                 if (renderable) {
