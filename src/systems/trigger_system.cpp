@@ -16,6 +16,13 @@
 #include "../messages/inflict_damage_message.hpp"
 #include "../messages/inventory_changed_message.hpp"
 #include "../main/game_globals.hpp"
+#include "../../external/imgui-sfml/imgui-SFML.h"
+#include "gui/imgui_helper.hpp"
+#include "../components/lever.hpp"
+#include "../components/bridge.hpp"
+#include "../raws/buildings.hpp"
+#include "../components/construct_provides_door.hpp"
+#include "../components/receives_signal.hpp"
 
 void trigger_system::configure() {
     system_name = "Trigger System";
@@ -26,6 +33,13 @@ void trigger_system::configure() {
 }
 
 void trigger_system::update(const double duration_ms) {
+    manage_triggers();
+    pull_levers();
+    edit_triggers();
+    entry_trigger_firing();
+}
+
+void trigger_system::manage_triggers() {
     each_mbox<triggers_changes_message>([this] (const triggers_changes_message &msg) {
         std::cout << "Received trigger notification\n";
         this->dirty = true;
@@ -40,16 +54,101 @@ void trigger_system::update(const double duration_ms) {
         });
         dirty = false;
     }
+}
 
+void trigger_system::pull_levers() {
     each_mbox<request_lever_pull_message>([this] (const request_lever_pull_message &msg) {
         // Add to the to-do list!
     });
+}
 
+void trigger_system::edit_triggers() {
     each_mbox<trigger_details_requested>([this] (const trigger_details_requested &msg) {
         trigger_id = msg.lever_id;
         pause_mode = PAUSED;
+        game_master_mode = TRIGGER_MANAGEMENT;
     });
 
+    if (game_master_mode != TRIGGER_MANAGEMENT) return;
+    auto trigger_entity = entity(trigger_id);
+    if (!trigger_entity) return;
+    auto lever = trigger_entity->component<lever_t>();
+
+    bool is_lever = false;
+    bool is_pressure_plate = false;
+    if (lever) is_lever = true;
+    // TODO: is_pressure_plate determination
+
+    ImGui::Begin(win_trigger_mgmt.c_str());
+
+    // Input options
+    if (is_lever) {
+        ImGui::Text("Levers have no input options; their input is triggered when a settler pulls the lever.");
+    }
+
+    // Connection options - current destinations
+    std::unordered_set<std::size_t> already_linked;
+    std::vector<std::pair<std::size_t, std::string>> linked_to;
+    for (const auto &target : lever->targets) {
+        auto target_entity = entity(target);
+        if (target_entity) {
+            std::string prefix = "";
+            if (target_entity->component<bridge_t>()) prefix = "Bridge";
+            if (target_entity->component<construct_door_t>()) prefix = "Door";
+            // Spikes, etc.
+
+            const std::string target_info = prefix + std::string(" #") + std::to_string(target);
+            linked_to.emplace_back(std::pair<std::size_t, std::string>{target, target_info});
+            already_linked.insert(target);
+        }
+    }
+    const char* linked_to_items[linked_to.size()];
+    for (int i=0; i<linked_to.size(); ++i) {
+        linked_to_items[i] = linked_to[i].second.c_str();
+    }
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## Existing Links", &selected_existing_link, linked_to_items, linked_to.size(), 10);
+    if (ImGui::Button(btn_remove_link.c_str())) {
+        if (is_lever) {
+            const std::size_t target_to_remove = linked_to[selected_existing_link].first;
+            lever->targets.erase(std::remove_if(lever->targets.begin(), lever->targets.end(),
+                                [&target_to_remove] (auto &n) { return target_to_remove == n; } ),
+                                 lever->targets.end());
+        }
+    }
+
+    // Possible connections
+    std::vector<std::pair<std::size_t, std::string>> can_link_to;
+    each<receives_signal_t>([&can_link_to, &already_linked] (entity_t &e, receives_signal_t &s) {
+        std::string stem = "";
+        bool mine = true;
+        auto building_component = e.component<building_t>();
+        if (building_component && building_component->civ_owner != 0) mine = false;
+        if (!mine) return;
+        if (already_linked.find(e.id) != already_linked.end()) return;
+        if (e.component<bridge_t>()) stem = "Bridge";
+        if (e.component<construct_door_t>()) stem = "Door";
+        // TODO: Spikes
+        const std::string target_info = stem + std::string(" #") + std::to_string(e.id);
+        can_link_to.emplace_back(std::make_pair(e.id, target_info));
+    });
+    const char* can_link[can_link_to.size()];
+    for (int i=0; i<can_link_to.size(); ++i) {
+        can_link[i] = can_link_to[i].second.c_str();
+    }
+    ImGui::PushItemWidth(-1);
+    ImGui::ListBox("## New Links", &new_link, can_link, can_link_to.size(), 10);
+    // TODO: Find a way to move the camera to show what you are picking when selecting
+    if (ImGui::Button(btn_add_link.c_str())) {
+        if (is_lever) lever->targets.emplace_back(can_link_to[new_link].first);
+    }
+    if (ImGui::Button(btn_close.c_str())) {
+        game_master_mode = PLAY;
+    }
+    ImGui::End();
+}
+
+void trigger_system::entry_trigger_firing() {
     each_mbox<entity_moved_message>([this] (const entity_moved_message &msg) {
         //std::cout << "Received an entity move message. There are " << triggers.size() << " triggers.\n";
         const int tile_index = mapidx(msg.destination);
@@ -138,3 +237,4 @@ void trigger_system::update(const double duration_ms) {
         }
     });
 }
+

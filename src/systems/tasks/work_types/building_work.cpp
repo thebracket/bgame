@@ -35,6 +35,7 @@
 #include "../settler_move_to.hpp"
 #include "../../../raws/buildings.hpp"
 #include "../../../components/receives_signal.hpp"
+#include "../../../components/lever.hpp"
 
 #include <iostream>
 #include <map>
@@ -187,11 +188,13 @@ void do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 						|| provides.provides == provides_stairs_down || provides.provides == provides_stairs_updown 
 						|| provides.provides == provides_ramp || provides.provides == provides_stonefall_trap
 						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap
-                        || provides.provides == provides_spikes || provides.provides == provides_lever)
+                        || provides.provides == provides_spikes)
 				{					
 					emit(perform_construction_message{ai.building_target.building_entity, tag, material});
 				} else if (provides.provides == provides_signal_recipient) {
                     entity(ai.building_target.building_entity)->assign(receives_signal_t{});
+                } else if (provides.provides == provides_lever) {
+                    entity(ai.building_target.building_entity)->assign(lever_t{});
                 }
 			}
 			if (finder->second.emits_smoke) {

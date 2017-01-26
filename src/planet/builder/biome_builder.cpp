@@ -41,7 +41,10 @@ std::unordered_map<uint8_t, double> biome_membership(planet_t &planet, const std
 	}
 
 	// Calculate the averages
-	if (n_cells == 0) std::unordered_map<uint8_t, double>();
+	if (n_cells == 0) {
+		std::unordered_map<uint8_t, double>();
+		n_cells = 1;
+	}
 
 	double counter = static_cast<double>(n_cells);
 	planet.biomes[idx].mean_altitude = static_cast<uint8_t>((double)total_height / counter);

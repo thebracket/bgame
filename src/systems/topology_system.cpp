@@ -9,7 +9,6 @@
 #include "../raws/buildings.hpp"
 #include "../components/entry_trigger.hpp"
 #include "../components/receives_signal.hpp"
-#include "../components/lever.hpp"
 
 void topology_system::update(const double duration_ms) {
     std::queue<perform_mining_message> * messages = mbox<perform_mining_message>();
@@ -217,11 +216,6 @@ void topology_system::build_construction(const perform_construction_message &e) 
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
             auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(receives_signal_t{});
-            entity_should_be_deleted = false;
-        } else if (provides.provides == provides_lever) {
-            int x,y,z;
-            std::tie(x,y,z) = idxmap(index);
-            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(lever_t{});
             entity_should_be_deleted = false;
         }
     }

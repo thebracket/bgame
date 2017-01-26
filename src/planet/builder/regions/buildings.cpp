@@ -13,6 +13,7 @@
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../components/receives_signal.hpp"
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
     auto building = building_defs.find(tag);
@@ -46,7 +47,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         new_building->assign(lightsource_t{5, rltk::colors::YELLOW});
         new_building->assign(smoke_emitter_t{});
     } else if (tag == "energy_door" || tag == "door") {
-        new_building->assign(construct_door_t{});
+        new_building->assign(construct_door_t{})->assign(receives_signal_t{});
     }
 }
 
