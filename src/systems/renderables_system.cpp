@@ -84,14 +84,11 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         if (ai) {
             if (ai->job_type_major == JOB_SLEEP && ai->job_type_minor==JM_SLEEP) {
                 layers.push_back(vchar{336, rltk::colors::WHITE, rltk::colors::BLACK});
-            }
-            if (ai->job_type_major == JOB_MINE) {
+            } else if (ai->job_type_major == JOB_MINE) {
                 layers.push_back(vchar{337, rltk::colors::WHITE, rltk::colors::BLACK});
-            }
-            if (ai->job_type_major == JOB_CHOP) {
+            } else if (ai->job_type_major == JOB_CHOP) {
                 layers.push_back(vchar{338, rltk::colors::WHITE, rltk::colors::BLACK});
-            }
-            if (ai->job_type_major == JOB_CONSTRUCTION || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
+            } else if (ai->job_type_major == JOB_CONST || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
                 layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
             }
         }
