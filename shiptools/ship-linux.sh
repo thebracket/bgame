@@ -9,7 +9,7 @@ echo "1b - tagging the latest release"
 VERSIONDATE=`date +"%Y_%m_%d"`
 VERSION="${VERSIONDATE}_osx_nightly"
 mv ../src/main/constants.hpp ../src/main/constants.hpp.backup
-echo -e "#prama once\n\n#include <string>\n\nconst std::string VERSION=\"$VERSION\";\n\n" > ../src/main/constants.hpp
+echo -e "#pragma once\n\n#include <string>\n\nconst std::string VERSION=\"$VERSION\";\n\n" > ../src/main/constants.hpp
 
 echo "1c - building latest version"
 make -j4
