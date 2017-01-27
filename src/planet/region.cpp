@@ -291,11 +291,11 @@ void region_t::calc_render(const int &idx) {
 		} break;
 		case tile_type::CLOSED_DOOR : {
 			if (get_material(tile_material[idx])->spawn_type == sand) {
-				glyph = 126;
+				glyph = 329;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
-				glyph = 240;
+				glyph = 329;
 			} else {
-				glyph = ',';
+				glyph = 329;
 			}
 
 			fg = get_material(tile_material[idx])->fg;

@@ -370,7 +370,7 @@ buildings = {
 		provides = { door={energy_cost=0}, signal={energy_cost=0} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['door'], foreground = colors['white'], background = colors['black']}
+				{glyph= glyphs['door_open'], foreground = colors['white'], background = colors['black']}
 			}
 		}
 	},
@@ -382,7 +382,7 @@ buildings = {
 		provides = { door={energy_cost=10} },
 		render = {
 			width=1, height=1, tiles= {
-				{glyph= glyphs['door'], foreground = colors['cyan'], background = colors['black']}
+				{glyph= glyphs['door_open'], foreground = colors['cyan'], background = colors['black']}
 			}
 		}
 	},
