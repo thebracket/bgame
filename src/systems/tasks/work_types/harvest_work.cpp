@@ -33,6 +33,7 @@
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
 #include "../../../raws/plants.hpp"
+#include "../../../utils/telemetry.hpp"
 
 using namespace rltk;
 using tasks::become_idle;
@@ -106,6 +107,7 @@ void do_harvesting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
         current_region->tile_vegetation_ticker[idx] = 0;
 
         // Become idle - done
+        call_home("harvest", result);
         become_idle(e, ai, name);
         return;
     }

@@ -32,6 +32,7 @@
 #include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
+#include "../../../utils/telemetry.hpp"
 
 #include <iostream>
 #include <map>
@@ -164,7 +165,8 @@ void do_mining(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &sp
 			const auto idx = mapidx(pos.x, pos.y, pos.z);
 			const int target_idx = mining_targets[idx];
 			const int target_operation = designations->mining[target_idx];
-			
+            call_home("mining", std::to_string(target_operation));
+
 			if (target_operation > 0) {
 				emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z});
 				designations->mining.erase(target_idx);

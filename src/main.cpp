@@ -8,6 +8,7 @@
 #include "utils/string_utils.hpp"
 #include "main/IconsFontAwesome.h"
 #include "external/imgui-sfml/imgui-SFML.h"
+#include "utils/telemetry.hpp"
 #include <chrono>
 #include <filesystem.hpp>
 
@@ -146,6 +147,8 @@ void read_config() {
 		if (split_line[0] == "gui_ttf") game_config.gui_ttf = split_line[1];
 		if (split_line[0] == "gui_ttf_size") game_config.gui_ttf_size = std::stoi(split_line[1]);
 		if (split_line[0] == "scale_factor") game_config.scale_factor = std::stof(split_line[1]);
+		if (split_line[0] == "allow_calling_home" && split_line[1] != "yes") game_config.allow_calling_home = false;
+		if (split_line[0] == "online_username") game_config.online_username = split_line[1];
 	}
 	rltk::scale_factor = game_config.scale_factor;
 }
@@ -163,6 +166,7 @@ int main(int argc, char* argv[])
      */
 
 	read_config();
+    start_telemetry();
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
 	splash.init();
 
@@ -183,5 +187,8 @@ int main(int argc, char* argv[])
     rltk::optional_display_hook = on_display;
 
     // Main loop - hand over to RLTK
+    call_home("Startup");
     run(tick);
+    call_home("Shutdown");
+    stop_telemetry();
 }

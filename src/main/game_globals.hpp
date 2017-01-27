@@ -23,6 +23,8 @@ struct config_t {
 	std::string gui_ttf = "DroidSans.ttf";
 	int gui_ttf_size = 24;
 	float scale_factor = 1.0f;
+	bool allow_calling_home = true;
+    std::string online_username = "anonymouse";
 };
 
 struct available_building_t {

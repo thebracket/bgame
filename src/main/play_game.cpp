@@ -4,6 +4,7 @@
 #include "../systems/systems.hpp"
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
+#include "../utils/telemetry.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -51,6 +52,7 @@ void resize_game_panel(rltk::layer_t * l, int w, int h) {
 }
 
 void do_load_game() {
+    call_home("playgame");
     // Load the game
     std::cout << "Loading the planet\n";
     planet = load_planet();
@@ -111,6 +113,7 @@ void play_game::init() {
 }
 
 void play_game::destroy() {
+    call_home("stopgame");
 	gui->delete_layer(MAP_LAYER);
 	gui->delete_layer(TOOLTIP_LAYER);
 	gui->delete_layer(GUI_LAYER);

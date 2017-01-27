@@ -32,6 +32,7 @@
 #include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
+#include "../../../utils/telemetry.hpp"
 
 #include <iostream>
 #include <map>
@@ -160,6 +161,7 @@ void do_chopping(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &
 		auto skill_check = skill_roll(e.id, stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
 
 		if (skill_check >= SUCCESS) {
+			call_home("tree_chop");
 			// Tree is going down!
 			int number_of_logs = 0;
             int tree_idx = 0;

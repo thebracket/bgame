@@ -16,6 +16,7 @@
 #include "../../../raws/buildings.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/lever.hpp"
+#include "../../../utils/telemetry.hpp"
 
 using namespace rltk;
 using tasks::become_idle;
@@ -161,6 +162,7 @@ do_building(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &speci
             }
 
             // Place the building, and assign any provide tags
+            call_home("new_building", finder->second.tag);
             entity(ai.building_target.building_entity)->component<building_t>()->complete = true;
             emit(opacity_changed_message{});
 

@@ -20,7 +20,7 @@ find_package(Lua 5 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 
 # Require SFML
-find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
+find_package(SFML 2 COMPONENTS system window graphics network REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Require OpenGL

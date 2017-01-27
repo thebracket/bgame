@@ -9,6 +9,7 @@
 #include "../../components/species.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../movement_system.hpp"
+#include "../../utils/telemetry.hpp"
 
 using namespace rltk;
 
@@ -32,6 +33,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
                 ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
+        call_home("settler_death");
     } else if (victim->component<sentient_ai>()) {
         // It's a dead native
         planet.civs.unimportant_people[victim->component<sentient_ai>()->person_id].deceased = true;
@@ -42,6 +44,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
                 ->assign(renderable_t{ renderable->glyph, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
+        call_home("sentient_death", name->first_name);
     } else {
         // It's something else that died.
         std::string tag = "";
@@ -57,6 +60,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
                     ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") });
             emit_deferred(butcherable_moved_message{});
         }
+        call_home("other_death", tag);
     }
 
     // Remove the entity

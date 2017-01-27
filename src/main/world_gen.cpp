@@ -1,6 +1,7 @@
 #include "world_gen.hpp"
 #include "../planet/planet_builder.hpp"
 #include "game_globals.hpp"
+#include "../utils/telemetry.hpp"
 #include <iostream>
 
 constexpr int WORLD_LAYER=1;
@@ -18,6 +19,7 @@ void world_gen::init() {
 	done = false;
 	setup_build_planet(term(WORLD_LAYER)->term_width, term(WORLD_LAYER)->term_height);
 	world_thread = std::make_unique<std::thread>(build_planet);
+	call_home("worldgen");
 }
 
 void world_gen::destroy() {
@@ -25,6 +27,7 @@ void world_gen::destroy() {
 	world_thread->join();
 	world_thread.reset();
 	planet_builder_display.reset();
+    call_home("worldgen_done");
 }
 
 void world_gen::tick(const double duration_ms) {
