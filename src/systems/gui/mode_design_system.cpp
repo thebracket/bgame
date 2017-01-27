@@ -177,13 +177,14 @@ void mode_design_system::architecture() {
 
         if (mouse::clicked && arch_possible) {
             // Build!
+            std::size_t bridge_id = 0;
+            if (architecture_mode == 6) {
+                auto new_bridge = create_entity()->assign(bridge_t{});
+                bridge_id = new_bridge->id;
+            }
+
             for (int y=world_y; y<world_y+arch_height; ++y) {
                 for (int x = world_x; x < world_x + arch_width; ++x) {
-                    std::size_t bridge_id = 0;
-                    if (architecture_mode == 6) {
-                        auto new_bridge = create_entity()->assign(bridge_t{});
-                        bridge_id = new_bridge->id;
-                    }
                     if (arch_filled) {
                         const int idx = mapidx(x,y,camera_position->region_z);
                         designations->architecture[idx] = architecture_mode;
