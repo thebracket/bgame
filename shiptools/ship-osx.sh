@@ -1,10 +1,21 @@
 #!/bin/bash
 GAMEBASE=/Users/herbert/Development/github/bgame
 
-echo "1 - Pulling latest source and building"
+echo "1a - Pulling latest source"
 pushd $GAMEBASE/build
 git pull
+
+echo "1b - tagging the latest release"
+VERSIONDATE=`date +"%Y_%m_%d"`
+VERSION="${VERSIONDATE}_osx_nightly"
+mv ../src/main/constants.hpp ../src/main/constants.hpp.backup
+echo -e "#prama once\n\n#include <string>\n\nconst std::string VERSION=\"$VERSION\";\n\n" > ../src/main/constants.hpp
+
+echo "1c - building latest version"
 make -j8
+
+echo "1d - restoring the previous version file to avoid conflicts"
+mv ../src/main/constants.hpp.backup ../src/main/constants.hpp
 
 now=`date +"%Y_%m_%d"`
 tempfolder="/tmp/blackfuture_macosx_nightly_$now"
