@@ -283,7 +283,7 @@ std::vector<available_building_t> get_available_buildings() {
 			result.push_back(building);
 		}
 	}
-
+	std::sort(result.begin(), result.end(), [] (auto &b1, auto &b2) { return b1.get_name() < b2.get_name(); });
 	return result;
 }
 
@@ -324,6 +324,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 		}
 	}
 
+    std::sort(result.begin(), result.end(), [] (auto &b1, auto &b2) { return b1.second < b2.second; });
 	return result;
 }
 
