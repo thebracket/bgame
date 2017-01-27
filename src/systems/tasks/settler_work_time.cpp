@@ -75,7 +75,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		if (!designations->levers_to_pull.empty() && levers_map.distance_map[mapidx(pos)] < MAX_DIJSTRA_DISTANCE-1) {
             ai.job_type_major = JOB_PULL_LEVER;
             ai.job_type_minor = JM_GO_TO_LEVER;
-            change_job_status(ai, name, "pulling a lever", true);
+            change_job_status(ai, name, "pulling a lever", false);
             return;
         }
 
@@ -88,7 +88,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 					ai.target_x = g.second.x;
 					ai.target_y = g.second.y;
 					ai.target_z = g.second.z;
-					change_job_status(ai, name, "starting guard duty.", true);
+					change_job_status(ai, name, "starting guard duty.", false);
 					return;
 				}
 			}
@@ -103,7 +103,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
                     ai.target_x = g.second.x;
                     ai.target_y = g.second.y;
                     ai.target_z = g.second.z;
-                    change_job_status(ai, name, "starting to harvest plants.", true);
+                    change_job_status(ai, name, "starting to harvest plants.", false);
                     return;
                 }
             }
@@ -113,14 +113,14 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
 			ai.job_type_major = JOB_MINE;
 			ai.job_type_minor = JM_FIND_PICK;
-			change_job_status(ai, name, "doing some mining.", true);
+			change_job_status(ai, name, "doing some mining.", false);
 			return;
 		}
 		if (ai.permitted_work[JOB_CHOPPING] && designations->chopping.size() > 0 && is_item_category_available(TOOL_CHOPPING)) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::Brown, rltk::colors::BLACK});
 			ai.job_type_major = JOB_CHOP;
 			ai.job_type_minor = JM_FIND_AXE;
-			change_job_status(ai, name, "chopping down a tree.", true);
+			change_job_status(ai, name, "chopping down a tree.", false);
 			return;
 		}
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
