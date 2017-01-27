@@ -9,6 +9,7 @@
 #include "../../utils/string_utils.hpp"
 #include "../input/mouse_input_system.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "imgui_helper.hpp"
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -56,14 +57,8 @@ void panel_render_system::render_work_mode()
         work_listbox_items[i] = worklist[i].c_str();
     }
 
-    ImGui::Begin("Queued Work");
-    ImGui::ListBox("", &selected_work_item, work_listbox_items, worklist.size(), 10);
-    if (ImGui::Button("Close")) {
-        game_master_mode = PLAY;
-        emit_deferred(map_dirty_message{});
-        emit_deferred(recalculate_mining_message{});
-    }
-    ImGui::End();
+    ImGui::Begin(win_workflow.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+    ImGui::ListBox("Queued Jobs", &selected_work_item, work_listbox_items, worklist.size(), 10);
 
     std::vector<std::string> buildlist;
     auto available_reactions = get_available_reactions();
@@ -75,9 +70,8 @@ void panel_render_system::render_work_mode()
         buildable_listbox_items[i] = buildlist[i].c_str();
     }
 
-    ImGui::Begin("Available Work");
-    ImGui::ListBox("", &selected_build_item, buildable_listbox_items, buildlist.size(), 10);
-    if (ImGui::Button("Build")) {
+    ImGui::ListBox("Available Jobs", &selected_build_item, buildable_listbox_items, buildlist.size(), 10);
+    if (ImGui::Button(btn_build.c_str())) {
         const std::string tag = available_reactions[selected_build_item].first;
         bool found = false;
         for (auto &order : designations->build_orders) {
@@ -89,10 +83,11 @@ void panel_render_system::render_work_mode()
         if (!found) designations->build_orders.push_back(std::make_pair(1, tag));
     }
     ImGui::SameLine();
-    if (ImGui::Button("Close")) {
+    if (ImGui::Button(btn_close.c_str())) {
         game_master_mode = PLAY;
         emit_deferred(map_dirty_message{});
         emit_deferred(recalculate_mining_message{});
     }
+
     ImGui::End();
 }
