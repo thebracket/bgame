@@ -38,6 +38,7 @@ void log_system::update(const double ms) {
             ImGui::SetNextWindowPos(ImVec2(5, get_window()->getSize().y - 150), ImGuiSetCond_Always);
             first_run = false;
         }
+        if (logger->lines.empty()) return;
         ImGui::Begin(win_log.c_str(), nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
         for (const auto &line : logger->lines) {
             if (!line.chars.empty()) {
