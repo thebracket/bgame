@@ -221,6 +221,10 @@ int main(int argc, char* argv[])
 
     // Main loop - hand over to RLTK
     call_home("Startup");
+    call_home("Startup-FullScreen", std::to_string(game_config.fullscreen));
+    call_home("Startup-Resolution", std::to_string(game_config.window_width) + std::string("x") + std::to_string(game_config.window_height));
+    call_home("Startup-GUI-Font", game_config.gui_ttf + std::string(" / ") + std::to_string(game_config.gui_ttf_size));
+    call_home("Startup-Scaling", std::to_string(game_config.scale_factor));
     run(tick);
     call_home("Shutdown");
     stop_telemetry();

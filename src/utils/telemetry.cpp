@@ -26,7 +26,7 @@ namespace telemetry {
             while (msg_queue.try_pop(msg)) {
                 sf::Http::Request request("/telemetry-post.php", sf::Http::Request::Post);
                 std::ostringstream stream;
-                stream << "game=bf&session=" << session_stamp << "&version=" << VERSION << "&event=" << msg.event << "&details=" << msg.details;
+                stream << "game=bf&user=" << username << "&session=" << session_stamp << "&version=" << VERSION << "&event=" << msg.event << "&details=" << msg.details;
                 request.setBody(stream.str());
                 sf::Http http("http://bfnightly.bracketproductions.com/");
                 sf::Http::Response response = http.sendRequest(request);
