@@ -13,7 +13,9 @@
 #include <chrono>
 #include <filesystem.hpp>
 #include <unistd.h>
+#ifdef __APPLE__
 #include <libproc.h>
+#endif
 
 using namespace rltk;
 using namespace rltk::colors;
