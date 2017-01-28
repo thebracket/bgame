@@ -76,4 +76,4 @@ rm -rf $tempfolder
 
 #echo "7 - publishing the tarball"
 scp $tarball herbert@172.16.10.193:/var/www/bfnightly
-
+rm $tarball

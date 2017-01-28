@@ -14,7 +14,10 @@ echo -e "#pragma once\n\n#include <string>\n\nconst std::string VERSION=\"$VERSI
 echo "1c - building latest version"
 make -j8
 
-echo "1d - restoring the previous version file to avoid conflicts"
+echo "1d - building os ax package and fixing paths"
+make install
+
+echo "1e - restoring the previous version file to avoid conflicts"
 mv ../src/main/constants.hpp.backup ../src/main/constants.hpp
 
 now=`date +"%Y_%m_%d"`
@@ -22,12 +25,15 @@ tempfolder="/tmp/blackfuture_macosx_nightly_$now"
 tarball="/tmp/blackfuture_macosx_nightly_${now}.tgz"
 echo "2 - creating $tempfolder and populating it with game data"
 mkdir -p $tempfolder
-mkdir -p $tempfolder/assets
-mkdir -p $tempfolder/rex
-mkdir -p $tempfolder/world
-mkdir -p $tempfolder/world_defs
-pushd $tempfolder
-cp $GAMEBASE/build/bgame .
+mkdir -p ${tempfolder}/bf.app
+APP=${tempfolder}/bf.app
+APPCONTENT=${APP}/Contents/MacOS
+cp -R ${GAMEBASE}/build/bf.app/* ${APP}
+mkdir -p ${APPCONTENT}/assets
+mkdir -p ${APPCONTENT}/rex
+mkdir -p ${APPCONTENT}/world
+mkdir -p ${APPCONTENT}/world_defs
+pushd ${APPCONTENT}
 
 cp $GAMEBASE/assets/*.ttf assets
 cp $GAMEBASE/assets/terminal8x8.png assets
@@ -43,22 +49,8 @@ cp $GAMEBASE/assets/gamelogo.png assets
 cp $GAMEBASE/world_defs/* world_defs
 cp $GAMEBASE/rex/* rex
 
-echo "5 - copying dependencies"
-
-cp -R /Library/Frameworks/sfml-audio.framework sfml-audio.framework
-cp -R /Library/Frameworks/sfml-graphics.framework sfml-graphics.framework
-cp -R /Library/Frameworks/sfml-network.framework sfml-network.framework
-cp -R /Library/Frameworks/sfml-system.framework sfml-system.framework
-cp -R /Library/Frameworks/sfml-window.framework sfml-window.framework
-cp /opt/local/lib/libz.1.dylib .
-cp /System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL .
-cp /opt/local/lib/libomp/libomp.dylib .
-cp /usr/lib/libc++.1.dylib .
-cp /usr/lib/libSystem.B.dylib .
-cp $GAMEBASE/build/external/*.dylib .
-
 echo "4 - stripping binaries"
-strip $tempfolder/bgame
+strip ${APPCONTENT}/bf
 
 echo "5 - making tarball: ${tarball}"
 tar cvfz $tarball *
@@ -66,9 +58,9 @@ tar cvfz $tarball *
 popd
 popd
 
-#echo "6 - cleaning up folder"
+echo "6 - cleaning up folder"
 rm -rf $tempfolder
 
 echo "7 - publishing the tarball"
 scp $tarball 172.16.10.193:/var/www/bfnightly
-
+rm $tarball

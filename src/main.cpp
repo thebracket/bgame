@@ -9,8 +9,11 @@
 #include "main/IconsFontAwesome.h"
 #include "external/imgui-sfml/imgui-SFML.h"
 #include "utils/telemetry.hpp"
+#include "utils/string_utils.hpp"
 #include <chrono>
 #include <filesystem.hpp>
+#include <unistd.h>
+#include <libproc.h>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -153,17 +156,47 @@ void read_config() {
 	rltk::scale_factor = game_config.scale_factor;
 }
 
+void remove_from_path(std::string &s, const std::string needle) {
+    //std::cout << "Searching " << s << " for " << needle << "\n";
+    const std::size_t location = s.find_last_of(needle);
+    if (location == std::string::npos) {
+        //std::cout << "Not found\n";
+    } else {
+        //std::cout << "Found at location " << location << "\n";
+        s = s.substr(0, location);
+    }
+}
+
 int main(int argc, char* argv[])
 {
-    /*
-#ifndef WIN32
 
-	fs::path full_path( fs::initial_path<fs::path>() );
-	full_path = fs::system_complete( fs::path( argv[0] ) );
-	fs::current_path(full_path.parent_path());
+#ifdef __APPLE__
+    // We're probably running inside a bundle, which means that we need to find the executable's path
+    // and have that as our working directory
 
-#endif // !WIN32
-     */
+    int ret;
+    pid_t pid;
+    char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
+
+    std::string executable_path;
+
+    pid = getpid();
+    ret = proc_pidpath (pid, pathbuf, sizeof(pathbuf));
+    if ( ret <= 0 ) {
+        fprintf(stderr, "PID %d: proc_pidpath ();\n", pid);
+        fprintf(stderr, "    %s\n", strerror(errno));
+    } else {
+        //printf("proc %d: %s\n", pid, pathbuf);
+        executable_path = pathbuf;
+    }
+
+    remove_from_path(executable_path, std::string("/"));
+
+    std::cout << executable_path << "\n";
+    chdir(executable_path.c_str());
+
+#endif // apple
+
 
 	read_config();
     start_telemetry();

@@ -68,4 +68,4 @@ rm -rf $tempfolder
 
 echo "7 - publishing the tarball"
 mv $tarball /var/www/bfnightly
-
+rm $tarball
