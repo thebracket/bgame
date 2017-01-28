@@ -7,7 +7,7 @@ git pull
 
 echo "1b - tagging the latest release"
 VERSIONDATE=`date +"%Y_%m_%d"`
-VERSION="${VERSIONDATE}_osx_nightly"
+VERSION="${VERSIONDATE}_win64_nightly"
 mv ../src/main/constants.hpp ../src/main/constants.hpp.backup
 echo -e "#pragma once\n\n#include <string>\n\nconst std::string VERSION=\"$VERSION\";\n\n" > ../src/main/constants.hpp
 
