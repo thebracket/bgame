@@ -177,5 +177,5 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 	save_region(region);
 	const std::string save_filename = "world/savegame.dat";
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
-	ecs_save(std::move(lbfile));
+	ecs_save(lbfile);
 }

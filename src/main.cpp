@@ -34,7 +34,7 @@ void save_game() {
 	std::cout << "Saving game to " << save_filename << "\n";
 	if (exists(save_filename)) std::remove(save_filename.c_str());
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
-	ecs_save(std::move(lbfile));
+	ecs_save(lbfile);
 	std::cout << "Saving region\n";
 	save_region(*current_region);
 	std::cout << "Saving planet\n";
