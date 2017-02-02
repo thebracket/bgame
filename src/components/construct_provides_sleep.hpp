@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -9,8 +11,11 @@ struct construct_provides_sleep_t {
 
 	construct_provides_sleep_t() {}
 
-	std::string xml_identity = "construct_provides_sleep_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( claimed ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<construct_provides_sleep_t>>)

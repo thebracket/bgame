@@ -15,6 +15,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 	#	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
 	#endif()
 
+include_directories(external/rltk)
+
 # Require Lua
 find_package(Lua 5 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})

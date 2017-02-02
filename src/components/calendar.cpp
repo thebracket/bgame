@@ -30,30 +30,3 @@ void calendar_t::next_minute() {
     if (day > 30) { day = 0; ++month; }
     if (month > 11) { month = 0; ++year; }
 }
-
-void calendar_t::to_xml(xml_node * c) {
-    component_to_xml(c,
-        std::make_pair("year", year),
-        std::make_pair("month", month),
-        std::make_pair("day", day),
-        std::make_pair("hour", hour),
-        std::make_pair("minute", minute),
-        std::make_pair("second", second),
-        std::make_pair("defined_shifts", defined_shifts)
-    );
-}
-
-void calendar_t::from_xml(xml_node * c) {
-    year = c->val<uint16_t>("year");
-    month = c->val<uint8_t>("month");
-    day = c->val<uint8_t>("day");
-    hour = c->val<uint8_t>("hour");
-    minute = c->val<uint8_t>("minute");
-    second = c->val<uint8_t>("second");
-    defined_shifts.clear();
-    c->iterate_child("defined_shifts", [this] (xml_node * s) {
-        shift_t shift;
-        shift.from_xml(s);
-        defined_shifts.push_back(shift);
-    });
-}

@@ -1,3 +1,5 @@
+#include <cereal/archives/xml.hpp>
+#include <cereal/types/polymorphic.hpp>
 #include <rltk.hpp>
 #include "main/splash_screen.hpp"
 #include "main/main_menu.hpp"

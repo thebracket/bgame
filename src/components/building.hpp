@@ -2,6 +2,11 @@
 
 #include <rltk.hpp>
 #include <vector>
+#include <cereal/archives/xml.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/utility.hpp>
 
 using namespace rltk;
 
@@ -18,8 +23,12 @@ struct building_t {
 
 	building_t() {}
 
-    std::string xml_identity = "building_t";
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( tag, width, height, glyphs, complete, built_with, civ_owner ); // serialize things by passing them to the archive
+	}
 
-    void to_xml(xml_node * c);
-    void from_xml(xml_node * c);
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<building_t>>)

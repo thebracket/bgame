@@ -3,6 +3,7 @@
 #include <istream>
 #include <ostream>
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
 
 struct skill_t {
 	skill_t() {}
@@ -10,6 +11,9 @@ struct skill_t {
 	int16_t skill_level = 0;
 	uint16_t experience_gained = 0;
 
-	void to_xml(rltk::xml_node * c);
-	void from_xml(rltk::xml_node * c);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( skill_level, experience_gained ); // serialize things by passing them to the archive
+    }
 };

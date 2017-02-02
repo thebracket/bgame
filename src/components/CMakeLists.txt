@@ -1,46 +1,8 @@
 add_library(components STATIC
-    loader.cpp
-	bridge.cpp
-	building.cpp
 	calendar.cpp
-	construct_power.cpp
-	construct_provides_door.cpp
-	construct_provides_sleep.cpp
-	corpse_harvestable.cpp
-	corpse_settler.cpp
-	designations.cpp
-	entry_trigger.cpp
-	falling.cpp
 	game_stats.cpp
-	grazer_ai.cpp
-	health.cpp
-    initiative.cpp
-	item.cpp
-	item_carried.cpp
-	item_stored.cpp
-    lever.cpp
-	lightsource.cpp
 	logger.cpp
-	name.cpp
-	position.cpp
-    receives_signal.cpp
-	renderable.cpp
-	renderable_composite.cpp
-	sentient_ai.cpp
-	settler_ai.cpp
-    slidemove.cpp
 	species.cpp
-	stockpile.cpp
-	viewshed.cpp
-	water_spawner.cpp
-	wildlife_group.cpp
-	world_position.cpp
-	helpers/shift.cpp
-	helpers/building_designation_t.cpp
-	helpers/health_part_t.cpp
-	helpers/reaction_task_t.cpp
-	helpers/skill_t.cpp
-	helpers/unbuild_t.cpp
 )
 target_link_libraries(components rltk)
 target_link_libraries(components planet)

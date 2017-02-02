@@ -1,7 +1,9 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
 #include "position.hpp"
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -20,8 +22,11 @@ struct sentient_ai {
 	// Not serialized
 	std::shared_ptr<rltk::navigation_path<position_t>> current_path;
 
-	std::string xml_identity = "sentient_ai";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( aggression, person_id, hostile, goal, target, days_since_arrival ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<sentient_ai>>)

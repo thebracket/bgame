@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -17,8 +19,11 @@ struct position_t {
     position_t(const float &X, const float &Y, const int &Z) : x(X), y(Y), z(Z) {}
 	bool operator==(position_t &rhs) { return (x==rhs.x && y==rhs.y && z==rhs.z); }
 
-	std::string xml_identity = "position_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( x, y, z, offsetX, offsetY, offsetZ ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<position_t>>)

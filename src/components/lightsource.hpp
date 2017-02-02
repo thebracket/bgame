@@ -2,6 +2,8 @@
 
 #include <rltk.hpp>
 #include <vector>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -17,8 +19,11 @@ struct lightsource_t {
 	// Non-persistent
 	std::vector<int> lit_cache;
 
-	std::string xml_identity = "lightsource_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( radius, color, alert_status ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<lightsource_t>>)

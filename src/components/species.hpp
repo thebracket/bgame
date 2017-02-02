@@ -3,6 +3,8 @@
 #include <rltk.hpp>
 #include <sstream>
 #include <iomanip>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -33,9 +35,12 @@ struct species_t {
 	std::string ethnicity();
 	std::string hair_color_str();
 	std::string hair_style_str();
-	
-	std::string xml_identity = "species_t";
 
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( tag, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<species_t>>)

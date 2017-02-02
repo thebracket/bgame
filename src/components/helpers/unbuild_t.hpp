@@ -3,6 +3,7 @@
 #include <istream>
 #include <ostream>
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
 
 struct unbuild_t {
 	unbuild_t() {}
@@ -10,6 +11,9 @@ struct unbuild_t {
 	bool is_building = true;
 	std::size_t building_id;
 
-	void to_xml(rltk::xml_node * c);
-	void from_xml(rltk::xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( is_building, building_id ); // serialize things by passing them to the archive
+	}
 };

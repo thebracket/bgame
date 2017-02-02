@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 struct initiative_t {
     initiative_t() {}
@@ -8,8 +10,11 @@ struct initiative_t {
     int initiative = 0;
     int initiative_modifier = 0;
 
-    std::string xml_identity = "initiative_t";
-
-    void to_xml(rltk::xml_node * c);
-    void from_xml(rltk::xml_node * c);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( initiative, initiative_modifier ); // serialize things by passing them to the archive
+    }
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<initiative_t>>)

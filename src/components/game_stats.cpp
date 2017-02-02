@@ -2,40 +2,6 @@
 #include "../messages/log_message.hpp"
 #include "../components/logger.hpp"
 
-void game_stats_t::to_xml(xml_node * c) {
-	component_to_xml(c,
-		std::make_pair("profession_tag", profession_tag),
-		std::make_pair("strength", strength),
-		std::make_pair("dexterity", dexterity),
-		std::make_pair("constitution", constitution),
-		std::make_pair("intelligence", intelligence),
-		std::make_pair("wisdom", wisdom),
-		std::make_pair("charisma", charisma),
-		std::make_pair("comeliness", comeliness),
-		std::make_pair("ethics", ethics),
-		std::make_pair("age", age),
-		std::make_pair("skills", skills)
-	);
-}
-
-void game_stats_t::from_xml(xml_node * c) {
-	profession_tag = c->val<std::string>("profession_tag");
-	strength = c->val<short>("strength");
-	dexterity = c->val<short>("dexterity");
-	constitution = c->val<short>("constitution");
-	intelligence = c->val<short>("intelligence");
-	wisdom = c->val<short>("wisdom");
-	charisma = c->val<short>("charisma");
-	comeliness = c->val<short>("comeliness");
-	ethics = c->val<short>("ethics");
-	age = c->val<short>("age");
-	c->iterate_child("skills", [this] (xml_node * child) {
-		skill_t skill;
-		skill.from_xml(child);
-		skills[child->val<std::string>("key")] = skill;
-	});
-}
-
 std::string game_stats_t::strength_str() {
     if (strength < 5) return "is very weak.";
     if (strength < 8) return "is weak.";

@@ -7,6 +7,8 @@
 #include "../raws/clothing.hpp"
 #include "../raws/items.hpp"
 #include "../main/game_globals.hpp"
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -71,8 +73,11 @@ struct item_t {
             }
 		}
 
-	std::string xml_identity = "item_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( item_name, item_tag, category, type, material, claimed, stack_size, clothing_glyph, clothing_color ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<item_t>>)

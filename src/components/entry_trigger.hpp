@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -14,8 +16,11 @@ struct entry_trigger_t {
     entry_trigger_t(const trigger_type &t) : type(t) {}
     entry_trigger_t(const trigger_type &t, const bool &enabled) : type(t), active(enabled) {}
 
-    std::string xml_identity = "entry_trigger_t";
-
-    void to_xml(xml_node * c);
-    void from_xml(xml_node * c);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( active, type ); // serialize things by passing them to the archive
+    }
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<entry_trigger_t>>)

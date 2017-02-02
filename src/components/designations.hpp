@@ -8,7 +8,11 @@
 #include "helpers/unbuild_t.hpp"
 #include "helpers/standing_orders.hpp"
 #include "helpers/reaction_task_t.hpp"
-
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/utility.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -37,8 +41,13 @@ struct designations_t {
 	designations_t() {
 	}
 
-	std::string xml_identity = "designations_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( mining, architecture, chopping, buildings, build_orders, guard_points, deconstructions,
+			harvest, levers_to_pull, current_power, current_cash, standing_order_idle_move, standing_order_wildlife_treatment,
+            standing_order_upgrade); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<designations_t>>)

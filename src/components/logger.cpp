@@ -4,33 +4,6 @@
 using rltk::serialize;
 using rltk::deserialize;
 
-void log_line_t::to_xml(rltk::xml_node * c) {
-    xml_node * l = c->add_node("line");
-    rltk::component_to_xml(l,
-        std::make_pair("age", age),
-        std::make_pair("chars", chars)
-    );
-}
-
-void log_line_t::from_xml(xml_node * c) {
-    age = c->val<int>("age");
-    c->iterate_child("chars", [this] (xml_node * ch) {
-        chars.push_back(ch->vchar());
-    });
-}
-
-void logger_t::to_xml(xml_node * c) {
-    component_to_xml(c, std::make_pair("lines", lines));
-}
-
-void logger_t::from_xml(xml_node * c) {
-    c->iterate_child("lines", [this] (xml_node * ch) {
-        log_line_t l;
-        l.from_xml(ch);
-        lines.push_back(l);
-    });
-}
-
 LOG * LOG::text(const std::string &txt) {
     for (std::size_t i=0; i<txt.size(); ++i) {
         chars.push_back(rltk::vchar{ txt[i], fg, rltk::colors::BLACK });

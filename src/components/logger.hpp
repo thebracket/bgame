@@ -2,6 +2,9 @@
 
 #include <rltk.hpp>
 #include "name.hpp"
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 struct log_line_t {
     log_line_t() {}
@@ -10,18 +13,22 @@ struct log_line_t {
     int age = 0;
     std::vector<rltk::vchar> chars;
 
-    void to_xml(rltk::xml_node * c);
-    void from_xml(rltk::xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( age, chars ); // serialize things by passing them to the archive
+	}
 };
 
 struct logger_t {
 	logger_t() {}
     std::vector<log_line_t> lines;
 
-    std::string xml_identity = "logger_t";
-
-    void to_xml(xml_node * c);
-    void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( lines ); // serialize things by passing them to the archive
+	}
 };
 
 struct LOG {
@@ -36,3 +43,5 @@ struct LOG {
     LOG * other_name(const std::size_t &entity_id);
     LOG * civ_name(const std::size_t &civ_id);
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<logger_t>>)

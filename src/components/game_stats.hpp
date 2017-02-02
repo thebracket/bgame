@@ -3,6 +3,10 @@
 #include <rltk.hpp>
 #include <vector>
 #include <unordered_map>
+#include <cereal/archives/xml.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/polymorphic.hpp>
 #include "helpers/skill_t.hpp"
 
 using namespace rltk;
@@ -30,10 +34,6 @@ struct game_stats_t {
 
 	game_stats_t() {}
 
-	std::string xml_identity = "game_stats_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
 	std::string strength_str();
 	std::string dexterity_str();
 	std::string constitution_str();
@@ -42,6 +42,13 @@ struct game_stats_t {
 	std::string charisma_str();
 	std::string comeliness_str();
 	std::string ethics_str();
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma,
+            comeliness, ethics, age, skills); // serialize things by passing them to the archive
+	}
 };
 
 enum attributes_t { strength, dexterity, constitution, intelligence, wisdom, charisma, ethics };
@@ -80,3 +87,5 @@ int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::strin
 int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill);
 void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, const std::string &skill, const int &difficulty, rltk::random_number_generator &rng);
 skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats, rltk::random_number_generator &rng, const std::string skill_name, const int difficulty);
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<game_stats_t>>)

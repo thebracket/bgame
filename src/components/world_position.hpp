@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -10,12 +12,16 @@ struct world_position_t {
 	int region_x=0;
 	int region_y=0;
 	int region_z=0;
-	std::string xml_identity = "world_position_t";
 
 	world_position_t(const int wx, const int wy, const int rx, const int ry, const int rz) :
 		world_x(wx), world_y(wy), region_x(rx), region_y(ry), region_z(rz) {}
 	world_position_t() {}
 
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( world_x, world_y, region_x, region_y, region_z ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<world_position_t>>)

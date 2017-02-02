@@ -1,6 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -13,8 +15,12 @@ struct slidemove_t {
     slidemove_t() {}
     slidemove_t(const float &x, const float &y, const float &z, const int &life) :
         offsetX(x), offsetY(y), offsetZ(z), lifespan(life) {}
-    std::string xml_identity = "slidemove_t";
 
-    void to_xml(xml_node * c);
-    void from_xml(xml_node * c);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( offsetX, offsetY, offsetZ, lifespan ); // serialize things by passing them to the archive
+    }
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<slidemove_t>>)

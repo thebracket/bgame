@@ -2,6 +2,8 @@
 
 #include <rltk.hpp>
 #include <string>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -29,8 +31,11 @@ struct item_carried_t {
 	item_carried_t() {}
 	item_carried_t(const item_location_t loc, const std::size_t carrier) : location(loc), carried_by(carrier) {}
 
-	std::string xml_identity = "item_carried_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( location, carried_by ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<item_carried_t>>)

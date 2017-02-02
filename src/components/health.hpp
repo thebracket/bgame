@@ -3,6 +3,9 @@
 #include <rltk.hpp>
 #include <vector>
 #include "helpers/health_part_t.hpp"
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -18,8 +21,11 @@ struct health_t {
 
 	health_t() {}
 
-	std::string xml_identity = "health_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( max_hitpoints, current_hitpoints, unconscious, blind, immobile, slow, no_grasp, parts ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<health_t>>)

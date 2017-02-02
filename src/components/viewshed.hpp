@@ -3,6 +3,9 @@
 #include <rltk.hpp>
 #include <vector>
 #include <unordered_set>
+#include <cereal/cereal.hpp>
+#include <cereal/types/unordered_set.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace rltk;
 
@@ -18,8 +21,11 @@ struct viewshed_t {
 	// Non-persistent
 	std::vector<int> visible_cache;
 
-	std::string xml_identity = "viewshed_t";
-
-	void to_xml(xml_node * c);
-	void from_xml(xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( viewshed_radius, penetrating, good_guy_visibility, visible_entities ); // serialize things by passing them to the archive
+	}
 };
+
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<viewshed_t>>)

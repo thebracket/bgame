@@ -1,6 +1,5 @@
 #include "play_game.hpp"
 #include "game_globals.hpp"
-#include "../components/loader.hpp"
 #include "../systems/systems.hpp"
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
@@ -62,8 +61,7 @@ void do_load_game() {
     {
         const std::string save_filename = "world/savegame.dat";
         std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
-        std::function<void(xml_node *, std::size_t, std::string)> loader(component_loader_xml);
-        ecs_load(lbfile, loader);
+        ecs_load(lbfile);
     }
 
     // Load the current region - check the camera for the world position

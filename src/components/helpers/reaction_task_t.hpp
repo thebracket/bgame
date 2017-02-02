@@ -4,6 +4,9 @@
 #include <ostream>
 #include <vector>
 #include <rltk.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/utility.hpp>
 
 struct reaction_task_t {
     reaction_task_t() {}
@@ -14,6 +17,9 @@ struct reaction_task_t {
 	std::string reaction_tag;
     std::vector<std::pair<std::size_t,bool>> components;
 
-    void to_xml(rltk::xml_node * c);
-    void from_xml(rltk::xml_node * c);
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( building_id, job_name, reaction_tag, components ); // serialize things by passing them to the archive
+	}
 };
