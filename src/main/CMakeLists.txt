@@ -7,4 +7,4 @@ add_library(bfmain STATIC
 	game_globals.cpp
 )
 target_link_libraries(bfmain planet rltk components systems)
-
+cotire(bfmain)

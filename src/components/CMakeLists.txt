@@ -6,3 +6,4 @@ add_library(components STATIC
 )
 target_link_libraries(components rltk)
 target_link_libraries(components planet)
+cotire(components)

@@ -1,0 +1,30 @@
+add_library(tasks STATIC
+        idle_mode.cpp
+        settler_glyph.cpp
+        settler_job_status.cpp
+        settler_drop_tool.cpp
+        settler_cancel_action.cpp
+        settler_leisure.cpp
+        settler_sleep.cpp
+        threat_scanner.cpp
+        settler_wander.cpp
+        settler_work_time.cpp
+        civ_dislike.cpp
+        world_queries.cpp
+        work_types/building_work.cpp
+        work_types/mining_work.cpp
+        work_types/chopping_work.cpp
+        work_types/reaction_work.cpp
+        work_types/equip_melee_work.cpp
+        work_types/equip_ranged_work.cpp
+        work_types/equip_armor_work.cpp
+        work_types/hunting_work.cpp
+        work_types/guard_duty.cpp
+        work_types/demolition_work.cpp
+        work_types/hauling_work.cpp
+        work_types/harvest_work.cpp
+        work_types/architecture_work.cpp
+        work_types/lever_work.cpp
+        )
+target_link_libraries(tasks rltk utils components raws)
+cotire(tasks)

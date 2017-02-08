@@ -1,85 +1,33 @@
+add_subdirectory(ai)
+add_subdirectory(damage)
+add_subdirectory(gui)
+add_subdirectory(input)
+add_subdirectory(physics)
+add_subdirectory(tasks)
 add_library(systems STATIC
 	map_render_system.cpp
 	calendar_system.cpp
-	ai/settler_ai_system.cpp
-	gui/panel_render_system.cpp
 	mining_system.cpp
 	inventory_system.cpp
 	path_finding.cpp
 	visibility_system.cpp
-	ai/workflow_system.cpp
 	topology_system.cpp
 	camera_system.cpp
 	renderables_system.cpp
 	lighting_system.cpp
 	power_system.cpp
-	damage/damage_system.cpp
-	ai/wildlife_population_system.cpp
 	movement_system.cpp
-	gui/mode_units_system.cpp
-	ai/mode_rogue_system.cpp
-	gui/mode_rogue_render_system.cpp
-	gui/mode_settler_info_system.cpp
-	gui/mode_play_system.cpp
-	gui/mode_design_system.cpp
-	gui/mode_standing_orders.cpp
-	gui/mode_sentient_info_system.cpp
 	corpse_system.cpp
-	gui/particle_system.cpp
 	vegetation_system.cpp
-	input/keyboard_system.cpp
-	input/mouse_input_system.cpp
-	ai/sentient_ai_system.cpp
 	world_system.cpp
-	damage/weapons_helpers.cpp
-	gui/game_over_system.cpp
-	gui/mode_civs_system.cpp
-	gui/log_system.cpp
-	gui/gui_system.cpp
-	gui/hud_system.cpp
-	physics/fluid_system.cpp
-	physics/gravity_system.cpp
-	gui/gui_elements.cpp
-	ai/grazer_ai_system.cpp
-	gui/wish_system.cpp
 	door_system.cpp
 	pause_system.cpp
 	stockpile_system.cpp
-    damage/settler_ranged_attack.cpp
-    damage/settler_melee_attacks.cpp
-    damage/creature_attacks.cpp
-    damage/kill_system.cpp
-    damage/healing_system.cpp
 	initiative_system.cpp
 	distance_map_system.cpp
 	settler_spawner_system.cpp
 	trigger_system.cpp
-	tasks/idle_mode.cpp
-	tasks/settler_glyph.cpp
-	tasks/settler_job_status.cpp
-	tasks/settler_drop_tool.cpp
-	tasks/settler_cancel_action.cpp
-	tasks/settler_leisure.cpp
-	tasks/settler_sleep.cpp
-	tasks/threat_scanner.cpp
-	tasks/settler_wander.cpp
-	tasks/settler_work_time.cpp
-    tasks/civ_dislike.cpp
-	tasks/world_queries.cpp
-	tasks/work_types/building_work.cpp
-	tasks/work_types/mining_work.cpp
-	tasks/work_types/chopping_work.cpp
-	tasks/work_types/reaction_work.cpp
-	tasks/work_types/equip_melee_work.cpp
-	tasks/work_types/equip_ranged_work.cpp
-	tasks/work_types/equip_armor_work.cpp
-	tasks/work_types/hunting_work.cpp
-	tasks/work_types/guard_duty.cpp
-	tasks/work_types/demolition_work.cpp
-	tasks/work_types/hauling_work.cpp
-	tasks/work_types/harvest_work.cpp
-	tasks/work_types/architecture_work.cpp
-	tasks/work_types/lever_work.cpp
     systems.cpp
 )
-target_link_libraries(systems rltk utils components raws)
+target_link_libraries(systems rltk utils components raws ai damage gui input physics tasks)
+cotire(systems)

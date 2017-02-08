@@ -27,16 +27,20 @@ add_library(rltk rltk/rltk/rltk.cpp
 	)
 target_link_libraries(rltk ${ZLIB_LIBRARIES})
 target_link_libraries(rltk ${SFML_LIBRARIES})
+cotire(rltk)
 
 # Build sqlite
 add_library(sqlite STATIC sqlite/sqlite3.c)
+cotire(sqlite)
 
 # Build FastNoise
 add_library(FastNoise STATIC FastNoise/FastNoise.cpp)
+cotire(FastNoise)
 
 # Build imgui
 add_library(imgui STATIC imgui/imgui.cpp imgui/imgui_draw.cpp)
 target_link_libraries(imgui ${SFML_LIBRARIES})
+cotire(imgui)
 
 # Build imgi-sfml
 include_directories(imgui)
@@ -45,4 +49,4 @@ add_library(imgui-sfml imgui-sfml/imgui-SFML.cpp )
 target_link_libraries(imgui-sfml ${SFML_LIBRARIES})
 target_link_libraries(imgui-sfml imgui)
 target_link_libraries(imgui-sfml ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
-
+cotire(imgui-sfml)
