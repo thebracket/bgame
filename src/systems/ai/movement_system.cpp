@@ -1,12 +1,12 @@
 #include "movement_system.hpp"
-#include "../messages/entity_moved_message.hpp"
-#include "../messages/renderables_changed_message.hpp"
-#include "../messages/map_dirty_message.hpp"
-#include "../messages/vegetation_damage_message.hpp"
-#include "../main/game_globals.hpp"
-#include "../components/slidemove.hpp"
-#include "../components/initiative.hpp"
-#include "../components/settler_ai.hpp"
+#include "../../messages/entity_moved_message.hpp"
+#include "../../messages/renderables_changed_message.hpp"
+#include "../../messages/map_dirty_message.hpp"
+#include "../../messages/vegetation_damage_message.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../components/slidemove.hpp"
+#include "../../components/initiative.hpp"
+#include "../../components/settler_ai.hpp"
 #include <rltk.hpp>
 
 octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};

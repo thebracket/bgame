@@ -8,7 +8,7 @@
 #include "../../components/corpse_harvestable.hpp"
 #include "../../components/species.hpp"
 #include "../../components/sentient_ai.hpp"
-#include "../movement_system.hpp"
+#include "../ai/movement_system.hpp"
 #include "../../utils/telemetry.hpp"
 
 using namespace rltk;

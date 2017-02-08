@@ -4,30 +4,13 @@ add_subdirectory(gui)
 add_subdirectory(input)
 add_subdirectory(physics)
 add_subdirectory(tasks)
+add_subdirectory(scheduler)
+add_subdirectory(render)
 add_library(systems STATIC
-	map_render_system.cpp
-	calendar_system.cpp
-	mining_system.cpp
-	inventory_system.cpp
-	path_finding.cpp
-	visibility_system.cpp
-	topology_system.cpp
-	camera_system.cpp
-	renderables_system.cpp
-	lighting_system.cpp
 	power_system.cpp
-	movement_system.cpp
-	corpse_system.cpp
-	vegetation_system.cpp
 	world_system.cpp
-	door_system.cpp
-	pause_system.cpp
 	stockpile_system.cpp
-	initiative_system.cpp
-	distance_map_system.cpp
-	settler_spawner_system.cpp
-	trigger_system.cpp
     systems.cpp
 )
-target_link_libraries(systems rltk utils components raws ai damage gui input physics tasks)
+target_link_libraries(systems rltk utils components raws ai damage gui input physics tasks scheduler render)
 cotire(systems)

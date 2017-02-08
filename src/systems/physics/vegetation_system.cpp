@@ -1,9 +1,9 @@
 #include "vegetation_system.hpp"
-#include "../messages/vegetation_damage_message.hpp"
-#include "../messages/map_dirty_message.hpp"
-#include "../messages/tick_message.hpp"
-#include "../main/game_globals.hpp"
-#include "../raws/plants.hpp"
+#include "../../messages/vegetation_damage_message.hpp"
+#include "../../messages/map_dirty_message.hpp"
+#include "../../messages/tick_message.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../raws/plants.hpp"
 
 void vegetation_system::configure() {
     system_name = "Vegetation System";

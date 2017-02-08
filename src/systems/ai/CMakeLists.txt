@@ -5,6 +5,14 @@ add_library(ai STATIC
         mode_rogue_system.cpp
         sentient_ai_system.cpp
         grazer_ai_system.cpp
+        initiative_system.cpp
+        settler_spawner_system.cpp
+        mining_system.cpp
+        path_finding.cpp
+        movement_system.cpp
+        distance_map_system.cpp
+        inventory_system.cpp
+        visibility_system.cpp
         )
 target_link_libraries(ai rltk utils components raws)
 cotire(ai)

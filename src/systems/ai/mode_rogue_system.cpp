@@ -1,8 +1,8 @@
 #include "mode_rogue_system.hpp"
 
 #include "../../messages/messages.hpp"
-#include "../path_finding.hpp"
-#include "../movement_system.hpp"
+#include "path_finding.hpp"
+#include "movement_system.hpp"
 #include "../damage/weapons_helpers.hpp"
 #include "../input/mouse_input_system.hpp"
 #include "../../components/health.hpp"

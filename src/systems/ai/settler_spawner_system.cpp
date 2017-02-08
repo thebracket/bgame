@@ -1,8 +1,8 @@
 #include "settler_spawner_system.hpp"
-#include "../planet/builder/settler_builder.hpp"
-#include "../messages/messages.hpp"
-#include "../main/game_globals.hpp"
-#include "../components/position.hpp"
+#include "../../planet/builder/settler_builder.hpp"
+#include "../../messages/messages.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../components/position.hpp"
 
 void settler_spawner_system::configure() {
     system_name = "Settler Spawner";

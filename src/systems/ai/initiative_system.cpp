@@ -1,13 +1,13 @@
 #include "initiative_system.hpp"
-#include "../components/initiative.hpp"
-#include "../components/game_stats.hpp"
-#include "../messages/messages.hpp"
-#include "../components/settler_ai.hpp"
-#include "../components/sentient_ai.hpp"
-#include "../components/grazer_ai.hpp"
-#include "tasks/initiative.hpp"
-#include "../main/game_globals.hpp"
-#include "../components/slidemove.hpp"
+#include "../../components/initiative.hpp"
+#include "../../components/game_stats.hpp"
+#include "../../messages/messages.hpp"
+#include "../../components/settler_ai.hpp"
+#include "../../components/sentient_ai.hpp"
+#include "../../components/grazer_ai.hpp"
+#include "../tasks/initiative.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../components/slidemove.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {

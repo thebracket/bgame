@@ -1,8 +1,8 @@
 #include "camera_system.hpp"
-#include "../messages/map_dirty_message.hpp"
-#include "../messages/inputs.hpp"
+#include "../../messages/map_dirty_message.hpp"
+#include "../../messages/inputs.hpp"
 #include "renderables_system.hpp"
-#include "../messages/tick_message.hpp"
+#include "../../messages/tick_message.hpp"
 
 std::vector<int> render_tiles;
 

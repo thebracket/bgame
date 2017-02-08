@@ -1,11 +1,11 @@
 #include "lighting_system.hpp"
 #include "camera_system.hpp"
-#include "../messages/map_dirty_message.hpp"
-#include "../messages/entity_moved_message.hpp"
-#include "../messages/power_changed_message.hpp"
-#include "../main/game_globals.hpp"
-#include "visibility_system.hpp"
-#include "../components/lightsource.hpp"
+#include "../../messages/map_dirty_message.hpp"
+#include "../../messages/entity_moved_message.hpp"
+#include "../../messages/power_changed_message.hpp"
+#include "../../main/game_globals.hpp"
+#include "../ai/visibility_system.hpp"
+#include "../../components/lightsource.hpp"
 
 using namespace rltk;
 

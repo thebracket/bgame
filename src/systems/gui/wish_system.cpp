@@ -2,7 +2,7 @@
 #include "../../main/game_globals.hpp"
 #include "../input/keyboard_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../distance_map_system.hpp"
+#include "../ai/distance_map_system.hpp"
 #include <../../external/imgui-sfml/imgui-SFML.h>
 #include "../physics/fluid_system.hpp"
 

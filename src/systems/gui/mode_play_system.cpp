@@ -17,7 +17,7 @@
 #include "../../components/bridge.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/plants.hpp"
-#include "../distance_map_system.hpp"
+#include "../ai/distance_map_system.hpp"
 #include "../../components/lever.hpp"
 
 using namespace rltk;

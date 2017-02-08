@@ -1,8 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../utils/dijkstra_map.hpp"
-#include "../components/position.hpp"
+#include "../../utils/dijkstra_map.hpp"
+#include "../../components/position.hpp"
 
 extern dijkstra_map huntables_map;
 extern dijkstra_map butcherables_map;

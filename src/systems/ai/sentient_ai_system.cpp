@@ -2,7 +2,7 @@
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
 #include "../damage/weapons_helpers.hpp"
-#include "../path_finding.hpp"
+#include "path_finding.hpp"
 #include "../tasks/pathfinding.hpp"
 #include "../tasks/initiative.hpp"
 #include "../../components/sentient_ai.hpp"
@@ -17,7 +17,7 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
 #include "../tasks/threat_scanner.hpp"
-#include "../distance_map_system.hpp"
+#include "distance_map_system.hpp"
 
 using tasks::calculate_initiative;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../components/position.hpp"
+#include "../../components/position.hpp"
 #include <rltk.hpp>
 #include <memory>
 

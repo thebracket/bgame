@@ -1,7 +1,7 @@
 #include "path_finding.hpp"
 #include <rltk.hpp>
-#include "../planet/region.hpp"
-#include "../main/game_globals.hpp"
+#include "../../planet/region.hpp"
+#include "../../main/game_globals.hpp"
 
 std::size_t civ_id = 0;
 

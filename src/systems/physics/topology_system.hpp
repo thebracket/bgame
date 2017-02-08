@@ -1,8 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../messages/perform_mining.hpp"
-#include "../messages/perform_construction.hpp"
+#include "../../messages/perform_mining.hpp"
+#include "../../messages/perform_construction.hpp"
 
 class topology_system : public rltk::base_system {
 public:

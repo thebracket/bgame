@@ -1,11 +1,11 @@
 #include "inventory_system.hpp"
-#include "../messages/messages.hpp"
+#include "../../messages/messages.hpp"
 #include "movement_system.hpp"
-#include "../components/item_stored.hpp"
-#include "../components/settler_ai.hpp"
-#include "../raws/clothing.hpp"
-#include "../raws/buildings.hpp"
-#include "../raws/reactions.hpp"
+#include "../../components/item_stored.hpp"
+#include "../../components/settler_ai.hpp"
+#include "../../raws/clothing.hpp"
+#include "../../raws/buildings.hpp"
+#include "../../raws/reactions.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!

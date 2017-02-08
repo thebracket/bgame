@@ -1,13 +1,13 @@
 #include "visibility_system.hpp"
-#include "../main/game_globals.hpp"
-#include "../messages/messages.hpp"
+#include "../../main/game_globals.hpp"
+#include "../../messages/messages.hpp"
 #include "visibility_system.hpp"
 #include "movement_system.hpp"
-#include "../components/viewshed.hpp"
-#include "../components/building.hpp"
-#include "../components/grazer_ai.hpp"
-#include "../components/settler_ai.hpp"
-#include "../components/sentient_ai.hpp"
+#include "../../components/viewshed.hpp"
+#include "../../components/building.hpp"
+#include "../../components/grazer_ai.hpp"
+#include "../../components/settler_ai.hpp"
+#include "../../components/sentient_ai.hpp"
 
 
 using namespace rltk;

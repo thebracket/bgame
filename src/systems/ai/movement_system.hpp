@@ -1,8 +1,8 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../components/position.hpp"
-#include "../utils/octree.hpp"
+#include "../../components/position.hpp"
+#include "../../utils/octree.hpp"
 
 extern octree_t entity_octree;
 

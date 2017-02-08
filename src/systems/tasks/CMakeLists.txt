@@ -1,3 +1,4 @@
+add_subdirectory(work_types)
 add_library(tasks STATIC
         idle_mode.cpp
         settler_glyph.cpp
@@ -11,20 +12,6 @@ add_library(tasks STATIC
         settler_work_time.cpp
         civ_dislike.cpp
         world_queries.cpp
-        work_types/building_work.cpp
-        work_types/mining_work.cpp
-        work_types/chopping_work.cpp
-        work_types/reaction_work.cpp
-        work_types/equip_melee_work.cpp
-        work_types/equip_ranged_work.cpp
-        work_types/equip_armor_work.cpp
-        work_types/hunting_work.cpp
-        work_types/guard_duty.cpp
-        work_types/demolition_work.cpp
-        work_types/hauling_work.cpp
-        work_types/harvest_work.cpp
-        work_types/architecture_work.cpp
-        work_types/lever_work.cpp
         )
-target_link_libraries(tasks rltk utils components raws)
+target_link_libraries(tasks work_types rltk utils components raws)
 cotire(tasks)

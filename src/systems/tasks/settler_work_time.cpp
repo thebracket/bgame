@@ -16,9 +16,9 @@
 
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
-#include "../path_finding.hpp"
-#include "../mining_system.hpp"
-#include "../inventory_system.hpp"
+#include "../ai/path_finding.hpp"
+#include "../ai/mining_system.hpp"
+#include "../ai/inventory_system.hpp"
 #include "../ai/workflow_system.hpp"
 #include "../ai/wildlife_population_system.hpp"
 #include "../damage/weapons_helpers.hpp"
@@ -48,7 +48,7 @@
 #include "settler_move_to.hpp"
 #include "../../raws/reactions.hpp"
 #include "../stockpile_system.hpp"
-#include "../distance_map_system.hpp"
+#include "../ai/distance_map_system.hpp"
 
 #include <iostream>
 #include <map>

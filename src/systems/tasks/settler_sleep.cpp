@@ -6,11 +6,11 @@
 #include "../../components/health.hpp"
 #include "settler_drop_tool.hpp"
 #include "settler_cancel_action.hpp"
-#include "../path_finding.hpp"
+#include "../ai/path_finding.hpp"
 #include "settler_glyph.hpp"
 #include "../messages/messages.hpp"
 #include "pathfinding.hpp"
-#include "../distance_map_system.hpp"
+#include "../ai/distance_map_system.hpp"
 #include "settler_move_to.hpp"
 #include "../../messages/entity_moved_message.hpp"
 
