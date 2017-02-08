@@ -3,6 +3,7 @@
 #include <string>
 #include "../../main/IconsFontAwesome.h"
 
+const std::string win_options = std::string(ICON_FA_WRENCH) + " Options";
 const std::string win_units = std::string(ICON_FA_USERS) + " Units";
 const std::string win_settler_list = std::string(ICON_FA_USERS) + " Settlers";
 const std::string win_wildlife_list = std::string(ICON_FA_PAW) + " Wildlife";
@@ -24,3 +25,4 @@ const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 const std::string btn_add_link = std::string(ICON_FA_PLUS) + " Add Link";
 const std::string btn_remove_link = std::string(ICON_FA_MINUS) + " Remove Link";
 const std::string btn_build = std::string(ICON_FA_PLUS) + " Queue Job";
+const std::string btn_save = std::string(ICON_FA_FLOPPY_O) + " Save Changes";

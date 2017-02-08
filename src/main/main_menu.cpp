@@ -5,6 +5,8 @@
 #include "menu_helper.hpp"
 #include "constants.hpp"
 #include "game_globals.hpp"
+#include "../systems/gui/imgui_helper.hpp"
+#include "../external/imgui-sfml/imgui-SFML.h"
 
 constexpr int BACKDROP_LAYER=1;
 constexpr int LOG_LAYER=2;
@@ -69,6 +71,8 @@ void main_menu::init() {
 	auto second_noun = get_descriptive_noun(first_noun.first);
 
 	tagline += "of " + first_noun.second + " and " + second_noun.second;
+
+	strncpy(online_username, game_config.online_username.c_str(), 254);
 }
 
 void main_menu::destroy() {
@@ -101,29 +105,6 @@ void main_menu::tick(const double duration_ms) {
 	const int y_height = term(LOG_LAYER)->term_height;
 	const int y_center = y_height / 2;
 
-	int mouse_x, mouse_y;
-	int font_w, font_h;
-	std::tie(mouse_x, mouse_y) = get_mouse_position();
-	std::tie(font_w, font_h) = term(LOG_LAYER)->get_font_size();
-	const int terminal_x = mouse_x / font_w;
-	const int terminal_y = mouse_y / font_h;
-	const int term_width = term(LOG_LAYER)->term_width;
-	const int half_term_width = term_width/2;
-
-	if (terminal_y == y_center-3 && terminal_x > half_term_width-6 && terminal_x < half_term_width+7 && world_exists) {
-		selected=0;
-		if (get_mouse_button_state(rltk::button::LEFT)) clicked = true;
-	}
-	if (terminal_y == y_center-2 && terminal_x > half_term_width-6 && terminal_x < half_term_width+7) {
-		selected=1;
-		if (get_mouse_button_state(rltk::button::LEFT)) clicked = true;
-	}
-	if (terminal_y == y_center-1 && terminal_x > half_term_width-6 && terminal_x < half_term_width+7 && world_exists) {
-		selected=2;
-		if (get_mouse_button_state(rltk::button::LEFT)) clicked = true;
-	}
-
-
 	term(LOG_LAYER)->clear();
 	term(LOG_LAYER)->print_center(y_center - 6, VERSION, WHITE, BLACK);
 	term(LOG_LAYER)->print_center(y_center - 5, tagline, LIGHT_RED, BLACK);
@@ -131,25 +112,65 @@ void main_menu::tick(const double duration_ms) {
 	term(LOG_LAYER)->print_center(y_center + 6, "http://www.bracketproductions.com/", YELLOW, BLACK);
 	term(LOG_LAYER)->print_center(term(LOG_LAYER)->term_height-2, "To Kylah of the West, the Bravest Little Warrior of Them All", WHITE, BLACK);
 
-	if (selected != 0) {
-		if (world_exists) {
-			term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", WHITE, BLACK);
-		} else {
-			term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", DARK_GREY, BLACK);			
-		}
-	} else {
-		term(LOG_LAYER)->print_center(y_center - 3, "Play the Game", GREEN, BLACK);
-	}
+    if (!show_options) {
+        ImGui::SetNextWindowPosCenter();
+        ImGui::Begin("Startup", nullptr, ImVec2{400, 400}, 0.0f,
+                     ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
+        if (world_exists) {
+            if (ImGui::Button("Play the Game")) {
+                selected = 0;
+                clicked = true;
+            }
+        }
+        if (ImGui::Button("Generate the World")) {
+            selected = 1;
+            clicked = true;
+        }
+        if (ImGui::Button("Options")) {
+            show_options = true;
+        }
+        if (ImGui::Button("Quit")) {
+            selected = 2;
+            clicked = true;
+        }
+        ImGui::End();
+    }
 
-	if (selected != 1) {
-		term(LOG_LAYER)->print_center(y_center - 2, "Generate The World", WHITE, BLACK);
-	} else {
-		term(LOG_LAYER)->print_center(y_center - 2, "Generate The World", GREEN, BLACK);
-	}
-
-	if (selected != 2) {
-		term(LOG_LAYER)->print_center(y_center - 1, "Quit", WHITE, BLACK);
-	} else {
-		term(LOG_LAYER)->print_center(y_center - 1, "Quit", GREEN, BLACK);
-	}
+    if (show_options) {
+        ImGui::SetNextWindowPosCenter();
+        ImGui::Begin(win_options.c_str(), nullptr, ImVec2{600, 400}, 0.7f,
+                     ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+        ImGui::Text("Options won't take effect until you restart.");
+        ImGui::Text("Full Screen Mode");
+        ImGui::SameLine();
+        ImGui::Checkbox("## Full Screen", &game_config.fullscreen);
+        ImGui::Text("Window Height");
+        ImGui::SameLine();
+        ImGui::InputInt("## Window Mode Width", &game_config.window_width);
+        ImGui::SameLine();
+        ImGui::Text("Width");
+        ImGui::SameLine();
+        ImGui::InputInt(" ## Window Mode Height", &game_config.window_height);
+        ImGui::Text("Autosave Every X Minutes (0=never)");
+        ImGui::SameLine();
+        ImGui::InputInt("## Auto save every X minutes (0 none)", &game_config.autosave_minutes);
+        ImGui::Text("Allow telemetry to phone home");
+        ImGui::SameLine();
+        ImGui::Checkbox("## Allow telemetry to phone home", &game_config.allow_calling_home);
+        ImGui::Text("Online Username");
+        ImGui::SameLine();
+        ImGui::InputText("Online Username", (char *) &online_username, 254);
+        ImGui::Text("UI Scale Factor");
+        ImGui::InputFloat("## Scale Factor", &game_config.scale_factor);
+        if (ImGui::Button(btn_save.c_str())) {
+            game_config.online_username = std::string(online_username);
+            game_config.save();
+            show_options = false;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(btn_close.c_str())) {
+            show_options = false;
+        }
+        ImGui::End();
+    }
 }

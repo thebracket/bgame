@@ -16,5 +16,7 @@ public:
 private:
 	std::string tagline;
 	std::pair<int,std::string> get_descriptive_noun(const int do_not_use=-1) const;
+	char online_username[254];
+	bool show_options = false;
 };
 
