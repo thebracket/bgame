@@ -57,8 +57,8 @@ void mode_play_system::update(const double duration_ms) {
 		selected_tile_x = world_x;
 		selected_tile_y = world_y;
 		selected_tile_z = camera_position->region_z;
-		menu_x = mouse::term4x;
-		menu_y = mouse::term4y;
+		menu_x = mouse::x;
+		menu_y = mouse::y;
 	} else if (tooltip) {
 		show_tooltip(world_x, world_y, tile_idx);
 	}
@@ -249,28 +249,6 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 		ImGui::Text("%s", s.c_str());
 	}
 	ImGui::End();
-
-	/*if (right_align) {
-		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
-		int tt_x = mouse::term4x+2;
-		term(4)->set_char(mouse::term4x+1, mouse::term4y, vchar{27, color, DARKEST_GREEN});
-		term(4)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
-		++tt_y;
-		for (const std::string &s : lines) {
-			term(4)->print(tt_x+1, tt_y, s, color);
-			++tt_y;
-		}
-	} else {
-		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
-		int tt_x = mouse::term4x-3-longest;
-		term(4)->box(tt_x, tt_y, longest+1, (int)lines.size()+1, color);
-		++tt_y;
-		for (const std::string &s : lines) {
-			term(4)->print(tt_x+1, tt_y, s, color);
-			++tt_y;
-		}
-		term(4)->set_char(mouse::term4x-1, mouse::term4y, vchar{26, color, DARKEST_GREEN});
-	}*/
 }
 
 void mode_play_system::show_tilemenu() {
@@ -436,6 +414,16 @@ void mode_play_system::show_tilemenu() {
 	if (menu->options.empty()) {
 		game_master_mode = PLAY;
 	} else {
-		add_gui_element(std::move(menu));
+		//add_gui_element(std::move(menu));
+        ImGui::SetNextWindowPos({static_cast<float>(menu_x), static_cast<float>(menu_y)});
+
+        ImGui::Begin("Tile Options", nullptr, ImVec2{600, 400}, 0.8f,
+                     ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
+        for (auto &m : menu->options) {
+            if (ImGui::Button(m.first.c_str())) {
+                m.second();
+            }
+        }
+        ImGui::End();
 	}
 }
