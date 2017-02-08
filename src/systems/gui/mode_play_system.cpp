@@ -19,6 +19,8 @@
 #include "../../raws/plants.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../components/lever.hpp"
+#include "../gui/imgui_helper.hpp"
+#include "../../external/imgui-sfml/imgui-SFML.h"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -31,17 +33,6 @@ void mode_play_system::update(const double duration_ms) {
     term(4)->clear();
 	if (game_master_mode == TILEMENU) show_tilemenu();
     if (game_master_mode != PLAY && game_master_mode != ROGUE) return;
-
-    // Controls Help
-	if (pause_mode == PAUSED) {
-        add_gui_element(std::make_unique<map_static_text>( 54, 1, "SPACE", YELLOW));
-        add_gui_element(std::make_unique<map_static_text>( 60, 1, "Unpause"));
-	} else {
-        add_gui_element(std::make_unique<map_static_text>( 54, 1, "SPACE", YELLOW));
-        add_gui_element(std::make_unique<map_static_text>( 60, 1, "Pause"));
-	}
-    add_gui_element(std::make_unique<map_static_text>( 68, 1, "/", YELLOW));
-    add_gui_element(std::make_unique<map_static_text>( 71, 1, "One Step"));
 
 	// Since we're using an 8x8, it's just a matter of dividing by 8 to find the terminal-character
 	// coordinates. There will be a helper function for this once we get into retained GUIs.
@@ -76,7 +67,7 @@ void mode_play_system::update(const double duration_ms) {
 void mode_play_system::show_tooltip(const int world_x, const int world_y, const int tile_idx) {
 	std::vector<std::string> lines;
 
-	{
+	if (flags_debug) {
 		std::stringstream ss;
 		if (current_region->solid[tile_idx]) ss << "Solid-";
 		if (current_region->opaque[tile_idx]) ss << "Opaque-";
@@ -229,9 +220,10 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
         }
     }
 
-	int longest = 0;
+	float longest = 0.0F;
 	for (const std::string &s : lines) {
-		if (s.size() > longest) longest = (int)s.size();
+		const auto render_size = ImGui::CalcTextSize(s.c_str());
+		if (render_size.x > longest) longest = render_size.x;
 	}
 
 	// TODO - dynamic placement
@@ -240,19 +232,25 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	if (revealed_pct > 1.0) revealed_pct = 1.0F;
 	if (!game_config.tooltip_fadein) revealed_pct = 1.0F;
 
-	if (revealed_pct < 1.0) {
-		for (std::string &s : lines) {
-			int n_garbled = static_cast<int>(s.size() - ((float)s.size() * (revealed_pct/2.0F)));
-			for (int i=0; i<n_garbled; ++i) s[i] = static_cast<uint8_t>(rng.roll_dice(1,255));
-		}
-	}
-
 	bool right_align = true;
 	if (mouse::term1x > term(1)->term_width/2 ) right_align = false;
 	int tt_y = mouse::term4y;
 	if (tt_y+lines.size() > term(4)->term_height-1) tt_y -= (int)lines.size()+1;
 
-	if (right_align) {
+
+	if (!right_align) {
+		ImGui::SetNextWindowPos({static_cast<float>(mouse::x+35), static_cast<float>(mouse::y)});
+	} else {
+		ImGui::SetNextWindowPos({static_cast<float>(mouse::x) - (longest+35.0F), static_cast<float>(mouse::y)});
+	}
+	ImGui::Begin("Tooltip", nullptr, ImVec2{600, 400}, revealed_pct,
+				 ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
+	for (const std::string &s : lines) {
+		ImGui::Text("%s", s.c_str());
+	}
+	ImGui::End();
+
+	/*if (right_align) {
 		auto color = lerp(BLACK, LIGHT_GREEN, revealed_pct);
 		int tt_x = mouse::term4x+2;
 		term(4)->set_char(mouse::term4x+1, mouse::term4y, vchar{27, color, DARKEST_GREEN});
@@ -272,7 +270,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			++tt_y;
 		}
 		term(4)->set_char(mouse::term4x-1, mouse::term4y, vchar{26, color, DARKEST_GREEN});
-	}
+	}*/
 }
 
 void mode_play_system::show_tilemenu() {

@@ -15,4 +15,7 @@ private:
 
 	void show_tooltip(const int world_x, const int world_y, const int tile_idx);
 	void show_tilemenu();
+
 };
+
+extern bool flags_debug;

@@ -5,6 +5,7 @@
 #include "../ai/distance_map_system.hpp"
 #include <../../external/imgui-sfml/imgui-SFML.h>
 #include "../physics/fluid_system.hpp"
+#include "mode_play_system.hpp"
 
 using namespace rltk;
 
@@ -23,6 +24,8 @@ void wish_system::make_wish(const std::string &wish) {
         }
     } else if (wish == "show distance") {
         dijkstra_debug = !dijkstra_debug;
+    } else if (wish == "show flags") {
+        flags_debug = !flags_debug;
     }
 
     game_master_mode = PLAY;

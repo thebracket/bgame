@@ -31,6 +31,7 @@ bool arch_available = false;
 bool arch_possible = true;
 int arch_x = 0;
 int arch_y = 0;
+bool flags_debug = false;
 
 void mode_design_system::configure() {
     system_name = "Design Mode";
@@ -429,10 +430,10 @@ void mode_design_system::stockpiles() {
 void mode_design_system::update(const double duration_ms) {
     if (game_master_mode != DESIGN) return;
 
-    add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
-    add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
+    //add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
+    //add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
 
-    add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles", "Harvest", "Architecture"}, 5, 3, [] (int key) {
+    /*add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles", "Harvest", "Architecture"}, 5, 3, [] (int key) {
         switch (key) {
             case 0 : { game_design_mode = DIGGING; emit_deferred(map_dirty_message{}); } break;
             case 1 : { game_design_mode = BUILDING; emit_deferred(refresh_available_buildings_message{}); emit_deferred(map_dirty_message{}); } break;
@@ -442,7 +443,7 @@ void mode_design_system::update(const double duration_ms) {
             case 5 : { game_design_mode = HARVEST; emit_deferred(map_dirty_message{}); } break;
             case 6 : { game_design_mode = ARCHITECTURE; emit_deferred(map_dirty_message{}); } break;
         }
-    });
+    });*/
 
     switch (game_design_mode) {
         case DIGGING    : digging(); break;
