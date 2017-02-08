@@ -129,7 +129,7 @@ void main_menu::tick(const double duration_ms) {
 	term(LOG_LAYER)->print_center(y_center - 5, tagline, LIGHT_RED, BLACK);
 	term(LOG_LAYER)->print_center(y_center + 5, "Powered by RLTK - the RogueLike Tool Kit", RED, BLACK);
 	term(LOG_LAYER)->print_center(y_center + 6, "http://www.bracketproductions.com/", YELLOW, BLACK);
-	term(LOG_LAYER)->print_center(y_center + 8, "To Kylah of the West, the Bravest Little Warrior of Them All", WHITE, BLACK);
+	term(LOG_LAYER)->print_center(term(LOG_LAYER)->term_height-2, "To Kylah of the West, the Bravest Little Warrior of Them All", WHITE, BLACK);
 
 	if (selected != 0) {
 		if (world_exists) {

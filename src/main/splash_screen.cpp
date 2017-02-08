@@ -42,7 +42,7 @@ void splash_screen::tick(const double duration_ms) {
 }
 
 void splash_screen::init() {
-	register_texture("assets/background_image.png", "backdrop");
+	register_texture("assets/background_image.jpg", "backdrop");
 	register_texture("assets/gamelogo.png", "logo");
 
 	auto window_size = get_window()->getSize();
