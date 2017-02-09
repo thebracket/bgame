@@ -16,5 +16,6 @@ struct string_table_t {
 extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
+extern string_table_t new_arrival_quips;
 
 void load_string_table(const std::string filename, string_table_t &target);

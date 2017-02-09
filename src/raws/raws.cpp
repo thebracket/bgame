@@ -71,6 +71,7 @@ void load_raws() {
 	load_string_table("world_defs/first_names_male.txt", first_names_male);
 	load_string_table("world_defs/first_names_female.txt", first_names_female);
 	load_string_table("world_defs/last_names.txt", last_names);
+    load_string_table("world_defs/newarrival.txt", new_arrival_quips);
 
 	// Setup LUA
 	lua_handle = std::make_unique<lua_lifecycle>();

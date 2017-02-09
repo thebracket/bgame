@@ -15,6 +15,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../components/renderable.hpp"
 #include "../../components/initiative.hpp"
+#include "../../components/ai_mode_idle.hpp"
 #include <array>
 
 std::array<uint8_t, 4> group_populations;
@@ -107,7 +108,8 @@ void wildlife_population_system::spawn_wildlife() {
                         ->assign(std::move(stats))
                         ->assign(viewshed_t(6, false, false))
                         ->assign(wildlife_group{i})
-                        ->assign(initiative_t{});
+                        ->assign(initiative_t{})
+                        ->assign(ai_mode_idle_t{});
                         std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
                     }
                     emit_deferred(huntable_moved_message{});

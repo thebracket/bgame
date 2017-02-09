@@ -1,13 +1,12 @@
 #include "initiative_system.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/game_stats.hpp"
-#include "../../messages/messages.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../tasks/initiative.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/slidemove.hpp"
+#include "../../components/ai_tag_my_turn.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {
@@ -29,7 +28,7 @@ void initiative_system::on_message(const tick_message &msg) {
             }
 
             // Emit a message that it's the entity's turn
-            emit_deferred(action_available_message{e.id});
+            e.assign(ai_tag_my_turn_t{});
 
             // Roll initiative!
 

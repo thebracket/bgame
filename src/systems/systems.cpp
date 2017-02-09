@@ -52,6 +52,9 @@
 #include "ai/distance_map_system.hpp"
 #include "ai/settler_spawner_system.hpp"
 #include "physics/trigger_system.hpp"
+#include "ai/ai_status_effects.hpp"
+#include "ai/ai_new_arrival.hpp"
+#include "ai/ai_action_shim.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -61,6 +64,7 @@ void add_systems_to_ecs() {
     add_system<pause_system>();
     add_system<calendar_system>();
     add_system<initiative_system>();
+    add_system<ai_status_effects>();
     add_system<world_system>();
     add_system<settler_spawner_system>();
     add_system<gravity_system>();
@@ -77,6 +81,8 @@ void add_systems_to_ecs() {
     add_system<stockpile_system>();
     add_system<power_system>();
     add_system<workflow_system>();
+    add_system<ai_new_arrival>();
+    add_system<ai_action_shim>();
     add_system<settler_ai_system>();
     add_system<mode_rogue_system>();
     add_system<movement_system>();
