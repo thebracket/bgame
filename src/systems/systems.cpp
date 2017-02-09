@@ -38,7 +38,6 @@
 #include "gui/mode_sentient_info_system.hpp"
 #include "physics/fluid_system.hpp"
 #include "physics/gravity_system.hpp"
-#include "ai/grazer_ai_system.hpp"
 #include "gui/wish_system.hpp"
 #include "physics/door_system.hpp"
 #include "scheduler/pause_system.hpp"
@@ -56,6 +55,7 @@
 #include "ai/ai_new_arrival.hpp"
 #include "ai/ai_action_shim.hpp"
 #include "ai/ai_visibility_scan.hpp"
+#include "ai/ai_idle.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -72,7 +72,6 @@ void add_systems_to_ecs() {
     add_system<distance_map_system>();
     add_system<wildlife_population_system>();
     add_system<sentient_ai_system>();
-    add_system<grazer_ai_system>();
     add_system<corpse_system>();
     add_system<particle_system>();
     add_system<camera_system>();
@@ -84,6 +83,7 @@ void add_systems_to_ecs() {
     add_system<workflow_system>();
     add_system<ai_visibility_scan>();
     add_system<ai_new_arrival>();
+    add_system<ai_idle>();
     add_system<ai_action_shim>();
     add_system<settler_ai_system>();
     add_system<mode_rogue_system>();
