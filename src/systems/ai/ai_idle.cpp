@@ -8,6 +8,8 @@
 #include "../../components/position.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../messages/vegetation_damage_message.hpp"
+#include "distance_map_system.hpp"
+#include "../../messages/renderables_changed_message.hpp"
 
 void ai_idle::configure() {}
 
@@ -31,8 +33,39 @@ void ai_idle::update(const double duration_ms) {
                 emit_deferred(entity_wants_to_move_randomly_message{e.id});
                 emit_deferred(huntable_moved_message{});
             }
+            delete_component<ai_tag_my_turn_t>(e.id);
         } else if (sentient) {
-            // TODO
+            auto pos = e.component<position_t>();
+            int feelings = planet.civs.civs[planet.civs.unimportant_people[sentient->person_id].civ_id].cordex_feelings;
+            if (feelings < 0) {
+                sentient->hostile = true;
+            } else {
+                sentient->hostile = false;
+            }
+
+            // There's a chance they will go berserk
+            if (sentient->goal == SENTIENT_GOAL_IDLE && rng.roll_dice(1,500)-1+(0-feelings) <= sentient->aggression && sentient->days_since_arrival > 1) {
+                const int idx = mapidx(*pos);
+                if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
+                    sentient->goal = SENTIENT_GOAL_KILL;
+                }
+            }
+
+            if (sentient->goal == SENTIENT_GOAL_KILL) {
+                // Close for the kill!
+                const int idx = mapidx(*pos);
+                if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
+                    position_t destination = settler_map.find_destination(*pos);
+                    emit_deferred(entity_wants_to_move_message{e.id, destination});
+                    emit_deferred(renderables_changed_message{});
+                } else {
+                    sentient->goal = SENTIENT_GOAL_IDLE;
+                }
+            } else {
+                // Wander aimlessly
+                emit_deferred(entity_wants_to_move_randomly_message{e.id});
+            }
+            delete_component<ai_tag_my_turn_t>(e.id);
         } else if (settler) {
             // TODO
         }
