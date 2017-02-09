@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <rltk.hpp>
 
 struct settlement_t {
     std::size_t civ_id;
@@ -13,8 +14,11 @@ struct settlement_t {
     uint8_t abandoned_years = 0;
     int max_size = 0;
 
-    void save(std::fstream &deflate) const;
-    void load(std::fstream &inflate);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( civ_id, name, world_x, world_y, status, deleted, abandoned_years, max_size );
+    }
 };
 
 inline void civ_cull_settlements(std::vector<settlement_t> &settlements) {
@@ -55,8 +59,11 @@ struct civ_t {
     int cordex_feelings = 0;
     bool met_cordex = false;
 
-    void save(std::fstream &deflate) const;
-    void load(std::fstream &inflate);    
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( name, species_tag, relations, extinct, tech_level, r, g, b, gov_type, cordex_feelings, met_cordex );
+    }
 };
 
 constexpr uint8_t MAX_OCCUPATION = 15;
@@ -109,8 +116,11 @@ struct unimportant_person_t {
     std::size_t father_id = 0;
     int level = 1;
 
-    void save(std::fstream &deflate) const;
-    void load(std::fstream &inflate);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( civ_id, species_tag, world_x, world_y, male, married, married_to, age, deceased, occupation, mother_id, father_id, level );
+    }
 };
 
 struct civ_holder_t {
@@ -118,6 +128,9 @@ struct civ_holder_t {
     std::vector<unimportant_person_t> unimportant_people;
     std::vector<settlement_t> settlements;
 
-    void save(std::fstream &deflate) const;
-    void load(std::fstream &inflate);
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( civs, unimportant_people, settlements );
+    }
 };

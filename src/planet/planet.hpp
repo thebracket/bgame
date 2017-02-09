@@ -5,6 +5,7 @@
 #include "constants.hpp"
 #include "civilizations.hpp"
 #include "history.hpp"
+#include <rltk.hpp>
 
 namespace block_type {
 constexpr uint8_t MAX_BLOCK_TYPE = 9;
@@ -27,6 +28,12 @@ struct block_t {
 	int8_t temperature_c = 0;
 	int8_t rainfall = 0;
 	int biome_idx = -1;
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( height, variance, type, temperature_c, rainfall, biome_idx );
+	}
 };
 
 struct biome_t {
@@ -41,11 +48,24 @@ struct biome_t {
 	uint8_t savagery = 0;
 	int center_x = 0;
 	int center_y = 0;
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( type, name, mean_temperature, mean_rainfall, mean_altitude, mean_variance, warp_mutation,
+			evil, savagery, center_x, center_y);
+	}
 };
 
 struct river_step_t {
 	int x=0;
 	int y=0;
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( x, y );
+	}
 };
 
 struct river_t {
@@ -53,6 +73,12 @@ struct river_t {
 	int start_x=0;
 	int start_y=0;
 	std::vector<river_step_t> steps;
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( name, start_x, start_y, steps );
+	}
 };
 
 struct planet_t {
@@ -73,6 +99,13 @@ struct planet_t {
 	inline int idx(const int x, const int y) { return y*WORLD_WIDTH + x; }
 	civ_holder_t civs;
 	history_t history;
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive( name, rng_seed, perlin_seed, remaining_settlers, migrant_counter, water_height, plains_height, hills_height,
+			landblocks, biomes, rivers, civs, history);
+	}
 };
 
 void save_planet(const planet_t &planet);
