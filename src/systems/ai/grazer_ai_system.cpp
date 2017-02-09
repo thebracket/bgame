@@ -21,38 +21,12 @@ void grazer_ai_system::on_message(const action_available_message &msg) {
     auto view = e->component<viewshed_t>();
     if (!pos || !view) return;
 
-    // Can we see anything scary?
-    auto hostile = tasks::can_see_hostile(*e, *pos, *view, [] (entity_t &other) {
-        if (other.component<settler_ai_t>() || other.component<sentient_ai>()) {
-            return true;
-        } else {
-            return false;
-        }
-    });
-
-    if (!hostile.terrified) {
-        // Handle the AI here
-        const auto idx = mapidx(pos->x, pos->y, pos->z);
-        if (current_region->tile_vegetation_type[idx] > 0) {
-            if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
-        } else {
-            this->wander_randomly(*e, *pos);
-            emit_deferred(huntable_moved_message{});
-        }
+    // Handle the AI here
+    const auto idx = mapidx(pos->x, pos->y, pos->z);
+    if (current_region->tile_vegetation_type[idx] > 0) {
+        if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
     } else {
-        // Poor creature is scared!
-        if (hostile.terror_distance < 1.5F) {
-            // Attack the target
-            auto health = entity(e->id)->component<health_t>();
-            if (health) {
-                if (!health->unconscious) {
-                    emit_deferred(creature_attack_message{e->id, hostile.closest_fear});
-                    emit_deferred(huntable_moved_message{});
-                }
-            }
-        } else {
-            emit_deferred(entity_wants_to_flee_message{e->id, hostile.closest_fear});
-            emit_deferred(huntable_moved_message{});
-        }
+        this->wander_randomly(*e, *pos);
+        emit_deferred(huntable_moved_message{});
     }
 }

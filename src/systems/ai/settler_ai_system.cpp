@@ -71,7 +71,6 @@ void settler_ai_system::update(const double duration_ms) {
         }
 
         if (game_master_mode == ROGUE && e->id == selected_settler) return; // We handle this in the rogue system
-        if (health->unconscious) return; // Do nothing - they passed out!
 
         const int shift_id = ai->shift_id;
         const int hour_of_day = calendar->hour;
@@ -99,22 +98,7 @@ void settler_ai_system::update(const double duration_ms) {
             return false;
         });
 
-        if (hostile.terrified) {
-            // Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
-            // is implemented it's a good idea not to run away from your target.
-            const int range = shooting_range(*e, *pos);
-            if (hostile.terror_distance < 1.5F) {
-                // Hit it with melee weapon
-                emit_deferred(settler_attack_message{e->id, hostile.closest_fear});
-                initiative->initiative_modifier += get_weapon_initiative_penalty(get_melee_id(*e));
-            } else if (range != -1 && range < hostile.terror_distance) {
-                // Shoot it
-                emit_deferred(settler_ranged_attack_message{e->id, hostile.closest_fear});
-                initiative->initiative_modifier += get_weapon_initiative_penalty(get_ranged_and_ammo_id(*e).first);
-            } else {
-                emit_deferred(entity_wants_to_flee_message{e->id, hostile.closest_fear});
-            }
-        } else if (ai->job_type_major == JOB_MINE || ai->job_type_major == JOB_CHOP || ai->job_type_major == JOB_CONST
+        if (ai->job_type_major == JOB_MINE || ai->job_type_major == JOB_CHOP || ai->job_type_major == JOB_CONST
                    || ai->job_type_major == JOB_REACTION || ai->job_type_major == JOB_BUTCHER || ai->job_type_major == JOB_DECONSTRUCT) {
             // If we have a job to do - keep doing it
             do_work_time(*e, *ai, *stats, *species, *pos, *name);

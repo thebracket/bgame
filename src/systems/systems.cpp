@@ -55,6 +55,7 @@
 #include "ai/ai_status_effects.hpp"
 #include "ai/ai_new_arrival.hpp"
 #include "ai/ai_action_shim.hpp"
+#include "ai/ai_visibility_scan.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -81,6 +82,7 @@ void add_systems_to_ecs() {
     add_system<stockpile_system>();
     add_system<power_system>();
     add_system<workflow_system>();
+    add_system<ai_visibility_scan>();
     add_system<ai_new_arrival>();
     add_system<ai_action_shim>();
     add_system<settler_ai_system>();

@@ -2,6 +2,7 @@ add_library(ai STATIC
         ai_action_shim.cpp
         ai_new_arrival.cpp
         ai_status_effects.cpp
+        ai_visibility_scan.cpp
         settler_ai_system.cpp
         workflow_system.cpp
         wildlife_population_system.cpp
