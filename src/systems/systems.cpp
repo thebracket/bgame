@@ -47,7 +47,7 @@
 #include "damage/creature_attacks.hpp"
 #include "damage/kill_system.hpp"
 #include "damage/healing_system.hpp"
-#include "ai/initiative_system.hpp"
+#include "scheduler/initiative_system.hpp"
 #include "stockpile_system.hpp"
 #include "ai/distance_map_system.hpp"
 #include "ai/settler_spawner_system.hpp"

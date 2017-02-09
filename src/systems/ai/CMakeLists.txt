@@ -5,7 +5,6 @@ add_library(ai STATIC
         mode_rogue_system.cpp
         sentient_ai_system.cpp
         grazer_ai_system.cpp
-        initiative_system.cpp
         settler_spawner_system.cpp
         mining_system.cpp
         path_finding.cpp
