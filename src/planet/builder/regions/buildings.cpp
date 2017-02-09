@@ -277,20 +277,10 @@ xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet,
     const auto tech_level = planet.civs.civs[civ_id].tech_level;
     std::vector<std::string> available_buildings;
 
-    // Stone Age
-    if (tech_level == TECH_AGE_STONE) {
-        available_buildings.push_back("rex/mud-hut.xp");
-        available_buildings.push_back("rex/hovel-wood.xp");
-        available_buildings.push_back("rex/longhall-wood.xp");
-        available_buildings.push_back("rex/henge-wood.xp");
-    } else {
-        // Bronze age and beyond
-        available_buildings.push_back("rex/hovel-wood.xp");
-        available_buildings.push_back("rex/mud-hut.xp");
-        available_buildings.push_back("rex/hovel-wood.xp");
-        available_buildings.push_back("rex/tower-wood.xp");
-        available_buildings.push_back("rex/henge-wood.xp");
-    }
+    available_buildings.push_back("rex/mud-hut.xp");
+    available_buildings.push_back("rex/hovel-wood.xp");
+    available_buildings.push_back("rex/longhall-wood.xp");
+    available_buildings.push_back("rex/henge-wood.xp");
 
     const int roll = rng.roll_dice(1, available_buildings.size())-1;
     const std::string building_template = available_buildings[roll];

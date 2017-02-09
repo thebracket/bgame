@@ -15,24 +15,9 @@ const std::string random_species(rltk::random_number_generator &rng) {
     return get_species_nth_tag(roll);
 }
 
-std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag, uint8_t gov_type, rltk::random_number_generator &rng) {
-    std::string format;
-    switch (gov_type) {
-        case GOV_ANARCHY : format = "Free {SPECIES} of {NOUN}"; break;
-        case GOV_FEUDAL : format = "{SPECIES} Duchy of {NOUN}"; break;
-        case GOV_DICTATORSHIP : format = "{SPECIES} Clan of {NOUN}"; break;
-        case GOV_COMMUNIST : format = "{SPECIES} utopian {NOUN}"; break;
-        case GOV_TECHNOCRACY : format = "{NOUN} Technocracy of Free {SPECIES}"; break;
-        case GOV_DEMOCRACY : format = "Democratic {SPECIES} of {NOUN}"; break;
-        case GOV_REPUBLIC : format = "Republican {SPECIES} of {NOUN}"; break;
-        case GOV_OLIGARCHY : format = "Corporate {SPECIES} of {NOUN}"; break;
-        case GOV_FASCIST : format = "National Socialist {SPECIES} of {NOUN}"; break;
-        case GOV_CONSTITUTIONAL_MONARCHY : format = "{SPECIES} Kingdom of {NOUN}"; break;
-        case GOV_WARLORD : format = "Mighty {SPECIES} of {NOUN}"; break;
-        case GOV_TOTALITARIAN : format = "{SPECIES} junta of {NOUN}"; break;
-        case GOV_THEOCRACY : format = "Holy {NOUN} of {SPECIES}"; break;
-        default : format = "The {SPECIES} of {NOUN}";
-    }
+std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag, rltk::random_number_generator &rng)
+{
+    std::string format = "{NOUN}";
     auto species = *get_species_def(species_tag);
     str_replace(format, "{SPECIES}", species.collective_name);
     str_replace(format, "{NOUN}", to_proper_noun_case(last_names.random_entry(rng)));
@@ -58,8 +43,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         if (species.alignment == align_neutral) civ.b = 255;
         if (species.alignment == align_good) civ.g = 255;
 
-        civ.gov_type = rng.roll_dice(1, MAX_GOV_TYPE);
-        civ.name = civ_name_generator(planet, i, civ.species_tag, civ.gov_type, rng);
+        civ.name = civ_name_generator(planet, i, civ.species_tag, rng);
         //std::cout << civ.name << " - " << civ.species_tag << "\n";
 
         // Find a starting location
@@ -104,7 +88,6 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
             peep.married_to = 0;            
             peep.deceased = false;
             peep.age = 12 + rng.roll_dice(1,30);
-            peep.occupation = rng.roll_dice(1, MAX_OCCUPATION);
             peep.level = 1;
 
             planet.civs.unimportant_people.push_back(peep);
@@ -156,23 +139,6 @@ inline void planet_build_run_movement(planet_t &planet, rltk::random_number_gene
     if (peep.age < species.child_age) return;
 
     int chance_of_movement = 5;
-    switch (peep.occupation) {
-        case OCC_LABORER : chance_of_movement = 5; break;
-        case OCC_FARMER : chance_of_movement = 3; break;
-        case OCC_HERBALIST : chance_of_movement = 7; break;
-        case OCC_METALWORKER : chance_of_movement = 3; break;
-        case OCC_STONEWORKER : chance_of_movement = 3; break;
-        case OCC_WOODWORKER : chance_of_movement = 3; break;
-        case OCC_COOK : chance_of_movement = 4; break;
-        case OCC_HUNTER : chance_of_movement = 7; break;
-        case OCC_SKIRMISHER : chance_of_movement = 8; break;
-        case OCC_LIGHT_INFANTRY : chance_of_movement = 15; break;
-        case OCC_INFANTRY : chance_of_movement = 10; break;
-        case OCC_HEAVY_INFANTRY : chance_of_movement = 10; break;
-        case OCC_LIGHT_CAVALRY : chance_of_movement = 15; break;
-        case OCC_MEDIUM_CAVALRY : chance_of_movement = 13; break;
-        case OCC_HEAVY_CAVALRY : chance_of_movement = 12; break;
-    }
 
     if (rng.roll_dice(1, 20) <= chance_of_movement) {
         std::vector<int> candidates;
@@ -519,7 +485,6 @@ inline void planet_build_new_births(planet_t &planet, std::vector<std::tuple<std
             newbie.father_id = std::get<2>(birth);
             newbie.world_x = planet.civs.unimportant_people[std::get<1>(birth)].world_x;
             newbie.world_y = planet.civs.unimportant_people[std::get<1>(birth)].world_y;
-            newbie.occupation = rng.roll_dice(1, MAX_OCCUPATION);
             newbie.level = 1;
             planet.civs.unimportant_people.push_back(newbie);
         }
@@ -595,7 +560,7 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
     std::cout << "Remaining population: " << living << ", " << dead << " deceased.\n";
     for (std::size_t i=0; i<planet.civs.civs.size(); ++i) {
         if (!planet.civs.civs[i].extinct) {
-            std::cout << "Civ " << planet.civs.civs[i].name << " : " << GOVERNMENT_NAMES[planet.civs.civs[i].gov_type] << " (" << planet.civs.civs[i].species_tag << "): ";
+            std::cout << "Civ " << planet.civs.civs[i].name << " : " << " (" << planet.civs.civs[i].species_tag << "): ";
             auto finder = civpops.find((int)i);
             if (finder == civpops.end()) {
                 std::cout << "Bordering on extinct\n";

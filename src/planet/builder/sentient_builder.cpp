@@ -56,8 +56,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 
     int techlevel = planet.civs.civs[planet.civs.unimportant_people[person_id].civ_id].tech_level;
     if (techlevel > 2) techlevel = 2;
-    const std::string profession_tag = OCCUPATION_TAGS[planet.civs.unimportant_people[person_id].occupation] + std::string("_") + 
-        std::to_string(techlevel);
+    const std::string profession_tag = "heavyinfantry_2";
     std::cout << profession_tag << "\n";
     auto profession = *get_native_professions(profession_tag);
     const int profidx = rng.roll_dice(1,profession.size())-1;    

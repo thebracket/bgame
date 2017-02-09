@@ -126,7 +126,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
             std::cout << "It had a peak population of " << town.max_size << "\n";
             std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
-            std::cout << "With a tech level of " << TECH_LEVELS[planet.civs.civs[town.civ_id].tech_level] << "\n";
 
             has_settlement = true;
             if (town.status > 0) settlement_active = true;
@@ -149,7 +148,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     for (auto &peep : planet.civs.unimportant_people) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
             for (int i=0; i<5; ++i) {
-                std::cout << "Spawn a " << TECH_LEVELS[planet.civs.civs[peep.civ_id].tech_level] << " " << peep.species_tag << " " << OCCUPATION_NAMES[peep.occupation] << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
+                std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
 
                 if (count < spawn_points.size()) {
                     create_sentient(std::get<0>(spawn_points[count]), std::get<1>(spawn_points[count]), std::get<2>(spawn_points[count]),

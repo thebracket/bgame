@@ -85,9 +85,6 @@ void load_raws() {
 
 	// Extract game tables
 	load_game_tables();
-
-    // Quit LUA
-    lua_handle.reset();
 }
 
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
