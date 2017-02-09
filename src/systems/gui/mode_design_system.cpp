@@ -311,14 +311,12 @@ void mode_design_system::guardposts() {
 }
 
 void mode_design_system::harvest() {
-    //add_gui_element(std::make_unique<map_static_text>(5,4, "Harvest mode - click a square to harvest it, right-click to clear."));
-    ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
-    ImGui::Text("Click a tile to harvest it, right click to remove harvest status.");
-    ImGui::End();
 
+    std::string harvest_name = "";
     if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
         const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
         const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+
 
         const auto idx = mapidx(world_x, world_y, camera_position->region_z);
         bool ok = true;
@@ -326,7 +324,14 @@ void mode_design_system::harvest() {
         if (ok) {
             plant_t p = get_plant_def(current_region->tile_vegetation_type[idx]);
             const std::string harvests_to = p.provides[current_region->tile_vegetation_lifecycle[idx]];
-            if (harvests_to == "none") ok=false;
+            if (harvests_to == "none") {
+                ok=false;
+            } else {
+                auto finder = item_defs.find(harvests_to);
+                if (finder != item_defs.end()) {
+                    harvest_name = finder->second.name;
+                }
+            }
         }
 
         if (ok && current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
@@ -348,6 +353,16 @@ void mode_design_system::harvest() {
             }
         }
     }
+
+    ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+    ImGui::TextColored(ImVec4{1.0f, 1.0f, 0.0f, 1.0f}, "%s", "Click a tile to harvest it, right click to remove harvest status.");
+    if (!harvest_name.empty()) {
+        ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s%", "Current tile will provide: ");
+        ImGui::SameLine();
+        ImGui::Text(harvest_name.c_str());
+    }
+    ImGui::End();
+
 }
 
 void mode_design_system::stockpiles() {
