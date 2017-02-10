@@ -18,78 +18,69 @@ civilized_species = {
     emmet = {
         name = "Emmet", male_name = "Emmet", female_name = "Emmet", group_name = "Emmet", baby_name = "Hatchling",
         child_name = "Young",
-        description = "An ant-like nightmare that eats everything, and spreads blight.",
+        description = "An ant-like creature of nightmares. It eats everything, and spreads blight.",
         stat_mods = {con=2,str=2,int=-2,wis=-2},
         parts = humanoid_parts,
-        ethics = { diet="omnivore", mentality="hive", blight=true, behvarior="eat_world" },
+        ethics = { diet="omnivore", mentality="hive", blight=true, behavior="eat_world" },
         max_age = 10, infant_age=1, child_age=2,
-        glyph = glyphs['at'],
+        glyph = glyphs['ant'],
         breed_type = "hatch",
         clutch_size_min = 100,
         clutch_size_max = 200,
         clutch_frequency = 1,
         gains_tech_by_eating = true,
+        lisp = true,
+        never_negotiates = true,
 
         castes = {
-            all = {
+            queen = { max_per_region=1, min_per_occupied_region=1, starting_level = 10, name = "Hive Queen",
+                fertile=true,
+                combat = {
+                    armor_class = 20,
+                    attacks = {
+                        bite1 = { type="bite", hit_bonus=8, n_dice=2, die_type=20, die_mod=4 },
+                        sting1 = { type="sting", hit_bonus=8, n_dice=2, die_type=20, die_mod=4 }
+                     },
+                    guard_only = true
+                },
+                hp_n = 10, hp_dice = 6, hp_mod = 1
+            },
+            prince = { max_per_region=16, min_per_occupied_region=1, starting_level = 10, name = "Hive Prince",
+                fertile=true,
+                combat = {
+                    armor_class = 18,
+                    attacks = {
+                        bite1 = { type="bite", hit_bonus=6, n_dice=1, die_type=20, die_mod=4 },
+                        sting1 = { type="sting", hit_bonus=6, n_dice=1, die_type=20, die_mod=4 }
+                    },
+                    guard_only = true
+                },
+                hp_n = 10, hp_dice = 6, hp_mod = 1
+            },
+            soldier = { probability=1, starting_level = 10, name = "Hive Soldier",
                 fertile = false,
                 combat = {
-                    armor_class = 12,
+                    armor_class = 16,
                     attacks = {
-                        bite1 = { type="bite", hit_bonus=0, n_dice=1, die_type=8, die_mod=0 },
-                        sting1 = { type="sting", hit_bonus=0, n_dice=1, die_type=4, die_mod=0 }
+                        bite1 = { type="bite", hit_bonus=2, n_dice=1, die_type=8, die_mod=4 },
+                        sting1 = { type="sting", hit_bonus=2, n_dice=1, die_type=8, die_mod=4 }
                     }
                 },
-                hp_n = 1, hp_dice = 4, hp_mod = 0
+                hp_n = 10, hp_dice = 6, hp_mod = 1
             },
-            stone_age = {
-                queen = { max_per_region=1, min_per_occupied_region=1, starting_level = 10, name = "Hive Queen",
-                    fertile=true,
-                    combat = {
-                        armor_class = 20,
-                        attacks = {
-                            bite1 = { type="bite", hit_bonus=0, n_dice=2, die_type=20, die_mod=4 },
-                            sting1 = { type="sting", hit_bonus=0, n_dice=2, die_type=20, die_mod=4 }
-                         },
-                        guard_only = true
-                    },
-                    hp_n = 10, hp_dice = 6, hp_mod = 1
+            worker = { probability=3, starting_level = 10, name = "Hive Worker",
+                fertile = false,
+                combat = {
+                    armor_class = 16,
+                    attacks = {
+                        bite1 = { type="bite", hit_bonus=0, n_dice=1, die_type=4, die_mod=4 },
+                        sting1 = { type="sting", hit_bonus=0, n_dice=1, die_type=4, die_mod=4 }
+                    }
                 },
-                prince = { max_per_region=16, min_per_occupied_region=1, starting_level = 10, name = "Hive Prince",
-                    fertile=true,
-                    combat = {
-                        armor_class = 18,
-                        attacks = {
-                            bite1 = { type="bite", hit_bonus=0, n_dice=1, die_type=20, die_mod=4 },
-                            sting1 = { type="sting", hit_bonus=0, n_dice=1, die_type=20, die_mod=4 }
-                        },
-                        guard_only = true
-                    },
-                    hp_n = 10, hp_dice = 6, hp_mod = 1
-                },
-                soldier = { probability=1, starting_level = 10, name = "Hive Soldier",
-                    combat = {
-                        armor_class = 16,
-                        attacks = {
-                            bite1 = { type="bite", hit_bonus=0, n_dice=1, die_type=8, die_mod=4 },
-                            sting1 = { type="sting", hit_bonus=0, n_dice=1, die_type=8, die_mod=4 }
-                        }
-                    },
-                    hp_n = 10, hp_dice = 6, hp_mod = 1
-                },
-                worker = { probability=3, starting_level = 10, name = "Hive Worker",
-                    combat = {
-                        armor_class = 16,
-                        attacks = {
-                            bite1 = { type="bite", hit_bonus=0, n_dice=1, die_type=4, die_mod=4 },
-                            sting1 = { type="sting", hit_bonus=0, n_dice=1, die_type=4, die_mod=4 }
-                        }
-                    },
-                    spreads_blight = true,
-                    destroys_everything = true,
-                    hp_n = 10, hp_dice = 6, hp_mod = 1
-                },
-            } -- End stone age
+                spreads_blight = true,
+                destroys_everything = true,
+                hp_n = 10, hp_dice = 6, hp_mod = 1
+            },
         }
     },
 }

@@ -79,6 +79,7 @@ glyphs = {
 	deer = 260,
 	badger = 261,
 	boar = 262,
+	ant = 263,
 	grass = 272,
 	grass_sparse = 273,
 	reeds = 274,
