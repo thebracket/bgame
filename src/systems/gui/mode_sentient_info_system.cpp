@@ -32,10 +32,10 @@ void display_sentient_info()
     header2 << species->gender_str() << " " << species_finder.name;
 
     std::stringstream header3;
-    header3 << "Member of: " << planet.civs.civs[planet.civs.unimportant_people[ai->person_id].civ_id].name;
-    if (planet.civs.civs[planet.civs.unimportant_people[ai->person_id].civ_id].cordex_feelings < 0) {
+    header3 << "Member of: " << planet.civs.civs[planet.civs.population[ai->person_id].civ_id].name;
+    if (planet.civs.civs[planet.civs.population[ai->person_id].civ_id].cordex_feelings < 0) {
         header3 << " (HOSTILE)";        
-    } else if (planet.civs.civs[planet.civs.unimportant_people[ai->person_id].civ_id].cordex_feelings == 0) {
+    } else if (planet.civs.civs[planet.civs.population[ai->person_id].civ_id].cordex_feelings == 0) {
         header3 << " (NEUTRAL)";
     } else {
         header3 << " (FRIENDLY)";

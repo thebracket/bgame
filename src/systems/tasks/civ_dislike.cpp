@@ -11,7 +11,7 @@ void civ_dislike_attacker(entity_t * victim) {
     if (!victim) return;
     auto victim_ai = victim->component<sentient_ai>();
     if (victim_ai) {
-        const std::size_t civ_id = planet.civs.unimportant_people[victim_ai->person_id].civ_id;
+        const std::size_t civ_id = planet.civs.population[victim_ai->person_id].civ_id;
         if (planet.civs.civs[civ_id].cordex_feelings > -10) {
             --planet.civs.civs[civ_id].cordex_feelings;
             emit_deferred(log_message{LOG{}.civ_name(civ_id)->text(" dislikes you more.")->chars});

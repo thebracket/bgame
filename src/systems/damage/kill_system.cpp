@@ -36,7 +36,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
         call_home("settler_death");
     } else if (victim->component<sentient_ai>()) {
         // It's a dead native
-        planet.civs.unimportant_people[victim->component<sentient_ai>()->person_id].deceased = true;
+        planet.civs.population[victim->component<sentient_ai>()->person_id].deceased = true;
         auto name = victim->component<name_t>();
         auto renderable = victim->component<renderable_t>();
         auto corpse = create_entity()

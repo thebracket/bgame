@@ -14,10 +14,12 @@ struct settlement_t {
     uint8_t abandoned_years = 0;
     int max_size = 0;
 
+    uint8_t blight_level = 0;
+
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( civ_id, name, world_x, world_y, status, deleted, abandoned_years, max_size );
+        archive( civ_id, name, world_x, world_y, status, deleted, abandoned_years, max_size, blight_level );
     }
 };
 
@@ -47,9 +49,10 @@ struct civ_t {
     }
 };
 
-struct unimportant_person_t {
+struct civ_person_t {
     std::size_t civ_id;
     std::string species_tag;
+    std::string caste;
     int world_x, world_y;
     bool male;
     bool married;
@@ -59,22 +62,31 @@ struct unimportant_person_t {
     std::size_t mother_id = 0;
     std::size_t father_id = 0;
     int level = 1;
+    int str = 10;
+    int dex = 10;
+    int con = 10;
+    int intelligence = 10;
+    int wis = 10;
+    int cha = 10;
+    int com = 10;
+    int ethics = 10;
+    int hit_points = 10;
 
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( civ_id, species_tag, world_x, world_y, male, married, married_to, age, deceased, mother_id, father_id, level );
+        archive( civ_id, species_tag, world_x, world_y, male, married, married_to, age, deceased, mother_id, father_id, level, caste );
     }
 };
 
 struct civ_holder_t {
     std::vector<civ_t> civs;
-    std::vector<unimportant_person_t> unimportant_people;
+    std::vector<civ_person_t> population;
     std::vector<settlement_t> settlements;
 
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( civs, unimportant_people, settlements );
+        archive( civs, population, settlements );
     }
 };

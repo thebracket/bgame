@@ -18,43 +18,37 @@
 #include "../../components/initiative.hpp"
 #include "../../components/ai_mode_idle.hpp"
 
-int sentient_stat_mod(raw_species_t &species, const std::string &stat) {
-    auto finder = species.stat_mods.find(stat);
-    if (finder == species.stat_mods.end()) return 0;
-    return finder->second;
-}
-
 void create_sentient(const int x, const int y, const int z, rltk::random_number_generator &rng, planet_t &planet, 
         region_t &region, const std::size_t person_id, const bool announce) 
 {
     species_t species;
     game_stats_t stats;
 
-    species.tag = planet.civs.unimportant_people[person_id].species_tag;
+    species.tag = planet.civs.population[person_id].species_tag;
     std::cout << species.tag << "\n";
-    auto species_finder = *get_species_def(species.tag);
-    if (planet.civs.unimportant_people[person_id].male) {
+    auto species_finder = civ_defs.find(species.tag)->second;
+    if (planet.civs.population[person_id].male) {
         species.gender = MALE;
     } else {
         species.gender = FEMALE;
     }
 
-    stats.strength = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "str");
-    stats.dexterity = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "dex");
-    stats.constitution = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "con");
-    stats.intelligence = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "int");
-    stats.wisdom = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "wis");
-    stats.charisma = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "cha");
-    stats.comeliness = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "com");
-    stats.ethics = rng.roll_dice(3,6) + sentient_stat_mod(species_finder, "eth");
-    stats.age = planet.civs.unimportant_people[person_id].age;
+    stats.strength = planet.civs.population[person_id].str;
+    stats.dexterity = planet.civs.population[person_id].dex;
+    stats.constitution = planet.civs.population[person_id].con;
+    stats.intelligence = planet.civs.population[person_id].intelligence;
+    stats.wisdom = planet.civs.population[person_id].wis;
+    stats.charisma = planet.civs.population[person_id].cha;
+    stats.comeliness = planet.civs.population[person_id].com;
+    stats.ethics = planet.civs.population[person_id].ethics;
+    stats.age = planet.civs.population[person_id].age;
 
-    int base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
+    int base_hp = planet.civs.population[person_id].hit_points;
 	if (base_hp < 1) base_hp = 1;
 	health_t health = create_health_component_sentient(species.tag, base_hp);
 
 
-    int techlevel = planet.civs.civs[planet.civs.unimportant_people[person_id].civ_id].tech_level;
+    int techlevel = planet.civs.civs[planet.civs.population[person_id].civ_id].tech_level;
     if (techlevel > 2) techlevel = 2;
     const std::string profession_tag = "heavyinfantry_2";
     std::cout << profession_tag << "\n";
@@ -135,5 +129,5 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ammo->component<item_t>()->claimed = true;
     }
 
-    planet.civs.civs[planet.civs.unimportant_people[person_id].civ_id].met_cordex = true;
+    planet.civs.civs[planet.civs.population[person_id].civ_id].met_cordex = true;
 }

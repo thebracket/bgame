@@ -36,7 +36,7 @@ void ai_idle::update(const double duration_ms) {
             delete_component<ai_tag_my_turn_t>(e.id);
         } else if (sentient) {
             auto pos = e.component<position_t>();
-            int feelings = planet.civs.civs[planet.civs.unimportant_people[sentient->person_id].civ_id].cordex_feelings;
+            int feelings = planet.civs.civs[planet.civs.population[sentient->person_id].civ_id].cordex_feelings;
             if (feelings < 0) {
                 sentient->hostile = true;
             } else {

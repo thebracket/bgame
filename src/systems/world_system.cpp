@@ -38,7 +38,7 @@ void world_system::update(const double ms) {
 
         std::cout << "A new day has dawned\n";
         std::size_t peep_id = 0;
-        for (auto &peep : planet.civs.unimportant_people) {
+        for (auto &peep : planet.civs.population) {
             if (!peep.deceased && !(peep.world_x == current_region->region_x && peep.world_y == current_region->region_y)) {
                 // Move randomly
                 std::vector<int> candidates;

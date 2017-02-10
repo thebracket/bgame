@@ -281,7 +281,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 
 	int base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
 	if (base_hp < 1) base_hp = 1;
-	health_t health = create_health_component_sentient("human", base_hp);
+	health_t health = create_health_component_settler("human", base_hp);
 
 	settler_ai_t ai;
 	ai.shift_id = shift_id;

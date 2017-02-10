@@ -22,7 +22,7 @@ civilized_species = {
         stat_mods = {con=2,str=2,int=-2,wis=-2},
         parts = humanoid_parts,
         ethics = { diet="omnivore", mentality="hive", blight=true, behavior="eat_world" },
-        max_age = 10, infant_age=1, child_age=2,
+        max_age = 20, infant_age=1, child_age=2,
         glyph = glyphs['ant'],
         breed_type = "hatch",
         clutch_size_min = 100,
