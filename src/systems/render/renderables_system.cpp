@@ -12,11 +12,12 @@
 #include "../../components/construct_provides_door.hpp"
 #include "../../components/species.hpp"
 #include "../../components/item.hpp"
+#include "../ai/movement_system.hpp"
 
 using namespace rltk;
 
-std::unordered_map<int, std::vector<screen_render_t>> renderables;
-std::unordered_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
+spp::sparse_hash_map<int, std::vector<screen_render_t>> renderables;
+spp::sparse_hash_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
 
 void renderables_system::configure() {
     system_name = "Renderables System";
@@ -110,6 +111,65 @@ void renderables_system::update(const double time_elapsed) {
     renderables_changed = true;
 
     if (renderables_changed) {
+        renderables.clear();
+        composite_renderables.clear();
+
+        for (int y=clip_top-1; y<clip_bottom+1; ++y) {
+            for (int x=clip_left-1; x<clip_right+1; ++x) {
+                for (int z=camera_position->region_z-10; z<camera_position->region_z+1; ++z) {
+                    std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{x, y, z, 0});
+                    for (const std::size_t &id : visible_here) {
+                        auto E = entity(id);
+                        if (!E) break;
+                        const int idx = mapidx(x,y,z);
+
+                        bool done = false;
+                        auto b = E->component<building_t>();
+                        auto pos = E->component<position_t>();
+                        if (!done && b && pos) {
+                            int glyph_idx = 0;
+                            int offset_x = 0;
+                            int offset_y = 0;
+                            if (b->width == 3) offset_x = -1;
+                            if (b->height == 3) offset_y = -1;
+
+                            for (int y = 0; y<b->height; ++y) {
+                                for (int x=0; x<b->width; ++x) {
+                                    const auto idx = mapidx(pos->x + offset_x, pos->y + offset_y, pos->z);
+                                    rltk::vchar glyph;
+                                    glyph = b->glyphs[glyph_idx];
+                                    if (!b->complete) glyph.foreground = rltk::colors::GREY;
+                                    auto door = E->component<construct_door_t>();
+                                    if (door && door->locked) glyph.background = rltk::colors::GREY;
+                                    renderables[idx].push_back(screen_render_t{pos->x + offset_x, pos->y + offset_y, pos->offsetX, pos->offsetY, glyph});
+                                    ++glyph_idx;
+                                    ++offset_x;
+                                }
+                                offset_x = 0;
+                                if (b->width == 3) offset_x = -1;
+                                ++offset_y;
+                            }
+
+                            done = true;
+                        }
+                        if (!done && E->component<renderable_composite_t>()) {
+                            add_render_composite(E->id, idx);
+                            done = true;
+                        }
+                        if (!done && pos) {
+                            auto render = E->component<renderable_t>();
+                            if (render) {
+                                renderables[idx].push_back(
+                                        screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY,
+                                                        rltk::vchar{render->glyph, render->foreground, rltk::colors::BLACK}});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
 		renderables.clear();
         composite_renderables.clear();
 
@@ -148,7 +208,7 @@ void renderables_system::update(const double time_elapsed) {
         // Add composite renderables
         each<renderable_composite_t, position_t>([] (entity_t &entity, renderable_composite_t &render, position_t &pos) {
             add_render_composite(entity.id, mapidx(pos));
-        });
+        });*/
 
 		// Add particles
 		for (const particle_t &p : particles) {

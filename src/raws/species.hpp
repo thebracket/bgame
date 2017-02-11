@@ -68,7 +68,7 @@ struct raw_civilized_t {
     int max_age = 90;
     int infant_age = 5;
     int child_age = 12;
-    uint8_t glyph = '@';
+    uint16_t glyph = '@';
     std::unordered_map<std::string, caste_t> castes;
     std::string breed_type = "";
     int clutch_size_min=0;

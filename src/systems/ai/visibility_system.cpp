@@ -147,6 +147,7 @@ void visibility_system::update(const double duration_ms) {
 			} else {
 				update_normal_viewshed(e, pos, view);
 			}
+			dirty_entities.erase(e.id);
 		}
 
 		// Make visible
