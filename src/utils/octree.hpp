@@ -43,42 +43,42 @@ struct octree_t {
         switch (segment) {
             case 0 : {
                 // Upper top-left
-                if ((left < half_w || right < half_w) && (top < half_h || bottom < half_h) && (ztop < half_d || zbottom < half_d))
+                if ((left <= half_w || right <= half_w) && (top <= half_h || bottom <= half_h) && (ztop <= half_d || zbottom <= half_d))
                     return true;
             } break;
             case 1 : {
                 // Upper top-right
-                if ((left > half_w || right > half_w) && (top < half_h || bottom < half_h) && (ztop < half_d || zbottom < half_d))
+                if ((left >= half_w || right >= half_w) && (top <= half_h || bottom <= half_h) && (ztop <= half_d || zbottom <= half_d))
                     return true;
             } break;
             case 2 : {
                 // Upper bottom-left
-                if ((left < half_w || right < half_w) && (top > half_h || bottom > half_h) && (ztop < half_d || zbottom < half_d))
+                if ((left <= half_w || right <= half_w) && (top >= half_h || bottom >= half_h) && (ztop <= half_d || zbottom <= half_d))
                     return true;
             } break;
             case 3 : {
                 // Upper bottom-right
-                if ((left > half_w || right > half_w) && (top > half_h || bottom > half_h) && (ztop < half_d || zbottom < half_d))
+                if ((left >= half_w || right >= half_w) && (top >= half_h || bottom >= half_h) && (ztop <= half_d || zbottom <= half_d))
                     return true;
             } break;
             case 4 : {
                 // Lower top-left
-                if ((left < half_w || right < half_w) && (top < half_h || bottom < half_h) && (ztop > half_d || zbottom > half_d))
+                if ((left <= half_w || right <= half_w) && (top <= half_h || bottom <= half_h) && (ztop >= half_d || zbottom >= half_d))
                     return true;
             } break;
             case 5 : {
                 // Lower top-right
-                if ((left > half_w || right > half_w) && (top < half_h || bottom < half_h) && (ztop > half_d || zbottom > half_d))
+                if ((left >= half_w || right >= half_w) && (top <= half_h || bottom <= half_h) && (ztop >= half_d || zbottom >= half_d))
                     return true;
             } break;
             case 6 : {
                 // Lower bottom-left
-                if ((left < half_w || right < half_w) && (top > half_h || bottom > half_h) && (ztop > half_d || zbottom > half_d))
+                if ((left <= half_w || right <= half_w) && (top >= half_h || bottom >= half_h) && (ztop >= half_d || zbottom >= half_d))
                     return true;
             } break;
             case 7 : {
                 // Lower bottom-right
-                if ((left > half_w || right > half_w) && (top > half_h || bottom > half_h) && (ztop > half_d || zbottom > half_d))
+                if ((left >= half_w || right >= half_w) && (top >= half_h || bottom >= half_h) && (ztop >= half_d || zbottom >= half_d))
                     return true;
             } break;
         }
