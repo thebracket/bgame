@@ -82,3 +82,23 @@ void octree_t::find_by_loc_impl(const octree_location_t &loc, std::vector<std::s
     const int subsection = get_child_index(loc);
     if (children[subsection]) children[subsection]->find_by_loc_impl(loc, result);
 }
+
+std::vector<std::size_t> octree_t::find_by_region(const int &left, const int &right, const int &top, const int &bottom, const int &ztop, const int &zbottom) {
+    std::vector<std::size_t> result;
+    find_by_region_impl(left, right, top, bottom, ztop, zbottom, result);
+    return result;
+}
+
+void octree_t::find_by_region_impl(const int &left, const int &right, const int &top, const int &bottom, const int &ztop, const int &zbottom, std::vector<std::size_t> &result) {
+    for (const auto &l : contents) {
+        if (l.x >= left && l.x <= right && l.y >=top && l.y <= bottom) {
+            result.emplace_back(l.id);
+        }
+    }
+
+    for (int i=0; i<8; i++) {
+        if (children[i] && intersects(i, left, right, top, bottom, ztop, zbottom)) {
+            children[i]->find_by_region_impl(left, right, top, bottom, ztop, zbottom, result);
+        }
+    }
+}
