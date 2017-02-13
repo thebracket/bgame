@@ -12,6 +12,7 @@
 #include "regions/decorators.hpp"
 #include "regions/trees.hpp"
 #include "regions/buildings.hpp"
+#include <algorithm>
 
 #include <rltk.hpp>
 
@@ -121,6 +122,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     bool settlement_active = false;
     int max_size = 0;
     std::size_t civ_id;
+    int blight_level = 0;
     for (auto &town : planet.civs.settlements) {
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
@@ -131,6 +133,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
             if (town.status > 0) settlement_active = true;
             max_size += town.max_size;
             civ_id = town.civ_id;
+            blight_level = std::max((int)town.blight_level, (int)blight_level);
         }
     }
 
@@ -163,7 +166,14 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         ++peep_id;
     }
 
-    build_trees(region, biome, rng);
+    if (blight_level < 100) {
+        build_trees(region, biome, rng);
+    } else {
+        std::cout << "No trees - blighted region\n";
+        for (auto &v : region.tile_vegetation_type) {
+            if (v > 0) v = 0;
+        }
+    }
 
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");
