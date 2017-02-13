@@ -12,6 +12,7 @@
 #include "regions/decorators.hpp"
 #include "regions/trees.hpp"
 #include "regions/buildings.hpp"
+#include "../../raws/materials.hpp"
 #include <algorithm>
 
 #include <rltk.hpp>
@@ -172,6 +173,13 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         std::cout << "No trees - blighted region\n";
         for (auto &v : region.tile_vegetation_type) {
             if (v > 0) v = 0;
+        }
+        auto blight_mat = get_material_by_tag("blight");
+        for (auto &m : region.tile_material) {
+            if (m > 0) {
+                auto mat = get_material(m);
+                if (mat->spawn_type == soil || mat->spawn_type == sand) m = blight_mat;
+            }
         }
     }
 
