@@ -50,15 +50,16 @@ struct civ_t {
 };
 
 struct civ_person_t {
-    std::size_t civ_id;
-    std::string species_tag;
-    std::string caste;
+    std::size_t civ_id = 0;
+    std::string species_tag = "";
+    std::string caste = "";
+    std::string behavior = "";
     int world_x, world_y;
-    bool male;
-    bool married;
-    std::size_t married_to;
-    int age;
-    bool deceased;
+    bool male = true;
+    bool married = false;
+    std::size_t married_to = 0;
+    int age = 10;
+    bool deceased = false;
     std::size_t mother_id = 0;
     std::size_t father_id = 0;
     int level = 1;
@@ -75,7 +76,7 @@ struct civ_person_t {
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( civ_id, species_tag, world_x, world_y, male, married, married_to, age, deceased, mother_id, father_id, level, caste );
+        archive( civ_id, species_tag, world_x, world_y, male, married, married_to, age, deceased, mother_id, father_id, level, caste, behavior );
     }
 };
 

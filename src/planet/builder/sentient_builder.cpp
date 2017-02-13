@@ -47,11 +47,14 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
 	if (base_hp < 1) base_hp = 1;
 	health_t health = create_health_component_sentient(species.tag, base_hp);
 
-
     int techlevel = planet.civs.civs[planet.civs.population[person_id].civ_id].tech_level;
     if (techlevel > 2) techlevel = 2;
-    const std::string profession_tag = "heavyinfantry_2";
-    std::cout << profession_tag << "\n";
+
+    sentient_ai ai{person_id, 10};
+    if (species_finder.ethics.behavior == "eat_world") {
+        ai.hostile = true;
+        ai.aggression = 100;
+    }
 
     auto sentient = create_entity()
         ->assign(position_t{x,y,z})
@@ -60,7 +63,7 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         ->assign(viewshed_t{ 6, false, false })
         ->assign(std::move(stats))
         ->assign(std::move(health))
-        ->assign(sentient_ai{person_id, 10})
+        ->assign(std::move(ai))
         ->assign(std::move(species))
         ->assign(initiative_t{})
         ->assign(ai_mode_idle_t{});

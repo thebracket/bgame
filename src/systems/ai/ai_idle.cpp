@@ -36,22 +36,28 @@ void ai_idle::update(const double duration_ms) {
             delete_component<ai_tag_my_turn_t>(e.id);
         } else if (sentient) {
             auto pos = e.component<position_t>();
-            int feelings = planet.civs.civs[planet.civs.population[sentient->person_id].civ_id].cordex_feelings;
+            int feelings = 0;
+            feelings = planet.civs.civs[planet.civs.population[sentient->person_id].civ_id].cordex_feelings;
             if (feelings < 0) {
                 sentient->hostile = true;
             } else {
                 sentient->hostile = false;
             }
+            if (planet.civs.population[sentient->person_id].behavior == "eat_world") sentient->hostile = true;
 
             // There's a chance they will go berserk
-            if (sentient->goal == SENTIENT_GOAL_IDLE && rng.roll_dice(1,500)-1+(0-feelings) <= sentient->aggression && sentient->days_since_arrival > 1) {
+            std::cout << planet.civs.population[sentient->person_id].behavior << "\n";
+            if (planet.civs.population[sentient->person_id].behavior == "eat_world" ||
+                    (sentient->goal == SENTIENT_GOAL_IDLE && rng.roll_dice(1,500)-1+(0-feelings) <= sentient->aggression && sentient->days_since_arrival > 1)) {
                 const int idx = mapidx(*pos);
+                //std::cout << "Kill mode detected, distance " << settler_map.distance_map[idx] << "\n";
                 if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
                     sentient->goal = SENTIENT_GOAL_KILL;
                 }
             }
 
             if (sentient->goal == SENTIENT_GOAL_KILL) {
+                //std::cout << "Sentient kill mode\n";
                 // Close for the kill!
                 const int idx = mapidx(*pos);
                 if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {

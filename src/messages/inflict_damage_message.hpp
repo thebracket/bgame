@@ -35,6 +35,22 @@ struct settler_ranged_attack_message : public rltk::base_message_t {
     std::size_t victim;
 };
 
+struct sentient_attack_message : public rltk::base_message_t {
+    sentient_attack_message() {}
+    sentient_attack_message(const std::size_t attack, const std::size_t defend) : attacker(attack), victim(defend) {}
+
+	std::size_t attacker;
+	std::size_t victim;
+};
+
+struct sentient_ranged_attack_message : public rltk::base_message_t {
+    sentient_ranged_attack_message() {}
+    sentient_ranged_attack_message(const std::size_t attack, const std::size_t defend) : attacker(attack), victim(defend) {}
+
+	std::size_t attacker;
+	std::size_t victim;
+};
+
 struct entity_slain_message : public rltk::base_message_t {
     entity_slain_message() {}
     entity_slain_message(const std::size_t id) : victim(id) {}

@@ -56,6 +56,7 @@
 #include "ai/ai_action_shim.hpp"
 #include "ai/ai_visibility_scan.hpp"
 #include "ai/ai_idle.hpp"
+#include "damage/sentient_attacks.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -92,6 +93,7 @@ void add_systems_to_ecs() {
     add_system<settler_ranged_attack_system>();
     add_system<settler_melee_attacks_system>();
     add_system<creature_attacks_system>();
+    add_system<sentient_attacks_system>();
     add_system<damage_system>();
     add_system<kill_system>();
     add_system<healing_system>();

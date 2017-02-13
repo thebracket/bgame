@@ -41,7 +41,7 @@ inline std::tuple<int,int,int> idxmap(int idx) noexcept {
 #ifdef BOUNDS_CHECKING
     if (x < 0 || x > REGION_WIDTH-1 || y < 0 || y>REGION_HEIGHT-1 || z<0 || z>REGION_DEPTH+1) {
         std::cout << "MapIdx bounds check fail: " << x << "/" << y << "/" << z << "\n";
-        assert(x>-1 && x<REGION_WIDTH && y>-1 && y<REGION_HEIGHT && z>-1 && z<REGION_DEPTH);
+        //assert(x>-1 && x<REGION_WIDTH && y>-1 && y<REGION_HEIGHT && z>-1 && z<REGION_DEPTH);
     }
 #endif
     return std::make_tuple(x,y,z);

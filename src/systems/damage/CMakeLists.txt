@@ -6,7 +6,7 @@ add_library(damage STATIC
         creature_attacks.cpp
         kill_system.cpp
         healing_system.cpp
-
+        sentient_attacks.cpp
         )
 target_link_libraries(damage rltk utils components raws)
 cotire(damage)

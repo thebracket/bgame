@@ -109,6 +109,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
             civ_person_t peep;
             peep.civ_id = i;
             peep.species_tag = civ.species_tag;
+            peep.behavior = species.ethics.behavior;
 
             bool picked_caste = false;
             while (!picked_caste) {

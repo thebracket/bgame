@@ -107,12 +107,12 @@ void ai_visibility_scan::update(const double duration_ms) {
             const float range = shooting_range(e, pos);
             if (hostile.terror_distance < 1.5F) {
                 // Hit it with melee weapon
-                emit_deferred(settler_attack_message{e.id, hostile.closest_fear});
+                emit_deferred(sentient_attack_message{e.id, hostile.closest_fear});
                 initiative->initiative_modifier += get_weapon_initiative_penalty(get_melee_id(e));
                 delete_component<ai_tag_my_turn_t>(e.id);
             } else if ( range != -1 && range < hostile.terror_distance) {
                 // Shoot it
-                emit_deferred(settler_ranged_attack_message{e.id, hostile.closest_fear});
+                emit_deferred(sentient_ranged_attack_message{e.id, hostile.closest_fear});
                 initiative->initiative_modifier += get_weapon_initiative_penalty(get_ranged_and_ammo_id(e).first);
                 delete_component<ai_tag_my_turn_t>(e.id);
             } else {
