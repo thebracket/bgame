@@ -14,6 +14,8 @@
 #include "regions/buildings.hpp"
 #include "../../raws/materials.hpp"
 #include <algorithm>
+#include "../../components/sentient_ai.hpp"
+#include "../../components/position.hpp"
 
 #include <rltk.hpp>
 
@@ -170,6 +172,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     if (blight_level < 100) {
         build_trees(region, biome, rng);
     } else {
+        // Blight handler
         std::cout << "No trees - blighted region\n";
         for (auto &v : region.tile_vegetation_type) {
             if (v > 0) v = 0;
@@ -181,6 +184,69 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
                 if (mat->spawn_type == soil || mat->spawn_type == sand) m = blight_mat;
             }
         }
+
+        // Build nests and move the creatures into them
+
+        int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
+        int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
+        int z = get_ground_z(region, x, y) - 20;
+        bool not_in_middle = false;
+        while (!not_in_middle) {
+            if (distance2d(x,y, REGION_WIDTH/2, REGION_HEIGHT/2)>10.0F) {
+                not_in_middle = true;
+                x = rng.roll_dice(1,REGION_WIDTH-10)+5;
+                y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
+                z = get_ground_z(region, x, y) - 20;
+                if (z < 10) z = 10;
+            }
+        }
+
+        // Caves
+        const int ground_z = get_ground_z(region, x,y);
+        int i = 20;
+        for (int sz = z; sz<ground_z-1; ++sz) {
+            for (int X = x-i; X<x+i; ++X) {
+                for (int Y = y-i; Y<y+i; ++Y) {
+                    if (distance2d(X,Y,x,y) < i) {
+                        region.tile_type[mapidx(X, Y, sz)] = tile_type::FLOOR;
+                    }
+                }
+            }
+            --i;
+        }
+
+        // Nest: central stair
+        for (int sz = z; sz < ground_z; ++sz ) {
+            region.tile_type[mapidx(x,y,sz)] = tile_type::STAIRS_UPDOWN;
+        }
+        region.tile_type[mapidx(x,y,ground_z)] = tile_type::STAIRS_DOWN;
+        region.tile_type[mapidx(x,y,z)] == tile_type::STAIRS_UP;
+
+        // Mound above
+        i = 20;
+        for (int sz = ground_z; sz<ground_z+20; ++sz) {
+            for (int X = x-i; X<x+i; ++X) {
+                for (int Y = y-i; Y<y+i; ++Y) {
+                    if (distance2d(X,Y,x,y) < i && sz<REGION_DEPTH && x>0 && x<REGION_WIDTH && y>0 && y<REGION_HEIGHT) {
+                        if (sz != ground_z) {
+                            region.tile_type[mapidx(X, Y, sz)] = tile_type::SOLID;
+                            region.tile_material[mapidx(X, Y, sz)] = blight_mat;
+                        }
+                        else if (x != X) {
+                            region.tile_type[mapidx(X, Y, sz)] = tile_type::SOLID;
+                            region.tile_material[mapidx(X, Y, sz)] = blight_mat;
+                        }
+                    }
+                }
+            }
+            --i;
+        }
+
+        each<sentient_ai, position_t>([&x, &y, &z] (entity_t &e, sentient_ai &ai, position_t &pos) {
+            pos.x = x;
+            pos.y = y;
+            pos.z = z;
+        });
     }
 
     // Build connectivity graphs

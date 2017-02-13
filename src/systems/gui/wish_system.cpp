@@ -26,6 +26,10 @@ void wish_system::make_wish(const std::string &wish) {
         dijkstra_debug = !dijkstra_debug;
     } else if (wish == "show flags") {
         flags_debug = !flags_debug;
+    } else if (wish == "reveal all") {
+        std::fill(current_region->revealed.begin(), current_region->revealed.end(), true);
+        std::fill(current_region->visible.begin(), current_region->visible.end(), true);
+        emit_deferred(map_dirty_message{});
     }
 
     game_master_mode = PLAY;
