@@ -6,6 +6,7 @@ add_library(regions STATIC
         decorators.cpp
         trees.cpp
         buildings.cpp
+        blight_builder.cpp
         )
 target_link_libraries(regions rltk raws FastNoise)
 cotire(regions)

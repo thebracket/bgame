@@ -15,5 +15,5 @@ add_library(builder STATIC
         regions/trees.cpp
         regions/buildings.cpp
         )
-target_link_libraries(builder rltk raws FastNoise)
+target_link_libraries(builder rltk raws FastNoise regions)
 cotire(builder)
