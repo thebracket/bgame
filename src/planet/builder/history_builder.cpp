@@ -47,6 +47,73 @@ std::string random_species(rltk::random_number_generator &rng) {
     throw std::runtime_error("Should not have got this far!");
 }
 
+void planet_build_spawn_sentient(planet_t &planet, random_number_generator &rng, int &i, civ_t &civ,
+            raw_civilized_t &species, std::vector<std::tuple<int, int, int, std::string>> &available_castes,
+            std::pair<int,int> &starting_loc)
+{
+    civ_person_t peep;
+    peep.civ_id = i;
+    peep.species_tag = civ.species_tag;
+    peep.behavior = species.ethics.behavior;
+
+    bool picked_caste = false;
+    while (!picked_caste) {
+        int random = rng.roll_dice(1, available_castes.size()) - 1;
+
+        const int n_present = std::get<0>(available_castes[random]);
+        const int min_present = std::get<1>(available_castes[random]);
+        const int max_present = std::get<2>(available_castes[random]);
+
+        //std::cout << "Evaluating " << std::get<3>(available_castes[random]) << ", " << n_present << "/" << min_present << "\n";
+
+        if (min_present > 0) {
+            if (n_present < min_present && n_present <= max_present) {
+                ++std::get<0>(available_castes[random]);
+                picked_caste = true;
+                peep.caste = std::get<3>(available_castes[random]);
+            }
+        } else {
+            ++std::get<0>(available_castes[random]);
+            picked_caste = true;
+            peep.caste = std::get<3>(available_castes[random]);
+        }
+        if (!picked_caste) random = rng.roll_dice(1, available_castes.size()) - 1;
+    }
+
+    peep.world_x = starting_loc.first;
+    peep.world_y = starting_loc.second;
+    if (rng.roll_dice(1,2)==1) {
+        peep.male = true;
+    } else {
+        peep.male = false;
+    }
+    peep.married = false;
+    peep.married_to = 0;
+    peep.deceased = false;
+    peep.age = 1;
+    peep.level = species.castes[peep.caste].starting_level;
+    peep.str = rng.roll_dice(3,6) + hb_stat_mod(species, "str");
+    peep.dex = rng.roll_dice(3,6) + hb_stat_mod(species, "dex");
+    peep.con = rng.roll_dice(3,6) + hb_stat_mod(species, "con");
+    peep.intelligence = rng.roll_dice(3,6) + hb_stat_mod(species, "int");
+    peep.wis = rng.roll_dice(3,6) + hb_stat_mod(species, "wis");
+    peep.cha = rng.roll_dice(3,6) + hb_stat_mod(species, "cha");
+    peep.com = rng.roll_dice(3,6) + hb_stat_mod(species, "com");
+    peep.ethics = rng.roll_dice(3,6) + hb_stat_mod(species, "eth");
+
+    peep.hit_points = 10 + stat_modifier(peep.con);
+    if (peep.level > 1) {
+        for (int i=1; i<peep.level; ++i) {
+            peep.hit_points += rng.roll_dice(species.castes[peep.caste].hp_n,
+                                             species.castes[peep.caste].hp_dice) +
+                               species.castes[peep.caste].hp_mod;
+        }
+    }
+
+    planet.civs.population.push_back(peep);
+    //std::cout << "Spawned a " << peep.caste << "\n";
+}
+
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
@@ -95,6 +162,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         }
         town.world_x = starting_loc.first;
         town.world_y = starting_loc.second;
+        town.status = 2;
         planet.civs.settlements.push_back(town);
         std::cout << "They have founded the town, " << town.name << "\n";
 
@@ -106,144 +174,10 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         const int n_peeps = rng.roll_dice(10,20);
         for (int j=0; j<n_peeps; ++j) {
-            civ_person_t peep;
-            peep.civ_id = i;
-            peep.species_tag = civ.species_tag;
-            peep.behavior = species.ethics.behavior;
-
-            bool picked_caste = false;
-            while (!picked_caste) {
-                int random = rng.roll_dice(1, available_castes.size()) - 1;
-
-                const int n_present = std::get<0>(available_castes[random]);
-                const int min_present = std::get<1>(available_castes[random]);
-                const int max_present = std::get<2>(available_castes[random]);
-
-                //std::cout << "Evaluating " << std::get<3>(available_castes[random]) << ", " << n_present << "/" << min_present << "\n";
-
-                if (min_present > 0) {
-                    if (n_present < min_present && n_present <= max_present) {
-                        ++std::get<0>(available_castes[random]);
-                        picked_caste = true;
-                        peep.caste = std::get<3>(available_castes[random]);
-                    }
-                } else {
-                    ++std::get<0>(available_castes[random]);
-                    picked_caste = true;
-                    peep.caste = std::get<3>(available_castes[random]);
-                }
-                if (!picked_caste) random = rng.roll_dice(1, available_castes.size()) - 1;
-            }
-
-            peep.world_x = starting_loc.first;
-            peep.world_y = starting_loc.second;
-            if (rng.roll_dice(1,2)==1) {
-                peep.male = true;
-            } else {
-                peep.male = false;
-            }
-            peep.married = false;
-            peep.married_to = 0;
-            peep.deceased = false;
-            peep.age = 12 + rng.roll_dice(1,30);
-            peep.level = species.castes[peep.caste].starting_level;
-            peep.str = rng.roll_dice(3,6) + hb_stat_mod(species, "str");
-            peep.dex = rng.roll_dice(3,6) + hb_stat_mod(species, "dex");
-            peep.con = rng.roll_dice(3,6) + hb_stat_mod(species, "con");
-            peep.intelligence = rng.roll_dice(3,6) + hb_stat_mod(species, "int");
-            peep.wis = rng.roll_dice(3,6) + hb_stat_mod(species, "wis");
-            peep.cha = rng.roll_dice(3,6) + hb_stat_mod(species, "cha");
-            peep.com = rng.roll_dice(3,6) + hb_stat_mod(species, "com");
-            peep.ethics = rng.roll_dice(3,6) + hb_stat_mod(species, "eth");
-
-            peep.hit_points = 10 + stat_modifier(peep.con);
-            if (peep.level > 1) {
-                for (int i=1; i<peep.level; ++i) {
-                    peep.hit_points += rng.roll_dice(species.castes[peep.caste].hp_n,
-                                                     species.castes[peep.caste].hp_dice) +
-                                       species.castes[peep.caste].hp_mod;
-                }
-            }
-
-            planet.civs.population.push_back(peep);
-            //std::cout << "Spawned a " << peep.caste << "\n";
+            planet_build_spawn_sentient(planet, rng, i, civ, species, available_castes, starting_loc);
         }
         planet.civs.civs.push_back(civ);
     }
-
-/*
-    const int n_civs = WORLD_WIDTH;
-    for (int i=0; i<n_civs; ++i) {
-        civ_t civ;
-
-        // Define the initial species
-        civ.species_tag = random_species(rng);
-        auto species = *get_species_def(civ.species_tag);
-        if (species.alignment == align_evil) civ.cordex_feelings = -3;
-        civ.r = rng.roll_dice(1,192);
-        civ.g = rng.roll_dice(1,192);
-        civ.b = rng.roll_dice(1,192);
-        if (species.alignment == align_evil) civ.r = 255;
-        if (species.alignment == align_neutral) civ.b = 255;
-        if (species.alignment == align_good) civ.g = 255;
-
-        civ.name = civ_name_generator(planet, i, civ.species_tag, rng);
-        //std::cout << civ.name << " - " << civ.species_tag << "\n";
-
-        // Find a starting location
-        std::pair<int,int> starting_loc;
-        bool found = false;
-        while (!found) {
-            starting_loc = { rng.roll_dice(1, WORLD_WIDTH)-1, rng.roll_dice(1, WORLD_HEIGHT)-1 };
-            if (planet.landblocks[planet.idx(starting_loc.first, starting_loc.second)].type != block_type::WATER)
-            {
-                bool dupe = false;
-                for (const auto &s : planet.civs.settlements) {
-                    if (s.world_x == starting_loc.first && s.world_y == starting_loc.second) dupe = true;
-                }
-                if (!dupe) found = true;
-            }
-        }
-        //std::cout << "Starting at " << starting_loc.first << "," << starting_loc.second << "\n";
-
-        // Build the initial settlement
-        settlement_t town;
-        town.civ_id = i;
-        town.name = std::string("Settlement #") + std::to_string(planet.civs.settlements.size());
-        town.world_x = starting_loc.first;
-        town.world_y = starting_loc.second;
-        planet.civs.settlements.push_back(town);
-        //std::cout << "They have founded the town, " << town.name << "\n";
-
-        // Generate an initial population of unimportant people
-        const int n_peeps = rng.roll_dice(5,20);
-        for (int j=0; j<n_peeps; ++j) {
-            civ_person_t peep;
-            peep.civ_id = i;
-            peep.species_tag = civ.species_tag;
-            peep.world_x = starting_loc.first;
-            peep.world_y = starting_loc.second;
-            if (rng.roll_dice(1,2)==1) {
-                peep.male = true;
-            } else {
-                peep.male = false;
-            }
-            peep.married = false;
-            peep.married_to = 0;            
-            peep.deceased = false;
-            peep.age = 12 + rng.roll_dice(1,30);
-            peep.level = 1;
-
-            planet.civs.population.push_back(peep);
-        }
-        //std::cout << "They started with a population of " << n_peeps << "\n\n";
-
-        planet.civs.civs.push_back(civ);
-        //planet_display_update_zoomed(planet, starting_loc.first, starting_loc.second);
-    }
-
-    std::cout << "Seeded the world with " << n_civs << " civilizations and " << planet.civs.population.size() << " folk.\n";
-*/
 }
 
 /*
@@ -671,10 +605,168 @@ void planet_build_run_year(const int &year, planet_t &planet, rltk::random_numbe
 }
 */
 
+void planet_build_births(planet_t &planet, random_number_generator &rng) {
+    const std::size_t max_peep_id = planet.civs.population.size();
+    int births = 0;
+    for (std::size_t i=0; i<max_peep_id; ++i) {
+        auto peep = planet.civs.population[i];
+        if (peep.deceased) break;
+        auto species_def = civ_defs.find(peep.species_tag)->second;
+        auto caste_def = species_def.castes.find(peep.caste)->second;
+
+        // Hatching types
+        if (species_def.breed_type == "hatch") {
+            if (caste_def.fertile) {
+                std::vector<std::tuple<int, int, int, std::string>> available_castes;
+                for (auto &caste : species_def.castes) {
+                    available_castes.push_back( std::make_tuple( 0, caste.second.min_per_occupied_region, caste.second.max_per_region, caste.first ) );
+                }
+                for (const auto &p : planet.civs.population) {
+                    if (!p.deceased && p.civ_id == peep.civ_id & p.world_x == peep.world_x && p.world_y == peep.world_y) {
+                        for (auto &c : available_castes) {
+                            if (std::get<3>(c) == p.caste) std::get<0>(c)++;
+                        }
+                    }
+                }
+
+
+                const int max_hatchlings = species_def.clutch_size_max;
+                const int min_hatchlings = species_def.clutch_size_min;
+                const int hatch_range = max_hatchlings - min_hatchlings;
+                const int n_hatchlings = rng.roll_dice(1, hatch_range) + min_hatchlings;
+
+                // Now we need to create n_hatchlings
+                for (int j=0; j<n_hatchlings; ++j) {
+                    int civ_id = (int)peep.civ_id;
+                    std::pair<int,int> loc = std::make_pair( peep.world_x, peep.world_y );
+                    planet_build_spawn_sentient(planet, rng, civ_id, planet.civs.civs[peep.civ_id],
+                                                species_def, available_castes, loc);
+                    ++births;
+                }
+            }
+        }
+    }
+    std::cout << "Births this year: " << births << "\n";
+}
+
+void planet_build_natural_deaths(planet_t &planet) {
+    int deaths = 0;
+    for (auto &peep : planet.civs.population) {
+        if (peep.deceased) break;
+        ++peep.age;
+        auto species_def = civ_defs.find(peep.species_tag)->second;
+        if (peep.age > species_def.max_age) {
+            peep.deceased = true;
+            ++deaths;
+        }
+    }
+    std::cout << "Deaths this year: " << deaths << "\n";
+}
+
+settlement_t * find_settlement_by_loc(planet_t &planet, const int &wx, const int &wy) {
+    for (auto &town : planet.civs.settlements) {
+        if (town.world_x == wx && town.world_y == wy) return &town;
+    }
+    return nullptr;
+}
+
+inline void planet_build_evaluate_move_option(std::vector<int> &candidates, planet_t &planet, const int &idx) {
+    if (planet.landblocks[idx].type == block_type::WATER) return;
+
+    int weight = 1;
+    if (planet.landblocks[idx].type == block_type::PLAINS) weight=4;
+    if (planet.landblocks[idx].type == block_type::HILLS) weight=2;
+    if (planet.landblocks[idx].type == block_type::MOUNTAINS) weight=1;
+    if (planet.landblocks[idx].type == block_type::MARSH) weight=2;
+    if (planet.landblocks[idx].type == block_type::PLATEAU) weight=4;
+    if (planet.landblocks[idx].type == block_type::HIGHLANDS) weight=3;
+    if (planet.landblocks[idx].type == block_type::COASTAL) weight=4;
+    if (planet.landblocks[idx].type == block_type::SALT_MARSH) weight=1;
+
+    for (int i=0; i<weight; ++i) candidates.push_back(idx);
+}
+
+inline void planet_build_run_movement(planet_t &planet, rltk::random_number_generator &rng,
+                                      civ_person_t &peep, std::size_t &peep_id)
+{
+    std::vector<int> candidates;
+    if (peep.world_y > 2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x, peep.world_y-1));
+    if (peep.world_y < WORLD_HEIGHT-2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x, peep.world_y+1));
+    if (peep.world_x > 2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x-1, peep.world_y));
+    if (peep.world_x < WORLD_WIDTH-2) planet_build_evaluate_move_option(candidates, planet, planet.idx(peep.world_x+1, peep.world_y));
+
+    if (!candidates.empty()) {
+        const int roll = rng.roll_dice(1, (int)candidates.size())-1;
+        const int destination = candidates[roll];
+        peep.world_x = destination % WORLD_WIDTH;
+        peep.world_y = destination / WORLD_WIDTH;
+    }
+}
+
+void planet_explore(planet_t &planet, random_number_generator &rng) {
+    std::size_t i=0;
+    for (auto &peep : planet.civs.population) {
+        if (peep.deceased) {
+            ++i;
+            break;
+        }
+        ++peep.age;
+        auto species_def = civ_defs.find(peep.species_tag)->second;
+        auto caste_def = species_def.castes.find(peep.caste)->second;
+
+        // blight spreaders - they spread when the area they are in is converted
+        auto town = find_settlement_by_loc(planet, peep.world_x, peep.world_y);
+        if (caste_def.spreads_blight && !caste_def.guard_only) {
+            if (town && town->blight_level > 99) {
+                int move_roll = rng.roll_dice(1, 100);
+                if (move_roll < 75) {
+                    planet_build_run_movement(planet, rng, peep, i);
+                }
+            } else {
+                if (town) {
+                    ++town->blight_level;
+                } else {
+                    // Found a new town
+                    settlement_t town;
+                    town.civ_id = i;
+                    if (species_def.ethics.mentality == "hive") {
+                        town.name = species_def.name + std::string(" Hive");
+                        town.blight_level = 1;
+                    } else {
+                        town.name = std::string("Settlement #") + std::to_string(planet.civs.settlements.size());
+                    }
+                    town.world_x = peep.world_x;
+                    town.world_y = peep.world_y;
+                    town.status = 2;
+                    planet.civs.settlements.push_back(town);
+                    //std::cout << "New settlement: " << town.name << " at " << town.world_x << "," << town.world_y << "\n";
+                }
+            }
+        }
+        ++i;
+    }
+}
+
+void planet_build_run_year(int year, planet_t &planet, random_number_generator &rng) {
+    set_worldgen_status("Running Year " + std::to_string(year));
+
+    // TODO: Tech advancements
+    std::cout << "Births\n";
+    planet_build_births(planet, rng);
+    std::cout << "Deaths\n";
+    planet_build_natural_deaths(planet);
+    std::cout << "Exploration\n";
+    planet_explore(planet, rng);
+    // TODO: Conflicts in regions
+    // TODO: Cull abandoned settlements
+    // TODO: Mark extinct civs
+}
+
 void planet_build_initial_history(planet_t &planet, rltk::random_number_generator &rng) {
-    /*
-    for (int year=2475; year<2525; ++year) {        
+    constexpr int STARTING_YEAR = 2425;
+    for (int year=STARTING_YEAR; year<2525; ++year) {
         planet_build_run_year(year, planet, rng);
+        planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
     }
 
     std::unordered_map<int, int> civpops;
@@ -704,5 +796,5 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
                 std::cout << finder->second << " remain. Tech level: " << +planet.civs.civs[i].tech_level << "\n";
             }
         }
-    }*/
+    }
 }

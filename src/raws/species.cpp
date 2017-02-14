@@ -98,7 +98,7 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                         if (diet_type == "carnivore") s.diet = diet_carnivore;
                     }
                     if (subfield == "mentality") s.ethics.mentality = lua_tostring(lua_state, -1);
-                    if (subfield == "blight") s.ethics.spread_blight = true;
+                    if (subfield == "blight") s.ethics.spread_blight = lua_toboolean(lua_state, -1);
                     if (subfield == "behavior") s.ethics.behavior = lua_tostring(lua_state, -1);
                     lua_pop(lua_state, 1);
                 }
@@ -111,9 +111,9 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
             if (field == "clutch_size_min") s.clutch_size_min = lua_tonumber(lua_state, -1);
             if (field == "clutch_size_max") s.clutch_size_max = lua_tonumber(lua_state, -1);
             if (field == "clutch_frequency") s.clutch_frequency = lua_tonumber(lua_state, -1);
-            if (field == "gains_tech_by_eating") s.gains_tech_by_eating = true;
-            if (field == "lisp") s.lisp = true;
-            if (field == "never_negotiates") s.never_negotiates = true;
+            if (field == "gains_tech_by_eating") s.gains_tech_by_eating = lua_toboolean(lua_state, -1);
+            if (field == "lisp") s.lisp = lua_toboolean(lua_state, -1);
+            if (field == "never_negotiates") s.never_negotiates = lua_toboolean(lua_state, -1);
             if (field == "castes") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
@@ -125,13 +125,13 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
                         std::string subfield = lua_tostring(lua_state, -2);
-                        if (subfield == "fertile") caste.fertile = true;
+                        if (subfield == "fertile") caste.fertile = lua_toboolean(lua_state, -1);
                         if (subfield == "hp_n") caste.hp_n = lua_tonumber(lua_state, -1);
                         if (subfield == "hp_dice") caste.hp_n = lua_tonumber(lua_state, -1);
                         if (subfield == "hp_mod") caste.hp_n = lua_tonumber(lua_state, -1);
-                        if (subfield == "spreads_blight") caste.spreads_blight = true;
-                        if (subfield == "destroys_everything") caste.destroys_everything = true;
-                        if (subfield == "berserk") caste.berserk = true;
+                        if (subfield == "spreads_blight") caste.spreads_blight = lua_toboolean(lua_state, -1);
+                        if (subfield == "destroys_everything") caste.destroys_everything = lua_toboolean(lua_state, -1);
+                        if (subfield == "berserk") caste.berserk = lua_toboolean(lua_state, -1);
                         if (subfield == "max_per_region") caste.max_per_region = lua_tonumber(lua_state, -1);
                         if (subfield == "min_per_occupied_region") caste.min_per_occupied_region = lua_tonumber(lua_state, -1);
                         if (subfield == "starting_level") caste.starting_level = lua_tonumber(lua_state, -1);
