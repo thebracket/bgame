@@ -14,7 +14,7 @@ struct material_def_t {
     std::string name = "";
     material_def_spawn_type_t spawn_type = rock;
     std::string parent_material_tag = "";
-    uint8_t glyph;
+    uint16_t glyph;
     rltk::color_t fg;
     rltk::color_t bg;
     uint8_t hit_points = 0;

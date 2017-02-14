@@ -270,8 +270,11 @@ void region_t::calc_render(const int &idx) {
 			fg = get_material(tile_material[idx])->fg;
 		} break;
 		case tile_type::FLOOR: {
+
 			if (get_material(tile_material[idx])->spawn_type == sand) {
 				glyph = 258;
+			} else if (get_material(tile_material[idx])->spawn_type == blight) {
+				glyph = 265;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
 				glyph = 256;
 			} else {

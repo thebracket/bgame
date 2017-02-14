@@ -35,6 +35,7 @@ civilized_species = {
         castes = {
             queen = { max_per_region=1, min_per_occupied_region=1, starting_level = 10, name = "Hive Queen",
                 fertile=true,
+                berserk=false,
                 combat = {
                     armor_class = 20,
                     attacks = {
@@ -47,6 +48,7 @@ civilized_species = {
             },
             prince = { max_per_region=16, min_per_occupied_region=1, starting_level = 10, name = "Hive Prince",
                 fertile=true,
+                berserk=false,
                 combat = {
                     armor_class = 18,
                     attacks = {
@@ -59,6 +61,7 @@ civilized_species = {
             },
             soldier = { probability=1, starting_level = 10, name = "Hive Soldier",
                 fertile = false,
+                berserk=true,
                 combat = {
                     armor_class = 16,
                     attacks = {
@@ -70,6 +73,7 @@ civilized_species = {
             },
             worker = { probability=3, starting_level = 10, name = "Hive Worker",
                 fertile = false,
+                berserk=false,
                 combat = {
                     armor_class = 16,
                     attacks = {

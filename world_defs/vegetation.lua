@@ -70,5 +70,9 @@ vegetation = {
     garlic = build_veg("Garlic", fast_lifecycle, veg_g('tilled', 'grass_sparse', 'grass_long', 'flower_small'), harvest_normal('garlic_herb'), {''}),
     rhubarb = build_veg("Rhubarb", fast_lifecycle, veg_g('tilled', 'grass_sparse', 'grass_long', 'flower_small'), harvest_normal('rhubarb_herb'), {''}),
     lavendar = build_veg("Lavendar", fast_lifecycle, veg_g('tilled', 'grass_sparse', 'grass_long', 'flower_purple'), harvest_normal('lavendar_herb'), {''}),
-    sage = build_veg("Sage", fast_lifecycle, veg_g('tilled', 'grass_sparse', 'bush', 'bush'), harvest_normal('sage_herb'), {''})
+    sage = build_veg("Sage", fast_lifecycle, veg_g('tilled', 'grass_sparse', 'bush', 'bush'), harvest_normal('sage_herb'), {''}),
+
+    -- Mushrooms
+    deathcap = build_veg("Deathcap", grass_lifecycle, veg_g('tilled', 'toadstool_red', 'toadstool_red', 'toadstool_red'), harvest_normal('none'), {'spread'}),
+    blightcap = build_veg("Blightcap", grass_lifecycle, veg_g('tilled', 'toadstool_green', 'toadstool_green', 'toadstool_green'), harvest_normal('none'), {'spread'})
 }

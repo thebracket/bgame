@@ -131,6 +131,7 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                         if (subfield == "hp_mod") caste.hp_n = lua_tonumber(lua_state, -1);
                         if (subfield == "spreads_blight") caste.spreads_blight = true;
                         if (subfield == "destroys_everything") caste.destroys_everything = true;
+                        if (subfield == "berserk") caste.berserk = true;
                         if (subfield == "max_per_region") caste.max_per_region = lua_tonumber(lua_state, -1);
                         if (subfield == "min_per_occupied_region") caste.min_per_occupied_region = lua_tonumber(lua_state, -1);
                         if (subfield == "starting_level") caste.starting_level = lua_tonumber(lua_state, -1);

@@ -5,7 +5,7 @@
 #include <rltk.hpp>
 #include <cereal/cereal.hpp>
 
-enum material_def_spawn_type_t { no_spawn_type, cluster_rock, rock, soil, sand, metal, synthetic, organic, leather, food, spice };
+enum material_def_spawn_type_t { no_spawn_type, cluster_rock, rock, soil, sand, metal, synthetic, organic, leather, food, spice, blight };
 
 struct reaction_input_t {
 	std::string tag = "";

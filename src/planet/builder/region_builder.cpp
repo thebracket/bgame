@@ -16,6 +16,7 @@
 #include <algorithm>
 #include "../../components/sentient_ai.hpp"
 #include "../../components/position.hpp"
+#include "../../raws/plants.hpp"
 
 #include <rltk.hpp>
 
@@ -173,9 +174,20 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         build_trees(region, biome, rng);
     } else {
         // Blight handler
+        auto red_mushroom = get_plant_idx("deathcap");
+        auto green_mushroom = get_plant_idx("blightcap");
         std::cout << "No trees - blighted region\n";
         for (auto &v : region.tile_vegetation_type) {
-            if (v > 0) v = 0;
+            if (v > 0) {
+                const int roll = rng.roll_dice(1,6);
+                if (roll <= 2) {
+                    v = red_mushroom;
+                } else if (roll < 6) {
+                    v = green_mushroom;
+                } else {
+                    v = 0;
+                }
+            }
         }
         auto blight_mat = get_material_by_tag("blight");
         for (auto &m : region.tile_material) {
@@ -186,10 +198,12 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         }
 
         // Build nests and move the creatures into them
+        const int mound_height = rng.roll_dice(3,6);
+        const int mound_depth = rng.roll_dice(3,6);
 
         int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
         int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
-        int z = get_ground_z(region, x, y) - 20;
+        int z = get_ground_z(region, x, y) - mound_depth;
         bool not_in_middle = false;
         while (!not_in_middle) {
             if (distance2d(x,y, REGION_WIDTH/2, REGION_HEIGHT/2)>10.0F) {
@@ -203,11 +217,11 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 
         // Caves
         const int ground_z = get_ground_z(region, x,y);
-        int i = 20;
+        int i = mound_depth;
         for (int sz = z; sz<ground_z-1; ++sz) {
             for (int X = x-i; X<x+i; ++X) {
                 for (int Y = y-i; Y<y+i; ++Y) {
-                    if (distance2d(X,Y,x,y) < i) {
+                    if (distance2d(X,Y,x,y)+1.0f < i/2.0f) {
                         region.tile_type[mapidx(X, Y, sz)] = tile_type::FLOOR;
                     }
                 }
@@ -223,11 +237,11 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         region.tile_type[mapidx(x,y,z)] == tile_type::STAIRS_UP;
 
         // Mound above
-        i = 20;
-        for (int sz = ground_z; sz<ground_z+20; ++sz) {
+        i = mound_height;
+        for (int sz = ground_z; sz<ground_z+mound_height; ++sz) {
             for (int X = x-i; X<x+i; ++X) {
                 for (int Y = y-i; Y<y+i; ++Y) {
-                    if (distance2d(X,Y,x,y) < i && sz<REGION_DEPTH && x>0 && x<REGION_WIDTH && y>0 && y<REGION_HEIGHT) {
+                    if (distance2d(X,Y,x,y)+1.0f < i/2.0f && sz<REGION_DEPTH && x>0 && x<REGION_WIDTH && y>0 && y<REGION_HEIGHT) {
                         if (sz != ground_z) {
                             region.tile_type[mapidx(X, Y, sz)] = tile_type::SOLID;
                             region.tile_material[mapidx(X, Y, sz)] = blight_mat;

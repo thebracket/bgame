@@ -52,6 +52,7 @@ struct caste_t {
     bool guard_only = false;
     bool spreads_blight = false;
     bool destroys_everything = false;
+    bool berserk = false;
 };
 
 struct raw_civilized_t {

@@ -334,8 +334,8 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 10
     },
-    blight = { name = "Blight", type="organic",
-        glyph = glyphs['blight'], fg=colors['white'], bg=colors['black'],
+    blight = { name = "Blight", type="blight",
+        glyph = glyphs['blight'], fg=colors['brown'], bg=colors['black'],
         hit_points = 10
     },
     food = { name = "Food:", type="food", 
