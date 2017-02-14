@@ -4,6 +4,7 @@ vegetation.lua
 stockpiles.lua
 clothing.lua
 species.lua
+emmet.lua
 creatures.lua
 life_events.lua
 starting_professions.lua
