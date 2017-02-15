@@ -56,6 +56,16 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
             if (field == "group_name") s.collective_name = lua_tostring(lua_state, -1);
             if (field == "description") s.description = lua_tostring(lua_state, -1);
             if (field == "baby_name") s.baby_name = lua_tostring(lua_state, -1);
+            if (field == "tech_level") s.tech_level = lua_tonumber(lua_state, -1);
+            if (field == "evolves_into") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string evolution_target = lua_tostring(lua_state, -1);
+                    s.evolves_into.push_back(evolution_target);
+                    lua_pop(lua_state, 1);
+                }
+            }
             if (field == "stat_mods") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);

@@ -63,6 +63,8 @@ struct raw_civilized_t {
     std::string collective_name = "";
     std::string baby_name = "";
     std::string description = "";
+    int tech_level = 0;
+    std::vector<std::string> evolves_into;
     std::unordered_map<std::string,int> stat_mods;
     std::vector<std::tuple<std::string, int, int>> body_parts;
     ethics_t ethics;

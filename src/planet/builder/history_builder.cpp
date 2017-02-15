@@ -10,41 +10,24 @@
 #include <iostream>
 #include <sstream>
 
-/*
-const std::string random_species(rltk::random_number_generator &rng) {
-    const auto n_species = get_species_defs_size();
-    const int roll = rng.roll_dice(1, n_species)-1;
-    return get_species_nth_tag(roll);
-}
-
-std::string civ_name_generator(planet_t &planet, int i, std::string &species_tag, rltk::random_number_generator &rng)
-{
-    std::string format = "{NOUN}";
-    auto species = *get_species_def(species_tag);
-    str_replace(format, "{SPECIES}", species.collective_name);
-    str_replace(format, "{NOUN}", to_proper_noun_case(last_names.random_entry(rng)));
-
-    return format;
-}
-*/
-
 int hb_stat_mod(raw_civilized_t &species, const std::string &stat) {
     auto finder = species.stat_mods.find(stat);
     if (finder == species.stat_mods.end()) return 0;
     return finder->second;
 }
 
-std::string random_species(rltk::random_number_generator &rng) {
+std::string random_species(rltk::random_number_generator &rng, const int desired_tech_level=0) {
     const std::size_t size = civ_defs.size();
-    const auto random = rng.roll_dice(1, size)-1;
-    auto i=0;
-    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
-        if (i == random) {
-            return it->second.tag;
+    while (true) {
+        const auto random = rng.roll_dice(1, size)-1;
+        auto i = 0;
+        for (auto it = civ_defs.begin(); it != civ_defs.end(); ++it) {
+            if (i == random && it->second.tech_level == desired_tech_level) {
+                return it->second.tag;
+            }
+            ++i;
         }
-        ++i;
     }
-    throw std::runtime_error("Should not have got this far!");
 }
 
 void planet_build_spawn_sentient(planet_t &planet, random_number_generator &rng, int &i, civ_t &civ,
