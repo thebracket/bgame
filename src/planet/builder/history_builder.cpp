@@ -293,8 +293,7 @@ namespace history_builder {
         return available_castes;
     }
 
-    void
-    hatch_eggs(planet_t &planet, random_number_generator &rng, raw_civilized_t &species_def, civ_person_t &peep) {
+    void hatch_eggs(planet_t &planet, random_number_generator &rng, raw_civilized_t &species_def, civ_person_t &peep) {
         std::vector<std::tuple<int, int, int, std::string>> available_castes = get_available_castes(planet, species_def,
                                                                                                     peep);
 
@@ -638,7 +637,7 @@ void planet_build_run_year(const int &year, planet_t &planet, random_number_gene
         auto &caste = species.castes.find(peep.caste)->second;
         const int pidx = planet.idx(peep.world_x, peep.world_y);
 
-        if (!peep.deceased && peep.age > species.child_age) {
+        if (!peep.deceased) {
             bool can_move = true;
 
             // Age and natural death
@@ -709,27 +708,10 @@ void planet_build_run_year(const int &year, planet_t &planet, random_number_gene
 
     // Settlement cull
     planet_settlement_cull(planet);
-
-    // Clean up
-    planet.civs.population.erase( std::remove_if(
-            planet.civs.population.begin(),
-            planet.civs.population.end(),
-            [] (civ_person_t &p) { return p.deceased; }
-                                  ),
-        planet.civs.population.end());
-    planet_build_map->regions.clear();
-    for (std::size_t i=0; i<planet.civs.settlements.size(); ++i) {
-        const auto &town = planet.civs.settlements[i];
-        record_town(planet.idx(town.world_x, town.world_y), i);
-    }
-    for (std::size_t i=0; i<planet.civs.population.size(); ++i) {
-        const auto &peep = planet.civs.population[i];
-        record_arrival(planet.idx(peep.world_x, peep.world_y), peep, i);
-    }
 }
 
 void planet_build_initial_history(planet_t &planet, rltk::random_number_generator &rng) {
-    constexpr int STARTING_YEAR = 2475;
+    constexpr int STARTING_YEAR = 2500;
     for (int year=STARTING_YEAR; year<2525; ++year) {
         set_worldgen_status(std::string("Running year ") + std::to_string(year));
         planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
