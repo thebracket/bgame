@@ -123,9 +123,10 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 				for (const auto &s : planet.civs.settlements) {
 					if (s.world_x == x && s.world_y == y) {
 						color_t civ_color = color_t{planet.civs.civs[s.civ_id].r, planet.civs.civs[s.civ_id].g, planet.civs.civs[s.civ_id].b};
-						if (s.status == 0) (*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::DARK_GREY, rltk::colors::BLACK};
-						if (s.status == 1) (*planet_builder_display.get())[idx] = rltk::vchar{'*', rltk::colors::WHITE, civ_color};
-						if (s.status == 2) (*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::WHITE, civ_color};
+						//if (s.status == 0) (*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::DARK_GREY, rltk::colors::BLACK};
+						//if (s.status == 1) (*planet_builder_display.get())[idx] = rltk::vchar{'*', rltk::colors::WHITE, civ_color};
+						//if (s.status == 2) (*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::WHITE, civ_color};
+						if (s.status != 0) (*planet_builder_display.get())[idx] = rltk::vchar{planet.civs.civs[s.civ_id].glyph, rltk::colors::WHITE, civ_color};
 					}
 				}
 			}

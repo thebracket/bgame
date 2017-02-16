@@ -1,4 +1,4 @@
--- This is a prototype of what the new species system should look like.
+-- Scary ant-people who just want to eat the world
 civilized_species['emmet'] = {
     name = "Emmet",
     male_name = "Emmet",
@@ -10,13 +10,13 @@ civilized_species['emmet'] = {
     stat_mods = { con = 2, str = 2, int = -2, wis = -2 },
     parts = humanoid_parts,
     ethics = { diet = "omnivore", mentality = "hive", blight = true, behavior = "eat_world" },
-    max_age = 20,
+    max_age = 10,
     infant_age = 1,
-    child_age = 2,
+    child_age = 1,
     glyph = glyphs['ant'],
     breed_type = "hatch",
-    clutch_size_min = 100,
-    clutch_size_max = 200,
+    clutch_size_min = 10,
+    clutch_size_max = 100,
     clutch_frequency = 1,
     gains_tech_by_eating = true,
     lisp = true,
@@ -64,7 +64,7 @@ civilized_species['emmet'] = {
         },
         soldier = {
             probability = 1,
-            starting_level = 10,
+            starting_level = 1,
             name = "Hive Soldier",
             fertile = false,
             berserk = true,
@@ -81,7 +81,7 @@ civilized_species['emmet'] = {
         },
         worker = {
             probability = 3,
-            starting_level = 10,
+            starting_level = 1,
             name = "Hive Worker",
             fertile = false,
             berserk = false,
@@ -96,7 +96,8 @@ civilized_species['emmet'] = {
             destroys_everything = true,
             hp_n = 10,
             hp_dice = 6,
-            hp_mod = 1
+            hp_mod = 1,
+            builds = { mound = { type = "ant_mound", max=1} }
         },
     }
 }

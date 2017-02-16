@@ -146,11 +146,31 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                         if (subfield == "min_per_occupied_region") caste.min_per_occupied_region = lua_tonumber(lua_state, -1);
                         if (subfield == "starting_level") caste.starting_level = lua_tonumber(lua_state, -1);
                         if (subfield == "name") caste.name_override = lua_tostring(lua_state, -1);
+                        if (subfield == "researcher") caste.researcher = lua_toboolean(lua_state, -1);
+                        if (subfield == "builds") {
+                            lua_pushstring(lua_state, subfield.c_str());
+                            lua_gettable(lua_state, -2);
+                            while (lua_next(lua_state, -2) != 0) {
+                                const std::string build_target = lua_tostring(lua_state, -2);
+                                lua_pushstring(lua_state, subfield.c_str());
+                                lua_gettable(lua_state, -2);
+                                std::pair<std::string, int> bt;
+                                while (lua_next(lua_state, -2) != 0) {
+                                    const std::string build_field = lua_tostring(lua_state, -2);
+                                    if (build_field == "type") bt.first = lua_tostring(lua_state, -1);
+                                    if (build_field == "max") bt.second = lua_tonumber(lua_state, -1);
+                                    lua_pop(lua_state, 1);
+                                }
+                                caste.builds.push_back(bt);
+                                lua_pop(lua_state, 1);
+                            }
+                        }
                         if (subfield == "combat") {
                             lua_pushstring(lua_state, subfield.c_str());
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
                                 std::string cfield = lua_tostring(lua_state, -2);
+                                if (cfield == "guard_only") caste.guard_only = lua_toboolean(lua_state, -1);
                                 if (cfield == "armor_class") caste.combat.base_armor_class = lua_tonumber(lua_state, -1);
                                 if (cfield == "attacks") {
                                     lua_pushstring(lua_state, subfield.c_str());

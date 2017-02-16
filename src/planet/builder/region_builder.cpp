@@ -125,6 +125,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     int max_size = 0;
     std::size_t civ_id;
     int blight_level = 0;
+    std::vector<std::string> improvements;
     for (auto &town : planet.civs.settlements) {
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
@@ -136,15 +137,22 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
             max_size += town.max_size;
             civ_id = town.civ_id;
             blight_level = std::max((int)town.blight_level, (int)blight_level);
+            for (const std::string &s : town.improvements) {
+                improvements.push_back(s);
+            }
         }
     }
 
     std::vector<std::tuple<int,int,int>> spawn_points;
     if (has_settlement) {
-        const int n_buildings = max_size * 5;
+        /*const int n_buildings = max_size * 5;
         std::cout << "Spawning " << n_buildings << " buildings. \n";
         if (!settlement_active) std::cout << "The buildings are ruined.\n";
-        build_buildings(region, rng, n_buildings, settlement_active, spawn_points, civ_id, planet);
+        build_buildings(region, rng, n_buildings, settlement_active, spawn_points, civ_id, planet);*/
+        for (const std::string improvement : improvements) {
+            std::cout << "Improvement: " << improvement << "\n";
+            if (improvement == "ant_mound") build_ant_mound(region, rng);
+        }
     }
 
     // Add anyone who is still here from world-gen

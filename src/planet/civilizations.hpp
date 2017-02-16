@@ -15,11 +15,12 @@ struct settlement_t {
     int max_size = 0;
 
     uint8_t blight_level = 0;
+    std::vector<std::string> improvements;
 
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( civ_id, name, world_x, world_y, status, deleted, abandoned_years, max_size, blight_level );
+        archive( civ_id, name, world_x, world_y, status, deleted, abandoned_years, max_size, blight_level, improvements );
     }
 };
 
@@ -41,11 +42,13 @@ struct civ_t {
     uint8_t r,g,b;
     int cordex_feelings = 0;
     bool met_cordex = false;
+    int research_level = 0;
+    uint16_t glyph;
 
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( name, species_tag, relations, extinct, tech_level, r, g, b, cordex_feelings, met_cordex );
+        archive( name, species_tag, relations, extinct, tech_level, r, g, b, cordex_feelings, met_cordex, research_level, glyph );
     }
 };
 

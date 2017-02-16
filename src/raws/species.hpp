@@ -53,6 +53,8 @@ struct caste_t {
     bool spreads_blight = false;
     bool destroys_everything = false;
     bool berserk = false;
+    bool researcher = false;
+    std::vector<std::pair<std::string, int>> builds;
 };
 
 struct raw_civilized_t {
