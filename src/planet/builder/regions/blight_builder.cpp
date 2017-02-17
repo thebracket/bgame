@@ -32,7 +32,7 @@ void build_ant_mound(region_t &region, random_number_generator &rng) {
     for (int sz = z; sz<ground_z-1; ++sz) {
         for (int X = x-i; X<x+i; ++X) {
             for (int Y = y-i; Y<y+i; ++Y) {
-                if (distance2d(X,Y,x,y)+1.0f < i/2.0f) {
+                if (distance2d(X,Y,x,y) < (i+2.0f)/2.0f) {
                     region.tile_type[mapidx(X, Y, sz)] = tile_type::FLOOR;
                     spawn_points.push_back(mapidx(X,Y,sz));
                 }
@@ -42,10 +42,10 @@ void build_ant_mound(region_t &region, random_number_generator &rng) {
     }
 
     // Nest: central stair
-    for (int sz = z; sz < ground_z; ++sz ) {
+    for (int sz = z; sz < ground_z+mound_height; ++sz ) {
         region.tile_type[mapidx(x,y,sz)] = tile_type::STAIRS_UPDOWN;
     }
-    region.tile_type[mapidx(x,y,ground_z)] = tile_type::STAIRS_DOWN;
+    region.tile_type[mapidx(x,y,ground_z+mound_height)] = tile_type::STAIRS_DOWN;
     region.tile_type[mapidx(x,y,z)] == tile_type::STAIRS_UP;
 
     // Mound above
@@ -68,10 +68,10 @@ void build_ant_mound(region_t &region, random_number_generator &rng) {
         --i;
     }
 
-    i = 0;
     each<sentient_ai, position_t>([&i, &spawn_points, &x, &y, &z] (entity_t &e, sentient_ai &ai, position_t &pos) {
-        const std::size_t spawn_idx = i % spawn_points.size();
-        std::tie(pos.x, pos.y, pos.z) = idxmap(spawn_points[spawn_idx]);
+        const std::size_t pos_idx = i % spawn_points.size();
+        std::tie(pos.x, pos.y, pos.z) = idxmap(spawn_points[pos_idx]);
+        ++i;
     });
 }
 

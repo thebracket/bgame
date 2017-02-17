@@ -3,7 +3,7 @@
 #include "apihelper.hpp"
 
 std::unordered_map<std::string, raw_species_t> species_defs;
-std::unordered_map<std::string, raw_civilized_t> civ_defs;
+spp::sparse_hash_map<std::string, raw_civilized_t> civ_defs;
 
 const raw_species_t * get_species_def(const std::string &tag) noexcept
 {

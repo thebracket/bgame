@@ -150,7 +150,7 @@ void mode_units_system::render_natives() {
     //ImGui::Begin(win_natives_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::PushItemWidth(-1);
     ImGui::ListBox("## Natives", &current_native, native_listbox_items, natives.size(), 10);
-    if (ImGui::Button(btn_goto.c_str())) {
+    if (ImGui::Button(std::string(btn_goto + std::string(" ")).c_str())) {
         auto selected_critter = natives[current_settler].first;
         auto the_critter = entity(selected_critter);
         if (the_critter) {

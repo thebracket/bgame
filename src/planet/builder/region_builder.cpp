@@ -143,6 +143,28 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         }
     }
 
+    // Add anyone who is still here from world-gen
+    int count = 0;
+    std::size_t peep_id = 0;
+    for (auto &peep : planet.civs.population) {
+        if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
+            std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
+
+            const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
+            const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
+            const int z = get_ground_z(region, x, y);
+            create_sentient(x, y, z, rng, planet, region, peep_id);
+            ++count;
+        }
+        ++peep_id;
+    }
+
+    if (blight_level < 100) {
+        build_trees(region, biome, rng);
+    } else {
+        just_add_blight(region, rng);
+    }
+
     std::vector<std::tuple<int,int,int>> spawn_points;
     if (has_settlement) {
         /*const int n_buildings = max_size * 5;
@@ -153,33 +175,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
             std::cout << "Improvement: " << improvement << "\n";
             if (improvement == "ant_mound") build_ant_mound(region, rng);
         }
-    }
-
-    // Add anyone who is still here from world-gen
-    int count = 0;
-    std::size_t peep_id = 0;
-    for (auto &peep : planet.civs.population) {
-        if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
-            std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
-
-            if (count < spawn_points.size()) {
-                create_sentient(std::get<0>(spawn_points[count]), std::get<1>(spawn_points[count]), std::get<2>(spawn_points[count]),
-                    rng, planet, region, peep_id);
-            } else {
-                const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
-                const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
-                const int z = get_ground_z(region, x, y);
-                create_sentient(x, y, z, rng, planet, region, peep_id);
-            }
-            ++count;
-        }
-        ++peep_id;
-    }
-
-    if (blight_level < 100) {
-        build_trees(region, biome, rng);
-    } else {
-        just_add_blight(region, rng);
     }
 
     // Build connectivity graphs

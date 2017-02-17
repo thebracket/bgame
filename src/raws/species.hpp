@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <fstream>
+#include "../utils/sparsepp.h"
 
 /*
  * Defines species dietary preferences
@@ -130,4 +131,4 @@ void sanity_check_species() noexcept ;
  */
 void read_species_types(std::ofstream &tech_tree_file) noexcept;
 
-extern std::unordered_map<std::string, raw_civilized_t> civ_defs;
+extern spp::sparse_hash_map<std::string, raw_civilized_t> civ_defs;

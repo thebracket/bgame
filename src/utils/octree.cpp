@@ -90,14 +90,20 @@ std::vector<std::size_t> octree_t::find_by_region(const int &left, const int &ri
 }
 
 void octree_t::find_by_region_impl(const int &left, const int &right, const int &top, const int &bottom, const int &ztop, const int &zbottom, std::vector<std::size_t> &result) {
+    //if (RectA.Left < RectB.Right && RectA.Right > RectB.Left &&
+    //    RectA.Top < RectB.Bottom && RectA.Bottom > RectB.Top )
+
+    //if (!(x < right && x+w > left && y < bottom && y+h > top)) return;
+
     for (const auto &l : contents) {
         if (l.x >= left && l.x <= right && l.y >=top && l.y <= bottom) {
             result.emplace_back(l.id);
         }
     }
 
-    for (int i=0; i<8; i++) {
-        if (children[i] && intersects(i, left, right, top, bottom, ztop, zbottom)) {
+    for (int i=0; i<children.size(); ++i) {
+        //if (children[i] && intersects(i, left, right, top, bottom, ztop, zbottom)) {
+        if (children[i]) {
             children[i]->find_by_region_impl(left, right, top, bottom, ztop, zbottom, result);
         }
     }
