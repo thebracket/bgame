@@ -119,6 +119,7 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
             if (field == "infant_age") s.infant_age = lua_tonumber(lua_state, -1);
             if (field == "child_age") s.child_age = lua_tonumber(lua_state, -1);
             if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
+            if (field == "worldgen_glyph") s.worldgen_glyph = lua_tonumber(lua_state, -1);
             if (field == "breed_type") s.breed_type = lua_tostring(lua_state, -1);
             if (field == "clutch_size_min") s.clutch_size_min = lua_tonumber(lua_state, -1);
             if (field == "clutch_size_max") s.clutch_size_max = lua_tonumber(lua_state, -1);
@@ -197,6 +198,36 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                                         lua_pop(lua_state, 1);
                                     }
                                 }
+                                lua_pop(lua_state, 1);
+                            }
+                        }
+                        if (subfield == "clothing") {
+                            lua_pushstring(lua_state, subfield.c_str());
+                            lua_gettable(lua_state, -2);
+                            while (lua_next(lua_state, -2) != 0) {
+                                const std::string gender_specifier = lua_tostring(lua_state, -2);
+                                lua_pushstring(lua_state, gender_specifier.c_str());
+                                lua_gettable(lua_state, -2);
+                                while (lua_next(lua_state, -2) != 0) {
+                                    const std::string slot = lua_tostring(lua_state, -2);
+                                    const std::string item = lua_tostring(lua_state, -1);
+                                    int gender_tag = 0;
+                                    if (gender_specifier == "male") gender_tag = 1;
+                                    if (gender_specifier == "female") gender_tag = 2;
+                                    caste.starting_clothes.push_back( std::make_tuple(gender_tag, slot, item));
+                                    lua_pop(lua_state, 1);
+                                }
+                                lua_pop(lua_state, 1);
+                            }
+                        }
+                        if (subfield == "weapons") {
+                            lua_pushstring(lua_state, subfield.c_str());
+                            lua_gettable(lua_state, -2);
+                            while (lua_next(lua_state, -2) != 0) {
+                                const std::string wslot = lua_tostring(lua_state, -2);
+                                if (wslot == "melee") caste.melee = lua_tostring(lua_state, -1);
+                                if (wslot == "ranged") caste.melee = lua_tostring(lua_state, -1);
+                                if (wslot == "ammo") caste.melee = lua_tostring(lua_state, -1);
                                 lua_pop(lua_state, 1);
                             }
                         }

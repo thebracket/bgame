@@ -84,6 +84,7 @@ glyphs = {
 	blight = 265,
 	toadstool_red = 266,
 	toadstool_green = 267,
+	caveman = 268,
 	grass = 272,
 	grass_sparse = 273,
 	reeds = 274,

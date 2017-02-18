@@ -223,12 +223,14 @@ namespace history_builder {
         civ.r = rng.roll_dice(1, 254);
         civ.g = rng.roll_dice(1, 254);
         civ.b = rng.roll_dice(1, 254);
-        civ.glyph = species.glyph;
+        civ.glyph = species.worldgen_glyph;
 
         auto starting_loc = find_starting_loc(planet, rng);
 
         // Build the initial settlement
+
         build_settlement(planet, i, species, starting_loc);
+        planet_spawn_minimums(planet, rng, planet.civs.settlements[planet.civs.settlements.size()-1], species);
 
         // Generate an initial population
         std::vector<caste_info_t > available_castes;
@@ -560,6 +562,7 @@ namespace history_builder {
                 if (!species.evolves_into.empty()) {
                     const int roll = rng.roll_dice(1, species.evolves_into.size())-1;
                     civ.species = civ_def_index.find(species.evolves_into[roll])->second;
+                    civ.glyph = civ_defs[civ.species].worldgen_glyph;
                 }
             }
         }

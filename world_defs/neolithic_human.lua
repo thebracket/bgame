@@ -14,6 +14,7 @@ civilized_species['neolithic_human'] = {
     infant_age = 3,
     child_age = 10,
     glyph = glyphs['at'],
+    worldgen_glyph = glyphs['caveman'],
     breed_type = "marriage",
     min_guard_settlement = 3,
     tech_level = 0,

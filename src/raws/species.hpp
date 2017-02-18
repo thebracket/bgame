@@ -57,6 +57,10 @@ struct caste_t {
     bool researcher = false;
     std::vector<std::pair<std::string, int>> builds;
     int world_block_size = 20; // How many individuals does this unit represent?
+    std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
+    std::string melee = "";
+    std::string ranged = "";
+    std::string ammo = "";
 };
 
 struct raw_civilized_t {
@@ -77,6 +81,7 @@ struct raw_civilized_t {
     int infant_age = 5;
     int child_age = 12;
     uint16_t glyph = '@';
+    uint16_t worldgen_glyph = '@';
     std::vector<caste_t> castes;
     std::string breed_type = "";
     int clutch_size_min=0;
