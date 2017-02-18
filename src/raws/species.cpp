@@ -3,7 +3,8 @@
 #include "apihelper.hpp"
 
 std::unordered_map<std::string, raw_species_t> species_defs;
-spp::sparse_hash_map<std::string, raw_civilized_t> civ_defs;
+spp::sparse_hash_map<std::string, std::size_t> civ_def_index;
+std::vector<raw_civilized_t> civ_defs;
 
 const raw_species_t * get_species_def(const std::string &tag) noexcept
 {
@@ -57,6 +58,7 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
             if (field == "description") s.description = lua_tostring(lua_state, -1);
             if (field == "baby_name") s.baby_name = lua_tostring(lua_state, -1);
             if (field == "tech_level") s.tech_level = lua_tonumber(lua_state, -1);
+            if (field == "min_guard_settlement") s.min_guard_settlement = lua_tonumber(lua_state, -1);
             if (field == "evolves_into") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
@@ -147,6 +149,7 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                         if (subfield == "starting_level") caste.starting_level = lua_tonumber(lua_state, -1);
                         if (subfield == "name") caste.name_override = lua_tostring(lua_state, -1);
                         if (subfield == "researcher") caste.researcher = lua_toboolean(lua_state, -1);
+                        if (subfield == "world_block_size") caste.world_block_size = lua_tonumber(lua_state, -1);
                         if (subfield == "builds") {
                             lua_pushstring(lua_state, subfield.c_str());
                             lua_gettable(lua_state, -2);
@@ -200,7 +203,7 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
                         lua_pop(lua_state, 1);
                     }
 
-                    s.castes.insert(std::make_pair(caste_type, caste));
+                    s.castes.push_back(caste);
                     lua_pop(lua_state, 1);
                 }
                 //lua_pop(lua_state, 1);
@@ -209,7 +212,9 @@ void read_civ_species(std::ofstream &tech_tree_file) noexcept
             lua_pop(lua_state, 1);
         }
 
-        civ_defs.insert(std::make_pair( s.tag, s ));
+        s.index = civ_defs.size();
+        civ_defs.emplace_back( s );
+        civ_def_index.insert(std::make_pair( s.tag, civ_defs.size()-1 ));
         lua_pop(lua_state, 1);
     }
     lua_pop(lua_state, 1);

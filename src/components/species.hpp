@@ -16,6 +16,7 @@ enum skin_color_t { CAUCASIAN, ASIAN, INDIAN, AFRICAN };
 
 struct species_t {
 	std::string tag = "";
+	std::size_t index = 0;
 	gender_t gender;
 	sexuality_t sexuality;
 	hair_color_t hair_color;
@@ -39,7 +40,7 @@ struct species_t {
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( tag, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded ); // serialize things by passing them to the archive
+		archive( tag, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, index ); // serialize things by passing them to the archive
 	}
 };
 

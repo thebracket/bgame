@@ -35,7 +35,7 @@ inline void civ_cull_settlements(std::vector<settlement_t> &settlements) {
 
 struct civ_t {
     std::string name;
-    std::string species_tag;
+    std::size_t species;
     std::unordered_map<std::size_t, int> relations;
     bool extinct = false;
     uint8_t tech_level = 1;
@@ -48,14 +48,14 @@ struct civ_t {
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( name, species_tag, relations, extinct, tech_level, r, g, b, cordex_feelings, met_cordex, research_level, glyph );
+        archive( name, species, relations, extinct, tech_level, r, g, b, cordex_feelings, met_cordex, research_level, glyph );
     }
 };
 
 struct civ_person_t {
     std::size_t civ_id = 0;
-    std::string species_tag = "";
-    std::string caste = "";
+    std::size_t species = 0;
+    std::size_t caste = 0;
     std::string behavior = "";
     int world_x, world_y;
     bool male = true;
@@ -75,7 +75,7 @@ struct civ_person_t {
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( civ_id, species_tag, world_x, world_y, male, age, deceased, level, caste, behavior );
+        archive( civ_id, species, world_x, world_y, male, age, deceased, level, caste, behavior );
     }
 };
 

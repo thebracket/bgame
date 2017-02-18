@@ -15,9 +15,10 @@ civilized_species['emmet'] = {
     child_age = 1,
     glyph = glyphs['ant'],
     breed_type = "hatch",
-    clutch_size_min = 10,
-    clutch_size_max = 50,
+    clutch_size_min = 2,
+    clutch_size_max = 7,
     clutch_frequency = 1,
+    min_guard_settlement = 4,
     gains_tech_by_eating = true,
     lisp = true,
     never_negotiates = true,
@@ -41,7 +42,8 @@ civilized_species['emmet'] = {
             },
             hp_n = 10,
             hp_dice = 6,
-            hp_mod = 1
+            hp_mod = 1,
+            world_block_size=1
         },
         prince = {
             max_per_region = 16,
@@ -60,7 +62,8 @@ civilized_species['emmet'] = {
             },
             hp_n = 10,
             hp_dice = 6,
-            hp_mod = 1
+            hp_mod = 1,
+            world_block_size=1
         },
         soldier = {
             probability = 1,

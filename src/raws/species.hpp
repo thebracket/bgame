@@ -56,10 +56,12 @@ struct caste_t {
     bool berserk = false;
     bool researcher = false;
     std::vector<std::pair<std::string, int>> builds;
+    int world_block_size = 20; // How many individuals does this unit represent?
 };
 
 struct raw_civilized_t {
     std::string tag = "";
+    std::size_t index = 0;
     std::string name = "";
     std::string male_name = "";
     std::string female_name = "";
@@ -75,7 +77,7 @@ struct raw_civilized_t {
     int infant_age = 5;
     int child_age = 12;
     uint16_t glyph = '@';
-    std::unordered_map<std::string, caste_t> castes;
+    std::vector<caste_t> castes;
     std::string breed_type = "";
     int clutch_size_min=0;
     int clutch_size_max=0;
@@ -84,6 +86,7 @@ struct raw_civilized_t {
     bool lisp=false;
     bool never_negotiates=false;
     diet_t diet = diet_omnivore;
+    int min_guard_settlement = 50;
 };
 
 /*
@@ -131,4 +134,5 @@ void sanity_check_species() noexcept ;
  */
 void read_species_types(std::ofstream &tech_tree_file) noexcept;
 
-extern spp::sparse_hash_map<std::string, raw_civilized_t> civ_defs;
+extern spp::sparse_hash_map<std::string, std::size_t> civ_def_index;
+extern std::vector<raw_civilized_t> civ_defs;

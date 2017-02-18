@@ -130,7 +130,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
             std::cout << "It had a peak population of " << town.max_size << "\n";
-            std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
+            //std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
 
             has_settlement = true;
             if (town.status > 0) settlement_active = true;
@@ -148,7 +148,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     std::size_t peep_id = 0;
     for (auto &peep : planet.civs.population) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
-            std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
+            //std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
 
             const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
             const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;

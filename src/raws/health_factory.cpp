@@ -4,14 +4,13 @@
 #include "creatures.hpp"
 #include "species.hpp"
 
-health_t create_health_component_sentient(const std::string &tag, const int base_hp) {
+health_t create_health_component_sentient(const std::size_t &species_id, const int base_hp) {
     health_t result;
 
     result.max_hitpoints = base_hp;
     result.current_hitpoints = base_hp;
 
-    std::cout << "Finding parts for " << tag << "\n";
-    auto species = civ_defs.find(tag)->second;
+    auto &species = civ_defs[species_id];
     for (const auto &part : species.body_parts) {
         const int n_parts = std::get<1>(part);
         for (int i=0; i<n_parts; ++i) {

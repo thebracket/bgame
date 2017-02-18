@@ -47,9 +47,9 @@ void ai_idle::update(const double duration_ms) {
             if (planet.civs.population[sentient->person_id].behavior == "eat_world") sentient->hostile = true;
 
             // There's a chance they will go berserk
-            auto species_def = civ_defs.find(planet.civs.population[sentient->person_id].species_tag);
-            auto caste_def = species_def->second.castes.find(planet.civs.population[sentient->person_id].caste);
-            if (caste_def->second.berserk ||
+            const auto &species_def = civ_defs[planet.civs.population[sentient->person_id].species];
+            const auto &caste_def = species_def.castes[planet.civs.population[sentient->person_id].caste];
+            if (caste_def.berserk ||
                     (sentient->goal == SENTIENT_GOAL_IDLE && rng.roll_dice(1,500)-1+(0-feelings) <= sentient->aggression && sentient->days_since_arrival > 1)) {
                 const int idx = mapidx(*pos);
                 //std::cout << "Kill mode detected, distance " << settler_map.distance_map[idx] << "\n";

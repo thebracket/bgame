@@ -54,8 +54,8 @@ void sentient_attacks_system::update(const double duration_ms) {
         std::size_t weapon_id = get_melee_id(msg.attacker);
         if (weapon_id == 0) {
             // Natural attacks
-            auto species = civ_defs.find(planet.civs.population[ai->person_id].species_tag)->second;
-            auto caste = species.castes[planet.civs.population[ai->person_id].caste];
+            const auto &species = civ_defs[planet.civs.population[ai->person_id].species];
+            const auto &caste = species.castes[planet.civs.population[ai->person_id].caste];
             for (const auto &na : caste.combat.natural_attacks) {
                 sentient_melee_attack(na.type, na.hit_bonus, na.n_dice, na.die_type, na.die_mod, msg);
             }
