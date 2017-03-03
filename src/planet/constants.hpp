@@ -2,6 +2,7 @@
 
 constexpr int WORLD_HEIGHT = 128;
 constexpr int WORLD_WIDTH = 128;
+constexpr int WORLD_TILES_COUNT = WORLD_HEIGHT * WORLD_WIDTH;
 
 constexpr int REGION_WIDTH=256;
 constexpr int REGION_HEIGHT=256;

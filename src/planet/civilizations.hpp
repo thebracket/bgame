@@ -4,7 +4,59 @@
 #include <unordered_map>
 #include <algorithm>
 #include <rltk.hpp>
+#include <array>
+#include "constants.hpp"
 
+struct civ_t {
+    std::size_t species_idx = 0;
+    uint8_t tech_level = 0;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(species_idx, tech_level);
+    }
+};
+
+struct region_info_t {
+    std::size_t owner_civ = 0;
+    uint8_t blight_level = 0;
+    uint8_t settlement_size = 0;
+    std::vector<uint16_t> improvements;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(owner_civ, blight_level, improvements);
+    }
+};
+
+struct unit_t {
+    std::size_t owner_civ = 0;
+    uint16_t world_x = 0;
+    uint16_t world_y = 0;
+    uint8_t unit_type = 0;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(owner_civ, world_x, world_y, unit_type);
+    }
+};
+
+struct civ_holder_t {
+    std::vector<civ_t> civs;
+    std::vector<unit_t> units;
+    std::vector<region_info_t> region_info;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( civs, units, region_info );
+    }
+};
+
+/*
 struct settlement_t {
     std::size_t civ_id;
     std::string name;
@@ -89,4 +141,4 @@ struct civ_holder_t {
     {
         archive( civs, population, settlements );
     }
-};
+};*/

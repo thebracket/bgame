@@ -36,6 +36,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
         call_home("settler_death");
     } else if (victim->component<sentient_ai>()) {
         // It's a dead native
+        /*
         planet.civs.population[victim->component<sentient_ai>()->person_id].deceased = true;
         auto name = victim->component<name_t>();
         auto renderable = victim->component<renderable_t>();
@@ -44,7 +45,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
                 ->assign(renderable_t{ renderable->glyph, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
-        call_home("sentient_death", name->first_name);
+        call_home("sentient_death", name->first_name);*/
     } else {
         // It's something else that died.
         std::string tag = "";

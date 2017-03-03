@@ -8,6 +8,7 @@
 using namespace rltk;
 
 void civ_dislike_attacker(entity_t * victim) {
+    /*
     if (!victim) return;
     auto victim_ai = victim->component<sentient_ai>();
     if (victim_ai) {
@@ -30,5 +31,5 @@ void civ_dislike_attacker(entity_t * victim) {
                 }
             }
         }
-    }
+    }*/
 }

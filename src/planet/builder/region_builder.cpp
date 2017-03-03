@@ -126,6 +126,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     std::size_t civ_id;
     int blight_level = 0;
     std::vector<std::string> improvements;
+    /*
     for (auto &town : planet.civs.settlements) {
         if (town.world_x == region.region_x && town.world_y == region.region_y) {
             std::cout << "A settlement of type " << +town.status << " should be here.\n";
@@ -141,11 +142,12 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
                 improvements.push_back(s);
             }
         }
-    }
+    }*/
 
     // Add anyone who is still here from world-gen
     int count = 0;
     std::size_t peep_id = 0;
+    /*
     for (auto &peep : planet.civs.population) {
         if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
             //std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
@@ -158,6 +160,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         }
         ++peep_id;
     }
+     */
 
     if (blight_level < 100) {
         build_trees(region, biome, rng);

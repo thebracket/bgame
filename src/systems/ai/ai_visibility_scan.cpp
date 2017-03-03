@@ -29,7 +29,7 @@ bool grazer_hostile_scan(entity_t &other) {
 }
 
 bool sentient_hostile_scan(entity_t &other) {
-    bool hostile_sentient = false;
+    /*bool hostile_sentient = false;
     auto other_sentient = other.component<sentient_ai>();
     if (other_sentient) {
         const std::size_t my_civ = planet.civs.population[ai_visibility::ai->person_id].civ_id;
@@ -48,7 +48,7 @@ bool sentient_hostile_scan(entity_t &other) {
     {
         return true;
     }
-
+    */
     return false;
 }
 

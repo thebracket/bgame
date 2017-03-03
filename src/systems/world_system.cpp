@@ -36,6 +36,7 @@ void world_system::update(const double ms) {
         day_elapsed_message msg = day->front();
         day->pop();
 
+        /*
         std::cout << "A new day has dawned\n";
         std::size_t peep_id = 0;
         for (auto &peep : planet.civs.population) {
@@ -102,6 +103,6 @@ void world_system::update(const double ms) {
 
             }
             ++peep_id;
-        }
+        }*/
     }
 }

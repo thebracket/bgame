@@ -59,8 +59,8 @@ LOG * LOG::other_name(const std::size_t &entity_id) {
 }
 
 LOG * LOG::civ_name(const std::size_t &civ_id) {
-    col(rltk::colors::CYAN);
+/*    col(rltk::colors::CYAN);
     text(planet.civs.civs[civ_id].name);
-    col(rltk::colors::WHITE);
+    col(rltk::colors::WHITE);*/
     return this;
 }

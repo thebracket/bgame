@@ -120,7 +120,7 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 			if (block_idx < planet.landblocks.size() && idx < planet_build_term_height*planet_build_term_width)
 			{
 				set_planet_display_char(block_idx, idx, planet);
-				for (const auto &s : planet.civs.settlements) {
+				/*for (const auto &s : planet.civs.settlements) {
 					if (s.world_x == x && s.world_y == y) {
 						color_t civ_color = color_t{planet.civs.civs[s.civ_id].r, planet.civs.civs[s.civ_id].g, planet.civs.civs[s.civ_id].b};
 						//if (s.status == 0) (*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::DARK_GREY, rltk::colors::BLACK};
@@ -128,7 +128,7 @@ void planet_display_update_zoomed(planet_t &planet, const int world_x, const int
 						//if (s.status == 2) (*planet_builder_display.get())[idx] = rltk::vchar{9, rltk::colors::WHITE, civ_color};
 						if (s.status != 0) (*planet_builder_display.get())[idx] = rltk::vchar{planet.civs.civs[s.civ_id].glyph, rltk::colors::WHITE, civ_color};
 					}
-				}
+				}*/
 			}
 			++X;
 		}
