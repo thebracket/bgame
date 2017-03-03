@@ -8,7 +8,7 @@ health_t create_health_component_sentient(const std::size_t &species_id, const i
     health_t result;
 
     result.max_hitpoints = base_hp;
-    result.current_hitpoints = base_hp;
+    result.current_hitpoints = base_hp;/*
 
     auto &species = civ_defs[species_id];
     for (const auto &part : species.body_parts) {
@@ -26,7 +26,7 @@ health_t create_health_component_sentient(const std::size_t &species_id, const i
         }
     }
 
-    return result;
+    return result;*/
 }
 
 health_t create_health_component_settler(const std::string &tag, const int base_hp) {

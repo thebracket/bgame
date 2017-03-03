@@ -36,6 +36,7 @@ void ai_idle::update(const double duration_ms) {
             }
             delete_component<ai_tag_my_turn_t>(e.id);
         } else if (sentient) {
+            /*
             auto pos = e.component<position_t>();
             int feelings = 0;
             feelings = planet.civs.civs[planet.civs.population[sentient->person_id].civ_id].cordex_feelings;
@@ -73,7 +74,7 @@ void ai_idle::update(const double duration_ms) {
                 // Wander aimlessly
                 emit_deferred(entity_wants_to_move_randomly_message{e.id});
             }
-            delete_component<ai_tag_my_turn_t>(e.id);
+            delete_component<ai_tag_my_turn_t>(e.id);*/
         } else if (settler) {
             // TODO
         }

@@ -11,8 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace history_builder {
-
+/*namespace history_builder {
     constexpr int n_civs = WORLD_WIDTH;
     using caste_info_t = std::tuple<int, int, int, std::size_t>;
 
@@ -28,7 +27,7 @@ namespace history_builder {
 
     std::unique_ptr<build_map_t> planet_build_map;
 
-    /* Build map accessors */
+    // Build map accessors
     void record_town(const int &pidx, const std::size_t town_idx) {
         planet_build_map->regions[pidx].town_idx = town_idx;
     }
@@ -48,7 +47,7 @@ namespace history_builder {
         }
     }
 
-    /* Utility Functions */
+    // Utility Functions
     int hb_stat_mod(const raw_civilized_t &species, const std::string &stat) {
         auto finder = species.stat_mods.find(stat);
         if (finder == species.stat_mods.end()) return 0;
@@ -729,4 +728,12 @@ void planet_build_initial_history(planet_t &planet, rltk::random_number_generato
         planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
     }
     planet_build_map.reset();
+}*/
+
+void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
+    // Do nothing
+}
+
+void planet_build_initial_history(planet_t &planet, rltk::random_number_generator &rng) {
+    // Do nothing!
 }

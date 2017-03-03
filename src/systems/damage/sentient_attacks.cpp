@@ -46,6 +46,7 @@ void sentient_attacks_system::configure() {
 
 void sentient_attacks_system::update(const double duration_ms) {
     each_mbox<sentient_attack_message>([] (const sentient_attack_message &msg) {
+        /*
         auto sentient_entity = entity(msg.attacker);
         if (!sentient_entity) return;
         auto ai = sentient_entity->component<sentient_ai>();
@@ -70,10 +71,11 @@ void sentient_attacks_system::update(const double duration_ms) {
                                           msg);
                 }
             }
-        }
+        }*/
     });
 
     each_mbox<sentient_ranged_attack_message>([] (const sentient_ranged_attack_message &msg) {
+        /*
         auto attacker = entity(msg.attacker);
         auto defender = entity(msg.victim);
         if (!attacker || !defender) return;
@@ -127,6 +129,6 @@ void sentient_attacks_system::update(const double duration_ms) {
         } else {
             ss.text("The attack misses.");
         }
-        emit_deferred(log_message{ss.chars});
+        emit_deferred(log_message{ss.chars});*/
     });
 }

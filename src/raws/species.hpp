@@ -63,37 +63,6 @@ struct caste_t {
     std::string ammo = "";
 };
 
-struct raw_civilized_t {
-    std::string tag = "";
-    std::size_t index = 0;
-    std::string name = "";
-    std::string male_name = "";
-    std::string female_name = "";
-    std::string collective_name = "";
-    std::string baby_name = "";
-    std::string description = "";
-    int tech_level = 0;
-    std::vector<std::string> evolves_into;
-    std::unordered_map<std::string,int> stat_mods;
-    std::vector<std::tuple<std::string, int, int>> body_parts;
-    ethics_t ethics;
-    int max_age = 90;
-    int infant_age = 5;
-    int child_age = 12;
-    uint16_t glyph = '@';
-    uint16_t worldgen_glyph = '@';
-    std::vector<caste_t> castes;
-    std::string breed_type = "";
-    int clutch_size_min=0;
-    int clutch_size_max=0;
-    int clutch_frequency=0;
-    bool gains_tech_by_eating=false;
-    bool lisp=false;
-    bool never_negotiates=false;
-    diet_t diet = diet_omnivore;
-    int min_guard_settlement = 50;
-};
-
 /*
  * Basic definition of a species.
  */
@@ -138,6 +107,3 @@ void sanity_check_species() noexcept ;
  * Lua loader, used in raws loader.
  */
 void read_species_types(std::ofstream &tech_tree_file) noexcept;
-
-extern spp::sparse_hash_map<std::string, std::size_t> civ_def_index;
-extern std::vector<raw_civilized_t> civ_defs;

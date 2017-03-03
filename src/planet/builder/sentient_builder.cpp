@@ -21,6 +21,7 @@
 void create_sentient(const int x, const int y, const int z, rltk::random_number_generator &rng, planet_t &planet, 
         region_t &region, const std::size_t person_id, const bool announce) 
 {
+    /*
     const auto &species_finder = civ_defs[planet.civs.population[person_id].species];
     const auto &caste_finder = species_finder.castes[planet.civs.population[person_id].caste];
     for (int counter = 0; counter < caste_finder.world_block_size; ++counter) {
@@ -80,5 +81,5 @@ void create_sentient(const int x, const int y, const int z, rltk::random_number_
         }
 
         planet.civs.civs[planet.civs.population[person_id].civ_id].met_cordex = true;
-    }
+    }*/
 }
