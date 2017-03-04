@@ -5,8 +5,6 @@ stockpiles.lua
 clothing.lua
 species.lua
 emmet.lua
-neolithic_human.lua
-bronze_age_human_monarchy.lua
 creatures.lua
 life_events.lua
 starting_professions.lua

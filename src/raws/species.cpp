@@ -3,6 +3,7 @@
 #include "apihelper.hpp"
 
 std::unordered_map<std::string, raw_species_t> species_defs;
+std::unordered_map<std::string, civilization_t> civ_defs;
 
 const raw_species_t * get_species_def(const std::string &tag) noexcept
 {
@@ -30,6 +31,111 @@ void sanity_check_species() noexcept
         if (s->second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s->second.tag << "\n";
         if (s->second.stat_mods.empty()) std::cout << "WARNING: Species has no stat modifiers: " << s->second.tag << "\n";
         if (s->second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s->second.tag << "\n";
+    }
+}
+
+void read_civ_types() noexcept
+{
+    lua_getglobal(lua_state, "civilizations");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        std::string key = lua_tostring(lua_state, -2);
+        civilization_t civ;
+        civ.tag = key;
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+            if (field == "species_def") civ.species_tag = lua_tostring(lua_state, -1);
+            if (field == "ai") civ.ai = lua_tostring(lua_state, -1);
+            if (field == "units") {
+                // Read the units table
+
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string unit_type = lua_tostring(lua_state, -2);
+                    civ_unit_t unit;
+                    unit.tag = unit_type;
+
+                    lua_pushstring(lua_state, unit_type.c_str());
+                    lua_gettable(lua_state, -2);
+                    while (lua_next(lua_state, -2) != 0) {
+                        std::string ufield = lua_tostring(lua_state, -2);
+                        if (ufield == "bp_per_turn") unit.bp_per_turn = lua_tonumber(lua_state, -1);
+                        if (ufield == "speed") unit.speed = lua_tonumber(lua_state, -1);
+                        if (ufield == "name") unit.name = lua_tostring(lua_state, -1);
+
+                        if (ufield == "sentients") {
+                            lua_pushstring(lua_state, ufield.c_str());
+                            lua_gettable(lua_state, -2);
+                            while (lua_next(lua_state, -2) != 0) {
+                                std::string sentient_type = lua_tostring(lua_state, -2);
+                                civ_unit_sentient_t sentient;
+                                sentient.tag = sentient_type;
+
+                                lua_pushstring(lua_state, sentient_type.c_str());
+                                lua_gettable(lua_state, -2);
+                                while (lua_next(lua_state, -2) != 0) {
+                                    std::string sfield = lua_tostring(lua_state, -2);
+                                    if (sfield == "n") sentient.n_present = lua_tonumber(lua_state, -1);
+                                    if (sfield == "name") sentient.name = lua_tostring(lua_state, -1);
+                                    if (sfield == "level") sentient.base_level = lua_tonumber(lua_state, -1);
+                                    if (sfield == "armor_class") sentient.base_armor_class = lua_tonumber(lua_state, -1);
+                                    if (sfield == "hp_n") sentient.hp_n = lua_tonumber(lua_state, -1);
+                                    if (sfield == "hp_dice") sentient.hp_dice = lua_tonumber(lua_state, -1);
+                                    if (sfield == "hp_mod") sentient.hp_mod = lua_tonumber(lua_state, -1);
+                                    if (sfield == "gender") sentient.gender = lua_tostring(lua_state, -1);
+                                    if (sfield == "natural_attacks") {
+                                        civ_unit_natural_attack_t nattack;
+                                        lua_pushstring(lua_state, sfield.c_str());
+                                        lua_gettable(lua_state, -2);
+                                        while (lua_next(lua_state, -2) != 0) {
+                                            std::string afield = lua_tostring(lua_state, -2);
+                                            if (afield == "type") nattack.type = lua_tostring(lua_state, -1);
+                                            if (afield == "hit_bonus") nattack.hit_bonus = lua_tonumber(lua_state, -1);
+                                            if (afield == "n_dice") nattack.n_dice = lua_tonumber(lua_state, -1);
+                                            if (afield == "die_type") nattack.die_type = lua_tonumber(lua_state, -1);
+                                            if (afield == "die_mod") nattack.die_mod = lua_tonumber(lua_state, -1);
+
+                                            lua_pop(lua_state, 1);
+                                        }
+                                        sentient.natural_attacks.push_back(nattack);
+                                    }
+
+                                    lua_pop(lua_state, 1);
+                                }
+                                unit.sentients.push_back(sentient);
+                                lua_pop(lua_state, 1);
+                            }
+                        }
+
+                        lua_pop(lua_state, 1);
+                    }
+
+                    civ.units[unit_type] = unit;
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "evolves_into") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string target = lua_tostring(lua_state, -2);
+                    civ.evolves_into.push_back(target);
+                    lua_pop(lua_state, 1);
+                }
+            }
+
+            lua_pop(lua_state, 1);
+        }
+
+        civ_defs[key] = civ;
+
+        lua_pop(lua_state, 1);
     }
 }
 
@@ -80,7 +186,9 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
                         if (alignment_type == "good") s.alignment = align_good;
                         if (alignment_type == "neutral") s.alignment = align_neutral;
                         if (alignment_type == "evil") s.alignment = align_evil;
+                        if (alignment_type == "devour") s.alignment = align_devour;
                     }
+                    if (subfield == "blight") s.spreads_blight = lua_toboolean(lua_state, -1);
                     lua_pop(lua_state, 1);
                 }
             }
@@ -115,4 +223,6 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
 
         lua_pop(lua_state, 1);
     }
+
+    read_civ_types();
 }

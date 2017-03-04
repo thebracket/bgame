@@ -1,108 +1,87 @@
+
 -- Scary ant-people who just want to eat the world
-civilized_species['emmet'] = {
-    name = "Emmet",
-    male_name = "Emmet",
-    female_name = "Emmet",
-    group_name = "Emmet",
-    baby_name = "Hatchling",
-    child_name = "Young",
+
+species_sentient['emmet'] = {
+    name = "Emmet", male_name = "Drone", female_name = "Queen", group_name = "Emmet",
     description = "An ant-like creature of nightmares. It eats everything, and spreads blight.",
     stat_mods = { con = 2, str = 2, int = -2, wis = -2 },
     parts = humanoid_parts,
-    ethics = { diet = "omnivore", mentality = "hive", blight = true, behavior = "eat_world" },
-    max_age = 20,
-    infant_age = 1,
-    child_age = 1,
+    ethics = { diet = "omnivore", blight = true, alignment="devour" },
+    max_age = 20, infant_age = 1, child_age = 2,
     glyph = glyphs['ant'],
-    worldgen_glyph = glyphs['ant'],
-    breed_type = "hatch",
-    clutch_size_min = 5,
-    clutch_size_max = 15,
-    clutch_frequency = 1,
-    min_guard_settlement = 4,
-    gains_tech_by_eating = true,
-    lisp = true,
-    never_negotiates = true,
-    tech_level = 0,
-    evolves_into = {},
-    castes = {
-        queen = {
-            max_per_region = 1,
-            min_per_occupied_region = 1,
-            starting_level = 10,
-            name = "Hive Queen",
-            fertile = true,
-            berserk = false,
-            combat = {
-                armor_class = 20,
-                attacks = {
-                    bite1 = { type = "bite", hit_bonus = 8, n_dice = 2, die_type = 20, die_mod = 4 },
-                    sting1 = { type = "sting", hit_bonus = 8, n_dice = 2, die_type = 20, die_mod = 4 }
-                },
-                guard_only = true
-            },
-            hp_n = 10,
-            hp_dice = 6,
-            hp_mod = 1,
-            world_block_size=1
-        },
-        prince = {
-            max_per_region = 16,
-            min_per_occupied_region = 1,
-            starting_level = 10,
-            name = "Hive Prince",
-            fertile = true,
-            berserk = false,
-            combat = {
-                armor_class = 18,
-                attacks = {
-                    bite1 = { type = "bite", hit_bonus = 6, n_dice = 1, die_type = 20, die_mod = 4 },
-                    sting1 = { type = "sting", hit_bonus = 6, n_dice = 1, die_type = 20, die_mod = 4 }
-                },
-                guard_only = true
-            },
-            hp_n = 10,
-            hp_dice = 6,
-            hp_mod = 1,
-            world_block_size=1
-        },
-        soldier = {
-            probability = 1,
-            starting_level = 1,
-            name = "Hive Soldier",
-            fertile = false,
-            berserk = true,
-            combat = {
-                armor_class = 16,
-                attacks = {
-                    bite1 = { type = "bite", hit_bonus = 2, n_dice = 1, die_type = 8, die_mod = 4 },
-                    sting1 = { type = "sting", hit_bonus = 2, n_dice = 1, die_type = 8, die_mod = 4 }
-                }
-            },
-            hp_n = 10,
-            hp_dice = 6,
-            hp_mod = 1
-        },
-        worker = {
-            probability = 3,
-            starting_level = 1,
-            name = "Hive Worker",
-            fertile = false,
-            berserk = true,
-            combat = {
-                armor_class = 16,
-                attacks = {
-                    bite1 = { type = "bite", hit_bonus = 0, n_dice = 1, die_type = 4, die_mod = 4 },
-                    sting1 = { type = "sting", hit_bonus = 0, n_dice = 1, die_type = 4, die_mod = 4 }
-                }
-            },
-            spreads_blight = true,
-            destroys_everything = true,
-            hp_n = 10,
-            hp_dice = 6,
-            hp_mod = 1,
-            builds = { mound = { type = "ant_mound", max=1} }
-        },
-    }
+    worldgen_glyph = glyphs['ant']
 }
 
+emmet_queen = {
+    n = 1, name = "Emmet Queen", level=10,
+    armor_class = 20,
+    attacks = {
+        bite1 = { type = "bite", hit_bonus = 8, n_dice = 2, die_type = 20, die_mod = 4 },
+        sting1 = { type = "sting", hit_bonus = 8, n_dice = 2, die_type = 20, die_mod = 4 }
+    },
+    hp_n = 10, hp_dice = 6, hp_mod = 1,
+    gender = "female"
+}
+
+emmet_princess = {
+    n = 6, name = "Emmet Princess", level=7,
+    armor_class = 17,
+    natural_attacks = {
+        bite1 = { type = "bite", hit_bonus = 6, n_dice = 2, die_type = 12, die_mod = 2 },
+        sting1 = { type = "sting", hit_bonus = 6, n_dice = 2, die_type = 12, die_mod = 2 }
+    },
+    hp_n = 10, hp_dice = 6, hp_mod = 1,
+    gender = "female"
+}
+
+emmet_soldier = {
+    n = 25, name = "Emmet Soldier", level=2,
+    armor_class = 14,
+    natural_attacks = {
+        bite1 = { type = "bite", hit_bonus = 2, n_dice = 1, die_type = 12, die_mod = 0 },
+        sting1 = { type = "sting", hit_bonus = 2, n_dice = 1, die_type = 12, die_mod = 0 }
+    },
+    hp_n = 2, hp_dice = 6, hp_mod = 1,
+    gender = "female"
+}
+
+emmet_worker = {
+    n = 25, name = "Emmet Worker", level=1,
+    armor_class = 12,
+    natural_attacks = {
+        bite1 = { type = "bite", hit_bonus = 2, n_dice = 1, die_type = 4, die_mod = 0 }
+    },
+    hp_n = 2, hp_dice = 6, hp_mod = 1,
+    gender = "female"
+}
+
+civilizations['emmet'] = {
+    tech_level = 0,
+    species_def = 'emmet',
+    ai = 'worldeater',
+    units = {
+        garrison = {
+            bp_per_turn = 1,
+            speed = 0,
+            name = "Emmet Guardians",
+            sentients = {
+                queen = emmet_queen,
+                princess = emmet_princess,
+                soldier = emmet_soldier,
+                worker = emmet_worker
+            },
+            can_build = { "ant_mound" }
+        },
+        swarm = {
+            bp_per_turn = 0,
+            speed = 1,
+            name = "Emmet Swarm",
+            sentients = {
+                soldier = emmet_soldier,
+                worker = emmet_worker
+            },
+            can_build = { "ant_tunnel" }
+        }
+    },
+    evolves_into = { }
+}

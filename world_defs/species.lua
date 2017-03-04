@@ -14,7 +14,7 @@ humanoid_parts = {
 }
 
 -- This is a prototype of what the new species system should look like.
-civilized_species = {}
+civilizations = {}
 
 species_sentient = {
     human = {
@@ -24,6 +24,6 @@ species_sentient = {
         parts = humanoid_parts,
         ethics = { diet="omnivore", alignment="neutral" },
         max_age = 114, infant_age=3, child_age=16,
-        glyph = glyphs['at']
+        glyph = glyphs['at'], worldgen_glyph = glyphs['caveman']
     }
 }

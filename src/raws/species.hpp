@@ -15,53 +15,7 @@ enum diet_t { diet_omnivore, diet_herbivore, diet_carnivore };
 /*
  * Defines base species alignment. This will be replaced at some point.
  */
-enum alignment_t { align_good, align_neutral, align_evil };
-
-struct ethics_t {
-    std::string diet;
-    std::string mentality;
-    bool spread_blight = false;
-    std::string behavior;
-};
-
-struct natural_attack_t {
-    std::string type;
-    int hit_bonus = 0;
-    int hit_dice = 0;
-    int die_type = 0;
-    int n_dice = 0;
-    int die_mod = 0;
-
-};
-
-struct civ_combat_t {
-    int base_armor_class = 10;
-    std::vector<natural_attack_t> natural_attacks;
-};
-
-struct caste_t {
-    std::string tag = "";
-    std::string name_override = "";
-    bool fertile = true;
-    int hp_n = 0;
-    int hp_dice = 0;
-    int hp_mod = 0;
-    int max_per_region = 0;
-    int min_per_occupied_region = 0;
-    int starting_level = 1;
-    civ_combat_t combat;
-    bool guard_only = false;
-    bool spreads_blight = false;
-    bool destroys_everything = false;
-    bool berserk = false;
-    bool researcher = false;
-    std::vector<std::pair<std::string, int>> builds;
-    int world_block_size = 20; // How many individuals does this unit represent?
-    std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
-    std::string melee = "";
-    std::string ranged = "";
-    std::string ammo = "";
-};
+enum alignment_t { align_good, align_neutral, align_evil, align_devour };
 
 /*
  * Basic definition of a species.
@@ -77,10 +31,54 @@ struct raw_species_t {
     std::vector<std::tuple<std::string, int, int>> body_parts;
     diet_t diet = diet_omnivore;
     alignment_t alignment = align_neutral;
+    bool spreads_blight = false;
     int max_age = 90;
     int infant_age = 5;
     int child_age = 12;
     uint8_t glyph = '@';
+};
+
+/*
+ * Definitions of civilizations that can be found.
+ */
+struct civ_unit_natural_attack_t {
+    std::string type = "";
+    int hit_bonus = 0;
+    int n_dice = 0;
+    int die_type = 6;
+    int die_mod = 0;
+};
+
+struct civ_unit_sentient_t {
+    int n_present = 0;
+    uint8_t base_level = 0;
+    std::string tag = "";
+    std::string name = "";
+    uint8_t base_armor_class = 10;
+    int hp_n = 1;
+    int hp_dice = 10;
+    int hp_mod = 0;
+    std::string gender = "male";
+    std::vector<civ_unit_natural_attack_t> natural_attacks;
+    // equipment
+};
+
+struct civ_unit_t {
+    std::string tag = "";
+    uint8_t bp_per_turn = 0;
+    uint8_t speed = 0;
+    std::string name = "";
+    std::vector<civ_unit_sentient_t> sentients;
+    std::vector<std::string> can_build;
+};
+
+struct civilization_t {
+    uint8_t tech_level;
+    std::string tag;
+    std::string species_tag;
+    std::string ai;
+    std::unordered_map<std::string, civ_unit_t> units;
+    std::vector<std::string> evolves_into;
 };
 
 /*
@@ -107,3 +105,5 @@ void sanity_check_species() noexcept ;
  * Lua loader, used in raws loader.
  */
 void read_species_types(std::ofstream &tech_tree_file) noexcept;
+
+extern std::unordered_map<std::string, civilization_t> civ_defs;

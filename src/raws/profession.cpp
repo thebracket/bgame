@@ -42,7 +42,7 @@ void read_professions(std::ofstream &tech_tree_file) noexcept
                                    while (lua_next(lua_state, -2) != 0) {
                                        const std::string slot = lua_tostring(lua_state, -2);
                                        const std::string item = lua_tostring(lua_state, -1);
-                                       std::cout << p.name << " - " << slot << ", " << item << "\n";
+                                       //std::cout << p.name << " - " << slot << ", " << item << "\n";
                                        int gender_tag = 0;
                                        if (gender_specifier == "male") gender_tag = 1;
                                        if (gender_specifier == "female") gender_tag = 2;
