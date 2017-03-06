@@ -66,10 +66,10 @@ civilizations['emmet2'] = {
             speed = 0,
             name = "Emmet Guardians",
             sentients = {
-                queen = emmet_queen1,
-                princess = emmet_princess1,
-                soldier = emmet_soldier1,
-                worker = emmet_worker1
+                queen = emmet_queen2,
+                princess = emmet_princess2,
+                soldier = emmet_soldier2,
+                worker = emmet_worker2
             },
             worldgen_strength = 5
         },
@@ -78,8 +78,8 @@ civilizations['emmet2'] = {
             speed = 1,
             name = "Emmet Swarm",
             sentients = {
-                soldier = emmet_soldier1,
-                worker = emmet_worker1
+                soldier = emmet_soldier2,
+                worker = emmet_worker2
             },
             worldgen_strength = 10
         }

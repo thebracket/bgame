@@ -12,7 +12,7 @@ species_sentient['emmet3'] = {
 }
 
 emmet_queen3 = {
-    n = 1, name = "Iron Emmet Queen", level=11,
+    n = 1, name = "Fire Emmet Queen", level=11,
     armor_class = 24,
     attacks = {
         bite1 = { type = "bite", hit_bonus = 8, n_dice = 3, die_type = 20, die_mod = 4 },
@@ -24,7 +24,7 @@ emmet_queen3 = {
 }
 
 emmet_princess3 = {
-    n = 6, name = "Iron Emmet Princess", level=7,
+    n = 6, name = "Fire Emmet Princess", level=7,
     armor_class = 21,
     natural_attacks = {
         bite1 = { type = "bite", hit_bonus = 6, n_dice = 3, die_type = 12, die_mod = 2 },
@@ -36,7 +36,7 @@ emmet_princess3 = {
 }
 
 emmet_soldier3 = {
-    n = 25, name = "Iron Emmet Soldier", level=2,
+    n = 25, name = "Fire Emmet Soldier", level=2,
     armor_class = 16,
     natural_attacks = {
         bite1 = { type = "bite", hit_bonus = 2, n_dice = 1, die_type = 12, die_mod = 0 },
@@ -48,7 +48,7 @@ emmet_soldier3 = {
 }
 
 emmet_worker3 = {
-    n = 25, name = "Iron Emmet Worker", level=1,
+    n = 25, name = "Fire Emmet Worker", level=1,
     armor_class = 16,
     natural_attacks = {
         bite1 = { type = "bite", hit_bonus = 2, n_dice = 1, die_type = 4, die_mod = 0 }
@@ -69,10 +69,10 @@ civilizations['emmet3'] = {
             speed = 0,
             name = "Emmet Guardians",
             sentients = {
-                queen = emmet_queen1,
-                princess = emmet_princess1,
-                soldier = emmet_soldier1,
-                worker = emmet_worker1
+                queen = emmet_queen3,
+                princess = emmet_princess3,
+                soldier = emmet_soldier3,
+                worker = emmet_worker3
             },
             worldgen_strength = 10
         },
@@ -81,13 +81,13 @@ civilizations['emmet3'] = {
             speed = 1,
             name = "Emmet Swarm",
             sentients = {
-                soldier = emmet_soldier1,
-                worker = emmet_worker1
+                soldier = emmet_soldier3,
+                worker = emmet_worker3
             },
             worldgen_strength = 20
         }
     },
-    evolves_into = { }
+    evolves_into = { "emmet4" }
 }
 
 function civ_name_gen_ant3(n)

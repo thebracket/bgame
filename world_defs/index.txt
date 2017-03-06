@@ -8,6 +8,8 @@ emmet.lua
 emmet_tl1.lua
 emmet_tl2.lua
 emmet_tl3.lua
+emmet_tl4.lua
+emmet_tl5.lua
 creatures.lua
 life_events.lua
 starting_professions.lua
