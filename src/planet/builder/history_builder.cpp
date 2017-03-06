@@ -158,7 +158,7 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     }
 
     // Tech-level improvement
-    if (!civ_f->second.evolves_into.empty() && bp > civ.tech_level*15 && rng.roll_dice(1,12)==1) {
+    if (!civ_f->second.evolves_into.empty() && bp > civ.tech_level*15 && rng.roll_dice(1,25)==1) {
         // Evolve!
         bp = 0;
         ++civ.tech_level;
@@ -166,8 +166,8 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
         civ.species_tag = civ_f->second.evolves_into[roll];
         auto civ2_f = civ_defs.find(civ.species_tag);
         const std::string civ_name_func = "civ_name_gen_" + civ2_f->second.name_generator;
+        std::cout << civ.name << " evolves to tech level " << +civ.tech_level << " and takes the name: " << civ.name << "\n";
         civ.name = lua_str_func( civ_name_func, rng.roll_dice(1, 1000) ) + std::string(" of the ") + civ.origin;
-        std::cout << civ.name << " evolves to tech level " << +civ.tech_level << ", type " << civ.species_tag << " and takes the name: " << civ.name << "\n";
         civ_f = civ2_f;
         species_f = get_species_def(civ_f->second.species_tag);
         civ.glyph = species_f->worldgen_glyph;
