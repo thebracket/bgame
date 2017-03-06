@@ -51,6 +51,7 @@ void read_civ_types() noexcept
             std::string field = lua_tostring(lua_state, -2);
             if (field == "species_def") civ.species_tag = lua_tostring(lua_state, -1);
             if (field == "ai") civ.ai = lua_tostring(lua_state, -1);
+            if (field == "name_generator") civ.name_generator = lua_tostring(lua_state, -1);
             if (field == "units") {
                 // Read the units table
 

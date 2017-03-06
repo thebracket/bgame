@@ -77,6 +77,7 @@ struct civilization_t {
     std::string tag;
     std::string species_tag;
     std::string ai;
+    std::string name_generator = "normal";
     std::unordered_map<std::string, civ_unit_t> units;
     std::vector<std::string> evolves_into;
 };

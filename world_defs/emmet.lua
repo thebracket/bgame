@@ -59,6 +59,7 @@ civilizations['emmet'] = {
     tech_level = 0,
     species_def = 'emmet',
     ai = 'worldeater',
+    name_generator = "ant",
     units = {
         garrison = {
             bp_per_turn = 1,

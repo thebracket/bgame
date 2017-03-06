@@ -121,6 +121,15 @@ void read_biome_types(std::ofstream &tech_tree_file) noexcept
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "nouns") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string noun = lua_tostring(lua_state, -1);
+                    b.nouns.push_back(noun);
+                    lua_pop(lua_state, 1);
+                }
+            }
 
             lua_pop(lua_state, 1);
         }

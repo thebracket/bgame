@@ -26,6 +26,7 @@ struct biome_type_t {
     std::vector<std::string> wildlife;
     int deciduous_tree_chance = 0;
     int evergreen_tree_chance = 0;
+    std::vector<std::string> nouns;
 };
 
 /*

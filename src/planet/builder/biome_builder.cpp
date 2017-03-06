@@ -102,6 +102,202 @@ std::vector<std::pair<double,std::size_t>> find_possible_biomes(std::unordered_m
 	return result;
 } 
 
+std::string name_biome(planet_t &planet, rltk::random_number_generator &rng, biome_t &biome) {
+	std::string name = "Nameless";
+
+	std::vector<std::string> adjectives;
+
+	// Location-based adjective
+	if (std::abs(biome.center_x - WORLD_WIDTH/2) < WORLD_WIDTH/10 && std::abs(biome.center_y - WORLD_HEIGHT/2) < WORLD_HEIGHT/10) {
+		adjectives.push_back("Central");
+	} else {
+		if (biome.center_x < WORLD_WIDTH / 2) adjectives.push_back("Western");
+		if (biome.center_x > WORLD_WIDTH / 2) adjectives.push_back("Eastern");
+		if (biome.center_y < WORLD_HEIGHT / 2) adjectives.push_back("Northern");
+		if (biome.center_y > WORLD_WIDTH / 2) adjectives.push_back("Southern");
+	}
+
+	// Water-based adjectives
+	if (biome.mean_rainfall < 10) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Dry");
+				break;
+			case 2 :
+				adjectives.push_back("Arid");
+				break;
+			case 3 :
+				adjectives.push_back("Parched");
+				break;
+			case 4 :
+				adjectives.push_back("Cracked");
+				break;
+		}
+	} else if (biome.mean_rainfall < 30) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Dusty");
+				break;
+			case 2 :
+				adjectives.push_back("Withered");
+				break;
+			case 3 :
+				adjectives.push_back("Droughty");
+				break;
+			case 4 :
+				adjectives.push_back("Dehydrated");
+				break;
+		}
+	} else if (biome.mean_rainfall < 50) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Pleasant");
+				break;
+			case 2 :
+				adjectives.push_back("Kind");
+				break;
+			case 3 :
+				adjectives.push_back("Gentle");
+				break;
+			case 4 :
+				adjectives.push_back("Timid");
+				break;
+		}
+	} else if (biome.mean_rainfall < 70) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Damp");
+				break;
+			case 2 :
+				adjectives.push_back("Dank");
+				break;
+			case 3 :
+				adjectives.push_back("Moist");
+				break;
+			case 4 :
+				adjectives.push_back("Fresh");
+				break;
+		}
+	} else {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Wet");
+				break;
+			case 2 :
+				adjectives.push_back("Soggy");
+				break;
+			case 3 :
+				adjectives.push_back("Soaked");
+				break;
+			case 4 :
+				adjectives.push_back("Drenched");
+				break;
+		}
+	}
+
+	// Temperature based adjectives
+	if (biome.mean_temperature < 10) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Frozen");
+				break;
+			case 2 :
+				adjectives.push_back("Cold");
+				break;
+			case 3 :
+				adjectives.push_back("Icy");
+				break;
+			case 4 :
+				adjectives.push_back("Biting");
+				break;
+		}
+	} else if (biome.mean_temperature < 20) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Chilly");
+				break;
+			case 2 :
+				adjectives.push_back("Frigid");
+				break;
+			case 3 :
+				adjectives.push_back("Chilling");
+				break;
+			case 4 :
+				adjectives.push_back("Shivering");
+				break;
+		}
+	} else if (biome.mean_temperature < 30) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Pleasant");
+				break;
+			case 2 :
+				adjectives.push_back("Nice");
+				break;
+			case 3 :
+				adjectives.push_back("Temperate");
+				break;
+			case 4 :
+				adjectives.push_back("Comfortable");
+				break;
+		}
+	} else if (biome.mean_temperature < 40) {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Warm");
+				break;
+			case 2 :
+				adjectives.push_back("Toasty");
+				break;
+			case 3 :
+				adjectives.push_back("Cozy");
+				break;
+			case 4 :
+				adjectives.push_back("Snug");
+				break;
+		}
+	} else  {
+		switch (rng.roll_dice(1,4)) {
+			case 1 :
+				adjectives.push_back("Hot");
+				break;
+			case 2 :
+				adjectives.push_back("Scorching");
+				break;
+			case 3 :
+				adjectives.push_back("Burning");
+				break;
+			case 4 :
+				adjectives.push_back("Fuming");
+				break;
+		}
+	}
+
+	std::string noun = "";
+	biome_type_t bt = get_biome_def(biome.type);
+	if (bt.nouns.empty()) {
+		std::cout << "Warning: no nouns defined for " << bt.name << "\n";
+	} else {
+		noun = bt.nouns[rng.roll_dice(1, bt.nouns.size())-1];
+	}
+
+	name = noun;
+	if (adjectives.size() > 0) {
+		const int adj1 = rng.roll_dice(1, adjectives.size())-1;
+		name = adjectives[adj1] + " " + noun;
+		if (adjectives.size() > 1 && rng.roll_dice(1,6)>2) {
+			int adj2 = rng.roll_dice(1, adjectives.size())-1;
+			while (adj1 == adj2) {
+				adj2 = rng.roll_dice(1, adjectives.size())-1;
+			}
+			name = adjectives[adj2] + " " + name;
+		}
+	}
+
+	//std::cout << "Biome: " << name << "\n";
+	return name;
+}
+
 void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Growing Biomes");
 
@@ -161,7 +357,7 @@ void build_biomes(planet_t &planet, rltk::random_number_generator &rng) {
 					}
 				}
 				if (biome.type == -1) biome.type = possible_types[possible_types.size()-1].second;
-				// Name that biome!
+				biome.name = name_biome(planet, rng, biome);
 			} else {
 				++ no_match;
 			}

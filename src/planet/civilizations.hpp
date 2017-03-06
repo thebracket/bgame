@@ -10,11 +10,13 @@
 struct civ_t {
     std::size_t species_idx = 0;
     uint8_t tech_level = 0;
+    bool extinct = false;
+    std::string name = "";
 
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive(species_idx, tech_level);
+        archive(species_idx, tech_level, extinct, name);
     }
 };
 
