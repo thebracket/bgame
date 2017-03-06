@@ -52,6 +52,7 @@ void read_civ_types() noexcept
             if (field == "species_def") civ.species_tag = lua_tostring(lua_state, -1);
             if (field == "ai") civ.ai = lua_tostring(lua_state, -1);
             if (field == "name_generator") civ.name_generator = lua_tostring(lua_state, -1);
+            if (field == "tech_level") civ.tech_level = lua_tonumber(lua_state, -1);
             if (field == "units") {
                 // Read the units table
 
@@ -69,6 +70,7 @@ void read_civ_types() noexcept
                         if (ufield == "bp_per_turn") unit.bp_per_turn = lua_tonumber(lua_state, -1);
                         if (ufield == "speed") unit.speed = lua_tonumber(lua_state, -1);
                         if (ufield == "name") unit.name = lua_tostring(lua_state, -1);
+                        if (ufield == "worldgen_strength") unit.worldgen_strength = lua_tonumber(lua_state, -1);
 
                         if (ufield == "sentients") {
                             lua_pushstring(lua_state, ufield.c_str());
@@ -101,6 +103,7 @@ void read_civ_types() noexcept
                                             if (afield == "n_dice") nattack.n_dice = lua_tonumber(lua_state, -1);
                                             if (afield == "die_type") nattack.die_type = lua_tonumber(lua_state, -1);
                                             if (afield == "die_mod") nattack.die_mod = lua_tonumber(lua_state, -1);
+                                            if (afield == "range") nattack.range = lua_tonumber(lua_state, -1);
 
                                             lua_pop(lua_state, 1);
                                         }
@@ -125,8 +128,17 @@ void read_civ_types() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string target = lua_tostring(lua_state, -2);
+                    std::string target = lua_tostring(lua_state, -1);
                     civ.evolves_into.push_back(target);
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "can_build") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string target = lua_tostring(lua_state, -1);
+                    civ.can_build.push_back(target);
                     lua_pop(lua_state, 1);
                 }
             }
@@ -135,6 +147,7 @@ void read_civ_types() noexcept
         }
 
         civ_defs[key] = civ;
+        std::cout << "Loaded civ: " << key << "\n";
 
         lua_pop(lua_state, 1);
     }
@@ -217,6 +230,7 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
             if (field == "infant_age") s.infant_age = lua_tonumber(lua_state, -1);
             if (field == "child_age") s.child_age = lua_tonumber(lua_state, -1);
             if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
+            if (field == "worldgen_glyph") s.worldgen_glyph = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }

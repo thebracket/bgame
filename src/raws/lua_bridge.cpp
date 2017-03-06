@@ -109,3 +109,17 @@ rltk::color_t read_lua_color(std::string field) {
     }
     return col;
 }
+
+std::string lua_str_func(const std::string &func_name, const int &n) {
+    std::string result = "";
+
+    lua_getglobal(lua_state, func_name.c_str());
+    lua_pushnumber(lua_state, n);
+    if (lua_pcall(lua_state, 1, 1, 0) != 0) {
+        throw std::runtime_error(std::string("Error calling Lua function: ") + func_name + std::string(" ") + std::string(lua_tostring(lua_state, -1)));
+    } else {
+        result = lua_tostring(lua_state, -1);
+    }
+    lua_pop(lua_state, 1);
+    return result;
+}

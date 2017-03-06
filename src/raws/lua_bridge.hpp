@@ -50,3 +50,5 @@ void read_stat_modifiers(const std::string &table, T &obj) {
         if (stat == "eth") obj.ethics = lua_int();
     });
 }
+
+std::string lua_str_func(const std::string &func_name, const int &n);

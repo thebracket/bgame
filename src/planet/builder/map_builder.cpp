@@ -13,6 +13,7 @@ void planet_zero_fill(planet_t &planet) {
 	std::fill(planet.landblocks.begin(), planet.landblocks.end(), block_t{});
 	planet.migrant_counter = 0;
 	planet.remaining_settlers = 200;
+	planet.civs.region_info.resize(WORLD_TILES_COUNT);
 }
 
 FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {

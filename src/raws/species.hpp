@@ -35,7 +35,8 @@ struct raw_species_t {
     int max_age = 90;
     int infant_age = 5;
     int child_age = 12;
-    uint8_t glyph = '@';
+    uint16_t glyph = '@';
+    uint16_t worldgen_glyph = '@';
 };
 
 /*
@@ -47,6 +48,7 @@ struct civ_unit_natural_attack_t {
     int n_dice = 0;
     int die_type = 6;
     int die_mod = 0;
+    int range = 0;
 };
 
 struct civ_unit_sentient_t {
@@ -69,7 +71,7 @@ struct civ_unit_t {
     uint8_t speed = 0;
     std::string name = "";
     std::vector<civ_unit_sentient_t> sentients;
-    std::vector<std::string> can_build;
+    int worldgen_strength = 1;
 };
 
 struct civilization_t {
@@ -80,6 +82,7 @@ struct civilization_t {
     std::string name_generator = "normal";
     std::unordered_map<std::string, civ_unit_t> units;
     std::vector<std::string> evolves_into;
+    std::vector<std::string> can_build;
 };
 
 /*

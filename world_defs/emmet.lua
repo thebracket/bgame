@@ -1,4 +1,3 @@
-
 -- Scary ant-people who just want to eat the world
 
 species_sentient['emmet'] = {
@@ -60,6 +59,7 @@ civilizations['emmet'] = {
     species_def = 'emmet',
     ai = 'worldeater',
     name_generator = "ant",
+    can_build = { "ant_mound", "ant_tunnel" },
     units = {
         garrison = {
             bp_per_turn = 1,
@@ -71,7 +71,7 @@ civilizations['emmet'] = {
                 soldier = emmet_soldier,
                 worker = emmet_worker
             },
-            can_build = { "ant_mound" }
+            worldgen_strength = 2
         },
         swarm = {
             bp_per_turn = 0,
@@ -81,8 +81,37 @@ civilizations['emmet'] = {
                 soldier = emmet_soldier,
                 worker = emmet_worker
             },
-            can_build = { "ant_tunnel" }
+            worldgen_strength = 2
         }
     },
-    evolves_into = { }
+    evolves_into = { "emmet1" }
 }
+
+function civ_name_gen_ant(n)
+    n = n % 6;
+    if n == 0 then return "Emmet Swarm";
+    elseif n == 1 then return "Emmet Hive";
+    elseif n == 2 then return "Emmet Nest";
+    elseif n == 3 then return "Emmet Mound";
+    elseif n == 4 then return "Emmet Plague";
+    elseif n == 5 then return "Emmet Monarchy";
+    else return "Emmet Infestation";
+    end
+end
+
+function leader_name_gen_ant(n)
+    n = n % 8;
+    if n == 0 then return "Queen Click-Click";
+    elseif n == 1 then return "Queen Devourer";
+    elseif n == 2 then return "Queen Gut-muncher";
+    elseif n == 3 then return "Queen Butcher";
+    elseif n == 4 then return "Queen Marrow-Gnawer";
+    elseif n == 5 then return "Queen Bone-cruncher";
+    elseif n == 6 then return "Queen Hatred";
+    elseif n == 7 then return "Queen Murder";
+    elseif n == 8 then return "Queen Pillage";
+    elseif n == 9 then return "Queen Intestinal Fungus";
+    elseif n == 10 then return "Queen of the Blight";
+    else return "Queen Slaughter";
+    end
+end
