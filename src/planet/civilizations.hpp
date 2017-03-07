@@ -20,11 +20,15 @@ struct civ_t {
     uint16_t glyph = 0;
     int startx = 0;
     int starty = 0;
+    bool met_cordex = false;
+    int cordex_feelings = 0;
+    std::unordered_map<std::size_t, int> relations;
 
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive(species_tag, tech_level, extinct, name, leader_name, r, g, b, glyph, origin);
+        archive(species_tag, tech_level, extinct, name, leader_name, r, g, b, glyph, origin, met_cordex, relations,
+            cordex_feelings);
     }
 };
 

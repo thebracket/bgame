@@ -29,11 +29,11 @@ bool grazer_hostile_scan(entity_t &other) {
 }
 
 bool sentient_hostile_scan(entity_t &other) {
-    /*bool hostile_sentient = false;
+    bool hostile_sentient = false;
     auto other_sentient = other.component<sentient_ai>();
     if (other_sentient) {
-        const std::size_t my_civ = planet.civs.population[ai_visibility::ai->person_id].civ_id;
-        const std::size_t their_civ = planet.civs.population[other_sentient->person_id].civ_id;
+        const std::size_t my_civ = ai_visibility::ai->civ_id;
+        const std::size_t their_civ = other_sentient->civ_id;
         if (my_civ != their_civ) {
             auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
             if (civfinder != planet.civs.civs[my_civ].relations.end()) {
@@ -48,7 +48,7 @@ bool sentient_hostile_scan(entity_t &other) {
     {
         return true;
     }
-    */
+
     return false;
 }
 

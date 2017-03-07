@@ -6,6 +6,7 @@
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../components/grazer_ai.hpp"
+#include "../../components/natural_attacks_t.hpp"
 
 bool has_melee_weapon(const entity_t &entity) 
 {
@@ -44,7 +45,7 @@ bool has_appropriate_ammo(const entity_t &entity, const std::string ammo_type, c
 	return has_weapon;
 }
 
-int shooting_range(const entity_t &entity, const position_t &pos)
+int shooting_range(entity_t &entity, const position_t &pos)
 {
 	int result = -1;
 	auto ranged_status = has_ranged_weapon(entity);
@@ -54,6 +55,13 @@ int shooting_range(const entity_t &entity, const position_t &pos)
 				result = item_defs.find(i.item_tag)->second.range;
 			}
 		});
+	} else {
+		const auto na = entity.component<natural_attacks_t>();
+		if (na) {
+			for (const auto &a : na->attacks) {
+				if (a.range > 0) result = a.range;
+			}
+		}
 	}
 	return result;
 }

@@ -10,6 +10,7 @@
 #include "../../components/game_stats.hpp"
 #include "../tasks/civ_dislike.hpp"
 #include "../../messages/emit_particles_message.hpp"
+#include "../../components/natural_attacks_t.hpp"
 
 void sentient_melee_attack(const std::string &weapon_name,
                            const int &hit_bonus,
@@ -46,7 +47,7 @@ void sentient_attacks_system::configure() {
 
 void sentient_attacks_system::update(const double duration_ms) {
     each_mbox<sentient_attack_message>([] (const sentient_attack_message &msg) {
-        /*
+
         auto sentient_entity = entity(msg.attacker);
         if (!sentient_entity) return;
         auto ai = sentient_entity->component<sentient_ai>();
@@ -55,10 +56,13 @@ void sentient_attacks_system::update(const double duration_ms) {
         std::size_t weapon_id = get_melee_id(msg.attacker);
         if (weapon_id == 0) {
             // Natural attacks
-            const auto &species = civ_defs[planet.civs.population[ai->person_id].species];
-            const auto &caste = species.castes[planet.civs.population[ai->person_id].caste];
-            for (const auto &na : caste.combat.natural_attacks) {
-                sentient_melee_attack(na.type, na.hit_bonus, na.n_dice, na.die_type, na.die_mod, msg);
+            auto * na = sentient_entity->component<natural_attacks_t>();
+            if (na) {
+                for (const auto &a : na->attacks) {
+                    if (a.range == 0) {
+                        sentient_melee_attack(a.type, a.hit_bonus, a.n_dice, a.die_type, a.die_mod, msg);
+                    }
+                }
             }
         } else {
             auto weapon_component = entity(weapon_id)->component<item_t>();
@@ -71,11 +75,11 @@ void sentient_attacks_system::update(const double duration_ms) {
                                           msg);
                 }
             }
-        }*/
+        }
     });
 
     each_mbox<sentient_ranged_attack_message>([] (const sentient_ranged_attack_message &msg) {
-        /*
+
         auto attacker = entity(msg.attacker);
         auto defender = entity(msg.victim);
         if (!attacker || !defender) return;
@@ -85,6 +89,7 @@ void sentient_attacks_system::update(const double duration_ms) {
 
         civ_dislike_attacker(defender);
 
+        // Held Weapons
         std::size_t weapon_id, ammo_id;
         std::tie(weapon_id, ammo_id) = get_ranged_and_ammo_id(msg.attacker);
         std::string weapon_name = "fists";
@@ -116,6 +121,20 @@ void sentient_attacks_system::update(const double duration_ms) {
                                         defender_pos->x, defender_pos->y, defender_pos->z});
         }
 
+        // Natural weapons
+        auto na = attacker->component<natural_attacks_t>();
+        if (na) {
+            for (const auto &a : na->attacks) {
+                if (a.range > 0) {
+                    weapon_n = a.n_dice;
+                    weapon_d = a.die_type;
+                    weapon_mod = a.die_mod;
+                    emit(emit_particles_message{3, attacker_pos->x, attacker_pos->y, attacker_pos->z,
+                                                defender_pos->x, defender_pos->y, defender_pos->z});
+                }
+            }
+        }
+
         LOG ss;
         ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(rltk::colors::YELLOW)->text(weapon_name+std::string(". "))->col(rltk::colors::WHITE);
         const int skill_modifier = get_skill_modifier(*attacker_stats, "Ranged Attacks");
@@ -129,6 +148,6 @@ void sentient_attacks_system::update(const double duration_ms) {
         } else {
             ss.text("The attack misses.");
         }
-        emit_deferred(log_message{ss.chars});*/
+        emit_deferred(log_message{ss.chars});
     });
 }

@@ -28,7 +28,7 @@ std::string get_random_species(random_number_generator &rng, const int tech_leve
 void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &rng) {
     set_worldgen_status("Initializing starting settlements");
 
-    for (int i=0; i<n_civs; ++i) {
+    for (int i=1; i<n_civs; ++i) {
         civ_t civ;
 
         start_over:
@@ -259,8 +259,16 @@ void planet_build_run_year(const int year, planet_t &planet, random_number_gener
                     }
 
                     for (auto &uid : cit->second) {
-                        auto civ_f = civ_defs.find(planet.civs.civs[cit->first].species_tag);
-                        str += civ_f->second.units.find(planet.civs.units[uid].unit_type)->second.worldgen_strength;
+                        const std::string ut = planet.civs.units[uid].unit_type;
+                        const std::string st = planet.civs.civs[cit->first].species_tag;
+                        //std::cout << st << ":" << ut << "\n";
+                        auto civ_f = civ_defs.find(st);
+                        if (civ_f != civ_defs.end()) {
+                            auto u_f = civ_f->second.units.find(ut);
+                            if (u_f != civ_f->second.units.end()) {
+                                str += u_f->second.worldgen_strength;
+                            }
+                        }
                     }
                     strengths[cit->first] = str + rng.roll_dice(2, 6);
                 }
@@ -307,15 +315,6 @@ void planet_build_run_year(const int year, planet_t &planet, random_number_gener
         if (planet.civs.region_info[pidx].owner_civ == 0) {
             planet.civs.region_info[pidx].owner_civ = unit.owner_civ;
             planet.civs.region_info[pidx].settlement_size = 1;
-
-            /*unit_t u;
-            u.owner_civ = unit.owner_civ;
-            u.world_x = unit.world_x;
-            u.world_y = unit.world_y;
-            u.unit_type = "garrison";
-            u.dead = false;
-            new_units.push_back(u);*/
-            //std::cout << "Claimed a new region!\n";
         }
     }
     for (const auto unit : new_units) {

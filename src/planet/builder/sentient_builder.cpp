@@ -17,6 +17,7 @@
 #include "../../components/position.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/ai_mode_idle.hpp"
+#include "../../components/natural_attacks_t.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     int mod = 0;
@@ -26,7 +27,7 @@ int sentient_get_stat_mod(const std::string stat, const raw_species_t * species)
 }
 
 void create_sentient(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::tuple<int,int,int> &start,
-                     const civ_unit_sentient_t &unit, const std::string species_tag, const std::size_t person_id,
+                     const civ_unit_sentient_t &unit, const std::string species_tag, const std::size_t civ_id,
                      bool announce)
 {
     // Species definition
@@ -58,8 +59,14 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     }
     health_t health = create_health_component_sentient(species_finder, base_hp);
 
+    // Natural Attacks
+    natural_attacks_t attacks;
+    for (const auto &na : unit.natural_attacks) {
+        attacks.attacks.push_back( natural_attack_t{ na } );
+    }
+
     // AI
-    sentient_ai ai{person_id, 10};
+    sentient_ai ai{civ_id, 10};
     if (species_finder->alignment == align_devour) {
         ai.aggression = 100;
         ai.hostile = true;
@@ -78,7 +85,8 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
             ->assign(std::move(ai))
             ->assign(std::move(species))
             ->assign(initiative_t{})
-            ->assign(ai_mode_idle_t{});
+            ->assign(ai_mode_idle_t{})
+            ->assign(std::move(attacks));
     std::cout << "Sentient #" << sentient->id << "\n";
     if (announce) {
         emit_deferred(log_message{
@@ -86,7 +94,7 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
                         " has arrived.")->chars});
     }
 
-    //planet.civs.civs[civ_id].met_cordex = true;
+    planet.civs.civs[civ_id].met_cordex = true;
 
     // Equipment
 }
@@ -94,7 +102,6 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
 void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::size_t civ_id,
                           const std::string &unit_tag,
                           std::vector<std::tuple<int,int,int>> &starting_points, int &spawn_counter,
-                          const std::size_t person_id,
                           const bool announce)
 {
     const std::string species_tag = planet.civs.civs[civ_id].species_tag;
@@ -105,7 +112,7 @@ void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_numbe
 
     for (const auto &unit : unit_f->second.sentients) {
         for (int i=0; i<unit.n_present; ++i) {
-            create_sentient(planet, region, rng, starting_points[spawn_counter], unit, species_tag, person_id, announce);
+            create_sentient(planet, region, rng, starting_points[spawn_counter], unit, species_tag, civ_id, announce);
 
             ++spawn_counter;
             if (spawn_counter > starting_points.size()) spawn_counter = 0;

@@ -7,5 +7,4 @@
 void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::size_t civ_id,
                           const std::string &unit_tag,
                           std::vector<std::tuple<int,int,int>> &starting_points, int &spawn_counter,
-                          const std::size_t person_id,
                           const bool announce=false);

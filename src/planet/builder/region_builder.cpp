@@ -120,13 +120,10 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
 	create_settler(planet, crash_x + 1, crash_y, crash_z+1, rng, 2);
 
     // Add features
-    bool has_settlement = false;
-    bool settlement_active = false;
-    int max_size = 0;
-    std::size_t civ_id;
     int blight_level = 0;
 
     const int pidx = planet.idx(region.region_x, region.region_y);
+    blight_level = planet.civs.region_info[pidx].blight_level;
     std::vector<std::tuple<int,int,int>> spawn_points;
     int spawn_counter = 0;
     if (planet.civs.region_info[pidx].settlement_size > 0) {
@@ -138,16 +135,14 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         }
         std::cout << "Free Garrison of " << planet.civs.civs[planet.civs.region_info[pidx].owner_civ].name << "\n";
         create_sentient_unit(planet, region, rng, planet.civs.region_info[pidx].owner_civ, "garrison", spawn_points,
-                            spawn_counter, 0);
+                            spawn_counter);
     }
-    std::size_t counter = 0;
     for (const auto &unit : planet.civs.units) {
         if (unit.world_y == region.region_y && unit.world_x == region.region_x) {
             std::cout << "Spawn a unit: " << unit.unit_type << "\n";
             create_sentient_unit(planet, region, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
-                                spawn_counter, counter);
+                                spawn_counter);
         }
-        ++counter;
     }
 
     // Trees and blight

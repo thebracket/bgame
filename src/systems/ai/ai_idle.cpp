@@ -14,69 +14,65 @@
 
 void ai_idle::configure() {}
 
+void idle_grazer(entity_t &e, ai_tag_my_turn_t &t, ai_mode_idle_t &idle, grazer_ai * grazer) {
+    auto pos = e.component<position_t>();
+    delete_component<ai_tag_my_turn_t>(e.id);
+
+    // Grazers simply eat vegetation or move
+    const auto idx = mapidx(pos->x, pos->y, pos->z);
+    if (current_region->tile_vegetation_type[idx] > 0) {
+        if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
+    } else {
+        emit_deferred(entity_wants_to_move_randomly_message{e.id});
+        emit_deferred(huntable_moved_message{});
+    }
+    delete_component<ai_tag_my_turn_t>(e.id);
+}
+
+void idle_sentient(entity_t &e, ai_tag_my_turn_t &t, ai_mode_idle_t &idle, sentient_ai * sentient) {
+    auto pos = e.component<position_t>();
+    int feelings = planet.civs.civs[sentient->civ_id].cordex_feelings;
+
+    if (sentient->hostile || feelings < 0) {
+        sentient->goal = SENTIENT_GOAL_KILL;
+    } else {
+        sentient->goal = SENTIENT_GOAL_IDLE;
+    }
+
+    if (sentient->goal == SENTIENT_GOAL_KILL) {
+        //std::cout << "Sentient kill mode\n";
+        // Close for the kill!
+        const int idx = mapidx(*pos);
+        if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
+            position_t destination = settler_map.find_destination(*pos);
+            emit_deferred(entity_wants_to_move_message{e.id, destination});
+            emit_deferred(renderables_changed_message{});
+        } else {
+            sentient->goal = SENTIENT_GOAL_IDLE;
+        }
+    } else {
+        // Wander aimlessly
+        emit_deferred(entity_wants_to_move_randomly_message{e.id});
+    }
+    delete_component<ai_tag_my_turn_t>(e.id);
+}
+
+void idle_iterator(entity_t &e, ai_tag_my_turn_t &t, ai_mode_idle_t &idle) {
+    auto settler = e.component<settler_ai_t>();
+    auto sentient = e.component<sentient_ai>();
+    auto grazer = e.component<grazer_ai>();
+
+    if (grazer) {
+        idle_grazer(e, t, idle, grazer);
+    } else if (sentient) {
+        idle_sentient(e, t, idle, sentient);
+    } else if (settler) {
+        // TODO
+    }
+}
+
 void ai_idle::update(const double duration_ms) {
     if (pause_mode != RUNNING) return;
 
-    each<ai_tag_my_turn_t, ai_mode_idle_t>([] (entity_t &e, ai_tag_my_turn_t &t, ai_mode_idle_t &idle) {
-        auto settler = e.component<settler_ai_t>();
-        auto sentient = e.component<sentient_ai>();
-        auto grazer = e.component<grazer_ai>();
-
-        if (grazer) {
-            auto pos = e.component<position_t>();
-            delete_component<ai_tag_my_turn_t>(e.id);
-
-            // Grazers simply eat vegetation or move
-            const auto idx = mapidx(pos->x, pos->y, pos->z);
-            if (current_region->tile_vegetation_type[idx] > 0) {
-                if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
-            } else {
-                emit_deferred(entity_wants_to_move_randomly_message{e.id});
-                emit_deferred(huntable_moved_message{});
-            }
-            delete_component<ai_tag_my_turn_t>(e.id);
-        } else if (sentient) {
-            /*
-            auto pos = e.component<position_t>();
-            int feelings = 0;
-            feelings = planet.civs.civs[planet.civs.population[sentient->person_id].civ_id].cordex_feelings;
-            if (feelings < 0) {
-                sentient->hostile = true;
-            } else {
-                sentient->hostile = false;
-            }
-            if (planet.civs.population[sentient->person_id].behavior == "eat_world") sentient->hostile = true;
-
-            // There's a chance they will go berserk
-            const auto &species_def = civ_defs[planet.civs.population[sentient->person_id].species];
-            const auto &caste_def = species_def.castes[planet.civs.population[sentient->person_id].caste];
-            if (caste_def.berserk ||
-                    (sentient->goal == SENTIENT_GOAL_IDLE && rng.roll_dice(1,500)-1+(0-feelings) <= sentient->aggression && sentient->days_since_arrival > 1)) {
-                const int idx = mapidx(*pos);
-                //std::cout << "Kill mode detected, distance " << settler_map.distance_map[idx] << "\n";
-                if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
-                    sentient->goal = SENTIENT_GOAL_KILL;
-                }
-            }
-
-            if (sentient->goal == SENTIENT_GOAL_KILL) {
-                //std::cout << "Sentient kill mode\n";
-                // Close for the kill!
-                const int idx = mapidx(*pos);
-                if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
-                    position_t destination = settler_map.find_destination(*pos);
-                    emit_deferred(entity_wants_to_move_message{e.id, destination});
-                    emit_deferred(renderables_changed_message{});
-                } else {
-                    sentient->goal = SENTIENT_GOAL_IDLE;
-                }
-            } else {
-                // Wander aimlessly
-                emit_deferred(entity_wants_to_move_randomly_message{e.id});
-            }
-            delete_component<ai_tag_my_turn_t>(e.id);*/
-        } else if (settler) {
-            // TODO
-        }
-    });
+    each<ai_tag_my_turn_t, ai_mode_idle_t>(idle_iterator);
 }
