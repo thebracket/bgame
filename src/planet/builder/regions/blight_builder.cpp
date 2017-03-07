@@ -5,7 +5,7 @@
 #include "../../../components/sentient_ai.hpp"
 #include "../../../raws/materials.hpp"
 
-void build_ant_mound(region_t &region, random_number_generator &rng) {
+void build_ant_mound(region_t &region, random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) {
     // Build nests and move the creatures into them
     auto blight_mat = get_material_by_tag("blight");
     const int mound_height = rng.roll_dice(3,6);
@@ -26,7 +26,6 @@ void build_ant_mound(region_t &region, random_number_generator &rng) {
     }
 
     // Caves
-    std::vector<int> spawn_points;
     const int ground_z = get_ground_z(region, x,y);
     int i = mound_depth;
     for (int sz = z; sz<ground_z-1; ++sz) {
@@ -34,7 +33,7 @@ void build_ant_mound(region_t &region, random_number_generator &rng) {
             for (int Y = y-i; Y<y+i; ++Y) {
                 if (distance2d(X,Y,x,y) < (i+2.0f)/2.0f) {
                     region.tile_type[mapidx(X, Y, sz)] = tile_type::FLOOR;
-                    spawn_points.push_back(mapidx(X,Y,sz));
+                    spawn_points.push_back(std::make_tuple(X,Y,sz));
                 }
             }
         }
@@ -67,12 +66,6 @@ void build_ant_mound(region_t &region, random_number_generator &rng) {
         }
         --i;
     }
-
-    each<sentient_ai, position_t>([&i, &spawn_points, &x, &y, &z] (entity_t &e, sentient_ai &ai, position_t &pos) {
-        const std::size_t pos_idx = i % spawn_points.size();
-        std::tie(pos.x, pos.y, pos.z) = idxmap(spawn_points[pos_idx]);
-        ++i;
-    });
 }
 
 void just_add_blight(region_t &region, random_number_generator &rng) {

@@ -72,8 +72,8 @@ emmet_worker4 = {
 }
 
 civilizations['emmet4'] = {
-    tech_level = 3,
-    species_def = 'emmet5',
+    tech_level = 4,
+    species_def = 'emmet4',
     ai = 'worldeater',
     name_generator = "ant4",
     can_build = { "ant_mound", "ant_tunnel" },

@@ -18,68 +18,97 @@
 #include "../../components/initiative.hpp"
 #include "../../components/ai_mode_idle.hpp"
 
-void create_sentient(const int x, const int y, const int z, rltk::random_number_generator &rng, planet_t &planet, 
-        region_t &region, const std::size_t person_id, const bool announce) 
+int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
+    int mod = 0;
+    auto finder = species->stat_mods.find(stat);
+    if (finder != species->stat_mods.end()) mod = finder->second;
+    return mod;
+}
+
+void create_sentient(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::tuple<int,int,int> &start,
+                     const civ_unit_sentient_t &unit, const std::string species_tag, const std::size_t person_id,
+                     bool announce)
 {
-    /*
-    const auto &species_finder = civ_defs[planet.civs.population[person_id].species];
-    const auto &caste_finder = species_finder.castes[planet.civs.population[person_id].caste];
-    for (int counter = 0; counter < caste_finder.world_block_size; ++counter) {
+    // Species definition
+    species_t species;
+    species.tag = species_tag;
+    if (unit.gender == "female") {
+        species.gender = FEMALE;
+    } else {
+        species.gender = MALE;
+    }
+    const auto species_finder = get_species_def(species_tag);
 
-        species_t species;
-        game_stats_t stats;
+    // Game stats
+    game_stats_t stats;
+    stats.strength = rng.roll_dice(3, 6) + sentient_get_stat_mod("str", species_finder);
+    stats.dexterity = rng.roll_dice(3, 6) + sentient_get_stat_mod("dex", species_finder);
+    stats.constitution = rng.roll_dice(3, 6) + sentient_get_stat_mod("con", species_finder);
+    stats.intelligence = rng.roll_dice(3, 6) + sentient_get_stat_mod("int", species_finder);
+    stats.wisdom = rng.roll_dice(3, 6) + sentient_get_stat_mod("wis", species_finder);
+    stats.charisma = rng.roll_dice(3, 6) + sentient_get_stat_mod("cha", species_finder);
+    stats.comeliness = rng.roll_dice(3, 6) + sentient_get_stat_mod("com", species_finder);
+    stats.ethics = rng.roll_dice(3, 6) + sentient_get_stat_mod("eth", species_finder);
+    stats.age = species_finder->child_age+1;
 
-        species.tag = civ_defs[planet.civs.population[person_id].species].tag;
-        species.index = civ_defs[planet.civs.population[person_id].species].index;
-        std::cout << species.tag << "\n";
-        if (planet.civs.population[person_id].male) {
-            species.gender = MALE;
-        } else {
-            species.gender = FEMALE;
+    // Hit points
+    int base_hp = 10;
+    for (int i=0; i<unit.base_level; ++i) {
+        base_hp += rng.roll_dice(unit.hp_n, unit.hp_dice) + unit.hp_mod;
+    }
+    health_t health = create_health_component_sentient(species_finder, base_hp);
+
+    // AI
+    sentient_ai ai{person_id, 10};
+    if (species_finder->alignment == align_devour) {
+        ai.aggression = 100;
+        ai.hostile = true;
+    }
+
+    int x,y,z;
+    std::tie(x,y,z) = start;
+    auto sentient = create_entity()
+            ->assign(position_t{x, y, z})
+            ->assign(name_t{unit.name,
+                            ""})
+            ->assign(renderable_t{species_finder->glyph, rltk::colors::WHITE, rltk::colors::BLACK})
+            ->assign(viewshed_t{6, false, false})
+            ->assign(std::move(stats))
+            ->assign(std::move(health))
+            ->assign(std::move(ai))
+            ->assign(std::move(species))
+            ->assign(initiative_t{})
+            ->assign(ai_mode_idle_t{});
+    std::cout << "Sentient #" << sentient->id << "\n";
+    if (announce) {
+        emit_deferred(log_message{
+                LOG().col(rltk::colors::CYAN)->text(species_finder->name)->text(" ")->col(rltk::colors::WHITE)->text(
+                        " has arrived.")->chars});
+    }
+
+    //planet.civs.civs[civ_id].met_cordex = true;
+
+    // Equipment
+}
+
+void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::size_t civ_id,
+                          const std::string &unit_tag,
+                          std::vector<std::tuple<int,int,int>> &starting_points, int &spawn_counter,
+                          const std::size_t person_id,
+                          const bool announce)
+{
+    const std::string species_tag = planet.civs.civs[civ_id].species_tag;
+    auto civ_f = civ_defs.find(species_tag);
+    auto species_f = get_species_def(civ_f->second.species_tag);
+    auto unit_f = civ_f->second.units.find(unit_tag);
+
+
+    for (const auto &unit : unit_f->second.sentients) {
+        for (int i=0; i<unit.n_present; ++i) {
+            create_sentient(planet, region, rng, starting_points[spawn_counter], unit, species_tag, person_id, announce);
+
+            ++spawn_counter;
+            if (spawn_counter > starting_points.size()) spawn_counter = 0;
         }
-
-        stats.strength = planet.civs.population[person_id].str;
-        stats.dexterity = planet.civs.population[person_id].dex;
-        stats.constitution = planet.civs.population[person_id].con;
-        stats.intelligence = planet.civs.population[person_id].intelligence;
-        stats.wisdom = planet.civs.population[person_id].wis;
-        stats.charisma = planet.civs.population[person_id].cha;
-        stats.comeliness = planet.civs.population[person_id].com;
-        stats.ethics = planet.civs.population[person_id].ethics;
-        stats.age = planet.civs.population[person_id].age;
-
-        int base_hp = planet.civs.population[person_id].hit_points;
-        if (base_hp < 1) base_hp = 1;
-        health_t health = create_health_component_sentient(species.index, base_hp);
-
-        int techlevel = planet.civs.civs[planet.civs.population[person_id].civ_id].tech_level;
-        if (techlevel > 2) techlevel = 2;
-
-        sentient_ai ai{person_id, 10};
-        if (species_finder.ethics.behavior == "eat_world") {
-            ai.hostile = true;
-            ai.aggression = 100;
-        }
-
-        auto sentient = create_entity()
-                ->assign(position_t{x, y, z})
-                ->assign(name_t{species_finder.name,
-                                species_finder.castes[planet.civs.population[person_id].caste].name_override})
-                ->assign(renderable_t{species_finder.glyph, rltk::colors::WHITE, rltk::colors::BLACK})
-                ->assign(viewshed_t{6, false, false})
-                ->assign(std::move(stats))
-                ->assign(std::move(health))
-                ->assign(std::move(ai))
-                ->assign(std::move(species))
-                ->assign(initiative_t{})
-                ->assign(ai_mode_idle_t{});
-        std::cout << "Sentient #" << sentient->id << "\n";
-        if (announce) {
-            emit_deferred(log_message{
-                    LOG().col(rltk::colors::CYAN)->text(species_finder.name)->text(" ")->col(rltk::colors::WHITE)->text(
-                            " has arrived.")->chars});
-        }
-
-        planet.civs.civs[planet.civs.population[person_id].civ_id].met_cordex = true;
-    }*/
+    }
 }

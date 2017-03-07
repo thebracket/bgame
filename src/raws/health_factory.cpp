@@ -4,14 +4,13 @@
 #include "creatures.hpp"
 #include "species.hpp"
 
-health_t create_health_component_sentient(const std::size_t &species_id, const int base_hp) {
+health_t create_health_component_sentient(const raw_species_t * species, const int base_hp)
+{
     health_t result;
 
     result.max_hitpoints = base_hp;
-    result.current_hitpoints = base_hp;/*
-
-    auto &species = civ_defs[species_id];
-    for (const auto &part : species.body_parts) {
+    result.current_hitpoints = base_hp;
+    for (const auto &part : species->body_parts) {
         const int n_parts = std::get<1>(part);
         for (int i=0; i<n_parts; ++i) {
             health_part_t p;
@@ -19,14 +18,13 @@ health_t create_health_component_sentient(const std::size_t &species_id, const i
             float hitpoints = static_cast<float>(base_hp) * pct;
             if (hitpoints < 1.0F) hitpoints = 1.0F;
             p.part = std::get<0>(part);
-            p.max_hitpoints = (int)hitpoints;
-            p.current_hitpoints = (int)hitpoints;
+            p.max_hitpoints = (int) hitpoints;
+            p.current_hitpoints = (int) hitpoints;
             p.size = std::get<2>(part);
             result.parts.push_back(p);
         }
     }
-
-    return result;*/
+    return result;
 }
 
 health_t create_health_component_settler(const std::string &tag, const int base_hp) {

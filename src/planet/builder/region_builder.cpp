@@ -125,59 +125,36 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     int max_size = 0;
     std::size_t civ_id;
     int blight_level = 0;
-    std::vector<std::string> improvements;
-    /*
-    for (auto &town : planet.civs.settlements) {
-        if (town.world_x == region.region_x && town.world_y == region.region_y) {
-            std::cout << "A settlement of type " << +town.status << " should be here.\n";
-            std::cout << "It had a peak population of " << town.max_size << "\n";
-            //std::cout << "It belonged to " << planet.civs.civs[town.civ_id].name << " (" << planet.civs.civs[town.civ_id].species_tag << ")\n";
 
-            has_settlement = true;
-            if (town.status > 0) settlement_active = true;
-            max_size += town.max_size;
-            civ_id = town.civ_id;
-            blight_level = std::max((int)town.blight_level, (int)blight_level);
-            for (const std::string &s : town.improvements) {
-                improvements.push_back(s);
-            }
+    const int pidx = planet.idx(region.region_x, region.region_y);
+    std::vector<std::tuple<int,int,int>> spawn_points;
+    int spawn_counter = 0;
+    if (planet.civs.region_info[pidx].settlement_size > 0) {
+        std::cout << "There is a settlement of size " << planet.civs.region_info[pidx].settlement_size << " here.\n";
+        for (const auto &i : planet.civs.region_info[pidx].improvements) {
+            std::cout << "Build a: " << i << "\n";
+            // Spawn it
+            if (i == "ant_mound") build_ant_mound(region, rng, spawn_points);
         }
-    }*/
-
-    // Add anyone who is still here from world-gen
-    int count = 0;
-    std::size_t peep_id = 0;
-    /*
-    for (auto &peep : planet.civs.population) {
-        if (!peep.deceased && peep.world_x == region.region_x && peep.world_y == region.region_y) {
-            //std::cout << "Spawn a " << peep.species_tag << ", of the " << planet.civs.civs[peep.civ_id].name << "!\n";
-
-            const int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
-            const int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
-            const int z = get_ground_z(region, x, y);
-            create_sentient(x, y, z, rng, planet, region, peep_id);
-            ++count;
-        }
-        ++peep_id;
+        std::cout << "Free Garrison of " << planet.civs.civs[planet.civs.region_info[pidx].owner_civ].name << "\n";
+        create_sentient_unit(planet, region, rng, planet.civs.region_info[pidx].owner_civ, "garrison", spawn_points,
+                            spawn_counter, 0);
     }
-     */
+    std::size_t counter = 0;
+    for (const auto &unit : planet.civs.units) {
+        if (unit.world_y == region.region_y && unit.world_x == region.region_x) {
+            std::cout << "Spawn a unit: " << unit.unit_type << "\n";
+            create_sentient_unit(planet, region, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
+                                spawn_counter, counter);
+        }
+        ++counter;
+    }
 
+    // Trees and blight
     if (blight_level < 100) {
         build_trees(region, biome, rng);
     } else {
         just_add_blight(region, rng);
-    }
-
-    std::vector<std::tuple<int,int,int>> spawn_points;
-    if (has_settlement) {
-        /*const int n_buildings = max_size * 5;
-        std::cout << "Spawning " << n_buildings << " buildings. \n";
-        if (!settlement_active) std::cout << "The buildings are ruined.\n";
-        build_buildings(region, rng, n_buildings, settlement_active, spawn_points, civ_id, planet);*/
-        for (const std::string improvement : improvements) {
-            std::cout << "Improvement: " << improvement << "\n";
-            if (improvement == "ant_mound") build_ant_mound(region, rng);
-        }
     }
 
     // Build connectivity graphs

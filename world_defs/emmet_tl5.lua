@@ -61,7 +61,7 @@ emmet_raider5 = {
 }
 
 emmet_worker5 = {
-    n = 25, name = "Dark Emmet Worker", level=1,
+    n = 25, name = "Cyber-Emmet Worker", level=1,
     armor_class = 17,
     natural_attacks = {
         disintegrator = { type = "disintegrator", hit_bonus = 2, n_dice = 1, die_type = 8, die_mod = 0 },
@@ -72,7 +72,7 @@ emmet_worker5 = {
 }
 
 civilizations['emmet5'] = {
-    tech_level = 3,
+    tech_level = 5,
     species_def = 'emmet5',
     ai = 'worldeater',
     name_generator = "ant5",
