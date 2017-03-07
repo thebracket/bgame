@@ -6,6 +6,7 @@
 #include <rltk.hpp>
 #include <array>
 #include "constants.hpp"
+#include "../components/species.hpp"
 
 struct civ_t {
     std::string species_tag = "";
@@ -23,6 +24,11 @@ struct civ_t {
     bool met_cordex = false;
     int cordex_feelings = 0;
     std::unordered_map<std::size_t, int> relations;
+
+    // For types that have it...
+    hair_color_t hair_color;
+    hair_style_t hair_style;
+    skin_color_t skin_color;
 
     template<class Archive>
     void serialize(Archive & archive)

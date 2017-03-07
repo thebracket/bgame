@@ -37,6 +37,9 @@ struct raw_species_t {
     int child_age = 12;
     uint16_t glyph = '@';
     uint16_t worldgen_glyph = '@';
+    bool render_composite = false;
+    uint16_t base_male_glyph = 352;
+    uint16_t base_female_glyph = 353;
 };
 
 /*
@@ -51,6 +54,13 @@ struct civ_unit_natural_attack_t {
     int range = 0;
 };
 
+struct civ_equipment_t {
+    std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
+    std::string melee = "";
+    std::string ranged = "";
+    std::string ammo = "";
+};
+
 struct civ_unit_sentient_t {
     int n_present = 0;
     uint8_t base_level = 0;
@@ -62,7 +72,7 @@ struct civ_unit_sentient_t {
     int hp_mod = 0;
     std::string gender = "male";
     std::vector<civ_unit_natural_attack_t> natural_attacks;
-    // equipment
+    civ_equipment_t equipment;
 };
 
 struct civ_unit_t {

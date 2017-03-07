@@ -19,7 +19,6 @@ void mode_sentient_info_system::configure() {
 
 void display_sentient_info()
 {
-    /*
     auto name = entity(selected_settler)->component<name_t>();
 	auto species = entity(selected_settler)->component<species_t>();
 	auto ai = entity(selected_settler)->component<sentient_ai>();
@@ -33,10 +32,10 @@ void display_sentient_info()
     header2 << species->gender_str() << " " << species_finder.name;
 
     std::stringstream header3;
-    header3 << "Member of: " << planet.civs.civs[planet.civs.population[ai->person_id].civ_id].name;
-    if (planet.civs.civs[planet.civs.population[ai->person_id].civ_id].cordex_feelings < 0) {
+    header3 << "Member of: " << planet.civs.civs[ai->civ_id].name;
+    if (planet.civs.civs[ai->civ_id].cordex_feelings < 0) {
         header3 << " (HOSTILE)";        
-    } else if (planet.civs.civs[planet.civs.population[ai->person_id].civ_id].cordex_feelings == 0) {
+    } else if (planet.civs.civs[ai->civ_id].cordex_feelings == 0) {
         header3 << " (NEUTRAL)";
     } else {
         header3 << " (FRIENDLY)";
@@ -71,7 +70,7 @@ void display_sentient_info()
         emit_deferred(map_dirty_message{});
         emit_deferred(recalculate_mining_message{});
     }
-    ImGui::End();*/
+    ImGui::End();
 }
 
 void display_grazer_info() {

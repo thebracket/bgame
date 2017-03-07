@@ -59,6 +59,64 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         std::cout << "Welcome: " << civ.name << ", lead by " << civ.leader_name << "\n";
         civ.glyph = get_species_def(civ_finder->second.species_tag)->worldgen_glyph;
 
+        // Appearance
+        if (get_species_def(civ_finder->second.species_tag)->render_composite) {
+            const int ethnic_roll = rng.roll_dice(1, 4);
+            switch (ethnic_roll)
+            {
+                case 1:
+                    civ.skin_color = CAUCASIAN;
+                    break;
+                case 2:
+                    civ.skin_color = ASIAN;
+                    break;
+                case 3:
+                    civ.skin_color = INDIAN;
+                    break;
+                case 4:
+                    civ.skin_color = AFRICAN;
+                    break;
+            }
+
+            const int hair_color_roll = rng.roll_dice(1, 5);
+            switch (hair_color_roll)
+            {
+                case 1:
+                    civ.hair_color = BLACK_HAIR;
+                    break;
+                case 2:
+                    civ.hair_color = BLONDE_HAIR;
+                    break;
+                case 3:
+                    civ.hair_color = BROWN_HAIR;
+                    break;
+                case 4:
+                    civ.hair_color = WHITE_HAIR;
+                    break;
+                case 5:
+                    civ.hair_color = RED_HAIR;
+                    break;
+            }
+
+            civ.hair_style = BALD;
+            const int style_roll = rng.roll_dice(1, 4);
+            switch (style_roll)
+            {
+                case 1:
+                    civ.hair_style = SHORT;
+                    break;
+                case 2:
+                    civ.hair_style = LONG;
+                    break;
+                case 3:
+                    civ.hair_style = PIGTAILS;
+                    break;
+                case 4:
+                    civ.hair_style = TRIANGLE;
+                    break;
+            }
+        }
+
         planet.civs.civs.push_back(civ);
 
         // Place the civilization start
@@ -129,6 +187,14 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
                 //std::cout << "Spread some blight for 10 bp\n";
             }
         }
+    } else {
+        for (auto &pidx : towns) {
+            if (planet.civs.region_info[pidx].blight_level > 0 && bp > 10) {
+                planet.civs.region_info[pidx].blight_level = 0;
+                bp -= 10;
+                //std::cout << "Clear some blight for 10 bp\n";
+            }
+        }
     }
 
     // Build improvements
@@ -174,11 +240,12 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     }
 
     // Consider new units
-    const int unit_cap = towns.size() + civ.tech_level;
+    const int unit_cap = towns.size() + civ.tech_level + 1;
     //std::cout << "Unit count: " << unit_count << ", cap " << unit_cap << "\n";
     while (bp > 5 && unit_count < unit_cap) {
         unit_t unit;
         unit.owner_civ = id;
+        std::cout << "(Civ " << id << "), " << planet.civs.civs[id].species_tag << "\n";
         unit.unit_type = random_unit_type(civ_f->second, rng);
         unit.world_x = civ.startx;
         unit.world_y = civ.starty;
@@ -255,6 +322,8 @@ void planet_build_run_year(const int year, planet_t &planet, random_number_gener
                         for (auto &imp : planet.civs.region_info[pidx].improvements) {
                             if (imp == "ant_mound") str += 2;
                             if (imp == "ant_tunnel") str += 1;
+                            if (imp == "earthworks") str += 3;
+                            if (imp == "wood-pallisade") str += 5;
                         }
                     }
 
@@ -309,7 +378,7 @@ void planet_build_run_year(const int year, planet_t &planet, random_number_gener
 
     // Units in an unclaimed region build there and claim it
     //std::cout << "Considering expansion\n";
-    std::vector<unit_t> new_units;
+    //std::vector<unit_t> new_units;
     for (const auto &unit : planet.civs.units) {
         const int pidx = planet.idx(unit.world_x, unit.world_y);
         if (planet.civs.region_info[pidx].owner_civ == 0) {
@@ -317,9 +386,9 @@ void planet_build_run_year(const int year, planet_t &planet, random_number_gener
             planet.civs.region_info[pidx].settlement_size = 1;
         }
     }
-    for (const auto unit : new_units) {
+    /*for (const auto unit : new_units) {
         planet.civs.units.push_back(unit);
-    }
+    }*/
 
     // Remove all extinct civilizations
     //std::cout << "Extinctions\n";

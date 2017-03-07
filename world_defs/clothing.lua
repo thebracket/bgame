@@ -182,28 +182,31 @@ clothing = {
 		slot = "torso",
 		colors = {"brown", "black", "grey"},
 		description = "A simple tunic.",
-		ac = 1.0
+		ac = 1.0, glyph = 378
 	},
 	britches = {
 		name = "Britches",
 		slot = "legs",
 		colors = {"brown", "black", "grey"},
 		description = "A simple pair of pants.",
-		ac = 1.0
+		ac = 1.0,
+		glyph = 379
 	},
 	skirt_simple = {
 		name = "Simple Skirt",
 		slot = "legs",
 		colors = {"brown", "black", "grey"},
 		description = "A simple skirt.",
-		ac = 1.0
+		ac = 1.0,
+		glyph = 382
 	},
 	sandals = {
 		name = "Sandals",
 		slot = "torso",
 		colors = {"brown", "black", "grey"},
 		description = "A simple pair of sandals.",
-		ac = 1.0
+		ac = 1.0,
+		glyph = 384
 	},
 	cap = {
 		name = "Armored Cap",

@@ -7,7 +7,7 @@
 
 using namespace rltk;
 
-enum render_mode_t { RENDER_SETTLER };
+enum render_mode_t { RENDER_SETTLER, RENDER_SENTIENT };
 
 struct renderable_composite_t {
     render_mode_t render_mode = RENDER_SETTLER;
