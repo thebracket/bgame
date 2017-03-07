@@ -137,9 +137,24 @@ civilizations['neolithic_human'] = {
 }
 
 function civ_name_gen_neohuman(n)
-    return "Tribe";
+    n = n % 6;
+    if n == 0 then return "{LASTNAME} Tribe";
+    elseif n == 1 then return "{LASTNAME} Clan";
+    elseif n == 2 then return "{LASTNAME} Gang";
+    elseif n == 3 then return "{LASTNAME} Dynasty";
+    elseif n == 4 then return "{LASTNAME} Horde";
+    elseif n == 5 then return "{LASTNAME} Kindred";
+    else return "{LASTNAME} Blood";
+    end
 end
 
 function leader_name_gen_neohuman(n)
-    return "Lord";
+    n = n % 6;
+    if n == 0 then return "Lord {FIRSTNAME_M} {LASTNAME}";
+    elseif n == 1 then return "Lady {FIRSTNAME_F} {LASTNAME}";
+    elseif n == 2 then return "Sir {FIRSTNAME_M} {LASTNAME}";
+    elseif n == 3 then return "Dame {FIRSTNAME_F} {LASTNAME}";
+    elseif n == 4 then return "Warlord {LASTNAME}";
+    elseif n == 5 then return "Highness {LASTNAME}";
+    end
 end

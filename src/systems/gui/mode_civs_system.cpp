@@ -32,7 +32,7 @@ void mode_civs_system::update(const double ms) {
 int selected_civ = 0;
 
 void render_civ_list() {
-    /*
+
     std::vector<std::pair<std::size_t, std::string>> civs;
     std::size_t civ_id = 0;
     for (civ_t &civ : planet.civs.civs) {
@@ -53,7 +53,7 @@ void render_civ_list() {
     for (int i=0; i<civs.size(); ++i) {
         civ_listbox_items[i] = civs[i].second.c_str();
     }
-    ImGui::Begin(win_civs_list.c_str(), nullptr, ImVec2{600,400}, 0.9f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin(win_civs_list.c_str(), nullptr, ImVec2{600,400}, 0.9f, ImGuiWindowFlags_NoCollapse);
     ImGui::PushItemWidth(-1);
     ImGui::ListBox("## ", &selected_civ, civ_listbox_items, civs.size(), 10);
 
@@ -69,7 +69,7 @@ void render_civ_list() {
         emit_deferred(recalculate_mining_message{});
     }
 
-    ImGui::End();*/
+    ImGui::End();
 }
 
 void civs_add_text_line_to_table(const dialog_placement_t &box, std::unique_ptr<gui_table> &table, const int &w, const std::string &s)
@@ -91,7 +91,7 @@ void civs_add_button_line_to_table(const dialog_placement_t &box, std::unique_pt
 }
 
 void render_civ_negotiate() {
-    /*
+
     const std::string title = std::string("Negotiations with ") + planet.civs.civs[negotiating_civ].name;
     const std::string salutation = std::string("Greeting, Cordex. We are The ") + planet.civs.civs[negotiating_civ].name;
     std::string feelings;
@@ -133,5 +133,5 @@ void render_civ_negotiate() {
     if (ImGui::Button("End Negotiation")) {
         game_master_mode = PLAY;
     }
-    ImGui::End();*/
+    ImGui::End();
 }

@@ -54,7 +54,19 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         const std::string civ_name_func = "civ_name_gen_" + civ_finder->second.name_generator;
         const std::string civ_leader_func = "leader_name_gen_" + civ_finder->second.name_generator;
         civ.name = lua_str_func(civ_name_func, rng.roll_dice(1,1000)) + std::string(" of the ") + loc_name;
+        if (str_contains(civ.name, "{LASTNAME}")) {
+            civ.name = str_replace(civ.name, "{LASTNAME}", last_names.random_entry(rng));
+        }
         civ.leader_name = lua_str_func(civ_leader_func, rng.roll_dice(1,1000));
+        if (str_contains(civ.leader_name, "{LASTNAME}")) {
+            civ.leader_name = str_replace(civ.leader_name, "{LASTNAME}", to_proper_noun_case(last_names.random_entry(rng)));
+        }
+        if (str_contains(civ.leader_name, "{FIRSTNAME_M}")) {
+            civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_M}", to_proper_noun_case(first_names_male.random_entry(rng)));
+        }
+        if (str_contains(civ.leader_name, "{FIRSTNAME_F}")) {
+            civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_F}", to_proper_noun_case(first_names_female.random_entry(rng)));
+        }
         civ.origin = loc_name;
         std::cout << "Welcome: " << civ.name << ", lead by " << civ.leader_name << "\n";
         civ.glyph = get_species_def(civ_finder->second.species_tag)->worldgen_glyph;
