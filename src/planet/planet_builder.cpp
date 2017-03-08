@@ -7,6 +7,7 @@
 #include "builder/history_builder.hpp"
 #include "builder/river_builder.hpp"
 #include "../FastNoise/FastNoise.h"
+#include "../raws/biomes.hpp"
 
 #include <atomic>
 #include <iostream>
@@ -35,13 +36,14 @@ void setup_build_planet() {
 
 inline void set_planet_display_char(const int &block_idx, const int &idx, planet_t &planet) {
     // Set the altitude component
-    (*planet_builder_display.get())[idx].altitude = planet.landblocks[block_idx].height;
+    (*planet_builder_display.get())[idx].altitude = planet.landblocks[block_idx].height / 3;
     (*planet_builder_display.get())[idx].background = rltk::colors::BLACK;
 
     const uint8_t zero = 0;
     const int biome_idx = planet.landblocks[block_idx].biome_idx;
     const rltk::color_t bg = rltk::colors::BLACK;
     uint8_t col = planet.landblocks[block_idx].height;
+
 
     if (planet.landblocks[block_idx].type == block_type::NONE) {
         (*planet_builder_display.get())[idx].terrain_glyph = 178;
@@ -73,6 +75,9 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
     } else {
         (*planet_builder_display.get())[idx].terrain_glyph = 30;
         (*planet_builder_display.get())[idx].foreground = color_t{col, col, col};
+    }
+    if (planet.landblocks[block_idx].type != block_type::WATER && !planet.biomes.empty() && planet.biomes[biome_idx].type > 0) {
+        (*planet_builder_display.get())[idx].foreground = get_biome_def(planet.biomes[biome_idx].type).worldgen_color;
     }
 
     for (const river_t &r : planet.rivers) {

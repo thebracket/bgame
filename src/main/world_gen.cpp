@@ -62,8 +62,6 @@ void world_gen::render_menu() {
 	ImGui::End();
 }
 
-float wg_rotate_angle = 0.0f;
-
 void render_hook() {
     planet_builder_lock.lock();
 
@@ -82,12 +80,16 @@ void render_hook() {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    /*
     glRotatef(wg_rotate_angle, 0.0f, 1.0f, 0.0f);
-    //glTranslatef(0.f, -160.f, -150.f);
     glTranslatef(0.f, -60.f, -50.f);
     glScalef(2.0f, 0.3f, 2.0f);
     wg_rotate_angle += 1.0f;
-    if (wg_rotate_angle > 360.0f) wg_rotate_angle = 0.0f;
+    if (wg_rotate_angle > 360.0f) wg_rotate_angle = 0.0f;*/
+    gluLookAt(0.0f, 112.0f, 10.0f, // Camera
+              0.0f, 64.0f, 0.0f, // Target
+              0.0f, 1.0f, 0.0f // Up
+    );
 
     glEnable(GL_TEXTURE_2D);
     sf::Texture::bind(rltk::get_texture(term(WORLD_LAYER)->get_font_tag()));
@@ -143,13 +145,13 @@ void render_hook() {
                 glColor3f(1.0f, 1.0f, 1.0f);
 
                 glTexCoord2f(tex_xf, tex_yf);
-                glVertex3f(X, altitude, Y);
+                glVertex3f(X, altitude + 1.0f, Y);
                 glTexCoord2f(tex_xf, tex_yf + tex_ysize);
-                glVertex3f(X, (*planet_builder_display.get())[planet.idx(x, y + 1)].altitude, Y + 1.0f);
+                glVertex3f(X, altitude + 2.0f, Y );
                 glTexCoord2f(tex_xf + tex_xsize, tex_yf + tex_ysize);
-                glVertex3f(X + 1.0f, (*planet_builder_display.get())[planet.idx(x + 1, y + 1)].altitude, Y + 1.0f);
+                glVertex3f(X, altitude + 2.0f, Y + 1.0f );
                 glTexCoord2f(tex_xf + tex_xsize, tex_yf);
-                glVertex3f(X + 1.0f, (*planet_builder_display.get())[planet.idx(x + 1, y)].altitude, Y);
+                glVertex3f(X, altitude + 1.0f, Y + 1.0f);
             }
         }
     }
