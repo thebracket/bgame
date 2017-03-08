@@ -93,10 +93,11 @@ void planet_base_type_allocation(planet_t &planet) {
 	set_worldgen_status("Dividing the waters from the earth");
 
 	int candidate = 0;
+	const int remaining_divisor = 10 - (planet.water_divisor + planet.plains_divisor);
 	const int n_cells = WORLD_HEIGHT * WORLD_WIDTH;
-	const int n_cells_water = (n_cells / 3);
-	const int n_cells_plains = (n_cells / 3) + n_cells_water;
-	const int n_cells_hills = (n_cells / 6) + n_cells_plains;
+	const int n_cells_water = (n_cells / planet.water_divisor);
+	const int n_cells_plains = (n_cells / planet.plains_divisor) + n_cells_water;
+	const int n_cells_hills = (n_cells / remaining_divisor) + n_cells_plains;
 	
 	planet.water_height = planet_determine_proportion(planet, candidate, n_cells_water);
 	planet.plains_height = planet_determine_proportion(planet, candidate, n_cells_plains);

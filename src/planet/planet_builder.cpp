@@ -162,15 +162,21 @@ void builder_save_planet(planet_t &planet) {
 	//std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
-void build_planet() {
+void build_planet(const int &seed, const int &water_divisor, const int &plains_divisor, const int &starting_settlers,
+    const bool &strict_beamdown)
+{
 	planet_build_done.store(false);
 
-	random_number_generator rng;
+	random_number_generator rng(seed);
 	planet_t planet;
-	planet.rng_seed = rng.initial_seed;
+	planet.rng_seed = seed;
 	const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
 	planet.perlin_seed = perlin_seed;
-	std::cout << "Planet seed: " << planet.perlin_seed << "\n";
+    planet.water_divisor = water_divisor;
+    planet.plains_divisor = plains_divisor;
+    planet.starting_settlers = starting_settlers;
+    planet.strict_beamdown = strict_beamdown;
+	//std::cout << "Planet seed: " << planet.perlin_seed << "\n";
 
 	// Make a zero-height map
 	planet_zero_fill(planet);

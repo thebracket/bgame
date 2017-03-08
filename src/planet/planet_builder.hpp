@@ -8,7 +8,8 @@
 #include "region.hpp"
 #include "planet.hpp"
 
-void build_planet();
+void build_planet(const int &seed, const int &water_divisor, const int &plains_divisor, const int &starting_settlers,
+    const bool &strict_beamdown);
 bool is_planet_build_complete();
 extern std::mutex planet_builder_lock;
 extern std::unique_ptr<std::vector<rltk::vchar>> planet_builder_display;

@@ -88,6 +88,10 @@ struct planet_t {
 	int perlin_seed;
 	int remaining_settlers;
 	int migrant_counter;
+	int water_divisor = 3;
+	int plains_divisor = 3;
+	int starting_settlers = 10;
+	bool strict_beamdown = false;
 
 	uint8_t water_height;
 	uint8_t plains_height;
@@ -104,7 +108,7 @@ struct planet_t {
 	void serialize(Archive & archive)
 	{
 		archive( name, rng_seed, perlin_seed, remaining_settlers, migrant_counter, water_height, plains_height, hills_height,
-			landblocks, biomes, rivers, civs, history);
+			landblocks, biomes, rivers, civs, history, water_divisor, plains_divisor, starting_settlers, strict_beamdown);
 	}
 };
 
