@@ -20,132 +20,103 @@ using namespace rltk::colors;
 
 std::atomic<bool> planet_build_done;
 std::mutex planet_builder_lock;
-int planet_build_term_width;
-int planet_build_term_height;
-std::unique_ptr<std::vector<rltk::vchar>> planet_builder_display;
+std::unique_ptr<std::vector<worldgen_display_t>> planet_builder_display;
 std::string planet_builder_status = "";
 
 bool is_planet_build_complete() {
 	return planet_build_done.load();
 }
 
-void setup_build_planet(int width, int height) {
-	planet_build_term_width = width;
-	planet_build_term_height = height;
-	planet_builder_display = std::make_unique<std::vector<rltk::vchar>>();
-	planet_builder_display->resize(width*height);
-	std::fill(planet_builder_display->begin(), planet_builder_display->end(), vchar{0, WHITE, BLACK});
+void setup_build_planet() {
+	planet_builder_display = std::make_unique<std::vector<worldgen_display_t>>();
+	planet_builder_display->resize(WORLD_TILES_COUNT);
+	std::fill(planet_builder_display->begin(), planet_builder_display->end(), worldgen_display_t{});
 }
 
 inline void set_planet_display_char(const int &block_idx, const int &idx, planet_t &planet) {
-	double hotness = ((double)planet.landblocks[block_idx].temperature_c + 88.0) / 146.0;
-	const color_t temperature = lerp(BLUE, RED, hotness);
-	uint8_t col = planet.landblocks[block_idx].height;
-	const uint8_t zero = 0;
+    // Set the altitude component
+    (*planet_builder_display.get())[idx].altitude = planet.landblocks[block_idx].height;
+    (*planet_builder_display.get())[idx].background = rltk::colors::BLACK;
 
-	rltk::color_t bg = BLACK;
-	const int biome_idx = planet.landblocks[block_idx].biome_idx;
-	if (biome_idx > -1) {
-		//bg = biome_defs[planet.biomes[biome_idx].type].worldgen_color;
-		bg = rltk::colors::BLACK;
-	}
+    const uint8_t zero = 0;
+    const int biome_idx = planet.landblocks[block_idx].biome_idx;
+    const rltk::color_t bg = rltk::colors::BLACK;
+    uint8_t col = planet.landblocks[block_idx].height;
 
-	if (planet.landblocks[block_idx].type == block_type::NONE) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{col, col, col}, temperature};
-	} else if (planet.landblocks[block_idx].type == block_type::WATER) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{zero, zero, col}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::PLAINS) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{zero, col, zero}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::HILLS) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{zero, col, zero}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::MARSH) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{'~', color_t{zero, col, zero}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::PLATEAU) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{239, color_t{col, col, col}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::HIGHLANDS) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{178, color_t{col, col, col}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::COASTAL) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{176, color_t{zero, col, zero}, bg};
-	} else if (planet.landblocks[block_idx].type == block_type::SALT_MARSH) {
-		(*planet_builder_display.get())[idx] = rltk::vchar{247, color_t{zero, col, zero}, bg};
-	} else {
-		(*planet_builder_display.get())[idx] = rltk::vchar{30, color_t{col, col, col}, bg};
-	}
+    if (planet.landblocks[block_idx].type == block_type::NONE) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 178;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, zero, col};
+    } else if (planet.landblocks[block_idx].type == block_type::WATER) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 178;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, zero, col};
+    } else if (planet.landblocks[block_idx].type == block_type::PLAINS) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 178;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, col, zero};
+    } else if (planet.landblocks[block_idx].type == block_type::HILLS) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 30;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, col, zero};
+    } else if (planet.landblocks[block_idx].type == block_type::MARSH) {
+        (*planet_builder_display.get())[idx].terrain_glyph = '~';
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, col, zero};
+    } else if (planet.landblocks[block_idx].type == block_type::PLATEAU) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 239;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, col, zero};
+    } else if (planet.landblocks[block_idx].type == block_type::HIGHLANDS) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 178;
+        (*planet_builder_display.get())[idx].foreground = color_t{col, col, col};
+    } else if (planet.landblocks[block_idx].type == block_type::COASTAL) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 176;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, col, zero};
+    } else if (planet.landblocks[block_idx].type == block_type::SALT_MARSH) {
+        (*planet_builder_display.get())[idx].terrain_glyph = 247;
+        (*planet_builder_display.get())[idx].foreground = color_t{zero, col, zero};
+    } else {
+        (*planet_builder_display.get())[idx].terrain_glyph = 30;
+        (*planet_builder_display.get())[idx].foreground = color_t{col, col, col};
+    }
 
-	for (const river_t &r : planet.rivers) {
-		if (planet.idx(r.start_x, r.start_y) == block_idx) {
-			(*planet_builder_display.get())[idx] = rltk::vchar{'%', color_t{0, 0, 255}, bg};
-		}
-		for (const river_step_t &s : r.steps) {
-			if (planet.idx(s.x, s.y) == block_idx) {
-				(*planet_builder_display.get())[idx] = rltk::vchar{'%', color_t{0, 0, 255}, bg};
-			}
-		}
-	}
+    for (const river_t &r : planet.rivers) {
+        if (planet.idx(r.start_x, r.start_y) == block_idx) {
+            (*planet_builder_display.get())[idx].terrain_glyph = '%';
+            (*planet_builder_display.get())[idx].foreground = color_t{0, 0, 255};
+        }
+        for (const river_step_t &s : r.steps) {
+            if (planet.idx(s.x, s.y) == block_idx) {
+                (*planet_builder_display.get())[idx].terrain_glyph = '%';
+                (*planet_builder_display.get())[idx].foreground = color_t{0, 0, 255};
+            }
+        }
+    }
+
+    if (!planet.civs.civs.empty()) {
+        std::size_t owner_civ = planet.civs.region_info[block_idx].owner_civ;
+        if (owner_civ != 0) {
+            color_t civ_color = color_t{ planet.civs.civs[owner_civ].r, planet.civs.civs[owner_civ].g, planet.civs.civs[owner_civ].b };
+            (*planet_builder_display.get())[idx].unit_glyph = planet.civs.civs[owner_civ].glyph;
+        } else {
+            (*planet_builder_display.get())[idx].unit_glyph = 0;
+        }
+    }
 }
 
 void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y) {
 	planet_builder_lock.lock();
-	const int half_term_x = planet_build_term_width / 2;
-	const int half_term_y = planet_build_term_height / 2;
-
-	int left_x = world_x - half_term_x;
-	int right_x = world_x + half_term_x;
-	int top_y = world_y - half_term_y;
-	int bottom_y = world_y + half_term_y;
-
-	if (left_x < 0) {
-		left_x = 0;
-		right_x = planet_build_term_width;
-	}
-	if (right_x > WORLD_WIDTH) {
-		left_x = WORLD_WIDTH - planet_build_term_width;
-		right_x = WORLD_WIDTH;
-	}
-	if (top_y < 0) {
-		top_y = 0;
-		bottom_y = planet_build_term_height;
-	}
-	if (bottom_y > WORLD_HEIGHT) {
-		bottom_y = WORLD_HEIGHT;
-		top_y = WORLD_HEIGHT - planet_build_term_height;
-	}
-
-	int Y = 0;
-	for (int y=top_y; y<bottom_y; ++y) {
-		int X = 0;
-		for (int x=left_x; x<right_x; ++x) {
-			const int idx = (planet_build_term_width * Y) + X;
-			const int block_idx = planet.idx(x, y);			
-			if (block_idx < planet.landblocks.size() && idx < planet_build_term_height*planet_build_term_width)
-			{
-				set_planet_display_char(block_idx, idx, planet);
-				std::size_t owner_civ = planet.civs.region_info[block_idx].owner_civ;
-				if (owner_civ != 0) {
-					color_t civ_color = color_t{ planet.civs.civs[owner_civ].r, planet.civs.civs[owner_civ].g, planet.civs.civs[owner_civ].b };
-					(*planet_builder_display.get())[idx] = rltk::vchar{planet.civs.civs[owner_civ].glyph, rltk::colors::WHITE, civ_color};
-				}
-			}
-			++X;
-		}
-		++Y;
-	}
+    for (int y=0; y<WORLD_HEIGHT; ++y) {
+        for (int x = 0; x < WORLD_WIDTH; ++x) {
+            set_planet_display_char(planet.idx(x,y), planet.idx(x,y), planet);
+        }
+    }
 	planet_builder_lock.unlock();
 }
 
 void planet_display_update_altitude(planet_t &planet) {
-	const int stride_x = WORLD_WIDTH / planet_build_term_width;
-	const int stride_y = WORLD_HEIGHT / planet_build_term_height;
-
-	planet_builder_lock.lock();
-	for (int y=0; y<planet_build_term_height; ++y) {
-		for (int x=0; x<planet_build_term_width; ++x) {
-			const int idx = (planet_build_term_width * y) + x;
-			const int block_idx = planet.idx(x*stride_x, y*stride_y);			
-			set_planet_display_char(block_idx, idx, planet);
-		}
-	}
-	planet_builder_lock.unlock();
+    planet_builder_lock.lock();
+    for (int y=0; y<WORLD_HEIGHT; ++y) {
+        for (int x = 0; x < WORLD_WIDTH; ++x) {
+            set_planet_display_char(planet.idx(x,y), planet.idx(x,y), planet);
+        }
+    }
+    planet_builder_lock.unlock();
 }
 
 void set_worldgen_status(const std::string &status) {

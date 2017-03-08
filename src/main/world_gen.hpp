@@ -23,4 +23,5 @@ private:
     int water = 3;
     int starting_settlers = 10;
     bool strict_beamdown = false;
+    std::function<void()> optional_display_hook = nullptr;
 };
