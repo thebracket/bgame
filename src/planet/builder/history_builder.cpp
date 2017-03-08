@@ -257,7 +257,7 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     while (bp > 5 && unit_count < unit_cap) {
         unit_t unit;
         unit.owner_civ = id;
-        std::cout << "(Civ " << id << "), " << planet.civs.civs[id].species_tag << "\n";
+        //std::cout << "(Civ " << id << "), " << planet.civs.civs[id].species_tag << "\n";
         unit.unit_type = random_unit_type(civ_f->second, rng);
         unit.world_x = civ.startx;
         unit.world_y = civ.starty;
