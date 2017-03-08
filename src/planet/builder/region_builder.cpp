@@ -108,16 +108,23 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     build_escape_pod(region, crash_x, crash_y, crash_z);
 
     // Add settlers
-    create_settler(planet, crash_x - 3, crash_y - 2, crash_z+1, rng, 0);
-	create_settler(planet, crash_x - 2, crash_y - 2, crash_z+1, rng, 0);
-	create_settler(planet, crash_x - 1, crash_y - 2, crash_z+1, rng, 0);
-	create_settler(planet, crash_x, crash_y - 2, crash_z+1, rng, 1);
-	create_settler(planet, crash_x + 1, crash_y - 2, crash_z+1, rng, 1);
-	create_settler(planet, crash_x - 3, crash_y, crash_z+1, rng, 1);
-	create_settler(planet, crash_x - 2, crash_y, crash_z+1, rng, 1);
-	create_settler(planet, crash_x - 1, crash_y, crash_z+1, rng, 2);
-	create_settler(planet, crash_x, crash_y, crash_z+1, rng, 2);
-	create_settler(planet, crash_x + 1, crash_y, crash_z+1, rng, 2);
+    std::vector<std::tuple<int,int,int>> settler_spawn_points;
+    settler_spawn_points.push_back(std::make_tuple(crash_x - 3, crash_y - 2, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x - 2, crash_y - 2, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x - 1, crash_y - 2, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x, crash_y - 2, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x + 1, crash_y - 2, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x - 3, crash_y, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x - 2, crash_y, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x - 1, crash_y, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x, crash_y, crash_z+1));
+    settler_spawn_points.push_back(std::make_tuple(crash_x + 1, crash_y, crash_z+1));
+
+    for (int i=0; i<planet.starting_settlers; ++i) {
+        int sx, sy, sz;
+        std::tie(sx, sy, sz) = settler_spawn_points[i % settler_spawn_points.size()];
+        create_settler(planet, sx, sy, sz, rng, i % 3);
+    }
 
     // Add features
     int blight_level = 0;

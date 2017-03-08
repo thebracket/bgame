@@ -78,7 +78,7 @@ void render_hook() {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(90.f, 1.f, 1.f, 150.0f);//fov, aspect, zNear, zFar
+    gluPerspective(90.f, 1.f, 1.f, 300.0f);//fov, aspect, zNear, zFar
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

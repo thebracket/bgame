@@ -18,7 +18,7 @@ void settler_spawner_system::update(const double duration_ms) {
         // New arrivals
         if (planet.remaining_settlers > 0) {
             ++planet.migrant_counter;
-            if (planet.migrant_counter > 14) { // Every 2 weeks
+            if (planet.migrant_counter > 14 && !planet.strict_beamdown) { // Every 2 weeks
                 const int crash_x = REGION_WIDTH / 2;
                 const int crash_y = REGION_HEIGHT / 2;
                 const int crash_z = get_ground_z(*current_region, crash_x, crash_y);
