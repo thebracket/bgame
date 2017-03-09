@@ -115,10 +115,10 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
             switch (style_roll)
             {
                 case 1:
-                    civ.hair_style = SHORT;
+                    civ.hair_style = SHORT_HAIR;
                     break;
                 case 2:
-                    civ.hair_style = LONG;
+                    civ.hair_style = LONG_HAIR;
                     break;
                 case 3:
                     civ.hair_style = PIGTAILS;

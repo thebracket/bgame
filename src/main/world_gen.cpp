@@ -1,3 +1,6 @@
+#ifdef WIN32
+#include <windows.h>
+#endif
 #include "world_gen.hpp"
 #include "../planet/planet_builder.hpp"
 #include "game_globals.hpp"
@@ -7,7 +10,7 @@
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
-#include <OpenGL/glu.h>
+#include <GL/glu.h>
 #include <iostream>
 
 constexpr int WORLD_LAYER=1;

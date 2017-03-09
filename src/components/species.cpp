@@ -62,8 +62,8 @@ std::string species_t::hair_color_str() {
 std::string species_t::hair_style_str() {
     switch (hair_style) {
         case BALD : return "bald";
-        case SHORT : return "cropped short";
-        case LONG : return "long";
+        case SHORT_HAIR : return "cropped short";
+        case LONG_HAIR : return "long";
         case PIGTAILS : return "in pigtails";
         case MOHAWK : return "in a mowhawk";
         case BALDING : return "balding";

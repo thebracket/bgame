@@ -158,10 +158,10 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 			species.hair_style = MOHAWK;
 			break;
 		case 4:
-			species.hair_style = SHORT;
+			species.hair_style = SHORT_HAIR;
 			break;
 		case 5:
-			species.hair_style = LONG;
+			species.hair_style = LONG_HAIR;
 			break;
 		}
 	}
@@ -171,10 +171,10 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		switch (style_roll)
 		{
 		case 1:
-			species.hair_style = SHORT;
+			species.hair_style = SHORT_HAIR;
 			break;
 		case 2:
-			species.hair_style = LONG;
+			species.hair_style = LONG_HAIR;
 			break;
 		case 3:
 			species.hair_style = PIGTAILS;

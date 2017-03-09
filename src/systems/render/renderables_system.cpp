@@ -63,8 +63,8 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
 
         int hair_glyph = 0;
         switch (species->hair_style) {
-            case SHORT : hair_glyph = 354; break;
-            case LONG : hair_glyph = 355; break;
+            case SHORT_HAIR : hair_glyph = 354; break;
+            case LONG_HAIR : hair_glyph = 355; break;
             case PIGTAILS : hair_glyph = 356; break;
             case MOHAWK : hair_glyph = 357; break;
             case BALDING : hair_glyph = 358; break;
@@ -132,8 +132,8 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
 
         int hair_glyph = 0;
         switch (species->hair_style) {
-            case SHORT : hair_glyph = 354; break;
-            case LONG : hair_glyph = 355; break;
+            case SHORT_HAIR : hair_glyph = 354; break;
+            case LONG_HAIR : hair_glyph = 355; break;
             case PIGTAILS : hair_glyph = 356; break;
             case MOHAWK : hair_glyph = 357; break;
             case BALDING : hair_glyph = 358; break;

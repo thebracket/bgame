@@ -4,4 +4,4 @@ add_library(utils STATIC
     dijkstra_map.cpp
 	telemetry.cpp
 )
-cotire(utils)
+#cotire(utils)
