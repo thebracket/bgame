@@ -4,6 +4,15 @@
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
 #include "../utils/telemetry.hpp"
+#include "../systems/gui/imgui_helper.hpp"
+#include "../external/imgui-sfml/imgui-SFML.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
 
 #include <rltk.hpp>
 #include <iostream>
@@ -23,6 +32,18 @@ constexpr int VEG_LAYER=6;
 std::atomic<bool> loaded(false);
 std::thread * loader_thread = nullptr;
 
+void render_hook_gameplay() {
+    // Push GL
+    get_window()->pushGLStates();
+    get_window()->resetGLStates();
+
+    // Pop GL
+    get_window()->popGLStates();
+
+    // Call ImGui
+    ImGui::Render();
+}
+
 void loader_tick() {
     term(GUI_LAYER)->clear();
     term(MAP_LAYER)->clear();
@@ -40,6 +61,9 @@ void play_game::tick(const double duration_ms) {
             loader_thread->join();
             delete loader_thread;
             loader_thread = nullptr;
+
+            optional_display_hook = rltk::optional_display_hook;
+            rltk::optional_display_hook = render_hook_gameplay;
         }
 
     }
@@ -111,6 +135,7 @@ void play_game::init() {
 }
 
 void play_game::destroy() {
+    rltk::optional_display_hook = optional_display_hook;
     call_home("stopgame");
 	gui->delete_layer(MAP_LAYER);
 	gui->delete_layer(TOOLTIP_LAYER);
