@@ -10,7 +10,11 @@
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 #include <iostream>
 
 constexpr int WORLD_LAYER=1;
