@@ -82,12 +82,15 @@ void worldgen_scene::render() {
 
         glTexCoord2f(tex_xf, tex_yf);
         glVertex3f(unit.x, unit.altitude + 1.0f, unit.y);
+
         glTexCoord2f(tex_xf, tex_yf + tex_ysize);
-        glVertex3f(unit.x, unit.altitude + 2.0f, unit.y );
+        glVertex3f(unit.x, unit.altitude + 3.0f, unit.y );
+
         glTexCoord2f(tex_xf + tex_xsize, tex_yf + tex_ysize);
-        glVertex3f(unit.x, unit.altitude + 2.0f, unit.y + 1.0f );
+        glVertex3f(unit.x, unit.altitude + 3.0f, unit.y + 2.0f );
+
         glTexCoord2f(tex_xf + tex_xsize, tex_yf);
-        glVertex3f(unit.x, unit.altitude + 1.0f, unit.y + 1.0f);
+        glVertex3f(unit.x, unit.altitude + 1.0f, unit.y + 2.0f);
     }
     glEnd();
     pop_gl_states();
