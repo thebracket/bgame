@@ -94,6 +94,9 @@ void render_hook() {
 
     glEnable(GL_TEXTURE_2D);
     sf::Texture::bind(rltk::get_texture(term(WORLD_LAYER)->get_font_tag()));
+    auto texture_size_vec = rltk::get_texture(term(WORLD_LAYER)->get_font_tag())->getSize();
+    const float texture_w = texture_size_vec.x;
+    const float texture_h = texture_size_vec.y;
 
     glBegin(GL_QUADS);
     for (int y=0; y<WORLD_HEIGHT-1; ++y) {
@@ -118,10 +121,10 @@ void render_hook() {
             {
                 const int tex_x = ((*planet_builder_display.get())[idx].terrain_glyph % 16) * 24;
                 const int tex_y = ((*planet_builder_display.get())[idx].terrain_glyph / 16) * 24;
-                const float tex_xf = (float) tex_x / 384.0f;
-                const float tex_yf = (float) tex_y / 768.0f;
-                const float tex_xsize = 24.0f / 384.0f;
-                const float tex_ysize = 24.0f / 768.0f;
+                const float tex_xf = (float) tex_x / texture_w;
+                const float tex_yf = (float) tex_y / texture_h;
+                const float tex_xsize = 24.0f / texture_w;
+                const float tex_ysize = 24.0f / texture_h;
 
                 glColor3f(red, green, blue);
 
@@ -138,10 +141,10 @@ void render_hook() {
             if ((*planet_builder_display.get())[planet.idx(x,y+1)].unit_glyph > 0) {
                 const int tex_x = ((*planet_builder_display.get())[idx].unit_glyph % 16) * 24;
                 const int tex_y = ((*planet_builder_display.get())[idx].unit_glyph / 16) * 24;
-                const float tex_xf = (float) tex_x / 384.0f;
-                const float tex_yf = (float) tex_y / 768.0f;
-                const float tex_xsize = 24.0f / 384.0f;
-                const float tex_ysize = 24.0f / 768.0f;
+                const float tex_xf = (float) tex_x / texture_w;
+                const float tex_yf = (float) tex_y / texture_h;
+                const float tex_xsize = 24.0f / texture_w;
+                const float tex_ysize = 24.0f / texture_h;
 
                 glColor3f(1.0f, 1.0f, 1.0f);
 
