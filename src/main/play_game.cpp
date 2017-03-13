@@ -37,6 +37,25 @@ void render_hook_gameplay() {
     get_window()->pushGLStates();
     get_window()->resetGLStates();
 
+    /* 3d map mode */
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glShadeModel(GL_SMOOTH);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(90.f, 1.f, 1.f, 300.0f);//fov, aspect, zNear, zFar
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0.0f, 112.0f, 10.0f, // Camera
+              0.0f, 64.0f, 0.0f, // Target
+              0.0f, 1.0f, 0.0f // Up
+    );
+
+    glBegin(GL_QUADS);
+    glEnd();
+
     // Pop GL
     get_window()->popGLStates();
 

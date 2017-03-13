@@ -87,12 +87,6 @@ void render_hook() {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    /*
-    glRotatef(wg_rotate_angle, 0.0f, 1.0f, 0.0f);
-    glTranslatef(0.f, -60.f, -50.f);
-    glScalef(2.0f, 0.3f, 2.0f);
-    wg_rotate_angle += 1.0f;
-    if (wg_rotate_angle > 360.0f) wg_rotate_angle = 0.0f;*/
     gluLookAt(0.0f, 112.0f, 10.0f, // Camera
               0.0f, 64.0f, 0.0f, // Target
               0.0f, 1.0f, 0.0f // Up
