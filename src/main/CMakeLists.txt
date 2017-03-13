@@ -6,5 +6,5 @@ add_library(bfmain STATIC
 	play_game.cpp
 	game_globals.cpp
 )
-target_link_libraries(bfmain planet rltk components systems)
+target_link_libraries(bfmain planet rltk components systems utils gl)
 cotire(bfmain)
