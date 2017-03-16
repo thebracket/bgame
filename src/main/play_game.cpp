@@ -6,13 +6,7 @@
 #include "../utils/telemetry.hpp"
 #include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/OpenGL.hpp>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "../utils/gl/map_render.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -33,31 +27,11 @@ std::atomic<bool> loaded(false);
 std::thread * loader_thread = nullptr;
 
 void render_hook_gameplay() {
-    // Push GL
-    get_window()->pushGLStates();
-    get_window()->resetGLStates();
-
-    /* 3d map mode */
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glShadeModel(GL_SMOOTH);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(90.f, 1.f, 1.f, 300.0f);//fov, aspect, zNear, zFar
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(0.0f, 112.0f, 10.0f, // Camera
-              0.0f, 64.0f, 0.0f, // Target
-              0.0f, 1.0f, 0.0f // Up
-    );
-
-    glBegin(GL_QUADS);
-    glEnd();
-
-    // Pop GL
-    get_window()->popGLStates();
+    if (loaded) {
+        map_render_t map3d;
+        map3d.layer_texture = MAP_LAYER;
+        map3d.render();
+    }
 
     // Call ImGui
     ImGui::Render();
@@ -80,9 +54,6 @@ void play_game::tick(const double duration_ms) {
             loader_thread->join();
             delete loader_thread;
             loader_thread = nullptr;
-
-            optional_display_hook = rltk::optional_display_hook;
-            rltk::optional_display_hook = render_hook_gameplay;
         }
 
     }
@@ -132,6 +103,9 @@ void do_load_game() {
     std::cout << "Go!\n";
 
     loaded = true;
+
+    optional_display_hook = rltk::optional_display_hook;
+    rltk::optional_display_hook = render_hook_gameplay;
 }
 
 void play_game::init() {

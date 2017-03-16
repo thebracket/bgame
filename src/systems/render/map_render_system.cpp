@@ -336,6 +336,9 @@ void map_render_system::update(const double duration_ms) {
 		map_change->pop();
 	}
 
+	return;
+
+	/*
 	int mouse_x, mouse_y;
 	int font_w, font_h;
 	std::tie(mouse_x, mouse_y) = get_mouse_position();
@@ -393,5 +396,5 @@ void map_render_system::update(const double duration_ms) {
 			}
 		}
 		renderables_changed = false;
-	}
+	}*/
 }

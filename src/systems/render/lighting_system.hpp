@@ -4,6 +4,7 @@
 #include <vector>
 
 extern std::vector<rltk::color_t> light_map;
+extern std::unordered_map<int, rltk::color_t> lit_tiles;
 
 class lighting_system : public rltk::base_system {
 public:

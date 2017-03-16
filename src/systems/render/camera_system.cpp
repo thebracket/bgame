@@ -3,6 +3,7 @@
 #include "../../messages/inputs.hpp"
 #include "renderables_system.hpp"
 #include "../../messages/tick_message.hpp"
+#include "../../utils/gl/map_render.hpp"
 
 std::vector<int> render_tiles;
 
@@ -70,9 +71,10 @@ void camera_system::update(const double duration_ms) {
 	}
 
 	if (dirty || clip_left == -1) {
-		 update_clipping_rectangle();
-		 build_render_tiles();
-		 dirty = false;
+        update_clipping_rectangle();
+        build_render_tiles();
+        dirty = false;
+        world_changed = true;
 	}
 }
 

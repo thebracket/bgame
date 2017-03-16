@@ -197,13 +197,13 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::SOLID : {
 			auto mat = get_material(tile_material[idx]);
 			if (idx < tile_material.size()) {
-				glyph = mat->glyph;
+				glyph = glyph = 257;
 				fg = mat->fg;
 				bg = mat->bg;
 			} else {
 				//std::cout << "Warning - material not found (" << idx << ")!\n";
 				tile_material[idx] = 1;
-				glyph = mat->glyph;
+				glyph = glyph = 257;
 				fg = mat->fg;
 				bg = mat->bg;
 			}
@@ -213,6 +213,7 @@ void region_t::calc_render(const int &idx) {
 			fg = rltk::colors::BLACK;
 		} break;
 		case tile_type::WALL : {
+			/*
 			uint8_t wall_mask = 0;
 			if (tile_type[idx-1] == tile_type::WALL) wall_mask += 1;
 			if (tile_type[idx+1] == tile_type::WALL) wall_mask += 2;
@@ -240,16 +241,17 @@ void region_t::calc_render(const int &idx) {
 					std::cout << "WARNING: Wall calculator hit a case of " << +wall_mask << "\n";
 					glyph = 79;
 				}
-			}
+			}*/
+			glyph = 257;
 			fg = get_material(tile_material[idx])->fg;
 			//bg = material_defs[tile_material[idx]].bg;
 		} break;
 		case tile_type::WINDOW : {
-			glyph = 176;
+			glyph = 257;
 			fg = rltk::colors::CYAN;
 		} break;
 		case tile_type::RAMP : {
-			glyph = 30;
+			glyph = 257;
 			if (tile_material[idx] > 0) {
 				fg = get_material(tile_material[idx])->fg;
 			} else {
