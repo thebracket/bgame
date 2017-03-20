@@ -18,3 +18,5 @@ namespace map_render_sys {
 	extern int mouse_term_y;
 	extern bool building_possible;
 }
+
+extern uint32_t glyph_cycle;
