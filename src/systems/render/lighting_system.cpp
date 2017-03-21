@@ -10,7 +10,7 @@
 using namespace rltk;
 
 std::vector<color_t> light_map;
-std::unordered_map<int, color_t> lit_tiles;
+std::unordered_map<int, std::pair<int, rltk::color_t>> lit_tiles;
 
 void lighting_system::configure() {
     system_name = "Lighting System";
@@ -24,8 +24,9 @@ void lighting_system::configure() {
     std::fill(light_map.begin(), light_map.end(), rltk::colors::WHITE);
 }
 
-inline void reveal(const int &idx, lightsource_t &view) {
-	lit_tiles[idx] = view.color;
+inline void reveal(const int &idx, const lightsource_t &view, const int &light_pos) {
+    lit_tiles[idx].first = light_pos;
+	lit_tiles[idx].second = view.color;
 }
 
 inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
@@ -33,7 +34,7 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
 		const auto idx = mapidx(X, Y, Z);
-		reveal(idx, view);
+		reveal(idx, view, mapidx(pos));
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {
 			return false;
@@ -46,7 +47,8 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 
 void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
     if (view.alert_status) {
-        view.color = designations->alert_color;
+        float power_percent = (float)designations->current_power / (float)designations->total_capacity;
+        view.color = rltk::lerp(rltk::colors::RED, rltk::colors::WHITE, power_percent);
     }
 	for (int z=(0-view.radius); z<view.radius; ++z) {
 		for (int i=0-view.radius; i<view.radius; ++i) {
@@ -123,7 +125,7 @@ void lighting_system::update(double time_ms) {
                 if (tileidx > 0) {
                     auto finder = lit_tiles.find(tileidx);
                     if (finder != lit_tiles.end()) {
-                        light_map[scridx] = finder->second;
+                        light_map[scridx] = finder->second.second;
                     } else if (current_region->above_ground[tileidx]) {
                         // Determine sunlight
                         bool shadowed = false;

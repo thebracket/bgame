@@ -10,6 +10,7 @@
 #endif
 #include "../../main/game_globals.hpp"
 #include "../../systems/render/map_render_system.hpp"
+#include "../../systems/render/lighting_system.hpp"
 
 using namespace rltk;
 
@@ -346,6 +347,7 @@ namespace world_scene {
     render_block world_interior_geometry;
     render_block floor_exterior_geometry;
     render_block floor_interior_geometry;
+    std::unordered_map<int, render_block> game_lit_geometry;
 
     /*
      * Reset all buffers. Only used the first time, or when the world geometry changes.
@@ -355,23 +357,34 @@ namespace world_scene {
         world_interior_geometry.reset();
         floor_exterior_geometry.reset();
         floor_interior_geometry.reset();
+        game_lit_geometry.clear();
     }
 
     // Adds a world-geometry floor tile
     void add_world_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        if (current_region->above_ground[idx]) {
-            floor_exterior_geometry.add_floor(x, y, z, c);
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_floor(x, y, z, c);
         } else {
-            floor_interior_geometry.add_floor(x, y, z, c);
+            if (current_region->above_ground[idx]) {
+                floor_exterior_geometry.add_floor(x, y, z, c);
+            } else {
+                floor_interior_geometry.add_floor(x, y, z, c);
+            }
         }
     }
 
     // Adds a world-geometry cube (solid)
     void add_world_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        if (current_region->above_ground[idx]) {
-            world_exterior_geometry.add_cube(x, y, z, c);
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_cube(x, y, z, c);
         } else {
-            world_interior_geometry.add_cube(x, y, z, c);
+            if (current_region->above_ground[idx]) {
+                world_exterior_geometry.add_cube(x, y, z, c);
+            } else {
+                world_interior_geometry.add_cube(x, y, z, c);
+            }
         }
     }
 
@@ -416,6 +429,38 @@ namespace world_scene {
 
     }
 
+    void setup_indoor_lighting_unlit(const int &deferred_program) {
+        const auto pos = glGetUniformLocation(deferred_program, "light_position");
+        const auto ambient = glGetUniformLocation(deferred_program, "light_ambient");
+        const auto diffuse = glGetUniformLocation(deferred_program, "light_diffuse");
+
+        GLfloat lightAmbient[3] = { 0.3f, 0.3f, 0.4f };
+        GLfloat lightDiffuse[3] = { 0.7f, 0.7f, 0.8f };
+        //GLfloat lightPosition[3] = { (float)camera_position->region_x-1.0f, (float)camera_position->region_z+20.0f, (float)camera_position->region_y-1.0f };
+        GLfloat lightPosition[3] = { 0.f, 0.f, 0.f };
+
+        glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
+        glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
+        glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+    }
+
+    void setup_indoor_lighting_lit(const int &deferred_program, const std::pair<int, rltk::color_t> &light) {
+        const auto pos = glGetUniformLocation(deferred_program, "light_position");
+        const auto ambient = glGetUniformLocation(deferred_program, "light_ambient");
+        const auto diffuse = glGetUniformLocation(deferred_program, "light_diffuse");
+
+        GLfloat lightAmbient[3] = { 0.3f, 0.3f, 0.4f };
+        GLfloat lightDiffuse[3] = { (float)light.second.r/255.0f, (float)light.second.g/255.0f, (float)light.second.b/255.0f };
+        //GLfloat lightPosition[3] = { (float)camera_position->region_x-1.0f, (float)camera_position->region_z+20.0f, (float)camera_position->region_y-1.0f };
+        int x,y,z;
+        std::tie(x,y,z) = idxmap(light.first);
+        GLfloat lightPosition[3] = { (float)x, (float)z+0.9f, (float)y };
+
+        glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
+        glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
+        glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+    }
+
     // Renders the world geometry
     void render_world(const GLuint &program_id, const GLuint &deferred_id)
     {
@@ -423,49 +468,80 @@ namespace world_scene {
 
         // Setup outdoor illumination
         glDisable(GL_LIGHTING);
-        setup_sun_and_moon(deferred_id);
 
         // Pass texture to the shader
         int texture_location = glGetUniformLocation(deferred_id, "my_color_texture");
         glUniform1i(texture_location, 0);
 
         // Call the rendering
-        world_exterior_geometry.render();
-        world_interior_geometry.render();
+
+        // Exterior - lit by the sun/moon
+        setup_sun_and_moon(deferred_id);
         floor_exterior_geometry.render();
+        world_exterior_geometry.render();
+
+        // With game-provided lighting
+        for (auto it=game_lit_geometry.begin(); it!=game_lit_geometry.end(); ++it) {
+            setup_indoor_lighting_lit(deferred_id, lit_tiles[it->first]);
+            it->second.render();
+        }
+
+        // Interior with no lights
+        setup_indoor_lighting_unlit(deferred_id);
+        world_interior_geometry.render();
         floor_interior_geometry.render();
         glUseProgram(0);
     }
 
     // Adds renderable vegetation
-    void add_vegetation(const int &x, const int &y, const int &z, const rltk::vchar &c) {
-        floor_exterior_geometry.add_decal(x, y, z, c);
+    void add_vegetation(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_decal(x, y, z, c);
+        } else {
+            floor_exterior_geometry.add_decal(x, y, z, c);
+        }
     }
 
     // Adds decals (blood stains)
     void add_decal(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        if (current_region->above_ground[idx]) {
-            floor_exterior_geometry.add_decal(x, y, z, c);
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_decal(x, y, z, c);
         } else {
-            floor_interior_geometry.add_decal(x, y, z, c);
+            if (current_region->above_ground[idx]) {
+                floor_exterior_geometry.add_decal(x, y, z, c);
+            } else {
+                floor_interior_geometry.add_decal(x, y, z, c);
+            }
         }
     }
 
     // Adds simple renderable
     void add_simple_renderable(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        if (current_region->above_ground[idx]) {
-            floor_exterior_geometry.add_decal(x, y, z, c);
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_decal(x, y, z, c);
         } else {
-            floor_interior_geometry.add_decal(x, y, z, c);
+            if (current_region->above_ground[idx]) {
+                floor_exterior_geometry.add_decal(x, y, z, c);
+            } else {
+                floor_interior_geometry.add_decal(x, y, z, c);
+            }
         }
     }
 
     // Adds composite renderable
     void add_composite_renderable(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        if (current_region->above_ground[idx]) {
-            floor_exterior_geometry.add_floor(x, y, z, c);
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_floor(x, y, z, c);
         } else {
-            floor_interior_geometry.add_floor(x, y, z, c);
+            if (current_region->above_ground[idx]) {
+                floor_exterior_geometry.add_floor(x, y, z, c);
+            } else {
+                floor_interior_geometry.add_floor(x, y, z, c);
+            }
         }
     }
 }

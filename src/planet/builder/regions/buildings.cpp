@@ -34,13 +34,14 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"));
+        new_building->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "cordex") {
         new_building->assign(viewshed_t{16, false})
             ->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {
-        new_building->assign(construct_power_t{0,1,0});
+        new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "solar_panel") {
         new_building->assign(construct_power_t{00,0,1});
     } else if (tag == "camp_fire") {

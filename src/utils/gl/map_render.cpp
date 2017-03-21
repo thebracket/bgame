@@ -73,7 +73,7 @@ namespace map_render {
                                 // Add vegetation
                                 auto veg_cache = current_region->veg_cache[idx];
                                 if (veg_cache.glyph > 0) {
-                                    world_scene::add_vegetation(x, y, z, veg_cache);
+                                    world_scene::add_vegetation(x, y, z, veg_cache, idx);
                                 }
 
                                 // Add blood stains
