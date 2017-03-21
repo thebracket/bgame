@@ -130,12 +130,11 @@ void map_render_t::render() {
     glClear(GL_DEPTH_BUFFER_BIT);
     glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glViewport(0,0,screen_size.x,screen_size.y);
+    //glViewport(0,0,screen_size.x,screen_size.y);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //gluPerspective(90.f, (float)screen_size.x / (float)screen_size.y, 0.1f, 64.0f);//fov, aspect, zNear, zFar
-    glOrtho(-12.0f, 12.0f, -12.0f, 12.0f, 0.0f, 128.0f);
+    gluPerspective(90.f, 1.f, 1.f, 300.0f);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

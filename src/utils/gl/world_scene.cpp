@@ -375,21 +375,55 @@ namespace world_scene {
         }
     }
 
+    bool is_daytime() noexcept {
+        if (calendar->hour > 5 && calendar->hour < 18) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void setup_sun_and_moon(const int &deferred_program) {
+        const float latitude = ((float)current_region->region_y - ((float)WORLD_HEIGHT/2.0F)) * (float)REGION_HEIGHT;
+        const auto pos = glGetUniformLocation(deferred_program, "light_position");
+        const auto ambient = glGetUniformLocation(deferred_program, "light_ambient");
+        const auto diffuse = glGetUniformLocation(deferred_program, "light_diffuse");
+
+        if (is_daytime()) {
+            // Sun
+            const float time_as_decimal = ((float)calendar->hour-6.0f + ((float)calendar->minute / 60.0f)) / 12.0f;
+            const float sun_angle_degrees = time_as_decimal * (float)REGION_WIDTH;
+
+            GLfloat lightAmbient[3] = { 0.4f, 0.4f, 0.35f };
+            GLfloat lightDiffuse[3] = { 1.0f, 1.0f, 0.9f };
+            GLfloat lightPosition[3] = { sun_angle_degrees, 300.0f, latitude };
+
+            glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
+            glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
+            glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+        } else {
+            // Moon
+            // Set the light position
+            GLfloat lightAmbient[3] = { 0.3f, 0.3f, 0.4f };
+            GLfloat lightDiffuse[3] = { 0.7f, 0.7f, 0.8f };
+            //GLfloat lightPosition[3] = { (float)camera_position->region_x-1.0f, (float)camera_position->region_z+20.0f, (float)camera_position->region_y-1.0f };
+            GLfloat lightPosition[3] = { REGION_WIDTH/2.0f , 300.0f, -latitude };
+
+            glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
+            glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
+            glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+        }
+
+    }
+
     // Renders the world geometry
     void render_world(const GLuint &program_id, const GLuint &deferred_id)
     {
         glUseProgram(deferred_id);
 
-        // Set the light position
-        GLfloat lightAmbient[3] = { 0.1f, 0.1f, 0.1f };
-        GLfloat lightDiffuse[3] = { 1.0f, 1.0f, 1.0f };
-        GLfloat lightPosition[3] = { (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y };
-
-        // Set light colors here
-        glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-        glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-        glEnable(GL_LIGHT0);
+        // Setup outdoor illumination
+        glDisable(GL_LIGHTING);
+        setup_sun_and_moon(deferred_id);
 
         // Pass texture to the shader
         int texture_location = glGetUniformLocation(deferred_id, "my_color_texture");
