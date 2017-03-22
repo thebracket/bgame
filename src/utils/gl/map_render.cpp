@@ -48,20 +48,9 @@ namespace map_render {
         return false;
     }
 
-    inline void build_world_vertex_buffer(const float texture_w, const float texture_h) {
-        // TODO: Break this into utilities, separate world geometry from renderables and vegetation
-        // Basically, it's scene graph time.
-
-
-        world_scene::reset_all();
-
+    inline void populate_vertex_buffer(const int &start_z, const int &end_z) {
         const vchar bloodstain{ 340, color_t{255,255,255}, color_t{255,255,255} };
-        // This is a test cube - comment out unless fixing basic render!
-        //world_scene::add_world_cube(camera_position->region_x, camera_position->region_y, camera_position->region_z, vchar{257, rltk::colors::WHITE, rltk::colors::BLACK}, mapidx(camera_position->region_x, camera_position->region_y, camera_position->region_z));
 
-        // Add world geometry
-        const int start_z = std::max(1, camera_position->region_z - 15);
-        const int end_z = std::min(REGION_DEPTH-1, camera_position->region_z+1);
         const int start_x = std::max(1, camera_position->region_x - 24);
         const int end_x = std::min(REGION_WIDTH-1, camera_position->region_x + 24);
         const int start_y = std::max(1, camera_position->region_y - 24);
@@ -78,7 +67,12 @@ namespace map_render {
                                 if (tiletype == tile_type::RAMP) {
                                     world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, 0.5f);
                                 } else if (has_ceiling(tiletype)) {
-                                    world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
+                                    if (game_master_mode == DESIGN && game_design_mode == CHOPPING && current_region->tree_id[idx]>0
+                                        && designations->chopping.find(current_region->tree_id[idx])!=designations->chopping.end()) {
+                                        world_scene::add_world_cube(x, y, z, vchar{'*', colors::RED, colors::RED}, idx);
+                                    } else {
+                                        world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
+                                    }
                                 } else if (has_floor(tiletype)) {
                                     world_scene::add_world_floor(x, y, z, current_region->render_cache[idx], idx);
                                 }
@@ -120,8 +114,20 @@ namespace map_render {
                 }
             }
         }
+    }
 
-        world_changed = false;
+    inline void build_world_vertex_buffer(const float texture_w, const float texture_h) {
+        world_scene::reset_all();
+
+        // Add world geometry, depending upon game mode
+        const bool single_z_layer = !(game_master_mode == PLAY || game_master_mode == ROGUE);
+
+        if (single_z_layer) {
+            populate_vertex_buffer(camera_position->region_z, camera_position->region_z+1);
+        } else {
+            populate_vertex_buffer(std::max(1, camera_position->region_z - 15),
+                                   std::min(REGION_DEPTH - 1, camera_position->region_z + 1));
+        }
     }
 
     void gl_states() {
@@ -195,15 +201,14 @@ namespace map_render {
         world_scene::render_world(program_id, deferred_id);
 
         // Render the framebuffer
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        gl_states();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glDisable(GL_TEXTURE_2D);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-        glDepthMask(GL_TRUE);
-        world_scene::render_index(index_program_id);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
+        if (world_changed) {
+            glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+            gl_states();
+            glDisable(GL_TEXTURE_2D);
+            world_scene::render_index(index_program_id);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
+            world_changed = false;
+        }
     }
 
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
