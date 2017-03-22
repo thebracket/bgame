@@ -97,10 +97,13 @@ namespace world_scene {
             vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
             vertices.emplace_back(v3d{X + vsize, Z, Y});
 
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
+            const float SX = X/255.0f;
+            const float SY = Y/255.0f;
+            const float SZ = Z/255.0f;
+            screen_index.emplace_back(v3d{SX,SY,SZ});
+            screen_index.emplace_back(v3d{SX,SY,SZ});
+            screen_index.emplace_back(v3d{SX,SY,SZ});
+            screen_index.emplace_back(v3d{SX,SY,SZ});
 
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
@@ -140,11 +143,6 @@ namespace world_scene {
             vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
             vertices.emplace_back(v3d{X + vsize, Z, Y});
 
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
@@ -152,7 +150,6 @@ namespace world_scene {
         }
 
         void add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c) {
-            const int idx = mapidx(x,y,z);
             const float light_r = light_red(c);
             const float light_g = light_green(c);
             const float light_b = light_blue(c);
@@ -292,37 +289,6 @@ namespace world_scene {
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
             normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
-
-            // Screen indices
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
-            screen_index.emplace_back(v3d{X,Y,Z});
         }
 
         void render() const noexcept {
@@ -340,6 +306,24 @@ namespace world_scene {
             glNormalPointer(GL_FLOAT, 0, &normals[0]);
 
             glDrawArrays(GL_QUADS, 0, vertices.size());
+
+            glDisableClientState(GL_COLOR_ARRAY);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            glDisableClientState(GL_VERTEX_ARRAY);
+            glDisableClientState(GL_NORMAL_ARRAY);
+        }
+
+        void render_index() const noexcept {
+            glEnableClientState(GL_COLOR_ARRAY);
+            glColorPointer(3, GL_FLOAT, 0, &screen_index[0]);
+
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+
+            glDrawArrays(GL_QUADS, 0, vertices.size());
+
+            glDisableClientState(GL_COLOR_ARRAY);
+            glDisableClientState(GL_VERTEX_ARRAY);
         }
     };
 
@@ -348,6 +332,7 @@ namespace world_scene {
     render_block floor_exterior_geometry;
     render_block floor_interior_geometry;
     std::unordered_map<int, render_block> game_lit_geometry;
+    render_block mouse_picker_geometry;
 
     /*
      * Reset all buffers. Only used the first time, or when the world geometry changes.
@@ -372,6 +357,7 @@ namespace world_scene {
                 floor_interior_geometry.add_floor(x, y, z, c);
             }
         }
+        mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     // Adds a world-geometry cube (solid)
@@ -386,6 +372,7 @@ namespace world_scene {
                 world_interior_geometry.add_cube(x, y, z, c);
             }
         }
+        mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     bool is_daytime() noexcept {
@@ -543,5 +530,17 @@ namespace world_scene {
                 floor_interior_geometry.add_floor(x, y, z, c);
             }
         }
+    }
+
+    void render_index(const GLuint &program_id) {
+        //glUseProgram(program_id);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_TRUE);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR);
+
+        mouse_picker_geometry.render_index();
+        glUseProgram(0);
     }
 }

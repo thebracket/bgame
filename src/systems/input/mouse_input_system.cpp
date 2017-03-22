@@ -1,4 +1,6 @@
 #include "mouse_input_system.hpp"
+#include "../../utils/gl/map_render.hpp"
+#include "../../planet/constants.hpp"
 
 namespace mouse {
 	int x, y;
@@ -10,6 +12,10 @@ namespace mouse {
 	int term3x,term3y;
 	int term4x,term4y;
 	bool clicked;
+
+	int mouse_world_x=0;
+	int mouse_world_y=0;
+	int mouse_world_z=0;
 }
 
 void mouse_input_system::configure() {
@@ -33,4 +39,11 @@ void mouse_input_system::update(const double ms) {
 		mouse::clicked = true;
 		mouse_damper = 0;
 	}
+
+	// Read back from the texture to find out where we really are in GL-land!
+	auto mouse_pos = map_render::readback_texture_pixel(mouse::x, mouse::y);
+	std::tie(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z) = mouse_pos;
+	if (mouse::mouse_world_x >= REGION_WIDTH) mouse::mouse_world_x = 1;
+	if (mouse::mouse_world_y >= REGION_HEIGHT) mouse::mouse_world_y = 1;
+	if (mouse::mouse_world_z >= REGION_DEPTH) mouse::mouse_world_z = 1;
 }

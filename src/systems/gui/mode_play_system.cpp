@@ -60,7 +60,7 @@ void mode_play_system::update(const double duration_ms) {
 		menu_x = mouse::x;
 		menu_y = mouse::y;
 	} else if (tooltip) {
-		show_tooltip(world_x, world_y, tile_idx);
+		show_tooltip(mouse::mouse_world_x, mouse::mouse_world_y, mapidx(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z));
 	}
 }
 

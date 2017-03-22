@@ -82,6 +82,7 @@ void lighting_system::update(double time_ms) {
         dirty = false;
     }
 
+    /*
     timer += time_ms;
     if (lighting_changed && timer > 33.0) {
         timer = 0.0;
@@ -175,5 +176,5 @@ void lighting_system::update(double time_ms) {
         }
 
         lighting_changed = false;
-    }
+    }*/
 }

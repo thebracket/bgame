@@ -12,6 +12,7 @@ namespace mouse {
 	extern int term3x, term3y;
 	extern int term4x, term4y;
 	extern bool clicked;
+	extern int mouse_world_x, mouse_world_y, mouse_world_z;
 }
 
 class mouse_input_system : public rltk::base_system {
