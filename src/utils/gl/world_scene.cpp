@@ -65,6 +65,21 @@ namespace world_scene {
         mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
+    // Adds a world-geometry cube (solid)
+    void add_world_fractional_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx, const float &height) {
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_fractional_height_cube(x, y, z, c, height);
+        } else {
+            if (current_region->above_ground[idx]) {
+                world_exterior_geometry.add_fractional_height_cube(x, y, z, c, height);
+            } else {
+                world_interior_geometry.add_fractional_height_cube(x, y, z, c, height);
+            }
+        }
+        mouse_picker_geometry.add_floor(x,y,z,c);
+    }
+
     bool is_daytime() noexcept {
         if (calendar->hour > 5 && calendar->hour < 18) {
             return true;

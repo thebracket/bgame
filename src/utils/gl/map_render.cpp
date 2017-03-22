@@ -75,12 +75,14 @@ namespace map_render {
                         if (current_region->revealed[idx]) {
                             const uint8_t tiletype = current_region->tile_type[idx];
                             if (tiletype != tile_type::OPEN_SPACE) {
-                                if (has_floor(tiletype)) {
+                                if (tiletype == tile_type::RAMP) {
+                                    world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, 0.5f);
+                                } else if (has_ceiling(tiletype)) {
+                                    world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
+                                } else if (has_floor(tiletype)) {
                                     world_scene::add_world_floor(x, y, z, current_region->render_cache[idx], idx);
                                 }
-                                if (has_ceiling(tiletype)) {
-                                    world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
-                                }
+
 
                                 // Add vegetation
                                 auto veg_cache = current_region->veg_cache[idx];

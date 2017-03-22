@@ -259,6 +259,149 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
 }
 
+void render_block::add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height)
+{
+    const float light_r = light_red(c);
+    const float light_g = light_green(c);
+    const float light_b = light_blue(c);
+
+    const float X = (float)x;
+    const float Y = (float)y;
+    const float Z = (float)z;
+    const float vsize = 1.0f;
+
+    const float tex_x = (c.glyph % 16) * 24.0f;
+    const float tex_y = (c.glyph / 16) * 24.0f;
+    const float tex_xf = (float) tex_x / texture_w;
+    const float tex_yf = (float) tex_y / texture_h;
+
+    // Floor
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    vertices.emplace_back(v3d{X,        Z, Y});
+    vertices.emplace_back(v3d{X,        Z, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z, Y});
+
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+
+    // Left Face
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    vertices.emplace_back(v3d{X, Z, Y});
+    vertices.emplace_back(v3d{X, Z, Y + vsize});
+    vertices.emplace_back(v3d{X, Z + height, Y + vsize});
+    vertices.emplace_back(v3d{X, Z + height, Y});
+
+    normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
+    normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
+    normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
+    normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
+
+    // Right Face
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    vertices.emplace_back(v3d{X + vsize, Z, Y});
+    vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z + height, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z + height, Y});
+
+    normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
+    normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
+    normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
+    normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
+
+    // North face
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    vertices.emplace_back(v3d{X, Z, Y});
+    vertices.emplace_back(v3d{X + vsize, Z, Y});
+    vertices.emplace_back(v3d{X + vsize, Z + height, Y});
+    vertices.emplace_back(v3d{X, Z + height, Y});
+
+    normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
+    normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
+    normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
+    normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
+
+    // South face
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    vertices.emplace_back(v3d{X, Z, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z + height, Y + vsize});
+    vertices.emplace_back(v3d{X, Z + height, Y + vsize});
+
+    normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
+    normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
+    normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
+    normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
+
+    // Ceiling - facing up because that's what is visible
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    vertices.emplace_back(v3d{X,        Z+height, Y});
+    vertices.emplace_back(v3d{X,        Z+height, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z+height, Y + vsize});
+    vertices.emplace_back(v3d{X + vsize, Z+height, Y});
+
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+}
+
 void render_block::render() const noexcept {
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glEnableClientState(GL_COLOR_ARRAY);

@@ -37,6 +37,7 @@ struct render_block {
     void add_floor(const int &x, const int &y, const int &z, const rltk::vchar &c);
     void add_decal(const int &x, const int &y, const int &z, const rltk::vchar &c);
     void add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c);
+    void add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height);
 
     void render() const noexcept;
     void render_index() const noexcept;
