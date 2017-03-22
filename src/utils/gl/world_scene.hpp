@@ -4,9 +4,7 @@
 
 namespace world_scene
 {
-    void calculate_texture_info();
     void reset_all();
-    void build_textures(const GLuint &deferred_id);
 
     void add_world_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx);
     void add_world_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx);

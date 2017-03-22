@@ -3,5 +3,6 @@ add_library(gl gl_utils.cpp
         map_render.cpp
         world_scene.cpp
         frustrum.cpp
+        render_block.cpp
         )
 cotire(gl)

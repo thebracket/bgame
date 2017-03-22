@@ -17,6 +17,7 @@
 #include "world_scene.hpp"
 #include "frustrum.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
+#include "render_block.hpp"
 
 constexpr bool show_index_buffer = false;
 bool world_changed = true;
@@ -149,7 +150,7 @@ namespace map_render {
             deferred_id = LoadShaders("world_defs/vertex-deferred.glsl", "world_defs/fragment-deferred.glsl");
             index_program_id = LoadShaders("world_defs/vertex-index.glsl", "world_defs/fragment-index.glsl");
             loaded_program = true;
-            world_scene::calculate_texture_info();
+            calculate_texture_info();
 
             // Create and bind the framebuffer for mouse-picking output
             glGenFramebuffers(1, &mouse_pick_fbo);
