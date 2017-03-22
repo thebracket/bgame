@@ -26,6 +26,7 @@ namespace map_render_sys {
 	bool building_possible = false;
 }
 
+/*
 vchar greyscale(vchar target) {
 	const color_t grey_fg = greyscale(target.foreground);
 	const color_t grey_bg = greyscale(target.background);
@@ -315,7 +316,7 @@ vchar get_render_char_building(const int &x, const int &y) {
 	}
 
 	return result;
-}
+}*/
 
 void map_render_system::configure() {
 	system_name = "Map Render";
