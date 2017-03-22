@@ -146,6 +146,8 @@ void fluid_system::update(const double ms) {
     std::queue<slow_tick_message> * sticks = mbox<slow_tick_message>();
 	while (!sticks->empty()) {
 		sticks->pop();
+        break;
+
         for (std::size_t i=0; i<REGION_TILES_COUNT; ++i) {
             if (water_stable[i] && current_region->water_level[i] == 1 && rng.roll_dice(1,6)==6) current_region->water_level[i] = 0;
         }
@@ -172,6 +174,6 @@ void fluid_system::update(const double ms) {
     std::queue<tick_message> * ticks = mbox<tick_message>();
 	while (!ticks->empty()) {
 		ticks->pop();
-        fluids::do_fluids();
+        //fluids::do_fluids();
 	}
 }
