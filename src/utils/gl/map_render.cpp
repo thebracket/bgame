@@ -83,6 +83,11 @@ namespace map_render {
                                     world_scene::add_world_floor(x, y, z, current_region->render_cache[idx], idx);
                                 }
 
+                                // Add water
+                                const float water_depth = (float)current_region->water_level[idx] / 10.0f;
+                                if (water_depth>0) {
+                                    world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, water_depth);
+                                }
 
                                 // Add vegetation
                                 auto veg_cache = current_region->veg_cache[idx];
