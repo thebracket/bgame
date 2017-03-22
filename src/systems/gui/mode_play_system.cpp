@@ -1,8 +1,6 @@
 #include "mode_play_system.hpp"
 #include "../../main/game_globals.hpp"
-#include "gui_system.hpp"
 #include "../input/mouse_input_system.hpp"
-#include "gui_system.hpp"
 #include "../../messages/build_request_message.hpp"
 #include "../../messages/inventory_changed_message.hpp"
 #include <rltk.hpp>
@@ -36,18 +34,19 @@ void mode_play_system::update(const double duration_ms) {
 
 	// Since we're using an 8x8, it's just a matter of dividing by 8 to find the terminal-character
 	// coordinates. There will be a helper function for this once we get into retained GUIs.
-	const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
-	const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+	const int world_x = mouse::mouse_world_x;
+	const int world_y = mouse::mouse_world_y;
+	const int world_z = mouse::mouse_world_z;
     if (world_x < 0 || world_x > REGION_WIDTH-1 || world_y < 0 || world_y > REGION_HEIGHT-1) return;
-	const int tile_idx = mapidx( world_x, world_y, camera_position->region_z );
+	const int tile_idx = mapidx( world_x, world_y, world_z );
 	bool tooltip = false;
 	
-	if (mouse::term1x == last_mouse_x && mouse::term1y == last_mouse_y && world_y > 0) {
+	if (mouse::mouse_world_x == last_mouse_x && mouse::mouse_world_y == last_mouse_y && world_y > 0) {
 		mouse_dwell_time += (float)duration_ms;
 		if (mouse_dwell_time > 200.0 && tile_idx !=0 && current_region->revealed[tile_idx] ) tooltip = true;
 	} else {
-		last_mouse_x = mouse::term1x;
-		last_mouse_y = mouse::term1y;
+		last_mouse_x = mouse::mouse_world_x;
+		last_mouse_y = mouse::mouse_world_y;
 		mouse_dwell_time = 0.0;
 	}
 
@@ -56,7 +55,7 @@ void mode_play_system::update(const double duration_ms) {
 		game_master_mode = TILEMENU;
 		selected_tile_x = world_x;
 		selected_tile_y = world_y;
-		selected_tile_z = camera_position->region_z;
+		selected_tile_z = world_z;
 		menu_x = mouse::x;
 		menu_y = mouse::y;
 	} else if (tooltip) {
@@ -233,10 +232,6 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	if (!game_config.tooltip_fadein) revealed_pct = 1.0F;
 
 	bool right_align = true;
-	if (mouse::term1x > term(1)->term_width/2 ) right_align = false;
-	int tt_y = mouse::term4y;
-	if (tt_y+lines.size() > term(4)->term_height-1) tt_y -= (int)lines.size()+1;
-
 
 	if (!right_align) {
 		ImGui::SetNextWindowPos({static_cast<float>(mouse::x+35), static_cast<float>(mouse::y)});
@@ -252,42 +247,42 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 }
 
 void mode_play_system::show_tilemenu() {
-	std::unique_ptr<gui_popup_menu> menu = std::make_unique<gui_popup_menu>(menu_x, menu_y, true, true, [] () { game_master_mode=PLAY; });
+    std::vector<std::pair<std::string, std::function<void()>>> options;
 
-	each<name_t, position_t, settler_ai_t>([&menu] (entity_t &entity, name_t &name, position_t &pos, settler_ai_t &settler) {
+	each<name_t, position_t, settler_ai_t>([&options] (entity_t &entity, name_t &name, position_t &pos, settler_ai_t &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
 			std::function<void()> on_click{};
 			on_click = [&entity] () {
 				selected_settler = entity.id;
 				game_master_mode = SETTLER;
 			};
-			menu->options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
+			options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
 		}
 	});
 
-	each<name_t, position_t, sentient_ai>([&menu] (entity_t &entity, name_t &name, position_t &pos, sentient_ai &settler) {
+	each<name_t, position_t, sentient_ai>([&options] (entity_t &entity, name_t &name, position_t &pos, sentient_ai &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
 			std::function<void()> on_click{};
 			on_click = [&entity] () {
 				selected_settler = entity.id;
 				game_master_mode = SENTIENT_INFO;
 			};
-			menu->options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
+			options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
 		}
 	});
 
-	each<name_t, position_t, grazer_ai>([&menu] (entity_t &entity, name_t &name, position_t &pos, grazer_ai &settler) {
+	each<name_t, position_t, grazer_ai>([&options] (entity_t &entity, name_t &name, position_t &pos, grazer_ai &settler) {
 		if (pos.x == selected_tile_x && pos.y == selected_tile_y && pos.z == selected_tile_z) {
 			std::function<void()> on_click{};
 			on_click = [&entity] () {
 				selected_settler = entity.id;
 				game_master_mode = GRAZER_INFO;
 			};
-			menu->options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
+			options.push_back(std::make_pair(name.first_name + std::string(" ") + name.last_name, on_click));
 		}
 	});
 
-	each<building_t, position_t>([&menu] (entity_t &building_entity, building_t &building, position_t &pos) {
+	each<building_t, position_t>([&options] (entity_t &building_entity, building_t &building, position_t &pos) {
 		bool on_building = false;
 
 		if (pos.z == selected_tile_z) {
@@ -326,7 +321,7 @@ void mode_play_system::show_tilemenu() {
 							game_master_mode = PLAY;
 						};
 						if (building_name != "Cordex") { // Don't let the player commit suicide this easily!
-							menu->options.push_back(std::make_pair(std::string("Deconstruct ")+building_name, on_click));
+							options.push_back(std::make_pair(std::string("Deconstruct ")+building_name, on_click));
 						}
 					} else {
 						std::function<void()> on_click{};
@@ -347,7 +342,7 @@ void mode_play_system::show_tilemenu() {
 							});
 							game_master_mode = PLAY;
 						};
-						menu->options.push_back(std::make_pair(std::string("Cancel removal of ")+building_name, on_click));
+						options.push_back(std::make_pair(std::string("Cancel removal of ")+building_name, on_click));
 					}
 
 					// Doors
@@ -364,9 +359,9 @@ void mode_play_system::show_tilemenu() {
 							emit_deferred(door_changed_message{});
 						};
 						if (!door->locked) {
-							menu->options.push_back(std::make_pair(std::string("Lock ")+building_name, on_lock));
+							options.push_back(std::make_pair(std::string("Lock ")+building_name, on_lock));
 						} else {
-							menu->options.push_back(std::make_pair(std::string("Unlock ")+building_name, on_unlock));
+							options.push_back(std::make_pair(std::string("Unlock ")+building_name, on_unlock));
 						}
 					}
 
@@ -383,8 +378,8 @@ void mode_play_system::show_tilemenu() {
                             // Go to lever settings mode
                             emit_deferred(trigger_details_requested{building_entity.id});
                         };
-                        menu->options.push_back(std::make_pair(std::string("Pull Lever"), on_pull));
-                        menu->options.push_back(std::make_pair(std::string("Lever Settings"), on_settings));
+                        options.push_back(std::make_pair(std::string("Pull Lever"), on_pull));
+                        options.push_back(std::make_pair(std::string("Lever Settings"), on_settings));
                     }
 				} else {
 					building_name = finder->second.name;
@@ -392,7 +387,7 @@ void mode_play_system::show_tilemenu() {
 					on_click = [&building_entity] () {
 						emit(cancel_build_request_message{building_entity.id});
 					};
-					menu->options.push_back(std::make_pair(std::string("Cancel construction of ")+building_name, on_click));
+					options.push_back(std::make_pair(std::string("Cancel construction of ")+building_name, on_click));
 				}
 			}
 		}
@@ -408,10 +403,10 @@ void mode_play_system::show_tilemenu() {
 			designations->deconstructions.push_back(unbuild_t{false,static_cast<std::size_t>(idx)});
 			game_master_mode = PLAY;
 		};
-		menu->options.push_back(std::make_pair("Demolish Structure", on_click));
+		options.push_back(std::make_pair("Demolish Structure", on_click));
 	}
 
-	if (menu->options.empty()) {
+	if (options.empty()) {
 		game_master_mode = PLAY;
 	} else {
 		//add_gui_element(std::move(menu));
@@ -419,7 +414,7 @@ void mode_play_system::show_tilemenu() {
 
         ImGui::Begin("Tile Options", nullptr, ImVec2{600, 400}, 0.8f,
                      ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
-        for (auto &m : menu->options) {
+        for (auto &m : options) {
             if (ImGui::Button(m.first.c_str())) {
                 m.second();
             }

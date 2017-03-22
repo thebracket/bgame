@@ -29,7 +29,6 @@
 #include "gui/mode_civs_system.hpp"
 #include "gui/log_system.hpp"
 #include "input/mouse_input_system.hpp"
-#include "gui/gui_system.hpp"
 #include "gui/hud_system.hpp"
 #include "gui/mode_settler_info_system.hpp"
 #include "gui/mode_play_system.hpp"
@@ -115,5 +114,4 @@ void add_systems_to_ecs() {
     add_system<mode_sentient_info_system>();
     add_system<wish_system>();
     add_system<log_system>();
-    add_system<gui_system>();
 }

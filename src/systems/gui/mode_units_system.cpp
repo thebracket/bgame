@@ -3,7 +3,6 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../utils/string_utils.hpp"
-#include "gui_system.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/sentient_ai.hpp"

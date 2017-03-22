@@ -1,5 +1,4 @@
 #include "mode_design_system.hpp"
-#include "gui_system.hpp"
 #include "../input/mouse_input_system.hpp"
 #include "../../main/game_globals.hpp"
 #include "../../raws/raws.hpp"
@@ -56,23 +55,19 @@ void mode_design_system::digging() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) game_mining_mode = MINING_DELETE;
     }
 
-    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
-        if (get_mouse_button_state(rltk::button::LEFT)) {
-            const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
-            const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
-            const auto idx = mapidx(world_x, world_y, camera_position->region_z);
-            if (is_mining_designation_valid(world_x, world_y, camera_position->region_z, game_mining_mode)) {
-                switch (game_mining_mode) {
-                    case DIG : designations->mining[idx] = 1; break;
-                    case CHANNEL : designations->mining[idx] = 2; break;
-                    case RAMP : designations->mining[idx] = 3; break;
-                    case UP : designations->mining[idx] = 4; break;
-                    case DOWN : designations->mining[idx] = 5; break;
-                    case UPDOWN : designations->mining[idx] = 6; break;
-                    case MINING_DELETE : designations->mining.erase(idx); break;
-                }
-                emit(map_dirty_message{});
+    if (get_mouse_button_state(rltk::button::LEFT)) {
+        const auto idx = mapidx(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z);
+        if (is_mining_designation_valid(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z, game_mining_mode)) {
+            switch (game_mining_mode) {
+                case DIG : designations->mining[idx] = 1; break;
+                case CHANNEL : designations->mining[idx] = 2; break;
+                case RAMP : designations->mining[idx] = 3; break;
+                case UP : designations->mining[idx] = 4; break;
+                case DOWN : designations->mining[idx] = 5; break;
+                case UPDOWN : designations->mining[idx] = 6; break;
+                case MINING_DELETE : designations->mining.erase(idx); break;
             }
+            emit(map_dirty_message{});
         }
     }
 
@@ -172,69 +167,68 @@ void mode_design_system::architecture() {
     // Pass through to render system
     arch_available = true; // We're always allowing this to enable future planning mode
 
-    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
-        const int world_x = arch_x;
-        const int world_y = arch_y;
+    const int world_x = arch_x;
+    const int world_y = arch_y;
 
-        if (mouse::clicked && arch_possible) {
-            // Build!
-            std::size_t bridge_id = 0;
-            if (architecture_mode == 6) {
-                auto new_bridge = create_entity()->assign(bridge_t{});
-                bridge_id = new_bridge->id;
-            }
+    if (mouse::clicked && arch_possible) {
+        // Build!
+        std::size_t bridge_id = 0;
+        if (architecture_mode == 6) {
+            auto new_bridge = create_entity()->assign(bridge_t{});
+            bridge_id = new_bridge->id;
+        }
 
-            for (int y=world_y; y<world_y+arch_height; ++y) {
-                for (int x = world_x; x < world_x + arch_width; ++x) {
-                    if (arch_filled) {
+        for (int y=world_y; y<world_y+arch_height; ++y) {
+            for (int x = world_x; x < world_x + arch_width; ++x) {
+                if (arch_filled) {
+                    const int idx = mapidx(x,y,camera_position->region_z);
+                    designations->architecture[idx] = architecture_mode;
+                    if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
+                    emit(map_dirty_message{});
+                    emit(architecture_changed_message{});
+                } else {
+                    bool interior = false;
+                    if (x>world_x && x<world_x+arch_width && y>world_y && y<world_y+arch_height) interior = true;
+                    if (x==world_x) interior=false;
+                    if (x==world_x+arch_width-1) interior = false;
+                    if (y==world_y) interior = false;
+                    if (y==world_y+arch_height-1) interior = false;
+                    if (!interior) {
                         const int idx = mapidx(x,y,camera_position->region_z);
                         designations->architecture[idx] = architecture_mode;
                         if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
                         emit(map_dirty_message{});
                         emit(architecture_changed_message{});
-                    } else {
-                        bool interior = false;
-                        if (x>world_x && x<world_x+arch_width && y>world_y && y<world_y+arch_height) interior = true;
-                        if (x==world_x) interior=false;
-                        if (x==world_x+arch_width-1) interior = false;
-                        if (y==world_y) interior = false;
-                        if (y==world_y+arch_height-1) interior = false;
-                        if (!interior) {
-                            const int idx = mapidx(x,y,camera_position->region_z);
-                            designations->architecture[idx] = architecture_mode;
-                            if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
-                            emit(map_dirty_message{});
-                            emit(architecture_changed_message{});
-                        }
                     }
                 }
-            }
-        }
-        if (get_mouse_button_state(rltk::button::RIGHT)) {
-            // Erase
-            const int idx = mapidx(world_x, world_y, camera_position->region_z);
-            auto finder = designations->architecture.find(idx);
-            if (finder != designations->architecture.end()) {
-                if (finder->second == 6) {
-                    // Bridge - remove all of it
-                    const std::size_t bridge_id = current_region->bridge_id[idx];
-                    if (bridge_id > 0) {
-                        for (auto &id : current_region->bridge_id) {
-                            if (id == bridge_id) id=0;
-                        }
-                    }
-                    for (auto it=designations->architecture.begin(); it!=designations->architecture.end(); ++it) {
-                        if (it->second == 6 && current_region->bridge_id[it->first] == bridge_id) {
-                            designations->architecture.erase(it->first);
-                        }
-                    }
-                }
-                designations->architecture.erase(idx);
-                emit(map_dirty_message{});
-                emit(architecture_changed_message{});
             }
         }
     }
+    if (get_mouse_button_state(rltk::button::RIGHT)) {
+        // Erase
+        const int idx = mapidx(world_x, world_y, camera_position->region_z);
+        auto finder = designations->architecture.find(idx);
+        if (finder != designations->architecture.end()) {
+            if (finder->second == 6) {
+                // Bridge - remove all of it
+                const std::size_t bridge_id = current_region->bridge_id[idx];
+                if (bridge_id > 0) {
+                    for (auto &id : current_region->bridge_id) {
+                        if (id == bridge_id) id=0;
+                    }
+                }
+                for (auto it=designations->architecture.begin(); it!=designations->architecture.end(); ++it) {
+                    if (it->second == 6 && current_region->bridge_id[it->first] == bridge_id) {
+                        designations->architecture.erase(it->first);
+                    }
+                }
+            }
+            designations->architecture.erase(idx);
+            emit(map_dirty_message{});
+            emit(architecture_changed_message{});
+        }
+    }
+
     arch_possible = true;
 }
 
@@ -244,40 +238,35 @@ void mode_design_system::chopping() {
     ImGui::Text("Click a tree to cut it down, right-click to clear designation.");
     ImGui::End();
 
-    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
-        const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
-        const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+    const auto idx = mapidx(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z);
+    const auto tree_id = current_region->tree_id[idx];
 
-        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
-        const auto tree_id = current_region->tree_id[idx];
+    if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
+        // Naieve search for the base of the tree; this could be optimized a LOT
+        int lowest_z = camera_position->region_z;
+        const int stop_z = lowest_z-10;
 
-        if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
-            // Naieve search for the base of the tree; this could be optimized a LOT
-            int lowest_z = camera_position->region_z;
-            const int stop_z = lowest_z-10;
-
-            position_t tree_pos{world_x, world_y, lowest_z};
-            while (lowest_z > stop_z) {
-                for (int y=-10; y<10; ++y) {
-                    for (int x=-10; x<10; ++x) {
-                        const int tree_idx = mapidx(world_x + x, world_y + y, lowest_z);
-                        if (current_region->tree_id[tree_idx] == tree_id) {
-                            tree_pos.x = world_x+x;
-                            tree_pos.y = world_y+y;
-                            tree_pos.z = lowest_z;
-                        }
+        position_t tree_pos{mouse::mouse_world_x, mouse::mouse_world_y, lowest_z};
+        while (lowest_z > stop_z) {
+            for (int y=-10; y<10; ++y) {
+                for (int x=-10; x<10; ++x) {
+                    const int tree_idx = mapidx(mouse::mouse_world_x + x, mouse::mouse_world_y + y, lowest_z);
+                    if (current_region->tree_id[tree_idx] == tree_id) {
+                        tree_pos.x = mouse::mouse_world_x+x;
+                        tree_pos.y = mouse::mouse_world_y+y;
+                        tree_pos.z = lowest_z;
                     }
                 }
-                --lowest_z;
             }
-
-            designations->chopping[(int)tree_id] = tree_pos;
-            emit(map_dirty_message{});
-        } else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
-            designations->chopping.erase((int)tree_id);
-            emit(map_dirty_message{});
+            --lowest_z;
         }
-    }			
+
+        designations->chopping[(int)tree_id] = tree_pos;
+        emit(map_dirty_message{});
+    } else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
+        designations->chopping.erase((int)tree_id);
+        emit(map_dirty_message{});
+    }
 }
 
 void mode_design_system::guardposts() {
@@ -286,26 +275,25 @@ void mode_design_system::guardposts() {
     ImGui::Text("Click a tile to guard it, right click to remove guard status.");
     ImGui::End();
 
-    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
-        const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
-        const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+    const int world_x = mouse::mouse_world_x;
+    const int world_y = mouse::mouse_world_y;
+    const int world_z = mouse::mouse_world_z;
 
-        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
-        if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
-            if (get_mouse_button_state(rltk::button::LEFT)) {
-                bool found = false;
-                for (const auto &g : designations->guard_points) {
-                    if (mapidx(g.second) == idx) found = true;
-                }
-                if (!found) designations->guard_points.push_back(std::make_pair(false, position_t{world_x, world_y, camera_position->region_z}));
-            } else if (get_mouse_button_state(rltk::button::RIGHT)) {
-                designations->guard_points.erase(std::remove_if(
-                        designations->guard_points.begin(),
-                        designations->guard_points.end(),
-                        [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
-                    ),
-                    designations->guard_points.end());
+    const auto idx = mapidx(world_x, world_y, camera_position->region_z);
+    if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+        if (get_mouse_button_state(rltk::button::LEFT)) {
+            bool found = false;
+            for (const auto &g : designations->guard_points) {
+                if (mapidx(g.second) == idx) found = true;
             }
+            if (!found) designations->guard_points.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
+        } else if (get_mouse_button_state(rltk::button::RIGHT)) {
+            designations->guard_points.erase(std::remove_if(
+                    designations->guard_points.begin(),
+                    designations->guard_points.end(),
+                    [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
+                ),
+                designations->guard_points.end());
         }
     }
 }
@@ -313,44 +301,42 @@ void mode_design_system::guardposts() {
 void mode_design_system::harvest() {
 
     std::string harvest_name = "";
-    if (mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
-        const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
-        const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+    const int world_x = mouse::mouse_world_x;
+    const int world_y = mouse::mouse_world_y;
+    const int world_z = mouse::mouse_world_z;
 
-
-        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
-        bool ok = true;
-        if (current_region->tile_vegetation_type[idx]==0) ok = false;
-        if (ok) {
-            plant_t p = get_plant_def(current_region->tile_vegetation_type[idx]);
-            const std::string harvests_to = p.provides[current_region->tile_vegetation_lifecycle[idx]];
-            if (harvests_to == "none") {
-                ok=false;
-            } else {
-                auto finder = item_defs.find(harvests_to);
-                if (finder != item_defs.end()) {
-                    harvest_name = finder->second.name;
-                }
+    const auto idx = mapidx(world_x, world_y, camera_position->region_z);
+    bool ok = true;
+    if (current_region->tile_vegetation_type[idx]==0) ok = false;
+    if (ok) {
+        plant_t p = get_plant_def(current_region->tile_vegetation_type[idx]);
+        const std::string harvests_to = p.provides[current_region->tile_vegetation_lifecycle[idx]];
+        if (harvests_to == "none") {
+            ok=false;
+        } else {
+            auto finder = item_defs.find(harvests_to);
+            if (finder != item_defs.end()) {
+                harvest_name = finder->second.name;
             }
         }
+    }
 
-        if (ok && current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
-            if (get_mouse_button_state(rltk::button::LEFT)) {
-                bool found = false;
-                for (const auto &g : designations->harvest) {
-                    if (mapidx(g.second) == idx) found = true;
-                }
-                if (!found) {
-                    designations->harvest.push_back(std::make_pair(false, position_t{world_x, world_y, camera_position->region_z}));
-                }
-            } else if (get_mouse_button_state(rltk::button::RIGHT)) {
-                designations->harvest.erase(std::remove_if(
-                        designations->harvest.begin(),
-                        designations->harvest.end(),
-                        [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
-                                                 ),
-                                                 designations->harvest.end());
+    if (ok && current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+        if (get_mouse_button_state(rltk::button::LEFT)) {
+            bool found = false;
+            for (const auto &g : designations->harvest) {
+                if (mapidx(g.second) == idx) found = true;
             }
+            if (!found) {
+                designations->harvest.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
+            }
+        } else if (get_mouse_button_state(rltk::button::RIGHT)) {
+            designations->harvest.erase(std::remove_if(
+                    designations->harvest.begin(),
+                    designations->harvest.end(),
+                    [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
+                                             ),
+                                             designations->harvest.end());
         }
     }
 
@@ -419,11 +405,9 @@ void mode_design_system::stockpiles() {
     }
     ImGui::End();
 
-    if (current_stockpile>0 && mouse::term1x >= 0 && mouse::term1x < term(1)->term_width && mouse::term1y >= 3 && mouse::term1y < term(1)->term_height) {
-        const int world_x = std::min(clip_left + mouse::term1x, REGION_WIDTH);
-        const int world_y = std::min(clip_top + mouse::term1y-2, REGION_HEIGHT);
+    if (current_stockpile>0) {
 
-        const auto idx = mapidx(world_x, world_y, camera_position->region_z);
+        const auto idx = mapidx(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z);
         if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
             if (get_mouse_button_state(rltk::button::LEFT)) {
                 if (current_region->stockpile_id[idx]==0) {
@@ -444,21 +428,6 @@ void mode_design_system::stockpiles() {
 
 void mode_design_system::update(const double duration_ms) {
     if (game_master_mode != DESIGN) return;
-
-    //add_gui_element(std::make_unique<map_static_text>( 32, 1, "ESC", YELLOW));
-    //add_gui_element(std::make_unique<map_static_text>( 36, 1, "Resume normal play", WHITE));
-
-    /*add_gui_element<gui_menu_bar>(std::vector<std::string>{"Digging", "Building", "Tree Cutting", "Guard Posts", "Stockpiles", "Harvest", "Architecture"}, 5, 3, [] (int key) {
-        switch (key) {
-            case 0 : { game_design_mode = DIGGING; emit_deferred(map_dirty_message{}); } break;
-            case 1 : { game_design_mode = BUILDING; emit_deferred(refresh_available_buildings_message{}); emit_deferred(map_dirty_message{}); } break;
-            case 2 : { game_design_mode = CHOPPING; emit_deferred(map_dirty_message{}); } break;
-            case 3 : { game_design_mode = GUARDPOINTS; emit_deferred(map_dirty_message{}); } break;
-            case 4 : { game_design_mode = STOCKPILES; emit_deferred(map_dirty_message{}); } break;
-            case 5 : { game_design_mode = HARVEST; emit_deferred(map_dirty_message{}); } break;
-            case 6 : { game_design_mode = ARCHITECTURE; emit_deferred(map_dirty_message{}); } break;
-        }
-    });*/
 
     switch (game_design_mode) {
         case DIGGING    : digging(); break;

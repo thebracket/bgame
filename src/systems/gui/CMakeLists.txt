@@ -11,9 +11,7 @@ add_library(gui STATIC
         game_over_system.cpp
         mode_civs_system.cpp
         log_system.cpp
-        gui_system.cpp
         hud_system.cpp
-        gui_elements.cpp
         wish_system.cpp
 
         )

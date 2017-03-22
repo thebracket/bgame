@@ -1,6 +1,5 @@
 #include "mode_settler_info_system.hpp"
 #include "../../main/game_globals.hpp"
-#include "gui_system.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../components/health.hpp"

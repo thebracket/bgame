@@ -3,7 +3,6 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../utils/string_utils.hpp"
-#include "gui_system.hpp"
 #include <sstream>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
@@ -70,24 +69,6 @@ void render_civ_list() {
     }
 
     ImGui::End();
-}
-
-void civs_add_text_line_to_table(const dialog_placement_t &box, std::unique_ptr<gui_table> &table, const int &w, const std::string &s)
-{
-    gui_table_row row;
-    std::unique_ptr<gui_table_text> c_line = std::make_unique<gui_table_text>(box.right - 2, s);
-    row.cols.push_back(std::move(c_line));
-    table->rows.push_back(std::move(row));
-}
-
-void civs_add_button_line_to_table(const dialog_placement_t &box, std::unique_ptr<gui_table> &table, const int &w, const std::string &s,
-    const std::function<void()> &on_click, const rltk::color_t &fg, const rltk::color_t &bg)
-{
-    gui_table_row row;
-    std::unique_ptr<gui_table_button> c_line = std::make_unique<gui_table_button>(box.right - 2, s, on_click);
-    c_line->colors = std::make_pair(fg, bg);
-    row.cols.push_back(std::move(c_line));
-    table->rows.push_back(std::move(row));
 }
 
 void render_civ_negotiate() {

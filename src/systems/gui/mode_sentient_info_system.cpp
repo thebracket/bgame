@@ -2,7 +2,6 @@
 #include "../../main/game_globals.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
-#include "gui_system.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../components/health.hpp"

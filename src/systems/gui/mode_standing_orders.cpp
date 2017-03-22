@@ -3,7 +3,6 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../utils/string_utils.hpp"
-#include "gui_system.hpp"
 #include <rltk.hpp>
 
 void mode_standing_orders::configure() {
@@ -13,6 +12,7 @@ void mode_standing_orders::configure() {
 void mode_standing_orders::update(const double ms) {
     if (game_master_mode != STANDING_ORDERS) return;
 
+    /*
     dialog_placement_t box{};
 
     std::unique_ptr<gui_dialog> dialog = std::make_unique<gui_dialog>(" Standing Orders ", [] () { 
@@ -39,4 +39,6 @@ void mode_standing_orders::update(const double ms) {
 
 
     add_gui_element(std::move(dialog));
+    */
+    // TODO: Rewrite for ImGui
 }
