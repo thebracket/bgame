@@ -173,7 +173,7 @@ namespace map_render {
             auto screen_size = rltk::get_window()->getSize();
             glGenTextures(1, &mouse_pick_texture);
             glBindTexture(GL_TEXTURE_2D, mouse_pick_texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
@@ -214,7 +214,7 @@ namespace map_render {
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         uint8_t pixel[4] = {0,0,0,0};
-        glReadPixels(x, get_window()->getSize().y - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel[0]);
+        glReadPixels(x, get_window()->getSize().y - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         int mx = pixel[0];
