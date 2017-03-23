@@ -128,6 +128,23 @@ namespace map_render {
             populate_vertex_buffer(std::max(1, camera_position->region_z - 15),
                                    std::min(REGION_DEPTH - 1, camera_position->region_z + 1));
         }
+
+        // Add marker types in design mode as needed
+        if (game_master_mode == DESIGN) {
+            if (game_design_mode == GUARDPOINTS) {
+                for (const auto &gp : designations->guard_points) {
+                    world_scene::add_decal(gp.second.x, gp.second.y, gp.second.z,
+                                           vchar{'G', colors::CYAN, colors::CYAN}, mapidx(gp.second));
+                }
+            } else if (game_design_mode == HARVEST) {
+                for (const auto &h : designations->harvest) {
+                    for (const auto &h : designations->harvest) {
+                        world_scene::add_decal(h.second.x, h.second.y, h.second.z,
+                                               vchar{'H', colors::CYAN, colors::CYAN}, mapidx(h.second));
+                    }
+                }
+            }
+        }
     }
 
     void gl_states() {
