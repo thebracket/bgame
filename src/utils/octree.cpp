@@ -1,110 +1,45 @@
 #include "octree.hpp"
 #include <algorithm>
 
-octree_t::octree_t(const int &width, const int &height, const int &depth, const int layer) : w(width), h(height), d(depth), n(layer) 
-{
-    x = 0;
-    y = 0;
-    z = 0;
-}
-
-octree_t::octree_t(const octree_t * parent, int section) {
-    w = parent->w/2;
-    h = parent->h/2;
-    d = parent->d/2;
-    n = parent->n+1;
-
-    if (section == 0) { x=parent->x; y=parent->y; z=parent->z; }
-    if (section == 1) { x=parent->x + w; y=parent->y; z=parent->z; }
-    if (section == 2) { x=parent->x; y=parent->y + h; z=parent->z; }
-    if (section == 3) { x=parent->x + w; y=parent->y + h; z=parent->z; }
-    if (section == 4) { x=parent->x; y=parent->y; z=parent->z + d; }
-    if (section == 5) { x=parent->x + w; y=parent->y; z=parent->z + d; }
-    if (section == 6) { x=parent->x; y=parent->y + h; z=parent->z + d; }
-    if (section == 7) { x=parent->x + w; y=parent->y + h; z=parent->z + d; }
-}
-
 void octree_t::add_node(const octree_location_t loc) {
-    contents.push_back(loc);
-
-    if (contents.size()>0 && w!=1 && h!=1 && d!=1) {
-        for (const octree_location_t &l : contents) {
-            const int subsection = get_child_index(l);
-            if (!children[subsection]) {
-                children[subsection] = std::make_unique<octree_t>(this, subsection);
-            }
-            children[subsection]->add_node(l);
-        }
-        contents.clear();
-    }
-
+    const int idx = mapidx(loc.x, loc.y, loc.z);
+    contents[idx].emplace_back(loc.id);
     ++total_nodes;
 }
 
-int octree_t::find_nearest(const octree_location_t &loc) {
-    if (total_nodes == 0) {
-        return -1;
-    }
-    if (!contents.empty()) {
-        return contents[0].id;
-    } else {
-        const int subsection = get_child_index(loc);
-        if (children[subsection]) return children[subsection]->find_nearest(loc);
-        return -1;
-    }
-}
-
 void octree_t::remove_node(const octree_location_t &loc) {
-    // Does this node contain the desired entity?
-    auto finder = std::find_if(contents.begin(), contents.end(), [&loc] (octree_location_t &n) { return n.id==loc.id;});
-    if (finder != contents.end()) {
-        // If so, remove it and we're done
-        contents.erase(std::remove_if(contents.begin(), contents.end(), [&loc] (octree_location_t &n) { return n.id==loc.id;}));
-        return;
-    }
-
-    // If not, determine where it is and traverse down
-    const int subsection = get_child_index(loc);
-    if (children[subsection]) children[subsection]->remove_node(loc);
+    const int idx = mapidx(loc.x, loc.y, loc.z);
+    contents[idx].erase(
+        std::remove_if(
+                contents[idx].begin(),
+                contents[idx].end(),
+                [&loc] (const std::size_t &test) { return test == loc.id; }
+        ),
+        contents[idx].end());
 }
 
 std::vector<std::size_t> octree_t::find_by_loc(const octree_location_t &loc) {
     std::vector<std::size_t> result;
-    find_by_loc_impl(loc, result);
+    const int idx = mapidx(loc.x, loc.y, loc.z);
+    for (const auto &loc : contents[idx]) {
+        result.emplace_back(loc);
+    }
     return result;
 }
 
-void octree_t::find_by_loc_impl(const octree_location_t &loc, std::vector<std::size_t> &result) {
-    for (const auto &l : contents) {
-        if (l.x == loc.x && l.y == loc.y && l.z == loc.z) result.push_back(l.id);
-    }
-
-    const int subsection = get_child_index(loc);
-    if (children[subsection]) children[subsection]->find_by_loc_impl(loc, result);
-}
-
-std::vector<std::size_t> octree_t::find_by_region(const int &left, const int &right, const int &top, const int &bottom, const int &ztop, const int &zbottom) {
+std::vector<std::size_t> octree_t::find_by_region(const int &left, const int &right, const int &top, const int &bottom,
+                                        const int &ztop, const int &zbottom)
+{
     std::vector<std::size_t> result;
-    find_by_region_impl(left, right, top, bottom, ztop, zbottom, result);
+    for (int z=zbottom; z<ztop; ++z) {
+        for (int y=top; y<bottom; ++y) {
+            for (int x=left; x<right; ++x) {
+                const int idx = mapidx(x,y,z);
+                for (const auto &loc : contents[idx]) {
+                    result.emplace_back(loc);
+                }
+            }
+        }
+    }
     return result;
-}
-
-void octree_t::find_by_region_impl(const int &left, const int &right, const int &top, const int &bottom, const int &ztop, const int &zbottom, std::vector<std::size_t> &result) {
-    //if (RectA.Left < RectB.Right && RectA.Right > RectB.Left &&
-    //    RectA.Top < RectB.Bottom && RectA.Bottom > RectB.Top )
-
-    //if (!(x < right && x+w > left && y < bottom && y+h > top)) return;
-
-    for (const auto &l : contents) {
-        if (l.x >= left && l.x <= right && l.y >=top && l.y <= bottom) {
-            result.emplace_back(l.id);
-        }
-    }
-
-    for (int i=0; i<children.size(); ++i) {
-        //if (children[i] && intersects(i, left, right, top, bottom, ztop, zbottom)) {
-        if (children[i]) {
-            children[i]->find_by_region_impl(left, right, top, bottom, ztop, zbottom, result);
-        }
-    }
 }

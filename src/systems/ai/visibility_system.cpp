@@ -14,10 +14,10 @@ using namespace rltk;
 
 std::unordered_set<std::size_t> blocked_visibility;
 
-std::mutex update_guard;
+//std::mutex update_guard;
 
 inline void reveal(const int &idx, viewshed_t &view) {
-	std::lock_guard<std::mutex> lock(update_guard);
+	//std::lock_guard<std::mutex> lock(update_guard);
 	if (view.good_guy_visibility) current_region->revealed[idx] = true;
 	view.visible_cache.push_back(idx);
 }

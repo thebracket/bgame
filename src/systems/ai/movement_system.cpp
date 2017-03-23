@@ -9,7 +9,7 @@
 #include "../../components/settler_ai.hpp"
 #include <rltk.hpp>
 
-octree_t entity_octree{REGION_WIDTH, REGION_HEIGHT, REGION_DEPTH};
+octree_t entity_octree;
 
 void movement_system::configure() {
     system_name = "Movement System";
