@@ -125,7 +125,7 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     const float X = (float)x;
     const float Y = (float)y;
     const float Z = (float)z;
-    const float vsize = 1.0f;
+    const float vsize = 0.999f;
 
     const float tex_x = (c.glyph % 16) * 24.0f;
     const float tex_y = (c.glyph / 16) * 24.0f;

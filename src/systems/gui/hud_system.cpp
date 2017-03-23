@@ -4,6 +4,7 @@
 #include <sstream>
 #include "imgui_helper.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "../../utils/gl/map_render.hpp"
 
 constexpr int HUD_TERM = 3;
 const std::string menu_main = std::string(ICON_FA_ROCKET) + " Black Future";
@@ -47,6 +48,7 @@ void hud_system::update(const double ms) {
             game_master_mode = PLAY;
             emit_deferred(map_dirty_message{});
             emit_deferred(recalculate_mining_message{});
+            world_changed=true;
         }
         if (ImGui::MenuItem(menu_main_quit.c_str())) {
             quitting = true;
@@ -59,6 +61,7 @@ void hud_system::update(const double ms) {
             pause_mode = PAUSED;
             emit_deferred(map_dirty_message{});
             game_design_mode = DIGGING;
+            world_changed=true;
         }
         if (ImGui::MenuItem(menu_design_building.c_str())) {
             game_master_mode = DESIGN;

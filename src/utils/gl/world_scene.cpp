@@ -47,7 +47,7 @@ namespace world_scene {
                 floor_interior_geometry.add_floor(x, y, z, c);
             }
         }
-        mouse_picker_geometry.add_floor(x,y,z,c);
+        if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     // Adds a world-geometry cube (solid)
@@ -62,6 +62,10 @@ namespace world_scene {
                 world_interior_geometry.add_cube(x, y, z, c);
             }
         }
+        if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
+    }
+
+    void add_index_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         mouse_picker_geometry.add_floor(x,y,z,c);
     }
 

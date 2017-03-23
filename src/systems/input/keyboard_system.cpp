@@ -1,6 +1,7 @@
 #include "keyboard_system.hpp"
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../utils/gl/map_render.hpp"
 #include <sstream>
 #include <chrono>
 #include <ctime>
@@ -139,6 +140,7 @@ void keyboard_system::update(const double ms) {
                 game_design_mode = DIGGING;
                 pause_mode = PAUSED;
                 emit_deferred(map_dirty_message{});
+                world_changed=true;
             } else if (e.event.key.code == sf::Keyboard::U) {
                 game_master_mode = UNITS;
                 pause_mode = PAUSED;
@@ -167,10 +169,12 @@ void keyboard_system::update(const double ms) {
                 game_master_mode = PLAY;
                 emit_deferred(map_dirty_message{});
                 emit_deferred(recalculate_mining_message{});
+                world_changed=true;
             }
             if (e.event.key.code == sf::Keyboard::D) {
                 game_design_mode = DIGGING;
                 emit_deferred(map_dirty_message{});
+                world_changed=true;
             }
             if (e.event.key.code == sf::Keyboard::B) {
                 game_design_mode = BUILDING;

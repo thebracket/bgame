@@ -113,6 +113,60 @@ namespace map_render {
                                 if (game_master_mode == DESIGN && game_design_mode == STOCKPILES && current_stockpile>0 && current_region->stockpile_id[idx]==current_stockpile) {
                                     world_scene::add_decal(x, y, z, vchar{'#', colors::MAGENTA, colors::MAGENTA}, idx);
                                 }
+
+                                // Mining
+                                if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
+                                    auto mf = designations->mining.find(idx);
+                                    if (mf != designations->mining.end()) {
+                                        vchar result{'!', colors::YELLOW, colors::YELLOW};
+                                        switch (mf->second) {
+                                            case 1 : result.glyph = 177; break;
+                                            case 2 : result.glyph = 31; break;
+                                            case 3 : result.glyph = 30; break;
+                                            case 4 : result.glyph = '<'; break;
+                                            case 5 : result.glyph = '>'; break;
+                                            case 6 : result.glyph = 'X'; break;
+                                        }
+
+                                        if (mf->second != 5) {
+                                            world_scene::add_world_cube(x, y, z, result, idx);
+                                        } else {
+                                            world_scene::add_decal(x, y, z, result, idx);
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
+                            const uint8_t tiletype = current_region->tile_type[idx];
+                            if (tiletype != tile_type::OPEN_SPACE) {
+                                vchar result{257, colors::CYAN, colors::GREY};
+                                auto mf = designations->mining.find(idx);
+                                if (mf != designations->mining.end()) {
+                                    result.foreground = colors::YELLOW;
+                                    switch (mf->second) {
+                                        case 1 :
+                                            result.glyph = 177;
+                                            break;
+                                        case 2 :
+                                            result.glyph = 31;
+                                            break;
+                                        case 3 :
+                                            result.glyph = 30;
+                                            break;
+                                        case 4 :
+                                            result.glyph = '<';
+                                            break;
+                                        case 5 :
+                                            result.glyph = '>';
+                                            break;
+                                        case 6 :
+                                            result.glyph = 'X';
+                                            break;
+                                    }
+
+                                }
+                                world_scene::add_world_cube(x, y, z, result, idx);
+                                world_changed = true;
                             }
                         }
                     }
@@ -227,6 +281,7 @@ namespace map_render {
             glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
             gl_states();
             glDisable(GL_TEXTURE_2D);
+            glClear(GL_COLOR_BUFFER_BIT);
             world_scene::render_index(index_program_id);
             glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
             world_changed = false;
