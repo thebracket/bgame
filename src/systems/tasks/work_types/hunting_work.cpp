@@ -39,7 +39,7 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 
     const int idx = mapidx(pos);
 	if (ai.job_type_minor == JM_HUNT_FIND_TARGET) {
-        const auto distance = huntables_map.distance_map[idx];
+        const auto distance = huntables_map.get(idx);
         if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
             cancel_action(e, ai, stats, species, pos, name, "No hunting target");
             return;
@@ -51,7 +51,7 @@ void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &s
 	}
 
 	if (ai.job_type_minor == JM_HUNT) {
-        const auto distance = huntables_map.distance_map[idx];
+        const auto distance = huntables_map.get(idx);
         if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
             cancel_action(e, ai, stats, species, pos, name, "No hunting target");
             return;
@@ -68,7 +68,7 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
     const int idx = mapidx(pos);
 
 	if (ai.job_type_minor == JM_BUTCHER_FIND_CORPSE) {
-        if (butcherables_map.distance_map[idx] > MAX_DIJSTRA_DISTANCE-1) {
+        if (butcherables_map.get(idx) > MAX_DIJSTRA_DISTANCE-1) {
             cancel_action(e, ai, stats, species, pos, name, "No butcherable targets");
             return;
         }
@@ -78,11 +78,11 @@ void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 	}
 
 	if (ai.job_type_minor == JM_BUTCHER_GO_TO_CORPSE) {
-        if (butcherables_map.distance_map[idx] > MAX_DIJSTRA_DISTANCE-1) {
+        if (butcherables_map.get(idx) > MAX_DIJSTRA_DISTANCE-1) {
             cancel_action(e, ai, stats, species, pos, name, "No butcherable targets");
             return;
         }
-        if (butcherables_map.distance_map[idx] == 0) {
+        if (butcherables_map.get(idx) == 0) {
             ai.job_type_minor = JM_BUTCHER_COLLECT_CORPSE;
             ai.job_status = "Collecting corpse";
             std::cout << "Collecting corpse\n";

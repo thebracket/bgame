@@ -24,6 +24,82 @@ bool dijkstra_debug = false;
 
 using namespace rltk;
 
+namespace dijkstra {
+    void update_hunting_map() {
+        std::vector<int> huntables;
+        each<grazer_ai, position_t>([&huntables] (entity_t &e, grazer_ai &ai, position_t &pos) {
+            huntables.emplace_back(mapidx(pos));
+        });
+        huntables_map.update(huntables);
+    }
+
+    void update_butcher_map() {
+        std::vector<int> butcherables;
+        each<corpse_harvestable, position_t>([&butcherables] (entity_t &e, corpse_harvestable &corpse, position_t &pos) {
+            butcherables.emplace_back(mapidx(pos));
+        });
+        butcherables_map.update(butcherables);
+    }
+
+    void update_bed_map() {
+        std::vector<int> beds;
+        each<construct_provides_sleep_t, position_t>([&beds] (entity_t &e, construct_provides_sleep_t &bed, position_t &pos) {
+            if (!bed.claimed) {
+                beds.emplace_back(mapidx(pos));
+            }
+        });
+        bed_map.update(beds);
+    }
+
+    void update_settler_map() {
+        std::vector<int> settlers;
+        each<settler_ai_t, position_t>([&settlers] (entity_t &e, settler_ai_t &settler, position_t &pos) {
+            settlers.emplace_back(mapidx(pos));
+        });
+        settler_map.update(settlers);
+    }
+
+    void update_architecure_map() {
+        std::vector<int> targets;
+        for (auto it = designations->architecture.begin(); it != designations->architecture.end(); ++it) {
+            targets.emplace_back(it->first);
+        }
+        architecure_map.update_architecture(targets);
+    }
+
+    void update_blocks_map() {
+        std::unordered_set<int> used;
+        std::vector<int> targets;
+
+        each_if<item_t>([] (entity_t &e, item_t &i) { return i.claimed == false && i.item_tag == "block"; },
+                        [&used, &targets] (entity_t &e, item_t &i) {
+                            auto pos = get_item_location(e.id);
+                            if (pos) {
+                                const int idx = mapidx(*pos);
+                                if (used.find(idx)==used.end()) {
+                                    used.insert(idx);
+                                    targets.emplace_back(idx);
+                                }
+                            }
+                        }
+        );
+        blocks_map.update(targets);
+    }
+
+    void update_levers_map() {
+        std::vector<int> targets;
+        for (auto it = designations->levers_to_pull.begin(); it != designations->levers_to_pull.end(); ++it) {
+            auto lever_id = *it;
+            auto lever_entity = entity(lever_id);
+            if (!lever_entity) break;
+            auto lever_pos = lever_entity->component<position_t>();
+            if (!lever_pos) break;
+            targets.emplace_back(mapidx(*lever_pos));
+        }
+        levers_map.update(targets);
+    }
+}
+
 void distance_map_system::configure() {
     system_name = "Distance Maps";
     subscribe_mbox<huntable_moved_message>();
@@ -55,87 +131,37 @@ void distance_map_system::update(const double duration_ms) {
     });
 
     if (update_huntables) {
-        std::vector<int> huntables;
-        each<grazer_ai, position_t>([&huntables] (entity_t &e, grazer_ai &ai, position_t &pos) {
-            huntables.emplace_back(mapidx(pos));
-        });
-        huntables_map.update(huntables);
-
+        dijkstra::update_hunting_map();
         update_huntables = false;
     }
 
     if (update_butcherables) {
-        std::vector<int> butcherables;
-        each<corpse_harvestable, position_t>([&butcherables] (entity_t &e, corpse_harvestable &corpse, position_t &pos) {
-            butcherables.emplace_back(mapidx(pos));
-        });
-        butcherables_map.update(butcherables);
-
+        dijkstra::update_butcher_map();
         update_butcherables = false;
     }
 
     if (update_bed_map) {
-        std::vector<int> beds;
-        each<construct_provides_sleep_t, position_t>([&beds] (entity_t &e, construct_provides_sleep_t &bed, position_t &pos) {
-            if (!bed.claimed) {
-                beds.emplace_back(mapidx(pos));
-            }
-        });
-        bed_map.update(beds);
-
+        dijkstra::update_bed_map();
         update_bed_map = false;
     }
 
     if (update_settler_map) {
-        std::vector<int> settlers;
-        each<settler_ai_t, position_t>([&settlers] (entity_t &e, settler_ai_t &settler, position_t &pos) {
-            settlers.emplace_back(mapidx(pos));
-        });
-        settler_map.update(settlers);
-
+        dijkstra::update_settler_map();
         update_settler_map = false;
     }
 
     if (update_architecture_map) {
-        std::vector<int> targets;
-        for (auto it = designations->architecture.begin(); it != designations->architecture.end(); ++it) {
-            targets.emplace_back(it->first);
-        }
-        architecure_map.update_architecture(targets);
+        dijkstra::update_architecure_map();
         update_architecture_map = false;
     }
 
     if (update_blocks_map) {
-        std::unordered_set<int> used;
-        std::vector<int> targets;
-
-        each_if<item_t>([] (entity_t &e, item_t &i) { return i.claimed == false && i.item_tag == "block"; },
-                        [&used, &targets] (entity_t &e, item_t &i) {
-                            auto pos = get_item_location(e.id);
-                            if (pos) {
-                                const int idx = mapidx(*pos);
-                                if (used.find(idx)==used.end()) {
-                                    used.insert(idx);
-                                    targets.emplace_back(idx);
-                                }
-                            }
-                        }
-        );
-        blocks_map.update(targets);
+        dijkstra::update_blocks_map();
         update_blocks_map = false;
     }
 
     if (update_levers_map) {
-        std::vector<int> targets;
-        for (auto it = designations->levers_to_pull.begin(); it != designations->levers_to_pull.end(); ++it) {
-            auto lever_id = *it;
-            auto lever_entity = entity(lever_id);
-            if (!lever_entity) break;
-            auto lever_pos = lever_entity->component<position_t>();
-            if (!lever_pos) break;
-            targets.emplace_back(mapidx(*lever_pos));
-        }
-        levers_map.update(targets);
+        dijkstra::update_levers_map();
         update_levers_map = false;
     }
 }

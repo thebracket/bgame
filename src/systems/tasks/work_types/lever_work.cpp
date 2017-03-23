@@ -55,7 +55,7 @@ void do_lever_pull(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
     const int idx = mapidx(pos);
 
     if (ai.job_type_minor == JM_GO_TO_LEVER) {
-        const auto distance = levers_map.distance_map[idx];
+        const auto distance = levers_map.get(idx);
         if (distance >= MAX_DIJSTRA_DISTANCE) {
             cancel_action(e, ai, stats, species, pos, name, "No route to lever");
             return;

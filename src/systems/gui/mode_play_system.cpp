@@ -201,9 +201,9 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
     }
     if (dijkstra_debug) {
         lines.push_back(std::string("Architecture Distance: ") + std::to_string(
-                architecure_map.distance_map[mapidx(world_x, world_y, camera_position->region_z)]));
+                architecure_map.get(mapidx(world_x, world_y, camera_position->region_z))));
         lines.push_back(std::string("Blocks Distance: ") +
-                        std::to_string(blocks_map.distance_map[mapidx(world_x, world_y, camera_position->region_z)]));
+                        std::to_string(blocks_map.get(mapidx(world_x, world_y, camera_position->region_z))));
     }
 	if (current_region->bridge_id[mapidx(world_x, world_y, camera_position->region_z)]>0) {
         auto be = entity(current_region->bridge_id[mapidx(world_x, world_y, camera_position->region_z)]);

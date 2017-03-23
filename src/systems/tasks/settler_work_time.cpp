@@ -72,7 +72,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		// Find something to do!
 		const auto idx = mapidx(pos.x, pos.y, pos.z);
 
-		if (!designations->levers_to_pull.empty() && levers_map.distance_map[mapidx(pos)] < MAX_DIJSTRA_DISTANCE-1) {
+		if (!designations->levers_to_pull.empty() && levers_map.get(mapidx(pos)) < MAX_DIJSTRA_DISTANCE-1) {
             ai.job_type_major = JOB_PULL_LEVER;
             ai.job_type_minor = JM_GO_TO_LEVER;
             change_job_status(ai, name, "pulling a lever", false);
@@ -187,8 +187,8 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		}
 
         // Architect work
-        if (ai.permitted_work[JOB_CONSTRUCTION] && architecure_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE-1
-            && blocks_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE-1 && !designations->architecture.empty()) {
+        if (ai.permitted_work[JOB_CONSTRUCTION] && architecure_map.get(mapidx(pos))<MAX_DIJSTRA_DISTANCE-1
+            && blocks_map.get(mapidx(pos))<MAX_DIJSTRA_DISTANCE-1 && !designations->architecture.empty()) {
             change_job_status(ai, name, "collecting block for architecture", true);
             ai.job_type_major = JOB_ARCHITECT;
             ai.job_type_minor = JM_ARCHITECT_GOTOBLOCK;
@@ -216,7 +216,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		}
 
 		// Butcher corpses
-		if (ai.permitted_work[JOB_BUTCHER] && butcher_exist() && butcherables_map.distance_map[mapidx(pos.x, pos.y, pos.z)]<MAX_DIJSTRA_DISTANCE) {
+		if (ai.permitted_work[JOB_BUTCHER] && butcher_exist() && butcherables_map.get(mapidx(pos.x, pos.y, pos.z))<MAX_DIJSTRA_DISTANCE) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
 			ai.job_type_major = JOB_BUTCHERING;
 			ai.job_type_minor = JM_BUTCHER_FIND_CORPSE;
@@ -226,7 +226,7 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 
 		// Hunt
 		if (butcher_exist() && ai.permitted_work[JOB_HUNTING] && ranged_status.first && has_ammo &&
-				huntables_map.distance_map[mapidx(pos)]>0 && huntables_map.distance_map[mapidx(pos)]<MAX_DIJSTRA_DISTANCE) {
+				huntables_map.get(mapidx(pos))>0 && huntables_map.get(mapidx(pos))<MAX_DIJSTRA_DISTANCE) {
 			change_settler_glyph(entity, vchar{1, rltk::colors::GREEN, rltk::colors::BLACK});
 			ai.job_type_major = JOB_HUNT;
 			ai.job_type_minor = JM_HUNT_FIND_TARGET;

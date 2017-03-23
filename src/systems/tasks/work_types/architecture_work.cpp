@@ -55,7 +55,7 @@ void do_architecture(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species
     const int idx = mapidx(pos);
 
     if (ai.job_type_minor == JM_ARCHITECT_GOTOBLOCK) {
-        const auto distance = blocks_map.distance_map[idx];
+        const auto distance = blocks_map.get(idx);
         if (distance >= MAX_DIJSTRA_DISTANCE) {
             cancel_action(e, ai, stats, species, pos, name, "No route to block");
             return;
@@ -92,7 +92,7 @@ void do_architecture(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species
     }
 
     if (ai.job_type_minor == JM_ARCHITECT_GOTOSITE) {
-        const auto distance = architecure_map.distance_map[idx];
+        const auto distance = architecure_map.get(idx);
         if (distance >= MAX_DIJSTRA_DISTANCE) {
             cancel_action(e, ai, stats, species, pos, name, "No available task");
             return;

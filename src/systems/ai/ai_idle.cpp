@@ -43,7 +43,7 @@ void idle_sentient(entity_t &e, ai_tag_my_turn_t &t, ai_mode_idle_t &idle, senti
         //std::cout << "Sentient kill mode\n";
         // Close for the kill!
         const int idx = mapidx(*pos);
-        if (settler_map.distance_map[idx] < MAX_DIJSTRA_DISTANCE-1) {
+        if (settler_map.get(idx) < MAX_DIJSTRA_DISTANCE-1) {
             position_t destination = settler_map.find_destination(*pos);
             emit_deferred(entity_wants_to_move_message{e.id, destination});
             emit_deferred(renderables_changed_message{});

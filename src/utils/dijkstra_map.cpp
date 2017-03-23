@@ -1,39 +1,55 @@
 #include "dijkstra_map.hpp"
 #include "../main/game_globals.hpp"
 #include <utility>
-#include <queue>
+#include <deque>
 #include <map>
+#include <thread>
 
 dijkstra_map::dijkstra_map() {
     distance_map.resize(REGION_TILES_COUNT);
     std::fill(distance_map.begin(), distance_map.end(), MAX_DIJSTRA_DISTANCE);
 }
 
-inline void dm_add_candidate(std::queue<std::pair<int,int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
+int16_t dijkstra_map::get(const std::size_t &idx) {
+    std::lock_guard<std::mutex> lock(map_lock);
+    return distance_map[idx];
+}
+
+inline void dm_add_candidate(std::deque<std::pair<int,int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
     const int idx = mapidx(x,y,z);
     if (current_region->water_level[idx] < 4) {
-        open_nodes.emplace(std::make_pair(idx, distance));
+        open_nodes.emplace_back(std::make_pair(idx, distance));
     }
 }
 
-void dijkstra_map::update(const std::vector<int> &starting_points)
+void dijkstra_map::update(const std::vector<int> starting_points) {
+    std::thread{&dijkstra_map::update_async, this, starting_points}.detach();
+}
+
+void dijkstra_map::update_architecture(const std::vector<int> starting_points) {
+    std::thread{&dijkstra_map::update_architecture_async, this, starting_points}.detach();
+}
+
+void dijkstra_map::update_async(const std::vector<int> &starting_points)
 {
-    std::fill(distance_map.begin(), distance_map.end(), MAX_DIJSTRA_DISTANCE);
+    std::vector<int16_t> new_map;
+    new_map.resize(REGION_TILES_COUNT);
+    std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
 
     // Populate the open list with starting points
-    std::queue<std::pair<int,int>> open_nodes;
+    std::deque<std::pair<int,int>> open_nodes;
     for (const int &sp : starting_points) {
-        open_nodes.emplace(std::make_pair(sp, 0));
+        open_nodes.emplace_back(std::make_pair(sp, 0));
     }
 
     // Iterate open nodes list
     while (!open_nodes.empty()) {
         const std::pair<int,int> open_node = open_nodes.front();
-        open_nodes.pop();
+        open_nodes.pop_front();
 
-        if (distance_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
+        if (new_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
         {
-            distance_map[open_node.first] = open_node.second;
+            new_map[open_node.first] = open_node.second;
 
             int x,y,z;
             std::tie(x,y,z) = idxmap(open_node.first);
@@ -49,7 +65,6 @@ void dijkstra_map::update(const std::vector<int> &starting_points)
             }
             if (y > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_WEST)) {
                 dm_add_candidate(open_nodes, x, y-1, z, open_node.second+1);
-                open_nodes.emplace(std::make_pair(mapidx(x, y-1, z), open_node.second+1));
             }
             if (z > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_DOWN)) {
                 dm_add_candidate(open_nodes, x, y, z-1, open_node.second+1);
@@ -59,26 +74,31 @@ void dijkstra_map::update(const std::vector<int> &starting_points)
             }
         }
     }
+
+    std::lock_guard<std::mutex> lock(map_lock);
+    distance_map = new_map;
 }
 
-void dijkstra_map::update_architecture(const std::vector<int> &starting_points)
+void dijkstra_map::update_architecture_async(const std::vector<int> &starting_points)
 {
-    std::fill(distance_map.begin(), distance_map.end(), MAX_DIJSTRA_DISTANCE);
+    std::vector<int16_t> new_map;
+    new_map.resize(REGION_TILES_COUNT);
+    std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
 
     // Populate the open list with starting points
-    std::queue<std::pair<int,int>> open_nodes;
+    std::deque<std::pair<int,int>> open_nodes;
     for (const int &sp : starting_points) {
-        open_nodes.emplace(std::make_pair(sp, 0));
+        open_nodes.emplace_back(std::make_pair(sp, 0));
     }
 
     // Iterate open nodes list
     while (!open_nodes.empty()) {
         const std::pair<int,int> open_node = open_nodes.front();
-        open_nodes.pop();
+        open_nodes.pop_front();
 
-        if (distance_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
+        if (new_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
         {
-            distance_map[open_node.first] = open_node.second;
+            new_map[open_node.first] = open_node.second;
 
             int x,y,z;
             std::tie(x,y,z) = idxmap(open_node.first);
@@ -88,7 +108,6 @@ void dijkstra_map::update_architecture(const std::vector<int> &starting_points)
             }
             if (x > 0 && (current_region->tile_flags[open_node.first].test(CAN_GO_WEST) || open_node.second == 0)) {
                 dm_add_candidate(open_nodes, x-1, y, z, open_node.second+1);
-                open_nodes.emplace(std::make_pair(mapidx(x-1, y, z), open_node.second+1));
             }
             if (y < REGION_WIDTH-1 && (current_region->tile_flags[open_node.first].test(CAN_GO_SOUTH) || open_node.second == 0)) {
                 dm_add_candidate(open_nodes, x, y+1, z, open_node.second+1);
@@ -104,9 +123,14 @@ void dijkstra_map::update_architecture(const std::vector<int> &starting_points)
             }
         }
     }
+
+    std::lock_guard<std::mutex> lock(map_lock);
+    distance_map = new_map;
 }
 
 position_t dijkstra_map::find_destination(const position_t &pos) {
+    std::lock_guard<std::mutex> lock(map_lock);
+
     const int idx = mapidx(pos);
     std::map<int16_t, int> candidates;
     if (pos.x > 0 && current_region->tile_flags[idx].test(CAN_GO_WEST)) {

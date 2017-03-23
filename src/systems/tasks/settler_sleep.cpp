@@ -40,7 +40,7 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
 
     const int idx = mapidx(pos);
 	if (ai.job_type_minor == JM_FIND_BED) {
-        const int16_t distance = bed_map.distance_map[idx];
+        const int16_t distance = bed_map.get(idx);
         if (distance >= MAX_DIJSTRA_DISTANCE) {
             // There is no bed available - sleep rough!
             // TODO: Bad thoughts!
@@ -57,7 +57,7 @@ void do_sleep_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, spec
 	}
 
 	if (ai.job_type_minor == JM_GO_TO_BED) {
-        const int16_t distance = bed_map.distance_map[idx];
+        const int16_t distance = bed_map.get(idx);
         if (distance == 0) {
             std::size_t bed_id = 0;
             each<construct_provides_sleep_t, position_t>([&bed_id, &pos] (entity_t &e, construct_provides_sleep_t &sleep, position_t &bpos) {
