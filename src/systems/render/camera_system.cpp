@@ -30,7 +30,9 @@ void camera_system::update(const double duration_ms) {
 		camera_move_requested_message e = messages->front();
 		messages->pop();
 
-		if (e.direction == 1) {
+        world_changed = true;
+
+        if (e.direction == 1) {
 			camera_position->region_x -= e.step;
 			if (camera_position->region_x < 0) camera_position->region_x = 0;
 			dirty = true;
@@ -71,7 +73,6 @@ void camera_system::update(const double duration_ms) {
 	if (dirty || clip_left == -1) {
         update_clipping_rectangle();
         dirty = false;
-        world_changed = true;
 	}
 }
 
