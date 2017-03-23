@@ -108,6 +108,11 @@ namespace map_render {
                                         world_scene::add_composite_renderable(x, y, z, sr.c, idx);
                                     }
                                 }
+
+                                // Stockpiles
+                                if (game_master_mode == DESIGN && game_design_mode == STOCKPILES && current_stockpile>0 && current_region->stockpile_id[idx]==current_stockpile) {
+                                    world_scene::add_decal(x, y, z, vchar{'#', colors::MAGENTA, colors::MAGENTA}, idx);
+                                }
                             }
                         }
                     }
