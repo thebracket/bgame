@@ -18,6 +18,9 @@
 #include "frustrum.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
 #include "render_block.hpp"
+#include "../../messages/messages.hpp"
+
+using namespace map_render_sys;
 
 constexpr bool show_index_buffer = false;
 bool world_changed = true;
@@ -135,6 +138,45 @@ namespace map_render {
                                         }
                                     }
                                 }
+
+                                // Buildings
+                                if (game_master_mode == DESIGN && game_design_mode == BUILDING && has_build_mode_building) {
+                                    const int building_left_x = mouse::mouse_world_x;
+                                    const int building_top_y = mouse::mouse_world_y;
+                                    const int building_right_x = mouse::mouse_world_x + build_mode_building.width;
+                                    const int building_bottom_y = mouse::mouse_world_y + build_mode_building.height;
+
+                                    if (x >= building_left_x && x < building_right_x && y >= building_top_y && y < building_bottom_y) {
+
+                                        vchar result{'*', colors::BLACK, colors::BLACK};
+                                        if ((!current_region->solid[idx] &&
+                                             current_region->tile_flags[idx].test(CAN_STAND_HERE)
+                                             && !current_region->tile_flags[idx].test(CONSTRUCTION)
+                                             && !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+                                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+                                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN))
+                                            || (build_mode_building.tag == "floor"
+                                                && !current_region->tile_flags[idx].test(CONSTRUCTION) &&
+                                                !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+                                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+                                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+                                                && (current_region->tile_flags[idx].test(CAN_STAND_HERE) ||
+                                                    current_region->tile_flags[idx - 1].test(CAN_STAND_HERE) ||
+                                                    current_region->tile_flags[idx + 1].test(CAN_STAND_HERE) ||
+                                                    current_region->tile_flags[idx - REGION_WIDTH].test(
+                                                            CAN_STAND_HERE) ||
+                                                    current_region->tile_flags[idx + REGION_WIDTH].test(CAN_STAND_HERE)
+                                                )
+                                            )
+                                                ) {
+                                            result.foreground = rltk::colors::GREEN;
+                                        } else {
+                                            result.foreground = rltk::colors::RED;
+                                            building_possible = false;
+                                        }
+                                        world_scene::add_decal(x, y, z, result, idx);
+                                    }
+                                }
                             }
                         } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
                             const uint8_t tiletype = current_region->tile_type[idx];
@@ -181,6 +223,8 @@ namespace map_render {
         // Add world geometry, depending upon game mode
         const bool single_z_layer = !(game_master_mode == PLAY || game_master_mode == ROGUE);
 
+        if (game_master_mode == DESIGN && game_design_mode == BUILDING && has_build_mode_building) building_possible = true;
+
         if (single_z_layer) {
             populate_vertex_buffer(camera_position->region_z, camera_position->region_z+1);
         } else {
@@ -202,6 +246,15 @@ namespace map_render {
                                                vchar{'H', colors::CYAN, colors::CYAN}, mapidx(h.second));
                     }
                 }
+            }
+        }
+
+        if (game_master_mode == DESIGN && game_design_mode == BUILDING) {
+            if (mouse::clicked) {
+                emit(build_request_message{mouse::mouse_world_x, mouse::mouse_world_y, camera_position->region_z, build_mode_building});
+                emit(refresh_available_buildings_message{});
+                emit(map_dirty_message{});
+                emit(renderables_changed_message{});
             }
         }
     }

@@ -24,9 +24,8 @@ void lighting_system::configure() {
     std::fill(light_map.begin(), light_map.end(), rltk::colors::WHITE);
 }
 
-inline void reveal(const int &idx, const lightsource_t &view, const int &light_pos) {
-    lit_tiles[idx].first = light_pos;
-	lit_tiles[idx].second = view.color;
+inline void reveal(const int &idx, const lightsource_t view, const int light_pos) {
+    lit_tiles[idx] = std::make_pair(light_pos, view.color);
 }
 
 inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
@@ -50,6 +49,8 @@ void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
         float power_percent = (float)designations->current_power / (float)designations->total_capacity;
         view.color = rltk::lerp(rltk::colors::RED, rltk::colors::WHITE, power_percent);
     }
+    const int idx = mapidx(pos);
+    lit_tiles[idx] = std::make_pair(idx, view.color); // Always light yourself
 	for (int z=(0-view.radius); z<view.radius; ++z) {
 		for (int i=0-view.radius; i<view.radius; ++i) {
 			internal_light_to(pos, view, i, 0-view.radius, z);

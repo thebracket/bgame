@@ -13,7 +13,7 @@ struct lightsource_t {
 	lightsource_t(const int r, const color_t col, const bool alert) : radius(r), color(col), alert_status(alert) {}
 
 	int radius = 0;
-    color_t color;
+    color_t color = rltk::colors::WHITE;
 	bool alert_status = false;
 
 	// Non-persistent

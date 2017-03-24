@@ -101,6 +101,11 @@ void inventory_system::configure() {
 			->assign(position_t{msg.x, msg.y, msg.z})
 			->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs, false });
 		designate.building_entity = building_template->id;
+		for (int y=msg.y; y<msg.y + designate.height; ++y) {
+			for (int x = msg.x; x < msg.x + designate.width; ++x) {
+				entity_octree.add_node(octree_location_t{x,y,msg.z,building_template->id});
+			}
+		}
 
 		designations->buildings.push_back(designate);
 
