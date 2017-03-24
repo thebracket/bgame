@@ -19,6 +19,7 @@
 #include "../../systems/input/mouse_input_system.hpp"
 #include "render_block.hpp"
 #include "../../messages/messages.hpp"
+#include "../../systems/gui/mode_design_system.hpp"
 
 using namespace map_render_sys;
 
@@ -175,6 +176,83 @@ namespace map_render {
                                             building_possible = false;
                                         }
                                         world_scene::add_decal(x, y, z, result, idx);
+                                    }
+                                }
+
+                                // Architecure Mode
+                                if (game_master_mode == DESIGN && game_design_mode == ARCHITECTURE) {
+                                    vchar result{' ', colors::GREY, colors::GREY};
+
+                                    // Display existing architecture
+                                    auto mf = designations->architecture.find(idx);
+                                    if (mf != designations->architecture.end()) {
+                                        result.foreground = rltk::colors::YELLOW;
+                                        result.background = rltk::colors::GREY;
+                                        switch (mf->second) {
+                                            case 0 : result.glyph = '#'; break;
+                                            case 1 : result.glyph = '.'; break;
+                                            case 2 : result.glyph = '<'; break;
+                                            case 3 : result.glyph = '>'; break;
+                                            case 4 : result.glyph = 'X'; break;
+                                            case 5 : result.glyph = '^'; break;
+                                            case 6 : result.glyph = '='; break;
+                                        }
+                                    }
+
+                                    if (arch_available && mf == designations->architecture.end()) {
+                                        const int building_left_x = mouse::mouse_world_x;
+                                        const int building_top_y = mouse::mouse_world_y;
+                                        const int building_right_x = mouse::mouse_world_x + arch_width;
+                                        const int building_bottom_y = mouse::mouse_world_y + arch_height;
+
+                                        if (arch_filled) {
+
+                                            if (x >= building_left_x && x < building_right_x &&
+                                                y >= building_top_y && y < building_bottom_y) {
+                                                result.background = rltk::colors::BLACK;
+                                                result.glyph = 177;
+
+                                                if (arch_possible && !current_region->solid[idx] &&
+                                                    !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
+                                                    result.foreground = rltk::colors::GREEN;
+                                                } else {
+                                                    arch_possible = false;
+                                                    result.foreground = rltk::colors::RED;
+                                                }
+                                            }
+                                        } else {
+                                            if (x >= building_left_x && x < building_right_x &&
+                                                y >= building_top_y && y < building_bottom_y) {
+                                                bool interior = false;
+                                                if (arch_width > 2 && x+clip_left >= building_left_x+1 && x+clip_left < building_right_x-1 ) {
+                                                    interior = true;
+                                                }
+                                                if (arch_height > 2 && y+clip_top >= building_top_y+1 && y+clip_top < building_bottom_y-1) {
+                                                    interior = true;
+                                                }
+                                                if (x+clip_left == building_left_x) interior=false;
+                                                if (x+clip_left == building_right_x-1) interior = false;
+                                                if (y+clip_top == building_top_y) interior = false;
+                                                if (y+clip_top == building_bottom_y-1) interior = false;
+
+                                                if (!interior) {
+                                                    result.background = rltk::colors::BLACK;
+                                                    result.glyph = 177;
+
+                                                    if (arch_possible && !current_region->solid[idx] &&
+                                                        !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
+                                                        result.foreground = rltk::colors::GREEN;
+                                                    } else {
+                                                        arch_possible = false;
+                                                        result.foreground = rltk::colors::RED;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (result.glyph != ' ') {
+                                        world_scene::add_world_cube(x, y, z, result, idx);
                                     }
                                 }
                             }

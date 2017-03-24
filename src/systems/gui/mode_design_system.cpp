@@ -167,6 +167,8 @@ void mode_design_system::architecture() {
     // Pass through to render system
     arch_available = true; // We're always allowing this to enable future planning mode
 
+    arch_x = mouse::mouse_world_x;
+    arch_y = mouse::mouse_world_y;
     const int world_x = arch_x;
     const int world_y = arch_y;
 
