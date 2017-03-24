@@ -19,6 +19,7 @@
 #include "items.hpp"
 #include "buildings.hpp"
 #include "reactions.hpp"
+#include "../systems/ai/movement_system.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -94,10 +95,11 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     auto mat = get_material(material);
     if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
-    create_entity()
+    auto entity = create_entity()
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->second.glyph, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+    entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 }
 
 entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
@@ -111,6 +113,7 @@ entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const
             ->assign(position_t{ x,y,z })
             ->assign(renderable_t{ finder->second.glyph, mat->fg, mat->bg })
             ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+    entity_octree.add_node(octree_location_t{x,y,z,entity->id});
     return entity;
 }
 

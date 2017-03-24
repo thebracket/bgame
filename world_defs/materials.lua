@@ -128,7 +128,7 @@ materials = {
         hit_points = 100, mines_to="stone_boulder"
     },
     jet = { name="Jet", type="rock", layer="sedimentary", 
-        glyph=glyphs['one_quarter_solid'], fg=colors['black'], bg=colors['grey'],
+        glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
         hit_points = 100, mines_to="stone_boulder"
     },
     kaolinite = { name="Kaolinite", type="rock", layer="sedimentary", 
@@ -168,7 +168,7 @@ materials = {
         hit_points = 100, mines_to="stone_boulder"
     },
     obsidian = { name="Marble", type="rock", layer="igneous", 
-        glyph=glyphs['one_quarter_solid'], fg=colors['black'], bg=colors['grey'],
+        glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
         hit_points = 100, mines_to="stone_boulder", damage_bonus=1
     },
     olivine = { name="Olivine", type="rock", layer="igneous", 
@@ -257,15 +257,15 @@ materials = {
     },
 
     clay_soil = { name="Clay", type="soil",
-        glyph = glyphs['solid_square'], fg=colors['dark_red'], bg=colors['black'],
+        glyph = glyphs['solid_square'], fg=colors['red'], bg=colors['black'],
         hit_points = 20, mines_to="clay"
     },
     clay_loam = { name="Clay Loam", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_red'], bg=colors['grey'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
         hit_points = 20, mines_to="clay"
     },
     loam = { name="Loam", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil"
     },
     loamy_sand = { name="Loamy Sand", type="soil",
@@ -273,7 +273,7 @@ materials = {
         hit_points = 15, mines_to="topsoil"
     },
     peat = { name="Peat", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_yellow'], bg=colors['grey'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil"
     },
     sandy_clay = { name="Sandy Clay", type="soil",
@@ -281,23 +281,23 @@ materials = {
         hit_points = 15, mines_to="clay"
     },
     sandy_clay_loam = { name="Sandy Clay Loam", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_red'], bg=colors['dark_yellow'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['dark_yellow'],
         hit_points = 15, mines_to="topsoil", mines_to_also="clay"
     },
     silt = { name="Silt", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_yellow'], bg=colors['black'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['black'],
         hit_points = 15, mines_to="topsoil"
     },
     silty_clay = { name="Silty Clay", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_red'], bg=colors['black'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 15, mines_to="clay"
     },
     silty_clay_loam = { name="Silty Clay Loam", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_red'], bg=colors['grey'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil"
     },
     silt_loam = { name="Silt Loam", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
+        glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil"
     },
     sand = { name="Sand", type="sand",
