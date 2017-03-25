@@ -124,6 +124,23 @@ void hud_system::update(const double ms) {
         }
         ImGui::EndMenu();
     }
+
+    if (ImGui::BeginMenu("Display")) {
+        if (ImGui::MenuItem("Top-Down")) {
+            camera_mode = TOP_DOWN;
+        }
+        if (ImGui::MenuItem("Front")) {
+            camera_mode = FRONT;
+        }
+        if (ImGui::MenuItem("Diagonal")) {
+            camera_mode = DIAGONAL;
+        }
+        if (ImGui::MenuItem("Toggle ASCII")) {
+            ascii_mode = !ascii_mode;
+        }
+        ImGui::EndMenu();
+    }
+
     auto status_size = ImGui::CalcTextSize(cash_str.c_str());
     ImGui::SameLine(ImGui::GetWindowWidth()-(status_size.x + 10));
     ImGui::Text("%s", cash_str.c_str());
