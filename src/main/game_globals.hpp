@@ -51,6 +51,7 @@ enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, C
 	STANDING_ORDERS, TILEMENU, SENTIENT_INFO, GRAZER_INFO, WISHMODE, TRIGGER_MANAGEMENT };
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING, GUARDPOINTS, STOCKPILES, HARVEST, ARCHITECTURE };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, MINING_DELETE };
+enum game_camera_mode_t { TOP_DOWN, FRONT, DIAGONAL };
 
 extern config_t game_config;
 extern planet_t planet;
@@ -78,3 +79,5 @@ extern std::size_t negotiating_civ;
 extern int selected_tile_x;
 extern int selected_tile_y;
 extern int selected_tile_z;
+extern game_camera_mode_t camera_mode;
+extern bool ascii_mode;

@@ -97,6 +97,21 @@ void keyboard_system::update(const double ms) {
         if (e.event.key.code == sf::Keyboard::Space) emit_deferred(pause_requested_message{});
         if (e.event.key.code == sf::Keyboard::Slash) emit_deferred(one_step_requested_message{});
 
+        // Camera mode
+        if (e.event.key.code == sf::Keyboard::Tab) {
+            if (e.event.key.shift) {
+                ascii_mode = !ascii_mode;
+            } else {
+                if (camera_mode == TOP_DOWN) {
+                    camera_mode = FRONT;
+                } else if (camera_mode == FRONT) {
+                    camera_mode = DIAGONAL;
+                } else if (camera_mode == DIAGONAL) {
+                    camera_mode = TOP_DOWN;
+                }
+            }
+        }
+
         // Camera controls
         if (e.event.key.code == sf::Keyboard::Left) {
             if (e.event.key.shift) { 

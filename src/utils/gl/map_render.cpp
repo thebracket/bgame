@@ -306,7 +306,7 @@ namespace map_render {
         if (single_z_layer) {
             populate_vertex_buffer(camera_position->region_z, camera_position->region_z+1);
         } else {
-            populate_vertex_buffer(std::max(1, camera_position->region_z - 15),
+            populate_vertex_buffer(std::max(1, camera_position->region_z - 7),
                                    std::min(REGION_DEPTH - 1, camera_position->region_z + 1));
         }
 
@@ -358,10 +358,37 @@ namespace map_render {
                   0.0f, 1.0f, 0.0f // Up
         );*/
 
-        gluLookAt((float)camera_position->region_x, ((float)camera_position->region_z)+12.0f, ((float)camera_position->region_y)+4.0f, // Camera
-                  (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y, // Target
-                  0.0f, 1.0f, 0.0f // Up
-        );
+        switch (camera_mode) {
+            case FRONT : {
+                // Nice X-perspective view
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + 12.0f,
+                          ((float) camera_position->region_y) + 4.0f, // Camera
+                          (float) camera_position->region_x, (float) camera_position->region_z,
+                          (float) camera_position->region_y, // Target
+                          0.0f, 1.0f, 0.0f // Up
+                );
+            } break;
+
+            case TOP_DOWN : {
+                // Top-down
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + 12.0f,
+                          ((float) camera_position->region_y) + 0.1f, // Camera
+                          (float) camera_position->region_x, (float) camera_position->region_z,
+                          (float) camera_position->region_y, // Target
+                          0.0f, 1.0f, 0.0f // Up
+                );
+            } break;
+
+            case DIAGONAL : {
+                // Diagonal
+                gluLookAt((float) camera_position->region_x + 12.0f, ((float) camera_position->region_z) + 12.0f,
+                          ((float) camera_position->region_y) + 12.0f, // Camera
+                          (float) camera_position->region_x, (float) camera_position->region_z,
+                          (float) camera_position->region_y, // Target
+                          0.0f, 1.0f, 0.0f // Up
+                );
+            } break;
+        }
     }
 
     inline void draw_world(const float texture_w, const float texture_h) {
