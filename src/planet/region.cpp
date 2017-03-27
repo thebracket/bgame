@@ -5,6 +5,7 @@
 #include "../raws/materials.hpp"
 #include "../raws/plants.hpp"
 #include "../systems/physics/fluid_system.hpp"
+#include "../main/game_globals.hpp"
 
 using namespace rltk;
 
@@ -196,14 +197,13 @@ void region_t::calc_render(const int &idx) {
 		} break;
 		case tile_type::SOLID : {
 			auto mat = get_material(tile_material[idx]);
+            glyph = ascii_mode ? 219 : 257;
 			if (idx < tile_material.size()) {
-				glyph = glyph = 257;
 				fg = mat->fg;
 				bg = mat->bg;
 			} else {
 				//std::cout << "Warning - material not found (" << idx << ")!\n";
 				tile_material[idx] = 1;
-				glyph = glyph = 257;
 				fg = mat->fg;
 				bg = mat->bg;
 			}
@@ -213,45 +213,47 @@ void region_t::calc_render(const int &idx) {
 			fg = rltk::colors::BLACK;
 		} break;
 		case tile_type::WALL : {
-			/*
-			uint8_t wall_mask = 0;
-			if (tile_type[idx-1] == tile_type::WALL) wall_mask += 1;
-			if (tile_type[idx+1] == tile_type::WALL) wall_mask += 2;
-			if (tile_type[idx-REGION_WIDTH] == tile_type::WALL) wall_mask += 4;
-			if (tile_type[idx+REGION_WIDTH] == tile_type::WALL) wall_mask += 8;
+            if (ascii_mode) {
+                uint8_t wall_mask = 0;
+                if (tile_type[idx-1] == tile_type::WALL) wall_mask += 1;
+                if (tile_type[idx+1] == tile_type::WALL) wall_mask += 2;
+                if (tile_type[idx-REGION_WIDTH] == tile_type::WALL) wall_mask += 4;
+                if (tile_type[idx+REGION_WIDTH] == tile_type::WALL) wall_mask += 8;
 
-			switch (wall_mask) {
-				case 0 : glyph = 79; break; // Isolated
-				case 1 : glyph = 181; break; // West only
-				case 2 : glyph = 198; break; // East only
-				case 3 : glyph = 205; break; // East and West
-				case 4 : glyph = 208; break; // North only
-				case 5 : glyph = 188; break; // North and west
-				case 6 : glyph = 200; break; // North and east
-				case 7 : glyph = 202; break; // North and east/west
-				case 8 : glyph = 210; break; // South only
-				case 9 : glyph = 187; break; // South and west
-				case 10 : glyph = 201; break; // South and east
-				case 11 : glyph = 203; break; // South east/west
-				case 12 : glyph = 186; break; // North and South
-				case 13 : glyph = 185; break; // North/South/West
-				case 14 : glyph = 204; break; // North/South/East
-				case 15 : glyph = 206; break; // All
-				default : {
-					std::cout << "WARNING: Wall calculator hit a case of " << +wall_mask << "\n";
-					glyph = 79;
-				}
-			}*/
-			glyph = 257;
-			fg = get_material(tile_material[idx])->fg;
-			//bg = material_defs[tile_material[idx]].bg;
+                switch (wall_mask) {
+                    case 0 : glyph = 79; break; // Isolated
+                    case 1 : glyph = 181; break; // West only
+                    case 2 : glyph = 198; break; // East only
+                    case 3 : glyph = 205; break; // East and West
+                    case 4 : glyph = 208; break; // North only
+                    case 5 : glyph = 188; break; // North and west
+                    case 6 : glyph = 200; break; // North and east
+                    case 7 : glyph = 202; break; // North and east/west
+                    case 8 : glyph = 210; break; // South only
+                    case 9 : glyph = 187; break; // South and west
+                    case 10 : glyph = 201; break; // South and east
+                    case 11 : glyph = 203; break; // South east/west
+                    case 12 : glyph = 186; break; // North and South
+                    case 13 : glyph = 185; break; // North/South/West
+                    case 14 : glyph = 204; break; // North/South/East
+                    case 15 : glyph = 206; break; // All
+                    default : {
+                        std::cout << "WARNING: Wall calculator hit a case of " << +wall_mask << "\n";
+                        glyph = 79;
+                    }
+                }
+            } else {
+                glyph = 257;
+                fg = get_material(tile_material[idx])->fg;
+                //bg = material_defs[tile_material[idx]].bg;
+            }
 		} break;
 		case tile_type::WINDOW : {
-			glyph = 257;
+			glyph = ascii_mode ? 176 : 257;
 			fg = rltk::colors::CYAN;
 		} break;
 		case tile_type::RAMP : {
-			glyph = 257;
+			glyph = ascii_mode ? 30 : 257;
 			if (tile_material[idx] > 0) {
 				fg = get_material(tile_material[idx])->fg;
 			} else {
@@ -274,13 +276,13 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::FLOOR: {
 
 			if (get_material(tile_material[idx])->spawn_type == sand) {
-				glyph = 258;
+				glyph = ascii_mode ? 126 : 258;
 			} else if (get_material(tile_material[idx])->spawn_type == blight) {
-				glyph = 265;
+				glyph = ascii_mode ? 126 : 265;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
-				glyph = 256;
+				glyph = ascii_mode ? 126 : 256;
 			} else {
-				glyph = 257;
+				glyph = ascii_mode ? 126 : 257;
 			}
 
 			fg = get_material(tile_material[idx])->fg;
@@ -295,25 +297,18 @@ void region_t::calc_render(const int &idx) {
 			}
 		} break;
 		case tile_type::CLOSED_DOOR : {
-			if (get_material(tile_material[idx])->spawn_type == sand) {
-				glyph = 329;
-			} else if (tile_flags[idx].test(CONSTRUCTION)) {
-				glyph = 329;
-			} else {
-				glyph = 329;
-			}
-
+            glyph = ascii_mode ? 197 : 329;
 			fg = get_material(tile_material[idx])->fg;
 
 		} break;
 		case tile_type::TREE_TRUNK : {
-			glyph = 257;
+			glyph = ascii_mode ? 180 : 257;
 			fg = get_material(tile_material[idx])->fg;
 			bg = rltk::colors::Black;
             veg_cache[idx] = vchar{259, rltk::colors::WHITE, rltk::colors::BLACK};
 		} break;
 		case tile_type::TREE_LEAF : {
-			glyph = 278;
+			glyph = ascii_mode ? 177 : 278;
 			fg = rltk::colors::White;
 			bg = rltk::colors::Black;
 		} break;
