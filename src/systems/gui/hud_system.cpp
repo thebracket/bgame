@@ -62,6 +62,7 @@ void hud_system::update(const double ms) {
             }
             if (ImGui::MenuItem("Toggle ASCII")) {
                 ascii_mode = !ascii_mode;
+                current_region->tile_recalc_all();
             }
             ImGui::EndMenu();
         }

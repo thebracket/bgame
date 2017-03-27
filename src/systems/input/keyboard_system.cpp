@@ -101,6 +101,7 @@ void keyboard_system::update(const double ms) {
         if (e.event.key.code == sf::Keyboard::Tab) {
             if (e.event.key.shift) {
                 ascii_mode = !ascii_mode;
+                current_region->tile_recalc_all();
             } else {
                 if (camera_mode == TOP_DOWN) {
                     camera_mode = FRONT;
