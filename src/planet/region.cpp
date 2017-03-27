@@ -278,11 +278,11 @@ void region_t::calc_render(const int &idx) {
 			if (get_material(tile_material[idx])->spawn_type == sand) {
 				glyph = ascii_mode ? 126 : 258;
 			} else if (get_material(tile_material[idx])->spawn_type == blight) {
-				glyph = ascii_mode ? 126 : 265;
+				glyph = ascii_mode ? 247 : 265;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
-				glyph = ascii_mode ? 126 : 256;
+				glyph = ascii_mode ? '.' : 256;
 			} else {
-				glyph = ascii_mode ? 126 : 257;
+				glyph = ascii_mode ? '`' : 257;
 			}
 
 			fg = get_material(tile_material[idx])->fg;
@@ -292,7 +292,12 @@ void region_t::calc_render(const int &idx) {
 				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
                 const uint8_t lifecycle = tile_vegetation_lifecycle[idx];
                 rltk::vchar plant_render;
-                plant_render.glyph = plant.glyphs[lifecycle];
+                plant_render.glyph = ascii_mode ? '"' : plant.glyphs[lifecycle];
+                if (ascii_mode) {
+                    plant_render.foreground = colors::GREEN;
+                } else {
+                    plant_render.foreground = colors::WHITE;
+                }
                 veg_cache[idx] = plant_render;
 			}
 		} break;
@@ -305,11 +310,11 @@ void region_t::calc_render(const int &idx) {
 			glyph = ascii_mode ? 180 : 257;
 			fg = get_material(tile_material[idx])->fg;
 			bg = rltk::colors::Black;
-            veg_cache[idx] = vchar{259, rltk::colors::WHITE, rltk::colors::BLACK};
+            veg_cache[idx] = ascii_mode ? vchar{180, rltk::colors::Brown, rltk::colors::BLACK} : vchar{259, rltk::colors::WHITE, rltk::colors::BLACK};
 		} break;
 		case tile_type::TREE_LEAF : {
 			glyph = ascii_mode ? 177 : 278;
-			fg = rltk::colors::White;
+			fg = ascii_mode ? rltk::colors::GREEN : rltk::colors::White;
 			bg = rltk::colors::Black;
 		} break;
 	}

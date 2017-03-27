@@ -27,7 +27,7 @@ int selected_tile_x;
 int selected_tile_y;
 int selected_tile_z;
 std::size_t current_stockpile=0;
-game_camera_mode_t camera_mode = FRONT;
+game_camera_mode_t camera_mode = TOP_DOWN;
 bool ascii_mode = false;
 
 void config_t::save() {

@@ -52,246 +52,491 @@ namespace map_render {
         return false;
     }
 
-    inline void populate_vertex_buffer(const int &start_z, const int &end_z) {
-        const vchar bloodstain{ 340, color_t{255,255,255}, color_t{255,255,255} };
+    inline std::tuple<int, int, int, int> calculate_edges() noexcept {
+        return std::make_tuple(
+                std::max(1, camera_position->region_x - 24),
+                std::min(REGION_WIDTH-1, camera_position->region_x + 24),
+                std::max(1, camera_position->region_y - 24),
+                std::min(REGION_HEIGHT-1, camera_position->region_y + 24)
+        );
+    }
 
-        const int start_x = std::max(1, camera_position->region_x - 24);
-        const int end_x = std::min(REGION_WIDTH-1, camera_position->region_x + 24);
-        const int start_y = std::max(1, camera_position->region_y - 24);
-        const int end_y = std::min(REGION_HEIGHT-1, camera_position->region_y + 24);
+    template <typename F>
+    inline void render_area_loop(const int &start_z, const int &end_z, const std::tuple<int, int, int, int> &edges, const F &&func) {
+        int start_x, end_x, start_y, end_y;
+        std::tie(start_x, end_x, start_y, end_y) = calculate_edges();
 
         for (int z=start_z; z<end_z; ++z) {
             for (int y = start_y; y < end_y; ++y) {
                 for (int x = start_x; x < end_x; ++x) {
                     if (gl_frustrum::point_in_frustrum(x, z, y)) {
                         const int idx = mapidx(x, y, z);
-                        if (current_region->revealed[idx]) {
-                            const uint8_t tiletype = current_region->tile_type[idx];
-                            if (tiletype != tile_type::OPEN_SPACE) {
-                                if (tiletype == tile_type::RAMP) {
-                                    world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, 0.5f);
-                                } else if (has_ceiling(tiletype)) {
-                                    if (game_master_mode == DESIGN && game_design_mode == CHOPPING && current_region->tree_id[idx]>0
-                                        && designations->chopping.find(current_region->tree_id[idx])!=designations->chopping.end()) {
-                                        world_scene::add_world_cube(x, y, z, vchar{'*', colors::RED, colors::RED}, idx);
-                                    } else {
-                                        world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
-                                    }
-                                } else if (has_floor(tiletype)) {
-                                    world_scene::add_world_floor(x, y, z, current_region->render_cache[idx], idx);
-                                }
-
-                                // Add water
-                                const float water_depth = (float)current_region->water_level[idx] / 10.0f;
-                                if (water_depth>0) {
-                                    world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, water_depth);
-                                }
-
-                                // Add vegetation
-                                auto veg_cache = current_region->veg_cache[idx];
-                                if (veg_cache.glyph > 0) {
-                                    world_scene::add_vegetation(x, y, z, veg_cache, idx);
-                                }
-
-                                // Add blood stains
-                                if (current_region->blood_stains[idx]) {
-                                    world_scene::add_decal(x, y, z, bloodstain, idx);
-                                }
-
-                                // Add renderables
-                                auto rfinder = renderables.find(idx);
-                                if (rfinder != renderables.end()) {
-                                    screen_render_t &sr = rfinder->second[0];
-                                    world_scene::add_simple_renderable(x, y, z, sr.c, idx);
-                                }
-
-                                // Add composite renderables
-                                auto cfinder = composite_renderables.find(idx);
-                                if (cfinder != composite_renderables.end()) {
-                                    for (const auto &sr : cfinder->second[0]) {
-                                        world_scene::add_composite_renderable(x, y, z, sr.c, idx);
-                                    }
-                                }
-
-                                // Stockpiles
-                                if (game_master_mode == DESIGN && game_design_mode == STOCKPILES && current_stockpile>0 && current_region->stockpile_id[idx]==current_stockpile) {
-                                    world_scene::add_decal(x, y, z, vchar{'#', colors::MAGENTA, colors::MAGENTA}, idx);
-                                }
-
-                                // Mining
-                                if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
-                                    auto mf = designations->mining.find(idx);
-                                    if (mf != designations->mining.end()) {
-                                        vchar result{'!', colors::YELLOW, colors::YELLOW};
-                                        switch (mf->second) {
-                                            case 1 : result.glyph = 177; break;
-                                            case 2 : result.glyph = 31; break;
-                                            case 3 : result.glyph = 30; break;
-                                            case 4 : result.glyph = '<'; break;
-                                            case 5 : result.glyph = '>'; break;
-                                            case 6 : result.glyph = 'X'; break;
-                                        }
-
-                                        if (mf->second != 5) {
-                                            world_scene::add_world_cube(x, y, z, result, idx);
-                                        } else {
-                                            world_scene::add_decal(x, y, z, result, idx);
-                                        }
-                                    }
-                                }
-
-                                // Buildings
-                                if (game_master_mode == DESIGN && game_design_mode == BUILDING && has_build_mode_building) {
-                                    const int building_left_x = mouse::mouse_world_x;
-                                    const int building_top_y = mouse::mouse_world_y;
-                                    const int building_right_x = mouse::mouse_world_x + build_mode_building.width;
-                                    const int building_bottom_y = mouse::mouse_world_y + build_mode_building.height;
-
-                                    if (x >= building_left_x && x < building_right_x && y >= building_top_y && y < building_bottom_y) {
-
-                                        vchar result{'*', colors::BLACK, colors::BLACK};
-                                        if ((!current_region->solid[idx] &&
-                                             current_region->tile_flags[idx].test(CAN_STAND_HERE)
-                                             && !current_region->tile_flags[idx].test(CONSTRUCTION)
-                                             && !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
-                                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
-                                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN))
-                                            || (build_mode_building.tag == "floor"
-                                                && !current_region->tile_flags[idx].test(CONSTRUCTION) &&
-                                                !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
-                                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
-                                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
-                                                && (current_region->tile_flags[idx].test(CAN_STAND_HERE) ||
-                                                    current_region->tile_flags[idx - 1].test(CAN_STAND_HERE) ||
-                                                    current_region->tile_flags[idx + 1].test(CAN_STAND_HERE) ||
-                                                    current_region->tile_flags[idx - REGION_WIDTH].test(
-                                                            CAN_STAND_HERE) ||
-                                                    current_region->tile_flags[idx + REGION_WIDTH].test(CAN_STAND_HERE)
-                                                )
-                                            )
-                                                ) {
-                                            result.foreground = rltk::colors::GREEN;
-                                        } else {
-                                            result.foreground = rltk::colors::RED;
-                                            building_possible = false;
-                                        }
-                                        world_scene::add_decal(x, y, z, result, idx);
-                                    }
-                                }
-
-                                // Architecure Mode
-                                if (game_master_mode == DESIGN && game_design_mode == ARCHITECTURE) {
-                                    vchar result{' ', colors::GREY, colors::GREY};
-
-                                    // Display existing architecture
-                                    auto mf = designations->architecture.find(idx);
-                                    if (mf != designations->architecture.end()) {
-                                        result.foreground = rltk::colors::YELLOW;
-                                        result.background = rltk::colors::GREY;
-                                        switch (mf->second) {
-                                            case 0 : result.glyph = '#'; break;
-                                            case 1 : result.glyph = '.'; break;
-                                            case 2 : result.glyph = '<'; break;
-                                            case 3 : result.glyph = '>'; break;
-                                            case 4 : result.glyph = 'X'; break;
-                                            case 5 : result.glyph = '^'; break;
-                                            case 6 : result.glyph = '='; break;
-                                        }
-                                    }
-
-                                    if (arch_available && mf == designations->architecture.end()) {
-                                        const int building_left_x = mouse::mouse_world_x;
-                                        const int building_top_y = mouse::mouse_world_y;
-                                        const int building_right_x = mouse::mouse_world_x + arch_width;
-                                        const int building_bottom_y = mouse::mouse_world_y + arch_height;
-
-                                        if (arch_filled) {
-
-                                            if (x >= building_left_x && x < building_right_x &&
-                                                y >= building_top_y && y < building_bottom_y) {
-                                                result.background = rltk::colors::BLACK;
-                                                result.glyph = 177;
-
-                                                if (arch_possible && !current_region->solid[idx] &&
-                                                    !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
-                                                    result.foreground = rltk::colors::GREEN;
-                                                } else {
-                                                    arch_possible = false;
-                                                    result.foreground = rltk::colors::RED;
-                                                }
-                                            }
-                                        } else {
-                                            if (x >= building_left_x && x < building_right_x &&
-                                                y >= building_top_y && y < building_bottom_y) {
-                                                bool interior = false;
-                                                if (arch_width > 2 && x+clip_left >= building_left_x+1 && x+clip_left < building_right_x-1 ) {
-                                                    interior = true;
-                                                }
-                                                if (arch_height > 2 && y+clip_top >= building_top_y+1 && y+clip_top < building_bottom_y-1) {
-                                                    interior = true;
-                                                }
-                                                if (x+clip_left == building_left_x) interior=false;
-                                                if (x+clip_left == building_right_x-1) interior = false;
-                                                if (y+clip_top == building_top_y) interior = false;
-                                                if (y+clip_top == building_bottom_y-1) interior = false;
-
-                                                if (!interior) {
-                                                    result.background = rltk::colors::BLACK;
-                                                    result.glyph = 177;
-
-                                                    if (arch_possible && !current_region->solid[idx] &&
-                                                        !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
-                                                        result.foreground = rltk::colors::GREEN;
-                                                    } else {
-                                                        arch_possible = false;
-                                                        result.foreground = rltk::colors::RED;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    if (result.glyph != ' ') {
-                                        world_scene::add_world_cube(x, y, z, result, idx);
-                                    }
-                                }
-                            }
-                        } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
-                            const uint8_t tiletype = current_region->tile_type[idx];
-                            if (tiletype != tile_type::OPEN_SPACE) {
-                                vchar result{257, colors::CYAN, colors::GREY};
-                                auto mf = designations->mining.find(idx);
-                                if (mf != designations->mining.end()) {
-                                    result.foreground = colors::YELLOW;
-                                    switch (mf->second) {
-                                        case 1 :
-                                            result.glyph = 177;
-                                            break;
-                                        case 2 :
-                                            result.glyph = 31;
-                                            break;
-                                        case 3 :
-                                            result.glyph = 30;
-                                            break;
-                                        case 4 :
-                                            result.glyph = '<';
-                                            break;
-                                        case 5 :
-                                            result.glyph = '>';
-                                            break;
-                                        case 6 :
-                                            result.glyph = 'X';
-                                            break;
-                                    }
-
-                                }
-                                world_scene::add_world_cube(x, y, z, result, idx);
-                                world_changed = true;
-                            }
-                        }
+                        func(x, y, z, idx, current_region->revealed[idx], current_region->tile_type[idx]);
                     }
                 }
             }
+        }
+    }
+
+    const vchar bloodstain{ 340, color_t{255,255,255}, color_t{255,255,255} };
+
+    void populate_tile_render(const int &x, const int &y, const int &z, const int &idx, const bool &revealed, const uint8_t &tiletype) {
+        if (revealed) {
+            if (tiletype != tile_type::OPEN_SPACE) {
+                if (tiletype == tile_type::RAMP) {
+                    world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, 0.5f);
+                } else if (has_ceiling(tiletype)) {
+                    if (game_master_mode == DESIGN && game_design_mode == CHOPPING && current_region->tree_id[idx]>0
+                        && designations->chopping.find(current_region->tree_id[idx])!=designations->chopping.end()) {
+                        world_scene::add_world_cube(x, y, z, vchar{'*', colors::RED, colors::RED}, idx);
+                    } else {
+                        world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
+                    }
+                } else if (has_floor(tiletype)) {
+                    world_scene::add_world_floor(x, y, z, current_region->render_cache[idx], idx);
+                }
+
+                // Add water
+                const float water_depth = (float)current_region->water_level[idx] / 10.0f;
+                if (water_depth>0) {
+                    world_scene::add_world_fractional_cube(x, y, z, current_region->render_cache[idx], idx, water_depth);
+                }
+
+                // Add vegetation
+                auto veg_cache = current_region->veg_cache[idx];
+                if (veg_cache.glyph > 0) {
+                    world_scene::add_vegetation(x, y, z, veg_cache, idx);
+                }
+
+                // Add blood stains
+                if (current_region->blood_stains[idx]) {
+                    world_scene::add_decal(x, y, z, bloodstain, idx);
+                }
+
+                // Add renderables
+                auto rfinder = renderables.find(idx);
+                if (rfinder != renderables.end()) {
+                    screen_render_t &sr = rfinder->second[0];
+                    world_scene::add_simple_renderable(x, y, z, sr.c, idx);
+                }
+
+                // Add composite renderables
+                auto cfinder = composite_renderables.find(idx);
+                if (cfinder != composite_renderables.end()) {
+                    for (const auto &sr : cfinder->second[0]) {
+                        world_scene::add_composite_renderable(x, y, z, sr.c, idx);
+                    }
+                }
+
+                // Stockpiles
+                if (game_master_mode == DESIGN && game_design_mode == STOCKPILES && current_stockpile>0 && current_region->stockpile_id[idx]==current_stockpile) {
+                    world_scene::add_decal(x, y, z, vchar{'#', colors::MAGENTA, colors::MAGENTA}, idx);
+                }
+
+                // Mining
+                if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
+                    auto mf = designations->mining.find(idx);
+                    if (mf != designations->mining.end()) {
+                        vchar result{'!', colors::YELLOW, colors::YELLOW};
+                        switch (mf->second) {
+                            case 1 : result.glyph = 177; break;
+                            case 2 : result.glyph = 31; break;
+                            case 3 : result.glyph = 30; break;
+                            case 4 : result.glyph = '<'; break;
+                            case 5 : result.glyph = '>'; break;
+                            case 6 : result.glyph = 'X'; break;
+                        }
+
+                        if (mf->second != 5) {
+                            world_scene::add_world_cube(x, y, z, result, idx);
+                        } else {
+                            world_scene::add_decal(x, y, z, result, idx);
+                        }
+                    }
+                }
+
+                // Buildings
+                if (game_master_mode == DESIGN && game_design_mode == BUILDING && has_build_mode_building) {
+                    const int building_left_x = mouse::mouse_world_x;
+                    const int building_top_y = mouse::mouse_world_y;
+                    const int building_right_x = mouse::mouse_world_x + build_mode_building.width;
+                    const int building_bottom_y = mouse::mouse_world_y + build_mode_building.height;
+
+                    if (x >= building_left_x && x < building_right_x && y >= building_top_y && y < building_bottom_y) {
+
+                        vchar result{'*', colors::BLACK, colors::BLACK};
+                        if ((!current_region->solid[idx] &&
+                             current_region->tile_flags[idx].test(CAN_STAND_HERE)
+                             && !current_region->tile_flags[idx].test(CONSTRUCTION)
+                             && !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN))
+                            || (build_mode_building.tag == "floor"
+                                && !current_region->tile_flags[idx].test(CONSTRUCTION) &&
+                                !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+                                && (current_region->tile_flags[idx].test(CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx - 1].test(CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx + 1].test(CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx - REGION_WIDTH].test(
+                                            CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx + REGION_WIDTH].test(CAN_STAND_HERE)
+                                )
+                            )
+                                ) {
+                            result.foreground = rltk::colors::GREEN;
+                        } else {
+                            result.foreground = rltk::colors::RED;
+                            building_possible = false;
+                        }
+                        world_scene::add_decal(x, y, z, result, idx);
+                    }
+                }
+
+                // Architecure Mode
+                if (game_master_mode == DESIGN && game_design_mode == ARCHITECTURE) {
+                    vchar result{' ', colors::GREY, colors::GREY};
+
+                    // Display existing architecture
+                    auto mf = designations->architecture.find(idx);
+                    if (mf != designations->architecture.end()) {
+                        result.foreground = rltk::colors::YELLOW;
+                        result.background = rltk::colors::GREY;
+                        switch (mf->second) {
+                            case 0 : result.glyph = '#'; break;
+                            case 1 : result.glyph = '.'; break;
+                            case 2 : result.glyph = '<'; break;
+                            case 3 : result.glyph = '>'; break;
+                            case 4 : result.glyph = 'X'; break;
+                            case 5 : result.glyph = '^'; break;
+                            case 6 : result.glyph = '='; break;
+                        }
+                    }
+
+                    if (arch_available && mf == designations->architecture.end()) {
+                        const int building_left_x = mouse::mouse_world_x;
+                        const int building_top_y = mouse::mouse_world_y;
+                        const int building_right_x = mouse::mouse_world_x + arch_width;
+                        const int building_bottom_y = mouse::mouse_world_y + arch_height;
+
+                        if (arch_filled) {
+
+                            if (x >= building_left_x && x < building_right_x &&
+                                y >= building_top_y && y < building_bottom_y) {
+                                result.background = rltk::colors::BLACK;
+                                result.glyph = 177;
+
+                                if (arch_possible && !current_region->solid[idx] &&
+                                    !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
+                                    result.foreground = rltk::colors::GREEN;
+                                } else {
+                                    arch_possible = false;
+                                    result.foreground = rltk::colors::RED;
+                                }
+                            }
+                        } else {
+                            if (x >= building_left_x && x < building_right_x &&
+                                y >= building_top_y && y < building_bottom_y) {
+                                bool interior = false;
+                                if (arch_width > 2 && x+clip_left >= building_left_x+1 && x+clip_left < building_right_x-1 ) {
+                                    interior = true;
+                                }
+                                if (arch_height > 2 && y+clip_top >= building_top_y+1 && y+clip_top < building_bottom_y-1) {
+                                    interior = true;
+                                }
+                                if (x+clip_left == building_left_x) interior=false;
+                                if (x+clip_left == building_right_x-1) interior = false;
+                                if (y+clip_top == building_top_y) interior = false;
+                                if (y+clip_top == building_bottom_y-1) interior = false;
+
+                                if (!interior) {
+                                    result.background = rltk::colors::BLACK;
+                                    result.glyph = 177;
+
+                                    if (arch_possible && !current_region->solid[idx] &&
+                                        !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
+                                        result.foreground = rltk::colors::GREEN;
+                                    } else {
+                                        arch_possible = false;
+                                        result.foreground = rltk::colors::RED;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (result.glyph != ' ') {
+                        world_scene::add_world_cube(x, y, z, result, idx);
+                    }
+                }
+            }
+        } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
+            const uint8_t tiletype = current_region->tile_type[idx];
+            if (tiletype != tile_type::OPEN_SPACE) {
+                vchar result{257, colors::CYAN, colors::GREY};
+                auto mf = designations->mining.find(idx);
+                if (mf != designations->mining.end()) {
+                    result.foreground = colors::YELLOW;
+                    switch (mf->second) {
+                        case 1 :
+                            result.glyph = 177;
+                            break;
+                        case 2 :
+                            result.glyph = 31;
+                            break;
+                        case 3 :
+                            result.glyph = 30;
+                            break;
+                        case 4 :
+                            result.glyph = '<';
+                            break;
+                        case 5 :
+                            result.glyph = '>';
+                            break;
+                        case 6 :
+                            result.glyph = 'X';
+                            break;
+                    }
+
+                }
+                world_scene::add_world_cube(x, y, z, result, idx);
+                world_changed = true;
+            }
+        }
+    }
+
+    void populate_ascii_render(const int &x, const int &y, const int &z, const int &idx, const bool &revealed, const uint8_t &tiletype) {
+        if (revealed) {
+            rltk::vchar tile{' ', colors::BLACK, colors::BLACK};
+
+            if (tiletype != tile_type::OPEN_SPACE) {
+                if (tiletype == tile_type::RAMP) {
+                    tile = current_region->render_cache[idx];
+                } else if (has_ceiling(tiletype)) {
+                    if (game_master_mode == DESIGN && game_design_mode == CHOPPING && current_region->tree_id[idx]>0
+                        && designations->chopping.find(current_region->tree_id[idx])!=designations->chopping.end())
+                    {
+                        tile.glyph = '*';
+                        tile.foreground = colors::RED;
+                    } else {
+                        tile = current_region->render_cache[idx];
+                    }
+                } else if (has_floor(tiletype)) {
+                    tile = current_region->render_cache[idx];
+                }
+
+                // Add water
+                const float water_depth = (float)current_region->water_level[idx] / 10.0f;
+                if (water_depth>0) {
+                    tile = current_region->render_cache[idx];
+                }
+
+                // Add vegetation
+                auto veg_cache = current_region->veg_cache[idx];
+                if (veg_cache.glyph > 0) {
+                    tile = veg_cache;
+                }
+
+                // Add blood stains
+                if (current_region->blood_stains[idx]) {
+                    tile.background = colors::RED;
+                }
+
+                // Add renderables
+                auto rfinder = renderables.find(idx);
+                if (rfinder != renderables.end()) {
+                    screen_render_t &sr = rfinder->second[0];
+                    tile = sr.c;
+                }
+
+                // Add composite renderables
+                auto cfinder = composite_renderables.find(idx);
+                if (cfinder != composite_renderables.end()) {
+                    tile = cfinder->second[0][0].c;
+                }
+
+                // Stockpiles
+                if (game_master_mode == DESIGN && game_design_mode == STOCKPILES && current_stockpile>0 && current_region->stockpile_id[idx]==current_stockpile) {
+                    tile = vchar{'#', colors::MAGENTA, colors::MAGENTA};
+                }
+
+                // Mining
+                if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
+                    auto mf = designations->mining.find(idx);
+                    if (mf != designations->mining.end()) {
+                        vchar result{'!', colors::YELLOW, colors::YELLOW};
+                        switch (mf->second) {
+                            case 1 : result.glyph = 177; break;
+                            case 2 : result.glyph = 31; break;
+                            case 3 : result.glyph = 30; break;
+                            case 4 : result.glyph = '<'; break;
+                            case 5 : result.glyph = '>'; break;
+                            case 6 : result.glyph = 'X'; break;
+                        }
+
+                        tile = result;
+                    }
+                }
+
+                // Buildings
+                if (game_master_mode == DESIGN && game_design_mode == BUILDING && has_build_mode_building) {
+                    const int building_left_x = mouse::mouse_world_x;
+                    const int building_top_y = mouse::mouse_world_y;
+                    const int building_right_x = mouse::mouse_world_x + build_mode_building.width;
+                    const int building_bottom_y = mouse::mouse_world_y + build_mode_building.height;
+
+                    if (x >= building_left_x && x < building_right_x && y >= building_top_y && y < building_bottom_y) {
+
+                        vchar result{'*', colors::BLACK, colors::BLACK};
+                        if ((!current_region->solid[idx] &&
+                             current_region->tile_flags[idx].test(CAN_STAND_HERE)
+                             && !current_region->tile_flags[idx].test(CONSTRUCTION)
+                             && !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+                             && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN))
+                            || (build_mode_building.tag == "floor"
+                                && !current_region->tile_flags[idx].test(CONSTRUCTION) &&
+                                !(current_region->tile_type[idx] == tile_type::STAIRS_DOWN)
+                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UP)
+                                && !(current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN)
+                                && (current_region->tile_flags[idx].test(CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx - 1].test(CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx + 1].test(CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx - REGION_WIDTH].test(
+                                            CAN_STAND_HERE) ||
+                                    current_region->tile_flags[idx + REGION_WIDTH].test(CAN_STAND_HERE)
+                                )
+                            )
+                                ) {
+                            result.foreground = rltk::colors::GREEN;
+                        } else {
+                            result.foreground = rltk::colors::RED;
+                            building_possible = false;
+                        }
+                        tile = result;
+                    }
+                }
+
+                // Architecure Mode
+                if (game_master_mode == DESIGN && game_design_mode == ARCHITECTURE) {
+                    vchar result{' ', colors::GREY, colors::GREY};
+
+                    // Display existing architecture
+                    auto mf = designations->architecture.find(idx);
+                    if (mf != designations->architecture.end()) {
+                        result.foreground = rltk::colors::YELLOW;
+                        result.background = rltk::colors::GREY;
+                        switch (mf->second) {
+                            case 0 : result.glyph = '#'; break;
+                            case 1 : result.glyph = '.'; break;
+                            case 2 : result.glyph = '<'; break;
+                            case 3 : result.glyph = '>'; break;
+                            case 4 : result.glyph = 'X'; break;
+                            case 5 : result.glyph = '^'; break;
+                            case 6 : result.glyph = '='; break;
+                        }
+                    }
+
+                    if (arch_available && mf == designations->architecture.end()) {
+                        const int building_left_x = mouse::mouse_world_x;
+                        const int building_top_y = mouse::mouse_world_y;
+                        const int building_right_x = mouse::mouse_world_x + arch_width;
+                        const int building_bottom_y = mouse::mouse_world_y + arch_height;
+
+                        if (arch_filled) {
+
+                            if (x >= building_left_x && x < building_right_x &&
+                                y >= building_top_y && y < building_bottom_y) {
+                                result.background = rltk::colors::BLACK;
+                                result.glyph = 177;
+
+                                if (arch_possible && !current_region->solid[idx] &&
+                                    !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
+                                    result.foreground = rltk::colors::GREEN;
+                                } else {
+                                    arch_possible = false;
+                                    result.foreground = rltk::colors::RED;
+                                }
+                            }
+                        } else {
+                            if (x >= building_left_x && x < building_right_x &&
+                                y >= building_top_y && y < building_bottom_y) {
+                                bool interior = false;
+                                if (arch_width > 2 && x+clip_left >= building_left_x+1 && x+clip_left < building_right_x-1 ) {
+                                    interior = true;
+                                }
+                                if (arch_height > 2 && y+clip_top >= building_top_y+1 && y+clip_top < building_bottom_y-1) {
+                                    interior = true;
+                                }
+                                if (x+clip_left == building_left_x) interior=false;
+                                if (x+clip_left == building_right_x-1) interior = false;
+                                if (y+clip_top == building_top_y) interior = false;
+                                if (y+clip_top == building_bottom_y-1) interior = false;
+
+                                if (!interior) {
+                                    result.background = rltk::colors::BLACK;
+                                    result.glyph = 177;
+
+                                    if (arch_possible && !current_region->solid[idx] &&
+                                        !current_region->tile_flags[idx].test(CONSTRUCTION) && current_region->bridge_id[idx]==0) {
+                                        result.foreground = rltk::colors::GREEN;
+                                    } else {
+                                        arch_possible = false;
+                                        result.foreground = rltk::colors::RED;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (result.glyph != ' ') {
+                        tile = result;
+                    }
+                }
+                world_scene::add_ascii_tile(x, y, z, tile, idx);
+            } // end open space
+        } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
+            const uint8_t tiletype = current_region->tile_type[idx];
+            if (tiletype != tile_type::OPEN_SPACE) {
+                vchar result{257, colors::CYAN, colors::GREY};
+                auto mf = designations->mining.find(idx);
+                if (mf != designations->mining.end()) {
+                    result.foreground = colors::YELLOW;
+                    switch (mf->second) {
+                        case 1 :
+                            result.glyph = 177;
+                            break;
+                        case 2 :
+                            result.glyph = 31;
+                            break;
+                        case 3 :
+                            result.glyph = 30;
+                            break;
+                        case 4 :
+                            result.glyph = '<';
+                            break;
+                        case 5 :
+                            result.glyph = '>';
+                            break;
+                        case 6 :
+                            result.glyph = 'X';
+                            break;
+                    }
+
+                }
+                world_scene::add_ascii_tile(x, y, z, result, idx);
+                world_changed = true;
+            }
+        }
+    }
+
+    inline void populate_vertex_buffer(const int &start_z, const int &end_z) {
+        const auto edges = calculate_edges();
+        if (ascii_mode) {
+            render_area_loop(start_z, end_z, edges, populate_ascii_render);
+        } else {
+            render_area_loop(start_z, end_z, edges, populate_tile_render);
         }
     }
 
@@ -304,10 +549,10 @@ namespace map_render {
         if (game_master_mode == DESIGN && game_design_mode == BUILDING && has_build_mode_building) building_possible = true;
 
         if (single_z_layer) {
-            populate_vertex_buffer(camera_position->region_z, camera_position->region_z+1);
+            populate_vertex_buffer(camera_position->region_z, camera_position->region_z + 1);
         } else {
             populate_vertex_buffer(std::max(1, camera_position->region_z - 7),
-                                   std::min(REGION_DEPTH - 1, camera_position->region_z + 1));
+                                         std::min(REGION_DEPTH - 1, camera_position->region_z + 1));
         }
 
         // Add marker types in design mode as needed

@@ -287,7 +287,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	ai.shift_id = shift_id;
 
 	settler->assign(position_t{ x,y,z })
-		->assign(renderable_composite_t{ RENDER_SETTLER })
+		->assign(renderable_composite_t{ RENDER_SETTLER, 2 })
 		->assign(name_t{ first_name, last_name })
 		->assign(std::move(species))
 		->assign(std::move(health))

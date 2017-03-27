@@ -30,6 +30,11 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
     auto pos = entity(id)->component<position_t>();
     if (!compr || !pos) return;
 
+    if (ascii_mode) {
+        composite_renderables[idx].emplace_back(std::vector<screen_render_t>{ screen_render_t{ (float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY, vchar{ compr->ascii_char, colors::WHITE, colors::BLACK } } });
+        return;
+    }
+
     std::vector<rltk::vchar> layers;
 
     if (compr->render_mode == RENDER_SETTLER) {
@@ -220,47 +225,6 @@ void renderables_system::update(const double time_elapsed) {
                 }
             }
         }
-
-        /*
-		renderables.clear();
-        composite_renderables.clear();
-
-		// Add buildings to renderables
-		each<building_t, position_t>([] (entity_t &entity, building_t &b, position_t &pos) {
-			int glyph_idx = 0;
-			int offset_x = 0;
-			int offset_y = 0;
-			if (b.width == 3) offset_x = -1;
-			if (b.height == 3) offset_y = -1;
-
-			for (int y = 0; y<b.height; ++y) {
-				for (int x=0; x<b.width; ++x) {
-					const auto idx = mapidx(pos.x + offset_x, pos.y + offset_y, pos.z);
-					rltk::vchar glyph;
-					glyph = b.glyphs[glyph_idx];
-					if (!b.complete) glyph.foreground = rltk::colors::GREY;
-					auto door = entity.component<construct_door_t>();
-					if (door && door->locked) glyph.background = rltk::colors::GREY;
-					renderables[idx].push_back(screen_render_t{pos.x + offset_x, pos.y + offset_y, pos.offsetX, pos.offsetY, glyph});
-					++glyph_idx;
-                    ++offset_x;
-				}
-                offset_x = 0;
-                if (b.width == 3) offset_x = -1;
-                ++offset_y;
-			}
-		});
-
-		// Add other entities
-		each<renderable_t, position_t>([] (entity_t &entity, renderable_t &render, position_t &pos) {
-			renderables[mapidx(pos.x, pos.y, pos.z)].push_back(
-                    screen_render_t{(float)pos.x, (float)pos.y, pos.offsetX, pos.offsetY, rltk::vchar{render.glyph, render.foreground, rltk::colors::BLACK}});
-		});
-
-        // Add composite renderables
-        each<renderable_composite_t, position_t>([] (entity_t &entity, renderable_composite_t &render, position_t &pos) {
-            add_render_composite(entity.id, mapidx(pos));
-        });*/
 
 		// Add particles
 		for (const particle_t &p : particles) {

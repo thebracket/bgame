@@ -241,6 +241,26 @@ namespace world_scene {
         }
     }
 
+    // Adds an ASCII tile with background
+    void add_ascii_tile(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
+        const vchar bg{219, c.background, c.background};
+        const vchar fg{c.glyph, c.foreground, c.foreground};
+        auto light = lit_tiles.find(idx);
+        if (light != lit_tiles.end()) {
+            game_lit_geometry[light->second.first].add_floor(x, y, z, bg);
+            game_lit_geometry[light->second.first].add_floor(x, y, z, fg);
+        } else {
+            if (current_region->above_ground[idx]) {
+                floor_exterior_geometry.add_floor(x, y, z, bg);
+                floor_exterior_geometry.add_floor(x, y, z, fg);
+            } else {
+                floor_interior_geometry.add_floor(x, y, z, bg);
+                floor_interior_geometry.add_floor(x, y, z, fg);
+            }
+        }
+        mouse_picker_geometry.add_floor(x,y,z,c);
+    }
+
     void render_index(const GLuint &program_id) {
         //glUseProgram(program_id);
         glEnable(GL_DEPTH_TEST);
