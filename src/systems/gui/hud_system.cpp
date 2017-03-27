@@ -50,6 +50,21 @@ void hud_system::update(const double ms) {
             emit_deferred(recalculate_mining_message{});
             world_changed=true;
         }
+        if (ImGui::BeginMenu("Display")) {
+            if (ImGui::MenuItem("Top-Down")) {
+                camera_mode = TOP_DOWN;
+            }
+            if (ImGui::MenuItem("Front")) {
+                camera_mode = FRONT;
+            }
+            if (ImGui::MenuItem("Diagonal")) {
+                camera_mode = DIAGONAL;
+            }
+            if (ImGui::MenuItem("Toggle ASCII")) {
+                ascii_mode = !ascii_mode;
+            }
+            ImGui::EndMenu();
+        }
         if (ImGui::MenuItem(menu_main_quit.c_str())) {
             quitting = true;
         }
@@ -121,22 +136,6 @@ void hud_system::update(const double ms) {
             game_master_mode = STANDING_ORDERS;
             pause_mode = PAUSED;
             emit_deferred(map_dirty_message{});
-        }
-        ImGui::EndMenu();
-    }
-
-    if (ImGui::BeginMenu("Display")) {
-        if (ImGui::MenuItem("Top-Down")) {
-            camera_mode = TOP_DOWN;
-        }
-        if (ImGui::MenuItem("Front")) {
-            camera_mode = FRONT;
-        }
-        if (ImGui::MenuItem("Diagonal")) {
-            camera_mode = DIAGONAL;
-        }
-        if (ImGui::MenuItem("Toggle ASCII")) {
-            ascii_mode = !ascii_mode;
         }
         ImGui::EndMenu();
     }
