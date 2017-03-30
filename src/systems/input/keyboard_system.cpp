@@ -148,6 +148,14 @@ void keyboard_system::update(const double ms) {
         if (e.event.key.code == sf::Keyboard::Comma) {
             emit_deferred(camera_move_requested_message{6, 1}); 
         }
+        if (e.event.key.code == sf::Keyboard::PageUp) {
+            ++zoom_level;
+            if (zoom_level > 40) zoom_level = 40;
+        }
+        if (e.event.key.code == sf::Keyboard::PageDown) {
+            --zoom_level;
+            if (zoom_level < 10) zoom_level = 10;
+        }
 
         // Mode changes
         if (game_master_mode == PLAY) {

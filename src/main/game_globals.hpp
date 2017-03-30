@@ -81,3 +81,4 @@ extern int selected_tile_y;
 extern int selected_tile_z;
 extern game_camera_mode_t camera_mode;
 extern bool ascii_mode;
+extern int zoom_level;

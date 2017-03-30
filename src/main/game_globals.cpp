@@ -29,6 +29,7 @@ int selected_tile_z;
 std::size_t current_stockpile=0;
 game_camera_mode_t camera_mode = TOP_DOWN;
 bool ascii_mode = false;
+int zoom_level = 12;
 
 void config_t::save() {
     std::ofstream f("world_defs/config.txt");

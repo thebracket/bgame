@@ -2,6 +2,7 @@
 #include "../../utils/gl/map_render.hpp"
 #include "../../planet/constants.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../messages/messages.hpp"
 
 namespace mouse {
 	int x=0;
@@ -34,4 +35,21 @@ void mouse_input_system::update(const double ms) {
 	if (mouse::mouse_world_z >= REGION_DEPTH) mouse::mouse_world_z = 1;
 
     //std::cout << mouse::mouse_world_z << ", camera is " << camera_position->region_z << "\n";
+    if (rltk::get_mouse_button_state(button::WHEEL_UP) && mouse_damper > 500.0) {
+        mouse_damper = 0;
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+            emit_deferred(camera_move_requested_message{6, 1});
+        } else {
+            ++zoom_level;
+            if (zoom_level > 40) zoom_level = 40;
+        }
+    } else if (rltk::get_mouse_button_state(button::WHEEL_DOWN) && mouse_damper > 500.0) {
+        mouse_damper = 0;
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+            emit_deferred(camera_move_requested_message{5, 1});
+        } else {
+            --zoom_level;
+            if (zoom_level < 12) zoom_level = 12;
+        }
+    }
 }

@@ -606,8 +606,8 @@ namespace map_render {
         switch (camera_mode) {
             case FRONT : {
                 // Nice X-perspective view
-                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + 12.0f,
-                          ((float) camera_position->region_y) + 4.0f, // Camera
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)zoom_level,
+                          ((float) camera_position->region_y) + ((float)zoom_level/3.0f), // Camera
                           (float) camera_position->region_x, (float) camera_position->region_z,
                           (float) camera_position->region_y, // Target
                           0.0f, 1.0f, 0.0f // Up
@@ -616,7 +616,7 @@ namespace map_render {
 
             case TOP_DOWN : {
                 // Top-down
-                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + 12.0f,
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)zoom_level,
                           ((float) camera_position->region_y) + 0.1f, // Camera
                           (float) camera_position->region_x, (float) camera_position->region_z,
                           (float) camera_position->region_y, // Target
@@ -626,8 +626,8 @@ namespace map_render {
 
             case DIAGONAL : {
                 // Diagonal
-                gluLookAt((float) camera_position->region_x + 12.0f, ((float) camera_position->region_z) + 12.0f,
-                          ((float) camera_position->region_y) + 12.0f, // Camera
+                gluLookAt((float) camera_position->region_x + (float)zoom_level, ((float) camera_position->region_z) + (float)zoom_level,
+                          ((float) camera_position->region_y) + (float)zoom_level, // Camera
                           (float) camera_position->region_x, (float) camera_position->region_z,
                           (float) camera_position->region_y, // Target
                           0.0f, 1.0f, 0.0f // Up

@@ -77,10 +77,11 @@ void camera_system::update(const double duration_ms) {
 }
 
 void camera_system::update_clipping_rectangle() {
-	clip_left = std::max(1, camera_position->region_x - 24);
-	clip_right = std::min(REGION_WIDTH-1, camera_position->region_x + 24);
-	clip_top = std::max(1, camera_position->region_y - 24);
-	clip_bottom = std::min(REGION_HEIGHT-1, camera_position->region_y + 24);
+    int z2 = zoom_level * 2;
+	clip_left = std::max(1, camera_position->region_x - z2);
+	clip_right = std::min(REGION_WIDTH-1, camera_position->region_x + z2);
+	clip_top = std::max(1, camera_position->region_y - z2);
+	clip_bottom = std::min(REGION_HEIGHT-1, camera_position->region_y + z2);
 
 	emit(map_rerender_message{});
 }
