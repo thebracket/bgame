@@ -683,9 +683,9 @@ namespace map_render {
         // Render the framebuffer
         if (world_changed) {
             glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             gl_states();
             glDisable(GL_TEXTURE_2D);
-            glClear(GL_COLOR_BUFFER_BIT);
             world_scene::render_index(index_program_id);
             glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
             world_changed = false;
