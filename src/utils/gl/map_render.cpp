@@ -53,11 +53,12 @@ namespace map_render {
     }
 
     inline std::tuple<int, int, int, int> calculate_edges() noexcept {
+        const int z2 = zoom_level * 2;
         return std::make_tuple(
-                std::max(1, camera_position->region_x - 24),
-                std::min(REGION_WIDTH-1, camera_position->region_x + 24),
-                std::max(1, camera_position->region_y - 24),
-                std::min(REGION_HEIGHT-1, camera_position->region_y + 24)
+                std::max(1, camera_position->region_x - z2),
+                std::min(REGION_WIDTH-1, camera_position->region_x + z2),
+                std::max(1, camera_position->region_y - z2),
+                std::min(REGION_HEIGHT-1, camera_position->region_y + z2)
         );
     }
 
