@@ -40,13 +40,36 @@ void read_plant_types(std::ofstream &tech_tree_file) noexcept
                    [&p, &tag] (const auto &key) { tag=key; p=plant_t{}; p.tag = tag; },
                    [&p, &tag] (const auto &key) { plant_defs.push_back(p); },
                    lua_parser{
-                           {"name",    [&p]() { p.name = lua_str(); }},
+                           {"name",    [&p]() { p.name = lua_str(); std::cout << "Plant: " << p.name << "\n"; }},
                            {"cycles",  [&p]() {
                                read_lua_table_inner("cycles",
                                                     [&p](auto cycle) { p.lifecycle.push_back(std::stoi(cycle)); });
                            }},
                            {"glyphs",  [&p]() {
                                read_lua_table_inner("glyphs", [&p](auto g) { p.glyphs.push_back(std::stoi(g)); });
+                           }},
+                           {"glyphs_ascii",  [&p]() {
+                               rltk::vchar ap; // ascii-plant
+
+                               lua_pushstring(lua_state, "glyphs_ascii");
+                               lua_gettable(lua_state, -2);
+                               while(lua_next(lua_state, -2) != 0)
+                               {
+                                   const std::string n = lua_tostring(lua_state, -2);
+                                   rltk::vchar ap;
+                                   lua_pushstring(lua_state, n.c_str());
+                                   lua_gettable(lua_state, -2);
+                                   while(lua_next(lua_state, -2) != 0)
+                                   {
+                                       const std::string field = lua_tostring(lua_state, -2);
+                                       if (field == "glyph") ap.glyph = lua_tonumber(lua_state, -1);
+                                       if (field == "col") ap.foreground = read_lua_color("col");
+                                       lua_pop(lua_state, 1);
+                                   }
+
+                                   p.glyphs_ascii.push_back(ap);
+                                   lua_pop(lua_state, 1);
+                               }
                            }},
                            {"harvest", [&p]() {
                                read_lua_table_inner("harvest", [&p](auto h) { p.provides.push_back(h); });

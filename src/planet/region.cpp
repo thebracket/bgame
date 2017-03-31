@@ -242,6 +242,7 @@ void region_t::calc_render(const int &idx) {
                         glyph = 79;
                     }
                 }
+                fg = get_material(tile_material[idx])->fg;
             } else {
                 glyph = 257;
                 fg = get_material(tile_material[idx])->fg;
@@ -292,9 +293,9 @@ void region_t::calc_render(const int &idx) {
 				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
                 const uint8_t lifecycle = tile_vegetation_lifecycle[idx];
                 rltk::vchar plant_render;
-                plant_render.glyph = ascii_mode ? '"' : plant.glyphs[lifecycle];
+                plant_render.glyph = ascii_mode ? plant.glyphs_ascii[lifecycle].glyph : plant.glyphs[lifecycle];
                 if (ascii_mode) {
-                    plant_render.foreground = colors::GREEN;
+                    plant_render.foreground = plant.glyphs_ascii[lifecycle].foreground;
                 } else {
                     plant_render.foreground = colors::WHITE;
                 }

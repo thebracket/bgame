@@ -175,6 +175,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
 
                     region.water_level[mapidx(x,y,z-1)] = 0;
 
+                    /*
                     // Soil/sand
                     int roll = rng.roll_dice(1,100);
                     if (roll < biome.second.soil_pct) {
@@ -185,7 +186,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                         const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
                         //std::cout << material_name(sands[sand_idx]) << "\n";
                         region.tile_material[mapidx(x,y,z-1)] = sands[sand_idx];
-                    }
+                    }*/
 
                     // Surface coverage
                     std::string veg_type = "";

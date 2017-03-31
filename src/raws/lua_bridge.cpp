@@ -75,7 +75,7 @@ void read_lua_table_inner(const std::string &table, const std::function<void(std
     }
 }
 
-void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser)    
+void read_lua_table_inner_p(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser)
 {
     lua_pushstring(lua_state, table.c_str());
     lua_gettable(lua_state, -2);
