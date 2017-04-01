@@ -29,7 +29,6 @@ std::thread * loader_thread = nullptr;
 void render_hook_gameplay() {
     if (loaded) {
         map_render_t map3d;
-        map3d.layer_texture = MAP_LAYER;
         map3d.render();
     }
 

@@ -39,8 +39,7 @@ struct render_block {
     void add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c);
     void add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height);
 
-    void render() const noexcept;
-    void render_index() const noexcept;
+    void render(const GLuint &program_id) const noexcept;
 };
 
 void calculate_texture_info();

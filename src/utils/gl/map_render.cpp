@@ -23,18 +23,16 @@
 
 using namespace map_render_sys;
 
-constexpr bool show_index_buffer = false;
 bool world_changed = true;
 
 namespace map_render {
 
     bool loaded_program = false;
-    GLuint program_id;
     GLuint deferred_id;
-    GLuint index_program_id;
     GLuint mouse_pick_texture;
     GLuint mouse_pick_fbo;
     GLuint mouse_pick_depth;
+    GLuint render_texture;
 
     inline bool has_floor(uint8_t tiletype) {
         if (tiletype != tile_type::OPEN_SPACE) {
@@ -541,7 +539,7 @@ namespace map_render {
         }
     }
 
-    inline void build_world_vertex_buffer(const float texture_w, const float texture_h) {
+    inline void build_world_vertex_buffer() {
         world_scene::reset_all();
 
         // Add world geometry, depending upon game mode
@@ -635,51 +633,88 @@ namespace map_render {
                 );
             } break;
         }
+
+        glEnable(GL_TEXTURE_2D);
+        //glActiveTexture(GL_TEXTURE0);
+        sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+        /*glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, map_render::render_texture);
+        glEnable(GL_TEXTURE_2D);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, map_render::mouse_pick_texture);
+        glEnable(GL_TEXTURE_2D);*/
+
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT };
+        glDrawBuffers(2, buffers);
     }
 
-    inline void draw_world(const float texture_w, const float texture_h) {
+    inline void setup_fbo() {
+        //program_id = LoadShaders("world_defs/vertex.glsl", "world_defs/fragment.glsl");
+        deferred_id = LoadShaders("world_defs/vertex-deferred.glsl", "world_defs/fragment-deferred.glsl");
+        //index_program_id = LoadShaders("world_defs/vertex-index.glsl", "world_defs/fragment-index.glsl");
+        loaded_program = true;
+        calculate_texture_info();
+
+        // Create and bind the framebuffer for mouse-picking output
+        glGenFramebuffers(1, &mouse_pick_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+
+        // Create the mouse picker render target texture
+        const auto screen_size = rltk::get_window()->getSize();
+        glGenTextures(1, &mouse_pick_texture);
+        glBindTexture(GL_TEXTURE_2D, mouse_pick_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mouse_pick_texture, 0);
+
+        // Create the render target texture
+        glGenTextures(1, &render_texture);
+        glBindTexture(GL_TEXTURE_2D, render_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, render_texture, 0);
+
+        // Create a depth-buffer for the render target
+        glGenRenderbuffers(1, &mouse_pick_depth);
+        glBindRenderbuffer(GL_RENDERBUFFER, mouse_pick_depth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
+
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT };
+        glDrawBuffers(2, buffers);
+
+        // Return to regular render mode
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    inline void draw_world() {
         if (!loaded_program) {
-            program_id = LoadShaders("world_defs/vertex.glsl", "world_defs/fragment.glsl");
-            deferred_id = LoadShaders("world_defs/vertex-deferred.glsl", "world_defs/fragment-deferred.glsl");
-            index_program_id = LoadShaders("world_defs/vertex-index.glsl", "world_defs/fragment-index.glsl");
-            loaded_program = true;
-            calculate_texture_info();
-
-            // Create and bind the framebuffer for mouse-picking output
-            glGenFramebuffers(1, &mouse_pick_fbo);
-            glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-
-            // Create the render target texture
-            auto screen_size = rltk::get_window()->getSize();
-            glGenTextures(1, &mouse_pick_texture);
-            glBindTexture(GL_TEXTURE_2D, mouse_pick_texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mouse_pick_texture, 0);
-
-            // Create a depth-buffer for the render target
-            glGenRenderbuffers(1, &mouse_pick_depth);
-            glBindRenderbuffer(GL_RENDERBUFFER, mouse_pick_depth);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
-            glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
-
-            // Configure the framebuffer
-            //GLenum draw_buffers[2] = {GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT};
-            //glDrawBuffers(2, draw_buffers);
-
-            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
+            setup_fbo();
         }
 
         gl_frustrum::extract();
-        build_world_vertex_buffer(texture_w, texture_h);
+        build_world_vertex_buffer();
 
         // Render the main visible scene
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        gl_states();
+        world_scene::render_world(deferred_id);
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
-        world_scene::render_world(program_id, deferred_id);
 
+        /*
         // Render the framebuffer
         if (world_changed) {
             glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
@@ -689,7 +724,7 @@ namespace map_render {
             world_scene::render_index(index_program_id);
             glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
             world_changed = false;
-        }
+        }*/
     }
 
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
@@ -711,49 +746,41 @@ namespace map_render {
 void map_render_t::render() {
     push_gl_states();
 
+    glUseProgram(map_render::deferred_id);
+
     map_render::gl_states();
 
-    glEnable(GL_TEXTURE_2D);
-    sf::Texture::bind(rltk::get_texture(term(layer_texture)->get_font_tag()));
-    auto texture_size_vec = rltk::get_texture(term(layer_texture)->get_font_tag())->getSize();
-    const float texture_w = texture_size_vec.x;
-    const float texture_h = texture_size_vec.y;
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-    map_render::draw_world(texture_w, texture_h);
+    map_render::draw_world();
 
     pop_gl_states();
 
     // Render the index buffer
-    if (show_index_buffer) {
-        push_gl_states();
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glViewport(100, 100, 600, 600);
-        glOrtho(100, 600, 100, 600, 0.0f, 1.0f);
-        glEnableClientState(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, map_render::mouse_pick_texture);
+    auto sz = rltk::get_window()->getSize();
+    const float W = (float)sz.x;
+    const float H = (float)sz.y;
+    push_gl_states();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, sz.x, sz.y);
+    glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
+    glEnableClientState(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, map_render::render_texture);
 
-        glColor3f(1, 1, 1);
-        glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glBegin(GL_QUADS);
 
-        glTexCoord2f(0, 1);
-        glVertex2f(100.0f, 600.0f);
+    glTexCoord2f(0, 1);
+    glVertex2f(0.0f, H);
 
-        glTexCoord2f(0, 0);
-        glVertex2f(100.0f, 100.0f);
+    glTexCoord2f(0, 0);
+    glVertex2f(0.0f, 0.0f);
 
-        glTexCoord2f(1, 0);
-        glVertex2f(600.0f, 100.0f);
+    glTexCoord2f(1, 0);
+    glVertex2f(W, 0.0f);
 
-        glTexCoord2f(1, 1);
-        glVertex2f(600.0f, 600.0f);
+    glTexCoord2f(1, 1);
+    glVertex2f(W, H);
 
-        glEnd();
-        pop_gl_states();
-    }
+    glEnd();
+    pop_gl_states();
 }

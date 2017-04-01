@@ -19,6 +19,7 @@ void render_block::reset() {
     vertices.clear();
     tvertices.clear();
     cvertices.clear();
+    screen_index.clear();
 }
 
 float render_block::light_red(const rltk::vchar &c) const noexcept {
@@ -111,6 +112,14 @@ void render_block::add_decal(const int &x, const int &y, const int &z, const rlt
     vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z, Y});
 
+    const float SX = X/255.0f;
+    const float SY = Y/255.0f;
+    const float SZ = Z/255.0f;
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
@@ -132,6 +141,10 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     const float tex_xf = (float) tex_x / texture_w;
     const float tex_yf = (float) tex_y / texture_h;
 
+    const float SX = X/255.0f;
+    const float SY = Y/255.0f;
+    const float SZ = Z/255.0f;
+
     // Floor
     cvertices.emplace_back(c3d{light_r, light_g, light_b});
     cvertices.emplace_back(c3d{light_r, light_g, light_b});
@@ -147,6 +160,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     vertices.emplace_back(v3d{X,        Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z, Y});
+
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
 
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
@@ -169,6 +187,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     vertices.emplace_back(v3d{X, Z + vsize, Y + vsize});
     vertices.emplace_back(v3d{X, Z + vsize, Y});
 
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
     normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
     normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
@@ -189,6 +212,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z + vsize, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z + vsize, Y});
+
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
 
     normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
     normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
@@ -211,6 +239,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     vertices.emplace_back(v3d{X + vsize, Z + vsize, Y});
     vertices.emplace_back(v3d{X, Z + vsize, Y});
 
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
@@ -232,6 +265,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     vertices.emplace_back(v3d{X + vsize, Z + vsize, Y + vsize});
     vertices.emplace_back(v3d{X, Z + vsize, Y + vsize});
 
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
@@ -252,6 +290,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     vertices.emplace_back(v3d{X,        Z+vsize, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z+vsize, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z+vsize, Y});
+
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
 
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
@@ -275,6 +318,10 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     const float tex_xf = (float) tex_x / texture_w;
     const float tex_yf = (float) tex_y / texture_h;
 
+    const float SX = X/255.0f;
+    const float SY = Y/255.0f;
+    const float SZ = Z/255.0f;
+
     // Floor
     cvertices.emplace_back(c3d{light_r, light_g, light_b});
     cvertices.emplace_back(c3d{light_r, light_g, light_b});
@@ -290,6 +337,11 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     vertices.emplace_back(v3d{X,        Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z, Y});
+
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
 
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
@@ -312,6 +364,11 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     vertices.emplace_back(v3d{X, Z + height, Y + vsize});
     vertices.emplace_back(v3d{X, Z + height, Y});
 
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
     normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
     normals.emplace_back(v3d{-1.0f, 0.0f, 0.0f});
@@ -332,6 +389,11 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z + height, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z + height, Y});
+
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
 
     normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
     normals.emplace_back(v3d{1.0f, 0.0f, 0.0f});
@@ -354,6 +416,11 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     vertices.emplace_back(v3d{X + vsize, Z + height, Y});
     vertices.emplace_back(v3d{X, Z + height, Y});
 
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, -1.0f});
@@ -374,6 +441,11 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z + height, Y + vsize});
     vertices.emplace_back(v3d{X, Z + height, Y + vsize});
+
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
 
     normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
     normals.emplace_back(v3d{0.0f, 0.0f, 1.0f});
@@ -396,13 +468,20 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
     vertices.emplace_back(v3d{X + vsize, Z+height, Y + vsize});
     vertices.emplace_back(v3d{X + vsize, Z+height, Y});
 
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
 }
 
-void render_block::render() const noexcept {
+void render_block::render(const GLuint &program_id) const noexcept {
+    //assert(vertices.size() == screen_index.size());
+
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(3, GL_FLOAT, 0, &cvertices[0]);
@@ -416,23 +495,14 @@ void render_block::render() const noexcept {
     glEnableClientState(GL_NORMAL_ARRAY);
     glNormalPointer(GL_FLOAT, 0, &normals[0]);
 
+    GLint index_pos = glGetAttribLocation(program_id, "screen_index");
+    glEnableVertexAttribArray(index_pos);
+    glVertexAttribPointer(index_pos, 3, GL_FLOAT, 0, 0, &screen_index[0]);
+
     glDrawArrays(GL_QUADS, 0, vertices.size());
 
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-}
-
-void render_block::render_index() const noexcept {
-    glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(3, GL_FLOAT, 0, &screen_index[0]);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
-
-    glDrawArrays(GL_QUADS, 0, vertices.size());
-
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
 }

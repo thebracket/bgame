@@ -22,7 +22,6 @@ namespace world_scene {
     render_block floor_exterior_geometry;
     render_block floor_interior_geometry;
     std::unordered_map<int, render_block> game_lit_geometry;
-    render_block mouse_picker_geometry;
 
     /*
      * Reset all buffers. Only used the first time, or when the world geometry changes.
@@ -47,7 +46,7 @@ namespace world_scene {
                 floor_interior_geometry.add_floor(x, y, z, c);
             }
         }
-        if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
+        //if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     // Adds a world-geometry cube (solid)
@@ -62,11 +61,11 @@ namespace world_scene {
                 world_interior_geometry.add_cube(x, y, z, c);
             }
         }
-        if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
+        //if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     void add_index_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        mouse_picker_geometry.add_floor(x,y,z,c);
+        //mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     // Adds a world-geometry cube (solid)
@@ -81,7 +80,7 @@ namespace world_scene {
                 world_interior_geometry.add_fractional_height_cube(x, y, z, c, height);
             }
         }
-        mouse_picker_geometry.add_floor(x,y,z,c);
+        //mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
     bool is_daytime() noexcept {
@@ -158,9 +157,9 @@ namespace world_scene {
     }
 
     // Renders the world geometry
-    void render_world(const GLuint &program_id, const GLuint &deferred_id)
+    void render_world(const GLuint &deferred_id)
     {
-        glUseProgram(deferred_id);
+        //glUseProgram(deferred_id);
 
         // Setup outdoor illumination
         glDisable(GL_LIGHTING);
@@ -173,19 +172,19 @@ namespace world_scene {
 
         // Exterior - lit by the sun/moon
         setup_sun_and_moon(deferred_id);
-        floor_exterior_geometry.render();
-        world_exterior_geometry.render();
+        floor_exterior_geometry.render(deferred_id);
+        world_exterior_geometry.render(deferred_id);
 
         // With game-provided lighting
         for (auto it=game_lit_geometry.begin(); it!=game_lit_geometry.end(); ++it) {
             setup_indoor_lighting_lit(deferred_id, lit_tiles[it->first]);
-            it->second.render();
+            it->second.render(deferred_id);
         }
 
         // Interior with no lights
         setup_indoor_lighting_unlit(deferred_id);
-        world_interior_geometry.render();
-        floor_interior_geometry.render();
+        world_interior_geometry.render(deferred_id);
+        floor_interior_geometry.render(deferred_id);
         glUseProgram(0);
     }
 
@@ -258,18 +257,6 @@ namespace world_scene {
                 floor_interior_geometry.add_floor(x, y, z, fg);
             }
         }
-        mouse_picker_geometry.add_floor(x,y,z,c);
-    }
-
-    void render_index(const GLuint &program_id) {
-        //glUseProgram(program_id);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-        glDepthMask(GL_TRUE);
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glClear(GL_COLOR);
-
-        mouse_picker_geometry.render_index();
-        glUseProgram(0);
+        //mouse_picker_geometry.add_floor(x,y,z,c);
     }
 }

@@ -6,6 +6,8 @@ uniform vec3 light_diffuse;
 varying vec3 normal, ambient;
 varying vec4 diffuse;
 varying vec3 lightDir;
+attribute vec3 screen_index;
+varying vec3 si;
 
 // Outdoor rendering
 void main()
@@ -34,6 +36,7 @@ void main()
                 1.0);*/
     gl_FrontColor = gl_Color;
     ambient = light_ambient;
+    si = screen_index;
 
     // Project the texture
     gl_TexCoord[0] = gl_MultiTexCoord0;
