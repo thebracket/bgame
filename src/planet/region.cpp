@@ -308,10 +308,10 @@ void region_t::calc_render(const int &idx) {
 
 		} break;
 		case tile_type::TREE_TRUNK : {
-			glyph = ascii_mode ? 180 : 257;
+			glyph = ascii_mode ? 180 : 259;
 			fg = get_material(tile_material[idx])->fg;
 			bg = rltk::colors::Black;
-            veg_cache[idx] = ascii_mode ? vchar{180, rltk::colors::Brown, rltk::colors::BLACK} : vchar{259, rltk::colors::WHITE, rltk::colors::BLACK};
+            render_cache[idx] = ascii_mode ? vchar{180, rltk::colors::Brown, rltk::colors::BLACK} : vchar{glyph, rltk::colors::Brown, bg};
 		} break;
 		case tile_type::TREE_LEAF : {
 			glyph = ascii_mode ? 177 : 278;
