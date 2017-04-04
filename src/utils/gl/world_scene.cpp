@@ -203,9 +203,9 @@ namespace world_scene {
     void add_vegetation(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
         if (light != lit_tiles.end()) {
-            game_lit_geometry[light->second.first].add_decal(x, y, z, c);
+            game_lit_geometry[light->second.first].add_standup(x, y, z, c);
         } else {
-            floor_exterior_geometry.add_decal(x, y, z, c);
+            floor_exterior_geometry.add_standup(x, y, z, c);
         }
     }
 
@@ -227,12 +227,12 @@ namespace world_scene {
     void add_simple_renderable(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
         if (light != lit_tiles.end()) {
-            game_lit_geometry[light->second.first].add_floor(x, y, z, c, 1.0f);
+            game_lit_geometry[light->second.first].add_floor(x, y, z, c);
         } else {
             if (current_region->above_ground[idx]) {
-                floor_exterior_geometry.add_floor(x, y, z, c, 1.0f);
+                floor_exterior_geometry.add_floor(x, y, z, c);
             } else {
-                floor_interior_geometry.add_floor(x, y, z, c, 1.0f);
+                floor_interior_geometry.add_floor(x, y, z, c);
             }
         }
     }

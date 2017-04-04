@@ -19,13 +19,16 @@ struct t3d {
 struct c3d {
     GLfloat r, g, b;
 };
+struct v4d {
+    GLfloat x, y, z, w;
+};
 
 struct render_block {
     std::vector<v3d> vertices;
     std::vector<t3d> tvertices;
     std::vector<c3d> cvertices;
     std::vector<v3d> normals;
-    std::vector<v3d> screen_index;
+    std::vector<v4d> screen_index;
 
     void reset();
 

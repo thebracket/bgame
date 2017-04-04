@@ -8,21 +8,76 @@ uniform mat4 view_matrix;
 varying vec3 normal, ambient;
 varying vec4 diffuse;
 varying vec3 lightDir;
-attribute vec3 screen_index;
+attribute vec4 screen_index;
 varying vec3 si;
+
+mat4 translate(float x, float y, float z){
+    return mat4(
+        vec4(1.0, 0.0, 0.0, 0.0),
+        vec4(0.0, 1.0, 0.0, 0.0),
+        vec4(0.0, 0.0, 1.0, 0.0),
+        vec4(x,   y,   z,   1.0)
+    );
+}
 
 // Outdoor rendering
 void main()
 {
+    // Are we in billboard mode?
+    bool billboard_mode;
+    if (screen_index.w != 1.0) {
+        billboard_mode = false;
+    } else {
+        billboard_mode = true;
+    }
+
+    // Calculate world position from the screen index; note that Y and Z are flipped
+    float world_x = screen_index.x * 255.0;
+    float world_y = screen_index.z * 255.0;
+    float world_z = screen_index.y * 255.0;
+
     // Transforming The Vertex
-    gl_Position = projection_matrix * (view_matrix * gl_Vertex);
+    if (billboard_mode) {
+        // We want to rotate to face the camera
+        mat4 ModelView = view_matrix * translate(world_x, world_y, world_z);
+
+        // Column 0:
+        ModelView[0][0] = 1;
+        ModelView[0][1] = 0;
+        ModelView[0][2] = 0;
+
+        // Column 1:
+        ModelView[1][0] = 0;
+        ModelView[1][1] = 1;
+        ModelView[1][2] = 0;
+
+        // Column 2:
+        ModelView[2][0] = 0;
+        ModelView[2][1] = 0;
+        ModelView[2][2] = 1;
+
+        vec4 position = gl_Vertex; // At this point we're in -0.5 to 0.5 space
+        gl_Position = projection_matrix * (ModelView * position);
+    } else {
+        // Simple transform to world-space
+        vec4 position = gl_Vertex;
+        position.x += world_x;
+        position.y += world_y;
+        position.z += world_z;
+        gl_Position = projection_matrix * (view_matrix * position);
+    }
+
+    vec4 position = gl_Vertex;
+    position.x += world_x;
+    position.y += world_y;
+    position.z += world_z;
 
     // Transform the normal and normalize (heh) it
     normal = normalize(gl_Normal * gl_NormalMatrix);
 
     // Now we get the light direction (in eye space)
     vec3 light_position_transformed = light_position * gl_NormalMatrix;
-    lightDir = normalize((vec3(gl_Vertex) * gl_NormalMatrix)-light_position_transformed);
+    lightDir = normalize((vec3(position) * gl_NormalMatrix)-light_position_transformed);
 
     // Now we get the dot product between the light and the vertex
     diffuse = vec4(light_diffuse, 1.0f) * gl_Color;
