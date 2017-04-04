@@ -160,6 +160,7 @@ namespace world_scene {
     void render_world(const GLuint &deferred_id)
     {
         //glUseProgram(deferred_id);
+        glPolygonMode( GL_FRONT, GL_FILL );
 
         // Setup outdoor illumination
         glDisable(GL_LIGHTING);
@@ -167,6 +168,16 @@ namespace world_scene {
         // Pass texture to the shader
         int texture_location = glGetUniformLocation(deferred_id, "my_color_texture");
         glUniform1i(texture_location, 0);
+
+        int projection_matrix_loc = glGetUniformLocation(deferred_id, "projection_matrix");
+        float proj[16];
+        glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&proj);
+        glUniformMatrix4fv(projection_matrix_loc, 1, false, (GLfloat*)&proj);
+
+        int view_matrix_loc = glGetUniformLocation(deferred_id, "view_matrix");
+        float view[16];
+        glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&view);
+        glUniformMatrix4fv(view_matrix_loc, 1, false, (GLfloat*)&view);
 
         // Call the rendering
 
@@ -216,12 +227,12 @@ namespace world_scene {
     void add_simple_renderable(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
         if (light != lit_tiles.end()) {
-            game_lit_geometry[light->second.first].add_decal(x, y, z, c);
+            game_lit_geometry[light->second.first].add_floor(x, y, z, c, 1.0f);
         } else {
             if (current_region->above_ground[idx]) {
-                floor_exterior_geometry.add_decal(x, y, z, c);
+                floor_exterior_geometry.add_floor(x, y, z, c, 1.0f);
             } else {
-                floor_interior_geometry.add_decal(x, y, z, c);
+                floor_interior_geometry.add_floor(x, y, z, c, 1.0f);
             }
         }
     }
@@ -230,12 +241,12 @@ namespace world_scene {
     void add_composite_renderable(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
         if (light != lit_tiles.end()) {
-            game_lit_geometry[light->second.first].add_floor(x, y, z, c);
+            game_lit_geometry[light->second.first].add_standup(x, y, z, c, 1.0f);
         } else {
             if (current_region->above_ground[idx]) {
-                floor_exterior_geometry.add_floor(x, y, z, c);
+                floor_exterior_geometry.add_standup(x, y, z, c, 1.0f);
             } else {
-                floor_interior_geometry.add_floor(x, y, z, c);
+                floor_interior_geometry.add_standup(x, y, z, c, 1.0f);
             }
         }
     }

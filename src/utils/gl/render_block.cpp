@@ -34,7 +34,7 @@ float render_block::light_blue(const rltk::vchar &c) const noexcept {
     return (float)c.foreground.b / 255.0f;
 }
 
-void render_block::add_floor(const int &x, const int &y, const int &z, const rltk::vchar &c)
+void render_block::add_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode)
 {
     const float light_r = light_red(c) - ((camera_position->region_z - (float)z)*0.05f);
     const float light_g = light_green(c) - ((camera_position->region_z - (float)z)*0.05f);
@@ -80,7 +80,62 @@ void render_block::add_floor(const int &x, const int &y, const int &z, const rlt
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
 }
 
-void render_block::add_decal(const int &x, const int &y, const int &z, const rltk::vchar &c)
+void render_block::add_standup(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode)
+{
+    const float light_r = light_red(c) - ((camera_position->region_z - (float)z)*0.05f);
+    const float light_g = light_green(c) - ((camera_position->region_z - (float)z)*0.05f);
+    const float light_b = light_blue(c) - ((camera_position->region_z - (float)z)*0.05f);
+
+    const float X = (float)x;
+    const float Y = (float)y;
+    const float Z = (float)z;
+    const float vsize = 1.0f;
+
+    const float tex_x = (c.glyph % 16) * 24.0f;
+    const float tex_y = (c.glyph / 16) * 24.0f;
+    const float tex_xf = (float) tex_x / texture_w;
+    const float tex_yf = (float) tex_y / texture_h;
+
+    // Floor
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+    cvertices.emplace_back(c3d{light_r, light_g, light_b});
+
+    tvertices.emplace_back(t3d{tex_xf, tex_yf});
+    tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf + tex_ysize});
+    tvertices.emplace_back(t3d{tex_xf + tex_xsize, tex_yf});
+
+    //if (camera_mode == TOP_DOWN) {
+        // Paste to the floor
+        vertices.emplace_back(v3d{X,        Z, Y});
+        vertices.emplace_back(v3d{X,        Z, Y + vsize});
+        vertices.emplace_back(v3d{X + vsize, Z, Y + vsize});
+        vertices.emplace_back(v3d{X + vsize, Z, Y});
+    //} else {
+    //    // Vertical
+    //    vertices.emplace_back(v3d{X,         Z + vsize, Y + 0.5f});
+    //    vertices.emplace_back(v3d{X,         Z,         Y + 0.5f});
+    //    vertices.emplace_back(v3d{X + vsize, Z,         Y + 0.5f - vsize});
+    //    vertices.emplace_back(v3d{X + vsize, Z + vsize, Y + 0.5f - vsize});
+    //}
+
+    const float SX = X/255.0f;
+    const float SY = Y/255.0f;
+    const float SZ = Z/255.0f;
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+    screen_index.emplace_back(v3d{SX,SY,SZ});
+
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+    normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
+}
+
+void render_block::add_decal(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode)
 {
     const float light_r = 1.0f - ((camera_position->region_z - (float)z)*0.05f);
     const float light_g = 1.0f - ((camera_position->region_z - (float)z)*0.05f);
@@ -126,7 +181,7 @@ void render_block::add_decal(const int &x, const int &y, const int &z, const rlt
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
 }
 
-void render_block::add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c) {
+void render_block::add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode) {
     const float light_r = light_red(c);
     const float light_g = light_green(c);
     const float light_b = light_blue(c);
@@ -302,7 +357,7 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     normals.emplace_back(v3d{0.0f, 1.0f, 0.0f});
 }
 
-void render_block::add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height)
+void render_block::add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height, const GLfloat &billboard_mode)
 {
     const float light_r = light_red(c);
     const float light_g = light_green(c);
@@ -480,7 +535,7 @@ void render_block::add_fractional_height_cube(const int &x, const int &y, const 
 }
 
 void render_block::render(const GLuint &program_id) const noexcept {
-    //assert(vertices.size() == screen_index.size());
+    //assert(vertices.size() == billboard.size());
 
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glEnableClientState(GL_COLOR_ARRAY);

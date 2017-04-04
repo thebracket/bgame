@@ -27,17 +27,17 @@ struct render_block {
     std::vector<v3d> normals;
     std::vector<v3d> screen_index;
 
-
     void reset();
 
     float light_red(const rltk::vchar &c) const noexcept;
     float light_green(const rltk::vchar &c) const noexcept;
     float light_blue(const rltk::vchar &c) const noexcept;
 
-    void add_floor(const int &x, const int &y, const int &z, const rltk::vchar &c);
-    void add_decal(const int &x, const int &y, const int &z, const rltk::vchar &c);
-    void add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c);
-    void add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height);
+    void add_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode=0);
+    void add_standup(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode=1.0f);
+    void add_decal(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode=0);
+    void add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode=0);
+    void add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height, const GLfloat &billboard_mode=0);
 
     void render(const GLuint &program_id) const noexcept;
 };
