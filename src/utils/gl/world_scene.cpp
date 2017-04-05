@@ -203,9 +203,9 @@ namespace world_scene {
     void add_vegetation(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
         if (light != lit_tiles.end()) {
-            game_lit_geometry[light->second.first].add_standup(x, y, z, c);
+            game_lit_geometry[light->second.first].add_decal(x, y, z, c);
         } else {
-            floor_exterior_geometry.add_standup(x, y, z, c);
+            floor_exterior_geometry.add_decal(x, y, z, c);
         }
     }
 

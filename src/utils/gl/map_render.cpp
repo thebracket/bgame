@@ -89,7 +89,11 @@ namespace map_render {
                         && designations->chopping.find(current_region->tree_id[idx])!=designations->chopping.end()) {
                         world_scene::add_world_cube(x, y, z, vchar{'*', colors::RED, colors::RED}, idx);
                     } else {
-                        world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
+                        if (tiletype == tile_type::TREE_TRUNK) {
+                            world_scene::add_composite_renderable(x, y, z, current_region->render_cache[idx], idx);
+                        } else {
+                            world_scene::add_world_cube(x, y, z, current_region->render_cache[idx], idx);
+                        }
                     }
                 } else if (has_floor(tiletype)) {
                     world_scene::add_world_floor(x, y, z, current_region->render_cache[idx], idx);
