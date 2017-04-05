@@ -74,7 +74,7 @@ void main()
     position.z += world_z;
 
     // Transform the normal and normalize (heh) it
-    normal = normalize(gl_Normal);
+    normal = gl_Normal;
 
     // Now we get the light direction (in world space)
     light_pos_frag = light_position;

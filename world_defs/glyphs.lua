@@ -235,7 +235,7 @@ colors = {
 	cyan = { r=0, g=255, b=255 },
 	orange = { r=255, g=165, b=0 },
 	magenta = { r=255, g=0, b=255 },
-	wood_brown = { r=102, g=51, b=0 },
+	wood_brown = { r=204, g=102, b=10 },
 	tree_green = { r=130, g=212, b=53},
 	pink = { r=255, g=128, b=128 },
 	aluminium_blue = { r=173, g=178, b=189 },

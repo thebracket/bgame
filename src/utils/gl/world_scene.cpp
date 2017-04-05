@@ -35,10 +35,18 @@ namespace world_scene {
         game_lit_geometry.clear();
     }
 
+    bool is_daytime() noexcept {
+        if (calendar->hour > 5 && calendar->hour < 18) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Adds a world-geometry floor tile
     void add_world_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
-        if (light != lit_tiles.end()) {
+        if (light != lit_tiles.end() && ( !is_daytime() | !current_region->above_ground[idx] )) {
             game_lit_geometry[light->second.first].add_floor(x, y, z, c);
         } else {
             if (current_region->above_ground[idx]) {
@@ -65,10 +73,6 @@ namespace world_scene {
         //if (z == camera_position->region_z) mouse_picker_geometry.add_floor(x,y,z,c);
     }
 
-    void add_index_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
-        //mouse_picker_geometry.add_floor(x,y,z,c);
-    }
-
     // Adds a world-geometry cube (solid)
     void add_world_fractional_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx, const float &height) {
         auto light = lit_tiles.find(idx);
@@ -82,14 +86,6 @@ namespace world_scene {
             }
         }
         //mouse_picker_geometry.add_floor(x,y,z,c);
-    }
-
-    bool is_daytime() noexcept {
-        if (calendar->hour > 5 && calendar->hour < 18) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     void setup_sun_and_moon(const int &deferred_program) {

@@ -347,11 +347,11 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     std::tie(SX, SY, SZ) = screenspace_calc(x, y, z);
 
     primitives_floor(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode);
-    primitives_cube_left(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize);
-    primitives_cube_right(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize);
-    primitives_cube_north(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize);
-    primitives_cube_south(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize);
-    primitives_cube_ceiling(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize);
+    primitives_cube_left(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
+    primitives_cube_right(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
+    primitives_cube_north(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
+    primitives_cube_south(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
+    primitives_cube_ceiling(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
 }
 
 void render_block::add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height, const GLfloat &billboard_mode)

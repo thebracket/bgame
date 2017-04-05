@@ -25,7 +25,17 @@ void lighting_system::configure() {
 }
 
 inline void reveal(const int &idx, const lightsource_t view, const int light_pos) {
-    lit_tiles[idx] = std::make_pair(light_pos, view.color);
+	auto finder = lit_tiles.find(idx);
+	if (finder == lit_tiles.end()) {
+		lit_tiles[idx] = std::make_pair(light_pos, view.color);
+	} else {
+		const int new_light_level = view.color.r + view.color.g + view.color.b;
+		const int old_light_level = finder->second.second.r + finder->second.second.g + finder->second.second.b;
+		if (new_light_level > old_light_level) {
+			finder->second.first = light_pos;
+			finder->second.second = view.color;
+		}
+	}
 }
 
 inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
@@ -33,13 +43,13 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 
 	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
 		const auto idx = mapidx(X, Y, Z);
-		reveal(idx, view, mapidx(pos));
 		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
 		if (distance > dist_square) {
 			return false;
 		}
         bool blocked = current_region->opaque[idx];
         if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
+		reveal(idx, view, mapidx(pos));
 		return !blocked;
 	});
 }
