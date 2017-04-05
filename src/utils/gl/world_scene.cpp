@@ -12,6 +12,7 @@
 #include "../../systems/render/map_render_system.hpp"
 #include "../../systems/render/lighting_system.hpp"
 #include "render_block.hpp"
+#include "../../systems/input/mouse_input_system.hpp"
 
 using namespace rltk;
 
@@ -92,36 +93,43 @@ namespace world_scene {
     }
 
     void setup_sun_and_moon(const int &deferred_program) {
-        const float latitude = ((float)current_region->region_y - ((float)WORLD_HEIGHT/2.0F)) * (float)REGION_HEIGHT;
+        const float latitude = (float)REGION_HEIGHT/2.0f + (((float)current_region->region_y - ((float)WORLD_HEIGHT/2.0F)) * (float)REGION_HEIGHT);
         const auto pos = glGetUniformLocation(deferred_program, "light_position");
         const auto ambient = glGetUniformLocation(deferred_program, "light_ambient");
         const auto diffuse = glGetUniformLocation(deferred_program, "light_diffuse");
 
+        float hour_sun_bias = (float)calendar->hour;
+        const float minutes = ((float)calendar->minute / 60.0f)/10.0f;
+
+        float time_of_day_radians = ((hour_sun_bias+minutes) * 3.141592653589793f) / 180.0f;
+        std::pair<float, float> sun_pos = std::make_pair(
+                (std::sin(time_of_day_radians)*256.0)+128.0f,
+                (std::cos(time_of_day_radians)*256.0)+128.0f
+        );
+        //std::cout << time_of_day_radians << " = " << sun_pos.first << "," << sun_pos.second << "," << latitude << "\n";
+        //std::cout << sun_pos.first << "\n";
+
         if (is_daytime()) {
-            // Sun
-            const float time_as_decimal = ((float)calendar->hour-6.0f + ((float)calendar->minute / 60.0f)) / 12.0f;
-            const float sun_angle_degrees = time_as_decimal * (float)REGION_WIDTH;
 
             GLfloat lightAmbient[3] = { 0.4f, 0.4f, 0.35f };
             GLfloat lightDiffuse[3] = { 1.0f, 1.0f, 0.9f };
-            GLfloat lightPosition[3] = { sun_angle_degrees, 300.0f, latitude };
+            GLfloat lightPosition[3] = { sun_pos.first, sun_pos.second, latitude };
 
             glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
             glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
-            glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+            glUniform3f(pos, lightPosition[0], lightPosition[1], lightPosition[2]);
         } else {
-            // Moon
-            // Set the light position
-            GLfloat lightAmbient[3] = { 0.3f, 0.3f, 0.4f };
-            GLfloat lightDiffuse[3] = { 0.7f, 0.7f, 0.8f };
-            //GLfloat lightPosition[3] = { (float)camera_position->region_x-1.0f, (float)camera_position->region_z+20.0f, (float)camera_position->region_y-1.0f };
-            GLfloat lightPosition[3] = { REGION_WIDTH/2.0f , 300.0f, -latitude };
+            sun_pos.first = 0-sun_pos.first;
+            sun_pos.second = 0-sun_pos.second;
+
+            GLfloat lightAmbient[3] = { 0.3f, 0.3f, 0.5f };
+            GLfloat lightDiffuse[3] = { 0.7f, 0.7f, 0.9f };
+            GLfloat lightPosition[3] = { sun_pos.first, sun_pos.second, latitude };
 
             glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
             glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
-            glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+            glUniform3f(pos, lightPosition[0], lightPosition[1], lightPosition[2]);
         }
-
     }
 
     void setup_indoor_lighting_unlit(const int &deferred_program) {
@@ -136,7 +144,7 @@ namespace world_scene {
 
         glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
         glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
-        glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+        glUniform3f(pos, lightPosition[0], lightPosition[1], lightPosition[2]);
     }
 
     void setup_indoor_lighting_lit(const int &deferred_program, const std::pair<int, rltk::color_t> &light) {
@@ -149,11 +157,11 @@ namespace world_scene {
         //GLfloat lightPosition[3] = { (float)camera_position->region_x-1.0f, (float)camera_position->region_z+20.0f, (float)camera_position->region_y-1.0f };
         int x,y,z;
         std::tie(x,y,z) = idxmap(light.first);
-        GLfloat lightPosition[3] = { (float)x, (float)z+0.9f, (float)y };
+        GLfloat lightPosition[3] = { (float)x+0.5f, (float)z+0.9f, (float)y+0.5f };
 
         glUniform3f(ambient, lightAmbient[0], lightAmbient[1], lightAmbient[2]);
         glUniform3f(diffuse, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2]);
-        glUniform3f(pos, lightPosition[0], lightDiffuse[1], lightDiffuse[2]);
+        glUniform3f(pos, lightPosition[0], lightPosition[1], lightPosition[2]);
     }
 
     // Renders the world geometry

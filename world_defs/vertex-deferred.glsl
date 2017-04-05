@@ -7,7 +7,8 @@ uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
 varying vec3 normal, ambient;
 varying vec4 diffuse;
-varying vec3 lightDir;
+varying vec3 light_pos_frag;
+varying vec3 v;
 attribute vec4 screen_index;
 varying vec3 si;
 
@@ -73,11 +74,11 @@ void main()
     position.z += world_z;
 
     // Transform the normal and normalize (heh) it
-    normal = normalize(gl_Normal * gl_NormalMatrix);
+    normal = normalize(gl_Normal);
 
-    // Now we get the light direction (in eye space)
-    vec3 light_position_transformed = light_position * gl_NormalMatrix;
-    lightDir = normalize((vec3(position) * gl_NormalMatrix)-light_position_transformed);
+    // Now we get the light direction (in world space)
+    light_pos_frag = light_position;
+    v = vec3(position);
 
     // Now we get the dot product between the light and the vertex
     diffuse = vec4(light_diffuse, 1.0f) * gl_Color;
