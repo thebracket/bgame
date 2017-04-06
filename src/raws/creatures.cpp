@@ -127,6 +127,7 @@ void read_creature_types(std::ofstream &tech_tree_file) noexcept
                 if (ai_type == "grazer") s.ai = creature_grazer;
             }
             if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
+            if (field == "glyph") s.glyph_ascii = lua_tonumber(lua_state, -1);
             if (field == "hp_n") s.hp_n = lua_tonumber(lua_state, -1);
             if (field == "hp_dice") s.hp_dice = lua_tonumber(lua_state, -1);
             if (field == "hp_mod") s.hp_mod = lua_tonumber(lua_state, -1);

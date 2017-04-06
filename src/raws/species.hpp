@@ -36,6 +36,7 @@ struct raw_species_t {
     int infant_age = 5;
     int child_age = 12;
     uint16_t glyph = '@';
+    uint16_t glyph_ascii = '@';
     uint16_t worldgen_glyph = '@';
     bool render_composite = false;
     uint16_t base_male_glyph = 352;

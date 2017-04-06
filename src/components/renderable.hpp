@@ -8,16 +8,17 @@ using namespace rltk;
 
 struct renderable_t {
 	uint16_t glyph;
+	uint16_t glyph_ascii;
 	color_t foreground;
 	color_t background;
 
 	renderable_t() {}
-	renderable_t(const uint16_t ch, const color_t fg, const color_t bg) : glyph(ch), foreground(fg), background(bg) {}
+	renderable_t(const uint16_t ch, const uint16_t cha, const color_t fg, const color_t bg) : glyph(ch), glyph_ascii(cha), foreground(fg), background(bg) {}
 
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( glyph, foreground, background ); // serialize things by passing them to the archive
+		archive( glyph, glyph_ascii, foreground, background ); // serialize things by passing them to the archive
 	}
 };
 

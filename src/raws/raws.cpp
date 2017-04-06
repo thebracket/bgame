@@ -97,7 +97,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 
     auto entity = create_entity()
         ->assign(position_t{ x,y,z })
-        ->assign(renderable_t{ finder->second.glyph, mat->fg, mat->bg })
+        ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 }
@@ -111,7 +111,7 @@ entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const
 
     auto entity = create_entity()
             ->assign(position_t{ x,y,z })
-            ->assign(renderable_t{ finder->second.glyph, mat->fg, mat->bg })
+            ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
             ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
     return entity;
@@ -127,7 +127,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     create_entity()
         ->assign(item_stored_t{ container_id })
-        ->assign(renderable_t{ finder->second.glyph, mat->fg, mat->bg })
+        ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }
 
@@ -139,6 +139,6 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 
     create_entity()
         ->assign(item_carried_t{ loc, holder_id })
-        ->assign(renderable_t{ finder->second.glyph, mat->fg, mat->bg })
+        ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
 }

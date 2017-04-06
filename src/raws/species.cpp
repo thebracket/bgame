@@ -258,6 +258,7 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
             if (field == "infant_age") s.infant_age = lua_tonumber(lua_state, -1);
             if (field == "child_age") s.child_age = lua_tonumber(lua_state, -1);
             if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
+            if (field == "glyph_ascii") s.glyph = lua_tonumber(lua_state, -1);
             if (field == "worldgen_glyph") s.worldgen_glyph = lua_tonumber(lua_state, -1);
             if (field == "composite_render") s.render_composite = lua_toboolean(lua_state, -1);
             if (field == "base_male") s.base_male_glyph = lua_tonumber(lua_state, -1);

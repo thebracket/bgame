@@ -15,6 +15,7 @@ creatures = {
         hunting_yield = { meat=4, hide=4, bone=2, skull=1 },
         ai = "grazer",
         glyph = glyphs['deer'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['d'],
         hp_n = 1, hp_dice = 10, hp_mod = 0,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     },
@@ -34,6 +35,7 @@ creatures = {
         hunting_yield = { meat=2, hide=2, bone=1, skull=1 },
         ai = "grazer",
         glyph = glyphs['armadillo'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['a'],
         hp_n = 1, hp_dice = 4, hp_mod = 0,
         group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
     },
@@ -53,6 +55,7 @@ creatures = {
         hunting_yield = { meat=1, hide=1, bone=1, skull=1 },
         ai = "grazer",
         glyph = glyphs['badger'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['b'],
         hp_n = 1, hp_dice = 8, hp_mod = 5,
         group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
     },
@@ -72,6 +75,7 @@ creatures = {
         hunting_yield = { meat=4, hide=4, bone=4, skull=1 },
         ai = "grazer",
         glyph = glyphs['boar'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['b'],
         hp_n = 1, hp_dice = 8, hp_mod = 5,
         group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
     },
@@ -92,6 +96,7 @@ creatures = {
         hunting_yield = { meat=16, hide=16, bone=8, skull=1 },
         ai = "grazer",
         glyph = glyphs['E'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['E'],
         hp_n = 13, hp_dice = 8, hp_mod = 78,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     },
@@ -112,6 +117,7 @@ creatures = {
         hunting_yield = { meat=16, hide=16, bone=8, skull=1 },
         ai = "grazer",
         glyph = glyphs['E'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['E'],
         hp_n = 13, hp_dice = 8, hp_mod = 78,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     },
@@ -131,6 +137,7 @@ creatures = {
         hunting_yield = { meat=4, hide=4, bone=4, skull=1 },
         ai = "grazer",
         glyph = glyphs['h'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['h'],
         hp_n = 1, hp_dice = 4, hp_mod = 0,
         group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
     },
@@ -150,6 +157,7 @@ creatures = {
         hunting_yield = { meat=4, hide=4, bone=2, skull=1 },
         ai = "grazer",
         glyph = glyphs['d'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['d'],
         hp_n = 1, hp_dice = 8, hp_mod = 2,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     }

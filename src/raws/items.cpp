@@ -29,6 +29,7 @@ void read_items(std::ofstream &tech_tree_file) noexcept
                            { "background", [&c] ()     { c.bg = read_lua_color("background"); }},
                            { "foreground", [&c] ()     { c.bg = read_lua_color("foreground"); }},
                            { "glyph", [&c] ()          { c.glyph = lua_int(); }},
+                           { "glyph_ascii", [&c] ()    { c.glyph_ascii = lua_int(); }},
                            { "damage_n", [&c] ()       { c.damage_n = lua_int(); }},
                            { "damage_d", [&c] ()       { c.damage_d = lua_int(); }},
                            { "damage_mod", [&c] ()     { c.damage_mod = lua_int(); }},

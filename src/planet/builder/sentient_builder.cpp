@@ -105,7 +105,7 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     if (species_finder->render_composite) {
         sentient->assign(renderable_composite_t{RENDER_SENTIENT, species_finder->glyph});
     } else {
-        sentient->assign(renderable_t{species_finder->glyph, rltk::colors::WHITE, rltk::colors::BLACK});
+        sentient->assign(renderable_t{species_finder->glyph, species_finder->glyph_ascii, rltk::colors::WHITE, rltk::colors::BLACK});
     }
     //std::cout << "Sentient #" << sentient->id << "\n";
 

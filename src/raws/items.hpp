@@ -32,6 +32,7 @@ struct item_def_t {
     std::string description = "";
     std::bitset<NUMBER_OF_ITEM_CATEGORIES> categories;
     uint16_t glyph;
+    uint16_t glyph_ascii = 1;
     rltk::color_t fg;
     rltk::color_t bg;
     int damage_n=0, damage_d=0, damage_mod=0;

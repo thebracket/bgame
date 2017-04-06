@@ -7,7 +7,7 @@ species_sentient['emmet'] = {
     parts = humanoid_parts,
     ethics = { diet = "omnivore", blight = true, alignment="devour" },
     max_age = 20, infant_age = 1, child_age = 2,
-    glyph = glyphs['ant'],
+    glyph = glyphs['ant'], ascii_glyph = glyphs['a'],
     worldgen_glyph = glyphs['ant']
 }
 

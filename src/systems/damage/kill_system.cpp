@@ -30,7 +30,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
         auto name = victim->component<name_t>();
         auto corpse = create_entity()
                 ->assign(position_t{ pos->x, pos->y, pos->z })
-                ->assign(renderable_t{ 2, rltk::colors::YELLOW, rltk::colors::RED })
+                ->assign(renderable_t{ 2, 2, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
                 ->assign(corpse_settler{msg.cause_of_death});
         call_home("settler_death");
@@ -56,7 +56,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
         if (old_render && tag != "") {
             auto corpse = create_entity()
                     ->assign(position_t{ pos->x, pos->y, pos->z })
-                    ->assign(renderable_t{ old_render->glyph, rltk::colors::GREY, rltk::colors::BLACK })
+                    ->assign(renderable_t{ old_render->glyph, old_render->glyph_ascii, rltk::colors::GREY, rltk::colors::BLACK })
                     ->assign(corpse_harvestable{tag})
                     ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") });
             emit_deferred(butcherable_moved_message{});
