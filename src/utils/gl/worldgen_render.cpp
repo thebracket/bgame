@@ -25,9 +25,17 @@ void worldgen_scene::render() {
     push_gl_states();
 
     // Draw it
+    glUseProgram(0); // Just in case we left one lying around
+    glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering, again just in case
+
+    auto screen_size = rltk::get_window()->getSize();
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     glDepthMask(GL_TRUE);
+    glClear(GL_DEPTH_BUFFER_BIT);
     glShadeModel(GL_SMOOTH);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glViewport(0,0,screen_size.x,screen_size.y);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -36,7 +44,7 @@ void worldgen_scene::render() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(0.0f, 112.0f, 10.0f, // Camera
-              0.0f, 64.0f, 0.0f, // Target
+              0.0f, 64.0f, 1.0f, // Target
               0.0f, 1.0f, 0.0f // Up
     );
 
@@ -45,7 +53,6 @@ void worldgen_scene::render() {
     auto texture_size_vec = rltk::get_texture(term(layer_texture)->get_font_tag())->getSize();
     const float texture_w = texture_size_vec.x;
     const float texture_h = texture_size_vec.y;
-    glUseProgram(0); // Just in case we left one lying around
 
     glBegin(GL_QUADS);
     for (const worldgen_tile &tile : tiles) {

@@ -123,7 +123,9 @@ void world_gen::tick(const double duration_ms) {
 		render_menu();
 	} else {
         planet_builder_lock.lock();
-        term(WORLD_LAYER)->print_center(2, planet_builder_status);
+        ImGui::Begin("World Generation Progress");
+        ImGui::Text("%s",planet_builder_status.c_str());
+        ImGui::End();
         planet_builder_lock.unlock();
 
 		if (is_planet_build_complete()) {
