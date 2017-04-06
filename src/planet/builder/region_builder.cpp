@@ -62,7 +62,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     set_worldgen_status("Establishing ground altitude");
     std::vector<uint8_t> heightmap = create_empty_heightmap();
     build_heightmap_from_noise(target_region, noise, heightmap, planet);
-    const int water_level = 5;
 
     // Wet places
     std::vector<uint8_t> pooled_water;
