@@ -45,7 +45,7 @@ void build_ant_mound(region_t &region, random_number_generator &rng, std::vector
         region.tile_type[mapidx(x,y,sz)] = tile_type::STAIRS_UPDOWN;
     }
     region.tile_type[mapidx(x,y,ground_z+mound_height)] = tile_type::STAIRS_DOWN;
-    region.tile_type[mapidx(x,y,z)] == tile_type::STAIRS_UP;
+    region.tile_type[mapidx(x,y,z)] = tile_type::STAIRS_UP;
 
     // Mound above
     i = mound_height;
