@@ -41,7 +41,6 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
 
     const uint8_t zero = 0;
     const int biome_idx = planet.landblocks[block_idx].biome_idx;
-    const rltk::color_t bg = rltk::colors::BLACK;
     uint8_t col = planet.landblocks[block_idx].height;
 
 
@@ -96,7 +95,6 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
     if (!planet.civs.civs.empty()) {
         std::size_t owner_civ = planet.civs.region_info[block_idx].owner_civ;
         if (owner_civ != 0) {
-            color_t civ_color = color_t{ planet.civs.civs[owner_civ].r, planet.civs.civs[owner_civ].g, planet.civs.civs[owner_civ].b };
             (*planet_builder_display.get())[idx].unit_glyph = planet.civs.civs[owner_civ].glyph;
         } else {
             (*planet_builder_display.get())[idx].unit_glyph = 0;
