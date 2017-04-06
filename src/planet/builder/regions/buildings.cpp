@@ -225,7 +225,7 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
 		LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT,	WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT }
 	});
     
-    auto camera = create_entity()
+    create_entity()
 		->assign(world_position_t{region.region_x, region.region_y, crash_x, crash_y, crash_z+1})
 		->assign(std::move(calendar))
 		->assign(designations_t{})
@@ -277,7 +277,6 @@ int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z
 }
 
 xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet, rltk::random_number_generator &rng) {
-    const auto tech_level = planet.civs.civs[civ_id].tech_level;
     std::vector<std::string> available_buildings;
 
     available_buildings.push_back("rex/mud-hut.xp");
