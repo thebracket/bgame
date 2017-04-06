@@ -186,7 +186,6 @@ void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_numbe
 {
     const std::string species_tag = planet.civs.civs[civ_id].species_tag;
     auto civ_f = civ_defs.find(species_tag);
-    auto species_f = get_species_def(civ_f->second.species_tag);
     auto unit_f = civ_f->second.units.find(unit_tag);
     if (unit_f == civ_f->second.units.end()) {
         std::cout << "Error loading " << unit_tag << "\n";
