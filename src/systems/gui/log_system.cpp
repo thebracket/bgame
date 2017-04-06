@@ -7,8 +7,6 @@
 #include "imgui_helper.hpp"
 
 constexpr int MAX_LOG_AGE = 200;
-constexpr int MAX_LOG_LINES = 10;
-constexpr int LOG_TERM = 3;
 
 void log_system::configure() {
     system_name = "Log System";

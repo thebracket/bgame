@@ -40,6 +40,7 @@ void panel_render_system::render_mode_select(const double duration_ms) {
 			term(2)->print(28,1,"ESC", YELLOW);
 			term(2)->print(32,1,"Return to normal play", WHITE, GREEN_BG);
 		} break;
+        default : return;
 	}
 }
 

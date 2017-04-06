@@ -25,7 +25,6 @@ void mode_rogue_system::configure() {
         }
         auto ai = settler->component<settler_ai_t>();
         auto health = settler->component<health_t>();
-        auto stats = settler->component<game_stats_t>();
 
         if (ai->job_type_major == JOB_IDLE) {
             // We're waiting for input

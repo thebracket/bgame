@@ -98,12 +98,12 @@ void wildlife_population_system::spawn_wildlife() {
                 }
 
                 if (critter_def.ai == creature_grazer) {
-                    auto critter = create_entity()
+                    create_entity()
                         ->assign(std::move(pos))
                         ->assign(std::move(render))
                         ->assign(std::move(name))
                         ->assign(std::move(species))
-                        ->assign(std::move(create_health_component_creature(critter_def.tag)))
+                        ->assign(create_health_component_creature(critter_def.tag))
                         ->assign(grazer_ai{ })
                         ->assign(std::move(stats))
                         ->assign(viewshed_t(6, false, false))

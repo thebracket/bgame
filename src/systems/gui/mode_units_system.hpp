@@ -7,7 +7,6 @@ public:
 	virtual void update(const double duration_ms) override final;
 	virtual void configure() override final;
 private:
-    int tab=0;
 	int current_settler=0;
     int current_critter=0;
     int current_native=0;

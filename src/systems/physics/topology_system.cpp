@@ -191,7 +191,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
             // Add an entry_trigger and a position to it
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
-            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_cage});
+            create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_cage});
             emit_deferred(triggers_changes_message{});
             entity_should_be_deleted = false;
         } else if (provides.provides == provides_stonefall_trap) {
@@ -199,7 +199,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
             // Add an entry_trigger and a position to it
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
-            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_stonefall});
+            create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_stonefall});
             emit_deferred(triggers_changes_message{});
             entity_should_be_deleted = false;
         } else if (provides.provides == provides_blades_trap) {
@@ -207,7 +207,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
             // Add an entry_trigger and a position to it
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
-            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_blade});
+            create_entity()->assign(position_t{x, y, z})->assign(entry_trigger_t{trigger_blade});
             emit_deferred(triggers_changes_message{});
             entity_should_be_deleted = false;
         } else if (provides.provides == provides_spikes) {
@@ -215,7 +215,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
             // Add an entry_trigger and a position to it
             int x,y,z;
             std::tie(x,y,z) = idxmap(index);
-            auto new_trap = create_entity()->assign(position_t{x, y, z})->assign(receives_signal_t{});
+            create_entity()->assign(position_t{x, y, z})->assign(receives_signal_t{});
             entity_should_be_deleted = false;
         }
     }

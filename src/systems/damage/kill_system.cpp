@@ -28,7 +28,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
     if (victim->component<settler_ai_t>()) {
         // It's a dead settler, we create a special item
         auto name = victim->component<name_t>();
-        auto corpse = create_entity()
+        create_entity()
                 ->assign(position_t{ pos->x, pos->y, pos->z })
                 ->assign(renderable_t{ 2, 2, rltk::colors::YELLOW, rltk::colors::RED })
                 ->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
@@ -54,7 +54,7 @@ void kill_system::on_message(const entity_slain_message &msg) {
         auto old_render = victim->component<renderable_t>();
         auto name = victim->component<name_t>();
         if (old_render && tag != "") {
-            auto corpse = create_entity()
+            create_entity()
                     ->assign(position_t{ pos->x, pos->y, pos->z })
                     ->assign(renderable_t{ old_render->glyph, old_render->glyph_ascii, rltk::colors::GREY, rltk::colors::BLACK })
                     ->assign(corpse_harvestable{tag})

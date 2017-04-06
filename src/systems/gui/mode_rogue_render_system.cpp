@@ -27,8 +27,8 @@ void mode_rogue_render_system::update(const double ms) {
         return;
     }
     auto name = e->component<name_t>();
-	auto stats = e->component<game_stats_t>();
-	auto species = e->component<species_t>();
+	//auto stats = e->component<game_stats_t>();
+	//auto species = e->component<species_t>();
 	auto ai = e->component<settler_ai_t>();
 	auto health = e->component<health_t>(); 
     auto pos = e->component<position_t>();

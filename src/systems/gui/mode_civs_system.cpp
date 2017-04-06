@@ -96,8 +96,8 @@ void render_civ_negotiate() {
     }
 
     ImGui::Begin(title.c_str());
-    ImGui::Text(salutation.c_str());
-    ImGui::TextColored(feelings_color, feelings.c_str());
+    ImGui::Text("%s", salutation.c_str());
+    ImGui::TextColored(feelings_color, "%s", feelings.c_str());
     if (show_bribe) {
         if (ImGui::Button("Maybe 50 Mcr will make you feel better?")) {
             game_master_mode = PLAY;

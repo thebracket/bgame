@@ -12,7 +12,6 @@ void settler_spawner_system::configure() {
 void settler_spawner_system::update(const double duration_ms) {
     std::queue<day_elapsed_message> * day = mbox<day_elapsed_message>();
     while (!day->empty()) {
-        day_elapsed_message msg = day->front();
         day->pop();
 
         // New arrivals

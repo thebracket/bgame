@@ -33,7 +33,6 @@ inline void world_evaluate_move_option(std::vector<int> &candidates, planet_t &p
 void world_system::update(const double ms) {
     std::queue<day_elapsed_message> * day = mbox<day_elapsed_message>();
 	while (!day->empty()) {
-        day_elapsed_message msg = day->front();
         day->pop();
 
         /*

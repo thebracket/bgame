@@ -54,7 +54,7 @@ void tick(double duration_ms) {
 		const std::string font_path = std::string("assets/") + game_config.gui_ttf;
         //io.Fonts->AddFontDefault();
         std::cout << "Loading " << font_path << ", at size " << game_config.gui_ttf_size << " pixels\n";
-        ImFont * my_font = io.Fonts->AddFontFromFileTTF(font_path.c_str(), game_config.gui_ttf_size);
+        io.Fonts->AddFontFromFileTTF(font_path.c_str(), game_config.gui_ttf_size);
         ImFontConfig config;
         config.MergeMode = true;
         const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };

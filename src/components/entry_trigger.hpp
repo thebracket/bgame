@@ -14,7 +14,7 @@ struct entry_trigger_t {
 
     entry_trigger_t() {}
     entry_trigger_t(const trigger_type &t) : type(t) {}
-    entry_trigger_t(const trigger_type &t, const bool &enabled) : type(t), active(enabled) {}
+    entry_trigger_t(const trigger_type &t, const bool &enabled) : active(enabled), type(t) {}
 
     template<class Archive>
     void serialize(Archive & archive)

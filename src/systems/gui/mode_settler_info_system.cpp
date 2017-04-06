@@ -42,9 +42,9 @@ void mode_settler_info_system::update(const double ms) {
     profile << species->gender_pronoun() << std::string(" has ") << species->hair_color_str() << std::string(" hair, ") << species->hair_style_str() << ".";
 
     ImGui::Begin(header.str().c_str());
-    ImGui::Text(header2.str().c_str());
-    ImGui::Text(ai->job_status.c_str());
-    ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, hitpoints.c_str());
+    ImGui::Text("%s", header2.str().c_str());
+    ImGui::Text("%s", ai->job_status.c_str());
+    ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, "%s", hitpoints.c_str());
     for (const health_part_t &part : health->parts) {
         if (part.current_hitpoints != part.max_hitpoints) {
             std::string part_state = "OK";
@@ -52,14 +52,14 @@ void mode_settler_info_system::update(const double ms) {
             if (part.current_hitpoints < -9 && part.current_hitpoints > -20) part_state = "BROKEN";
             if (part.current_hitpoints < -19) part_state = "GONE";
             const std::string part_info = part.part + std::string(": ") + std::to_string(part.current_hitpoints) + std::string("/") + std::to_string(part.max_hitpoints) + std::string(" (") + part_state + std::string(")");
-            ImGui::Text(part_info.c_str());
+            ImGui::Text("%s", part_info.c_str());
         }
     }
-    ImGui::TextWrapped(profile.str().c_str());
+    ImGui::TextWrapped("%s", profile.str().c_str());
     ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "Skills:");
     for (const auto &skill : stats->skills) {
         const std::string skill_display = skill.first + std::string(" : ") + std::to_string(skill.second.skill_level);
-        ImGui::Text(skill_display.c_str());
+        ImGui::Text("%s", skill_display.c_str());
     }
     ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "Inventory:");
     each_if<item_t, item_carried_t>(
@@ -68,14 +68,14 @@ void mode_settler_info_system::update(const double ms) {
             },
             [] (entity_t &e, item_t &item, item_carried_t &carried) {
             const std::string item_info = item.item_name + std::string(" (") + item_loc_name(carried.location) + std::string(")");
-            ImGui::Text(item_info.c_str());
+            ImGui::Text("%s", item_info.c_str());
     });
     ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "History:");
     for (const life_event_t &le : planet.history.settler_life_events[selected_settler]) {
         auto finder = life_event_defs.find(le.type);
         if (finder != life_event_defs.end()) {
             const std::string line = std::to_string(le.year) + std::string(" : ") + finder->second.description;
-            ImGui::Text(line.c_str());
+            ImGui::Text("%s", line.c_str());
         } else {
             std::cout << "Warning: " << le.type << " life event not found\n";
         }

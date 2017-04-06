@@ -60,7 +60,6 @@ void settler_ai_system::update(const double duration_ms) {
         auto name = e->component<name_t>();
         auto health = e->component<health_t>();
         auto view = e->component<viewshed_t>();
-        auto initiative = e->component<initiative_t>();
 
         if (!stats || !species || !pos || !name || !health || !view) return;
 
@@ -90,7 +89,7 @@ void settler_ai_system::update(const double duration_ms) {
         }
 
         // Do we have any hostiles to worry about?
-        auto hostile = tasks::can_see_hostile(*e, *pos, *view, [&ai] (entity_t &other) {
+        tasks::can_see_hostile(*e, *pos, *view, [&ai] (entity_t &other) {
             if (ai->job_type_minor == JM_SLEEP) return false; // We don't spot anyone when sleeping
             if (other.component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE) return true;
             auto sentient = other.component<sentient_ai>();

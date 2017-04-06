@@ -5,7 +5,6 @@
 void damage_system::on_message(const inflict_damage_message &msg) {
     if (!entity(msg.victim)) return;
     auto h = entity(msg.victim)->component<health_t>();
-    auto name = entity(msg.victim)->component<name_t>();
 
     if (h) {
         h->current_hitpoints -= msg.damage_amount;

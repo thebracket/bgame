@@ -6,7 +6,6 @@
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../utils/gl/map_render.hpp"
 
-constexpr int HUD_TERM = 3;
 const std::string menu_main = std::string(ICON_FA_ROCKET) + " Black Future";
 const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
 const std::string menu_main_quit = std::string(ICON_FA_WINDOW_CLOSE) + " Save and Quit";

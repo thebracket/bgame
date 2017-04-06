@@ -82,7 +82,6 @@ void trigger_system::edit_triggers() {
     auto lever = trigger_entity->component<lever_t>();
 
     bool is_lever = false;
-    bool is_pressure_plate = false;
     if (lever) is_lever = true;
     // TODO: is_pressure_plate determination
 
@@ -174,7 +173,6 @@ void trigger_system::entry_trigger_firing() {
                         if (target_entity) {
                             auto grazer = target_entity->component<grazer_ai>();
                             auto sentient = target_entity->component<sentient_ai>();
-                            auto settler = target_entity->component<settler_ai_t>();
 
                             //if (grazer) std::cout << "Target grazes\n";
                             //if (sentient) std::cout << "Target is sentient\n";
@@ -259,9 +257,10 @@ void trigger_system::pulled_levers() {
 
                 lever_component->active = !lever_component->active;
                 if (renderable) {
-                    switch (lever_component->active) {
-                        case false : renderable->glyph = 326; break;
-                        case true : renderable->glyph = 327; break;
+                    if (lever_component->active) {
+                        renderable->glyph = 326;
+                    } else {
+                        renderable->glyph = 327;
                     }
                 }
 

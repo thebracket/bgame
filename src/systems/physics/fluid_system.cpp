@@ -35,9 +35,6 @@ inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bo
         const int idx_east = mapidx(x+1,y,z);
         const int idx_north = mapidx(x,y-1,z);
         const int idx_south = mapidx(x,y+1,z);
-        const int idx_above = mapidx(x,y,z+1);
-        const int neighbor_level = my_water_level + current_region->water_level[idx_west] + current_region->water_level[idx_east] +
-                                    current_region->water_level[idx_north] + current_region->water_level[idx_south];
         if (x>0 && !current_region->solid[idx_west] && current_region->water_level[idx_west]<my_water_level && current_region->water_level[idx_west]<10) {
             ++current_region->water_level[idx_west];
             --current_region->water_level[idx];
@@ -77,7 +74,7 @@ inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bo
         if (x>0 && current_region->water_level[idx_west]>0) water_stable[idx_west] = false;
         if (x<REGION_WIDTH-1 && current_region->water_level[idx_east]>0) water_stable[idx_east] = false;
         if (y>0 && current_region->water_level[idx_north]>0) water_stable[idx_north] = false;
-        if (y<REGION_HEIGHT-1 && current_region->water_level[idx_north]>0) water_stable[idx_north] = false;
+        if (y<REGION_HEIGHT-1 && current_region->water_level[idx_south]>0) water_stable[idx_south] = false;
         if (z>0 && current_region->water_level[idx_down]>0) water_stable[idx_down] = false;
         if (z<REGION_DEPTH-1 && current_region->water_level[idx_up]>0) water_stable[idx_up] = false;
     }

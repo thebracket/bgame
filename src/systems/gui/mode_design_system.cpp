@@ -135,9 +135,9 @@ void mode_design_system::architecture() {
 
     ImGui::Begin(win_architect.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     if (materials_available) {
-        ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s%", block_availability.c_str());
+        ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s", block_availability.c_str());
     } else {
-        ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, "%s%", block_availability.c_str());
+        ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, "%s", block_availability.c_str());
     }
     ImGui::Text("Left click to build, right click to clear tile");
 
@@ -345,9 +345,9 @@ void mode_design_system::harvest() {
     ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
     ImGui::TextColored(ImVec4{1.0f, 1.0f, 0.0f, 1.0f}, "%s", "Click a tile to harvest it, right click to remove harvest status.");
     if (!harvest_name.empty()) {
-        ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s%", "Current tile will provide: ");
+        ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "%s", "Current tile will provide: ");
         ImGui::SameLine();
-        ImGui::Text(harvest_name.c_str());
+        ImGui::Text("%s", harvest_name.c_str());
     }
     ImGui::End();
 

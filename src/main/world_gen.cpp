@@ -11,7 +11,6 @@
 #include "../utils/gl/worldgen_render.hpp"
 
 constexpr int WORLD_LAYER=1;
-constexpr int LOG_LAYER=2;
 constexpr int BACKDROP_LAYER=2;
 
 using namespace rltk;
