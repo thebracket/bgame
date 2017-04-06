@@ -176,6 +176,12 @@ void region_t::tile_pathing(const int &x, const int &y, const int &z) {
 }
 
 void region_t::calc_render(const int &idx) {
+    if (camera == nullptr) {
+        each<camera_options_t>([] (entity_t &e, camera_options_t &cam) {
+            camera = &cam;
+        });
+    }
+
 	uint16_t glyph;
 	color_t fg;
 	color_t bg = rltk::colors::BLACK;

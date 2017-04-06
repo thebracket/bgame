@@ -45,6 +45,7 @@ void worldgen_scene::render() {
     auto texture_size_vec = rltk::get_texture(term(layer_texture)->get_font_tag())->getSize();
     const float texture_w = texture_size_vec.x;
     const float texture_h = texture_size_vec.y;
+    glUseProgram(0); // Just in case we left one lying around
 
     glBegin(GL_QUADS);
     for (const worldgen_tile &tile : tiles) {
@@ -56,16 +57,18 @@ void worldgen_scene::render() {
         const float tex_ysize = 24.0f / texture_h;
 
         glColor3f(tile.red, tile.green, tile.blue);
-
         glTexCoord2f(tex_xf, tex_yf);
         glVertex3f(tile.x, tile.alt1, tile.y);
 
+        glColor3f(tile.red, tile.green, tile.blue);
         glTexCoord2f(tex_xf, tex_yf + tex_ysize);
         glVertex3f(tile.x, tile.alt2, tile.y + 1.0f);
 
+        glColor3f(tile.red, tile.green, tile.blue);
         glTexCoord2f(tex_xf + tex_xsize, tex_yf + tex_ysize);
         glVertex3f(tile.x + 1.0f, tile.alt3, tile.y + 1.0f);
 
+        glColor3f(tile.red, tile.green, tile.blue);
         glTexCoord2f(tex_xf + tex_xsize, tex_yf);
         glVertex3f(tile.x + 1.0f, tile.alt4, tile.y);
     }
@@ -78,17 +81,20 @@ void worldgen_scene::render() {
         const float tex_xsize = 24.0f / texture_w;
         const float tex_ysize = 24.0f / texture_h;
 
-        glColor3f(1.0f, 1.0f, 1.0f);
 
+        glColor3f(1.0f, 1.0f, 1.0f);
         glTexCoord2f(tex_xf, tex_yf);
         glVertex3f(unit.x, unit.altitude + 1.0f, unit.y);
 
+        glColor3f(1.0f, 1.0f, 1.0f);
         glTexCoord2f(tex_xf, tex_yf + tex_ysize);
         glVertex3f(unit.x, unit.altitude + 3.0f, unit.y );
 
+        glColor3f(1.0f, 1.0f, 1.0f);
         glTexCoord2f(tex_xf + tex_xsize, tex_yf + tex_ysize);
         glVertex3f(unit.x, unit.altitude + 3.0f, unit.y + 2.0f );
 
+        glColor3f(1.0f, 1.0f, 1.0f);
         glTexCoord2f(tex_xf + tex_xsize, tex_yf);
         glVertex3f(unit.x, unit.altitude + 1.0f, unit.y + 2.0f);
     }
