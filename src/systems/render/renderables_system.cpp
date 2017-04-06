@@ -197,7 +197,8 @@ void renderables_system::update(const double time_elapsed) {
                     for (int x=0; x<b->width; ++x) {
                         const auto idx = mapidx(pos->x + offset_x, pos->y + offset_y, pos->z);
                         rltk::vchar glyph;
-                        glyph = b->glyphs[glyph_idx];
+                        glyph = ascii_mode && b->glyphs_ascii.size() == b->glyphs.size() ? b->glyphs_ascii[glyph_idx] : b->glyphs[glyph_idx];
+                        if (b->glyphs_ascii.size() != b->glyphs.size()) std::cout << "WARNING: " << b->tag << " ASCII information invalid.\n";
                         if (!b->complete) glyph.foreground = rltk::colors::GREY;
                         auto door = E->component<construct_door_t>();
                         if (door && door->locked) glyph.background = rltk::colors::GREY;

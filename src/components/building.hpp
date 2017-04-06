@@ -11,12 +11,13 @@
 using namespace rltk;
 
 struct building_t {
-    building_t(const std::string ntag, const int w, const int h, const std::vector<rltk::vchar> &g, const bool comp, const std::size_t owner=0) :
-        tag(ntag), width(w), height(h), glyphs(g), complete(comp), civ_owner(owner) {}
+    building_t(const std::string ntag, const int w, const int h, const std::vector<rltk::vchar> &g, const std::vector<rltk::vchar> &ga, const bool comp, const std::size_t owner=0) :
+        tag(ntag), width(w), height(h), glyphs(g), glyphs_ascii(ga), complete(comp), civ_owner(owner) {}
 
     std::string tag;
     int width, height;
     std::vector<rltk::vchar> glyphs;
+	std::vector<rltk::vchar> glyphs_ascii;
     bool complete = false;
     std::vector<std::pair<std::string, std::size_t>> built_with;
     std::size_t civ_owner=0;
@@ -26,7 +27,7 @@ struct building_t {
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( tag, width, height, glyphs, complete, built_with, civ_owner ); // serialize things by passing them to the archive
+		archive( tag, width, height, glyphs, glyphs_ascii, complete, built_with, civ_owner ); // serialize things by passing them to the archive
 	}
 
 };

@@ -17,11 +17,12 @@ struct building_designation_t {
     int width;
     int height;
     std::vector<rltk::vchar> glyphs;
+	std::vector<rltk::vchar> glyphs_ascii;
 	std::size_t building_entity = 0;
 
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( x, y, z, component_ids, name, tag, components, width, height, glyphs, building_entity ); // serialize things by passing them to the archive
+		archive( x, y, z, component_ids, name, tag, components, width, height, glyphs, building_entity, glyphs_ascii ); // serialize things by passing them to the archive
 	}
 };

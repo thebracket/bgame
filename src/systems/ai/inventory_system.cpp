@@ -90,6 +90,7 @@ void inventory_system::configure() {
     	designate.width = building.width;
     	designate.height = building.height;
     	designate.glyphs = building.glyphs;
+		designate.glyphs_ascii = building.glyphs_ascii;
 
 		for (const auto &requested_component : building.components) {
 			const std::size_t component_id = claim_item_by_reaction_input(requested_component);
@@ -99,7 +100,7 @@ void inventory_system::configure() {
 
 		auto building_template = create_entity()
 			->assign(position_t{msg.x, msg.y, msg.z})
-			->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs, false });
+			->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs, designate.glyphs_ascii, false });
 		designate.building_entity = building_template->id;
 		for (int y=msg.y; y<msg.y + designate.height; ++y) {
 			for (int x = msg.x; x < msg.x + designate.width; ++x) {
@@ -285,6 +286,7 @@ std::vector<available_building_t> get_available_buildings() {
 			building.width = it->second.width;
 			building.components = it->second.components;
 			building.glyphs = it->second.glyphs;
+            building.glyphs_ascii = it->second.glyphs_ascii;
 			result.push_back(building);
 		}
 	}

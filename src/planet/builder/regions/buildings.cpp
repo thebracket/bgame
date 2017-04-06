@@ -21,7 +21,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
-        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, true, civ_owner });
+        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, building->second.glyphs_ascii, true, civ_owner });
 
     for (const building_provides_t &provides : building->second.provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});

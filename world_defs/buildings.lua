@@ -15,6 +15,11 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['solar_panel'], foreground = colors['cyan'], background = colors['white']}
 			}
+		},
+		render_ascii = {
+			width=1, height=1, tiles={
+				{glyph=glyphs['hash'], foreground = colors['cyan'], background = colors['white']}
+			}
 		}
 	},
 
@@ -27,7 +32,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['cryo_bed'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['eight'], foreground = colors['white'], background = colors['black']}
+            }
+        }
 	},
 
 	battery = {
@@ -39,7 +49,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['battery'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['plus_minus'], foreground = colors['red'], background = colors['black']}
+            }
+        }
 	},
 
 	storage_locker = {
@@ -51,7 +66,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['storage_locker'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['cabinet'], foreground = colors['white'], background = colors['black']}
+            }
+        }
 	},
 
 	small_replicator = {
@@ -63,7 +83,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['replicator_small'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['square_root'], foreground = colors['cyan'], background = colors['black']}
+            }
+        }
 	},
 
 	rtg = {
@@ -75,7 +100,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['rtg'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['plus_minus'], foreground = colors['green'], background = colors['black']}
+            }
+        }
 	},
 
 	personal_survival_shelter = {
@@ -87,7 +117,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['tent'], foreground = colors['green'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['arch'], foreground = colors['green'], background = colors['black']}
+            }
+        }
 	},
 
 	fake_camp_fire = {
@@ -100,6 +135,11 @@ buildings = {
 				{glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
+            }
+        },
         emits_smoke = true
 	},
 
@@ -113,6 +153,11 @@ buildings = {
 				{glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
+            }
+        },
         emits_smoke = true
 	},
 
@@ -128,6 +173,14 @@ buildings = {
 				{glyph= glyphs['sawmill_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']}
+            }
+        },
 	},
 
 	still = {
@@ -142,6 +195,14 @@ buildings = {
 				{glyph= glyphs['still_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']}
+            }
+        },
 	},
 
 	butcher = {
@@ -156,6 +217,14 @@ buildings = {
 				{glyph= glyphs['butcher_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['cabinet'], foreground = colors['red'], background = colors['black']},
+                {glyph= glyphs['kit'], foreground = colors['red'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['red'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['red'], background = colors['black']}
+            }
+        },
 	},
 
 	tanner = {
@@ -170,6 +239,14 @@ buildings = {
 				{glyph= glyphs['tanner_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['double_wall_nse'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['double_wall_nsw'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
+            }
+        },
 	},
 
 	leatherworker = {
@@ -184,6 +261,14 @@ buildings = {
 				{glyph= glyphs['leatherworker_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['chair'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']}
+            }
+        },
 	},
 
 	bonecarver = {
@@ -198,6 +283,14 @@ buildings = {
 				{glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['happy_face'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['happy_face'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['vertical_line'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['vertical_line'], foreground = colors['white'], background = colors['black']}
+            }
+        },
 	},
 
 	stonecutter = {
@@ -212,6 +305,14 @@ buildings = {
 				{glyph= glyphs['stonecutter_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']}
+            }
+        },
 	},
 
 	carpenter = {
@@ -226,6 +327,14 @@ buildings = {
 				{glyph= glyphs['carpenter_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
+            }
+        },
 	},
 
 	charcoal_hut = {
@@ -237,6 +346,11 @@ buildings = {
 				{glyph= glyphs['charcoal_hut'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['arch'], foreground = colors['wood_brown'], background = colors['black']}
+            }
+        },
 	},
 
 	smelter = {
@@ -248,6 +362,11 @@ buildings = {
 				{glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
+            }
+        },
 	},
 
 	glass_furnace = {
@@ -259,6 +378,11 @@ buildings = {
 				{glyph= glyphs['glass_furnace'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['arch'], foreground = colors['light_green'], background = colors['black']}
+            }
+        },
 	},
 
 	silicon_refinery = {
@@ -270,6 +394,11 @@ buildings = {
 				{glyph= glyphs['silicon_refinery'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['arch'], foreground = colors['cyan'], background = colors['black']}
+            }
+        },
 	},
 
 	kiln = {
@@ -281,6 +410,11 @@ buildings = {
 				{glyph= glyphs['kiln'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
+            }
+        },
 	},
 
 	primitive_forge = {
@@ -295,6 +429,14 @@ buildings = {
 				{glyph= glyphs['forge_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+                {glyph= glyphs['cabinet'], foreground = colors['grey'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']},
+                {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['black']}
+            }
+        },
 	},
 
 	primitive_workshop = {
@@ -309,6 +451,14 @@ buildings = {
 				{glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
+            }
+        },
 	},
 
 	mason = {
@@ -323,6 +473,14 @@ buildings = {
 				{glyph= glyphs['mason_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
+            }
+        },
 	},
 
 	mechanic = {
@@ -337,6 +495,14 @@ buildings = {
 				{glyph= glyphs['mechanic_4'], foreground = colors['white'], background = colors['black']}
 			}
 		},
+        render_ascii = {
+            width=2, height=2, tiles= {
+                {glyph= glyphs['star'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+                {glyph= glyphs['star'], foreground = colors['red'], background = colors['black']}
+            }
+        },
 	},
 
 	table = {
@@ -348,7 +514,12 @@ buildings = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
+            }
+        }
 	},
 
 	chair = {
@@ -360,7 +531,12 @@ buildings = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['chair'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['chair'], foreground = colors['white'], background = colors['black']}
+            }
+        }
 	},
 
 	door = {
@@ -372,7 +548,12 @@ buildings = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['door_open'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['door'], foreground = colors['white'], background = colors['black']}
+            }
+        }
 	},
 
 	energy_door = {
@@ -384,7 +565,12 @@ buildings = {
 			width=1, height=1, tiles= {
 				{glyph= glyphs['door_open'], foreground = colors['cyan'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles= {
+                {glyph= glyphs['door'], foreground = colors['cyan'], background = colors['black']}
+            }
+        }
 	},
 
 	bed_simple = {
@@ -396,7 +582,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['cryo_bed'], foreground = colors['white'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['eight'], foreground = colors['brown'], background = colors['black']}
+            }
+        }
 	},
 
 	cage_trap = {
@@ -408,7 +599,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['cage'], foreground = colors['green'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['cage_ascii'], foreground = colors['green'], background = colors['black']}
+            }
+        }
 	},
 	stonefall_trap = {
 		name = "Stonefall Trap",
@@ -419,7 +615,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['small_circle'], foreground = colors['red'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['small_circle'], foreground = colors['red'], background = colors['black']}
+            }
+        }
 	},
 	weapon_trap = {
 		name = "Blade Trap",
@@ -430,7 +631,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['clubs'], foreground = colors['red'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['clubs'], foreground = colors['red'], background = colors['black']}
+            }
+        }
 	},
 	spike_trap = {
 		name = "Retractable Spikes",
@@ -441,7 +647,12 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['spikes_retracted'], foreground = colors['red'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['o'], foreground = colors['red'], background = colors['black']}
+            }
+        }
 	},
 	lever = {
 		name = "Lever",
@@ -452,35 +663,54 @@ buildings = {
 			width=1, height=1, tiles={
 				{glyph=glyphs['lever_off'], foreground = colors['red'], background = colors['black']}
 			}
-		}
+		},
+        render_ascii = {
+            width=1, height=1, tiles={
+                {glyph=glyphs['marker'], foreground = colors['red'], background = colors['black']}
+            }
+        }
 	},
 
 	wall = {
 		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
-		provides = { wall={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} }
+		provides = { wall={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['solid_square'], foreground = colors['white'], background = colors['black']}	} }
 	},
 	floor = {
 		name = "Floor", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
-		provides = { floor={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
+		provides = { floor={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	stairs_up = {
 		name = "Up Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
-		provides = { stairs_up={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['less_than'], foreground = colors['wood_brown'], background = colors['black']} } }
+		provides = { stairs_up={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['less_than'], foreground = colors['wood_brown'], background = colors['black']} } },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['less_than'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	stairs_down = {
 		name = "Down Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
-		provides = { stairs_down={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['greater_than'], foreground = colors['wood_brown'], background = colors['black']} } }
+		provides = { stairs_down={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['greater_than'], foreground = colors['wood_brown'], background = colors['black']} } },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['greater_than'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	stairs_updown = {
 		name = "Spiral Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
-		provides = { stairs_updown={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['X'], foreground = colors['wood_brown'], background = colors['black']} } }
+		provides = { stairs_updown={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['X'], foreground = colors['wood_brown'], background = colors['black']} } },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['X'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	ramp = {
 		name = "Ramp", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
-		provides = { ramp={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['ramp_up'], foreground = colors['wood_brown'], background = colors['black']} } }
+		provides = { ramp={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['ramp_up'], foreground = colors['wood_brown'], background = colors['black']} } },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['ramp_up'], foreground = colors['wood_brown'], background = colors['black']} } }
 	},
 	bridge = {
 		name = "Bridge", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
-		provides = { ramp={energy_cost=0} }, render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
+		provides = { ramp={energy_cost=0} },
+        render = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } },
+        render_ascii = {	width=1, height=1, tiles= {	{glyph= glyphs['comma'], foreground = colors['wood_brown'], background = colors['black']} } }
 	}
 }

@@ -19,6 +19,7 @@ void sanity_check_buildings() noexcept
                 std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it->first << "\n";
             }
         }
+        if (it->second.glyphs_ascii.size() != it->second.glyphs.size()) std::cout << "WARNING: Building " << it->first << " has invalid ASCII render data.\n";
     }
 }
 
@@ -176,6 +177,36 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "render_ascii") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string type = lua_tostring(lua_state, -2);
+                    if (type == "width") c.width = lua_tonumber(lua_state, -1);
+                    if (type == "height") c.height = lua_tonumber(lua_state, -1);
+                    if (type == "tiles") {
+                        lua_pushstring(lua_state, type.c_str());
+                        lua_gettable(lua_state, -2);
+                        int i = 0;
+                        while (lua_next(lua_state, -2) != 0) {
+                            rltk::vchar render;
+                            lua_pushnumber(lua_state, i);
+                            lua_gettable(lua_state, -2);
+                            while (lua_next(lua_state, -2) != 0) {
+                                std::string tiletag = lua_tostring(lua_state, -2);
+                                if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
+                                if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
+                                if (tiletag == "background") render.background = read_lua_color("background");
+                                lua_pop(lua_state, 1);
+                            }
+                            lua_pop(lua_state, 1);
+                            ++i;
+                            c.glyphs_ascii.push_back(render);
+                        }
+                    }
+                    lua_pop(lua_state, 1);
+                }
+            }
             if (field == "render_rex") {
                 std::string filename = "rex/" + std::string(lua_tostring(lua_state, -1));
                 xp::rex_sprite sprite(filename);
@@ -184,6 +215,7 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                 for (int y=0; y<c.height; ++y) {
                     for (int x=0; x<c.width; ++x) {
                         c.glyphs.push_back(*sprite.get_tile(0,x,y));
+                        c.glyphs_ascii.push_back(*sprite.get_tile(0,x,y));
                     }
                 }
             }

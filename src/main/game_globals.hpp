@@ -39,6 +39,7 @@ struct available_building_t {
     int width = 0;
     int height = 0;
     std::vector<rltk::vchar> glyphs;
+	std::vector<rltk::vchar> glyphs_ascii;
 	int n_existing = 0;
 	std::string get_name() const noexcept {
 		return name + std::string(" (") + std::to_string(n_existing) + std::string(")");
