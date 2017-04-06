@@ -8,6 +8,8 @@
 #include <atomic>
 #include <thread>
 #include <memory>
+#include "../systems/gui/imgui_helper.hpp"
+#include "../external/imgui-sfml/imgui-SFML.h"
 
 constexpr int LOG_LAYER=1;
 constexpr int BACKDROP_LAYER=2;
@@ -26,8 +28,11 @@ void splash_loader() {
 
 void splash_screen::tick(const double duration_ms) {
 	term(LOG_LAYER)->clear();
-	term(LOG_LAYER)->print_center(2, VERSION, WHITE, BLACK);
-	term(LOG_LAYER)->print_center(4, "Loading assets - please wait.", YELLOW, BLACK);
+	/*term(LOG_LAYER)->print_center(2, VERSION, WHITE, BLACK);
+	term(LOG_LAYER)->print_center(4, "Loading assets - please wait.", YELLOW, BLACK);*/
+    ImGui::Begin("Loading game assets");
+    ImGui::Text("Please wait - loading assets");
+    ImGui::End();
 
 	if (splash_loader_started.load() == false) {
 		splash_loader_started.store(true);
