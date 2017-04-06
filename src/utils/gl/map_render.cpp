@@ -567,10 +567,8 @@ namespace map_render {
                 }
             } else if (game_design_mode == HARVEST) {
                 for (const auto &h : designations->harvest) {
-                    for (const auto &h : designations->harvest) {
-                        world_scene::add_decal(h.second.x, h.second.y, h.second.z,
-                                               vchar{'H', colors::CYAN, colors::CYAN}, mapidx(h.second));
-                    }
+                    world_scene::add_decal(h.second.x, h.second.y, h.second.z,
+                                           vchar{'H', colors::CYAN, colors::CYAN}, mapidx(h.second));
                 }
             }
         }
