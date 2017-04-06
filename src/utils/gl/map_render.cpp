@@ -51,7 +51,7 @@ namespace map_render {
     }
 
     inline std::tuple<int, int, int, int> calculate_edges() noexcept {
-        const int z2 = zoom_level * 2;
+        const int z2 = camera->zoom_level * 2;
         return std::make_tuple(
                 std::max(1, camera_position->region_x - z2),
                 std::min(REGION_WIDTH-1, camera_position->region_x + z2),
@@ -536,7 +536,7 @@ namespace map_render {
 
     inline void populate_vertex_buffer(const int &start_z, const int &end_z) {
         const auto edges = calculate_edges();
-        if (ascii_mode) {
+        if (camera->ascii_mode) {
             render_area_loop(start_z, end_z, edges, populate_ascii_render);
         } else {
             render_area_loop(start_z, end_z, edges, populate_tile_render);
@@ -606,11 +606,11 @@ namespace map_render {
                   0.0f, 1.0f, 0.0f // Up
         );*/
 
-        switch (camera_mode) {
+        switch (camera->camera_mode) {
             case FRONT : {
                 // Nice X-perspective view
-                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)zoom_level,
-                          ((float) camera_position->region_y) + ((float)zoom_level/3.0f), // Camera
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                          ((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f), // Camera
                           (float) camera_position->region_x, (float) camera_position->region_z,
                           (float) camera_position->region_y, // Target
                           0.0f, 1.0f, 0.0f // Up
@@ -619,7 +619,7 @@ namespace map_render {
 
             case TOP_DOWN : {
                 // Top-down
-                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)zoom_level,
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
                           ((float) camera_position->region_y) + 0.1f, // Camera
                           (float) camera_position->region_x, (float) camera_position->region_z,
                           (float) camera_position->region_y, // Target
@@ -629,8 +629,8 @@ namespace map_render {
 
             case DIAGONAL : {
                 // Diagonal
-                gluLookAt((float) camera_position->region_x + (float)zoom_level, ((float) camera_position->region_z) + (float)zoom_level,
-                          ((float) camera_position->region_y) + (float)zoom_level, // Camera
+                gluLookAt((float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                          ((float) camera_position->region_y) + (float)camera->zoom_level, // Camera
                           (float) camera_position->region_x, (float) camera_position->region_z,
                           (float) camera_position->region_y, // Target
                           0.0f, 1.0f, 0.0f // Up

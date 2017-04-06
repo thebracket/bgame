@@ -30,7 +30,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
     auto pos = entity(id)->component<position_t>();
     if (!compr || !pos) return;
 
-    if (ascii_mode) {
+    if (camera->ascii_mode) {
         composite_renderables[idx].emplace_back(std::vector<screen_render_t>{ screen_render_t{ (float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY, vchar{ compr->ascii_char, colors::WHITE, colors::BLACK } } });
         return;
     }
@@ -197,7 +197,7 @@ void renderables_system::update(const double time_elapsed) {
                     for (int x=0; x<b->width; ++x) {
                         const auto idx = mapidx(pos->x + offset_x, pos->y + offset_y, pos->z);
                         rltk::vchar glyph;
-                        glyph = ascii_mode && b->glyphs_ascii.size() == b->glyphs.size() ? b->glyphs_ascii[glyph_idx] : b->glyphs[glyph_idx];
+                        glyph = camera->ascii_mode && b->glyphs_ascii.size() == b->glyphs.size() ? b->glyphs_ascii[glyph_idx] : b->glyphs[glyph_idx];
                         if (b->glyphs_ascii.size() != b->glyphs.size()) std::cout << "WARNING: " << b->tag << " ASCII information invalid.\n";
                         if (!b->complete) glyph.foreground = rltk::colors::GREY;
                         auto door = E->component<construct_door_t>();
@@ -220,7 +220,7 @@ void renderables_system::update(const double time_elapsed) {
             if (!done && pos) {
                 auto render = E->component<renderable_t>();
                 if (render) {
-                    if (!ascii_mode) {
+                    if (!camera->ascii_mode) {
                             renderables[idx].push_back(
                                 screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY,
                                             rltk::vchar{render->glyph, render->foreground, rltk::colors::BLACK}});

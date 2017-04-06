@@ -14,6 +14,7 @@
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
 #include "../../../components/receives_signal.hpp"
+#include "../../../components/camera_options.hpp"
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
     auto building = building_defs.find(tag);
@@ -228,7 +229,8 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
 		->assign(world_position_t{region.region_x, region.region_y, crash_x, crash_y, crash_z+1})
 		->assign(std::move(calendar))
 		->assign(designations_t{})
-        ->assign(logger_t{});
+        ->assign(logger_t{})
+        ->assign(camera_options_t{});
 }
 
 int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, region_t &region, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {

@@ -100,15 +100,15 @@ void keyboard_system::update(const double ms) {
         // Camera mode
         if (e.event.key.code == sf::Keyboard::Tab) {
             if (e.event.key.shift) {
-                ascii_mode = !ascii_mode;
+                camera->ascii_mode = !camera->ascii_mode;
                 current_region->tile_recalc_all();
             } else {
-                if (camera_mode == TOP_DOWN) {
-                    camera_mode = FRONT;
-                } else if (camera_mode == FRONT) {
-                    camera_mode = DIAGONAL;
-                } else if (camera_mode == DIAGONAL) {
-                    camera_mode = TOP_DOWN;
+                if (camera->camera_mode == TOP_DOWN) {
+                    camera->camera_mode = FRONT;
+                } else if (camera->camera_mode == FRONT) {
+                    camera->camera_mode = DIAGONAL;
+                } else if (camera->camera_mode == DIAGONAL) {
+                    camera->camera_mode = TOP_DOWN;
                 }
             }
         }
@@ -149,12 +149,12 @@ void keyboard_system::update(const double ms) {
             emit_deferred(camera_move_requested_message{6, 1}); 
         }
         if (e.event.key.code == sf::Keyboard::PageUp) {
-            ++zoom_level;
-            if (zoom_level > 40) zoom_level = 40;
+            ++camera->zoom_level;
+            if (camera->zoom_level > 40) camera->zoom_level = 40;
         }
         if (e.event.key.code == sf::Keyboard::PageDown) {
-            --zoom_level;
-            if (zoom_level < 10) zoom_level = 10;
+            --camera->zoom_level;
+            if (camera->zoom_level < 10) camera->zoom_level = 10;
         }
 
         // Mode changes

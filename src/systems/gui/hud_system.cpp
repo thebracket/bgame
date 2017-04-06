@@ -52,16 +52,16 @@ void hud_system::update(const double ms) {
         }
         if (ImGui::BeginMenu("Display")) {
             if (ImGui::MenuItem("Top-Down")) {
-                camera_mode = TOP_DOWN;
+                camera->camera_mode = TOP_DOWN;
             }
             if (ImGui::MenuItem("Front")) {
-                camera_mode = FRONT;
+                camera->camera_mode = FRONT;
             }
             if (ImGui::MenuItem("Diagonal")) {
-                camera_mode = DIAGONAL;
+                camera->camera_mode = DIAGONAL;
             }
             if (ImGui::MenuItem("Toggle ASCII")) {
-                ascii_mode = !ascii_mode;
+                camera->ascii_mode = !camera->ascii_mode;
                 current_region->tile_recalc_all();
             }
             ImGui::EndMenu();

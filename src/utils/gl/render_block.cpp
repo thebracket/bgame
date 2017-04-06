@@ -280,7 +280,7 @@ void render_block::add_standup(const int &x, const int &y, const int &z, const r
     cvertices.emplace_back(c3d{light_r, light_g, light_b});
     cvertices.emplace_back(c3d{light_r, light_g, light_b});
 
-    if (camera_mode == TOP_DOWN) {
+    if (camera->camera_mode == TOP_DOWN) {
         // Paste to the floor
         tvertices.emplace_back(t3d{tex_xf, tex_yf});
         tvertices.emplace_back(t3d{tex_xf, tex_yf + tex_ysize});
@@ -304,7 +304,7 @@ void render_block::add_standup(const int &x, const int &y, const int &z, const r
         vertices.emplace_back(v3d{-0.5f, 0.5f, 0.5f});
     }
 
-    if (camera_mode == TOP_DOWN) {
+    if (camera->camera_mode == TOP_DOWN) {
         screen_index.emplace_back(v4d{SX, SY, SZ, 0.0f});
         screen_index.emplace_back(v4d{SX, SY, SZ, 0.0f});
         screen_index.emplace_back(v4d{SX, SY, SZ, 0.0f});

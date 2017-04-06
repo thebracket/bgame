@@ -197,7 +197,7 @@ void region_t::calc_render(const int &idx) {
 		} break;
 		case tile_type::SOLID : {
 			auto mat = get_material(tile_material[idx]);
-            glyph = ascii_mode ? 219 : 257;
+            glyph = camera->ascii_mode ? 219 : 257;
 			if (idx < tile_material.size()) {
 				fg = mat->fg;
 				bg = mat->bg;
@@ -213,7 +213,7 @@ void region_t::calc_render(const int &idx) {
 			fg = rltk::colors::BLACK;
 		} break;
 		case tile_type::WALL : {
-            if (ascii_mode) {
+            if (camera->ascii_mode) {
                 uint8_t wall_mask = 0;
                 if (tile_type[idx-1] == tile_type::WALL) wall_mask += 1;
                 if (tile_type[idx+1] == tile_type::WALL) wall_mask += 2;
@@ -250,11 +250,11 @@ void region_t::calc_render(const int &idx) {
             }
 		} break;
 		case tile_type::WINDOW : {
-			glyph = ascii_mode ? 176 : 257;
+			glyph = camera->ascii_mode ? 176 : 257;
 			fg = rltk::colors::CYAN;
 		} break;
 		case tile_type::RAMP : {
-			glyph = ascii_mode ? 30 : 257;
+			glyph = camera->ascii_mode ? 30 : 257;
 			if (tile_material[idx] > 0) {
 				fg = get_material(tile_material[idx])->fg;
 			} else {
@@ -277,13 +277,13 @@ void region_t::calc_render(const int &idx) {
 		case tile_type::FLOOR: {
 
 			if (get_material(tile_material[idx])->spawn_type == sand) {
-				glyph = ascii_mode ? 126 : 258;
+				glyph = camera->ascii_mode ? 126 : 258;
 			} else if (get_material(tile_material[idx])->spawn_type == blight) {
-				glyph = ascii_mode ? 247 : 265;
+				glyph = camera->ascii_mode ? 247 : 265;
 			} else if (tile_flags[idx].test(CONSTRUCTION)) {
-				glyph = ascii_mode ? '.' : 256;
+				glyph = camera->ascii_mode ? '.' : 256;
 			} else {
-				glyph = ascii_mode ? '`' : 257;
+				glyph = camera->ascii_mode ? '`' : 257;
 			}
 
 			fg = get_material(tile_material[idx])->fg;
@@ -293,8 +293,8 @@ void region_t::calc_render(const int &idx) {
 				const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
                 const uint8_t lifecycle = tile_vegetation_lifecycle[idx];
                 rltk::vchar plant_render;
-                plant_render.glyph = ascii_mode ? plant.glyphs_ascii[lifecycle].glyph : plant.glyphs[lifecycle];
-                if (ascii_mode) {
+                plant_render.glyph = camera->ascii_mode ? plant.glyphs_ascii[lifecycle].glyph : plant.glyphs[lifecycle];
+                if (camera->ascii_mode) {
                     plant_render.foreground = plant.glyphs_ascii[lifecycle].foreground;
                 } else {
                     plant_render.foreground = colors::WHITE;
@@ -303,19 +303,19 @@ void region_t::calc_render(const int &idx) {
 			}
 		} break;
 		case tile_type::CLOSED_DOOR : {
-            glyph = ascii_mode ? 197 : 329;
+            glyph = camera->ascii_mode ? 197 : 329;
 			fg = get_material(tile_material[idx])->fg;
 
 		} break;
 		case tile_type::TREE_TRUNK : {
-			glyph = ascii_mode ? 180 : 259;
+			glyph = camera->ascii_mode ? 180 : 259;
 			fg = get_material(tile_material[idx])->fg;
 			bg = rltk::colors::Black;
-            render_cache[idx] = ascii_mode ? vchar{180, rltk::colors::Brown, rltk::colors::BLACK} : vchar{glyph, rltk::colors::Brown, bg};
+            render_cache[idx] = camera->ascii_mode ? vchar{180, rltk::colors::Brown, rltk::colors::BLACK} : vchar{glyph, rltk::colors::Brown, bg};
 		} break;
 		case tile_type::TREE_LEAF : {
-			glyph = ascii_mode ? 177 : 278;
-			fg = ascii_mode ? rltk::colors::GREEN : rltk::colors::White;
+			glyph = camera->ascii_mode ? 177 : 278;
+			fg = camera->ascii_mode ? rltk::colors::GREEN : rltk::colors::White;
 			bg = rltk::colors::Black;
 		} break;
 	}
