@@ -41,7 +41,10 @@ void loader_tick() {
     term(MAP_LAYER)->clear();
     term(RIGHT_PANEL)->clear();
     term(TOOLTIP_LAYER)->clear();
-    term(GUI_LAYER)->print_center(4, "Loading game - please wait.", YELLOW, BLACK);
+    //term(GUI_LAYER)->print_center(4, "Loading game - please wait.", YELLOW, BLACK);
+    ImGui::Begin("Loading, please wait...");
+    ImGui::Text("The game is loading, please wait.");
+    ImGui::End();
 }
 
 void play_game::tick(const double duration_ms) {
