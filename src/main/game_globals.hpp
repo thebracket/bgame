@@ -26,6 +26,7 @@ struct config_t {
 	float scale_factor = 1.0f;
 	bool allow_calling_home = true;
     std::string online_username = "anonymouse";
+    bool show_entity_ids = true;
 
     void save();
 };

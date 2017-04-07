@@ -12,3 +12,4 @@ gui_ttf_size=18
 scale_factor=1
 allow_calling_home=yes
 online_username=anonymouse
+show_entity_ids=yes

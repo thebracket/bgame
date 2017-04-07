@@ -123,7 +123,11 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	// Named entities in the location
 	each<name_t, position_t>([&lines,&world_x, &world_y] (entity_t &entity, name_t &name, position_t &pos) {
 		if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
-			lines.push_back(name.first_name + std::string(" ") + name.last_name);
+			if (game_config.show_entity_ids) {
+				lines.push_back(name.first_name + std::string(" ") + name.last_name + std::string(" (") + std::to_string(entity.id) + std::string(")"));
+			} else {
+				lines.push_back(name.first_name + std::string(" ") + name.last_name);
+			}
 		}
 	});
 	// Items on the ground

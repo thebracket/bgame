@@ -162,6 +162,9 @@ void main_menu::tick(const double duration_ms) {
         ImGui::InputText("Online Username", (char *) &online_username, 254);
         ImGui::Text("UI Scale Factor");
         ImGui::InputFloat("## Scale Factor", &game_config.scale_factor);
+		ImGui::Text("Show Entity ID Numbers");
+		ImGui::SameLine();
+		ImGui::Checkbox("## Entity ID", &game_config.show_entity_ids);
         if (ImGui::Button(btn_save.c_str())) {
             game_config.online_username = std::string(online_username);
             game_config.save();

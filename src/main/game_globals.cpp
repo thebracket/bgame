@@ -57,4 +57,9 @@ void config_t::save() {
         f << "allow_calling_home=no\n";
     }
     f << "online_username=" << online_username << "\n";
+    if (show_entity_ids) {
+        f << "show_entity_ids=yes\n";
+    } else {
+        f << "show_entity_ids=no\n";
+    }
 }

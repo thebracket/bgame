@@ -156,6 +156,7 @@ void read_config() {
 		if (split_line[0] == "scale_factor") game_config.scale_factor = std::stof(split_line[1]);
 		if (split_line[0] == "allow_calling_home" && split_line[1] != "yes") game_config.allow_calling_home = false;
 		if (split_line[0] == "online_username") game_config.online_username = split_line[1];
+        if (split_line[0] == "show_entity_ids" && split_line[1]!="yes") game_config.show_entity_ids = false;
 	}
 	rltk::scale_factor = game_config.scale_factor;
 }
