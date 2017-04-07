@@ -3,6 +3,7 @@ add_library(ai STATIC
         ai_idle.cpp
         ai_new_arrival.cpp
         ai_status_effects.cpp
+        ai_stuck.cpp
         ai_visibility_scan.cpp
         settler_ai_system.cpp
         workflow_system.cpp

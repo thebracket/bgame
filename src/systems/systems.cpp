@@ -56,6 +56,7 @@
 #include "ai/ai_visibility_scan.hpp"
 #include "ai/ai_idle.hpp"
 #include "damage/sentient_attacks.hpp"
+#include "ai/ai_stuck.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -66,6 +67,7 @@ void add_systems_to_ecs() {
     add_system<calendar_system>();
     add_system<initiative_system>();
     add_system<ai_status_effects>();
+    add_system<ai_stuck_system>();
     add_system<world_system>();
     add_system<settler_spawner_system>();
     add_system<gravity_system>();

@@ -75,19 +75,6 @@ void settler_ai_system::update(const double duration_ms) {
         const int hour_of_day = calendar->hour;
         const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
-        if (tasks::is_stuck_or_invalid(*pos)) {
-            emit_deferred(log_message{LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars});
-            std::cout << "Warning - stuck settler!\n";
-            bool done = false;
-            each<position_t, construct_provides_sleep_t>([this,&e,&pos,&done] (entity_t &E, position_t &P, construct_provides_sleep_t &S) {
-                if (!done) {
-                    move_to(*e, *pos, P);
-                    done = true;
-                    // This should use power
-                }
-            });
-        }
-
         // Do we have any hostiles to worry about?
         tasks::can_see_hostile(*e, *pos, *view, [&ai] (entity_t &other) {
             if (ai->job_type_minor == JM_SLEEP) return false; // We don't spot anyone when sleeping
