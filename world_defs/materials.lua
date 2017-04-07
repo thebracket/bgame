@@ -252,7 +252,7 @@ materials = {
         hit_points = 100, mines_to="stone_boulder"
     },
     tetrahedrite = { name="Tetrahedrite", type="rock", layer="igneous", 
-        glyph=glyphs['ukp'], fg=colors['grey'], bg=colors['grey'],
+        glyph=glyphs['ukp'], fg=colors['copper'], bg=colors['grey'],
         hit_points = 100, mines_to="ore", ore_materials = {"copper", "silver"}
     },
 
