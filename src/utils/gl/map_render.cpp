@@ -339,6 +339,7 @@ namespace map_render {
                 auto veg_cache = current_region->veg_cache[idx];
                 if (veg_cache.glyph > 0) {
                     tile = veg_cache;
+                    tile.background = rltk::colors::BLACK;
                 }
 
                 // Add blood stains
