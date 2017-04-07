@@ -75,15 +75,6 @@ void settler_ai_system::update(const double duration_ms) {
         const int hour_of_day = calendar->hour;
         const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
-        // Do we have any hostiles to worry about?
-        tasks::can_see_hostile(*e, *pos, *view, [&ai] (entity_t &other) {
-            if (ai->job_type_minor == JM_SLEEP) return false; // We don't spot anyone when sleeping
-            if (other.component<grazer_ai>() && designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE) return true;
-            auto sentient = other.component<sentient_ai>();
-            if (sentient && sentient->hostile) return true;
-            return false;
-        });
-
         if (ai->job_type_major == JOB_MINE || ai->job_type_major == JOB_CHOP || ai->job_type_major == JOB_CONST
                    || ai->job_type_major == JOB_REACTION || ai->job_type_major == JOB_BUTCHER || ai->job_type_major == JOB_DECONSTRUCT) {
             // If we have a job to do - keep doing it
