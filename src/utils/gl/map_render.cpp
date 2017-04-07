@@ -273,6 +273,21 @@ namespace map_render {
                         world_scene::add_world_cube(x, y, z, result, idx);
                     }
                 }
+            } else {
+                // Add renderables in open space
+                auto rfinder = renderables.find(idx);
+                if (rfinder != renderables.end()) {
+                    screen_render_t &sr = rfinder->second[glyph_cycle % rfinder->second.size()];
+                    world_scene::add_simple_renderable(x, y, z, sr.c, idx);
+                }
+
+                // Add composite renderables in open space
+                auto cfinder = composite_renderables.find(idx);
+                if (cfinder != composite_renderables.end()) {
+                    for (const auto &sr : cfinder->second[glyph_cycle % cfinder->second.size()]) {
+                        world_scene::add_composite_renderable(x, y, z, sr.c, idx);
+                    }
+                }
             }
         } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
             const uint8_t tiletype = current_region->tile_type[idx];
@@ -499,6 +514,19 @@ namespace map_render {
                     }
                 }
                 world_scene::add_ascii_tile(x, y, z, tile, idx);
+            } else {
+                // Add renderables
+                auto rfinder = renderables.find(idx);
+                if (rfinder != renderables.end()) {
+                    screen_render_t &sr = rfinder->second[glyph_cycle % rfinder->second.size()];
+                    tile = sr.c;
+                }
+
+                // Add composite renderables
+                auto cfinder = composite_renderables.find(idx);
+                if (cfinder != composite_renderables.end()) {
+                    tile = cfinder->second[glyph_cycle % cfinder->second.size()][0].c;
+                }
             } // end open space
         } else if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
             const uint8_t tiletype = current_region->tile_type[idx];
