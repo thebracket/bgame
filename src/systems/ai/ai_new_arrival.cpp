@@ -26,7 +26,7 @@ void ai_new_arrival::update(const double duration_ms) {
         }
 
         ++arrival.turns_since_arrival;
-        if (arrival.turns_since_arrival > 50) {
+        if (arrival.turns_since_arrival > 10) {
             delete_component<ai_settler_new_arrival_t>(e.id);
             e.assign(ai_mode_idle_t{});
         }
