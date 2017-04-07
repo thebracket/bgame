@@ -2,6 +2,7 @@ add_library(ai STATIC
         ai_action_shim.cpp
         ai_idle.cpp
         ai_new_arrival.cpp
+        ai_scheduler.cpp
         ai_status_effects.cpp
         ai_stuck.cpp
         ai_visibility_scan.cpp
