@@ -82,9 +82,6 @@ void settler_ai_system::update(const double duration_ms) {
         } else {
             switch (current_schedule) {
                 case SLEEP_SHIFT : do_sleep_time(*e, *ai, *stats, *species, *pos, *name); break;
-                    //case LEISURE_SHIFT : do_leisure_time(entity, ai, stats, species, pos, name); break;
-                    // Temporary - everyone works
-                case LEISURE_SHIFT : do_work_time(*e, *ai, *stats, *species, *pos, *name); break;
                 case WORK_SHIFT : do_work_time(*e, *ai, *stats, *species, *pos, *name); break;
             }
         }

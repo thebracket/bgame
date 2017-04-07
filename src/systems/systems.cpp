@@ -58,6 +58,7 @@
 #include "damage/sentient_attacks.hpp"
 #include "ai/ai_stuck.hpp"
 #include "ai/ai_scheduler.hpp"
+#include "ai/ai_leisure_time.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -86,10 +87,11 @@ void add_systems_to_ecs() {
     add_system<workflow_system>();
     add_system<ai_visibility_scan>();
     add_system<ai_new_arrival>();
-    add_system<ai_action_shim>();
-    add_system<settler_ai_system>();
     add_system<ai_idle>();
     add_system<ai_scheduler>();
+    add_system<ai_leisure_time_t>();
+    add_system<ai_action_shim>();
+    add_system<settler_ai_system>();
     add_system<mode_rogue_system>();
     add_system<movement_system>();
     add_system<trigger_system>();
