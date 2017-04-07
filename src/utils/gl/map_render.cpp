@@ -119,14 +119,14 @@ namespace map_render {
                 // Add renderables
                 auto rfinder = renderables.find(idx);
                 if (rfinder != renderables.end()) {
-                    screen_render_t &sr = rfinder->second[0];
+                    screen_render_t &sr = rfinder->second[glyph_cycle % rfinder->second.size()];
                     world_scene::add_simple_renderable(x, y, z, sr.c, idx);
                 }
 
                 // Add composite renderables
                 auto cfinder = composite_renderables.find(idx);
                 if (cfinder != composite_renderables.end()) {
-                    for (const auto &sr : cfinder->second[0]) {
+                    for (const auto &sr : cfinder->second[glyph_cycle % cfinder->second.size()]) {
                         world_scene::add_composite_renderable(x, y, z, sr.c, idx);
                     }
                 }
@@ -349,14 +349,14 @@ namespace map_render {
                 // Add renderables
                 auto rfinder = renderables.find(idx);
                 if (rfinder != renderables.end()) {
-                    screen_render_t &sr = rfinder->second[0];
+                    screen_render_t &sr = rfinder->second[glyph_cycle % rfinder->second.size()];
                     tile = sr.c;
                 }
 
                 // Add composite renderables
                 auto cfinder = composite_renderables.find(idx);
                 if (cfinder != composite_renderables.end()) {
-                    tile = cfinder->second[0][0].c;
+                    tile = cfinder->second[glyph_cycle % cfinder->second.size()][0].c;
                 }
 
                 // Stockpiles
