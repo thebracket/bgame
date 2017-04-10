@@ -27,9 +27,11 @@ find_package(SFML 2 COMPONENTS system window graphics network REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Require GLEW - maybe not on OSX?
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
-link_libraries(${GLEW_LIBRARIES})
+if (NOT(APPLE))
+    find_package(GLEW REQUIRED)
+    include_directories(${GLEW_INCLUDE_DIRS})
+    link_libraries(${GLEW_LIBRARIES})
+endif()
 
 # Require OpenGL
 find_package(OpenGL REQUIRED)
