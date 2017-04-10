@@ -39,6 +39,7 @@ cp $GAMEBASE/assets/Hack_square_64x64.png assets
 cp $GAMEBASE/assets/fonts.txt assets
 cp $GAMEBASE/assets/background_image.png assets
 cp $GAMEBASE/assets/gamelogo.png assets
+cp $GAMEBASE/assets/background_image.jpg assets
 
 cp $GAMEBASE/world_defs/* world_defs
 cp $GAMEBASE/rex/* rex

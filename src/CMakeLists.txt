@@ -6,7 +6,7 @@ include(cotire)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 #if (NOT(WIN32))
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -Wextra -Wpedantic -pedantic-errors -march=native -mtune=native -pthread -g -fopenmp -ffast-math")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -march=native -mtune=native -pthread -g -fopenmp -ffast-math")
 	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -pthread")
 	#endif()
 	#if (WIN32)
@@ -26,10 +26,16 @@ include_directories(${LUA_INCLUDE_DIR})
 find_package(SFML 2 COMPONENTS system window graphics network REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
+# Require GLEW - maybe not on OSX?
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRS})
+link_libraries(${GLEW_LIBRARIES})
+
 # Require OpenGL
 find_package(OpenGL REQUIRED)
 #find_package(GLUT REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS})
+link_libraries(${OPENGL_LIBRARIES})
 
 # Require RLTK, FastNoise
 include_directories(external/rltk/rltk)
