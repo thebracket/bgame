@@ -4,4 +4,5 @@ add_library(render STATIC
         lighting_system.cpp
         renderables_system.cpp
         )
+target_link_libraries(render rltk)
 cotire(render)
