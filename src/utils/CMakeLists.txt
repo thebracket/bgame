@@ -4,5 +4,6 @@ add_library(utils STATIC
 	octree.cpp
     dijkstra_map.cpp
 	telemetry.cpp
+	filesystem.cpp
 )
 cotire(utils)

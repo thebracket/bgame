@@ -15,6 +15,7 @@
 #include "../../raws/materials.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "regions/blight_builder.hpp"
+#include "../../utils/filesystem.hpp"
 
 #include <rltk.hpp>
 
@@ -165,7 +166,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Save the region
     set_worldgen_status("Saving region to disk");
 	save_region(region);
-	const std::string save_filename = "world/savegame.dat";
+	const std::string save_filename = get_save_path() + std::string("/savegame.dat");
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
 	ecs_save(lbfile);
 }

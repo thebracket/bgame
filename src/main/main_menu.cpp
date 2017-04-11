@@ -7,6 +7,7 @@
 #include "game_globals.hpp"
 #include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
+#include "../utils/filesystem.hpp"
 
 constexpr int BACKDROP_LAYER=1;
 constexpr int LOG_LAYER=2;
@@ -50,7 +51,7 @@ void main_menu::init() {
 	gui->add_owner_layer(BACKDROP_LAYER, 0, 0, window_width, window_height, resize_fullscreen, draw_splash_backdrop);
 	gui->add_layer(LOG_LAYER, 0, 0, window_width, window_height, game_config.gui_font, resize_fullscreen, false);
 
-	if (exists("world/savegame.dat")) {
+	if (exists(get_save_path() + std::string("/savegame.dat"))) {
 		world_exists = true;
 		selected = 0;
 	}

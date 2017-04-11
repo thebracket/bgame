@@ -6,11 +6,12 @@
 #include "../raws/plants.hpp"
 #include "../systems/physics/fluid_system.hpp"
 #include "../main/game_globals.hpp"
+#include "../utils/filesystem.hpp"
 
 using namespace rltk;
 
 void save_region(const region_t &region) {
-	std::string region_filename = "world/region_" + std::to_string(region.region_x) + "_" + std::to_string(region.region_y) + ".dat";
+	std::string region_filename = get_save_path() + std::string("/region_") + std::to_string(region.region_x) + "_" + std::to_string(region.region_y) + ".dat";
 	gzip_file deflate(region_filename, "wb");
 
 	deflate.serialize(region.region_x);
@@ -38,7 +39,7 @@ void save_region(const region_t &region) {
 }
 
 region_t load_region(const int region_x, const int region_y) {
-	std::string region_filename = "world/region_" + std::to_string(region_x) + "_" + std::to_string(region_y) + ".dat";
+	std::string region_filename = get_save_path() + std::string("/region_") + std::to_string(region_x) + "_" + std::to_string(region_y) + ".dat";
 	gzip_file inflate(region_filename, "rb");
 	region_t region;
 

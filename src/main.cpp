@@ -15,6 +15,7 @@
 #include <chrono>
 #include <filesystem.hpp>
 #include <unistd.h>
+#include "utils/filesystem.hpp"
 #ifdef __APPLE__
 #include <libproc.h>
 #endif
@@ -32,7 +33,7 @@ play_game game;
 std::chrono::high_resolution_clock::time_point last_save;
 
 void save_game() {
-	const std::string save_filename = "world/savegame.dat";
+	const std::string save_filename = get_save_path() + std::string("/savegame.dat");
 	std::cout << "Saving game to " << save_filename << "\n";
 	if (exists(save_filename)) std::remove(save_filename.c_str());
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);

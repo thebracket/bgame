@@ -7,6 +7,7 @@
 #include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/map_render.hpp"
+#include "../utils/filesystem.hpp"
 
 #include <rltk.hpp>
 #include <iostream>
@@ -75,7 +76,7 @@ void do_load_game() {
     // Load the ECS
     std::cout << "Loading game state\n";
     {
-        const std::string save_filename = "world/savegame.dat";
+        const std::string save_filename = get_save_path() + std::string("/savegame.dat");
         std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
         ecs_load(lbfile);
     }

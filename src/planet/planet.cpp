@@ -4,10 +4,11 @@
 #include <iostream>
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
+#include "../utils/filesystem.hpp"
 
 using namespace rltk;
 
-const std::string planet_filename = "world/planet.dat";
+const std::string planet_filename = get_save_path() + std::string("/planet.dat");
 
 void save_planet(const planet_t &planet) {
 	std::fstream lbfile(planet_filename, std::ios::out | std::ios::binary);
