@@ -1,7 +1,10 @@
 #include "filesystem.hpp"
+
+#ifndef WIN32
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+#endif
 
 bool directory_exists(const char *path)
 {
@@ -15,6 +18,7 @@ bool directory_exists(const char *path)
         return false;
 }
 
+#ifndef WIN32
 std::string get_save_path()
 {
     struct passwd *pw = getpwuid(getuid());
@@ -27,3 +31,26 @@ std::string get_save_path()
 
     return result;
 }
+#else
+
+#include <Shlobj.h>
+#include <windows.h>
+#include <iostream>
+
+std::string get_save_path()
+{
+    WCHAR path[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, path))) {
+    	const std::wstring p(path);
+	const std::string ps(p.begin(), p.end());
+	std::cout << ps << "\n";
+	if (!directory_exists(ps.c_str())) {
+	    CreateDirectory(ps.c_str(), nullptr);
+	}
+        return ps;
+    }
+}
+
+#endif
+
+
