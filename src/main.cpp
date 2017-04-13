@@ -19,6 +19,7 @@
 #ifdef __APPLE__
 #include <libproc.h>
 #endif
+#include <GL/glew.h>
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -207,6 +208,8 @@ int main(int argc, char* argv[])
 	read_config();
     start_telemetry();
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
+	glewExperimental = GL_TRUE;
+	glewInit();
 	splash.init();
 
     // ImGui hooks
