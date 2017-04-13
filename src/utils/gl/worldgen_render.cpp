@@ -25,8 +25,8 @@ void worldgen_scene::render() {
     push_gl_states();
 
     // Draw it
-    glUseProgram(0); // Just in case we left one lying around
-    glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering, again just in case
+    //glUseProgram(0); // Just in case we left one lying around
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering, again just in case
 
     auto screen_size = rltk::get_window()->getSize();
     glEnable(GL_DEPTH_TEST);
