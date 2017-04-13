@@ -23,15 +23,13 @@ find_package(Lua 5 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 
 # Require SFML
-find_package(SFML 2 COMPONENTS system window graphics network REQUIRED)
+find_package(SFML 2.4 COMPONENTS system window graphics network REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
-# Require GLEW - maybe not on OSX?
-if (NOT(APPLE))
-    find_package(GLEW REQUIRED)
-    include_directories(${GLEW_INCLUDE_DIRS})
-    link_libraries(${GLEW_LIBRARIES})
-endif()
+# Require GLEW
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRS})
+link_libraries(${GLEW_LIBRARIES})
 
 # Require OpenGL
 find_package(OpenGL REQUIRED)
