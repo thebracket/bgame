@@ -80,10 +80,7 @@ void settler_ai_system::update(const double duration_ms) {
             // If we have a job to do - keep doing it
             do_work_time(*e, *ai, *stats, *species, *pos, *name);
         } else {
-            switch (current_schedule) {
-                case SLEEP_SHIFT : do_sleep_time(*e, *ai, *stats, *species, *pos, *name); break;
-                case WORK_SHIFT : do_work_time(*e, *ai, *stats, *species, *pos, *name); break;
-            }
+            do_work_time(*e, *ai, *stats, *species, *pos, *name);
         }
 	});
 
