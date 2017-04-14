@@ -59,6 +59,7 @@
 #include "ai/ai_stuck.hpp"
 #include "ai/ai_scheduler.hpp"
 #include "ai/ai_leisure_time.hpp"
+#include "ai/ai_sleep_time_system.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -90,6 +91,7 @@ void add_systems_to_ecs() {
     add_system<ai_idle>();
     add_system<ai_scheduler>();
     add_system<ai_leisure_time_t>();
+    add_system<ai_sleep_time_system>();
     add_system<ai_action_shim>();
     add_system<settler_ai_system>();
     add_system<mode_rogue_system>();

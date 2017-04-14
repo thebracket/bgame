@@ -6,7 +6,6 @@ add_library(tasks STATIC
         settler_drop_tool.cpp
         settler_cancel_action.cpp
         settler_leisure.cpp
-        settler_sleep.cpp
         threat_scanner.cpp
         settler_wander.cpp
         settler_work_time.cpp

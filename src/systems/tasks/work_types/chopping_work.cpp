@@ -29,7 +29,6 @@
 #include "../../../components/lightsource.hpp"
 #include "../../../components/falling.hpp"
 #include "../world_queries.hpp"
-#include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
 #include "../../../utils/telemetry.hpp"

@@ -30,7 +30,6 @@
 #include "../../components/initiative.hpp"
 #include "../tasks/threat_scanner.hpp"
 #include "../tasks/world_queries.hpp"
-#include "../tasks/settler_sleep.hpp"
 #include "../tasks/settler_wander.hpp"
 #include "../tasks/settler_move_to.hpp"
 #include "../tasks/settler_work_time.hpp"

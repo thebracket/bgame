@@ -1,5 +1,6 @@
 #include "settler_cancel_action.hpp"
 #include "../../components/construct_provides_sleep.hpp"
+#include "../../components/claimed_t.hpp"
 #include "../../main/game_globals.hpp"
 #include "settler_drop_tool.hpp"
 #include "idle_mode.hpp"
@@ -12,7 +13,13 @@ void cancel_action(rltk::entity_t &e, settler_ai_t &ai, game_stats_t &stats, spe
 		auto bed_entity = entity(ai.target_id);
 		if (bed_entity) {
 			auto bed = bed_entity->component<construct_provides_sleep_t>();
-			if (bed) bed->claimed = false;
+			if (bed) {
+				auto bed_claim = bed_entity->component<claimed_t>();
+                if (bed_claim && bed_claim->claimed_by == e.id) {
+                    delete_component<claimed_t>(bed_entity->id);
+                }
+
+			}
 		}
 	}
 	if (ai.job_type_major == JOB_GUARD) {

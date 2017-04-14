@@ -14,6 +14,7 @@
 #include "../../components/item.hpp"
 #include "../ai/movement_system.hpp"
 #include "../../raws/species.hpp"
+#include "../../components/sleep_clock_t.hpp"
 
 using namespace rltk;
 
@@ -89,15 +90,18 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         // Optionally render a status flag
         auto ai = entity(id)->component<settler_ai_t>();
         if (ai) {
-            if (ai->job_type_major == JOB_SLEEP && ai->job_type_minor==JM_SLEEP) {
-                layers.push_back(vchar{336, rltk::colors::WHITE, rltk::colors::BLACK});
-            } else if (ai->job_type_major == JOB_MINE) {
+            if (ai->job_type_major == JOB_MINE) {
                 layers.push_back(vchar{337, rltk::colors::WHITE, rltk::colors::BLACK});
             } else if (ai->job_type_major == JOB_CHOP) {
                 layers.push_back(vchar{338, rltk::colors::WHITE, rltk::colors::BLACK});
             } else if (ai->job_type_major == JOB_CONST || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
                 layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
             }
+        }
+
+        auto sleep = entity(id)->component<sleep_clock_t>();
+        if (sleep && sleep->is_sleeping) {
+            layers.push_back(vchar{336, rltk::colors::WHITE, rltk::colors::BLACK});
         }
 
         std::vector<screen_render_t> tmp;

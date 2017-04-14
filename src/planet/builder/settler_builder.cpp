@@ -13,6 +13,7 @@
 #include "../../raws/profession.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/ai_settler_new_arrival.hpp"
+#include "../../components/sleep_clock_t.hpp"
 
 using namespace rltk;
 
@@ -295,7 +296,8 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		->assign(std::move(ai))
 		->assign(viewshed_t{ 8, false })
 		->assign(initiative_t{})
-		->assign(ai_settler_new_arrival_t{});
+		->assign(ai_settler_new_arrival_t{})
+		->assign(sleep_clock_t{});
 
 	// TODO: Create clothing items
 	//std::cout << settler->id << "\n";

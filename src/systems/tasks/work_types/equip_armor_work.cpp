@@ -30,7 +30,6 @@
 #include "../../../components/falling.hpp"
 #include "../../../raws/clothing.hpp"
 #include "../world_queries.hpp"
-#include "../settler_sleep.hpp"
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
 

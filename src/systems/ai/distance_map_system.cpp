@@ -10,6 +10,7 @@
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
 #include "../../components/item.hpp"
+#include "../../components/claimed_t.hpp"
 #include "inventory_system.hpp"
 #include <unordered_set>
 
@@ -44,7 +45,8 @@ namespace dijkstra {
     void update_bed_map() {
         std::vector<int> beds;
         each<construct_provides_sleep_t, position_t>([&beds] (entity_t &e, construct_provides_sleep_t &bed, position_t &pos) {
-            if (!bed.claimed) {
+            auto claimed = e.component<claimed_t>();
+            if (claimed == nullptr) {
                 beds.emplace_back(mapidx(pos));
             }
         });
