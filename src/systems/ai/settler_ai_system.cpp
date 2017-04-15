@@ -74,7 +74,7 @@ void settler_ai_system::update(const double duration_ms) {
         const int hour_of_day = calendar->hour;
         const shift_type_t current_schedule = calendar->defined_shifts[shift_id].hours[hour_of_day];
 
-        if (ai->job_type_major == JOB_MINE || ai->job_type_major == JOB_CONST
+        if (ai->job_type_major == JOB_CONST
                    || ai->job_type_major == JOB_REACTION || ai->job_type_major == JOB_BUTCHER || ai->job_type_major == JOB_DECONSTRUCT) {
             // If we have a job to do - keep doing it
             do_work_time(*e, *ai, *stats, *species, *pos, *name);

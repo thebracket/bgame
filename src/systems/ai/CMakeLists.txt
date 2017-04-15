@@ -8,6 +8,7 @@ add_library(ai STATIC
         ai_status_effects.cpp
         ai_stuck.cpp
         ai_work_lumberjack.cpp
+        ai_work_mining.cpp
         ai_work_time.cpp
         ai_visibility_scan.cpp
         settler_ai_system.cpp

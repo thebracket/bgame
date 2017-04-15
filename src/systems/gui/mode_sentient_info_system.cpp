@@ -89,7 +89,7 @@ void display_grazer_info() {
 
     ImGui::Begin(header.str().c_str());
     ImGui::Text("%s", header2.str().c_str());
-    ImGui::Text(species_finder.description.c_str());
+    ImGui::Text("%s", species_finder.description.c_str());
     ImGui::TextColored(ImVec4{1.0f, 0.0f, 0.0f, 1.0f}, "%s", hitpoints.c_str());
     for (const health_part_t &part : health->parts) {
         if (part.current_hitpoints != part.max_hitpoints) {

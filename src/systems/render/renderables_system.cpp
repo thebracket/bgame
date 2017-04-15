@@ -16,6 +16,7 @@
 #include "../../raws/species.hpp"
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/ai_tag_work_lumberjack.hpp"
+#include "../../components/ai_tag_work_mining.hpp"
 
 using namespace rltk;
 
@@ -91,9 +92,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         // Optionally render a status flag
         auto ai = entity(id)->component<settler_ai_t>();
         if (ai) {
-            if (ai->job_type_major == JOB_MINE) {
-                layers.push_back(vchar{337, rltk::colors::WHITE, rltk::colors::BLACK});
-            } else if (ai->job_type_major == JOB_CONST || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
+            if (ai->job_type_major == JOB_CONST || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
                 layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
             }
         }
@@ -106,6 +105,11 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         auto chop = entity(id)->component<ai_tag_work_lumberjack>();
         if (chop) {
             layers.push_back(vchar{338, rltk::colors::WHITE, rltk::colors::BLACK});
+        }
+
+        auto miner = entity(id)->component<ai_tag_work_miner>();
+        if (miner) {
+            layers.push_back(vchar{337, rltk::colors::WHITE, rltk::colors::BLACK});
         }
 
         std::vector<screen_render_t> tmp;

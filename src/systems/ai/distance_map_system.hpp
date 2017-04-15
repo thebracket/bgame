@@ -13,6 +13,7 @@ extern dijkstra_map blocks_map;
 extern dijkstra_map levers_map;
 extern bool dijkstra_debug;
 extern dijkstra_map axe_map;
+extern dijkstra_map pick_map;
 
 class distance_map_system : public rltk::base_system {
 public:
@@ -27,4 +28,5 @@ private:
     bool update_blocks_map = true;
     bool update_levers_map = true;
     bool update_axe_map = true;
+    bool update_pick_map = true;
 };

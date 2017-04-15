@@ -6,10 +6,12 @@
 #include "../../main/game_globals.hpp"
 #include "../../components/ai_mode_idle.hpp"
 #include "../../components/ai_tag_work_lumberjack.hpp"
+#include "../../components/ai_tag_work_mining.hpp"
+#include "mining_system.hpp"
 #include <map>
 
 namespace jobs_board {
-    enum job_type_t { LUMBERJACK };
+    enum job_type_t { LUMBERJACK, MINING };
 
     void evaluate_lumberjacking(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
         if (designations->chopping.empty()) return; // Nothing to cut down
@@ -30,15 +32,26 @@ namespace jobs_board {
             ++i;
         }
 
-        std::cout << "Offering lumberjacking work with a metric of " << distance + axe_distance << "\n";
         board.insert(std::make_pair(distance + axe_distance, LUMBERJACK));
+    }
+
+    void evaluate_mining(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
+        if (designations->mining.empty()) return; // No mining to do
+
+        auto pick_distance = pick_map.get(mapidx(pos));
+        if (pick_distance > MAX_DIJSTRA_DISTANCE-1) return; // No pick available
+
+        const auto idx = mapidx(pos);
+        const int distance = mining_map[idx] + pick_distance;
+
+        board.insert(std::make_pair(distance, MINING));
     }
 
     std::map<int, job_type_t> job_evaluations(entity_t &e, position_t &pos) {
         std::map<int, job_type_t> board;
 
-        // Evaluate lumberjacking options
         evaluate_lumberjacking(board, e, pos);
+        evaluate_mining(board, e, pos);
 
         return board;
     }
@@ -69,6 +82,7 @@ void ai_work_time::update(const double duration_ms) {
         auto job_type = available_jobs.begin()->second;
         switch (job_type) {
             case jobs_board::LUMBERJACK : { e.assign(ai_tag_work_lumberjack{}); } break;
+            case jobs_board::MINING : { e.assign(ai_tag_work_miner{}); } break;
         }
     });
 }

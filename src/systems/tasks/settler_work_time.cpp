@@ -1,5 +1,4 @@
 #include "settler_work_time.hpp"
-#include "work_types/mining_work.hpp"
 #include "work_types/building_work.hpp"
 #include "work_types/reaction_work.hpp"
 #include "work_types/equip_melee_work.hpp"
@@ -103,13 +102,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
             }
         }
 
-		if (ai.permitted_work[JOB_MINING] && mining_map[idx]<250 && is_item_category_available(TOOL_DIGGING)) {
-			change_settler_glyph(entity, vchar{1, rltk::colors::WHITE, rltk::colors::BLACK});
-			ai.job_type_major = JOB_MINE;
-			ai.job_type_minor = JM_FIND_PICK;
-			change_job_status(ai, name, "doing some mining.", false);
-			return;
-		}
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
 			ai.has_building_target = false;
 
@@ -256,9 +248,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
             std::tie(ai.target_x, ai.target_y, ai.target_z) = idxmap(item.dest_tile);
         }
 
-	} else if (ai.job_type_major == JOB_MINE) {
-		do_mining(entity, ai, stats, species, pos, name);
-		return;
 	} else if (ai.job_type_major == JOB_CONST) {
 		do_building(entity, ai, stats, species, pos, name);
 		return;
