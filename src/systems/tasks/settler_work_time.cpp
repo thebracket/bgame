@@ -5,7 +5,6 @@
 #include "work_types/equip_ranged_work.hpp"
 #include "work_types/equip_armor_work.hpp"
 #include "work_types/hunting_work.hpp"
-#include "work_types/guard_duty.hpp"
 #include "work_types/demolition_work.hpp"
 #include "work_types/hauling_work.hpp"
 #include "work_types/harvest_work.hpp"
@@ -71,21 +70,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
             change_job_status(ai, name, "pulling a lever", false);
             return;
         }
-
-		if (ai.permitted_work[JOB_GUARDING] && !designations->guard_points.empty() && shooting_range(entity, pos)>0) {
-			for (auto &g : designations->guard_points) {
-				if (!g.first) {
-					g.first = true;
-					ai.job_type_major = JOB_GUARD;
-					ai.job_type_minor = JM_FIND_GUARDPOST;
-					ai.target_x = g.second.x;
-					ai.target_y = g.second.y;
-					ai.target_z = g.second.z;
-					change_job_status(ai, name, "starting guard duty.", false);
-					return;
-				}
-			}
-		}
 
 		if (ai.permitted_work[JOB_FARMING] && !designations->harvest.empty()) {
             for (auto &g : designations->harvest) {
@@ -272,9 +256,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 	} else if (ai.job_type_major == JOB_BUTCHERING) {
 		do_butchering(entity, ai, stats, species, pos, name);
 		return;
-	} else if (ai.job_type_major == JOB_GUARD) {
-        do_guard_duty(entity, ai, stats, species, pos, name);
-        return;
     } else if (ai.job_type_major == JOB_HARVEST) {
         do_harvesting(entity, ai, stats, species, pos, name);
         return;

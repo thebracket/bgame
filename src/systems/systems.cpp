@@ -63,6 +63,7 @@
 #include "ai/ai_work_time.hpp"
 #include "ai/ai_work_lumberjack.hpp"
 #include "ai/ai_work_mining.hpp"
+#include "ai/ai_work_guard.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -97,6 +98,7 @@ void add_systems_to_ecs() {
     add_system<ai_work_time>();
     add_system<ai_work_lumberjack>();
     add_system<ai_work_mining>();
+    add_system<ai_work_guard>();
     add_system<ai_action_shim>();
     add_system<ai_idle>();
     add_system<settler_ai_system>();

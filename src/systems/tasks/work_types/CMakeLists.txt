@@ -5,7 +5,6 @@ add_library(work_types STATIC
         equip_ranged_work.cpp
         equip_armor_work.cpp
         hunting_work.cpp
-        guard_duty.cpp
         demolition_work.cpp
         hauling_work.cpp
         harvest_work.cpp

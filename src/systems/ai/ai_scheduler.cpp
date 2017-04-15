@@ -10,6 +10,7 @@
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../components/construct_provides_sleep.hpp"
+#include "../../components/ai_tag_work_guarding.hpp"
 
 void ai_scheduler::configure() {
     system_name = "AI Scheduler";
@@ -39,6 +40,13 @@ void ai_scheduler::update(const double duration_ms)
 
             // Wake up
             sleep.is_sleeping = false;
+        }
+        auto guard = e.component<ai_tag_work_guarding>();
+        if (current_schedule != WORK_SHIFT && guard) {
+            for (auto &g : designations->guard_points) {
+                if (g.second == guard->guard_post) g.first = false;
+            }
+            delete_component<ai_tag_work_guarding>(e.id);
         }
 
         switch (current_schedule) {

@@ -16,13 +16,6 @@ void become_idle(entity_t &e, settler_ai_t &ai, name_t &name) {
 		}
 	}
 
-	if (ai.job_type_major == JOB_GUARD) {
-		const auto idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
-		for (auto &g : designations->guard_points) {
-			if (mapidx(g.second) == idx) g.first = false;
-		}
-	}
-
 	ai.job_type_major = JOB_IDLE;
 	ai.target_x = 0; 
 	ai.target_y = 0; 
