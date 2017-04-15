@@ -1,7 +1,6 @@
 add_library(work_types STATIC
         building_work.cpp
         mining_work.cpp
-        chopping_work.cpp
         reaction_work.cpp
         equip_melee_work.cpp
         equip_ranged_work.cpp

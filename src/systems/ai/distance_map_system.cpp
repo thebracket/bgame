@@ -12,6 +12,7 @@
 #include "../../components/item.hpp"
 #include "../../components/claimed_t.hpp"
 #include "inventory_system.hpp"
+#include "../../components/item_stored.hpp"
 #include <unordered_set>
 
 dijkstra_map huntables_map;
@@ -21,6 +22,7 @@ dijkstra_map settler_map;
 dijkstra_map architecure_map;
 dijkstra_map blocks_map;
 dijkstra_map levers_map;
+dijkstra_map axe_map;
 bool dijkstra_debug = false;
 
 using namespace rltk;
@@ -100,6 +102,30 @@ namespace dijkstra {
         }
         levers_map.update(targets);
     }
+
+    void update_axe_map() {
+        std::vector<int> targets;
+        each<item_t>([&targets] (entity_t &e, item_t &item) {
+            if (!item.category.test(TOOL_CHOPPING)) return; // Not an axe!
+            if (e.component<claimed_t>() != nullptr) return; // Don't touch claimed items
+            if (item.claimed) return;
+
+            auto pos = e.component<position_t>();
+            if (pos != nullptr) {
+                targets.emplace_back(mapidx(*pos));
+            } else {
+                auto store = e.component<item_stored_t>();
+                if (store != nullptr) {
+                    auto storage_entity = entity(store->stored_in);
+                    if (storage_entity) {
+                        auto spos = storage_entity->component<position_t>();
+                        targets.emplace_back(mapidx(*spos));
+                    }
+                }
+            }
+        });
+        axe_map.update(targets);
+    }
 }
 
 void distance_map_system::configure() {
@@ -112,6 +138,7 @@ void distance_map_system::configure() {
     subscribe_mbox<blocks_changed_message>();
     subscribe_mbox<map_changed_message>();
     subscribe_mbox<leverpull_changed_message>();
+    subscribe_mbox<axemap_changed_message>();
 }
 
 void distance_map_system::update(const double duration_ms) {
@@ -122,6 +149,7 @@ void distance_map_system::update(const double duration_ms) {
     each_mbox<architecture_changed_message>([this] (const architecture_changed_message &msg) { update_architecture_map = true; });
     each_mbox<blocks_changed_message>([this] (const blocks_changed_message &msg) { update_blocks_map = true; });
     each_mbox<leverpull_changed_message>([this] (const leverpull_changed_message &msg) { update_levers_map = true; });
+    each_mbox<axemap_changed_message>([this] (const axemap_changed_message &msg) { update_axe_map = true; });
     each_mbox<map_changed_message>([this] (const map_changed_message &msg) {
         update_huntables = true;
         update_butcherables = true;
@@ -130,6 +158,7 @@ void distance_map_system::update(const double duration_ms) {
         update_architecture_map = true;
         update_blocks_map = true;
         update_levers_map = true;
+        update_axe_map = true;
     });
 
     if (update_huntables) {
@@ -165,5 +194,10 @@ void distance_map_system::update(const double duration_ms) {
     if (update_levers_map) {
         dijkstra::update_levers_map();
         update_levers_map = false;
+    }
+
+    if (update_axe_map) {
+        dijkstra::update_axe_map();
+        update_axe_map = false;
     }
 }

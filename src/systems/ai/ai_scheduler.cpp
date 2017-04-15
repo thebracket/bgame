@@ -28,6 +28,7 @@ void ai_scheduler::update(const double duration_ms)
         delete_component<ai_tag_work_shift_t>(e.id);
         delete_component<ai_tag_sleep_shift_t>(e.id);
 
+        // We just woke up and shouldn't be sleeping anymore!
         if (current_schedule != SLEEP_SHIFT && sleep.is_sleeping) {
             // Unclaim the bed
             each<construct_provides_sleep_t, claimed_t>([&e] (entity_t &bed, construct_provides_sleep_t &sleep, claimed_t &claimed) {

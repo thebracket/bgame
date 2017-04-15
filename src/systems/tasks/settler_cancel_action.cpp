@@ -9,19 +9,6 @@ namespace tasks {
 
 void cancel_action(rltk::entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name, const std::string reason) {
 	// Drop whatever we are doing!
-	if (ai.job_type_major == JOB_SLEEP && ai.target_id > 0) {
-		auto bed_entity = entity(ai.target_id);
-		if (bed_entity) {
-			auto bed = bed_entity->component<construct_provides_sleep_t>();
-			if (bed) {
-				auto bed_claim = bed_entity->component<claimed_t>();
-                if (bed_claim && bed_claim->claimed_by == e.id) {
-                    delete_component<claimed_t>(bed_entity->id);
-                }
-
-			}
-		}
-	}
 	if (ai.job_type_major == JOB_GUARD) {
 		const auto idx = mapidx(ai.target_x, ai.target_y, ai.target_z);
 		for (auto &g : designations->guard_points) {

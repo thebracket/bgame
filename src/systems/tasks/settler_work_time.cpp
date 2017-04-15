@@ -1,6 +1,5 @@
 #include "settler_work_time.hpp"
 #include "work_types/mining_work.hpp"
-#include "work_types/chopping_work.hpp"
 #include "work_types/building_work.hpp"
 #include "work_types/reaction_work.hpp"
 #include "work_types/equip_melee_work.hpp"
@@ -63,10 +62,6 @@ using tasks::follow_result_t;
 using tasks::calculate_initiative;
 
 void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
-	if (ai.job_type_major == JOB_SLEEP) {
-		cancel_action(entity, ai, stats, species, pos, name, "Time to wake up");
-		return;
-	}
 	if (ai.job_type_major == JOB_IDLE) {
 		// Find something to do!
 		const auto idx = mapidx(pos.x, pos.y, pos.z);
@@ -113,13 +108,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 			ai.job_type_major = JOB_MINE;
 			ai.job_type_minor = JM_FIND_PICK;
 			change_job_status(ai, name, "doing some mining.", false);
-			return;
-		}
-		if (ai.permitted_work[JOB_CHOPPING] && designations->chopping.size() > 0 && is_item_category_available(TOOL_CHOPPING)) {
-			change_settler_glyph(entity, vchar{1, rltk::colors::Brown, rltk::colors::BLACK});
-			ai.job_type_major = JOB_CHOP;
-			ai.job_type_minor = JM_FIND_AXE;
-			change_job_status(ai, name, "chopping down a tree.", false);
 			return;
 		}
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
@@ -270,9 +258,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 
 	} else if (ai.job_type_major == JOB_MINE) {
 		do_mining(entity, ai, stats, species, pos, name);
-		return;
-	} else if (ai.job_type_major == JOB_CHOP) {
-		do_chopping(entity, ai, stats, species, pos, name);
 		return;
 	} else if (ai.job_type_major == JOB_CONST) {
 		do_building(entity, ai, stats, species, pos, name);

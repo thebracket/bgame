@@ -15,6 +15,7 @@
 #include "../ai/movement_system.hpp"
 #include "../../raws/species.hpp"
 #include "../../components/sleep_clock_t.hpp"
+#include "../../components/ai_tag_work_lumberjack.hpp"
 
 using namespace rltk;
 
@@ -92,8 +93,6 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         if (ai) {
             if (ai->job_type_major == JOB_MINE) {
                 layers.push_back(vchar{337, rltk::colors::WHITE, rltk::colors::BLACK});
-            } else if (ai->job_type_major == JOB_CHOP) {
-                layers.push_back(vchar{338, rltk::colors::WHITE, rltk::colors::BLACK});
             } else if (ai->job_type_major == JOB_CONST || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
                 layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
             }
@@ -102,6 +101,11 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         auto sleep = entity(id)->component<sleep_clock_t>();
         if (sleep && sleep->is_sleeping) {
             layers.push_back(vchar{336, rltk::colors::WHITE, rltk::colors::BLACK});
+        }
+
+        auto chop = entity(id)->component<ai_tag_work_lumberjack>();
+        if (chop) {
+            layers.push_back(vchar{338, rltk::colors::WHITE, rltk::colors::BLACK});
         }
 
         std::vector<screen_render_t> tmp;
