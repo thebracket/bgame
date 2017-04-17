@@ -43,7 +43,7 @@ cp $GAMEBASE/assets/VGA8x16.png assets
 cp $GAMEBASE/assets/Nagidal24x24shade.png assets
 cp $GAMEBASE/assets/Hack_square_64x64.png assets
 cp $GAMEBASE/assets/fonts.txt assets
-cp $GAMEBASE/assets/background_image.png assets
+cp $GAMEBASE/assets/background_image.* assets
 cp $GAMEBASE/assets/gamelogo.png assets
 
 cp $GAMEBASE/world_defs/* world_defs
@@ -53,7 +53,9 @@ echo "4 - stripping binaries"
 strip ${APPCONTENT}/bf
 
 echo "5 - making tarball: ${tarball}"
+pushd ${tempfolder}
 tar cvfz $tarball *
+popd
 
 popd
 popd
