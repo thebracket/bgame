@@ -126,7 +126,10 @@ void ai_work_lumberjack::update(const double duration_ms) {
             } else {
                 const position_t next_step = lj.current_path->steps.front();
                 lj.current_path->steps.pop_front();
-                if (current_region->tile_flags[mapidx(next_step)].test(CAN_STAND_HERE)) {
+                if (next_step.x > 0 && next_step.x < REGION_WIDTH && next_step.y > 0 &&
+                        next_step.y < REGION_HEIGHT && next_step.z > 0 && next_step.z < REGION_DEPTH
+                    && current_region->tile_flags[mapidx(next_step)].test(CAN_STAND_HERE))
+                {
                     emit_deferred(entity_wants_to_move_message{e.id, next_step});
                     emit_deferred(renderables_changed_message{});
                 } else {

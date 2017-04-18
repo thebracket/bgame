@@ -20,10 +20,12 @@
 void ai_work_mining::configure() {}
 
 void ai_work_mining::update(const double duration_ms) {
+    if (pause_mode == PAUSED) return;
+
     each<ai_tag_work_miner, ai_tag_my_turn_t, position_t>([] (entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
         delete_component<ai_tag_my_turn_t>(e.id); // It's not my turn anymore
 
-        std::cout << "Mining\n";
+        std::cout << "Entity #" << e.id << " is mining\n";
 
         if (m.step == ai_tag_work_miner::mining_steps::GET_PICK) {
             const auto d = pick_map.get(mapidx(pos));
@@ -38,7 +40,7 @@ void ai_work_mining::update(const double duration_ms) {
                 // Pick up the axe
                 std::size_t tool_id = 0;
                 each<item_t>([&tool_id, &pos] (entity_t &pick, item_t &item) {
-                    if (item.category.test(TOOL_CHOPPING)) return; // Not an axe
+                    if (item.category.test(TOOL_DIGGING)) return; // Not an axe
 
                     auto axe_pos = pick.component<position_t>();
                     if (axe_pos != nullptr && *axe_pos == pos) {
@@ -66,11 +68,13 @@ void ai_work_mining::update(const double duration_ms) {
                 return;
             } else {
                 // Path towards the pick
+                std::cout << "Moving towards pick - " << e.id << "\n";
                 position_t destination = pick_map.find_destination(pos);
                 emit_deferred(entity_wants_to_move_message{e.id, destination});
                 return;
             }
         } else if (m.step == ai_tag_work_miner::mining_steps::GOTO_SITE) {
+            std::cout << "Moving towards mining target\n";
             const auto idx = mapidx(pos.x, pos.y, pos.z);
             if (mining_map[idx]==0) {
                 // We're at a minable site

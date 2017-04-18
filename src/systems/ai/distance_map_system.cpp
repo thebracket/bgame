@@ -149,6 +149,7 @@ namespace dijkstra {
                 }
             }
         });
+        std::cout << "Updating pick map - " << targets.size() << " candidates.\n";
         pick_map.update(targets);
     }
 }
