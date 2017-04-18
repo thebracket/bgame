@@ -21,17 +21,17 @@ void ai_work_lumberjack::update(const double duration_ms) {
     each<ai_tag_work_lumberjack, ai_tag_my_turn_t, position_t>([] (entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
         delete_component<ai_tag_my_turn_t>(e.id); // It's not my turn anymore
 
-        std::cout << "Lumberjacking\n";
+        //std::cout << "Lumberjacking\n";
 
         if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
             const auto d = axe_map.get(mapidx(pos));
-            std::cout << "Get axe - distance " << d << "\n";
+            //std::cout << "Get axe - distance " << d << "\n";
             if (d > MAX_DIJSTRA_DISTANCE-1) {
                 // Cancel the job, we can't do it
                 delete_component<ai_tag_work_lumberjack>(e.id);
                 return;
             } else if (d < 1) {
-                std::cout << "Picking up axe\n";
+                //std::cout << "Picking up axe\n";
 
                 // Pick up the axe
                 std::size_t tool_id = 0;
@@ -57,7 +57,7 @@ void ai_work_lumberjack::update(const double duration_ms) {
                     emit(axemap_changed_message{});
                     lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
                 } else {
-                    std::cout << "We failed to find the axe\n";
+                    //std::cout << "We failed to find the axe\n";
                     // We've failed to get the axe!
                     delete_component<ai_tag_work_lumberjack>(e.id);
                 }
@@ -69,7 +69,7 @@ void ai_work_lumberjack::update(const double duration_ms) {
                 return;
             }
         } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE) {
-            std::cout << "Find tree\n";
+            //std::cout << "Find tree\n";
 
             if (designations->chopping.empty()) {
                 // There is no tree - cancel
@@ -110,7 +110,7 @@ void ai_work_lumberjack::update(const double duration_ms) {
                 return;
             }
         } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE) {
-            std::cout << "Goto tree\n";
+            //std::cout << "Goto tree\n";
 
             if (!lj.current_path) {
                 // No path, so we go back a step.
@@ -124,6 +124,11 @@ void ai_work_lumberjack::update(const double duration_ms) {
                 lj.current_path.reset();
                 lj.step = ai_tag_work_lumberjack::lumberjack_steps::CHOP;
             } else {
+                if (lj.current_path->steps.empty()) {
+                    lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+                    return;
+                }
+
                 const position_t next_step = lj.current_path->steps.front();
                 lj.current_path->steps.pop_front();
                 if (next_step.x > 0 && next_step.x < REGION_WIDTH && next_step.y > 0 &&
@@ -141,7 +146,7 @@ void ai_work_lumberjack::update(const double duration_ms) {
 
             return;
         } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::CHOP) {
-            std::cout << "Chop\n";
+            //std::cout << "Chop\n";
 
             auto stats = e.component<game_stats_t>();
             if (!stats) {
@@ -154,7 +159,7 @@ void ai_work_lumberjack::update(const double duration_ms) {
             auto skill_check = skill_roll(e.id, *stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
 
             if (skill_check >= SUCCESS) {
-                call_home("tree_chop");
+                //call_home("tree_chop");
                 // Tree is going down!
                 int number_of_logs = 0;
                 int tree_idx = 0;
