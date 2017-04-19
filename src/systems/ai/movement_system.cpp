@@ -13,7 +13,7 @@ octree_t entity_octree;
 
 void movement_system::configure() {
     system_name = "Movement System";
-    subscribe_mbox<entity_wants_to_move_message>();
+    //subscribe_mbox<entity_wants_to_move_message>();
     subscribe<entity_wants_to_move_randomly_message>([] (entity_wants_to_move_randomly_message &msg) {
 
         auto original = entity(msg.entity_id)->component<position_t>();
@@ -37,6 +37,68 @@ void movement_system::configure() {
 
             if (can_go) emit(entity_wants_to_move_message{msg.entity_id, pos});
         }
+    });
+    subscribe<entity_wants_to_move_message>([] (entity_wants_to_move_message &msg) {
+        if (!entity(msg.entity_id)) {
+            std::cout << "Oops - move request for entity " << msg.entity_id << ", but entity does not exist\n";
+            return;
+        }
+        auto epos = entity(msg.entity_id)->component<position_t>();
+        if (!epos) {
+            std::cout << "Oops - move request for entity " << msg.entity_id << ", but entity does not have a position!\n";
+            return;
+        }
+        position_t origin{epos->x, epos->y, epos->z};
+        if (origin == msg.destination) {
+            std::cout << "Oops - Moving to same tile, entity " << msg.entity_id << "\n";
+            return;
+        }
+
+        // Bounds check
+        if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH - 1 || msg.destination.y < 1 ||
+            msg.destination.y > REGION_HEIGHT - 1
+            || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH - 1)
+            return;
+
+        // Add sliding effect
+        auto slide = entity(msg.entity_id)->component<slidemove_t>();
+        auto initiative = entity(msg.entity_id)->component<initiative_t>();
+
+        const int dX = msg.destination.x - epos->x;
+        const int dY = msg.destination.y - epos->y;
+        const int dZ = msg.destination.z - epos->z;
+
+        if (initiative) {
+            const float deltaX = (float) dX / (float) initiative->initiative;
+            const float deltaY = (float) dY / (float) initiative->initiative;
+            const float deltaZ = (float) dZ / (float) initiative->initiative;
+
+            if (!slide && initiative) {
+                entity(msg.entity_id)->assign(slidemove_t{deltaX, deltaY, deltaZ, initiative->initiative});
+            } else if (slide && initiative) {
+                slide->offsetX = deltaX;
+                slide->offsetY = deltaY;
+                slide->offsetZ = deltaZ;
+                slide->lifespan = initiative->initiative;
+            }
+        }
+
+        // Move
+        epos->x = msg.destination.x;
+        epos->y = msg.destination.y;
+        epos->z = msg.destination.z;
+        epos->offsetX = 0.0F - (float)dX;
+        epos->offsetY = 0.0F - (float)dY;
+        epos->offsetZ = 0.0F - (float)dZ;
+
+        // Do vegetation damage
+        const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
+        if (current_region->tile_vegetation_type[idx] > 0) {
+            emit_deferred(vegetation_damage_message{idx, 1});
+        }
+
+        emit(entity_moved_message{msg.entity_id, origin, msg.destination});
+        emit(renderables_changed_message{});
     });
     subscribe<entity_wants_to_flee_message>([] (entity_wants_to_flee_message &msg) {
         auto pos = entity(msg.entity_id)->component<position_t>();
@@ -82,63 +144,6 @@ void movement_system::update(const double ms) {
             entity_octree.add_node(octree_location_t{static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z, e.id});
         });
     }
-
-    std::queue<entity_wants_to_move_message> * movers = mbox<entity_wants_to_move_message>();
-	while (!movers->empty()) {
-        entity_wants_to_move_message msg = movers->front();
-        movers->pop();
-
-        if (!entity(msg.entity_id)) break;
-        auto epos = entity(msg.entity_id)->component<position_t>();
-        if (!epos) break;
-        position_t origin{epos->x, epos->y, epos->z};
-
-        // Bounds check
-        if (msg.destination.x < 1 || msg.destination.x > REGION_WIDTH - 1 || msg.destination.y < 1 ||
-            msg.destination.y > REGION_HEIGHT - 1
-            || msg.destination.z < 1 || msg.destination.z > REGION_DEPTH - 1)
-            break;
-
-        // Add sliding effect
-        auto slide = entity(msg.entity_id)->component<slidemove_t>();
-        auto initiative = entity(msg.entity_id)->component<initiative_t>();
-
-        const int dX = msg.destination.x - epos->x;
-        const int dY = msg.destination.y - epos->y;
-        const int dZ = msg.destination.z - epos->z;
-
-        if (initiative) {
-            const float deltaX = (float) dX / (float) initiative->initiative;
-            const float deltaY = (float) dY / (float) initiative->initiative;
-            const float deltaZ = (float) dZ / (float) initiative->initiative;
-
-            if (!slide && initiative) {
-                entity(msg.entity_id)->assign(slidemove_t{deltaX, deltaY, deltaZ, initiative->initiative});
-            } else if (slide && initiative) {
-                slide->offsetX = deltaX;
-                slide->offsetY = deltaY;
-                slide->offsetZ = deltaZ;
-                slide->lifespan = initiative->initiative;
-            }
-        }
-
-        // Move
-        epos->x = msg.destination.x;
-        epos->y = msg.destination.y;
-        epos->z = msg.destination.z;
-        epos->offsetX = 0.0F - (float)dX;
-        epos->offsetY = 0.0F - (float)dY;
-        epos->offsetZ = 0.0F - (float)dZ;
-
-        // Do vegetation damage
-        const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
-        if (current_region->tile_vegetation_type[idx] > 0) {
-            emit_deferred(vegetation_damage_message{idx, 1});
-        }
-
-        emit(entity_moved_message{msg.entity_id, origin, msg.destination});
-	    emit(renderables_changed_message{});
-	}
 
     std::queue<entity_moved_message> * moved = mbox<entity_moved_message>();
     while (!moved->empty()) {

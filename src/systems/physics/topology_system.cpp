@@ -11,11 +11,12 @@
 #include "../../components/receives_signal.hpp"
 
 void topology_system::update(const double duration_ms) {
-    std::queue<perform_mining_message> * messages = mbox<perform_mining_message>();
-	while (!messages->empty()) {
-		perform_mining_message e = messages->front();
-		messages->pop();
+}
 
+void topology_system::configure() {
+	system_name = "Topology";
+
+    subscribe<perform_mining_message>([this] (perform_mining_message &e) {
         switch (e.operation) {
             case 1 : dig(e); break;
             case 2 : channel(e); break;
@@ -30,21 +31,11 @@ void topology_system::update(const double duration_ms) {
         emit(map_dirty_message{});
         emit(recalculate_mining_message{});
         emit(map_changed_message{});
-    }
+    });
 
-    std::queue<perform_construction_message> * cmessages = mbox<perform_construction_message>();
-    while (!cmessages->empty()) {
-        perform_construction_message e = cmessages->front();
-        cmessages->pop();
-
+    subscribe<perform_construction_message>([this] (perform_construction_message &e) {
         build_construction(e);
-    }
-}
-
-void topology_system::configure() {
-	system_name = "Topology";
-    subscribe_mbox<perform_mining_message>();
-    subscribe_mbox<perform_construction_message>();
+    });
 }
 
 void topology_system::dig(const perform_mining_message &e) {

@@ -110,10 +110,12 @@ void ai_work_mining::update(const double duration_ms) {
             }
 
             if (current_direction == 0) {
+                std::cout << "Direction 0 - drop tools\n";
                 m.step = ai_tag_work_miner::mining_steps::DROP_TOOLS;
                 return;
             }
 
+            std::cout << "Direction: " << current_direction << "\n";
             position_t destination = pos;
             switch (current_direction) {
                 case 1 : --destination.y; break;
@@ -124,6 +126,7 @@ void ai_work_mining::update(const double duration_ms) {
                 case 6 : ++destination.z; break;
             }
             emit_deferred(entity_wants_to_move_message{e.id, destination});
+            std::cout << "Emitted entity movement - " << e.id << "\n";
 
             return;
         } else if (m.step == ai_tag_work_miner::mining_steps::DIG) {

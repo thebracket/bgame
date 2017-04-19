@@ -25,7 +25,7 @@ struct entity_wants_to_charge_message : public rltk::base_message_t {
 
 struct entity_wants_to_move_message : public rltk::base_message_t {
 	entity_wants_to_move_message() {}
-	entity_wants_to_move_message(std::size_t id, const position_t dest) : entity_id(id), destination(dest) {}
+	entity_wants_to_move_message(std::size_t id, const position_t dest) : entity_id(id), destination(dest) { }
 	std::size_t entity_id;
 	position_t destination;
 };
