@@ -11,5 +11,5 @@ add_library(work_types STATIC
         architecture_work.cpp
         lever_work.cpp
         )
-target_link_libraries(work_types rltk utils components raws)
+target_link_libraries(work_types rltk utils components raws tasks)
 cotire(work_types)

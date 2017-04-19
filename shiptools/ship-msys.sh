@@ -2,7 +2,7 @@
 GAMEBASE=/home/herbert/github/bgame
 
 echo "1a - Pulling latest source"
-pushd $GAMEBASE/build
+pushd $GAMEBASE/build2
 git pull
 
 echo "1b - tagging the latest release"
@@ -27,7 +27,7 @@ mkdir -p $tempfolder/rex
 mkdir -p $tempfolder/world
 mkdir -p $tempfolder/world_defs
 pushd $tempfolder
-cp $GAMEBASE/build/bgame .
+cp $GAMEBASE/build2/bgame.exe .
 
 cp $GAMEBASE/assets/*.ttf assets
 cp $GAMEBASE/assets/terminal8x8.png assets
@@ -62,6 +62,7 @@ cp /mingw64/bin/libgraphite2.dll .
 cp /mingw64/bin/libintl-8.dll .
 cp /mingw64/bin/libpcre-1.dll .
 cp /mingw64/bin/libiconv-2.dll .
+cp /mingw64/bin/glew32.dll .
 
 echo "4 - stripping binaries"
 strip $tempfolder/bgame.exe
