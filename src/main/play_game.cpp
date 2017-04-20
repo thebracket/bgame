@@ -1,5 +1,6 @@
 #include "play_game.hpp"
 #include "game_globals.hpp"
+#include "game_config.hpp"
 #include "../systems/systems.hpp"
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"

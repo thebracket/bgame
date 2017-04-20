@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "menu_helper.hpp"
 #include "constants.hpp"
-#include "game_globals.hpp"
+#include "game_config.hpp"
 #include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/filesystem.hpp"

@@ -1,5 +1,6 @@
 #include "mode_play_system.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../main/game_config.hpp"
 #include "../input/mouse_input_system.hpp"
 #include "../../messages/build_request_message.hpp"
 #include "../../messages/inventory_changed_message.hpp"

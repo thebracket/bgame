@@ -3,7 +3,7 @@
 #include "menu_helper.hpp"
 #include "constants.hpp"
 #include "../raws/raws.hpp"
-#include "game_globals.hpp"
+#include "game_config.hpp"
 #include <iostream>
 #include <atomic>
 #include <thread>

@@ -1,6 +1,6 @@
 #include "telemetry.hpp"
 #include "threadsafequeue.hpp"
-#include "../main/game_globals.hpp"
+#include "../main/game_config.hpp"
 #include "../main/constants.hpp"
 #include <iostream>
 #include <string>

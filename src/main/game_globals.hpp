@@ -11,26 +11,6 @@
 #include <rltk.hpp>
 #include <memory>
 
-struct config_t {
-	int window_width = 800;
-	int window_height = 600;
-	std::string game_font = "8x8";
-	std::string gui_font = "8x16";
-	std::string game_font_small = "8x8";
-	bool tooltip_fadein = true;
-	float tooltip_speed = 100.0;
-	int autosave_minutes = 5;
-	bool fullscreen = false;
-	std::string gui_ttf = "DroidSans.ttf";
-	int gui_ttf_size = 24;
-	float scale_factor = 1.0f;
-	bool allow_calling_home = true;
-    std::string online_username = "anonymouse";
-    bool show_entity_ids = true;
-
-    void save();
-};
-
 struct available_building_t {
 	available_building_t() {}
 	available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
@@ -55,7 +35,6 @@ enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, C
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING, GUARDPOINTS, STOCKPILES, HARVEST, ARCHITECTURE };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, MINING_DELETE };
 
-extern config_t game_config;
 extern planet_t planet;
 extern std::unique_ptr<region_t> current_region;
 extern std::size_t camera_entity;
