@@ -6,11 +6,14 @@
 #include "path_finding.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../messages/entity_moved_message.hpp"
+#include "ai_work_template.hpp"
 
 void ai_work_guard::configure() {}
 
 void ai_work_guard::update(const double duration_ms) {
-    do_ai([this] (entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
+    ai_work_template<ai_tag_work_guarding> work;
+
+    work.do_ai([this, &work] (entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
         if (g.step == ai_tag_work_guarding::GOTO_POST) {
             if (!g.has_post) {
                 //std::cout << "Selecting a post\n";
@@ -55,7 +58,7 @@ void ai_work_guard::update(const double duration_ms) {
                 //std::cout << "Found a path\n";
                 return;
             } else {
-                follow_path(g, pos, e, [&g, &e] () {
+                work.follow_path(g, pos, e, [&g, &e] () {
                     // Cancel
                     g.current_path.reset();
                     delete_component<ai_tag_work_guarding>(e.id);

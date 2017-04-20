@@ -14,20 +14,22 @@
 #include "../../messages/inflict_damage_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../components/item_stored.hpp"
+#include "ai_work_template.hpp"
 
 void ai_work_lumberjack::configure() {}
 
 void ai_work_lumberjack::update(const double duration_ms)
 {
-    do_ai([this] (entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
+    ai_work_template<ai_tag_work_lumberjack> work;
+    work.do_ai([this, &work] (entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
         if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
-            fetch_tool(axe_map, pos, e, [&e] () {
+            work.fetch_tool(axe_map, pos, e, [&e] () {
                 // On cancel
                 delete_component<ai_tag_work_lumberjack>(e.id);
                 return;
-            }, [&e, this, &pos, &lj] {
+            }, [&e, this, &pos, &lj, &work] {
                 // On success
-                pickup_tool<axemap_changed_message>(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj] () {
+                work.pickup_tool<axemap_changed_message>(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj] () {
                     // On cancel
                     delete_component<ai_tag_work_lumberjack>(e.id);
                     return;
@@ -80,7 +82,7 @@ void ai_work_lumberjack::update(const double duration_ms)
                 return;
             }
         } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE) {
-            follow_path(lj, pos, e, [&lj] () {
+            work.follow_path(lj, pos, e, [&lj] () {
                 // Cancel
                 lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
                 return;

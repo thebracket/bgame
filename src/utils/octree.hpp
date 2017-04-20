@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <memory>
-#include "sparsepp.h"
 #include "../planet/region.hpp"
 
 struct octree_location_t {

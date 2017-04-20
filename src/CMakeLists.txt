@@ -23,7 +23,7 @@ find_package(Lua 5 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 
 # Require SFML
-find_package(SFML 2.4 COMPONENTS system window graphics network REQUIRED)
+find_package(SFML 2.3 COMPONENTS system window graphics network REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
 # Require GLEW

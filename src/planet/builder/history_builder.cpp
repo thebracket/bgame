@@ -6,7 +6,6 @@
 #include "../constants.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../components/game_stats.hpp"
-#include "../../utils/sparsepp.h"
 #include "../../raws/lua_bridge.hpp"
 #include <unordered_map>
 #include <iostream>

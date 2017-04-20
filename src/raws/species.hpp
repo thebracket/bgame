@@ -5,7 +5,6 @@
 #include <vector>
 #include <tuple>
 #include <fstream>
-#include "../utils/sparsepp.h"
 
 /*
  * Defines species dietary preferences

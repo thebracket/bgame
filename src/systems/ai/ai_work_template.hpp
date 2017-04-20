@@ -13,7 +13,7 @@
 #include "../../components/ai_mode_idle.hpp"
 
 template<typename TAG>
-class ai_work_template : public rltk::base_system {
+class ai_work_template {
 public:
     ai_work_template() { }
 
@@ -29,7 +29,7 @@ public:
 
             // If not tagged for this work type, go idle
             if (e.component<TAG>() == nullptr) {
-                e.assign<ai_mode_idle_t>();
+                e.assign(ai_mode_idle_t{});
             }
         });
 
