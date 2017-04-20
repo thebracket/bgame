@@ -10,11 +10,7 @@
 void ai_work_guard::configure() {}
 
 void ai_work_guard::update(const double duration_ms) {
-    each<ai_tag_work_guarding, ai_tag_my_turn_t, position_t>([] (entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
-        delete_component<ai_tag_my_turn_t>(e.id); // It's not my turn anymore
-
-        //std::cout << "Guard Duty - entity #" << e.id << "\n";
-
+    do_ai([this] (entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
         if (g.step == ai_tag_work_guarding::GOTO_POST) {
             if (!g.has_post) {
                 //std::cout << "Selecting a post\n";
@@ -59,34 +55,21 @@ void ai_work_guard::update(const double duration_ms) {
                 //std::cout << "Found a path\n";
                 return;
             } else {
-                // Follow the path - bail out on fail
-                if (pos == g.current_path->destination || g.current_path->steps.empty()) {
-                    //std::cout << "We got to the guard post\n";
-                    // We got there!
+                follow_path(g, pos, e, [&g, &e] () {
+                    // Cancel
+                    g.current_path.reset();
+                    delete_component<ai_tag_work_guarding>(e.id);
+                    for (auto &gp : designations->guard_points) {
+                        if (gp.second == g.guard_post) gp.first = false;
+                    }
+                    return;
+                }, [&g] () {
+                    // Arrived
                     g.current_path.reset();
                     g.step = ai_tag_work_guarding::guard_steps::GUARD;
-                } else {
-                    const position_t next_step = g.current_path->steps.front();
-                    g.current_path->steps.pop_front();
-                    if (next_step.x > 0 && next_step.x < REGION_WIDTH && next_step.y > 0 &&
-                        next_step.y < REGION_HEIGHT && next_step.z > 0 && next_step.z < REGION_DEPTH
-                        && current_region->tile_flags[mapidx(next_step)].test(CAN_STAND_HERE))
-                    {
-                        //std::cout << "Moving to guard\n";
-                        emit_deferred(entity_wants_to_move_message{e.id, next_step});
-                        emit_deferred(renderables_changed_message{});
-                    } else {
-                        //std::cout << "Abort - unable to get there\n";
-                        // We couldn't get there
-                        g.current_path.reset();
-                        delete_component<ai_tag_work_guarding>(e.id);
-                        for (auto &gp : designations->guard_points) {
-                            if (gp.second == g.guard_post) gp.first = false;
-                        }
-                    }
-                }
+                    return;
+                });
             }
-
         } else if (g.step == ai_tag_work_guarding::guard_steps::GUARD) {
             // Do we still have ammo? If not, stop guarding.
             if (shooting_range(e, pos) == 0) {
