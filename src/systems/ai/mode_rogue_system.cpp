@@ -8,6 +8,8 @@
 #include "../../components/health.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/sentient_ai.hpp"
+#include "../../main/game_pause.hpp"
+#include "../../main/game_clipping.hpp"
 #include <rltk.hpp>
 
 void mode_rogue_system::configure() {

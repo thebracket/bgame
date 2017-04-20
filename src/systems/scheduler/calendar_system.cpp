@@ -1,6 +1,7 @@
 #include "calendar_system.hpp"
 #include "../../main/game_globals.hpp"
 #include "../../messages/messages.hpp"
+#include "../../main/game_pause.hpp"
 
 void calendar_system::configure() {
 	system_name = "Calendar";

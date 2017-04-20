@@ -6,6 +6,7 @@
 #include "../../messages/log_message.hpp"
 #include "../../raws/string_table.hpp"
 #include "../../components/settler_ai.hpp"
+#include "../../main/game_pause.hpp"
 
 void ai_new_arrival::configure() {}
 

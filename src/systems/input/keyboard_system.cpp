@@ -2,6 +2,7 @@
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
 #include "../../utils/gl/map_render.hpp"
+#include "../../main/game_pause.hpp"
 #include <sstream>
 #include <chrono>
 #include <ctime>

@@ -4,6 +4,7 @@
 #include "renderables_system.hpp"
 #include "../../messages/tick_message.hpp"
 #include "../../utils/gl/map_render.hpp"
+#include "../../main/game_clipping.hpp"
 
 uint32_t camera_glyph_cycle = 0;
 

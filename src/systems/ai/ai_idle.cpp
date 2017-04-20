@@ -12,6 +12,7 @@
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../raws/species.hpp"
 #include "../../main/game_planet.hpp"
+#include "../../main/game_pause.hpp"
 
 void ai_idle::configure() {}
 

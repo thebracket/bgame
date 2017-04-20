@@ -17,6 +17,7 @@
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/ai_tag_work_lumberjack.hpp"
 #include "../../components/ai_tag_work_mining.hpp"
+#include "../../main/game_clipping.hpp"
 
 using namespace rltk;
 

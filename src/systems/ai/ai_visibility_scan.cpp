@@ -14,6 +14,7 @@
 #include "../../messages/inflict_damage_message.hpp"
 #include "../damage/weapons_helpers.hpp"
 #include "../../components/initiative.hpp"
+#include "../../main/game_pause.hpp"
 
 void ai_visibility_scan::configure() {}
 

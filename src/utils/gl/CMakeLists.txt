@@ -5,6 +5,6 @@ add_library(gl STATIC gl_utils.cpp
         frustrum.cpp
         render_block.cpp
         )
-target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws )
+target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain)
 
 cotire(gl)

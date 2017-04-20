@@ -10,6 +10,7 @@
 #include "../../components/species.hpp"
 #include "../../components/position.hpp"
 #include "../../components/game_stats.hpp"
+#include "../../main/game_pause.hpp"
 
 void mode_rogue_render_system::configure() {
     system_name = "Rogue Render System";

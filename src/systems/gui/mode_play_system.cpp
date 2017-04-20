@@ -20,6 +20,7 @@
 #include "../../components/lever.hpp"
 #include "../gui/imgui_helper.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "../../main/game_pause.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;

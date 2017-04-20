@@ -20,6 +20,7 @@
 #include "render_block.hpp"
 #include "../../messages/messages.hpp"
 #include "../../systems/gui/mode_design_system.hpp"
+#include "../../main/game_clipping.hpp"
 
 using namespace map_render_sys;
 

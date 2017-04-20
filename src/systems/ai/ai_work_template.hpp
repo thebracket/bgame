@@ -11,6 +11,7 @@
 #include "../../main/game_globals.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../components/ai_mode_idle.hpp"
+#include "../../main/game_pause.hpp"
 
 template<typename TAG>
 class ai_work_template {

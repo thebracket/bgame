@@ -4,5 +4,5 @@ add_library(input STATIC
 
 
         )
-target_link_libraries(input rltk utils components raws)
+target_link_libraries(input rltk utils components raws bfmain)
 cotire(input)

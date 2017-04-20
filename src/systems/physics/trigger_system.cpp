@@ -27,6 +27,7 @@
 #include "../../messages/messages.hpp"
 #include "../ai/movement_system.hpp"
 #include "../../components/health.hpp"
+#include "../../main/game_pause.hpp"
 
 void trigger_system::configure() {
     system_name = "Trigger System";

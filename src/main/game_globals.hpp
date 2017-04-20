@@ -28,7 +28,6 @@ struct available_building_t {
     bool structure = false;
 };
 
-enum pause_mode_t { RUNNING, PAUSED, ONE_STEP };
 enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, CIV_NEGOTIATE, 
 	STANDING_ORDERS, TILEMENU, SENTIENT_INFO, GRAZER_INFO, WISHMODE, TRIGGER_MANAGEMENT };
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING, GUARDPOINTS, STOCKPILES, HARVEST, ARCHITECTURE };
@@ -41,12 +40,7 @@ extern calendar_t * calendar;
 extern designations_t * designations;
 extern logger_t * logger;
 extern camera_options_t * camera;
-extern int clip_left;
-extern int clip_right;
-extern int clip_top;
-extern int clip_bottom;
 extern rltk::random_number_generator rng;
-extern pause_mode_t pause_mode;
 extern game_master_mode_t game_master_mode;
 extern game_design_mode_t game_design_mode;
 extern game_mining_mode_t game_mining_mode;
