@@ -1,11 +1,12 @@
 #include "wish_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../input/keyboard_system.hpp"
 #include "../../messages/messages.hpp"
 #include "../ai/distance_map_system.hpp"
 #include <../../external/imgui-sfml/imgui-SFML.h>
 #include "../physics/fluid_system.hpp"
 #include "mode_play_system.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_mode.hpp"
 
 using namespace rltk;
 

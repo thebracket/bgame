@@ -4,6 +4,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/initiative.hpp"
+#include "../../main/game_rng.hpp"
 
 namespace tasks {
 

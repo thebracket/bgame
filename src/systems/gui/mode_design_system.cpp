@@ -1,6 +1,5 @@
 #include "mode_design_system.hpp"
 #include "../input/mouse_input_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../raws/raws.hpp"
 #include "../../messages/messages.hpp"
 #include "../ai/mining_system.hpp"
@@ -15,6 +14,11 @@
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
 #include "../../components/bridge.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_selections.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_camera.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;

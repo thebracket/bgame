@@ -1,6 +1,5 @@
 #include "kill_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../planet/planet.hpp"
 #include "../../components/renderable.hpp"
@@ -10,6 +9,8 @@
 #include "../../components/sentient_ai.hpp"
 #include "../ai/movement_system.hpp"
 #include "../../utils/telemetry.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
 
 using namespace rltk;
 

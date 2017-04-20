@@ -1,7 +1,7 @@
 #include "pause_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/messages.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_mode.hpp"
 
 void pause_system::configure() {
     system_name = "Pausing";

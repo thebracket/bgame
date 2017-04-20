@@ -1,5 +1,4 @@
 #include "ai_visibility_scan.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
 #include "../../components/viewshed.hpp"
@@ -15,6 +14,7 @@
 #include "../damage/weapons_helpers.hpp"
 #include "../../components/initiative.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_designations.hpp"
 
 void ai_visibility_scan::configure() {}
 

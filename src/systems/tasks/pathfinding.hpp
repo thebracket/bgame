@@ -3,9 +3,11 @@
 #include <rltk.hpp>
 #include <functional>
 #include "../../components/position.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
+#include "../../main/game_region.hpp"
 
 namespace tasks {
 

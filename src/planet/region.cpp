@@ -5,7 +5,7 @@
 #include "../raws/materials.hpp"
 #include "../raws/plants.hpp"
 #include "../systems/physics/fluid_system.hpp"
-#include "../main/game_globals.hpp"
+#include "../main/game_camera.hpp"
 #include "../utils/filesystem.hpp"
 
 using namespace rltk;

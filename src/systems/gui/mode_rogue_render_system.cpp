@@ -1,6 +1,4 @@
 #include "mode_rogue_render_system.hpp"
-
-#include "../../main/game_globals.hpp"
 #include <rltk.hpp>
 #include "../damage/weapons_helpers.hpp"
 #include "../../components/health.hpp"
@@ -10,7 +8,12 @@
 #include "../../components/species.hpp"
 #include "../../components/position.hpp"
 #include "../../components/game_stats.hpp"
+#include "../../components/name.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_selections.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_mode.hpp"
+
 
 void mode_rogue_render_system::configure() {
     system_name = "Rogue Render System";

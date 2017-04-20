@@ -1,5 +1,4 @@
 #include "ai_new_arrival.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/ai_settler_new_arrival.hpp"
 #include "../../components/ai_mode_idle.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
@@ -7,6 +6,8 @@
 #include "../../raws/string_table.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
 
 void ai_new_arrival::configure() {}
 

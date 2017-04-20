@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../main/game_globals.hpp"
 #include <vector>
 
 class camera_system : public rltk::base_system {

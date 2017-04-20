@@ -1,7 +1,6 @@
 #include "equip_ranged_work.hpp"
 #include "../settler_work_time.hpp"
 #include "../../../messages/messages.hpp"
-#include "../../../main/game_globals.hpp"
 #include "../../ai/path_finding.hpp"
 #include "../../ai/mining_system.hpp"
 #include "../../ai/inventory_system.hpp"
@@ -31,6 +30,7 @@
 #include "../world_queries.hpp"
 #include "../settler_wander.hpp"
 #include "../settler_move_to.hpp"
+#include "../../main/game_designations.hpp"
 
 #include <iostream>
 #include <map>

@@ -1,7 +1,10 @@
 #include "game_over_system.hpp"
 #include "../../messages/game_over_message.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../main/game_pause.hpp"
+#include <rltk.hpp>
+#include "../../main/game_mode.hpp"
+
+using namespace rltk;
 
 void game_over_system::configure() {
 	subscribe<game_over_message>([this](game_over_message &msg) {

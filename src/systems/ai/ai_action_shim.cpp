@@ -1,5 +1,4 @@
 #include "ai_action_shim.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/ai_mode_idle.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
 #include "../../components/ai_tag_work_shift.hpp"

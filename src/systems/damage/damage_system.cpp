@@ -1,6 +1,9 @@
 #include "damage_system.hpp"
 #include "../../messages/messages.hpp"
 #include "../../components/health.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
+#include "../../main/game_region.hpp"
 
 void damage_system::on_message(const inflict_damage_message &msg) {
     if (!entity(msg.victim)) return;

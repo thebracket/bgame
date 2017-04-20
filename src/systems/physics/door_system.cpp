@@ -2,11 +2,11 @@
 #include "../../components/construct_provides_door.hpp"
 #include "../../components/position.hpp"
 #include "../../components/renderable.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/build_request_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
+#include "../../main/game_region.hpp"
 
 void door_system::configure() {
     system_name = "Door System";

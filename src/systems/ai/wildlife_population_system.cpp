@@ -2,7 +2,6 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/biomes.hpp"
 #include "../../raws/creatures.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../messages/messages.hpp"
@@ -17,6 +16,9 @@
 #include "../../components/renderable.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/ai_mode_idle.hpp"
+#include "../../components/name.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_rng.hpp"
 #include <array>
 
 std::array<uint8_t, 4> group_populations;

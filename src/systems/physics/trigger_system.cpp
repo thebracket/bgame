@@ -15,7 +15,6 @@
 #include "../../raws/materials.hpp"
 #include "../../messages/inflict_damage_message.hpp"
 #include "../../messages/inventory_changed_message.hpp"
-#include "../../main/game_globals.hpp"
 #include "imgui-sfml/imgui-SFML.h"
 #include "../gui/imgui_helper.hpp"
 #include "../../components/lever.hpp"
@@ -28,6 +27,10 @@
 #include "../ai/movement_system.hpp"
 #include "../../components/health.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_mode.hpp"
 
 void trigger_system::configure() {
     system_name = "Trigger System";

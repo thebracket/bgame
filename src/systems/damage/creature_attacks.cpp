@@ -6,6 +6,8 @@
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../raws/creatures.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
 
 using namespace rltk;
 

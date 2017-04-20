@@ -15,6 +15,7 @@
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../components/item_stored.hpp"
 #include "ai_work_template.hpp"
+#include "../../main/game_designations.hpp"
 
 void ai_work_lumberjack::configure() {}
 

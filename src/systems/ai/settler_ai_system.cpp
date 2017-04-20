@@ -1,6 +1,5 @@
 #include "settler_ai_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "path_finding.hpp"
 #include "mining_system.hpp"
 #include "inventory_system.hpp"
@@ -33,6 +32,12 @@
 #include "../tasks/settler_wander.hpp"
 #include "../tasks/settler_move_to.hpp"
 #include "../tasks/settler_work_time.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_calendar.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_building.hpp"
+#include "../../main/game_selections.hpp"
+
 
 #include <iostream>
 #include <map>

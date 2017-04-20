@@ -6,7 +6,7 @@
 #include "../raws/materials.hpp"
 #include "../raws/clothing.hpp"
 #include "../raws/items.hpp"
-#include "../main/game_globals.hpp"
+#include "../main/game_rng.hpp"
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 

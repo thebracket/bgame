@@ -17,6 +17,7 @@
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/lever.hpp"
 #include "../../../utils/telemetry.hpp"
+#include "../../main/game_designations.hpp"
 
 using namespace rltk;
 using tasks::become_idle;

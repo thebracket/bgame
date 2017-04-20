@@ -4,6 +4,8 @@
 #include "../../components/game_stats.hpp"
 #include "weapons_helpers.hpp"
 #include "../../components/item.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
 
 using namespace rltk;
 void settler_melee_attacks_system::on_message(const settler_attack_message &msg) {

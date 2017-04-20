@@ -2,10 +2,11 @@
 
 #include <rltk.hpp>
 #include "../raws/raws.hpp"
-#include "../main/game_globals.hpp"
 #include "../components/item.hpp"
 #include "../components/building.hpp"
 #include "../raws/reaction_input.hpp"
+#include "../../components/position.hpp"
+#include "../../main/game_building.hpp"
 
 class inventory_system : public rltk::base_system {
 public:

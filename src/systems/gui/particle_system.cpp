@@ -1,9 +1,10 @@
 #include "particle_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/smoke_emitter.hpp"
 #include <rltk.hpp>
 #include <algorithm>
+#include "../../main/game_rng.hpp"
+#include "../../main/game_region.hpp"
 
 using namespace rltk;
 

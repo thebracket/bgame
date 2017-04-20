@@ -1,6 +1,5 @@
 #include "sentient_ai_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "../damage/weapons_helpers.hpp"
 #include "path_finding.hpp"
 #include "../tasks/pathfinding.hpp"
@@ -18,6 +17,8 @@
 #include "../../raws/species.hpp"
 #include "../tasks/threat_scanner.hpp"
 #include "distance_map_system.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_logger.hpp"
 
 using tasks::calculate_initiative;
 

@@ -1,5 +1,4 @@
 #include "mode_civs_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
@@ -7,6 +6,9 @@
 #include <sstream>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_selections.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;

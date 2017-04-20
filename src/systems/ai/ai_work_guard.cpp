@@ -1,12 +1,12 @@
 #include "ai_work_guard.hpp"
 #include "../../components/ai_tag_work_guarding.hpp"
 #include "../damage/weapons_helpers.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
 #include "path_finding.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "ai_work_template.hpp"
+#include "../../main/game_designations.hpp"
 
 void ai_work_guard::configure() {}
 

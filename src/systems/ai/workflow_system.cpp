@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "inventory_system.hpp"
+#include "../../main/game_designations.hpp"
 
 std::unordered_map<std::size_t, std::vector<std::string>> automatic_reactions;
 std::unordered_set<std::size_t> workshop_claimed;

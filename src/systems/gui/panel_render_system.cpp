@@ -1,5 +1,4 @@
 #include "panel_render_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../messages/messages.hpp"
@@ -10,6 +9,9 @@
 #include "../input/mouse_input_system.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_mode.hpp"
 #include <sstream>
 #include <iomanip>
 #include <map>

@@ -1,5 +1,4 @@
 #include "mode_units_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../utils/string_utils.hpp"
@@ -7,11 +6,17 @@
 #include "../../components/game_stats.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/grazer_ai.hpp"
+#include "../../components/name.hpp"
 #include <rltk.hpp>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../main/IconsFontAwesome.h"
 #include "imgui_helper.hpp"
 #include "../../components/species.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_camera.hpp"
+#include "../../main/game_selections.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;

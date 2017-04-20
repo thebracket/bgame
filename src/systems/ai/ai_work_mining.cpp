@@ -17,6 +17,7 @@
 #include "../../components/item_stored.hpp"
 #include "mining_system.hpp"
 #include "ai_work_template.hpp"
+#include "../../main/game_designations.hpp"
 
 void ai_work_mining::configure() {}
 

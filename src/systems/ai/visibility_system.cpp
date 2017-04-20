@@ -1,5 +1,4 @@
 #include "visibility_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/messages.hpp"
 #include "visibility_system.hpp"
 #include "movement_system.hpp"
@@ -8,7 +7,7 @@
 #include "../../components/grazer_ai.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
-
+#include "../../main/game_region.hpp"
 
 using namespace rltk;
 

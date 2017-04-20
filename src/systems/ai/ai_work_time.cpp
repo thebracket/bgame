@@ -3,7 +3,6 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/position.hpp"
 #include "distance_map_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/ai_mode_idle.hpp"
 #include "../../components/ai_tag_work_lumberjack.hpp"
 #include "../../components/ai_tag_work_mining.hpp"
@@ -11,6 +10,7 @@
 #include "../damage/weapons_helpers.hpp"
 #include "mining_system.hpp"
 #include <map>
+#include "../../main/game_designations.hpp"
 
 namespace jobs_board {
     enum job_type_t { LUMBERJACK, MINING, GUARD };

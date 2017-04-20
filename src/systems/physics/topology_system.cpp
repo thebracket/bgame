@@ -5,10 +5,10 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/materials.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
+#include "../../main/game_region.hpp"
 
 void topology_system::update(const double duration_ms) {
 }

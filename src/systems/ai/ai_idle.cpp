@@ -1,5 +1,4 @@
 #include "ai_idle.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/ai_mode_idle.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
 #include "../../components/settler_ai.hpp"
@@ -13,6 +12,8 @@
 #include "../../raws/species.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_rng.hpp"
 
 void ai_idle::configure() {}
 

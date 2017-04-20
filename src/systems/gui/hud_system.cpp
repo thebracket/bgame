@@ -1,11 +1,15 @@
 #include "hud_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/messages.hpp"
 #include <sstream>
 #include "imgui_helper.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../utils/gl/map_render.hpp"
 #include "../../main/game_pause.hpp"
+#include "../../main/game_calendar.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_camera.hpp"
+#include "../../main/game_region.hpp"
 
 const std::string menu_main = std::string(ICON_FA_ROCKET) + " Black Future";
 const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";

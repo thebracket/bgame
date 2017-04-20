@@ -1,5 +1,4 @@
 #include "mode_settler_info_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
@@ -10,6 +9,9 @@
 #include "../../components/item.hpp"
 #include "../../raws/life_events.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
+#include "../../main/game_selections.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../components/name.hpp"
 
 void mode_settler_info_system::configure() {
     system_name = "Settler Info";

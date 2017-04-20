@@ -1,5 +1,4 @@
 #include "mode_sentient_info_system.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
@@ -12,6 +11,10 @@
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../components/grazer_ai.hpp"
 #include "../../raws/creatures.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_selections.hpp"
+#include "../../components/name.hpp"
 
 void mode_sentient_info_system::configure() { 
     system_name = "Creature Info System";   

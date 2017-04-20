@@ -1,5 +1,5 @@
 #include "logger.hpp"
-#include "../main/game_globals.hpp"
+#include "../main/game_logger.hpp"
 
 using rltk::serialize;
 using rltk::deserialize;

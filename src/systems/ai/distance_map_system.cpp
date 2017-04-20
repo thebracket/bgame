@@ -8,12 +8,13 @@
 #include "../../components/construct_provides_sleep.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/item.hpp"
 #include "../../components/claimed_t.hpp"
 #include "inventory_system.hpp"
 #include "../../components/item_stored.hpp"
 #include <unordered_set>
+#include "../../main/game_region.hpp"
+#include "../../main/game_designations.hpp"
 
 dijkstra_map huntables_map;
 dijkstra_map butcherables_map;

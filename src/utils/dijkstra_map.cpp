@@ -1,5 +1,5 @@
 #include "dijkstra_map.hpp"
-#include "../main/game_globals.hpp"
+#include "../main/game_region.hpp"
 #include <utility>
 #include <deque>
 #include <map>

@@ -1,5 +1,5 @@
 #include "health_factory.hpp"
-#include "../main/game_globals.hpp"
+#include "../main/game_rng.hpp"
 #include "raws.hpp"
 #include "creatures.hpp"
 #include "species.hpp"

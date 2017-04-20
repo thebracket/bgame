@@ -1,11 +1,12 @@
 #include "fluid_system.hpp"
 #include "../../messages/tick_message.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/water_spawner.hpp"
 #include "../../components/health.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../messages/inflict_damage_message.hpp"
 #include "../../messages/map_dirty_message.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../main/game_region.hpp"
 #include <algorithm>
 #include <memory>
 #include <thread>
