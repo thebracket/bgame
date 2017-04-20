@@ -1,5 +1,6 @@
 #include "ai_visibility_scan.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../main/game_planet.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
 #include "../../components/viewshed.hpp"
 #include "../tasks/threat_scanner.hpp"

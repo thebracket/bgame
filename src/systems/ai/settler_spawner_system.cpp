@@ -2,6 +2,7 @@
 #include "../../planet/builder/settler_builder.hpp"
 #include "../../messages/messages.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../main/game_planet.hpp"
 #include "../../components/position.hpp"
 
 void settler_spawner_system::configure() {

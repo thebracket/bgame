@@ -3,6 +3,7 @@
 #include "../../raws/biomes.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../main/game_planet.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../messages/messages.hpp"
 #include "../../components/position.hpp"

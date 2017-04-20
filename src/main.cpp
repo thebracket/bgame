@@ -7,6 +7,7 @@
 #include "main/play_game.hpp"
 #include "main/game_config.hpp"
 #include "main/game_globals.hpp"
+#include "main/game_planet.hpp"
 #include "main/guitheme.hpp"
 #include "utils/string_utils.hpp"
 #include "main/IconsFontAwesome.h"

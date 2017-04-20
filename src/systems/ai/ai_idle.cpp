@@ -11,6 +11,7 @@
 #include "distance_map_system.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../raws/species.hpp"
+#include "../../main/game_planet.hpp"
 
 void ai_idle::configure() {}
 

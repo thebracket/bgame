@@ -1,5 +1,6 @@
 #include "mode_sentient_info_system.hpp"
 #include "../../main/game_globals.hpp"
+#include "../../main/game_planet.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
 #include "../../messages/map_dirty_message.hpp"

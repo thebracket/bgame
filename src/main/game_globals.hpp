@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../planet/planet.hpp"
 #include "../planet/region.hpp"
 #include "../raws/reaction_input.hpp"
 #include "../components/calendar.hpp"
@@ -35,7 +34,6 @@ enum game_master_mode_t { PLAY, DESIGN, UNITS, SETTLER, WORKFLOW, ROGUE, CIVS, C
 enum game_design_mode_t { DIGGING, BUILDING, CHOPPING, GUARDPOINTS, STOCKPILES, HARVEST, ARCHITECTURE };
 enum game_mining_mode_t { DIG, CHANNEL, RAMP, UP, DOWN, UPDOWN, MINING_DELETE };
 
-extern planet_t planet;
 extern std::unique_ptr<region_t> current_region;
 extern std::size_t camera_entity;
 extern world_position_t * camera_position;

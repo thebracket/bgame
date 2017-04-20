@@ -5,6 +5,7 @@
 #include "../planet/planet_builder.hpp"
 #include "game_config.hpp"
 #include "game_globals.hpp"
+#include "game_planet.hpp"
 #include "../utils/telemetry.hpp"
 #include "menu_helper.hpp"
 #include "../systems/gui/imgui_helper.hpp"
