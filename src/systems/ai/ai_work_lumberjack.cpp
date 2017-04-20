@@ -17,6 +17,159 @@
 
 void ai_work_lumberjack::configure() {}
 
+void ai_work_lumberjack::update(const double duration_ms)
+{
+    do_ai([this] (entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
+        if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
+            fetch_tool(axe_map, pos, e, [&e] () {
+                // On cancel
+                delete_component<ai_tag_work_lumberjack>(e.id);
+                return;
+            }, [&e, this, &pos, &lj] {
+                // On success
+                pickup_tool<axemap_changed_message>(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj] () {
+                    // On cancel
+                    delete_component<ai_tag_work_lumberjack>(e.id);
+                    return;
+                }, [&lj] () {
+                    // On success
+                    lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+                });
+            });
+        } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE) {
+            // Check that we're still a go
+            if (designations->chopping.empty()) {
+                // There is no tree - cancel
+                emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
+                emit(axemap_changed_message{});
+                delete_component<ai_tag_work_lumberjack>(e.id);
+                return;
+            }
+
+            // Find a tree position
+            position_t tree_pos = designations->chopping.begin()->second;
+            lj.target_tree = designations->chopping.begin()->first;
+            lj.target_x = tree_pos.x;
+            lj.target_y = tree_pos.y;
+            lj.target_z = tree_pos.z;
+
+            std::array<position_t, 4> target;
+            target[0] = position_t{ tree_pos.x, tree_pos.y-1, tree_pos.z };
+            target[1] = position_t{ tree_pos.x, tree_pos.y+1, tree_pos.z };
+            target[2] = position_t{ tree_pos.x-1, tree_pos.y, tree_pos.z };
+            target[3] = position_t{ tree_pos.x+1, tree_pos.y, tree_pos.z };
+
+            int n = 0;
+            while (!lj.current_path && n<4) {
+                lj.current_path = find_path(pos, target[n]);
+                if (!lj.current_path->success) {
+                    lj.current_path.reset();
+                }
+                ++n;
+            }
+
+            // Are we good to go?
+            if (!lj.current_path) {
+                // There is no path - cancel
+                emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
+                emit(axemap_changed_message{});
+                delete_component<ai_tag_work_lumberjack>(e.id);
+                return;
+            } else {
+                lj.step = ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE;
+                return;
+            }
+        } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE) {
+            follow_path(lj, pos, e, [&lj] () {
+                // Cancel
+                lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+                return;
+            }, [&lj] () {
+                // We've arrived
+                lj.current_path.reset();
+                lj.step = ai_tag_work_lumberjack::lumberjack_steps::CHOP;
+                return;
+            });
+        }else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::CHOP) {
+            //std::cout << "Chop\n";
+
+            auto stats = e.component<game_stats_t>();
+            if (!stats) {
+                emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
+                emit(axemap_changed_message{});
+                delete_component<ai_tag_work_lumberjack>(e.id);
+                return;
+            }
+
+            auto skill_check = skill_roll(e.id, *stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
+
+            if (skill_check >= SUCCESS) {
+                //call_home("tree_chop");
+                // Tree is going down!
+                int number_of_logs = 0;
+                int tree_idx = 0;
+                int lowest_z = 1000;
+                for (int z=0; z<REGION_DEPTH; ++z) {
+                    for (int y=0; y<REGION_HEIGHT; ++y) {
+                        for (int x=0; x<REGION_WIDTH; ++x) {
+                            const auto idx = mapidx(x,y,z);
+                            if (current_region->tree_id[idx] == lj.target_tree) {
+                                if (z < lowest_z) {
+                                    lowest_z = z;
+                                    tree_idx = idx;
+                                }
+
+                                current_region->solid[idx]=false;
+                                current_region->opaque[idx]=false;
+                                current_region->tile_flags[idx].reset(CAN_STAND_HERE);
+                                current_region->tree_id[idx] = 0;
+                                current_region->tile_type[idx] = tile_type::OPEN_SPACE;
+                                current_region->tile_calculate(x,y,z);
+                                ++number_of_logs;
+                            }
+                        }
+                    }
+                }
+                current_region->tile_type[tree_idx] = tile_type::FLOOR;
+                current_region->tile_flags[tree_idx].set(CAN_STAND_HERE);
+                current_region->tile_calculate(lj.target_x, lj.target_y, lj.target_z);
+                int tx,ty,tz;
+                std::tie(tx,ty,tz) = idxmap(tree_idx);
+
+                // Spawn wooden logs
+                number_of_logs = (number_of_logs/20)+1;
+                for (int i=0; i<number_of_logs; ++i) {
+                    spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"));
+                }
+
+                // Update pathing
+                for (int Z=-2; Z<10; ++Z) {
+                    for (int Y=-10; Y<10; ++Y) {
+                        for (int X=-10; X<10; ++X) {
+                            current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+                            current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+                        }
+                    }
+                }
+
+                // Change status to drop axe or continue
+                lj.step = ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS;
+
+            } else if (skill_check == CRITICAL_FAIL) {
+                // Damage yourself
+                emit_deferred(inflict_damage_message{e.id, 1, "Lumberjacking Accident"});
+            }
+            return;
+        } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS) {
+            emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
+            emit(axemap_changed_message{});
+            delete_component<ai_tag_work_lumberjack>(e.id);
+            return;
+        }
+    });
+}
+
+/*
 void ai_work_lumberjack::update(const double duration_ms) {
     each<ai_tag_work_lumberjack, ai_tag_my_turn_t, position_t>([] (entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
         delete_component<ai_tag_my_turn_t>(e.id); // It's not my turn anymore
@@ -223,3 +376,4 @@ void ai_work_lumberjack::update(const double duration_ms) {
         }
     });
 }
+*/
