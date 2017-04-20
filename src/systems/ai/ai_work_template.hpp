@@ -11,7 +11,6 @@
 #include "../../main/game_globals.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../components/ai_mode_idle.hpp"
-#include <functional>
 
 template<typename TAG>
 class ai_work_template : public rltk::base_system {
@@ -29,8 +28,8 @@ public:
             f(e, tag, turn, pos);
 
             // If not tagged for this work type, go idle
-            if (e.component<ai_mode_idle_t>() != nullptr) {
-                delete_component<TAG>(e.id);
+            if (e.component<TAG>() == nullptr) {
+                e.assign<ai_mode_idle_t>();
             }
         });
 
