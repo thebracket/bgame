@@ -36,7 +36,7 @@ public:
 
     }
 
-    void move_to(const std::size_t &entity_id, const position_t &destination) {
+    void move_to(const std::size_t &entity_id, const position_t &destination) const {
         emit_deferred(entity_wants_to_move_message{entity_id, destination});
     }
 
