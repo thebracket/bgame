@@ -10,7 +10,6 @@
 #endif
 #include <iostream>
 #include "gl_utils.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../systems/render/lighting_system.hpp"
 #include "../../systems/render/renderables_system.hpp"
 #include "../../systems/render/map_render_system.hpp"
@@ -21,6 +20,12 @@
 #include "../../messages/messages.hpp"
 #include "../../systems/gui/mode_design_system.hpp"
 #include "../../main/game_clipping.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_camera.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_mode.hpp"
+#include "../../main/game_selections.hpp"
 
 using namespace map_render_sys;
 

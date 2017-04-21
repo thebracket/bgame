@@ -2,9 +2,10 @@
 #include "../components/stockpile.hpp"
 #include <vector>
 #include <unordered_set>
-#include "../main/game_globals.hpp"
 #include "../components/item.hpp"
 #include "../raws/items.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_region.hpp"
 
 namespace stockpile_sys {
     std::unordered_map<std::size_t, stockpile_info_t> stockpiles;

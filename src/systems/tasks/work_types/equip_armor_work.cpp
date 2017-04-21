@@ -1,7 +1,6 @@
 #include "equip_armor_work.hpp"
 #include "../settler_work_time.hpp"
 #include "../../../messages/messages.hpp"
-#include "../../../main/game_globals.hpp"
 #include "../../ai/path_finding.hpp"
 #include "../../ai/mining_system.hpp"
 #include "../../ai/inventory_system.hpp"

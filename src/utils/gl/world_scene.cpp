@@ -8,11 +8,12 @@
 #else
 #include <GL/glu.h>
 #endif
-#include "../../main/game_globals.hpp"
 #include "../../systems/render/map_render_system.hpp"
 #include "../../systems/render/lighting_system.hpp"
 #include "render_block.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
+#include "../../main/game_calendar.hpp"
+#include "../../main/game_region.hpp"
 
 using namespace rltk;
 

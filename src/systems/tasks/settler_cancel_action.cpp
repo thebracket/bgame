@@ -1,7 +1,6 @@
 #include "settler_cancel_action.hpp"
 #include "../../components/construct_provides_sleep.hpp"
 #include "../../components/claimed_t.hpp"
-#include "../../main/game_globals.hpp"
 #include "settler_drop_tool.hpp"
 #include "idle_mode.hpp"
 

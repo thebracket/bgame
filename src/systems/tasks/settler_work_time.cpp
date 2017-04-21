@@ -12,7 +12,6 @@
 #include "work_types/lever_work.hpp"
 
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "../ai/path_finding.hpp"
 #include "../ai/mining_system.hpp"
 #include "../ai/inventory_system.hpp"
@@ -45,6 +44,7 @@
 #include "../../raws/reactions.hpp"
 #include "../stockpile_system.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../../main/game_designations.hpp"
 
 #include <iostream>
 #include <map>

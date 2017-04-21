@@ -1,6 +1,5 @@
 #include "idle_mode.hpp"
 #include "../../components/corpse_harvestable.hpp"
-#include "../../main/game_globals.hpp"
 #include "settler_glyph.hpp"
 #include "settler_drop_tool.hpp"
 #include "settler_job_status.hpp"

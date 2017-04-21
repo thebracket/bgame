@@ -1,11 +1,13 @@
 #include "keyboard_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../utils/gl/map_render.hpp"
 #include "../../main/game_pause.hpp"
 #include <sstream>
 #include <chrono>
 #include <ctime>
+#include "../../main/game_mode.hpp"
+#include "../../main/game_camera.hpp"
+#include "../../main/game_region.hpp"
 
 bool collect_text = false;
 std::string input_text;

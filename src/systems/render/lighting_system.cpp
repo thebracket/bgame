@@ -3,9 +3,10 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../messages/power_changed_message.hpp"
-#include "../../main/game_globals.hpp"
 #include "../ai/visibility_system.hpp"
 #include "../../components/lightsource.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_designations.hpp"
 
 using namespace rltk;
 

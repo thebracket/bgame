@@ -1,8 +1,9 @@
 #include "power_system.hpp"
 #include "../messages/messages.hpp"
-#include "../main/game_globals.hpp"
 #include <sstream>
 #include "../components/construct_power.hpp"
+#include "../../main/game_designations.hpp"
+#include "../../main/game_calendar.hpp"
 
 void power_system::calculate(int consumption) {
     designations->total_capacity = 0;

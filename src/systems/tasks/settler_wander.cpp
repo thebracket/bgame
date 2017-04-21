@@ -1,7 +1,7 @@
 #include "settler_wander.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../components/renderable.hpp"
 #include "../../messages/entity_moved_message.hpp"
+#include "../../main/game_designations.hpp"
 
 void wander_randomly(entity_t &entity, position_t &original) {
 	// Never wander if it is prohibited

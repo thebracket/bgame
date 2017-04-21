@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../main/game_globals.hpp"
 
 class map_render_system : public rltk::base_system {
 public:

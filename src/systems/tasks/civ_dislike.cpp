@@ -3,7 +3,6 @@
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../components/sentient_ai.hpp"
-#include "../../main/game_globals.hpp"
 
 using namespace rltk;
 

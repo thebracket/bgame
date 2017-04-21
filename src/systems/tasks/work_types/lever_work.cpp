@@ -1,7 +1,6 @@
 #include "lever_work.hpp"
 #include "../settler_work_time.hpp"
 #include "../../../messages/messages.hpp"
-#include "../../../main/game_globals.hpp"
 #include "../../ai/path_finding.hpp"
 #include "../../ai/mining_system.hpp"
 #include "../../ai/inventory_system.hpp"
@@ -38,6 +37,7 @@
 #include "../../../components/bridge.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/lever.hpp"
+#include "../../../main/game_designations.hpp"
 
 using namespace rltk;
 using tasks::become_idle;

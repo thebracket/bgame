@@ -1,5 +1,5 @@
 #include "render_block.hpp"
-#include "../../main/game_globals.hpp"
+#include "../../main/game_camera.hpp"
 
 /* Texture information - stores the size of the texture we are using */
 float texture_w = 384.0F;

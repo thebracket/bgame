@@ -4,13 +4,14 @@
 #include "world_gen.hpp"
 #include "../planet/planet_builder.hpp"
 #include "game_config.hpp"
-#include "game_globals.hpp"
 #include "game_planet.hpp"
 #include "../utils/telemetry.hpp"
 #include "menu_helper.hpp"
 #include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/worldgen_render.hpp"
+#include "../../main/game_rng.hpp"
+
 
 constexpr int WORLD_LAYER=1;
 constexpr int BACKDROP_LAYER=2;

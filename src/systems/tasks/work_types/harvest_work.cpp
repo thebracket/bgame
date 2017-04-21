@@ -1,7 +1,6 @@
 #include "harvest_work.hpp"
 #include "../settler_work_time.hpp"
 #include "../../../messages/messages.hpp"
-#include "../../../main/game_globals.hpp"
 #include "../../ai/path_finding.hpp"
 #include "../../ai/mining_system.hpp"
 #include "../../ai/inventory_system.hpp"
@@ -33,6 +32,7 @@
 #include "../settler_move_to.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../utils/telemetry.hpp"
+#include "../../../main/game_designations.hpp"
 
 using namespace rltk;
 using tasks::become_idle;

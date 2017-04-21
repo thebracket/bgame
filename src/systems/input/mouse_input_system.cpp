@@ -1,8 +1,8 @@
 #include "mouse_input_system.hpp"
 #include "../../utils/gl/map_render.hpp"
 #include "../../planet/constants.hpp"
-#include "../../main/game_globals.hpp"
 #include "../../messages/messages.hpp"
+#include "../../main/game_camera.hpp"
 
 namespace mouse {
 	int x=0;

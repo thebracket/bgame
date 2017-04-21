@@ -1,5 +1,4 @@
 #include "play_game.hpp"
-#include "game_globals.hpp"
 #include "game_config.hpp"
 #include "game_planet.hpp"
 #include "../systems/systems.hpp"
@@ -10,6 +9,12 @@
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/map_render.hpp"
 #include "../utils/filesystem.hpp"
+#include "../../main/game_region.hpp"
+#include "../../main/game_camera.hpp"
+#include "../../main/game_logger.hpp"
+#include "../../main/game_calendar.hpp"
+#include "../../main/game_designations.hpp"
+
 
 #include <rltk.hpp>
 #include <iostream>
