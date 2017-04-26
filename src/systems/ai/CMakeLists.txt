@@ -1,18 +1,5 @@
+add_subdirectory(settler)
 add_library(ai STATIC
-        ai_action_shim.cpp
-        ai_idle.cpp
-        ai_leisure_time.cpp
-        ai_sleep_time_system.cpp
-        ai_new_arrival.cpp
-        ai_scheduler.cpp
-        ai_status_effects.cpp
-        ai_stuck.cpp
-        ai_work_guard.cpp
-        ai_work_lumberjack.cpp
-        ai_work_mining.cpp
-        ai_work_time.cpp
-        ai_visibility_scan.cpp
-        job_board.cpp
         settler_ai_system.cpp
         workflow_system.cpp
         wildlife_population_system.cpp
@@ -26,5 +13,5 @@ add_library(ai STATIC
         inventory_system.cpp
         visibility_system.cpp
         )
-target_link_libraries(ai rltk utils components raws)
+target_link_libraries(ai settler_ai rltk utils components raws)
 cotire(ai)

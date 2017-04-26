@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "../../components/position.hpp"
+#include "../../../components/position.hpp"
 #include <rltk.hpp>
 #include <map>
 #include <memory>

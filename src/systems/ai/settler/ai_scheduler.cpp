@@ -1,17 +1,16 @@
 #include "ai_scheduler.hpp"
-#include "../../components/ai_tag_my_turn.hpp"
-#include "../../components/ai_tag_my_turn.hpp"
-#include "../../components/settler_ai.hpp"
-#include "../../components/ai_mode_idle.hpp"
-#include "../../components/ai_tag_leisure_shift.hpp"
-#include "../../components/ai_tag_sleep_shift.hpp"
-#include "../../components/ai_tag_work_shift.hpp"
-#include "../../components/sleep_clock_t.hpp"
-#include "../../components/claimed_t.hpp"
-#include "../../components/construct_provides_sleep.hpp"
-#include "../../components/ai_tag_work_guarding.hpp"
-#include "../../main/game_calendar.hpp"
-#include "../../main/game_designations.hpp"
+#include "../../../components/ai_tag_my_turn.hpp"
+#include "../../../components/settler_ai.hpp"
+#include "../../../components/ai_mode_idle.hpp"
+#include "../../../components/ai_tag_leisure_shift.hpp"
+#include "../../../components/ai_tag_sleep_shift.hpp"
+#include "../../../components/ai_tag_work_shift.hpp"
+#include "../../../components/sleep_clock_t.hpp"
+#include "../../../components/claimed_t.hpp"
+#include "../../../components/construct_provides_sleep.hpp"
+#include "../../../components/ai_tag_work_guarding.hpp"
+#include "../../../main/game_calendar.hpp"
+#include "../../../main/game_designations.hpp"
 
 void ai_scheduler::configure() {
     system_name = "AI Scheduler";
@@ -32,8 +31,10 @@ void ai_scheduler::update(const double duration_ms)
 
         // We just woke up and shouldn't be sleeping anymore!
         if (current_schedule != SLEEP_SHIFT && sleep.is_sleeping) {
+            std::cout << "Wake up time\n";
+
             // Unclaim the bed
-            each<construct_provides_sleep_t, claimed_t>([&e] (entity_t &bed, construct_provides_sleep_t &sleep, claimed_t &claimed) {
+            each<construct_provides_sleep_t, claimed_t>([&e] (entity_t &bed, construct_provides_sleep_t &sleeper, claimed_t &claimed) {
                 if (e.id == claimed.claimed_by) {
                     delete_component<claimed_t>(bed.id);
                 }

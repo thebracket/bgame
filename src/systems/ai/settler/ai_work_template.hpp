@@ -1,17 +1,17 @@
 #pragma once
 
 #include <rltk.hpp>
-#include "../../components/ai_tag_my_turn.hpp"
-#include "../../components/position.hpp"
-#include "../../components/item.hpp"
-#include "../../components/item_stored.hpp"
-#include "../../utils/dijkstra_map.hpp"
-#include "../../messages/entity_moved_message.hpp"
-#include "../../messages/inventory_changed_message.hpp"
-#include "../../messages/renderables_changed_message.hpp"
-#include "../../components/ai_mode_idle.hpp"
-#include "../../main/game_pause.hpp"
-#include "../../main/game_region.hpp"
+#include "../../../components/ai_tag_my_turn.hpp"
+#include "../../../components/position.hpp"
+#include "../../../components/item.hpp"
+#include "../../../components/item_stored.hpp"
+#include "../../../utils/dijkstra_map.hpp"
+#include "../../../messages/entity_moved_message.hpp"
+#include "../../../messages/inventory_changed_message.hpp"
+#include "../../../messages/renderables_changed_message.hpp"
+#include "../../../components/ai_mode_idle.hpp"
+#include "../../../main/game_pause.hpp"
+#include "../../../main/game_region.hpp"
 
 template<typename TAG>
 class ai_work_template {

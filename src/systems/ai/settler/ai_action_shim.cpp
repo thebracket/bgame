@@ -1,9 +1,9 @@
 #include "ai_action_shim.hpp"
-#include "../../components/ai_mode_idle.hpp"
-#include "../../components/ai_tag_my_turn.hpp"
-#include "../../components/ai_tag_work_shift.hpp"
-#include "../../messages/tick_message.hpp"
-#include "../../main/game_pause.hpp"
+#include "../../../components/ai_mode_idle.hpp"
+#include "../../../components/ai_tag_my_turn.hpp"
+#include "../../../components/ai_tag_work_shift.hpp"
+#include "../../../messages/tick_message.hpp"
+#include "../../../main/game_pause.hpp"
 
 void ai_action_shim::configure() {}
 
