@@ -31,8 +31,15 @@ void ai_sleep_time_system::update(const double duration_ms) {
         });
     });
 
-    each<settler_ai_t, ai_tag_my_turn_t, ai_tag_sleep_shift_t, sleep_clock_t, position_t>([]
-                       (entity_t &e, settler_ai_t &ai, ai_tag_my_turn_t &turn, ai_tag_sleep_shift_t &schedule, sleep_clock_t &sleep, position_t &pos) {
+    each<settler_ai_t, ai_tag_my_turn_t, sleep_clock_t, position_t>([]
+                       (entity_t &e, settler_ai_t &ai, ai_tag_my_turn_t &turn, sleep_clock_t &sleep, position_t &pos)
+    {
+        auto schedule = e.component<ai_tag_sleep_shift_t>();
+        if (schedule == nullptr) {
+            sleep.is_sleeping = false;
+            return;
+        }
+
         // It's my turn, and I'm sleeping
         delete_component<ai_tag_my_turn_t>(e.id);
 
@@ -53,15 +60,18 @@ void ai_sleep_time_system::update(const double duration_ms) {
                     emit(bed_changed_message{});
                 }
             });
+            return;
         } else if (distance >= MAX_DIJSTRA_DISTANCE) {
             // There is no bed - sleep rough
             sleep.is_sleeping = true;
             // TODO: Bad thoughts!
             emit_deferred(log_message{LOG{}.settler_name(e.id)->text(" cannot find a bed, and is sleeping rough.")->chars});
+            return;
         } else {
             // Path towards the bed
             position_t destination = bed_map.find_destination(pos);
             emit_deferred(entity_wants_to_move_message{e.id, destination});
+            return;
         }
     });
 }
