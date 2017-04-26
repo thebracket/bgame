@@ -12,6 +12,7 @@ add_library(ai STATIC
         ai_work_mining.cpp
         ai_work_time.cpp
         ai_visibility_scan.cpp
+        job_board.cpp
         settler_ai_system.cpp
         workflow_system.cpp
         wildlife_population_system.cpp

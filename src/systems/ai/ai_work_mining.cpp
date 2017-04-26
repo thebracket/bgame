@@ -18,8 +18,25 @@
 #include "mining_system.hpp"
 #include "ai_work_template.hpp"
 #include "../../main/game_designations.hpp"
+#include "job_board.hpp"
 
-void ai_work_mining::configure() {}
+namespace jobs_board {
+    void evaluate_mining(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
+        if (designations->mining.empty()) return; // No mining to do
+
+        auto pick_distance = pick_map.get(mapidx(pos));
+        if (pick_distance > MAX_DIJSTRA_DISTANCE-1) return; // No pick available
+
+        const auto idx = mapidx(pos);
+        const int distance = mining_map[idx] + pick_distance;
+
+        board.insert(std::make_pair(distance, MINING));
+    }
+}
+
+void ai_work_mining::configure() {
+    jobs_board::register_job_offer(jobs_board::evaluate_mining);
+}
 
 void ai_work_mining::update(const double duration_ms) {
     ai_work_template<ai_tag_work_miner> work;

@@ -11,60 +11,13 @@
 #include "mining_system.hpp"
 #include <map>
 #include "../../main/game_designations.hpp"
+#include "job_board.cpp"
 
-namespace jobs_board {
-    enum job_type_t { LUMBERJACK, MINING, GUARD };
-
-    void evaluate_lumberjacking(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
-        if (designations->chopping.empty()) return; // Nothing to cut down
-
-        auto axe_distance = axe_map.get(mapidx(pos));
-        if (axe_distance > MAX_DIJSTRA_DISTANCE-1) return; // No axe available
-
-        // Evaluate the closest tree to chop
-        std::size_t i = 0;
-        float distance = std::numeric_limits<float>().max();
-        std::size_t selected = 0;
-        for (const auto &chop : designations->chopping) {
-            const float d = distance3d(pos.x, pos.y, pos.z, chop.second.x, chop.second.y, chop.second.z);
-            if (d < distance) {
-                distance = d;
-                selected = i;
-            }
-            ++i;
-        }
-
-        board.insert(std::make_pair(distance + axe_distance, LUMBERJACK));
-    }
-
-    void evaluate_mining(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
-        if (designations->mining.empty()) return; // No mining to do
-
-        auto pick_distance = pick_map.get(mapidx(pos));
-        if (pick_distance > MAX_DIJSTRA_DISTANCE-1) return; // No pick available
-
-        const auto idx = mapidx(pos);
-        const int distance = mining_map[idx] + pick_distance;
-
-        board.insert(std::make_pair(distance, MINING));
-    }
-
-    void evaluate_guarding(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
-        if (designations->guard_points.empty()) return; // Nothing to guard
-        if (shooting_range(e, pos)<1) return; // No gun
-        for (const auto &g : designations->guard_points) {
-            if (!g.first) {
-                board.insert(std::make_pair(static_cast<int>(distance3d(pos.x, pos.y, pos.z, g.second.x, g.second.y, g.second.z)), GUARD));
-            }
-        }
-    }
+namespace jobs_board {    
 
     std::map<int, job_type_t> job_evaluations(entity_t &e, position_t &pos) {
-        std::map<int, job_type_t> board;
-
-        evaluate_lumberjacking(board, e, pos);
-        evaluate_mining(board, e, pos);
-        evaluate_guarding(board, e, pos);
+        job_board_t board;
+        evaluate(board, e, pos);
 
         return board;
     }
