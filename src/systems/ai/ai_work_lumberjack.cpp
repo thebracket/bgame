@@ -19,7 +19,7 @@
 #include "job_board.hpp"
 
 namespace jobs_board {
-    void evaluate_lumberjacking(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
+    void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
         if (designations->chopping.empty()) return; // Nothing to cut down
 
         auto axe_distance = axe_map.get(mapidx(pos));
@@ -38,13 +38,13 @@ namespace jobs_board {
             ++i;
         }
 
-        board.insert(std::make_pair(distance + axe_distance, LUMBERJACK));
+        board.insert(std::make_pair(distance + axe_distance, jt));
     }
 }
 
 void ai_work_lumberjack::configure() {
     // Register with the jobs board
-    jobs_board::register_job_offer(jobs_board::evaluate_lumberjacking);
+    jobs_board::register_job_offer<ai_tag_work_lumberjack>(jobs_board::evaluate_lumberjacking);
 }
 
 void ai_work_lumberjack::update(const double duration_ms)

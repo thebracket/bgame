@@ -15,7 +15,7 @@
 
 namespace jobs_board {    
 
-    std::map<int, job_type_t> job_evaluations(entity_t &e, position_t &pos) {
+    job_board_t job_evaluations(entity_t &e, position_t &pos) {
         job_board_t board;
         evaluate(board, e, pos);
 
@@ -24,16 +24,13 @@ namespace jobs_board {
 }
 
 void ai_work_time::configure() {
-
 }
 
 void ai_work_time::update(const double duration_ms) {
 
     each<settler_ai_t, ai_tag_work_shift_t, position_t>([] (entity_t &e, settler_ai_t &ai, ai_tag_work_shift_t &work, position_t &pos) {
         // Do we already have a job? If so, then return to doing it!
-        if (e.component<ai_tag_work_lumberjack>() != nullptr) return;
-        if (e.component<ai_tag_work_miner>() != nullptr) return;
-        if (e.component<ai_tag_work_guarding>() != nullptr) return;
+        if (jobs_board::is_working(e)) return;
 
         // Build a job candidates list, goal is to pick the easiest job to complete.
         auto available_jobs = jobs_board::job_evaluations(e, pos);
@@ -48,10 +45,6 @@ void ai_work_time::update(const double duration_ms) {
         }
 
         auto job_type = available_jobs.begin()->second;
-        switch (job_type) {
-            case jobs_board::LUMBERJACK : { e.assign(ai_tag_work_lumberjack{}); } break;
-            case jobs_board::MINING : { e.assign(ai_tag_work_miner{}); } break;
-            case jobs_board::GUARD : { e.assign(ai_tag_work_guarding{}); } break;
-        }
+        job_type->set_tag(e);
     });
 }

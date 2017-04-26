@@ -21,7 +21,7 @@
 #include "job_board.hpp"
 
 namespace jobs_board {
-    void evaluate_mining(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
+    void evaluate_mining(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
         if (designations->mining.empty()) return; // No mining to do
 
         auto pick_distance = pick_map.get(mapidx(pos));
@@ -30,12 +30,12 @@ namespace jobs_board {
         const auto idx = mapidx(pos);
         const int distance = mining_map[idx] + pick_distance;
 
-        board.insert(std::make_pair(distance, MINING));
+        board.insert(std::make_pair(distance, jt));
     }
 }
 
 void ai_work_mining::configure() {
-    jobs_board::register_job_offer(jobs_board::evaluate_mining);
+    jobs_board::register_job_offer<ai_tag_work_miner>(jobs_board::evaluate_mining);
 }
 
 void ai_work_mining::update(const double duration_ms) {

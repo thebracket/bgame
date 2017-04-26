@@ -10,19 +10,20 @@
 #include "job_board.hpp"
 
 namespace jobs_board {
-    void evaluate_guarding(std::map<int, job_type_t> &board, entity_t &e, position_t &pos) {
+    void evaluate_guarding(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
         if (designations->guard_points.empty()) return; // Nothing to guard
         if (shooting_range(e, pos)<1) return; // No gun
         for (const auto &g : designations->guard_points) {
             if (!g.first) {
-                board.insert(std::make_pair(static_cast<int>(distance3d(pos.x, pos.y, pos.z, g.second.x, g.second.y, g.second.z)), GUARD));
+                board[static_cast<int>(distance3d(pos.x, pos.y, pos.z, g.second.x, g.second.y, g.second.z))] = jt;
             }
         }
     }
 }
 
 void ai_work_guard::configure() {
-    jobs_board::register_job_offer(jobs_board::evaluate_guarding);
+    using namespace jobs_board;
+    register_job_offer<ai_tag_work_guarding>(evaluate_guarding);
 }
 
 void ai_work_guard::update(const double duration_ms) {
