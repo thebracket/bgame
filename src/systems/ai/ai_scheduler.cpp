@@ -41,6 +41,7 @@ void ai_scheduler::update(const double duration_ms)
 
             // Wake up
             sleep.is_sleeping = false;
+            e.assign(ai_mode_idle_t{});
         }
         auto guard = e.component<ai_tag_work_guarding>();
         if (current_schedule != WORK_SHIFT && guard) {
