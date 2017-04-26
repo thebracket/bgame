@@ -3,12 +3,10 @@
 #include "movement_system.hpp"
 #include "../../components/item_stored.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../raws/clothing.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_building.hpp"
 #include "../../main/game_region.hpp"
 
 void inventory_system::update(const double duration_ms) {

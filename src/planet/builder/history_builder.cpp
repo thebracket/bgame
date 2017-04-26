@@ -1,15 +1,10 @@
 #include "history_builder.hpp"
 #include "../planet_builder.hpp"
-#include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
 #include "../../raws/string_table.hpp"
-#include "../constants.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../raws/lua_bridge.hpp"
-#include <unordered_map>
-#include <iostream>
-#include <sstream>
 
 constexpr int n_civs = WORLD_WIDTH;
 

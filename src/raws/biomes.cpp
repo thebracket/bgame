@@ -1,5 +1,4 @@
 #include "biomes.hpp"
-#include <iostream>
 #include "lua_bridge.hpp"
 #include "creatures.hpp"
 

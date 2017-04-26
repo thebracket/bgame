@@ -4,7 +4,6 @@
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../components/health.hpp"
 #include "../../components/game_stats.hpp"
-#include "../../components/species.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/item.hpp"
 #include "../../raws/life_events.hpp"

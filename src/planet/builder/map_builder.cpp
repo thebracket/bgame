@@ -1,8 +1,6 @@
 #include "map_builder.hpp"
 #include "../planet_builder.hpp"
 #include "noise_helper.hpp"
-#include <sstream>
-#include <set>
 
 using namespace rltk;
 

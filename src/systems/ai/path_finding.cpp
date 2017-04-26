@@ -1,5 +1,4 @@
 #include "path_finding.hpp"
-#include <rltk.hpp>
 #include "../../planet/region.hpp"
 #include "../../main/game_region.hpp"
 

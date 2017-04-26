@@ -1,7 +1,6 @@
 #include "camera_system.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/inputs.hpp"
-#include "renderables_system.hpp"
 #include "../../messages/tick_message.hpp"
 #include "../../utils/gl/map_render.hpp"
 #include "../../main/game_clipping.hpp"

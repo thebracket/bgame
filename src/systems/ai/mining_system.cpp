@@ -3,7 +3,6 @@
 #include "../../planet/region.hpp"
 #include "../../main/game_region.hpp"
 #include "../../main/game_designations.hpp"
-#include <tuple>
 
 std::vector<uint8_t> mining_map;
 std::vector<int> mining_targets;

@@ -1,14 +1,12 @@
 #include "movement_system.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
-#include "../../messages/map_dirty_message.hpp"
 #include "../../messages/vegetation_damage_message.hpp"
 #include "../../components/slidemove.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../main/game_region.hpp"
 #include "../../main/game_rng.hpp"
-#include <rltk.hpp>
 
 octree_t entity_octree;
 

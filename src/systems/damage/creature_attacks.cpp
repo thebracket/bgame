@@ -1,12 +1,9 @@
 #include "creature_attacks.hpp"
-#include "../../messages/messages.hpp"
-#include "../tasks/civ_dislike.hpp"
 #include "../../components/game_stats.hpp"
 #include "weapons_helpers.hpp"
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../raws/creatures.hpp"
-#include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
 
 using namespace rltk;

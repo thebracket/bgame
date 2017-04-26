@@ -1,16 +1,9 @@
 #include "mode_design_system.hpp"
 #include "../input/mouse_input_system.hpp"
-#include "../../raws/raws.hpp"
 #include "../../messages/messages.hpp"
-#include "../ai/mining_system.hpp"
 #include "../ai/inventory_system.hpp"
-#include "../render/camera_system.hpp"
-#include "../../utils/string_utils.hpp"
 #include "../../components/stockpile.hpp"
 #include "../../raws/plants.hpp"
-#include <sstream>
-#include <iomanip>
-#include <map>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
 #include "../../components/bridge.hpp"

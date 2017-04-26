@@ -1,7 +1,5 @@
 #include "distance_map_system.hpp"
-#include "../../messages/tick_message.hpp"
 #include "../../components/grazer_ai.hpp"
-#include "../../components/position.hpp"
 #include "../../components/corpse_harvestable.hpp"
 #include "../../planet/region.hpp"
 #include "../../messages/entity_moved_message.hpp"
@@ -12,8 +10,6 @@
 #include "../../components/claimed_t.hpp"
 #include "inventory_system.hpp"
 #include "../../components/item_stored.hpp"
-#include <unordered_set>
-#include "../../main/game_region.hpp"
 #include "../../main/game_designations.hpp"
 
 dijkstra_map huntables_map;

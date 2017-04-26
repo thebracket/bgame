@@ -2,8 +2,6 @@
 #include "../../main/game_planet.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
-#include "../../utils/string_utils.hpp"
-#include <sstream>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
 #include "../../main/game_mode.hpp"

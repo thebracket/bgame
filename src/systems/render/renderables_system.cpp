@@ -17,9 +17,7 @@
 #include "../../components/ai_tag_work_lumberjack.hpp"
 #include "../../components/ai_tag_work_mining.hpp"
 #include "../../main/game_clipping.hpp"
-#include "../../main/game_region.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_designations.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
 

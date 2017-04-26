@@ -1,7 +1,6 @@
 #include "door_system.hpp"
 #include "../../components/construct_provides_door.hpp"
 #include "../../components/position.hpp"
-#include "../../components/renderable.hpp"
 #include "../../messages/build_request_message.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/map_dirty_message.hpp"

@@ -5,7 +5,6 @@
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
 #include "../utils/telemetry.hpp"
-#include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/map_render.hpp"
 #include "../utils/filesystem.hpp"

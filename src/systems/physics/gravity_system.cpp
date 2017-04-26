@@ -7,8 +7,6 @@
 #include "../../components/building.hpp"
 #include "../../messages/emit_particles_message.hpp"
 #include "../../raws/raws.hpp"
-#include <deque>
-#include <array>
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/perform_mining.hpp"
 #include "../../main/game_rng.hpp"

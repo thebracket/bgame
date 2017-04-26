@@ -1,6 +1,5 @@
 #include "hud_system.hpp"
 #include "../../messages/messages.hpp"
-#include <sstream>
 #include "imgui_helper.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../utils/gl/map_render.hpp"

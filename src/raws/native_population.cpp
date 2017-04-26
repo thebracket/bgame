@@ -1,6 +1,5 @@
 #include "native_population.hpp"
 #include "lua_bridge.hpp"
-#include "../utils/string_utils.hpp"
 
 std::unordered_map<std::string, std::vector<native_population_t>> native_pop_defs;
 

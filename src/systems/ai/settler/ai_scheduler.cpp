@@ -6,8 +6,6 @@
 #include "../../../components/ai_tag_sleep_shift.hpp"
 #include "../../../components/ai_tag_work_shift.hpp"
 #include "../../../components/sleep_clock_t.hpp"
-#include "../../../components/claimed_t.hpp"
-#include "../../../components/construct_provides_sleep.hpp"
 #include "../../../components/ai_tag_work_guarding.hpp"
 #include "../../../main/game_calendar.hpp"
 #include "../../../main/game_designations.hpp"

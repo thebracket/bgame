@@ -1,8 +1,5 @@
 #include "blight_builder.hpp"
 #include "../../../raws/plants.hpp"
-#include <algorithm>
-#include "../../../components/position.hpp"
-#include "../../../components/sentient_ai.hpp"
 #include "../../../raws/materials.hpp"
 
 void build_ant_mound(region_t &region, random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) {

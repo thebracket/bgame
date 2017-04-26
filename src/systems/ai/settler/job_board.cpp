@@ -1,5 +1,4 @@
 #include "job_board.hpp"
-#include <algorithm>
 
 namespace jobs_board {    
 

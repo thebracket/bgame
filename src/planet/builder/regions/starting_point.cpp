@@ -1,5 +1,4 @@
 #include "starting_point.hpp"
-#include <iostream>
 
 
 bool has_civilization(planet_t &planet, const int &x, const int &y) {

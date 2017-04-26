@@ -7,7 +7,6 @@
 #include "../tasks/initiative.hpp"
 #include "../../components/slidemove.hpp"
 #include "../../components/ai_tag_my_turn.hpp"
-#include "../../main/game_rng.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {

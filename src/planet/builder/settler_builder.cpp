@@ -1,6 +1,5 @@
 #include "settler_builder.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../components/species.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/name.hpp"
 #include "../../components/viewshed.hpp"

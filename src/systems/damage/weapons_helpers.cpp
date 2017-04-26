@@ -1,6 +1,5 @@
 #include "weapons_helpers.hpp"
 #include "../../messages/messages.hpp"
-#include "../../raws/raws.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../raws/clothing.hpp"
 #include "../../components/item.hpp"

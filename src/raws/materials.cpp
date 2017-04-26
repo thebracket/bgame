@@ -1,6 +1,5 @@
 #include "materials.hpp"
 #include "lua_bridge.hpp"
-#include "apihelper.hpp"
 
 using namespace rltk;
 

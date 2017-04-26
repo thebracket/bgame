@@ -10,7 +10,6 @@
 #include "../../../messages/log_message.hpp"
 #include "../../../messages/entity_moved_message.hpp"
 #include "../../../components/construct_provides_sleep.hpp"
-#include "../../../components/position.hpp"
 
 void ai_sleep_time_system::configure() {
     system_name = "AI Sleep System";

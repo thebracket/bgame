@@ -1,29 +1,20 @@
 #include "raws.hpp"
 #include "lua_bridge.hpp"
-#include "../utils/string_utils.hpp"
-#include "../components/species.hpp"
 #include "../components/position.hpp"
 #include "../components/renderable.hpp"
 #include "../components/item.hpp"
 #include "../components/item_stored.hpp"
 #include "string_table.hpp"
-#include "materials.hpp"
 #include "native_population.hpp"
 #include "creatures.hpp"
 #include "species.hpp"
 #include "biomes.hpp"
 #include "plants.hpp"
 #include "life_events.hpp"
-#include "clothing.hpp"
 #include "profession.hpp"
-#include "items.hpp"
 #include "buildings.hpp"
 #include "reactions.hpp"
 #include "../systems/ai/movement_system.hpp"
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <memory>
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 

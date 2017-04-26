@@ -1,5 +1,4 @@
 #include "wish_system.hpp"
-#include "../input/keyboard_system.hpp"
 #include "../../messages/messages.hpp"
 #include "../ai/distance_map_system.hpp"
 #include <../../external/imgui-sfml/imgui-SFML.h>

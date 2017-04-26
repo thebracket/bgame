@@ -1,16 +1,7 @@
 #include "ai_work_time.hpp"
 #include "../../../components/ai_tag_work_shift.hpp"
 #include "../../../components/settler_ai.hpp"
-#include "../../../components/position.hpp"
-#include "../distance_map_system.hpp"
 #include "../../../components/ai_mode_idle.hpp"
-#include "../../../components/ai_tag_work_lumberjack.hpp"
-#include "../../../components/ai_tag_work_mining.hpp"
-#include "../../../components/ai_tag_work_guarding.hpp"
-#include "../../damage/weapons_helpers.hpp"
-#include "../mining_system.hpp"
-#include <map>
-#include "../../../main/game_designations.hpp"
 #include "job_board.cpp"
 
 namespace jobs_board {    

@@ -3,7 +3,6 @@
 #include "../input/mouse_input_system.hpp"
 #include "../../messages/build_request_message.hpp"
 #include "../../messages/inventory_changed_message.hpp"
-#include <rltk.hpp>
 #include "../../components/building.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
@@ -17,7 +16,6 @@
 #include "../../raws/plants.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../components/lever.hpp"
-#include "../gui/imgui_helper.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../main/game_pause.hpp"
 #include "../../main/game_mode.hpp"

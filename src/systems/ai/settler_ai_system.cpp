@@ -1,12 +1,5 @@
 #include "settler_ai_system.hpp"
 #include "../../messages/messages.hpp"
-#include "path_finding.hpp"
-#include "mining_system.hpp"
-#include "inventory_system.hpp"
-#include "workflow_system.hpp"
-#include "wildlife_population_system.hpp"
-#include "../damage/weapons_helpers.hpp"
-#include "../../components/item_carried.hpp"
 #include "../tasks/idle_mode.hpp"
 #include "../tasks/settler_glyph.hpp"
 #include "../tasks/settler_job_status.hpp"
@@ -14,33 +7,15 @@
 #include "../tasks/settler_cancel_action.hpp"
 #include "../tasks/pathfinding.hpp"
 #include "../tasks/initiative.hpp"
-#include "../../messages/log_message.hpp"
-#include "../../components/logger.hpp"
 #include "../../components/health.hpp"
-#include "../../components/renderable.hpp"
-#include "../../components/corpse_harvestable.hpp"
-#include "../../components/construct_provides_sleep.hpp"
 #include "../../components/viewshed.hpp"
-#include "../../components/smoke_emitter.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/lightsource.hpp"
 #include "../../components/falling.hpp"
-#include "../../components/initiative.hpp"
 #include "../tasks/threat_scanner.hpp"
-#include "../tasks/world_queries.hpp"
-#include "../tasks/settler_wander.hpp"
-#include "../tasks/settler_move_to.hpp"
 #include "../tasks/settler_work_time.hpp"
-#include "../../main/game_designations.hpp"
 #include "../../main/game_calendar.hpp"
 #include "../../main/game_mode.hpp"
-#include "../../main/game_building.hpp"
 #include "../../main/game_selections.hpp"
 
-
-#include <iostream>
-#include <map>
 
 using namespace rltk;
 using tasks::become_idle;

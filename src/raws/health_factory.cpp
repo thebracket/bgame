@@ -1,8 +1,6 @@
 #include "health_factory.hpp"
 #include "../main/game_rng.hpp"
-#include "raws.hpp"
 #include "creatures.hpp"
-#include "species.hpp"
 
 health_t create_health_component_sentient(const raw_species_t * species, const int base_hp)
 {

@@ -1,7 +1,6 @@
 #include "sentient_attacks.hpp"
 #include "../../messages/inflict_damage_message.hpp"
 #include "weapons_helpers.hpp"
-#include "../../raws/species.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../raws/items.hpp"
@@ -10,7 +9,6 @@
 #include "../tasks/civ_dislike.hpp"
 #include "../../messages/emit_particles_message.hpp"
 #include "../../components/natural_attacks_t.hpp"
-#include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
 
 void sentient_melee_attack(const std::string &weapon_name,

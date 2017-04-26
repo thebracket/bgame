@@ -1,5 +1,4 @@
 #include "healing_system.hpp"
-#include "../../messages/messages.hpp"
 #include "../../components/health.hpp"
 
 using namespace rltk;
