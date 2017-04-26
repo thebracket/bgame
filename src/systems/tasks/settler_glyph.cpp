@@ -1,5 +1,4 @@
 #include "settler_glyph.hpp"
-#include "../../components/renderable.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 
 namespace tasks {

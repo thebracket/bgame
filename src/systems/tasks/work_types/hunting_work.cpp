@@ -1,7 +1,6 @@
 #include "hunting_work.hpp"
 #include "../../ai/path_finding.hpp"
 #include "../../ai/inventory_system.hpp"
-#include "../../ai/wildlife_population_system.hpp"
 #include "../../damage/weapons_helpers.hpp"
 #include "../idle_mode.hpp"
 #include "../settler_glyph.hpp"
@@ -15,9 +14,6 @@
 #include "../../../raws/creatures.hpp"
 #include "../../ai/distance_map_system.hpp"
 #include "../../../messages/messages.hpp"
-
-#include <iostream>
-#include <map>
 
 using namespace rltk;
 using tasks::become_idle;

@@ -1,7 +1,6 @@
 #include "settler_leisure.hpp"
 #include "settler_cancel_action.hpp"
 #include "settler_drop_tool.hpp"
-#include "settler_cancel_action.hpp"
 #include "settler_wander.hpp"
 
 using tasks::cancel_action;

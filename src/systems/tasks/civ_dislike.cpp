@@ -1,8 +1,4 @@
 #include "civ_dislike.hpp"
-#include "../../planet/planet.hpp"
-#include "../../messages/log_message.hpp"
-#include "../../components/logger.hpp"
-#include "../../components/sentient_ai.hpp"
 
 using namespace rltk;
 

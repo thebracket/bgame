@@ -11,14 +11,9 @@
 #include "work_types/architecture_work.hpp"
 #include "work_types/lever_work.hpp"
 
-#include "../../messages/messages.hpp"
-#include "../ai/path_finding.hpp"
-#include "../ai/mining_system.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../ai/workflow_system.hpp"
-#include "../ai/wildlife_population_system.hpp"
 #include "../damage/weapons_helpers.hpp"
-#include "../components/item_carried.hpp"
 #include "idle_mode.hpp"
 #include "settler_glyph.hpp"
 #include "settler_job_status.hpp"
@@ -26,28 +21,12 @@
 #include "settler_cancel_action.hpp"
 #include "pathfinding.hpp"
 #include "initiative.hpp"
-#include "../../messages/log_message.hpp"
-#include "../../components/logger.hpp"
-#include "../../components/health.hpp"
-#include "../../components/renderable.hpp"
-#include "../../components/corpse_harvestable.hpp"
-#include "../../components/construct_provides_sleep.hpp"
-#include "../../components/viewshed.hpp"
-#include "../../components/smoke_emitter.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/lightsource.hpp"
-#include "../../components/falling.hpp"
 #include "world_queries.hpp"
 #include "settler_wander.hpp"
-#include "settler_move_to.hpp"
 #include "../../raws/reactions.hpp"
 #include "../stockpile_system.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../main/game_designations.hpp"
-
-#include <iostream>
-#include <map>
 
 using namespace rltk;
 using tasks::become_idle;
