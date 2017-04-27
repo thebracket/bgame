@@ -1,5 +1,4 @@
 #include "settler_work_time.hpp"
-#include "work_types/reaction_work.hpp"
 #include "work_types/equip_melee_work.hpp"
 #include "work_types/equip_ranged_work.hpp"
 #include "work_types/equip_armor_work.hpp"
@@ -57,34 +56,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 				ai.job_type_minor = JM_FIND_DEMOLISH;
 				change_job_status(ai, name, "performing structural demolition.", true);
 			}
-			return;
-		}
-
-		// Look for a queued order to perform
-		if (!designations->build_orders.empty()) {
-			auto autojob = find_queued_reaction_task(ai);
-
-			if (autojob) {
-				auto finder = reaction_defs.find(autojob->reaction_tag);
-				change_settler_glyph(entity, vchar{1, get_task_color(finder->second.skill), rltk::colors::BLACK});
-				ai.job_type_major = JOB_REACTION;
-				ai.job_type_minor = JM_SELECT_INPUT;
-				change_job_status(ai, name, autojob->job_name, true);
-				ai.reaction_target = *autojob;
-                ai.has_reaction_target = true;
-				return;
-			}
-		}
-
-		// Look for an automatic reaction to perform
-		auto autojob = find_automatic_reaction_task(ai);
-		if (autojob) {
-			auto finder = reaction_defs.find(autojob->reaction_tag);
-			change_settler_glyph(entity, vchar{1, get_task_color(finder->second.skill), rltk::colors::BLACK});
-			ai.job_type_major = JOB_REACTION;
-			ai.job_type_minor = JM_SELECT_INPUT;
-			change_job_status(ai, name, autojob->job_name, true);
-			ai.reaction_target = *autojob;
 			return;
 		}
 
@@ -171,9 +142,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
             std::tie(ai.target_x, ai.target_y, ai.target_z) = idxmap(item.dest_tile);
         }
 
-	} else if (ai.job_type_major == JOB_REACTION) {
-		do_reaction(entity, ai, stats, species, pos, name);
-		return;
 	} else if (ai.job_type_major == JOB_EQUIP_MELEE) {
 		do_equip_melee(entity, ai, stats, species, pos, name);
 		return;

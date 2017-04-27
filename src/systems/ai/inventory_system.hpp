@@ -31,7 +31,7 @@ int available_items_by_tag(const std::string &tag);
 int available_items_by_reaction_input(const reaction_input_t &input);
 int blocks_available();
 std::size_t claim_item_by_tag(const std::string &tag);
-std::size_t claim_item_by_reaction_input(const reaction_input_t &input);
+std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim=true);
 void unclaim_by_id(const std::size_t &id);
 
 void delete_item(const std::size_t &id);

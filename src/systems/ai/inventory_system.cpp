@@ -406,7 +406,7 @@ std::size_t claim_item_by_tag(const std::string &tag) {
 	return result;
 }
 
-std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
+std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim) {
 	std::size_t result = 0;
 	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
 		if ((input.tag == "any" || i.item_tag == input.tag) && i.claimed == false) {
@@ -420,7 +420,7 @@ std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
 			if (ok) result = e.id;
 		}
 	});
-	if (result != 0) {
+	if (result != 0 && really_claim) {
 		emit(item_claimed_message{result, true});
 	}
 	return result;

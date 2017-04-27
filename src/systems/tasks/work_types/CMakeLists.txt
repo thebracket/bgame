@@ -1,5 +1,4 @@
 add_library(work_types STATIC
-        reaction_work.cpp
         equip_melee_work.cpp
         equip_ranged_work.cpp
         equip_armor_work.cpp
