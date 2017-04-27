@@ -8,7 +8,6 @@ add_library(work_types STATIC
         demolition_work.cpp
         hauling_work.cpp
         architecture_work.cpp
-        lever_work.cpp
         )
 target_link_libraries(work_types rltk utils components raws tasks)
 cotire(work_types)

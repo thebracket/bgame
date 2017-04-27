@@ -3,6 +3,7 @@ add_library(settler_ai STATIC
         ai_work_harvest.cpp
         ai_idle.cpp
         ai_leisure_time.cpp
+        ai_work_lever_pull.cpp
         ai_sleep_time_system.cpp
         ai_new_arrival.cpp
         ai_scheduler.cpp

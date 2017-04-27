@@ -7,12 +7,12 @@
 
 using namespace rltk;
 
-struct ai_tag_work_harvest {
+struct ai_tag_work_pull_lever {
 
-    enum harvest_steps { FIND_HARVEST, DO_HARVEST };
+    enum lever_steps { FIND, PULL };
 
-    ai_tag_work_harvest() {}
-    harvest_steps step = FIND_HARVEST;
+    ai_tag_work_pull_lever() {}
+    lever_steps step = FIND;
 
     template<class Archive>
     void serialize(Archive & archive)
@@ -22,4 +22,4 @@ struct ai_tag_work_harvest {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<ai_tag_work_harvest>>)
+CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<ai_tag_work_pull_lever>>)
