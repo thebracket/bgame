@@ -7,7 +7,6 @@
 #include "work_types/hunting_work.hpp"
 #include "work_types/demolition_work.hpp"
 #include "work_types/hauling_work.hpp"
-#include "work_types/harvest_work.hpp"
 #include "work_types/architecture_work.hpp"
 #include "work_types/lever_work.hpp"
 
@@ -48,21 +47,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
             ai.job_type_minor = JM_GO_TO_LEVER;
             change_job_status(ai, name, "pulling a lever", false);
             return;
-        }
-
-		if (ai.permitted_work[JOB_FARMING] && !designations->harvest.empty()) {
-            for (auto &g : designations->harvest) {
-                if (!g.first) {
-                    g.first = true;
-                    ai.job_type_major = JOB_HARVEST;
-                    ai.job_type_minor = JM_FIND_HARVEST;
-                    ai.target_x = g.second.x;
-                    ai.target_y = g.second.y;
-                    ai.target_z = g.second.z;
-                    change_job_status(ai, name, "starting to harvest plants.", false);
-                    return;
-                }
-            }
         }
 
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
@@ -235,9 +219,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 	} else if (ai.job_type_major == JOB_BUTCHERING) {
 		do_butchering(entity, ai, stats, species, pos, name);
 		return;
-    } else if (ai.job_type_major == JOB_HARVEST) {
-        do_harvesting(entity, ai, stats, species, pos, name);
-        return;
 	} else if (ai.job_type_major == JOB_DECONSTRUCT) {
 		do_deconstruction(entity, ai, stats, species, pos, name);
 		return;

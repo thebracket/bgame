@@ -7,7 +7,6 @@ add_library(work_types STATIC
         hunting_work.cpp
         demolition_work.cpp
         hauling_work.cpp
-        harvest_work.cpp
         architecture_work.cpp
         lever_work.cpp
         )

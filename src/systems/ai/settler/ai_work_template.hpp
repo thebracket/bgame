@@ -41,7 +41,7 @@ public:
     }
 
     template <typename CANCEL, typename SUCCESS>
-    void fetch_tool(dijkstra_map &map, position_t &pos, entity_t &e, const CANCEL &cancel, const SUCCESS &success) const {
+    void folllow_path(dijkstra_map &map, position_t &pos, entity_t &e, const CANCEL &cancel, const SUCCESS &success) const {
         const auto d = map.get(mapidx(pos));
         if (d > MAX_DIJSTRA_DISTANCE-1) {
             // We can't get to it

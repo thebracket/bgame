@@ -328,6 +328,7 @@ void mode_design_system::harvest() {
             }
             if (!found) {
                 designations->harvest.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
+                emit_deferred(harvestmap_changed_message{});
             }
         } else if (get_mouse_button_state(rltk::button::RIGHT)) {
             designations->harvest.erase(std::remove_if(
@@ -336,6 +337,7 @@ void mode_design_system::harvest() {
                     [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
                                              ),
                                              designations->harvest.end());
+            emit_deferred(harvestmap_changed_message{});
         }
     }
 

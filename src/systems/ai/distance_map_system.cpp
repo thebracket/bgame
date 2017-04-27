@@ -21,6 +21,7 @@ dijkstra_map blocks_map;
 dijkstra_map levers_map;
 dijkstra_map axe_map;
 dijkstra_map pick_map;
+dijkstra_map harvest_map;
 bool dijkstra_debug = false;
 
 using namespace rltk;
@@ -149,6 +150,14 @@ namespace dijkstra {
         std::cout << "Updating pick map - " << targets.size() << " candidates.\n";
         pick_map.update(targets);
     }
+
+    void update_harvest_map() {
+        std::vector<int> targets;
+        for (auto it = designations->harvest.begin(); it != designations->harvest.end(); ++it) {
+            targets.emplace_back(mapidx(it->second));
+        }
+        harvest_map.update(targets);
+    }
 }
 
 void distance_map_system::configure() {
@@ -163,6 +172,7 @@ void distance_map_system::configure() {
     subscribe_mbox<leverpull_changed_message>();
     subscribe_mbox<axemap_changed_message>();
     subscribe_mbox<pickmap_changed_message>();
+    subscribe_mbox<harvestmap_changed_message>();
 }
 
 void distance_map_system::update(const double duration_ms) {
@@ -175,6 +185,7 @@ void distance_map_system::update(const double duration_ms) {
     each_mbox<leverpull_changed_message>([this] (const leverpull_changed_message &msg) { update_levers_map = true; });
     each_mbox<axemap_changed_message>([this] (const axemap_changed_message &msg) { update_axe_map = true; });
     each_mbox<pickmap_changed_message>([this] (const pickmap_changed_message &msg) { update_pick_map = true; });
+    each_mbox<harvestmap_changed_message>([this] (const harvestmap_changed_message &msg) { update_harvest_map = true; });
     each_mbox<map_changed_message>([this] (const map_changed_message &msg) {
         update_huntables = true;
         update_butcherables = true;
@@ -185,6 +196,7 @@ void distance_map_system::update(const double duration_ms) {
         update_levers_map = true;
         update_axe_map = true;
         update_pick_map = true;
+        update_harvest_map = true;
     });
 
     if (update_huntables) {
@@ -230,5 +242,10 @@ void distance_map_system::update(const double duration_ms) {
     if (update_pick_map) {
         dijkstra::update_pick_map();
         update_pick_map = false;
+    }
+
+    if (update_harvest_map) {
+        dijkstra::update_harvest_map();
+        update_harvest_map = false;
     }
 }

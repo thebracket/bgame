@@ -1,5 +1,6 @@
 add_library(settler_ai STATIC
         ai_action_shim.cpp
+        ai_work_harvest.cpp
         ai_idle.cpp
         ai_leisure_time.cpp
         ai_sleep_time_system.cpp

@@ -46,17 +46,17 @@ void ai_work_lumberjack::update(const double duration_ms)
     ai_work_template<ai_tag_work_lumberjack> work;
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
         if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
-            work.fetch_tool(axe_map, pos, e, [&e] () {
+            work.folllow_path(axe_map, pos, e, [&e]() {
                 // On cancel
                 delete_component<ai_tag_work_lumberjack>(e.id);
                 return;
             }, [&e, this, &pos, &lj, &work] {
                 // On success
-                work.pickup_tool<axemap_changed_message>(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj] () {
+                work.pickup_tool<axemap_changed_message>(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj]() {
                     // On cancel
                     delete_component<ai_tag_work_lumberjack>(e.id);
                     return;
-                }, [&lj] () {
+                }, [&lj]() {
                     // On success
                     lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
                 });
