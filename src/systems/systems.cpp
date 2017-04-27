@@ -66,6 +66,7 @@
 #include "ai/settler/ai_work_guard.hpp"
 #include "ai/settler/ai_work_harvest.hpp"
 #include "ai/settler/ai_work_lever_pull.hpp"
+#include "ai/settler/ai_work_building.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -103,6 +104,7 @@ void add_systems_to_ecs() {
     add_system<ai_work_guard>();
     add_system<ai_work_harvest>();
     add_system<ai_work_lever_pull>();
+    add_system<ai_work_building>();
     add_system<ai_action_shim>();
     add_system<ai_idle>();
     add_system<settler_ai_system>();

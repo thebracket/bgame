@@ -1,6 +1,5 @@
 add_library(settler_ai STATIC
         ai_action_shim.cpp
-        ai_work_harvest.cpp
         ai_idle.cpp
         ai_leisure_time.cpp
         ai_work_lever_pull.cpp
@@ -9,7 +8,9 @@ add_library(settler_ai STATIC
         ai_scheduler.cpp
         ai_status_effects.cpp
         ai_stuck.cpp
+        ai_work_building.cpp
         ai_work_guard.cpp
+        ai_work_harvest.cpp
         ai_work_lumberjack.cpp
         ai_work_mining.cpp
         ai_work_time.cpp

@@ -8,6 +8,7 @@
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_region.hpp"
+#include "../../components/ai_tags/ai_tag_work_building.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
@@ -145,8 +146,9 @@ void inventory_system::configure() {
 		}
 
 		// Remove any settler references to the building
-		each<settler_ai_t>([&msg] (entity_t &e, settler_ai_t &ai) {
-			if (ai.job_type_major == JOB_CONST && ai.has_building_target && ai.building_target.building_entity == msg.building_entity) {
+		each<ai_tag_work_building>([&msg] (entity_t &e, ai_tag_work_building &ai) {
+
+			if (ai.building_target.building_entity == msg.building_entity) {
 				for (auto &c : ai.building_target.component_ids) {
 					unclaim_by_id(c.first);
 					each<position_t, item_carried_t>([&c] (entity_t &carrier, position_t &pos, item_carried_t &carried) {
@@ -155,8 +157,7 @@ void inventory_system::configure() {
 						}
 					});
 				}
-				ai.job_type_major = JOB_IDLE;
-				ai.job_status = "Idle";
+				delete_component<ai_tag_work_building>(e.id);
 			}
 		});
 

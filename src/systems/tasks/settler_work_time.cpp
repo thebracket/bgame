@@ -1,5 +1,4 @@
 #include "settler_work_time.hpp"
-#include "work_types/building_work.hpp"
 #include "work_types/reaction_work.hpp"
 #include "work_types/equip_melee_work.hpp"
 #include "work_types/equip_ranged_work.hpp"
@@ -41,21 +40,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		// Find something to do!
 		const auto idx = mapidx(pos.x, pos.y, pos.z);
 
-		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->buildings.size() > 0) {
-			ai.has_building_target = false;
-
-			ai.building_target = (designations->buildings.back());
-			ai.has_building_target = true;
-			designations->buildings.pop_back();
-
-			if (ai.has_building_target) {
-				change_settler_glyph(entity, vchar{1, rltk::colors::Pink, rltk::colors::BLACK});
-				ai.job_type_major = JOB_CONST;
-				ai.job_type_minor = JM_SELECT_COMPONENT;
-				change_job_status(ai, name, "performing construction.", true);
-			}
-			return;
-		}
 		if (ai.permitted_work[JOB_CONSTRUCTION] && designations->deconstructions.size() > 0) {
 			unbuild_t building = designations->deconstructions.back();
 			designations->deconstructions.pop_back();
@@ -187,9 +171,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
             std::tie(ai.target_x, ai.target_y, ai.target_z) = idxmap(item.dest_tile);
         }
 
-	} else if (ai.job_type_major == JOB_CONST) {
-		do_building(entity, ai, stats, species, pos, name);
-		return;
 	} else if (ai.job_type_major == JOB_REACTION) {
 		do_reaction(entity, ai, stats, species, pos, name);
 		return;
