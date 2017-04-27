@@ -1,6 +1,6 @@
 #include "ai_work_lever_pull.hpp"
 #include "ai_work_template.hpp"
-#include "../../../components/ai_tag_work_pull_lever.hpp"
+#include "../../../components/ai_tags/ai_tag_work_pull_lever.hpp"
 #include "../../../main/game_designations.hpp"
 #include "../../../components/lever.hpp"
 #include "../distance_map_system.hpp"

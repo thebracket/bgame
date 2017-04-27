@@ -11,7 +11,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/renderable.hpp"
 #include "../../components/initiative.hpp"
-#include "../../components/ai_mode_idle.hpp"
+#include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/name.hpp"
 #include "../../main/game_region.hpp"
 #include "../../main/game_rng.hpp"

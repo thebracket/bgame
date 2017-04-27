@@ -11,7 +11,7 @@
 #include "../../raws/life_events.hpp"
 #include "../../raws/profession.hpp"
 #include "../../components/initiative.hpp"
-#include "../../components/ai_settler_new_arrival.hpp"
+#include "../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../components/sleep_clock_t.hpp"
 
 using namespace rltk;

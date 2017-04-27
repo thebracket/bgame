@@ -1,6 +1,6 @@
 #include "ai_work_lumberjack.hpp"
-#include "../../../components/ai_tag_work_lumberjack.hpp"
-#include "../../../components/ai_tag_my_turn.hpp"
+#include "../../../components/ai_tags/ai_tag_work_lumberjack.hpp"
+#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../messages/inventory_changed_message.hpp"
 #include "../../../components/item.hpp"

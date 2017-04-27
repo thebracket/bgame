@@ -1,9 +1,9 @@
 #include "ai_leisure_time.hpp"
 #include "../../../components/settler_ai.hpp"
-#include "../../../components/ai_tag_leisure_shift.hpp"
-#include "../../../components/ai_tag_my_turn.hpp"
+#include "../../../components/ai_tags/ai_tag_leisure_shift.hpp"
+#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../../messages/entity_moved_message.hpp"
-#include "../../../components/ai_mode_idle.hpp"
+#include "../../../components/ai_tags/ai_mode_idle.hpp"
 
 void ai_leisure_time_t::configure() {
 

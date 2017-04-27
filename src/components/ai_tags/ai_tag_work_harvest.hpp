@@ -3,7 +3,7 @@
 #include <rltk.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "position.hpp"
+#include "../position.hpp"
 
 using namespace rltk;
 

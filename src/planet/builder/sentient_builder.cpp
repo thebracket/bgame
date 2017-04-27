@@ -11,7 +11,7 @@
 #include "../../components/renderable.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../components/initiative.hpp"
-#include "../../components/ai_mode_idle.hpp"
+#include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
 

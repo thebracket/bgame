@@ -6,7 +6,7 @@
 #include "../../components/grazer_ai.hpp"
 #include "../tasks/initiative.hpp"
 #include "../../components/slidemove.hpp"
-#include "../../components/ai_tag_my_turn.hpp"
+#include "../../components/ai_tags/ai_tag_my_turn.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {

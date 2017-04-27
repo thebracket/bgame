@@ -1,7 +1,7 @@
 #include "ai_stuck.hpp"
 #include "../../tasks/pathfinding.hpp"
 #include "../../../messages/log_message.hpp"
-#include "../../../components/ai_tag_my_turn.hpp"
+#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../../components/construct_provides_sleep.hpp"
 #include "../../tasks/settler_move_to.hpp"
 

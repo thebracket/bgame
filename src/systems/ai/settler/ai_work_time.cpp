@@ -1,7 +1,7 @@
 #include "ai_work_time.hpp"
-#include "../../../components/ai_tag_work_shift.hpp"
+#include "../../../components/ai_tags/ai_tag_work_shift.hpp"
 #include "../../../components/settler_ai.hpp"
-#include "../../../components/ai_mode_idle.hpp"
+#include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "job_board.cpp"
 
 namespace jobs_board {    

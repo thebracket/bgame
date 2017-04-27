@@ -1,6 +1,6 @@
 #include "ai_sleep_time_system.hpp"
-#include "../../../components/ai_tag_my_turn.hpp"
-#include "../../../components/ai_tag_sleep_shift.hpp"
+#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
+#include "../../../components/ai_tags/ai_tag_sleep_shift.hpp"
 #include "../../../components/sleep_clock_t.hpp"
 #include "../../../messages/tick_message.hpp"
 #include "../../../components/settler_ai.hpp"
