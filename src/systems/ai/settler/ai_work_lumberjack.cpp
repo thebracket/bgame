@@ -11,6 +11,7 @@
 #include "ai_work_template.hpp"
 #include "../../../main/game_designations.hpp"
 #include "job_board.hpp"
+#include "../../../utils/telemetry.hpp"
 
 namespace jobs_board {
     void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
@@ -72,8 +73,35 @@ void ai_work_lumberjack::update(const double duration_ms)
             }
 
             // Find a tree position
-            position_t tree_pos = designations->chopping.begin()->second;
-            lj.target_tree = designations->chopping.begin()->first;
+            std::set<int> claimed_trees;
+            each<ai_tag_work_lumberjack>([&claimed_trees, &e] (entity_t &E, ai_tag_work_lumberjack &LJ) {
+                if (e.id != E.id && LJ.target_tree > 0) claimed_trees.insert(E.id);
+            });
+
+            std::size_t tree_id = 0;
+            float distance = std::numeric_limits<float>::max();
+            for (auto it= designations->chopping.begin(); it!=designations->chopping.end(); ++it) {
+                auto dupe_finder = claimed_trees.find(it->first);
+                if (dupe_finder == claimed_trees.end()) {
+                    const float d = distance3d(pos.x, pos.y, pos.z, it->second.x, it->second.y, it->second.z);
+                    if (d < distance) {
+                        tree_id = it->first;
+                        distance = d;
+                    }
+                }
+            }
+
+            if (tree_id == 0) {
+                emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
+                emit(axemap_changed_message{});
+                delete_component<ai_tag_work_lumberjack>(e.id);
+                return;
+            }
+
+            auto f = designations->chopping.find(tree_id);
+
+            position_t tree_pos = f->second;
+            lj.target_tree = f->first;
             lj.target_x = tree_pos.x;
             lj.target_y = tree_pos.y;
             lj.target_z = tree_pos.z;
@@ -105,6 +133,14 @@ void ai_work_lumberjack::update(const double duration_ms)
                 return;
             }
         } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE) {
+            // Check that it is still a valid tree
+            auto tree_finder = designations->chopping.find(lj.target_tree);
+            if (tree_finder == designations->chopping.end()) {
+                lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+                return;
+            }
+
+            // Go there
             work.follow_path(lj, pos, e, [&lj] () {
                 // Cancel
                 lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
@@ -115,8 +151,15 @@ void ai_work_lumberjack::update(const double duration_ms)
                 lj.step = ai_tag_work_lumberjack::lumberjack_steps::CHOP;
                 return;
             });
+            return;
         }else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::CHOP) {
             //std::cout << "Chop\n";
+            // Check that it is still a valid tree
+            auto tree_finder = designations->chopping.find(lj.target_tree);
+            if (tree_finder == designations->chopping.end()) {
+                lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+                return;
+            }
 
             auto stats = e.component<game_stats_t>();
             if (!stats) {
@@ -129,7 +172,8 @@ void ai_work_lumberjack::update(const double duration_ms)
             auto skill_check = skill_roll(e.id, *stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
 
             if (skill_check >= SUCCESS) {
-                //call_home("tree_chop");
+                call_home("tree_chop");
+
                 // Tree is going down!
                 int number_of_logs = 0;
                 int tree_idx = 0;
@@ -176,6 +220,9 @@ void ai_work_lumberjack::update(const double duration_ms)
                         }
                     }
                 }
+
+                // Remove the tree from the designations list
+                designations->chopping.erase(lj.target_tree);
 
                 // Change status to drop axe or continue
                 lj.step = ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS;

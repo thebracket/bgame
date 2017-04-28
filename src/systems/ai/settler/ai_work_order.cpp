@@ -20,16 +20,19 @@ namespace jobs_board {
         // Check for available queued reactions
         if (!designations->build_orders.empty()) {
             board.insert(std::make_pair(10, jt));
-            std::cout << "Offering queued build order\n";
+            //std::cout << "Offering queued build order\n";
             return;
         }
 
         // Check for available automatic reactions
         auto ai = e.component<settler_ai_t>();
-        if (ai == nullptr) return;
+        if (ai == nullptr) {
+            //std::cout << "Warning: bailing on null AI\n";
+            return;
+        }
         if (is_auto_reaction_task_available(*ai)) {
             board.insert(std::make_pair(20, jt));
-            std::cout << "Offering automatic build order\n";
+            //std::cout << "Offering automatic build order\n";
             return;
         }
     }
@@ -44,30 +47,30 @@ void ai_work_order::update(const double duration_ms) {
     ai_work_template<ai_tag_work_order> work;
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) {
         if (w.step == ai_tag_work_order::work_steps ::FIND_JOB) {
-            std::cout << "Finding work\n";
+            //std::cout << "Finding work\n";
             std::unique_ptr<reaction_task_t> autojob;
 
             if (!designations->build_orders.empty()) {
                 autojob = find_queued_reaction_task(w);
-                std::cout << "Queued reaction added\n";
+                //if (autojob) std::cout << "Queued reaction added\n";
             }
             if (!autojob) {
                 autojob = find_automatic_reaction_task(w);
-                std::cout << "Automatic reaction added\n";
+                //if (autojob) std::cout << "Automatic reaction added\n";
             }
 
             if (!autojob) {
-                std::cout << "Bailing out\n";
+                //std::cout << "Bailing out - no available reaction\n";
                 delete_component<ai_tag_work_order>(e.id);
             } else {
-                std::cout << "Setting up workflow\n";
+                //std::cout << "Setting up workflow\n";
                 w.reaction_target = *autojob;
                 w.step = ai_tag_work_order::work_steps ::SELECT_INPUT;
             }
             return;
 
         } else if (w.step == ai_tag_work_order::work_steps ::SELECT_INPUT) {
-            std::cout << "Input selection\n";
+            //std::cout << "Input selection\n";
             // If there are no inputs, go to the workshop
             auto reactor_pos = entity(w.reaction_target.building_id)->component<position_t>();
             if (w.reaction_target.components.empty() && ! (pos == *reactor_pos)) {
@@ -83,7 +86,7 @@ void ai_work_order::update(const double duration_ms) {
                     w.current_tool = component.first;
                     auto item_loc = get_item_location(w.current_tool);
                     if (!item_loc) {
-                        std::cout << "Bailing - invalid item\n";
+                        //std::cout << "Bailing - invalid item\n";
                         delete_component<ai_tag_work_order>(e.id);
                         return;
                     }
@@ -92,7 +95,7 @@ void ai_work_order::update(const double duration_ms) {
                         component.second = true;
                         w.step = ai_tag_work_order::work_steps ::GO_TO_INPUT;
                     } else {
-                        std::cout << "Bailing - no path to item\n";
+                        //std::cout << "Bailing - no path to item\n";
                         delete_component<ai_tag_work_order>(e.id);
                     }
                     return;
@@ -104,20 +107,20 @@ void ai_work_order::update(const double duration_ms) {
             }
             return;
         } else if (w.step == ai_tag_work_order::work_steps ::GO_TO_INPUT) {
-            std::cout << "Go to input\n";
-            work.follow_path(w, pos, e, [&w] () {
+            //std::cout << "Go to input\n";
+            work.follow_path(w, pos, e, [&w, &e] () {
                 // Cancel
-                w.current_path.reset();
-                w.step = ai_tag_work_order::work_steps ::COLLECT_INPUT;
-                std::cout << "Cancelling - input pathing failed\n";
-            }, [&w, &e] () {
-                // Arrived
                 unclaim_by_id(w.current_tool);
                 delete_component<ai_tag_work_order>(e.id);
+            }, [&w, &e] () {
+                // Arrived
+                w.current_path.reset();
+                w.step = ai_tag_work_order::work_steps ::COLLECT_INPUT;
+                //std::cout << "Cancelling - input pathing failed\n";
             });
             return;
         } else if (w.step == ai_tag_work_order::work_steps ::COLLECT_INPUT) {
-            std::cout << "Collect input\n";
+            //std::cout << "Collect input\n";
             // Find the component, remove any position or stored components, add a carried_by component
             emit(pickup_item_message{w.current_tool, e.id});
 
@@ -126,13 +129,13 @@ void ai_work_order::update(const double duration_ms) {
             w.current_path = find_path(pos, position_t{reactor_pos->x, reactor_pos->y, reactor_pos->z});
             return;
         } else if (w.step == ai_tag_work_order::work_steps ::GO_TO_WORKSHOP) {
-            std::cout << "Go to workshop\n";
+            //std::cout << "Go to workshop\n";
             work.follow_path(w, pos, e, [&w, &e, &pos] () {
                 // Cancel
                 unclaim_by_id(w.current_tool);
                 emit(drop_item_message{w.current_tool, pos.x, pos.y, pos.z});
                 delete_component<ai_tag_work_order>(e.id);
-                std::cout << "Bailing - no path to workshop\n";
+                //std::cout << "Bailing - no path to workshop\n";
             }, [&w, &pos, &e] () {
                 // Arrived
                 w.current_path.reset();
@@ -140,14 +143,14 @@ void ai_work_order::update(const double duration_ms) {
             });
             return;
         } else if (w.step == ai_tag_work_order::work_steps ::DROP_INPUT) {
-            std::cout << "Drop input\n";
+            //std::cout << "Drop input\n";
             if (w.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
             emit(drop_item_message{w.current_tool, pos.x, pos.y, pos.z});
             w.current_tool = 0;
             w.step = ai_tag_work_order::work_steps ::SELECT_INPUT;
             return;
         } else if (w.step == ai_tag_work_order::work_steps ::REACT) {
-            std::cout << "React\n";
+            //std::cout << "React\n";
 
             // Skill check, destroy inputs, create outputs
             auto stats = e.component<game_stats_t>();

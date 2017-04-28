@@ -66,32 +66,18 @@ bool is_auto_reaction_task_available(const settler_ai_t &ai) {
             for (const std::string &reaction_name : outerit->second) {
                 auto reaction = reaction_defs.find(reaction_name);
                 if (reaction != reaction_defs.end()) {
-                    // Is the settler allowed to do this?
-                    int target_category = -1;
-                    if (reaction->second.skill == "Carpentry") {
-                        target_category = JOB_CARPENTRY;
-                    } else if (reaction->second.skill == "Masonry") {
-                        target_category = JOB_MASONRY;
+                    // Are the inputs available?
+                    bool available = true;
+                    for (auto &input : reaction->second.inputs) {
+                        const int n_available = available_items_by_reaction_input(input);
+                        if (n_available < input.quantity) {
+                            available = false;
+                        };
                     }
-                    if (target_category == -1 || ai.permitted_work[target_category]) {
-                        // Are the inputs available?
-                        bool available = true;
-                        std::vector<std::pair<std::size_t,bool>> components;
-                        for (auto &input : reaction->second.inputs) {
-                            const int n_available = available_items_by_reaction_input(input);
-                            if (n_available < input.quantity) {
-                                available = false;
-                            } else {
-                                // Claim an item and push its # to the list
-                                std::size_t item_id = claim_item_by_reaction_input(input, false);
-                                components.push_back(std::make_pair(item_id,false));
-                            }
-                        }
 
-                        if (available) {
-                            // Components are available, build job and return it
-                            return true;
-                        }
+                    if (available) {
+                        // Components are available, build job and return it
+                        return true;
                     }
                 }
             }
@@ -115,37 +101,28 @@ std::unique_ptr<reaction_task_t> find_automatic_reaction_task(const ai_tag_work_
             for (const std::string &reaction_name : outerit->second) {
                 auto reaction = reaction_defs.find(reaction_name);
                 if (reaction != reaction_defs.end()) {
-                    // Is the settler allowed to do this?
-                    int target_category = -1;
-                    if (reaction->second.skill == "Carpentry") {
-                        target_category = JOB_CARPENTRY;
-                    } else if (reaction->second.skill == "Masonry") {
-                        target_category = JOB_MASONRY;
-                    }
-                    if (target_category > -2) {
-                        // Are the inputs available?
-                        bool available = true;
-                        std::vector<std::pair<std::size_t,bool>> components;
-                        for (auto &input : reaction->second.inputs) {
-                            const int n_available = available_items_by_reaction_input(input);
-                            if (n_available < input.quantity) {
-                                available = false;
-                            } else {
-                                // Claim an item and push its # to the list
-                                std::size_t item_id = claim_item_by_reaction_input(input);
-                                components.push_back(std::make_pair(item_id,false));
-                            }
-                        }
-
-                        if (available) {
-                            // Components are available, build job and return it
-                            result = std::make_unique<reaction_task_t>(outerit->first, reaction->second.name, reaction->second.tag, components);
-                            workshop_claimed.insert(outerit->first);
-                            return result;
+                    // Are the inputs available?
+                    bool available = true;
+                    std::vector<std::pair<std::size_t,bool>> components;
+                    for (auto &input : reaction->second.inputs) {
+                        const int n_available = available_items_by_reaction_input(input);
+                        if (n_available < input.quantity) {
+                            available = false;
                         } else {
-                            for (auto comp : components) {
-                                unclaim_by_id(comp.first);
-                            }
+                            // Claim an item and push its # to the list
+                            std::size_t item_id = claim_item_by_reaction_input(input);
+                            components.push_back(std::make_pair(item_id,false));
+                        }
+                    }
+
+                    if (available) {
+                        // Components are available, build job and return it
+                        result = std::make_unique<reaction_task_t>(outerit->first, reaction->second.name, reaction->second.tag, components);
+                        workshop_claimed.insert(outerit->first);
+                        return result;
+                    } else {
+                        for (auto comp : components) {
+                            unclaim_by_id(comp.first);
                         }
                     }
                 }

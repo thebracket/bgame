@@ -90,6 +90,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+    //std::cout << "Spawned item on ground: " << entity->id << ", " << entity->component<item_t>()->item_tag << "\n";
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 }
 

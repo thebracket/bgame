@@ -380,18 +380,32 @@ int available_items_by_tag(const std::string &tag) {
 
 int available_items_by_reaction_input(const reaction_input_t &input) {
 	int result = 0;
+	//std::cout << "Looking for item type: " << input.tag << "\n";
 	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
-		if ((input.tag=="any" || i.item_tag == input.tag) && i.claimed == false) {
-			bool ok = true;
-			if (input.required_material != 0) {
-				if (i.material != input.required_material) ok=false;
+		//std::cout << "Evaluating " << i.item_tag << "\n";
+		if ((input.tag=="any" || i.item_tag == input.tag)) {
+			//std::cout << "Available items tag hit - " << input.tag << "\n";
+			if (i.claimed == false) {
+				bool ok = true;
+				if (input.required_material != 0) {
+					if (i.material != input.required_material) {
+						//std::cout << "Reject item by material type\n";
+						ok = false;
+					}
+				}
+				if (input.required_material_type != no_spawn_type) {
+					if (get_material(i.material)->spawn_type != input.required_material_type) {
+						//std::cout << "Reject item by spawn type\n";
+						ok = false;
+					}
+				}
+				if (ok) ++result;
+			} else {
+				//std::cout << "Reject item because it was claimed\n";
 			}
-			if (input.required_material_type != no_spawn_type) {
-				if (get_material(i.material)->spawn_type != input.required_material_type) ok = false;
-			}
-			if (ok) ++result;
 		}
 	});
+	//std::cout << "Returning available item count: " << result << "\n";
 	return result;
 }
 
