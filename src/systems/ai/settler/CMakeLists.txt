@@ -8,6 +8,7 @@ add_library(settler_ai STATIC
         ai_scheduler.cpp
         ai_status_effects.cpp
         ai_stuck.cpp
+        ai_work_architect.cpp
         ai_work_building.cpp
         ai_work_guard.cpp
         ai_work_harvest.cpp

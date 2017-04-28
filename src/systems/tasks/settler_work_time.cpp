@@ -5,7 +5,6 @@
 #include "work_types/hunting_work.hpp"
 #include "work_types/demolition_work.hpp"
 #include "work_types/hauling_work.hpp"
-#include "work_types/architecture_work.hpp"
 
 #include "../ai/inventory_system.hpp"
 #include "../ai/workflow_system.hpp"
@@ -58,15 +57,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 			}
 			return;
 		}
-
-        // Architect work
-        if (ai.permitted_work[JOB_CONSTRUCTION] && architecure_map.get(mapidx(pos))<MAX_DIJSTRA_DISTANCE-1
-            && blocks_map.get(mapidx(pos))<MAX_DIJSTRA_DISTANCE-1 && !designations->architecture.empty()) {
-            change_job_status(ai, name, "collecting block for architecture", true);
-            ai.job_type_major = JOB_ARCHITECT;
-            ai.job_type_minor = JM_ARCHITECT_GOTOBLOCK;
-            return;
-        }
 
 		// If we don't have a ranged weapon, and one is available, equip it
 		std::pair<bool, std::string> ranged_status = has_ranged_weapon(entity);
@@ -168,9 +158,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		return;
 	} else if (ai.job_type_major == JOB_TIDY) {
         do_hauling(entity, ai, stats, species, pos, name);
-        return;
-    } else if (ai.job_type_major == JOB_ARCHITECT) {
-        do_architecture(entity, ai, stats, species, pos, name);
         return;
     }
 	wander_randomly(entity, pos);

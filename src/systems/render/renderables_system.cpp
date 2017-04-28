@@ -21,6 +21,7 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
+#include "../../components/ai_tags/ai_tag_work_architect.hpp"
 
 
 using namespace rltk;
@@ -97,9 +98,14 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         // Optionally render a status flag
         auto ai = entity(id)->component<settler_ai_t>();
         if (ai) {
-            if (ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
+            if (ai->job_type_major == JOB_CARPENTRY) {
                 layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
             }
+        }
+
+        auto arch = entity(id)->component<ai_tag_work_architect>();
+        if (arch) {
+            layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
         }
 
         auto building = entity(id)->component<ai_tag_work_building>();
