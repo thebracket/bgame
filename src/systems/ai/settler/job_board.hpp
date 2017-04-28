@@ -49,7 +49,7 @@ namespace jobs_board {
     }
 
     template <typename T>
-    void register_job_offer(job_evaluator_t evaluator) {
+    inline void register_job_offer(job_evaluator_t evaluator) {
         std::unique_ptr<job_evaluator_base_t> base = std::make_unique<job_evaluator_concrete<T>>(evaluator);
 
         impl::evaluators.emplace_back( std::move(base) );

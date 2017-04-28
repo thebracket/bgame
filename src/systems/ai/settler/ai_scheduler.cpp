@@ -9,6 +9,7 @@
 #include "../../../components/ai_tags/ai_tag_work_guarding.hpp"
 #include "../../../main/game_calendar.hpp"
 #include "../../../main/game_designations.hpp"
+#include "job_board.hpp"
 
 void ai_scheduler::configure() {
     system_name = "AI Scheduler";
@@ -26,6 +27,8 @@ void ai_scheduler::update(const double duration_ms)
         delete_component<ai_tag_leisure_shift_t>(e.id);
         delete_component<ai_tag_work_shift_t>(e.id);
         delete_component<ai_tag_sleep_shift_t>(e.id);
+
+        if (jobs_board::is_working(e)) return; // Don't interrupt ongoing jobs
 
         auto guard = e.component<ai_tag_work_guarding>();
         if (current_schedule != WORK_SHIFT && guard) {
