@@ -25,41 +25,6 @@ using tasks::follow_path;
 using tasks::follow_result_t;
 using tasks::calculate_initiative;
 
-void do_hunting(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
-	auto ranged_status = has_ranged_weapon(e);
-	bool has_ammo = has_appropriate_ammo(e, ranged_status.second, pos);
-	if (!ranged_status.first || !has_ammo) {
-		cancel_action(e, ai, stats, species, pos, name, "Out of ammo");
-		return;
-	}
-
-    const int idx = mapidx(pos);
-	if (ai.job_type_minor == JM_HUNT_FIND_TARGET) {
-        const auto distance = huntables_map.get(idx);
-        if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
-            cancel_action(e, ai, stats, species, pos, name, "No hunting target");
-            return;
-        }
-
-        ai.job_type_minor = JM_HUNT;
-        ai.job_status = "Hunting";
-        return;
-	}
-
-	if (ai.job_type_minor == JM_HUNT) {
-        const auto distance = huntables_map.get(idx);
-        if (distance == 0 || distance == MAX_DIJSTRA_DISTANCE) {
-            cancel_action(e, ai, stats, species, pos, name, "No hunting target");
-            return;
-        }
-
-		// Pick the destination from the Dikstra map
-        position_t destination = huntables_map.find_destination(pos);
-        move_to(e, pos, destination);
-		return;
-	}
-}
-
 void do_butchering(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name) {
     const int idx = mapidx(pos);
 

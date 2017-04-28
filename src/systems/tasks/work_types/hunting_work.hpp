@@ -7,5 +7,4 @@
 #include "../../components/position.hpp"
 #include "../../components/name.hpp"
 
-void do_hunting(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);
 void do_butchering(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, species_t &species, position_t &pos, name_t &name);

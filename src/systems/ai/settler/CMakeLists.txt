@@ -12,6 +12,7 @@ add_library(settler_ai STATIC
         ai_work_building.cpp
         ai_work_guard.cpp
         ai_work_harvest.cpp
+        ai_work_hunt.cpp
         ai_work_lumberjack.cpp
         ai_work_mining.cpp
         ai_work_order.cpp
