@@ -11,6 +11,7 @@ emmet_tl3.lua
 emmet_tl4.lua
 emmet_tl5.lua
 neolithic_human.lua
+neolithic_orc.lua
 creatures.lua
 life_events.lua
 starting_professions.lua

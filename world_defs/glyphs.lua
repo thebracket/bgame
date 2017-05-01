@@ -119,6 +119,7 @@ glyphs = {
 	tilled = 280,
 	ant_dark = 281,
 	ant_cyber = 282,
+	caveorc = 283,
 	wood_log = 304,
 	boulder = 305,
 	ore = 306,
