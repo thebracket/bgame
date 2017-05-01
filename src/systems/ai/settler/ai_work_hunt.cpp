@@ -36,17 +36,17 @@ void ai_work_hunt::update(const double duration_ms) {
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_hunting &h, ai_tag_my_turn_t &t, position_t &pos) {
         const auto distance = huntables_map.get(mapidx(pos));
         if (distance > MAX_DIJSTRA_DISTANCE-1) {
-            delete_component<ai_tag_work_hunting>(e.id);
+            work.cancel_work_tag(e);
             return;
         }
 
-        work.folllow_path(huntables_map, pos, e, [&e] () {
+        work.folllow_path(huntables_map, pos, e, [&e, &work] () {
             // Cancel
-            delete_component<ai_tag_work_hunting>(e.id);
+            work.cancel_work_tag(e);
             return;
-        }, [&e] () {
+        }, [&e, &work] () {
             // At destination - stop hunting
-            delete_component<ai_tag_work_hunting>(e.id);
+            work.cancel_work_tag(e);
             return;
         });
     });

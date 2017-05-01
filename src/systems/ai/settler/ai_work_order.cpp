@@ -163,11 +163,11 @@ void ai_work_order::update(const double duration_ms) {
                 std::string mat_names = "";
                 for (auto comp : w.reaction_target.components) {
                     if (!entity(comp.first)) {
-                        delete_component<ai_tag_work_order>(e.id);
+                        work.cancel_work_tag(e);
                         return;
                     }
                     if (!entity(comp.first)->component<item_t>()) {
-                        delete_component<ai_tag_work_order>(e.id);
+                        work.cancel_work_tag(e);
                         return;
                     }
                     material = entity(comp.first)->component<item_t>()->material;
@@ -221,7 +221,7 @@ void ai_work_order::update(const double duration_ms) {
                 emit(blocks_changed_message{});
 
                 // Become idle
-                delete_component<ai_tag_work_order>(e.id);
+                work.cancel_work_tag(e);
             }
         }
     });

@@ -38,15 +38,15 @@ void ai_work_mining::update(const double duration_ms) {
     
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
         if (m.step == ai_tag_work_miner::mining_steps::GET_PICK) {
-            work.folllow_path(pick_map, pos, e, [&e]() {
+            work.folllow_path(pick_map, pos, e, [&e, &work]() {
                 // On cancel
-                delete_component<ai_tag_work_miner>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }, [&e, this, &pos, &m, &work] {
                 // On success
-                work.pickup_tool<axemap_changed_message>(e, pos, TOOL_DIGGING, m.current_pick, [&e]() {
+                work.pickup_tool<axemap_changed_message>(e, pos, TOOL_DIGGING, m.current_pick, [&e, &work]() {
                     // On cancel
-                    delete_component<ai_tag_work_miner>(e.id);
+                    work.cancel_work_tag(e);
                     return;
                 }, [&m]() {
                     // On success
@@ -142,7 +142,7 @@ void ai_work_mining::update(const double duration_ms) {
         } else if (m.step == ai_tag_work_miner::mining_steps::DROP_TOOLS) {
             emit(drop_item_message{m.current_pick, pos.x, pos.y, pos.z});
             emit(pickmap_changed_message{});
-            delete_component<ai_tag_work_miner>(e.id);
+            work.cancel_work_tag(e);
             return;
         }
     });

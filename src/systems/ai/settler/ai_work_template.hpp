@@ -110,5 +110,9 @@ public:
             cancel();
         }
     }
+
+    inline void cancel_work_tag(entity_t &e) {
+        delete_component<TAG>(e.id);
+    }
 private:
 };

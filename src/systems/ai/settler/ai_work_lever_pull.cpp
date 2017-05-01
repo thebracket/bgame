@@ -28,9 +28,9 @@ void ai_work_lever_pull::update(const double duration_ms) {
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_pull_lever &l, ai_tag_my_turn_t &t, position_t &pos) {
         if (l.step == ai_tag_work_pull_lever::lever_steps::FIND) {
             // Path towards the harvest
-            work.folllow_path(levers_map, pos, e, [&e]() {
+            work.folllow_path(levers_map, pos, e, [&e, &work]() {
                 // On cancel
-                delete_component<ai_tag_work_pull_lever>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }, [&e, this, &pos, &l, &work] {
                 // On success
@@ -58,7 +58,7 @@ void ai_work_lever_pull::update(const double duration_ms) {
             emit_deferred(lever_pulled_message{lever_id});
 
             // Idle
-            delete_component<ai_tag_work_pull_lever>(e.id);
+            work.cancel_work_tag(e);
             return;
         }
     });

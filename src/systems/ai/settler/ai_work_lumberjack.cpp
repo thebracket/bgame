@@ -94,7 +94,7 @@ void ai_work_lumberjack::update(const double duration_ms)
             if (tree_id == 0) {
                 emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
                 emit(axemap_changed_message{});
-                delete_component<ai_tag_work_lumberjack>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
 
@@ -126,7 +126,7 @@ void ai_work_lumberjack::update(const double duration_ms)
                 // There is no path - cancel
                 emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
                 emit(axemap_changed_message{});
-                delete_component<ai_tag_work_lumberjack>(e.id);
+                work.cancel_work_tag(e);
                 return;
             } else {
                 lj.step = ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE;
@@ -165,7 +165,7 @@ void ai_work_lumberjack::update(const double duration_ms)
             if (!stats) {
                 emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
                 emit(axemap_changed_message{});
-                delete_component<ai_tag_work_lumberjack>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
 
@@ -235,7 +235,7 @@ void ai_work_lumberjack::update(const double duration_ms)
         } else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS) {
             emit(drop_item_message{lj.current_axe, pos.x, pos.y, pos.z});
             emit(axemap_changed_message{});
-            delete_component<ai_tag_work_lumberjack>(e.id);
+            work.cancel_work_tag(e);
             return;
         }
     });

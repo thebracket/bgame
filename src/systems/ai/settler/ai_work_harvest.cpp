@@ -29,9 +29,9 @@ void ai_work_harvest::update(const double duration_ms) {
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_harvest &h, ai_tag_my_turn_t &t, position_t &pos) {
         if (h.step == ai_tag_work_harvest::harvest_steps::FIND_HARVEST) {
             // Path towards the harvest
-            work.folllow_path(harvest_map, pos, e, [&e]() {
+            work.folllow_path(harvest_map, pos, e, [&e, &work]() {
                 // On cancel
-                delete_component<ai_tag_work_harvest>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }, [&e, this, &pos, &h, &work] {
                 // On success
@@ -49,7 +49,7 @@ void ai_work_harvest::update(const double duration_ms) {
 
             // Create the harvesting result
             if (current_region->tile_vegetation_type[idx] == 0) {
-                delete_component<ai_tag_work_harvest>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
             const plant_t plant = get_plant_def(current_region->tile_vegetation_type[idx]);
@@ -71,7 +71,7 @@ void ai_work_harvest::update(const double duration_ms) {
 
             // Become idle - done
             call_home("harvest", result);
-            delete_component<ai_tag_work_harvest>(e.id);
+            work.cancel_work_tag(e);
             return;
         }
     });

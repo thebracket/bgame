@@ -31,9 +31,9 @@ void ai_work_architect::update(const double duration_ms) {
     ai_work_template<ai_tag_work_architect> work;
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
         if (a.step == ai_tag_work_architect::architect_steps::GOTO_BLOCK) {
-            work.folllow_path(blocks_map, pos, e, [&e] () {
+            work.folllow_path(blocks_map, pos, e, [&e, &work] () {
                 // Cancel
-                delete_component<ai_tag_work_architect>(e.id);
+                work.cancel_work_tag(e);
             }, [&a] () {
                 // Success
                 a.step = ai_tag_work_architect::architect_steps::COLLECT_BLOCK;
@@ -47,7 +47,7 @@ void ai_work_architect::update(const double duration_ms) {
                 }
             });
             if (block_id == 0) {
-                delete_component<ai_tag_work_architect>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
             std::cout << "Collected block\n";
@@ -62,7 +62,7 @@ void ai_work_architect::update(const double duration_ms) {
             const auto distance = architecure_map.get(idx);
             if (distance >= MAX_DIJSTRA_DISTANCE) {
                 emit(drop_item_message{a.current_tool, pos.x, pos.y, pos.z});
-                delete_component<ai_tag_work_architect>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
             if (distance < 2) {
@@ -155,10 +155,10 @@ void ai_work_architect::update(const double duration_ms) {
                 call_home("architecture", std::to_string(build_type));
             } else {
                 emit(drop_item_message{a.current_tool, pos.x, pos.y, pos.z});
-                delete_component<ai_tag_work_architect>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
-            delete_component<ai_tag_work_architect>(e.id);
+            work.cancel_work_tag(e);
             return;
         }
     });

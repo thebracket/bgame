@@ -51,7 +51,7 @@ void ai_work_guard::update(const double duration_ms) {
                 std::cout << "Picked: " << idx << "\n";
 
                 if (idx == std::numeric_limits<std::size_t>().max()) {
-                    delete_component<ai_tag_work_guarding>(e.id);
+                    work.cancel_work_tag(e);
                 } else {
                     g.guard_post = designations->guard_points[idx].second;
                     designations->guard_points[idx].first = true;
@@ -64,7 +64,7 @@ void ai_work_guard::update(const double duration_ms) {
                 // Determine a path - bail out if none
                 g.current_path = find_path(pos, g.guard_post);
                 if (!g.current_path->success) {
-                    delete_component<ai_tag_work_guarding>(e.id);
+                    work.cancel_work_tag(e);
                     for (auto &gp : designations->guard_points) {
                         if (gp.second == g.guard_post) gp.first = false;
                     }
@@ -72,10 +72,10 @@ void ai_work_guard::update(const double duration_ms) {
                 //std::cout << "Found a path\n";
                 return;
             } else {
-                work.follow_path(g, pos, e, [&g, &e] () {
+                work.follow_path(g, pos, e, [&g, &e, &work] () {
                     // Cancel
                     g.current_path.reset();
-                    delete_component<ai_tag_work_guarding>(e.id);
+                    work.cancel_work_tag(e);
                     for (auto &gp : designations->guard_points) {
                         if (gp.second == g.guard_post) gp.first = false;
                     }
@@ -90,7 +90,7 @@ void ai_work_guard::update(const double duration_ms) {
         } else if (g.step == ai_tag_work_guarding::guard_steps::GUARD) {
             // Do we still have ammo? If not, stop guarding.
             if (shooting_range(e, pos) == 0) {
-                delete_component<ai_tag_work_guarding>(e.id);
+                work.cancel_work_tag(e);
                 for (auto &gp : designations->guard_points) {
                     if (gp.second == g.guard_post) gp.first = false;
                 }

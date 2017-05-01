@@ -48,7 +48,7 @@ void ai_work_building::update(const double duration_ms) {
         if (b.step == ai_tag_work_building::building_steps::SELECT_BUILDING) {
             // Select the building
             if (designations->buildings.empty()) {
-                delete_component<ai_tag_work_building>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
             b.building_target = (designations->buildings.back());
@@ -65,7 +65,7 @@ void ai_work_building::update(const double duration_ms) {
                     auto item_loc = get_item_location(b.current_tool);
                     if (!item_loc) {
                         designations->buildings.push_back(b.building_target);
-                        delete_component<ai_tag_work_building>(e.id);
+                        work.cancel_work_tag(e);
                         return;
                     }
                     b.current_path = find_path(pos, *item_loc);
@@ -75,7 +75,7 @@ void ai_work_building::update(const double duration_ms) {
                         return;
                     } else {
                         designations->buildings.push_back(b.building_target);
-                        delete_component<ai_tag_work_building>(e.id);
+                        work.cancel_work_tag(e);
                     }
                     return;
                 }
@@ -103,19 +103,19 @@ void ai_work_building::update(const double duration_ms) {
         } else if (b.step == ai_tag_work_building::building_steps::GO_TO_BUILDING) {
             auto building_entity = entity(b.building_target.building_entity);
             if (!building_entity) {
-                delete_component<ai_tag_work_building>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
             auto bpos = building_entity->component<position_t>();
             if (!bpos) {
-                delete_component<ai_tag_work_building>(e.id);
+                work.cancel_work_tag(e);
                 return;
             }
 
             if (!b.current_path) {
                 b.current_path = find_path(pos, *bpos);
                 if (!b.current_path->success) {
-                    delete_component<ai_tag_work_building>(e.id);
+                    work.cancel_work_tag(e);
                     return;
                 }
             }
@@ -130,11 +130,11 @@ void ai_work_building::update(const double duration_ms) {
                 return;
             }
 
-            work.follow_path(b, pos, e, [&b, &e] () {
+            work.follow_path(b, pos, e, [&b, &e, &work] () {
                 // Cancel
                 unclaim_by_id(b.current_tool);
                 designations->buildings.push_back(b.building_target);
-                delete_component<ai_tag_work_building>(e.id);
+                work.cancel_work_tag(e);
             }, [&b] () {
                 // Success - do nothing
             });
@@ -208,7 +208,7 @@ void ai_work_building::update(const double duration_ms) {
                 emit(map_changed_message{});
 
                 // Become idle
-                delete_component<ai_tag_work_building>(e.id);
+                work.cancel_work_tag(e);
             }
 
             return;
