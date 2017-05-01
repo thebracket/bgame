@@ -2,13 +2,9 @@
 
 #include <rltk.hpp>
 
-namespace jobs_board {
-    bool butcher_exist();
-}
-
-class ai_work_hunt  : public rltk::base_system {
+class ai_work_butcher  : public rltk::base_system {
 public:
-    ai_work_hunt() { system_name = "AI work - hunting"; }
+    ai_work_butcher() { system_name = "AI work - butcher"; }
     virtual void update(const double duration_ms) override final;
     virtual void configure() override final;
 private:

@@ -4,7 +4,6 @@
 #include "work_types/equip_armor_work.hpp"
 #include "work_types/demolition_work.hpp"
 #include "work_types/hauling_work.hpp"
-#include "work_types/hunting_work.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../ai/workflow_system.hpp"
 #include "../damage/weapons_helpers.hpp"
@@ -77,15 +76,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 			return;
 		}
 
-		// Butcher corpses
-		if (ai.permitted_work[JOB_BUTCHER] && butcher_exist() && butcherables_map.get(mapidx(pos.x, pos.y, pos.z))<MAX_DIJSTRA_DISTANCE) {
-			change_settler_glyph(entity, vchar{1, rltk::colors::RED, rltk::colors::BLACK});
-			ai.job_type_major = JOB_BUTCHERING;
-			ai.job_type_minor = JM_BUTCHER_FIND_CORPSE;
-			change_job_status(ai, name, "Finding corpse to butcher.", true);
-			return;
-		}
-
 		// If we don't have a melee weapon, and one is available, equip it
 		// TODO: This needs fixing - it gets stuck, commented out for now.
 		/*if (designations->standing_order_upgrade > standing_orders::SO_UPGRADE_NEVER && is_item_category_available(WEAPON_MELEE) && has_melee_weapon(entity)==false) {
@@ -132,9 +122,6 @@ void do_work_time(entity_t &entity, settler_ai_t &ai, game_stats_t &stats, speci
 		return;
 	} else if (ai.job_type_major == JOB_EQUIP_ARMOR) {
 		do_equip_armor(entity, ai, stats, species, pos, name);
-		return;
-	} else if (ai.job_type_major == JOB_BUTCHERING) {
-		do_butchering(entity, ai, stats, species, pos, name);
 		return;
 	} else if (ai.job_type_major == JOB_DECONSTRUCT) {
 		do_deconstruction(entity, ai, stats, species, pos, name);
