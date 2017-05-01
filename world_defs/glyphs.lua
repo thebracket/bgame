@@ -120,6 +120,7 @@ glyphs = {
 	ant_dark = 281,
 	ant_cyber = 282,
 	caveorc = 283,
+	elf_primitive=284,
 	wood_log = 304,
 	boulder = 305,
 	ore = 306,
