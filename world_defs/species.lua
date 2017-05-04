@@ -64,6 +64,7 @@ species_sentient = {
         ethics = { diet="omnivore", alignment="neutral" },
         max_age = 114, infant_age=3, child_age=16,
         glyph = glyphs['at'], worldgen_glyph = glyphs['caveman'],
-        skin_colors = human_skin_tones, hair_colors = human_hair_colors
+        skin_colors = human_skin_tones, hair_colors = human_hair_colors,
+        base_male_glyph = 352, base_female_glyph = 353
     }
 }

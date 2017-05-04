@@ -25,6 +25,8 @@ struct species_t {
 	float height_cm;
 	float weight_kg;
 	bool bearded;
+    uint16_t base_male_glyph;
+    uint16_t base_female_glyph;
 
 	species_t() {}
 
@@ -40,7 +42,7 @@ struct species_t {
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( tag, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, index ); // serialize things by passing them to the archive
+		archive( tag, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, index, base_male_glyph, base_female_glyph ); // serialize things by passing them to the archive
 	}
 };
 

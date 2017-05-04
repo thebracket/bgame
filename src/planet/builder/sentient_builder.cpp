@@ -46,6 +46,8 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     if (species_finder == nullptr) std::cout << "WARNING: Unable to find info for " << species_tag << "\n";
     if (species_finder->render_composite) {
         // We need to define skin color, hair
+        species.base_male_glyph = species_finder->base_male_glyph;
+        species.base_female_glyph = species_finder->base_female_glyph;
         species.skin_color = planet.civs.civs[civ_id].skin_color;
         species.hair_color = planet.civs.civs[civ_id].hair_color;
         species.hair_style = planet.civs.civs[civ_id].hair_style;

@@ -54,9 +54,9 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         color_t skin_color = species->skin_color.second;
 
         if (species->gender == MALE) {
-            layers.push_back(vchar{352, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_male_glyph, skin_color, rltk::colors::BLACK});
         } else {
-            layers.push_back(vchar{353, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_female_glyph, skin_color, rltk::colors::BLACK});
         }
 
         // Render hair and beard
@@ -129,9 +129,9 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         color_t skin_color = species->skin_color.second;
 
         if (species->gender == MALE) {
-            layers.push_back(vchar{species_f->base_male_glyph, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_male_glyph, skin_color, rltk::colors::BLACK});
         } else {
-            layers.push_back(vchar{species_f->base_female_glyph, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_female_glyph, skin_color, rltk::colors::BLACK});
         }
 
         // Render hair and beard
