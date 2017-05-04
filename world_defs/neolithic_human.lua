@@ -8,7 +8,7 @@ species_sentient['neolithic_human'] = {
     max_age = 114, infant_age=3, child_age=16,
     glyph = glyphs['at'], worldgen_glyph = glyphs['caveman'],
     composite_render=true, base_male=glyphs['base_male'], base_female=glyphs['base_female'],
-    skin_colors = human_skin_tones = { r=141, g=85, b=36 }
+    skin_colors = human_skin_tones, hair_colors = human_hair_colors
 }
 
 neolithic_human_leader = {

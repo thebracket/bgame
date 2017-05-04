@@ -69,26 +69,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         // Appearance
         if (get_species_def(civ_finder->second.species_tag)->render_composite) {
             civ.skin_color = get_species_def(civ_finder->second.species_tag)->skin_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->skin_colors.size())-1];
-
-            const int hair_color_roll = rng.roll_dice(1, 5);
-            switch (hair_color_roll)
-            {
-                case 1:
-                    civ.hair_color = BLACK_HAIR;
-                    break;
-                case 2:
-                    civ.hair_color = BLONDE_HAIR;
-                    break;
-                case 3:
-                    civ.hair_color = BROWN_HAIR;
-                    break;
-                case 4:
-                    civ.hair_color = WHITE_HAIR;
-                    break;
-                case 5:
-                    civ.hair_color = RED_HAIR;
-                    break;
-            }
+            civ.hair_color = get_species_def(civ_finder->second.species_tag)->hair_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->hair_colors.size())-1];
 
             civ.hair_style = BALD;
             const int style_roll = rng.roll_dice(1, 4);

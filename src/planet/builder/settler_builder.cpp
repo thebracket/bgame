@@ -108,25 +108,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		}
 	}
 
-	const int hair_color_roll = rng.roll_dice(1, 5);
-	switch (hair_color_roll)
-	{
-	case 1:
-		species.hair_color = BLACK_HAIR;
-		break;
-	case 2:
-		species.hair_color = BLONDE_HAIR;
-		break;
-	case 3:
-		species.hair_color = BROWN_HAIR;
-		break;
-	case 4:
-		species.hair_color = WHITE_HAIR;
-		break;
-	case 5:
-		species.hair_color = RED_HAIR;
-		break;
-	}
+    species.hair_color = species_def->hair_colors[rng.roll_dice(1, species_def->hair_colors.size())-1];
 
 	species.hair_style = BALD;
 	if (species.gender == MALE)

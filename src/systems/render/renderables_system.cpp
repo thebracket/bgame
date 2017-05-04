@@ -60,14 +60,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         }
 
         // Render hair and beard
-        color_t hair_color;
-        switch (species->hair_color) {
-            case WHITE_HAIR : hair_color = color_t(250, 250, 250); break;
-            case BROWN_HAIR : hair_color = color_t(141,85,36); break;
-            case BLACK_HAIR : hair_color = color_t(50, 50, 64); break;
-            case BLONDE_HAIR : hair_color = color_t(216, 192, 120); break;
-            case RED_HAIR : hair_color = color_t(181, 82, 57); break;
-        }
+        color_t hair_color = species->hair_color.second;
 
         int hair_glyph = 0;
         switch (species->hair_style) {
@@ -142,14 +135,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         }
 
         // Render hair and beard
-        color_t hair_color;
-        switch (species->hair_color) {
-            case WHITE_HAIR : hair_color = color_t(250, 250, 250); break;
-            case BROWN_HAIR : hair_color = color_t(141,85,36); break;
-            case BLACK_HAIR : hair_color = color_t(50, 50, 64); break;
-            case BLONDE_HAIR : hair_color = color_t(216, 192, 120); break;
-            case RED_HAIR : hair_color = color_t(181, 82, 57); break;
-        }
+        color_t hair_color = species->hair_color.second;
 
         int hair_glyph = 0;
         switch (species->hair_style) {

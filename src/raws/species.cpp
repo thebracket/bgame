@@ -273,6 +273,16 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
                     lua_pop(lua_state, 1);
                 }
             }
+            if (field == "hair_colors") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string title = lua_tostring(lua_state, -2);
+                    rltk::color_t col = read_lua_color(title);
+                    s.hair_colors.emplace_back(std::make_pair(title, col));
+                    lua_pop(lua_state, 1);
+                }
+            }
 
 
             lua_pop(lua_state, 1);

@@ -42,6 +42,7 @@ struct raw_species_t {
     uint16_t base_male_glyph = 352;
     uint16_t base_female_glyph = 353;
     std::vector<std::pair<std::string, rltk::color_t>> skin_colors;
+    std::vector<std::pair<std::string, rltk::color_t>> hair_colors;
 };
 
 /*

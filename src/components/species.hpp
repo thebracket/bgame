@@ -19,9 +19,9 @@ struct species_t {
 	std::size_t index = 0;
 	gender_t gender;
 	sexuality_t sexuality;
-	hair_color_t hair_color;
 	hair_style_t hair_style;
 	std::pair<std::string, color_t> skin_color;
+	std::pair<std::string, color_t> hair_color;
 	float height_cm;
 	float weight_kg;
 	bool bearded;
