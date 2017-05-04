@@ -10,6 +10,7 @@
 #include "../../../messages/inventory_changed_message.hpp"
 #include "../../../messages/renderables_changed_message.hpp"
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
+#include "../../../components/settler_ai.hpp"
 #include "../../../main/game_pause.hpp"
 #include "../../../main/game_region.hpp"
 
@@ -113,6 +114,14 @@ public:
 
     inline void cancel_work_tag(entity_t &e) {
         delete_component<TAG>(e.id);
+        set_status(e, "Idle");
+    }
+
+    inline void set_status(entity_t &e, const std::string &&status) {
+        auto ai = e.component<settler_ai_t>();
+        if (ai) {
+            ai->job_status = status;
+        }
     }
 private:
 };

@@ -37,6 +37,7 @@ void ai_work_mining::update(const double duration_ms) {
     ai_work_template<ai_tag_work_miner> work;
     
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
+        work.set_status(e, "Mining");
         if (m.step == ai_tag_work_miner::mining_steps::GET_PICK) {
             work.folllow_path(pick_map, pos, e, [&e, &work]() {
                 // On cancel

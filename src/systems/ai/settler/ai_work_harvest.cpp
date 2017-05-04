@@ -27,6 +27,7 @@ void ai_work_harvest::configure() {
 void ai_work_harvest::update(const double duration_ms) {
     ai_work_template<ai_tag_work_harvest> work;
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_harvest &h, ai_tag_my_turn_t &t, position_t &pos) {
+        work.set_status(e, "Harvesting");
         if (h.step == ai_tag_work_harvest::harvest_steps::FIND_HARVEST) {
             // Path towards the harvest
             work.folllow_path(harvest_map, pos, e, [&e, &work]() {

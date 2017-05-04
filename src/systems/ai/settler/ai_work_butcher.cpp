@@ -29,6 +29,7 @@ void ai_work_butcher::update(const double duration_ms) {
     ai_work_template<ai_tag_work_butcher> work;
 
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_butcher &b, ai_tag_my_turn_t &t, position_t &pos) {
+        work.set_status(e, "Butchering");
         if (b.step == ai_tag_work_butcher::butcher_steps::FIND_CORPSE) {
             if (butcherables_map.get(mapidx(pos)) > MAX_DIJSTRA_DISTANCE-1) {
                 work.cancel_work_tag(e);

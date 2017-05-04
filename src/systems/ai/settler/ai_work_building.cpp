@@ -45,6 +45,7 @@ void ai_work_building::configure() {
 void ai_work_building::update(const double duration_ms) {
     ai_work_template<ai_tag_work_building> work;
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_building &b, ai_tag_my_turn_t &t, position_t &pos) {
+        work.set_status(e, "Construction");
         if (b.step == ai_tag_work_building::building_steps::SELECT_BUILDING) {
             // Select the building
             if (designations->buildings.empty()) {

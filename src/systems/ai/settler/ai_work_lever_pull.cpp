@@ -26,6 +26,7 @@ void ai_work_lever_pull::configure() {
 void ai_work_lever_pull::update(const double duration_ms) {
     ai_work_template<ai_tag_work_pull_lever> work;
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_pull_lever &l, ai_tag_my_turn_t &t, position_t &pos) {
+        work.set_status(e, "Lever Operation");
         if (l.step == ai_tag_work_pull_lever::lever_steps::FIND) {
             // Path towards the harvest
             work.folllow_path(levers_map, pos, e, [&e, &work]() {

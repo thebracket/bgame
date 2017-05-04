@@ -28,6 +28,7 @@ void ai_work_guard::update(const double duration_ms) {
     ai_work_template<ai_tag_work_guarding> work;
 
     work.do_ai([this, &work] (entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
+        work.set_status(e, "Guard Duty");
         if (g.step == ai_tag_work_guarding::GOTO_POST) {
             if (!g.has_post) {
                 //std::cout << "Selecting a post\n";
