@@ -51,13 +51,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         if (!species) return;
 
         // Render the base person glyph
-        color_t skin_color;
-        switch (species->skin_color) {
-            case CAUCASIAN : skin_color = color_t(255,219,172); break;
-            case ASIAN : skin_color = color_t(224,172,105); break;
-            case INDIAN : skin_color = color_t(198,134,66); break;
-            case AFRICAN : skin_color = color_t(141,85,36); break;
-        }
+        color_t skin_color = species->skin_color.second;
 
         if (species->gender == MALE) {
             layers.push_back(vchar{352, skin_color, rltk::colors::BLACK});
@@ -139,13 +133,7 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         auto species_f = get_species_def(species->tag);
 
         // Render the base person glyph
-        color_t skin_color;
-        switch (species->skin_color) {
-            case CAUCASIAN : skin_color = color_t(255,219,172); break;
-            case ASIAN : skin_color = color_t(224,172,105); break;
-            case INDIAN : skin_color = color_t(198,134,66); break;
-            case AFRICAN : skin_color = color_t(141,85,36); break;
-        }
+        color_t skin_color = species->skin_color.second;
 
         if (species->gender == MALE) {
             layers.push_back(vchar{species_f->base_male_glyph, skin_color, rltk::colors::BLACK});

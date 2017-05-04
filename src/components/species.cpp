@@ -41,12 +41,7 @@ std::string species_t::weight_lbs() {
 }
 
 std::string species_t::ethnicity() {
-    switch (skin_color) {
-        case CAUCASIAN : return "caucasian";
-        case ASIAN : return "asian";
-        case INDIAN : return "middle-eastern";
-        case AFRICAN : return "african";
-    }
+    return skin_color.first;
 }
 
 std::string species_t::hair_color_str() {

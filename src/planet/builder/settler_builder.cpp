@@ -59,7 +59,8 @@ std::vector<std::string> get_event_candidates(const int &age, const std::vector<
 
 void create_settler(planet_t &planet, const int x, const int y, const int z, random_number_generator &rng, int shift_id) {
 	species_t species;
-	game_stats_t stats;	
+	game_stats_t stats;
+    auto species_def = get_species_def("human");
 
 	species.tag = "human";
 
@@ -91,22 +92,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	}
 
 	// Hair/etc. this should be made more realistic one day!
-	const int ethnic_roll = rng.roll_dice(1, 4);
-	switch (ethnic_roll)
-	{
-	case 1:
-		species.skin_color = CAUCASIAN;
-		break;
-	case 2:
-		species.skin_color = ASIAN;
-		break;
-	case 3:
-		species.skin_color = INDIAN;
-		break;
-	case 4:
-		species.skin_color = AFRICAN;
-		break;
-	}
+    species.skin_color = species_def->skin_colors[rng.roll_dice(1, species_def->skin_colors.size())-1];
 
 	species.bearded = false;
 	if (species.gender == MALE)

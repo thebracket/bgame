@@ -16,6 +16,18 @@ humanoid_parts = {
 -- This is a prototype of what the new species system should look like.
 civilizations = {}
 
+human_skin_tones = {
+   Pale = { r=237, g=232, b=226 },
+   Peach = { r=255, g=216, b=173 },
+   Tanned = { r=255, g=205, b=148 },
+   Wan = { r=234, g=192, b=134},
+   Yellow = {r=255, g=227, b=159},
+   Red = {r=113, g=2, b=0},
+   Dark = { r=198, g=134, b=66 },
+   Darker = { r=141, g=85, b=36 },
+   Black = { r=56, g=0, b=0 }
+}
+
 species_sentient = {
     human = {
         name = "Human", male_name = "Man", female_name = "Woman", group_name = "People",
@@ -24,6 +36,7 @@ species_sentient = {
         parts = humanoid_parts,
         ethics = { diet="omnivore", alignment="neutral" },
         max_age = 114, infant_age=3, child_age=16,
-        glyph = glyphs['at'], worldgen_glyph = glyphs['caveman']
+        glyph = glyphs['at'], worldgen_glyph = glyphs['caveman'],
+        skin_colors = human_skin_tones
     }
 }

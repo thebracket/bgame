@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <fstream>
+#include <rltk.hpp>
 
 /*
  * Defines species dietary preferences
@@ -40,6 +41,7 @@ struct raw_species_t {
     bool render_composite = false;
     uint16_t base_male_glyph = 352;
     uint16_t base_female_glyph = 353;
+    std::vector<std::pair<std::string, rltk::color_t>> skin_colors;
 };
 
 /*

@@ -68,22 +68,7 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         // Appearance
         if (get_species_def(civ_finder->second.species_tag)->render_composite) {
-            const int ethnic_roll = rng.roll_dice(1, 4);
-            switch (ethnic_roll)
-            {
-                case 1:
-                    civ.skin_color = CAUCASIAN;
-                    break;
-                case 2:
-                    civ.skin_color = ASIAN;
-                    break;
-                case 3:
-                    civ.skin_color = INDIAN;
-                    break;
-                case 4:
-                    civ.skin_color = AFRICAN;
-                    break;
-            }
+            civ.skin_color = get_species_def(civ_finder->second.species_tag)->skin_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->skin_colors.size())-1];
 
             const int hair_color_roll = rng.roll_dice(1, 5);
             switch (hair_color_roll)
