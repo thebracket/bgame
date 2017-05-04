@@ -14,6 +14,7 @@
 #include "ai_work_template.hpp"
 #include "../../../main/game_designations.hpp"
 #include "job_board.hpp"
+#include "../../messages/recalculate_mining_message.hpp"
 
 namespace jobs_board {
     void evaluate_mining(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
@@ -128,8 +129,9 @@ void ai_work_mining::update(const double duration_ms) {
                 call_home("mining", std::to_string(target_operation));
 
                 if (target_operation > 0) {
-                    emit(perform_mining_message{mining_targets[idx], designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z});
+                    emit(perform_mining_message{target_idx, designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z});
                     designations->mining.erase(target_idx);
+                    emit(recalculate_mining_message{});
                 }
                 m.step = ai_tag_work_miner::mining_steps::DROP_TOOLS;
                 return;
