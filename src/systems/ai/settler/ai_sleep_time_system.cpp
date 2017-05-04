@@ -36,6 +36,11 @@ void ai_sleep_time_system::update(const double duration_ms) {
         auto schedule = e.component<ai_tag_sleep_shift_t>();
         if (schedule == nullptr) {
             sleep.is_sleeping = false;
+            each<construct_provides_sleep_t, claimed_t>([&e] (entity_t &E, construct_provides_sleep_t &s, claimed_t &c) {
+                if (c.claimed_by == e.id) {
+                    delete_component<claimed_t>(E.id);
+                }
+            });
             return;
         }
 
