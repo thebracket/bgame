@@ -8,6 +8,7 @@
 #include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/filesystem.hpp"
+#include "../raws/string_table.hpp"
 
 constexpr int BACKDROP_LAYER=1;
 constexpr int LOG_LAYER=2;
@@ -15,32 +16,9 @@ constexpr int LOG_LAYER=2;
 using namespace rltk;
 using namespace rltk::colors;
 
-std::pair<int,std::string> main_menu::get_descriptive_noun(const int do_not_use) const {
-	random_number_generator rng;
-	int roll = do_not_use;
-	while (roll == do_not_use) {
-		roll = rng.roll_dice(1,17);
-	}
-	switch (roll) {
-		case 1 : return std::make_pair(1, std::string("Stupidity"));
-		case 2 : return std::make_pair(2, std::string("Idiocy"));
-		case 3 : return std::make_pair(3, std::string("Dullness"));
-		case 4 : return std::make_pair(4, std::string("Foolishness"));
-		case 5 : return std::make_pair(5, std::string("Futility"));
-		case 6 : return std::make_pair(6, std::string("Naievity"));
-		case 7 : return std::make_pair(7, std::string("Senselessness"));
-		case 8 : return std::make_pair(8, std::string("Shortsightedness"));
-		case 9 : return std::make_pair(9, std::string("Triviality"));
-		case 10 : return std::make_pair(10, std::string("Brainlessness"));
-		case 11 : return std::make_pair(11, std::string("Inanity"));
-		case 12 : return std::make_pair(12, std::string("Insensitivity"));
-		case 13 : return std::make_pair(13, std::string("Indiscretion"));
-		case 14 : return std::make_pair(14, std::string("Mindlessness"));
-		case 15 : return std::make_pair(15, std::string("Moronism"));
-		case 16 : return std::make_pair(16, std::string("Obtuseness"));
-		case 17 : return std::make_pair(17, std::string("Unthinkingness"));
-	}
-	return std::make_pair(18, "Bugginess");
+std::string main_menu::get_descriptive_noun() const {
+    random_number_generator rng;
+    return menu_subtitles.random_entry(rng);
 }
 
 void main_menu::init() {
@@ -69,9 +47,12 @@ void main_menu::init() {
 	}
 
 	auto first_noun = get_descriptive_noun();
-	auto second_noun = get_descriptive_noun(first_noun.first);
+    std::string second_noun = first_noun;
+    while (second_noun == first_noun) {
+        second_noun = get_descriptive_noun();
+    }
 
-	tagline += "of " + first_noun.second + " and " + second_noun.second;
+	tagline += "of " + first_noun + " and " + second_noun;
 
 	strncpy(online_username, game_config.online_username.c_str(), 254);
 }

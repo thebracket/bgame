@@ -17,5 +17,6 @@ extern string_table_t first_names_male;
 extern string_table_t first_names_female;
 extern string_table_t last_names;
 extern string_table_t new_arrival_quips;
+extern string_table_t menu_subtitles;
 
 void load_string_table(const std::string filename, string_table_t &target);
