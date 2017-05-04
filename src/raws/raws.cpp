@@ -59,20 +59,21 @@ void load_game_tables() {
 }
 
 void load_raws() {
+    using namespace string_tables;
+
 	// Load string tables for first names and last names
-	load_string_table("world_defs/first_names_male.txt", first_names_male);
-	load_string_table("world_defs/first_names_female.txt", first_names_female);
-	load_string_table("world_defs/last_names.txt", last_names);
-    load_string_table("world_defs/newarrival.txt", new_arrival_quips);
-    load_string_table("world_defs/menu_text.txt", menu_subtitles);
+	load_string_table(FIRST_NAMES_MALE, "world_defs/first_names_male.txt");
+	load_string_table(FIRST_NAMES_FEMALE, "world_defs/first_names_female.txt");
+	load_string_table(LAST_NAMES, "world_defs/last_names.txt");
+    load_string_table(NEW_ARRIVAL_QUIPS, "world_defs/newarrival.txt");
+    load_string_table(MENU_SUBTITLES, "world_defs/menu_text.txt");
 
 	// Setup LUA
 	lua_handle = std::make_unique<lua_lifecycle>();
 
 	// Load game data via LUA
-	string_table_t raw_index;
-	load_string_table("world_defs/index.txt", raw_index);
-	for (const std::string &filename : raw_index.strings) {
+	load_string_table(-1, "world_defs/index.txt");
+	for (const std::string &filename : string_table(-1)->strings) {
 		load_lua_script("world_defs/" + filename);
 	}
 

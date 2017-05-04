@@ -186,16 +186,17 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	}
 
 	// Name
+	using namespace string_tables;
 	std::string first_name;
 	if (species.gender == FEMALE) {
-		first_name = to_proper_noun_case(first_names_female.random_entry(rng));
+		first_name = to_proper_noun_case(string_table(FIRST_NAMES_FEMALE)->random_entry(rng));
 	}
 	else 
 	{
-		first_name = to_proper_noun_case(first_names_male.random_entry(rng));
+		first_name = to_proper_noun_case(string_table(FIRST_NAMES_MALE)->random_entry(rng));
 	}
 
-	const std::string last_name = to_proper_noun_case(last_names.random_entry(rng));
+	const std::string last_name = to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng));
 
 	// Profession
 	const int number_of_professions = starting_professions.size();

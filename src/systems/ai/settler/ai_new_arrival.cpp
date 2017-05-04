@@ -23,7 +23,7 @@ void ai_new_arrival::update(const double duration_ms) {
         }
 
         if (arrival.turns_since_arrival == 0 && rng.roll_dice(1,6)==1) {
-            const std::string quip = new_arrival_quips.random_entry(rng);
+            const std::string quip = string_tables::string_table(string_tables::NEW_ARRIVAL_QUIPS)->random_entry(rng);
             emit(log_message{ LOG{}.settler_name(e.id)->text("says ")->col(rltk::colors::YELLOW)->text(quip)->chars });
         }
 

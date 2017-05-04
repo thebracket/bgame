@@ -1,7 +1,5 @@
 #include "main_menu.hpp"
 #include <rltk.hpp>
-#include <filesystem.hpp>
-#include <algorithm>
 #include "menu_helper.hpp"
 #include "constants.hpp"
 #include "game_config.hpp"
@@ -17,8 +15,10 @@ using namespace rltk;
 using namespace rltk::colors;
 
 std::string main_menu::get_descriptive_noun() const {
+    using namespace string_tables;
+
     random_number_generator rng;
-    return menu_subtitles.random_entry(rng);
+    return string_table(MENU_SUBTITLES)->random_entry(rng);
 }
 
 void main_menu::init() {
