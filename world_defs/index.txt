@@ -27,6 +27,10 @@ items_weapons_melee.lua
 items_weapons_ranged.lua
 items_intermediary.lua
 buildings.lua
+buildings_power.lua
+buildings_furniture.lua
+buildings_workshop.lua
+buildings_trap.lua
 reactions.lua
 biomes.lua
 populace.lua
