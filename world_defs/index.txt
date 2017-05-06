@@ -28,6 +28,9 @@ items_weapons_ranged.lua
 items_intermediary.lua
 reactions_base.lua
 buildings.lua
+buildings_kitchen.lua
+buildings_raw_material.lua
+buildings_scifi.lua
 buildings_power.lua
 buildings_furniture.lua
 buildings_workshop.lua

@@ -223,6 +223,7 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
             lua_pop(lua_state, 1);
         }
         building_defs[key] = c;
+        std::cout << "Read schematics for building: " << key << "\n";
         lua_pop(lua_state, 1);
     }
 }

@@ -1,303 +1,6 @@
 -- Workshops
 
 ------------------------------------------------------------------------------------------------------------------------
--- Cordex starts with a small replicator on board. It's deliberately not very useful, but can get you started.
-------------------------------------------------------------------------------------------------------------------------
-buildings["small_replicator"] = {
-    name = "A small replicator",
-    components = { { item="replicator_unit", qty=1} },
-    skill = { name="Construction", difficulty=10 },
-    provides = { storage={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['replicator_small'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['square_root'], foreground = colors['cyan'], background = colors['black']}
-        }
-    }
-};
-
-reactions["replicate_tea_earl_grey_hot"] = {
-    name = "Replicate Cup of Tea",
-    workshop = "small_replicator",
-    inputs = {  },
-    outputs = { { item="tea_replicated", qty=1 } },
-    skill = "Construction",
-    difficulty = 5,
-    automatic = false,
-    power_drain = 20
-};
-
-reactions["replicate_sandwich"] = {
-    name = "Replicate Sandwich",
-    workshop = "small_replicator",
-    inputs = {  },
-    outputs = { { item="sandwich_replicated", qty=1 } },
-    skill = "Construction",
-    difficulty = 5,
-    automatic = false,
-    power_drain = 20
-};
-
-reactions["replicate_small_energy_cell"] = {
-    name = "Replicate Small Energy Cell",
-    workshop = "small_replicator",
-    inputs = {  },
-    outputs = { { item="small_energy_cell", qty=1 } },
-    skill = "Construction",
-    difficulty = 5,
-    automatic = false,
-    power_drain = 30
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Fake camp fires provide light and can replicate marshmallows.
-------------------------------------------------------------------------------------------------------------------------
-buildings["fake_camp_fire"] = {
-    name = "Nuclear Camp Fire",
-    components = { { item="camp_fire_kit", qty=1 } },
-    skill = { name="Construction", difficulty=5 },
-    provides = { light={radius=5, color = colors['yellow']} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
-        }
-    },
-    emits_smoke = true
-};
-
-reactions["replicate_tiny_marshmallow"] = {
-    name = "Replicate Tiny Marshmallow",
-    workshop = "fake_camp_fire",
-    inputs = {  },
-    outputs = { { item="tiny_marshmallow", qty=1 } },
-    skill = "Construction",
-    difficulty = 5,
-    automatic = false,
-    power_drain = 10
-};
-
-reactions["roast_food_on_fire"] = {
-    name = "Roast simple meal",
-    workshop = "fake_camp_fire",
-    inputs = { { item="any", qty=1, mat_type="food" }  },
-    outputs = { { item="roast_simple", qty=1, special="cooking" } },
-    skill = "Cooking",
-    difficulty = 5,
-    automatic = false
-};
-
-reactions["roast_combined_food_on_fire"] = {
-    name = "Roast normal meal",
-    workshop = "fake_camp_fire",
-    inputs = { { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }  },
-    outputs = { { item="roast_simple", qty=1, special="cooking" } },
-    skill = "Cooking",
-    difficulty = 10,
-    automatic = false
-};
-
-reactions["roast_lavish_meal_on_fire"] = {
-    name = "Roast lavish meal",
-    workshop = "fake_camp_fire",
-    inputs = { { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="spice" }  },
-    outputs = { { item="roast_simple", qty=1, special="cooking" } },
-    skill = "Cooking",
-    difficulty = 15,
-    automatic = false
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- An actual campfire, useful for cooking.
-------------------------------------------------------------------------------------------------------------------------
-buildings["camp_fire"] = {
-    name = "Camp Fire",
-    components = { { item="wood_log", qty=1 } },
-    skill = { name="Construction", difficulty=5 },
-    provides = { light={radius=5, color = colors['yellow']} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
-        }
-    },
-    emits_smoke = true
-};
-
-reactions["roast_food_on_real_fire"] = {
-    name = "Roast simple meal",
-    workshop = "camp_fire",
-    inputs = { { item="any", qty=1, mat_type="food" }  },
-    outputs = { { item="roast_simple", qty=1, special="cooking" } },
-    skill = "Cooking",
-    difficulty = 5,
-    automatic = false
-};
-
-reactions["roast_combined_food_on_real_fire"] = {
-    name = "Roast normal meal",
-    workshop = "camp_fire",
-    inputs = { { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }  },
-    outputs = { { item="roast_simple", qty=1, special="cooking" } },
-    skill = "Cooking",
-    difficulty = 10,
-    automatic = false
-};
-
-reactions["roast_lavish_meal_on_real_fire"] = {
-    name = "Roast lavish meal",
-    workshop = "camp_fire",
-    inputs = { { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="food" }, { item="any", qty=1, mat_type="spice" }  },
-    outputs = { { item="roast_simple", qty=1, special="cooking" } },
-    skill = "Cooking",
-    difficulty = 15,
-    automatic = false
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Sawmills are used for converting wood into blocks, and offcuts.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["sawmill"] = {
-    name = "Sawmill",
-    components = { { item="wood_log", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['sawmill_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sawmill_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sawmill_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sawmill_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']}
-        }
-    },
-};
-
-reactions["cut_wooden_planks"] = {
-   name = "Cut Wooden Logs into Blocks",
-   workshop = "sawmill",
-   inputs = { { item="wood_log", qty=1 } },
-   outputs = { { item="block", qty=4 }, { item="wood_waste", qty=2} },
-   skill = "Carpentry",
-   difficulty = 10,
-   automatic = true
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Distilleries make booze.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["still"] = {
-    name = "Distillery",
-    components = { { item="block", qty=2 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['still_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['still_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['still_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['still_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
-};
-
-reactions["make_booze"] = {
-    name = "Ferment Alcoholic Beverage", workshop = "still",
-    inputs = { { item="any", qty=1, mat_type="food" } },
-    outputs = { { item="wine", qty=1, special="cooking" } },
-    skill = "Brewing", difficulty = 16, automatic = false
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Butchers convert dead animals into useful parts. Not controlled by reactions, it's in the C++. Sorry.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["butcher"] = {
-    name = "Butcher",
-    components = { { item="block", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['butcher_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['cabinet'], foreground = colors['red'], background = colors['black']},
-            {glyph= glyphs['kit'], foreground = colors['red'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['red'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['red'], background = colors['black']}
-        }
-    },
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Tanneries combine hide with dung, and use it to make leather.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["tanner"] = {
-    name = "Tanner",
-    components = { { item="block", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['tanner_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['tanner_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['tanner_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['tanner_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['double_wall_nse'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['double_wall_nsw'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
-};
-
-reactions["tan_leather"] = {
-   name = "Tan Leather",
-   workshop = "tanner",
-   inputs = { { item="hide", qty=1 } },
-   outputs = { { item="leather", qty=2, special="tanning" } },
-   skill = "Tanning",
-   difficulty = 10,
-   automatic = true
-};
-
-------------------------------------------------------------------------------------------------------------------------
 -- Leatherworker shops are used to sew leather into useful shapes.
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -397,41 +100,6 @@ buildings["bonecarver"] = {
             {glyph= glyphs['vertical_line'], foreground = colors['white'], background = colors['black']}
         }
     },
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Stonecutters are where one cuts stone. Kinda obvious, I guess.
-------------------------------------------------------------------------------------------------------------------------
-buildings["stonecutter"] = {
-    name = "Stonecutters",
-    components = { { item="stone_boulder", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['stonecutter_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-};
-
-reactions["cut_stone"] = {
-    name = "Cut Stone Blocks",
-    workshop = "stonecutter",
-    inputs = { { item="stone_boulder", qty=1 } },
-    outputs = { { item="block", qty=4 } },
-    skill = "Masonry",
-    difficulty = 10,
-    automatic = true
 };
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -550,153 +218,28 @@ reactions["make_wood_dart"] = {
 };
 
 ------------------------------------------------------------------------------------------------------------------------
--- Charcoal huts slow-cook wood to make a super-fuel. They can also be used to refine coal.
+-- Intermediate Carpentry workshops are where woodwork is performed, requiring a lathe or other advancement.
 ------------------------------------------------------------------------------------------------------------------------
-
-buildings["charcoal_hut"] = {
-    name = "Charcoal Burner",
-    components = { { item="block", qty=1, mat_type="rock" } },
+buildings["intermediate_carpenter"] = {
+    name = "Intermediate Carpentry Workshop",
+    components = { { item="block", qty=1 }, {item="simple_lathe", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['charcoal_hut'], foreground = colors['white'], background = colors['black']}
+        width=2, height=2, tiles= {
+            {glyph= glyphs['carpenter_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['carpenter_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['carpenter_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['carpenter_4'], foreground = colors['white'], background = colors['black']}
         }
     },
     render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['wood_brown'], background = colors['black']}
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
-};
-
-reactions["charcoal_waste"] = {
-    name = "Make Charcoal from Waste",
-    workshop = "charcoal_hut",
-    inputs = { { item="wood_waste", qty=1 } },
-    outputs = { { item="charcoal", qty=2 }, { item="ash", qty=1} },
-    skill = "Furnace Operation",
-    difficulty = 10,
-    automatic = true,
-    emits_smoke = true
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Smelters extract metal from ore.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["smelter"] = {
-    name = "Smelter",
-    components = { { item="block", qty=1, mat_type="rock" } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
-        }
-    },
-};
-
-reactions["smelt_ore"] = {
-   name = "Smelt Ore",
-   workshop = "smelter",
-   inputs = { { item="ore", qty=1 } },
-   outputs = { { item="block", qty=2 } },
-   skill = "Furnace Operation",
-   difficulty = 12,
-   automatic = true
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Glass furnaces heat up sand to make raw glass.
-------------------------------------------------------------------------------------------------------------------------
-buildings["glass_furnace"] = {
-    name = "Glass Furnace",
-    components = { { item="block", qty=1, mat_type="rock" } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['glass_furnace'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['light_green'], background = colors['black']}
-        }
-    },
-};
-
-reactions["make_raw_glass"] = {
-    name = "Make Raw Glass",
-    workshop = "glass_furnace",
-    inputs = { { item="charcoal", qty=1 }, { item="sand", qty=1} },
-    outputs = { { item="raw_glass", qty=2 } },
-    skill = "Glassmaking",
-    difficulty = 10,
-    automatic = false,
-    emits_smoke = true
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Silicon refineries convert glass into raw silicon.
-------------------------------------------------------------------------------------------------------------------------
-buildings["silicon_refinery"] = {
-    name = "Silicon Refinery",
-    components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['silicon_refinery'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['cyan'], background = colors['black']}
-        }
-    },
-};
-
-reactions["make_raw_silicon"] = {
-   name = "Make Raw Silicon",
-   workshop = "silicon_refinery",
-   inputs = { { item="raw_glass", qty=1} },
-   outputs = { { item="raw_silicon", qty=1 } },
-   skill = "Glassmaking",
-   difficulty = 10,
-   automatic = false
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Kilns are used for baking clay into bricks. They should also be used for pottery.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["kiln"] = {
-    name = "Kiln",
-    components = { { item="clay", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['kiln'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
-        }
-    },
-};
-
-reactions["bake_bricks"] = {
-    name = "Bake Clay into Bricks",
-    workshop = "kiln",
-    inputs = { { item="charcoal", qty=1 }, { item="clay", qty=1 } },
-    outputs = { { item="block", qty=4 } },
-    skill = "Carpentry",
-    difficulty = 10,
-    automatic = true
 };
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -855,6 +398,31 @@ reactions["make_metal_longsword"] = {
     automatic = false
 };
 
+------------------------------------------------------------------------------------------------------------------------
+-- Intermediate forges cover up to medieval forge technology up to the renaissance.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["intermediate_forge"] = {
+    name = "Intermediate Forge",
+    components = { { item="block", qty=1, mat_type="rock" }, { item="simple_lathe", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['forge_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['black']}
+        }
+    },
+};
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Primitive workshops are used for the crafting of intricate, but primitive, items.
@@ -982,6 +550,41 @@ reactions["make_bronze_skirt"] = {
     automatic = false
 };
 
+reactions["make_simple_lathe"] = {
+    name = "Make Simple Lathe",
+    workshop = "primitive_workshop",
+    inputs = { { item="block", material="wood", qty=1 }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="simple_lathe", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Intermediate workshops are used for the crafting of intricate items, up to the renaissance era.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["intermediate_workshop"] = {
+    name = "Intermediate Workshop",
+    components = { { item="block", qty=1 }, { item="simple_lathe", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['workshop_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+};
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Masonry shops are used to convert stone blocks into furniture

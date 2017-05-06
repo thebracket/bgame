@@ -12,9 +12,9 @@ items["axe_blade"] = {
     stockpile = stockpiles['component'].id
 };
 
-items["forge_parts"] = {
-    name = "Forge Parts",
-    description = "Components required for an advanced forge",
+items["simple_lathe"] = {
+    name = "Simple Lathe",
+    description = "A simple lathe, required for an intermediary-level forge or carpentry workshop",
     itemtype = {"component"},
     glyph = glyphs['less_than_equal'],
     glyph_ascii = glyphs['less_than_equal'],
