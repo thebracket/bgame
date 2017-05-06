@@ -26,6 +26,7 @@ items_food.lua
 items_weapons_melee.lua
 items_weapons_ranged.lua
 items_intermediary.lua
+reactions_base.lua
 buildings.lua
 buildings_power.lua
 buildings_furniture.lua
