@@ -181,3 +181,55 @@ buildings["intermediate_forge"] = {
         }
     },
 };
+
+------------------------------------------------------------------------------------------------------------------------
+-- Intermediate forges cover up to medieval forge technology up to the renaissance.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["advanced_forge"] = {
+    name = "Advanced Forge",
+    components = { { item="block", qty=4, mat_type="rock" }, { item="precision_tools", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['forge_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['black']}
+        }
+    },
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Intermediate forges cover up to medieval forge technology up to the renaissance.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["foundry"] = {
+    name = "Foundry",
+    components = { { item="block", qty=4, mat_type="rock" }, { item="tool_and_die", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['forge_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['black']}
+        }
+    },
+};

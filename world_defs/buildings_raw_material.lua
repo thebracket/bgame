@@ -169,6 +169,66 @@ reactions["smelt_ore"] = {
 };
 
 ------------------------------------------------------------------------------------------------------------------------
+-- Blast Smelters are used to make advanced metals from other metals.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["blast_smelter"] = {
+    name = "Blast Smelter",
+    components = { { item="block", qty=1, mat_type="rock" }, { item="tool_and_die", qty=1 }, { item="mechanism", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
+        }
+    },
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Crude Oil Refinery is used to turn oil into usable substances.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["crude_refinery"] = {
+    name = "Simple Oil Refinery",
+    components = { { item="block", qty=1, mat_type="rock" }, { item="tool_and_die", qty=1 }, { item="mechanism", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
+        }
+    },
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Chemistry workshops transform various powders into useful items
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["chemistry_workshop"] = {
+    name = "Chemistry Workshop",
+    components = { { item="block", qty=1, mat_type="rock" }, { item="mechanism", qty=2 } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
+        }
+    },
+};
+
+------------------------------------------------------------------------------------------------------------------------
 -- Glass furnaces heat up sand to make raw glass.
 ------------------------------------------------------------------------------------------------------------------------
 buildings["glass_furnace"] = {

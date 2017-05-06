@@ -23,6 +23,28 @@ items["simple_lathe"] = {
     stockpile = stockpiles['component'].id
 };
 
+items["precision_tools"] = {
+    name = "Precision Tools",
+    description = "A set of early-Industrial era precision tools",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["tool_and_die"] = {
+    name = "Tool and Die Kit",
+    description = "A set of tools and die-casting equipment, suitable for mass-production.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
 items["hay"] = {
     name="Hay",
     description = "Dried grass, suitable for animal fodder",

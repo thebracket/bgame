@@ -162,3 +162,74 @@ buildings["intermediate_workshop"] = {
     },
 };
 
+reactions["make_precision_tools"] = {
+    name = "Make Precision Tools",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", material="wood", qty=2 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="precision_tools", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Advanced workshops are used for the crafting of intricate items, up to the industrial revolution era.
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["advanced_workshop"] = {
+    name = "Advanced Workshop",
+    components = { { item="block", qty=4 }, { item="precision_tools", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['workshop_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+};
+
+reactions["make_tool_and_die"] = {
+    name = "Make Tool and Die Cast Kit",
+    workshop = "advanced_workshop",
+    inputs = { { item="block", material="wood", qty=2 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="tool_and_die", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Factories can produce items up to the modern era
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["factory"] = {
+    name = "Factory",
+    components = { { item="block", qty=4 }, { item="precision_tools", qty=2 }, { item="mechanism", qty=2}, { item="tool_and_die", qty=1} },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['workshop_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+};
