@@ -17,6 +17,15 @@ creatures.lua
 life_events.lua
 starting_professions.lua
 items.lua
+items_starting.lua
+items_raw_materials.lua
+items_mechanical.lua
+items_trap.lua
+items_furniture.lua
+items_food.lua
+items_weapons_melee.lua
+items_weapons_ranged.lua
+items_intermediary.lua
 buildings.lua
 reactions.lua
 biomes.lua
