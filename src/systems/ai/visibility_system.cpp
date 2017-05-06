@@ -1,6 +1,5 @@
 #include "visibility_system.hpp"
 #include "../../messages/messages.hpp"
-#include "visibility_system.hpp"
 #include "movement_system.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../components/building.hpp"

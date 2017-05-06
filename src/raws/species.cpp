@@ -261,8 +261,28 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
             if (field == "glyph_ascii") s.glyph = lua_tonumber(lua_state, -1);
             if (field == "worldgen_glyph") s.worldgen_glyph = lua_tonumber(lua_state, -1);
             if (field == "composite_render") s.render_composite = lua_toboolean(lua_state, -1);
-            if (field == "base_male") s.base_male_glyph = lua_tonumber(lua_state, -1);
-            if (field == "base_female") s.base_female_glyph = lua_tonumber(lua_state, -1);
+            if (field == "base_male_glyph") s.base_male_glyph = lua_tonumber(lua_state, -1);
+            if (field == "base_female_glyph") s.base_female_glyph = lua_tonumber(lua_state, -1);
+            if (field == "skin_colors") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string title = lua_tostring(lua_state, -2);
+                    rltk::color_t col = read_lua_color(title);
+                    s.skin_colors.emplace_back(std::make_pair(title, col));
+                    lua_pop(lua_state, 1);
+                }
+            }
+            if (field == "hair_colors") {
+                lua_pushstring(lua_state, field.c_str());
+                lua_gettable(lua_state, -2);
+                while (lua_next(lua_state, -2) != 0) {
+                    std::string title = lua_tostring(lua_state, -2);
+                    rltk::color_t col = read_lua_color(title);
+                    s.hair_colors.emplace_back(std::make_pair(title, col));
+                    lua_pop(lua_state, 1);
+                }
+            }
 
 
             lua_pop(lua_state, 1);

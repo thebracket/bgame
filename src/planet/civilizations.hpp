@@ -26,9 +26,9 @@ struct civ_t {
     std::unordered_map<std::size_t, int> relations;
 
     // For types that have it...
-    hair_color_t hair_color;
+    std::pair<std::string, rltk::color_t> hair_color;
     hair_style_t hair_style;
-    skin_color_t skin_color;
+    std::pair<std::string, rltk::color_t> skin_color;
 
     template<class Archive>
     void serialize(Archive & archive)

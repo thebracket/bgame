@@ -1,7 +1,6 @@
 #include "world_queries.hpp"
 #include <rltk.hpp>
 #include "../../components/building.hpp"
-#include "../../components/corpse_harvestable.hpp"
 
 using namespace rltk;
 

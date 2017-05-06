@@ -2,7 +2,6 @@
 #include "../../planet/builder/settler_builder.hpp"
 #include "../../messages/messages.hpp"
 #include "../../main/game_planet.hpp"
-#include "../../components/position.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
 #include "../../main/game_region.hpp"

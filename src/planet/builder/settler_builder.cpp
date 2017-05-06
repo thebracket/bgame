@@ -1,6 +1,5 @@
 #include "settler_builder.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../components/species.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/name.hpp"
 #include "../../components/viewshed.hpp"
@@ -12,7 +11,7 @@
 #include "../../raws/life_events.hpp"
 #include "../../raws/profession.hpp"
 #include "../../components/initiative.hpp"
-#include "../../components/ai_settler_new_arrival.hpp"
+#include "../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../components/sleep_clock_t.hpp"
 
 using namespace rltk;
@@ -60,7 +59,8 @@ std::vector<std::string> get_event_candidates(const int &age, const std::vector<
 
 void create_settler(planet_t &planet, const int x, const int y, const int z, random_number_generator &rng, int shift_id) {
 	species_t species;
-	game_stats_t stats;	
+	game_stats_t stats;
+    auto species_def = get_species_def("human");
 
 	species.tag = "human";
 
@@ -92,22 +92,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	}
 
 	// Hair/etc. this should be made more realistic one day!
-	const int ethnic_roll = rng.roll_dice(1, 4);
-	switch (ethnic_roll)
-	{
-	case 1:
-		species.skin_color = CAUCASIAN;
-		break;
-	case 2:
-		species.skin_color = ASIAN;
-		break;
-	case 3:
-		species.skin_color = INDIAN;
-		break;
-	case 4:
-		species.skin_color = AFRICAN;
-		break;
-	}
+    species.base_male_glyph = species_def->base_male_glyph;
+    species.base_female_glyph = species_def->base_female_glyph;
+    species.skin_color = species_def->skin_colors[rng.roll_dice(1, species_def->skin_colors.size())-1];
 
 	species.bearded = false;
 	if (species.gender == MALE)
@@ -123,25 +110,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		}
 	}
 
-	const int hair_color_roll = rng.roll_dice(1, 5);
-	switch (hair_color_roll)
-	{
-	case 1:
-		species.hair_color = BLACK_HAIR;
-		break;
-	case 2:
-		species.hair_color = BLONDE_HAIR;
-		break;
-	case 3:
-		species.hair_color = BROWN_HAIR;
-		break;
-	case 4:
-		species.hair_color = WHITE_HAIR;
-		break;
-	case 5:
-		species.hair_color = RED_HAIR;
-		break;
-	}
+    species.hair_color = species_def->hair_colors[rng.roll_dice(1, species_def->hair_colors.size())-1];
 
 	species.hair_style = BALD;
 	if (species.gender == MALE)
@@ -187,16 +156,17 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	}
 
 	// Name
+	using namespace string_tables;
 	std::string first_name;
 	if (species.gender == FEMALE) {
-		first_name = to_proper_noun_case(first_names_female.random_entry(rng));
+		first_name = to_proper_noun_case(string_table(FIRST_NAMES_FEMALE)->random_entry(rng));
 	}
 	else 
 	{
-		first_name = to_proper_noun_case(first_names_male.random_entry(rng));
+		first_name = to_proper_noun_case(string_table(FIRST_NAMES_MALE)->random_entry(rng));
 	}
 
-	const std::string last_name = to_proper_noun_case(last_names.random_entry(rng));
+	const std::string last_name = to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng));
 
 	// Profession
 	const int number_of_professions = starting_professions.size();

@@ -14,7 +14,6 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_selections.hpp"
-#include <rltk.hpp>
 
 void mode_rogue_system::configure() {
     system_name = "Rogue Mode System";

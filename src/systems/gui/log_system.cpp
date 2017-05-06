@@ -1,7 +1,6 @@
 #include "log_system.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../messages/tick_message.hpp"
-#include <algorithm>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
 #include "../../main/game_logger.hpp"

@@ -33,6 +33,8 @@ struct axemap_changed_message : public rltk::base_message_t {
 struct pickmap_changed_message : public rltk::base_message_t {
 };
 
+struct harvestmap_changed_message : public rltk::base_message_t {
+};
 
 struct tile_removed_message : public rltk::base_message_t {
     tile_removed_message() {}

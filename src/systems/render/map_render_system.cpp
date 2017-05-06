@@ -1,18 +1,5 @@
 #include "map_render_system.hpp"
-#include "../../raws/raws.hpp"
 #include "../../messages/messages.hpp"
-#include "renderables_system.hpp"
-#include "camera_system.hpp"
-#include "lighting_system.hpp"
-#include "../../components/renderable_composite.hpp"
-#include "../../components/species.hpp"
-#include "../../components/item.hpp"
-#include "../../components/item_carried.hpp"
-#include "../input/mouse_input_system.hpp"
-#include "../gui/mode_design_system.hpp"
-#include "../../main/game_region.hpp"
-#include <iostream>
-#include <cmath>
 
 using namespace rltk;
 using namespace map_render_sys;

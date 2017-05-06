@@ -1,15 +1,10 @@
 #include "history_builder.hpp"
 #include "../planet_builder.hpp"
-#include "../../raws/raws.hpp"
 #include "../../raws/species.hpp"
 #include "../../raws/string_table.hpp"
-#include "../constants.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../raws/lua_bridge.hpp"
-#include <unordered_map>
-#include <iostream>
-#include <sstream>
 
 constexpr int n_civs = WORLD_WIDTH;
 
@@ -49,22 +44,23 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         civ.starty = wy;
 
         // Name generation
+        using namespace string_tables;
         auto civ_finder = civ_defs.find(civ.species_tag);
         const std::string civ_name_func = "civ_name_gen_" + civ_finder->second.name_generator;
         const std::string civ_leader_func = "leader_name_gen_" + civ_finder->second.name_generator;
         civ.name = lua_str_func(civ_name_func, rng.roll_dice(1,1000)) + std::string(" of the ") + loc_name;
         if (str_contains(civ.name, "{LASTNAME}")) {
-            civ.name = str_replace(civ.name, "{LASTNAME}", last_names.random_entry(rng));
+            civ.name = str_replace(civ.name, "{LASTNAME}", string_table(LAST_NAMES)->random_entry(rng));
         }
         civ.leader_name = lua_str_func(civ_leader_func, rng.roll_dice(1,1000));
         if (str_contains(civ.leader_name, "{LASTNAME}")) {
-            civ.leader_name = str_replace(civ.leader_name, "{LASTNAME}", to_proper_noun_case(last_names.random_entry(rng)));
+            civ.leader_name = str_replace(civ.leader_name, "{LASTNAME}", to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng)));
         }
         if (str_contains(civ.leader_name, "{FIRSTNAME_M}")) {
-            civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_M}", to_proper_noun_case(first_names_male.random_entry(rng)));
+            civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_M}", to_proper_noun_case(string_table(FIRST_NAMES_MALE)->random_entry(rng)));
         }
         if (str_contains(civ.leader_name, "{FIRSTNAME_F}")) {
-            civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_F}", to_proper_noun_case(first_names_female.random_entry(rng)));
+            civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_F}", to_proper_noun_case(string_table(FIRST_NAMES_FEMALE)->random_entry(rng)));
         }
         civ.origin = loc_name;
         std::cout << "Welcome: " << civ.name << ", lead by " << civ.leader_name << "\n";
@@ -72,42 +68,8 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         // Appearance
         if (get_species_def(civ_finder->second.species_tag)->render_composite) {
-            const int ethnic_roll = rng.roll_dice(1, 4);
-            switch (ethnic_roll)
-            {
-                case 1:
-                    civ.skin_color = CAUCASIAN;
-                    break;
-                case 2:
-                    civ.skin_color = ASIAN;
-                    break;
-                case 3:
-                    civ.skin_color = INDIAN;
-                    break;
-                case 4:
-                    civ.skin_color = AFRICAN;
-                    break;
-            }
-
-            const int hair_color_roll = rng.roll_dice(1, 5);
-            switch (hair_color_roll)
-            {
-                case 1:
-                    civ.hair_color = BLACK_HAIR;
-                    break;
-                case 2:
-                    civ.hair_color = BLONDE_HAIR;
-                    break;
-                case 3:
-                    civ.hair_color = BROWN_HAIR;
-                    break;
-                case 4:
-                    civ.hair_color = WHITE_HAIR;
-                    break;
-                case 5:
-                    civ.hair_color = RED_HAIR;
-                    break;
-            }
+            civ.skin_color = get_species_def(civ_finder->second.species_tag)->skin_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->skin_colors.size())-1];
+            civ.hair_color = get_species_def(civ_finder->second.species_tag)->hair_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->hair_colors.size())-1];
 
             civ.hair_style = BALD;
             const int style_roll = rng.roll_dice(1, 4);

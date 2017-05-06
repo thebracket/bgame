@@ -50,20 +50,27 @@
 #include "ai/distance_map_system.hpp"
 #include "ai/settler_spawner_system.hpp"
 #include "physics/trigger_system.hpp"
-#include "ai/ai_status_effects.hpp"
-#include "ai/ai_new_arrival.hpp"
-#include "ai/ai_action_shim.hpp"
-#include "ai/ai_visibility_scan.hpp"
-#include "ai/ai_idle.hpp"
+#include "ai/settler/ai_status_effects.hpp"
+#include "ai/settler/ai_new_arrival.hpp"
+#include "ai/settler/ai_action_shim.hpp"
+#include "ai/settler/ai_visibility_scan.hpp"
+#include "ai/settler/ai_idle.hpp"
 #include "damage/sentient_attacks.hpp"
-#include "ai/ai_stuck.hpp"
-#include "ai/ai_scheduler.hpp"
-#include "ai/ai_leisure_time.hpp"
-#include "ai/ai_sleep_time_system.hpp"
-#include "ai/ai_work_time.hpp"
-#include "ai/ai_work_lumberjack.hpp"
-#include "ai/ai_work_mining.hpp"
-#include "ai/ai_work_guard.hpp"
+#include "ai/settler/ai_stuck.hpp"
+#include "ai/settler/ai_scheduler.hpp"
+#include "ai/settler/ai_leisure_time.hpp"
+#include "ai/settler/ai_sleep_time_system.hpp"
+#include "ai/settler/ai_work_time.hpp"
+#include "ai/settler/ai_work_lumberjack.hpp"
+#include "ai/settler/ai_work_mining.hpp"
+#include "ai/settler/ai_work_guard.hpp"
+#include "ai/settler/ai_work_harvest.hpp"
+#include "ai/settler/ai_work_lever_pull.hpp"
+#include "ai/settler/ai_work_building.hpp"
+#include "ai/settler/ai_work_order.hpp"
+#include "ai/settler/ai_work_architect.hpp"
+#include "ai/settler/ai_work_hunt.hpp"
+#include "ai/settler/ai_work_butcher.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -99,6 +106,13 @@ void add_systems_to_ecs() {
     add_system<ai_work_lumberjack>();
     add_system<ai_work_mining>();
     add_system<ai_work_guard>();
+    add_system<ai_work_harvest>();
+    add_system<ai_work_lever_pull>();
+    add_system<ai_work_building>();
+    add_system<ai_work_order>();
+    add_system<ai_work_architect>();
+    add_system<ai_work_hunt>();
+    add_system<ai_work_butcher>();
     add_system<ai_action_shim>();
     add_system<ai_idle>();
     add_system<settler_ai_system>();

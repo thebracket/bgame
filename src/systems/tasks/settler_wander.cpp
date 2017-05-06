@@ -1,5 +1,4 @@
 #include "settler_wander.hpp"
-#include "../../components/renderable.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../main/game_designations.hpp"
 

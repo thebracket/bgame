@@ -14,14 +14,14 @@
 #include "../ai/movement_system.hpp"
 #include "../../raws/species.hpp"
 #include "../../components/sleep_clock_t.hpp"
-#include "../../components/ai_tag_work_lumberjack.hpp"
-#include "../../components/ai_tag_work_mining.hpp"
+#include "../../components/ai_tags/ai_tag_work_lumberjack.hpp"
+#include "../../components/ai_tags/ai_tag_work_mining.hpp"
 #include "../../main/game_clipping.hpp"
-#include "../../main/game_region.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_designations.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
+#include "../../components/ai_tags/ai_tag_work_building.hpp"
+#include "../../components/ai_tags/ai_tag_work_architect.hpp"
 
 
 using namespace rltk;
@@ -51,29 +51,16 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         if (!species) return;
 
         // Render the base person glyph
-        color_t skin_color;
-        switch (species->skin_color) {
-            case CAUCASIAN : skin_color = color_t(255,219,172); break;
-            case ASIAN : skin_color = color_t(224,172,105); break;
-            case INDIAN : skin_color = color_t(198,134,66); break;
-            case AFRICAN : skin_color = color_t(141,85,36); break;
-        }
+        color_t skin_color = species->skin_color.second;
 
         if (species->gender == MALE) {
-            layers.push_back(vchar{352, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_male_glyph, skin_color, rltk::colors::BLACK});
         } else {
-            layers.push_back(vchar{353, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_female_glyph, skin_color, rltk::colors::BLACK});
         }
 
         // Render hair and beard
-        color_t hair_color;
-        switch (species->hair_color) {
-            case WHITE_HAIR : hair_color = color_t(250, 250, 250); break;
-            case BROWN_HAIR : hair_color = color_t(141,85,36); break;
-            case BLACK_HAIR : hair_color = color_t(50, 50, 64); break;
-            case BLONDE_HAIR : hair_color = color_t(216, 192, 120); break;
-            case RED_HAIR : hair_color = color_t(181, 82, 57); break;
-        }
+        color_t hair_color = species->hair_color.second;
 
         int hair_glyph = 0;
         switch (species->hair_style) {
@@ -98,9 +85,19 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         // Optionally render a status flag
         auto ai = entity(id)->component<settler_ai_t>();
         if (ai) {
-            if (ai->job_type_major == JOB_CONST || ai->job_type_major == JOB_ARCHITECT || ai->job_type_major == JOB_CARPENTRY) {
+            if (ai->job_type_major == JOB_CARPENTRY) {
                 layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
             }
+        }
+
+        auto arch = entity(id)->component<ai_tag_work_architect>();
+        if (arch) {
+            layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
+        }
+
+        auto building = entity(id)->component<ai_tag_work_building>();
+        if (building) {
+            layers.push_back(vchar{339, rltk::colors::WHITE, rltk::colors::BLACK});
         }
 
         auto sleep = entity(id)->component<sleep_clock_t>();
@@ -129,29 +126,16 @@ inline void add_render_composite(const std::size_t &id, const int &idx) {
         auto species_f = get_species_def(species->tag);
 
         // Render the base person glyph
-        color_t skin_color;
-        switch (species->skin_color) {
-            case CAUCASIAN : skin_color = color_t(255,219,172); break;
-            case ASIAN : skin_color = color_t(224,172,105); break;
-            case INDIAN : skin_color = color_t(198,134,66); break;
-            case AFRICAN : skin_color = color_t(141,85,36); break;
-        }
+        color_t skin_color = species->skin_color.second;
 
         if (species->gender == MALE) {
-            layers.push_back(vchar{species_f->base_male_glyph, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_male_glyph, skin_color, rltk::colors::BLACK});
         } else {
-            layers.push_back(vchar{species_f->base_female_glyph, skin_color, rltk::colors::BLACK});
+            layers.push_back(vchar{species->base_female_glyph, skin_color, rltk::colors::BLACK});
         }
 
         // Render hair and beard
-        color_t hair_color;
-        switch (species->hair_color) {
-            case WHITE_HAIR : hair_color = color_t(250, 250, 250); break;
-            case BROWN_HAIR : hair_color = color_t(141,85,36); break;
-            case BLACK_HAIR : hair_color = color_t(50, 50, 64); break;
-            case BLONDE_HAIR : hair_color = color_t(216, 192, 120); break;
-            case RED_HAIR : hair_color = color_t(181, 82, 57); break;
-        }
+        color_t hair_color = species->hair_color.second;
 
         int hair_glyph = 0;
         switch (species->hair_style) {

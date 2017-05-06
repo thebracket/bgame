@@ -1,7 +1,6 @@
 #include "game_over_system.hpp"
 #include "../../messages/game_over_message.hpp"
 #include "../../main/game_pause.hpp"
-#include <rltk.hpp>
 #include "../../main/game_mode.hpp"
 
 using namespace rltk;

@@ -1,9 +1,6 @@
 #include "stockpile_system.hpp"
 #include "../components/stockpile.hpp"
-#include <vector>
-#include <unordered_set>
 #include "../components/item.hpp"
-#include "../raws/items.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_region.hpp"
 

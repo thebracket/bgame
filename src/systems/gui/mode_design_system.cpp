@@ -1,16 +1,9 @@
 #include "mode_design_system.hpp"
 #include "../input/mouse_input_system.hpp"
-#include "../../raws/raws.hpp"
 #include "../../messages/messages.hpp"
-#include "../ai/mining_system.hpp"
 #include "../ai/inventory_system.hpp"
-#include "../render/camera_system.hpp"
-#include "../../utils/string_utils.hpp"
 #include "../../components/stockpile.hpp"
 #include "../../raws/plants.hpp"
-#include <sstream>
-#include <iomanip>
-#include <map>
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
 #include "../../components/bridge.hpp"
@@ -335,6 +328,7 @@ void mode_design_system::harvest() {
             }
             if (!found) {
                 designations->harvest.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
+                emit_deferred(harvestmap_changed_message{});
             }
         } else if (get_mouse_button_state(rltk::button::RIGHT)) {
             designations->harvest.erase(std::remove_if(
@@ -343,6 +337,7 @@ void mode_design_system::harvest() {
                     [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
                                              ),
                                              designations->harvest.end());
+            emit_deferred(harvestmap_changed_message{});
         }
     }
 

@@ -41,22 +41,23 @@ std::string species_t::weight_lbs() {
 }
 
 std::string species_t::ethnicity() {
-    switch (skin_color) {
-        case CAUCASIAN : return "caucasian";
-        case ASIAN : return "asian";
-        case INDIAN : return "middle-eastern";
-        case AFRICAN : return "african";
-    }
+    return skin_color.first;
 }
 
 std::string species_t::hair_color_str() {
-    switch (hair_color) {
-        case WHITE_HAIR : return "white";
-        case BROWN_HAIR : return "brown";
-        case BLACK_HAIR : return "black";
-        case BLONDE_HAIR : return "blonde";
-        case RED_HAIR : return "red";
+    const std::string base = hair_color.first;
+    std::string result = "";
+
+    for (std::size_t i=0; i<base.size(); ++i) {
+        if (std::isupper(base[i]) && i != 0) {
+            result += " ";
+            result += base[i];
+        } else {
+            result += base[i];
+        }
     }
+
+    return result;
 }
 
 std::string species_t::hair_style_str() {

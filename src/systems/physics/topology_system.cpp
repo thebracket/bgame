@@ -1,6 +1,5 @@
 #include "topology_system.hpp"
 #include "../../messages/map_dirty_message.hpp"
-#include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
@@ -29,7 +28,6 @@ void topology_system::configure() {
         spawn_mining_result(e);
         recalculate(e);
         emit(map_dirty_message{});
-        emit(recalculate_mining_message{});
         emit(map_changed_message{});
     });
 

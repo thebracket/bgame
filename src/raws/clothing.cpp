@@ -1,7 +1,6 @@
 #include "clothing.hpp"
 #include "apihelper.hpp"
 #include "lua_bridge.hpp"
-#include <iostream>
 
 std::unordered_map<std::string, clothing_t> clothing_types;
 

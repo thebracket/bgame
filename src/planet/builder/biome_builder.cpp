@@ -1,8 +1,6 @@
 #include "biome_builder.hpp"
 #include "../planet_builder.hpp"
-#include "../../raws/raws.hpp"
 #include "../../raws/biomes.hpp"
-#include <unordered_map>
 
 std::unordered_map<uint8_t, double> biome_membership(planet_t &planet, const std::size_t &idx) {
 	std::unordered_map<uint8_t, double> percents;

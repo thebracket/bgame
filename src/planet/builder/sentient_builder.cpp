@@ -1,22 +1,17 @@
 #include "sentient_builder.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
-#include "../../raws/native_population.hpp"
 #include "../../raws/health_factory.hpp"
-#include "../../raws/species.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../utils/string_utils.hpp"
 #include "../../components/sentient_ai.hpp"
-#include "../../components/species.hpp"
-#include "../../components/name.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/item.hpp"
 #include "../../components/renderable.hpp"
 #include "../../components/viewshed.hpp"
-#include "../../components/position.hpp"
 #include "../../components/initiative.hpp"
-#include "../../components/ai_mode_idle.hpp"
+#include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
 
@@ -51,6 +46,8 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     if (species_finder == nullptr) std::cout << "WARNING: Unable to find info for " << species_tag << "\n";
     if (species_finder->render_composite) {
         // We need to define skin color, hair
+        species.base_male_glyph = species_finder->base_male_glyph;
+        species.base_female_glyph = species_finder->base_female_glyph;
         species.skin_color = planet.civs.civs[civ_id].skin_color;
         species.hair_color = planet.civs.civs[civ_id].hair_color;
         species.hair_style = planet.civs.civs[civ_id].hair_style;

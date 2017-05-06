@@ -1,8 +1,5 @@
 #include "blight_builder.hpp"
 #include "../../../raws/plants.hpp"
-#include <algorithm>
-#include "../../../components/position.hpp"
-#include "../../../components/sentient_ai.hpp"
 #include "../../../raws/materials.hpp"
 
 void build_ant_mound(region_t &region, random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) {
@@ -11,8 +8,8 @@ void build_ant_mound(region_t &region, random_number_generator &rng, std::vector
     const int mound_height = rng.roll_dice(3,6);
     const int mound_depth = rng.roll_dice(3,6);
 
-    int x = rng.roll_dice(1,REGION_WIDTH-10)+5;
-    int y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
+    int x = rng.roll_dice(1,REGION_WIDTH-40)+20;
+    int y = rng.roll_dice(1,REGION_HEIGHT-40)+20;
     int z = get_ground_z(region, x, y) - mound_depth;
     bool not_in_middle = false;
     while (!not_in_middle) {

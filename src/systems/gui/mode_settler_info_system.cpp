@@ -4,7 +4,6 @@
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../components/health.hpp"
 #include "../../components/game_stats.hpp"
-#include "../../components/species.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/item.hpp"
 #include "../../raws/life_events.hpp"
@@ -41,7 +40,7 @@ void mode_settler_info_system::update(const double ms) {
     profile << species->gender_pronoun() << std::string(" ") << stats->charisma_str() << ". ";
     profile << species->gender_pronoun() << std::string(" ") << stats->comeliness_str() << ". ";
     profile << species->gender_pronoun() << std::string(" ") << stats->ethics_str() << ". ";
-    profile << species->gender_pronoun() << std::string(" is of ") << species->ethnicity() << std::string(" descent. ");
+    profile << species->gender_pronoun() << std::string(" has ") << species->ethnicity() << std::string(" colored skin. ");
     profile << species->gender_pronoun() << std::string(" has ") << species->hair_color_str() << std::string(" hair, ") << species->hair_style_str() << ".";
 
     ImGui::Begin(header.str().c_str());

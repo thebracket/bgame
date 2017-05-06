@@ -7,9 +7,6 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_region.hpp"
-#include <algorithm>
-#include <memory>
-#include <thread>
 
 std::vector<bool> water_stable(REGION_TILES_COUNT);
 

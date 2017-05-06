@@ -1,5 +1,4 @@
 #include "creatures.hpp"
-#include <iostream>
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 

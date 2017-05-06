@@ -7,7 +7,6 @@
 #include "game_planet.hpp"
 #include "../utils/telemetry.hpp"
 #include "menu_helper.hpp"
-#include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/worldgen_render.hpp"
 #include "../../main/game_rng.hpp"

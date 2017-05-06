@@ -1,5 +1,4 @@
 #include "lighting_system.hpp"
-#include "camera_system.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../messages/power_changed_message.hpp"

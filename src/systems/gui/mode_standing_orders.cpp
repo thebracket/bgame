@@ -1,10 +1,5 @@
 #include "mode_standing_orders.hpp"
-#include "../../messages/map_dirty_message.hpp"
-#include "../../messages/recalculate_mining_message.hpp"
-#include "../../utils/string_utils.hpp"
-#include <rltk.hpp>
 #include "../../main/game_mode.hpp"
-#include "../../main/game_designations.hpp"
 
 void mode_standing_orders::configure() {
     system_name = "Standing Orders";

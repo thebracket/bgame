@@ -1,20 +1,11 @@
 #include "panel_render_system.hpp"
-#include "../../raws/raws.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../messages/messages.hpp"
-#include "../ai/mining_system.hpp"
 #include "../ai/inventory_system.hpp"
-#include "../render/camera_system.hpp"
-#include "../../utils/string_utils.hpp"
-#include "../input/mouse_input_system.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "imgui_helper.hpp"
-#include "../../main/game_region.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_mode.hpp"
-#include <sstream>
-#include <iomanip>
-#include <map>
 
 using namespace rltk;
 using namespace rltk::colors;

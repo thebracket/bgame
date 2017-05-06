@@ -1,14 +1,12 @@
 #include <rltk.hpp>
 #include "splash_screen.hpp"
 #include "menu_helper.hpp"
-#include "constants.hpp"
 #include "../raws/raws.hpp"
 #include "game_config.hpp"
 #include <iostream>
 #include <atomic>
 #include <thread>
 #include <memory>
-#include "../systems/gui/imgui_helper.hpp"
 #include "../external/imgui-sfml/imgui-SFML.h"
 
 constexpr int LOG_LAYER=1;

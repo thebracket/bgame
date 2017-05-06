@@ -1,23 +1,16 @@
 #include "region_builder.hpp"
-#include "../../raws/raws.hpp"
 #include "../../raws/biomes.hpp"
-#include "../constants.hpp"
 #include "../planet_builder.hpp"
 #include "settler_builder.hpp"
 #include "sentient_builder.hpp"
-#include "regions/starting_point.hpp"
 #include "regions/heightmap.hpp"
 #include "regions/water_features.hpp"
 #include "regions/strata.hpp"
 #include "regions/decorators.hpp"
 #include "regions/trees.hpp"
 #include "regions/buildings.hpp"
-#include "../../raws/materials.hpp"
-#include "../../components/sentient_ai.hpp"
 #include "regions/blight_builder.hpp"
 #include "../../utils/filesystem.hpp"
-
-#include <rltk.hpp>
 
 using namespace rltk;
 

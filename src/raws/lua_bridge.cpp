@@ -1,5 +1,4 @@
 #include "lua_bridge.hpp"
-#include <iostream>
 
 lua_State* lua_state;
 

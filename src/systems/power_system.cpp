@@ -1,6 +1,5 @@
 #include "power_system.hpp"
 #include "../messages/messages.hpp"
-#include <sstream>
 #include "../components/construct_power.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_calendar.hpp"

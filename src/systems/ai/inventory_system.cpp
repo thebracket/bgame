@@ -3,13 +3,12 @@
 #include "movement_system.hpp"
 #include "../../components/item_stored.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../raws/clothing.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_building.hpp"
 #include "../../main/game_region.hpp"
+#include "../../components/ai_tags/ai_tag_work_building.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
@@ -147,8 +146,9 @@ void inventory_system::configure() {
 		}
 
 		// Remove any settler references to the building
-		each<settler_ai_t>([&msg] (entity_t &e, settler_ai_t &ai) {
-			if (ai.job_type_major == JOB_CONST && ai.has_building_target && ai.building_target.building_entity == msg.building_entity) {
+		each<ai_tag_work_building>([&msg] (entity_t &e, ai_tag_work_building &ai) {
+
+			if (ai.building_target.building_entity == msg.building_entity) {
 				for (auto &c : ai.building_target.component_ids) {
 					unclaim_by_id(c.first);
 					each<position_t, item_carried_t>([&c] (entity_t &carrier, position_t &pos, item_carried_t &carried) {
@@ -157,8 +157,7 @@ void inventory_system::configure() {
 						}
 					});
 				}
-				ai.job_type_major = JOB_IDLE;
-				ai.job_status = "Idle";
+				delete_component<ai_tag_work_building>(e.id);
 			}
 		});
 
@@ -381,18 +380,32 @@ int available_items_by_tag(const std::string &tag) {
 
 int available_items_by_reaction_input(const reaction_input_t &input) {
 	int result = 0;
+	//std::cout << "Looking for item type: " << input.tag << "\n";
 	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
-		if ((input.tag=="any" || i.item_tag == input.tag) && i.claimed == false) {
-			bool ok = true;
-			if (input.required_material != 0) {
-				if (i.material != input.required_material) ok=false;
+		//std::cout << "Evaluating " << i.item_tag << "\n";
+		if ((input.tag=="any" || i.item_tag == input.tag)) {
+			//std::cout << "Available items tag hit - " << input.tag << "\n";
+			if (i.claimed == false) {
+				bool ok = true;
+				if (input.required_material != 0) {
+					if (i.material != input.required_material) {
+						//std::cout << "Reject item by material type\n";
+						ok = false;
+					}
+				}
+				if (input.required_material_type != no_spawn_type) {
+					if (get_material(i.material)->spawn_type != input.required_material_type) {
+						//std::cout << "Reject item by spawn type\n";
+						ok = false;
+					}
+				}
+				if (ok) ++result;
+			} else {
+				//std::cout << "Reject item because it was claimed\n";
 			}
-			if (input.required_material_type != no_spawn_type) {
-				if (get_material(i.material)->spawn_type != input.required_material_type) ok = false;
-			}
-			if (ok) ++result;
 		}
 	});
+	//std::cout << "Returning available item count: " << result << "\n";
 	return result;
 }
 
@@ -407,7 +420,7 @@ std::size_t claim_item_by_tag(const std::string &tag) {
 	return result;
 }
 
-std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
+std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim) {
 	std::size_t result = 0;
 	each<item_t>([&result, &input] (entity_t &e, item_t &i) {
 		if ((input.tag == "any" || i.item_tag == input.tag) && i.claimed == false) {
@@ -421,7 +434,7 @@ std::size_t claim_item_by_reaction_input(const reaction_input_t &input) {
 			if (ok) result = e.id;
 		}
 	});
-	if (result != 0) {
+	if (result != 0 && really_claim) {
 		emit(item_claimed_message{result, true});
 	}
 	return result;
