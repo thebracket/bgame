@@ -39,7 +39,7 @@ reactions["make_simple_circuit"] = {
     name = "Make Simple Circuit",
     workshop = "mechanic",
     inputs = { { item="raw_silicon", qty=1}, { item="block", mat_type="metal", qty=1 } },
-    outputs = { { item="mechanism", qty=1 } },
+    outputs = { { item="circuit", qty=1 } },
     skill = "Mechanics",
     difficulty = 10,
     automatic = false
