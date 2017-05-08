@@ -31,7 +31,7 @@ void sanity_check_plants() noexcept
     }
 }
 
-void read_plant_types(std::ofstream &tech_tree_file) noexcept
+void read_plant_types() noexcept
 {
     plant_t p;
     std::string tag;

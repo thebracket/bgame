@@ -23,7 +23,7 @@ void sanity_check_buildings() noexcept
     }
 }
 
-void read_buildings(std::ofstream &tech_tree_file) noexcept
+void read_buildings() noexcept
 {
     lua_getglobal(lua_state, "buildings");
     lua_pushnil(lua_state);
@@ -94,7 +94,6 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                     }
 
                     c.components.push_back(comp);
-                    tech_tree_file << "item_" << comp.tag << " -> " <<  key << "\n";
                     lua_pop(lua_state, 1);
                 }
             }
@@ -225,5 +224,13 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
         building_defs[key] = c;
         std::cout << "Read schematics for building: " << key << "\n";
         lua_pop(lua_state, 1);
+    }
+}
+
+void make_building_tree(graphviz_t &tree) {
+    for (const auto &b : building_defs) {
+        for (const auto &input : b.second.components) {
+            tree.add_node(std::string("item_") + input.tag, std::string("building_") + b.second.tag );
+        }
     }
 }

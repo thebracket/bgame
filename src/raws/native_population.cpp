@@ -15,7 +15,7 @@ std::vector<native_population_t> * get_native_professions(const std::string &tag
     return nullptr;
 }
 
-void read_native_population_types(std::ofstream &tech_tree_file) noexcept {
+void read_native_population_types() noexcept {
     lua_getglobal(lua_state, "native_populations");
     lua_pushnil(lua_state);
 

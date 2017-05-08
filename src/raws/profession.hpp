@@ -24,7 +24,7 @@ struct profession_t {
 /*
  * Lua reader
  */
-void read_professions(std::ofstream &tech_tree_file) noexcept;
+void read_professions() noexcept;
 
 /*
  * Lua linter

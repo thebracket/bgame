@@ -28,4 +28,4 @@ void sanity_check_clothing() noexcept;
 /*
  * Lua loader
  */
-void read_clothing(std::ofstream &tech_tree_file) noexcept;
+void read_clothing() noexcept;

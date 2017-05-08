@@ -47,4 +47,4 @@ void sanity_check_biomes() noexcept;
 /*
  * Load the biomes from Lua
  */
-void read_biome_types(std::ofstream &tech_tree_file) noexcept;
+void read_biome_types() noexcept;

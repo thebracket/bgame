@@ -5,6 +5,7 @@
 #include <fstream>
 #include <rltk.hpp>
 #include "reaction_input.hpp"
+#include "graphviz.hpp"
 
 /*
  * Defines a material type. Used by just about everything.
@@ -60,4 +61,6 @@ void sanity_check_materials() noexcept;
 /*
  * Reads the material definitions from Lua.
  */
-void read_material_types(std::ofstream &tech_tree_file) noexcept;
+void read_material_types() noexcept;
+void build_material_tech_tree(graphviz_t &tree);
+void build_material_acquisition_tech_tree(graphviz_t &tree);

@@ -48,7 +48,7 @@ extern std::unordered_map<std::string, item_def_t> item_defs;
 extern std::unordered_map<int, stockpile_def_t> stockpile_defs;
 extern int clothing_stockpile;
 
-void read_items(std::ofstream &tech_tree_file) noexcept;
+void read_items() noexcept;
 void sanity_check_items() noexcept;
 void read_stockpiles() noexcept;
 void sanity_check_stockpiles() noexcept;

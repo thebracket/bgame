@@ -8,7 +8,7 @@
 std::unordered_map<std::string, reaction_t> reaction_defs;
 std::unordered_map<std::string, std::vector<std::string>> reaction_building_defs;
 
-void read_reactions(std::ofstream &tech_tree_file) noexcept
+void read_reactions() noexcept
 {
     lua_getglobal(lua_state, "reactions");
     lua_pushnil(lua_state);
@@ -118,12 +118,6 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
         }
         reaction_defs[key] = c;
         reaction_building_defs[c.workshop].push_back(key);
-        for (const auto &input : c.inputs) {
-            tech_tree_file << "item_" << input.tag << " -> " << c.workshop << "\n";
-        }
-        for (const auto &output : c.outputs) {
-            tech_tree_file << c.workshop << " -> item_" << output.first << "\n";
-        }
 
         lua_pop(lua_state, 1);
     }
@@ -146,6 +140,18 @@ void sanity_check_reactions() noexcept
             auto finder = item_defs.find(output.first);
             auto finder2 = get_clothing_by_tag(output.first);
             if (finder == item_defs.end() && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+        }
+    }
+}
+
+void build_reaction_tree(graphviz_t &tree) {
+    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
+        tree.add_node(std::string("building_") + it->second.workshop, it->second.tag, graphviz_t::graphviz_shape_t::HOUSE);
+        for (const auto &input : it->second.inputs) {
+            tree.add_node(std::string("item_") + input.tag, it->second.tag);
+        }
+        for (const auto &output : it->second.outputs) {
+            tree.add_node(it->second.tag, std::string("item_") + output.first, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
         }
     }
 }

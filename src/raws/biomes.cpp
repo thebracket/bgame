@@ -37,7 +37,7 @@ void sanity_check_biomes() noexcept
     }
 }
 
-void read_biome_types(std::ofstream &tech_tree_file) noexcept
+void read_biome_types() noexcept
 {
     lua_getglobal(lua_state, "biomes");
     lua_pushnil(lua_state);

@@ -61,4 +61,4 @@ void sanity_check_creatures() noexcept;
 /*
  * Read creatures from Lua.
  */
-void read_creature_types(std::ofstream &tech_tree_file) noexcept;
+void read_creature_types() noexcept;

@@ -90,7 +90,7 @@ void sanity_check_materials() noexcept
 /*
  * Loads the material definitions from Lua.
  */
-void read_material_types(std::ofstream &tech_tree_file) noexcept
+void read_material_types() noexcept
 {
     lua_getglobal(lua_state, "materials");
     lua_pushnil(lua_state);
@@ -160,10 +160,6 @@ void read_material_types(std::ofstream &tech_tree_file) noexcept
             lua_pop(lua_state, 1);
         }
         material_defs.push_back(m);
-        if (m.mines_to_tag.size() > 1)
-            tech_tree_file << key << " -> mining -> item_" << m.mines_to_tag << "\n";
-        if (m.mines_to_tag_second.size() > 1)
-            tech_tree_file << key << " -> mining -> item_" << m.mines_to_tag_second << "\n";
 
         lua_pop(lua_state, 1);
     }
@@ -176,3 +172,33 @@ void read_material_types(std::ofstream &tech_tree_file) noexcept
     }
 }
 
+void build_material_acquisition_tech_tree(graphviz_t &tree) {
+    tree.add_trees();
+    for (const auto &mat : material_defs) {
+        switch (mat.spawn_type) {
+            case no_spawn_type : tree.add_node("None", mat.tag); break;
+            case cluster_rock : tree.add_node("Cluster Rock", mat.tag); break;
+            case rock : tree.add_node("Rock", mat.tag); break;
+            case soil : tree.add_node("Soil", mat.tag); break;
+            case sand : tree.add_node("Sand", mat.tag); break;
+            case metal : tree.add_node("Metal", mat.tag); break;
+            case synthetic : tree.add_node("Synthetic", mat.tag); break;
+            case organic : tree.add_node("Organic", mat.tag); break;
+            case leather : tree.add_node("Leather", mat.tag); break;
+            case food : tree.add_node("Food", mat.tag); break;
+            case spice : tree.add_node("Spice", mat.tag); break;
+            case blight : tree.add_node("Blight", mat.tag); break;
+        }
+    }
+}
+
+void build_material_tech_tree(graphviz_t &tree) {
+    /*for (const auto &mat : material_defs) {
+        if (mat.mines_to_tag != "") {
+            tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag);
+        }
+        if (mat.mines_to_tag_second != "") {
+            tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag_second);
+        }
+    }*/
+}

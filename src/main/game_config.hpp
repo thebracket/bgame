@@ -16,6 +16,7 @@ struct config_t {
 	bool allow_calling_home = true;
     std::string online_username = "anonymouse";
     bool show_entity_ids = true;
+	bool build_tech_trees = false;
 
     void save();
 };

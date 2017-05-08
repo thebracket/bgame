@@ -28,7 +28,7 @@ struct life_event_template {
 /*
  * Read Lua definitions.
  */
-void read_life_events(std::ofstream &tech_tree_file) noexcept;
+void read_life_events() noexcept;
 
 /*
  * TODO: Make this non-global!

@@ -3,7 +3,7 @@
 
 std::unordered_map<std::string, life_event_template> life_event_defs;
 
-void read_life_events(std::ofstream &tech_tree_file) noexcept
+void read_life_events() noexcept
 {
     std::string tag = "";
     life_event_template le;

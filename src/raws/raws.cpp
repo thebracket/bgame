@@ -15,6 +15,8 @@
 #include "buildings.hpp"
 #include "reactions.hpp"
 #include "../systems/ai/movement_system.hpp"
+#include "graphviz.hpp"
+#include "../main/game_config.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -33,29 +35,45 @@ void sanity_check_raws() {
     sanity_check_stockpiles();
 }
 
-void load_game_tables() {
-    std::ofstream tech_tree_file("tech_tree.gv");
-    tech_tree_file << "digraph G {\n";
-    tech_tree_file << "\"cut trees\" -> wood_logs\n";
+void build_tech_tree_files() {
+    std::cout << "Building DOT files\n";
 
-    read_material_types(tech_tree_file);
-    read_clothing(tech_tree_file);
-    read_life_events(tech_tree_file);
-    read_professions(tech_tree_file);
+    graphviz_t mats("material_tree.gv");
+    build_material_acquisition_tech_tree(mats);
+
+    graphviz_t master("tech_tree.gv");
+    build_material_tech_tree(master);
+    build_reaction_tree(master);
+    make_building_tree(master);
+
+    std::ofstream script(get_save_path() + std::string("/build-tech-tree.sh"));
+    script << "#!/bin/bash\n";
+    script << "dot -Tpng material_tree.gv -o material_tree.png\n";
+    script << "dot -Tpng tech_tree.gv -o tech_tree.png\n";
+    script.close();
+}
+
+void load_game_tables()
+{
+    read_material_types();
+    read_clothing();
+    read_life_events();
+    read_professions();
     read_stockpiles();
-    read_items(tech_tree_file);
-    read_buildings(tech_tree_file);
-    read_reactions(tech_tree_file);
-    read_plant_types(tech_tree_file);
-    read_biome_types(tech_tree_file);
-    read_species_types(tech_tree_file);
-    read_creature_types(tech_tree_file);
-    read_native_population_types(tech_tree_file);
-
-    tech_tree_file << "}\n";
-    tech_tree_file.close();
+    read_items();
+    read_buildings();
+    read_reactions();
+    read_plant_types();
+    read_biome_types();
+    read_species_types();
+    read_creature_types();
+    read_native_population_types();
 
     sanity_check_raws();
+
+    if (game_config.build_tech_trees) {
+        build_tech_tree_files();
+    }
 }
 
 void load_raws() {

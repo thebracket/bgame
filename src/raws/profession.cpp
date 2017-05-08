@@ -18,7 +18,7 @@ void sanity_check_professions() noexcept
     }
 }
 
-void read_professions(std::ofstream &tech_tree_file) noexcept
+void read_professions() noexcept
 {
 
     std::string tag;

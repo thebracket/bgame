@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "reaction_input.hpp"
+#include "graphviz.hpp"
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door,
     provides_wall, provides_floor, provides_stairs_up, provides_stairs_down, provides_stairs_updown,
@@ -33,5 +34,6 @@ struct building_def_t {
 
 extern std::unordered_map<std::string, building_def_t> building_defs;
 
-void read_buildings(std::ofstream &tech_tree_file) noexcept;
+void read_buildings() noexcept;
 void sanity_check_buildings() noexcept;
+void make_building_tree(graphviz_t &tree);

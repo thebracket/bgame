@@ -33,7 +33,7 @@ std::vector<native_population_t> * get_native_professions(const std::string &tag
 /*
  * Load the natives from Lua
  */
-void read_native_population_types(std::ofstream &tech_tree_file) noexcept;
+void read_native_population_types() noexcept;
 
 /*
  * Sanity check - used in raw loading linter.

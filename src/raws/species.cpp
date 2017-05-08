@@ -181,7 +181,7 @@ void read_civ_types() noexcept
     }
 }
 
-void read_species_types(std::ofstream &tech_tree_file) noexcept
+void read_species_types() noexcept
 {
     lua_getglobal(lua_state, "species_sentient");
     lua_pushnil(lua_state);

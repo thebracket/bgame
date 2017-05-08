@@ -25,7 +25,7 @@ void sanity_check_creatures() noexcept
     }
 }
 
-void read_creature_types(std::ofstream &tech_tree_file) noexcept
+void read_creature_types() noexcept
 {
     lua_getglobal(lua_state, "creatures");
     lua_pushnil(lua_state);

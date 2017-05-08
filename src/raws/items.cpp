@@ -14,7 +14,7 @@ void sanity_check_items() noexcept
     }
 }
 
-void read_items(std::ofstream &tech_tree_file) noexcept
+void read_items() noexcept
 {
 
     std::string tag;

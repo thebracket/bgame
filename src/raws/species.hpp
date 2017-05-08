@@ -121,6 +121,6 @@ void sanity_check_species() noexcept ;
 /*
  * Lua loader, used in raws loader.
  */
-void read_species_types(std::ofstream &tech_tree_file) noexcept;
+void read_species_types() noexcept;
 
 extern std::unordered_map<std::string, civilization_t> civ_defs;

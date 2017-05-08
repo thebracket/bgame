@@ -45,4 +45,4 @@ void sanity_check_plants() noexcept;
 /*
  * Load plant definitions from Lua
  */
-void read_plant_types(std::ofstream &tech_tree_file) noexcept;
+void read_plant_types() noexcept;
