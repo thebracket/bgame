@@ -146,6 +146,26 @@ reactions["make_simple_lathe"] = {
     automatic = false
 };
 
+reactions["make_shortbow"] = {
+    name = "Make Shortbow",
+    workshop = "primitive_workshop",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="shortbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 15,
+    automatic = false
+};
+
+reactions["make_composite_shortbow"] = {
+    name = "Make Composite Shortbow",
+    workshop = "primitive_workshop",
+    inputs = { { item="block", qty=1, material="wood" }, { item="bone", qty=1 } },
+    outputs = { { item="composite_shortbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 17,
+    automatic = false
+};
+
 ------------------------------------------------------------------------------------------------------------------------
 -- Intermediate workshops are used for the crafting of intricate items, up to the renaissance era.
 ------------------------------------------------------------------------------------------------------------------------
@@ -170,5 +190,65 @@ buildings["intermediate_workshop"] = {
             {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
         }
     },
+};
+
+reactions["make_heavy_crossbow"] = {
+    name = "Make Heavy Crossbow",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="heavy_crossbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 19,
+    automatic = false
+};
+
+reactions["make_light_crossbow"] = {
+    name = "Make Light Crossbow",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="light_crossbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_repeating_crossbow"] = {
+    name = "Make Repeating Crossbow",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="wood" }, { item="mechanism", qty=1 } },
+    outputs = { { item="repeating_crossbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_longbow"] = {
+    name = "Make Longbow",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="longbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_composite_longbow"] = {
+    name = "Make Composite Longbow",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="wood" }, { item="bone", qty=1 } },
+    outputs = { { item="composite_longbow", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 19,
+    automatic = false
+};
+
+reactions["make_quarrel"] = {
+    name = "Make Quarrel",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="quarrel", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 12,
+    automatic = false
 };
 

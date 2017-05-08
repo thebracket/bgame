@@ -135,6 +135,16 @@ reactions["make_atlatl"] = {
     automatic = false
 };
 
+reactions["make_blowgun"] = {
+    name = "Make Blowgun",
+    workshop = "carpenter",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="blowgun", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 15,
+    automatic = false
+};
+
 reactions["make_wood_dart"] = {
     name = "Make Wooden Dart",
     workshop = "carpenter",
