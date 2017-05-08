@@ -1,6 +1,8 @@
 -- This file defines melee weapons
 -----------------------------------------------------------------------------------------------------------------
 
+-- Clubs - simple items with which one bashes things
+
 items["club"] = {
     name = "Club",
     description = "A simple club",
@@ -12,6 +14,94 @@ items["club"] = {
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
     stockpile = stockpiles['weapon'].id
 };
+
+items["spiked_club"] = {
+    name = "Board With Nail",
+    description = "A large board with a nail through it",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=4, damage_mod=2, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["greatclub"] = {
+    name = "Huge Club",
+    description = "A simple club, but REALLY BIG",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+-- Maces and flails - basically refined clubs
+
+items["mace_light"] = {
+    name = "Light Mace",
+    description = "A lightweight mace, designed for bashing things",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["mace_heavy"] = {
+    name = "Heavy Mace",
+    description = "A weighted mace, designed for bashing things",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["morningstar"] = {
+    name = "Morningstar",
+    description = "A spiked ball on the end of a handle.",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["flail_light"] = {
+    name = "Light Flail",
+    description = "A wooden handle, with balls on chains mounted on it.",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["flail_heavy"] = {
+    name = "Heavy Flail",
+    description = "A metal handle, with balls on chains mounted on it.",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+-- Spear types
 
 items["pointy_stick"] = {
     name = "Pointy Stick",
@@ -25,9 +115,71 @@ items["pointy_stick"] = {
     stockpile = stockpiles['weapon'].id
 };
 
-items["warhammer"] = {
-    name = "Warhammer",
-    description = "A heavy hammer design for bashing people",
+items["quarterstaff"] = {
+    name = "Quarterstaff",
+    description = "A rounded walking stick, useful for hitting things",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["short_spear"] = {
+    name = "Short Spear",
+    description = "A short length of wood with a spike on the end",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["long_spear"] = {
+    name = "Long Spear",
+    description = "A length of wood with a spike on the end",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["boar_spear"] = {
+    name = "Boar Spear",
+    description = "A spiked length of wood with a large cross-guard",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=2, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["trident"] = {
+    name = "Trident",
+    description = "A three-pronged metal spear",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+-- Hammertime
+
+items["light_warhammer"] = {
+    name = "Light Warhammer",
+    description = "A light hammer design for bashing people",
     itemtype = {"weapon-melee"},
     glyph = glyphs['axe'],
     glyph_ascii = glyphs['paragraph'],
@@ -36,6 +188,32 @@ items["warhammer"] = {
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
     stockpile = stockpiles['weapon'].id
 };
+
+items["warhammer"] = {
+    name = "Warhammer",
+    description = "A heavy hammer design for bashing people",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+items["hooked_warhammer"] = {
+    name = "Hooked Warhammer",
+    description = "A heavy hammer design for bashing people, with extra spikes",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
+    stockpile = stockpiles['weapon'].id
+};
+
+-- Axe variants for chopping in various ways
 
 items["battleaxe"] = {
     name = "Battle Axe",
@@ -46,6 +224,30 @@ items["battleaxe"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 6,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["greataxe"] = {
+    name = "Great Axe",
+    description = "A REALLY big axe, designed for chopping people rather than trees",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["double_axe"] = {
+    name = "Double-Bladed Axe",
+    description = "A REALLY big axe, with two cutting edges, for when you really need to look barbaric",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=10, damage_mod=2, damage_stat="str", initiative_penalty = 6,
     stockpile = stockpiles['weapon'].id
 };
 
@@ -61,6 +263,8 @@ items["handaxe"] = {
     stockpile = stockpiles['weapon'].id
 };
 
+-- Swords
+
 items["shortsword"] = {
     name = "Short Sword",
     description = "A short sword, designed for thrusting",
@@ -70,6 +274,18 @@ items["shortsword"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["sickle"] = {
+    name = "Sickle",
+    description = "An agricultural implement ideally suited to removing fingers",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=6, damage_mod=1, damage_stat="str", initiative_penalty = 5,
     stockpile = stockpiles['weapon'].id
 };
 
@@ -84,6 +300,92 @@ items["longsword"] = {
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5,
     stockpile = stockpiles['weapon'].id
 };
+
+items["scimitar"] = {
+    name = "Scimitar",
+    description = "A long sword, surprisingly bendy",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["rapier"] = {
+    name = "Rapier",
+    description = "A long, thin, sword used for making holes",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["sabre"] = {
+    name = "Sabre",
+    description = "A large sword optimized for quick slashing",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 2,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["cutlass"] = {
+    name = "Cutlass",
+    description = "A heavy sword used for bashing",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=2, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["falchion"] = {
+    name = "Falchion",
+    description = "A heavy sword used for slashing",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=2, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["bastard_sword"] = {
+    name = "Bastard Sword",
+    description = "A sword that can be used with one or two hands.",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=8, damage_mod=2, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["greatsword"] = {
+    name = "Greatsword",
+    description = "A REALLY BIG sword, for when you absolutely have to slash everyone in the room.",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['bismuth_yellow'],
+    background = colors['black'],
+    damage_n=1, damage_d=10, damage_mod=2, damage_stat="str", initiative_penalty = 7,
+    stockpile = stockpiles['weapon'].id
+};
+
+-- Knives and Daggers
 
 items["knife"] = {
     name = "Knife",
@@ -106,5 +408,67 @@ items["dagger"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 2,
+    stockpile = stockpiles['weapon']
+};
+
+items["punching_dagger"] = {
+    name = "Punching Dagger",
+    description = "A dagger designed to fit in your hand like brass knuckles, but make your punch really hurt",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=4, damage_mod=2, damage_stat="str", initiative_penalty = 2,
+    stockpile = stockpiles['weapon']
+};
+
+items["kukri"] = {
+    name = "Kukri",
+    description = "A dagger with an inwardly curving blade",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=4, damage_mod=1, damage_stat="str", initiative_penalty = 2,
+    stockpile = stockpiles['weapon']
+};
+
+-- Polearms
+
+items["glaive"] = {
+    name = "Glaive",
+    description = "A wicked-looking sword on a stick",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=10, damage_mod=1, damage_stat="str", initiative_penalty = 5,
+    stockpile = stockpiles['weapon']
+};
+
+items["guisarm"] = {
+    name = "Guisarm",
+    description = "A hooked agricultural implement, on a stick",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=2, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6,
+    stockpile = stockpiles['weapon']
+};
+
+items["halberd"] = {
+    name = "Halberd",
+    description = "A big axe, on a stick",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
     stockpile = stockpiles['weapon']
 };

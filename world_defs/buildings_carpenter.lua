@@ -85,6 +85,26 @@ reactions["make_wooden_club"] = {
     automatic = false
 };
 
+reactions["make_great_club"] = {
+    name = "Make HUGE Wooden Club",
+    workshop = "carpenter",
+    inputs = { { item="block", qty=2, material="wood" } },
+    outputs = { { item="greatclub", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 12,
+    automatic = false
+};
+
+reactions["make_spiked_club"] = {
+    name = "Make Board with Nail",
+    workshop = "carpenter",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, material="metal" } },
+    outputs = { { item="club", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 10,
+    automatic = false
+};
+
 reactions["make_pointy_stick"] = {
     name = "Make Wooden Pointy Stick",
     workshop = "carpenter",
@@ -92,6 +112,16 @@ reactions["make_pointy_stick"] = {
     outputs = { { item="pointy_stick", qty=1 } },
     skill = "Carpentry",
     difficulty = 7,
+    automatic = false
+};
+
+reactions["make_quarterstaff"] = {
+    name = "Make Wooden Pointy Stick",
+    workshop = "carpenter",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="quarterstaff", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 8,
     automatic = false
 };
 

@@ -86,6 +86,26 @@ reactions["make_metal_hammer"] = {
     automatic = false
 };
 
+reactions["make_light_metal_hammer"] = {
+    name = "Make Light Metal Warhammer",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="light_warhammer", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_hooked_warhammer"] = {
+    name = "Make Hooked Warhammer",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="hooked_warhammer", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
 reactions["make_metal_battleaxe"] = {
     name = "Make Metal Battleaxe",
     workshop = "primitive_forge",
@@ -93,6 +113,26 @@ reactions["make_metal_battleaxe"] = {
     outputs = { { item="battleaxe", qty=1 } },
     skill = "Metalworking",
     difficulty = 12,
+    automatic = false
+};
+
+reactions["make_metal_greataxe"] = {
+    name = "Make Metal Greataxe",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="greataxe", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_metal_doubleaxe"] = {
+    name = "Make Metal Double-Bladed Axe",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="double_axe", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 19,
     automatic = false
 };
 
@@ -126,6 +166,26 @@ reactions["make_metal_dagger"] = {
     automatic = false
 };
 
+reactions["make_metal_kukri"] = {
+    name = "Make Metal Kukri",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="kukri", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 14,
+    automatic = false
+};
+
+reactions["make_metal_punching_dagger"] = {
+    name = "Make Metal Punching Dagger",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="punching_dagger", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 14,
+    automatic = false
+};
+
 reactions["make_metal_knife"] = {
     name = "Make Metal Knife",
     workshop = "primitive_forge",
@@ -146,11 +206,11 @@ reactions["make_metal_shortsword"] = {
     automatic = false
 };
 
-reactions["make_metal_longsword"] = {
-    name = "Make Longsword",
+reactions["make_metal_sickle"] = {
+    name = "Make Sickle",
     workshop = "primitive_forge",
-    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
-    outputs = { { item="longsword", qty=1 } },
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="sickle", qty=1 } },
     skill = "Metalworking",
     difficulty = 16,
     automatic = false
@@ -181,3 +241,205 @@ buildings["intermediate_forge"] = {
         }
     },
 };
+
+reactions["make_light_mace"] = {
+    name = "Make Light Mace",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="mace_light", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_heavy_mace"] = {
+    name = "Make Heavy Mace",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="mace_heavy", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_morningstar"] = {
+    name = "Make Morningstar",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="morningstar", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_light_flail"] = {
+    name = "Make Light Flail",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="morningstar", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_heavy_flail"] = {
+    name = "Make Heavy Flail",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="flail_heavy", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_short_spear"] = {
+    name = "Make Short Spear",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="short_spear", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 12,
+    automatic = false
+};
+
+reactions["make_long_spear"] = {
+    name = "Make Long Spear",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="long_spear", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 14,
+    automatic = false
+};
+
+reactions["make_boar_spear"] = {
+    name = "Make Boar Spear",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="boar_spear", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_trident"] = {
+    name = "Make Trident",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="trident", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_metal_longsword"] = {
+    name = "Make Longsword",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="longsword", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_metal_scimitar"] = {
+    name = "Make Scimitar",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="scimitar", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_metal_rapier"] = {
+    name = "Make Rapier",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="rapier", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_metal_sabre"] = {
+    name = "Make Sabre",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="sabre", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_metal_cutlass"] = {
+    name = "Make Cutlass",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="cutlass", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_metal_falchion"] = {
+    name = "Make Falchion",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="falchion", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_metal_greatsword"] = {
+    name = "Make Greatsword",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="greatsword", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 18,
+    automatic = false
+};
+
+reactions["make_metal_bastard_sword"] = {
+    name = "Make Bastard Sword",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="bastard_sword", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_metal_glaive"] = {
+    name = "Make Glaive",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="glaive", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_metal_guisarm"] = {
+    name = "Make Guisarm",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="guisarm", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 14,
+    automatic = false
+};
+
+reactions["make_metal_halberd"] = {
+    name = "Make Halberd",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="halberd", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 19,
+    automatic = false
+};
+
+

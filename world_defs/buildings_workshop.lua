@@ -26,6 +26,16 @@ buildings["primitive_workshop"] = {
     },
 };
 
+reactions["make_light_stone_hammer"] = {
+    name = "Make Light Stone Warhammer",
+    workshop = "primitive_workshop",
+    inputs = { { item="block", qty=1, mat_type="rock" } },
+    outputs = { { item="light_warhammer", qty=1 } },
+    skill = "Masonry",
+    difficulty = 10,
+    automatic = false
+};
+
 reactions["make_stone_hammer"] = {
     name = "Make Stone Warhammer",
     workshop = "primitive_workshop",
