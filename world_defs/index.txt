@@ -30,6 +30,7 @@ reactions_base.lua
 buildings.lua
 buildings_bone.lua
 buildings_carpenter.lua
+buildings_chemist.lua
 buildings_clothier.lua
 buildings_mason.lua
 buildings_forge.lua

@@ -182,3 +182,36 @@ items["tar"] = {
     background = colors['black'],
     stockpile = stockpiles['component'].id
 };
+
+items["black_powder"] = {
+    name = "Black Powder",
+    description = "An oxidizing powder, useful for making things explode.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["nitric_acid"] = {
+    name = "Nitric Acid",
+    description = "A corrosive liquid, often used in the creation of explosives and fertilizers.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["dynamite_raw"] = {
+    name = "Raw Dynamite",
+    description = "Dynamite clay, ready to be shaped into an explosive.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};

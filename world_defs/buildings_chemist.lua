@@ -1,0 +1,56 @@
+-- Chemistry facilities
+
+------------------------------------------------------------------------------------------------------------------------
+-- Simple chemists handle early chemistry tasks
+------------------------------------------------------------------------------------------------------------------------
+buildings["simple_chemist"] = {
+    name = "Simple Chemistry Workshop",
+    components = { { item="block", qty=1 }, { item="raw_glass", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['carpenter_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['carpenter_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['carpenter_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['carpenter_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
+        }
+    },
+};
+
+reactions["make_black_powder"] = {
+    name = "Make Black Powder",
+    workshop = "simple_chemist",
+    inputs = { { item="sulphur", qty=1 }, { item="saltpeter_ore", qty=1 } },
+    outputs = { { item="black_powder", qty=1 } },
+    skill = "Chemistry",
+    difficulty = 15,
+    automatic = false
+};
+
+reactions["make_nitric_acid"] = {
+    name = "Make Nitric Acid",
+    workshop = "simple_chemist",
+    inputs = { { item="sulphur", qty=1 }, { item="saltpeter_ore", qty=1 } },
+    outputs = { { item="nitric_acid", qty=1 } },
+    skill = "Chemistry",
+    difficulty = 15,
+    automatic = false
+};
+
+reactions["make_raw_dynamite"] = {
+    name = "Make Raw Dynamite",
+    workshop = "simple_chemist",
+    inputs = { { item="sulphur", qty=1 }, { item="nitric_acid", qty=1 } },
+    outputs = { { item="raw_dynamite", qty=1 } },
+    skill = "Chemistry",
+    difficulty = 15,
+    automatic = false
+};

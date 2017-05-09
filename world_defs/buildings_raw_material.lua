@@ -354,7 +354,7 @@ buildings["oil_refinery"] = {
 
 reactions["refine_oil"] = {
     name = "Refine Oil",
-    workshop = "loom",
+    workshop = "oil_refinery",
     inputs = { { item="oil", qty=1 }, { item="block", qty=1 } },
     outputs = {
         { item="liquified_petroleum_gas", qty=4 },
