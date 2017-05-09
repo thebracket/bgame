@@ -262,6 +262,96 @@ reactions["make_quarrel"] = {
     automatic = false
 };
 
+reactions["make_firelance_tube"] = {
+    name = "Make Firelance Tube",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="mechanism", qty=1 } },
+    outputs = { { item="firelance_tube", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_firelance_spike"] = {
+    name = "Make Firelance Spike",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, mat_type="metal" }, { item="black_powder", qty=1 }, { item="flint", qty=1 } },
+    outputs = { { item="firelance_spike", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_handcannon"] = {
+    name = "Make Hand Cannon",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="mechanism", qty=1 }, { item="flint", qty=1 } },
+    outputs = { { item="handcannon", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_musket"] = {
+    name = "Make Musket",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="musket_cast", qty=1 }, { item="flint", qty=1 } },
+    outputs = { { item="musket", qty=2 }, { item="musket_cast", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_flintlock_pistol"] = {
+    name = "Make Flintlock Pistol",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="mechanism", qty=1 }, { item="flint", qty=1 } },
+    outputs = { { item="flintlock_pistol", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
+reactions["make_wheelock_pistol"] = {
+    name = "Make Wheelock Pistol",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="mechanism", qty=2 }, { item="flint", qty=2 } },
+    outputs = { { item="wheel_lock_pistol", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_flintlock_shotgun"] = {
+    name = "Make Flintlock Shotgun",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="mechanism", qty=1 }, { item="flint", qty=1 } },
+    outputs = { { item="flintlock_shotgun", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_blunderbuss"] = {
+    name = "Make Blunderbuss",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, material="metal" }, { item="mechanism", qty=1 } },
+    outputs = { { item="flintlock_shotgun", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_shot_wadding"] = {
+    name = "Make Shot and Wadding",
+    workshop = "intermediate_workshop",
+    inputs = { { item="block", qty=1, mat_type="metal" }, { item="black_powder", qty=1 }, { item="cloth", qty=1 } },
+    outputs = { { item="shot_wadding", qty=2 } },
+    skill = "Metalworking",
+    difficulty = 16,
+    automatic = false
+};
+
 ------------------------------------------------------------------------------------------------------------------------
 -- Factories are used for the crafting of modern items
 ------------------------------------------------------------------------------------------------------------------------

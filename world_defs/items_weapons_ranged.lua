@@ -175,6 +175,116 @@ items["quarrel"] = {
     stockpile = stockpiles['ammo'].id
 };
 
+-- Primitive Firearms
+
+items["firelance_tube"] = {
+    name = "Firelance",
+    description = "A metal tube, into which one places a firelance spike, lights the fuse, and hopes for the best",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=2, damage_stat="dex", range=8, ammo="firelance_spike", initiative_penalty = 20,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["firelance_spike"] = {
+    name = "Firelance Spike",
+    description = "A serrated spike, designed to be launched from a firelance",
+    itemtype = {"ammo"},
+    glyph = glyphs['greater_than_equal'],
+    glyph_ascii = glyphs['greater_than_equal'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_n=2, damage_d=8, damage_mod=0, stack_size=20, ammo="firelance_spike",
+    stockpile = stockpiles['ammo'].id
+};
+
+items["handcannon"] = {
+    name = "Hand Cannon",
+    description = "A metal tube, into which one places shot and wadding, aim and hope for the best",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=2, damage_stat="dex", range=8, ammo="shot_wadding", initiative_penalty = 20,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["musket"] = {
+    name = "Musket",
+    description = "A muzzle-loaded, flintlock musket",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=4, damage_stat="dex", range=8, ammo="shot_wadding", initiative_penalty = 10,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["flintlock_pistol"] = {
+    name = "Flintlock Pistol",
+    description = "A flintlock pistol",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=2, damage_stat="dex", range=6, ammo="shot_wadding", initiative_penalty = 8,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["wheel_lock_pistol"] = {
+    name = "Wheelock Pistol",
+    description = "A wheelock pistol",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=2, damage_stat="dex", range=6, ammo="shot_wadding", initiative_penalty = 4,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["flintlock_shotgun"] = {
+    name = "Flintlock Shotgun",
+    description = "A flintlock shotgun",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=20, damage_stat="dex", range=4, ammo="shot_wadding", initiative_penalty = 8,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["blunderbuss"] = {
+    name = "Blunderbuss",
+    description = "A blunderbuss",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=20, damage_stat="dex", range=3, ammo="shot_wadding", initiative_penalty = 8,
+    stockpile = stockpiles['weapon'].id
+};
+
+items["shot_wadding"] = {
+    name = "Shot and Wadding",
+    description = "A metal ball, piece of cloth, and accompanying load of black powder",
+    itemtype = {"ammo"},
+    glyph = glyphs['greater_than_equal'],
+    glyph_ascii = glyphs['greater_than_equal'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_n=2, damage_d=8, damage_mod=0, stack_size=20, ammo="shot_wadding",
+    stockpile = stockpiles['ammo'].id
+};
+
 -- Future Ranged Weapons
 
 items["ray_pistol"] = {

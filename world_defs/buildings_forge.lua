@@ -442,6 +442,16 @@ reactions["make_metal_halberd"] = {
     automatic = false
 };
 
+reactions["make_musket_cast"] = {
+    name = "Make Musket Cast",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="metal" }  },
+    outputs = { { item="musket_cast", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
 ------------------------------------------------------------------------------------------------------------------------
 -- Foundries are used for the construction of modern metal items
 ------------------------------------------------------------------------------------------------------------------------

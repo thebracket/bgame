@@ -215,3 +215,14 @@ items["dynamite_raw"] = {
     background = colors['black'],
     stockpile = stockpiles['component'].id
 };
+
+items["musket_cast"] = {
+    name = "Musket Cast",
+    description = "A cast for mass-production of muskets",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
