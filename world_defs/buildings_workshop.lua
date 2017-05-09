@@ -262,3 +262,28 @@ reactions["make_quarrel"] = {
     automatic = false
 };
 
+------------------------------------------------------------------------------------------------------------------------
+-- Factories are used for the crafting of modern items
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["factory"] = {
+    name = "Factory",
+    components = { { item="block", qty=1 }, { item="simple_lathe", qty=1 }, { item="tool_and_die", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['workshop_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+};

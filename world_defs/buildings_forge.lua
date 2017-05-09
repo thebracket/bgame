@@ -442,4 +442,38 @@ reactions["make_metal_halberd"] = {
     automatic = false
 };
 
+------------------------------------------------------------------------------------------------------------------------
+-- Foundries are used for the construction of modern metal items
+------------------------------------------------------------------------------------------------------------------------
 
+buildings["foundry"] = {
+    name = "Foundry",
+    components = { { item="block", qty=1, mat_type="rock" }, { item="simple_lathe", qty=1 }, { item="tool_and_die", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['forge_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['forge_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['grey'], background = colors['black']},
+            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['black']}
+        }
+    },
+};
+
+reactions["make_oil_separation_tank"] = {
+    name = "Make Oil Separation Tank",
+    workshop = "foundry",
+    inputs = { { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="oil_separation_tank", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};

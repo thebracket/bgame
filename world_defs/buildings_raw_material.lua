@@ -326,3 +326,48 @@ reactions["weave_thread_kenaf"] = {
     difficulty = 10,
     automatic = true
 };
+
+------------------------------------------------------------------------------------------------------------------------
+-- Oil refineries take oil as input, let it settle, and produce various oil byproducts
+------------------------------------------------------------------------------------------------------------------------
+buildings["oil_refinery"] = {
+    name = "Oil Refinery",
+    components = { { item="block", qty=1 }, { item="tool_and_die", qty=1 }, { item="oil_separation_tank", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['stonecutter_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['stonecutter_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['stonecutter_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['stonecutter_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+};
+
+reactions["refine_oil"] = {
+    name = "Refine Oil",
+    workshop = "loom",
+    inputs = { { item="oil", qty=1 }, { item="block", qty=1 } },
+    outputs = {
+        { item="liquified_petroleum_gas", qty=4 },
+        { item="gasolene_fuel", qty=4 },
+        { item="naptha", qty=4 },
+        { item="lubricating_oil", qty=4 },
+        { item="paraffin_wax", qty=4 },
+        { item="tar", qty=4 },
+        { item="charcoal", qty=1 },
+        { item="sulphur", qty=4 }
+    },
+    skill = "Weaving",
+    difficulty = 10,
+    automatic = true,
+    power_drain = 20
+};

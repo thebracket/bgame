@@ -23,6 +23,28 @@ items["simple_lathe"] = {
     stockpile = stockpiles['component'].id
 };
 
+items["tool_and_die"] = {
+    name = "Tool and Die Template",
+    description = "A tool-and-die template required for the construction of advanced forges and workshops.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["oil_separation_tank"] = {
+    name = "Oil Separation Tank",
+    description = "A large metal tank stratified with extraction systems at various levels.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
 items["hay"] = {
     name="Hay",
     description = "Dried grass, suitable for animal fodder",
@@ -93,4 +115,70 @@ items["reed_paper"] = {
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
     stockpile=stockpiles['thread']
+};
+
+items["liquified_petroleum_gas"] = {
+    name = "LPG",
+    description = "Liquified Petroleum Gas.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["gasolene_fuel"] = {
+    name = "Gasolene",
+    description = "Gasolene Fuel",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["naptha"] = {
+    name = "Naptha",
+    description = "Highly flammable hydrocarbon liquid",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["lubricating_oil"] = {
+    name = "Lubricating Oil",
+    description = "Oil, suitable for keeping machines running",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["paraffin_wax"] = {
+    name = "Paraffin Wax",
+    description = "A plastic wax (flammable), a precursor to most plastics.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
+items["tar"] = {
+    name = "Tar",
+    description = "Thick, oily tar. Ideal for burning invaders, or building roads.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
 };
