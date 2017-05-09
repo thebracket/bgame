@@ -46,10 +46,14 @@ void build_tech_tree_files() {
     build_reaction_tree(master);
     make_building_tree(master);
 
+    graphviz_t civs("civ_tree.gv");
+    make_civ_tree(civs);
+
     std::ofstream script(get_save_path() + std::string("/build-tech-tree.sh"));
     script << "#!/bin/bash\n";
     script << "dot -Tpng material_tree.gv -o material_tree.png\n";
     script << "dot -Tpng tech_tree.gv -o tech_tree.png\n";
+    script << "dot -Tpng civ_tree.gv -o civ_tree.png\n";
     script.close();
 }
 

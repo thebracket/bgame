@@ -294,3 +294,24 @@ void read_species_types() noexcept
 
     read_civ_types();
 }
+
+void make_civ_tree(graphviz_t &tree) {
+    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
+        const auto species = species_defs.find(it->second.species_tag);
+        const auto species_name = species->second.tag;
+
+        // Evolutionary options
+        for (const auto &evolve : it->second.evolves_into) {
+            tree.add_node(species_name, evolve);
+        }
+
+        // Units
+        for (const auto &unit : it->second.units) {
+            tree.add_node(species_name, unit.second.tag, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
+        }
+
+        for (const auto &build : it->second.can_build) {
+            tree.add_node(species_name, build, graphviz_t::graphviz_shape_t::HOUSE);
+        }
+    }
+}

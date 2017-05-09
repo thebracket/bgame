@@ -111,7 +111,7 @@ civilizations['emmet4'] = {
             worldgen_strength = 50
         }
     },
-    evolves_into = { }
+    evolves_into = { "emmet5" }
 }
 
 function civ_name_gen_ant4(n)

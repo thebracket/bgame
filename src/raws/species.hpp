@@ -6,6 +6,7 @@
 #include <tuple>
 #include <fstream>
 #include <rltk.hpp>
+#include "graphviz.hpp"
 
 /*
  * Defines species dietary preferences
@@ -124,3 +125,5 @@ void sanity_check_species() noexcept ;
 void read_species_types() noexcept;
 
 extern std::unordered_map<std::string, civilization_t> civ_defs;
+
+void make_civ_tree(graphviz_t &tree);
