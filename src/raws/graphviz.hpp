@@ -55,7 +55,9 @@ struct graphviz_t {
     }
 
     inline void add_node(const std::string key, const std::string item, graphviz_shape_t shape = OVAL) {
-        nodes.emplace_back(graphviz_node_t{key, item, shape});
+        if (key != "item_block" && item != "item_block") {
+            nodes.emplace_back(graphviz_node_t{key, item, shape});
+        }
     }
 
 private:
