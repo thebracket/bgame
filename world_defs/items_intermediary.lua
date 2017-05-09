@@ -41,6 +41,51 @@ items["reed_thread"] = {
     stockpile=stockpiles['thread']
 };
 
+items["burlap_thread"] = {
+    name="Burlap Fiber",
+    description = "Fibers from a jute plant, often used to make sacks",
+    itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
+    glyph_ascii = glyphs['inv_exclaim'],
+    foreground=colors['white'], background=colors['black'],
+    stockpile=stockpiles['thread']
+};
+
+items["hemp_thread"] = {
+    name="Hemp Thread",
+    description = "Fibers from a hemp plant, useful for a variety of crafts",
+    itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
+    glyph_ascii = glyphs['inv_exclaim'],
+    foreground=colors['white'], background=colors['black'],
+    stockpile=stockpiles['thread']
+};
+
+items["ramie_thread"] = {
+    name="Ramie Thread",
+    description = "Fibers from a ramie plant, useful for a variety of crafts",
+    itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
+    glyph_ascii = glyphs['inv_exclaim'],
+    foreground=colors['white'], background=colors['black'],
+    stockpile=stockpiles['thread']
+};
+
+items["kenaf_thread"] = {
+    name="Ramie Thread",
+    description = "Fibers from a kenaf plant, useful for a variety of crafts",
+    itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
+    glyph_ascii = glyphs['inv_exclaim'],
+    foreground=colors['white'], background=colors['black'],
+    stockpile=stockpiles['thread']
+};
+
+items["cloth"] = {
+    name="Cloth",
+    description = "A skein of cloth",
+    itemtype = { "cloth" }, glyph = glyphs["inv_exclaim"],
+    glyph_ascii = glyphs['inv_exclaim'],
+    foreground=colors['white'], background=colors['black'],
+    stockpile=stockpiles['thread']
+};
+
 items["reed_paper"] = {
     name="Reed Papyrus",
     description = "Fibers from a reed, suitable for making paper",

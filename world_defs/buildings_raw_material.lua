@@ -257,3 +257,72 @@ reactions["bake_bricks"] = {
     automatic = true
 };
 
+------------------------------------------------------------------------------------------------------------------------
+-- Looms are used to weave thread into cloth
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["loom"] = {
+    name = "Loom",
+    components = { { item="block", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
+        }
+    },
+};
+
+reactions["weave_thread_reed"] = {
+    name = "Weave Reed Thread into Cloth",
+    workshop = "loom",
+    inputs = { { item="reed_thread", qty=1 } },
+    outputs = { { item="cloth", qty=4 } },
+    skill = "Weaving",
+    difficulty = 10,
+    automatic = true
+};
+
+reactions["weave_thread_burlap"] = {
+    name = "Weave Burlap Thread into Cloth",
+    workshop = "loom",
+    inputs = { { item="burlap_thread", qty=1 } },
+    outputs = { { item="cloth", qty=4 } },
+    skill = "Weaving",
+    difficulty = 10,
+    automatic = true
+};
+
+reactions["weave_thread_hemp"] = {
+    name = "Weave Hemp Thread into Cloth",
+    workshop = "loom",
+    inputs = { { item="hemp_thread", qty=1 } },
+    outputs = { { item="cloth", qty=4 } },
+    skill = "Weaving",
+    difficulty = 10,
+    automatic = true
+};
+
+reactions["weave_thread_ramie"] = {
+    name = "Weave Ramie Thread into Cloth",
+    workshop = "loom",
+    inputs = { { item="ramie_thread", qty=1 } },
+    outputs = { { item="cloth", qty=4 } },
+    skill = "Weaving",
+    difficulty = 10,
+    automatic = true
+};
+
+reactions["weave_thread_kenaf"] = {
+    name = "Weave Kenaf Thread into Cloth",
+    workshop = "loom",
+    inputs = { { item="kenaf_thread", qty=1 } },
+    outputs = { { item="cloth", qty=4 } },
+    skill = "Weaving",
+    difficulty = 10,
+    automatic = true
+};
