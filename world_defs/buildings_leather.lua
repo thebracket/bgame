@@ -75,3 +75,23 @@ reactions["make_leather_sandals"] = {
     difficulty = 16,
     automatic = false
 };
+
+reactions["make_combat_boots"] = {
+    name = "Make Sandals",
+    workshop = "leatherworker",
+    inputs = { { item="leather", qty=1 } },
+    outputs = { { item="combat_boots", qty=1 } },
+    skill = "Leatherworking",
+    difficulty = 16,
+    automatic = false
+};
+
+reactions["make_high_boots"] = {
+    name = "Make High Boots",
+    workshop = "leatherworker",
+    inputs = { { item="leather", qty=1 } },
+    outputs = { { item="high_boots", qty=1 } },
+    skill = "Leatherworking",
+    difficulty = 16,
+    automatic = false
+};

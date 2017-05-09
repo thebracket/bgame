@@ -27,6 +27,18 @@ items["blowgun"] = {
     stockpile = stockpiles['weapon']
 };
 
+items["sling"] = {
+    name = "Sling",
+    description = "Cloth, arranged to throw sling bullets at an enemy.",
+    itemtype = {"weapon-ranged"},
+    glyph = glyphs['curly_right'],
+    glyph_ascii = glyphs['curly_right'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_mod=0, damage_stat="str", range=4, ammo="dart", initiative_penalty = 6,
+    stockpile = stockpiles['weapon']
+};
+
 items["dart"] = {
     name = "Dart",
     description = "A simple dart",
@@ -36,6 +48,18 @@ items["dart"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="dart",
+    stockpile = stockpiles['ammo'].id
+};
+
+items["sling_bullet"] = {
+    name = "Sling Bullet",
+    description = "A simple rounded rock",
+    itemtype = {"ammo"},
+    glyph = glyphs['comma'],
+    glyph_ascii = glyphs['comma'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="sling_bullet",
     stockpile = stockpiles['ammo'].id
 };
 

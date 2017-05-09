@@ -36,6 +36,16 @@ reactions["make_light_stone_hammer"] = {
     automatic = false
 };
 
+reactions["make_sling"] = {
+    name = "Make Cloth Sling",
+    workshop = "primitive_workshop",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="sling", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
 reactions["make_stone_hammer"] = {
     name = "Make Stone Warhammer",
     workshop = "primitive_workshop",
