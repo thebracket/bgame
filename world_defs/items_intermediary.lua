@@ -34,6 +34,17 @@ items["tool_and_die"] = {
     stockpile = stockpiles['component'].id
 };
 
+items["smart_fabrication_controller"] = {
+    name = "Smart Fabrication Controller",
+    description = "A small AI unit, capable of running a fabrication facility.",
+    itemtype = {"component"},
+    glyph = glyphs['less_than_equal'],
+    glyph_ascii = glyphs['less_than_equal'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};
+
 items["oil_separation_tank"] = {
     name = "Oil Separation Tank",
     description = "A large metal tank stratified with extraction systems at various levels.",

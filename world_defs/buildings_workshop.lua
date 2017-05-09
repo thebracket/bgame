@@ -377,3 +377,39 @@ buildings["factory"] = {
         }
     },
 };
+
+reactions["make_fabrication_controller"] = {
+    name = "Make Smart Fabrication Controller",
+    workshop = "factory",
+    inputs = { { item="block", qty=1, mat_type="metal" }, { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    outputs = { { item="smart_fabrication_controller", qty=1 } },
+    skill = "Electronics",
+    difficulty = 19,
+    automatic = false
+};
+
+------------------------------------------------------------------------------------------------------------------------
+-- Fabricators are used for ultra-modern to futuristic construction
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["fabricator"] = {
+    name = "Fabrication Plant",
+    components = { { item="block", qty=1 }, { item="smart_fabrication_controller", qty=1 }, { item="tool_and_die", qty=1 } },
+    skill = { name="Construction", difficulty=15 },
+    render = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['workshop_1'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['workshop_4'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=2, height=2, tiles= {
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['cabinet'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+};
