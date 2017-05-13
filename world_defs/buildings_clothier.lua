@@ -205,3 +205,63 @@ reactions["make_leg_wraps"] = {
     automatic = false
 };
 
+reactions["make_surcoat"] = {
+    name = "Make Surcoat",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="surcoat", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_nightcap"] = {
+    name = "Make Nightcap",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="nightcap", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_brocade_shirt"] = {
+    name = "Make Brocade Shirt",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="brocade_shirt", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_brocade_blouse"] = {
+    name = "Make Brocade Blouse",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="brocade_blouse", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_peasant_shirt"] = {
+    name = "Make Peasant Shirt",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="peasant_shirt", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_peasant_blouse"] = {
+    name = "Make Peasant Blouse",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="peasant_blouse", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+

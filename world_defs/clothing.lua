@@ -238,7 +238,7 @@ clothing = {
 		description = "A hard metal breastplate, backed by hardened leather.",
 		ac = 2.5
 	},
-	
+
 	ringmail_leggings = {
 		name = "Ringmail Leggings",
 		slot = "legs",
@@ -328,5 +328,128 @@ clothing = {
         colors = {"yellow", "grey"},
         description = "Interlocking loops of metal, meshed into a bikini. Ideal for ren-fests, not actually practical - and it pinches!",
         ac = 1.5
+    },
+
+    -- Medieval Clothing/Armor
+    surcoat = {
+        name = "Surcoat",
+        slot = "torso",
+        colors = {"red", "blue", "yellow"},
+        description = "A cloth coat with sleeves",
+        ac = 0.5,
+        glyph = 374
+    },
+
+    nightcap = {
+        name = "Nightcap",
+        slot = "head",
+        colors = {"red", "blue", "yellow"},
+        description = "A long cloth hat for keeping the head warm at night. Associated with Father Christmas.",
+        ac = 0.5,
+        glyph = 374
+    },
+    brocade_shirt = {
+        name = "Brocade Shirt",
+        slot = "torso",
+        colors = {"white"},
+        description = "A loose-fitting shirt with puffy arms and decorative trimmings.",
+        ac = 0.5,
+        glyph = 372
+    },
+    brocade_blouse = {
+        name = "Brocade Blouse",
+        slot = "torso",
+        colors = {"white"},
+        description = "A loose-fitting blouse with puffy arms and decorative trimmings.",
+        ac = 0.5,
+        glyph = 373
+    },
+    peasant_shirt = {
+        name = "Peasant Shirt",
+        slot = "torso",
+        colors = {"white"},
+        description = "A tight-fitting shirt that shows off one's chest.",
+        ac = 0.5,
+        glyph = 372
+    },
+    peasant_blouse = {
+        name = "Peasant Blouse",
+        slot = "torso",
+        colors = {"white"},
+        description = "A tight-fitting blouse that shows off one's chest while remaining somewhat decent. Peasents rarely actually wore this, but it's great for conventions.",
+        ac = 0.5,
+        glyph = 373
+    },
+
+    helm_bassinet = {
+        name = "Bassinet Helm",
+        slot = "head",
+        colors = {"brown", "black", "yellow"},
+        description = "A full face metal helm, with limited visibility.",
+        ac = 3.5
+    },
+
+    great_helm = {
+        name = "Great Helm",
+        slot = "head",
+        colors = {"brown", "black", "yellow"},
+        description = "A huge metal helmet, made of layered steel. The only drawback is seeing where you are going.",
+        ac = 4.0
+    },
+
+    plate_and_chain_mail = {
+        name = "Plate and Chain Torso",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Chainmail backing with metal plates over all of the strategic areas. A good compromise between being able to move and survival on the field.",
+        ac = 4.5
+    },
+
+    plate_and_chain_leggings = {
+        name = "Plate and Chain Leggings",
+        slot = "legs",
+        colors = {"yellow", "grey"},
+        description = "Chainmail backing with metal plates over all of the strategic areas. A good compromise between being able to move and survival on the field.",
+        ac = 4.5
+    },
+
+    plate_and_chain_swimwear = {
+        name = "Plate and Chain Swimwear",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Chainmail backing with metal plates, but in a bikini! Look amazing at conventions, and block arrows if they happen to hit the tiny areas actually covered in metal.",
+        ac = 2.5
+    },
+
+    field_plate_mail = {
+        name = "Field Plate Torso",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Interlocking metal, covering the whole body but still maintaining the ability to move.",
+        ac = 5.0
+    },
+
+    field_plate_mail_legs = {
+        name = "Field Plate Legs",
+        slot = "legs",
+        colors = {"yellow", "grey"},
+        description = "Interlocking metal, covering the whole body but still maintaining the ability to move.",
+        ac = 5.0
+    },
+
+    full_plate_mail = {
+        name = "Full Plate Torso",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Interlocking metal, covering the upper body. Ever wanted to look like a metal turtle?",
+        ac = 5.5
+    },
+
+    full_plate_mail_legs = {
+        name = "Full Plate Legs",
+        slot = "legs",
+        colors = {"yellow", "grey"},
+        description = "Interlocking metal, covering the lower body. For the tortoise lover.",
+        ac = 5.5
     },
 }

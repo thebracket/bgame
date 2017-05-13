@@ -105,7 +105,7 @@ reactions["extract_atmospheric_nitrogen"] = {
     name = "Refine Air into Nitric Acid",
     workshop = "nitrogen_extractor",
     inputs = {  },
-    outputs = { { item="make_nitric_acid", qty=1 } },
+    outputs = { { item="nitric_acid", qty=1 } },
     skill = "Construction",
     difficulty = 5,
     automatic = false,

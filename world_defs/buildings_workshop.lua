@@ -226,6 +226,96 @@ reactions["make_bronze_skirt"] = {
     automatic = false
 };
 
+reactions["make_bassinet"] = {
+    name = "Make Bassinet Helm",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="helm_bassinet", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 19,
+    automatic = false
+};
+
+reactions["make_great_helm"] = {
+    name = "Make Great Helm",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="great_helm", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_chain_and_plate"] = {
+    name = "Make Plate and Chain Torso",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="plate_and_chain_mail", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_chain_and_plate_legs"] = {
+    name = "Make Plate and Chain Leggings",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="plate_and_chain_leggings", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_chain_and_plate_bikini"] = {
+    name = "Make Plate and Chain Swimwear",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="plate_and_chain_swimwear", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
+reactions["make_field_plate"] = {
+    name = "Make Field Plate Torso",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="field_plate_mail", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 23,
+    automatic = false
+};
+
+reactions["make_field_plate_legs"] = {
+    name = "Make Field Plate Legs",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=3, mat_type="metal" } },
+    outputs = { { item="field_plate_mail_legs", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 23,
+    automatic = false
+};
+
+reactions["make_full_plate"] = {
+    name = "Make Full Plate Torso",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=4, mat_type="metal" } },
+    outputs = { { item="full_plate_mail", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 24,
+    automatic = false
+};
+
+reactions["make_full_plate_legs"] = {
+    name = "Make Full Plate Legs",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=4, mat_type="metal" } },
+    outputs = { { item="full_plate_mail_legs", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 24,
+    automatic = false
+};
+
 reactions["make_simple_lathe"] = {
     name = "Make Simple Lathe",
     workshop = "primitive_workshop",
