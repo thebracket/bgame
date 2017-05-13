@@ -12,6 +12,8 @@
 #include "../../../main/game_pause.hpp"
 #include "../../../main/game_region.hpp"
 #include "../../../main/game_rng.hpp"
+#include "../../../raws/raws.hpp"
+#include "../../../raws/materials.hpp"
 
 void ai_idle::configure() {}
 
@@ -27,6 +29,12 @@ void idle_grazer(entity_t &e, ai_tag_my_turn_t &t, grazer_ai &grazer) {
         emit(entity_wants_to_move_randomly_message{e.id});
         emit(huntable_moved_message{});
     }
+
+    const int poop_chance = rng.roll_dice(1, 100);
+    if (poop_chance == 100) {
+        spawn_item_on_ground(pos->x, pos->y, pos->z, "dung", get_material_by_tag("organic"));
+    }
+
     delete_component<ai_tag_my_turn_t>(e.id);
 }
 

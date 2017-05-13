@@ -237,3 +237,14 @@ items["musket_cast"] = {
     background = colors['black'],
     stockpile = stockpiles['component'].id
 };
+
+items["dung"] = {
+    name = "Dung",
+    description = "Smelly animal excrement, that can be used in various chemical processes. It smells terrible.",
+    itemtype = {"component"},
+    glyph = glyphs['circle'],
+    glyph_ascii = glyphs['circle'],
+    foreground = colors['earth_brown'],
+    background = colors['black'],
+    stockpile = stockpiles['component'].id
+};

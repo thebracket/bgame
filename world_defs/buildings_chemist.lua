@@ -45,6 +45,26 @@ reactions["make_nitric_acid"] = {
     automatic = false
 };
 
+reactions["refine_dung_acid"] = {
+    name = "Refine Dung into Nitric Acid",
+    workshop = "simple_chemist",
+    inputs = { { item="dung", qty=1 } },
+    outputs = { { item="nitric_acid", qty=1 } },
+    skill = "Chemistry",
+    difficulty = 15,
+    automatic = false
+};
+
+reactions["refine_dung_saltpeter"] = {
+    name = "Refine Dung into Saltpeter",
+    workshop = "simple_chemist",
+    inputs = { { item="dung", qty=1 } },
+    outputs = { { item="saltpeter_ore", qty=1 } },
+    skill = "Chemistry",
+    difficulty = 15,
+    automatic = false
+};
+
 reactions["make_raw_dynamite"] = {
     name = "Make Raw Dynamite",
     workshop = "simple_chemist",
