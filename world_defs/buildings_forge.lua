@@ -442,6 +442,16 @@ reactions["make_metal_halberd"] = {
     automatic = false
 };
 
+reactions["make_metal_pike"] = {
+    name = "Make Pike",
+    workshop = "intermediate_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="pike", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 17,
+    automatic = false
+};
+
 reactions["make_musket_cast"] = {
     name = "Make Musket Cast",
     workshop = "intermediate_forge",

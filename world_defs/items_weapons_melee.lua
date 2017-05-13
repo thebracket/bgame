@@ -472,3 +472,15 @@ items["halberd"] = {
     damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
     stockpile = stockpiles['weapon']
 };
+
+items["pike"] = {
+    name = "Pike",
+    description = "A wicked blade, on a stick. Useful for fending off cavalry, and pretending to be a hedgehog.",
+    itemtype = {"weapon-melee"},
+    glyph = glyphs['axe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['grey'],
+    background = colors['black'],
+    damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
+    stockpile = stockpiles['weapon']
+};
