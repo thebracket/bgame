@@ -126,11 +126,91 @@ reactions["make_helm"] = {
     automatic = false
 };
 
-reactions["make_leggings"] = {
+reactions["make_galea"] = {
+    name = "Make Galea Helm",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="helm_roman_galea", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 19,
+    automatic = false
+};
+
+reactions["make_banded_armor"] = {
+    name = "Make Banded Armor",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="banded_armor", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_scalemail_armor"] = {
+    name = "Make Scale Mail Armor",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="scalemail_armor", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_scalemail_leggings"] = {
+    name = "Make Scale Mail Leggings",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="scalemail_leggings", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_chainmail_armor"] = {
+    name = "Make Chain Mail Armor",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="chainmail_shirt", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_chainmail_leggings"] = {
+    name = "Make Chain Mail Leggings",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="chainmail_leggings", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_chainmail_skirt"] = {
+    name = "Make Chain Mail Skirt",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="chainmail_skirt", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_chainmail_bikini"] = {
+    name = "Make Chain Mail Bikini",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=1 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="chainmail_bikini", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 20,
+    automatic = false
+};
+
+reactions["make_ringmail_leggings"] = {
     name = "Make Armored Leggings",
     workshop = "primitive_workshop",
     inputs = { { item="leather", qty=1 }, { item="block", qty=1, mat_type="metal" } },
-    outputs = { { item="leggings", qty=1 } },
+    outputs = { { item="ringmail_leggings", qty=1 } },
     skill = "Metalworking",
     difficulty = 16,
     automatic = false

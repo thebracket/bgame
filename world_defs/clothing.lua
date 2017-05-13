@@ -232,17 +232,101 @@ clothing = {
 		ac = 2.5
 	},
 	breastplate = {
-		name = "Bronze Breastplate",
+		name = "Breastplate",
 		slot = "torso",
 		colors = {"yellow"},
 		description = "A hard metal breastplate, backed by hardened leather.",
 		ac = 2.5
 	},
-	leggings = {
-		name = "Armored Leggings",
+	
+	ringmail_leggings = {
+		name = "Ringmail Leggings",
 		slot = "legs",
 		colors = {"brown", "yellow"},
 		description = "Leggings, covered in metal rings for added protection.",
 		ac = 2.0
-	}
+	},
+
+	-- Early Iron-age clothing
+	toga = {
+        name = "Toga",
+        slot = "torso",
+        colors = {"red", "blue", "yellow"},
+        description = "A simple cloth wrap. Strangely popular at parties.",
+        ac = 0.5,
+        glyph = 374
+    },
+
+    leg_wraps = {
+        name = "Leg wraps",
+        slot = "legs",
+        colors = {"grey", "khaki", "blue", "navy", "black"},
+        description = "Strips of cloth, wrapped around the legs for warmth and protection.",
+        ac = 0.5,
+        glyph = 379
+    },
+
+    helm_roman_galea = {
+        name = "Galea",
+        slot = "head",
+        colors = {"brown", "black", "yellow"},
+        description = "A helmet featuring layered metal and cheek protection.",
+        ac = 3.0
+    },
+
+    banded_armor = {
+        name = "Banded Armor",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Strips of metal, bent around the torso and layered for extra protection.",
+        ac = 3.5
+    },
+
+    scalemail_armor = {
+        name = "Scale Mail Armor",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Fish-scale shaped pieces of metal, sewn together on a leather backing.",
+        ac = 3.0
+    },
+
+    scalemail_leggings = {
+        name = "Scale Mail Leggings",
+        slot = "legs",
+        colors = {"yellow", "grey"},
+        description = "Fish-scale shaped pieces of metal, sewn together on a leather backing.",
+        ac = 3.0
+    },
+
+    chainmail_shirt = {
+        name = "Chainmail Shirt Armor",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Interlocking loops of metal, meshed into armor.",
+        ac = 3.5
+    },
+
+    chainmail_leggings = {
+        name = "Chainmail Leg Armor",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Interlocking loops of metal, meshed into leggings.",
+        ac = 3.5
+    },
+
+    chainmail_skirt = {
+        name = "Chainmail Skirt",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Interlocking loops of metal, meshed into a skirt.",
+        ac = 3.2
+    },
+
+    chainmail_bikini = {
+        name = "Chainmail Bikini",
+        slot = "torso",
+        colors = {"yellow", "grey"},
+        description = "Interlocking loops of metal, meshed into a bikini. Ideal for ren-fests, not actually practical - and it pinches!",
+        ac = 1.5
+    },
 }

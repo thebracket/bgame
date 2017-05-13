@@ -185,3 +185,23 @@ reactions["make_miniskirt"] = {
     automatic = false
 };
 
+reactions["make_toga"] = {
+    name = "Make Toga",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="toga", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
+reactions["make_leg_wraps"] = {
+    name = "Make Leg Wraps",
+    workshop = "tailor",
+    inputs = { { item="cloth", qty=1 } },
+    outputs = { { item="leg_wraps", qty=1 } },
+    skill = "Tailoring",
+    difficulty = 10,
+    automatic = false
+};
+
