@@ -316,6 +316,16 @@ reactions["make_full_plate_legs"] = {
     automatic = false
 };
 
+reactions["make_cuirass"] = {
+    name = "Make Cuirass",
+    workshop = "primitive_workshop",
+    inputs = { { item="leather", qty=2 }, { item="block", qty=2, mat_type="metal" } },
+    outputs = { { item="cuirass", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 21,
+    automatic = false
+};
+
 reactions["make_simple_lathe"] = {
     name = "Make Simple Lathe",
     workshop = "primitive_workshop",

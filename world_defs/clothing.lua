@@ -452,4 +452,12 @@ clothing = {
         description = "Interlocking metal, covering the lower body. For the tortoise lover.",
         ac = 5.5
     },
+
+    make_cuirass = {
+        name = "Cuirass",
+        slot = "torso",
+        colors = {"yellow"},
+        description = "An extra-thick hard metal breastplate, backed by hardened leather.",
+        ac = 4.0
+    },
 }
