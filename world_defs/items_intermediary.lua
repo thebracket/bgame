@@ -246,5 +246,5 @@ items["dung"] = {
     glyph_ascii = glyphs['circle'],
     foreground = colors['earth_brown'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['manure'].id
 };
