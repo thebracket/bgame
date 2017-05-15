@@ -1,4 +1,4 @@
-# Black Future
+# Nox Futura (formerly Black Future)
 
 An open-source game combining elements of Dwarf Fortress, Civilization, Warhammer, Douglass Adams, and more.
 
