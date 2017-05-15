@@ -10,7 +10,7 @@
 #include "../../main/game_camera.hpp"
 #include "../../main/game_region.hpp"
 
-const std::string menu_main = std::string(ICON_FA_ROCKET) + " Black Future";
+const std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
 const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
 const std::string menu_main_quit = std::string(ICON_FA_WINDOW_CLOSE) + " Save and Quit";
 const std::string menu_design = std::string(ICON_FA_CUBES) + " Design";

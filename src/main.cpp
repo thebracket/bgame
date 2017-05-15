@@ -212,7 +212,7 @@ int main(int argc, char* argv[])
 
 	read_config();
     start_telemetry();
-	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
+	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Nox Futura",game_config.fullscreen));
 	glewExperimental = GL_TRUE;
 	glewInit();
 	splash.init();
