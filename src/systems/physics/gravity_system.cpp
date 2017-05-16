@@ -22,6 +22,7 @@ void gravity_system::update(const double ms) {
     std::queue<tile_removed_message> * removals = mbox<tile_removed_message>();
 	while (!removals->empty()) {
 		removals->pop();
+        return; // Temporarily disable collapses
 
         std::vector<bool> connected;
         std::vector<bool> visited;

@@ -22,7 +22,8 @@ void save_region(const region_t &region) {
 	deflate.serialize_vector_bool(region.opaque);
 	deflate.serialize(region.tile_type);
 	deflate.serialize(region.tile_material);
-	deflate.serialize(region.tile_hit_points);
+	deflate.serialize(region.hit_points);
+	deflate.serialize(region.veg_hit_points);
 	deflate.serialize(region.building_id);
 	deflate.serialize(region.tree_id);
 	deflate.serialize(region.tile_vegetation_type);
@@ -51,7 +52,8 @@ region_t load_region(const int region_x, const int region_y) {
 	inflate.deserialize(region.opaque);
 	inflate.deserialize(region.tile_type);
 	inflate.deserialize(region.tile_material);
-	inflate.deserialize(region.tile_hit_points);
+	inflate.deserialize(region.hit_points);
+	inflate.deserialize(region.veg_hit_points);
 	inflate.deserialize(region.building_id);
 	inflate.deserialize(region.tree_id);
 	inflate.deserialize(region.tile_vegetation_type);

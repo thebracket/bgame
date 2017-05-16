@@ -3,9 +3,33 @@
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
 #include "../../main/game_region.hpp"
+#include "../../components/building.hpp"
+
+void damage_system::do_building_damage(const inflict_damage_message &msg) {
+    auto e = entity(msg.victim);
+    if (!e) return;
+    auto building = e->component<building_t>();
+    if (!building) return;
+
+    const int scaled_damage = msg.damage_amount/10;
+    if (building->hit_points <= scaled_damage) {
+        // Building is destroyed
+        emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(std::string(" is destroyed!"))->chars});
+        delete_entity(msg.victim);
+    } else {
+        building->hit_points -= scaled_damage;
+        emit_deferred(log_message{LOG{}.other_name(msg.victim)->text(std::string(" suffers ") + std::to_string(msg.damage_amount) + std::string(" points of damage. Source: "+msg.damage_type))->chars});
+    }
+}
 
 void damage_system::on_message(const inflict_damage_message &msg) {
     if (!entity(msg.victim)) return;
+
+    if (entity(msg.victim)->component<building_t>()) {
+        do_building_damage(msg);
+        return;
+    }
+
     auto h = entity(msg.victim)->component<health_t>();
 
     if (h) {

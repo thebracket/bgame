@@ -28,7 +28,8 @@ inline void zero_map(region_t &region) {
     std::fill(region.revealed.begin(), region.revealed.end(), false);
     std::fill(region.tile_type.begin(), region.tile_type.end(), tile_type::OPEN_SPACE);
     std::fill(region.tile_material.begin(), region.tile_material.end(), 0);
-    std::fill(region.tile_hit_points.begin(), region.tile_hit_points.end(), 0);
+    std::fill(region.hit_points.begin(), region.hit_points.end(), 0);
+    std::fill(region.veg_hit_points.begin(), region.veg_hit_points.end(), 0);
     std::fill(region.building_id.begin(), region.building_id.end(), 0);
     std::fill(region.tree_id.begin(), region.tree_id.end(), 0);
     std::fill(region.tile_vegetation_type.begin(), region.tile_vegetation_type.end(), 0);

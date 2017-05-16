@@ -105,6 +105,7 @@ void ai_work_architect::update(const double duration_ms) {
                     // Wall
                     current_region->solid[bidx] = true;
                     current_region->tile_type[bidx] = tile_type::WALL;
+                    current_region->hit_points[bidx] = get_material(material)->hit_points;
                 } else if (build_type == 1) {
                     // Floor
                     current_region->tile_type[bidx] = tile_type::FLOOR;

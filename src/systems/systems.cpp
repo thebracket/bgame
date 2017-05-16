@@ -71,9 +71,11 @@
 #include "ai/settler/ai_work_architect.hpp"
 #include "ai/settler/ai_work_hunt.hpp"
 #include "ai/settler/ai_work_butcher.hpp"
+#include "physics/explosive_system.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
+    add_system<explosive_system>();
     add_system<keyboard_system>();
     add_system<mouse_input_system>();
     add_system<door_system>();

@@ -96,8 +96,10 @@ void topology_system::recalculate(const perform_mining_message &e) {
     for (int Z=-2; Z<3; ++Z) {
         for (int Y=-2; Y<3; ++Y) {
             for (int X=-2; X<3; ++X) {
-                current_region->revealed[mapidx(e.x + X, e.y + Y, e.z + Z)] = true;
-                current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
+                if (e.x + X > 0 && e.x + X < REGION_WIDTH && e.y+Y > 0 && e.y + Y < REGION_HEIGHT && e.z +Z > 0 && e.z+Z<REGION_DEPTH) {
+                    current_region->revealed[mapidx(e.x + X, e.y + Y, e.z + Z)] = true;
+                    current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
+                }
             }
         }
     }
@@ -209,6 +211,7 @@ void topology_system::build_construction(const perform_construction_message &e) 
         }
     }
     current_region->tile_material[index] = e.material;
+    current_region->hit_points[index] = get_material(e.material)->hit_points;
 
     current_region->tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
     for (int Z=-2; Z<3; ++Z) {

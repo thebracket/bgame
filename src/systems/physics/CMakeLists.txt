@@ -5,6 +5,7 @@ add_library(physics STATIC
         vegetation_system.cpp
         door_system.cpp
         trigger_system.cpp
+        explosive_system.cpp
         )
 target_link_libraries(physics rltk utils components raws)
 cotire(physics)

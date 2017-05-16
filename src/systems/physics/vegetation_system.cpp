@@ -17,12 +17,12 @@ void vegetation_system::update(const double ms) {
         vegetation_damage_message msg = vdamage->front();
         vdamage->pop();
 
-        current_region->tile_hit_points[msg.idx] -= msg.damage;
+        current_region->veg_hit_points[msg.idx] -= msg.damage;
 
-        if (current_region->tile_hit_points[msg.idx] < 1) {
+        if (current_region->veg_hit_points[msg.idx] < 1) {
             // We've destroyed the vegetation!
             //std::cout << "Vegetation Destroyed\n";
-            current_region->tile_hit_points[msg.idx] = 0;
+            current_region->veg_hit_points[msg.idx] = 0;
             current_region->tile_vegetation_type[msg.idx] = 0;
             current_region->calc_render(msg.idx);
             emit(map_dirty_message{});

@@ -22,7 +22,8 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
-        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, building->second.glyphs_ascii, true, civ_owner });
+        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs,
+                             building->second.glyphs_ascii, true, civ_owner, 10, 10 });
 
     for (const building_provides_t &provides : building->second.provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
@@ -72,65 +73,76 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
         region.opaque[idx] = true;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "ship_window") {
         region.tile_type[idx] = tile_type::WINDOW;
         region.solid[idx] = true;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = plasteel;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "ship_floor") {
         region.tile_type[idx] = tile_type::FLOOR;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        region.tile_material[idx] = plasteel;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "hut_wall") {
         region.tile_type[idx] = tile_type::WALL;
         region.solid[idx] = true;
         region.opaque[idx] = true;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "hut_floor") {
         region.tile_type[idx] = tile_type::FLOOR;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood; 
+        region.tile_material[idx] = wood;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "ship_up") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        region.tile_material[idx] = plasteel;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "ship_down") {
         region.tile_type[idx] = tile_type::STAIRS_DOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        region.tile_material[idx] = plasteel;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "ship_updown") {
         region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        region.tile_material[idx] = plasteel;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "hut_upstairs") {
         region.tile_type[idx] = tile_type::STAIRS_UP;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood;    
+        region.tile_material[idx] = wood;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "hut_downstairs") {
         region.tile_type[idx] = tile_type::STAIRS_DOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood;    
+        region.tile_material[idx] = wood;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "hut_updownstairs") {
         region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
         region.solid[idx] = false;
         region.opaque[idx] = false;
         region.tile_flags[idx].set(CONSTRUCTION);
         region.tile_material[idx] = wood;
+        region.hit_points[idx] = get_material(region.tile_material[idx])->hit_points;
     } else if (type == "cordex") {
         add_building("cordex", x, y, z, civ_owner);
     } else if (type == "solar_panel") {

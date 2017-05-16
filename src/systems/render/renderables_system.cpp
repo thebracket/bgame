@@ -227,7 +227,7 @@ void renderables_system::update(const double time_elapsed) {
                                 screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY,
                                             rltk::vchar{render->glyph, render->foreground, rltk::colors::BLACK}});
                         } else {
-                        renderables[idx].push_back(
+                            renderables[idx].push_back(
                                 screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY,
                                                 rltk::vchar{render->glyph_ascii, render->foreground, rltk::colors::BLACK}});
                     }

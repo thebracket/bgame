@@ -104,6 +104,9 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			case tile_type::CLOSED_DOOR : ss << "Closed Door (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
 			default : ss << "Unknown!";
 		}
+		if (current_region->tile_type[tile_idx] != tile_type::OPEN_SPACE) {
+			ss << " (" << current_region->hit_points[tile_idx] << ")";
+		}
 		lines.push_back(ss.str());
 	}
 	if (current_region->tile_type[tile_idx] == tile_type::FLOOR && !current_region->tile_flags[tile_idx].test(CONSTRUCTION)) {
@@ -197,7 +200,8 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			std::string building_name = "Unknown Building";
 			if (finder != building_defs.end()) {
 				if (building.complete) {
-					building_name = finder->second.name;
+					building_name = finder->second.name + std::string(" (") + std::to_string(building.hit_points)
+                                    + std::string("/") + std::to_string(building.max_hit_points) + std::string(")");
 				} else {
 					building_name = std::string("...") + finder->second.name;
 				}

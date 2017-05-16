@@ -16,7 +16,8 @@ struct region_t {
 		opaque.resize(REGION_TILES_COUNT);
 		tile_type.resize(REGION_TILES_COUNT);
 		tile_material.resize(REGION_TILES_COUNT);
-		tile_hit_points.resize(REGION_TILES_COUNT);
+		hit_points.resize(REGION_TILES_COUNT);
+		veg_hit_points.resize(REGION_TILES_COUNT);
 		building_id.resize(REGION_TILES_COUNT);
 		tree_id.resize(REGION_TILES_COUNT);
 		tile_vegetation_type.resize(REGION_TILES_COUNT);
@@ -41,7 +42,8 @@ struct region_t {
 	// New tile format data
 	std::vector<uint8_t> tile_type;
 	std::vector<std::size_t> tile_material;
-	std::vector<uint8_t> tile_hit_points;
+	std::vector<uint16_t> hit_points;
+	std::vector<uint8_t> veg_hit_points;
 	std::vector<std::size_t> building_id;
 	std::vector<std::size_t> tree_id;
 	std::vector<std::size_t> bridge_id;
