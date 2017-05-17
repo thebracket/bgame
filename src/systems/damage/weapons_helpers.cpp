@@ -4,6 +4,7 @@
 #include "../../raws/clothing.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/clothing_t.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../components/grazer_ai.hpp"

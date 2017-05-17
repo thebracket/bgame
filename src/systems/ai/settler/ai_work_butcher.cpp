@@ -10,6 +10,7 @@
 #include "../../../components/building.hpp"
 #include "../path_finding.hpp"
 #include "../../../raws/creatures.hpp"
+#include "../../../raws/defs/raw_creature_t.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/raws.hpp"
 

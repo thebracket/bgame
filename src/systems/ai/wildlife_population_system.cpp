@@ -2,6 +2,7 @@
 #include "../../raws/biomes.hpp"
 #include "../../raws/defs/biome_type_t.hpp"
 #include "../../raws/creatures.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../messages/messages.hpp"
