@@ -2,6 +2,7 @@
 #include "job_board.hpp"
 #include "../../../components/ai_tags/ai_tag_work_order.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../../../main/game_rng.hpp"
 #include "../workflow_system.hpp"
 #include "../../../raws/reactions.hpp"
 #include "../inventory_system.hpp"

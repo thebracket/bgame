@@ -13,6 +13,7 @@
 #include "../mining_system.hpp"
 #include "ai_work_template.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../../../main/game_rng.hpp"
 #include "job_board.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 

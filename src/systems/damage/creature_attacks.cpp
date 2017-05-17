@@ -5,6 +5,7 @@
 #include "../../components/species.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../main/game_logger.hpp"
+#include "../../main/game_rng.hpp"
 
 using namespace rltk;
 

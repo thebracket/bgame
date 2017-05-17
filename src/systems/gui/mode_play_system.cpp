@@ -14,6 +14,7 @@
 #include "../../components/bridge.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/defs/building_def_t.hpp"
+#include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../components/lever.hpp"

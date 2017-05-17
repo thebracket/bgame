@@ -11,6 +11,7 @@
 #include "../../main/game_selections.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../components/name.hpp"
+#include "../../components/item_carried.hpp"
 
 void mode_settler_info_system::configure() {
     system_name = "Settler Info";

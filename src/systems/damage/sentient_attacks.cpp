@@ -10,6 +10,8 @@
 #include "../../messages/emit_particles_message.hpp"
 #include "../../components/natural_attacks_t.hpp"
 #include "../../main/game_logger.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../raws/materials.hpp"
 
 void sentient_melee_attack(const std::string &weapon_name,
                            const int &hit_bonus,

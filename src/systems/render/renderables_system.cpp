@@ -11,6 +11,7 @@
 #include "../../components/construct_provides_door.hpp"
 #include "../../components/species.hpp"
 #include "../../components/item.hpp"
+#include "../../components/item_carried.hpp"
 #include "../ai/movement_system.hpp"
 #include "../../raws/species.hpp"
 #include "../../components/sleep_clock_t.hpp"

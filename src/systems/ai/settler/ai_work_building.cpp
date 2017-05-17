@@ -1,6 +1,7 @@
 #include "ai_work_building.hpp"
 #include "../../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../../../main/game_rng.hpp"
 #include "../../../utils/telemetry.hpp"
 #include "ai_work_template.hpp"
 #include "job_board.hpp"

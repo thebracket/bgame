@@ -10,8 +10,11 @@
 #include "../../../messages/inflict_damage_message.hpp"
 #include "ai_work_template.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../../../main/game_rng.hpp"
 #include "job_board.hpp"
 #include "../../../utils/telemetry.hpp"
+#include "../../../raws/materials.hpp"
+#include "../../../raws/raws.hpp"
 
 using namespace region;
 

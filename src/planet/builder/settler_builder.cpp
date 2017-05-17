@@ -6,13 +6,16 @@
 #include "../../components/renderable_composite.hpp"
 #include "../../components/item.hpp"
 #include "../../utils/string_utils.hpp"
+#include "../../raws/raws.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../raws/string_table.hpp"
 #include "../../raws/life_events.hpp"
 #include "../../raws/profession.hpp"
+#include "../../raws/materials.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../components/sleep_clock_t.hpp"
+#include "../../components/item_carried.hpp"
 
 using namespace rltk;
 

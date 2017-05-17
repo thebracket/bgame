@@ -10,6 +10,8 @@
 #include "../../../components/building.hpp"
 #include "../path_finding.hpp"
 #include "../../../raws/creatures.hpp"
+#include "../../../raws/materials.hpp"
+#include "../../../raws/raws.hpp"
 
 namespace jobs_board {
     void evaluate_butchering(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {

@@ -2,6 +2,8 @@
 #include "../../messages/messages.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../raws/clothing.hpp"
+#include "../../raws/materials.hpp"
+#include "../../raws/defs/clothing_t.hpp"
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../components/grazer_ai.hpp"

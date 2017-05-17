@@ -14,6 +14,8 @@
 #include "profession.hpp"
 #include "buildings.hpp"
 #include "reactions.hpp"
+#include "clothing.hpp"
+#include "materials.hpp"
 #include "../systems/ai/movement_system.hpp"
 #include "graphviz.hpp"
 #include "../main/game_config.hpp"

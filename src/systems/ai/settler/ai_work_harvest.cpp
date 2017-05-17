@@ -3,10 +3,13 @@
 #include "../../../components/ai_tags/ai_tag_work_harvest.hpp"
 #include "../../../main/game_designations.hpp"
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"
+#include "../../../components/item.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../utils/telemetry.hpp"
 #include "ai_work_template.hpp"
 #include "../../../raws/plants.hpp"
+#include "../../../raws/materials.hpp"
+#include "../../../raws/raws.hpp"
 #include "../../../planet/region/region.hpp"
 
 using namespace region;
