@@ -13,6 +13,7 @@
 #include "../../main/game_camera.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
@@ -201,7 +202,7 @@ bool is_item_category_available(const int &category) {
 bool is_ammo_available(const std::string &ammo_type) {
 	int result = 0;
 	each<item_t>([&result, &ammo_type] (entity_t &e, item_t &i) {
-		if (i.category.test(WEAPON_AMMO) && i.claimed == false && item_defs.find(i.item_tag)->second.ammo == ammo_type) ++result;
+		if (i.category.test(WEAPON_AMMO) && i.claimed == false && get_item_def(i.item_tag)->ammo == ammo_type) ++result;
 	});
 	return (result > 0);
 }
@@ -233,7 +234,7 @@ std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::
 	std::map<float, std::size_t> distance_sorted; 
 
 	each<item_t>([&distance_sorted, &category, &pos, &ammo_type, &range] (entity_t &e, item_t &i) {
-		if (i.category.test(category) && i.claimed==false && item_defs.find(i.item_tag)->second.ammo == ammo_type) {
+		if (i.category.test(category) && i.claimed==false && get_item_def(i.item_tag)->ammo == ammo_type) {
 			auto p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);

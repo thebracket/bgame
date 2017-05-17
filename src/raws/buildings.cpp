@@ -30,8 +30,8 @@ void sanity_check_buildings() noexcept
         if (it->second.name.empty()) std::cout << "WARNING: Building " << it->first << " has no name.\n";
         for (const reaction_input_t &comp : it->second.components) {
             if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
-            auto finder = item_defs.find(comp.tag);
-            if (finder == item_defs.end()) {
+            auto finder = get_item_def(comp.tag);
+            if (finder == nullptr) {
                 std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it->first << "\n";
             }
         }

@@ -3,6 +3,7 @@
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/defs/building_def_t.hpp"
@@ -100,8 +101,8 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
     int X,Y,Z;
     std::tie(X,Y,Z) = idxmap(e.target_idx);
 
-    auto finder = item_defs.find(tag);
-    if (finder != item_defs.end()) {
+    auto finder = get_item_def(tag);
+    if (finder != nullptr) {
         //std::cout << "Topology system - producing a [" << tag << "]";
         auto mat = material(e.target_idx);
         if (tag == "ore") {

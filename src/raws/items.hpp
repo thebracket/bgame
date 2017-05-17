@@ -1,52 +1,18 @@
 #pragma once
 
 #include <string>
-#include <bitset>
-#include <rltk.hpp>
-#include <fstream>
+#include <functional>
 
-constexpr int NUMBER_OF_ITEM_CATEGORIES = 64;
-constexpr int COMPONENT = 0;
-constexpr int TOOL_CHOPPING = 1;
-constexpr int TOOL_DIGGING = 2;
-constexpr int WEAPON_MELEE = 3;
-constexpr int WEAPON_RANGED = 4;
-constexpr int WEAPON_AMMO = 5;
-constexpr int ITEM_FOOD = 6;
-constexpr int ITEM_SPICE = 7;
-constexpr int ITEM_DRINK = 8;
-constexpr int ITEM_HIDE = 9;
-constexpr int ITEM_BONE = 10;
-constexpr int ITEM_SKULL = 11;
-constexpr int ITEM_LEATHER = 12;
+struct item_def_t;
+struct stockpile_def_t;
 
-struct stockpile_def_t {
-    int index = 0;
-    std::string name = "";
-    std::string tag = "";
-};
+item_def_t * get_item_def(const std::string tag);
+stockpile_def_t * get_stockpile_def(const int tag);
 
-struct item_def_t {
-    std::string tag = "";
-    std::string name = "";
-    std::string description = "";
-    std::bitset<NUMBER_OF_ITEM_CATEGORIES> categories;
-    uint16_t glyph;
-    uint16_t glyph_ascii = 1;
-    rltk::color_t fg;
-    rltk::color_t bg;
-    int damage_n=0, damage_d=0, damage_mod=0;
-    int range = 0;
-    std::string ammo;
-    int stack_size = 1;
-    int initiative_penalty = 0;
-    std::string damage_stat = "";
-    int stockpile_idx = 0;
-};
+int get_clothing_stockpile();
+void set_clothing_stockpile(const int n);
 
-extern std::unordered_map<std::string, item_def_t> item_defs;
-extern std::unordered_map<int, stockpile_def_t> stockpile_defs;
-extern int clothing_stockpile;
+void each_stockpile(const std::function<void(stockpile_def_t *)> func);
 
 void read_items() noexcept;
 void sanity_check_items() noexcept;

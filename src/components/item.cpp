@@ -1,6 +1,7 @@
 #include "item.hpp"
 #include "../raws/clothing.hpp"
 #include "../raws/defs/clothing_t.hpp"
+#include "../raws/defs/item_def_t.hpp"
 #include "../raws/raws.hpp"
 #include "../raws/materials.hpp"
 #include "../main/game_rng.hpp"
@@ -24,9 +25,9 @@ color_t colname_to_col(const std::string &col)
 
 item_t::item_t(const std::string name) : item_tag(name), type(CLOTHING) {
     //std::cout << "[" << item_tag << "]\n";
-    auto finder = item_defs.find(item_tag);
-    if (finder != item_defs.end()) {
-        item_name = finder->second.name;
+    auto finder = get_item_def(item_tag);
+    if (finder != nullptr) {
+        item_name = finder->name;
     } else {
         auto finder2 = get_clothing_by_tag(item_tag);
         if (finder2) {

@@ -15,7 +15,7 @@ color_t colname_to_col(const std::string &col);
 struct item_t {
 	std::string item_name;
 	std::string item_tag;
-	std::bitset<NUMBER_OF_ITEM_CATEGORIES> category;
+	std::bitset<64> category;
 	item_type_t type;
 	std::size_t material;
 	bool claimed = false;
@@ -25,7 +25,7 @@ struct item_t {
 
 	item_t() {}
 	item_t(const std::string name);
-	item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats,
+	item_t(const std::string tag, const std::string name, const std::bitset<64> cats,
 		const std::size_t mat, int stack=1);
 
 	template<class Archive>

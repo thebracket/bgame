@@ -16,6 +16,7 @@
 #include "../../../main/game_rng.hpp"
 #include "job_board.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
+#include "../../../raws/defs/item_def_t.hpp"
 
 using namespace region;
 

@@ -4,6 +4,7 @@
 #include "buildings.hpp"
 #include "items.hpp"
 #include "clothing.hpp"
+#include "defs/item_def_t.hpp"
 
 std::unordered_map<std::string, reaction_t> reaction_defs;
 std::unordered_map<std::string, std::vector<std::string>> reaction_building_defs;
@@ -133,13 +134,13 @@ void sanity_check_reactions() noexcept
         auto bf = get_building_def(it->second.workshop);
         if (bf == nullptr) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
         for (const auto &input : it->second.inputs) {
-            auto finder = item_defs.find(input.tag);
-            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
+            auto finder = get_item_def(input.tag);
+            if (finder == nullptr) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
         }
         for (const auto &output : it->second.outputs) {
-            auto finder = item_defs.find(output.first);
+            auto finder = get_item_def(output.first);
             auto finder2 = get_clothing_by_tag(output.first);
-            if (finder == item_defs.end() && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+            if (finder == nullptr && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
         }
     }
 }

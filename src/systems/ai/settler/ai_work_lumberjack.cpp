@@ -15,6 +15,7 @@
 #include "../../../utils/telemetry.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/raws.hpp"
+#include "../../../raws/defs/item_def_t.hpp"
 
 using namespace region;
 

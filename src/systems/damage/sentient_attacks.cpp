@@ -12,6 +12,7 @@
 #include "../../main/game_logger.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../raws/materials.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 void sentient_melee_attack(const std::string &weapon_name,
                            const int &hit_bonus,
@@ -68,11 +69,11 @@ void sentient_attacks_system::update(const double duration_ms) {
         } else {
             auto weapon_component = entity(weapon_id)->component<item_t>();
             if (weapon_component) {
-                auto weapon_finder = item_defs.find(weapon_component->item_tag);
-                if (weapon_finder != item_defs.end()) {
-                    sentient_melee_attack(weapon_finder->second.name, 0,
-                                          weapon_finder->second.damage_n, weapon_finder->second.damage_d,
-                                          weapon_finder->second.damage_mod + get_material(weapon_component->material)->damage_bonus,
+                auto weapon_finder = get_item_def(weapon_component->item_tag);
+                if (weapon_finder != nullptr) {
+                    sentient_melee_attack(weapon_finder->name, 0,
+                                          weapon_finder->damage_n, weapon_finder->damage_d,
+                                          weapon_finder->damage_mod + get_material(weapon_component->material)->damage_bonus,
                                           msg);
                 }
             }
@@ -100,20 +101,20 @@ void sentient_attacks_system::update(const double duration_ms) {
         if (weapon_id != 0) {
             auto weapon_component = entity(weapon_id)->component<item_t>();
             if (weapon_component) {
-                auto weapon_finder = item_defs.find(weapon_component->item_tag);
-                if (weapon_finder != item_defs.end()) {
-                    weapon_name = weapon_finder->second.name;
+                auto weapon_finder = get_item_def(weapon_component->item_tag);
+                if (weapon_finder != nullptr) {
+                    weapon_name = weapon_finder->name;
                 }
             }
         }
         if (ammo_id != 0) {
             auto ammo_component = entity(ammo_id)->component<item_t>();
             if (ammo_component) {
-                auto ammo_finder = item_defs.find(ammo_component->item_tag);
-                if (ammo_finder != item_defs.end()) {
-                    weapon_n = ammo_finder->second.damage_n;
-                    weapon_d = ammo_finder->second.damage_d + get_material(ammo_component->material)->damage_bonus;
-                    weapon_mod = ammo_finder->second.damage_mod;
+                auto ammo_finder = get_item_def(ammo_component->item_tag);
+                if (ammo_finder != nullptr) {
+                    weapon_n = ammo_finder->damage_n;
+                    weapon_d = ammo_finder->damage_d + get_material(ammo_component->material)->damage_bonus;
+                    weapon_mod = ammo_finder->damage_mod;
                 }
                 --ammo_component->stack_size;
                 if (ammo_component->stack_size < 1) delete_entity(ammo_id);

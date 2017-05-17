@@ -5,7 +5,6 @@
 #include "work_types/demolition_work.hpp"
 #include "work_types/hauling_work.hpp"
 #include "../ai/inventory_system.hpp"
-#include "../ai/workflow_system.hpp"
 #include "../damage/weapons_helpers.hpp"
 #include "idle_mode.hpp"
 #include "settler_glyph.hpp"
@@ -14,12 +13,10 @@
 #include "settler_cancel_action.hpp"
 #include "pathfinding.hpp"
 #include "initiative.hpp"
-#include "world_queries.hpp"
 #include "settler_wander.hpp"
-#include "../../raws/reactions.hpp"
 #include "../stockpile_system.hpp"
-#include "../ai/distance_map_system.hpp"
 #include "../../main/game_designations.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 using namespace rltk;
 using tasks::become_idle;

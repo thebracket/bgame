@@ -19,6 +19,7 @@
 #include "../systems/ai/movement_system.hpp"
 #include "graphviz.hpp"
 #include "../main/game_config.hpp"
+#include "defs/item_def_t.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -106,57 +107,57 @@ void load_raws() {
 }
 
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
-    auto finder = item_defs.find(tag);
-    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+    auto finder = get_item_def(tag);
+    if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
     if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
     auto entity = create_entity()
         ->assign(position_t{ x,y,z })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+        ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
     //std::cout << "Spawned item on ground: " << entity->id << ", " << entity->component<item_t>()->item_tag << "\n";
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 }
 
 entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
-    auto finder = item_defs.find(tag);
-    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+    auto finder = get_item_def(tag);
+    if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
     if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
     auto entity = create_entity()
             ->assign(position_t{ x,y,z })
-            ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
-            ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+            ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+            ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
     return entity;
 }
 
 void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material) {
-    auto finder = item_defs.find(tag);
-    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+    auto finder = get_item_def(tag);
+    if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
 
-    std::cout << "Spawning [" << tag << "], glyph " << +finder->second.glyph << "\n";
+    std::cout << "Spawning [" << tag << "], glyph " << +finder->glyph << "\n";
 
     create_entity()
         ->assign(item_stored_t{ container_id })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+        ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
 }
 
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc) {
-    auto finder = item_defs.find(tag);
-    if (finder == item_defs.end()) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
+    auto finder = get_item_def(tag);
+    if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
 
     create_entity()
         ->assign(item_carried_t{ loc, holder_id })
-        ->assign(renderable_t{ finder->second.glyph, finder->second.glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->second.name, finder->second.categories, material, finder->second.stack_size});
+        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+        ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
 }

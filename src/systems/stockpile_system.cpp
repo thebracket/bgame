@@ -3,6 +3,7 @@
 #include "../components/item.hpp"
 #include "../../main/game_designations.hpp"
 #include "../planet/region/region.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 using namespace region;
 
@@ -64,11 +65,11 @@ void stockpile_system::on_message(const tick_message &msg) {
         // Determine the destination stockpile; Clothing is a special case
         int item_stockpile_idx = 0;
         if (i.type == CLOTHING) {
-            item_stockpile_idx = clothing_stockpile;
+            item_stockpile_idx = get_clothing_stockpile();
         } else {
-            auto finder = item_defs.find(i.item_tag);
-            if (finder != item_defs.end()) {
-                item_stockpile_idx = finder->second.stockpile_idx;
+            auto finder = get_item_def(i.item_tag);
+            if (finder != nullptr) {
+                item_stockpile_idx = finder->stockpile_idx;
             }
         }
 

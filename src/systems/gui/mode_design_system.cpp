@@ -12,6 +12,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include <vector>
 
 using namespace rltk;
@@ -313,9 +314,9 @@ void mode_design_system::harvest() {
         if (harvests_to == "none") {
             ok=false;
         } else {
-            auto finder = item_defs.find(harvests_to);
-            if (finder != item_defs.end()) {
-                harvest_name = finder->second.name;
+            auto finder = get_item_def(harvests_to);
+            if (finder != nullptr) {
+                harvest_name = finder->name;
             }
         }
     }
@@ -384,19 +385,19 @@ void mode_design_system::stockpiles() {
         if (sp_entity) {
             auto sp = sp_entity->component<stockpile_t>();
             if (sp) {
-                for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
-                    if (sp->category.test(it->second.index)) {
-                        const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->second.name;
+                each_stockpile([&sp] (stockpile_def_t * it) {
+                    if (sp->category.test(it->index)) {
+                        const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->name;
                         if (ImGui::Button(sp_label.c_str())) {
-                            sp->category.reset(it->second.index);
+                            sp->category.reset(it->index);
                         }
                     } else {
-                        const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->second.name;
+                        const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->name;
                         if (ImGui::Button(sp_label.c_str())) {
-                            sp->category.set(it->second.index);
+                            sp->category.set(it->index);
                         }
                     }
-                }
+                });
             }
         }
     }

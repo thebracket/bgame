@@ -1,9 +1,37 @@
 #include "items.hpp"
 #include "lua_bridge.hpp"
+#include "defs/item_def_t.hpp"
+#include <boost/container/flat_map.hpp>
 
-std::unordered_map<std::string, item_def_t> item_defs;
-std::unordered_map<int, stockpile_def_t> stockpile_defs;
+boost::container::flat_map<std::string, item_def_t> item_defs;
+boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
 int clothing_stockpile = 0;
+
+int get_clothing_stockpile() {
+    return clothing_stockpile;
+}
+
+void set_clothing_stockpile(const int n) {
+    clothing_stockpile = n;
+}
+
+item_def_t * get_item_def(const std::string tag) {
+    auto finder = item_defs.find(tag);
+    if (finder == item_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+stockpile_def_t * get_stockpile_def(const int tag) {
+    auto finder = stockpile_defs.find(tag);
+    if (finder == stockpile_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+void each_stockpile(const std::function<void(stockpile_def_t *)> func) {
+    for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
+        func(&it->second);
+    }
+}
 
 void sanity_check_items() noexcept
 {

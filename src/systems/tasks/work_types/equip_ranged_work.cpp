@@ -11,6 +11,7 @@
 #include "../pathfinding.hpp"
 #include "../initiative.hpp"
 #include "../../main/game_designations.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 using namespace rltk;
 using tasks::become_idle;

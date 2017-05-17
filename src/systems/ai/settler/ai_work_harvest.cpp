@@ -11,6 +11,7 @@
 #include "../../../raws/materials.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../planet/region/region.hpp"
+#include "../../../raws/defs/item_def_t.hpp"
 
 using namespace region;
 
@@ -63,10 +64,10 @@ void ai_work_harvest::update(const double duration_ms) {
             const std::string result = plant.provides[veg_lifecycle(idx)];
             if (result != "none") {
                 std::string mat_type = "organic";
-                auto item_finder = item_defs.find(result);
-                if (item_finder != item_defs.end()) {
-                    if (item_finder->second.categories.test(ITEM_FOOD)) mat_type="food";
-                    if (item_finder->second.categories.test(ITEM_SPICE)) mat_type="spice";
+                auto item_finder = get_item_def(result);
+                if (item_finder != nullptr) {
+                    if (item_finder->categories.test(ITEM_FOOD)) mat_type="food";
+                    if (item_finder->categories.test(ITEM_SPICE)) mat_type="spice";
                 }
                 auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type));
                 item->component<item_t>()->item_name = plant.name;

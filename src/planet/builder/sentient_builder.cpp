@@ -2,6 +2,8 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/health_factory.hpp"
+#include "../../raws/items.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../utils/string_utils.hpp"
@@ -129,40 +131,40 @@ void create_sentient(planet_t &planet, rltk::random_number_generator &rng, std::
     if (unit.equipment.melee != "") {
         auto cs = split(unit.equipment.melee, '/');
         const std::string item_name = cs[0];
-        auto finder = item_defs.find(item_name);
+        auto finder = get_item_def(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
         w.material = get_material_by_tag(cs[1]);
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_MELEE, sentient->id});
-        weapon->component<item_t>()->stack_size = finder->second.stack_size;
-        weapon->component<item_t>()->category = finder->second.categories;
+        weapon->component<item_t>()->stack_size = finder->stack_size;
+        weapon->component<item_t>()->category = finder->categories;
         weapon->component<item_t>()->claimed = true;
     }
     if (unit.equipment.ranged != "") {
         auto cs = split(unit.equipment.ranged, '/');
         const std::string item_name = cs[0];
-        auto finder = item_defs.find(item_name);
+        auto finder = get_item_def(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
         w.material = get_material_by_tag(cs[1]);
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_RANGED, sentient->id});
-        weapon->component<item_t>()->stack_size = finder->second.stack_size;
-        weapon->component<item_t>()->category = finder->second.categories;
+        weapon->component<item_t>()->stack_size = finder->stack_size;
+        weapon->component<item_t>()->category = finder->categories;
         weapon->component<item_t>()->claimed = true;
     }
     if (unit.equipment.ammo != "") {
         auto cs = split(unit.equipment.ammo, '/');
         const std::string item_name = cs[0];
-        auto finder = item_defs.find(item_name);
+        auto finder = get_item_def(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
         w.material = get_material_by_tag(cs[1]);
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto ammo = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_AMMO, sentient->id});
-        ammo->component<item_t>()->stack_size = finder->second.stack_size;
-        ammo->component<item_t>()->category = finder->second.categories;
+        ammo->component<item_t>()->stack_size = finder->stack_size;
+        ammo->component<item_t>()->category = finder->categories;
         ammo->component<item_t>()->claimed = true;
     }
 

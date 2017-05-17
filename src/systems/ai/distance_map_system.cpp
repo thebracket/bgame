@@ -11,6 +11,7 @@
 #include "inventory_system.hpp"
 #include "../../components/item_stored.hpp"
 #include "../../main/game_designations.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 dijkstra_map huntables_map;
 dijkstra_map butcherables_map;
