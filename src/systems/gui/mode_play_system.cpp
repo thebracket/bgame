@@ -26,6 +26,7 @@
 #include "../../main/game_selections.hpp"
 #include "../../components/name.hpp"
 #include "../../main/game_camera.hpp"
+#include "../../raws/defs/plant_t.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -115,8 +116,8 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 	if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
 		if (veg_type(tile_idx) > 0) {
 			std::stringstream ss;
-            plant_t plant = get_plant_def(veg_type(tile_idx));
-            ss << plant.name << " (";
+            auto plant = get_plant_def(veg_type(tile_idx));
+            ss << plant->name << " (";
             switch (veg_lifecycle(tile_idx)) {
                 case 0 : ss << "Germinating"; break;
                 case 1 : ss << "Sprouting"; break;
@@ -124,7 +125,7 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
                 case 3 : ss << "Flowering"; break;
                 default : ss << "Unknown - error!";
             }
-            const std::string harvest_to = plant.provides[veg_lifecycle(tile_idx)];
+            const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
             if (harvest_to != "none") ss << " - " << harvest_to;
             ss << ")";
 			lines.push_back(ss.str());

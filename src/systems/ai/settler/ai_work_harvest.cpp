@@ -12,6 +12,7 @@
 #include "../../../raws/raws.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../../../raws/defs/item_def_t.hpp"
+#include "../../../raws/defs/plant_t.hpp"
 
 using namespace region;
 
@@ -60,8 +61,8 @@ void ai_work_harvest::update(const double duration_ms) {
                 work.cancel_work_tag(e);
                 return;
             }
-            const plant_t plant = get_plant_def(veg_type(idx));
-            const std::string result = plant.provides[veg_lifecycle(idx)];
+            const auto plant = get_plant_def(veg_type(idx));
+            const std::string result = plant->provides[veg_lifecycle(idx)];
             if (result != "none") {
                 std::string mat_type = "organic";
                 auto item_finder = get_item_def(result);
@@ -70,7 +71,7 @@ void ai_work_harvest::update(const double duration_ms) {
                     if (item_finder->categories.test(ITEM_SPICE)) mat_type="spice";
                 }
                 auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type));
-                item->component<item_t>()->item_name = plant.name;
+                item->component<item_t>()->item_name = plant->name;
             }
 
             // Knock tile back to germination

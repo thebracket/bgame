@@ -13,6 +13,7 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/plant_t.hpp"
 #include <vector>
 
 using namespace rltk;
@@ -309,8 +310,8 @@ void mode_design_system::harvest() {
     bool ok = true;
     if (veg_type(idx)==0) ok = false;
     if (ok) {
-        plant_t p = get_plant_def(veg_type(idx));
-        const std::string harvests_to = p.provides[veg_lifecycle(idx)];
+        auto p = get_plant_def(veg_type(idx));
+        const std::string harvests_to = p->provides[veg_lifecycle(idx)];
         if (harvests_to == "none") {
             ok=false;
         } else {

@@ -4,6 +4,7 @@
 #include "../../messages/tick_message.hpp"
 #include "../../raws/plants.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../raws/defs/plant_t.hpp"
 
 using namespace region;
 
@@ -42,10 +43,10 @@ void vegetation_system::update(const double ms) {
                     if (veg_type(idx) > 0) {
                         uint16_t current_tick = veg_ticker(idx)+1;
                         uint8_t current_cycle = veg_lifecycle(idx);
-                        plant_t plant = get_plant_def(veg_type(idx));
-                        const int return_val = plant.lifecycle[4];
+                        auto plant = get_plant_def(veg_type(idx));
+                        const int return_val = plant->lifecycle[4];
 
-                        if (current_tick > plant.lifecycle[current_cycle]) {
+                        if (current_tick > plant->lifecycle[current_cycle]) {
                             ++current_cycle;
                             current_tick = 0;
                             if (current_cycle > 3) current_cycle = return_val;

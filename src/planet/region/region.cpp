@@ -4,6 +4,7 @@
 #include "../../systems/physics/fluid_system.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../raws/defs/material_def_t.hpp"
+#include "../../raws/defs/plant_t.hpp"
 
 using namespace rltk;
 
@@ -727,13 +728,13 @@ namespace region {
 
 				if (tile_vegetation_type[idx] > 0) {
 					//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
-					const plant_t plant = get_plant_def(tile_vegetation_type[idx]);
+					const auto plant = get_plant_def(tile_vegetation_type[idx]);
 					const uint8_t lifecycle = tile_vegetation_lifecycle[idx];
 					rltk::vchar plant_render;
-					plant_render.glyph = camera->ascii_mode ? plant.glyphs_ascii[lifecycle].glyph
-															: plant.glyphs[lifecycle];
+					plant_render.glyph = camera->ascii_mode ? plant->glyphs_ascii[lifecycle].glyph
+															: plant->glyphs[lifecycle];
 					if (camera->ascii_mode) {
-						plant_render.foreground = plant.glyphs_ascii[lifecycle].foreground;
+						plant_render.foreground = plant->glyphs_ascii[lifecycle].foreground;
 					} else {
 						plant_render.foreground = colors::WHITE;
 					}
