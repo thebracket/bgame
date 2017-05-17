@@ -7,6 +7,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/item.hpp"
 #include "../../raws/life_events.hpp"
+#include "../../raws/defs/life_event_template.hpp"
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../main/game_selections.hpp"
 #include "../../main/game_mode.hpp"
@@ -75,9 +76,9 @@ void mode_settler_info_system::update(const double ms) {
     });
     ImGui::TextColored(ImVec4{0.0f, 1.0f, 0.0f, 1.0f}, "History:");
     for (const life_event_t &le : planet.history.settler_life_events[selected_settler]) {
-        auto finder = life_event_defs.find(le.type);
-        if (finder != life_event_defs.end()) {
-            const std::string line = std::to_string(le.year) + std::string(" : ") + finder->second.description;
+        auto finder = get_life_event(le.type);
+        if (finder != nullptr) {
+            const std::string line = std::to_string(le.year) + std::string(" : ") + finder->description;
             ImGui::Text("%s", line.c_str());
         } else {
             std::cout << "Warning: " << le.type << " life event not found\n";
