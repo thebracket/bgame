@@ -2,6 +2,7 @@
 
 #include "../../../raws/raws.hpp"
 #include "../../../raws/biomes.hpp"
+#include "../../../raws/defs/biome_type_t.hpp"
 #include <rltk.hpp>
 #include "../../planet.hpp"
 

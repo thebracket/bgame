@@ -5,6 +5,7 @@
 #include "builder/history_builder.hpp"
 #include "builder/river_builder.hpp"
 #include "../raws/biomes.hpp"
+#include "../raws/defs/biome_type_t.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -66,7 +67,7 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         (*planet_builder_display.get())[idx].foreground = color_t{col, col, col};
     }
     if (planet.landblocks[block_idx].type != block_type::WATER && !planet.biomes.empty() && planet.biomes[biome_idx].type > 0) {
-        (*planet_builder_display.get())[idx].foreground = get_biome_def(planet.biomes[biome_idx].type).worldgen_color;
+        (*planet_builder_display.get())[idx].foreground = get_biome_def(planet.biomes[biome_idx].type)->worldgen_color;
     }
 
     for (const river_t &r : planet.rivers) {

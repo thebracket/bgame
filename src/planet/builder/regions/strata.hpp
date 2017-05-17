@@ -5,6 +5,7 @@
 #include "../../planet.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/biomes.hpp"
+#include "../../../raws/defs/biome_type_t.hpp"
 
 struct strata_t {
     std::vector<int> strata_map;

@@ -1,6 +1,7 @@
 #include "biome_builder.hpp"
 #include "../planet_builder.hpp"
 #include "../../raws/biomes.hpp"
+#include "../../raws/defs/biome_type_t.hpp"
 
 std::unordered_map<uint8_t, double> biome_membership(planet_t &planet, const std::size_t &idx) {
 	std::unordered_map<uint8_t, double> percents;
@@ -81,21 +82,21 @@ std::vector<std::pair<double,std::size_t>> find_possible_biomes(std::unordered_m
 	std::vector<std::pair<double,std::size_t>> result;
 
 	std::size_t idx = 0;
-	for (const biome_type_t &bt : get_biome_defs()) {
-		if (biome.mean_temperature >= bt.min_temp && biome.mean_temperature <= bt.max_temp 
-			&& biome.mean_rainfall >= bt.min_rain && biome.mean_rainfall <= bt.max_rain
-			&& biome.warp_mutation >= bt.min_mutation && biome.warp_mutation <= bt.max_mutation) {
-			
-			// It's possible, so check to see if tile types are available
-			for (const uint8_t &occur : bt.occurs) {
-				auto finder = percents.find(occur);
-				if (finder != percents.end() && finder->second > 0) {
-					result.push_back(std::make_pair( finder->second * 100.0, idx ));
-				}
-			}
-		}
-		++idx;
-	}
+	each_biome([&biome, &idx, &result, &percents] (biome_type_t *bt) {
+        if (biome.mean_temperature >= bt->min_temp && biome.mean_temperature <= bt->max_temp
+            && biome.mean_rainfall >= bt->min_rain && biome.mean_rainfall <= bt->max_rain
+            && biome.warp_mutation >= bt->min_mutation && biome.warp_mutation <= bt->max_mutation) {
+
+            // It's possible, so check to see if tile types are available
+            for (const uint8_t &occur : bt->occurs) {
+                auto finder = percents.find(occur);
+                if (finder != percents.end() && finder->second > 0) {
+                    result.push_back(std::make_pair( finder->second * 100.0, idx ));
+                }
+            }
+        }
+        ++idx;
+    });
 
 	return result;
 } 
@@ -272,11 +273,11 @@ std::string name_biome(planet_t &planet, rltk::random_number_generator &rng, bio
 	}
 
 	std::string noun = "";
-	biome_type_t bt = get_biome_def(biome.type);
-	if (bt.nouns.empty()) {
-		std::cout << "Warning: no nouns defined for " << bt.name << "\n";
+	biome_type_t * bt = get_biome_def(biome.type);
+	if (bt->nouns.empty()) {
+		std::cout << "Warning: no nouns defined for " << bt->name << "\n";
 	} else {
-		noun = bt.nouns[rng.roll_dice(1, bt.nouns.size())-1];
+		noun = bt->nouns[rng.roll_dice(1, bt->nouns.size())-1];
 	}
 
 	name = noun;
