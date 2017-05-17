@@ -5,7 +5,6 @@
 #include "../components/item.hpp"
 #include "../components/item_stored.hpp"
 #include "string_table.hpp"
-#include "native_population.hpp"
 #include "creatures.hpp"
 #include "species.hpp"
 #include "biomes.hpp"
@@ -35,7 +34,6 @@ void sanity_check_raws() {
     sanity_check_biomes();
     sanity_check_species();
     sanity_check_creatures();
-    sanity_check_natives();
     sanity_check_stockpiles();
 }
 
@@ -75,7 +73,6 @@ void load_game_tables()
     read_biome_types();
     read_species_types();
     read_creature_types();
-    read_native_population_types();
 
     sanity_check_raws();
 
