@@ -10,8 +10,10 @@
 #include "../pathfinding.hpp"
 #include "../initiative.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../planet/region.hpp"
 
 using namespace rltk;
+using namespace region;
 using tasks::become_idle;
 using tasks::change_settler_glyph;
 using tasks::change_job_status;
@@ -89,7 +91,7 @@ void do_deconstruction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, speci
 					for (int Z=-2; Z<4; ++Z) {
 						for (int Y=-10; Y<10; ++Y) {
 							for (int X=-10; X<10; ++X) {
-								current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+								tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
 							}
 						}
 					}
@@ -114,17 +116,17 @@ void do_demolition(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 		int y = ai.target_y;
 		int z = ai.target_z;
 
-		if (current_region->tile_flags[mapidx(x-1,y,z)].test(CAN_STAND_HERE)) {
+		if (flag(mapidx(x-1,y,z), CAN_STAND_HERE)) {
 			x=x-1;
-		} else if (current_region->tile_flags[mapidx(x+1,y,z)].test(CAN_STAND_HERE)) {
+		} else if (flag(mapidx(x+1,y,z), CAN_STAND_HERE)) {
 			x=x+1;
-		} else if (current_region->tile_flags[mapidx(x,y-1,z)].test(CAN_STAND_HERE)) {
+		} else if (flag(mapidx(x,y-1,z), CAN_STAND_HERE)) {
 			y=y-1;
-		} else if (current_region->tile_flags[mapidx(x,y+1,z)].test(CAN_STAND_HERE)) {
+		} else if (flag(mapidx(x,y+1,z), CAN_STAND_HERE)) {
 			y=y+1;
-		} else if (current_region->tile_flags[mapidx(x,y,z-1)].test(CAN_STAND_HERE)) {
+		} else if (flag(mapidx(x,y,z-1), CAN_STAND_HERE)) {
 			z=z-1;
-		} else if (current_region->tile_flags[mapidx(x,y,z+1)].test(CAN_STAND_HERE)) {
+		} else if (flag(mapidx(x,y,z+1), CAN_STAND_HERE)) {
 			z=z+1;
 		} else {
 			cancel_action(e, ai, stats, species, pos, name, "No route to demolition");
@@ -162,20 +164,17 @@ void do_demolition(entity_t &e, settler_ai_t &ai, game_stats_t &stats, species_t
 		const int difficulty = 15;
 		auto skill_check = skill_roll(e.id, stats, rng, skill, difficulty);
 		if (skill_check >= SUCCESS) {
-			current_region->tile_type[ai.target_id] = tile_type::OPEN_SPACE;
-			current_region->solid[ai.target_id] = false;
-			current_region->tile_flags[ai.target_id].reset(CONSTRUCTION);
-			current_region->tile_flags[ai.target_id].reset(CAN_STAND_HERE);
-			spawn_item_on_ground(pos.x, pos.y, pos.z, "block", current_region->tile_material[ai.target_id]);
-			current_region->revealed[ai.target_id] = true;
-			current_region->revealed[mapidx(ai.target_x, ai.target_y, ai.target_z-1)] = true;
+            make_open_space(ai.target_id);
+			spawn_item_on_ground(pos.x, pos.y, pos.z, "block", material(ai.target_id));
+            reveal(ai.target_id);
+            reveal(mapidx(ai.target_x, ai.target_y, ai.target_z-1));
 			become_idle(e, ai, name);
 			// Update pathing
 			for (int i=0; i<2; ++i) {
 				for (int Z=-2; Z<4; ++Z) {
 					for (int Y=-10; Y<10; ++Y) {
 						for (int X=-10; X<10; ++X) {
-							current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+							tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
 						}
 					}
 				}

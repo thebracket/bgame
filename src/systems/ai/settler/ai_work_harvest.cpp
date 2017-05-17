@@ -7,6 +7,9 @@
 #include "../../../utils/telemetry.hpp"
 #include "ai_work_template.hpp"
 #include "../../../raws/plants.hpp"
+#include "../../../planet/region.hpp"
+
+using namespace region;
 
 namespace jobs_board {
     void evaluate_harvest(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
@@ -49,12 +52,12 @@ void ai_work_harvest::update(const double duration_ms) {
                                         designations->harvest.end());
 
             // Create the harvesting result
-            if (current_region->tile_vegetation_type[idx] == 0) {
+            if (veg_type(idx) == 0) {
                 work.cancel_work_tag(e);
                 return;
             }
-            const plant_t plant = get_plant_def(current_region->tile_vegetation_type[idx]);
-            const std::string result = plant.provides[current_region->tile_vegetation_lifecycle[idx]];
+            const plant_t plant = get_plant_def(veg_type(idx));
+            const std::string result = plant.provides[veg_lifecycle(idx)];
             if (result != "none") {
                 std::string mat_type = "organic";
                 auto item_finder = item_defs.find(result);
@@ -67,8 +70,8 @@ void ai_work_harvest::update(const double duration_ms) {
             }
 
             // Knock tile back to germination
-            current_region->tile_vegetation_lifecycle[idx] = 0;
-            current_region->tile_vegetation_ticker[idx] = 0;
+            set_veg_lifecycle(idx, 0);
+            set_veg_ticker(idx, 0);
 
             // Become idle - done
             call_home("harvest", result);

@@ -7,7 +7,7 @@
 #include "../../raws/reactions.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
 
 void inventory_system::update(const double duration_ms) {
@@ -122,9 +122,9 @@ void inventory_system::configure() {
 		for (int x = sx; x < sx + designate.width; ++x) {
 			for (int y=sy; y < sy + designate.height; ++y) {
 				const auto idx = mapidx(x,y,camera_position->region_z);
-				current_region->tile_flags[idx].set(CONSTRUCTION);
-				current_region->tile_vegetation_type[idx] = 0;
-                current_region->calc_render(idx);
+				region::set_flag(idx, CONSTRUCTION);
+                region::set_veg_type(idx, 0);
+                region::calc_render(idx);
 			}
 		}
 	});

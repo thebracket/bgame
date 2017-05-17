@@ -8,7 +8,7 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 
 const std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
 const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
@@ -65,7 +65,7 @@ void hud_system::update(const double ms) {
             }
             if (ImGui::MenuItem("Toggle ASCII")) {
                 camera->ascii_mode = !camera->ascii_mode;
-                current_region->tile_recalc_all();
+                region::tile_recalc_all();
             }
             ImGui::EndMenu();
         }

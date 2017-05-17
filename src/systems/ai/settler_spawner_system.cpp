@@ -4,7 +4,9 @@
 #include "../../main/game_planet.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
+
+using namespace region;
 
 void settler_spawner_system::configure() {
     system_name = "Settler Spawner";
@@ -22,7 +24,7 @@ void settler_spawner_system::update(const double duration_ms) {
             if (planet.migrant_counter > 14 && !planet.strict_beamdown) { // Every 2 weeks
                 const int crash_x = REGION_WIDTH / 2;
                 const int crash_y = REGION_HEIGHT / 2;
-                const int crash_z = get_ground_z(*current_region, crash_x, crash_y);
+                const int crash_z = ground_z(crash_x, crash_y);
 
                 const std::vector<position_t> settler_arrival_points{
                         {crash_x - 2, crash_y - 2, crash_z+1},

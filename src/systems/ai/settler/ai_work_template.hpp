@@ -12,7 +12,7 @@
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../main/game_pause.hpp"
-#include "../../../main/game_region.hpp"
+#include "../../../planet/region.hpp"
 
 template<typename TAG>
 class ai_work_template {
@@ -102,7 +102,7 @@ public:
         tag.current_path->steps.pop_front();
         if (next_step.x > 0 && next_step.x < REGION_WIDTH && next_step.y > 0 &&
             next_step.y < REGION_HEIGHT && next_step.z > 0 && next_step.z < REGION_DEPTH
-            && current_region->tile_flags[mapidx(next_step)].test(CAN_STAND_HERE))
+            && region::flag(mapidx(next_step), CAN_STAND_HERE))
         {
             move_to(e.id, next_step);
         } else {

@@ -5,7 +5,7 @@
 #include "../../utils/gl/map_render.hpp"
 #include "../../main/game_clipping.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 
 
 uint32_t camera_glyph_cycle = 0;

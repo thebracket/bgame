@@ -2,7 +2,9 @@
 #include "../components/stockpile.hpp"
 #include "../components/item.hpp"
 #include "../../main/game_designations.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
+
+using namespace region;
 
 namespace stockpile_sys {
     std::unordered_map<std::size_t, stockpile_info_t> stockpiles;
@@ -39,7 +41,7 @@ void stockpile_system::on_message(const tick_message &msg) {
 
     // Build a free tiles list
     for (int i=0; i<REGION_TILES_COUNT; ++i) {
-        const int spid = current_region->stockpile_id[i];
+        const int spid = stockpile_id(i);
         if (spid > 0) {
             ++stockpiles[spid].free_capacity;
             stockpiles[spid].open_tiles.insert(i);
@@ -49,10 +51,10 @@ void stockpile_system::on_message(const tick_message &msg) {
     // Find items in stockpiles and items not in stockpiles
     each<item_t, position_t>([] (entity_t &e, item_t &i, position_t &pos) {
         const int idx = mapidx(pos);
-        if (current_region->stockpile_id[idx] > 0) {
+        if (stockpile_id(idx) > 0) {
             // If it is already in a stockpile, reduce that capacity
-            --stockpiles[current_region->stockpile_id[idx]].free_capacity;
-            stockpiles[current_region->stockpile_id[idx]].open_tiles.erase(idx);
+            --stockpiles[stockpile_id(idx)].free_capacity;
+            stockpiles[stockpile_id(idx)].open_tiles.erase(idx);
             return;
         }
 

@@ -16,6 +16,8 @@
 #include "job_board.hpp"
 #include "../../messages/recalculate_mining_message.hpp"
 
+using namespace region;
+
 namespace jobs_board {
     void evaluate_mining(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
         if (designations->mining.empty()) return; // No mining to do
@@ -67,27 +69,27 @@ void ai_work_mining::update(const double duration_ms) {
 
             int current_direction = 0;
             uint8_t min_value = std::numeric_limits<uint8_t>::max();
-            if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_NORTH)) {
+            if (mining_map[mapidx(pos.x, pos.y-1, pos.z)] < min_value && flag(idx, CAN_GO_NORTH)) {
                 min_value = mining_map[mapidx(pos.x, pos.y-1, pos.z)];
                 current_direction = 1;
             }
-            if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) {
+            if (mining_map[mapidx(pos.x, pos.y+1, pos.z)] < min_value && flag(idx, CAN_GO_SOUTH)) {
                 min_value = mining_map[mapidx(pos.x, pos.y+1, pos.z)];
                 current_direction = 2;
             }
-            if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
+            if (mining_map[mapidx(pos.x-1, pos.y, pos.z)] < min_value && flag(idx, CAN_GO_WEST)) {
                 min_value = mining_map[mapidx(pos.x-1, pos.y, pos.z)];
                 current_direction = 3;
             }
-            if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
+            if (mining_map[mapidx(pos.x+1, pos.y, pos.z)] < min_value && flag(idx, CAN_GO_EAST)) {
                 min_value = mining_map[mapidx(pos.x+1, pos.y, pos.z)];
                 current_direction = 4;
             }
-            if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && current_region->tile_flags[idx].test(CAN_GO_DOWN)) {
+            if (mining_map[mapidx(pos.x, pos.y, pos.z-1)] < min_value && flag(idx, CAN_GO_DOWN)) {
                 min_value = mining_map[mapidx(pos.x, pos.y, pos.z-1)];
                 current_direction = 5;
             }
-            if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && current_region->tile_flags[idx].test(CAN_GO_UP)) {
+            if (mining_map[mapidx(pos.x, pos.y, pos.z+1)] < min_value && flag(idx, CAN_GO_UP)) {
                 min_value = mining_map[mapidx(pos.x, pos.y, pos.z+1)];
                 current_direction = 6;
             }

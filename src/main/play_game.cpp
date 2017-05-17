@@ -8,7 +8,7 @@
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/map_render.hpp"
 #include "../utils/filesystem.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_logger.hpp"
 #include "../../main/game_calendar.hpp"
@@ -104,7 +104,7 @@ void do_load_game() {
         camera = &camera_prefs;
     });
     std::cout << "Loading the region\n";
-    *current_region = load_region(region_x, region_y);
+    region::load_current_region(region_x, region_y);
 
     // Setup systems
     std::cout << "Setting up systems\n";

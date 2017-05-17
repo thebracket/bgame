@@ -4,7 +4,7 @@
 #include <../../external/imgui-sfml/imgui-SFML.h>
 #include "../physics/fluid_system.hpp"
 #include "mode_play_system.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 #include "../../main/game_mode.hpp"
 #include "../input/mouse_input_system.hpp"
 #include "../../components/explosion_t.hpp"
@@ -12,6 +12,7 @@
 #include "../../main/game_rng.hpp"
 
 using namespace rltk;
+using namespace region;
 
 namespace boomtest {
     bool boom_mode = false;
@@ -30,7 +31,7 @@ void wish_system::make_wish(const std::string &wish) {
         std::cout << "Let it rain!\n";
         for (int y=1; y<REGION_HEIGHT-1; ++y) {
             for (int x=1; x<REGION_WIDTH-1; ++x) {
-                current_region->water_level[mapidx(x,y,REGION_DEPTH-2)] = 3;
+                set_water_level(mapidx(x,y,REGION_DEPTH-2), 3);
                 water_stable[mapidx(x,y,REGION_DEPTH-2)]=false;
             }
         }
@@ -38,10 +39,6 @@ void wish_system::make_wish(const std::string &wish) {
         dijkstra_debug = !dijkstra_debug;
     } else if (wish == "show flags") {
         flags_debug = !flags_debug;
-    } else if (wish == "reveal all") {
-        std::fill(current_region->revealed.begin(), current_region->revealed.end(), true);
-        std::fill(current_region->visible.begin(), current_region->visible.end(), true);
-        emit_deferred(map_dirty_message{});
     } else if (wish == "boom") {
         boomtest::boom_mode = true;
     } else if (wish == "asteroids") {
@@ -49,7 +46,7 @@ void wish_system::make_wish(const std::string &wish) {
         for (int i=0; i<n_missiles; ++i) {
             const int x = rng.roll_dice(1, REGION_WIDTH-1);
             const int y = rng.roll_dice(1, REGION_HEIGHT-1);
-            const int z = get_ground_z(*current_region, x, y);
+            const int z = ground_z(x, y);
             create_entity()
                     ->assign(position_t{ x, y, z })
                     ->assign(explosion_t{10, 10, 5, 20});
@@ -57,7 +54,7 @@ void wish_system::make_wish(const std::string &wish) {
     } else if (wish == "nuke") {
         const int x = REGION_WIDTH/2 - 20;
         const int y = REGION_HEIGHT/2 - 20;
-        const int z = std::max(REGION_DEPTH-2, get_ground_z(*current_region, x, y));
+        const int z = std::max(REGION_DEPTH-2, ground_z(x, y));
         create_entity()
                 ->assign(position_t{ x, y, z })
                 ->assign(explosion_t{10, 30, 10, 200});

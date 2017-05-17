@@ -14,6 +14,7 @@
 #include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
+#include "../region.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -23,7 +24,7 @@ int sentient_get_stat_mod(const std::string stat, const raw_species_t * species)
     return mod;
 }
 
-void create_sentient(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::tuple<int,int,int> &start,
+void create_sentient(planet_t &planet, rltk::random_number_generator &rng, std::tuple<int,int,int> &start,
                      const civ_unit_sentient_t &unit, const std::string species_tag, const std::size_t civ_id,
                      bool announce)
 {
@@ -176,7 +177,7 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     // Equipment
 }
 
-void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::size_t civ_id,
+void create_sentient_unit(planet_t &planet, rltk::random_number_generator &rng, std::size_t civ_id,
                           const std::string &unit_tag,
                           std::vector<std::tuple<int,int,int>> &starting_points, int &spawn_counter,
                           const bool announce)
@@ -197,9 +198,9 @@ void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_numbe
             } else {
                 std::get<0>(sp) = rng.roll_dice(1,REGION_WIDTH-1);
                 std::get<1>(sp) = rng.roll_dice(1,REGION_HEIGHT-1);
-                std::get<2>(sp) = get_ground_z(region, std::get<0>(sp), std::get<1>(sp));
+                std::get<2>(sp) = region::ground_z(std::get<0>(sp), std::get<1>(sp));
             }
-            create_sentient(planet, region, rng, sp, unit, species_tag, civ_id, announce);
+            create_sentient(planet, rng, sp, unit, species_tag, civ_id, announce);
 
             ++spawn_counter;
             if (spawn_counter > starting_points.size()) spawn_counter = 0;

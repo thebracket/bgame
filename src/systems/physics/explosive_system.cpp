@@ -3,7 +3,7 @@
 #include "../../components/position.hpp"
 #include "../../components/explosion_t.hpp"
 #include "../ai/movement_system.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 #include "../../messages/emit_particles_message.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../main/game_rng.hpp"
@@ -22,6 +22,8 @@
 #include <unordered_set>
 #include <tuple>
 
+using namespace region;
+
 void explosive_system::configure() {
     system_name = "Explosive System";
     subscribe<tick_message>([this] (tick_message &msg) {
@@ -39,18 +41,18 @@ inline void internal_boom_to(position_t &pos, int radius, int x, int y, int z, s
             return false;
         } else {
             const auto idx = mapidx(X, Y, Z);
-            bool blocked = current_region->solid[idx];
+            bool blocked = solid(idx);
             if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
             if (!blocked && last_z != Z) {
                 //std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
                 // Check for ceilings and floors
                 if (last_z > Z) {
-                    if (current_region->tile_type[idx] == tile_type::FLOOR) {
+                    if (region::tile_type(idx) == tile_type::FLOOR) {
                         blocked = true;
                         //std::cout << "Ceiling block\n";
                     }
                 } else if (last_z < Z) {
-                    if (current_region->tile_type[mapidx(X, Y, last_z)] == tile_type::FLOOR) {
+                    if (region::tile_type(mapidx(X, Y, last_z)) == tile_type::FLOOR) {
                         blocked = true;
                         //std::cout << "Floor block\n";
                     }
@@ -116,27 +118,23 @@ void explosive_system::update(const double duration_ms) {
                     emit(emit_particles_message{PARTICLE_SMOKE, x, y, z});
 
                     // Damage to the tile - change it to use the material properties
-                    if (current_region->solid[boomidx] || current_region->tile_type[boomidx] == tile_type::FLOOR) {
+                    if (solid(boomidx) || region::tile_type(boomidx) == tile_type::FLOOR) {
                         // We need to damage the tile
                         const int damage_base = rng.roll_dice(boom.damage_dice, boom.damage_dice_type);
                         const int damage = damage_base / 10;
                         emit(vegetation_damage_message{boomidx, damage});
-                        if (damage > current_region->hit_points[boomidx]) {
-                            current_region->hit_points[boomidx] = 0;
+                        if (damage > tile_hit_points(boomidx)) {
+                            damage_tile(boomidx, damage);
                             // Destroyed
-                            if (current_region->tree_id[boomidx] > 0) {
+                            if (tree_id(boomidx) > 0) {
                                 // Destroy the tree and make wood
-                                const auto tree_id = current_region->tree_id[boomidx];
+                                const auto tid = tree_id(boomidx);
                                 for (int Z = 0; Z < REGION_DEPTH; ++Z) {
                                     for (int Y = 0; Y < REGION_HEIGHT; ++Y) {
                                         for (int X = 0; X < REGION_WIDTH; ++X) {
                                             const int idx = mapidx(X, Y, Z);
-                                            if (current_region->tree_id[idx] == tree_id) {
-                                                current_region->solid[idx] = false;
-                                                current_region->tile_type[idx] = tile_type::OPEN_SPACE;
-                                                current_region->tree_id[idx] = 0;
-                                                current_region->tile_flags[idx].reset(CAN_STAND_HERE);
-                                                current_region->opaque[idx] = false;
+                                            if (tree_id(idx) == tid) {
+                                                make_open_space(idx);
                                                 if (rng.roll_dice(1, 4) > 2) spawn_item_on_ground(X, Y, Z, "wood_log",
                                                                                                   get_material_by_tag(
                                                                                                           "wood"));
@@ -144,14 +142,15 @@ void explosive_system::update(const double duration_ms) {
                                         }
                                     }
                                 }
-                                designations->chopping.erase(tree_id);
+                                delete_tree(tid);
+                                designations->chopping.erase(tid);
                                 for (int Z = -2; Z < 10; ++Z) {
                                     for (int Y = -10; Y < 10; ++Y) {
                                         for (int X = -10; X < 10; ++X) {
                                             if (x + X > 0 && x + X < REGION_WIDTH && y + Y > 0 &&
                                                 y + Y < REGION_HEIGHT && z + Z > 0 && z + Z < REGION_DEPTH) {
-                                                current_region->tile_calculate(x + X, y + Y, z + Z);
-                                                current_region->tile_calculate(x + X, y + Y, z + Z);
+                                                tile_calculate(x + X, y + Y, z + Z);
+                                                tile_calculate(x + X, y + Y, z + Z);
                                             }
                                         }
                                     }
@@ -159,13 +158,13 @@ void explosive_system::update(const double duration_ms) {
                             } else {
                                 // Mine out the tile
                                 emit(perform_mining_message{boomidx, 1, x, y, z});
-                                if (current_region->tile_type[boomidx] == tile_type::FLOOR) {
-                                    current_region->tile_type[boomidx] = tile_type::OPEN_SPACE;
-                                    current_region->tile_calculate(x, y, z);
+                                if (region::tile_type(boomidx) == tile_type::FLOOR) {
+                                    make_open_space(boomidx);
+                                    tile_calculate(x, y, z);
                                 }
                             }
                         } else {
-                            current_region->veg_hit_points[boomidx] -= damage; // Apply the damage
+                            damage_tile(boomidx, damage);
                         }
                     }
 
@@ -190,7 +189,7 @@ void explosive_system::update(const double duration_ms) {
                     if (dest.y > REGION_HEIGHT - 1) dest.y = REGION_HEIGHT - 1;
                     if (dest.z < 1) dest.z = 1;
                     if (dest.z > REGION_DEPTH - 1) dest.z = REGION_DEPTH - 1;
-                    const bool dest_solid = current_region->solid[mapidx(dest)];
+                    const bool dest_solid = solid(mapidx(dest));
 
                     for (const auto &target : targets) {
                         emit(

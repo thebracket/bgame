@@ -25,10 +25,12 @@
 #include "../ai/movement_system.hpp"
 #include "../../components/health.hpp"
 #include "../../main/game_pause.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_mode.hpp"
+
+using namespace region;
 
 void trigger_system::configure() {
     system_name = "Trigger System";
@@ -284,19 +286,19 @@ void trigger_system::pulled_levers() {
                         if (target_bridge->retracted) {
                             // Retract the bridge
                             for (int i=0; i<REGION_TILES_COUNT; ++i) {
-                                if (current_region->bridge_id[i] == id) {
-                                    current_region->tile_type[i] = tile_type::OPEN_SPACE;
+                                if (bridge_id(i) == id) {
+                                    make_open_space(i);
                                 }
                             }
                         } else {
                             // Extend the bridge!
                             for (int i=0; i<REGION_TILES_COUNT; ++i) {
-                                if (current_region->bridge_id[i] == id) {
-                                    current_region->tile_type[i] = tile_type::FLOOR;
+                                if (bridge_id(i) == id) {
+                                    make_floor(i);
                                 }
                             }
                         }
-                        current_region->tile_recalc_all();
+                        tile_recalc_all();
                         emit_deferred(map_changed_message{});
                     }
                     if (target_building && target_building->tag == "spike_trap") {

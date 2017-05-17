@@ -5,7 +5,9 @@
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
+
+using namespace region;
 
 void door_system::configure() {
     system_name = "Door System";
@@ -19,16 +21,16 @@ void door_system::update(const double ms) {
         each<construct_door_t, position_t>([] (entity_t &e, construct_door_t &door, position_t &pos) {
             const int idx = mapidx(pos.x, pos.y, pos.z);
             if (door.locked) {
-                current_region->tile_type[idx] = tile_type::CLOSED_DOOR;
+                set_tile_type(idx, tile_type::CLOSED_DOOR);
             } else {
-                current_region->tile_type[idx] = tile_type::FLOOR;
+                set_tile_type(idx, tile_type::FLOOR);
             }
 
-            current_region->tile_calculate(pos.x, pos.y, pos.z);
+            tile_calculate(pos.x, pos.y, pos.z);
             for (int Z=-2; Z<3; ++Z) {
                 for (int Y=-2; Y<3; ++Y) {
                     for (int X=-2; X<3; ++X) {
-                        current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+                        tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
                     }
                 }
             }

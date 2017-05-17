@@ -4,7 +4,7 @@
 #include "../../main/game_pause.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 
 bool collect_text = false;
 std::string input_text;
@@ -101,7 +101,7 @@ void keyboard_system::update(const double ms) {
         if (e.event.key.code == sf::Keyboard::Tab) {
             if (e.event.key.shift) {
                 camera->ascii_mode = !camera->ascii_mode;
-                current_region->tile_recalc_all();
+                region::tile_recalc_all();
             } else {
                 if (camera->camera_mode == TOP_DOWN) {
                     camera->camera_mode = FRONT;

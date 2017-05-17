@@ -10,10 +10,12 @@
 #include "../../../messages/renderables_changed_message.hpp"
 #include "../../../main/game_planet.hpp"
 #include "../../../main/game_pause.hpp"
-#include "../../../main/game_region.hpp"
+#include "../../../planet/region.hpp"
 #include "../../../main/game_rng.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
+
+using namespace region;
 
 void ai_idle::configure() {}
 
@@ -23,7 +25,7 @@ void idle_grazer(entity_t &e, ai_tag_my_turn_t &t, grazer_ai &grazer) {
 
     // Grazers simply eat vegetation or move
     const auto idx = mapidx(pos->x, pos->y, pos->z);
-    if (current_region->tile_vegetation_type[idx] > 0) {
+    if (veg_type(idx) > 0) {
         if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
     } else {
         emit(entity_wants_to_move_randomly_message{e.id});

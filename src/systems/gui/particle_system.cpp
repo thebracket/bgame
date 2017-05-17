@@ -2,9 +2,10 @@
 #include "../../messages/messages.hpp"
 #include "../../components/smoke_emitter.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 
 using namespace rltk;
+using namespace region;
 
 std::vector<particle_t> particles;
 
@@ -49,22 +50,22 @@ void particle_system::update(const double ms) {
                 p.deleteme = true;
             }
             if (!p.deleteme) {
-                if (p.z < REGION_DEPTH - 2 && !current_region->solid[mapidx(p.x, p.y, p.z + 1)]) {
+                if (p.z < REGION_DEPTH - 2 && !solid(mapidx(p.x, p.y, p.z + 1))) {
                     ++p.z;
                 }
                 int direction = rng.roll_dice(1, 6);
                 switch (direction) {
                     case 1 :
-                        if (p.x > 1 && !current_region->solid[mapidx(p.x - 1, p.y, p.z)]) --p.x;
+                        if (p.x > 1 && !solid(mapidx(p.x - 1, p.y, p.z))) --p.x;
                         break;
                     case 2 :
-                        if (p.x < REGION_WIDTH - 2 && !current_region->solid[mapidx(p.x + 1, p.y, p.z)]) ++p.x;
+                        if (p.x < REGION_WIDTH - 2 && !solid(mapidx(p.x + 1, p.y, p.z))) ++p.x;
                         break;
                     case 3 :
-                        if (p.y > 1 && !current_region->solid[mapidx(p.x, p.y - 1, p.z)]) --p.y;
+                        if (p.y > 1 && !solid(mapidx(p.x, p.y - 1, p.z))) --p.y;
                         break;
                     case 4 :
-                        if (p.y < REGION_HEIGHT - 2 && !current_region->solid[mapidx(p.x, p.y + 1, p.z)]) ++p.x;
+                        if (p.y < REGION_HEIGHT - 2 && !solid(mapidx(p.x, p.y + 1, p.z))) ++p.x;
                         break;
                 }
             }

@@ -7,7 +7,7 @@
 #include "main/play_game.hpp"
 #include "main/game_config.hpp"
 #include "main/game_planet.hpp"
-#include "main/game_region.hpp"
+#include "planet/region.hpp"
 #include "main/game_mode.hpp"
 #include "main/guitheme.hpp"
 #include "utils/string_utils.hpp"
@@ -43,7 +43,7 @@ void save_game() {
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
 	ecs_save(lbfile);
 	std::cout << "Saving region\n";
-	save_region(*current_region);
+	region::save_current_region();
 	std::cout << "Saving planet\n";
 	save_planet(planet);
 	last_save = std::chrono::high_resolution_clock::now();

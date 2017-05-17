@@ -2,8 +2,8 @@
 #include "../../components/health.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
-#include "../../main/game_region.hpp"
 #include "../../components/building.hpp"
+#include "../../planet/region.hpp"
 
 void damage_system::do_building_damage(const inflict_damage_message &msg) {
     auto e = entity(msg.victim);
@@ -83,7 +83,7 @@ void damage_system::on_message(const inflict_damage_message &msg) {
         }
         auto pos = entity(msg.victim)->component<position_t>();
         if (pos) {
-            current_region->blood_stains[mapidx(pos->x, pos->y, pos->z)] = true;
+            region::set_bloodstain(mapidx(pos->x, pos->y, pos->z), true);
         }
 
     }

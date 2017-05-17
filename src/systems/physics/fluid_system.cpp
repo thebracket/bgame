@@ -6,7 +6,9 @@
 #include "../../messages/inflict_damage_message.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
+
+using namespace region;
 
 std::vector<bool> water_stable(REGION_TILES_COUNT);
 
@@ -20,42 +22,42 @@ inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bo
 
     const auto idx_below = mapidx(x,y,z-1);
     // Is there space below? If so, fall
-    if (!current_region->solid[idx_below] && current_region->water_level[idx_below]<10) {
+    if (!solid(idx_below) && water_level(idx_below)<10) {
         // Move a water cell down
-        ++current_region->water_level[idx_below];
-        --current_region->water_level[idx];
-        current_region->calc_render(idx);
-        current_region->calc_render(idx_below);
+        add_water(idx_below);
+        remove_water(idx);
+        calc_render(idx);
+        calc_render(idx_below);
         did_something = true;
     } else {
-        const uint8_t my_water_level = current_region->water_level[idx];
+        const uint8_t my_water_level = water_level(idx);
         const int idx_west = mapidx(x-1,y,z);
         const int idx_east = mapidx(x+1,y,z);
         const int idx_north = mapidx(x,y-1,z);
         const int idx_south = mapidx(x,y+1,z);
-        if (x>0 && !current_region->solid[idx_west] && current_region->water_level[idx_west]<my_water_level && current_region->water_level[idx_west]<10) {
-            ++current_region->water_level[idx_west];
-            --current_region->water_level[idx];
-            current_region->calc_render(idx);
-            current_region->calc_render(idx_west);
+        if (x>0 && !solid(idx_west) && water_level(idx_west)<my_water_level && water_level(idx_west)<10) {
+            add_water(idx_west);
+            remove_water(idx);
+            calc_render(idx);
+            calc_render(idx_west);
             did_something = true;
-        } else if (x<REGION_WIDTH-1 && !current_region->solid[idx_east] && current_region->water_level[idx_east]<my_water_level && current_region->water_level[idx_east]<10) {
-            ++current_region->water_level[idx_east];
-            --current_region->water_level[idx];
-            current_region->calc_render(idx);
-            current_region->calc_render(idx_east);
+        } else if (x<REGION_WIDTH-1 && !solid(idx_east) && water_level(idx_east)<my_water_level && water_level(idx_east)<10) {
+            add_water(idx_east);
+            remove_water(idx);
+            calc_render(idx);
+            calc_render(idx_east);
             did_something = true;
-        } else if (y>0 && !current_region->solid[idx_north] && current_region->water_level[idx_north]<my_water_level && current_region->water_level[idx_north]<10) {
-            ++current_region->water_level[idx_north];
-            --current_region->water_level[idx];
-            current_region->calc_render(idx);
-            current_region->calc_render(idx_north);
+        } else if (y>0 && !solid(idx_north) && water_level(idx_north)<my_water_level && water_level(idx_north)<10) {
+            add_water(idx_north);
+            remove_water(idx);
+            calc_render(idx);
+            calc_render(idx_north);
             did_something = true;
-        } else if (y<REGION_HEIGHT-1 && !current_region->solid[idx_south] && current_region->water_level[idx_south]<my_water_level && current_region->water_level[idx_south]<10) {
-            ++current_region->water_level[idx_south];
-            --current_region->water_level[idx];
-            current_region->calc_render(idx);
-            current_region->calc_render(idx_south);
+        } else if (y<REGION_HEIGHT-1 && !solid(idx_south) && water_level(idx_south)<my_water_level && water_level(idx_south)<10) {
+            add_water(idx_south);
+            remove_water(idx);
+            calc_render(idx);
+            calc_render(idx_south);
             did_something = true;
         }
     }
@@ -69,12 +71,12 @@ inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bo
         const int idx_down = mapidx(x,y,z-1);
         const int idx_up = mapidx(x,y,z+1);
         water_stable[idx] = false;
-        if (x>0 && current_region->water_level[idx_west]>0) water_stable[idx_west] = false;
-        if (x<REGION_WIDTH-1 && current_region->water_level[idx_east]>0) water_stable[idx_east] = false;
-        if (y>0 && current_region->water_level[idx_north]>0) water_stable[idx_north] = false;
-        if (y<REGION_HEIGHT-1 && current_region->water_level[idx_south]>0) water_stable[idx_south] = false;
-        if (z>0 && current_region->water_level[idx_down]>0) water_stable[idx_down] = false;
-        if (z<REGION_DEPTH-1 && current_region->water_level[idx_up]>0) water_stable[idx_up] = false;
+        if (x>0 && water_level(idx_west)>0) water_stable[idx_west] = false;
+        if (x<REGION_WIDTH-1 && water_level(idx_east)>0) water_stable[idx_east] = false;
+        if (y>0 && water_level(idx_north)>0) water_stable[idx_north] = false;
+        if (y<REGION_HEIGHT-1 && water_level(idx_south)>0) water_stable[idx_south] = false;
+        if (z>0 && water_level(idx_down)>0) water_stable[idx_down] = false;
+        if (z<REGION_DEPTH-1 && water_level(idx_up)>0) water_stable[idx_up] = false;
     }
 }
 
@@ -82,7 +84,7 @@ inline void do_layer(const int &z, bool &did_something) {
     for (int y=1; y<REGION_HEIGHT-1; ++y) {
         for (int x=1; x<REGION_WIDTH-1; ++x) {
             const auto idx = mapidx(x,y,z);
-            if (current_region->water_level[idx]>0 && !water_stable[idx]) {
+            if (water_level(idx)>0 && !water_stable[idx]) {
                 do_cell(x, y, z, idx, did_something);
             }
         }
@@ -120,10 +122,10 @@ void do_fluids()
         const auto idx = mapidx(pos.x, pos.y, pos.z);
         if (w.spawner_type == 1 || w.spawner_type == 2) {
             // TODO: When rainfall is implemented, type 1 only spawns when it rains
-            if (current_region->water_level[idx] < 10) current_region->water_level[idx] = 10;
+            if (water_level(idx) < 10) set_water_level(idx, 10);
         } else {
             // Type 3 removes water - used to make rivers flow downhill
-            if (current_region->water_level[idx] > 0) current_region->water_level[idx] = 0;
+            if (water_level(idx) > 0) set_water_level(idx, 0);
         }
     });
 }
@@ -144,11 +146,11 @@ void fluid_system::update(const double ms) {
         break;
 
         for (std::size_t i=0; i<REGION_TILES_COUNT; ++i) {
-            if (water_stable[i] && current_region->water_level[i] == 1 && rng.roll_dice(1,6)==6) current_region->water_level[i] = 0;
+            if (water_stable[i] && water_level(i) == 1 && rng.roll_dice(1,6)==6) set_water_level(i, 0);
         }
 
         each<position_t>([] (entity_t &e, position_t &pos) {
-            if (current_region->water_level[mapidx(pos)] > 7) {
+            if (water_level(mapidx(pos)) > 7) {
                 bool is_drowning = true;
 
                 auto stats = e.component<game_stats_t>();

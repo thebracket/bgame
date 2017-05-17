@@ -1,8 +1,12 @@
 #include "blight_builder.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../raws/materials.hpp"
+#include "../../region.hpp"
 
-void build_ant_mound(region_t &region, random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) {
+using namespace rltk;
+using namespace region;
+
+void build_ant_mound(random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) {
     // Build nests and move the creatures into them
     auto blight_mat = get_material_by_tag("blight");
     const int mound_height = rng.roll_dice(3,6);
@@ -10,26 +14,26 @@ void build_ant_mound(region_t &region, random_number_generator &rng, std::vector
 
     int x = rng.roll_dice(1,REGION_WIDTH-40)+20;
     int y = rng.roll_dice(1,REGION_HEIGHT-40)+20;
-    int z = get_ground_z(region, x, y) - mound_depth;
+    int z = ground_z(x, y) - mound_depth;
     bool not_in_middle = false;
     while (!not_in_middle) {
-        if (distance2d(x,y, REGION_WIDTH/2, REGION_HEIGHT/2)>10.0F || region.water_level[mapidx(x,y,z)]>0) {
+        if (distance2d(x,y, REGION_WIDTH/2, REGION_HEIGHT/2)>10.0F || water_level(mapidx(x,y,z))>0) {
             not_in_middle = true;
             x = rng.roll_dice(1,REGION_WIDTH-10)+5;
             y = rng.roll_dice(1,REGION_HEIGHT-10)+5;
-            z = get_ground_z(region, x, y) - 20;
+            z = ground_z(x, y) - 20;
             if (z < 10) z = 10;
         }
     }
 
     // Caves
-    const int ground_z = get_ground_z(region, x,y);
+    const int gz = ground_z(x,y);
     int i = mound_depth;
-    for (int sz = z; sz<ground_z-1; ++sz) {
+    for (int sz = z; sz<gz-1; ++sz) {
         for (int X = x-i; X<x+i; ++X) {
             for (int Y = y-i; Y<y+i; ++Y) {
                 if (distance2d(X,Y,x,y) < (i+2.0f)/2.0f) {
-                    region.tile_type[mapidx(X, Y, sz)] = tile_type::FLOOR;
+                    set_tile_type(mapidx(X, Y, sz), tile_type::FLOOR);
                     spawn_points.push_back(std::make_tuple(X,Y,sz));
                 }
             }
@@ -38,25 +42,25 @@ void build_ant_mound(region_t &region, random_number_generator &rng, std::vector
     }
 
     // Nest: central stair
-    for (int sz = z; sz < ground_z+mound_height; ++sz ) {
-        region.tile_type[mapidx(x,y,sz)] = tile_type::STAIRS_UPDOWN;
+    for (int sz = z; sz < gz+mound_height; ++sz ) {
+        set_tile_type(mapidx(x,y,sz), tile_type::STAIRS_UPDOWN);
     }
-    region.tile_type[mapidx(x,y,ground_z+mound_height)] = tile_type::STAIRS_DOWN;
-    region.tile_type[mapidx(x,y,z)] = tile_type::STAIRS_UP;
+    set_tile_type(mapidx(x,y,gz+mound_height), tile_type::STAIRS_DOWN);
+    set_tile_type(mapidx(x,y,z), tile_type::STAIRS_UP);
 
     // Mound above
     i = mound_height;
-    for (int sz = ground_z; sz<ground_z+mound_height; ++sz) {
+    for (int sz = gz; sz<gz+mound_height; ++sz) {
         for (int X = x-i; X<x+i; ++X) {
             for (int Y = y-i; Y<y+i; ++Y) {
                 if (distance2d(X,Y,x,y)+1.0f < i/2.0f && sz<REGION_DEPTH && x>0 && x<REGION_WIDTH && y>0 && y<REGION_HEIGHT) {
-                    if (sz != ground_z) {
-                        region.tile_type[mapidx(X, Y, sz)] = tile_type::SOLID;
-                        region.tile_material[mapidx(X, Y, sz)] = blight_mat;
+                    if (sz != gz) {
+                        set_tile_type(mapidx(X, Y, sz), tile_type::SOLID);
+                        set_tile_material(mapidx(X, Y, sz), blight_mat);
                     }
                     else if (x != X) {
-                        region.tile_type[mapidx(X, Y, sz)] = tile_type::SOLID;
-                        region.tile_material[mapidx(X, Y, sz)] = blight_mat;
+                        set_tile_type(mapidx(X, Y, sz), tile_type::SOLID);
+                        set_tile_material(mapidx(X, Y, sz), blight_mat);
                     }
                 }
             }
@@ -65,10 +69,13 @@ void build_ant_mound(region_t &region, random_number_generator &rng, std::vector
     }
 }
 
-void just_add_blight(region_t &region, random_number_generator &rng) {
+void just_add_blight(random_number_generator &rng) {
     auto red_mushroom = get_plant_idx("deathcap");
     auto green_mushroom = get_plant_idx("blightcap");
-    for (auto &v : region.tile_vegetation_type) {
+    auto blight_mat = get_material_by_tag("blight");
+
+    for_all_tiles([&rng, &red_mushroom, &green_mushroom, &blight_mat] (int idx) {
+        auto v = veg_type(idx);
         if (v > 0) {
             const int roll = rng.roll_dice(1,6);
             if (roll <= 2) {
@@ -79,12 +86,11 @@ void just_add_blight(region_t &region, random_number_generator &rng) {
                 v = 0;
             }
         }
-    }
-    auto blight_mat = get_material_by_tag("blight");
-    for (auto &m : region.tile_material) {
+
+        auto m = material(idx);
         if (m > 0) {
             auto mat = get_material(m);
             if (mat->spawn_type == soil || mat->spawn_type == sand) m = blight_mat;
         }
-    }
+    });
 }

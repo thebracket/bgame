@@ -4,7 +4,7 @@
 #include "../../messages/power_changed_message.hpp"
 #include "../ai/visibility_system.hpp"
 #include "../../components/lightsource.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region.hpp"
 #include "../../main/game_designations.hpp"
 
 using namespace rltk;
@@ -47,7 +47,7 @@ inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y
 		if (distance > dist_square) {
 			return false;
 		}
-        bool blocked = current_region->opaque[idx];
+        bool blocked = region::opaque(idx);
         if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
 		reveal(idx, view, mapidx(pos));
 		return !blocked;

@@ -1,3 +1,6 @@
+/*
+ * Provides functionality relating to regions. This is an API - it hides the actual details.
+ */
 #pragma once
 
 #include <vector>
@@ -8,79 +11,257 @@
 #include "../components/position.hpp"
 #include "indices.hpp"
 
-struct region_t {
-	region_t() { 
-		revealed.resize(REGION_TILES_COUNT);
-		visible.resize(REGION_TILES_COUNT);
-		solid.resize(REGION_TILES_COUNT);
-		opaque.resize(REGION_TILES_COUNT);
-		tile_type.resize(REGION_TILES_COUNT);
-		tile_material.resize(REGION_TILES_COUNT);
-		hit_points.resize(REGION_TILES_COUNT);
-		veg_hit_points.resize(REGION_TILES_COUNT);
-		building_id.resize(REGION_TILES_COUNT);
-		tree_id.resize(REGION_TILES_COUNT);
-		tile_vegetation_type.resize(REGION_TILES_COUNT);
-        tile_vegetation_ticker.resize(REGION_TILES_COUNT);
-        tile_vegetation_lifecycle.resize(REGION_TILES_COUNT);
-		tile_flags.resize(REGION_TILES_COUNT);
-		render_cache.resize(REGION_TILES_COUNT);
-		water_level.resize(REGION_TILES_COUNT);
-		above_ground.resize(REGION_TILES_COUNT);
-		blood_stains.resize(REGION_TILES_COUNT);
-        veg_cache.resize(REGION_TILES_COUNT);
-        stockpile_id.resize(REGION_TILES_COUNT);
-        bridge_id.resize(REGION_TILES_COUNT);
-	}
+/*
+ * Region code is inside this namespace.
+ */
+namespace region {
 
-	int region_x, region_y, biome_idx;
-	std::vector<bool> revealed;
-	std::vector<bool> visible;
-	std::vector<bool> solid;
-	std::vector<bool> opaque;
+    /*************************************
+    * Creating regions
+    */
 
-	// New tile format data
-	std::vector<uint8_t> tile_type;
-	std::vector<std::size_t> tile_material;
-	std::vector<uint16_t> hit_points;
-	std::vector<uint8_t> veg_hit_points;
-	std::vector<std::size_t> building_id;
-	std::vector<std::size_t> tree_id;
-	std::vector<std::size_t> bridge_id;
-	std::vector<std::size_t> tile_vegetation_type;
-	std::vector<uint16_t> tile_vegetation_ticker;
-    std::vector<uint8_t> tile_vegetation_lifecycle;
-	std::vector<std::size_t> stockpile_id;
-	std::vector<bitset8> tile_flags;
-	std::vector<rltk::vchar> render_cache;
-    std::vector<rltk::vchar> veg_cache;
-	std::vector<uint8_t> water_level;
-	std::vector<bool> above_ground;
-	std::vector<bool> blood_stains;
+    /* Create a new region. */
+    void new_region(const int x, const int y, const std::size_t biome);
 
-	void tile_recalc_all();
-	void tile_calculate(const int &x, const int &y, const int &z);
-	void tile_pathing(const int &x, const int &y, const int &z);
-	void calc_render(const int &idx);
+    /* Zero the region. */
+    void zero_map();
 
-	int next_tree_id = 1;
-};
+    /*************************************
+     * Serialization - load/save
+     */
 
-void save_region(const region_t &region);
-region_t load_region(const int region_x, const int region_y);
+    /* Save the current region to disk. */
+    void save_current_region();
 
-inline int get_ground_z(region_t &region, const int x, const int y) {
-	int z = REGION_DEPTH-1;
-	bool hit_ground = false;
-	while (!hit_ground) {
-		const auto idx = mapidx(x, y, z);
-		if (region.tile_type[idx] == tile_type::SOLID) {
-			hit_ground = true;
-			++z;
-		} else {
-			--z;
-		}
-        if (z == 1) hit_ground = true;
-	}
-	return z;
+    /* Load the current region from disk, using the specified world co-ordinates. */
+    void load_current_region(const int region_x, const int region_y);
+
+    /*************************************
+     * Utility information
+     */
+
+    /* Find ground-level (Z) for a given X/Y pair */
+    int ground_z(const int x, const int y);
+
+    /* Get the X co-ordinate of the region. */
+    int region_x();
+
+    /* get the Y co-ordinate of the region. */
+    int region_y();
+
+    /* Get the biome index of the current region. */
+    std::size_t get_biome_idx();
+
+    /*************************************
+     * Tile Type and Material
+     */
+
+    /* Retrieve the type of tile present at a cell. */
+    uint8_t tile_type(const int idx);
+
+    /* Set the tile type of a cell. */
+    void set_tile_type(const int idx, const uint8_t type);
+
+    /* Retrieve the material for a cell. */
+    std::size_t material(const int idx);
+
+    /* How many hit points does a cell have? */
+    uint8_t tile_hit_points(const int idx);
+
+    /* Set the tile material for a cell. */
+    void set_tile_material(const int idx, const std::size_t material);
+
+    /* Apply damage to a tile. */
+    void damage_tile(const int idx, const uint8_t damage);
+
+    /*************************************
+     * Tile Flags
+     */
+
+    /* Is a flag set for a tile? */
+    bool flag(const int idx, uint8_t flag);
+
+    /* Is a cell solid? */
+    bool solid(const int idx);
+
+    /* Is a cell opaque? */
+    bool opaque(const int idx);
+
+    /* Is a cell revealed (has been visible at some point)? */
+    bool revealed(const int idx);
+
+    /* Is the cell above ground? */
+    bool above_ground(const int idx);
+
+    /* Is there a blood stain here? */
+    bool blood_stain(const int idx);
+
+    /* Reveal a cell. */
+    void reveal(const int idx);
+
+    /* Make a cell visible. */
+    void make_visible(const int idx);
+
+    /* Set the state of the SOLID flag for a cell. */
+    void set_solid(const int idx, bool val);
+
+    /* Set the state for the OPAQUE flag for a cell. */
+    void set_opaque(const int idx, bool val);
+
+    /* Set a flag for the cell. */
+    void set_flag(const int idx, const uint8_t flag);
+
+    /* Unset a flag for the cell. */
+    void reset_flag(const int idx, const uint8_t flag);
+
+    /* Set the bloodstain flag for a cell. */
+    void set_bloodstain(const int idx, const bool val);
+
+    /* Clear the visibility map. */
+    void clear_visibility();
+
+    /*************************************
+     * Water
+     */
+
+    /* Get the water level at a specified cell */
+    uint8_t water_level(const int idx);
+
+    /* Set the water level for a cell. */
+    void set_water_level(const int idx, const uint8_t level);
+
+    /* Add water to a cell. */
+    void add_water(const int idx);
+
+    /* Remove 1 level of water from a cell. */
+    void remove_water(const int idx);
+
+    /*************************************
+     * Vegetation
+     */
+
+    /* Retrieve the vegetation type at a cell. */
+    std::size_t veg_type(const int idx);
+
+    /* Retrieve the vegetation ticker (lifecycle counter) for a cell. */
+    uint16_t veg_ticker(const int idx);
+
+    /* Retrieve the current vegetation lifecycle indicator for a cell. */
+    uint8_t  veg_lifecycle(const int idx);
+
+    /* How many hit points does the vegetation layer have? */
+    uint8_t veg_hp(const int idx);
+
+    /* Set the vegetation type index for a cell. */
+    void set_veg_type(const int idx, const uint8_t type);
+
+    /* Set the vegetation hit points for a cell. */
+    void set_veg_hp(const int idx, const uint8_t hp);
+
+    /* Set the vegetation tick counter for a cell. */
+    void set_veg_ticker(const int idx, const uint16_t ticker);
+
+    /* Set the vegetation lifecycle state for a cell. */
+    void set_veg_lifecycle(const int idx, const uint8_t lifecycle);
+
+    /* Apply damage to a tile's vegetation. */
+    void damage_vegetation(const int idx, const uint8_t damage);
+
+    /*************************************
+     * Stockpiles
+     */
+
+    /* Get the stockpile ID # for the cell. */
+    std::size_t stockpile_id(const int idx);
+
+    /* Set the Stockpile ID # for a cell. */
+    void set_stockpile_id(const int idx, const std::size_t id);
+
+    /* Erase a stockpile by ID #. */
+    void delete_stockpile(const std::size_t stockpile_id);
+
+    /*************************************
+     * Bridges
+     */
+
+    /* Get the Bridge ID # for the cell. */
+    std::size_t bridge_id(const int idx);
+
+    /* Set the bridge ID # for a cell. */
+    void set_bridge_id(const int idx, const std::size_t id);
+
+    /* Erase a bridge by ID #. */
+    void delete_bridge(const std::size_t bridge_id);
+
+    /* For each bridge, execute... */
+    void each_bridge(const std::function<void(std::size_t)> &func);
+
+    /*************************************
+     * Trees
+     */
+
+    /* Get the ID # of a tree on this cell. */
+    std::size_t tree_id(const int idx);
+
+    /* Get the next tree ID */
+    std::size_t next_tree_id();
+
+    /* Set the tree ID # for a cell. */
+    void set_tree_id(const int idx, const std::size_t tree_id);
+
+    /* Erase a tree by ID #. */
+    void delete_tree(const std::size_t tree_id);
+
+    /* Increment the tree counter. */
+    void inc_next_tree();
+
+
+
+    /* Retrieve the cached render glyph for the tile. */
+    rltk::vchar render_cache(const int idx);
+
+    /* Retrieve the cached vegetation glyph for the tile. */
+    rltk::vchar veg_cache(const int idx);
+
+    /* Recalculate all tiles. */
+    void tile_recalc_all();
+
+    /* Recalculate render information for a single tile. */
+    void calc_render(const int idx);
+
+    /* Recalculate everything about a single tile. */
+    void tile_calculate(const int x, const int y, const int z);
+
+    /*************************************
+     * Builders
+     */
+
+    /* Set lots of details of a tile at once. */
+    void set_tile(const int idx, const uint8_t type, const bool solid, const bool opaque,
+                  const std::size_t material, const uint8_t water, const bool remove_vegetation = true,
+                  const bool construction = true);
+
+    /* Mark a cell as open space. */
+    void make_open_space(const int idx);
+
+    /* Mark a cell as a floor. */
+    void make_floor(const int idx);
+
+    /* Mark a cell as a ramp. */
+    void make_ramp(const int idx);
+
+    /* Mark a cell as an up staircase. */
+    void make_stairs_up(const int idx);
+
+    /* Mark a cell as a down staircase. */
+    void make_stairs_down(const int idx);
+
+    /* Mark a cell as an updown staircase. */
+    void make_stairs_updown(const int idx);
+
+    /* Mark a cell as a wall. */
+    void make_wall(const int idx, const std::size_t mat);
+
+    /* Run a function on every tile. */
+    void for_all_tiles(const std::function<void(int)> &func);
 }

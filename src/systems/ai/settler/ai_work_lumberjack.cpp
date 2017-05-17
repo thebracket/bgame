@@ -13,6 +13,8 @@
 #include "job_board.hpp"
 #include "../../../utils/telemetry.hpp"
 
+using namespace region;
+
 namespace jobs_board {
     void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
         if (designations->chopping.empty()) return; // Nothing to cut down
@@ -183,26 +185,21 @@ void ai_work_lumberjack::update(const double duration_ms)
                     for (int y=0; y<REGION_HEIGHT; ++y) {
                         for (int x=0; x<REGION_WIDTH; ++x) {
                             const auto idx = mapidx(x,y,z);
-                            if (current_region->tree_id[idx] == lj.target_tree) {
+                            if (tree_id(idx) == lj.target_tree) {
                                 if (z < lowest_z) {
                                     lowest_z = z;
                                     tree_idx = idx;
                                 }
 
-                                current_region->solid[idx]=false;
-                                current_region->opaque[idx]=false;
-                                current_region->tile_flags[idx].reset(CAN_STAND_HERE);
-                                current_region->tree_id[idx] = 0;
-                                current_region->tile_type[idx] = tile_type::OPEN_SPACE;
-                                current_region->tile_calculate(x,y,z);
+                                make_open_space(idx);
+                                tile_calculate(x,y,z);
                                 ++number_of_logs;
                             }
                         }
                     }
                 }
-                current_region->tile_type[tree_idx] = tile_type::FLOOR;
-                current_region->tile_flags[tree_idx].set(CAN_STAND_HERE);
-                current_region->tile_calculate(lj.target_x, lj.target_y, lj.target_z);
+                make_floor(tree_idx);
+                tile_calculate(lj.target_x, lj.target_y, lj.target_z);
                 int tx,ty,tz;
                 std::tie(tx,ty,tz) = idxmap(tree_idx);
 
@@ -216,8 +213,8 @@ void ai_work_lumberjack::update(const double duration_ms)
                 for (int Z=-2; Z<10; ++Z) {
                     for (int Y=-10; Y<10; ++Y) {
                         for (int X=-10; X<10; ++X) {
-                            current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
-                            current_region->tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+                            tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+                            tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
                         }
                     }
                 }
