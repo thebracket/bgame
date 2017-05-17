@@ -1,7 +1,7 @@
 #include "distance_map_system.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/corpse_harvestable.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../components/construct_provides_sleep.hpp"
 #include "../../components/settler_ai.hpp"

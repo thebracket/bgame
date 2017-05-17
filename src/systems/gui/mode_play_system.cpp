@@ -20,7 +20,7 @@
 #include "../../main/game_pause.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_designations.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_selections.hpp"
 #include "../../components/name.hpp"
 #include "../../main/game_camera.hpp"

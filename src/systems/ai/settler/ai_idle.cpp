@@ -10,7 +10,7 @@
 #include "../../../messages/renderables_changed_message.hpp"
 #include "../../../main/game_planet.hpp"
 #include "../../../main/game_pause.hpp"
-#include "../../../planet/region.hpp"
+#include "../../../planet/region/region.hpp"
 #include "../../../main/game_rng.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"

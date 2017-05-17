@@ -4,7 +4,7 @@
 #include "../../messages/power_changed_message.hpp"
 #include "../ai/visibility_system.hpp"
 #include "../../components/lightsource.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_designations.hpp"
 
 using namespace rltk;

@@ -1,6 +1,6 @@
 #include "mining_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_designations.hpp"
 
 std::vector<uint8_t> mining_map;

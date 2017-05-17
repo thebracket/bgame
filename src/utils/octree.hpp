@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "../planet/region.hpp"
+#include "../planet/region/region.hpp"
 
 struct octree_location_t {
     int x, y, z;

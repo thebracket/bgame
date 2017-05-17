@@ -1,7 +1,7 @@
 #include "blight_builder.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../raws/materials.hpp"
-#include "../../region.hpp"
+#include "../../region/region.hpp"
 
 using namespace rltk;
 using namespace region;

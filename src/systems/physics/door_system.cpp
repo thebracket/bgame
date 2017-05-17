@@ -5,7 +5,7 @@
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/renderables_changed_message.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

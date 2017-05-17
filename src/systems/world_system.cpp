@@ -1,7 +1,7 @@
 #include "world_system.hpp"
 #include "../messages/messages.hpp"
 #include "../planet/builder/sentient_builder.hpp"
-#include "../../planet/region.hpp"
+#include "../planet/region/region.hpp"
 
 void world_system::configure() {
     system_name = "Background World";

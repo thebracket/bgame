@@ -8,7 +8,7 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 const std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
 const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";

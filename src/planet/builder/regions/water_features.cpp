@@ -1,6 +1,6 @@
 #include "water_features.hpp"
 #include "../../planet_builder.hpp"
-#include "../../region.hpp"
+#include "../../region/region.hpp"
 
 using namespace rltk;
 using namespace region;

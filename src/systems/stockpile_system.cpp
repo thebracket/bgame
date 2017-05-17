@@ -2,7 +2,7 @@
 #include "../components/stockpile.hpp"
 #include "../components/item.hpp"
 #include "../../main/game_designations.hpp"
-#include "../../planet/region.hpp"
+#include "../planet/region/region.hpp"
 
 using namespace region;
 

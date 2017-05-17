@@ -20,7 +20,7 @@
 #include "../../messages/messages.hpp"
 #include "../../systems/gui/mode_design_system.hpp"
 #include "../../main/game_clipping.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_mode.hpp"

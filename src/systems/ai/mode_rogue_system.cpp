@@ -10,7 +10,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../main/game_pause.hpp"
 #include "../../main/game_clipping.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_selections.hpp"

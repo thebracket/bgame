@@ -4,7 +4,7 @@
 #include "../../main/game_pause.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 bool collect_text = false;
 std::string input_text;

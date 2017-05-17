@@ -12,7 +12,7 @@
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../main/game_pause.hpp"
-#include "../../../planet/region.hpp"
+#include "../../../planet/region/region.hpp"
 
 template<typename TAG>
 class ai_work_template {

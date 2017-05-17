@@ -8,5 +8,5 @@ add_library(builder STATIC
         sentient_builder.cpp
         river_builder.cpp
         )
-target_link_libraries(builder rltk raws FastNoise regions)
+target_link_libraries(builder rltk raws FastNoise regions region)
 cotire(builder)

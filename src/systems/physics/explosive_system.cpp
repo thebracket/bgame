@@ -3,7 +3,7 @@
 #include "../../components/position.hpp"
 #include "../../components/explosion_t.hpp"
 #include "../ai/movement_system.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../messages/emit_particles_message.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../main/game_rng.hpp"

@@ -8,5 +8,5 @@ add_library(regions STATIC
         buildings.cpp
         blight_builder.cpp
         )
-target_link_libraries(regions rltk raws FastNoise)
+target_link_libraries(regions rltk raws FastNoise region)
 cotire(regions)

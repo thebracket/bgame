@@ -2,7 +2,7 @@
 
 #include <rltk.hpp>
 #include <unordered_map>
-#include "../planet/region.hpp"
+#include "../planet/region/region.hpp"
 #include "position.hpp"
 #include "helpers/building_designation_t.hpp"
 #include "helpers/unbuild_t.hpp"

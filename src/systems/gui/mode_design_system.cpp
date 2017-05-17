@@ -9,7 +9,7 @@
 #include "../../components/bridge.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_selections.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
 #include <vector>

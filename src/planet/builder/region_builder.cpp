@@ -11,7 +11,7 @@
 #include "regions/buildings.hpp"
 #include "regions/blight_builder.hpp"
 #include "../../utils/filesystem.hpp"
-#include "../region.hpp"
+#include "../region/region.hpp"
 
 using namespace rltk;
 

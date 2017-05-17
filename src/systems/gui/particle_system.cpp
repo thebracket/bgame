@@ -2,7 +2,7 @@
 #include "../../messages/messages.hpp"
 #include "../../components/smoke_emitter.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace rltk;
 using namespace region;

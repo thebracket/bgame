@@ -6,7 +6,7 @@
 #include "../../messages/inflict_damage_message.hpp"
 #include "../../messages/map_dirty_message.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

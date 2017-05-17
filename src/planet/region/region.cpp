@@ -1,8 +1,8 @@
 #include "region.hpp"
-#include "../raws/materials.hpp"
-#include "../raws/plants.hpp"
-#include "../systems/physics/fluid_system.hpp"
-#include "../main/game_camera.hpp"
+#include "../../raws/materials.hpp"
+#include "../../raws/plants.hpp"
+#include "../../systems/physics/fluid_system.hpp"
+#include "../../main/game_camera.hpp"
 
 using namespace rltk;
 

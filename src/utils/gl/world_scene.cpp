@@ -13,7 +13,7 @@
 #include "render_block.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
 #include "../../main/game_calendar.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace rltk;
 using namespace region;

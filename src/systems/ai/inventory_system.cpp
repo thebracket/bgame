@@ -7,7 +7,7 @@
 #include "../../raws/reactions.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
 
 void inventory_system::update(const double duration_ms) {

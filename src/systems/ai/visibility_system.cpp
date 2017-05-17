@@ -6,7 +6,7 @@
 #include "../../components/grazer_ai.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace rltk;
 using namespace region;

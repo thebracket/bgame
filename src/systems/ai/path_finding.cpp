@@ -1,6 +1,6 @@
 #include "path_finding.hpp"
-#include "../../planet/region.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

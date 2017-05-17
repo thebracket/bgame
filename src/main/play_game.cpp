@@ -8,7 +8,7 @@
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../utils/gl/map_render.hpp"
 #include "../utils/filesystem.hpp"
-#include "../../planet/region.hpp"
+#include "../planet/region/region.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_logger.hpp"
 #include "../../main/game_calendar.hpp"

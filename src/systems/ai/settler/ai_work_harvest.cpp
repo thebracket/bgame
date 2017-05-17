@@ -7,7 +7,7 @@
 #include "../../../utils/telemetry.hpp"
 #include "ai_work_template.hpp"
 #include "../../../raws/plants.hpp"
-#include "../../../planet/region.hpp"
+#include "../../../planet/region/region.hpp"
 
 using namespace region;
 

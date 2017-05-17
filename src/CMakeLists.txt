@@ -48,6 +48,13 @@ include_directories(external/rltk/rltk)
 include_directories(external/FastNoise)
 include_directories(external)
 
+# Require Boost
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
 add_subdirectory(external)
 
 add_subdirectory(components)
@@ -73,6 +80,8 @@ target_link_libraries(bgame sqlite)
 target_link_libraries(bgame imgui)
 target_link_libraries(bgame imgui-sfml)
 target_link_libraries(bgame ${LUA_LIBRARIES})
+target_link_libraries(bgame ${Boost_LIBRARIES})
+
 
 if (APPLE)
 	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
@@ -97,6 +106,8 @@ if (APPLE)
     target_link_libraries(bf imgui)
     target_link_libraries(bf imgui-sfml)
     target_link_libraries(bf ${LUA_LIBRARIES})
+    target_link_libraries(bf ${Boost_LIBRARIES})
+
     install(CODE "
 	include (BundleUtilities)
 	fixup_bundle(${CMAKE_INSTALL_PREFIX}/bf.app \"\" \"\")

@@ -5,7 +5,7 @@
 #include "../../components/slidemove.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_rng.hpp"
 
 using namespace region;

@@ -14,7 +14,7 @@
 #include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
-#include "../region.hpp"
+#include "../region/region.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;

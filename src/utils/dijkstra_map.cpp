@@ -1,5 +1,5 @@
 #include "dijkstra_map.hpp"
-#include "../planet/region.hpp"
+#include "../planet/region/region.hpp"
 #include <utility>
 #include <deque>
 #include <map>

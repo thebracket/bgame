@@ -13,7 +13,7 @@
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/name.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_rng.hpp"
 
 std::array<uint8_t, 4> group_populations;

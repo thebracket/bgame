@@ -3,7 +3,7 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/tick_message.hpp"
 #include "../../raws/plants.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

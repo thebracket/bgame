@@ -3,7 +3,7 @@
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
 #include "../../components/building.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 void damage_system::do_building_damage(const inflict_damage_message &msg) {
     auto e = entity(msg.victim);

@@ -10,7 +10,7 @@
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/perform_mining.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

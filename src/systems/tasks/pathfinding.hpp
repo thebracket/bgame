@@ -7,7 +7,7 @@
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 namespace tasks {
 

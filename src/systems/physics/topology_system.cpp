@@ -7,7 +7,7 @@
 #include "../../raws/buildings.hpp"
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

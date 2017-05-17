@@ -4,7 +4,7 @@
 #include "../../main/game_planet.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace region;
 

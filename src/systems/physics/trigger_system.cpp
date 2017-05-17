@@ -25,7 +25,7 @@
 #include "../ai/movement_system.hpp"
 #include "../../components/health.hpp"
 #include "../../main/game_pause.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_mode.hpp"

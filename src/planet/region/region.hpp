@@ -5,11 +5,11 @@
 
 #include <vector>
 #include <rltk.hpp>
-#include "tile.hpp"
-#include "constants.hpp"
-#include "../utils/bitset8.hpp"
-#include "../components/position.hpp"
-#include "indices.hpp"
+#include "../tile.hpp"
+#include "../constants.hpp"
+#include "../../utils/bitset8.hpp"
+#include "../../components/position.hpp"
+#include "../indices.hpp"
 
 /*
  * Region code is inside this namespace.

@@ -10,7 +10,7 @@
 #include "../pathfinding.hpp"
 #include "../initiative.hpp"
 #include "../../../raws/buildings.hpp"
-#include "../../../planet/region.hpp"
+#include "../../../planet/region/region.hpp"
 
 using namespace rltk;
 using namespace region;

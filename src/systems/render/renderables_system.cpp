@@ -5,7 +5,7 @@
 #include "../../components/renderable_composite.hpp"
 #include "../../components/position.hpp"
 #include "../../components/building.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/construct_provides_door.hpp"
