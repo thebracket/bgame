@@ -10,6 +10,7 @@
 #include "../pathfinding.hpp"
 #include "../initiative.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../raws/defs/building_def_t.hpp"
 #include "../../../planet/region/region.hpp"
 
 using namespace rltk;
@@ -76,8 +77,8 @@ void do_deconstruction(entity_t &e, settler_ai_t &ai, game_stats_t &stats, speci
 				auto building_comp = building_entity->component<building_t>();
 				auto building_pos = building_entity->component<position_t>();
 				if (building_comp && building_pos) {
-					auto finder = building_defs.find(building_comp->tag);
-					if (finder != building_defs.end()) {
+					auto finder = get_building_def(building_comp->tag);
+					if (finder != nullptr) {
 						for (const std::pair<std::string, std::size_t> &component : building_comp->built_with) {
 							spawn_item_on_ground(building_pos->x, building_pos->y, building_pos->z, component.first, component.second);
 						}

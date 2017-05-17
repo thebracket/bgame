@@ -2,10 +2,26 @@
 #include "lua_bridge.hpp"
 #include "items.hpp"
 #include "materials.hpp"
+#include "defs/building_def_t.hpp"
+#include <boost/container/flat_map.hpp>
+#include "graphviz.hpp"
+
 
 using namespace rltk;
 
-std::unordered_map<std::string, building_def_t> building_defs;
+boost::container::flat_map<std::string, building_def_t> building_defs;
+
+building_def_t * get_building_def(const std::string tag) {
+    auto finder = building_defs.find(tag);
+    if (finder == building_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+void each_building_def(const std::function<void(building_def_t *)> func) {
+    for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
+        func(&it->second);
+    }
+}
 
 void sanity_check_buildings() noexcept
 {
@@ -227,10 +243,10 @@ void read_buildings() noexcept
     }
 }
 
-void make_building_tree(graphviz_t &tree) {
+void make_building_tree(graphviz_t * tree) {
     for (const auto &b : building_defs) {
         for (const auto &input : b.second.components) {
-            tree.add_node(std::string("item_") + input.tag, std::string("building_") + b.second.tag );
+            tree->add_node(std::string("item_") + input.tag, std::string("building_") + b.second.tag );
         }
     }
 }

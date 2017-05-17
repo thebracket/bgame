@@ -5,6 +5,7 @@
 #include "../../raws/items.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
 #include "../../planet/region/region.hpp"
@@ -135,8 +136,8 @@ void topology_system::build_construction(const perform_construction_message &e) 
     bool entity_should_be_deleted = true;
     auto construction_pos = entity(e.entity_id)->component<position_t>();
     const int index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
-    auto finder = building_defs.find(e.tag);
-    for (const building_provides_t &provides : finder->second.provides) {
+    auto finder = get_building_def(e.tag);
+    for (const building_provides_t &provides : finder->provides) {
         
         if (provides.provides == provides_wall) {
             set_tile_type(index, tile_type::WALL);

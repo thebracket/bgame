@@ -4,7 +4,8 @@
 #include "../utils/filesystem.hpp"
 #include <memory>
 #include <vector>
-
+#include <fstream>
+#include <set>
 
 struct graphviz_t {
     enum graphviz_shape_t { OVAL, PARALLELOGRAM, HOUSE };
@@ -19,7 +20,6 @@ struct graphviz_t {
 
     graphviz_t(std::string fn) : filename(get_save_path() + std::string("/") + fn)
     {
-        std::cout << "Writing " << filename << "\n";
         gv_file = std::make_unique<std::ofstream>(filename);
         *gv_file << "digraph G {\n";
     }

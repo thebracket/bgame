@@ -13,6 +13,7 @@
 #include "../../components/item_stored.hpp"
 #include "../../components/bridge.hpp"
 #include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 #include "../../raws/plants.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../components/lever.hpp"
@@ -197,14 +198,14 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 
 		if (on_building) {
 			// It's building and we can see it
-			auto finder = building_defs.find(building.tag);
+			auto finder = get_building_def(building.tag);
 			std::string building_name = "Unknown Building";
-			if (finder != building_defs.end()) {
+			if (finder != nullptr) {
 				if (building.complete) {
-					building_name = finder->second.name + std::string(" (") + std::to_string(building.hit_points)
+					building_name = finder->name + std::string(" (") + std::to_string(building.hit_points)
                                     + std::string("/") + std::to_string(building.max_hit_points) + std::string(")");
 				} else {
-					building_name = std::string("...") + finder->second.name;
+					building_name = std::string("...") + finder->name;
 				}
 			}
 			lines.push_back(building_name);
@@ -314,9 +315,9 @@ void mode_play_system::show_tilemenu() {
 
 		if (on_building) {
 			// It's building and we can see it			
-			auto finder = building_defs.find(building.tag);
+			auto finder = get_building_def(building.tag);
 			std::string building_name = "Unknown Building";
-			if (finder != building_defs.end()) {
+			if (finder != nullptr) {
 
 				if (building.complete) {
 					bool is_being_removed = false;
@@ -326,7 +327,7 @@ void mode_play_system::show_tilemenu() {
 					each<settler_ai_t>([&is_being_removed, &building_entity] (entity_t &E, settler_ai_t &ai) {
 						if (ai.job_type_major == JOB_DECONSTRUCT && ai.target_id == building_entity.id) is_being_removed = true;
 					});
-					building_name = finder->second.name;
+					building_name = finder->name;
 
 					if (!is_being_removed) {
 						std::function<void()> on_click{};
@@ -396,7 +397,7 @@ void mode_play_system::show_tilemenu() {
                         options.push_back(std::make_pair(std::string("Lever Settings"), on_settings));
                     }
 				} else {
-					building_name = finder->second.name;
+					building_name = finder->name;
 					std::function<void()> on_click{};
 					on_click = [&building_entity] () {
 						emit(cancel_build_request_message{building_entity.id});

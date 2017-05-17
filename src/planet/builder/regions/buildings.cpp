@@ -13,21 +13,22 @@
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../raws/defs/building_def_t.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/camera_options.hpp"
 
 using namespace region;
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
-    auto building = building_defs.find(tag);
-    if (building == building_defs.end()) std::cout << "Warning: do not know how to build " << tag << "\n";
+    auto building = get_building_def(tag);
+    if (building == nullptr) std::cout << "Warning: do not know how to build " << tag << "\n";
 
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
-        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs,
-                             building->second.glyphs_ascii, true, civ_owner, 10, 10 });
+        ->assign(building_t{ tag, building->width, building->height, building->glyphs,
+                             building->glyphs_ascii, true, civ_owner, 10, 10 });
 
-    for (const building_provides_t &provides : building->second.provides) {
+    for (const building_provides_t &provides : building->provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
     }
 

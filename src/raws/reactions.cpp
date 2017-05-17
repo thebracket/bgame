@@ -130,8 +130,8 @@ void sanity_check_reactions() noexcept
         if (it->second.tag.empty()) std::cout << "WARNING: Empty reaction tag\n";
         if (it->second.name.empty()) std::cout << "WARNING: Empty reaction name, tag: " << it->first << "\n";
         if (it->second.workshop.empty()) std::cout << "WARNING: Empty workshop name, tag: " << it->first << "\n";
-        auto bf = building_defs.find(it->second.workshop);
-        if (bf == building_defs.end()) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
+        auto bf = get_building_def(it->second.workshop);
+        if (bf == nullptr) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
         for (const auto &input : it->second.inputs) {
             auto finder = item_defs.find(input.tag);
             if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
