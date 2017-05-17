@@ -4,7 +4,6 @@
 #include <vector>
 #include <rltk.hpp>
 #include <utility>
-#include <fstream>
 
 /*
  * Defines a region biome type.
