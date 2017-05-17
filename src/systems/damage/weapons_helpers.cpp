@@ -10,6 +10,7 @@
 #include "../../components/species.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/natural_attacks_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 bool has_melee_weapon(const entity_t &entity) 
 {

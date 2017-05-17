@@ -14,6 +14,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!

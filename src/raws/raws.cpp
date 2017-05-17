@@ -20,6 +20,7 @@
 #include "graphviz.hpp"
 #include "../main/game_config.hpp"
 #include "defs/item_def_t.hpp"
+#include "defs/material_def_t.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -42,10 +43,10 @@ void build_tech_tree_files() {
     std::cout << "Building DOT files\n";
 
     graphviz_t mats("material_tree.gv");
-    build_material_acquisition_tech_tree(mats);
+    build_material_acquisition_tech_tree(&mats);
 
     graphviz_t master("tech_tree.gv");
-    build_material_tech_tree(master);
+    build_material_tech_tree(&master);
     build_reaction_tree(master);
     make_building_tree(&master);
 

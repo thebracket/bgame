@@ -10,6 +10,7 @@
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 using namespace region;
 

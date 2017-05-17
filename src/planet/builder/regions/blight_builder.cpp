@@ -2,6 +2,7 @@
 #include "../../../raws/plants.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../region/region.hpp"
+#include "../../../raws/defs/material_def_t.hpp"
 
 using namespace rltk;
 using namespace region;

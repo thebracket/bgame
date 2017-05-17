@@ -13,6 +13,7 @@
 #include "../../main/game_rng.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 void sentient_melee_attack(const std::string &weapon_name,
                            const int &hit_bonus,

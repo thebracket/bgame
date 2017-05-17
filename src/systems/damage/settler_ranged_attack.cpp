@@ -7,6 +7,7 @@
 #include "../../main/game_rng.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 using namespace rltk;
 

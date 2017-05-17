@@ -3,6 +3,7 @@
 #include "../../raws/plants.hpp"
 #include "../../systems/physics/fluid_system.hpp"
 #include "../../main/game_camera.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 using namespace rltk;
 
