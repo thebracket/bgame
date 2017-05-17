@@ -17,6 +17,7 @@
 #include "../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/item_carried.hpp"
+#include "../../raws/defs/profession_t.hpp"
 
 using namespace rltk;
 
@@ -173,19 +174,18 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	const std::string last_name = to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng));
 
 	// Profession
-	const int number_of_professions = starting_professions.size();
-	const std::size_t selected_profession = rng.roll_dice(1,number_of_professions)-1;
-	stats.profession_tag = starting_professions[selected_profession].name;
+	const auto starting_profession = get_random_profession(rng);
+	stats.profession_tag = starting_profession->name;
 
 	// Stats
-	stats.strength = rng.roll_dice(3,6) + starting_professions[selected_profession].strength;
-	stats.dexterity = rng.roll_dice(3,6) + starting_professions[selected_profession].dexterity;
-	stats.constitution = rng.roll_dice(3,6) + starting_professions[selected_profession].constitution;
-	stats.intelligence = rng.roll_dice(3,6) + starting_professions[selected_profession].intelligence;
-	stats.wisdom = rng.roll_dice(3,6)  + starting_professions[selected_profession].wisdom;
-	stats.charisma = rng.roll_dice(3,6)  + starting_professions[selected_profession].charisma;
-	stats.comeliness = rng.roll_dice(3,6)  + starting_professions[selected_profession].comeliness;
-	stats.ethics = rng.roll_dice(3,6)  + starting_professions[selected_profession].ethics;
+	stats.strength = rng.roll_dice(3,6) + starting_profession->strength;
+	stats.dexterity = rng.roll_dice(3,6) + starting_profession->dexterity;
+	stats.constitution = rng.roll_dice(3,6) + starting_profession->constitution;
+	stats.intelligence = rng.roll_dice(3,6) + starting_profession->intelligence;
+	stats.wisdom = rng.roll_dice(3,6)  + starting_profession->wisdom;
+	stats.charisma = rng.roll_dice(3,6)  + starting_profession->charisma;
+	stats.comeliness = rng.roll_dice(3,6)  + starting_profession->comeliness;
+	stats.ethics = rng.roll_dice(3,6)  + starting_profession->ethics;
 	stats.age = 15 + rng.roll_dice(3,6);
 
 	auto settler = create_entity();
@@ -273,9 +273,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		->assign(ai_settler_new_arrival_t{})
 		->assign(sleep_clock_t{});
 
-	// TODO: Create clothing items
+	// Create clothing items
 	//std::cout << settler->id << "\n";
-	for (auto item : starting_professions[selected_profession].starting_clothes) {
+	for (auto item : starting_profession->starting_clothes) {
 		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
 			std::string item_name = std::get<2>(item);
 			std::string slot_name = std::get<1>(item);
