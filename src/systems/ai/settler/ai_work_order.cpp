@@ -15,6 +15,7 @@
 #include "../../../messages/emit_particles_message.hpp"
 #include "../../../messages/power_consumed.hpp"
 #include "../../../messages/map_dirty_message.hpp"
+#include "../../../raws/defs/reaction_t.hpp"
 
 namespace jobs_board {
     void evaluate_work_orders(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
@@ -156,8 +157,8 @@ void ai_work_order::update(const double duration_ms) {
 
             // Skill check, destroy inputs, create outputs
             auto stats = e.component<game_stats_t>();
-            auto finder = reaction_defs.find(w.reaction_target.reaction_tag);
-            auto skill_check = skill_roll(e.id, *stats, rng, finder->second.skill, finder->second.difficulty);
+            auto finder = get_reaction_def(w.reaction_target.reaction_tag);
+            auto skill_check = skill_roll(e.id, *stats, rng, finder->skill, finder->difficulty);
 
             if (skill_check >= SUCCESS) {
                 // Delete components
@@ -178,11 +179,11 @@ void ai_work_order::update(const double duration_ms) {
                 }
 
                 // Spawn results
-                for (auto &output : finder->second.outputs) {
+                for (auto &output : finder->outputs) {
                     for (int i = 0; i < output.second; ++i) {
                         bool done = false;
 
-                        if (!done && finder->second.specials.test(special_reaction_cooking)) {
+                        if (!done && finder->specials.test(special_reaction_cooking)) {
                             // This is more complicated, we have to make a special item from the components.
                             // The idea is to get something like Roast Asparagus
                             std::cout << "Cooking Reaction - spawning " << output.first << "/" << material << "\n";
@@ -192,7 +193,7 @@ void ai_work_order::update(const double duration_ms) {
                             done = true;
                         }
 
-                        if (!done && finder->second.specials.test(special_reaction_tanning)) {
+                        if (!done && finder->specials.test(special_reaction_tanning)) {
                             // This is more complicated, we have to make a special item from the components.
                             // The idea is to get something like Roast Asparagus
                             std::cout << "Tanning Reaction - spawning " << output.first << "/" << material << "\n";
@@ -211,10 +212,10 @@ void ai_work_order::update(const double duration_ms) {
                 }
 
                 // Emit smoke
-                if (finder->second.emits_smoke) emit(emit_particles_message{1, pos.x, pos.y, pos.z});
+                if (finder->emits_smoke) emit(emit_particles_message{1, pos.x, pos.y, pos.z});
 
                 // Consume power
-                if (finder->second.power_drain != 0) emit(power_consumed_message{finder->second.power_drain});
+                if (finder->power_drain != 0) emit(power_consumed_message{finder->power_drain});
 
                 // Finish
                 free_workshop(w.reaction_target.building_id);

@@ -5,9 +5,30 @@
 #include "items.hpp"
 #include "clothing.hpp"
 #include "defs/item_def_t.hpp"
+#include "graphviz.hpp"
+#include "defs/reaction_t.hpp"
+#include <boost/container/flat_map.hpp>
 
-std::unordered_map<std::string, reaction_t> reaction_defs;
-std::unordered_map<std::string, std::vector<std::string>> reaction_building_defs;
+boost::container::flat_map<std::string, reaction_t> reaction_defs;
+boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
+
+reaction_t * get_reaction_def(const std::string tag) {
+    auto finder = reaction_defs.find(tag);
+    if (finder == reaction_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+std::vector<std::string> get_reactions_for_building(const std::string tag) {
+    auto result = reaction_building_defs.find(tag);
+    if (result == reaction_building_defs.end()) return std::vector<std::string>();
+    return result->second;
+}
+
+void each_reaction(const std::function<void(std::string, reaction_t *)> func) {
+    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
+        func(it->first, &it->second);
+    }
+}
 
 void read_reactions() noexcept
 {
@@ -145,14 +166,14 @@ void sanity_check_reactions() noexcept
     }
 }
 
-void build_reaction_tree(graphviz_t &tree) {
+void build_reaction_tree(graphviz_t * tree) {
     for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
-        tree.add_node(std::string("building_") + it->second.workshop, it->second.tag, graphviz_t::graphviz_shape_t::HOUSE);
+        tree->add_node(std::string("building_") + it->second.workshop, it->second.tag, graphviz_t::graphviz_shape_t::HOUSE);
         for (const auto &input : it->second.inputs) {
-            tree.add_node(std::string("item_") + input.tag, it->second.tag);
+            tree->add_node(std::string("item_") + input.tag, it->second.tag);
         }
         for (const auto &output : it->second.outputs) {
-            tree.add_node(it->second.tag, std::string("item_") + output.first, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
+            tree->add_node(it->second.tag, std::string("item_") + output.first, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
         }
     }
 }

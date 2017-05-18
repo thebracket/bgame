@@ -6,6 +6,7 @@
 #include "imgui_helper.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_mode.hpp"
+#include "../../raws/defs/reaction_t.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -41,9 +42,9 @@ void panel_render_system::render_work_mode()
 {
     std::vector<std::string> worklist;
     for (const std::pair<uint8_t, std::string> &order : designations->build_orders) {
-        auto finder = reaction_defs.find(order.second);
-        if (finder != reaction_defs.end()) {
-            worklist.emplace_back(std::to_string(order.first) + std::string(" ") + finder->second.name);
+        auto finder = get_reaction_def(order.second);
+        if (finder != nullptr) {
+            worklist.emplace_back(std::to_string(order.first) + std::string(" ") + finder->name);
         }
     }
     const char* work_listbox_items[worklist.size()];

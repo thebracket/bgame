@@ -15,6 +15,7 @@
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/defs/material_def_t.hpp"
+#include "../../raws/defs/reaction_t.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
@@ -308,12 +309,12 @@ std::vector<available_building_t> get_available_buildings() {
 std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 	std::vector<std::pair<std::string, std::string>> result;
 
-	for (auto it=reaction_defs.begin(); it != reaction_defs.end(); ++it) {
-		const std::string tag = it->first;
-		const std::string workshop = it->second.workshop;
-		const std::string name = it->second.name;
+	each_reaction([&result] (std::string rtag, reaction_t * it) {
+		const std::string tag = rtag;
+		const std::string workshop = it->workshop;
+		const std::string name = it->name;
 
-		if (!it->second.automatic) {
+		if (!it->automatic) {
 			bool possible = false;
 			// Does a workshop exist?
 			each<building_t>([&possible, &workshop] (entity_t &e, building_t &b) {
@@ -323,7 +324,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 			// Do the components exist, and are unclaimed?
 			if (possible) {
 				std::unordered_map<std::string, std::pair<int,int>> requirements;
-				for (const reaction_input_t &require : it->second.inputs) {
+				for (const reaction_input_t &require : it->inputs) {
 					auto finder = requirements.find(require.tag);
 					if (finder == requirements.end()) {
 						const int available_components = available_items_by_reaction_input(require);
@@ -340,7 +341,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 				}
 			}
 		}
-	}
+	});
 
     std::sort(result.begin(), result.end(), [] (auto &b1, auto &b2) { return b1.second < b2.second; });
 	return result;

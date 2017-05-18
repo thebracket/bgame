@@ -45,7 +45,7 @@ void build_tech_tree_files() {
 
     graphviz_t master("tech_tree.gv");
     build_material_tech_tree(&master);
-    build_reaction_tree(master);
+    build_reaction_tree(&master);
     make_building_tree(&master);
 
     graphviz_t civs("civ_tree.gv");
