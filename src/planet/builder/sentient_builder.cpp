@@ -17,6 +17,7 @@
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
 #include "../region/region.hpp"
+#include "../raws/defs/civilization_t.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -185,9 +186,9 @@ void create_sentient_unit(planet_t &planet, rltk::random_number_generator &rng, 
                           const bool announce)
 {
     const std::string species_tag = planet.civs.civs[civ_id].species_tag;
-    auto civ_f = civ_defs.find(species_tag);
-    auto unit_f = civ_f->second.units.find(unit_tag);
-    if (unit_f == civ_f->second.units.end()) {
+    auto civ_f = get_civ_def(species_tag);
+    auto unit_f = civ_f->units.find(unit_tag);
+    if (unit_f == civ_f->units.end()) {
         std::cout << "Error loading " << unit_tag << "\n";
         return;
     }

@@ -14,6 +14,7 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
 #include "../../components/name.hpp"
+#include "../../raws/defs/civilization_t.hpp"
 
 void mode_sentient_info_system::configure() { 
     system_name = "Creature Info System";   

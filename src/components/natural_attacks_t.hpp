@@ -4,6 +4,7 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../raws/species.hpp"
+#include "../raws/defs/civilization_t.hpp"
 
 using namespace rltk;
 

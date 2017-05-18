@@ -18,6 +18,7 @@
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/item_carried.hpp"
 #include "../../raws/defs/profession_t.hpp"
+#include "../../raws/defs/civilization_t.hpp"
 
 using namespace rltk;
 
