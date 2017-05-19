@@ -135,6 +135,7 @@ void read_civ_types() noexcept
                                             if (afield == "melee") equip.melee = lua_tostring(lua_state, -1);
                                             if (afield == "ranged") equip.ranged = lua_tostring(lua_state, -1);
                                             if (afield == "ammo") equip.ammo = lua_tostring(lua_state, -1);
+                                            if (afield == "mount") equip.mount = lua_tostring(lua_state, -1);
                                             if (afield == "both" || afield == "male" || afield == "female") {
                                                 lua_pushstring(lua_state, afield.c_str());
                                                 lua_gettable(lua_state, -2);

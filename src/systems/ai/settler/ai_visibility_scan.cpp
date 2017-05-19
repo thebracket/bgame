@@ -13,6 +13,7 @@
 #include "../../../components/initiative.hpp"
 #include "../../../main/game_pause.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../../../components/riding_t.hpp"
 
 void ai_visibility_scan::configure() {}
 
@@ -104,12 +105,18 @@ void ai_visibility_scan::update(const double duration_ms) {
         } else if (sentient) {
             // Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
             // is implemented it's a good idea not to run away from your target.
+            auto mounted = e.component<riding_t>();
+
             const float range = shooting_range(e, pos);
             if (hostile.terror_distance < 1.5F) {
                 // Hit it with melee weapon
                 emit_deferred(sentient_attack_message{e.id, hostile.closest_fear});
                 initiative->initiative_modifier += get_weapon_initiative_penalty(get_melee_id(e));
                 delete_component<ai_tag_my_turn_t>(e.id);
+                if (mounted) {
+                    // Let the mount attack also
+                    emit_deferred(creature_attack_message(mounted->riding, hostile.closest_fear));
+                }
             } else if ( range != -1 && range < hostile.terror_distance) {
                 // Shoot it
                 emit_deferred(sentient_ranged_attack_message{e.id, hostile.closest_fear});
@@ -119,6 +126,7 @@ void ai_visibility_scan::update(const double duration_ms) {
                 emit_deferred(entity_wants_to_charge_message{e.id, hostile.closest_fear});
                 ai_visibility::ai->goal = SENTIENT_GOAL_CHARGE;
             }
+
         } else if (settler) {
             // Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
             // is implemented it's a good idea not to run away from your target.

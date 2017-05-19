@@ -7,6 +7,7 @@
 #include "../tasks/initiative.hpp"
 #include "../../components/slidemove.hpp"
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
+#include "../../components/riding_t.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {
@@ -35,8 +36,18 @@ void initiative_system::on_message(const tick_message &msg) {
             auto settler_ai_v = e.component<settler_ai_t>();
             auto sentient_ai_v = e.component<sentient_ai>();
             auto grazer_ai_v = e.component<grazer_ai>();
+            auto mount_v = e.component<riding_t>();
 
-            if (settler_ai_v) {
+            if (mount_v) {
+                auto mount_entity = entity(mount_v->riding);
+                if (!mount_entity) {
+                    // Mount has gone away - be confused and revert to old behavior!
+                    delete_component<riding_t>(e.id);
+                } else {
+                    auto stats = mount_entity->component<game_stats_t>(); // Use the mount's initiative
+                    if (stats) tasks::calculate_initiative(i, *stats);
+                }
+            } else if (settler_ai_v) {
                 auto stats = e.component<game_stats_t>();
                 if (stats) {
                     tasks::calculate_initiative(i, *stats);
@@ -48,8 +59,6 @@ void initiative_system::on_message(const tick_message &msg) {
                 }
             } else if (grazer_ai_v) {
                 i.initiative = std::max(1, rng.roll_dice(1, 12) - i.initiative_modifier);
-            } else {
-                std::cout << "Warning: Entity has initiative but no AI???\n";
             }
 
             // Reset modifiers

@@ -20,7 +20,8 @@ neolithic_elf_leader = {
         both = { torso="tunic/hide", shoes="sandals/hide" },
         male = { legs="britches/hide" },
         female = { legs="skirt_simple/hide" },
-        melee = "warhammer/granite"
+        melee = "warhammer/granite",
+        mount = "horse"
     },
     hp_n = 1, hp_dice = 10, hp_mod = 1,
     gender = "random"

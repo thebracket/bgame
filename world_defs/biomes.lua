@@ -69,7 +69,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, beetroot=1, cabbage=1, cress=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1, hemp=1, cotton=1 },
         trees = { deciduous = 5, evergreen = 5 },
-        wildlife = { "deer","badger","boar","antelope"}, nouns = { "Coast", "Cliffs", "Seashore", "Littoral" }
+        wildlife = { "deer","badger","boar","antelope","horse"}, nouns = { "Coast", "Cliffs", "Seashore", "Littoral" }
     },
     tropical_coastal = {
         name = "Tropical Coast", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -77,7 +77,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['light_green'] },
         plants = { none=5, grass=20, reeds_paper=2, reeds_giant=2, sage=1, daisy=1, reeds=2, strawberry=1, goya=1, cabbage=1, caper=1, cassava=1, horned_melon=1, lentil=1, lettuce=1, onion=1, parsnip=1, soybean=1, watermelon=1, yam=1, jute=1, ramie=1, cotton=1 },
         trees = { deciduous = 10, evergreen = 0 },
-        wildlife = { "deer","armadillo","boar","antelope"},
+        wildlife = { "deer","armadillo","boar","antelope","horse"},
         nouns = { "Coast", "Cliffs", "Seashore", "Seaside", "Resort", "Littoral", "Bay" }
     },
 
@@ -133,7 +133,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['grey'] },
         plants = { none=25, grass=20, sage=1, daisy=1, reeds=2, cabbage=1, leek=1, hemp=1 },
         trees = { deciduous = 0, evergreen = 1 },
-        wildlife = { "deer"},
+        wildlife = { "deer","horse"},
         nouns = { "Plain", "Scarp", "Scree", "Boulderland" }
     },
     grass_plain = {
@@ -142,7 +142,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['green'] },
         plants = { none=3, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1, asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cucumber=1, cress=1, garlic=1, leek=1, lentil=1, onion=1, parsnip=1, pea=1, potato=1, radish=1, red_bean=1, rhubarb=1, soybean=1, spinach=1, turnip=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 20, evergreen = 3 },
-        wildlife = { "deer","boar","hedgehog"},
+        wildlife = { "deer","boar","hedgehog","horse"},
         nouns = { "Grasslands", "Plain", "Prairie", "Heath", "Level" }
     },
     savannah_plain = {
@@ -151,7 +151,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_half_solid'], color=colors['earth_brown'] },
         plants = { none=3, grass=25, reeds_giant=2, sage=1, daisy=1, reeds=2, strawberry=1,asparagus=1, string_bean=1, broad_bean=1, caper=1, carrot=1, cassava=1, celery=1, chickpea=1, chickory=1, cowpea=1, cucumber=1, eggplant=1, garlic=1, horned_melon=1, lentil=1, lettuce=1, mung_bean=1, onion=1, parsnip=1, peanut=1, pepper=1, soybean=1, spinach=1, squash=1, sweet_potato=1, tomatillo=1, watermelon=1, yam=1, reeds_paper=2, jute=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 20, evergreen = 0 },
-        wildlife = { "deer","armadillo","boar","elephant","antelope"},
+        wildlife = { "deer","armadillo","boar","elephant","antelope","horse"},
         nouns = { "Savannah", "Grassland", "Heath", "Scrub", "Level" }
     },
 
@@ -171,7 +171,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['grey'] },
         plants = { none=30, grass=20, lavendar=1, daisy=1, reeds=2, heather=2, cabbage=1, parsnip=1, hemp=1 },
         trees = { deciduous = 0, evergreen = 1 },
-        wildlife = {"deer"},
+        wildlife = {"deer","horse"},
         nouns = { "Rocky Hills", "Hill", "Mound", "Bump", "Scree", "Scar" }
     },
     grass_hills = {
@@ -180,7 +180,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, artichoke=1,asparagus=1, string_bean=1, broad_bean=1, beetroot=1, cabbage=1, carrot=1, celery=1, chickpea=1, chickory=1, cress=1, garlic=1, lentil=1, onion=1, parsnip=1, pea=1, soybean=1, turnip=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 5, evergreen = 3 },
-        wildlife = { "deer","boar"},
+        wildlife = { "deer","boar","horse"},
         nouns = { "Rolling Hill", "Hill", "Rolling Heath", "Moor" }
     },
     savannah_hills = {
@@ -189,7 +189,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['earth_brown'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2,asparagus=1, cabbage=1, caper=1, carrot=1, celery=1, chickpea=1, chickory=1, eggplant=1, lentil=1, onion=1, peanut=1, pepper=1, soybean=1, jute=1, ramie=1, cotton=1 },
         trees = { deciduous = 10, evergreen = 0 },
-        wildlife = { "deer","boar","elephant","antelope"},
+        wildlife = { "deer","boar","elephant","antelope","horse"},
         nouns = { "Savannah Hills", "Hill", "Rolling Savannah", "Savannah Moor" }
     },
 
@@ -209,7 +209,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['arch'], color=colors['grey'] },
         plants = { none=15, grass=20, sage=1, daisy=1, reeds=2, cabbage=1, hemp=1 },
         trees = { deciduous = 0, evergreen = 3 },
-        wildlife = {"deer"},
+        wildlife = {"deer","horse"},
         nouns = { "Tableland", "Tablerock", "Plateau", "Rocky Plateau" }
     },
     grass_plateau = {
@@ -218,7 +218,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['arch'], color=colors['green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, beetroot=1, cabbage=1, celery=1, chickpea=1, chickory=1, cucumber=1, lentil=1, garlic=1, onion=1, soybean=1, turnip=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 20, evergreen = 5 },
-        wildlife = { "deer","badger","boar"},
+        wildlife = { "deer","badger","boar","horse"},
         nouns = { "Hog's Back", "Plateau", "Table", "Fell", "Downs" }
     },
     savannah_plateau = {
@@ -227,7 +227,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['arch'], color=colors['earth_brown'] },
         plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, bambara_groundnut=1, goya=1, cabbage=1, caper=1, celery=1, chickpea=1, chickory=1, cucumber=1, eggplant=1, horned_melon=1, lentil=1, onion=1, soybean=1, tomatillo=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 25, evergreen = 0 },
-        wildlife = { "deer","armadillo","boar","antelope"},
+        wildlife = { "deer","armadillo","boar","antelope","horse"},
         nouns = { "Upland", "Table", "Plateau" }
     },
     badland_plateau = {
@@ -255,7 +255,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['grey'] },
         plants = { none=25, grass=10, sage=1, daisy=1, reeds=2, cabbage=1 },
         trees = { deciduous = 0, evergreen = 5 },
-        wildlife = { "deer","boar"},
+        wildlife = { "deer","boar","horse"},
         nouns = { "Waste", "Scree", "Fell", "Promontary", "Dales", "Pike" }
     },
     grass_highlands = {
@@ -264,7 +264,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, cabbage=1, onion=1, turnip=1, hemp=1 },
         trees = { deciduous = 10, evergreen = 3 },
-        wildlife = { "deer","badger","boar"},
+        wildlife = { "deer","badger","boar","horse"},
         nouns = { "Moor", "Heath", "Uplands", "Dales", "Scar" }
     },
     savannah_highlands = {
@@ -273,7 +273,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['earth_brown'] },
         plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, goya=1, cabbage=1, hemp=1 },
         trees = { deciduous = 20, evergreen = 1 },
-        wildlife = { "deer","armadillo","boar"},
+        wildlife = { "deer","armadillo","boar","horse"},
         nouns = { "Savannah Hills", "Highlands", "Uplands", "Peaks", "Mounds" }
     },
     badland_highlands = {
@@ -301,7 +301,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['grey'] },
         plants = { none=25, grass=20, sage=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 1 },
-        wildlife = { "deer"},
+        wildlife = { "deer","horse"},
         nouns = { "Mountains", "Peaks", "Pikes", "Alps" }
     },
     grass_mountains = {
@@ -310,7 +310,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, hemp=1 },
         trees = { deciduous = 0, evergreen = 5 },
-        wildlife = { "deer","boar"},
+        wildlife = { "deer","boar","horse"},
         nouns = { "Mountains", "Peaks", "Pikes", "Alps" }
     },
     savannah_mountains = {
@@ -319,7 +319,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['ramp_up'], color=colors['earth_brown'] },
         plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, goya=1, hemp=1 },
         trees = { deciduous = 3, evergreen = 0 },
-        wildlife = { "deer","armadillo","boar"},
+        wildlife = { "deer","armadillo","boar","horse"},
         nouns = { "Mountains", "Peaks", "Pikes", "Alps" }
     },
     badland_mountains = {
@@ -355,7 +355,7 @@ biomes = {
         occurs = { biome_types["plains"], biome_types["hills"], biome_types["coast"] }, soils = { soil=5, sand=95 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['yellow_sand'] },
         trees = { deciduous = 1, evergreen = 0 },
-        wildlife = { "deer"},
+        wildlife = { "deer","horse"},
         nouns = { "Desert", "Waste", "Wild", "Dunes", "Barren" }
     },
     rock_desert = {
@@ -363,7 +363,7 @@ biomes = {
         occurs = { biome_types["mountains"], biome_types["plateau"], biome_types["hills"], biome_types["coast"] }, soils = { soil=50, sand=50 },
         worldgen_render = { glyph=glyphs['one_quarter_solid'], color=colors['red_sand'] },
         trees = { deciduous = 1, evergreen = 0 },
-        wildlife = { "deer","armadillo"},
+        wildlife = { "deer","armadillo","horse"},
         nouns = { "Barrens", "Platter" }
     },
 
@@ -374,7 +374,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, bambara_groundnut=1, strawberry=1, cucumber=1, eggplant=1, garlic=1, tomato=1, tomatillo=1, hemp=1 },
         trees = { deciduous = 100, evergreen = 0 },
-        wildlife = { "deer","badger","boar","hedgehog","antelope"},
+        wildlife = { "deer","badger","boar","hedgehog","antelope","horse"},
         nouns = { "Forest", "Backwoods", "Old Forest", "Grove", "Timberland", "Chase" }
     },
     deciduous_needleleaf = {
@@ -383,7 +383,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['clubs'], color=colors['tree_green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, cucumber=1, garlic=1, tomato=1, tomatillo=1, hemp=1 },
         trees = { deciduous = 100, evergreen = 5 },
-        wildlife = { "deer","badger","boar","hedgehog","antelope"},
+        wildlife = { "deer","badger","boar","hedgehog","antelope","horse"},
         nouns = { "Forest", "Woods", "Old WOods", "Grove", "Chase", "Weald" }
     },
     evergreen_broadleef = {
@@ -392,7 +392,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, garlic=1, hemp=1 },
         trees = { deciduous = 0, evergreen = 100 },
-        wildlife = { "deer","badger","boar","hedgehog"},
+        wildlife = { "deer","badger","boar","hedgehog","horse"},
         nouns = { "Forest", "Coppice", "Chase", "Weald", "Pines" }
     },
     evergreen_needleleef = {
@@ -401,7 +401,7 @@ biomes = {
         worldgen_render = { glyph=glyphs['spades'], color=colors['tree_green'] },
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2, garlic=1, hemp=1 },
         trees = { deciduous = 5, evergreen = 100 },
-        wildlife = { "deer","badger","boar"},
+        wildlife = { "deer","badger","boar","horse"},
         nouns = { "Forest", "Coppice", "Chase", "Weald", "Pines", "Timber" }
     },
     rainforest = {

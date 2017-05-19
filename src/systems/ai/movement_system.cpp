@@ -7,6 +7,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../main/game_rng.hpp"
+#include "../../components/riding_t.hpp"
 
 using namespace region;
 
@@ -96,6 +97,17 @@ void movement_system::configure() {
         const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
         if (veg_type(idx) > 0) {
             emit_deferred(vegetation_damage_message{idx, 1});
+        }
+
+        auto mounted = entity(msg.entity_id)->component<riding_t>();
+        if (mounted) {
+            auto mount_pos = entity(mounted->riding)->component<position_t>();
+            mount_pos->x = epos->x;
+            mount_pos->y = epos->y;
+            mount_pos->z = epos->z;
+            mount_pos->offsetX = epos->offsetX;
+            mount_pos->offsetY = epos->offsetY;
+            mount_pos->offsetZ = epos->offsetZ;
         }
 
         emit(entity_moved_message{msg.entity_id, origin, msg.destination});

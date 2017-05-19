@@ -17,7 +17,10 @@
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
 #include "../region/region.hpp"
-#include "../raws/defs/civilization_t.hpp"
+#include "../../raws/defs/civilization_t.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
+#include "../../raws/creatures.hpp"
+#include "../../components/riding_t.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -167,6 +170,45 @@ void create_sentient(planet_t &planet, rltk::random_number_generator &rng, std::
         ammo->component<item_t>()->stack_size = finder->stack_size;
         ammo->component<item_t>()->category = finder->categories;
         ammo->component<item_t>()->claimed = true;
+    }
+    if (unit.equipment.mount != "") {
+        std::cout << "Spawning a mount: " << unit.equipment.mount << "\n";
+        // Spawn a mount at the same location, with a riding_t tag on the sentient
+        auto critter_def = get_creature_def( unit.equipment.mount );
+
+        bool male = true;
+        if (rng.roll_dice(1,4)<=2) male = false;
+        name_t name{};
+        name.first_name = critter_def->name;
+        if (male) {
+            name.last_name = critter_def->male_name;
+        } else {
+            name.last_name = critter_def->female_name;
+        }
+
+        game_stats_t stats;
+        stats.profession_tag = "Mount";
+        stats.age = 1;
+        for (auto it=critter_def->stats.begin(); it!=critter_def->stats.end(); ++it) {
+            if (it->first == "str") stats.strength = it->second;
+            if (it->first == "dex") stats.dexterity = it->second;
+            if (it->first == "con") stats.constitution = it->second;
+            if (it->first == "int") stats.intelligence = it->second;
+            if (it->first == "wis") stats.wisdom = it->second;
+            if (it->first == "cha") stats.charisma = it->second;
+        }
+
+        auto mount = create_entity()
+                ->assign(position_t{x,y,z})
+                ->assign(renderable_t{critter_def->glyph, critter_def->glyph_ascii, critter_def->fg, rltk::colors::BLACK})
+                ->assign(std::move(name))
+                ->assign(std::move(stats))
+                ->assign(create_health_component_creature(critter_def->tag))
+                ->assign(initiative_t{})
+                ->assign(ai_mode_idle_t{});
+
+        // Remove the position_t from the parent and assign a riding marker
+        sentient->assign(riding_t{mount->id});
     }
 
     if (announce) {

@@ -14,6 +14,7 @@
 #include "../../../main/game_rng.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
+#include "../../../components/riding_t.hpp"
 
 using namespace region;
 
@@ -41,7 +42,16 @@ void idle_grazer(entity_t &e, ai_tag_my_turn_t &t, grazer_ai &grazer) {
 }
 
 void idle_sentient(entity_t &e, ai_tag_my_turn_t &t, sentient_ai &sentient) {
+    auto mounted = e.component<riding_t>();
     auto pos = e.component<position_t>();
+
+    if (mounted) {
+        auto mount = entity(mounted->riding);
+        if (!mount) {
+            delete_component<riding_t>(e.id);
+        }
+    }
+
     int feelings = planet.civs.civs[sentient.civ_id].cordex_feelings;
 
     if (sentient.hostile || feelings < 0) {

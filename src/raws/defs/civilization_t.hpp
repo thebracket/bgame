@@ -55,6 +55,7 @@ struct civ_equipment_t {
     std::string melee = "";
     std::string ranged = "";
     std::string ammo = "";
+    std::string mount = "";
 };
 
 struct civ_unit_sentient_t {

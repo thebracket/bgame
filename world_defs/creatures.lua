@@ -19,6 +19,29 @@ creatures = {
         hp_n = 1, hp_dice = 10, hp_mod = 0,
         group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
     },
+    horse = {
+        name = "Horse", male_name = "Stallion", female_name = "Mare", group_name = "Horses",
+        description = "A sleek quadruped, often used for riding",
+        stats = { str=16, dex=14, con=17, int=2, wis=13, cha=7, hp=15 },
+        parts = {
+            head = { qty=1, size = 15 },
+            torso = { qty = 1, size = 50 },
+            legs = { qty=4, size = 10 }
+        },
+        combat = {
+            armor_class = 11,
+            attacks = {
+                bite1 = { type="bite", hit_bonus=2, n_dice=1, die_type=4, die_mod=0 },
+                kick1 = { type="kick", hit_bonus=2, n_dice=1, die_type=4, die_mod=1 },
+            }
+        },
+        hunting_yield = { meat=4, hide=4, bone=2, skull=1 },
+        ai = "grazer",
+        glyph = glyphs['H'], color=colors['wood_brown'],
+        glyph_ascii = glyphs['d'],
+        hp_n = 1, hp_dice = 10, hp_mod = 0,
+        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
+    },
     armadillo = {
         name = "Armadillo", male_name = "Male", female_name = "Female", group_name = "Armadillos",
         description = "A squat-bodied mammal with a distinctive leathery hide.",
