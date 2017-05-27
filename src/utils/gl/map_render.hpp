@@ -9,5 +9,6 @@ struct map_render_t {
 };
 
 namespace map_render {
+    void load_shaders();
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y);
 }

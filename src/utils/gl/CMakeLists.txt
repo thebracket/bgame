@@ -4,7 +4,8 @@ add_library(gl STATIC gl_utils.cpp
         world_scene.cpp
         frustrum.cpp
         render_block.cpp
+        shader.cpp
         )
-target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region)
+target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region vox)
 
 cotire(gl)

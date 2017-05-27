@@ -38,6 +38,8 @@ struct render_block {
     void add_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const GLfloat &billboard_mode=0);
     void add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height, const GLfloat &billboard_mode=0);
 
+    void add_minicube(const float &x, const float &y, const float &z, const rltk::vchar &c);
+
     void render(const GLuint &program_id) const noexcept;
 
 private:

@@ -215,7 +215,8 @@ int main(int argc, char* argv[])
 	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Nox Futura",game_config.fullscreen));
 	glewExperimental = GL_TRUE;
 	glewInit();
-	splash.init();
+	if (GLEW_EXT_geometry_shader4) std::cout << "Geometry shader detected\n";
+    splash.init();
 
     // ImGui hooks
     std::function<bool(sf::Event)> on_message = [] (sf::Event e) {

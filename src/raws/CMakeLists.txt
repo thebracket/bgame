@@ -14,6 +14,7 @@ add_library(raws STATIC
     items.cpp
     buildings.cpp
     reactions.cpp
+    models.cpp
 )
-target_link_libraries(raws rltk components utils ${LUA_LIBRARIES} )
+target_link_libraries(raws rltk vox components utils ${LUA_LIBRARIES} )
 

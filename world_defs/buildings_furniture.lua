@@ -14,7 +14,8 @@ buildings["cryo_bed"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['eight'], foreground = colors['white'], background = colors['black']}
         }
-    }
+    },
+    render_model = "cryobed"
 };
 
 buildings["storage_locker"] = {

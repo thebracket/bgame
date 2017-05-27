@@ -62,7 +62,7 @@ std::tuple<float, float, float, float, float, float, float, float> render_block:
 }
 
 std::tuple<float, float, float> render_block::screenspace_calc(const int &x, const int &y, const int &z) const noexcept {
-    return std::make_tuple((float)x/255.0f, (float)y/255.0f, (float)z/255.0f);
+    return std::make_tuple((float)x, (float)y, (float)z);
 };
 
 void render_block::primitives_floor(const float &light_r, const float &light_g, const float &light_b, const float &tex_xf,
@@ -352,6 +352,35 @@ void render_block::add_cube(const int &x, const int &y, const int &z, const rltk
     primitives_cube_north(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
     primitives_cube_south(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
     primitives_cube_ceiling(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, billboard_mode, X, Y, Z, vsize, 0.9f);
+}
+
+void render_block::add_minicube(const float &x, const float &y, const float &z, const rltk::vchar &c) {
+    float light_r=1.0f, light_g=1.0f, light_b=1.0f;
+    std::tie(light_r, light_g, light_b) = altitude_color_bias(c, z);
+
+    float X,Y,Z,vsize,tex_x,tex_y,tex_xf,tex_yf;
+    std::tie(X,Y,Z,vsize,tex_x,tex_y,tex_xf,tex_yf) = size_calcs(c);
+
+    //float SX, SY, SZ;
+    //std::tie(SX, SY, SZ) = screenspace_calc(x, y, z);
+    //vsize = 0.5f;
+    /*vsize = 0.04f;
+    X = -0.02f;
+    Y = -0.02f;
+    Z = -0.02f;*/
+
+    //primitives_floor(light_r, light_g, light_b, tex_xf, tex_yf, SX, SY, SZ, 0.0f);
+    /*primitives_cube_left(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, X, Y, Z, vsize, vsize);
+    primitives_cube_right(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, X, Y, Z, vsize, vsize);
+    primitives_cube_north(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, X, Y, Z, vsize, vsize);
+    primitives_cube_south(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, X, Y, Z, vsize, vsize);*/
+    constexpr float size = 0.05f;
+    constexpr float size_half = 0.0f - (size / 2.0f);
+    primitives_cube_ceiling(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, size_half, size_half, size_half, size, size);
+    primitives_cube_left(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, size_half, size_half, size_half, size, size);
+    primitives_cube_right(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, size_half, size_half, size_half, size, size);
+    primitives_cube_south(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, size_half, size_half, size_half, size, size);
+    primitives_cube_north(light_r, light_g, light_b, tex_xf, tex_yf, x, y, z, 0.0f, size_half, size_half, size_half, size, size);
 }
 
 void render_block::add_fractional_height_cube(const int &x, const int &y, const int &z, const rltk::vchar &c, const float &height, const GLfloat &billboard_mode)

@@ -18,6 +18,7 @@ struct building_designation_t {
     int height;
     std::vector<rltk::vchar> glyphs;
 	std::vector<rltk::vchar> glyphs_ascii;
+	std::size_t model_idx = 0;
 	std::size_t building_entity = 0;
 
 	template<class Archive>

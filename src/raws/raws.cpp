@@ -20,6 +20,7 @@
 #include "../main/game_config.hpp"
 #include "defs/item_def_t.hpp"
 #include "defs/material_def_t.hpp"
+#include "models.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -61,6 +62,7 @@ void build_tech_tree_files() {
 
 void load_game_tables()
 {
+    read_models();
     read_material_types();
     read_clothing();
     read_life_events();

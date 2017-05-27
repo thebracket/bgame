@@ -5,7 +5,7 @@
 #include "defs/building_def_t.hpp"
 #include <boost/container/flat_map.hpp>
 #include "graphviz.hpp"
-
+#include "../utils/vox/voxreader.hpp"
 
 using namespace rltk;
 
@@ -55,8 +55,14 @@ void read_buildings() noexcept
         lua_gettable(lua_state, -2);
         while (lua_next(lua_state, -2) != 0) {
             std::string field = lua_tostring(lua_state, -2);
+            //std::cout << field << "\n";
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
+            if (field == "render_model") {
+                const std::string model_name = lua_tostring(lua_state, -1);
+                c.model_idx = vox::model_index(model_name);
+                std::cout << "Render model: " << model_name << " = " << c.model_idx << "\n";
+            }
             if (field == "structure") c.structure = true;
             if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
             if (field == "components") {

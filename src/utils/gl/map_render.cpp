@@ -25,7 +25,128 @@
 #include "../../main/game_camera.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
+#include "shader.hpp"
 
+bool world_changed = true;
+
+namespace map_render {
+
+    std::unique_ptr<shader_t> cube_render_shader;
+
+    void load_shaders() {
+        /*cube_render_shader = std::make_unique<shader_t>("world_defs/shaders/cube_geometry.glsl",
+                                                       "world_defs/shaders/cube_vertex.glsl",
+                                                       "world_defs/shaders/cube_fragment.glsl");*/
+        cube_render_shader = std::make_unique<shader_t>("world_defs/shaders/cube_geometry.glsl",
+                                                        "world_defs/shaders/cube_vertex.glsl",
+                                                        "world_defs/shaders/cube_fragment.glsl");
+    }
+
+    std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
+        return std::make_tuple(0,0,0);
+    };
+}
+
+using namespace map_render;
+
+void map_render_t::render()
+{
+    push_gl_states();
+
+    std::vector<GLfloat> cube_locs;
+    for (int z=0; z<REGION_DEPTH; ++z) {
+        for (int y=0; y<REGION_HEIGHT; ++y) {
+            for (int x=0; x<REGION_WIDTH; ++x) {
+                const int idx=mapidx(x,y,z);
+                if (region::revealed(idx) && region::solid(idx)) {
+                    cube_locs.emplace_back((GLfloat)x);
+                    cube_locs.emplace_back((GLfloat)z);
+                    cube_locs.emplace_back((GLfloat)y);
+                }
+            }
+        }
+    }
+
+    glUseProgram(0); // Just in case we left one lying around
+    glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering, again just in case
+
+    auto screen_size = rltk::get_window()->getSize();
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glDepthMask(GL_TRUE);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glShadeModel(GL_SMOOTH);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glViewport(0,0,screen_size.x,screen_size.y);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(90.f, 1.f, 1.f, 300.0f);//fov, aspect, zNear, zFar
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    switch (camera->camera_mode) {
+        case FRONT : {
+            // Nice X-perspective view
+            gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                      ((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f), // Camera
+                      (float) camera_position->region_x, (float) camera_position->region_z,
+                      (float) camera_position->region_y, // Target
+                      0.0f, 1.0f, 0.0f // Up
+            );
+        } break;
+
+        case TOP_DOWN : {
+            // Top-down
+            gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                      ((float) camera_position->region_y) + 0.1f, // Camera
+                      (float) camera_position->region_x, (float) camera_position->region_z,
+                      (float) camera_position->region_y, // Target
+                      0.0f, 1.0f, 0.0f // Up
+            );
+        } break;
+
+        case DIAGONAL : {
+            // Diagonal
+            gluLookAt((float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                      ((float) camera_position->region_y) + (float)camera->zoom_level, // Camera
+                      (float) camera_position->region_x, (float) camera_position->region_z,
+                      (float) camera_position->region_y, // Target
+                      0.0f, 1.0f, 0.0f // Up
+            );
+        } break;
+    }
+
+    cube_render_shader->activate();
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, &cube_locs[0]);
+
+    //glEnableClientState(GL_COLOR_ARRAY);
+    //glColorPointer(3, GL_FLOAT, 0, &cube_colors[0]);
+
+    glDrawArrays(GL_POINTS, 0, cube_locs.size());
+
+    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    /*glBegin(GL_POINTS);
+    for (int z=0; z<REGION_DEPTH; ++z) {
+        for (int y = 0; y < REGION_HEIGHT; ++y) {
+            for (int x = 0; x < REGION_WIDTH; ++x) {
+                const int idx = mapidx(x,y,z);
+                if (region::revealed(idx) && region::solid(idx))
+                    glVertex3f((float)x, (float)z, (float)y);
+            }
+        }
+    }
+    glEnd();*/
+
+    //glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    cube_render_shader->deactivate();
+    pop_gl_states();
+}
+
+/*
 using namespace map_render_sys;
 using namespace region;
 
@@ -134,6 +255,14 @@ namespace map_render {
                 if (cfinder != composite_renderables.end()) {
                     for (const auto &sr : cfinder->second[glyph_cycle % cfinder->second.size()]) {
                         world_scene::add_composite_renderable(x, y, z, sr.c, idx);
+                    }
+                }
+
+                // Add model renderables
+                auto mfinder = model_renderables.find(idx);
+                if (mfinder != model_renderables.end()) {
+                    for (const auto &midx : mfinder->second) {
+                        world_scene::add_model_renderable(x, y, z, midx, idx);
                     }
                 }
 
@@ -632,10 +761,6 @@ namespace map_render {
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        /*gluLookAt((float)camera_position->region_x, ((float)camera_position->region_z)+1.0f, ((float)camera_position->region_y)+0.1f, // Camera
-                  (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y, // Target
-                  0.0f, 1.0f, 0.0f // Up
-        );*/
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -677,14 +802,6 @@ namespace map_render {
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-        /*glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, map_render::render_texture);
-        glEnable(GL_TEXTURE_2D);
-
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, map_render::mouse_pick_texture);
-        glEnable(GL_TEXTURE_2D);*/
 
         GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT };
         glDrawBuffers(2, buffers);
@@ -748,18 +865,6 @@ namespace map_render {
         gl_states();
         world_scene::render_world(deferred_id);
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
-
-        /*
-        // Render the framebuffer
-        if (world_changed) {
-            glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            gl_states();
-            glDisable(GL_TEXTURE_2D);
-            world_scene::render_index(index_program_id);
-            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
-            world_changed = false;
-        }*/
     }
 
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
@@ -819,3 +924,4 @@ void map_render_t::render() {
     glEnd();
     pop_gl_states();
 }
+*/

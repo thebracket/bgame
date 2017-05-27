@@ -33,9 +33,9 @@ void main()
     }
 
     // Calculate world position from the screen index; note that Y and Z are flipped
-    float world_x = screen_index.x * 255.0;
-    float world_y = screen_index.z * 255.0;
-    float world_z = screen_index.y * 255.0;
+    float world_x = screen_index.x;
+    float world_y = screen_index.z;
+    float world_z = screen_index.y;
 
     // Transforming The Vertex
     if (billboard_mode) {
@@ -69,9 +69,9 @@ void main()
     }
 
     vec4 position = gl_Vertex;
-    position.x += world_x;
+    /*position.x += world_x;
     position.y += world_y;
-    position.z += world_z;
+    position.z += world_z;*/
 
     // Transform the normal and normalize (heh) it
     normal = gl_Normal;
@@ -86,7 +86,9 @@ void main()
     // Pass the color through because we use it for colored textures
     gl_FrontColor = gl_Color;
     ambient = light_ambient;
-    si = screen_index.xyz;
+    si.x = screen_index.x/255.0f;
+    si.y = screen_index.y/255.0f;
+    si.z = screen_index.z/255.0f;
 
     // Project the texture
     gl_TexCoord[0] = gl_MultiTexCoord0;

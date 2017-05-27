@@ -17,5 +17,5 @@ add_library(bfmain STATIC
 	game_selections.cpp
 	game_rng.cpp
 )
-target_link_libraries(bfmain planet rltk components systems utils gl)
+target_link_libraries(bfmain planet rltk components systems utils gl vox)
 cotire(bfmain)

@@ -1,4 +1,6 @@
 #include "world_scene.hpp"
+#include "../vox/voxreader.hpp"
+#include "../vox/voxel_model.hpp"
 #include <vector>
 #include <rltk.hpp>
 #include <SFML/Graphics.hpp>
@@ -275,5 +277,33 @@ namespace world_scene {
             }
         }
         //mouse_picker_geometry.add_floor(x,y,z,c);
+    }
+
+    void add_model_renderable(const int &x, const int &y, const int &z, const std::size_t &model_idx, const int &idx) {
+        voxel_model * model = vox::get_model(model_idx);
+        if (model) {
+            render_block * target = nullptr;
+            auto light = lit_tiles.find(idx);
+            if (light != lit_tiles.end()) {
+                target = &game_lit_geometry[light->second.first];
+            } else {
+                if (above_ground(idx)) {
+                    target = &floor_exterior_geometry;
+                } else {
+                    target = &floor_interior_geometry;
+                }
+            }
+
+            if (target) {
+                const rltk::vchar rchar{ 219, colors::WHITE, colors::BLACK };
+                for (const auto &voxel : model->voxels) {
+                    //rltk::vchar rchar{ 219, color_t{ voxel.r * 255.0f, voxel.g*255.0f, voxel.b * 255.0f }, colors::BLACK };
+                    const float X = voxel.x + (float)x;
+                    const float Y = voxel.y + (float)y;
+                    const float Z = voxel.z + (float)z;
+                    target->add_minicube(X, Y, Z, rchar);
+                }
+            }
+        }
     }
 }
