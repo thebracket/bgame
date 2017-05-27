@@ -15,5 +15,5 @@ add_library(gui STATIC
         wish_system.cpp
 
         )
-target_link_libraries(gui rltk utils components raws)
+target_link_libraries(gui rltk utils components raws bfmain)
 cotire(gui)
