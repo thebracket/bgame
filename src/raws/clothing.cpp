@@ -1,6 +1,7 @@
 #include "clothing.hpp"
 #include "apihelper.hpp"
 #include "lua_bridge.hpp"
+#include "defs/clothing_t.hpp"
 
 std::unordered_map<std::string, clothing_t> clothing_types;
 
@@ -19,13 +20,15 @@ void sanity_check_clothing() noexcept
     }
 }
 
-void read_clothing(std::ofstream &tech_tree_file) noexcept
+void read_clothing() noexcept
 {
     std::string tag = "";
     clothing_t c;
     read_lua_table("clothing",
                    [&c, &tag] (const auto &key) { tag = key; c = clothing_t{}; },
-                   [&c, &tag] (const auto &key) { clothing_types[key] = c; },
+                   [&c, &tag] (const auto &key) {
+                       clothing_types[key] = c;
+                   },
                    lua_parser{
                            {"name",        [&c] () { c.name = lua_str(); }},
                            {"slot",        [&c] () { c.slot = lua_str(); }},

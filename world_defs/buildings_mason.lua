@@ -64,3 +64,13 @@ reactions["make_stone_club"] = {
     difficulty = 10,
     automatic = false
 };
+
+reactions["make_sling_bullet"] = {
+    name = "Make Sling Bullet",
+    workshop = "mason",
+    inputs = { { item="block", qty=1, mat_type="rock" } },
+    outputs = { { item="sling_bullet", qty=1 } },
+    skill = "Masonry",
+    difficulty = 10,
+    automatic = false
+};

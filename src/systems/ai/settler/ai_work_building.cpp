@@ -1,6 +1,7 @@
 #include "ai_work_building.hpp"
 #include "../../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../../../main/game_rng.hpp"
 #include "../../../utils/telemetry.hpp"
 #include "ai_work_template.hpp"
 #include "job_board.hpp"
@@ -10,6 +11,7 @@
 #include "../../../messages/update_workflow_message.hpp"
 #include "../../../components/game_stats.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../raws/defs/building_def_t.hpp"
 #include "../inventory_system.hpp"
 #include "../path_finding.hpp"
 #include "../../../components/building.hpp"
@@ -149,12 +151,12 @@ void ai_work_building::update(const double duration_ms) {
         } else if (b.step == ai_tag_work_building::building_steps::ASSEMBLE) {
             // Build it!
             std::string tag = b.building_target.tag;
-            auto finder = building_defs.find(tag);
-            if (finder == building_defs.end()) throw std::runtime_error("Building tag unknown!");
+            auto finder = get_building_def(tag);
+            if (finder == nullptr) throw std::runtime_error("Building tag unknown!");
 
             // Make a skill roll
-            const std::string skill = finder->second.skill.first;
-            const int difficulty = finder->second.skill.second;
+            const std::string skill = finder->skill.first;
+            const int difficulty = finder->skill.second;
             auto stats = e.component<game_stats_t>();
             auto skill_check = skill_roll(e.id, *stats, rng, skill, difficulty);
 
@@ -173,11 +175,11 @@ void ai_work_building::update(const double duration_ms) {
                 }
 
                 // Place the building, and assign any provide tags
-                call_home("new_building", finder->second.tag);
+                call_home("new_building", finder->tag);
                 entity(b.building_target.building_entity)->component<building_t>()->complete = true;
                 emit(opacity_changed_message{});
 
-                for (const building_provides_t &provides : finder->second.provides) {
+                for (const building_provides_t &provides : finder->provides) {
                     if (provides.provides == provides_sleep) {
                         entity(b.building_target.building_entity)->assign(construct_provides_sleep_t{});
                     } else if (provides.provides == provides_light) {
@@ -199,7 +201,7 @@ void ai_work_building::update(const double duration_ms) {
                         entity(b.building_target.building_entity)->assign(lever_t{});
                     }
                 }
-                if (finder->second.emits_smoke) {
+                if (finder->emits_smoke) {
                     entity(b.building_target.building_entity)->assign(smoke_emitter_t{});
                 }
 

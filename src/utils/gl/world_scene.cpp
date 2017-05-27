@@ -13,9 +13,10 @@
 #include "render_block.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
 #include "../../main/game_calendar.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace rltk;
+using namespace region;
 
 namespace world_scene {
 
@@ -47,10 +48,10 @@ namespace world_scene {
     // Adds a world-geometry floor tile
     void add_world_floor(const int &x, const int &y, const int &z, const rltk::vchar &c, const int &idx) {
         auto light = lit_tiles.find(idx);
-        if (light != lit_tiles.end() && ( !is_daytime() | !current_region->above_ground[idx] )) {
+        if (light != lit_tiles.end() && ( !is_daytime() | !above_ground(idx) )) {
             game_lit_geometry[light->second.first].add_floor(x, y, z, c);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 floor_exterior_geometry.add_floor(x, y, z, c);
             } else {
                 floor_interior_geometry.add_floor(x, y, z, c);
@@ -65,7 +66,7 @@ namespace world_scene {
         if (light != lit_tiles.end()) {
             game_lit_geometry[light->second.first].add_cube(x, y, z, c);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 world_exterior_geometry.add_cube(x, y, z, c);
             } else {
                 world_interior_geometry.add_cube(x, y, z, c);
@@ -80,7 +81,7 @@ namespace world_scene {
         if (light != lit_tiles.end()) {
             game_lit_geometry[light->second.first].add_fractional_height_cube(x, y, z, c, height);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 world_exterior_geometry.add_fractional_height_cube(x, y, z, c, height);
             } else {
                 world_interior_geometry.add_fractional_height_cube(x, y, z, c, height);
@@ -90,7 +91,7 @@ namespace world_scene {
     }
 
     void setup_sun_and_moon(const int &deferred_program) {
-        const float latitude = (float)REGION_HEIGHT/2.0f + (((float)current_region->region_y - ((float)WORLD_HEIGHT/2.0F)) * (float)REGION_HEIGHT);
+        const float latitude = (float)REGION_HEIGHT/2.0f + (((float)region_y() - ((float)WORLD_HEIGHT/2.0F)) * (float)REGION_HEIGHT);
         const auto pos = glGetUniformLocation(deferred_program, "light_position");
         const auto ambient = glGetUniformLocation(deferred_program, "light_ambient");
         const auto diffuse = glGetUniformLocation(deferred_program, "light_diffuse");
@@ -220,7 +221,7 @@ namespace world_scene {
         if (light != lit_tiles.end()) {
             game_lit_geometry[light->second.first].add_decal(x, y, z, c);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 floor_exterior_geometry.add_decal(x, y, z, c);
             } else {
                 floor_interior_geometry.add_decal(x, y, z, c);
@@ -234,7 +235,7 @@ namespace world_scene {
         if (light != lit_tiles.end()) {
             game_lit_geometry[light->second.first].add_floor(x, y, z, c);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 floor_exterior_geometry.add_floor(x, y, z, c);
             } else {
                 floor_interior_geometry.add_floor(x, y, z, c);
@@ -248,7 +249,7 @@ namespace world_scene {
         if (light != lit_tiles.end()) {
             game_lit_geometry[light->second.first].add_standup(x, y, z, c, 1.0f);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 floor_exterior_geometry.add_standup(x, y, z, c, 1.0f);
             } else {
                 floor_interior_geometry.add_standup(x, y, z, c, 1.0f);
@@ -265,7 +266,7 @@ namespace world_scene {
             game_lit_geometry[light->second.first].add_floor(x, y, z, bg);
             game_lit_geometry[light->second.first].add_floor(x, y, z, fg);
         } else {
-            if (current_region->above_ground[idx]) {
+            if (above_ground(idx)) {
                 floor_exterior_geometry.add_floor(x, y, z, bg);
                 floor_exterior_geometry.add_floor(x, y, z, fg);
             } else {

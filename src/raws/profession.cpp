@@ -1,8 +1,15 @@
 #include "profession.hpp"
 #include "lua_bridge.hpp"
 #include "clothing.hpp"
+#include "defs/profession_t.hpp"
 
 std::vector<profession_t> starting_professions;
+
+profession_t * get_random_profession(rltk::random_number_generator &rng) {
+	const auto number_of_professions = starting_professions.size();
+	const auto selected_profession = rng.roll_dice(1, number_of_professions -1);
+	return &starting_professions[selected_profession];
+}
 
 void sanity_check_professions() noexcept
 {
@@ -18,7 +25,7 @@ void sanity_check_professions() noexcept
     }
 }
 
-void read_professions(std::ofstream &tech_tree_file) noexcept
+void read_professions() noexcept
 {
 
     std::string tag;

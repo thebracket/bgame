@@ -7,13 +7,6 @@ add_library(builder STATIC
         history_builder.cpp
         sentient_builder.cpp
         river_builder.cpp
-        regions/starting_point.cpp
-        regions/heightmap.cpp
-        regions/water_features.cpp
-        regions/strata.cpp
-        regions/decorators.cpp
-        regions/trees.cpp
-        regions/buildings.cpp
         )
-target_link_libraries(builder rltk raws FastNoise regions)
+target_link_libraries(builder rltk raws FastNoise regions region)
 cotire(builder)

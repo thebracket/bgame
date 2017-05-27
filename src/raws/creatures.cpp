@@ -1,6 +1,7 @@
 #include "creatures.hpp"
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
+#include "defs/raw_creature_t.hpp"
 
 std::unordered_map<std::string, raw_creature_t> creature_defs;
 
@@ -25,7 +26,7 @@ void sanity_check_creatures() noexcept
     }
 }
 
-void read_creature_types(std::ofstream &tech_tree_file) noexcept
+void read_creature_types() noexcept
 {
     lua_getglobal(lua_state, "creatures");
     lua_pushnil(lua_state);

@@ -1,8 +1,10 @@
 #include "heightmap.hpp"
 #include "../noise_helper.hpp"
 #include "../../planet_builder.hpp"
+#include "../../region/region.hpp"
 
 using namespace rltk;
+using namespace region;
 
 std::vector<uint8_t> create_empty_heightmap() {
     std::vector<uint8_t> heightmap;
@@ -24,8 +26,8 @@ void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &noise, st
     }
 }
 
-std::vector<int> create_subregions(planet_t &planet, region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, uint8_t>> &water_spawners) {
-    const int region_variance = planet.landblocks[planet.idx(region.region_x, region.region_y)].variance;
+std::vector<int> create_subregions(planet_t &planet, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, uint8_t>> &water_spawners) {
+    const int region_variance = planet.landblocks[planet.idx(region_x(), region_y())].variance;
     const int n_subregions = 64 + rng.roll_dice(1,20) + (region_variance * 4);
 
     set_worldgen_status("Finding sub-biomes");

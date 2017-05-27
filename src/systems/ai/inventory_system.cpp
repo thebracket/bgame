@@ -4,11 +4,18 @@
 #include "../../components/item_stored.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 #include "../../raws/reactions.hpp"
+#include "../../raws/materials.hpp"
+#include "../../raws/clothing.hpp"
+#include "../../raws/defs/clothing_t.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
+#include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
+#include "../../raws/defs/reaction_t.hpp"
 
 void inventory_system::update(const double duration_ms) {
 	// Do nothing!
@@ -103,7 +110,8 @@ void inventory_system::configure() {
 
 		auto building_template = create_entity()
 			->assign(position_t{msg.x, msg.y, msg.z})
-			->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs, designate.glyphs_ascii, false });
+			->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs,
+								 designate.glyphs_ascii, false, 0, 10, 10 });
 		designate.building_entity = building_template->id;
 		for (int y=msg.y; y<msg.y + designate.height; ++y) {
 			for (int x = msg.x; x < msg.x + designate.width; ++x) {
@@ -121,9 +129,9 @@ void inventory_system::configure() {
 		for (int x = sx; x < sx + designate.width; ++x) {
 			for (int y=sy; y < sy + designate.height; ++y) {
 				const auto idx = mapidx(x,y,camera_position->region_z);
-				current_region->tile_flags[idx].set(CONSTRUCTION);
-				current_region->tile_vegetation_type[idx] = 0;
-                current_region->calc_render(idx);
+				region::set_flag(idx, CONSTRUCTION);
+                region::set_veg_type(idx, 0);
+                region::calc_render(idx);
 			}
 		}
 	});
@@ -196,7 +204,7 @@ bool is_item_category_available(const int &category) {
 bool is_ammo_available(const std::string &ammo_type) {
 	int result = 0;
 	each<item_t>([&result, &ammo_type] (entity_t &e, item_t &i) {
-		if (i.category.test(WEAPON_AMMO) && i.claimed == false && item_defs.find(i.item_tag)->second.ammo == ammo_type) ++result;
+		if (i.category.test(WEAPON_AMMO) && i.claimed == false && get_item_def(i.item_tag)->ammo == ammo_type) ++result;
 	});
 	return (result > 0);
 }
@@ -228,7 +236,7 @@ std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::
 	std::map<float, std::size_t> distance_sorted; 
 
 	each<item_t>([&distance_sorted, &category, &pos, &ammo_type, &range] (entity_t &e, item_t &i) {
-		if (i.category.test(category) && i.claimed==false && item_defs.find(i.item_tag)->second.ammo == ammo_type) {
+		if (i.category.test(category) && i.claimed==false && get_item_def(i.item_tag)->ammo == ammo_type) {
 			auto p = get_item_location(e.id);
 			if (p) {
 				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
@@ -258,41 +266,42 @@ std::vector<available_building_t> get_available_buildings() {
 		}
 	});
 
-	for (auto it = building_defs.begin(); it != building_defs.end(); ++it) {
-		bool possible = true;
+    each_building_def([&result, &existing_buildings] (building_def_t * it) {
+        bool possible = true;
 
-		// Evaluate the required components and see if they are available
-		std::unordered_map<std::string, std::pair<int,int>> requirements;
-		for (const auto &require : it->second.components) {
-			auto finder = requirements.find(require.tag);
-			if (finder == requirements.end()) {
-				const int available_item_count = available_items_by_reaction_input(require);
-				requirements[require.tag] = std::make_pair( require.quantity, available_item_count );
-				if (available_item_count < 1) possible = false;
-			} else {
-				++finder->second.first;
-				if (finder->second.first > finder->second.second) possible=false;
-			}
-		}
+        // Evaluate the required components and see if they are available
+        std::unordered_map<std::string, std::pair<int,int>> requirements;
+        for (const auto &require : it->components) {
+            auto finder = requirements.find(require.tag);
+            if (finder == requirements.end()) {
+                const int available_item_count = available_items_by_reaction_input(require);
+                requirements[require.tag] = std::make_pair( require.quantity, available_item_count );
+                if (available_item_count < 1) possible = false;
+            } else {
+                ++finder->second.first;
+                if (finder->second.first > finder->second.second) possible=false;
+            }
+        }
 
-		if (possible) {
-			available_building_t building{it->second.name, it->second.tag};
-			if (it->second.structure) building.structure = true;
-			auto finder = existing_buildings.find(it->second.tag);
-			if (finder == existing_buildings.end()) {
-				building.n_existing = 0;
-			} else {
-				building.n_existing = finder->second;
-			}
+        if (possible) {
+            available_building_t building{it->name, it->tag};
+            if (it->structure) building.structure = true;
+            auto finder = existing_buildings.find(it->tag);
+            if (finder == existing_buildings.end()) {
+                building.n_existing = 0;
+            } else {
+                building.n_existing = finder->second;
+            }
 
-			building.height = it->second.height;
-			building.width = it->second.width;
-			building.components = it->second.components;
-			building.glyphs = it->second.glyphs;
-            building.glyphs_ascii = it->second.glyphs_ascii;
-			result.push_back(building);
-		}
-	}
+            building.height = it->height;
+            building.width = it->width;
+            building.components = it->components;
+            building.glyphs = it->glyphs;
+            building.glyphs_ascii = it->glyphs_ascii;
+            result.emplace_back(building);
+        }
+    });
+
 	std::sort(result.begin(), result.end(), [] (auto &b1, auto &b2) { return b1.get_name() < b2.get_name(); });
 	return result;
 }
@@ -300,12 +309,12 @@ std::vector<available_building_t> get_available_buildings() {
 std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 	std::vector<std::pair<std::string, std::string>> result;
 
-	for (auto it=reaction_defs.begin(); it != reaction_defs.end(); ++it) {
-		const std::string tag = it->first;
-		const std::string workshop = it->second.workshop;
-		const std::string name = it->second.name;
+	each_reaction([&result] (std::string rtag, reaction_t * it) {
+		const std::string tag = rtag;
+		const std::string workshop = it->workshop;
+		const std::string name = it->name;
 
-		if (!it->second.automatic) {
+		if (!it->automatic) {
 			bool possible = false;
 			// Does a workshop exist?
 			each<building_t>([&possible, &workshop] (entity_t &e, building_t &b) {
@@ -315,7 +324,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 			// Do the components exist, and are unclaimed?
 			if (possible) {
 				std::unordered_map<std::string, std::pair<int,int>> requirements;
-				for (const reaction_input_t &require : it->second.inputs) {
+				for (const reaction_input_t &require : it->inputs) {
 					auto finder = requirements.find(require.tag);
 					if (finder == requirements.end()) {
 						const int available_components = available_items_by_reaction_input(require);
@@ -332,7 +341,7 @@ std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 				}
 			}
 		}
-	}
+	});
 
     std::sort(result.begin(), result.end(), [] (auto &b1, auto &b2) { return b1.second < b2.second; });
 	return result;

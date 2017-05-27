@@ -1,5 +1,6 @@
 #include "plants.hpp"
 #include "lua_bridge.hpp"
+#include "defs/plant_t.hpp"
 
 std::unordered_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
@@ -15,13 +16,9 @@ std::size_t get_plant_idx(const std::string &tag) noexcept
     return 0;
 }
 
-plant_t& get_plant_def(const std::size_t &index) noexcept
+plant_t * get_plant_def(const std::size_t &index) noexcept
 {
-    return plant_defs[index];
-}
-
-std::vector<plant_t>& get_plant_defs() noexcept {
-    return plant_defs;
+    return &plant_defs[index];
 }
 
 void sanity_check_plants() noexcept
@@ -31,7 +28,7 @@ void sanity_check_plants() noexcept
     }
 }
 
-void read_plant_types(std::ofstream &tech_tree_file) noexcept
+void read_plant_types() noexcept
 {
     plant_t p;
     std::string tag;

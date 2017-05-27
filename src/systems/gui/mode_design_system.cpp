@@ -9,12 +9,16 @@
 #include "../../components/bridge.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../main/game_selections.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
+#include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/plant_t.hpp"
+#include <vector>
 
 using namespace rltk;
 using namespace rltk::colors;
+using namespace region;
 
 std::vector<available_building_t> available_buildings;
 const color_t GREEN_BG{0,32,0};
@@ -182,7 +186,7 @@ void mode_design_system::architecture() {
                 if (arch_filled) {
                     const int idx = mapidx(x,y,camera_position->region_z);
                     designations->architecture[idx] = architecture_mode;
-                    if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
+                    if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
                     emit(map_dirty_message{});
                     emit(architecture_changed_message{});
                 } else {
@@ -195,7 +199,7 @@ void mode_design_system::architecture() {
                     if (!interior) {
                         const int idx = mapidx(x,y,camera_position->region_z);
                         designations->architecture[idx] = architecture_mode;
-                        if (architecture_mode == 6) current_region->bridge_id[idx] = bridge_id;
+                        if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
                         emit(map_dirty_message{});
                         emit(architecture_changed_message{});
                     }
@@ -210,14 +214,12 @@ void mode_design_system::architecture() {
         if (finder != designations->architecture.end()) {
             if (finder->second == 6) {
                 // Bridge - remove all of it
-                const std::size_t bridge_id = current_region->bridge_id[idx];
-                if (bridge_id > 0) {
-                    for (auto &id : current_region->bridge_id) {
-                        if (id == bridge_id) id=0;
-                    }
+                const std::size_t bid = bridge_id(idx);
+                if (bid > 0) {
+                    delete_bridge(bid);
                 }
                 for (auto it=designations->architecture.begin(); it!=designations->architecture.end(); ++it) {
-                    if (it->second == 6 && current_region->bridge_id[it->first] == bridge_id) {
+                    if (it->second == 6 && bridge_id(it->first) == bid) {
                         designations->architecture.erase(it->first);
                     }
                 }
@@ -238,7 +240,7 @@ void mode_design_system::chopping() {
     ImGui::End();
 
     const auto idx = mapidx(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z);
-    const auto tree_id = current_region->tree_id[idx];
+    const auto tree_id = region::tree_id(idx);
 
     if (get_mouse_button_state(rltk::button::LEFT) && tree_id > 0) {
         // Naieve search for the base of the tree; this could be optimized a LOT
@@ -250,7 +252,7 @@ void mode_design_system::chopping() {
             for (int y=-10; y<10; ++y) {
                 for (int x=-10; x<10; ++x) {
                     const int tree_idx = mapidx(mouse::mouse_world_x + x, mouse::mouse_world_y + y, lowest_z);
-                    if (current_region->tree_id[tree_idx] == tree_id) {
+                    if (region::tree_id(tree_idx) == tree_id) {
                         tree_pos.x = mouse::mouse_world_x+x;
                         tree_pos.y = mouse::mouse_world_y+y;
                         tree_pos.z = lowest_z;
@@ -279,7 +281,7 @@ void mode_design_system::guardposts() {
     const int world_z = mouse::mouse_world_z;
 
     const auto idx = mapidx(world_x, world_y, camera_position->region_z);
-    if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+    if (flag(idx, CAN_STAND_HERE)) {
         if (get_mouse_button_state(rltk::button::LEFT)) {
             bool found = false;
             for (const auto &g : designations->guard_points) {
@@ -306,21 +308,21 @@ void mode_design_system::harvest() {
 
     const auto idx = mapidx(world_x, world_y, camera_position->region_z);
     bool ok = true;
-    if (current_region->tile_vegetation_type[idx]==0) ok = false;
+    if (veg_type(idx)==0) ok = false;
     if (ok) {
-        plant_t p = get_plant_def(current_region->tile_vegetation_type[idx]);
-        const std::string harvests_to = p.provides[current_region->tile_vegetation_lifecycle[idx]];
+        auto p = get_plant_def(veg_type(idx));
+        const std::string harvests_to = p->provides[veg_lifecycle(idx)];
         if (harvests_to == "none") {
             ok=false;
         } else {
-            auto finder = item_defs.find(harvests_to);
-            if (finder != item_defs.end()) {
-                harvest_name = finder->second.name;
+            auto finder = get_item_def(harvests_to);
+            if (finder != nullptr) {
+                harvest_name = finder->name;
             }
         }
     }
 
-    if (ok && current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+    if (ok && flag(idx, CAN_STAND_HERE)) {
         if (get_mouse_button_state(rltk::button::LEFT)) {
             bool found = false;
             for (const auto &g : designations->harvest) {
@@ -375,11 +377,7 @@ void mode_design_system::stockpiles() {
     ImGui::SameLine();
     if (ImGui::Button("- Remove Stockpile")) {
         delete_entity(current_stockpile);
-        for (auto &id : current_region->stockpile_id) {
-            if (id == current_stockpile) {
-                id = 0;
-            }
-        }
+        delete_stockpile(current_stockpile);
         current_stockpile = 0;
         selected_stockpile = 0;
     }
@@ -388,19 +386,19 @@ void mode_design_system::stockpiles() {
         if (sp_entity) {
             auto sp = sp_entity->component<stockpile_t>();
             if (sp) {
-                for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
-                    if (sp->category.test(it->second.index)) {
-                        const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->second.name;
+                each_stockpile([&sp] (stockpile_def_t * it) {
+                    if (sp->category.test(it->index)) {
+                        const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->name;
                         if (ImGui::Button(sp_label.c_str())) {
-                            sp->category.reset(it->second.index);
+                            sp->category.reset(it->index);
                         }
                     } else {
-                        const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->second.name;
+                        const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->name;
                         if (ImGui::Button(sp_label.c_str())) {
-                            sp->category.set(it->second.index);
+                            sp->category.set(it->index);
                         }
                     }
-                }
+                });
             }
         }
     }
@@ -409,18 +407,18 @@ void mode_design_system::stockpiles() {
     if (current_stockpile>0) {
 
         const auto idx = mapidx(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z);
-        if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+        if (flag(idx, CAN_STAND_HERE)) {
             if (get_mouse_button_state(rltk::button::LEFT)) {
-                if (current_region->stockpile_id[idx]==0) {
-                    current_region->stockpile_id[idx] = current_stockpile;
-                    current_region->calc_render(idx);
+                if (stockpile_id(idx)==0) {
+                    set_stockpile_id(idx, current_stockpile);
+                    calc_render(idx);
                     emit(map_dirty_message{});
                 } else {
-                    current_stockpile = current_region->stockpile_id[idx];
+                    current_stockpile = stockpile_id(idx);
                 }
             } else if (get_mouse_button_state(rltk::button::RIGHT)) {
-                current_region->stockpile_id[idx] = 0;
-                current_region->calc_render(idx);
+                set_stockpile_id(idx, 0);
+                calc_render(idx);
                 emit(map_dirty_message{});
             }
         }

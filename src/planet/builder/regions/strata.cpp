@@ -3,11 +3,14 @@
 #include "../../components/water_spawner.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"
+#include "../../region/region.hpp"
+
+using namespace region;
 
 std::vector<std::size_t> soils;
 std::vector<std::size_t> sands;
 
-strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
+strata_t build_strata(std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet) {
     strata_t result;
     result.strata_map.resize(REGION_TILES_COUNT);
 
@@ -27,7 +30,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     std::fill(result.counts.begin(), result.counts.end(), std::make_tuple<int,int,int,int>(0,0,0,0));
     result.counts.resize(n_strata);
 
-    FastNoise biome_noise(planet.perlin_seed + (region.region_y * REGION_WIDTH ) + region.region_x);
+    FastNoise biome_noise(planet.perlin_seed + (region_y() * REGION_WIDTH ) + region_x());
     biome_noise.SetNoiseType(FastNoise::Cellular);
 
     for (int z=0; z<REGION_DEPTH; ++z) {
@@ -97,7 +100,7 @@ strata_t build_strata(region_t &region, std::vector<uint8_t> &heightmap, random_
     return result;
 }
 
-void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, uint8_t>> &water_spawners) {
+void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, strata_t &strata, random_number_generator &rng, std::vector<uint8_t> &pools, std::vector<std::pair<int, uint8_t>> &water_spawners) {
     // For vegetation
     int max_veg_probability = 0;
     for (const auto &vegprob : biome.second.plants) max_veg_probability += vegprob.second;
@@ -112,16 +115,16 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             if (altitude < 5) wet = true;
 
             // The bottom layer is always SMR to avoid spill-through
-            region.tile_type[mapidx(x,y,0)] = tile_type::SEMI_MOLTEN_ROCK;
+            set_tile_type(mapidx(x,y,0), tile_type::SEMI_MOLTEN_ROCK);
 
             int z = 1;
             while (z < altitude) {
                 // Place Lava area - SMR for now
                 if (x==0 || x==REGION_WIDTH-1 || y==0 || y==REGION_HEIGHT-1) {
-                    region.tile_type[mapidx(x,y,z)] = tile_type::SEMI_MOLTEN_ROCK;
+                    set_tile_type(mapidx(x,y,z), tile_type::SEMI_MOLTEN_ROCK);
                 } else {
-                    region.tile_type[mapidx(x,y,z)] = tile_type::OPEN_SPACE;
-                    region.tile_material[mapidx(x,y,z)] = 0;
+                    set_tile_type(mapidx(x,y,z), tile_type::OPEN_SPACE);
+                    set_tile_material(mapidx(x,y,z), 0);
                     // TODO: Just add magma
                 }
                 ++z;
@@ -130,7 +133,7 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
             // Next up is rock, until the soil layer
             while(z < std::min(altitude + 64, REGION_DEPTH-20)) {
                 // Place rock and soil
-                region.tile_type[mapidx(x,y,z)] = tile_type::SOLID;
+                set_tile_type(mapidx(x,y,z), tile_type::SOLID);
                 std::size_t material_idx;
                 const int idx = mapidx(x,y,z);
                 if (idx < strata.strata_map.size()) { 
@@ -145,16 +148,15 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                     std::cout << "Warning - exceeded strata_map size (" << strata.strata_map.size() << ")\n";
                     material_idx = 1;
                 }
-                region.tile_material[mapidx(x,y,z)] = material_idx;
-                region.tile_hit_points[mapidx(x,y,z)] = get_material(material_idx)->hit_points;
+                set_tile_material(mapidx(x,y,z), material_idx);
                 ++z;
             }
             
             // Populate the surface tile at z-1
-            region.revealed[mapidx(x,y,z-1)] = true;
-            region.tile_type[mapidx(x,y,z-1)] = tile_type::FLOOR;
+            reveal(mapidx(x,y,z-1));
+            set_tile_type(mapidx(x,y,z-1), tile_type::FLOOR);
             if (wet) {
-                region.water_level[mapidx(x,y,z-1)] = 10; // Below the water line; flood it!
+                set_water_level(mapidx(x,y,z-1), 10); // Below the water line; flood it!
             } else {
                 if (pools[cell_idx]>0) {
                     int w = pools[cell_idx];
@@ -167,13 +169,13 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
                     }
 
                     while (w > 0) {
-                        region.water_level[mapidx(x,y,Z)] = 10;
+                        set_water_level(mapidx(x,y,Z), 10);
                         w -= 10;
                         ++Z;
                     }
                 } else {
 
-                    region.water_level[mapidx(x,y,z-1)] = 0;
+                    set_water_level(mapidx(x,y,z-1), 0);
 
                     /*
                     // Soil/sand
@@ -202,19 +204,19 @@ void lay_strata(region_t &region, std::vector<uint8_t> &heightmap, std::pair<bio
 
                     if (veg_type != "none") {
                         auto finder = get_plant_idx(veg_type);
-                        region.tile_vegetation_type[mapidx(x,y,z-1)] = finder;
-                        region.tile_hit_points[mapidx(x,y,z-1)] = 10;
-                        region.tile_vegetation_ticker[mapidx(x,y,z-1)] = 1;
-                        region.tile_vegetation_lifecycle[mapidx(x,y,z-1)] = rng.roll_dice(1,4)-1;
+                        set_veg_type(mapidx(x,y,z-1), finder);
+                        set_veg_hp(mapidx(x,y,z-1), 10);
+                        set_veg_ticker(mapidx(x,y,z-1), 1);
+                        set_veg_lifecycle(mapidx(x,y,z-1), rng.roll_dice(1,4)-1);
                     }
                 }
             }
 
             while (z<REGION_DEPTH) {
                 // Place sky
-                region.revealed[mapidx(x,y,z)] = true;
-                region.tile_type[mapidx(x,y,z)] = tile_type::OPEN_SPACE;
-                if (z < 69) region.water_level[mapidx(x,y,z)] = 10; // Below the water line; flood it!
+                reveal(mapidx(x,y,z));
+                set_tile_type(mapidx(x,y,z), tile_type::OPEN_SPACE);
+                if (z < 69) set_water_level(mapidx(x,y,z), 10); // Below the water line; flood it!
                 ++z;
             }
         }

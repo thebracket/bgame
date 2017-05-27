@@ -10,8 +10,13 @@
 #include "../../../messages/renderables_changed_message.hpp"
 #include "../../../main/game_planet.hpp"
 #include "../../../main/game_pause.hpp"
-#include "../../../main/game_region.hpp"
+#include "../../../planet/region/region.hpp"
 #include "../../../main/game_rng.hpp"
+#include "../../../raws/raws.hpp"
+#include "../../../raws/materials.hpp"
+#include "../../../components/riding_t.hpp"
+
+using namespace region;
 
 void ai_idle::configure() {}
 
@@ -21,17 +26,32 @@ void idle_grazer(entity_t &e, ai_tag_my_turn_t &t, grazer_ai &grazer) {
 
     // Grazers simply eat vegetation or move
     const auto idx = mapidx(pos->x, pos->y, pos->z);
-    if (current_region->tile_vegetation_type[idx] > 0) {
+    if (veg_type(idx) > 0) {
         if (rng.roll_dice(1,6)==1) emit_deferred(vegetation_damage_message{idx, 1});
     } else {
         emit(entity_wants_to_move_randomly_message{e.id});
         emit(huntable_moved_message{});
     }
+
+    const int poop_chance = rng.roll_dice(1, 100);
+    if (poop_chance == 100) {
+        spawn_item_on_ground(pos->x, pos->y, pos->z, "dung", get_material_by_tag("organic"));
+    }
+
     delete_component<ai_tag_my_turn_t>(e.id);
 }
 
 void idle_sentient(entity_t &e, ai_tag_my_turn_t &t, sentient_ai &sentient) {
+    auto mounted = e.component<riding_t>();
     auto pos = e.component<position_t>();
+
+    if (mounted) {
+        auto mount = entity(mounted->riding);
+        if (!mount) {
+            delete_component<riding_t>(e.id);
+        }
+    }
+
     int feelings = planet.civs.civs[sentient.civ_id].cordex_feelings;
 
     if (sentient.hostile || feelings < 0) {

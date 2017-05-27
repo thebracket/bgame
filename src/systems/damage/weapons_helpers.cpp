@@ -2,10 +2,15 @@
 #include "../../messages/messages.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../raws/clothing.hpp"
+#include "../../raws/materials.hpp"
+#include "../../raws/defs/clothing_t.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include "../../components/item.hpp"
 #include "../../components/species.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/natural_attacks_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 bool has_melee_weapon(const entity_t &entity) 
 {
@@ -23,7 +28,7 @@ std::pair<bool, std::string> has_ranged_weapon(const entity_t &entity)
 	each<item_carried_t, item_t>([&entity, &has_weapon, &ammo_type] (entity_t &E, item_carried_t &item, item_t &i) {
 		if (item.carried_by == entity.id && item.location == EQUIP_RANGED) {
 			has_weapon = true;
-			ammo_type = item_defs.find(i.item_tag)->second.ammo;
+			ammo_type = get_item_def(i.item_tag)->ammo;
 		}
 	});
 	return std::make_pair(has_weapon, ammo_type);
@@ -34,7 +39,7 @@ bool has_appropriate_ammo(const entity_t &entity, const std::string ammo_type, c
 	bool has_weapon = false;
 	each<item_carried_t, item_t>([&entity, &has_weapon, &ammo_type, &pos] (entity_t &E, item_carried_t &item, item_t &i) {
 		if (item.carried_by == entity.id && item.location == EQUIP_AMMO) { 
-			if (item_defs.find(i.item_tag)->second.ammo == ammo_type) {
+			if (get_item_def(i.item_tag)->ammo == ammo_type) {
 				has_weapon = true;
 			} else {
 				emit(drop_item_message{E.id, pos.x, pos.y, pos.z});
@@ -51,7 +56,7 @@ int shooting_range(entity_t &entity, const position_t &pos)
 	if (ranged_status.first && has_appropriate_ammo(entity, ranged_status.second, pos)) {
 		each<item_carried_t, item_t>([&entity, &result] (entity_t &E, item_carried_t &item, item_t &i) {
 			if (item.carried_by == entity.id && item.location == EQUIP_RANGED) {
-				result = item_defs.find(i.item_tag)->second.range;
+				result = get_item_def(i.item_tag)->range;
 			}
 		});
 	} else {
@@ -120,9 +125,9 @@ int get_weapon_initiative_penalty(const std::size_t &weapon_id) {
 	if (weapon_entity) {
 		auto weapon_component = weapon_entity->component<item_t>();
 		if (weapon_component) {
-			auto finder = item_defs.find(weapon_component->item_tag);
-			if (finder != item_defs.end()) {
-				return finder->second.initiative_penalty;
+			auto finder = get_item_def(weapon_component->item_tag);
+			if (finder != nullptr) {
+				return finder->initiative_penalty;
 			}
 		}
 	}

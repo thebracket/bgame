@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "region.hpp"
+#include "region/region.hpp"
 #include "planet.hpp"
 
 struct worldgen_display_t {

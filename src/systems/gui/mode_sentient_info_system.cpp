@@ -10,9 +10,11 @@
 #include "../../external/imgui-sfml/imgui-SFML.h"
 #include "../../components/grazer_ai.hpp"
 #include "../../raws/creatures.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
 #include "../../components/name.hpp"
+#include "../../raws/defs/civilization_t.hpp"
 
 void mode_sentient_info_system::configure() { 
     system_name = "Creature Info System";   

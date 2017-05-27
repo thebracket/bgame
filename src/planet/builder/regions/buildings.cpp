@@ -13,18 +13,22 @@
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
+#include "../../../raws/defs/building_def_t.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/camera_options.hpp"
 
+using namespace region;
+
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
-    auto building = building_defs.find(tag);
-    if (building == building_defs.end()) std::cout << "Warning: do not know how to build " << tag << "\n";
+    auto building = get_building_def(tag);
+    if (building == nullptr) std::cout << "Warning: do not know how to build " << tag << "\n";
 
     auto new_building = create_entity()
         ->assign(position_t{x, y, z})
-        ->assign(building_t{ tag, building->second.width, building->second.height, building->second.glyphs, building->second.glyphs_ascii, true, civ_owner });
+        ->assign(building_t{ tag, building->width, building->height, building->glyphs,
+                             building->glyphs_ascii, true, civ_owner, 10, 10 });
 
-    for (const building_provides_t &provides : building->second.provides) {
+    for (const building_provides_t &provides : building->provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
     }
 
@@ -53,84 +57,36 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     }
 }
 
-void add_construction(region_t &region, const int x, const int y, const int z, const std::string type, bool solid, const std::size_t &civ_owner) {
+void add_construction(const int x, const int y, const int z, const std::string type, bool solid, const std::size_t &civ_owner) {
 
     const auto idx = mapidx(x,y,z);
-    region.water_level[idx] = 0;
-    region.solid[idx] = false;
-    region.tile_type[idx] = tile_type::FLOOR;
-    region.tile_flags[idx].set(CONSTRUCTION);
     const auto plasteel = get_material_by_tag("plasteel");
-    region.tile_material[idx] = plasteel;
-    region.tile_vegetation_type[idx] = 0;
-
     const auto wood = get_material_by_tag("wood");
 
+    set_tile(idx, tile_type::FLOOR, false, false, plasteel, 0, true, true);
+
     if (type == "ship_wall") {
-        region.tile_type[idx] = tile_type::WALL;
-        region.solid[idx] = true;
-        region.opaque[idx] = true;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;
+        set_tile(idx, tile_type::WALL, true, true, plasteel, 0, true, true);
     } else if (type == "ship_window") {
-        region.tile_type[idx] = tile_type::WINDOW;
-        region.solid[idx] = true;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;
+        set_tile(idx, tile_type::WINDOW, true, false, plasteel, 0, true, true);
     } else if (type == "ship_floor") {
-        region.tile_type[idx] = tile_type::FLOOR;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        set_tile(idx, tile_type::FLOOR, false, false, plasteel, 0, true, true);
     } else if (type == "hut_wall") {
-        region.tile_type[idx] = tile_type::WALL;
-        region.solid[idx] = true;
-        region.opaque[idx] = true;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood;
+        set_tile(idx, tile_type::WALL, true, true, wood, 0, true, true);
     } else if (type == "hut_floor") {
-        region.tile_type[idx] = tile_type::FLOOR;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood; 
+        set_tile(idx, tile_type::FLOOR, false, false, wood, 0, true, true);
     } else if (type == "ship_up") {
-        region.tile_type[idx] = tile_type::STAIRS_UP;
-        region.solid[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        set_tile(idx, tile_type::STAIRS_UP, false, false, plasteel, 0, true, true);
     } else if (type == "ship_down") {
-        region.tile_type[idx] = tile_type::STAIRS_DOWN;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        set_tile(idx, tile_type::STAIRS_DOWN, false, false, plasteel, 0, true, true);
     } else if (type == "ship_updown") {
-        region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = plasteel;    
+        set_tile(idx, tile_type::STAIRS_UPDOWN, false, false, plasteel, 0, true, true);
     } else if (type == "hut_upstairs") {
-        region.tile_type[idx] = tile_type::STAIRS_UP;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood;    
+        set_tile(idx, tile_type::STAIRS_UP, false, false, wood, 0, true, true);
     } else if (type == "hut_downstairs") {
-        region.tile_type[idx] = tile_type::STAIRS_DOWN;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood;    
+        set_tile(idx, tile_type::STAIRS_DOWN, false, false, wood, 0, true, true);
     } else if (type == "hut_updownstairs") {
-        region.tile_type[idx] = tile_type::STAIRS_UPDOWN;
-        region.solid[idx] = false;
-        region.opaque[idx] = false;
-        region.tile_flags[idx].set(CONSTRUCTION);
-        region.tile_material[idx] = wood;
+        set_tile(idx, tile_type::STAIRS_UPDOWN, false, false, wood, 0, true, true);
     } else if (type == "cordex") {
         add_building("cordex", x, y, z, civ_owner);
     } else if (type == "solar_panel") {
@@ -138,7 +94,6 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     } else if (type == "cryo_bed") {
         add_building("cryo_bed", x, y, z, civ_owner);
     } else if (type == "storage_locker") {
-        region.tile_flags[idx].set(CONSTRUCTION);
         add_building("storage_locker", x, y, z, civ_owner);
     } else if (type == "battery") {
         add_building("battery", x, y, z, civ_owner);
@@ -158,7 +113,7 @@ void add_construction(region_t &region, const int x, const int y, const int z, c
     }
 }
 
-void build_escape_pod(region_t &region, const int crash_x, const int crash_y, const int crash_z) {
+void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
     xp::rex_sprite ship("rex/spaceship.xp");
     int z=-2+crash_z;
     for (int layer = 0; layer<5; ++layer) {
@@ -168,40 +123,40 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
                 const int y = Y-11+crash_y;
 
                 const vchar * output = ship.get_tile(layer,X,Y);
-                if (output != nullptr && output->glyph != 32) region.revealed[mapidx(x,y, z)] = true;
+                if (output != nullptr && output->glyph != 32) reveal(mapidx(x,y, z));
 				if (output != nullptr && !xp::is_transparent(output)) {
                     if (output->glyph == 219) {
-                        add_construction(region, x, y, z, "ship_wall", true, 0);
+                        add_construction(x, y, z, "ship_wall", true, 0);
                     } else if (output->glyph == 177) {
-                        add_construction(region, x, y, z, "ship_window", true, 0);
+                        add_construction(x, y, z, "ship_window", true, 0);
                     } else if (output->glyph == 176) {
-                        add_construction(region, x, y, z, "ship_floor", false, 0);
+                        add_construction(x, y, z, "ship_floor", false, 0);
                     } else if (output->glyph == 'X') {
-                        add_construction(region, x, y, z, "ship_updown", false, 0);
+                        add_construction(x, y, z, "ship_updown", false, 0);
                     } else if (output->glyph == '<') {
-                        add_construction(region, x, y, z, "ship_up", false, 0);
+                        add_construction(x, y, z, "ship_up", false, 0);
                     } else if (output->glyph == '>') {
-                        add_construction(region, x, y, z, "ship_down", false, 0);
+                        add_construction(x, y, z, "ship_down", false, 0);
                     } else if (output->glyph == 178) {
-                        add_construction(region, x, y, z, "solar_panel", false, 0);
+                        add_construction(x, y, z, "solar_panel", false, 0);
                     } else if (output->glyph == 241) {
-                        add_construction(region, x, y, z, "battery", false, 0);
+                        add_construction(x, y, z, "battery", false, 0);
                     } else if (output->glyph == 'X') {
-                        add_construction(region, x, y, z, "ship_updown", false, 0);
+                        add_construction(x, y, z, "ship_updown", false, 0);
                     } else if (output->glyph == '0') {
-                        add_construction(region, x, y, z, "cryo_bed", false, 0);
+                        add_construction(x, y, z, "cryo_bed", false, 0);
                     } else if (output->glyph == 'X') {
-                        add_construction(region, x, y, z, "ship_updown", false, 0);
+                        add_construction(x, y, z, "ship_updown", false, 0);
                     } else if (output->glyph == 236) {
-                        add_construction(region, x, y, z, "storage_locker", false, 0);
+                        add_construction(x, y, z, "storage_locker", false, 0);
                     } else if (output->glyph == 'C') {
-                        add_construction(region, x, y, z, "cordex", false, 0);
+                        add_construction(x, y, z, "cordex", false, 0);
                     } else if (output->glyph == 251) {
-                        add_construction(region, x, y, z, "small_replicator", false, 0);
+                        add_construction(x, y, z, "small_replicator", false, 0);
                     } else if (output->glyph == 232) {
-                        add_construction(region, x, y, z, "rtg", false, 0);
+                        add_construction(x, y, z, "rtg", false, 0);
                     } else if (output->glyph == 197) {
-                        add_construction(region, x, y, z, "ship_door", false, 0);
+                        add_construction(x, y, z, "ship_door", false, 0);
                     } else {
                         if (output->glyph != 32)
                             std::cout << "Warning: No handler for " << (char)output->glyph << " (" << +output->glyph << ")\n";
@@ -213,7 +168,7 @@ void build_escape_pod(region_t &region, const int crash_x, const int crash_y, co
     }
 }
 
-void build_game_components(region_t &region, const int crash_x, const int crash_y, const int crash_z) {
+void build_game_components(const int crash_x, const int crash_y, const int crash_z) {
     calendar_t calendar;
 	calendar.defined_shifts.push_back(shift_t{"Early Shift", {
 		WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT }
@@ -226,14 +181,14 @@ void build_game_components(region_t &region, const int crash_x, const int crash_
 	});
     
     create_entity()
-		->assign(world_position_t{region.region_x, region.region_y, crash_x, crash_y, crash_z+1})
+		->assign(world_position_t{region_x(), region_y(), crash_x, crash_y, crash_z+1})
 		->assign(std::move(calendar))
 		->assign(designations_t{})
         ->assign(logger_t{})
         ->assign(camera_options_t{});
 }
 
-int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, region_t &region, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {
+int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {
     int n_spawn = 0;
     for (int layer = 0; layer < sprite.get_num_layers(); ++layer) {
         for (int Y=0; Y < sprite.get_height(); ++Y) {
@@ -248,26 +203,26 @@ int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z
                 }
 
                 if (output->glyph == 219 || output->glyph == 177) {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_wall", true, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_wall", true, civ_id);
                 } else if (output->glyph == 176) {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_floor", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_floor", false, civ_id);
                 } else if (output->glyph == 197) {
                     //std::cout << "Templater passing civ_id to door: " << civ_id << "\n";
-                    add_construction(region, x+X, y+Y, z+layer, "door", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "door", false, civ_id);
                 } else if (output->glyph == '<') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_upstairs", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_upstairs", false, civ_id);
                 } else if (output->glyph == 'X') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_updownstairs", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_updownstairs", false, civ_id);
                 } else if (output->glyph == '>') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_downstairs", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_downstairs", false, civ_id);
                 } else if (output->glyph == 's') {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_floor", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_floor", false, civ_id);
                     spawn_points.push_back(std::make_tuple(x+X, y+Y, z+layer));
                     ++n_spawn;
                 } else if (output->glyph == 234) {
-                    add_construction(region, x+X, y+Y, z+layer, "hut_floor", false, civ_id);
+                    add_construction(x+X, y+Y, z+layer, "hut_floor", false, civ_id);
                     if (active) {
-                        add_construction(region, x+X, y+Y, z+layer, "campfire", false, civ_id);
+                        add_construction(x+X, y+Y, z+layer, "campfire", false, civ_id);
                     }
                 }
             }
@@ -290,7 +245,7 @@ xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet,
     return xp::rex_sprite(building_template);
 }
 
-void build_buildings(region_t &region, rltk::random_number_generator &rng, const int n_buildings, const bool active, 
+void build_buildings(rltk::random_number_generator &rng, const int n_buildings, const bool active,
     std::vector<std::tuple<int,int,int>> &spawn_points, const std::size_t &civ_id, planet_t &planet) 
 {
     std::cout << "Civ ID#: " << civ_id << "\n";
@@ -305,12 +260,12 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
             ok = true;
             x = rng.roll_dice(1, REGION_WIDTH - 20) + 10;
             y = rng.roll_dice(1, REGION_HEIGHT - 20) + 10;
-            z = get_ground_z(region, x, y);
+            z = ground_z(x, y);
 
             // Find lowest point
             for (int Y=0; Y < building->get_height(); ++Y) {
                 for (int X = 0; X < building->get_width(); ++X) {
-                    const int tmp_z = get_ground_z(region, x+X, y+Y);
+                    const int tmp_z = ground_z(x+X, y+Y);
                     if (z > tmp_z) z = tmp_z;
                 }
             }
@@ -320,9 +275,9 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
                 for (int X = 0; X < building->get_width(); ++X) {
                     for (int Z = 0; Z < building->get_num_layers(); ++Z) {
                         const auto idx = mapidx(X+x, Y+y, Z+z);
-                        if (region.solid[idx]) ok = false;
-                        if (region.water_level[idx] > 0) ok = false;
-                        if (region.tile_type[idx] == tile_type::SOLID) ok = false;
+                        if (solid(idx)) ok = false;
+                        if (water_level(idx) > 0) ok = false;
+                        if (region::tile_type(idx) == tile_type::SOLID) ok = false;
                     }
                 }
             }
@@ -337,7 +292,7 @@ void build_buildings(region_t &region, rltk::random_number_generator &rng, const
         // Spawn the hut
         if (tries < 51) {
             std::cout << "Building passing civ_id: " << civ_id << "\n";
-            const int n_spawn = build_building(*building, x, y, z, region, spawn_points, active, civ_id);
+            const int n_spawn = build_building(*building, x, y, z, spawn_points, active, civ_id);
             i += (n_spawn -1);
         }
     }

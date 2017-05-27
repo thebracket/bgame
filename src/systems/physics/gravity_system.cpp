@@ -10,7 +10,9 @@
 #include "../../messages/recalculate_mining_message.hpp"
 #include "../../messages/perform_mining.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
+
+using namespace region;
 
 void gravity_system::configure() {
     system_name = "Gravity System";
@@ -22,6 +24,7 @@ void gravity_system::update(const double ms) {
     std::queue<tile_removed_message> * removals = mbox<tile_removed_message>();
 	while (!removals->empty()) {
 		removals->pop();
+        return; // Temporarily disable collapses
 
         std::vector<bool> connected;
         std::vector<bool> visited;
@@ -49,14 +52,14 @@ void gravity_system::update(const double ms) {
                     if (z<REGION_DEPTH-1) targets.push_back(mapidx(x,y,z+1));
                     //std::cout << "Connected " << x << "," << y << "," << z << ", type " << +current_region->tile_type[idx] << "\n";
                 } else {
-                    if (current_region->tile_type[idx] != tile_type::OPEN_SPACE || current_region->solid[idx] || current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+                    if (region::tile_type(idx) != tile_type::OPEN_SPACE || solid(idx) || flag(idx, CAN_STAND_HERE)) {
                         connected[idx] = true;
                         //std::cout << "Connected " << x << "," << y << "," << z << ", type " << +current_region->tile_type[idx] << "\n";
                         if (x>0) targets.push_back(mapidx(x-1,y,z));
                         if (x<REGION_WIDTH-1) targets.push_back(mapidx(x+1,y,z));
                         if (y>0) targets.push_back(mapidx(x,y-1,z));
                         if (y<REGION_HEIGHT-1) targets.push_back(mapidx(x,y+1,z));
-                        if (z<REGION_DEPTH-1 && current_region->tile_type[idx] != tile_type::FLOOR && current_region->tile_type[idx] != tile_type::RAMP) targets.push_back(mapidx(x,y,z+1));
+                        if (z<REGION_DEPTH-1 && region::tile_type(idx) != tile_type::FLOOR && region::tile_type(idx) != tile_type::RAMP) targets.push_back(mapidx(x,y,z+1));
                         if (z>0) targets.push_back(mapidx(x,y,z-1));               
                     }
                 }
@@ -64,20 +67,20 @@ void gravity_system::update(const double ms) {
         }
 
         for (int idx = 0; idx < REGION_TILES_COUNT; ++idx) {
-            if (current_region->tile_type[idx] != tile_type::OPEN_SPACE && !connected[idx]) {
+            if (region::tile_type(idx) != tile_type::OPEN_SPACE && !connected[idx]) {
                 int x,y,z;
                 std::tie(x,y,z) = idxmap(idx);
                 emit_deferred(emit_particles_message{1, x, y, z});
                 std::cout << "Collapse: " << x << "/" << y << "/" << z << "\n";
 
                 // Constructions de-construct
-                if (current_region->tile_flags[idx].test(CONSTRUCTION)) {
-                    if (current_region->tile_type[idx] == tile_type::FLOOR || current_region->tile_type[idx] == tile_type::WALL
-                        || current_region->tile_type[idx] == tile_type::STAIRS_DOWN || current_region->tile_type[idx] == tile_type::STAIRS_UP
-                        || current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN || current_region->tile_type[idx] == tile_type::WINDOW)
+                if (region::flag(idx, CONSTRUCTION)) {
+                    if (region::tile_type(idx) == tile_type::FLOOR || region::tile_type(idx) == tile_type::WALL
+                        || region::tile_type(idx) == tile_type::STAIRS_DOWN || region::tile_type(idx) == tile_type::STAIRS_UP
+                        || region::tile_type(idx) == tile_type::STAIRS_UPDOWN || region::tile_type(idx) == tile_type::WINDOW)
                     {
-                        spawn_item_on_ground(x, y, z, "block", current_region->tile_material[idx]);
-                    } else if (current_region->tile_type[idx] != tile_type::OPEN_SPACE) {
+                        spawn_item_on_ground(x, y, z, "block", material(idx));
+                    } else if (region::tile_type(idx) != tile_type::OPEN_SPACE) {
                         emit_deferred(perform_mining_message{idx, 1, x, y, z});
                     }
                 }
@@ -85,13 +88,13 @@ void gravity_system::update(const double ms) {
                 // Other tiles become objects and will naturally fall
 
                 // Tile resets and re-calculation
-                current_region->tile_type[idx] = tile_type::OPEN_SPACE;
-                current_region->tile_flags[idx].reset(CONSTRUCTION);
-                current_region->tile_flags[idx].reset(CAN_STAND_HERE);
+                set_tile_type(idx, tile_type::OPEN_SPACE);
+                reset_flag(idx, CONSTRUCTION);
+                reset_flag(idx, CAN_STAND_HERE);
                 for (int Z=z-2; Z<z+2; Z++) {
                     for (int Y=y-2; Y<y+2; Y++) {
                         for (int X=x-1; X<x+2; X++) {
-                            current_region->tile_calculate(X,Y,Z);
+                            tile_calculate(X,Y,Z);
                         }
                     }
                 }
@@ -111,7 +114,7 @@ void gravity_system::update(const double ms) {
             falling_entities.insert(e.id);
             const auto idx = mapidx(pos.x, pos.y, pos.z);
 
-            if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) {
+            if (flag(idx, CAN_STAND_HERE)) {
                 // We hit the ground
                 if (fall.distance > 2) {
                     emit_deferred(inflict_damage_message{e.id, rng.roll_dice(fall.distance, 6), "falling damage"});
@@ -132,7 +135,7 @@ void gravity_system::update(const double ms) {
                 bool is_falling = true;
 
                 // We're standing on a solid tile - don't fall
-                if (current_region->tile_flags[idx].test(CAN_STAND_HERE)) is_falling = false;
+                if (flag(idx, CAN_STAND_HERE)) is_falling = false;
 
                 // Incomplete buildings shouldn't fall
                 if (is_falling) {

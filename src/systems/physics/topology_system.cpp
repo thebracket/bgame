@@ -3,11 +3,16 @@
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
+#include "../../raws/defs/material_def_t.hpp"
+
+using namespace region;
 
 void topology_system::update(const double duration_ms) {
 }
@@ -37,67 +42,55 @@ void topology_system::configure() {
 }
 
 void topology_system::dig(const perform_mining_message &e) {
-    current_region->solid[e.target_idx]=false;
-    current_region->tile_type[e.target_idx] = tile_type::FLOOR;
-    current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
+    make_floor(e.target_idx);
     int x,y,z;
     std::tie(x,y,z) = idxmap(e.target_idx);
     emit_deferred(tile_removed_message{x,y,z});
 }
 
 void topology_system::channel(const perform_mining_message &e) {
-    current_region->solid[e.target_idx]=false;
-    current_region->tile_type[e.target_idx] = tile_type::OPEN_SPACE;
+    make_open_space(e.target_idx);
     int x,y,z;
     std::tie(x,y,z) = idxmap(e.target_idx);
     emit_deferred(tile_removed_message{x,y,z});
     
     // Add ramp
     const int below = e.target_idx - (REGION_WIDTH * REGION_HEIGHT);
-    if (current_region->solid[below]) {
-        current_region->solid[below]=false;
-        current_region->tile_type[below] = tile_type::RAMP;
-        current_region->tile_flags[below].set(CAN_STAND_HERE);
+    if (solid(below)) {
+        make_ramp(below);
     }
 }
 
 void topology_system::ramp(const perform_mining_message &e) {
-    current_region->solid[e.target_idx]=false;
-    current_region->tile_type[e.target_idx] = tile_type::RAMP;
-    current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
+    make_ramp(e.target_idx);
 
     const int above = e.target_idx + (REGION_WIDTH * REGION_HEIGHT);
-    if (current_region->solid[above]) {
-        current_region->solid[above]=false;
-        current_region->tile_type[above] = tile_type::OPEN_SPACE;
-        current_region->tile_flags[above].set(CAN_STAND_HERE);
+    if (solid(above)) {
+        make_open_space(above);
+        set_flag(above, CAN_STAND_HERE);
     }
 }
 
 void topology_system::stairs_up(const perform_mining_message &e) {
-    current_region->solid[e.target_idx]=false;
-    current_region->tile_type[e.target_idx] = tile_type::STAIRS_UP;
-    current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
+    make_stairs_up(e.target_idx);
 }
 
 void topology_system::stairs_down(const perform_mining_message &e) {
-    current_region->solid[e.target_idx]=false;
-    current_region->tile_type[e.target_idx] = tile_type::STAIRS_DOWN;
-    current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
+    make_stairs_down(e.target_idx);
 }
 
 void topology_system::stairs_updown(const perform_mining_message &e) {
-    current_region->solid[e.target_idx]=false;
-    current_region->tile_type[e.target_idx] = tile_type::STAIRS_UPDOWN;
-    current_region->tile_flags[e.target_idx].set(CAN_STAND_HERE);
+    make_stairs_updown(e.target_idx);
 }
 
 void topology_system::recalculate(const perform_mining_message &e) {
     for (int Z=-2; Z<3; ++Z) {
         for (int Y=-2; Y<3; ++Y) {
             for (int X=-2; X<3; ++X) {
-                current_region->revealed[mapidx(e.x + X, e.y + Y, e.z + Z)] = true;
-                current_region->tile_calculate(e.x + X, e.y + Y, e.z + Z);
+                if (e.x + X > 0 && e.x + X < REGION_WIDTH && e.y+Y > 0 && e.y + Y < REGION_HEIGHT && e.z +Z > 0 && e.z+Z<REGION_DEPTH) {
+                    reveal(mapidx(e.x + X, e.y + Y, e.z + Z));
+                    tile_calculate(e.x + X, e.y + Y, e.z + Z);
+                }
             }
         }
     }
@@ -109,17 +102,17 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
     int X,Y,Z;
     std::tie(X,Y,Z) = idxmap(e.target_idx);
 
-    auto finder = item_defs.find(tag);
-    if (finder != item_defs.end()) {
+    auto finder = get_item_def(tag);
+    if (finder != nullptr) {
         //std::cout << "Topology system - producing a [" << tag << "]";
-        std::size_t material = current_region->tile_material[e.target_idx];
+        auto mat = material(e.target_idx);
         if (tag == "ore") {
-            for (const std::string &metal : get_material(material)->ore_materials) {
+            for (const std::string &metal : get_material(mat)->ore_materials) {
                 const auto metal_finder = get_material_by_tag(metal);
                 spawn_item_on_ground(X, Y, Z, tag, metal_finder);
             }
         } else {
-            spawn_item_on_ground(X, Y, Z, tag, material);
+            spawn_item_on_ground(X, Y, Z, tag, mat);
         }
     } else {
         std::cout << "Topology system - don't know how to spawn a [" << tag << "]\n";
@@ -127,8 +120,8 @@ void topology_system::spawn_mining_result_impl(const perform_mining_message &e, 
 }
 
 void topology_system::spawn_mining_result(const perform_mining_message &e) {
-    const std::string mining_result = get_material(current_region->tile_material[e.target_idx])->mines_to_tag;
-    const std::string mining_result2 = get_material(current_region->tile_material[e.target_idx])->mines_to_tag_second;
+    const std::string mining_result = get_material(material(e.target_idx))->mines_to_tag;
+    const std::string mining_result2 = get_material(material(e.target_idx))->mines_to_tag_second;
 
     //std::cout << "Topology - mines to [" << mining_result << "], [" << mining_result2 << "]";
 
@@ -145,36 +138,36 @@ void topology_system::build_construction(const perform_construction_message &e) 
     bool entity_should_be_deleted = true;
     auto construction_pos = entity(e.entity_id)->component<position_t>();
     const int index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
-    auto finder = building_defs.find(e.tag);
-    for (const building_provides_t &provides : finder->second.provides) {
+    auto finder = get_building_def(e.tag);
+    for (const building_provides_t &provides : finder->provides) {
         
         if (provides.provides == provides_wall) {
-            current_region->tile_type[index] = tile_type::WALL;
+            set_tile_type(index, tile_type::WALL);
             // Relocate anything stuck in the new wall
             each<position_t>([index] (entity_t &E, position_t &P) {
                 if (mapidx(P.x, P.y, P.z) == index) {
                     // Something needs moving!
-                    if (!current_region->solid[index+1]) {
+                    if (!solid(index+1)) {
                         std::tie(P.x, P.y, P.z) = idxmap(index+1);
-                    } else if (!current_region->solid[index-1]) {
+                    } else if (!solid(index-1)) {
                         std::tie(P.x, P.y, P.z) = idxmap(index-1);
-                    } else if (!current_region->solid[index+REGION_WIDTH]) {
+                    } else if (!solid(index+REGION_WIDTH)) {
                         std::tie(P.x, P.y, P.z) = idxmap(index+REGION_WIDTH);
-                    } else if (!current_region->solid[index-REGION_WIDTH]) {
+                    } else if (!solid(index-REGION_WIDTH)) {
                         std::tie(P.x, P.y, P.z) = idxmap(index-REGION_WIDTH);
                     }
                 }
             });
         } else if (provides.provides == provides_floor) {
-            current_region->tile_type[index] = tile_type::FLOOR;
+            set_tile_type(index, tile_type::FLOOR);
         } else if (provides.provides == provides_stairs_up) {
-            current_region->tile_type[index] = tile_type::STAIRS_UP;
+            set_tile_type(index, tile_type::STAIRS_UP);
         } else if (provides.provides == provides_stairs_down) {
-            current_region->tile_type[index] = tile_type::STAIRS_DOWN;
+            set_tile_type(index, tile_type::STAIRS_DOWN);
         } else if (provides.provides == provides_stairs_updown) {
-            current_region->tile_type[index] = tile_type::STAIRS_UPDOWN;
+            set_tile_type(index, tile_type::STAIRS_UPDOWN);
         } else if (provides.provides == provides_ramp) {
-            current_region->tile_type[index] = tile_type::RAMP;
+            set_tile_type(index, tile_type::RAMP);
         } else if (provides.provides == provides_cage_trap) {
             // Create a new entity for the trap
             // Add an entry_trigger and a position to it
@@ -208,13 +201,13 @@ void topology_system::build_construction(const perform_construction_message &e) 
             entity_should_be_deleted = false;
         }
     }
-    current_region->tile_material[index] = e.material;
+    set_tile_material(index, e.material);
 
-    current_region->tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
+    tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
     for (int Z=-2; Z<3; ++Z) {
         for (int Y=-2; Y<3; ++Y) {
             for (int X=-2; X<3; ++X) {
-                current_region->tile_calculate(construction_pos->x + X, construction_pos->y + Y, construction_pos->z + Z);
+                tile_calculate(construction_pos->x + X, construction_pos->y + Y, construction_pos->z + Z);
             }
         }
     }

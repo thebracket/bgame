@@ -1,9 +1,11 @@
 #include "dijkstra_map.hpp"
-#include "../main/game_region.hpp"
+#include "../planet/region/region.hpp"
 #include <utility>
 #include <deque>
 #include <map>
 #include <thread>
+
+using namespace region;
 
 dijkstra_map::dijkstra_map() {
     distance_map.resize(REGION_TILES_COUNT);
@@ -17,7 +19,7 @@ int16_t dijkstra_map::get(const std::size_t &idx) {
 
 inline void dm_add_candidate(std::deque<std::pair<int,int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
     const int idx = mapidx(x,y,z);
-    if (current_region->water_level[idx] < 4) {
+    if (water_level(idx) < 4) {
         open_nodes.emplace_back(std::make_pair(idx, distance));
     }
 }
@@ -54,22 +56,22 @@ void dijkstra_map::update_async(const std::vector<int> &starting_points)
             int x,y,z;
             std::tie(x,y,z) = idxmap(open_node.first);
 
-            if (x < REGION_WIDTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_EAST)) {
+            if (x < REGION_WIDTH-1 && flag(open_node.first, CAN_GO_EAST)) {
                 dm_add_candidate(open_nodes, x+1, y, z, open_node.second+1);
             }
-            if (x > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_WEST)) {
+            if (x > 0 && flag(open_node.first, CAN_GO_WEST)) {
                 dm_add_candidate(open_nodes, x-1, y, z, open_node.second+1);
             }
-            if (y < REGION_WIDTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_SOUTH)) {
+            if (y < REGION_WIDTH-1 && flag(open_node.first, CAN_GO_SOUTH)) {
                 dm_add_candidate(open_nodes, x, y+1, z, open_node.second+1);
             }
-            if (y > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_WEST)) {
+            if (y > 0 && flag(open_node.first, CAN_GO_WEST)) {
                 dm_add_candidate(open_nodes, x, y-1, z, open_node.second+1);
             }
-            if (z > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_DOWN)) {
+            if (z > 0 && flag(open_node.first, CAN_GO_DOWN)) {
                 dm_add_candidate(open_nodes, x, y, z-1, open_node.second+1);
             }
-            if (z < REGION_DEPTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_UP)) {
+            if (z < REGION_DEPTH-1 && flag(open_node.first, CAN_GO_UP)) {
                 dm_add_candidate(open_nodes, x, y, z+1, open_node.second+1);
             }
         }
@@ -103,22 +105,22 @@ void dijkstra_map::update_architecture_async(const std::vector<int> &starting_po
             int x,y,z;
             std::tie(x,y,z) = idxmap(open_node.first);
 
-            if (x < REGION_WIDTH-1 && (current_region->tile_flags[open_node.first].test(CAN_GO_EAST) || open_node.second == 0)) {
+            if (x < REGION_WIDTH-1 && (flag(open_node.first, CAN_GO_EAST) || open_node.second == 0)) {
                 dm_add_candidate(open_nodes, x+1, y, z, open_node.second+1);
             }
-            if (x > 0 && (current_region->tile_flags[open_node.first].test(CAN_GO_WEST) || open_node.second == 0)) {
+            if (x > 0 && (flag(open_node.first, CAN_GO_WEST) || open_node.second == 0)) {
                 dm_add_candidate(open_nodes, x-1, y, z, open_node.second+1);
             }
-            if (y < REGION_WIDTH-1 && (current_region->tile_flags[open_node.first].test(CAN_GO_SOUTH) || open_node.second == 0)) {
+            if (y < REGION_WIDTH-1 && (flag(open_node.first, CAN_GO_SOUTH) || open_node.second == 0)) {
                 dm_add_candidate(open_nodes, x, y+1, z, open_node.second+1);
             }
-            if (y > 0 && (current_region->tile_flags[open_node.first].test(CAN_GO_WEST) || open_node.second == 0)) {
+            if (y > 0 && (flag(open_node.first, CAN_GO_WEST) || open_node.second == 0)) {
                 dm_add_candidate(open_nodes, x, y-1, z, open_node.second+1);
             }
-            if (z > 0 && current_region->tile_flags[open_node.first].test(CAN_GO_DOWN)) {
+            if (z > 0 && flag(open_node.first, CAN_GO_DOWN)) {
                 dm_add_candidate(open_nodes, x, y, z-1, open_node.second+1);
             }
-            if (z < REGION_DEPTH-1 && current_region->tile_flags[open_node.first].test(CAN_GO_UP)) {
+            if (z < REGION_DEPTH-1 && flag(open_node.first, CAN_GO_UP)) {
                 dm_add_candidate(open_nodes, x, y, z+1, open_node.second+1);
             }
         }
@@ -133,27 +135,27 @@ position_t dijkstra_map::find_destination(const position_t &pos) {
 
     const int idx = mapidx(pos);
     std::map<int16_t, int> candidates;
-    if (pos.x > 0 && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
+    if (pos.x > 0 && flag(idx, CAN_GO_WEST)) {
         const int destidx = mapidx(pos.x-1, pos.y, pos.z);
         candidates.insert(std::make_pair(distance_map[destidx], destidx));
     }
-    if (pos.x < REGION_WIDTH-1 && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
+    if (pos.x < REGION_WIDTH-1 && flag(idx, CAN_GO_EAST)) {
         const int destidx = mapidx(pos.x+1, pos.y, pos.z);
         candidates.insert(std::make_pair(distance_map[destidx], destidx));
     }
-    if (pos.y > 0 && current_region->tile_flags[idx].test(CAN_GO_NORTH)) {
+    if (pos.y > 0 && flag(idx, CAN_GO_NORTH)) {
         const int destidx = mapidx(pos.x, pos.y-1, pos.z);
         candidates.insert(std::make_pair(distance_map[destidx], destidx));
     }
-    if (pos.y < REGION_HEIGHT-1 && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) {
+    if (pos.y < REGION_HEIGHT-1 && flag(idx, CAN_GO_SOUTH)) {
         const int destidx = mapidx(pos.x, pos.y+1, pos.z);
         candidates.insert(std::make_pair(distance_map[destidx], destidx));
     }
-    if (pos.z > 0 && current_region->tile_flags[idx].test(CAN_GO_DOWN)) {
+    if (pos.z > 0 && flag(idx, CAN_GO_DOWN)) {
         const int destidx = mapidx(pos.x, pos.y, pos.z-1);
         candidates.insert(std::make_pair(distance_map[destidx], destidx));
     }
-    if (pos.z < REGION_DEPTH-1 && current_region->tile_flags[idx].test(CAN_GO_UP)) {
+    if (pos.z < REGION_DEPTH-1 && flag(idx, CAN_GO_UP)) {
         const int destidx = mapidx(pos.x, pos.y, pos.z+1);
         candidates.insert(std::make_pair(distance_map[destidx], destidx));
     }

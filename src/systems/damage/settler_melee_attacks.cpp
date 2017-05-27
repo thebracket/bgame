@@ -4,6 +4,10 @@
 #include "weapons_helpers.hpp"
 #include "../../components/item.hpp"
 #include "../../main/game_logger.hpp"
+#include "../../main/game_rng.hpp"
+#include "../../raws/materials.hpp"
+#include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 
 using namespace rltk;
 void settler_melee_attacks_system::on_message(const settler_attack_message &msg) {
@@ -22,12 +26,12 @@ void settler_melee_attacks_system::on_message(const settler_attack_message &msg)
     if (weapon_id != 0) {
         auto weapon_component = entity(weapon_id)->component<item_t>();
         if (weapon_component) {
-            auto weapon_finder = item_defs.find(weapon_component->item_tag);
-            if (weapon_finder != item_defs.end()) {
-                weapon_name = weapon_finder->second.name;
-                weapon_n = weapon_finder->second.damage_n;
-                weapon_d = weapon_finder->second.damage_d;
-                weapon_mod = weapon_finder->second.damage_mod + get_material(weapon_component->material)->damage_bonus;;
+            auto weapon_finder = get_item_def(weapon_component->item_tag);
+            if (weapon_finder != nullptr) {
+                weapon_name = weapon_finder->name;
+                weapon_n = weapon_finder->damage_n;
+                weapon_d = weapon_finder->damage_d;
+                weapon_mod = weapon_finder->damage_mod + get_material(weapon_component->material)->damage_bonus;;
             }
         }
     }

@@ -1,30 +1,12 @@
 #pragma once
 
-#include <string>
 #include <vector>
-#include <fstream>
-#include <rltk.hpp>
+#include <string>
 #include "reaction_input.hpp"
+#include "graphviz.hpp"
 
-/*
- * Defines a material type. Used by just about everything.
- */
-struct material_def_t {
-    std::string tag = "";
-    std::string name = "";
-    material_def_spawn_type_t spawn_type = rock;
-    std::string parent_material_tag = "";
-    uint16_t glyph;
-    rltk::color_t fg;
-    rltk::color_t bg;
-    uint8_t hit_points = 0;
-    std::string mines_to_tag = "";
-    std::string mines_to_tag_second = "";
-    std::string layer = "";
-    std::vector<std::string> ore_materials;
-    int damage_bonus = 0;
-    float ac_bonus = 0.0F;
-};
+struct material_def_t;
+struct graphviz_t;
 
 /*
  * Retrieve a material by tag.
@@ -60,4 +42,6 @@ void sanity_check_materials() noexcept;
 /*
  * Reads the material definitions from Lua.
  */
-void read_material_types(std::ofstream &tech_tree_file) noexcept;
+void read_material_types() noexcept;
+void build_material_tech_tree(graphviz_t * tree);
+void build_material_acquisition_tech_tree(graphviz_t * tree);

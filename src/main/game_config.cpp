@@ -36,4 +36,10 @@ void config_t::save() {
     } else {
         f << "show_entity_ids=no\n";
     }
+    f << "build_tech_trees=";
+    if (build_tech_trees) {
+        f << "yes\n";
+    } else {
+        f << "no\n";
+    }
 }

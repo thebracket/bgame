@@ -10,6 +10,8 @@
 #include "../../../components/receives_signal.hpp"
 #include "../../../utils/telemetry.hpp"
 
+using namespace region;
+
 namespace jobs_board {
     void evaluate_architecture(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
         auto blocks_distance = blocks_map.get(mapidx(pos));
@@ -98,53 +100,53 @@ void ai_work_architect::update(const double duration_ms) {
                 emit(destroy_item_message{a.current_tool});
                 a.current_tool = 0;
 
-                current_region->tile_flags[bidx].set(CONSTRUCTION);
-                if (material > 0) current_region->tile_material[bidx] = material;
+                set_flag(bidx, CONSTRUCTION);
+                if (material > 0) set_tile_material(bidx, material);
 
                 if (build_type == 0) {
                     // Wall
-                    current_region->solid[bidx] = true;
-                    current_region->tile_type[bidx] = tile_type::WALL;
+                    make_wall(bidx, material);
                 } else if (build_type == 1) {
                     // Floor
-                    current_region->tile_type[bidx] = tile_type::FLOOR;
+                    make_floor(bidx);
                 } else if (build_type == 2) {
                     // Up
-                    current_region->tile_type[bidx] = tile_type::STAIRS_UP;
+                    make_stairs_up(bidx);
                 } else if (build_type == 3) {
                     // Down
-                    current_region->tile_type[bidx] = tile_type::STAIRS_DOWN;
+                    make_stairs_down(bidx);
                 } else if (build_type == 4) {
                     // UpDown
-                    current_region->tile_type[bidx] = tile_type::STAIRS_UPDOWN;
+                    make_stairs_updown(bidx);
                 } else if (build_type == 5) {
                     // Ramp
-                    current_region->tile_type[bidx] = tile_type::RAMP;
+                    make_ramp(bidx);
                 } else if (build_type == 6) {
-                    current_region->tile_type[bidx] = tile_type::FLOOR;
+                    make_floor(bidx);
+
                     // We need to iterate through the bridge tiles and see if it is done yet.
-                    const auto bridge_id = current_region->bridge_id[bidx];
+                    const auto bid = bridge_id(bidx);
                     bool complete = true;
                     int bridge_idx = 0;
-                    for (auto &id : current_region->bridge_id) {
-                        if (id == bridge_id && bridge_idx != bidx && designations->architecture.find(bridge_idx) != designations->architecture.end()) {
+                    each_bridge([&bridge_idx, &bid, &bidx, &complete] (std::size_t id) {
+                        if (id == bid && bridge_idx != bidx && designations->architecture.find(bridge_idx) != designations->architecture.end()) {
                             complete = false;
                         }
                         ++bridge_idx;
-                    }
+                    });
                     if (complete) {
-                        entity(bridge_id)->component<bridge_t>()->complete = true;
-                        entity(bridge_id)->assign(receives_signal_t{});
+                        entity(bid)->component<bridge_t>()->complete = true;
+                        entity(bid)->assign(receives_signal_t{});
                     }
                 }
 
                 int cx, cy, cz;
                 std::tie(cx, cy, cz) = idxmap(bidx);
-                current_region->tile_calculate(cx, cy, cz);
+                tile_calculate(cx, cy, cz);
                 for (int Z=-2; Z<3; ++Z) {
                     for (int Y=-2; Y<3; ++Y) {
                         for (int X=-2; X<3; ++X) {
-                            current_region->tile_calculate(cx + X, cy + Y, cz + Z);
+                            tile_calculate(cx + X, cy + Y, cz + Z);
                         }
                     }
                 }

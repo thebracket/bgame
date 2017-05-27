@@ -5,15 +5,16 @@
 #include "../../utils/string_utils.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../raws/lua_bridge.hpp"
+#include "../../raws/defs/civilization_t.hpp"
 
 constexpr int n_civs = WORLD_WIDTH;
 
 std::string get_random_species(random_number_generator &rng, const int tech_level=0) {
     std::vector<std::string> eligible;
 
-    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
-        if (it->second.tech_level == tech_level) eligible.push_back(it->first);
-    }
+    each_civilization_def([&eligible, &tech_level] (std::string ctag, civilization_t * it) {
+        if (it->tech_level == tech_level) eligible.push_back(ctag);
+    });
 
     if (eligible.empty()) throw std::runtime_error("No suitable civs available!");
     return eligible[rng.roll_dice(1, eligible.size())-1];
@@ -45,9 +46,9 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
 
         // Name generation
         using namespace string_tables;
-        auto civ_finder = civ_defs.find(civ.species_tag);
-        const std::string civ_name_func = "civ_name_gen_" + civ_finder->second.name_generator;
-        const std::string civ_leader_func = "leader_name_gen_" + civ_finder->second.name_generator;
+        auto civ_finder = get_civ_def(civ.species_tag);
+        const std::string civ_name_func = "civ_name_gen_" + civ_finder->name_generator;
+        const std::string civ_leader_func = "leader_name_gen_" + civ_finder->name_generator;
         civ.name = lua_str_func(civ_name_func, rng.roll_dice(1,1000)) + std::string(" of the ") + loc_name;
         if (str_contains(civ.name, "{LASTNAME}")) {
             civ.name = str_replace(civ.name, "{LASTNAME}", string_table(LAST_NAMES)->random_entry(rng));
@@ -64,12 +65,12 @@ void planet_build_initial_civs(planet_t &planet, rltk::random_number_generator &
         }
         civ.origin = loc_name;
         std::cout << "Welcome: " << civ.name << ", lead by " << civ.leader_name << "\n";
-        civ.glyph = get_species_def(civ_finder->second.species_tag)->worldgen_glyph;
+        civ.glyph = get_species_def(civ_finder->species_tag)->worldgen_glyph;
 
         // Appearance
-        if (get_species_def(civ_finder->second.species_tag)->render_composite) {
-            civ.skin_color = get_species_def(civ_finder->second.species_tag)->skin_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->skin_colors.size())-1];
-            civ.hair_color = get_species_def(civ_finder->second.species_tag)->hair_colors[rng.roll_dice(1, get_species_def(civ_finder->second.species_tag)->hair_colors.size())-1];
+        if (get_species_def(civ_finder->species_tag)->render_composite) {
+            civ.skin_color = get_species_def(civ_finder->species_tag)->skin_colors[rng.roll_dice(1, get_species_def(civ_finder->species_tag)->skin_colors.size())-1];
+            civ.hair_color = get_species_def(civ_finder->species_tag)->hair_colors[rng.roll_dice(1, get_species_def(civ_finder->species_tag)->hair_colors.size())-1];
 
             civ.hair_style = BALD;
             const int style_roll = rng.roll_dice(1, 4);
@@ -123,8 +124,8 @@ std::string random_unit_type(const civilization_t &civ, random_number_generator 
 void planet_build_civ_year(const int year, planet_t &planet, random_number_generator &rng, civ_t &civ, const std::size_t &id) {
     //std::cout << year << ", " << civ.name << "\n";
 
-    auto civ_f = civ_defs.find(civ.species_tag);
-    auto species_f = get_species_def(civ_f->second.species_tag);
+    auto civ_f = get_civ_def(civ.species_tag);
+    auto species_f = get_species_def(civ_f->species_tag);
 
     // Total build points, find settlements
     int bp = 0;
@@ -140,8 +141,8 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     }
     for (auto &unit : planet.civs.units) {
         if (unit.owner_civ == id) {
-            auto unit_finder = civ_f->second.units.find(unit.unit_type);
-            if (unit_finder == civ_f->second.units.end()) {
+            auto unit_finder = civ_f->units.find(unit.unit_type);
+            if (unit_finder == civ_f->units.end()) {
                 throw std::runtime_error(std::string("Unable to find: ") + civ.species_tag + std::string("/") + unit.unit_type);
             } else {
                 if (unit_finder->second.bp_per_turn > 0) bp += unit_finder->second.bp_per_turn;
@@ -171,10 +172,10 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     }
 
     // Build improvements
-    if (bp > 9 && !civ_f->second.can_build.empty()) {
+    if (bp > 9 && !civ_f->can_build.empty()) {
         for (auto &pidx : towns) {
             if (bp > 9) {
-                for (auto &build : civ_f->second.can_build) {
+                for (auto &build : civ_f->can_build) {
                     bool has_one = false;
                     for (const auto &i : planet.civs.region_info[pidx].improvements) {
                         if (i == build) has_one = true;
@@ -197,18 +198,18 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     }
 
     // Tech-level improvement
-    if (!civ_f->second.evolves_into.empty() && bp > civ.tech_level*15 && rng.roll_dice(1,25)==1) {
+    if (!civ_f->evolves_into.empty() && bp > civ.tech_level*15 && rng.roll_dice(1,25)==1) {
         // Evolve!
         bp = 0;
         ++civ.tech_level;
-        int roll = rng.roll_dice(1, civ_f->second.evolves_into.size())-1;
-        civ.species_tag = civ_f->second.evolves_into[roll];
-        auto civ2_f = civ_defs.find(civ.species_tag);
-        const std::string civ_name_func = "civ_name_gen_" + civ2_f->second.name_generator;
+        int roll = rng.roll_dice(1, civ_f->evolves_into.size())-1;
+        civ.species_tag = civ_f->evolves_into[roll];
+        auto civ2_f = get_civ_def(civ.species_tag);
+        const std::string civ_name_func = "civ_name_gen_" + civ2_f->name_generator;
         std::cout << civ.name << " evolves to tech level " << +civ.tech_level << " and takes the name: " << civ.name << "\n";
         civ.name = lua_str_func( civ_name_func, rng.roll_dice(1, 1000) ) + std::string(" of the ") + civ.origin;
         civ_f = civ2_f;
-        species_f = get_species_def(civ_f->second.species_tag);
+        species_f = get_species_def(civ_f->species_tag);
         civ.glyph = species_f->worldgen_glyph;
     }
 
@@ -219,7 +220,7 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
         unit_t unit;
         unit.owner_civ = id;
         //std::cout << "(Civ " << id << "), " << planet.civs.civs[id].species_tag << "\n";
-        unit.unit_type = random_unit_type(civ_f->second, rng);
+        unit.unit_type = random_unit_type(*civ_f, rng);
         unit.world_x = civ.startx;
         unit.world_y = civ.starty;
         planet.civs.units.push_back(unit);
@@ -231,7 +232,7 @@ void planet_build_civ_year(const int year, planet_t &planet, random_number_gener
     // Movement goes here
     for (auto &unit : planet.civs.units) {
         if (unit.owner_civ == id) {
-            int moves = civ_f->second.units[unit.unit_type].speed;
+            int moves = civ_f->units[unit.unit_type].speed;
             while (moves > 0) {
                 std::set<std::size_t> candidates;
                 if (unit.world_x > 1 && planet.landblocks[planet.idx(unit.world_x - 1, unit.world_y)].type != block_type::WATER) candidates.insert(planet.idx(unit.world_x - 1, unit.world_y));
@@ -304,10 +305,10 @@ void planet_build_run_year(const int year, planet_t &planet, random_number_gener
                         const std::string ut = planet.civs.units[uid].unit_type;
                         const std::string st = planet.civs.civs[cit->first].species_tag;
                         //std::cout << st << ":" << ut << "\n";
-                        auto civ_f = civ_defs.find(st);
-                        if (civ_f != civ_defs.end()) {
-                            auto u_f = civ_f->second.units.find(ut);
-                            if (u_f != civ_f->second.units.end()) {
+                        auto civ_f = get_civ_def(st);
+                        if (civ_f != nullptr) {
+                            auto u_f = civ_f->units.find(ut);
+                            if (u_f != civ_f->units.end()) {
                                 str += u_f->second.worldgen_strength;
                             }
                         }

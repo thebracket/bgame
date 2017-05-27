@@ -10,7 +10,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../main/game_pause.hpp"
 #include "../../main/game_clipping.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../main/game_selections.hpp"
@@ -119,7 +119,7 @@ void mode_rogue_system::update(const double ms) {
             }
         }
 
-        if (ai->targeted_hostile==0 && current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) {
+        if (ai->targeted_hostile==0 && region::flag(tile_idx, CAN_STAND_HERE)) {
             ai->current_path.reset();
             ai->current_path = find_path(*pos, position_t{ world_x, world_y, camera_position->region_z });
             if (mouse::clicked) {

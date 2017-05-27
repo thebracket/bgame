@@ -3,7 +3,7 @@
 #include "../../../components/building.hpp"
 #include "job_board.hpp"
 #include "../distance_map_system.hpp"
-#include "../../../main/game_region.hpp"
+#include "../../../planet/region/region.hpp"
 #include "ai_work_template.hpp"
 
 namespace jobs_board {

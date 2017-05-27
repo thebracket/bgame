@@ -11,42 +11,20 @@
 #include "regions/buildings.hpp"
 #include "regions/blight_builder.hpp"
 #include "../../utils/filesystem.hpp"
+#include "../region/region.hpp"
 
 using namespace rltk;
 
 inline std::pair<biome_t, biome_type_t> get_biome_for_region(planet_t &planet, const std::pair<int,int> &region) {
     const int idx = planet.idx(region.first, region.second);
     const int biome_idx = planet.landblocks[idx].biome_idx;
-    return std::make_pair( planet.biomes[biome_idx], get_biome_def(planet.biomes[biome_idx].type) );
-}
-
-inline void zero_map(region_t &region) {
-    region.next_tree_id = 1;
-    std::fill(region.visible.begin(), region.visible.end(), false);
-    std::fill(region.solid.begin(), region.solid.end(), false);
-    std::fill(region.opaque.begin(), region.opaque.end(), false);
-    std::fill(region.revealed.begin(), region.revealed.end(), false);
-    std::fill(region.tile_type.begin(), region.tile_type.end(), tile_type::OPEN_SPACE);
-    std::fill(region.tile_material.begin(), region.tile_material.end(), 0);
-    std::fill(region.tile_hit_points.begin(), region.tile_hit_points.end(), 0);
-    std::fill(region.building_id.begin(), region.building_id.end(), 0);
-    std::fill(region.tree_id.begin(), region.tree_id.end(), 0);
-    std::fill(region.tile_vegetation_type.begin(), region.tile_vegetation_type.end(), 0);
-    std::fill(region.tile_vegetation_ticker.begin(), region.tile_vegetation_ticker.end(), 0);
-    std::fill(region.tile_vegetation_lifecycle.begin(), region.tile_vegetation_lifecycle.end(), 0);
-    std::fill(region.water_level.begin(), region.water_level.end(), 0);
-    std::fill(region.blood_stains.begin(), region.blood_stains.end(), false);
-    std::fill(region.stockpile_id.begin(), region.stockpile_id.end(), 0);
-    std::fill(region.bridge_id.begin(), region.bridge_id.end(), 0);
+    return std::make_pair( planet.biomes[biome_idx], *get_biome_def(planet.biomes[biome_idx].type) );
 }
 
 void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::random_number_generator &rng, FastNoise &noise) {
     // Builder region
-    region_t region;
-	region.region_x = target_region.first;
-	region.region_y = target_region.second;
-    region.biome_idx = planet.landblocks[planet.idx(target_region.first, target_region.second)].biome_idx;
-    
+    region::new_region(target_region.first, target_region.second, planet.landblocks[planet.idx(target_region.first, target_region.second)].biome_idx);
+
     // Lookup the biome
     set_worldgen_status("Looking up biome");
     auto biome = get_biome_for_region(planet, target_region);
@@ -64,23 +42,22 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     std::vector<std::pair<int, uint8_t>> water_spawners;
 
     // Sub-biome map
-    auto subregions = create_subregions(planet, region, heightmap, biome, rng, pooled_water, water_spawners);
+    auto subregions = create_subregions(planet, heightmap, biome, rng, pooled_water, water_spawners);
 
     // Hydrology
-    just_add_water(planet, region, pooled_water, heightmap, biome, rng, noise, water_spawners);
+    just_add_water(planet, pooled_water, heightmap, biome, rng, noise, water_spawners);
 
     // Strata map
     set_worldgen_status("Dividing strata");
-    auto strata = build_strata(region, heightmap, rng, biome, planet);
+    auto strata = build_strata(heightmap, rng, biome, planet);
 
     // Lay down rock strata, soil, top tile coverage
     set_worldgen_status("Laying down layers");
-    zero_map(region);
-    lay_strata(region, heightmap, biome, strata, rng, pooled_water, water_spawners);
+    lay_strata(heightmap, biome, strata, rng, pooled_water, water_spawners);
 
     // Build ramps and beaches
-    build_ramps(region);
-    build_beaches(region);
+    build_ramps();
+    build_beaches();
 
     // Plant trees
     set_worldgen_status("Planting trees");     
@@ -89,16 +66,16 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     set_worldgen_status("Crashing the ship");
     const int crash_x = REGION_WIDTH / 2;
 	const int crash_y = REGION_HEIGHT / 2;
-	const int crash_z = get_ground_z(region, crash_x, crash_y);
+	const int crash_z = region::ground_z(crash_x, crash_y);
     
     // Add game components
-    build_game_components(region, crash_x, crash_y, crash_z);
+    build_game_components(crash_x, crash_y, crash_z);
 
     // Trail of debris
-    build_debris_trail(region, crash_x, crash_y);
+    build_debris_trail(crash_x, crash_y);
   
     // Build the ship super-structure
-    build_escape_pod(region, crash_x, crash_y, crash_z);
+    build_escape_pod(crash_x, crash_y, crash_z);
 
     // Add settlers
     std::vector<std::tuple<int,int,int>> settler_spawn_points;
@@ -122,7 +99,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
     // Add features
     int blight_level = 0;
 
-    const int pidx = planet.idx(region.region_x, region.region_y);
+    const int pidx = planet.idx(region::region_x(), region::region_y());
     blight_level = planet.civs.region_info[pidx].blight_level;
     std::vector<std::tuple<int,int,int>> spawn_points;
     int spawn_counter = 0;
@@ -131,34 +108,34 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, rltk::ran
         for (const auto &i : planet.civs.region_info[pidx].improvements) {
             std::cout << "Build a: " << i << "\n";
             // Spawn it
-            if (i == "ant_mound") build_ant_mound(region, rng, spawn_points);
+            if (i == "ant_mound") build_ant_mound(rng, spawn_points);
         }
         std::cout << "Free Garrison of " << planet.civs.civs[planet.civs.region_info[pidx].owner_civ].name << "\n";
-        create_sentient_unit(planet, region, rng, planet.civs.region_info[pidx].owner_civ, "garrison", spawn_points,
+        create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, "garrison", spawn_points,
                             spawn_counter);
     }
     for (const auto &unit : planet.civs.units) {
-        if (unit.world_y == region.region_y && unit.world_x == region.region_x) {
+        if (unit.world_y == region::region_y() && unit.world_x == region::region_x()) {
             std::cout << "Spawn a unit: " << unit.unit_type << "\n";
-            create_sentient_unit(planet, region, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
+            create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
                                 spawn_counter);
         }
     }
 
     // Trees and blight
     if (blight_level < 100) {
-        build_trees(region, biome, rng);
+        build_trees(biome, rng);
     } else {
-        just_add_blight(region, rng);
+        just_add_blight(rng);
     }
 
     // Build connectivity graphs
     set_worldgen_status("Looking for the map");
-    region.tile_recalc_all();
+    region::tile_recalc_all();
 
     // Save the region
     set_worldgen_status("Saving region to disk");
-	save_region(region);
+	region::save_current_region();
 	const std::string save_filename = get_save_path() + std::string("/savegame.dat");
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
 	ecs_save(lbfile);

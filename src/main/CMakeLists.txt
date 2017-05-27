@@ -16,7 +16,6 @@ add_library(bfmain STATIC
 	game_logger.cpp
 	game_selections.cpp
 	game_rng.cpp
-	game_region.cpp
 )
 target_link_libraries(bfmain planet rltk components systems utils gl)
 cotire(bfmain)

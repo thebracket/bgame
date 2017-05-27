@@ -13,6 +13,8 @@
 #include "../../components/item_stored.hpp"
 #include "../../components/bridge.hpp"
 #include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
+#include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../components/lever.hpp"
@@ -20,13 +22,15 @@
 #include "../../main/game_pause.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_designations.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_selections.hpp"
 #include "../../components/name.hpp"
 #include "../../main/game_camera.hpp"
+#include "../../raws/defs/plant_t.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
+using namespace region;
 
 void mode_play_system::configure() {
     system_name = "Play mode";
@@ -48,7 +52,7 @@ void mode_play_system::update(const double duration_ms) {
 	
 	if (mouse::mouse_world_x == last_mouse_x && mouse::mouse_world_y == last_mouse_y && world_y > 0) {
 		mouse_dwell_time += (float)duration_ms;
-		if (mouse_dwell_time > 200.0 && tile_idx !=0 && current_region->revealed[tile_idx] ) tooltip = true;
+		if (mouse_dwell_time > 200.0 && tile_idx !=0 && revealed(tile_idx) ) tooltip = true;
 	} else {
 		last_mouse_x = mouse::mouse_world_x;
 		last_mouse_y = mouse::mouse_world_y;
@@ -73,52 +77,55 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 
 	if (flags_debug) {
 		std::stringstream ss;
-		if (current_region->solid[tile_idx]) ss << "Solid-";
-		if (current_region->opaque[tile_idx]) ss << "Opaque-";
-		if (current_region->tile_flags[tile_idx].test(CAN_GO_DOWN)) ss << "Down-";
-		if (current_region->tile_flags[tile_idx].test(CAN_GO_UP)) ss << "Up-";
-		if (current_region->tile_flags[tile_idx].test(CAN_GO_NORTH)) ss << "North-";
-		if (current_region->tile_flags[tile_idx].test(CAN_GO_EAST)) ss << "East-";
-		if (current_region->tile_flags[tile_idx].test(CAN_GO_WEST)) ss << "West-";
-		if (current_region->tile_flags[tile_idx].test(CAN_GO_SOUTH)) ss << "South-";
-		if (current_region->tile_flags[tile_idx].test(CAN_STAND_HERE)) ss << "Stand";
+		if (solid(tile_idx)) ss << "Solid-";
+		if (opaque(tile_idx)) ss << "Opaque-";
+		if (flag(tile_idx, CAN_GO_DOWN)) ss << "Down-";
+		if (flag(tile_idx, CAN_GO_UP)) ss << "Up-";
+		if (flag(tile_idx, CAN_GO_NORTH)) ss << "North-";
+		if (flag(tile_idx, CAN_GO_EAST)) ss << "East-";
+		if (flag(tile_idx, CAN_GO_WEST)) ss << "West-";
+		if (flag(tile_idx, CAN_GO_SOUTH)) ss << "South-";
+		if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand";
 		lines.push_back(ss.str());
 	}
-	if (current_region->water_level[tile_idx]>0) lines.push_back(std::string("Water level: " + std::to_string(current_region->water_level[tile_idx])));
+	if (water_level(tile_idx)>0) lines.push_back(std::string("Water level: " + std::to_string(water_level(tile_idx))));
 
 	{ // Base tile type
 		std::stringstream ss;
-		switch (current_region->tile_type[tile_idx]) {
+		switch (region::tile_type(tile_idx)) {
 			case tile_type::SEMI_MOLTEN_ROCK : ss << "Magma"; break;
-			case tile_type::SOLID : ss << "Solid Rock (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::SOLID : ss << "Solid Rock (" << material_name(material(tile_idx)) << ")"; break;
 			case tile_type::OPEN_SPACE : ss << "Open Space"; break;
-			case tile_type::WALL : ss << "Wall (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
-			case tile_type::RAMP : ss << "Ramp (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
-			case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
-			case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
-			case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
-			case tile_type::FLOOR : ss << "Floor (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::WALL : ss << "Wall (" << material_name(material(tile_idx)) << ")"; break;
+			case tile_type::RAMP : ss << "Ramp (" << material_name(material(tile_idx)) << ")"; break;
+			case tile_type::STAIRS_UP : ss << "Up Stairs (" << material_name(material(tile_idx)) << ")"; break;
+			case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_name(material(tile_idx)) << ")"; break;
+			case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_name(material(tile_idx)) << ")"; break;
+			case tile_type::FLOOR : ss << "Floor (" << material_name(material(tile_idx)) << ")"; break;
 			case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
 			case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
 			case tile_type::WINDOW : ss << "Window"; break;
-			case tile_type::CLOSED_DOOR : ss << "Closed Door (" << material_name(current_region->tile_material[tile_idx]) << ")"; break;
+			case tile_type::CLOSED_DOOR : ss << "Closed Door (" << material_name(material(tile_idx)) << ")"; break;
 			default : ss << "Unknown!";
+		}
+		if (region::tile_type(tile_idx) != tile_type::OPEN_SPACE) {
+			ss << " (" << tile_hit_points(tile_idx) << ")";
 		}
 		lines.push_back(ss.str());
 	}
-	if (current_region->tile_type[tile_idx] == tile_type::FLOOR && !current_region->tile_flags[tile_idx].test(CONSTRUCTION)) {
-		if (current_region->tile_vegetation_type[tile_idx] > 0) {
+	if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
+		if (veg_type(tile_idx) > 0) {
 			std::stringstream ss;
-            plant_t plant = get_plant_def(current_region->tile_vegetation_type[tile_idx]);
-            ss << plant.name << " (";
-            switch (current_region->tile_vegetation_lifecycle[tile_idx]) {
+            auto plant = get_plant_def(veg_type(tile_idx));
+            ss << plant->name << " (";
+            switch (veg_lifecycle(tile_idx)) {
                 case 0 : ss << "Germinating"; break;
                 case 1 : ss << "Sprouting"; break;
                 case 2 : ss << "Growing"; break;
                 case 3 : ss << "Flowering"; break;
                 default : ss << "Unknown - error!";
             }
-            const std::string harvest_to = plant.provides[current_region->tile_vegetation_lifecycle[tile_idx]];
+            const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
             if (harvest_to != "none") ss << " - " << harvest_to;
             ss << ")";
 			lines.push_back(ss.str());
@@ -193,20 +200,21 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 
 		if (on_building) {
 			// It's building and we can see it
-			auto finder = building_defs.find(building.tag);
+			auto finder = get_building_def(building.tag);
 			std::string building_name = "Unknown Building";
-			if (finder != building_defs.end()) {
+			if (finder != nullptr) {
 				if (building.complete) {
-					building_name = finder->second.name;
+					building_name = finder->name + std::string(" (") + std::to_string(building.hit_points)
+                                    + std::string("/") + std::to_string(building.max_hit_points) + std::string(")");
 				} else {
-					building_name = std::string("...") + finder->second.name;
+					building_name = std::string("...") + finder->name;
 				}
 			}
 			lines.push_back(building_name);
 		}
 	});
-	if (current_region->stockpile_id[mapidx(world_x, world_y, camera_position->region_z)]>0) {
-        lines.push_back(std::string("Stockpile #")+std::to_string(current_region->stockpile_id[mapidx(world_x, world_y, camera_position->region_z)]));
+	if (stockpile_id(mapidx(world_x, world_y, camera_position->region_z))>0) {
+        lines.push_back(std::string("Stockpile #")+std::to_string(stockpile_id(mapidx(world_x, world_y, camera_position->region_z))));
     }
     if (dijkstra_debug) {
         lines.push_back(std::string("Architecture Distance: ") + std::to_string(
@@ -214,8 +222,8 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
         lines.push_back(std::string("Blocks Distance: ") +
                         std::to_string(blocks_map.get(mapidx(world_x, world_y, camera_position->region_z))));
     }
-	if (current_region->bridge_id[mapidx(world_x, world_y, camera_position->region_z)]>0) {
-        auto be = entity(current_region->bridge_id[mapidx(world_x, world_y, camera_position->region_z)]);
+	if (bridge_id(mapidx(world_x, world_y, camera_position->region_z))>0) {
+        auto be = entity(bridge_id(mapidx(world_x, world_y, camera_position->region_z)));
         if (be) {
             auto bc = be->component<bridge_t>();
             if (bc) {
@@ -309,9 +317,9 @@ void mode_play_system::show_tilemenu() {
 
 		if (on_building) {
 			// It's building and we can see it			
-			auto finder = building_defs.find(building.tag);
+			auto finder = get_building_def(building.tag);
 			std::string building_name = "Unknown Building";
-			if (finder != building_defs.end()) {
+			if (finder != nullptr) {
 
 				if (building.complete) {
 					bool is_being_removed = false;
@@ -321,7 +329,7 @@ void mode_play_system::show_tilemenu() {
 					each<settler_ai_t>([&is_being_removed, &building_entity] (entity_t &E, settler_ai_t &ai) {
 						if (ai.job_type_major == JOB_DECONSTRUCT && ai.target_id == building_entity.id) is_being_removed = true;
 					});
-					building_name = finder->second.name;
+					building_name = finder->name;
 
 					if (!is_being_removed) {
 						std::function<void()> on_click{};
@@ -391,7 +399,7 @@ void mode_play_system::show_tilemenu() {
                         options.push_back(std::make_pair(std::string("Lever Settings"), on_settings));
                     }
 				} else {
-					building_name = finder->second.name;
+					building_name = finder->name;
 					std::function<void()> on_click{};
 					on_click = [&building_entity] () {
 						emit(cancel_build_request_message{building_entity.id});
@@ -403,9 +411,9 @@ void mode_play_system::show_tilemenu() {
 	});
 
 	const auto idx = mapidx(selected_tile_x, selected_tile_y, selected_tile_z);
-	if ((current_region->tile_type[idx] == tile_type::WALL || current_region->tile_type[idx] == tile_type::FLOOR 
-		|| current_region->tile_type[idx] == tile_type::STAIRS_DOWN || current_region->tile_type[idx] == tile_type::STAIRS_UP 
-		|| current_region->tile_type[idx] == tile_type::STAIRS_UPDOWN) && current_region->tile_flags[idx].test(CONSTRUCTION) )
+	if ((region::tile_type(idx) == tile_type::WALL || region::tile_type(idx) == tile_type::FLOOR
+		|| region::tile_type(idx) == tile_type::STAIRS_DOWN || region::tile_type(idx) == tile_type::STAIRS_UP
+		|| region::tile_type(idx) == tile_type::STAIRS_UPDOWN) && flag(idx, CONSTRUCTION) )
 	{
 		std::function<void()> on_click{};
 		on_click = [idx] () {

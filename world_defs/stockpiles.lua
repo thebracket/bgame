@@ -22,5 +22,6 @@ stockpiles = {
     leather = { name = "Leather", id = 20 },
     clothing = { name = "Clothing", id = 21 },
     fodder = { name = "Fodder", id = 22 },
-    thread = { name = "Thread", id = 23 }
+    thread = { name = "Thread", id = 23 },
+    manure = { name = "Manure", id = 24 }
 }

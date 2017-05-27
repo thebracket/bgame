@@ -3,10 +3,18 @@
 #include "../../../components/ai_tags/ai_tag_work_harvest.hpp"
 #include "../../../main/game_designations.hpp"
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"
+#include "../../../components/item.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../utils/telemetry.hpp"
 #include "ai_work_template.hpp"
 #include "../../../raws/plants.hpp"
+#include "../../../raws/materials.hpp"
+#include "../../../raws/raws.hpp"
+#include "../../../planet/region/region.hpp"
+#include "../../../raws/defs/item_def_t.hpp"
+#include "../../../raws/defs/plant_t.hpp"
+
+using namespace region;
 
 namespace jobs_board {
     void evaluate_harvest(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
@@ -49,26 +57,26 @@ void ai_work_harvest::update(const double duration_ms) {
                                         designations->harvest.end());
 
             // Create the harvesting result
-            if (current_region->tile_vegetation_type[idx] == 0) {
+            if (veg_type(idx) == 0) {
                 work.cancel_work_tag(e);
                 return;
             }
-            const plant_t plant = get_plant_def(current_region->tile_vegetation_type[idx]);
-            const std::string result = plant.provides[current_region->tile_vegetation_lifecycle[idx]];
+            const auto plant = get_plant_def(veg_type(idx));
+            const std::string result = plant->provides[veg_lifecycle(idx)];
             if (result != "none") {
                 std::string mat_type = "organic";
-                auto item_finder = item_defs.find(result);
-                if (item_finder != item_defs.end()) {
-                    if (item_finder->second.categories.test(ITEM_FOOD)) mat_type="food";
-                    if (item_finder->second.categories.test(ITEM_SPICE)) mat_type="spice";
+                auto item_finder = get_item_def(result);
+                if (item_finder != nullptr) {
+                    if (item_finder->categories.test(ITEM_FOOD)) mat_type="food";
+                    if (item_finder->categories.test(ITEM_SPICE)) mat_type="spice";
                 }
                 auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type));
-                item->component<item_t>()->item_name = plant.name;
+                item->component<item_t>()->item_name = plant->name;
             }
 
             // Knock tile back to germination
-            current_region->tile_vegetation_lifecycle[idx] = 0;
-            current_region->tile_vegetation_ticker[idx] = 0;
+            set_veg_lifecycle(idx, 0);
+            set_veg_ticker(idx, 0);
 
             // Become idle - done
             call_home("harvest", result);

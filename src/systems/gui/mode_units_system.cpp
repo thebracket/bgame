@@ -141,7 +141,7 @@ void mode_units_system::render_creatures() {
 void mode_units_system::render_natives() {
     std::vector<std::pair<std::size_t, std::string>> natives;
     each<sentient_ai, name_t>([&natives] (entity_t &e, sentient_ai &ai, name_t &name) {
-        natives.emplace_back(std::make_pair(e.id, name.first_name + std::string(" ") + name.last_name));
+        natives.emplace_back(std::make_pair(e.id, name.first_name + std::string(" ") + name.last_name + std::string(" #") + std::to_string(e.id)));
     });
     const char* native_listbox_items[natives.size()];
     for (int i=0; i<natives.size(); ++i) {
@@ -151,7 +151,7 @@ void mode_units_system::render_natives() {
     ImGui::PushItemWidth(-1);
     ImGui::ListBox("## Natives", &current_native, native_listbox_items, natives.size(), 10);
     if (ImGui::Button(std::string(btn_goto + std::string(" ")).c_str())) {
-        auto selected_critter = natives[current_settler].first;
+        auto selected_critter = natives[current_native].first;
         auto the_critter = entity(selected_critter);
         if (the_critter) {
             auto pos = the_critter->component<position_t>();

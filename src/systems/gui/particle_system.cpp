@@ -2,9 +2,10 @@
 #include "../../messages/messages.hpp"
 #include "../../components/smoke_emitter.hpp"
 #include "../../main/game_rng.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace rltk;
+using namespace region;
 
 std::vector<particle_t> particles;
 
@@ -28,6 +29,8 @@ void particle_system::update(const double ms) {
         case PARTICLE_SMOKE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ 176, rltk::colors::GREY, rltk::colors::BLACK }, 1, 20 }); break;
         case PARTICLE_MIASMA : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ 176, rltk::colors::GREEN, rltk::colors::BLACK }, 2, 20 }); break;
         case PARTICLE_PROJECTILE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ '*', rltk::colors::GREY, rltk::colors::BLACK }, 3, msg.dx, msg.dy, msg.dz }); break;
+        case PARTICLE_BOOM_FUSE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ '!', rltk::colors::RED, rltk::colors::BLACK }, 4, 20}); break;
+        case PARTICLE_BOOM : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ 176, rltk::lerp(rltk::colors::RED, rltk::colors::YELLOW, (float)rng.roll_dice(1,100)/100.0f), rltk::colors::BLACK}, 5, 20}); break;
         }
 	}
 
@@ -47,22 +50,22 @@ void particle_system::update(const double ms) {
                 p.deleteme = true;
             }
             if (!p.deleteme) {
-                if (p.z < REGION_DEPTH - 2 && !current_region->solid[mapidx(p.x, p.y, p.z + 1)]) {
+                if (p.z < REGION_DEPTH - 2 && !solid(mapidx(p.x, p.y, p.z + 1))) {
                     ++p.z;
                 }
                 int direction = rng.roll_dice(1, 6);
                 switch (direction) {
                     case 1 :
-                        if (p.x > 1 && !current_region->solid[mapidx(p.x - 1, p.y, p.z)]) --p.x;
+                        if (p.x > 1 && !solid(mapidx(p.x - 1, p.y, p.z))) --p.x;
                         break;
                     case 2 :
-                        if (p.x < REGION_WIDTH - 2 && !current_region->solid[mapidx(p.x + 1, p.y, p.z)]) ++p.x;
+                        if (p.x < REGION_WIDTH - 2 && !solid(mapidx(p.x + 1, p.y, p.z))) ++p.x;
                         break;
                     case 3 :
-                        if (p.y > 1 && !current_region->solid[mapidx(p.x, p.y - 1, p.z)]) --p.y;
+                        if (p.y > 1 && !solid(mapidx(p.x, p.y - 1, p.z))) --p.y;
                         break;
                     case 4 :
-                        if (p.y < REGION_HEIGHT - 2 && !current_region->solid[mapidx(p.x, p.y + 1, p.z)]) ++p.x;
+                        if (p.y < REGION_HEIGHT - 2 && !solid(mapidx(p.x, p.y + 1, p.z))) ++p.x;
                         break;
                 }
             }
@@ -75,6 +78,9 @@ void particle_system::update(const double ms) {
             if (p.z < p.dest_z) ++p.z;
             if (p.z > p.dest_z) --p.z;
             if (p.x == p.dest_x && p.y == p.dest_y && p.z == p.dest_z) p.deleteme = true;
+        } else {
+            --p.lifespan;
+            if (p.lifespan < 0) p.deleteme = true;
         }
     }
     if (updated) {

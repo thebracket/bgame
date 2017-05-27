@@ -1,13 +1,30 @@
 #include "species.hpp"
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
+#include "defs/civilization_t.hpp"
+#include <boost/container/flat_map.hpp>
+#include "graphviz.hpp"
 
-std::unordered_map<std::string, raw_species_t> species_defs;
-std::unordered_map<std::string, civilization_t> civ_defs;
+boost::container::flat_map<std::string, raw_species_t> species_defs;
+boost::container::flat_map<std::string, civilization_t> civ_defs;
 
 const raw_species_t * get_species_def(const std::string &tag) noexcept
 {
-    return api_search<raw_species_t>(species_defs, tag);
+    auto finder = species_defs.find(tag);
+    if (finder == species_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+civilization_t * get_civ_def(const std::string tag) {
+    auto finder = civ_defs.find(tag);
+    if (finder == civ_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+void each_civilization_def(std::function<void(std::string, civilization_t *)> func) {
+    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
+        func(it->first, &it->second);
+    }
 }
 
 std::size_t get_species_defs_size() noexcept
@@ -118,6 +135,7 @@ void read_civ_types() noexcept
                                             if (afield == "melee") equip.melee = lua_tostring(lua_state, -1);
                                             if (afield == "ranged") equip.ranged = lua_tostring(lua_state, -1);
                                             if (afield == "ammo") equip.ammo = lua_tostring(lua_state, -1);
+                                            if (afield == "mount") equip.mount = lua_tostring(lua_state, -1);
                                             if (afield == "both" || afield == "male" || afield == "female") {
                                                 lua_pushstring(lua_state, afield.c_str());
                                                 lua_gettable(lua_state, -2);
@@ -181,7 +199,7 @@ void read_civ_types() noexcept
     }
 }
 
-void read_species_types(std::ofstream &tech_tree_file) noexcept
+void read_species_types() noexcept
 {
     lua_getglobal(lua_state, "species_sentient");
     lua_pushnil(lua_state);
@@ -293,4 +311,25 @@ void read_species_types(std::ofstream &tech_tree_file) noexcept
     }
 
     read_civ_types();
+}
+
+void make_civ_tree(graphviz_t * tree) {
+    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
+        const auto species = species_defs.find(it->second.species_tag);
+        const auto species_name = species->second.tag;
+
+        // Evolutionary options
+        for (const auto &evolve : it->second.evolves_into) {
+            tree->add_node(species_name, evolve);
+        }
+
+        // Units
+        for (const auto &unit : it->second.units) {
+            tree->add_node(species_name, unit.second.tag, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
+        }
+
+        for (const auto &build : it->second.can_build) {
+            tree->add_node(species_name, build, graphviz_t::graphviz_shape_t::HOUSE);
+        }
+    }
 }

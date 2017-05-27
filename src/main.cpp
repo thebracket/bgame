@@ -7,7 +7,7 @@
 #include "main/play_game.hpp"
 #include "main/game_config.hpp"
 #include "main/game_planet.hpp"
-#include "main/game_region.hpp"
+#include "planet/region/region.hpp"
 #include "main/game_mode.hpp"
 #include "main/guitheme.hpp"
 #include "utils/string_utils.hpp"
@@ -43,7 +43,7 @@ void save_game() {
 	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
 	ecs_save(lbfile);
 	std::cout << "Saving region\n";
-	save_region(*current_region);
+	region::save_current_region();
 	std::cout << "Saving planet\n";
 	save_planet(planet);
 	last_save = std::chrono::high_resolution_clock::now();
@@ -162,6 +162,8 @@ void read_config() {
 		if (split_line[0] == "allow_calling_home" && split_line[1] != "yes") game_config.allow_calling_home = false;
 		if (split_line[0] == "online_username") game_config.online_username = split_line[1];
         if (split_line[0] == "show_entity_ids" && split_line[1]!="yes") game_config.show_entity_ids = false;
+		if (split_line[0] == "build_tech_trees" && split_line[1]=="yes") game_config.build_tech_trees = true;
+
 	}
 	rltk::scale_factor = game_config.scale_factor;
 }
@@ -210,7 +212,7 @@ int main(int argc, char* argv[])
 
 	read_config();
     start_telemetry();
-	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Black Future",game_config.fullscreen));
+	init(config_advanced("assets", game_config.window_width, game_config.window_height, "Nox Futura",game_config.fullscreen));
 	glewExperimental = GL_TRUE;
 	glewInit();
 	splash.init();

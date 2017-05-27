@@ -1,6 +1,8 @@
 #include "wildlife_population_system.hpp"
 #include "../../raws/biomes.hpp"
+#include "../../raws/defs/biome_type_t.hpp"
 #include "../../raws/creatures.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
 #include "../../main/game_planet.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../messages/messages.hpp"
@@ -13,7 +15,7 @@
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/name.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_rng.hpp"
 
 std::array<uint8_t, 4> group_populations;
@@ -33,10 +35,10 @@ void wildlife_population_system::count_wildlife_populations() {
 void wildlife_population_system::spawn_wildlife() {
     for (uint8_t i=0; i<4; ++i) {
         if (group_populations[i] == 0) {
-            const std::size_t biome_type = planet.biomes[current_region->biome_idx].type;
-            const std::size_t n_critters = get_biome_def(biome_type).wildlife.size();
+            const std::size_t biome_type = planet.biomes[region::get_biome_idx()].type;
+            const std::size_t n_critters = get_biome_def(biome_type)->wildlife.size();
             const std::size_t critter_idx = rng.roll_dice(1, (int)n_critters)-1;
-            const std::string critter_tag = get_biome_def(biome_type).wildlife[critter_idx];
+            const std::string critter_tag = get_biome_def(biome_type)->wildlife[critter_idx];
             auto critter_def = *get_creature_def( critter_tag );
             const int n_spawn = rng.roll_dice(critter_def.group_size_n_dice, critter_def.group_size_dice) + critter_def.group_size_mod;
 
@@ -52,9 +54,9 @@ void wildlife_population_system::spawn_wildlife() {
                     case 2 : { base_x = 1; base_y = REGION_HEIGHT/2; } break;
                     case 3 : { base_x = REGION_WIDTH-2; base_y = REGION_HEIGHT/2; } break;
                 }
-                base_z = get_ground_z(*current_region, base_x, base_y);
+                base_z = region::ground_z(base_x, base_y);
                 const auto idx = mapidx(base_x, base_y, base_z);
-                if (current_region->water_level[idx] > 0) {
+                if (region::water_level(idx) > 0) {
                     ++try_count;
                     edge = rng.roll_dice(1,4)-1;
                 } else {

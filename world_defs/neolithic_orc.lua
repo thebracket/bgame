@@ -20,7 +20,8 @@ neolithic_orc_leader = {
         both = { torso="tunic/hide", shoes="sandals/hide" },
         male = { legs="britches/hide" },
         female = { legs="skirt_simple/hide" },
-        melee = "warhammer/granite"
+        melee = "warhammer/granite",
+        mount = "boar"
     },
     hp_n = 1, hp_dice = 10, hp_mod = 1,
     gender = "random"
@@ -80,7 +81,8 @@ neolithic_orc_hunter = {
         both = { torso="tunic/leather", shoes="sandals/leather", head="cap/leather" },
         male = { legs="britches/leather" },
         female = { legs="skirt_simple/leather" },
-        melee = "knife/granite", ranged = "atlatl/wood", ammo = "dart/wood"
+        melee = "knife/granite", ranged = "atlatl/wood", ammo = "dart/wood",
+        mount = "boar"
     },
     hp_n = 1, hp_dice = 10, hp_mod = 1,
     gender = "random"
@@ -106,7 +108,7 @@ civilizations['neolithic_orc'] = {
     species_def = 'neolithic_orc',
     ai = 'builder',
     name_generator = "neohuman",
-    can_build = { "earthworks", "wood-pallisade", "hut", "shrine", "well", "farrier", "butcher" },
+    can_build = { "earthworks", "wood_pallisade", "hut", "shrine", "well", "farrier", "butcher" },
     units = {
         garrison = {
             bp_per_turn = 5,

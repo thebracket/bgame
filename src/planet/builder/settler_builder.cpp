@@ -6,13 +6,19 @@
 #include "../../components/renderable_composite.hpp"
 #include "../../components/item.hpp"
 #include "../../utils/string_utils.hpp"
+#include "../../raws/raws.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../raws/string_table.hpp"
 #include "../../raws/life_events.hpp"
+#include "../../raws/defs/life_event_template.hpp"
 #include "../../raws/profession.hpp"
+#include "../../raws/materials.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../components/sleep_clock_t.hpp"
+#include "../../components/item_carried.hpp"
+#include "../../raws/defs/profession_t.hpp"
+#include "../../raws/defs/civilization_t.hpp"
 
 using namespace rltk;
 
@@ -21,38 +27,38 @@ std::vector<std::string> get_event_candidates(const int &age, const std::vector<
 
 	std::set<std::string> unavailable;
 	for (const std::string &le : past) {
-		auto lefinder = life_event_defs.find(le);
-		for (const std::string &no : lefinder->second.precludes_event) {
+		auto lefinder = get_life_event(le);
+		for (const std::string &no : lefinder->precludes_event) {
 			unavailable.insert(no);
 		}
 	}
 
-	for (auto it=life_event_defs.begin(); it!=life_event_defs.end(); ++it) {
-		if (age >= it->second.min_age && age <= it->second.max_age) {
-			bool available = true;
+    each_life_event([&unavailable, &result, &age, &past] (std::string tag, life_event_template * it) {
+        if (age >= it->min_age && age <= it->max_age) {
+            bool available = true;
 
-			auto nope_check = unavailable.find(it->first);
-			if (nope_check != unavailable.end()) {
-				available = false;
-			}
+            auto nope_check = unavailable.find(tag);
+            if (nope_check != unavailable.end()) {
+                available = false;
+            }
 
-			if (available && !it->second.requires_event.empty()) {
-				available = false;
-				for (const auto &req : it->second.requires_event) {
-					for (const auto &p : past) {
-						if (p == req) available = true;
-					}
-				}
-			}
+            if (available && !it->requires_event.empty()) {
+                available = false;
+                for (const auto &req : it->requires_event) {
+                    for (const auto &p : past) {
+                        if (p == req) available = true;
+                    }
+                }
+            }
 
-			if (available) {
-				for (int i=0; i<it->second.weight; ++i) {
-					result.push_back(it->first);
-				}
-			}
+            if (available) {
+                for (int i=0; i<it->weight; ++i) {
+                    result.push_back(tag);
+                }
+            }
 
-		}
-	}
+        }
+    });
 
 	return result;
 }
@@ -169,19 +175,18 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 	const std::string last_name = to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng));
 
 	// Profession
-	const int number_of_professions = starting_professions.size();
-	const std::size_t selected_profession = rng.roll_dice(1,number_of_professions)-1;
-	stats.profession_tag = starting_professions[selected_profession].name;
+	const auto starting_profession = get_random_profession(rng);
+	stats.profession_tag = starting_profession->name;
 
 	// Stats
-	stats.strength = rng.roll_dice(3,6) + starting_professions[selected_profession].strength;
-	stats.dexterity = rng.roll_dice(3,6) + starting_professions[selected_profession].dexterity;
-	stats.constitution = rng.roll_dice(3,6) + starting_professions[selected_profession].constitution;
-	stats.intelligence = rng.roll_dice(3,6) + starting_professions[selected_profession].intelligence;
-	stats.wisdom = rng.roll_dice(3,6)  + starting_professions[selected_profession].wisdom;
-	stats.charisma = rng.roll_dice(3,6)  + starting_professions[selected_profession].charisma;
-	stats.comeliness = rng.roll_dice(3,6)  + starting_professions[selected_profession].comeliness;
-	stats.ethics = rng.roll_dice(3,6)  + starting_professions[selected_profession].ethics;
+	stats.strength = rng.roll_dice(3,6) + starting_profession->strength;
+	stats.dexterity = rng.roll_dice(3,6) + starting_profession->dexterity;
+	stats.constitution = rng.roll_dice(3,6) + starting_profession->constitution;
+	stats.intelligence = rng.roll_dice(3,6) + starting_profession->intelligence;
+	stats.wisdom = rng.roll_dice(3,6)  + starting_profession->wisdom;
+	stats.charisma = rng.roll_dice(3,6)  + starting_profession->charisma;
+	stats.comeliness = rng.roll_dice(3,6)  + starting_profession->comeliness;
+	stats.ethics = rng.roll_dice(3,6)  + starting_profession->ethics;
 	stats.age = 15 + rng.roll_dice(3,6);
 
 	auto settler = create_entity();
@@ -197,18 +202,18 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 			const std::size_t idx = rng.roll_dice(1, candidates.size())-1;
 			const std::string event_name = candidates[idx];
 			event_buffer.push_back(event_name);
-			auto ledef = life_event_defs.find(event_name);
+			auto ledef = get_life_event(event_name);
 
 			bool has_effect = false;
-			if (ledef->second.strength != 0) has_effect = true;
-			if (ledef->second.dexterity != 0) has_effect = true;
-			if (ledef->second.constitution != 0) has_effect = true;
-			if (ledef->second.intelligence != 0) has_effect = true;
-			if (ledef->second.wisdom != 0) has_effect = true;
-			if (ledef->second.charisma != 0) has_effect = true;
-			if (ledef->second.comeliness != 0) has_effect = true;
-			if (ledef->second.ethics != 0) has_effect = true;
-			if (!ledef->second.skills.empty()) has_effect = true;
+			if (ledef->strength != 0) has_effect = true;
+			if (ledef->dexterity != 0) has_effect = true;
+			if (ledef->constitution != 0) has_effect = true;
+			if (ledef->intelligence != 0) has_effect = true;
+			if (ledef->wisdom != 0) has_effect = true;
+			if (ledef->charisma != 0) has_effect = true;
+			if (ledef->comeliness != 0) has_effect = true;
+			if (ledef->ethics != 0) has_effect = true;
+			if (!ledef->skills.empty()) has_effect = true;
 
 			if (age==0 || has_effect) {
 				auto finder = planet.history.settler_life_events.find(settler->id);
@@ -219,16 +224,16 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 					planet.history.settler_life_events[settler->id].push_back(event);
 				}
 				if (rng.roll_dice(1,10)>7) {
-					stats.strength += ledef->second.strength;
-					stats.dexterity += ledef->second.dexterity;
-					stats.constitution += ledef->second.constitution;
-					stats.intelligence += ledef->second.intelligence;
-					stats.wisdom += ledef->second.wisdom;
-					stats.charisma += ledef->second.charisma;
-					stats.comeliness += ledef->second.comeliness;
-					stats.ethics += ledef->second.ethics;
+					stats.strength += ledef->strength;
+					stats.dexterity += ledef->dexterity;
+					stats.constitution += ledef->constitution;
+					stats.intelligence += ledef->intelligence;
+					stats.wisdom += ledef->wisdom;
+					stats.charisma += ledef->charisma;
+					stats.comeliness += ledef->comeliness;
+					stats.ethics += ledef->ethics;
 				}
-				for (const std::string &skill : ledef->second.skills) {
+				for (const std::string &skill : ledef->skills) {
                     if (rng.roll_dice(1,10)>7) {
                         auto skillfinder = stats.skills.find(skill);
                         if (skillfinder == stats.skills.end()) {
@@ -269,9 +274,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ran
 		->assign(ai_settler_new_arrival_t{})
 		->assign(sleep_clock_t{});
 
-	// TODO: Create clothing items
+	// Create clothing items
 	//std::cout << settler->id << "\n";
-	for (auto item : starting_professions[selected_profession].starting_clothes) {
+	for (auto item : starting_profession->starting_clothes) {
 		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
 			std::string item_name = std::get<2>(item);
 			std::string slot_name = std::get<1>(item);

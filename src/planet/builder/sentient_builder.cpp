@@ -2,6 +2,8 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/health_factory.hpp"
+#include "../../raws/items.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../utils/string_utils.hpp"
@@ -14,6 +16,11 @@
 #include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../components/natural_attacks_t.hpp"
 #include "../../components/renderable_composite.hpp"
+#include "../region/region.hpp"
+#include "../../raws/defs/civilization_t.hpp"
+#include "../../raws/defs/raw_creature_t.hpp"
+#include "../../raws/creatures.hpp"
+#include "../../components/riding_t.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -23,7 +30,7 @@ int sentient_get_stat_mod(const std::string stat, const raw_species_t * species)
     return mod;
 }
 
-void create_sentient(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::tuple<int,int,int> &start,
+void create_sentient(planet_t &planet, rltk::random_number_generator &rng, std::tuple<int,int,int> &start,
                      const civ_unit_sentient_t &unit, const std::string species_tag, const std::size_t civ_id,
                      bool announce)
 {
@@ -128,41 +135,80 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     if (unit.equipment.melee != "") {
         auto cs = split(unit.equipment.melee, '/');
         const std::string item_name = cs[0];
-        auto finder = item_defs.find(item_name);
+        auto finder = get_item_def(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
         w.material = get_material_by_tag(cs[1]);
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_MELEE, sentient->id});
-        weapon->component<item_t>()->stack_size = finder->second.stack_size;
-        weapon->component<item_t>()->category = finder->second.categories;
+        weapon->component<item_t>()->stack_size = finder->stack_size;
+        weapon->component<item_t>()->category = finder->categories;
         weapon->component<item_t>()->claimed = true;
     }
     if (unit.equipment.ranged != "") {
         auto cs = split(unit.equipment.ranged, '/');
         const std::string item_name = cs[0];
-        auto finder = item_defs.find(item_name);
+        auto finder = get_item_def(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
         w.material = get_material_by_tag(cs[1]);
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_RANGED, sentient->id});
-        weapon->component<item_t>()->stack_size = finder->second.stack_size;
-        weapon->component<item_t>()->category = finder->second.categories;
+        weapon->component<item_t>()->stack_size = finder->stack_size;
+        weapon->component<item_t>()->category = finder->categories;
         weapon->component<item_t>()->claimed = true;
     }
     if (unit.equipment.ammo != "") {
         auto cs = split(unit.equipment.ammo, '/');
         const std::string item_name = cs[0];
-        auto finder = item_defs.find(item_name);
+        auto finder = get_item_def(item_name);
         std::cout << "Created " << item_name << "\n";
         item_t w{item_name};
         w.material = get_material_by_tag(cs[1]);
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto ammo = create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_AMMO, sentient->id});
-        ammo->component<item_t>()->stack_size = finder->second.stack_size;
-        ammo->component<item_t>()->category = finder->second.categories;
+        ammo->component<item_t>()->stack_size = finder->stack_size;
+        ammo->component<item_t>()->category = finder->categories;
         ammo->component<item_t>()->claimed = true;
+    }
+    if (unit.equipment.mount != "") {
+        std::cout << "Spawning a mount: " << unit.equipment.mount << "\n";
+        // Spawn a mount at the same location, with a riding_t tag on the sentient
+        auto critter_def = get_creature_def( unit.equipment.mount );
+
+        bool male = true;
+        if (rng.roll_dice(1,4)<=2) male = false;
+        name_t name{};
+        name.first_name = critter_def->name;
+        if (male) {
+            name.last_name = critter_def->male_name;
+        } else {
+            name.last_name = critter_def->female_name;
+        }
+
+        game_stats_t stats;
+        stats.profession_tag = "Mount";
+        stats.age = 1;
+        for (auto it=critter_def->stats.begin(); it!=critter_def->stats.end(); ++it) {
+            if (it->first == "str") stats.strength = it->second;
+            if (it->first == "dex") stats.dexterity = it->second;
+            if (it->first == "con") stats.constitution = it->second;
+            if (it->first == "int") stats.intelligence = it->second;
+            if (it->first == "wis") stats.wisdom = it->second;
+            if (it->first == "cha") stats.charisma = it->second;
+        }
+
+        auto mount = create_entity()
+                ->assign(position_t{x,y,z})
+                ->assign(renderable_t{critter_def->glyph, critter_def->glyph_ascii, critter_def->fg, rltk::colors::BLACK})
+                ->assign(std::move(name))
+                ->assign(std::move(stats))
+                ->assign(create_health_component_creature(critter_def->tag))
+                ->assign(initiative_t{})
+                ->assign(ai_mode_idle_t{});
+
+        // Remove the position_t from the parent and assign a riding marker
+        sentient->assign(riding_t{mount->id});
     }
 
     if (announce) {
@@ -176,15 +222,15 @@ void create_sentient(planet_t &planet, region_t &region, rltk::random_number_gen
     // Equipment
 }
 
-void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_number_generator &rng, std::size_t civ_id,
+void create_sentient_unit(planet_t &planet, rltk::random_number_generator &rng, std::size_t civ_id,
                           const std::string &unit_tag,
                           std::vector<std::tuple<int,int,int>> &starting_points, int &spawn_counter,
                           const bool announce)
 {
     const std::string species_tag = planet.civs.civs[civ_id].species_tag;
-    auto civ_f = civ_defs.find(species_tag);
-    auto unit_f = civ_f->second.units.find(unit_tag);
-    if (unit_f == civ_f->second.units.end()) {
+    auto civ_f = get_civ_def(species_tag);
+    auto unit_f = civ_f->units.find(unit_tag);
+    if (unit_f == civ_f->units.end()) {
         std::cout << "Error loading " << unit_tag << "\n";
         return;
     }
@@ -197,9 +243,9 @@ void create_sentient_unit(planet_t &planet, region_t &region, rltk::random_numbe
             } else {
                 std::get<0>(sp) = rng.roll_dice(1,REGION_WIDTH-1);
                 std::get<1>(sp) = rng.roll_dice(1,REGION_HEIGHT-1);
-                std::get<2>(sp) = get_ground_z(region, std::get<0>(sp), std::get<1>(sp));
+                std::get<2>(sp) = region::ground_z(std::get<0>(sp), std::get<1>(sp));
             }
-            create_sentient(planet, region, rng, sp, unit, species_tag, civ_id, announce);
+            create_sentient(planet, rng, sp, unit, species_tag, civ_id, announce);
 
             ++spawn_counter;
             if (spawn_counter > starting_points.size()) spawn_counter = 0;

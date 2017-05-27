@@ -22,7 +22,7 @@ bool directory_exists(const char *path)
 std::string get_save_path()
 {
     struct passwd *pw = getpwuid(getuid());
-    const std::string result = std::string(pw->pw_dir) + std::string("/black future savegame");
+    const std::string result = std::string(pw->pw_dir) + std::string("/nox futura");
 
     if (!directory_exists(result.c_str())) {
         // Create the directory
@@ -42,7 +42,7 @@ std::string get_save_path()
     WCHAR path[MAX_PATH];
     if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, path))) {
     	const std::wstring p(path);
-	const std::string ps = std::string(p.begin(), p.end()) + std::string("/bfsave");
+	const std::string ps = std::string(p.begin(), p.end()) + std::string("/noxfutura");
 	std::cout << ps << "\n";
 	if (!directory_exists(ps.c_str())) {
 	    CreateDirectory(ps.c_str(), nullptr);

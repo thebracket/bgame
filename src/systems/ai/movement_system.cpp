@@ -5,8 +5,11 @@
 #include "../../components/slidemove.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_rng.hpp"
+#include "../../components/riding_t.hpp"
+
+using namespace region;
 
 octree_t entity_octree;
 
@@ -21,18 +24,18 @@ void movement_system::configure() {
         const int tile_index = mapidx(pos.x, pos.y, pos.z);
         const int direction = rng.roll_dice(1,6);
         switch (direction) {
-            case 1 : if (current_region->tile_flags[tile_index].test(CAN_GO_UP)) pos.z++; break;
-            case 2 : if (current_region->tile_flags[tile_index].test(CAN_GO_DOWN)) pos.z--; break;
-            case 3 : if (current_region->tile_flags[tile_index].test(CAN_GO_NORTH)) pos.y--; break;
-            case 4 : if (current_region->tile_flags[tile_index].test(CAN_GO_SOUTH)) pos.y++; break;
-            case 5 : if (current_region->tile_flags[tile_index].test(CAN_GO_EAST)) pos.x++; break;
-            case 6 : if (current_region->tile_flags[tile_index].test(CAN_GO_WEST)) pos.x--; break;
+            case 1 : if (flag(tile_index, CAN_GO_UP)) pos.z++; break;
+            case 2 : if (flag(tile_index, CAN_GO_DOWN)) pos.z--; break;
+            case 3 : if (flag(tile_index, CAN_GO_NORTH)) pos.y--; break;
+            case 4 : if (flag(tile_index, CAN_GO_SOUTH)) pos.y++; break;
+            case 5 : if (flag(tile_index, CAN_GO_EAST)) pos.x++; break;
+            case 6 : if (flag(tile_index, CAN_GO_WEST)) pos.x--; break;
         }
-        if (!current_region->solid[tile_index]) {
+        if (!solid(tile_index)) {
             bool can_go = true;
             const int dest = mapidx(pos);
 
-            if (current_region->water_level[dest]>2 && current_region->water_level[tile_index]<3) can_go = false;
+            if (water_level(dest)>2 && water_level(tile_index)<3) can_go = false;
 
             if (can_go && !(pos == *original)) emit(entity_wants_to_move_message{msg.entity_id, pos});
         }
@@ -92,8 +95,19 @@ void movement_system::configure() {
 
         // Do vegetation damage
         const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
-        if (current_region->tile_vegetation_type[idx] > 0) {
+        if (veg_type(idx) > 0) {
             emit_deferred(vegetation_damage_message{idx, 1});
+        }
+
+        auto mounted = entity(msg.entity_id)->component<riding_t>();
+        if (mounted) {
+            auto mount_pos = entity(mounted->riding)->component<position_t>();
+            mount_pos->x = epos->x;
+            mount_pos->y = epos->y;
+            mount_pos->z = epos->z;
+            mount_pos->offsetX = epos->offsetX;
+            mount_pos->offsetY = epos->offsetY;
+            mount_pos->offsetZ = epos->offsetZ;
         }
 
         emit(entity_moved_message{msg.entity_id, origin, msg.destination});
@@ -103,13 +117,13 @@ void movement_system::configure() {
         auto pos = entity(msg.entity_id)->component<position_t>();
         auto other_pos = entity(msg.flee_from_id)->component<position_t>();
 
-        if (pos->x > other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_EAST)) {
+        if (pos->x > other_pos->x && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_EAST)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x+1, pos->y, pos->z } });
-        } else if (pos->x < other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_WEST)) {
+        } else if (pos->x < other_pos->x && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_WEST)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x-1, pos->y, pos->z } });
-        } else if (pos->y < other_pos->y && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_NORTH)) {
+        } else if (pos->y < other_pos->y && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_NORTH)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x, pos->y-1, pos->z } });
-        } else if (pos->y > other_pos->y && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_SOUTH)) {
+        } else if (pos->y > other_pos->y && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_SOUTH)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x, pos->y+1, pos->z } });
         } else {
             emit(entity_wants_to_move_randomly_message{msg.entity_id});
@@ -119,13 +133,13 @@ void movement_system::configure() {
         auto pos = entity(msg.entity_id)->component<position_t>();
         auto other_pos = entity(msg.charge_to_id)->component<position_t>();
 
-        if (pos->x > other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_WEST)) {
+        if (pos->x > other_pos->x && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_WEST)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x-1, pos->y, pos->z } });
-        } else if (pos->x < other_pos->x && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_EAST)) {
+        } else if (pos->x < other_pos->x && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_EAST)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x+1, pos->y, pos->z } });
-        } else if (pos->y < other_pos->y && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_SOUTH)) {
+        } else if (pos->y < other_pos->y && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_SOUTH)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x, pos->y+1, pos->z } });
-        } else if (pos->y > other_pos->y && current_region->tile_flags[mapidx(pos->x,pos->y,pos->z)].test(CAN_GO_NORTH)) {
+        } else if (pos->y > other_pos->y && flag(mapidx(pos->x,pos->y,pos->z), CAN_GO_NORTH)) {
             emit(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x, pos->y-1, pos->z } });
         } else {
             emit(entity_wants_to_move_randomly_message{msg.entity_id});

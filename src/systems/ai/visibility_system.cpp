@@ -6,9 +6,10 @@
 #include "../../components/grazer_ai.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 
 using namespace rltk;
+using namespace region;
 
 std::unordered_set<std::size_t> blocked_visibility;
 
@@ -16,7 +17,7 @@ std::unordered_set<std::size_t> blocked_visibility;
 
 inline void reveal(const int &idx, viewshed_t &view) {
 	//std::lock_guard<std::mutex> lock(update_guard);
-	if (view.good_guy_visibility) current_region->revealed[idx] = true;
+	if (view.good_guy_visibility) region::reveal(idx);
 	view.visible_cache.push_back(idx);
 }
 
@@ -44,18 +45,18 @@ inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, in
 			return false;
 		} else {
 			const auto idx = mapidx(X, Y, Z);
-			bool blocked = current_region->opaque[idx];
+			bool blocked = opaque(idx);
 			if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
 			if (!blocked && last_z != Z) {
 				//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
 				// Check for ceilings and floors
 				if (last_z > Z) {
-					if (current_region->tile_type[idx] == tile_type::FLOOR) {
+					if (region::tile_type(idx) == tile_type::FLOOR) {
 						blocked = true;
 						//std::cout << "Ceiling block\n";
 					}
 				} else if (last_z < Z) {
-					if (current_region->tile_type[mapidx(X, Y, last_z)] == tile_type::FLOOR) {
+					if (region::tile_type(mapidx(X, Y, last_z)) == tile_type::FLOOR) {
 						blocked = true;
 						//std::cout << "Floor block\n";
 					}
@@ -134,7 +135,7 @@ void visibility_system::update(const double duration_ms) {
 	if (!dirty) return;
 
 	// Apply to map - first clear everything
-	std::fill(current_region->visible.begin(), current_region->visible.end(), false);
+	clear_visibility();
 
 	each<position_t, viewshed_t>([this] (entity_t &e, position_t &pos, viewshed_t &view) {
 		// Create viewsheds if needed
@@ -151,7 +152,7 @@ void visibility_system::update(const double duration_ms) {
 		// Make visible
 		if (view.good_guy_visibility) {
 			for (const int &idx : view.visible_cache) {
-				current_region->visible[idx] = true;
+				make_visible(idx);
 			}
 		}
 

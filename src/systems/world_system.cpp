@@ -1,7 +1,7 @@
 #include "world_system.hpp"
 #include "../messages/messages.hpp"
 #include "../planet/builder/sentient_builder.hpp"
-#include "../../main/game_region.hpp"
+#include "../planet/region/region.hpp"
 
 void world_system::configure() {
     system_name = "Background World";
@@ -13,7 +13,7 @@ inline void world_evaluate_move_option(std::vector<int> &candidates, planet_t &p
     if (planet.landblocks[idx].type == block_type::WATER) return;
 
     int weight = 1;
-    if (planet.idx(current_region->region_x, current_region->region_y) == idx) {
+    if (planet.idx(region::region_x(), region::region_y()) == idx) {
         // Heavily favor visiting the player
         weight = 8;
     } else {

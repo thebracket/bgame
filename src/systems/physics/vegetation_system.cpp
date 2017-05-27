@@ -3,7 +3,10 @@
 #include "../../messages/map_dirty_message.hpp"
 #include "../../messages/tick_message.hpp"
 #include "../../raws/plants.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
+#include "../../raws/defs/plant_t.hpp"
+
+using namespace region;
 
 void vegetation_system::configure() {
     system_name = "Vegetation System";
@@ -17,14 +20,13 @@ void vegetation_system::update(const double ms) {
         vegetation_damage_message msg = vdamage->front();
         vdamage->pop();
 
-        current_region->tile_hit_points[msg.idx] -= msg.damage;
+        damage_vegetation(msg.idx, msg.damage);
 
-        if (current_region->tile_hit_points[msg.idx] < 1) {
+        if (veg_hp(msg.idx) < 1) {
             // We've destroyed the vegetation!
             //std::cout << "Vegetation Destroyed\n";
-            current_region->tile_hit_points[msg.idx] = 0;
-            current_region->tile_vegetation_type[msg.idx] = 0;
-            current_region->calc_render(msg.idx);
+            set_veg_type(msg.idx, 0);
+            calc_render(msg.idx);
             emit(map_dirty_message{});
         }
     }
@@ -38,22 +40,22 @@ void vegetation_system::update(const double ms) {
             for (int y=0; y<REGION_HEIGHT-1; ++y) {
                 for (int x=0; x<REGION_WIDTH-1; ++x) {
                     const int idx = mapidx(x,y,z);
-                    if (current_region->tile_vegetation_type[idx] > 0) {
-                        uint16_t current_tick = current_region->tile_vegetation_ticker[idx]+1;
-                        uint8_t current_cycle = current_region->tile_vegetation_lifecycle[idx];
-                        plant_t plant = get_plant_def(current_region->tile_vegetation_type[idx]);
-                        const int return_val = plant.lifecycle[4];
+                    if (veg_type(idx) > 0) {
+                        uint16_t current_tick = veg_ticker(idx)+1;
+                        uint8_t current_cycle = veg_lifecycle(idx);
+                        auto plant = get_plant_def(veg_type(idx));
+                        const int return_val = plant->lifecycle[4];
 
-                        if (current_tick > plant.lifecycle[current_cycle]) {
+                        if (current_tick > plant->lifecycle[current_cycle]) {
                             ++current_cycle;
                             current_tick = 0;
                             if (current_cycle > 3) current_cycle = return_val;
-                            current_region->calc_render(idx);
+                            calc_render(idx);
                             emit(map_dirty_message{});
                         }
 
-                        current_region->tile_vegetation_ticker[idx] = current_tick;
-                        current_region->tile_vegetation_lifecycle[idx] = current_cycle;
+                        set_veg_ticker(idx, current_tick);
+                        set_veg_lifecycle(idx, current_cycle);
                     }
                 }
             }

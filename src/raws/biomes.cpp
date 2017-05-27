@@ -1,15 +1,18 @@
 #include "biomes.hpp"
 #include "lua_bridge.hpp"
 #include "creatures.hpp"
+#include "defs/biome_type_t.hpp"
 
 std::vector<biome_type_t> biome_defs;
 
-biome_type_t& get_biome_def(const std::size_t &index) {
-    return biome_defs[index];
+biome_type_t * get_biome_def(const std::size_t &index) {
+    return &biome_defs[index];
 }
 
-std::vector<biome_type_t>& get_biome_defs() {
-    return biome_defs;
+void each_biome(std::function<void(biome_type_t *)> func) {
+    for (auto &b : biome_defs) {
+        func(&b);
+    }
 }
 
 void sanity_check_biomes() noexcept
@@ -37,7 +40,7 @@ void sanity_check_biomes() noexcept
     }
 }
 
-void read_biome_types(std::ofstream &tech_tree_file) noexcept
+void read_biome_types() noexcept
 {
     lua_getglobal(lua_state, "biomes");
     lua_pushnil(lua_state);

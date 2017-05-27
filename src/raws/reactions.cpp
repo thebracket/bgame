@@ -4,11 +4,33 @@
 #include "buildings.hpp"
 #include "items.hpp"
 #include "clothing.hpp"
+#include "defs/item_def_t.hpp"
+#include "graphviz.hpp"
+#include "defs/reaction_t.hpp"
+#include <boost/container/flat_map.hpp>
 
-std::unordered_map<std::string, reaction_t> reaction_defs;
-std::unordered_map<std::string, std::vector<std::string>> reaction_building_defs;
+boost::container::flat_map<std::string, reaction_t> reaction_defs;
+boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
-void read_reactions(std::ofstream &tech_tree_file) noexcept
+reaction_t * get_reaction_def(const std::string tag) {
+    auto finder = reaction_defs.find(tag);
+    if (finder == reaction_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+std::vector<std::string> get_reactions_for_building(const std::string tag) {
+    auto result = reaction_building_defs.find(tag);
+    if (result == reaction_building_defs.end()) return std::vector<std::string>();
+    return result->second;
+}
+
+void each_reaction(const std::function<void(std::string, reaction_t *)> func) {
+    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
+        func(it->first, &it->second);
+    }
+}
+
+void read_reactions() noexcept
 {
     lua_getglobal(lua_state, "reactions");
     lua_pushnil(lua_state);
@@ -118,12 +140,6 @@ void read_reactions(std::ofstream &tech_tree_file) noexcept
         }
         reaction_defs[key] = c;
         reaction_building_defs[c.workshop].push_back(key);
-        for (const auto &input : c.inputs) {
-            tech_tree_file << "item_" << input.tag << " -> " << c.workshop << "\n";
-        }
-        for (const auto &output : c.outputs) {
-            tech_tree_file << c.workshop << " -> item_" << output.first << "\n";
-        }
 
         lua_pop(lua_state, 1);
     }
@@ -136,16 +152,28 @@ void sanity_check_reactions() noexcept
         if (it->second.tag.empty()) std::cout << "WARNING: Empty reaction tag\n";
         if (it->second.name.empty()) std::cout << "WARNING: Empty reaction name, tag: " << it->first << "\n";
         if (it->second.workshop.empty()) std::cout << "WARNING: Empty workshop name, tag: " << it->first << "\n";
-        auto bf = building_defs.find(it->second.workshop);
-        if (bf == building_defs.end()) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
+        auto bf = get_building_def(it->second.workshop);
+        if (bf == nullptr) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
         for (const auto &input : it->second.inputs) {
-            auto finder = item_defs.find(input.tag);
-            if (finder == item_defs.end()) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
+            auto finder = get_item_def(input.tag);
+            if (finder == nullptr) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
         }
         for (const auto &output : it->second.outputs) {
-            auto finder = item_defs.find(output.first);
+            auto finder = get_item_def(output.first);
             auto finder2 = get_clothing_by_tag(output.first);
-            if (finder == item_defs.end() && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+            if (finder == nullptr && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+        }
+    }
+}
+
+void build_reaction_tree(graphviz_t * tree) {
+    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
+        tree->add_node(std::string("building_") + it->second.workshop, it->second.tag, graphviz_t::graphviz_shape_t::HOUSE);
+        for (const auto &input : it->second.inputs) {
+            tree->add_node(std::string("item_") + input.tag, it->second.tag);
+        }
+        for (const auto &output : it->second.outputs) {
+            tree->add_node(it->second.tag, std::string("item_") + output.first, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
         }
     }
 }

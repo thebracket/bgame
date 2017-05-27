@@ -7,7 +7,7 @@
 #include "../../messages/renderables_changed_message.hpp"
 #include "../../main/game_rng.hpp"
 #include "../../main/game_logger.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 
 namespace tasks {
 
@@ -15,7 +15,7 @@ enum follow_result_t { SUCCESS, AT_DESTINATION, FAIL };
 
 inline bool can_enter_tile(const position_t &pos) {
     const auto idx = mapidx(pos);
-    return current_region->tile_flags[idx].test(CAN_STAND_HERE);
+    return region::flag(idx, CAN_STAND_HERE);
 }
 
 template<class T>
@@ -50,14 +50,14 @@ inline void try_path(const rltk::entity_t &e, const T &ai, position_t &pos,
 
 inline bool is_stuck_or_invalid(const position_t &pos) {
     const int map_index = mapidx(pos.x, pos.y, pos.z);
-    return ((map_index < 0 || map_index > (REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) || current_region->solid[map_index] ||
+    return ((map_index < 0 || map_index > (REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) || region::solid(map_index) ||
             (
-        !current_region->tile_flags[map_index].test(CAN_GO_NORTH) &&
-        !current_region->tile_flags[map_index].test(CAN_GO_SOUTH) &&
-        !current_region->tile_flags[map_index].test(CAN_GO_EAST) &&
-        !current_region->tile_flags[map_index].test(CAN_GO_WEST) &&
-        !current_region->tile_flags[map_index].test(CAN_GO_UP) &&
-        !current_region->tile_flags[map_index].test(CAN_GO_DOWN)
+        !region::flag(map_index, CAN_GO_NORTH) &&
+        !region::flag(map_index, CAN_GO_SOUTH) &&
+        !region::flag(map_index, CAN_GO_EAST) &&
+        !region::flag(map_index, CAN_GO_WEST) &&
+        !region::flag(map_index, CAN_GO_UP) &&
+        !region::flag(map_index, CAN_GO_DOWN)
     ));
 }
 

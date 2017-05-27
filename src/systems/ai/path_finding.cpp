@@ -1,6 +1,8 @@
 #include "path_finding.hpp"
-#include "../../planet/region.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
+#include "../../planet/region/region.hpp"
+
+using namespace region;
 
 std::size_t civ_id = 0;
 
@@ -8,25 +10,25 @@ struct navigator_t {
 	inline static void test_direction(const position_t &pos, const position_t &dest, std::vector<position_t> &successors) {
 		bool can_go = false;
 		const int idx = mapidx(pos);
-		if (dest.x > pos.x && current_region->tile_flags[idx].test(CAN_GO_EAST)) {
+		if (dest.x > pos.x && flag(idx, CAN_GO_EAST)) {
 			can_go = true;
-		} else if (dest.x < pos.x && current_region->tile_flags[idx].test(CAN_GO_WEST)) {
+		} else if (dest.x < pos.x && flag(idx, CAN_GO_WEST)) {
 			can_go = true;
-		} else if (dest.y < pos.y && current_region->tile_flags[idx].test(CAN_GO_NORTH)) {
+		} else if (dest.y < pos.y && flag(idx, CAN_GO_NORTH)) {
 			can_go = true;
-		} else if (dest.y > pos.y && current_region->tile_flags[idx].test(CAN_GO_SOUTH)) {
+		} else if (dest.y > pos.y && flag(idx, CAN_GO_SOUTH)) {
 			can_go = true;
-		} else if (dest.z > pos.z && current_region->tile_flags[idx].test(CAN_GO_UP)) {
+		} else if (dest.z > pos.z && flag(idx, CAN_GO_UP)) {
 			can_go = true;
-		} else if (dest.z < pos.z && current_region->tile_flags[idx].test(CAN_GO_DOWN)) {
+		} else if (dest.z < pos.z && flag(idx, CAN_GO_DOWN)) {
 			can_go = true;
 		}
 
 		if (can_go) {
 			const int destidx = mapidx(dest);
 			// Check for water level
-			if (current_region->water_level[destidx] > 3) {
-				if (current_region->water_level[idx] < 4) can_go = false;
+			if (water_level(destidx) > 3) {
+				if (water_level(idx) < 4) can_go = false;
 			}
 
 			if (can_go) {

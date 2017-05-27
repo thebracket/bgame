@@ -1,7 +1,9 @@
 #include "water_features.hpp"
 #include "../../planet_builder.hpp"
+#include "../../region/region.hpp"
 
 using namespace rltk;
+using namespace region;
 
 void add_dig_target(int X, int Y, int radius, int depth, std::unordered_map<int, region_water_feature_tile> &dig_targets,
     std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap) {
@@ -32,7 +34,7 @@ void add_dig_target(int X, int Y, int radius, int depth, std::unordered_map<int,
 }
 
 
-void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) {
+void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) {
     set_worldgen_status("Just add water...");
 
     bool river_starts_here = false;
@@ -44,7 +46,7 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
     std::fill(river_entry.begin(), river_entry.end(), 0);
 
     for (const river_t &river : planet.rivers) {
-        if (river.start_x == region.region_x && river.start_y == region.region_y) {
+        if (river.start_x == region_x() && river.start_y == region_y()) {
             river_starts_here = true;
             has_river = true;
         }
@@ -54,7 +56,7 @@ void just_add_water(planet_t &planet, region_t &region, std::vector<uint8_t> &po
 
         std::size_t i=0;
         for (const river_step_t &s : river.steps) {
-            if (s.x == region.region_x && s.y == region.region_y) {
+            if (s.x == region_x() && s.y == region_y()) {
                 has_river = true;
 
                 if (last_x < s.x) { ++river_entry[0]; }

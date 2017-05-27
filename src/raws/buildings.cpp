@@ -2,10 +2,26 @@
 #include "lua_bridge.hpp"
 #include "items.hpp"
 #include "materials.hpp"
+#include "defs/building_def_t.hpp"
+#include <boost/container/flat_map.hpp>
+#include "graphviz.hpp"
+
 
 using namespace rltk;
 
-std::unordered_map<std::string, building_def_t> building_defs;
+boost::container::flat_map<std::string, building_def_t> building_defs;
+
+building_def_t * get_building_def(const std::string tag) {
+    auto finder = building_defs.find(tag);
+    if (finder == building_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+void each_building_def(const std::function<void(building_def_t *)> func) {
+    for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
+        func(&it->second);
+    }
+}
 
 void sanity_check_buildings() noexcept
 {
@@ -14,8 +30,8 @@ void sanity_check_buildings() noexcept
         if (it->second.name.empty()) std::cout << "WARNING: Building " << it->first << " has no name.\n";
         for (const reaction_input_t &comp : it->second.components) {
             if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
-            auto finder = item_defs.find(comp.tag);
-            if (finder == item_defs.end()) {
+            auto finder = get_item_def(comp.tag);
+            if (finder == nullptr) {
                 std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it->first << "\n";
             }
         }
@@ -23,7 +39,7 @@ void sanity_check_buildings() noexcept
     }
 }
 
-void read_buildings(std::ofstream &tech_tree_file) noexcept
+void read_buildings() noexcept
 {
     lua_getglobal(lua_state, "buildings");
     lua_pushnil(lua_state);
@@ -94,7 +110,6 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
                     }
 
                     c.components.push_back(comp);
-                    tech_tree_file << "item_" << comp.tag << " -> " <<  key << "\n";
                     lua_pop(lua_state, 1);
                 }
             }
@@ -225,5 +240,13 @@ void read_buildings(std::ofstream &tech_tree_file) noexcept
         building_defs[key] = c;
         std::cout << "Read schematics for building: " << key << "\n";
         lua_pop(lua_state, 1);
+    }
+}
+
+void make_building_tree(graphviz_t * tree) {
+    for (const auto &b : building_defs) {
+        for (const auto &input : b.second.components) {
+            tree->add_node(std::string("item_") + input.tag, std::string("building_") + b.second.tag );
+        }
     }
 }

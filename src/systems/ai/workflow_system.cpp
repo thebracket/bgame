@@ -4,6 +4,7 @@
 #include "inventory_system.hpp"
 #include "../../main/game_designations.hpp"
 #include "../../components/ai_tags/ai_tag_work_order.hpp"
+#include "../../raws/defs/reaction_t.hpp"
 
 std::unordered_map<std::size_t, std::vector<std::string>> automatic_reactions;
 std::unordered_set<std::size_t> workshop_claimed;
@@ -15,14 +16,14 @@ void workflow_system::update(const double duration_ms) {
         // Enumerate buildings and see which ones have reactions.
         each<position_t, building_t>([this] (entity_t &e, position_t &pos, building_t &b) {
             if (b.complete) {
-                auto finder = reaction_building_defs.find(b.tag);
-                if (finder != reaction_building_defs.end()) {
-                    for (const std::string &reaction_name : finder->second) {
-                        auto reactor = reaction_defs.find(reaction_name);
-                        if (reactor != reaction_defs.end()) {
+                auto finder = get_reactions_for_building(b.tag);
+                if (!finder.empty()) {
+                    for (const std::string &reaction_name : finder) {
+                        auto reactor = get_reaction_def(reaction_name);
+                        if (reactor != nullptr) {
 
                             // Automatic reactions are added to the auto reactor list
-                            if (reactor->second.automatic) {
+                            if (reactor->automatic) {
                                 auto automatic_finder = automatic_reactions.find(e.id);
                                 if (automatic_finder == automatic_reactions.end()) {
                                     automatic_reactions[e.id] = std::vector<std::string>{ reaction_name };
@@ -64,11 +65,11 @@ bool is_auto_reaction_task_available(const settler_ai_t &ai) {
         if (busy_finder == workshop_claimed.end()) {
             // Iterate available automatic reactions
             for (const std::string &reaction_name : outerit->second) {
-                auto reaction = reaction_defs.find(reaction_name);
-                if (reaction != reaction_defs.end()) {
+                auto reaction = get_reaction_def(reaction_name);
+                if (reaction != nullptr) {
                     // Are the inputs available?
                     bool available = true;
-                    for (auto &input : reaction->second.inputs) {
+                    for (auto &input : reaction->inputs) {
                         const int n_available = available_items_by_reaction_input(input);
                         if (n_available < input.quantity) {
                             available = false;
@@ -99,12 +100,12 @@ std::unique_ptr<reaction_task_t> find_automatic_reaction_task(const ai_tag_work_
         if (busy_finder == workshop_claimed.end()) {
             // Iterate available automatic reactions
             for (const std::string &reaction_name : outerit->second) {
-                auto reaction = reaction_defs.find(reaction_name);
-                if (reaction != reaction_defs.end()) {
+                auto reaction = get_reaction_def(reaction_name);
+                if (reaction != nullptr) {
                     // Are the inputs available?
                     bool available = true;
                     std::vector<std::pair<std::size_t,bool>> components;
-                    for (auto &input : reaction->second.inputs) {
+                    for (auto &input : reaction->inputs) {
                         const int n_available = available_items_by_reaction_input(input);
                         if (n_available < input.quantity) {
                             available = false;
@@ -117,7 +118,7 @@ std::unique_ptr<reaction_task_t> find_automatic_reaction_task(const ai_tag_work_
 
                     if (available) {
                         // Components are available, build job and return it
-                        result = std::make_unique<reaction_task_t>(outerit->first, reaction->second.name, reaction->second.tag, components);
+                        result = std::make_unique<reaction_task_t>(outerit->first, reaction->name, reaction->tag, components);
                         workshop_claimed.insert(outerit->first);
                         return result;
                     } else {
@@ -140,13 +141,13 @@ std::unique_ptr<reaction_task_t> find_queued_reaction_task(const ai_tag_work_ord
 
     // Iterate through queued jobs
     for (std::pair<uint8_t,std::string> &order : designations->build_orders) {
-        auto reaction = reaction_defs.find(order.second);
+        auto reaction = get_reaction_def(order.second);
 
         // Is there an available workshop of the right type?
         bool possible = false;
         std::size_t workshop_id;
         each<building_t>([&possible, &reaction, &workshop_id] (entity_t &e, building_t &b) {
-            if (b.complete && b.tag == reaction->second.workshop) {
+            if (b.complete && b.tag == reaction->workshop) {
                 auto busy_finder = workshop_claimed.find(e.id);
                 if (busy_finder == workshop_claimed.end()) {
                     workshop_id = e.id;
@@ -158,15 +159,15 @@ std::unique_ptr<reaction_task_t> find_queued_reaction_task(const ai_tag_work_ord
 
         // Is the settler allowed to do this?
         int target_category = -1;
-        if (reaction->second.skill == "Carpentry") {
+        if (reaction->skill == "Carpentry") {
             target_category = JOB_CARPENTRY;
-        } else if (reaction->second.skill == "Masonry") {
+        } else if (reaction->skill == "Masonry") {
             target_category = JOB_MASONRY;
         }
         if (target_category > -2) {
             bool available = true;
             std::vector<std::pair<std::size_t,bool>> components;
-            for (auto &input : reaction->second.inputs) {
+            for (auto &input : reaction->inputs) {
                 const int n_available = available_items_by_reaction_input(input);
                 if (n_available < input.quantity) {
                     available = false;
@@ -179,7 +180,7 @@ std::unique_ptr<reaction_task_t> find_queued_reaction_task(const ai_tag_work_ord
 
             if (available) {
                 // Components are available, build job and return it
-                result = std::make_unique<reaction_task_t>(workshop_id, reaction->second.name, reaction->second.tag, components);
+                result = std::make_unique<reaction_task_t>(workshop_id, reaction->name, reaction->tag, components);
                 workshop_claimed.insert(workshop_id);
                 --order.first;
                 emit(update_workflow_message{});

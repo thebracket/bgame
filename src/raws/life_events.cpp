@@ -1,9 +1,23 @@
 #include "life_events.hpp"
 #include "lua_bridge.hpp"
+#include <boost/container/flat_map.hpp>
+#include "defs/life_event_template.hpp"
 
-std::unordered_map<std::string, life_event_template> life_event_defs;
+boost::container::flat_map<std::string, life_event_template> life_event_defs;
 
-void read_life_events(std::ofstream &tech_tree_file) noexcept
+life_event_template * get_life_event(const std::string tag) {
+    auto finder = life_event_defs.find(tag);
+    if (finder == life_event_defs.end()) return nullptr;
+    return &finder->second;
+}
+
+void each_life_event(const std::function<void(std::string tag, life_event_template *)> func) {
+    for (auto it=life_event_defs.begin(); it != life_event_defs.end(); ++it) {
+        func(it->first, &it->second);
+    }
+}
+
+void read_life_events() noexcept
 {
     std::string tag = "";
     life_event_template le;

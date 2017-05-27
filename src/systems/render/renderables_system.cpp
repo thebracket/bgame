@@ -5,12 +5,13 @@
 #include "../../components/renderable_composite.hpp"
 #include "../../components/position.hpp"
 #include "../../components/building.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/construct_provides_door.hpp"
 #include "../../components/species.hpp"
 #include "../../components/item.hpp"
+#include "../../components/item_carried.hpp"
 #include "../ai/movement_system.hpp"
 #include "../../raws/species.hpp"
 #include "../../components/sleep_clock_t.hpp"
@@ -227,7 +228,7 @@ void renderables_system::update(const double time_elapsed) {
                                 screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY,
                                             rltk::vchar{render->glyph, render->foreground, rltk::colors::BLACK}});
                         } else {
-                        renderables[idx].push_back(
+                            renderables[idx].push_back(
                                 screen_render_t{(float)pos->x, (float)pos->y, pos->offsetX, pos->offsetY,
                                                 rltk::vchar{render->glyph_ascii, render->foreground, rltk::colors::BLACK}});
                     }

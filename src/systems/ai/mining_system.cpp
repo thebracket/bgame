@@ -1,26 +1,27 @@
 #include "mining_system.hpp"
 #include "../../messages/messages.hpp"
-#include "../../planet/region.hpp"
-#include "../../main/game_region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../main/game_designations.hpp"
 
 std::vector<uint8_t> mining_map;
 std::vector<int> mining_targets;
 
+using namespace region;
+
 void walk_mining_map(const int x, const int y, const int z, const int distance, const int IDX) {
 	if (distance > 250) return;
 	const auto idx = mapidx(x,y,z);
 	if (mining_map[idx] > distance) {
-		if (!current_region->tile_flags[idx].test(CAN_STAND_HERE)) return;
+		if (!flag(idx, CAN_STAND_HERE)) return;
 		mining_map[idx] = distance;
 		mining_targets[idx] = IDX;
 
-		if (current_region->tile_flags[idx].test(CAN_GO_NORTH)) { walk_mining_map(x,y-1,z,distance+1,IDX); }
-		if (current_region->tile_flags[idx].test(CAN_GO_SOUTH)) { walk_mining_map(x,y+1,z,distance+1,IDX); }
-		if (current_region->tile_flags[idx].test(CAN_GO_EAST)) { walk_mining_map(x+1,y,z,distance+1,IDX); }
-		if (current_region->tile_flags[idx].test(CAN_GO_WEST)) { walk_mining_map(x-1,y,z,distance+1,IDX); }
-		if (current_region->tile_flags[idx].test(CAN_GO_UP)) { walk_mining_map(x,y,z+1,distance+1,IDX); }
-		if (current_region->tile_flags[idx].test(CAN_GO_DOWN)) { walk_mining_map(x,y,z-1,distance+1,IDX); }
+		if (flag(idx, CAN_GO_NORTH)) { walk_mining_map(x,y-1,z,distance+1,IDX); }
+		if (flag(idx, CAN_GO_SOUTH)) { walk_mining_map(x,y+1,z,distance+1,IDX); }
+		if (flag(idx, CAN_GO_EAST)) { walk_mining_map(x+1,y,z,distance+1,IDX); }
+		if (flag(idx, CAN_GO_WEST)) { walk_mining_map(x-1,y,z,distance+1,IDX); }
+		if (flag(idx, CAN_GO_UP)) { walk_mining_map(x,y,z+1,distance+1,IDX); }
+		if (flag(idx, CAN_GO_DOWN)) { walk_mining_map(x,y,z-1,distance+1,IDX); }
 	}
 }
 

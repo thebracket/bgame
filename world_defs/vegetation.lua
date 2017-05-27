@@ -28,6 +28,11 @@ vegetation = {
     reeds = build_veg("Reeds, Common", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'reeds', 'reeds'), reeds_template, harvest_normal('reed_thread'), {}),
     reeds_giant = build_veg("Reeds, Giant", fast_lifecycle, veg_g('tilled', 'grass_sparse', 'reeds', 'reeds'), reeds_template, harvest_normal('reed_thread'), {}),
     reeds_paper = build_veg("Reeds, Papyrus", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'reeds', 'reeds'), reeds_template, harvest_normal('reed_paper'), {}),
+    jute = build_veg("Jute", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'flower_purple', 'flower_purple'), heather_template, harvest_normal('burlap_thread'), {}),
+    hemp = build_veg("Hemp", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'flower_purple', 'flower_purple'), heather_template, harvest_normal('hemp_thread'), {}),
+    ramie = build_veg("Ramie", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'flower_purple', 'flower_purple'), heather_template, harvest_normal('ramie_thread'), {}),
+    kenaf = build_veg("Kenaf", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'flower_purple', 'flower_purple'), heather_template, harvest_normal('kenaf_thread'), {}),
+    cotton = build_veg("Cotton", grass_lifecycle, veg_g('tilled', 'grass_sparse', 'flower_purple', 'flower_purple'), heather_template, harvest_normal('cotton_thread'), {}),
 
     -- Vegetables
     artichoke = build_veg("Artichoke", slow_lifecycle, veg_g('tilled', 'grass_sparse', 'grass_long', 'flower_small'), veg_template('light_green'), harvest_normal('artichoke_veg'), {'annual'}),

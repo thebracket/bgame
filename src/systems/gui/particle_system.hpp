@@ -6,6 +6,8 @@
 constexpr uint8_t PARTICLE_SMOKE = 1;
 constexpr uint8_t PARTICLE_MIASMA = 2;
 constexpr uint8_t PARTICLE_PROJECTILE = 3;
+constexpr uint8_t PARTICLE_BOOM_FUSE = 4;
+constexpr uint8_t PARTICLE_BOOM = 5;
 
 struct particle_t {
     particle_t() {}

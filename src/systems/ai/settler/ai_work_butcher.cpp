@@ -1,7 +1,7 @@
 #include "ai_work_butcher.hpp"
 #include "job_board.hpp"
 #include "../distance_map_system.hpp"
-#include "../../../main/game_region.hpp"
+#include "../../../planet/region/region.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/ai_tags/ai_tag_work_butcher.hpp"
 #include "ai_work_hunt.hpp"
@@ -10,6 +10,9 @@
 #include "../../../components/building.hpp"
 #include "../path_finding.hpp"
 #include "../../../raws/creatures.hpp"
+#include "../../../raws/defs/raw_creature_t.hpp"
+#include "../../../raws/materials.hpp"
+#include "../../../raws/raws.hpp"
 
 namespace jobs_board {
     void evaluate_butchering(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {

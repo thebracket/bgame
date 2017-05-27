@@ -1,37 +1,18 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <tuple>
-#include <fstream>
+#include <rltk.hpp>
 
-/*
- * Defines a starting profession.
- */
-struct profession_t {
-    std::string name = "";
-    short strength = 0;
-    short dexterity = 0;
-    short constitution = 0;
-    short intelligence = 0;
-    short wisdom = 0;
-    short charisma = 0;
-    short comeliness = 0;
-    short ethics = 0;
-    std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
-};
+struct profession_t; // Forward
+
+profession_t * get_random_profession(rltk::random_number_generator &rng);
 
 /*
  * Lua reader
  */
-void read_professions(std::ofstream &tech_tree_file) noexcept;
+void read_professions() noexcept;
 
 /*
  * Lua linter
  */
 void sanity_check_professions() noexcept;
 
-/*
- * TODO: Hide this behind an API
- */
-extern std::vector<profession_t> starting_professions;

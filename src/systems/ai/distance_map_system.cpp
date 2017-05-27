@@ -1,7 +1,7 @@
 #include "distance_map_system.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/corpse_harvestable.hpp"
-#include "../../planet/region.hpp"
+#include "../../planet/region/region.hpp"
 #include "../../messages/entity_moved_message.hpp"
 #include "../../components/construct_provides_sleep.hpp"
 #include "../../components/settler_ai.hpp"
@@ -11,6 +11,7 @@
 #include "inventory_system.hpp"
 #include "../../components/item_stored.hpp"
 #include "../../main/game_designations.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 dijkstra_map huntables_map;
 dijkstra_map butcherables_map;

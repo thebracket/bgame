@@ -4,7 +4,6 @@ add_library(raws STATIC
 	health_factory.cpp
 	string_table.cpp
     materials.cpp
-    native_population.cpp
     creatures.cpp
     species.cpp
     biomes.cpp
@@ -16,6 +15,5 @@ add_library(raws STATIC
     buildings.cpp
     reactions.cpp
 )
-target_link_libraries(raws rltk)
-target_link_libraries(raws utils)
-target_link_libraries(raws components)
+target_link_libraries(raws rltk components utils ${LUA_LIBRARIES} )
+

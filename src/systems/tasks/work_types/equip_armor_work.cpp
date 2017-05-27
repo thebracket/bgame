@@ -9,6 +9,8 @@
 #include "../settler_cancel_action.hpp"
 #include "../pathfinding.hpp"
 #include "../initiative.hpp"
+#include "../../../raws/clothing.hpp"
+#include "../../../raws/defs/clothing_t.hpp"
 
 using namespace rltk;
 using tasks::become_idle;
