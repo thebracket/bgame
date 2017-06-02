@@ -16,6 +16,8 @@
 #include "../../../raws/defs/building_def_t.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/camera_options.hpp"
+#include "../../../components/turret_t.hpp"
+#include "../../../components/initiative.hpp"
 
 using namespace region;
 
@@ -54,6 +56,11 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         new_building->assign(smoke_emitter_t{});
     } else if (tag == "energy_door" || tag == "door") {
         new_building->assign(construct_door_t{})->assign(receives_signal_t{});
+    } else if (tag == "ship_defense_turret") {
+        std::cout << "Turret created\n";
+        new_building->assign(viewshed_t{8, false});
+        new_building->assign(turret_t{8, 0, 1, 8, 0, civ_owner});
+        new_building->assign(initiative_t{});
     }
 }
 
@@ -89,6 +96,8 @@ void add_construction(const int x, const int y, const int z, const std::string t
         set_tile(idx, tile_type::STAIRS_UPDOWN, false, false, wood, 0, true, true);
     } else if (type == "cordex") {
         add_building("cordex", x, y, z, civ_owner);
+    } else if (type == "ship_defense_turret") {
+        add_building("ship_defense_turret", x, y, z, civ_owner);
     } else if (type == "solar_panel") {
         add_building("solar_panel", x, y, z, civ_owner);
     } else if (type == "cryo_bed") {
@@ -151,6 +160,9 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
                         add_construction(x, y, z, "storage_locker", false, 0);
                     } else if (output->glyph == 'C') {
                         add_construction(x, y, z, "cordex", false, 0);
+                    } else if (output->glyph == 243) {
+                        std::cout << "Turret detected and built\n";
+                        add_construction(x, y, z, "ship_defense_turret", false, 0);
                     } else if (output->glyph == 251) {
                         add_construction(x, y, z, "small_replicator", false, 0);
                     } else if (output->glyph == 232) {

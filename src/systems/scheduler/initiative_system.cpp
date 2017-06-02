@@ -8,6 +8,7 @@
 #include "../../components/slidemove.hpp"
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../components/riding_t.hpp"
+#include "../../components/turret_t.hpp"
 
 void initiative_system::on_message(const tick_message &msg) {
     each<initiative_t>([] (entity_t &e, initiative_t &i) {
@@ -37,6 +38,7 @@ void initiative_system::on_message(const tick_message &msg) {
             auto sentient_ai_v = e.component<sentient_ai>();
             auto grazer_ai_v = e.component<grazer_ai>();
             auto mount_v = e.component<riding_t>();
+            auto turret_v = e.component<turret_t>();
 
             if (mount_v) {
                 auto mount_entity = entity(mount_v->riding);
@@ -59,6 +61,8 @@ void initiative_system::on_message(const tick_message &msg) {
                 }
             } else if (grazer_ai_v) {
                 i.initiative = std::max(1, rng.roll_dice(1, 12) - i.initiative_modifier);
+            } else if (turret_v) {
+                i.initiative = 10;
             }
 
             // Reset modifiers

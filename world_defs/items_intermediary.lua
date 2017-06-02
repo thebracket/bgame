@@ -23,15 +23,11 @@ items["simple_lathe"] = {
     stockpile = stockpiles['component'].id
 };
 
-<<<<<<< HEAD
 items["precision_tools"] = {
     name = "Precision Tools",
     description = "A set of early-Industrial era precision tools",
-=======
-items["tool_and_die"] = {
     name = "Tool and Die Template",
     description = "A tool-and-die template required for the construction of advanced forges and workshops.",
->>>>>>> refs/remotes/origin/master
     itemtype = {"component"},
     glyph = glyphs['less_than_equal'],
     glyph_ascii = glyphs['less_than_equal'],
@@ -40,11 +36,7 @@ items["tool_and_die"] = {
     stockpile = stockpiles['component'].id
 };
 
-<<<<<<< HEAD
-items["tool_and_die"] = {
-    name = "Tool and Die Kit",
-    description = "A set of tools and die-casting equipment, suitable for mass-production.",
-=======
+
 items["smart_fabrication_controller"] = {
     name = "Smart Fabrication Controller",
     description = "A small AI unit, capable of running a fabrication facility.",
@@ -59,7 +51,6 @@ items["smart_fabrication_controller"] = {
 items["oil_separation_tank"] = {
     name = "Oil Separation Tank",
     description = "A large metal tank stratified with extraction systems at various levels.",
->>>>>>> refs/remotes/origin/master
     itemtype = {"component"},
     glyph = glyphs['less_than_equal'],
     glyph_ascii = glyphs['less_than_equal'],

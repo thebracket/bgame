@@ -7,6 +7,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../components/turret_t.hpp"
 
 using namespace rltk;
 using namespace region;
@@ -156,11 +157,12 @@ void visibility_system::update(const double duration_ms) {
 			}
 		}
 
-		// What can we see? - Grazers, Sentients and Settlers only
+		// What can we see? - Grazers, Sentients, Turrets and Settlers only
 		auto grazer = e.component<grazer_ai>();
 		auto settler = e.component<settler_ai_t>();
-		auto sentient = e.component<sentient_ai>();		
-		if (grazer || settler || sentient) {
+		auto sentient = e.component<sentient_ai>();
+		auto turret = e.component<turret_t>();
+		if (grazer || settler || sentient || turret) {
 			view.visible_entities.clear();
 			for (const int &idx : view.visible_cache) {
 				int x,y,z;

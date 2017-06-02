@@ -14,6 +14,7 @@
 #include "../../../main/game_pause.hpp"
 #include "../../../main/game_designations.hpp"
 #include "../../../components/riding_t.hpp"
+#include "../../../components/turret_t.hpp"
 
 void ai_visibility_scan::configure() {}
 
@@ -60,6 +61,51 @@ bool settler_hostile_scan(entity_t &other) {
     return false;
 }
 
+bool turret_friendly_scan(entity_t &other) {
+    // A friendly (civ0) turret
+    if (other.component<grazer_ai>()) {
+        if (designations->standing_order_wildlife_treatment != standing_orders::SO_WILDLIFE_IGNORE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    auto sentient = other.component<sentient_ai>();
+    if (sentient) {
+        if (sentient->hostile) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
+bool turret_hostile_scan(entity_t &other) {
+    bool hostile_sentient = false;
+    auto other_sentient = other.component<sentient_ai>();
+    if (other_sentient) {
+        const std::size_t my_civ = ai_visibility::ai->civ_id;
+        const std::size_t their_civ = other_sentient->civ_id;
+        if (my_civ != their_civ) {
+            auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
+            if (civfinder != planet.civs.civs[my_civ].relations.end()) {
+                if (civfinder->second < 0) hostile_sentient = true;
+            }
+        }
+    }
+
+    if ((other.component<grazer_ai>()) ||
+        (other.component<settler_ai_t>() && ai_visibility::ai->hostile) ||
+        hostile_sentient)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+
 void ai_visibility_scan::update(const double duration_ms) {
     if (pause_mode != RUNNING) return;
 
@@ -68,6 +114,7 @@ void ai_visibility_scan::update(const double duration_ms) {
         auto sentient = e.component<sentient_ai>();
         auto settler = e.component<settler_ai_t>();
         auto initiative = e.component<initiative_t>();
+        auto turret = e.component<turret_t>();
 
         std::function<bool(rltk::entity_t&)> scanner_func;
         if (grazer) {
@@ -77,6 +124,12 @@ void ai_visibility_scan::update(const double duration_ms) {
             ai_visibility::ai = sentient;
         } else if (settler) {
             scanner_func = settler_hostile_scan;
+        } else if (turret) {
+            if (turret->owner_civilization == 0) {
+                scanner_func = turret_friendly_scan;
+            } else {
+                scanner_func = turret_hostile_scan;
+            }
         } else {
             throw std::runtime_error("Visibility present, but no AI?");
         }
@@ -141,6 +194,11 @@ void ai_visibility_scan::update(const double duration_ms) {
                 initiative->initiative_modifier += get_weapon_initiative_penalty(get_ranged_and_ammo_id(e).first);
             } else {
                 emit_deferred(entity_wants_to_flee_message{e.id, hostile.closest_fear});
+            }
+        } else if (turret) {
+            const int range = shooting_range(e, pos);
+            if (range <= turret->range) {
+                emit_deferred(turret_ranged_attack_message{ e.id, hostile.closest_fear });
             }
         }
     });

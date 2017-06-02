@@ -242,7 +242,6 @@ buildings["intermediate_forge"] = {
     },
 };
 
-<<<<<<< HEAD
 ------------------------------------------------------------------------------------------------------------------------
 -- Intermediate forges cover up to medieval forge technology up to the renaissance.
 ------------------------------------------------------------------------------------------------------------------------
@@ -271,7 +270,6 @@ buildings["advanced_forge"] = {
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Intermediate forges cover up to medieval forge technology up to the renaissance.
-=======
 reactions["make_light_mace"] = {
     name = "Make Light Mace",
     workshop = "intermediate_forge",

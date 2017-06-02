@@ -72,6 +72,7 @@
 #include "ai/settler/ai_work_hunt.hpp"
 #include "ai/settler/ai_work_butcher.hpp"
 #include "physics/explosive_system.hpp"
+#include "damage/turret_ranged_attack.hpp"
 
 void add_systems_to_ecs() {
     add_system<fluid_system>();
@@ -125,6 +126,7 @@ void add_systems_to_ecs() {
     add_system<settler_melee_attacks_system>();
     add_system<creature_attacks_system>();
     add_system<sentient_attacks_system>();
+    add_system<turret_ranged_attack_system>();
     add_system<damage_system>();
     add_system<kill_system>();
     add_system<healing_system>();

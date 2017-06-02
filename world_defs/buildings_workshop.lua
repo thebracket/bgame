@@ -382,13 +382,6 @@ buildings["intermediate_workshop"] = {
     },
 };
 
-<<<<<<< HEAD
-reactions["make_precision_tools"] = {
-    name = "Make Precision Tools",
-    workshop = "intermediate_workshop",
-    inputs = { { item="block", material="wood", qty=2 }, { item="block", qty=2, mat_type="metal" } },
-    outputs = { { item="precision_tools", qty=1 } },
-=======
 reactions["make_heavy_crossbow"] = {
     name = "Make Heavy Crossbow",
     workshop = "intermediate_workshop",

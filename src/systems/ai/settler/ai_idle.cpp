@@ -56,11 +56,14 @@ void idle_sentient(entity_t &e, ai_tag_my_turn_t &t, sentient_ai &sentient) {
 
     if (sentient.hostile || feelings < 0) {
         sentient.goal = SENTIENT_GOAL_KILL;
+        sentient.hostile = true;
     } else {
         sentient.goal = SENTIENT_GOAL_IDLE;
+        sentient.hostile = false;
     }
 
     if (sentient.goal == SENTIENT_GOAL_KILL) {
+        sentient.hostile = true;
         //std::cout << "Sentient kill mode\n";
         // Close for the kill!
         const int idx = mapidx(*pos);
