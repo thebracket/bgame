@@ -59,7 +59,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     } else if (tag == "ship_defense_turret") {
         std::cout << "Turret created\n";
         new_building->assign(viewshed_t{8, false});
-        new_building->assign(turret_t{8, 0, 1, 8, 0, civ_owner});
+        new_building->assign(turret_t{8, 2, 3, 8, 3, civ_owner});
         new_building->assign(initiative_t{});
     }
 }

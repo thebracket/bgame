@@ -28,7 +28,7 @@ void particle_system::update(const double ms) {
         switch (msg.type) {
         case PARTICLE_SMOKE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ 176, rltk::colors::GREY, rltk::colors::BLACK }, 1, 20 }); break;
         case PARTICLE_MIASMA : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ 176, rltk::colors::GREEN, rltk::colors::BLACK }, 2, 20 }); break;
-        case PARTICLE_PROJECTILE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ '*', rltk::colors::GREY, rltk::colors::BLACK }, 3, msg.dx, msg.dy, msg.dz }); break;
+        case PARTICLE_PROJECTILE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ '*', rltk::colors::YELLOW, rltk::colors::BLACK }, 3, msg.dx, msg.dy, msg.dz }); break;
         case PARTICLE_BOOM_FUSE : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ '!', rltk::colors::RED, rltk::colors::BLACK }, 4, 20}); break;
         case PARTICLE_BOOM : particles.push_back(particle_t{ msg.x, msg.y, msg.z, rltk::vchar{ 176, rltk::lerp(rltk::colors::RED, rltk::colors::YELLOW, (float)rng.roll_dice(1,100)/100.0f), rltk::colors::BLACK}, 5, 20}); break;
         }
