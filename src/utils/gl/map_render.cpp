@@ -25,14 +25,168 @@
 #include "../../main/game_camera.hpp"
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
+#include "chunk.hpp"
+#include "base_shader.hpp"
 
 using namespace map_render_sys;
 using namespace region;
 
 bool world_changed = true;
 
-namespace map_render {
+namespace map_render
+{
+    bool loaded_terrain_shader = false;
+    bool loaded_fbo = false;
+    bool built_chunk_buffer = false;
+    std::unique_ptr<gl::base_shader_t> terrain_chunk_shader;
 
+    void load_terrain_shader() {
+        terrain_chunk_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/terrain_vertex.glsl",
+                                                                   "world_defs/shaders/terrain_fragment.glsl");
+        loaded_terrain_shader = true;
+    }
+
+    void load_fbo() {
+        // TODO: Create the FBO
+        loaded_fbo = true;
+    }
+
+    void build_chunk_buffer() {
+        std::cout << "Building chunk buffer\n";
+        gl::build_chunk_buffer();
+        built_chunk_buffer = true;
+    }
+
+    std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
+        return std::make_tuple(0,0,0);
+    };
+
+    void setup_matrices() {
+        auto screen_size = rltk::get_window()->getSize();
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_TRUE);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glShadeModel(GL_SMOOTH);
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        glViewport(0,0,screen_size.x,screen_size.y);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(90.f, 1.f, 1.f, 300.0f);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        switch (camera->camera_mode) {
+            case FRONT : {
+                // Nice X-perspective view
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                          ((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f), // Camera
+                          (float) camera_position->region_x, (float) camera_position->region_z,
+                          (float) camera_position->region_y, // Target
+                          0.0f, 1.0f, 0.0f // Up
+                );
+            } break;
+
+            case TOP_DOWN : {
+                // Top-down
+                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                          ((float) camera_position->region_y) + 0.1f, // Camera
+                          (float) camera_position->region_x, (float) camera_position->region_z,
+                          (float) camera_position->region_y, // Target
+                          0.0f, 1.0f, 0.0f // Up
+                );
+            } break;
+
+            case DIAGONAL : {
+                // Diagonal
+                gluLookAt((float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level,
+                          ((float) camera_position->region_y) + (float)camera->zoom_level, // Camera
+                          (float) camera_position->region_x, (float) camera_position->region_z,
+                          (float) camera_position->region_y, // Target
+                          0.0f, 1.0f, 0.0f // Up
+                );
+            } break;
+        }
+    }
+
+    void render_terrain_chunk(const gl::chunk_t &chunk) {
+        if (!chunk.has_geometry) return;
+        if (!chunk.generated_vbo) return;
+
+        GLint world_position = glGetAttribLocation(terrain_chunk_shader->program_id, "world_position");
+        if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
+        GLint normal_position = glGetAttribLocation(terrain_chunk_shader->program_id, "normal");
+        if (normal_position == -1) throw std::runtime_error("Invalid normal position in shader");
+        GLint color_position = glGetAttribLocation(terrain_chunk_shader->program_id, "color");
+        if (color_position == -1) throw std::runtime_error("Invalid color position in shader");
+        GLint texture_position = glGetAttribLocation(terrain_chunk_shader->program_id, "texture_position");
+        if (texture_position == -1) throw std::runtime_error("Invalid texture position in shader");
+
+        glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo_id);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
+
+        glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 3*sizeof(float)));
+        glEnableVertexAttribArray(world_position);
+
+        glVertexAttribPointer(normal_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 6*sizeof(float)));
+        glEnableVertexAttribArray(normal_position);
+
+        glVertexAttribPointer(color_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 9*sizeof(float)));
+        glEnableVertexAttribArray(color_position);
+
+        glVertexAttribPointer(texture_position, 2, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 12*sizeof(float)));
+        glEnableVertexAttribArray(texture_position);
+
+        glDrawArrays(GL_QUADS, 0, chunk.n_quads);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+    }
+}
+
+void map_render_t::render() {
+    // Check that the environment is ready
+    if (!map_render::loaded_terrain_shader) map_render::load_terrain_shader();
+    if (!map_render::loaded_fbo) map_render::load_fbo();
+    if (!map_render::built_chunk_buffer) map_render::build_chunk_buffer();
+
+    // Update any chunks of the world that are dirty
+    gl::update_dirty_chunks();
+
+    // Push state
+    push_gl_states();
+
+    // TODO: Phase 1 render: draw terrain chunks
+    glUseProgram(map_render::terrain_chunk_shader->program_id);
+    map_render::setup_matrices();
+    gl_frustrum::extract();
+
+    // Pass along the matrices
+    int projection_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "projection_matrix");
+    if (projection_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
+    float proj[16];
+    glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&proj);
+    glUniformMatrix4fv(projection_matrix_loc, 1, false, (GLfloat*)&proj);
+
+    int view_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "view_matrix");
+    if (view_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
+    float view[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&view);
+    glUniformMatrix4fv(view_matrix_loc, 1, false, (GLfloat*)&view);
+
+    for (const gl::chunk_t &chunk : gl::chunks) {
+        map_render::render_terrain_chunk(chunk);
+    }
+    glUseProgram(0);
+
+    // Restore state
+    pop_gl_states();
+}
+
+
+    /*
     bool loaded_program = false;
     GLuint deferred_id;
     GLuint mouse_pick_texture;
@@ -632,10 +786,6 @@ namespace map_render {
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        /*gluLookAt((float)camera_position->region_x, ((float)camera_position->region_z)+1.0f, ((float)camera_position->region_y)+0.1f, // Camera
-                  (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y, // Target
-                  0.0f, 1.0f, 0.0f // Up
-        );*/
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -677,14 +827,6 @@ namespace map_render {
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-        /*glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, map_render::render_texture);
-        glEnable(GL_TEXTURE_2D);
-
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, map_render::mouse_pick_texture);
-        glEnable(GL_TEXTURE_2D);*/
 
         GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT };
         glDrawBuffers(2, buffers);
@@ -748,18 +890,6 @@ namespace map_render {
         gl_states();
         world_scene::render_world(deferred_id);
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
-
-        /*
-        // Render the framebuffer
-        if (world_changed) {
-            glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            gl_states();
-            glDisable(GL_TEXTURE_2D);
-            world_scene::render_index(index_program_id);
-            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Return to screen rendering
-            world_changed = false;
-        }*/
     }
 
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
@@ -819,3 +949,4 @@ void map_render_t::render() {
     glEnd();
     pop_gl_states();
 }
+*/
