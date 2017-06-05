@@ -176,6 +176,12 @@ void map_render_t::render() {
     glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&view);
     glUniformMatrix4fv(view_matrix_loc, 1, false, (GLfloat*)&view);
 
+    // Texture
+    glEnable(GL_TEXTURE_2D);
+    sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     for (const gl::chunk_t &chunk : gl::chunks) {
         map_render::render_terrain_chunk(chunk);
     }
