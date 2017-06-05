@@ -143,6 +143,7 @@ namespace map_render
         glDrawArrays(GL_QUADS, 0, chunk.n_quads);
 
         glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }
 

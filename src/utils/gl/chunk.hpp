@@ -77,8 +77,125 @@ namespace gl {
                 n_quads += 4;
             }
 
+            void add_left(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+                add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
+                add_to_items(x, y, z);                    // World position 0
+                add_to_items(-1.0f, 0.0f, 0.0f);          // Normal 0
+                add_to_items(r, g, b);                    // Color 0
+                add_to_items(tx, ty + tsize_y);           // Texture 0
+
+                add_to_items(-0.5f, 0.5f,  -0.5f);        // Vertex 1
+                add_to_items(x, y, z);                    // World position 1
+                add_to_items(-1.0f, 0.0f, 0.0f);           // Normal 1
+                add_to_items(r, g, b);                    // Color 1
+                add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+
+                add_to_items(-0.5f, 0.5f,  0.5f);         // Vertex 2
+                add_to_items(x, y, z);                    // World position 2
+                add_to_items(-1.0f, 0.0f, 0.0f);          // Normal 2
+                add_to_items(r, g, b);                    // Color 2
+                add_to_items(tx + tsize_x, ty);           // Texture 2
+
+                add_to_items(-0.5f, -0.5f, 0.5f);         // Vertex 3
+                add_to_items(x, y, z);                    // World position 3
+                add_to_items(-1.0f, 0.0f, 0.0f);           // Normal 3
+                add_to_items(r, g, b);                    // Color 3
+                add_to_items(tx, ty);                     // Texture 3
+
+                n_quads += 4;
+            }
+
+            void add_right(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+                add_to_items(0.5f, -0.5f, -0.5f);        // Vertex 0
+                add_to_items(x, y, z);                    // World position 0
+                add_to_items(1.0f, 0.0f, 0.0f);          // Normal 0
+                add_to_items(r, g, b);                    // Color 0
+                add_to_items(tx, ty + tsize_y);           // Texture 0
+
+                add_to_items(0.5f, 0.5f,  -0.5f);        // Vertex 1
+                add_to_items(x, y, z);                    // World position 1
+                add_to_items(1.0f, 0.0f, 0.0f);           // Normal 1
+                add_to_items(r, g, b);                    // Color 1
+                add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+
+                add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
+                add_to_items(x, y, z);                    // World position 2
+                add_to_items(1.0f, 0.0f, 0.0f);          // Normal 2
+                add_to_items(r, g, b);                    // Color 2
+                add_to_items(tx + tsize_x, ty);           // Texture 2
+
+                add_to_items(0.5f, -0.5f, 0.5f);         // Vertex 3
+                add_to_items(x, y, z);                    // World position 3
+                add_to_items(1.0f, 0.0f, 0.0f);           // Normal 3
+                add_to_items(r, g, b);                    // Color 3
+                add_to_items(tx, ty);                     // Texture 3
+
+                n_quads += 4;
+            }
+
+            void add_north(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+                add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
+                add_to_items(x, y, z);                    // World position 0
+                add_to_items(0.0f, -1.0f, 0.0f);          // Normal 0
+                add_to_items(r, g, b);                    // Color 0
+                add_to_items(tx, ty + tsize_y);           // Texture 0
+
+                add_to_items(0.5f, -0.5f,  -0.5f);        // Vertex 1
+                add_to_items(x, y, z);                    // World position 1
+                add_to_items(0.0f, -1.0f, 0.0f);           // Normal 1
+                add_to_items(r, g, b);                    // Color 1
+                add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+
+                add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
+                add_to_items(x, y, z);                    // World position 2
+                add_to_items(0.0f, -1.0f, 0.0f);          // Normal 2
+                add_to_items(r, g, b);                    // Color 2
+                add_to_items(tx + tsize_x, ty);           // Texture 2
+
+                add_to_items(-0.5f, -0.5f, 0.5f);         // Vertex 3
+                add_to_items(x, y, z);                    // World position 3
+                add_to_items(0.0f, -1.0f, 0.0f);           // Normal 3
+                add_to_items(r, g, b);                    // Color 3
+                add_to_items(tx, ty);                     // Texture 3
+
+                n_quads += 4;
+            }
+
+            void add_south(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+                add_to_items(-0.5f, 0.5f, -0.5f);        // Vertex 0
+                add_to_items(x, y, z);                    // World position 0
+                add_to_items(0.0f, 1.0f, 0.0f);          // Normal 0
+                add_to_items(r, g, b);                    // Color 0
+                add_to_items(tx, ty + tsize_y);           // Texture 0
+
+                add_to_items(0.5f, 0.5f,  -0.5f);        // Vertex 1
+                add_to_items(x, y, z);                    // World position 1
+                add_to_items(0.0f, 1.0f, 0.0f);           // Normal 1
+                add_to_items(r, g, b);                    // Color 1
+                add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+
+                add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
+                add_to_items(x, y, z);                    // World position 2
+                add_to_items(0.0f, 1.0f, 0.0f);          // Normal 2
+                add_to_items(r, g, b);                    // Color 2
+                add_to_items(tx + tsize_x, ty);           // Texture 2
+
+                add_to_items(-0.5f, 0.5f, 0.5f);         // Vertex 3
+                add_to_items(x, y, z);                    // World position 3
+                add_to_items(0.0f, 1.0f, 0.0f);           // Normal 3
+                add_to_items(r, g, b);                    // Color 3
+                add_to_items(tx, ty);                     // Texture 3
+
+                n_quads += 4;
+            }
+
             void add_cube(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
                 add_floor(x, y, z, r, g, b, tx, ty);
+                add_left(x, y, z, r, g, b, tx, ty);
+                add_right(x, y, z, r, g, b, tx, ty);
+                add_north(x, y, z, r, g, b, tx, ty);
+                add_south(x, y, z, r, g, b, tx, ty);
+                add_floor(x, y+1.0f, z, r, g, b, tx, ty);
             }
         };
     }
@@ -108,9 +225,9 @@ namespace gl {
 
         template <typename FUNC>
         void iterate_region(const FUNC &f) {
-            for (int z=base_z; z<base_z+CHUNK_SIZE; ++z) {
-                for (int y=base_y; y<base_y+CHUNK_SIZE; ++y) {
-                    for (int x=base_x; x<base_x+CHUNK_SIZE; ++x) {
+            for (int z=std::max(base_z, 1); z<std::min(base_z+CHUNK_SIZE, REGION_DEPTH-1); ++z) {
+                for (int y=std::max(base_y, 1); y<std::min(base_y+CHUNK_SIZE, REGION_HEIGHT-1); ++y) {
+                    for (int x=std::max(base_x, 1); x<std::min(base_x+CHUNK_SIZE, REGION_WIDTH-1); ++x) {
                         f(x, y, z);
                     }
                 }
@@ -118,9 +235,9 @@ namespace gl {
         }
     };
 
-    extern std::array<chunk_t, CHUNKS_TOTAL> chunks;
+    extern std::vector<chunk_t> chunks;
 
     void build_chunk_buffer();
     void update_dirty_chunks();
-    void update_chunk(chunk_t &chunk);
+    std::size_t update_chunk(chunk_t &chunk);
 }
