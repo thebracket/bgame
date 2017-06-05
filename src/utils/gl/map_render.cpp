@@ -177,6 +177,11 @@ void map_render_t::render() {
     glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&view);
     glUniformMatrix4fv(view_matrix_loc, 1, false, (GLfloat*)&view);
 
+    // Pass along the camera information
+    int camera_pos = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "camera_position");
+    if (camera_pos == -1) throw std::runtime_error("Unknown uniform slot - camera_pos");
+    glUniform3f(camera_pos, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
+
     // Texture
     glEnable(GL_TEXTURE_2D);
     sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
