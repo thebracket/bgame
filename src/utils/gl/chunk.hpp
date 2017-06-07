@@ -189,7 +189,10 @@ namespace gl {
                 n_quads += 4;
             }
 
-            void add_cube(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+            void add_cube(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty)
+            {
+                // TODO: We should decline to add portions that are merged with a neighbor. So no ceiling for a cube that has a neighbor above with a floor,
+                // etc.
                 add_floor(x, y, z, r, g, b, tx, ty);
                 add_left(x, y, z, r, g, b, tx, ty);
                 add_right(x, y, z, r, g, b, tx, ty);

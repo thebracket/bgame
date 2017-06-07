@@ -123,7 +123,7 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                 if (x==0 || x==REGION_WIDTH-1 || y==0 || y==REGION_HEIGHT-1) {
                     set_tile_type(mapidx(x,y,z), tile_type::SEMI_MOLTEN_ROCK);
                 } else {
-                    set_tile_type(mapidx(x,y,z), tile_type::OPEN_SPACE);
+                    set_tile_type(mapidx(x,y,z), tile_type::SEMI_MOLTEN_ROCK);
                     set_tile_material(mapidx(x,y,z), 0);
                     // TODO: Just add magma
                 }

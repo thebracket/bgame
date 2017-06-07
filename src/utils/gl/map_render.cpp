@@ -27,6 +27,8 @@
 #include "../../main/game_selections.hpp"
 #include "chunk.hpp"
 #include "base_shader.hpp"
+#include "../../main/game_calendar.hpp"
+
 #define GLM_COMPILER 0
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -72,6 +74,7 @@ namespace map_render
     GLuint mouse_pick_depth;
     GLuint render_texture;
     GLuint normal_texture;
+    GLuint lit_texture;
 
     // Shadow-based lighting
     GLuint sun_fbo;
@@ -157,6 +160,15 @@ namespace map_render
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normal_texture, 0);
 
+        // Create the lighting target texture
+        glGenTextures(1, &lit_texture);
+        glBindTexture(GL_TEXTURE_2D, lit_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, lit_texture, 0);
+
         // Create a depth-buffer for the render target
         glGenRenderbuffers(1, &mouse_pick_depth);
         glBindRenderbuffer(GL_RENDERBUFFER, mouse_pick_depth);
@@ -164,8 +176,8 @@ namespace map_render
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
 
-        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT };
-        glDrawBuffers(3, buffers);
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
+        glDrawBuffers(4, buffers);
 
         // Return to regular render mode
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -359,7 +371,7 @@ void map_render_t::render() {
     // Push state
     push_gl_states();
 
-    // TODO: Phase 0 render - draw to the sun!
+    // TODO: Phase 0 render - draw to the sun/moon!
     // Use sun program
     glUseProgram(map_render::shadow_shader->program_id);
 
@@ -381,10 +393,29 @@ void map_render_t::render() {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glViewport(0,0,screen_size.x,screen_size.y);
 
-    glm::mat4 sun_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
+    // Figure out where the sun is
+    const float time = (float)calendar->hour + ((float)calendar->minute/60.0f);
+    const float time_as_fraction =  1.0f - (time / 24.0f); // Inverted because the sun goes west to east
+    const float time_as_degrees = (time_as_fraction * 360.0f) + 270.0f; // Add to put midnight underneath the world
+    const float radians = time_as_degrees * 3.14159265f/180.0f;
+    constexpr float SUN_DISTANCE = 256.0f;
+
+    float sun_x = (SUN_DISTANCE * std::cos(radians)) + 128.0f;
+    float sun_y = (SUN_DISTANCE * std::sin(radians)) + 128.0f;
+    const float sun_z = 129.0f;
+
+    if (calendar->hour < 6 || calendar->hour > 17) {
+        sun_x = 0.0 - sun_x;
+        sun_y = 0.0 - sun_y;
+        // TODO: Mark moon mode
+    }
+    //std::cout << time << " : " << time_as_fraction << ", " << sun_x << "/" << sun_y << "/" << sun_z << "\n";
+
+    //glm::mat4 sun_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 600.0f);
+    glm::mat4 sun_projection_matrix = glm::ortho(-128.0f, 128.0f, -128.0f, 128.0f, 32.0f, 512.0f);
     const glm::vec3 up{0.0f, 1.0f, 0.0f};
-    const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
-    const glm::vec3 position{(float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + (float)camera->zoom_level};
+    const glm::vec3 target{(float)REGION_WIDTH/2.0f, (float)REGION_DEPTH/2.0f, (float)REGION_HEIGHT/2.0f};
+    const glm::vec3 position{sun_x, sun_y, sun_z};
     glm::mat4 sun_modelview_matrix = glm::lookAt( position, target, up );
 
     int sun_projection = glGetUniformLocation(map_render::shadow_shader->program_id, "projection_matrix");
@@ -399,26 +430,6 @@ void map_render_t::render() {
     for (const gl::chunk_t &chunk : gl::chunks) {
         map_render::render_sun_chunk(chunk);
     }
-
-    // save matrices
-    float worldToLightViewMatrix[16];
-    float lightViewToProjectionMatrix[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, worldToLightViewMatrix);
-    glGetFloatv(GL_PROJECTION_MATRIX, lightViewToProjectionMatrix);
-
-    // Re-set the projection to the default one we have pushed on the stack
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-
-    // Set the camera position
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glRotatef(20, 1, 0, 0);
-    glTranslatef(0.0f,-6.5f,-11.0f);
-    glFrontFace(GL_CCW);
-
-    float worldToCameraViewMatrix[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, worldToCameraViewMatrix);
 
     // clean up
     glUseProgram(0);
@@ -441,16 +452,33 @@ void map_render_t::render() {
     if (view_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
     glUniformMatrix4fv(view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
+    int light_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "light_space_matrix");
+    if (light_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - light space matrix");
+    glm::mat4 light_matrix = sun_projection_matrix * sun_modelview_matrix;
+    glUniformMatrix4fv(light_matrix_loc, 1, false, glm::value_ptr( light_matrix ));
+
     // Pass along the camera information
     int camera_pos = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "camera_position");
     if (camera_pos == -1) throw std::runtime_error("Unknown uniform slot - camera_pos");
     glUniform3f(camera_pos, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
     // Texture
+    glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
     sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, map_render::sun_depth_texture);
+
+    int tex1loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "my_color_texture");
+    if (tex1loc == -1) throw std::runtime_error("Unknown uniform slot - texture 0");
+    glUniform1i(tex1loc, 0);
+
+    int tex2loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "shadow_map");
+    if (tex2loc == -1) throw std::runtime_error("Unknown uniform slot - texture 1");
+    glUniform1i(tex2loc, 1);
 
     for (const gl::chunk_t &chunk : gl::chunks) {
         map_render::render_terrain_chunk(chunk);
@@ -469,10 +497,10 @@ void map_render_t::render() {
     glLoadIdentity();
     glViewport(0, 0, sz.x, sz.y);
     glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
-    render_test_texture(0.0f, 0.0f, W/2.0f, H/2.0f, map_render::mouse_pick_texture);
+    render_test_texture(0.0f, 0.0f, W/2.0f, H/2.0f, map_render::lit_texture);
     render_test_texture(W/2.0f, 0.0f, W, H/2.0f, map_render::render_texture);
-    render_test_texture(0.0f, H/2.0f, W/2.0f, H, map_render::normal_texture);
-    render_test_texture(W/2.0f, H/2.0f, W, H, map_render::sun_depth_texture);
+    render_test_texture(0.0f, H/2.0f, W/2.0f, H, map_render::sun_depth_texture);
+    render_test_texture(W/2.0f, H/2.0f, W, H, map_render::sun_render);
 
     /*
     // Render out the finished screen

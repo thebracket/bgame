@@ -51,12 +51,19 @@ namespace gl {
             const float ty = (float)(render.glyph / 16) * geometry::tsize_y;
 
             bool skip = false;
+            // Open space never needs rendering
             if (tiletype == tile_type::OPEN_SPACE) skip = true;
-            if (!skip && !region::revealed(idx)) skip = true;
+
+            // If it isn't seen, and isn't an outer edge, we can skip it (we keep outer edges to avoid shining through lights)
+            if (!skip && !region::revealed(idx))
+            {
+                skip = true;
+            }
+
+            // TODO: cull tiles with neighbors that completely occlude it.
 
             if (!skip) {
-                if (tiletype == tile_type::SOLID || tiletype == tile_type::WALL  || tiletype == tile_type::TREE_TRUNK
-                    || tiletype == tile_type::TREE_LEAF || tiletype == tile_type::SEMI_MOLTEN_ROCK)
+                if (tiletype != tile_type::FLOOR)
                 {
                     // Add cube
                     chunk.has_geometry = true;

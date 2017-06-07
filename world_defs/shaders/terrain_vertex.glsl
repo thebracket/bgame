@@ -4,6 +4,7 @@
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
 uniform vec3 camera_position;
+uniform mat4 light_space_matrix;
 
 // World position is part of the VBO
 attribute vec3 world_position;
@@ -15,6 +16,7 @@ attribute vec2 texture_position;
 varying vec3 base_normal;
 varying vec3 tint;
 varying vec3 world_pos;
+varying vec4 fragment_light_space_position;
 
 void main() {
     vec4 position = gl_Vertex;
@@ -28,4 +30,5 @@ void main() {
     }
     gl_TexCoord[0] = vec4(texture_position, 0.0, 0.0);
     world_pos = world_position;
+    fragment_light_space_position = light_space_matrix * position;
 }
