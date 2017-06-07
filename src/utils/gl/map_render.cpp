@@ -205,7 +205,7 @@ namespace map_render
         //glLoadIdentity();
 
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
-        glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
+        const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 position;
 
         switch (camera->camera_mode) {
@@ -381,32 +381,19 @@ void map_render_t::render() {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glViewport(0,0,screen_size.x,screen_size.y);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(90.f, 1.f, 1.f, 300.0f);
-
-    // Set the light position
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt((float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level,
-              ((float) camera_position->region_y) + (float)camera->zoom_level, // Camera
-              (float) camera_position->region_x, (float) camera_position->region_z,
-              (float) camera_position->region_y, // Target
-              0.0f, 1.0f, 0.0f // Up
-    );
-    glFrontFace(GL_CW);
+    glm::mat4 sun_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
+    const glm::vec3 up{0.0f, 1.0f, 0.0f};
+    const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
+    const glm::vec3 position{(float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + (float)camera->zoom_level};
+    glm::mat4 sun_modelview_matrix = glm::lookAt( position, target, up );
 
     int sun_projection = glGetUniformLocation(map_render::shadow_shader->program_id, "projection_matrix");
     if (sun_projection == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
-    float sproj[16];
-    glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&sproj);
-    glUniformMatrix4fv(sun_projection, 1, false, (GLfloat*)&sproj);
+    glUniformMatrix4fv(sun_projection, 1, false, glm::value_ptr(sun_projection_matrix));
 
     int sun_view = glGetUniformLocation(map_render::shadow_shader->program_id, "view_matrix");
     if (sun_view == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
-    float sview[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&sview);
-    glUniformMatrix4fv(sun_view, 1, false, (GLfloat*)&sview);
+    glUniformMatrix4fv(sun_view, 1, false, glm::value_ptr(sun_modelview_matrix));
 
     // render the terrain
     for (const gl::chunk_t &chunk : gl::chunks) {
