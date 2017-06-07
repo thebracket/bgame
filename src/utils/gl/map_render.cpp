@@ -36,9 +36,14 @@ bool world_changed = true;
 namespace map_render
 {
     bool loaded_terrain_shader = false;
+    bool loaded_shadow_shader = false;
+    bool loaded_render_shader = false;
     bool loaded_fbo = false;
+    bool loaded_sun_fbo = false;
     bool built_chunk_buffer = false;
     std::unique_ptr<gl::base_shader_t> terrain_chunk_shader;
+    std::unique_ptr<gl::base_shader_t> shadow_shader;
+    std::unique_ptr<gl::base_shader_t> render_shader;
 
     void load_terrain_shader() {
         terrain_chunk_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/terrain_vertex.glsl",
@@ -46,8 +51,121 @@ namespace map_render
         loaded_terrain_shader = true;
     }
 
+    void load_shadow_shader() {
+        shadow_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/shadow_vertex.glsl",
+                                                                   "world_defs/shaders/shadow_fragment.glsl");
+        loaded_shadow_shader = true;
+    }
+
+    void load_render_shader() {
+        render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
+                                                            "world_defs/shaders/render_fragment.glsl");
+        loaded_render_shader = true;
+    }
+
+    GLuint mouse_pick_texture;
+    GLuint mouse_pick_fbo;
+    GLuint mouse_pick_depth;
+    GLuint render_texture;
+    GLuint normal_texture;
+
+    // Shadow-based lighting
+    GLuint sun_fbo;
+    GLuint sun_depth_buffer;
+    GLuint sun_depth_texture;
+    GLuint sun_render;
+
+    void load_sun_fbo() {
+        const auto screen_size = rltk::get_window()->getSize();
+        glGenFramebuffers(1, &sun_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
+        std::cout << "Sun FBO: " << sun_fbo << "\n";
+
+        // Depth buffer
+        glGenRenderbuffers(1, &sun_depth_buffer);
+        std::cout << "Sun depth buffer: " << sun_depth_buffer << "\n";
+        glBindRenderbuffer(GL_RENDERBUFFER, sun_depth_buffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sun_depth_buffer);
+
+        // Depth texture
+        glGenTextures(1, &sun_depth_texture);
+        glBindTexture(GL_TEXTURE_2D, sun_depth_texture);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        std::cout << "Sun depth texture: " << sun_depth_texture << "\n";
+        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sun_depth_texture, 0);
+
+        // Render texture
+        glGenTextures(1, &sun_render);
+        glBindTexture(GL_TEXTURE_2D, sun_render);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sun_render, 0);
+
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT  };
+        glDrawBuffers(1, buffers);
+
+        // Return to regular render mode
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        loaded_sun_fbo = true;
+        std::cout << "Setup Shadow/Sun FBO\n";
+    }
+
     void load_fbo() {
-        // TODO: Create the FBO
+        // Create and bind the framebuffer for mouse-picking output
+        glGenFramebuffers(1, &mouse_pick_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+
+        // Create the mouse picker render target texture
+        const auto screen_size = rltk::get_window()->getSize();
+        glGenTextures(1, &mouse_pick_texture);
+        glBindTexture(GL_TEXTURE_2D, mouse_pick_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mouse_pick_texture, 0);
+
+        // Create the render target texture
+        glGenTextures(1, &render_texture);
+        glBindTexture(GL_TEXTURE_2D, render_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, render_texture, 0);
+
+        // Create the normal target texture
+        glGenTextures(1, &normal_texture);
+        glBindTexture(GL_TEXTURE_2D, normal_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normal_texture, 0);
+
+        // Create a depth-buffer for the render target
+        glGenRenderbuffers(1, &mouse_pick_depth);
+        glBindRenderbuffer(GL_RENDERBUFFER, mouse_pick_depth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
+
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT };
+        glDrawBuffers(3, buffers);
+
+        // Return to regular render mode
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
         loaded_fbo = true;
     }
 
@@ -111,34 +229,74 @@ namespace map_render
         }
     }
 
-    void render_terrain_chunk(const gl::chunk_t &chunk) {
+    void render_terrain_chunk(const gl::chunk_t &chunk, bool set_uniforms = true) {
         if (!chunk.has_geometry) return;
         if (!chunk.generated_vbo) return;
 
-        GLint world_position = glGetAttribLocation(terrain_chunk_shader->program_id, "world_position");
-        if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
-        GLint normal_position = glGetAttribLocation(terrain_chunk_shader->program_id, "normal");
-        if (normal_position == -1) throw std::runtime_error("Invalid normal position in shader");
-        GLint color_position = glGetAttribLocation(terrain_chunk_shader->program_id, "color");
-        if (color_position == -1) throw std::runtime_error("Invalid color position in shader");
-        GLint texture_position = glGetAttribLocation(terrain_chunk_shader->program_id, "texture_position");
-        if (texture_position == -1) throw std::runtime_error("Invalid texture position in shader");
+        GLint world_position;
+        GLint normal_position;
+        GLint color_position;
+        GLint texture_position;
+
+        if (set_uniforms) {
+            world_position = glGetAttribLocation(terrain_chunk_shader->program_id, "world_position");
+            if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
+            normal_position = glGetAttribLocation(terrain_chunk_shader->program_id, "normal");
+            if (normal_position == -1) throw std::runtime_error("Invalid normal position in shader");
+            color_position = glGetAttribLocation(terrain_chunk_shader->program_id, "color");
+            if (color_position == -1) throw std::runtime_error("Invalid color position in shader");
+            texture_position = glGetAttribLocation(terrain_chunk_shader->program_id, "texture_position");
+            if (texture_position == -1) throw std::runtime_error("Invalid texture position in shader");
+        }
 
         glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo_id);
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
 
-        glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 3*sizeof(float)));
-        glEnableVertexAttribArray(world_position);
+        if (set_uniforms) {
+            glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 3 * sizeof(float)));
+            glEnableVertexAttribArray(world_position);
 
-        glVertexAttribPointer(normal_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 6*sizeof(float)));
-        glEnableVertexAttribArray(normal_position);
+            glVertexAttribPointer(normal_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 6 * sizeof(float)));
+            glEnableVertexAttribArray(normal_position);
 
-        glVertexAttribPointer(color_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 9*sizeof(float)));
-        glEnableVertexAttribArray(color_position);
+            glVertexAttribPointer(color_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 9 * sizeof(float)));
+            glEnableVertexAttribArray(color_position);
 
-        glVertexAttribPointer(texture_position, 2, GL_FLOAT, GL_FALSE, gl::n_floats*sizeof(float), ((char *)nullptr + 12*sizeof(float)));
-        glEnableVertexAttribArray(texture_position);
+            glVertexAttribPointer(texture_position, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 12 * sizeof(float)));
+            glEnableVertexAttribArray(texture_position);
+        }
+
+        glDrawArrays(GL_QUADS, 0, chunk.n_quads);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    void render_sun_chunk(const gl::chunk_t &chunk, bool set_uniforms = true) {
+        if (!chunk.has_geometry) return;
+        if (!chunk.generated_vbo) return;
+
+        GLint world_position;
+
+        if (set_uniforms) {
+            world_position = glGetAttribLocation(shadow_shader->program_id, "world_position");
+            if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo_id);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
+
+        if (set_uniforms) {
+            glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 3 * sizeof(float)));
+            glEnableVertexAttribArray(world_position);
+        }
 
         glDrawArrays(GL_QUADS, 0, chunk.n_quads);
 
@@ -147,10 +305,54 @@ namespace map_render
     }
 }
 
+void render_test_texture(float left, float top, float right, float bottom, GLuint &target_texture) {
+    glEnableClientState(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, target_texture);
+
+    glColor3f(1, 1, 1);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(0, 1);
+    glVertex2f(left, bottom);
+
+    glTexCoord2f(0, 0);
+    glVertex2f(left, top);
+
+    glTexCoord2f(1, 0);
+    glVertex2f(right, top);
+
+    glTexCoord2f(1, 1);
+    glVertex2f(right, bottom);
+
+    glEnd();
+}
+
+void render_mixed_texture(float left, float top, float right, float bottom) {
+    glColor3f(1, 1, 1);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(0, 1);
+    glVertex2f(left, bottom);
+
+    glTexCoord2f(0, 0);
+    glVertex2f(left, top);
+
+    glTexCoord2f(1, 0);
+    glVertex2f(right, top);
+
+    glTexCoord2f(1, 1);
+    glVertex2f(right, bottom);
+
+    glEnd();
+}
+
 void map_render_t::render() {
     // Check that the environment is ready
     if (!map_render::loaded_terrain_shader) map_render::load_terrain_shader();
+    if (!map_render::loaded_shadow_shader) map_render::load_shadow_shader();
+    if (!map_render::loaded_render_shader) map_render::load_render_shader();
     if (!map_render::loaded_fbo) map_render::load_fbo();
+    if (!map_render::loaded_sun_fbo) map_render::load_sun_fbo();
     if (!map_render::built_chunk_buffer) map_render::build_chunk_buffer();
 
     // Update any chunks of the world that are dirty
@@ -159,8 +361,89 @@ void map_render_t::render() {
     // Push state
     push_gl_states();
 
+    // TODO: Phase 0 render - draw to the sun!
+    // Use sun program
+    glUseProgram(map_render::shadow_shader->program_id);
+
+    // Use sun framebuffer and clear
+    glBindFramebuffer(GL_FRAMEBUFFER, map_render::sun_fbo);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // setup matrices for sun rendering
+    glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+    // We move the near plane just a bit to make the depth texture a bit more visible.
+    // It also increases the precision.
+    auto screen_size = rltk::get_window()->getSize();
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glDepthMask(GL_TRUE);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glShadeModel(GL_SMOOTH);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glViewport(0,0,screen_size.x,screen_size.y);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(90.f, 1.f, 1.f, 300.0f);
+
+    // Set the light position
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt((float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level,
+              ((float) camera_position->region_y) + (float)camera->zoom_level, // Camera
+              (float) camera_position->region_x, (float) camera_position->region_z,
+              (float) camera_position->region_y, // Target
+              0.0f, 1.0f, 0.0f // Up
+    );
+    glFrontFace(GL_CW);
+
+    int sun_projection = glGetUniformLocation(map_render::shadow_shader->program_id, "projection_matrix");
+    if (sun_projection == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
+    float sproj[16];
+    glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&sproj);
+    glUniformMatrix4fv(sun_projection, 1, false, (GLfloat*)&sproj);
+
+    int sun_view = glGetUniformLocation(map_render::shadow_shader->program_id, "view_matrix");
+    if (sun_view == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
+    float sview[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&sview);
+    glUniformMatrix4fv(sun_view, 1, false, (GLfloat*)&sview);
+
+    // render the terrain
+    for (const gl::chunk_t &chunk : gl::chunks) {
+        map_render::render_sun_chunk(chunk);
+    }
+
+    // save matrices
+    float worldToLightViewMatrix[16];
+    float lightViewToProjectionMatrix[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, worldToLightViewMatrix);
+    glGetFloatv(GL_PROJECTION_MATRIX, lightViewToProjectionMatrix);
+
+    // Re-set the projection to the default one we have pushed on the stack
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    // Set the camera position
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glRotatef(20, 1, 0, 0);
+    glTranslatef(0.0f,-6.5f,-11.0f);
+    glFrontFace(GL_CCW);
+
+    float worldToCameraViewMatrix[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, worldToCameraViewMatrix);
+
+    // clean up
+    glUseProgram(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // TODO: Phase 1 render: draw terrain chunks
     glUseProgram(map_render::terrain_chunk_shader->program_id);
+    glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     map_render::setup_matrices();
     gl_frustrum::extract();
 
@@ -192,6 +475,60 @@ void map_render_t::render() {
         map_render::render_terrain_chunk(chunk);
     }
     glUseProgram(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Splat render
+    // Render the index buffer
+    auto sz = rltk::get_window()->getSize();
+    const float W = (float)sz.x;
+    const float H = (float)sz.y;
+    push_gl_states();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, sz.x, sz.y);
+    glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
+    render_test_texture(0.0f, 0.0f, W/2.0f, H/2.0f, map_render::mouse_pick_texture);
+    render_test_texture(W/2.0f, 0.0f, W, H/2.0f, map_render::render_texture);
+    render_test_texture(0.0f, H/2.0f, W/2.0f, H, map_render::normal_texture);
+    render_test_texture(W/2.0f, H/2.0f, W, H, map_render::sun_depth_texture);
+
+    /*
+    // Render out the finished screen
+    glUseProgram(map_render::render_shader->program_id);
+
+    // Bind the uniforms
+    //int r_worldToLightViewMatrix = glGetUniformLocation(map_render::render_shader->program_id, "worldToLightViewMatrix");
+    //glUniformMatrix4fv(r_worldToLightViewMatrix, 1, false, (GLfloat*)&worldToLightViewMatrix);
+    //int r_lightViewToProjectionMatrix = glGetUniformLocation(map_render::render_shader->program_id, "lightViewToProjectionMatrix");
+    //glUniformMatrix4fv(r_lightViewToProjectionMatrix, 1, false, (GLfloat*)&lightViewToProjectionMatrix);
+    //int r_worldToCameraViewMatrix = glGetUniformLocation(map_render::render_shader->program_id, "worldToCameraViewMatrix");
+    glUniformMatrix4fv(r_worldToCameraViewMatrix, 1, false, (GLfloat*)&view);
+    int r_camera = glGetUniformLocation(map_render::render_shader->program_id, "cameraPosition");
+    glUniform3f(r_camera, camera_position->region_x, camera_position->region_z, camera_position->region_y);
+
+    // Bind all the info textures. We send the normal map, position map,
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, map_render::render_texture); // Texture slot 0 = albedo
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, map_render::position_texture); // Texture slot 1 = position
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, map_render::normal_texture); // Texture slot 2 = normal
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, map_render::sun_depth_texture); // Texture slot 3 = normal
+    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "albedo_tex"), 0);
+    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "position_tex"), 1);
+    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "normal_tex"), 2);
+    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "shadow_map"), 3);
+
+    // Render out the quad
+    render_mixed_texture(0.0f, 0.0f, W, H);
+    */
+
+    // Done
+    glUseProgram(0);
+
+    pop_gl_states();
 
     // Restore state
     pop_gl_states();
