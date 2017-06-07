@@ -1,3 +1,4 @@
+#define GLM_COMPILER 0
 #include "map_render.hpp"
 #include "gl_utils.hpp"
 #include <rltk.hpp>
@@ -14,7 +15,6 @@
 #include "../../systems/render/renderables_system.hpp"
 #include "../../systems/render/map_render_system.hpp"
 #include "world_scene.hpp"
-#include "frustrum.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
 #include "render_block.hpp"
 #include "../../messages/messages.hpp"
@@ -29,10 +29,11 @@
 #include "base_shader.hpp"
 #include "../../main/game_calendar.hpp"
 
-#define GLM_COMPILER 0
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "main_fbo.hpp"
+#include "sun_fbo.hpp"
 
 using namespace map_render_sys;
 using namespace region;
@@ -44,8 +45,6 @@ namespace map_render
     bool loaded_terrain_shader = false;
     bool loaded_shadow_shader = false;
     bool loaded_render_shader = false;
-    bool loaded_fbo = false;
-    bool loaded_sun_fbo = false;
     bool built_chunk_buffer = false;
     std::unique_ptr<gl::base_shader_t> terrain_chunk_shader;
     std::unique_ptr<gl::base_shader_t> shadow_shader;
@@ -67,122 +66,6 @@ namespace map_render
         render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
                                                             "world_defs/shaders/render_fragment.glsl");
         loaded_render_shader = true;
-    }
-
-    GLuint mouse_pick_texture;
-    GLuint mouse_pick_fbo;
-    GLuint mouse_pick_depth;
-    GLuint render_texture;
-    GLuint normal_texture;
-    GLuint lit_texture;
-
-    // Shadow-based lighting
-    GLuint sun_fbo;
-    GLuint sun_depth_buffer;
-    GLuint sun_depth_texture;
-    GLuint sun_render;
-
-    void load_sun_fbo() {
-        const auto screen_size = rltk::get_window()->getSize();
-        glGenFramebuffers(1, &sun_fbo);
-        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
-        std::cout << "Sun FBO: " << sun_fbo << "\n";
-
-        // Depth buffer
-        glGenRenderbuffers(1, &sun_depth_buffer);
-        std::cout << "Sun depth buffer: " << sun_depth_buffer << "\n";
-        glBindRenderbuffer(GL_RENDERBUFFER, sun_depth_buffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
-        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sun_depth_buffer);
-
-        // Depth texture
-        glGenTextures(1, &sun_depth_texture);
-        glBindTexture(GL_TEXTURE_2D, sun_depth_texture);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        std::cout << "Sun depth texture: " << sun_depth_texture << "\n";
-        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sun_depth_texture, 0);
-
-        // Render texture
-        glGenTextures(1, &sun_render);
-        glBindTexture(GL_TEXTURE_2D, sun_render);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sun_render, 0);
-
-        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT  };
-        glDrawBuffers(1, buffers);
-
-        // Return to regular render mode
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        loaded_sun_fbo = true;
-        std::cout << "Setup Shadow/Sun FBO\n";
-    }
-
-    void load_fbo() {
-        // Create and bind the framebuffer for mouse-picking output
-        glGenFramebuffers(1, &mouse_pick_fbo);
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-
-        // Create the mouse picker render target texture
-        const auto screen_size = rltk::get_window()->getSize();
-        glGenTextures(1, &mouse_pick_texture);
-        glBindTexture(GL_TEXTURE_2D, mouse_pick_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mouse_pick_texture, 0);
-
-        // Create the render target texture
-        glGenTextures(1, &render_texture);
-        glBindTexture(GL_TEXTURE_2D, render_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, render_texture, 0);
-
-        // Create the normal target texture
-        glGenTextures(1, &normal_texture);
-        glBindTexture(GL_TEXTURE_2D, normal_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normal_texture, 0);
-
-        // Create the lighting target texture
-        glGenTextures(1, &lit_texture);
-        glBindTexture(GL_TEXTURE_2D, lit_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, lit_texture, 0);
-
-        // Create a depth-buffer for the render target
-        glGenRenderbuffers(1, &mouse_pick_depth);
-        glBindRenderbuffer(GL_RENDERBUFFER, mouse_pick_depth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
-        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
-
-        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
-        glDrawBuffers(4, buffers);
-
-        // Return to regular render mode
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        loaded_fbo = true;
     }
 
     void build_chunk_buffer() {
@@ -441,7 +324,6 @@ void map_render_t::render() {
     glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     map_render::setup_matrices();
-    gl_frustrum::extract();
 
     // Pass along the matrices
     int projection_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "projection_matrix");
