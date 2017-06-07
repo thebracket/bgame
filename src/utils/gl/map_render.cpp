@@ -27,6 +27,10 @@
 #include "../../main/game_selections.hpp"
 #include "chunk.hpp"
 #include "base_shader.hpp"
+#define GLM_COMPILER 0
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace map_render_sys;
 using namespace region;
@@ -179,6 +183,9 @@ namespace map_render
         return std::make_tuple(0,0,0);
     };
 
+    glm::mat4 camera_projection_matrix;
+    glm::mat4 camera_modelview_matrix;
+
     void setup_matrices() {
         auto screen_size = rltk::get_window()->getSize();
         glEnable(GL_DEPTH_TEST);
@@ -189,44 +196,35 @@ namespace map_render
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         glViewport(0,0,screen_size.x,screen_size.y);
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPerspective(90.f, 1.f, 1.f, 300.0f);
+        //glMatrixMode(GL_PROJECTION);
+        //glLoadIdentity();
+        //gluPerspective(90.f, 1.f, 1.f, 300.0f);
+        camera_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
 
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        //glMatrixMode(GL_MODELVIEW);
+        //glLoadIdentity();
+
+        const glm::vec3 up{0.0f, 1.0f, 0.0f};
+        glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
+        glm::vec3 position;
 
         switch (camera->camera_mode) {
             case FRONT : {
                 // Nice X-perspective view
-                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
-                          ((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f), // Camera
-                          (float) camera_position->region_x, (float) camera_position->region_z,
-                          (float) camera_position->region_y, // Target
-                          0.0f, 1.0f, 0.0f // Up
-                );
+                position = { (float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f) };
             } break;
 
             case TOP_DOWN : {
                 // Top-down
-                gluLookAt((float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,
-                          ((float) camera_position->region_y) + 0.1f, // Camera
-                          (float) camera_position->region_x, (float) camera_position->region_z,
-                          (float) camera_position->region_y, // Target
-                          0.0f, 1.0f, 0.0f // Up
-                );
+                position = {(float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + 0.1f};
             } break;
 
             case DIAGONAL : {
                 // Diagonal
-                gluLookAt((float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level,
-                          ((float) camera_position->region_y) + (float)camera->zoom_level, // Camera
-                          (float) camera_position->region_x, (float) camera_position->region_z,
-                          (float) camera_position->region_y, // Target
-                          0.0f, 1.0f, 0.0f // Up
-                );
+                position = {(float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + (float)camera->zoom_level};
             } break;
         }
+        camera_modelview_matrix = glm::lookAt(position, target, up);
     }
 
     void render_terrain_chunk(const gl::chunk_t &chunk, bool set_uniforms = true) {
@@ -450,15 +448,11 @@ void map_render_t::render() {
     // Pass along the matrices
     int projection_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "projection_matrix");
     if (projection_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
-    float proj[16];
-    glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&proj);
-    glUniformMatrix4fv(projection_matrix_loc, 1, false, (GLfloat*)&proj);
+    glUniformMatrix4fv(projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
 
     int view_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "view_matrix");
     if (view_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
-    float view[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&view);
-    glUniformMatrix4fv(view_matrix_loc, 1, false, (GLfloat*)&view);
+    glUniformMatrix4fv(view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
     // Pass along the camera information
     int camera_pos = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "camera_position");

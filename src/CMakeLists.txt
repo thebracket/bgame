@@ -43,6 +43,10 @@ find_package(OpenGL REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS})
 link_libraries(${OPENGL_LIBRARIES})
 
+# Require GLM
+find_package(GLM REQUIRED)
+include_directories(${GLM_INCLUDE_DIRS})
+
 # Require RLTK, FastNoise
 include_directories(external/rltk/rltk)
 include_directories(external/FastNoise)
