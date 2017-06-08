@@ -8,6 +8,7 @@ add_library(gl STATIC gl_utils.cpp
         sun_fbo.cpp
         phase1_sunmoon.cpp
         phase2_terrain.cpp
+        phase3_composition.cpp
         )
 target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region)
 cotire(gl)

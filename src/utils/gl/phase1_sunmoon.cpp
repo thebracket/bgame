@@ -48,29 +48,7 @@ namespace map_render {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    void render_phase_one_sun_moon() {
-        // Use sun program
-        glUseProgram(map_render::shadow_shader->program_id);
-
-        // Use sun framebuffer and clear
-        glBindFramebuffer(GL_FRAMEBUFFER, map_render::sun_fbo);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // setup matrices for sun rendering
-        glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
-
-        // We move the near plane just a bit to make the depth texture a bit more visible.
-        // It also increases the precision.
-        auto screen_size = rltk::get_window()->getSize();
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-        glDepthMask(GL_TRUE);
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glShadeModel(GL_SMOOTH);
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        glViewport(0,0,screen_size.x,screen_size.y);
-
-        // Figure out where the sun is
+    void place_sun_moon() {
         const float time = (float)calendar->hour + ((float)calendar->minute/60.0f);
         const float time_as_fraction =  1.0f - (time / 24.0f); // Inverted because the sun goes west to east
         const float time_as_degrees = (time_as_fraction * 360.0f) + 270.0f; // Add to put midnight underneath the world
@@ -94,6 +72,37 @@ namespace map_render {
         const glm::vec3 target{(float)REGION_WIDTH/2.0f, (float)REGION_DEPTH/2.0f, (float)REGION_HEIGHT/2.0f};
         const glm::vec3 position{sun_x, sun_y, sun_z};
         sun_modelview_matrix = glm::lookAt( position, target, up );
+    }
+
+    void place_light(const float sun_x, const float sun_y, const float sun_z) {
+        sun_projection_matrix = glm::perspective(360.0f, 1.0f, 1.0f, 30.0f);
+        const glm::vec3 up{0.0f, 1.0f, 0.0f};
+        const glm::vec3 target{(float)REGION_WIDTH/2.0f, (float)REGION_DEPTH/2.0f, (float)REGION_HEIGHT/2.0f};
+        const glm::vec3 position{sun_x, sun_y, sun_z};
+        sun_modelview_matrix = glm::lookAt( position, target, up );
+    }
+
+    void render_phase_one_sun_moon() {
+        // Use sun program
+        glUseProgram(map_render::shadow_shader->program_id);
+
+        // Use sun framebuffer and clear
+        glBindFramebuffer(GL_FRAMEBUFFER, map_render::sun_fbo);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // setup matrices for sun rendering
+        glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+        // We move the near plane just a bit to make the depth texture a bit more visible.
+        // It also increases the precision.
+        auto screen_size = rltk::get_window()->getSize();
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_TRUE);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glShadeModel(GL_SMOOTH);
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        glViewport(0,0,screen_size.x,screen_size.y);
 
         int sun_projection = glGetUniformLocation(map_render::shadow_shader->program_id, "projection_matrix");
         if (sun_projection == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");

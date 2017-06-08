@@ -35,6 +35,8 @@
 #include "sun_fbo.hpp"
 #include "phase1_sunmoon.hpp"
 #include "phase2_terrain.hpp"
+#include "phase3_composition.hpp"
+#include "../../components/lightsource.hpp"
 
 using namespace map_render_sys;
 using namespace region;
@@ -43,15 +45,7 @@ bool world_changed = true;
 
 namespace map_render
 {
-    bool loaded_render_shader = false;
     bool built_chunk_buffer = false;
-    std::unique_ptr<gl::base_shader_t> render_shader;
-
-    void load_render_shader() {
-        render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
-                                                            "world_defs/shaders/render_fragment.glsl");
-        loaded_render_shader = true;
-    }
 
     void build_chunk_buffer() {
         std::cout << "Building chunk buffer\n";
@@ -65,46 +59,6 @@ namespace map_render
 
 }
 
-void render_test_texture(float left, float top, float right, float bottom, GLuint &target_texture) {
-    glEnableClientState(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, target_texture);
-
-    glColor3f(1, 1, 1);
-    glBegin(GL_QUADS);
-
-    glTexCoord2f(0, 1);
-    glVertex2f(left, bottom);
-
-    glTexCoord2f(0, 0);
-    glVertex2f(left, top);
-
-    glTexCoord2f(1, 0);
-    glVertex2f(right, top);
-
-    glTexCoord2f(1, 1);
-    glVertex2f(right, bottom);
-
-    glEnd();
-}
-
-void render_mixed_texture(float left, float top, float right, float bottom) {
-    glColor3f(1, 1, 1);
-    glBegin(GL_QUADS);
-
-    glTexCoord2f(0, 1);
-    glVertex2f(left, bottom);
-
-    glTexCoord2f(0, 0);
-    glVertex2f(left, top);
-
-    glTexCoord2f(1, 0);
-    glVertex2f(right, top);
-
-    glTexCoord2f(1, 1);
-    glVertex2f(right, bottom);
-
-    glEnd();
-}
 
 void map_render_t::render() {
     // Check that the environment is ready
@@ -122,31 +76,18 @@ void map_render_t::render() {
     push_gl_states();
 
     // Phase 1 render - draw all geometry, from the point of view of the sun or moon.
+    map_render::place_sun_moon();
     map_render::render_phase_one_sun_moon();
 
     // Pase 2 render - draw all the geometry to our g-buffers
     map_render::render_phase_two_terrain();
 
-    // Phase 3 render: each light updates the light buffer
+    // Phase 3 render: composition
+    map_render::render_phase_three_composition();
 
-    // Phase 4 render: composition
-
-    // Phase 5 render: effects
+    // Phase 4 render: effects
 
     // Splat render
-    // Render the index buffer
-    auto sz = rltk::get_window()->getSize();
-    const float W = (float)sz.x;
-    const float H = (float)sz.y;
-    push_gl_states();
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, sz.x, sz.y);
-    glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
-    render_test_texture(0.0f, 0.0f, W/2.0f, H/2.0f, map_render::lit_texture);
-    render_test_texture(W/2.0f, 0.0f, W, H/2.0f, map_render::render_texture);
-    render_test_texture(0.0f, H/2.0f, W/2.0f, H, map_render::sun_depth_texture);
-    render_test_texture(W/2.0f, H/2.0f, W, H, map_render::sun_render);
 
     /*
     // Render out the finished screen

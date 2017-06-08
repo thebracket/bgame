@@ -17,5 +17,7 @@ namespace map_render {
 
     void load_shadow_shader();
     void render_sun_chunk(const gl::chunk_t &chunk, bool set_uniforms = true);
+    void place_sun_moon();
+    void place_light(const float sun_x, const float sun_y, const float sun_z);
     void render_phase_one_sun_moon();
 }
