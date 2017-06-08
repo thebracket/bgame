@@ -6,5 +6,6 @@ add_library(gl STATIC gl_utils.cpp
         chunk.cpp
         main_fbo.cpp
         sun_fbo.cpp
+        phase1_sunmoon.cpp
         )
 target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region)
