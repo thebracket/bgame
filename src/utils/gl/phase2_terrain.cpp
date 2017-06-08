@@ -62,6 +62,9 @@ namespace map_render {
         if (!chunk.has_geometry) return;
         if (!chunk.generated_vbo) return;
 
+        if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
+        if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
+
         GLint world_position;
         GLint normal_position;
         GLint color_position;

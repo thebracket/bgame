@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 #endif
+#include <boost/container/flat_map.hpp>
 
 namespace gl {
 
@@ -225,6 +226,7 @@ namespace gl {
         int n_quads = 0;
 
         std::unique_ptr<geometry::chunk_geometry_t> geometry;
+        boost::container::flat_map<int, std::size_t> z_offsets;
 
         template <typename FUNC>
         void iterate_region(const FUNC &f) {

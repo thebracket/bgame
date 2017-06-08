@@ -38,7 +38,13 @@ namespace gl {
         if (chunk.geometry) chunk.geometry.reset();
         chunk.geometry = std::make_unique<geometry::chunk_geometry_t>();
 
-        chunk.iterate_region([&chunk] (int x,int y, int z) {
+        int last_z = 0;
+        chunk.iterate_region([&chunk, &last_z] (int x,int y, int z) {
+            if (last_z != z) {
+                last_z = z;
+                chunk.z_offsets[z] == chunk.geometry->items.size();
+            }
+
             //printf("Iterating %d/%d/%d as part of %d\n", x, y, z, chunk.index);
             const int idx = mapidx(x,y,z);
             const auto tiletype = region::tile_type(idx);
