@@ -10,3 +10,4 @@ add_library(gl STATIC gl_utils.cpp
         phase2_terrain.cpp
         )
 target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region)
+cotire(gl)
