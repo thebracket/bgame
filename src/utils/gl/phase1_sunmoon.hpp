@@ -14,6 +14,9 @@ namespace map_render {
 
     extern glm::mat4 sun_projection_matrix;
     extern glm::mat4 sun_modelview_matrix;
+    extern glm::vec3 ambient_color;
+    extern glm::vec3 sun_moon_color;
+    extern glm::vec3 sun_moon_position;
 
     void load_shadow_shader();
     void render_sun_chunk(const gl::chunk_t &chunk, bool set_uniforms = true);

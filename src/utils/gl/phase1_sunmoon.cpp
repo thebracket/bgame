@@ -14,6 +14,9 @@ namespace map_render {
     bool loaded_shadow_shader = false;
     glm::mat4 sun_projection_matrix;
     glm::mat4 sun_modelview_matrix;
+    glm::vec3 ambient_color;
+    glm::vec3 sun_moon_color;
+    glm::vec3 sun_moon_position;
 
     void load_shadow_shader() {
         shadow_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/shadow_vertex.glsl",
@@ -49,7 +52,10 @@ namespace map_render {
     }
 
     void place_sun_moon() {
-        const float time = (float)calendar->hour + ((float)calendar->minute/60.0f);
+        bool moon_mode = false;
+
+        //const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour + ((float)calendar->minute/60.0f) : 5.0f;
+        const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour : 5.0f;
         const float time_as_fraction =  1.0f - (time / 24.0f); // Inverted because the sun goes west to east
         const float time_as_degrees = (time_as_fraction * 360.0f) + 270.0f; // Add to put midnight underneath the world
         const float radians = time_as_degrees * 3.14159265f/180.0f;
@@ -60,9 +66,7 @@ namespace map_render {
         const float sun_z = 129.0f;
 
         if (calendar->hour < 6 || calendar->hour > 17) {
-            sun_x = 0.0 - sun_x;
-            sun_y = 0.0 - sun_y;
-            // TODO: Mark moon mode
+            moon_mode = true;
         }
         //std::cout << time << " : " << time_as_fraction << ", " << sun_x << "/" << sun_y << "/" << sun_z << "\n";
 
@@ -72,6 +76,41 @@ namespace map_render {
         const glm::vec3 target{(float)REGION_WIDTH/2.0f, (float)REGION_DEPTH/2.0f, (float)REGION_HEIGHT/2.0f};
         const glm::vec3 position{sun_x, sun_y, sun_z};
         sun_modelview_matrix = glm::lookAt( position, target, up );
+
+        // Setup ambient light
+        rltk::color_t dark_moon{34,63,89};
+        const rltk::color_t dawn_light{143,164,191};
+        const rltk::color_t noon_sun{201, 226, 255};
+
+        if (moon_mode) {
+            float lerp_percent;
+            if (calendar->hour < 6) {
+                lerp_percent = (float)calendar->hour / 6.0f;
+            } else {
+                lerp_percent = (24.0f - (float)calendar->hour) / 6.0f;
+            }
+
+            int moon_phase = calendar->days_elapsed % 56;
+            if (moon_phase > 28) moon_phase = 56 - moon_phase;
+            dark_moon.r += moon_phase/2;
+            dark_moon.g += moon_phase/2;
+            dark_moon.b += moon_phase/2;
+
+            auto ambient_rltk = rltk::lerp(dark_moon, dawn_light, lerp_percent);
+            ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
+            sun_moon_color = glm::vec3{ 0.7f, 0.7f, 0.8f };
+        } else {
+            float lerp_percent;
+            if (calendar->hour < 12) {
+                lerp_percent = ((float)calendar->hour-6.0f) / 6.0f;
+            } else {
+                lerp_percent = (24.0f - (float)calendar->hour) / 6.0f;
+            }
+            auto ambient_rltk = rltk::lerp(dawn_light, noon_sun, lerp_percent);
+            ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
+            sun_moon_color = glm::vec3{ 1.0f, 1.0f, 0.97f };
+        }
+        sun_moon_position = glm::vec3{ sun_x, sun_y, sun_z };
     }
 
     void place_light(const float sun_x, const float sun_y, const float sun_z) {

@@ -17,6 +17,7 @@ struct calendar_t {
 	uint8_t hour = 0;
 	uint8_t minute = 0;
 	uint8_t second = 0;
+	uint16_t days_elapsed = 0;
 
 	std::vector<shift_t> defined_shifts;
 
@@ -34,7 +35,7 @@ struct calendar_t {
     template<class Archive>
     void serialize(Archive & archive)
     {
-        archive( year, month, day, hour, minute, second, defined_shifts ); // serialize things by passing them to the archive
+        archive( year, month, day, hour, minute, second, defined_shifts, days_elapsed ); // serialize things by passing them to the archive
     }
 };
 
