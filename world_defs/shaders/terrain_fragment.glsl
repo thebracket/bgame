@@ -8,11 +8,14 @@ varying vec3 world_pos;
 varying vec4 fragment_light_space_position;
 
 float shadow_calculation(vec4 frag_pos_light_space) {
+    vec3 light_dir = normalize(frag_pos_light_space.xyz - world_pos);
+
     vec3 proj_coords = frag_pos_light_space.xyz / frag_pos_light_space.w;
     proj_coords = proj_coords * 0.5 + 0.5; // Convert to depth map space
     float closest_depth = texture2D(shadow_map, proj_coords.xy).r;
     float current_depth = proj_coords.z;
-    return current_depth - 0.005 < closest_depth ? 1.0 : 0.0;
+    float bias = 0.01;
+    return current_depth - bias > closest_depth ? 0.0 : 1.0;
     //return closest_depth;
 }
 

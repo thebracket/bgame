@@ -54,8 +54,8 @@ namespace map_render {
     void place_sun_moon() {
         bool moon_mode = false;
 
-        //const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour + ((float)calendar->minute/60.0f) : 5.0f;
-        const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour : 5.0f;
+        const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour + ((float)calendar->minute/60.0f) : 5.0f;
+        //const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour : 5.0f;
         const float time_as_fraction =  1.0f - (time / 24.0f); // Inverted because the sun goes west to east
         const float time_as_degrees = (time_as_fraction * 360.0f) + 270.0f; // Add to put midnight underneath the world
         const float radians = time_as_degrees * 3.14159265f/180.0f;

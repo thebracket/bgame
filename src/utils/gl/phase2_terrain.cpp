@@ -103,7 +103,15 @@ namespace map_render {
             glEnableVertexAttribArray(texture_position);
         }
 
-        glDrawArrays(GL_QUADS, 0, chunk.n_quads);
+        int cull_pos = chunk.n_quads;
+        auto finder = chunk.z_offsets.find(camera_position->region_z);
+        if (finder != chunk.z_offsets.end()) {
+            cull_pos = finder->second;
+            //std::cout << cull_pos << "\n";
+        }
+
+        if (cull_pos > 0)
+            glDrawArrays(GL_QUADS, 0, cull_pos);
 
         glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
