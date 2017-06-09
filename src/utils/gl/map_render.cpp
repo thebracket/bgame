@@ -77,7 +77,9 @@ void map_render_t::render() {
 
     // Phase 1 render - draw all geometry, from the point of view of the sun or moon.
     map_render::place_sun_moon();
+    glCullFace(GL_FRONT);
     map_render::render_phase_one_sun_moon();
+    glCullFace(GL_BACK);
 
     // Pase 2 render - draw all the geometry to our g-buffers
     map_render::render_phase_two_terrain();
