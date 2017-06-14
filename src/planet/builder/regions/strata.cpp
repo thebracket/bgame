@@ -21,6 +21,18 @@ strata_t build_strata(std::vector<uint8_t> &heightmap, random_number_generator &
 
     get_strata_materials(soils, sedimintaries, igneouses, sands);
 
+    // Determine the dominant soil type
+    const int dominant_soil_roll = rng.roll_dice(1,100);
+    if (dominant_soil_roll < biome.second.soil_pct) {
+        const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
+        //std::cout << material_name(soils[soil_idx]) << "\n";
+        result.dominant_soil = soils[soil_idx];
+    } else {
+        const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+        //std::cout << material_name(sands[sand_idx]) << "\n";
+        result.dominant_soil = sands[sand_idx];
+    }
+
     set_worldgen_status("Locating strata");
     const int n_strata = (REGION_WIDTH + REGION_HEIGHT)*4 + rng.roll_dice(1,64);
     result.strata_map.resize(REGION_TILES_COUNT);
@@ -155,6 +167,7 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
             // Populate the surface tile at z-1
             reveal(mapidx(x,y,z-1));
             set_tile_type(mapidx(x,y,z-1), tile_type::FLOOR);
+            set_tile_material(mapidx(x,y,z-1), strata.dominant_soil); // Set the top layer to the dominant soil
             if (wet) {
                 set_water_level(mapidx(x,y,z-1), 10); // Below the water line; flood it!
             } else {

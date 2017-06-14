@@ -11,6 +11,7 @@ struct strata_t {
     std::vector<int> strata_map;
     std::vector<std::size_t> material_idx;
     std::vector<std::tuple<int,int,int,int>> counts;
+    int dominant_soil = 0;
 };
 
 strata_t build_strata(std::vector<uint8_t> &heightmap, random_number_generator &rng, std::pair<biome_t, biome_type_t> &biome, planet_t &planet);
