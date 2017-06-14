@@ -12,8 +12,21 @@ uniform vec3 sun_moon_position;
 
 vec3 diffuse_light(vec3 light_pos, vec3 surface_pos, vec3 surface_normal, vec3 color) {
     vec3 light_dir = normalize(light_pos - surface_pos);
-    color.xyz *= dot(light_dir, surface_normal);
-    return color;
+    vec3 result = color;
+    result.xyz *= dot(light_dir, surface_normal);
+    return result;
+}
+
+vec3 specular_light(vec3 light_pos, vec3 surface_pos, vec3 surface_normal, vec3 color) {
+    float specular_strength = 0.25;
+    float shininess = 2;
+
+    vec3 light_dir = normalize(light_pos - surface_pos);
+    vec3 view_dir = normalize(cameraPosition - surface_pos);
+    vec3 reflect_dir = reflect(-light_dir, surface_normal);
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess);
+    vec3 result = specular_strength * spec * color;
+    return result;
 }
 
 void main() {
@@ -27,7 +40,9 @@ void main() {
     if (shadow.r < 1.0) {
         base_color.xyz *= ambient_color;
     } else {
-        base_color.xyz *= diffuse_light(sun_moon_position, position.xyz, normal.xyz, sun_moon_color) + ambient_color;
+        base_color.xyz *= (diffuse_light(sun_moon_position, position.xyz, normal.xyz, sun_moon_color) +
+            specular_light(sun_moon_position, position.xyz, normal.xyz, sun_moon_color) +
+            base_color.xyz + ambient_color);
     }
     //base_color.xyz *= ambient_color;
 
