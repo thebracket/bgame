@@ -54,7 +54,17 @@ namespace map_render
     }
 
     std::tuple<int,int,int> readback_texture_pixel(const int &x, const int &y) {
-        return std::make_tuple(0,0,0);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        uint8_t pixel[4] = {0,0,0,0};
+        glReadPixels(x, get_window()->getSize().y - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        int mx = pixel[0];
+        int my = pixel[1];
+        int mz = pixel[2];
+        //std::cout << "Mouse: " << x << "/" << y << " = " << mx << "/" << my << "/" << mz << "\n";
+        return std::make_tuple(mx, my, mz);
+        //return std::make_tuple(0, 0, 0);
     };
 
 }
