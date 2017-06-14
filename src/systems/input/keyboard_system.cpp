@@ -154,7 +154,7 @@ void keyboard_system::update(const double ms) {
         }
         if (e.event.key.code == sf::Keyboard::PageDown) {
             --camera->zoom_level;
-            if (camera->zoom_level < 10) camera->zoom_level = 10;
+            if (camera->zoom_level < 5) camera->zoom_level = 5;
         }
 
         // Mode changes

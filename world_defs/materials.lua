@@ -1,3 +1,9 @@
+-- Texture Index
+-- 0 : Silt Ground
+-- 1 : Silt Wall
+-- 2 : Silt Floor
+-- 3 : Silt Construction
+
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
@@ -258,67 +264,83 @@ materials = {
 
     clay_soil = { name="Clay", type="soil",
         glyph = glyphs['solid_square'], fg=colors['red'], bg=colors['black'],
-        hit_points = 20, mines_to="clay"
+        hit_points = 20, mines_to="clay",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     clay_loam = { name="Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
-        hit_points = 20, mines_to="clay"
+        hit_points = 20, mines_to="clay",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     loam = { name="Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     loamy_sand = { name="Loamy Sand", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     peat = { name="Peat", type="soil",
-        glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        glyph = glyphs['one_quarter_solid'], fg=colors['brown'], bg=colors['grey'],
+        hit_points = 15, mines_to="topsoil",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     sandy_clay = { name="Sandy Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['red'],
-        hit_points = 15, mines_to="clay"
+        hit_points = 15, mines_to="clay",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     sandy_clay_loam = { name="Sandy Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['yellow'],
-        hit_points = 15, mines_to="topsoil", mines_to_also="clay"
+        hit_points = 15, mines_to="topsoil", mines_to_also="clay",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     silt = { name="Silt", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['black'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     silty_clay = { name="Silty Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
-        hit_points = 15, mines_to="clay"
+        hit_points = 15, mines_to="clay",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     silty_clay_loam = { name="Silty Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     silt_loam = { name="Silt Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['red'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     black_sand = { name="Black Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     red_sand = { name="Red Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['red_sand'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     white_sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['white_sand'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     yellow_sand = { name="Yellow Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow_sand'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
 
 -- Other materials needed
@@ -336,7 +358,8 @@ materials = {
     },
     blight = { name = "Blight", type="blight",
         glyph = glyphs['blight'], fg=colors['brown'], bg=colors['black'],
-        hit_points = 10
+        hit_points = 10,
+        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
     },
     food = { name = "Food:", type="food", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
@@ -366,7 +389,8 @@ materials = {
 -- Synthetic Materials - only occur after refining
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200,
+        floor_texture=0, wall_texture=1, constructed_floor_texture=5, constructed_wall_texture=4
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],

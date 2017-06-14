@@ -101,6 +101,7 @@ namespace map_render {
             glVertexAttribPointer(texture_position, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 12 * sizeof(float)));
             glEnableVertexAttribArray(texture_position);
+
         }
 
         int cull_pos = chunk.n_quads;
@@ -145,7 +146,7 @@ namespace map_render {
         // Texture
         glActiveTexture(GL_TEXTURE0);
         glEnable(GL_TEXTURE_2D);
-        sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
+        sf::Texture::bind(rltk::get_texture("materials"));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 

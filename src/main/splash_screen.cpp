@@ -20,6 +20,7 @@ std::atomic<bool> splash_loader_complete;
 std::unique_ptr<std::thread> splash_loader_thread;
 
 void splash_loader() {
+	register_texture("assets/material-textures.png", "materials");
 	load_raws();
 	splash_loader_complete.store(true);
 }

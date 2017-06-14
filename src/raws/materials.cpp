@@ -160,6 +160,12 @@ void read_material_types() noexcept
             if (field == "damage_bonus") m.damage_bonus = lua_tonumber(lua_state, -1);
             if (field == "ac_bonus") m.ac_bonus = lua_tonumber(lua_state, -1);
 
+            if (field == "floor_texture") m.floor_texture = lua_tonumber(lua_state, -1);
+            if (field == "constructed_floor_texture") m.constructed_floor_texture = lua_tonumber(lua_state, -1);
+            if (field == "wall_texture") m.wall_texture = lua_tonumber(lua_state, -1);
+            if (field == "constructed_wall_texture") m.constructed_wall_texture = lua_tonumber(lua_state, -1);
+
+
             lua_pop(lua_state, 1);
         }
         material_defs.push_back(m);

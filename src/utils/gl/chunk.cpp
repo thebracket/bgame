@@ -52,11 +52,11 @@ namespace gl {
             const auto tiletype = region::tile_type(idx);
 
             const auto render = region::render_cache(idx);
-            const float r = (float)render.foreground.r / 255.0f;
-            const float g = (float)render.foreground.g / 255.0f;
-            const float b = (float)render.foreground.b / 255.0f;
-            const float tx = (float)(render.glyph % 16) * geometry::tsize_x;
-            const float ty = (float)(render.glyph / 16) * geometry::tsize_y;
+            const float r = 1.0f;
+            const float g = 1.0f;
+            const float b = 1.0f;
+            constexpr float tx = 0.0f;
+            constexpr float ty = 0.0f;
 
             bool skip = false;
             // Open space never needs rendering

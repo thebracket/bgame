@@ -1,6 +1,9 @@
 #pragma once
 #include "../../planet/constants.hpp"
 #include "render_block.hpp"
+#include "../../planet/indices.hpp"
+#include "../../planet/region/region.hpp"
+#include "../../raws/materials.hpp"
 #include <array>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
@@ -9,6 +12,7 @@
 #include <GL/glu.h>
 #endif
 #include <boost/container/flat_map.hpp>
+#include "../../raws/defs/material_def_t.hpp"
 
 namespace gl {
 
@@ -24,12 +28,12 @@ namespace gl {
 
     // Forward
     namespace geometry {
-        constexpr float texture_width = 384.0f;
-        constexpr float texture_height = 768.0f;
-        constexpr float sprite_width = 24.0f;
-        constexpr float sprite_height = 24.0f;
-        constexpr float tsize_x = (1.0f / texture_width) * sprite_width;
-        constexpr float tsize_y = (1.0f / texture_height) * sprite_height;
+        constexpr float texture_width = 1024.0f;
+        constexpr float texture_height = 4096.0f;
+        constexpr float sprite_width = 512.0f;
+        constexpr float sprite_height = 512.0f;
+        constexpr float tsize_x = sprite_width / texture_width;
+        constexpr float tsize_y = sprite_height / texture_height;
 
         struct chunk_geometry_t {
             /*
@@ -50,7 +54,25 @@ namespace gl {
                 float float_array[] = { add_to_items_impl(args)... };
             }
 
-            void add_floor(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+            void add_floor(const float x, const float y, const float z, float r, float g, float b, float tx, float ty) {
+                const int idx = mapidx(x, y, z);
+                const size_t material_idx = region::material(idx);
+                auto material_definition = get_material(material_idx);
+                if (material_definition != nullptr) {
+                    if (region::flag(idx, CONSTRUCTION)) {
+                        ty = 512.0f * material_definition->constructed_floor_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    } else {
+                        ty = 512.0f * material_definition->floor_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    }
+                }
+                ty = ty / texture_height;
+
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(0.0f, 1.0f, 0.0f);           // Normal 0
@@ -78,7 +100,25 @@ namespace gl {
                 n_quads += 4;
             }
 
-            void add_left(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+            void add_left(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
+                const int idx = mapidx(x, y, z);
+                const size_t material_idx = region::material(idx);
+                auto material_definition = get_material(material_idx);
+                if (material_definition != nullptr) {
+                    if (region::flag(idx, CONSTRUCTION)) {
+                        ty = 512.0f * material_definition->constructed_wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    } else {
+                        ty = 512.0f * material_definition->wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    }
+                }
+                ty = ty / texture_height;
+
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(-1.0f, 0.0f, 0.0f);          // Normal 0
@@ -106,7 +146,25 @@ namespace gl {
                 n_quads += 4;
             }
 
-            void add_right(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+            void add_right(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
+                const int idx = mapidx(x, y, z);
+                const size_t material_idx = region::material(idx);
+                auto material_definition = get_material(material_idx);
+                if (material_definition != nullptr) {
+                    if (region::flag(idx, CONSTRUCTION)) {
+                        ty = 512.0f * material_definition->constructed_wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    } else {
+                        ty = 512.0f * material_definition->wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    }
+                }
+                ty = ty / texture_height;
+
                 add_to_items(0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(1.0f, 0.0f, 0.0f);          // Normal 0
@@ -134,7 +192,25 @@ namespace gl {
                 n_quads += 4;
             }
 
-            void add_north(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+            void add_north(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
+                const int idx = mapidx(x, y, z);
+                const size_t material_idx = region::material(idx);
+                auto material_definition = get_material(material_idx);
+                if (material_definition != nullptr) {
+                    if (region::flag(idx, CONSTRUCTION)) {
+                        ty = 512.0f * material_definition->constructed_wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    } else {
+                        ty = 512.0f * material_definition->wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    }
+                }
+                ty = ty / texture_height;
+
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(0.0f, -1.0f, 0.0f);          // Normal 0
@@ -162,7 +238,25 @@ namespace gl {
                 n_quads += 4;
             }
 
-            void add_south(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty) {
+            void add_south(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
+                const int idx = mapidx(x, y, z);
+                const size_t material_idx = region::material(idx);
+                auto material_definition = get_material(material_idx);
+                if (material_definition != nullptr) {
+                    if (region::flag(idx, CONSTRUCTION)) {
+                        ty = 512.0f * material_definition->constructed_wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    } else {
+                        ty = 512.0f * material_definition->wall_texture;
+                        r = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.r / 255.0f;
+                        b = (float)material_definition->fg.r / 255.0f;
+                    }
+                }
+                ty = ty / texture_height;
+
                 add_to_items(-0.5f, 0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(0.0f, 1.0f, 0.0f);          // Normal 0
