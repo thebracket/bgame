@@ -40,8 +40,8 @@ void main() {
     if (shadow.r < 1.0) {
         base_color.xyz *= ambient_color;
     } else {
-        base_color.xyz *= (diffuse_light(sun_moon_position, position.xyz, normal.xyz, sun_moon_color) +
-            specular_light(sun_moon_position, position.xyz, normal.xyz, sun_moon_color) +
+        base_color.xyz *= (diffuse_light(sun_moon_position, position.xzy, normal.xyz, sun_moon_color) +
+            specular_light(sun_moon_position, position.xzy, normal.xyz, sun_moon_color) +
             base_color.xyz + ambient_color);
     }
     //base_color.xyz *= ambient_color;

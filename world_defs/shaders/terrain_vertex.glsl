@@ -41,7 +41,7 @@ void main() {
     vec4 position = gl_Vertex;
     position.xyz += world_position.xzy;
     gl_Position = projection_matrix * (view_matrix * position);
-    tint = color;
+    tint = color/2.0;
     if (world_position.z < camera_position.z) {
         float darken = (camera_position.z - world_position.z) * 0.05f;
         tint.rgb -= darken;
