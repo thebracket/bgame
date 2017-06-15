@@ -62,13 +62,13 @@ namespace gl {
                     if (region::flag(idx, CONSTRUCTION)) {
                         ty = 512.0f * material_definition->constructed_floor_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     } else {
                         ty = 512.0f * material_definition->floor_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     }
                 }
                 ty = ty / texture_height;
@@ -108,13 +108,13 @@ namespace gl {
                     if (region::flag(idx, CONSTRUCTION)) {
                         ty = 512.0f * material_definition->constructed_wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     } else {
                         ty = 512.0f * material_definition->wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     }
                 }
                 ty = ty / texture_height;
@@ -154,13 +154,13 @@ namespace gl {
                     if (region::flag(idx, CONSTRUCTION)) {
                         ty = 512.0f * material_definition->constructed_wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     } else {
                         ty = 512.0f * material_definition->wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     }
                 }
                 ty = ty / texture_height;
@@ -200,13 +200,13 @@ namespace gl {
                     if (region::flag(idx, CONSTRUCTION)) {
                         ty = 512.0f * material_definition->constructed_wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     } else {
                         ty = 512.0f * material_definition->wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     }
                 }
                 ty = ty / texture_height;
@@ -246,13 +246,13 @@ namespace gl {
                     if (region::flag(idx, CONSTRUCTION)) {
                         ty = 512.0f * material_definition->constructed_wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     } else {
                         ty = 512.0f * material_definition->wall_texture;
                         r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.r / 255.0f;
-                        b = (float)material_definition->fg.r / 255.0f;
+                        g = (float)material_definition->fg.g / 255.0f;
+                        b = (float)material_definition->fg.b / 255.0f;
                     }
                 }
                 ty = ty / texture_height;

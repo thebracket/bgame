@@ -7,7 +7,8 @@
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 110, mines_to="alabaster_powder" 
+        hit_points = 110, mines_to="alabaster_powder",
+        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
     },
     aluminium_rock = { name="Raw Aluminium", type="rock", layer="igneous", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
@@ -119,7 +120,8 @@ materials = {
     },
     gypsum = { name="Gypsum", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 100, mines_to="gypsum_powder"
+        hit_points = 100, mines_to="gypsum_powder",
+        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
     },
     hematite_ig = { name="Hematite", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['red_sand'], bg=colors['grey'],
@@ -147,7 +149,8 @@ materials = {
     },
     limestone = { name="Limestone", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
     },
     limonite = { name="Limonite", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['yellow'], bg=colors['grey'],
@@ -163,7 +166,8 @@ materials = {
     },
     marble = { name="Marble", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
     },
     microcline = { name="Microcline", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['cyan'], bg=colors['grey'],
@@ -174,7 +178,7 @@ materials = {
         hit_points = 100, mines_to="stone_boulder"
     },
     obsidian = { name="Marble", type="rock", layer="igneous", 
-        glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
+        glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
         hit_points = 100, mines_to="stone_boulder", damage_bonus=1
     },
     olivine = { name="Olivine", type="rock", layer="igneous", 
@@ -219,7 +223,8 @@ materials = {
     },
     rock_salt = { name="Rock Salt", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 50, mines_to="stone_boulder"
+        hit_points = 50, mines_to="stone_boulder",
+        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
     },
     rutile = { name="Rutile", type="rock", layer="igneous", 
         glyph=glyphs['backtick'], fg=colors['purple'], bg=colors['grey'],
@@ -390,7 +395,7 @@ materials = {
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
-        floor_texture=0, wall_texture=1, constructed_floor_texture=5, constructed_wall_texture=4
+        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=4
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],

@@ -32,6 +32,15 @@ namespace gl {
         }
     }
 
+    bool render_as_cube(const uint8_t &type) {
+        switch (type) {
+            case tile_type::SOLID   : return true;
+            case tile_type::SEMI_MOLTEN_ROCK : return true;
+            case tile_type::WALL : return true;
+            default                 : return false;
+        }
+    }
+
     std::size_t update_chunk(chunk_t &chunk) {
         // We want to make a big render buffer for the terrain in this block.
         chunk.has_geometry = false;
@@ -71,12 +80,12 @@ namespace gl {
             // TODO: cull tiles with neighbors that completely occlude it.
 
             if (!skip) {
-                if (tiletype != tile_type::FLOOR)
+                if (render_as_cube(tiletype))
                 {
                     // Add cube
                     chunk.has_geometry = true;
                     chunk.geometry->add_cube(x,y,z,r,g,b,tx,ty);
-                } else {
+                } else if (tiletype == tile_type::FLOOR) {
                     // Add a floor
                     chunk.has_geometry = true;
                     chunk.geometry->add_floor(x,y,z,r,g,b,tx,ty);
