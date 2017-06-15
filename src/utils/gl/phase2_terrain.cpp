@@ -60,8 +60,6 @@ namespace map_render {
     }
 
     void render_terrain_chunk(const gl::chunk_t &chunk, bool set_uniforms) {
-        if (!chunk.has_geometry) return;
-        if (!chunk.generated_vbo) return;
 
         if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
@@ -166,7 +164,9 @@ namespace map_render {
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
 
         for (const gl::chunk_t &chunk : gl::chunks) {
-            if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_z, chunk.base_y), gl::CHUNK_SIZE)) {
+            if (chunk.has_geometry && chunk.generated_vbo &&
+                    frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_z, chunk.base_y), gl::CHUNK_SIZE))
+            {
                 map_render::render_terrain_chunk(chunk);
             }
         }
