@@ -28,10 +28,10 @@ namespace gl {
 
     // Forward
     namespace geometry {
-        constexpr float texture_width = 1024.0f;
+        constexpr float texture_width = 512.0f;
         constexpr float texture_height = 4096.0f;
-        constexpr float sprite_width = 512.0f;
-        constexpr float sprite_height = 512.0f;
+        constexpr float sprite_width = 256.0f;
+        constexpr float sprite_height = 256.0f;
         constexpr float tsize_x = sprite_width / texture_width;
         constexpr float tsize_y = sprite_height / texture_height;
 
@@ -56,19 +56,27 @@ namespace gl {
 
             void add_floor(const float x, const float y, const float z, float r, float g, float b, float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const size_t material_idx = region::material(idx);
-                auto material_definition = get_material(material_idx);
-                if (material_definition != nullptr) {
-                    if (region::flag(idx, CONSTRUCTION)) {
-                        ty = 512.0f * material_definition->constructed_floor_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
-                    } else {
-                        ty = 512.0f * material_definition->floor_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
+                const uint8_t type = region::tile_type(idx);
+                if (type == tile_type::TREE_TRUNK) {
+                    r = 1.0f;
+                    g = 1.0f;
+                    b = 1.0f;
+                    ty = 8.0f * sprite_height;
+                } else {
+                    const size_t material_idx = region::material(idx);
+                    auto material_definition = get_material(material_idx);
+                    if (material_definition != nullptr) {
+                        if (region::flag(idx, CONSTRUCTION)) {
+                            ty = sprite_height * material_definition->constructed_floor_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        } else {
+                            ty = sprite_height * material_definition->floor_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        }
                     }
                 }
                 ty = ty / texture_height;
@@ -102,19 +110,27 @@ namespace gl {
 
             void add_left(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const size_t material_idx = region::material(idx);
-                auto material_definition = get_material(material_idx);
-                if (material_definition != nullptr) {
-                    if (region::flag(idx, CONSTRUCTION)) {
-                        ty = 512.0f * material_definition->constructed_wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
-                    } else {
-                        ty = 512.0f * material_definition->wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
+                const uint8_t type = region::tile_type(idx);
+                if (type == tile_type::TREE_TRUNK) {
+                    r = 1.0f;
+                    g = 1.0f;
+                    b = 1.0f;
+                    ty = 8.0f * sprite_height;
+                } else {
+                    const size_t material_idx = region::material(idx);
+                    auto material_definition = get_material(material_idx);
+                    if (material_definition != nullptr) {
+                        if (region::flag(idx, CONSTRUCTION)) {
+                            ty = sprite_height * material_definition->constructed_wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        } else {
+                            ty = sprite_height * material_definition->wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        }
                     }
                 }
                 ty = ty / texture_height;
@@ -148,19 +164,27 @@ namespace gl {
 
             void add_right(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const size_t material_idx = region::material(idx);
-                auto material_definition = get_material(material_idx);
-                if (material_definition != nullptr) {
-                    if (region::flag(idx, CONSTRUCTION)) {
-                        ty = 512.0f * material_definition->constructed_wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
-                    } else {
-                        ty = 512.0f * material_definition->wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
+                const uint8_t type = region::tile_type(idx);
+                if (type == tile_type::TREE_TRUNK) {
+                    r = 1.0f;
+                    g = 1.0f;
+                    b = 1.0f;
+                    ty = 8.0f * sprite_height;
+                } else {
+                    const size_t material_idx = region::material(idx);
+                    auto material_definition = get_material(material_idx);
+                    if (material_definition != nullptr) {
+                        if (region::flag(idx, CONSTRUCTION)) {
+                            ty = sprite_height * material_definition->constructed_wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        } else {
+                            ty = sprite_height * material_definition->wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        }
                     }
                 }
                 ty = ty / texture_height;
@@ -194,44 +218,52 @@ namespace gl {
 
             void add_north(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const size_t material_idx = region::material(idx);
-                auto material_definition = get_material(material_idx);
-                if (material_definition != nullptr) {
-                    if (region::flag(idx, CONSTRUCTION)) {
-                        ty = 512.0f * material_definition->constructed_wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
-                    } else {
-                        ty = 512.0f * material_definition->wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
+                const uint8_t type = region::tile_type(idx);
+                if (type == tile_type::TREE_TRUNK) {
+                    r = 1.0f;
+                    g = 1.0f;
+                    b = 1.0f;
+                    ty = 8.0f * sprite_height;
+                } else {
+                    const size_t material_idx = region::material(idx);
+                    auto material_definition = get_material(material_idx);
+                    if (material_definition != nullptr) {
+                        if (region::flag(idx, CONSTRUCTION)) {
+                            ty = sprite_height * material_definition->constructed_wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        } else {
+                            ty = sprite_height * material_definition->wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        }
                     }
                 }
                 ty = ty / texture_height;
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
-                add_to_items(0.0f, -1.0f, 0.0f);          // Normal 0
+                add_to_items(0.0f, 0.0f, -1.0f);          // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty + tsize_y);           // Texture 0
 
                 add_to_items(0.5f, -0.5f,  -0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
-                add_to_items(0.0f, -1.0f, 0.0f);           // Normal 1
+                add_to_items(0.0f, 0.0f, -1.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
 
-                add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
+                add_to_items(0.5f, 0.5f,  -0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
-                add_to_items(0.0f, -1.0f, 0.0f);          // Normal 2
+                add_to_items(0.0f, 0.0f, -1.0f);          // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty);           // Texture 2
 
-                add_to_items(-0.5f, -0.5f, 0.5f);         // Vertex 3
+                add_to_items(-0.5f, 0.5f, -0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
-                add_to_items(0.0f, -1.0f, 0.0f);           // Normal 3
+                add_to_items(0.0f, 0.0f, -1.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx, ty);                     // Texture 3
 
@@ -240,44 +272,52 @@ namespace gl {
 
             void add_south(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const size_t material_idx = region::material(idx);
-                auto material_definition = get_material(material_idx);
-                if (material_definition != nullptr) {
-                    if (region::flag(idx, CONSTRUCTION)) {
-                        ty = 512.0f * material_definition->constructed_wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
-                    } else {
-                        ty = 512.0f * material_definition->wall_texture;
-                        r = (float)material_definition->fg.r / 255.0f;
-                        g = (float)material_definition->fg.g / 255.0f;
-                        b = (float)material_definition->fg.b / 255.0f;
+                const uint8_t type = region::tile_type(idx);
+                if (type == tile_type::TREE_TRUNK) {
+                    r = 1.0f;
+                    g = 1.0f;
+                    b = 1.0f;
+                    ty = 8.0f * sprite_height;
+                } else {
+                    const size_t material_idx = region::material(idx);
+                    auto material_definition = get_material(material_idx);
+                    if (material_definition != nullptr) {
+                        if (region::flag(idx, CONSTRUCTION)) {
+                            ty = sprite_height * material_definition->constructed_wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        } else {
+                            ty = sprite_height * material_definition->wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        }
                     }
                 }
                 ty = ty / texture_height;
 
-                add_to_items(-0.5f, 0.5f, -0.5f);        // Vertex 0
+                add_to_items(-0.5f, -0.5f, 0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
-                add_to_items(0.0f, 1.0f, 0.0f);          // Normal 0
+                add_to_items(0.0f, 0.0f, 1.0f);          // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty + tsize_y);           // Texture 0
 
-                add_to_items(0.5f, 0.5f,  -0.5f);        // Vertex 1
+                add_to_items(0.5f, -0.5f,  0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
-                add_to_items(0.0f, 1.0f, 0.0f);           // Normal 1
+                add_to_items(0.0f, 0.0f, 1.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
 
                 add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
-                add_to_items(0.0f, 1.0f, 0.0f);          // Normal 2
+                add_to_items(0.0f, 0.0f, 1.0f);          // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty);           // Texture 2
 
                 add_to_items(-0.5f, 0.5f, 0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
-                add_to_items(0.0f, 1.0f, 0.0f);           // Normal 3
+                add_to_items(0.0f, 0.0f, 1.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx, ty);                     // Texture 3
 
@@ -293,7 +333,7 @@ namespace gl {
                 add_right(x, y, z, r, g, b, tx, ty);
                 add_north(x, y, z, r, g, b, tx, ty);
                 add_south(x, y, z, r, g, b, tx, ty);
-                add_floor(x, y+1.0f, z, r, g, b, tx, ty);
+                add_floor(x, y, z+1.0f, r, g, b, tx, ty);
             }
         };
     }

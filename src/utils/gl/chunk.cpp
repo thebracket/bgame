@@ -37,6 +37,7 @@ namespace gl {
             case tile_type::SOLID   : return true;
             case tile_type::SEMI_MOLTEN_ROCK : return true;
             case tile_type::WALL : return true;
+            case tile_type::TREE_TRUNK : return true;
             default                 : return false;
         }
     }
