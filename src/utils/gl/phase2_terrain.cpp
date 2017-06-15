@@ -3,6 +3,7 @@
 #include "main_fbo.hpp"
 #include "sun_fbo.hpp"
 #include "phase1_sunmoon.hpp"
+#include "gl_utils.hpp"
 
 namespace map_render {
     bool loaded_terrain_shader = false;
@@ -161,8 +162,13 @@ namespace map_render {
         if (tex2loc == -1) throw std::runtime_error("Unknown uniform slot - texture 1");
         glUniform1i(tex2loc, 1);
 
+        Frustrum frustrum;
+        frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
+
         for (const gl::chunk_t &chunk : gl::chunks) {
-            map_render::render_terrain_chunk(chunk);
+            if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_z, chunk.base_y), gl::CHUNK_SIZE)) {
+                map_render::render_terrain_chunk(chunk);
+            }
         }
         glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
