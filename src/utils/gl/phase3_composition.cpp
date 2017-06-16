@@ -9,6 +9,26 @@ namespace map_render {
     bool loaded_render_shader = false;
     std::unique_ptr<gl::base_shader_t> render_shader;
 
+    GLint render_albedo_tex_loc;
+    GLint render_position_tex_loc;
+    GLint render_normal_tex_loc;
+    GLint render_light_position_loc;
+    GLint render_light_color_loc;
+    GLint render_ambient_color_loc;
+
+    void load_render_shader() {
+        render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
+                                                            "world_defs/shaders/render_fragment.glsl");
+        loaded_render_shader = true;
+
+        render_albedo_tex_loc = render_shader->get_uniform_location("albedo_tex");
+        render_position_tex_loc = render_shader->get_uniform_location("position_tex");
+        render_normal_tex_loc = render_shader->get_uniform_location("normal_tex");
+        render_light_position_loc = render_shader->get_uniform_location("light_position");
+        render_light_color_loc = render_shader->get_uniform_location("light_color");
+        render_ambient_color_loc = render_shader->get_uniform_location("ambient_color");
+    }
+
     void render_test_texture(float left, float top, float right, float bottom, GLuint &target_texture) {
         glActiveTexture(GL_TEXTURE0);
         glEnableClientState(GL_TEXTURE_2D);
@@ -45,13 +65,13 @@ namespace map_render {
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D, map_render::light_render_col); // Texture slot 4 = light color
 
-        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "albedo_tex"), 0);
-        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "position_tex"), 1);
-        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "normal_tex"), 2);
-        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "light_position"), 3);
-        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "light_color"), 4);
+        glUniform1i(render_albedo_tex_loc, 0);
+        glUniform1i(render_position_tex_loc, 1);
+        glUniform1i(render_normal_tex_loc, 2);
+        glUniform1i(render_light_position_loc, 3);
+        glUniform1i(render_light_color_loc, 4);
 
-        glUniform3fv(glGetUniformLocation(map_render::render_shader->program_id, "ambient_color"), 1, glm::value_ptr(ambient_color));
+        glUniform3fv(render_ambient_color_loc, 1, glm::value_ptr(ambient_color));
 
         glColor3f(1, 1, 1);
         glBegin(GL_QUADS);
@@ -72,12 +92,6 @@ namespace map_render {
 
 
         glUseProgram(0);
-    }
-
-    void load_render_shader() {
-        render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
-                                                            "world_defs/shaders/render_fragment.glsl");
-        loaded_render_shader = true;
     }
 
     void render_phase_three_composition() {
