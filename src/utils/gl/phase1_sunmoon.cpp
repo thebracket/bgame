@@ -23,6 +23,19 @@ namespace map_render {
     glm::vec3 sun_moon_position;
     float light_range;
 
+    // Uniform and attribute locations
+    GLint shadow_world_pos_loc;
+    GLint shadow_projection_matrix_loc;
+    GLint shadow_view_matrix_loc;
+    GLint light_projection_matrix_loc;
+    GLint light_view_matrix_loc;
+    GLint light_light_space_matrix_loc;
+    GLint light_light_position_loc;
+    GLint light_light_color_loc;
+    GLint light_range_loc;
+    GLint light_world_position_loc;
+    GLint light_shadow_map_loc;
+
     void load_shadow_shader() {
         shadow_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/shadow_vertex.glsl",
                                                             "world_defs/shaders/shadow_fragment.glsl");
@@ -31,27 +44,34 @@ namespace map_render {
                                                             "world_defs/shaders/light_fragment.glsl");
 
         loaded_shadow_shader = true;
+
+        // Fill uniform locations
+        shadow_world_pos_loc = shadow_shader->get_attribute_location("world_position");
+        shadow_projection_matrix_loc = shadow_shader->get_uniform_location("projection_matrix");
+        shadow_view_matrix_loc = shadow_shader->get_uniform_location("view_matrix");
+
+        light_projection_matrix_loc = light_shader->get_uniform_location("projection_matrix");
+        light_view_matrix_loc = light_shader->get_uniform_location("view_matrix");
+        light_light_space_matrix_loc = light_shader->get_uniform_location("light_space_matrix");
+        light_light_position_loc = light_shader->get_uniform_location("light_position");
+        light_light_color_loc = light_shader->get_uniform_location("light_color");
+        light_range_loc = light_shader->get_uniform_location("range");
+        light_world_position_loc = light_shader->get_attribute_location("world_position");
+        light_shadow_map_loc = light_shader->get_uniform_location("shadow_map");
     }
 
     void render_sun_chunk(const gl::chunk_t &chunk, bool set_uniforms) {
         if (!chunk.has_geometry) return;
         if (!chunk.generated_vbo) return;
 
-        GLint world_position;
-
-        if (set_uniforms) {
-            world_position = glGetAttribLocation(shadow_shader->program_id, "world_position");
-            if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
-        }
-
         glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo_id);
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
 
         if (set_uniforms) {
-            glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(shadow_world_pos_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(world_position);
+            glEnableVertexAttribArray(shadow_world_pos_loc);
         }
 
         glDrawArrays(GL_QUADS, 0, chunk.n_quads);
@@ -160,13 +180,8 @@ namespace map_render {
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         glViewport(0,0,screen_size.x,screen_size.y);
 
-        int sun_projection = glGetUniformLocation(map_render::shadow_shader->program_id, "projection_matrix");
-        if (sun_projection == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
-        glUniformMatrix4fv(sun_projection, 1, false, glm::value_ptr(sun_projection_matrix));
-
-        int sun_view = glGetUniformLocation(map_render::shadow_shader->program_id, "view_matrix");
-        if (sun_view == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
-        glUniformMatrix4fv(sun_view, 1, false, glm::value_ptr(sun_modelview_matrix));
+        glUniformMatrix4fv(shadow_projection_matrix_loc, 1, false, glm::value_ptr(sun_projection_matrix));
+        glUniformMatrix4fv(shadow_view_matrix_loc, 1, false, glm::value_ptr(sun_modelview_matrix));
 
         // render the terrain
         Frustrum frustrum;
@@ -194,42 +209,21 @@ namespace map_render {
 
         // Setup the program inputs
         map_render::setup_matrices();
-        int projection_matrix_loc = glGetUniformLocation(map_render::light_shader->program_id, "projection_matrix");
-        if (projection_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
-        glUniformMatrix4fv(projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(light_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(light_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
-        int view_matrix_loc = glGetUniformLocation(map_render::light_shader->program_id, "view_matrix");
-        if (view_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
-        glUniformMatrix4fv(view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
-
-        int light_matrix_loc = glGetUniformLocation(map_render::light_shader->program_id, "light_space_matrix");
-        if (light_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - light space matrix");
         glm::mat4 light_matrix = map_render::sun_projection_matrix * map_render::sun_modelview_matrix;
-        glUniformMatrix4fv(light_matrix_loc, 1, false, glm::value_ptr( light_matrix ));
+        glUniformMatrix4fv(light_light_space_matrix_loc, 1, false, glm::value_ptr( light_matrix ));
 
-        int light_pos_loc = glGetUniformLocation(map_render::light_shader->program_id, "light_position");
-        if (light_pos_loc == -1) throw std::runtime_error("Unknown uniform slot - light_position");
-        glUniform3fv(light_pos_loc, 1, glm::value_ptr(map_render::sun_moon_position));
-
-        int light_col_loc = glGetUniformLocation(map_render::light_shader->program_id, "light_color");
-        if (light_col_loc == -1) throw std::runtime_error("Unknown uniform slot - light_color");
-        glUniform3fv(light_col_loc, 1, glm::value_ptr(map_render::sun_moon_color));
-
-        int range_loc = glGetUniformLocation(map_render::light_shader->program_id, "range");
-        if (range_loc == -1) throw std::runtime_error("Unknown uniform slot - range");
-        glUniform1f(range_loc, light_range);
-
-        GLint world_position;
-        world_position = glGetAttribLocation(map_render::light_shader->program_id, "world_position");
-        if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
+        glUniform3fv(light_light_position_loc, 1, glm::value_ptr(map_render::sun_moon_position));
+        glUniform3fv(light_light_color_loc, 1, glm::value_ptr(map_render::sun_moon_color));
+        glUniform1f(light_range_loc, light_range);
 
         // Input texture - it needs the shadow map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, map_render::sun_depth_texture);
 
-        int tex1loc = glGetUniformLocation(map_render::light_shader->program_id, "shadow_map");
-        if (tex1loc == -1) throw std::runtime_error("Unknown uniform slot - texture 0");
-        glUniform1i(tex1loc, 0);
+        glUniform1i(light_shadow_map_loc, 0);
 
         // Splat out the chunks
         Frustrum frustrum;
@@ -242,9 +236,9 @@ namespace map_render {
                 glEnableClientState(GL_VERTEX_ARRAY);
                 glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
 
-                glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                glVertexAttribPointer(light_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                       ((char *) nullptr + 3 * sizeof(float)));
-                glEnableVertexAttribArray(world_position);
+                glEnableVertexAttribArray(light_world_position_loc);
 
                 int cull_pos = chunk.n_quads;
                 auto finder = chunk.z_offsets.find(camera_position->region_z);
