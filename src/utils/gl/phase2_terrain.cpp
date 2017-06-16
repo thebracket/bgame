@@ -11,11 +11,29 @@ namespace map_render {
     glm::mat4 camera_projection_matrix;
     glm::mat4 camera_modelview_matrix;
 
+    // Uniform/attribute locations
+    GLint terrain_world_position_loc;
+    GLint terrain_normal_loc;
+    GLint terrain_color_loc;
+    GLint terrain_texture_position_loc;
+    GLint terrain_projection_matrix_loc;
+    GLint terrain_view_matrix_loc;
+    GLint terrain_camera_position_loc;
+    GLint terrain_my_color_texture_loc;
 
     void load_terrain_shader() {
         terrain_chunk_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/terrain_vertex.glsl",
                                                                    "world_defs/shaders/terrain_fragment.glsl");
         loaded_terrain_shader = true;
+
+        terrain_world_position_loc = terrain_chunk_shader->get_attribute_location("world_position");
+        terrain_normal_loc = terrain_chunk_shader->get_attribute_location("normal");
+        terrain_color_loc = terrain_chunk_shader->get_attribute_location("color");
+        terrain_texture_position_loc = terrain_chunk_shader->get_attribute_location("texture_position");
+        terrain_projection_matrix_loc = terrain_chunk_shader->get_uniform_location("projection_matrix");
+        terrain_view_matrix_loc = terrain_chunk_shader->get_uniform_location("view_matrix");
+        terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
+        terrain_my_color_texture_loc = terrain_chunk_shader->get_uniform_location("my_color_texture");
     }
 
     void setup_matrices() {
@@ -64,42 +82,26 @@ namespace map_render {
         if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
 
-        GLint world_position;
-        GLint normal_position;
-        GLint color_position;
-        GLint texture_position;
-
-        if (set_uniforms) {
-            world_position = glGetAttribLocation(terrain_chunk_shader->program_id, "world_position");
-            if (world_position == -1) throw std::runtime_error("Invalid world position in shader");
-            normal_position = glGetAttribLocation(terrain_chunk_shader->program_id, "normal");
-            if (normal_position == -1) throw std::runtime_error("Invalid normal position in shader");
-            color_position = glGetAttribLocation(terrain_chunk_shader->program_id, "color");
-            if (color_position == -1) throw std::runtime_error("Invalid color position in shader");
-            texture_position = glGetAttribLocation(terrain_chunk_shader->program_id, "texture_position");
-            if (texture_position == -1) throw std::runtime_error("Invalid texture position in shader");
-        }
-
         glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo_id);
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
 
         if (set_uniforms) {
-            glVertexAttribPointer(world_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(world_position);
+            glEnableVertexAttribArray(terrain_world_position_loc);
 
-            glVertexAttribPointer(normal_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 6 * sizeof(float)));
-            glEnableVertexAttribArray(normal_position);
+            glEnableVertexAttribArray(terrain_normal_loc);
 
-            glVertexAttribPointer(color_position, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 9 * sizeof(float)));
-            glEnableVertexAttribArray(color_position);
+            glEnableVertexAttribArray(terrain_color_loc);
 
-            glVertexAttribPointer(texture_position, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 12 * sizeof(float)));
-            glEnableVertexAttribArray(texture_position);
+            glEnableVertexAttribArray(terrain_texture_position_loc);
 
         }
 
@@ -124,23 +126,11 @@ namespace map_render {
         map_render::setup_matrices();
 
         // Pass along the matrices
-        int projection_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "projection_matrix");
-        if (projection_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - projection matrix");
-        glUniformMatrix4fv(projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-
-        int view_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "view_matrix");
-        if (view_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
-        glUniformMatrix4fv(view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
-
-        //int light_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "light_space_matrix");
-        //if (light_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - light space matrix");
-        //glm::mat4 light_matrix = map_render::sun_projection_matrix * map_render::sun_modelview_matrix;
-        //glUniformMatrix4fv(light_matrix_loc, 1, false, glm::value_ptr( light_matrix ));
+        glUniformMatrix4fv(terrain_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(terrain_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
         // Pass along the camera information
-        int camera_pos = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "camera_position");
-        if (camera_pos == -1) throw std::runtime_error("Unknown uniform slot - camera_pos");
-        glUniform3f(camera_pos, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
+        glUniform3f(terrain_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
         // Texture
         glActiveTexture(GL_TEXTURE0);
@@ -152,13 +142,7 @@ namespace map_render {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, map_render::sun_depth_texture);
 
-        int tex1loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "my_color_texture");
-        if (tex1loc == -1) throw std::runtime_error("Unknown uniform slot - texture 0");
-        glUniform1i(tex1loc, 0);
-
-        //int tex2loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "shadow_map");
-        //if (tex2loc == -1) throw std::runtime_error("Unknown uniform slot - texture 1");
-        //glUniform1i(tex2loc, 1);
+        glUniform1i(terrain_my_color_texture_loc, 0);
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
