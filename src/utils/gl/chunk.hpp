@@ -326,13 +326,11 @@ namespace gl {
 
             void add_cube(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty)
             {
-                // TODO: We should decline to add portions that are merged with a neighbor. So no ceiling for a cube that has a neighbor above with a floor,
-                // etc.
                 add_floor(x, y, z, r, g, b, tx, ty);
-                add_left(x, y, z, r, g, b, tx, ty);
-                add_right(x, y, z, r, g, b, tx, ty);
-                add_north(x, y, z, r, g, b, tx, ty);
-                add_south(x, y, z, r, g, b, tx, ty);
+                if (!region::solid(mapidx(x-1, y, z))) add_left(x, y, z, r, g, b, tx, ty);
+                if (!region::solid(mapidx(x+1, y, z))) add_right(x, y, z, r, g, b, tx, ty);
+                if (!region::solid(mapidx(x, y-1, z))) add_north(x, y, z, r, g, b, tx, ty);
+                if (!region::solid(mapidx(x, y+1, z))) add_south(x, y, z, r, g, b, tx, ty);
                 add_floor(x, y, z+1.0f, r, g, b, tx, ty);
             }
         };
