@@ -9,7 +9,7 @@ namespace map_render {
     GLuint mouse_pick_depth;
     GLuint render_texture;
     GLuint normal_texture;
-    GLuint lit_texture;
+    GLuint interpolated_pos_texture;
 
     void load_fbo() {
         // Create and bind the framebuffer for mouse-picking output
@@ -44,14 +44,14 @@ namespace map_render {
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normal_texture, 0);
 
-        // Create the lighting target texture
-        glGenTextures(1, &lit_texture);
-        glBindTexture(GL_TEXTURE_2D, lit_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        // Create the interpolated position target texture
+        glGenTextures(1, &interpolated_pos_texture);
+        glBindTexture(GL_TEXTURE_2D, interpolated_pos_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, lit_texture, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, interpolated_pos_texture, 0);
 
         // Create a depth-buffer for the render target
         glGenRenderbuffers(1, &mouse_pick_depth);

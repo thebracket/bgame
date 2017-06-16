@@ -37,19 +37,21 @@ namespace map_render {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, map_render::render_texture); // Texture slot 0 = albedo
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, map_render::mouse_pick_texture); // Texture slot 1 = position
+        glBindTexture(GL_TEXTURE_2D, map_render::interpolated_pos_texture); // Texture slot 1 = position
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, map_render::normal_texture); // Texture slot 2 = normal
         glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, map_render::lit_texture); // Texture slot 3 = normal
+        glBindTexture(GL_TEXTURE_2D, map_render::light_render_pos); // Texture slot 3 = light position
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, map_render::light_render_col); // Texture slot 4 = light color
+
         glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "albedo_tex"), 0);
         glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "position_tex"), 1);
         glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "normal_tex"), 2);
-        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "shadow_map"), 3);
+        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "light_position"), 3);
+        glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "light_color"), 4);
 
         glUniform3fv(glGetUniformLocation(map_render::render_shader->program_id, "ambient_color"), 1, glm::value_ptr(ambient_color));
-        glUniform3fv(glGetUniformLocation(map_render::render_shader->program_id, "sun_moon_position"), 1, glm::value_ptr(sun_moon_position));
-        glUniform3fv(glGetUniformLocation(map_render::render_shader->program_id, "sun_moon_color"), 1, glm::value_ptr(sun_moon_color));
 
         glColor3f(1, 1, 1);
         glBegin(GL_QUADS);
@@ -91,14 +93,13 @@ namespace map_render {
         glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
 
         if (test_mode) {
-            render_test_texture(0.0f, 0.0f, W / 2.0f, H / 2.0f, map_render::lit_texture);
+            render_test_texture(0.0f, 0.0f, W / 2.0f, H / 2.0f, map_render::sun_depth_texture);
             render_test_texture(W / 2.0f, 0.0f, W, H / 2.0f, map_render::render_texture);
-            render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::sun_depth_texture);
-            render_test_texture(W / 2.0f, H / 2.0f, W, H, map_render::sun_render);
+            render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::light_render_col);
         } else {
             render_mixed_texture(0.0f, 0.0f, W, H);
-            //render_test_texture(0.0f, 0.0f, W / 2.0f, H / 2.0f, map_render::render_texture);
-            //render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::normal_texture);
+            //render_test_texture(0.0f, 0.0f, W / 2.0f, H / 2.0f, map_render::interpolated_pos_texture);
+            //render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::sun_render);
         }
     }
 }

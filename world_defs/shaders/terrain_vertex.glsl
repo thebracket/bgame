@@ -4,7 +4,6 @@
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
 uniform vec3 camera_position;
-uniform mat4 light_space_matrix;
 
 // World position is part of the VBO
 attribute vec3 world_position;
@@ -15,8 +14,8 @@ attribute vec2 texture_position;
 // Outputs
 varying vec3 tint;
 varying vec3 world_pos;
-varying vec4 fragment_light_space_position;
 varying mat3 TBN;
+varying vec4 interpolated_position;
 
 void main() {
     vec3 tangent;
@@ -41,7 +40,7 @@ void main() {
     vec4 position = gl_Vertex;
     position.xyz += world_position.xzy;
     gl_Position = projection_matrix * (view_matrix * position);
-    tint = color/2.0;
+    tint = color;
     if (world_position.z < camera_position.z) {
         float darken = (camera_position.z - world_position.z) * 0.05f;
         tint.rgb -= darken;
@@ -49,5 +48,5 @@ void main() {
     gl_TexCoord[0] = vec4(texture_position, 0.0, 0.0);
     gl_TexCoord[1] = vec4(texture_position.x + 0.5f, texture_position.y, 0.0, 0.0);
     world_pos = world_position;
-    fragment_light_space_position = light_space_matrix * position;
+    interpolated_position = position;
 }

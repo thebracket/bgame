@@ -17,7 +17,7 @@ namespace map_render {
     extern GLuint mouse_pick_depth;
     extern GLuint render_texture;
     extern GLuint normal_texture;
-    extern GLuint lit_texture;
+    extern GLuint interpolated_pos_texture;
 
     void load_fbo();
 }

@@ -11,8 +11,16 @@ namespace map_render {
     GLuint sun_depth_texture;
     GLuint sun_render;
 
+    // Light output buffer
+    GLuint light_fbo;
+    GLuint light_depth_buffer;
+    GLuint light_render_pos;
+    GLuint light_render_col;
+
     void load_sun_fbo() {
         const auto screen_size = rltk::get_window()->getSize();
+
+        // Create the sun FBO
         glGenFramebuffers(1, &sun_fbo);
         glBindFramebuffer(GL_FRAMEBUFFER, sun_fbo);
         std::cout << "Sun FBO: " << sun_fbo << "\n";
@@ -54,5 +62,46 @@ namespace map_render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         loaded_sun_fbo = true;
         std::cout << "Setup Shadow/Sun FBO\n";
+
+        //////////////////////////////////////////////////////////////////
+        // Setup the light output FBO
+        glGenFramebuffers(1, &light_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+        std::cout << "Light Output FBO: " << light_fbo << "\n";
+
+        // Depth buffer
+        glGenRenderbuffers(1, &light_depth_buffer);
+        std::cout << "Light depth buffer: " << light_depth_buffer << "\n";
+        glBindRenderbuffer(GL_RENDERBUFFER, light_depth_buffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screen_size.x, screen_size.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, light_depth_buffer);
+
+        // Render texture 1
+        glGenTextures(1, &light_render_pos);
+        std::cout << "Light render pos: " << light_render_pos << "\n";
+        glBindTexture(GL_TEXTURE_2D, light_render_pos);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, light_render_pos, 0);
+
+        // Render texture 1
+        glGenTextures(1, &light_render_col);
+        std::cout << "Light render col: " << light_render_col << "\n";
+        glBindTexture(GL_TEXTURE_2D, light_render_col);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, light_render_col, 0);
+
+        GLenum buffers2[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT  };
+        glDrawBuffers(2, buffers2);
+
+        // Return to regular render mode
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        std::cout << "Setup Light Output FBO\n";
     }
 }

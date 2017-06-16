@@ -44,11 +44,11 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         new_building->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "cordex") {
         new_building->assign(viewshed_t{16, false})
-            ->assign(lightsource_t{16, rltk::colors::WHITE, true});
+            ->assign(lightsource_t{8, rltk::colors::WHITE, true});
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {
-        new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{16, rltk::colors::WHITE, true});
+        //new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "solar_panel") {
         new_building->assign(construct_power_t{00,0,1});
     } else if (tag == "camp_fire") {
@@ -75,7 +75,8 @@ void add_construction(const int x, const int y, const int z, const std::string t
     if (type == "ship_wall") {
         set_tile(idx, tile_type::WALL, true, true, plasteel, 0, true, true);
     } else if (type == "ship_window") {
-        set_tile(idx, tile_type::WINDOW, true, false, plasteel, 0, true, true);
+        //set_tile(idx, tile_type::WINDOW, true, false, plasteel, 0, true, true);
+        set_tile(idx, tile_type::WALL, true, true, plasteel, 0, true, true);
     } else if (type == "ship_floor") {
         set_tile(idx, tile_type::FLOOR, false, false, plasteel, 0, true, true);
     } else if (type == "hut_wall") {

@@ -132,10 +132,10 @@ namespace map_render {
         if (view_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - view matrix");
         glUniformMatrix4fv(view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
-        int light_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "light_space_matrix");
-        if (light_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - light space matrix");
-        glm::mat4 light_matrix = map_render::sun_projection_matrix * map_render::sun_modelview_matrix;
-        glUniformMatrix4fv(light_matrix_loc, 1, false, glm::value_ptr( light_matrix ));
+        //int light_matrix_loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "light_space_matrix");
+        //if (light_matrix_loc == -1) throw std::runtime_error("Unknown uniform slot - light space matrix");
+        //glm::mat4 light_matrix = map_render::sun_projection_matrix * map_render::sun_modelview_matrix;
+        //glUniformMatrix4fv(light_matrix_loc, 1, false, glm::value_ptr( light_matrix ));
 
         // Pass along the camera information
         int camera_pos = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "camera_position");
@@ -156,9 +156,9 @@ namespace map_render {
         if (tex1loc == -1) throw std::runtime_error("Unknown uniform slot - texture 0");
         glUniform1i(tex1loc, 0);
 
-        int tex2loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "shadow_map");
-        if (tex2loc == -1) throw std::runtime_error("Unknown uniform slot - texture 1");
-        glUniform1i(tex2loc, 1);
+        //int tex2loc = glGetUniformLocation(map_render::terrain_chunk_shader->program_id, "shadow_map");
+        //if (tex2loc == -1) throw std::runtime_error("Unknown uniform slot - texture 1");
+        //glUniform1i(tex2loc, 1);
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);

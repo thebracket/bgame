@@ -4,10 +4,10 @@ uniform sampler2D my_color_texture;
 uniform sampler2D shadow_map;
 varying vec3 tint;
 varying vec3 world_pos;
-varying vec4 fragment_light_space_position;
 varying mat3 TBN;
+varying vec4 interpolated_position;
 
-float shadow_calculation(vec4 frag_pos_light_space) {
+/*float shadow_calculation(vec4 frag_pos_light_space) {
     vec3 light_dir = normalize(frag_pos_light_space.xyz - world_pos);
 
     vec3 proj_coords = frag_pos_light_space.xyz / frag_pos_light_space.w;
@@ -17,7 +17,7 @@ float shadow_calculation(vec4 frag_pos_light_space) {
     float bias = 0.01;
     return current_depth - bias > closest_depth ? 0.0 : 1.0;
     //return closest_depth;
-}
+}*/
 
 void main() {
     vec3 calc_normal = texture2D(my_color_texture, gl_TexCoord[1].st).rgb;
@@ -28,6 +28,5 @@ void main() {
     vec4 color = vec4(tint.r, tint.g, tint.b, 1.0);
     gl_FragData[1] = texture2D(my_color_texture, gl_TexCoord[0].st) * color;
     gl_FragData[2] = vec4(calc_normal.xyz, 1.0);
-    float shadow = shadow_calculation(fragment_light_space_position);
-    gl_FragData[3] = vec4(shadow, shadow, shadow, 1.0);
+    gl_FragData[3] = interpolated_position / 255.0;
 }

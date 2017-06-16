@@ -37,6 +37,7 @@
 #include "phase2_terrain.hpp"
 #include "phase3_composition.hpp"
 #include "../../components/lightsource.hpp"
+#include "../../main/game_camera.hpp"
 
 using namespace map_render_sys;
 using namespace region;
@@ -85,6 +86,32 @@ void map_render_t::render() {
     // Push state
     push_gl_states();
 
+    // Idea:
+    // Phase 1 renders the terrain without any lighting data
+    // Phase 2a renders all lights to depth buffers, and then 2b renders to a "lights" FBO
+
+    // Phase 1: Populate the basic g-buffer
+    map_render::render_phase_two_terrain();
+
+    // Phase 2: Shadowed lighting
+
+    // We start by rendering the sun/moon to the depth buffer
+    map_render::place_sun_moon();
+    map_render::render_phase_one_sun_moon();
+    map_render::render_to_light_buffer(true);
+
+    // Then we render each light
+    each<lightsource_t, position_t>([] (entity_t &e, lightsource_t &light, position_t &pos) {
+        map_render::place_light(1, light.radius, pos.x, pos.z, pos.y, (float)light.color.r/255.0f, (float)light.color.g/255.0f, (float)light.color.b/255.0f);
+        map_render::render_phase_one_sun_moon();
+        map_render::render_to_light_buffer(false);
+
+        map_render::place_light(2, light.radius, pos.x, pos.z, pos.y, (float)light.color.r/255.0f, (float)light.color.g/255.0f, (float)light.color.b/255.0f);
+        map_render::render_phase_one_sun_moon();
+        map_render::render_to_light_buffer(false);
+    });
+
+    /*
     // Phase 1 render - draw all geometry, from the point of view of the sun or moon.
     map_render::place_sun_moon();
     glCullFace(GL_FRONT);
@@ -93,6 +120,18 @@ void map_render_t::render() {
 
     // Pase 2 render - draw all the geometry to our g-buffers
     map_render::render_phase_two_terrain();
+
+    // Testing lighting
+    int i=0;
+    each<lightsource_t, position_t>([&i] (entity_t &e, lightsource_t &light, position_t &pos) {
+        //glCullFace(GL_FRONT);
+        map_render::place_light(pos.x, pos.z, pos.y);
+        map_render::render_phase_one_sun_moon();
+        //glCullFace(GL_BACK);
+        ++i;
+    });
+    //std::cout << "Light count: " << i << "\n";
+     */
 
     // Phase 3 render: composition
     map_render::render_phase_three_composition();

@@ -10,6 +10,7 @@
 
 namespace map_render {
     extern std::unique_ptr<gl::base_shader_t> shadow_shader;
+    extern std::unique_ptr<gl::base_shader_t> light_shader;
     extern bool loaded_shadow_shader;
 
     extern glm::mat4 sun_projection_matrix;
@@ -21,6 +22,8 @@ namespace map_render {
     void load_shadow_shader();
     void render_sun_chunk(const gl::chunk_t &chunk, bool set_uniforms = true);
     void place_sun_moon();
-    void place_light(const float sun_x, const float sun_y, const float sun_z);
+    void place_light(int direction, float range, const float sun_x, const float sun_y, const float sun_z, const float r, const float g, const float b);
     void render_phase_one_sun_moon();
+
+    void render_to_light_buffer(const bool clear);
 }
