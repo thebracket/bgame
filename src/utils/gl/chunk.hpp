@@ -43,6 +43,9 @@ namespace gl {
              * 6,7,8 = Normal
              * 9,10,11 = Color
              * 12,13 = Texture Position
+             * 14 = Above Ground
+             * 15,16,17 = Light position
+             * 18,19,20 = Light color
              */
             std::vector<float> items;
             int n_quads = 0;
@@ -54,8 +57,8 @@ namespace gl {
                 float float_array[] = { add_to_items_impl(args)... };
             }
 
-            void add_floor(const float x, const float y, const float z, float r, float g, float b, float tx, float ty) {
-                const int idx = mapidx(x, y, z);
+            // Warning: this modifies parameters!
+            inline void colorize_and_texture_floor(const int &idx, float &r, float &g, float &b, float &ty) {
                 const uint8_t type = region::tile_type(idx);
                 if (type == tile_type::TREE_TRUNK) {
                     r = 1.0f;
@@ -80,6 +83,39 @@ namespace gl {
                     }
                 }
                 ty = ty / texture_height;
+            }
+
+            // Warning: this modifies parameters!
+            inline void colorize_and_texture_other(const int &idx, float &r, float &g, float &b, float &ty) {
+                const uint8_t type = region::tile_type(idx);
+                if (type == tile_type::TREE_TRUNK) {
+                    r = 1.0f;
+                    g = 1.0f;
+                    b = 1.0f;
+                    ty = 8.0f * sprite_height;
+                } else {
+                    const size_t material_idx = region::material(idx);
+                    auto material_definition = get_material(material_idx);
+                    if (material_definition != nullptr) {
+                        if (region::flag(idx, CONSTRUCTION)) {
+                            ty = sprite_height * material_definition->constructed_wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        } else {
+                            ty = sprite_height * material_definition->wall_texture;
+                            r = (float) material_definition->fg.r / 255.0f;
+                            g = (float) material_definition->fg.g / 255.0f;
+                            b = (float) material_definition->fg.b / 255.0f;
+                        }
+                    }
+                }
+                ty = ty / texture_height;
+            }
+
+            void add_floor(const float x, const float y, const float z, float r, float g, float b, float tx, float ty) {
+                const int idx = mapidx(x, y, z);
+                colorize_and_texture_floor(idx, r, g, b, ty);
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
@@ -110,30 +146,7 @@ namespace gl {
 
             void add_left(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const uint8_t type = region::tile_type(idx);
-                if (type == tile_type::TREE_TRUNK) {
-                    r = 1.0f;
-                    g = 1.0f;
-                    b = 1.0f;
-                    ty = 8.0f * sprite_height;
-                } else {
-                    const size_t material_idx = region::material(idx);
-                    auto material_definition = get_material(material_idx);
-                    if (material_definition != nullptr) {
-                        if (region::flag(idx, CONSTRUCTION)) {
-                            ty = sprite_height * material_definition->constructed_wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        } else {
-                            ty = sprite_height * material_definition->wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        }
-                    }
-                }
-                ty = ty / texture_height;
+                colorize_and_texture_other(idx, r, g, b, ty);
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
@@ -164,30 +177,7 @@ namespace gl {
 
             void add_right(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const uint8_t type = region::tile_type(idx);
-                if (type == tile_type::TREE_TRUNK) {
-                    r = 1.0f;
-                    g = 1.0f;
-                    b = 1.0f;
-                    ty = 8.0f * sprite_height;
-                } else {
-                    const size_t material_idx = region::material(idx);
-                    auto material_definition = get_material(material_idx);
-                    if (material_definition != nullptr) {
-                        if (region::flag(idx, CONSTRUCTION)) {
-                            ty = sprite_height * material_definition->constructed_wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        } else {
-                            ty = sprite_height * material_definition->wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        }
-                    }
-                }
-                ty = ty / texture_height;
+                colorize_and_texture_other(idx, r, g, b, ty);
 
                 add_to_items(0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
@@ -218,30 +208,7 @@ namespace gl {
 
             void add_north(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const uint8_t type = region::tile_type(idx);
-                if (type == tile_type::TREE_TRUNK) {
-                    r = 1.0f;
-                    g = 1.0f;
-                    b = 1.0f;
-                    ty = 8.0f * sprite_height;
-                } else {
-                    const size_t material_idx = region::material(idx);
-                    auto material_definition = get_material(material_idx);
-                    if (material_definition != nullptr) {
-                        if (region::flag(idx, CONSTRUCTION)) {
-                            ty = sprite_height * material_definition->constructed_wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        } else {
-                            ty = sprite_height * material_definition->wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        }
-                    }
-                }
-                ty = ty / texture_height;
+                colorize_and_texture_other(idx, r, g, b, ty);
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
@@ -272,30 +239,7 @@ namespace gl {
 
             void add_south(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
                 const int idx = mapidx(x, y, z);
-                const uint8_t type = region::tile_type(idx);
-                if (type == tile_type::TREE_TRUNK) {
-                    r = 1.0f;
-                    g = 1.0f;
-                    b = 1.0f;
-                    ty = 8.0f * sprite_height;
-                } else {
-                    const size_t material_idx = region::material(idx);
-                    auto material_definition = get_material(material_idx);
-                    if (material_definition != nullptr) {
-                        if (region::flag(idx, CONSTRUCTION)) {
-                            ty = sprite_height * material_definition->constructed_wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        } else {
-                            ty = sprite_height * material_definition->wall_texture;
-                            r = (float) material_definition->fg.r / 255.0f;
-                            g = (float) material_definition->fg.g / 255.0f;
-                            b = (float) material_definition->fg.b / 255.0f;
-                        }
-                    }
-                }
-                ty = ty / texture_height;
+                colorize_and_texture_other(idx, r, g, b, ty);
 
                 add_to_items(-0.5f, -0.5f, 0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
