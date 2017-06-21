@@ -16,5 +16,5 @@ namespace map_render {
     void render_test_texture(float left, float top, float right, float bottom, GLuint &target_texture);
     void render_mixed_texture(float left, float top, float right, float bottom);
     void load_render_shader();
-    void render_phase_three_composition();
+    void render_composition();
 }

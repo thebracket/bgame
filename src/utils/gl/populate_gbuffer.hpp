@@ -17,5 +17,5 @@ namespace map_render {
     void load_terrain_shader();
     void setup_matrices();
     void render_terrain_chunk(const gl::chunk_t &chunk, bool set_uniforms = true);
-    void render_phase_two_terrain();
+    void render_terrain_to_gbuffer();
 }

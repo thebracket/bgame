@@ -32,9 +32,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "main_fbo.hpp"
-#include "phase1_sunmoon.hpp"
-#include "phase2_terrain.hpp"
-#include "phase3_composition.hpp"
+#include "sun_moon.hpp"
+#include "populate_gbuffer.hpp"
+#include "composition.hpp"
 #include "../../components/lightsource.hpp"
 #include "../../main/game_camera.hpp"
 
@@ -85,10 +85,10 @@ void map_render_t::render() {
 
     // Phase 1: Populate the basic g-buffer
     map_render::place_sun_moon();
-    map_render::render_phase_two_terrain();
+    map_render::render_terrain_to_gbuffer();
 
     // Phase 2 render: composition
-    map_render::render_phase_three_composition();
+    map_render::render_composition();
 
     // Phase 3 render: effects
 

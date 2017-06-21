@@ -1,7 +1,7 @@
-#include "phase2_terrain.hpp"
+#include "populate_gbuffer.hpp"
 #include "../../main/game_camera.hpp"
 #include "main_fbo.hpp"
-#include "phase1_sunmoon.hpp"
+#include "sun_moon.hpp"
 #include "gl_utils.hpp"
 
 namespace map_render {
@@ -118,7 +118,7 @@ namespace map_render {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    void render_phase_two_terrain() {
+    void render_terrain_to_gbuffer() {
         glUseProgram(map_render::terrain_chunk_shader->program_id);
         glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -1,7 +1,7 @@
-#include "phase3_composition.hpp"
+#include "composition.hpp"
 #include <rltk.hpp>
 #include "main_fbo.hpp"
-#include "phase1_sunmoon.hpp"
+#include "sun_moon.hpp"
 
 namespace map_render {
 
@@ -83,7 +83,7 @@ namespace map_render {
         glUseProgram(0);
     }
 
-    void render_phase_three_composition() {
+    void render_composition() {
         constexpr bool test_mode = false;
 
         auto sz = rltk::get_window()->getSize();

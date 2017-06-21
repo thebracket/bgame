@@ -1,4 +1,4 @@
-#include "phase1_sunmoon.hpp"
+#include "sun_moon.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #ifdef __APPLE__
@@ -8,7 +8,7 @@
 #endif
 #include "../../main/game_calendar.hpp"
 #include "gl_utils.hpp"
-#include "phase2_terrain.hpp"
+#include "populate_gbuffer.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
 
