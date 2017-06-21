@@ -32,7 +32,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "main_fbo.hpp"
-#include "sun_fbo.hpp"
 #include "phase1_sunmoon.hpp"
 #include "phase2_terrain.hpp"
 #include "phase3_composition.hpp"
@@ -74,10 +73,8 @@ namespace map_render
 void map_render_t::render() {
     // Check that the environment is ready
     if (!map_render::loaded_terrain_shader) map_render::load_terrain_shader();
-    if (!map_render::loaded_shadow_shader) map_render::load_shadow_shader();
     if (!map_render::loaded_render_shader) map_render::load_render_shader();
     if (!map_render::loaded_fbo) map_render::load_fbo();
-    if (!map_render::loaded_sun_fbo) map_render::load_sun_fbo();
     if (!map_render::built_chunk_buffer) map_render::build_chunk_buffer();
 
     // Update any chunks of the world that are dirty
@@ -86,91 +83,14 @@ void map_render_t::render() {
     // Push state
     push_gl_states();
 
-    // Idea:
-    // Phase 1 renders the terrain without any lighting data
-    // Phase 2a renders all lights to depth buffers, and then 2b renders to a "lights" FBO
-
     // Phase 1: Populate the basic g-buffer
+    map_render::place_sun_moon();
     map_render::render_phase_two_terrain();
 
-    // Phase 2: Shadowed lighting
-
-    // We start by rendering the sun/moon to the depth buffer
-    map_render::place_sun_moon();
-    map_render::render_phase_one_sun_moon();
-    map_render::render_to_light_buffer(true);
-
-    // Then we render each light
-    each<lightsource_t, position_t>([] (entity_t &e, lightsource_t &light, position_t &pos) {
-        map_render::place_light(1, light.radius, pos.x, pos.z, pos.y, (float)light.color.r/255.0f, (float)light.color.g/255.0f, (float)light.color.b/255.0f);
-        map_render::render_phase_one_sun_moon();
-        map_render::render_to_light_buffer(false);
-
-        map_render::place_light(2, light.radius, pos.x, pos.z, pos.y, (float)light.color.r/255.0f, (float)light.color.g/255.0f, (float)light.color.b/255.0f);
-        map_render::render_phase_one_sun_moon();
-        map_render::render_to_light_buffer(false);
-    });
-
-    /*
-    // Phase 1 render - draw all geometry, from the point of view of the sun or moon.
-    map_render::place_sun_moon();
-    glCullFace(GL_FRONT);
-    map_render::render_phase_one_sun_moon();
-    glCullFace(GL_BACK);
-
-    // Pase 2 render - draw all the geometry to our g-buffers
-    map_render::render_phase_two_terrain();
-
-    // Testing lighting
-    int i=0;
-    each<lightsource_t, position_t>([&i] (entity_t &e, lightsource_t &light, position_t &pos) {
-        //glCullFace(GL_FRONT);
-        map_render::place_light(pos.x, pos.z, pos.y);
-        map_render::render_phase_one_sun_moon();
-        //glCullFace(GL_BACK);
-        ++i;
-    });
-    //std::cout << "Light count: " << i << "\n";
-     */
-
-    // Phase 3 render: composition
+    // Phase 2 render: composition
     map_render::render_phase_three_composition();
 
-    // Phase 4 render: effects
-
-    // Splat render
-
-    /*
-    // Render out the finished screen
-    glUseProgram(map_render::render_shader->program_id);
-
-    // Bind the uniforms
-    //int r_worldToLightViewMatrix = glGetUniformLocation(map_render::render_shader->program_id, "worldToLightViewMatrix");
-    //glUniformMatrix4fv(r_worldToLightViewMatrix, 1, false, (GLfloat*)&worldToLightViewMatrix);
-    //int r_lightViewToProjectionMatrix = glGetUniformLocation(map_render::render_shader->program_id, "lightViewToProjectionMatrix");
-    //glUniformMatrix4fv(r_lightViewToProjectionMatrix, 1, false, (GLfloat*)&lightViewToProjectionMatrix);
-    //int r_worldToCameraViewMatrix = glGetUniformLocation(map_render::render_shader->program_id, "worldToCameraViewMatrix");
-    glUniformMatrix4fv(r_worldToCameraViewMatrix, 1, false, (GLfloat*)&view);
-    int r_camera = glGetUniformLocation(map_render::render_shader->program_id, "cameraPosition");
-    glUniform3f(r_camera, camera_position->region_x, camera_position->region_z, camera_position->region_y);
-
-    // Bind all the info textures. We send the normal map, position map,
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, map_render::render_texture); // Texture slot 0 = albedo
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, map_render::position_texture); // Texture slot 1 = position
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, map_render::normal_texture); // Texture slot 2 = normal
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, map_render::sun_depth_texture); // Texture slot 3 = normal
-    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "albedo_tex"), 0);
-    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "position_tex"), 1);
-    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "normal_tex"), 2);
-    glUniform1i(glGetUniformLocation(map_render::render_shader->program_id, "shadow_map"), 3);
-
-    // Render out the quad
-    render_mixed_texture(0.0f, 0.0f, W, H);
-    */
+    // Phase 3 render: effects
 
     // Done
     glUseProgram(0);
