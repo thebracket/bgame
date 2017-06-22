@@ -85,7 +85,8 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 		if (flag(tile_idx, CAN_GO_EAST)) ss << "East-";
 		if (flag(tile_idx, CAN_GO_WEST)) ss << "West-";
 		if (flag(tile_idx, CAN_GO_SOUTH)) ss << "South-";
-		if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand";
+		if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand-";
+		if (above_ground(tile_idx)) ss << "AboveGround-";
 		lines.push_back(ss.str());
 	}
 	if (water_level(tile_idx)>0) lines.push_back(std::string("Water level: " + std::to_string(water_level(tile_idx))));

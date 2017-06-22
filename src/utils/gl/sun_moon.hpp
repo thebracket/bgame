@@ -11,6 +11,8 @@
 namespace map_render {
 
     extern glm::vec3 ambient_color;
+    extern glm::vec3 sun_position;
+    extern glm::vec3 sun_color;
 
     void place_sun_moon();
 }

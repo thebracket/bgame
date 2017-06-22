@@ -13,6 +13,7 @@
 #endif
 #include <boost/container/flat_map.hpp>
 #include "../../raws/defs/material_def_t.hpp"
+#include "../../systems/render/lighting_system.hpp"
 
 namespace gl {
 
@@ -43,9 +44,9 @@ namespace gl {
              * 6,7,8 = Normal
              * 9,10,11 = Color
              * 12,13 = Texture Position
-             * 14 = Above Ground
-             * 15,16,17 = Light position
-             * 18,19,20 = Light color
+             * 14,15,16 = Flags
+             * 17,18,19 = Light position
+             * 20,21,22 = Light color
              */
             std::vector<float> items;
             int n_quads = 0;
@@ -113,169 +114,254 @@ namespace gl {
                 ty = ty / texture_height;
             }
 
-            void add_floor(const float x, const float y, const float z, float r, float g, float b, float tx, float ty) {
-                const int idx = mapidx(x, y, z);
+            void add_floor(const float x, const float y, const float z, float r, float g, float b, float tx,
+                           float ty, const int &idx, const bool &above_ground,
+                           const float &light_r, const float &light_g, const float &light_b,
+                           const float &light_x, const float &light_y, const float &light_z)
+            {
                 colorize_and_texture_floor(idx, r, g, b, ty);
+                const float ground_indicator = above_ground ? 255.0f : 0.0f;
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(0.0f, 1.0f, 0.0f);           // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty);                     // Texture 0
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(-0.5f, -0.5f,  0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
                 add_to_items(0.0f, 1.0f, 0.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx, ty + tsize_y);           // Texture 1
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
                 add_to_items(0.0f, 1.0f, 0.0f);           // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 2
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, -0.5f, -0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
                 add_to_items(0.0f, 1.0f, 0.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx + tsize_x, ty);           // Texture 3
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 n_quads += 4;
             }
 
-            void add_left(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
-                const int idx = mapidx(x, y, z);
+            void add_left(const float x, const float y, const float z, float r, float g, float b, const float tx,
+                          float ty, const int &idx, const bool &above_ground,
+                          const float &light_r, const float &light_g, const float &light_b,
+                          const float &light_x, const float &light_y, const float &light_z)
+            {
                 colorize_and_texture_other(idx, r, g, b, ty);
+                const float ground_indicator = above_ground ? 255.0f : 0.0f;
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(-1.0f, 0.0f, 0.0f);          // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty + tsize_y);           // Texture 0
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(-0.5f, 0.5f,  -0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
                 add_to_items(-1.0f, 0.0f, 0.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(-0.5f, 0.5f,  0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
                 add_to_items(-1.0f, 0.0f, 0.0f);          // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty);           // Texture 2
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(-0.5f, -0.5f, 0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
                 add_to_items(-1.0f, 0.0f, 0.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx, ty);                     // Texture 3
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 n_quads += 4;
             }
 
-            void add_right(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
-                const int idx = mapidx(x, y, z);
+            void add_right(const float x, const float y, const float z, float r, float g, float b, const float tx,
+                           float ty, const int &idx, const bool &above_ground,
+                           const float &light_r, const float &light_g, const float &light_b,
+                           const float &light_x, const float &light_y, const float &light_z)
+            {
                 colorize_and_texture_other(idx, r, g, b, ty);
+                const float ground_indicator = above_ground ? 255.0f : 0.0f;
 
                 add_to_items(0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(1.0f, 0.0f, 0.0f);          // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty + tsize_y);           // Texture 0
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, 0.5f,  -0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
                 add_to_items(1.0f, 0.0f, 0.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
                 add_to_items(1.0f, 0.0f, 0.0f);          // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty);           // Texture 2
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, -0.5f, 0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
                 add_to_items(1.0f, 0.0f, 0.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx, ty);                     // Texture 3
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 n_quads += 4;
             }
 
-            void add_north(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
-                const int idx = mapidx(x, y, z);
+            void add_north(const float x, const float y, const float z, float r, float g, float b, const float tx,
+                           float ty, const int &idx, const bool &above_ground,
+                           const float &light_r, const float &light_g, const float &light_b,
+                           const float &light_x, const float &light_y, const float &light_z)
+            {
                 colorize_and_texture_other(idx, r, g, b, ty);
+                const float ground_indicator = above_ground ? 255.0f : 0.0f;
 
                 add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(0.0f, 0.0f, -1.0f);          // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty + tsize_y);           // Texture 0
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, -0.5f,  -0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
                 add_to_items(0.0f, 0.0f, -1.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, 0.5f,  -0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
                 add_to_items(0.0f, 0.0f, -1.0f);          // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty);           // Texture 2
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(-0.5f, 0.5f, -0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
                 add_to_items(0.0f, 0.0f, -1.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx, ty);                     // Texture 3
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 n_quads += 4;
             }
 
-            void add_south(const float x, const float y, const float z, float r, float g, float b, const float tx, float ty) {
-                const int idx = mapidx(x, y, z);
+            void add_south(const float x, const float y, const float z, float r, float g, float b, const float tx,
+                           float ty, const int &idx, const bool &above_ground,
+                           const float &light_r, const float &light_g, const float &light_b,
+                           const float &light_x, const float &light_y, const float &light_z)
+            {
                 colorize_and_texture_other(idx, r, g, b, ty);
+                const float ground_indicator = above_ground ? 255.0f : 0.0f;
 
                 add_to_items(-0.5f, -0.5f, 0.5f);        // Vertex 0
                 add_to_items(x, y, z);                    // World position 0
                 add_to_items(0.0f, 0.0f, 1.0f);          // Normal 0
                 add_to_items(r, g, b);                    // Color 0
                 add_to_items(tx, ty + tsize_y);           // Texture 0
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, -0.5f,  0.5f);        // Vertex 1
                 add_to_items(x, y, z);                    // World position 1
                 add_to_items(0.0f, 0.0f, 1.0f);           // Normal 1
                 add_to_items(r, g, b);                    // Color 1
                 add_to_items(tx + tsize_x, ty + tsize_y); // Texture 1
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
                 add_to_items(x, y, z);                    // World position 2
                 add_to_items(0.0f, 0.0f, 1.0f);          // Normal 2
                 add_to_items(r, g, b);                    // Color 2
                 add_to_items(tx + tsize_x, ty);           // Texture 2
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 add_to_items(-0.5f, 0.5f, 0.5f);         // Vertex 3
                 add_to_items(x, y, z);                    // World position 3
                 add_to_items(0.0f, 0.0f, 1.0f);           // Normal 3
                 add_to_items(r, g, b);                    // Color 3
                 add_to_items(tx, ty);                     // Texture 3
+                add_to_items(ground_indicator, 0.0f, 0.0f);
+                add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
                 n_quads += 4;
             }
 
             void add_cube(const float x, const float y, const float z, const float r, const float g, const float b, const float tx, const float ty)
             {
-                add_floor(x, y, z, r, g, b, tx, ty);
-                if (!region::solid(mapidx(x-1, y, z))) add_left(x, y, z, r, g, b, tx, ty);
-                if (!region::solid(mapidx(x+1, y, z))) add_right(x, y, z, r, g, b, tx, ty);
-                if (!region::solid(mapidx(x, y-1, z))) add_north(x, y, z, r, g, b, tx, ty);
-                if (!region::solid(mapidx(x, y+1, z))) add_south(x, y, z, r, g, b, tx, ty);
-                add_floor(x, y, z+1.0f, r, g, b, tx, ty);
+                const int idx = mapidx(x, y, z);
+                bool above_ground = region::above_ground(idx);
+                //if (above_ground) std::cout << "Above ground\n";
+
+                float light_r, light_g, light_b, light_x, light_y, light_z;
+                auto light_finder = lit_tiles.find(idx);
+                if (light_finder != lit_tiles.end()) {
+                    light_r = (float)light_finder->second.second.r / 255.0f;
+                    light_g = (float)light_finder->second.second.g / 255.0f;
+                    light_b = (float)light_finder->second.second.b / 255.0f;
+                    int lx,ly,lz;
+                    std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
+                    light_x = (float)lx;
+                    light_y = (float)lz;
+                    light_z = (float)ly;
+                    //std::cout << "Light hit at " << light_x << "/" << light_y << "/" << light_z << "\n";
+                } else {
+                    light_r = 0.0f;
+                    light_g = 0.0f;
+                    light_b = 0.0f;
+                    light_x = 0.0f;
+                    light_y = 0.0f;
+                    light_z = 0.0f;
+                }
+
+                add_floor(x, y, z, r, g, b, tx, ty, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z);
+                if (!region::solid(mapidx(x-1, y, z))) add_left(x, y, z, r, g, b, tx, ty, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z);
+                if (!region::solid(mapidx(x+1, y, z))) add_right(x, y, z, r, g, b, tx, ty, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z);
+                if (!region::solid(mapidx(x, y-1, z))) add_north(x, y, z, r, g, b, tx, ty, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z);
+                if (!region::solid(mapidx(x, y+1, z))) add_south(x, y, z, r, g, b, tx, ty, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z);
+                add_floor(x, y, z+1.0f, r, g, b, tx, ty, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z);
             }
         };
     }
@@ -283,7 +369,7 @@ namespace gl {
     /*
      * Describes a 16x16x16 chunk of world scenery
      */
-    constexpr int n_floats = 14;
+    constexpr int n_floats = 23;
 
     struct chunk_t {
         chunk_t() : index(0), base_x(0), base_y(0), base_z(0) {}

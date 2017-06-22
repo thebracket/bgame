@@ -10,12 +10,18 @@ attribute vec3 world_position;
 attribute vec3 normal;
 attribute vec3 color;
 attribute vec2 texture_position;
+attribute vec3 flags;
+attribute vec3 light_position;
+attribute vec3 light_color;
 
 // Outputs
 varying vec3 tint;
 varying vec3 world_pos;
 varying mat3 TBN;
 varying vec4 interpolated_position;
+varying vec3 flag_out;
+varying vec3 light_pos;
+varying vec3 light_col;
 
 void main() {
     vec3 tangent;
@@ -49,4 +55,8 @@ void main() {
     gl_TexCoord[1] = vec4(texture_position.x + 0.5f, texture_position.y, 0.0, 0.0);
     world_pos = world_position;
     interpolated_position = position;
+
+    flag_out = flags;
+    light_pos = light_position;
+    light_col = light_color;
 }

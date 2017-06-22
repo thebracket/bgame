@@ -10,6 +10,9 @@ namespace map_render {
     GLuint render_texture;
     GLuint normal_texture;
     GLuint interpolated_pos_texture;
+    GLuint light_position_texture;
+    GLuint light_color_texture;
+    GLuint flag_texture;
 
     void load_fbo() {
         // Create and bind the framebuffer for mouse-picking output
@@ -47,11 +50,39 @@ namespace map_render {
         // Create the interpolated position target texture
         glGenTextures(1, &interpolated_pos_texture);
         glBindTexture(GL_TEXTURE_2D, interpolated_pos_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, interpolated_pos_texture, 0);
+
+        // Create the light position texture
+        glGenTextures(1, &light_position_texture);
+        std::cout << "Generated light position texture as ID: " << light_position_texture << "\n";
+        glBindTexture(GL_TEXTURE_2D, light_position_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, light_position_texture, 0);
+
+        // Create the light color texture
+        glGenTextures(1, &light_color_texture);
+        glBindTexture(GL_TEXTURE_2D, light_color_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, light_color_texture, 0);
+
+        // Create the flag texture (R = outdoors...)
+        glGenTextures(1, &flag_texture);
+        glBindTexture(GL_TEXTURE_2D, flag_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT6, GL_TEXTURE_2D, flag_texture, 0);
 
         // Create a depth-buffer for the render target
         glGenRenderbuffers(1, &mouse_pick_depth);
@@ -60,8 +91,10 @@ namespace map_render {
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
 
-        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
-        glDrawBuffers(4, buffers);
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT,
+                             GL_COLOR_ATTACHMENT3_EXT, GL_COLOR_ATTACHMENT4_EXT, GL_COLOR_ATTACHMENT5_EXT,
+                             GL_COLOR_ATTACHMENT6_EXT };
+        glDrawBuffers(7, buffers);
 
         // Return to regular render mode
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

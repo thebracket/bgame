@@ -6,6 +6,7 @@
 #include "../../components/lightsource.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../main/game_designations.hpp"
+#include "../../utils/gl/chunk.hpp"
 
 using namespace rltk;
 
@@ -36,6 +37,12 @@ inline void reveal(const int &idx, const lightsource_t view, const int light_pos
 			finder->second.second = view.color;
 		}
 	}
+
+    // TODO: Implement a comparison to only update if we have to!
+    int x,y,z;
+    std::tie(x,y,z) = idxmap(idx);
+	const int chunk_index = gl::chunk_idx(x/gl::CHUNK_SIZE, y/gl::CHUNK_SIZE, z/gl::CHUNK_SIZE);
+    gl::chunks[chunk_index].dirty = true;
 }
 
 inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
@@ -60,7 +67,8 @@ void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
         view.color = rltk::lerp(rltk::colors::RED, rltk::colors::WHITE, power_percent);
     }
     const int idx = mapidx(pos);
-    lit_tiles[idx] = std::make_pair(idx, view.color); // Always light yourself
+    //lit_tiles[idx] = std::make_pair(idx, view.color); // Always light yourself
+	reveal(idx, view, idx);
 	for (int z=(0-view.radius); z<view.radius; ++z) {
 		for (int i=0-view.radius; i<view.radius; ++i) {
 			internal_light_to(pos, view, i, 0-view.radius, z);

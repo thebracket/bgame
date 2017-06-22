@@ -15,6 +15,8 @@
 namespace map_render {
 
     glm::vec3 ambient_color;
+    glm::vec3 sun_position;
+    glm::vec3 sun_color;
 
     void place_sun_moon() {
         bool moon_mode = false;
@@ -55,7 +57,7 @@ namespace map_render {
 
             auto ambient_rltk = rltk::lerp(dark_moon, dawn_light, lerp_percent);
             ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
-            //sun_moon_color = glm::vec3{ 0.7f, 0.7f, 0.8f };
+            sun_color = glm::vec3{ 0.7f, 0.7f, 0.8f };
         } else {
             float lerp_percent;
             if (calendar->hour < 12) {
@@ -65,8 +67,8 @@ namespace map_render {
             }
             auto ambient_rltk = rltk::lerp(dawn_light, noon_sun, lerp_percent);
             ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
-            //sun_moon_color = glm::vec3{ 1.0f, 1.0f, 0.97f };
+            sun_color = glm::vec3{ 1.0f, 1.0f, 0.97f };
         }
-        //sun_moon_position = glm::vec3{ sun_x, sun_y, sun_z };
+        sun_position = glm::vec3{ sun_x, sun_y, sun_z };
     }
 }

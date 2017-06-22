@@ -19,6 +19,9 @@ namespace map_render {
     GLint terrain_view_matrix_loc;
     GLint terrain_camera_position_loc;
     GLint terrain_my_color_texture_loc;
+    GLint terrain_flags_loc;
+    GLint terrain_light_position_loc;
+    GLint terrain_light_color_loc;
 
     void load_terrain_shader() {
         terrain_chunk_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/terrain_vertex.glsl",
@@ -33,6 +36,9 @@ namespace map_render {
         terrain_view_matrix_loc = terrain_chunk_shader->get_uniform_location("view_matrix");
         terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
         terrain_my_color_texture_loc = terrain_chunk_shader->get_uniform_location("my_color_texture");
+        terrain_flags_loc = terrain_chunk_shader->get_attribute_location("flags");
+        terrain_light_position_loc = terrain_chunk_shader->get_attribute_location("light_position");
+        terrain_light_color_loc = terrain_chunk_shader->get_attribute_location("light_color");
     }
 
     void setup_matrices() {
@@ -102,6 +108,17 @@ namespace map_render {
                                   ((char *) nullptr + 12 * sizeof(float)));
             glEnableVertexAttribArray(terrain_texture_position_loc);
 
+            glVertexAttribPointer(terrain_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 14 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_flags_loc);
+
+            glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 17 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_light_color_loc);
+
+            glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 20 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_light_position_loc);
         }
 
         int cull_pos = chunk.n_quads;

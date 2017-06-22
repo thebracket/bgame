@@ -27,9 +27,9 @@ namespace gl {
             }
         });
         //std::cout << "Done with chunk updates\n";
-        if (n_updates >0) {
+        /*if (n_updates >0) {
             std::cout << "Emitted " << n_updates << " quads.\n";
-        }
+        }*/
     }
 
     bool render_as_cube(const uint8_t &type) {
@@ -89,7 +89,26 @@ namespace gl {
                 } else if (tiletype == tile_type::FLOOR) {
                     // Add a floor
                     chunk.has_geometry = true;
-                    chunk.geometry->add_floor(x,y,z,r,g,b,tx,ty);
+                    float light_r, light_g, light_b, light_x, light_y, light_z;
+                    auto light_finder = lit_tiles.find(idx);
+                    if (light_finder != lit_tiles.end()) {
+                        light_r = (float)light_finder->second.second.r / 255.0f;
+                        light_g = (float)light_finder->second.second.g / 255.0f;
+                        light_b = (float)light_finder->second.second.b / 255.0f;
+                        int lx,ly,lz;
+                        std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
+                        light_x = (float)lx;
+                        light_y = (float)lz;
+                        light_z = (float)ly;
+                    } else {
+                        light_r = 0.0f;
+                        light_g = 0.0f;
+                        light_b = 0.0f;
+                        light_x = 0.0f;
+                        light_y = 0.0f;
+                        light_z = 0.0f;
+                    }
+                    chunk.geometry->add_floor(x,y,z,r,g,b,tx,ty,idx,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
                 }
             }
         });

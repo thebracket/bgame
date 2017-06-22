@@ -44,7 +44,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         new_building->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "cordex") {
         new_building->assign(viewshed_t{16, false})
-            ->assign(lightsource_t{8, rltk::colors::WHITE, true});
+            ->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {

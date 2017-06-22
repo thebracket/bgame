@@ -18,6 +18,9 @@ namespace map_render {
     extern GLuint render_texture;
     extern GLuint normal_texture;
     extern GLuint interpolated_pos_texture;
+    extern GLuint light_position_texture;
+    extern GLuint light_color_texture;
+    extern GLuint flag_texture;
 
     void load_fbo();
 }

@@ -31,7 +31,7 @@ bool arch_available = false;
 bool arch_possible = true;
 int arch_x = 0;
 int arch_y = 0;
-bool flags_debug = false;
+bool flags_debug = true;
 
 void mode_design_system::configure() {
     system_name = "Design Mode";

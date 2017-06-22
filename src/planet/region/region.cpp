@@ -517,10 +517,12 @@ namespace region {
 			above_ground[idx] = true;
 		} else {
 			bool underground = false;
-			for (int z = REGION_DEPTH - 1; z > 0; --z) {
-				if (tile_type[idx] == tile_type::SOLID) underground = true;
+			for (int Z = z+1; Z < REGION_DEPTH - 2; ++Z) {
+                const int test_idx = mapidx(x,y,Z);
+				if (tile_type[test_idx] == tile_type::SOLID || tile_type[test_idx] == tile_type::FLOOR) underground = true;
 			}
 			above_ground[idx] = !underground;
+			//if (!underground) std::cout << "Tile is above ground\n";
 		}
 
 		tile_pathing(x, y, z);
