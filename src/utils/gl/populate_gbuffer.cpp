@@ -112,13 +112,13 @@ namespace map_render {
                                   ((char *) nullptr + 14 * sizeof(float)));
             glEnableVertexAttribArray(terrain_flags_loc);
 
-            glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 17 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_light_color_loc);
-
             glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 20 * sizeof(float)));
+                                  ((char *) nullptr + 17 * sizeof(float)));
             glEnableVertexAttribArray(terrain_light_position_loc);
+
+            glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 20 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_light_color_loc);
         }
 
         int cull_pos = chunk.n_quads;

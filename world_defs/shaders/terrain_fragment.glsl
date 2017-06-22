@@ -19,7 +19,7 @@ void main() {
     gl_FragData[1] = texture2D(my_color_texture, gl_TexCoord[0].st) * color;
     gl_FragData[2] = vec4(calc_normal.xyz, 1.0);
     gl_FragData[3] = interpolated_position / 255.0;
-    gl_FragData[4] = vec4(light_pos, 0.0) / 255.0;
-    gl_FragData[5] = vec4(light_col, 1.0);
+    gl_FragData[5] = vec4(light_pos, 1.0);
+    gl_FragData[4] = vec4(light_col, 1.0);
     gl_FragData[6] = vec4(flag_out.r, 0.0, 0.0, 1.0);
 }

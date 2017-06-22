@@ -49,7 +49,7 @@ void main() {
         base_color.xyz += diffuse_light(normal.xyz, sun_moon_color, light_dir);
         base_color.xyz += specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, light_dir);
     } else {
-        base_color.xyz *= vec3(0.1, 0.1, 0.1);
+        base_color.xyz *= vec3(0.2, 0.2, 0.2);
     }
 
     // If the tile is lit, we need to apply the lighting

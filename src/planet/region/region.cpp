@@ -519,7 +519,11 @@ namespace region {
 			bool underground = false;
 			for (int Z = z+1; Z < REGION_DEPTH - 2; ++Z) {
                 const int test_idx = mapidx(x,y,Z);
-				if (tile_type[test_idx] == tile_type::SOLID || tile_type[test_idx] == tile_type::FLOOR) underground = true;
+				if (tile_type[test_idx] == tile_type::SOLID || tile_type[test_idx] == tile_type::WALL ||
+                        tile_type[test_idx] == tile_type::FLOOR)
+                {
+                    underground = true;
+                }
 			}
 			above_ground[idx] = !underground;
 			//if (!underground) std::cout << "Tile is above ground\n";

@@ -167,7 +167,7 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
             // Populate the surface tile at z-1
             reveal(mapidx(x,y,z-1));
             set_tile_type(mapidx(x,y,z-1), tile_type::FLOOR);
-            //set_tile_material(mapidx(x,y,z-1), strata.dominant_soil); // Set the top layer to the dominant soil
+            set_tile_material(mapidx(x,y,z-1), strata.dominant_soil); // Set the top layer to the dominant soil
             if (wet) {
                 set_water_level(mapidx(x,y,z-1), 10); // Below the water line; flood it!
             } else {

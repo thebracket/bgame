@@ -45,22 +45,6 @@ inline void reveal(const int &idx, const lightsource_t view, const int light_pos
     gl::chunks[chunk_index].dirty = true;
 }
 
-inline void internal_light_to(position_t &pos, lightsource_t &view, int x, int y, int z) {
-	const float dist_square = (float)(view.radius * view.radius);
-
-	line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x+x, pos.y+y, pos.z+z, [&view, &pos, &dist_square] (int X, int Y, int Z) {
-		const auto idx = mapidx(X, Y, Z);
-		const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
-		if (distance > dist_square) {
-			return false;
-		}
-        bool blocked = region::opaque(idx);
-        if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
-		reveal(idx, view, mapidx(pos));
-		return !blocked;
-	});
-}
-
 void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
     if (view.alert_status) {
         float power_percent = (float)designations->current_power / (float)designations->total_capacity;
@@ -69,14 +53,18 @@ void update_normal_light(entity_t &e, position_t &pos, lightsource_t &view) {
     const int idx = mapidx(pos);
     //lit_tiles[idx] = std::make_pair(idx, view.color); // Always light yourself
 	reveal(idx, view, idx);
-	for (int z=(0-view.radius); z<view.radius; ++z) {
-		for (int i=0-view.radius; i<view.radius; ++i) {
-			internal_light_to(pos, view, i, 0-view.radius, z);
-			internal_light_to(pos, view, i, view.radius, z);
-			internal_light_to(pos, view, 0-view.radius, i, z);
-			internal_light_to(pos, view, view.radius, i, z);
-		}
-	}
+
+    constexpr float step = 0.0174533f * 5.0f;
+    for (float angle = 0.0f; angle < 6.28319f; angle += step) {
+        auto projection = project_angle(0, 0, view.radius, angle);
+
+        line_func_cancellable(pos.x, pos.y, pos.x + projection.first, pos.y + projection.second,
+                              [&pos, &idx, &view] (int x, int y) {
+                                  const int pidx = mapidx(x, y, pos.z);
+                                  reveal(pidx, view, idx);
+                                  return !region::opaque(pidx);
+                              });
+    }
 }
 
 void lighting_system::update(double time_ms) {

@@ -97,9 +97,9 @@ namespace gl {
                         light_b = (float)light_finder->second.second.b / 255.0f;
                         int lx,ly,lz;
                         std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
-                        light_x = (float)lx;
-                        light_y = (float)lz;
-                        light_z = (float)ly;
+                        light_x = (float)lx / 255.0f;
+                        light_y = (float)lz / 255.0f;
+                        light_z = (float)ly / 255.0f;
                     } else {
                         light_r = 0.0f;
                         light_g = 0.0f;

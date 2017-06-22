@@ -31,7 +31,9 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
                              building->glyphs_ascii, true, civ_owner, 10, 10 });
 
     for (const building_provides_t &provides : building->provides) {
-        if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
+        if (provides.provides == provides_sleep) {
+            new_building->assign(construct_provides_sleep_t{});
+        }
     }
 
     if (tag == "storage_locker") {
@@ -41,14 +43,13 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"));
-        new_building->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "cordex") {
         new_building->assign(viewshed_t{16, false})
             ->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {
-        //new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{16, rltk::colors::WHITE, true});
+        new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{8, rltk::colors::LIGHT_GREEN, false});
     } else if (tag == "solar_panel") {
         new_building->assign(construct_power_t{00,0,1});
     } else if (tag == "camp_fire") {
@@ -61,6 +62,8 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         new_building->assign(viewshed_t{8, false});
         new_building->assign(turret_t{8, 2, 3, 8, 3, civ_owner});
         new_building->assign(initiative_t{});
+    } else if (tag == "cryo_bed") {
+        new_building->assign(lightsource_t{4, rltk::colors::RED, true});
     }
 }
 
