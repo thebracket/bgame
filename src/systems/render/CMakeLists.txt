@@ -5,4 +5,4 @@ add_library(render STATIC
         renderables_system.cpp
         )
 target_link_libraries(render rltk bfmain)
-cotire(render)
+#cotire(render)

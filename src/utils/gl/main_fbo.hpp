@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <SFML/OpenGL.hpp>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
 #else

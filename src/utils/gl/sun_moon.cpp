@@ -1,6 +1,4 @@
 #include "sun_moon.hpp"
-#include <SFML/Graphics.hpp>
-#include <SFML/OpenGL.hpp>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
 #else

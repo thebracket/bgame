@@ -1,3 +1,9 @@
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glew.h>
+#include <GL/glu.h>
+#endif
 #include "main_fbo.hpp"
 #include <rltk.hpp>
 

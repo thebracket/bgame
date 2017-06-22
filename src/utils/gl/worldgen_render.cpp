@@ -1,8 +1,6 @@
 #include "worldgen_render.hpp"
 #include "gl_utils.hpp"
 #include <rltk.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/OpenGL.hpp>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
 #else
