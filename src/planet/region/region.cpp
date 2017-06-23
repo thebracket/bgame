@@ -33,6 +33,7 @@ namespace region {
 			veg_cache.resize(REGION_TILES_COUNT);
 			stockpile_id.resize(REGION_TILES_COUNT);
 			bridge_id.resize(REGION_TILES_COUNT);
+			veg_wang_tiles.resize(REGION_TILES_COUNT);
 		}
 
 		int region_x, region_y, biome_idx;
@@ -56,6 +57,7 @@ namespace region {
 		std::vector<bitset8> tile_flags;
 		std::vector<rltk::vchar> render_cache;
 		std::vector<rltk::vchar> veg_cache;
+		std::vector<uint8_t> veg_wang_tiles;
 		std::vector<uint8_t> water_level;
 		std::vector<bool> above_ground;
 		std::vector<bool> blood_stains;
@@ -128,6 +130,7 @@ namespace region {
 
     uint16_t veg_ticker(const int idx) { return current_region->tile_vegetation_ticker[idx]; }
     uint8_t  veg_lifecycle(const int idx) { return current_region->tile_vegetation_lifecycle[idx]; }
+	uint8_t veg_wang(const int idx) { return current_region->veg_wang_tiles[idx]; }
 
     int region_x() { return current_region->region_x; }
     int region_y() { return current_region->region_y; }
@@ -583,6 +586,7 @@ namespace region {
 		color_t fg;
 		color_t bg = rltk::colors::BLACK;
 		veg_cache[idx] = rltk::vchar{0, rltk::colors::BLACK, rltk::colors::BLACK};
+		veg_wang_tiles[idx] = 0;
 
 		if (stockpile_id[idx] > 0) {
 			// Stockpiles are always grey floors
@@ -745,6 +749,17 @@ namespace region {
 						plant_render.foreground = colors::WHITE;
 					}
 					veg_cache[idx] = plant_render;
+
+					// Calculate the wang tiles number for this tile
+					int x,y,z;
+					std::tie(x,y,z) = idxmap(idx);
+
+					uint8_t wang = 0;
+					if (x > 1 && tile_vegetation_type[mapidx(x-1, y, z)]>0) wang += 1;
+					if (x < REGION_WIDTH-1 && tile_vegetation_type[mapidx(x+1, y, z)]>0) wang += 2;
+					if (y > 1 && tile_vegetation_type[mapidx(x, y-1, z)]>0) wang += 4;
+					if (y < REGION_HEIGHT-1 && tile_vegetation_type[mapidx(x, y+1, z)]>0) wang += 8;
+					veg_wang_tiles[idx] = wang;
 				}
 			}
 				break;

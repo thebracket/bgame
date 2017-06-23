@@ -167,6 +167,9 @@ namespace region {
     /* Apply damage to a tile's vegetation. */
     void damage_vegetation(const int idx, const uint8_t damage);
 
+    /* Get the wang-tile calculation for a tile's vegetation coverage. */
+    uint8_t veg_wang(const int idx);
+
     /*************************************
      * Stockpiles
      */
