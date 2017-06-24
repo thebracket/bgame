@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "base_shader.hpp"
-#include "chunk.hpp"
+#include "chunks/chunk.hpp"
 #define GLM_COMPILER 0
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

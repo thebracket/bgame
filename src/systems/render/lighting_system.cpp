@@ -6,7 +6,7 @@
 #include "../../components/lightsource.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../main/game_designations.hpp"
-#include "../../utils/gl/chunk.hpp"
+#include "../../utils/gl/chunks/chunk.hpp"
 
 using namespace rltk;
 

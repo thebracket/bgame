@@ -52,7 +52,6 @@ void main() {
         tint.rgb -= darken;
     }
     gl_TexCoord[0] = vec4(texture_position, 0.0, 0.0);
-    gl_TexCoord[1] = vec4(texture_position.x + 0.5f, texture_position.y, 0.0, 0.0);
     world_pos = world_position;
     interpolated_position = position;
 

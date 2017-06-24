@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "base_shader.hpp"
-#include "chunk.hpp"
+#include "chunks/chunk.hpp"
 #define GLM_COMPILER 0
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -16,6 +16,6 @@ namespace map_render {
 
     void load_terrain_shader();
     void setup_matrices();
-    void render_terrain_chunk(const gl::chunk_t &chunk, bool set_uniforms = true);
+    void render_terrain_chunk(const gl::chunk_t &chunk);
     void render_terrain_to_gbuffer();
 }

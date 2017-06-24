@@ -3,6 +3,7 @@
 #include "main_fbo.hpp"
 #include "sun_moon.hpp"
 #include "gl_utils.hpp"
+#include "textures/texture.hpp"
 
 namespace map_render {
     bool loaded_terrain_shader = false;
@@ -19,6 +20,7 @@ namespace map_render {
     GLint terrain_view_matrix_loc;
     GLint terrain_camera_position_loc;
     GLint terrain_my_color_texture_loc;
+    GLint terrain_my_normal_texture_loc;
     GLint terrain_flags_loc;
     GLint terrain_light_position_loc;
     GLint terrain_light_color_loc;
@@ -36,6 +38,7 @@ namespace map_render {
         terrain_view_matrix_loc = terrain_chunk_shader->get_uniform_location("view_matrix");
         terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
         terrain_my_color_texture_loc = terrain_chunk_shader->get_uniform_location("my_color_texture");
+        terrain_my_normal_texture_loc = terrain_chunk_shader->get_uniform_location("my_normal_texture");
         terrain_flags_loc = terrain_chunk_shader->get_attribute_location("flags");
         terrain_light_position_loc = terrain_chunk_shader->get_attribute_location("light_position");
         terrain_light_color_loc = terrain_chunk_shader->get_attribute_location("light_color");
@@ -82,16 +85,20 @@ namespace map_render {
         camera_modelview_matrix = glm::lookAt(position, target, up);
     }
 
-    void render_terrain_chunk(const gl::chunk_t &chunk, bool set_uniforms) {
+    void render_terrain_chunk(const gl::chunk_t &chunk) {
 
         if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
 
-        glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo_id);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
+        for (auto it=chunk.geometry->buckets.begin(); it != chunk.geometry->buckets.end(); ++it) {
+            // Determine if we are z-culling the whole thing
 
-        if (set_uniforms) {
+            // Bind the texture VBO and map the attributes
+            glBindBuffer(GL_ARRAY_BUFFER, it->second.vbo_id);
+
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
+
             glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 3 * sizeof(float)));
             glEnableVertexAttribArray(terrain_world_position_loc);
@@ -119,20 +126,33 @@ namespace map_render {
             glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 20 * sizeof(float)));
             glEnableVertexAttribArray(terrain_light_color_loc);
+
+            // Bind the textures bucket
+            const int texture_id = it->first;
+            const auto tex = textures::get_texture_by_id(texture_id);
+            glActiveTexture(GL_TEXTURE0);
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, tex->normal_id);
+
+
+            glUniform1i(terrain_my_color_texture_loc, 0);
+            glUniform1i(terrain_my_normal_texture_loc, 1);
+
+            // Rendering
+            // TODO: I'm not sure this is right
+            int cull_pos = it->second.n_quads;
+            auto finder = it->second.z_offsets.find(camera_position->region_z);
+            if (finder != it->second.z_offsets.end()) {
+                cull_pos = finder->second;
+            }
+            if (cull_pos > 0) glDrawArrays(GL_QUADS, 0, cull_pos);
+
+            glDisableClientState(GL_VERTEX_ARRAY);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
-
-        int cull_pos = chunk.n_quads;
-        auto finder = chunk.z_offsets.find(camera_position->region_z);
-        if (finder != chunk.z_offsets.end()) {
-            cull_pos = finder->second;
-            //std::cout << cull_pos << "\n";
-        }
-
-        if (cull_pos > 0)
-            glDrawArrays(GL_QUADS, 0, cull_pos);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
     void render_terrain_to_gbuffer() {
@@ -149,6 +169,7 @@ namespace map_render {
         glUniform3f(terrain_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
         // Texture
+        /*
         glActiveTexture(GL_TEXTURE0);
         glEnable(GL_TEXTURE_2D);
         sf::Texture::bind(rltk::get_texture("materials"));
@@ -156,12 +177,13 @@ namespace map_render {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         glUniform1i(terrain_my_color_texture_loc, 0);
+         */
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
 
         for (const gl::chunk_t &chunk : gl::chunks) {
-            if (chunk.has_geometry && chunk.generated_vbo &&
+            if (chunk.has_geometry &&
                     frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_z, chunk.base_y), gl::CHUNK_SIZE))
             {
                 map_render::render_terrain_chunk(chunk);

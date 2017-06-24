@@ -2,6 +2,7 @@
 #include "../../planet/region/region.hpp"
 #include <algorithm>
 #include <vector>
+#include "geometry_buffer.hpp"
 
 namespace gl {
 
@@ -20,16 +21,11 @@ namespace gl {
     }
 
     void update_dirty_chunks() {
-        std::size_t n_updates = 0;
-        std::for_each(chunks.begin(), chunks.end(), [&n_updates] (chunk_t &chunk) {
+        std::for_each(chunks.begin(), chunks.end(), [] (chunk_t &chunk) {
             if (chunk.dirty) {
-                n_updates += update_chunk(chunk);
+                update_chunk(chunk);
             }
         });
-        //std::cout << "Done with chunk updates\n";
-        /*if (n_updates >0) {
-            std::cout << "Emitted " << n_updates << " quads.\n";
-        }*/
     }
 
     bool render_as_cube(const uint8_t &type) {
@@ -38,26 +34,24 @@ namespace gl {
             case tile_type::SEMI_MOLTEN_ROCK : return true;
             case tile_type::WALL : return true;
             case tile_type::TREE_TRUNK : return true;
+            case tile_type::TREE_LEAF : return true;
             default                 : return false;
         }
     }
 
-    std::size_t update_chunk(chunk_t &chunk) {
+    void update_chunk(chunk_t &chunk) {
         // We want to make a big render buffer for the terrain in this block.
         chunk.has_geometry = false;
         if (chunk.geometry) chunk.geometry.reset();
-        chunk.geometry = std::make_unique<geometry::chunk_geometry_t>();
-        chunk.n_quads = 0;
+        chunk.geometry = std::make_unique<geometry_buffer_t>();
 
         int last_z = chunk.base_z;
         chunk.iterate_region([&chunk, &last_z] (int x,int y, int z) {
             if (last_z != z) {
-                chunk.z_offsets[last_z] = chunk.geometry->n_quads;
+                chunk.geometry->mark_z_level_end(last_z);
                 last_z = z;
-                //std::cout << "Z offset stored: " << last_z << ", " << chunk.geometry->items.size() << "\n";
             }
 
-            //printf("Iterating %d/%d/%d as part of %d\n", x, y, z, chunk.index);
             const int idx = mapidx(x,y,z);
             const auto tiletype = region::tile_type(idx);
 
@@ -65,8 +59,6 @@ namespace gl {
             const float r = 1.0f;
             const float g = 1.0f;
             const float b = 1.0f;
-            constexpr float tx = 0.0f;
-            constexpr float ty = 0.0f;
 
             bool skip = false;
             // Open space never needs rendering
@@ -85,7 +77,7 @@ namespace gl {
                 {
                     // Add cube
                     chunk.has_geometry = true;
-                    chunk.geometry->add_cube(x,y,z,r,g,b,tx,ty);
+                    chunk.geometry->add_cube(x,y,z,r,g,b,1);
                 } else if (tiletype == tile_type::FLOOR) {
                     // Add a floor
                     chunk.has_geometry = true;
@@ -108,37 +100,12 @@ namespace gl {
                         light_y = 0.0f;
                         light_z = 0.0f;
                     }
-                    chunk.geometry->add_floor(x,y,z,r,g,b,tx,ty,idx,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
+                    chunk.geometry->add_floor(x,y,z,r,g,b,1,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
                 }
             }
         });
         chunk.dirty = false;
 
-        chunk.n_quads = chunk.geometry->n_quads;
-
-        if (chunk.generated_vbo) {
-            //std::cout << "Buffer deletion\n";
-            glDeleteBuffers(1, &chunk.vbo_id);
-        }
-
-        if (chunk.has_geometry || chunk.geometry->items.size()>0) {
-            //std::cout << "Generating a buffer of " << (chunk.geometry->items.size() / n_floats) << " quads.\n";
-            glGenBuffers(1, &chunk.vbo_id); // Generate the VBO
-            //std::cout << "Buffer ID: " << chunk.vbo_id << "\n";
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, chunk.vbo_id);
-
-            if (!chunk.geometry) {
-                throw std::runtime_error("Geometry chunk does not exist");
-            }
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLfloat) * chunk.geometry->items.size(),
-                         &chunk.geometry->items[0], GL_STATIC_DRAW);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-            chunk.generated_vbo = true;
-
-            return chunk.geometry->items.size() / n_floats;
-        }
-        return 0;
+        chunk.geometry->make_vbos();
     }
 }
