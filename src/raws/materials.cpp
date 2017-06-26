@@ -165,7 +165,7 @@ void read_material_types() noexcept
             if (field == "constructed_floor_texture") m.constructed_floor_texture = lua_tonumber(lua_state, -1);
             if (field == "wall_texture") m.wall_texture = lua_tonumber(lua_state, -1);
             if (field == "constructed_wall_texture") m.constructed_wall_texture = lua_tonumber(lua_state, -1);
-
+            if (field == "shininess") m.shininess = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }

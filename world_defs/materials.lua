@@ -3,6 +3,10 @@ texture_index = {
     tiled_floor = { index = 2, texture = "tiled_floor_t.jpg", normal = "tiled_floor_n.jpg" }
 }
 
+function tex(name)
+    return texture_index[name].index
+end
+
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
@@ -395,7 +399,11 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
         -- Plasteel is synthetic, so always use a constructed texture
-        floor_texture=2, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=1
+        floor_texture=tex('tiled_floor'),
+        wall_texture=tex('girder'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('girder'),
+        shininess = 64
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],

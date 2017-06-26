@@ -26,4 +26,5 @@ struct material_def_t {
     int constructed_floor_texture = 2;
     int wall_texture = 1;
     int constructed_wall_texture = 3;
+    float shininess = 8.0f;
 };

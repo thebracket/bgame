@@ -18,9 +18,8 @@ vec3 diffuse_light(vec3 surface_normal, vec3 color, vec3 light_dir) {
     return result;
 }
 
-vec3 specular_light(vec3 surface_pos, vec3 surface_normal, vec3 color, vec3 light_dir) {
+vec3 specular_light(vec3 surface_pos, vec3 surface_normal, vec3 color, vec3 light_dir, float shininess) {
     float specular_strength = 0.5;
-    float shininess = 8;
 
     vec3 view_dir = normalize(cameraPosition - surface_pos);
     vec3 reflect_dir = reflect(-light_dir, surface_normal);
@@ -47,7 +46,7 @@ void main() {
         // Add sun/moon light
         vec3 light_dir = normalize(sun_moon_position.xyz - position.xyz);
         base_color.xyz += diffuse_light(normal.xyz, sun_moon_color, light_dir);
-        base_color.xyz += specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, light_dir);
+        base_color.xyz += specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, light_dir, flags.g);
     } else {
         base_color.xyz *= vec3(0.2, 0.2, 0.2);
     }
@@ -56,7 +55,7 @@ void main() {
     if (light_position.x > 0.0) {
         vec3 light_dir = normalize(light_position.xyz - position.xyz);
         base_color.xyz += diffuse_light(normal.xyz, light_color, light_dir);
-        base_color.xyz += specular_light(position.xyz, normal.xyz, light_color.rgb, light_dir);
+        base_color.xyz += specular_light(position.xyz, normal.xyz, light_color.rgb, light_dir, flags.g);
     }
 
 
