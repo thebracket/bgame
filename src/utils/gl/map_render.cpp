@@ -82,6 +82,8 @@ void map_render_t::render() {
     // Push state
     push_gl_states();
 
+    textures::texture_start();
+
     // Phase 1: Populate the basic g-buffer
     map_render::place_sun_moon();
     map_render::render_terrain_to_gbuffer();
@@ -93,6 +95,8 @@ void map_render_t::render() {
 
     // Done
     glUseProgram(0);
+
+    textures::texture_cleanup();
 
     pop_gl_states();
 
