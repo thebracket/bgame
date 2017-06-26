@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../planet/constants.hpp"
+
 namespace gl {
     constexpr int CHUNK_SIZE = 16;
     constexpr int CHUNKS_WIDTH = REGION_WIDTH / CHUNK_SIZE;

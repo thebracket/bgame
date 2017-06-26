@@ -41,7 +41,7 @@ void main() {
     // Apply ambient color
     if (flags.r > 0.0) {
         // We are outdoors, use ambient light from the sun/moon
-        base_color.xyz *= ambient_color;
+        base_color.xyz *= (ambient_color/2.0);
 
         // Add sun/moon light
         vec3 light_dir = normalize(sun_moon_position.xyz - position.xyz);

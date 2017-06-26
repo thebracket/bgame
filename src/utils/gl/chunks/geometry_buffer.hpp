@@ -2,6 +2,8 @@
 
 #include <boost/container/flat_map.hpp>
 #include <vector>
+#include <array>
+#include "constants.hpp"
 
 namespace gl {
     /*
@@ -26,7 +28,7 @@ namespace gl {
         int n_quads = 0;
         bool generated_vbo = false;
         unsigned int vbo_id;
-        boost::container::flat_map<int, std::size_t> z_offsets;
+        std::array<std::size_t, CHUNK_SIZE> z_offsets{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         template<typename T> inline T add_to_items_impl(T arg) { items.emplace_back(arg); return arg; }
 
@@ -69,6 +71,7 @@ namespace gl {
      */
     struct geometry_buffer_t {
         boost::container::flat_map<int, terrain_bucket_t> buckets;
+        int base_z = 0;
 
         void add_floor(const float x, const float y, const float z,
                        const bool &above_ground,
@@ -78,6 +81,7 @@ namespace gl {
         void add_cube(const float x, const float y, const float z);
 
         void mark_z_level_end(const int &z);
+        void finish_z_map(const int &base_z);
         void make_vbos();
     };
 }

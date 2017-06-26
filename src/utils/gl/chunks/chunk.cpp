@@ -44,6 +44,7 @@ namespace gl {
         chunk.has_geometry = false;
         if (chunk.geometry) chunk.geometry.reset();
         chunk.geometry = std::make_unique<geometry_buffer_t>();
+        chunk.geometry->base_z = chunk.base_z;
 
         int last_z = chunk.base_z;
         chunk.iterate_region([&chunk, &last_z] (int x,int y, int z) {
@@ -102,7 +103,9 @@ namespace gl {
             }
         });
         chunk.dirty = false;
-
-        chunk.geometry->make_vbos();
+        if (chunk.has_geometry) {
+            chunk.geometry->finish_z_map(last_z);
+            chunk.geometry->make_vbos();
+        }
     }
 }

@@ -9,6 +9,7 @@
 #endif
 #include "../../../raws/defs/material_def_t.hpp"
 #include "../../../raws/materials.hpp"
+#include "constants.hpp"
 
 namespace gl {
 
@@ -252,8 +253,8 @@ namespace gl {
         const std::size_t material_idx = region::material(idx);
         const bool constructed = region::flag(idx, CONSTRUCTION);
         const material_def_t * mat = get_material(material_idx);
-        const int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
-        const int wall_texture_idx = constructed ? mat->constructed_wall_texture : mat->wall_texture;
+        int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
+        int wall_texture_idx = constructed ? mat->constructed_wall_texture : mat->wall_texture;
         const float shininess = mat->shininess;
         const float r = (float)mat->fg.r/255.0f;
         const float g = (float)mat->fg.g/255.0f;
@@ -313,13 +314,22 @@ namespace gl {
 
     void geometry_buffer_t::mark_z_level_end(const int &z) {
         for (auto it = buckets.begin(); it != buckets.end(); ++it) {
-            it->second.z_offsets[z] = it->second.n_quads;
+            const int offset = z - base_z;
+            for (int i=offset; i<CHUNK_SIZE; ++i) {
+                it->second.z_offsets[i] = it->second.n_quads;
+            }
         }
     }
 
     void geometry_buffer_t::make_vbos() {
         for (auto it = buckets.begin(); it != buckets.end(); ++it) {
             it->second.make_vbo();
+        }
+    }
+
+    void geometry_buffer_t::finish_z_map(const int &base_z) {
+        for (auto it = buckets.begin(); it != buckets.end(); ++it) {
+            it->second.z_offsets[CHUNK_SIZE-1] = it->second.n_quads;
         }
     }
 }

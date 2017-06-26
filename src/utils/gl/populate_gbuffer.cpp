@@ -4,6 +4,7 @@
 #include "sun_moon.hpp"
 #include "gl_utils.hpp"
 #include "textures/texture.hpp"
+#include "chunks/constants.hpp"
 
 namespace map_render {
     bool loaded_terrain_shader = false;
@@ -91,67 +92,65 @@ namespace map_render {
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
 
         for (auto it=chunk.geometry->buckets.begin(); it != chunk.geometry->buckets.end(); ++it) {
-            // Determine if we are z-culling the whole thing
+            const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
+            if (offset > 0) {
 
-            // Bind the texture VBO and map the attributes
-            glBindBuffer(GL_ARRAY_BUFFER, it->second.vbo_id);
+                // Bind the texture VBO and map the attributes
+                glBindBuffer(GL_ARRAY_BUFFER, it->second.vbo_id);
 
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(3, GL_FLOAT, gl::n_floats*sizeof(float), 0);
+                glEnableClientState(GL_VERTEX_ARRAY);
+                glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
 
-            glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_world_position_loc);
+                glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 3 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_world_position_loc);
 
-            glVertexAttribPointer(terrain_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 6 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_normal_loc);
+                glVertexAttribPointer(terrain_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 6 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_normal_loc);
 
-            glVertexAttribPointer(terrain_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 9 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_color_loc);
+                glVertexAttribPointer(terrain_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 9 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_color_loc);
 
-            glVertexAttribPointer(terrain_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 12 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_texture_position_loc);
+                glVertexAttribPointer(terrain_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 12 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_texture_position_loc);
 
-            glVertexAttribPointer(terrain_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 14 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_flags_loc);
+                glVertexAttribPointer(terrain_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 14 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_flags_loc);
 
-            glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 17 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_light_position_loc);
+                glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 17 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_light_position_loc);
 
-            glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 20 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_light_color_loc);
+                glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                      ((char *) nullptr + 20 * sizeof(float)));
+                glEnableVertexAttribArray(terrain_light_color_loc);
 
-            // Bind the textures bucket
-            const int texture_id = it->first;
-            const auto tex = textures::get_texture_by_id(texture_id);
-            glActiveTexture(GL_TEXTURE0);
-            glEnable(GL_TEXTURE_2D);
-            glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+                // Bind the textures bucket
+                const int texture_id = it->first;
+                const auto tex = textures::get_texture_by_id(texture_id);
+                glActiveTexture(GL_TEXTURE0);
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, tex->texture_id);
 
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, tex->normal_id);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, tex->normal_id);
 
 
-            glUniform1i(terrain_my_color_texture_loc, 0);
-            glUniform1i(terrain_my_normal_texture_loc, 1);
+                glUniform1i(terrain_my_color_texture_loc, 0);
+                glUniform1i(terrain_my_normal_texture_loc, 1);
 
-            // Rendering
-            // TODO: I'm not sure this is right
-            int cull_pos = it->second.n_quads;
-            auto finder = it->second.z_offsets.find(camera_position->region_z);
-            if (finder != it->second.z_offsets.end()) {
-                cull_pos = finder->second;
+                // Rendering
+
+                int cull_pos = it->second.z_offsets[offset];
+                if (cull_pos > 0) glDrawArrays(GL_QUADS, 0, cull_pos);
+
+                glDisableClientState(GL_VERTEX_ARRAY);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             }
-            if (cull_pos > 0) glDrawArrays(GL_QUADS, 0, cull_pos);
-
-            glDisableClientState(GL_VERTEX_ARRAY);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
     }
 
@@ -167,17 +166,6 @@ namespace map_render {
 
         // Pass along the camera information
         glUniform3f(terrain_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
-
-        // Texture
-        /*
-        glActiveTexture(GL_TEXTURE0);
-        glEnable(GL_TEXTURE_2D);
-        sf::Texture::bind(rltk::get_texture("materials"));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glUniform1i(terrain_my_color_texture_loc, 0);
-         */
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
