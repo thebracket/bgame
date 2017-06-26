@@ -1,8 +1,7 @@
--- Texture Index
--- 0 : Silt Ground
--- 1 : Silt Wall
--- 2 : Silt Floor
--- 3 : Silt Construction
+texture_index = {
+    girder = { index = 1, texture = "girder_t.jpg", normal = "girder_n.jpg" },
+    tiled_floor = { index = 2, texture = "tiled_floor_t.jpg", normal = "tiled_floor_n.jpg" }
+}
 
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
@@ -395,7 +394,8 @@ materials = {
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=4
+        -- Plasteel is synthetic, so always use a constructed texture
+        floor_texture=2, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=1
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],

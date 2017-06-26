@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "../reaction_input.hpp"
 
 /*
  * Defines a material type. Used by just about everything.

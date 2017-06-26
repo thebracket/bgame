@@ -43,5 +43,11 @@ void sanity_check_materials() noexcept;
  * Reads the material definitions from Lua.
  */
 void read_material_types() noexcept;
+
+/*
+ * Reads the texture index from the materials file.
+ */
+void read_texture_index() noexcept;
+
 void build_material_tech_tree(graphviz_t * tree);
 void build_material_acquisition_tech_tree(graphviz_t * tree);

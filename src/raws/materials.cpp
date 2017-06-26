@@ -2,6 +2,7 @@
 #include "lua_bridge.hpp"
 #include "graphviz.hpp"
 #include "defs/material_def_t.hpp"
+#include "../utils/gl/textures/texture.hpp"
 #include <boost/container/flat_map.hpp>
 
 using namespace rltk;
@@ -179,6 +180,36 @@ void read_material_types() noexcept
     for (std::size_t material_index = 0; material_index < material_defs.size(); ++material_index) {
         material_defs_idx[material_defs[material_index].tag] = material_index;
     }
+}
+
+void read_texture_index() noexcept {
+    std::vector<std::tuple<int, std::string, std::string>> textures_to_load;
+
+    lua_getglobal(lua_state, "texture_index");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        const std::string key = lua_tostring(lua_state, -2);
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+
+        std::string texture_file = "";
+        std::string normal_file = "";
+        int texture_index = 0;
+        while (lua_next(lua_state, -2) != 0) {
+            const std::string field = lua_tostring(lua_state, -2);
+            if (field == "texture") texture_file = std::string("world_defs/textures/") + lua_tostring(lua_state, -1);
+            if (field == "normal") normal_file = std::string("world_defs/textures/") + lua_tostring(lua_state, -1);
+            if (field == "index") texture_index = lua_tonumber(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        textures_to_load.emplace_back(std::make_tuple(texture_index, texture_file, normal_file));
+
+        lua_pop(lua_state, 1);
+    }
+    textures::load_textures(textures_to_load);
 }
 
 void build_material_acquisition_tech_tree(graphviz_t *tree) {

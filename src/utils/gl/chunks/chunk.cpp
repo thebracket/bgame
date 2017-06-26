@@ -77,7 +77,7 @@ namespace gl {
                 {
                     // Add cube
                     chunk.has_geometry = true;
-                    chunk.geometry->add_cube(x,y,z,r,g,b,1);
+                    chunk.geometry->add_cube(x,y,z,r,g,b);
                 } else if (tiletype == tile_type::FLOOR) {
                     // Add a floor
                     chunk.has_geometry = true;
@@ -100,7 +100,7 @@ namespace gl {
                         light_y = 0.0f;
                         light_z = 0.0f;
                     }
-                    chunk.geometry->add_floor(x,y,z,r,g,b,1,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
+                    chunk.geometry->add_floor(x,y,z,r,g,b,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
                 }
             }
         });

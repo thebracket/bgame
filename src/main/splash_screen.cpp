@@ -8,6 +8,7 @@
 #include <thread>
 #include <memory>
 #include "../external/imgui-sfml/imgui-SFML.h"
+#include "../raws/materials.hpp"
 
 constexpr int LOG_LAYER=1;
 constexpr int BACKDROP_LAYER=2;
@@ -41,6 +42,7 @@ void splash_screen::tick(const double duration_ms) {
 	if (splash_loader_complete.load()) {
 		splash_loader_thread->join();
 		splash_loader_thread.reset();
+		read_texture_index();
 		done_loading = true;
 	}
 }

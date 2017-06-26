@@ -44,17 +44,7 @@ bool world_changed = true;
 
 namespace map_render
 {
-    bool loaded_textures = false;
     bool built_chunk_buffer = false;
-
-    void load_textures() {
-        textures::load_textures(
-                {
-                        {1, "world_defs/textures/girder_t.jpg", "world_defs/textures/girder_n.jpg"}
-                }
-        );
-        loaded_textures = true;
-    }
 
     void build_chunk_buffer() {
         std::cout << "Building chunk buffer\n";
@@ -81,7 +71,6 @@ namespace map_render
 
 void map_render_t::render() {
     // Check that the environment is ready
-    if (!map_render::loaded_textures) map_render::load_textures();
     if (!map_render::loaded_terrain_shader) map_render::load_terrain_shader();
     if (!map_render::loaded_render_shader) map_render::load_render_shader();
     if (!map_render::loaded_fbo) map_render::load_fbo();
