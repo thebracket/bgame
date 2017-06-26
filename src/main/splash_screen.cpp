@@ -22,6 +22,7 @@ std::unique_ptr<std::thread> splash_loader_thread;
 
 void splash_loader() {
 	register_texture("assets/material-textures.png", "materials");
+    register_texture("world_defs/textures/wang_masks.jpg", "wang");
 	load_raws();
 	splash_loader_complete.store(true);
 }

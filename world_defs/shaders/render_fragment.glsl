@@ -36,7 +36,7 @@ void main() {
 
     vec4 light_position = texture2D( light_pos_tex, gl_TexCoord[0].xy ) * 255.0;
     vec3 light_color = texture2D( light_col_tex, gl_TexCoord[0].xy ).rgb;
-    vec3 flags = texture2D( flag_tex, gl_TexCoord[0].xy ).rgb;
+    vec3 flags = texture2D( flag_tex, gl_TexCoord[0].xy ).rgb * 255.0;
 
     // Apply ambient color
     if (flags.r > 0.0) {

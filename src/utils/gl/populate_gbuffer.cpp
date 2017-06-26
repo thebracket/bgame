@@ -22,6 +22,7 @@ namespace map_render {
     GLint terrain_camera_position_loc;
     GLint terrain_my_color_texture_loc;
     GLint terrain_my_normal_texture_loc;
+    GLint terrain_my_wang_texture_loc;
     GLint terrain_flags_loc;
     GLint terrain_light_position_loc;
     GLint terrain_light_color_loc;
@@ -40,6 +41,7 @@ namespace map_render {
         terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
         terrain_my_color_texture_loc = terrain_chunk_shader->get_uniform_location("my_color_texture");
         terrain_my_normal_texture_loc = terrain_chunk_shader->get_uniform_location("my_normal_texture");
+        terrain_my_wang_texture_loc = terrain_chunk_shader->get_uniform_location("my_wang_texture");
         terrain_flags_loc = terrain_chunk_shader->get_attribute_location("flags");
         terrain_light_position_loc = terrain_chunk_shader->get_attribute_location("light_position");
         terrain_light_color_loc = terrain_chunk_shader->get_attribute_location("light_color");
@@ -135,9 +137,12 @@ namespace map_render {
                 glActiveTexture(GL_TEXTURE1);
                 glBindTexture(GL_TEXTURE_2D, tex->normal_id);
 
+                glActiveTexture(GL_TEXTURE2);
+                sf::Texture::bind(rltk::get_texture("wang"));
 
                 glUniform1i(terrain_my_color_texture_loc, 0);
                 glUniform1i(terrain_my_normal_texture_loc, 1);
+                glUniform1i(terrain_my_wang_texture_loc, 2);
 
                 // Rendering
 
