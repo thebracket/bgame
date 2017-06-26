@@ -86,12 +86,8 @@ namespace map_render {
         camera_modelview_matrix = glm::lookAt(position, target, up);
     }
 
-    void render_terrain_chunk(const gl::chunk_t &chunk) {
-
-        if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
-        if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
-
-        for (auto it=chunk.geometry->buckets.begin(); it != chunk.geometry->buckets.end(); ++it) {
+    void render_buckets(const gl::chunk_t &chunk, const boost::container::flat_map<int, gl::terrain_bucket_t> &buckets ) {
+        for (auto it=buckets.begin(); it != buckets.end(); ++it) {
             const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
             if (offset > 0) {
 
@@ -151,6 +147,17 @@ namespace map_render {
                 glDisableClientState(GL_VERTEX_ARRAY);
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             }
+        }
+    }
+
+    void render_terrain_chunk(const gl::chunk_t &chunk) {
+
+        if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
+        if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
+
+        render_buckets(chunk, chunk.geometry->buckets);
+        if (chunk.vegetation) {
+            render_buckets(chunk, chunk.vegetation->buckets);
         }
     }
 

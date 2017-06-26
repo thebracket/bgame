@@ -298,6 +298,7 @@ namespace region {
         std::fill(current_region->tile_vegetation_type.begin(), current_region->tile_vegetation_type.end(), 0);
         std::fill(current_region->tile_vegetation_ticker.begin(), current_region->tile_vegetation_ticker.end(), 0);
         std::fill(current_region->tile_vegetation_lifecycle.begin(), current_region->tile_vegetation_lifecycle.end(), 0);
+        std::fill(current_region->veg_wang_tiles.begin(), current_region->veg_wang_tiles.end(), 0);
         std::fill(current_region->water_level.begin(), current_region->water_level.end(), 0);
         std::fill(current_region->blood_stains.begin(), current_region->blood_stains.end(), false);
         std::fill(current_region->stockpile_id.begin(), current_region->stockpile_id.end(), 0);

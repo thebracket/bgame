@@ -61,6 +61,50 @@ namespace gl {
         n_quads += 4;
     }
 
+    void terrain_bucket_t::add_veg(const float x, const float y, const float z, float r, float g, float b,
+                                     const int &idx, const bool &above_ground,
+                                     const float &light_r, const float &light_g, const float &light_b,
+                                     const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                                     const float &wang)
+    {
+        //colorize_and_texture_floor(idx, r, g, b, ty);
+        const float ground_indicator = above_ground ? 255.0f : 0.0f;
+
+        add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
+        add_to_items(x, y, z);                    // World position 0
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 0
+        add_to_items(r, g, b);                    // Color 0
+        add_to_items(tx, ty);                     // Texture 0
+        add_to_items(ground_indicator, shininess, wang);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        add_to_items(-0.5f, -0.5f,  0.5f);        // Vertex 1
+        add_to_items(x, y, z);                    // World position 1
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 1
+        add_to_items(r, g, b);                    // Color 1
+        add_to_items(tx, ty + tsize_y);           // Texture 1
+        add_to_items(ground_indicator, shininess, wang);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
+        add_to_items(x, y, z);                    // World position 2
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 2
+        add_to_items(r, g, b);                    // Color 2
+        add_to_items(tx + tsize_x, ty + tsize_y); // Texture 2
+        add_to_items(ground_indicator, shininess, wang);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        add_to_items(0.5f, -0.5f, -0.5f);         // Vertex 3
+        add_to_items(x, y, z);                    // World position 3
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 3
+        add_to_items(r, g, b);                    // Color 3
+        add_to_items(tx + tsize_x, ty);           // Texture 3
+        add_to_items(ground_indicator, shininess, wang);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        n_quads += 4;
+    }
+
     void terrain_bucket_t::add_left(const float x, const float y, const float z, float r, float g, float b,
                   const int &idx, const bool &above_ground,
                   const float &light_r, const float &light_g, const float &light_b,
@@ -310,6 +354,20 @@ namespace gl {
         const float g = (float)mat->fg.g/255.0f;
         const float b = (float)mat->fg.b/255.0f;
         buckets[floor_texture_idx].add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess);
+    }
+
+    void geometry_buffer_t::add_veg(const float x, const float y, const float z,
+                                      const bool &above_ground, const float &light_r,
+                                      const float &light_g, const float &light_b, const float &light_x,
+                                      const float &light_y, const float &light_z, const int &wang)
+    {
+        const int idx = mapidx(x,y,z);
+        constexpr float shininess = 8.0f;
+        constexpr int floor_texture_idx = 8;
+        constexpr float r = 1.0f;
+        constexpr float g = 1.0f;
+        constexpr float b = 1.0f;
+        buckets[floor_texture_idx].add_veg(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, (float)wang);
     }
 
     void geometry_buffer_t::mark_z_level_end(const int &z) {

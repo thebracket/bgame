@@ -22,5 +22,5 @@ void main() {
     gl_FragData[3] = interpolated_position / 255.0;
     gl_FragData[5] = vec4(light_pos, 1.0);
     gl_FragData[4] = vec4(light_col, 1.0);
-    gl_FragData[6] = vec4(flag_out.r, flag_out.g, 0.0, 1.0);
+    gl_FragData[6] = vec4(flag_out.rgb, 1.0);
 }

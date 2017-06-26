@@ -34,8 +34,11 @@ namespace gl {
         int base_x, base_y, base_z;
         bool dirty = true;
         bool has_geometry = false;
+        bool veg_dirty = true;
+        bool has_vegetation = false;
 
         std::unique_ptr<geometry_buffer_t> geometry;
+        std::unique_ptr<geometry_buffer_t> vegetation;
 
         template<typename FUNC>
         void iterate_region(const FUNC &f) {
@@ -54,4 +57,5 @@ namespace gl {
     void build_chunk_buffer();
     void update_dirty_chunks();
     void update_chunk(chunk_t &chunk);
+    void update_chunk_vegetation(chunk_t &chunk);
 };

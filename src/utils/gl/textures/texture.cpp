@@ -39,6 +39,7 @@ namespace textures {
         glBindTexture(GL_TEXTURE_2D, 0);
         stbi_image_free(normal_data);
 
+        std::cout << "Bound as IDs: " << texture_id << "/" << normal_id << "\n";
         loaded = true;
     }
 
