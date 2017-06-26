@@ -1,6 +1,11 @@
 texture_index = {
     girder = { index = 1, texture = "girder_t.jpg", normal = "girder_n.jpg" },
-    tiled_floor = { index = 2, texture = "tiled_floor_t.jpg", normal = "tiled_floor_n.jpg" }
+    tiled_floor = { index = 2, texture = "tiled_floor_t.jpg", normal = "tiled_floor_n.jpg" },
+    soil = { index = 3, texture = "soil_t.jpg", normal = "soil_n.jpg" },
+    soil_constructed = { index = 4, texture = "soil_constructed_t.jpg", normal = "soil_constructed_n.jpg" },
+    soil_wall = { index = 5, texture = "soil_wall_t.jpg", normal = "soil_wall_n.jpg" },
+    sand = { index = 6, texture = "sand_t.jpg", normal = "sand_n.jpg" },
+    silt = { index = 7, texture = "silt_t.png", normal = "silt_n.png" },
 }
 
 function tex(name)
@@ -270,85 +275,135 @@ materials = {
         hit_points = 100, mines_to="ore", ore_materials = {"copper", "silver"}
     },
 
+    -- Soil types
+
     clay_soil = { name="Clay", type="soil",
         glyph = glyphs['solid_square'], fg=colors['red'], bg=colors['black'],
         hit_points = 20, mines_to="clay",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('soil'),
+        wall_texture=tex('soil'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     clay_loam = { name="Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
         hit_points = 20, mines_to="clay",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('soil'),
+        wall_texture=tex('soil'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     loam = { name="Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('soil'),
+        wall_texture=tex('soil'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     loamy_sand = { name="Loamy Sand", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('soil'),
+        wall_texture=tex('soil'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     peat = { name="Peat", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['brown'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('silt'),
+        wall_texture=tex('silt'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     sandy_clay = { name="Sandy Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['red'],
         hit_points = 15, mines_to="clay",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('soil'),
+        wall_texture=tex('soil'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     sandy_clay_loam = { name="Sandy Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['yellow'],
         hit_points = 15, mines_to="topsoil", mines_to_also="clay",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('soil'),
+        wall_texture=tex('soil'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     silt = { name="Silt", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['black'],
         hit_points = 15, mines_to="topsoil",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('silt'),
+        wall_texture=tex('silt'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     silty_clay = { name="Silty Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 15, mines_to="clay",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('silt'),
+        wall_texture=tex('silt'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     silty_clay_loam = { name="Silty Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('silt'),
+        wall_texture=tex('silt'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     silt_loam = { name="Silt Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
-        floor_texture=0, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('silt'),
+        wall_texture=tex('silt'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['red'],
         hit_points = 10, mines_to="sand",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     black_sand = { name="Black Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     red_sand = { name="Red Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['red_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     white_sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['white_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     yellow_sand = { name="Yellow Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
-        floor_texture=6, wall_texture=1, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
 
 -- Other materials needed

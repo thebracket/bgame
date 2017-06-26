@@ -246,7 +246,7 @@ namespace gl {
         }
     }
 
-    void geometry_buffer_t::add_cube(const float x, const float y, const float z, const float r, const float g, const float b)
+    void geometry_buffer_t::add_cube(const float x, const float y, const float z)
     {
         const int idx = mapidx(x,y,z);
         const std::size_t material_idx = region::material(idx);
@@ -255,6 +255,9 @@ namespace gl {
         const int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
         const int wall_texture_idx = constructed ? mat->constructed_wall_texture : mat->wall_texture;
         const float shininess = mat->shininess;
+        const float r = (float)mat->fg.r/255.0f;
+        const float g = (float)mat->fg.g/255.0f;
+        const float b = (float)mat->fg.b/255.0f;
 
         bool above_ground = region::above_ground(idx);
         //if (above_ground) std::cout << "Above ground\n";
@@ -291,7 +294,7 @@ namespace gl {
         if (!region::solid(mapidx(x, y+1, z))) buckets[wall_texture_idx].add_south(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess);
     }
 
-    void geometry_buffer_t::add_floor(const float x, const float y, const float z, float r, float g, float b,
+    void geometry_buffer_t::add_floor(const float x, const float y, const float z,
                                       const bool &above_ground, const float &light_r,
                                       const float &light_g, const float &light_b, const float &light_x,
                                       const float &light_y, const float &light_z)
@@ -302,6 +305,9 @@ namespace gl {
         const material_def_t * mat = get_material(material_idx);
         const float shininess = mat->shininess;
         const int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
+        const float r = (float)mat->fg.r/255.0f;
+        const float g = (float)mat->fg.g/255.0f;
+        const float b = (float)mat->fg.b/255.0f;
         buckets[floor_texture_idx].add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess);
     }
 

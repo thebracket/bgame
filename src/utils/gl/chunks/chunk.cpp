@@ -56,9 +56,6 @@ namespace gl {
             const auto tiletype = region::tile_type(idx);
 
             const auto render = region::render_cache(idx);
-            const float r = 1.0f;
-            const float g = 1.0f;
-            const float b = 1.0f;
 
             bool skip = false;
             // Open space never needs rendering
@@ -77,7 +74,7 @@ namespace gl {
                 {
                     // Add cube
                     chunk.has_geometry = true;
-                    chunk.geometry->add_cube(x,y,z,r,g,b);
+                    chunk.geometry->add_cube(x,y,z);
                 } else if (tiletype == tile_type::FLOOR) {
                     // Add a floor
                     chunk.has_geometry = true;
@@ -100,7 +97,7 @@ namespace gl {
                         light_y = 0.0f;
                         light_z = 0.0f;
                     }
-                    chunk.geometry->add_floor(x,y,z,r,g,b,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
+                    chunk.geometry->add_floor(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
                 }
             }
         });

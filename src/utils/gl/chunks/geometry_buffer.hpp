@@ -70,12 +70,12 @@ namespace gl {
     struct geometry_buffer_t {
         boost::container::flat_map<int, terrain_bucket_t> buckets;
 
-        void add_floor(const float x, const float y, const float z, float r, float g, float b,
+        void add_floor(const float x, const float y, const float z,
                        const bool &above_ground,
                        const float &light_r, const float &light_g, const float &light_b,
                        const float &light_x, const float &light_y, const float &light_z);
 
-        void add_cube(const float x, const float y, const float z, const float r, const float g, const float b);
+        void add_cube(const float x, const float y, const float z);
 
         void mark_z_level_end(const int &z);
         void make_vbos();
