@@ -16,11 +16,14 @@ namespace map_render {
     glm::vec3 sun_position;
     glm::vec3 sun_color;
 
+    inline float calc_sun_time() {
+        return (float)calendar->hour + ((float)calendar->minute/60.0f);
+    }
+
     void place_sun_moon() {
         bool moon_mode = false;
 
-        const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour + ((float)calendar->minute/60.0f) : 12.0f;
-        //const float time = calendar->hour > 5 && calendar->hour < 18 ? (float)calendar->hour : 5.0f;
+        const float time = calc_sun_time();
         const float time_as_fraction =  1.0f - (time / 24.0f); // Inverted because the sun goes west to east
         const float time_as_degrees = (time_as_fraction * 360.0f) + 270.0f; // Add to put midnight underneath the world
         const float radians = time_as_degrees * 3.14159265f/180.0f;
@@ -35,7 +38,7 @@ namespace map_render {
         }
 
         // Setup ambient light
-        rltk::color_t dark_moon{34,63,89};
+        rltk::color_t dark_moon{68,131,170};
         const rltk::color_t dawn_light{143,164,191};
         const rltk::color_t noon_sun{201, 226, 255};
 

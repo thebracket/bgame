@@ -42,12 +42,34 @@ namespace gl {
         }
     }
 
+    inline void set_light(const int &idx, float &light_r, float &light_g, float &light_b, float &light_x, float &light_y, float &light_z) {
+        auto light_finder = lit_tiles.find(idx);
+        if (light_finder != lit_tiles.end()) {
+            light_r = (float)light_finder->second.second.r / 255.0f;
+            light_g = (float)light_finder->second.second.g / 255.0f;
+            light_b = (float)light_finder->second.second.b / 255.0f;
+            int lx,ly,lz;
+            std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
+            light_x = (float)lx / 255.0f;
+            light_y = (float)lz / 255.0f;
+            light_z = (float)ly / 255.0f;
+        } else {
+            light_r = 0.0f;
+            light_g = 0.0f;
+            light_b = 0.0f;
+            light_x = 0.0f;
+            light_y = 0.0f;
+            light_z = 0.0f;
+        }
+    }
+
     void update_chunk(chunk_t &chunk) {
         // We want to make a big render buffer for the terrain in this block.
         chunk.has_geometry = false;
         if (chunk.geometry) chunk.geometry.reset();
         chunk.geometry = std::make_unique<geometry_buffer_t>();
         chunk.geometry->base_z = chunk.base_z;
+        chunk.static_models.clear();
 
         int last_z = chunk.base_z;
         chunk.iterate_region([&chunk, &last_z] (int x,int y, int z) {
@@ -83,25 +105,12 @@ namespace gl {
                     // Add a floor
                     chunk.has_geometry = true;
                     float light_r, light_g, light_b, light_x, light_y, light_z;
-                    auto light_finder = lit_tiles.find(idx);
-                    if (light_finder != lit_tiles.end()) {
-                        light_r = (float)light_finder->second.second.r / 255.0f;
-                        light_g = (float)light_finder->second.second.g / 255.0f;
-                        light_b = (float)light_finder->second.second.b / 255.0f;
-                        int lx,ly,lz;
-                        std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
-                        light_x = (float)lx / 255.0f;
-                        light_y = (float)lz / 255.0f;
-                        light_z = (float)ly / 255.0f;
-                    } else {
-                        light_r = 0.0f;
-                        light_g = 0.0f;
-                        light_b = 0.0f;
-                        light_x = 0.0f;
-                        light_y = 0.0f;
-                        light_z = 0.0f;
-                    }
+                    set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
                     chunk.geometry->add_floor(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z);
+                } else if (tiletype == tile_type::STAIRS_DOWN || tiletype == tile_type::STAIRS_UP || tiletype == tile_type::STAIRS_UPDOWN) {
+                    float light_r, light_g, light_b, light_x, light_y, light_z;
+                    set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
+                    chunk.static_models.emplace_back(static_model_t{1, (float)x, (float)y, (float)z, region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z});
                 }
             }
         });
@@ -149,24 +158,7 @@ namespace gl {
                     // Add a floor
                     chunk.has_vegetation = true;
                     float light_r, light_g, light_b, light_x, light_y, light_z;
-                    auto light_finder = lit_tiles.find(idx);
-                    if (light_finder != lit_tiles.end()) {
-                        light_r = (float)light_finder->second.second.r / 255.0f;
-                        light_g = (float)light_finder->second.second.g / 255.0f;
-                        light_b = (float)light_finder->second.second.b / 255.0f;
-                        int lx,ly,lz;
-                        std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
-                        light_x = (float)lx / 255.0f;
-                        light_y = (float)lz / 255.0f;
-                        light_z = (float)ly / 255.0f;
-                    } else {
-                        light_r = 0.0f;
-                        light_g = 0.0f;
-                        light_b = 0.0f;
-                        light_x = 0.0f;
-                        light_y = 0.0f;
-                        light_z = 0.0f;
-                    }
+                    set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
                     chunk.vegetation->add_veg(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z, wang);
                 }
             }

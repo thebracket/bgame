@@ -13,13 +13,14 @@ uniform vec3 sun_moon_position;
 uniform vec3 sun_moon_color;
 
 vec3 diffuse_light(vec3 surface_normal, vec3 color, vec3 light_dir) {
+    float diffuse_strength = 0.5;
     vec3 result = color;
-    result.xyz *= dot(light_dir, surface_normal);
+    result.xyz *= dot(light_dir, surface_normal) * diffuse_strength;
     return result;
 }
 
 vec3 specular_light(vec3 surface_pos, vec3 surface_normal, vec3 color, vec3 light_dir, float shininess) {
-    float specular_strength = 0.5;
+    float specular_strength = 0.3;
 
     vec3 view_dir = normalize(cameraPosition - surface_pos);
     vec3 reflect_dir = reflect(-light_dir, surface_normal);
@@ -41,7 +42,7 @@ void main() {
     // Apply ambient color
     if (flags.r > 0.0) {
         // We are outdoors, use ambient light from the sun/moon
-        base_color.xyz *= (ambient_color/2.0);
+        base_color.xyz *= ambient_color;
 
         // Add sun/moon light
         vec3 light_dir = normalize(sun_moon_position.xyz - position.xyz);

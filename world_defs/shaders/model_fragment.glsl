@@ -1,19 +1,16 @@
 #version 120
 
 uniform sampler2D my_color_texture;
-uniform sampler2D my_normal_texture;
 varying vec3 tint;
 varying vec3 world_pos;
-varying mat3 TBN;
 varying vec4 interpolated_position;
 varying vec3 flag_out;
 varying vec3 light_pos;
 varying vec3 light_col;
+varying vec3 normal_out;
 
 void main() {
-    vec3 calc_normal = texture2D(my_normal_texture, gl_TexCoord[0].st).rgb;
-    calc_normal = normalize(calc_normal * 2.0 - 1.0);
-    calc_normal = normalize(TBN * calc_normal);
+    vec3 calc_normal = normalize(normal_out);
 
     gl_FragData[0] = vec4(world_pos.x / 255, world_pos.y / 255, world_pos.z / 255, 1.0);
     vec4 color = vec4(tint.r, tint.g, tint.b, 1.0);

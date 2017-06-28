@@ -86,7 +86,9 @@ void map_render_t::render() {
 
     // Phase 1: Populate the basic g-buffer
     map_render::place_sun_moon();
-    map_render::render_terrain_to_gbuffer();
+    std::vector<gl::static_model_t> render_models;
+    map_render::render_terrain_to_gbuffer(render_models);
+    map_render::render_static_models(render_models);
 
     // Phase 2 render: composition
     map_render::render_composition();

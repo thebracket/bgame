@@ -49,7 +49,7 @@ void mouse_input_system::update(const double ms) {
             emit_deferred(camera_move_requested_message{5, 1});
         } else {
             --camera->zoom_level;
-            if (camera->zoom_level < 5) camera->zoom_level = 5;
+            if (camera->zoom_level < 2) camera->zoom_level = 2;
         }
     }
 }

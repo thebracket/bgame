@@ -9,6 +9,7 @@
 #include <memory>
 #include "../external/imgui-sfml/imgui-SFML.h"
 #include "../raws/materials.hpp"
+#include "../utils/gl/models/model_loader.hpp"
 
 constexpr int LOG_LAYER=1;
 constexpr int BACKDROP_LAYER=2;
@@ -22,7 +23,6 @@ std::unique_ptr<std::thread> splash_loader_thread;
 
 void splash_loader() {
 	register_texture("assets/material-textures.png", "materials");
-    register_texture("world_defs/textures/wang_masks.jpg", "wang");
 	load_raws();
 	splash_loader_complete.store(true);
 }
@@ -44,6 +44,7 @@ void splash_screen::tick(const double duration_ms) {
 		splash_loader_thread->join();
 		splash_loader_thread.reset();
 		read_texture_index();
+        gl::setup_model(1, "world_defs/models/ladder_down.obj");
 		done_loading = true;
 	}
 }

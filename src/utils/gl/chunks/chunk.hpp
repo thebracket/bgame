@@ -19,10 +19,16 @@
 #include "geometry_buffer.hpp"
 
 namespace gl {
+    struct static_model_t {
+        int model_id;
+        float x,y,z;
+        bool above_ground;
+        float light_x, light_y, light_z, light_r, light_g, light_b;
+    };
+
     /*
      * Describes a 16x16x16 chunk of world scenery
      */
-
     struct chunk_t {
         chunk_t() : index(0), base_x(0), base_y(0), base_z(0) {}
 
@@ -39,6 +45,7 @@ namespace gl {
 
         std::unique_ptr<geometry_buffer_t> geometry;
         std::unique_ptr<geometry_buffer_t> vegetation;
+        std::vector<static_model_t> static_models;
 
         template<typename FUNC>
         void iterate_region(const FUNC &f) {

@@ -9,4 +9,9 @@ artwork/
 world/
 .idea/
 cmake-build-debug/
-
+build-old/
+imgui-old/
+imgui-sfml-old/
+src/external/osx/
+lua-5.3.3/
+src/external/SFML*

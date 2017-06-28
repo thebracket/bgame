@@ -120,8 +120,8 @@ namespace map_render {
             render_test_texture(W / 2.0f, 0.0f, W, H / 2.0f, map_render::render_texture);
         } else {
             render_mixed_texture(0.0f, 0.0f, W, H);
-            //render_test_texture(0.0f, 0.0f, W / 2.0f, H / 2.0f, map_render::light_color_texture);
-            //render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::light_position_texture);
+            //render_test_texture(0.0f, 0.0f, W / 2.0f, H / 2.0f, map_render::render_texture);
+            //render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::normal_texture);
         }
     }
 }
