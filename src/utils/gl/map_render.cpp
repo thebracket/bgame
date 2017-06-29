@@ -10,7 +10,6 @@
 #include <iostream>
 #include "gl_utils.hpp"
 #include "../../systems/render/lighting_system.hpp"
-#include "../../systems/render/renderables_system.hpp"
 #include "../../systems/render/map_render_system.hpp"
 #include "world_scene.hpp"
 #include "../../systems/input/mouse_input_system.hpp"
@@ -88,6 +87,7 @@ void map_render_t::render() {
     map_render::place_sun_moon();
     std::vector<gl::static_model_t> render_models;
     map_render::render_terrain_to_gbuffer(render_models);
+    map_render::add_renderables(render_models);
     map_render::render_static_models(render_models);
 
     // Phase 2 render: composition

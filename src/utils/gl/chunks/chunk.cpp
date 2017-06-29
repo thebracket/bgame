@@ -42,7 +42,7 @@ namespace gl {
         }
     }
 
-    inline void set_light(const int &idx, float &light_r, float &light_g, float &light_b, float &light_x, float &light_y, float &light_z) {
+    void set_light(const int &idx, float &light_r, float &light_g, float &light_b, float &light_x, float &light_y, float &light_z) {
         auto light_finder = lit_tiles.find(idx);
         if (light_finder != lit_tiles.end()) {
             light_r = (float)light_finder->second.second.r / 255.0f;

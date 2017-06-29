@@ -18,5 +18,6 @@ namespace map_render {
     void setup_matrices();
     void render_terrain_chunk(const gl::chunk_t &chunk);
     void render_terrain_to_gbuffer(std::vector<gl::static_model_t> &models);
+    void add_renderables(std::vector<gl::static_model_t> &models);
     void render_static_models(std::vector<gl::static_model_t> &models);
 }

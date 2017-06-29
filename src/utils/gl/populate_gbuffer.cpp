@@ -6,11 +6,13 @@
 #include "textures/texture.hpp"
 #include "chunks/constants.hpp"
 #include "models/model_loader.hpp"
+#include "../../systems/render/renderables_system.hpp"
 
 namespace map_render {
     bool loaded_terrain_shader = false;
     std::unique_ptr<gl::base_shader_t> terrain_chunk_shader;
     std::unique_ptr<gl::base_shader_t> static_model_shader;
+    std::unique_ptr<gl::base_shader_t> renderable_shader;
     glm::mat4 camera_projection_matrix;
     glm::mat4 camera_modelview_matrix;
 
@@ -39,11 +41,25 @@ namespace map_render {
     GLint model_light_position_loc;
     GLint model_light_color_loc;
 
+    GLint renderable_world_position_loc;
+    GLint renderable_normal_loc;
+    GLint renderable_color_loc;
+    GLint renderable_texture_position_loc;
+    GLint renderable_projection_matrix_loc;
+    GLint renderable_view_matrix_loc;
+    GLint renderable_camera_position_loc;
+    GLint renderable_my_color_texture_loc;
+    GLint renderable_flags_loc;
+    GLint renderable_light_position_loc;
+    GLint renderable_light_color_loc;
+
     void load_terrain_shader() {
         terrain_chunk_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/terrain_vertex.glsl",
                                                                    "world_defs/shaders/terrain_fragment.glsl");
         static_model_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/model_vertex.glsl",
                                                                    "world_defs/shaders/model_fragment.glsl");
+        renderable_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/renderable_vertex.glsl",
+                                                                  "world_defs/shaders/renderable_fragment.glsl");
         loaded_terrain_shader = true;
 
         terrain_world_position_loc = terrain_chunk_shader->get_attribute_location("world_position");
@@ -69,6 +85,18 @@ namespace map_render {
         model_flags_loc = static_model_shader->get_uniform_location("flags");
         model_light_position_loc = static_model_shader->get_uniform_location("light_position");
         model_light_color_loc = static_model_shader->get_uniform_location("light_color");
+
+        renderable_world_position_loc = renderable_shader->get_attribute_location("world_position");
+        renderable_normal_loc = renderable_shader->get_attribute_location("normal");
+        renderable_color_loc = renderable_shader->get_attribute_location("color");
+        renderable_texture_position_loc = renderable_shader->get_attribute_location("texture_position");
+        renderable_projection_matrix_loc = renderable_shader->get_uniform_location("projection_matrix");
+        renderable_view_matrix_loc = renderable_shader->get_uniform_location("view_matrix");
+        renderable_camera_position_loc = renderable_shader->get_uniform_location("camera_position");
+        renderable_my_color_texture_loc = renderable_shader->get_uniform_location("my_color_texture");
+        renderable_flags_loc = renderable_shader->get_attribute_location("flags");
+        renderable_light_position_loc = renderable_shader->get_attribute_location("light_position");
+        renderable_light_color_loc = renderable_shader->get_attribute_location("light_color");
     }
 
     void setup_matrices() {
@@ -212,14 +240,14 @@ namespace map_render {
             }
         }
         glUseProgram(0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     }
 
     void render_static_models(std::vector<gl::static_model_t> &models) {
         glUseProgram(map_render::static_model_shader->program_id);
-        glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
+        //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
 
         // Pass along the matrices
         glUniformMatrix4fv(model_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
@@ -268,6 +296,129 @@ namespace map_render {
         glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    void add_renderables(std::vector<gl::static_model_t> &models) {
+        glUseProgram(map_render::renderable_shader->program_id);
+        //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
+        //map_render::setup_matrices();
+
+        // Pass along the matrices
+        glUniformMatrix4fv(renderable_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(renderable_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+
+        // Pass along the camera information
+        glUniform3f(renderable_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
+
+        Frustrum frustrum;
+        frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
+
+        gl::terrain_bucket_t bucket;
+
+        for (auto it = renderables.begin(); it != renderables.end(); ++it) {
+            int x,y,z;
+            std::tie(x,y,z) = idxmap(it->first);
+
+            if (z <= camera_position->region_z && frustrum.checkSphere(glm::vec3((float)x, (float)z, (float)y), 16.0f)) {
+                float light_r, light_g, light_b, light_x, light_y, light_z;
+                gl::set_light(it->first, light_r, light_g, light_b, light_x, light_y, light_z);
+                for (const auto &r : it->second) {
+                    float tx = ((r.c.glyph % 16) * 24.0f) / 384.0f;
+                    float ty = ((r.c.glyph / 16) * 24.0f) / 768.0f;
+                    bucket.add_renderable(
+                        r.x,
+                        r.y,
+                        (float)z,
+                        (float)r.c.foreground.r / 255.0f,
+                        (float)r.c.foreground.g / 255.0f,
+                        (float)r.c.foreground.b / 255.0f,
+                        it->first,
+                        region::above_ground(it->first),
+                        light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, 0.0f, tx, ty
+                    );
+                }
+            }
+        }
+
+        for (auto it = composite_renderables.begin(); it != composite_renderables.end(); ++it) {
+            int x,y,z;
+            std::tie(x,y,z) = idxmap(it->first);
+
+            if (z <= camera_position->region_z && frustrum.checkSphere(glm::vec3((float)x, (float)z, (float)y), 16.0f)) {
+                for (const auto &rl : it->second) {
+                    float light_r, light_g, light_b, light_x, light_y, light_z;
+                    gl::set_light(it->first, light_r, light_g, light_b, light_x, light_y, light_z);
+                    
+                    for (const auto &r : rl) {
+                        float tx = ((r.c.glyph % 16) * 24.0f) / 384.0f;
+                        float ty = ((r.c.glyph / 16) * 24.0f) / 768.0f;
+                        bucket.add_renderable(
+                                r.x,
+                                r.y,
+                                (float)z,
+                                (float)r.c.foreground.r / 255.0f,
+                                (float)r.c.foreground.g / 255.0f,
+                                (float)r.c.foreground.b / 255.0f,
+                                it->first,
+                                region::above_ground(it->first),
+                                light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, 0.0f, tx, ty
+                        );
+                    }
+                }
+            }
+        }
+        //std::cout << i << " composite renderables to enqueue\n";
+
+        bucket.make_vbo();
+
+        // Bind attributes and texture
+        glBindBuffer(GL_ARRAY_BUFFER, bucket.vbo_id);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
+
+        glVertexAttribPointer(renderable_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 3 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_world_position_loc);
+
+        glVertexAttribPointer(renderable_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 6 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_normal_loc);
+
+        glVertexAttribPointer(renderable_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 9 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_color_loc);
+
+        glVertexAttribPointer(renderable_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 12 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_texture_position_loc);
+
+        glVertexAttribPointer(renderable_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 14 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_flags_loc);
+
+        glVertexAttribPointer(renderable_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 17 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_light_position_loc);
+
+        glVertexAttribPointer(renderable_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                              ((char *) nullptr + 20 * sizeof(float)));
+        glEnableVertexAttribArray(renderable_light_color_loc);
+
+        glActiveTexture(GL_TEXTURE0);
+        glEnable(GL_TEXTURE_2D);
+        sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
+        glUniform1i(renderable_my_color_texture_loc, 0);
+        
+        // Render
+        glDrawArrays(GL_QUADS, 0, bucket.n_quads);
+
+        // Cleanup
+        glDeleteBuffers(1, &bucket.vbo_id);
+
+        //glUseProgram(0);
+        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
 }

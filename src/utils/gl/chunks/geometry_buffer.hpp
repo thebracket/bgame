@@ -48,6 +48,12 @@ namespace gl {
                        const float &light_x, const float &light_y, const float &light_z, const float &shininess,
                        const float &wang);
 
+        void add_renderable(const float x, const float y, const float z, float r, float g, float b,
+                     const int &idx, const bool &above_ground,
+                     const float &light_r, const float &light_g, const float &light_b,
+                     const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                     const float &billboard, const float &tex_x, const float &tex_y);
+
         void add_left(const float x, const float y, const float z, float r, float g, float b,
                       const int &idx, const bool &above_ground,
                       const float &light_r, const float &light_g, const float &light_b,

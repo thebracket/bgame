@@ -105,6 +105,51 @@ namespace gl {
         n_quads += 4;
     }
 
+    void terrain_bucket_t::add_renderable(const float x, const float y, const float z, float r, float g, float b,
+                        const int &idx, const bool &above_ground,
+                        const float &light_r, const float &light_g, const float &light_b,
+                        const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                        const float &billboard, const float &tex_x, const float &tex_y) 
+    {
+        const float ground_indicator = above_ground ? 255.0f : 0.0f;
+        constexpr float tsize_sprite_x = 24.0f / 384.0f;
+        constexpr float tsize_sprite_y = 24.0f / 768.0f;
+
+        add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
+        add_to_items(x, y, z);                    // World position 0
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 0
+        add_to_items(r, g, b);                    // Color 0
+        add_to_items(tex_x, tex_y);                     // Texture 0
+        add_to_items(ground_indicator, shininess, billboard);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        add_to_items(-0.5f, -0.5f,  0.5f);        // Vertex 1
+        add_to_items(x, y, z);                    // World position 1
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 1
+        add_to_items(r, g, b);                    // Color 1
+        add_to_items(tex_x, tex_y + tsize_sprite_y);           // Texture 1
+        add_to_items(ground_indicator, shininess, billboard);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
+        add_to_items(x, y, z);                    // World position 2
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 2
+        add_to_items(r, g, b);                    // Color 2
+        add_to_items(tex_x + tsize_sprite_x, tex_y + tsize_sprite_y); // Texture 2
+        add_to_items(ground_indicator, shininess, billboard);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        add_to_items(0.5f, -0.5f, -0.5f);         // Vertex 3
+        add_to_items(x, y, z);                    // World position 3
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 3
+        add_to_items(r, g, b);                    // Color 3
+        add_to_items(tex_x + tsize_sprite_x, tex_y);           // Texture 3
+        add_to_items(ground_indicator, shininess, billboard);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+
+        n_quads += 4;
+    }
+
     void terrain_bucket_t::add_left(const float x, const float y, const float z, float r, float g, float b,
                   const int &idx, const bool &above_ground,
                   const float &light_r, const float &light_g, const float &light_b,

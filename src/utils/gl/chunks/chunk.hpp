@@ -65,4 +65,5 @@ namespace gl {
     void update_dirty_chunks();
     void update_chunk(chunk_t &chunk);
     void update_chunk_vegetation(chunk_t &chunk);
+    void set_light(const int &idx, float &light_r, float &light_g, float &light_b, float &light_x, float &light_y, float &light_z);
 };
