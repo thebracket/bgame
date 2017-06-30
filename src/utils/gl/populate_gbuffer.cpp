@@ -439,6 +439,12 @@ namespace map_render {
         //glUseProgram(0);
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        for (const auto &loc : renderable_models) {
+            for (const auto &m : loc.second) {
+                models.add_model_request(m.model_id, m);
+            }
+        }
     }
 
 }

@@ -31,7 +31,8 @@ buildings["battery"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['plus_minus'], foreground = colors['red'], background = colors['black']}
         }
-    }
+    },
+    model = model("battery_bank")
 };
 
 buildings["rtg"] = {

@@ -234,6 +234,7 @@ void read_buildings() noexcept
                     }
                 }
             }
+            if (field == "model") c.model_idx = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }

@@ -24,6 +24,7 @@ struct building_def_t {
     int height = 1;
     std::vector<rltk::vchar> glyphs;
     std::vector<rltk::vchar> glyphs_ascii;
+    int model_idx = 0;
     bool emits_smoke = false;
     bool structure = false;
 };

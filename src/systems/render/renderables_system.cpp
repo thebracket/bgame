@@ -23,12 +23,13 @@
 #include "../../main/game_selections.hpp"
 #include "../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../components/ai_tags/ai_tag_work_architect.hpp"
-
+#include "../../utils/gl/chunks/chunk.hpp"
 
 using namespace rltk;
 
 boost::container::flat_map<int, std::vector<screen_render_t>> renderables;
 boost::container::flat_map<int, std::vector<std::vector<screen_render_t>>> composite_renderables;
+boost::container::flat_map<int, std::vector<gl::static_model_t>> renderable_models;
 
 void renderables_system::configure() {
     system_name = "Renderables System";
@@ -190,29 +191,46 @@ void renderables_system::update(const double time_elapsed) {
             if (!pos) return;
             const int idx = mapidx(*pos);
             if (!done && b && pos) {
-                int glyph_idx = 0;
                 int offset_x = 0;
                 int offset_y = 0;
                 if (b->width == 3) offset_x = -1;
                 if (b->height == 3) offset_y = -1;
 
-                for (int y = 0; y<b->height; ++y) {
-                    for (int x=0; x<b->width; ++x) {
-                        const auto idx = mapidx(pos->x + offset_x, pos->y + offset_y, pos->z);
-                        rltk::vchar glyph;
-                        glyph = camera->ascii_mode && b->glyphs_ascii.size() == b->glyphs.size() ? b->glyphs_ascii[glyph_idx] : b->glyphs[glyph_idx];
-                        if (b->glyphs_ascii.size() != b->glyphs.size()) std::cout << "WARNING: " << b->tag << " ASCII information invalid.\n";
-                        if (!b->complete) glyph.foreground = rltk::colors::GREY;
-                        auto door = E->component<construct_door_t>();
-                        if (door && door->locked) glyph.background = rltk::colors::GREY;
-                        renderables[idx].push_back(screen_render_t{pos->x + offset_x, pos->y + offset_y, pos->offsetX, pos->offsetY, glyph});
-                        ++glyph_idx;
-                        ++offset_x;
+                if (b->model_idx > 0) {
+                    float light_r, light_g, light_b, light_x, light_y, light_z;
+                    gl::set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
+                    renderable_models[mapidx(pos->x + offset_x, pos->y + offset_y, pos->z)].emplace_back(
+                        gl::static_model_t{
+                                b->model_idx, (float)pos->x, (float)pos->y, (float)pos->z,
+                                region::above_ground(idx),
+                        }
+                    );
+                } else {
+                    int glyph_idx = 0;
+
+                    for (int y = 0; y < b->height; ++y) {
+                        for (int x = 0; x < b->width; ++x) {
+                            const auto idx = mapidx(pos->x + offset_x, pos->y + offset_y, pos->z);
+                            rltk::vchar glyph;
+                            glyph = camera->ascii_mode && b->glyphs_ascii.size() == b->glyphs.size()
+                                    ? b->glyphs_ascii[glyph_idx] : b->glyphs[glyph_idx];
+                            if (b->glyphs_ascii.size() != b->glyphs.size())
+                                std::cout << "WARNING: " << b->tag << " ASCII information invalid.\n";
+                            if (!b->complete) glyph.foreground = rltk::colors::GREY;
+                            auto door = E->component<construct_door_t>();
+                            if (door && door->locked) glyph.background = rltk::colors::GREY;
+                            renderables[idx].push_back(
+                                    screen_render_t{pos->x + offset_x, pos->y + offset_y, pos->offsetX, pos->offsetY,
+                                                    glyph});
+                            ++glyph_idx;
+                            ++offset_x;
+                        }
+                        offset_x = 0;
+                        if (b->width == 3) offset_x = -1;
+                        ++offset_y;
                     }
-                    offset_x = 0;
-                    if (b->width == 3) offset_x = -1;
-                    ++offset_y;
                 }
+
 
                 done = true;
             }

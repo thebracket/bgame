@@ -15,5 +15,10 @@ function tex(name)
 end
 
 model_index = {
-    ladder = { index = 1, model = "ladder_down.obj" }
+    ladder = { index = 1, model = "ladder_down.obj" },
+    battery_bank = { index = 2, model = "battery_bank.obj" }
 }
+
+function model(name)
+    return model_index[name].index
+end
