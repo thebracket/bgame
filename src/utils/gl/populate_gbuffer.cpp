@@ -214,7 +214,7 @@ namespace map_render {
         }
     }
 
-    void render_terrain_to_gbuffer(std::vector<gl::static_model_t> &models) {
+    void render_terrain_to_gbuffer(gl::model_request_t &models) {
         glUseProgram(map_render::terrain_chunk_shader->program_id);
         glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -236,7 +236,10 @@ namespace map_render {
             {
                 map_render::render_terrain_chunk(chunk);
                 // Copy the chunk's models over to the render queue
-                models.insert(models.end(), std::begin(chunk.static_models), std::end(chunk.static_models));
+                //models.insert(models.end(), std::begin(chunk.static_models), std::end(chunk.static_models));
+                for (const auto &m : chunk.static_models) {
+                    models.add_model_request(m.model_id, m);
+                }
             }
         }
         glUseProgram(0);
@@ -245,7 +248,7 @@ namespace map_render {
 
     }
 
-    void render_static_models(std::vector<gl::static_model_t> &models) {
+    void render_static_models(gl::model_request_t &models) {
         glUseProgram(map_render::static_model_shader->program_id);
         //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
 
@@ -256,8 +259,19 @@ namespace map_render {
         // Pass along the camera information
         glUniform3f(model_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
-        for (const auto &model : models) {
-            if (model.z <= camera_position->region_z) {
+        for (auto it = models.models.begin(); it != models.models.end(); ++it) {
+            auto m = gl::get_model(it->first);
+
+            // Setup a texture
+            const int texture_id = 9;
+            const auto tex = textures::get_texture_by_id(texture_id);
+            glActiveTexture(GL_TEXTURE0);
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+
+            glUniform1i(model_my_color_texture_loc, 0);
+
+            for (const auto &model : it->second) {
                 glUniform3f(model_world_position_loc, model.x, model.y-0.5f, model.z);
                 glUniform3f(model_flags_loc, model.above_ground ? 255.0f : 1.0f, 8.0f, 0.0f);
                 glUniform3f(model_light_position_loc, model.light_x, model.light_y, model.light_z);
@@ -271,22 +285,13 @@ namespace map_render {
                 glVertexPointer(3, GL_FLOAT, gl::num_model_items * sizeof(float), 0);
 
                 glVertexAttribPointer(model_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
-                                      ((char *) nullptr + 3 * sizeof(float)));                                      
+                                      ((char *) nullptr + 3 * sizeof(float)));
                 glEnableVertexAttribArray(model_normal_loc);
 
                 glVertexAttribPointer(model_texture_position_loc, 2, GL_FLOAT, GL_FALSE,
                                       gl::num_model_items * sizeof(float),
                                       ((char *) nullptr + 6 * sizeof(float)));
                 glEnableVertexAttribArray(model_texture_position_loc);
-
-                // Setup a texture
-                const int texture_id = 9;
-                const auto tex = textures::get_texture_by_id(texture_id);
-                glActiveTexture(GL_TEXTURE0);
-                glEnable(GL_TEXTURE_2D);
-                glBindTexture(GL_TEXTURE_2D, tex->texture_id);
-
-                glUniform1i(model_my_color_texture_loc, 0);
 
                 // Render it
                 glDrawArrays(GL_TRIANGLES, 0, m->items.size() / gl::num_model_items);
@@ -298,7 +303,7 @@ namespace map_render {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void add_renderables(std::vector<gl::static_model_t> &models) {
+    void add_renderables(gl::model_request_t &models) {
         glUseProgram(map_render::renderable_shader->program_id);
         //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
         //map_render::setup_matrices();

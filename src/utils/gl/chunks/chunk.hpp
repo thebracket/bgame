@@ -17,14 +17,9 @@
 #include "../../systems/render/lighting_system.hpp"
 #include "constants.hpp"
 #include "geometry_buffer.hpp"
+#include "../model_requests_t.hpp"
 
 namespace gl {
-    struct static_model_t {
-        int model_id;
-        float x,y,z;
-        bool above_ground;
-        float light_x, light_y, light_z, light_r, light_g, light_b;
-    };
 
     /*
      * Describes a 16x16x16 chunk of world scenery

@@ -35,6 +35,7 @@
 #include "../../components/lightsource.hpp"
 #include "../../main/game_camera.hpp"
 #include "textures/texture.hpp"
+#include "model_requests_t.hpp"
 
 using namespace map_render_sys;
 using namespace region;
@@ -85,7 +86,7 @@ void map_render_t::render() {
 
     // Phase 1: Populate the basic g-buffer
     map_render::place_sun_moon();
-    std::vector<gl::static_model_t> render_models;
+    gl::model_request_t render_models;
     map_render::render_terrain_to_gbuffer(render_models);
     map_render::add_renderables(render_models);
     map_render::render_static_models(render_models);
