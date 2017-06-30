@@ -45,11 +45,11 @@ namespace gl {
     void set_light(const int &idx, float &light_r, float &light_g, float &light_b, float &light_x, float &light_y, float &light_z) {
         auto light_finder = lit_tiles.find(idx);
         if (light_finder != lit_tiles.end()) {
-            light_r = (float)light_finder->second.second.r / 255.0f;
-            light_g = (float)light_finder->second.second.g / 255.0f;
-            light_b = (float)light_finder->second.second.b / 255.0f;
+            light_r = (float)light_finder->second.light_color.r / 255.0f;
+            light_g = (float)light_finder->second.light_color.g / 255.0f;
+            light_b = (float)light_finder->second.light_color.b / 255.0f;
             int lx,ly,lz;
-            std::tie(lx,ly,lz) = idxmap(light_finder->second.first);
+            std::tie(lx,ly,lz) = idxmap(light_finder->second.light_position);
             light_x = (float)lx / 255.0f;
             light_y = (float)lz / 255.0f;
             light_z = (float)ly / 255.0f;

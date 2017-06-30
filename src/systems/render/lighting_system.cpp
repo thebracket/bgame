@@ -10,34 +10,31 @@
 
 using namespace rltk;
 
-std::unordered_map<int, std::pair<int, rltk::color_t>> lit_tiles;
+boost::container::flat_map<int, lit_tile_t> lit_tiles;
 
 void lighting_system::configure() {
     system_name = "Lighting System";
     subscribe_mbox<map_rerender_message>();
     subscribe_mbox<power_changed_message>();
-
-    subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
-		lighting_changed = true;
-	});
 }
 
 inline void reveal(const int &idx, const lightsource_t view, const int light_pos) {
+    int x,y,z;
+    int lx,ly,lz;
+    std::tie(x,y,z) = idxmap(idx);
+    std::tie(lx,ly,lz) = idxmap(light_pos);
+    const int distance = rltk::distance3d_squared(x, y, z, lx, ly, lz);
+
 	auto finder = lit_tiles.find(idx);
 	if (finder == lit_tiles.end()) {
-		lit_tiles[idx] = std::make_pair(light_pos, view.color);
+		lit_tiles[idx] = lit_tile_t{light_pos, view.color, distance};
 	} else {
-		const int new_light_level = view.color.r + view.color.g + view.color.b;
-		const int old_light_level = finder->second.second.r + finder->second.second.g + finder->second.second.b;
-		if (new_light_level > old_light_level) {
-			finder->second.first = light_pos;
-			finder->second.second = view.color;
-		}
+        if (distance < finder->second.light_distance_squared) {
+            finder->second = lit_tile_t{light_pos, view.color, distance};
+        }
 	}
 
     // TODO: Implement a comparison to only update if we have to!
-    int x,y,z;
-    std::tie(x,y,z) = idxmap(idx);
 	const int chunk_index = gl::chunk_idx(x/gl::CHUNK_SIZE, y/gl::CHUNK_SIZE, z/gl::CHUNK_SIZE);
     gl::chunks[chunk_index].dirty = true;
 }
@@ -68,13 +65,11 @@ void lighting_system::update(double time_ms) {
     std::queue<map_rerender_message> * map_change = mbox<map_rerender_message>();
 	while (!map_change->empty()) {
 		dirty = true;
-        lighting_changed = true;
 		map_change->pop();
 	}
     std::queue<power_changed_message> * power_change = mbox<power_changed_message>();
 	while (!power_change->empty()) {
 		dirty = true;
-        lighting_changed = true;
 		power_change->pop();
 	}
 
@@ -82,7 +77,6 @@ void lighting_system::update(double time_ms) {
         // Rebuild the light map
         lit_tiles.clear();
         each<position_t, lightsource_t>(update_normal_light);
-        lighting_changed = true;
         dirty = false;
     }
 
