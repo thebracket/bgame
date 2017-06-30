@@ -10,7 +10,6 @@
 
 using namespace rltk;
 
-std::vector<color_t> light_map;
 std::unordered_map<int, std::pair<int, rltk::color_t>> lit_tiles;
 
 void lighting_system::configure() {
@@ -21,8 +20,6 @@ void lighting_system::configure() {
     subscribe<entity_moved_message>([this] (entity_moved_message &msg) {
 		lighting_changed = true;
 	});
-    light_map.resize(REGION_TILES_COUNT);
-    std::fill(light_map.begin(), light_map.end(), rltk::colors::WHITE);
 }
 
 inline void reveal(const int &idx, const lightsource_t view, const int light_pos) {
