@@ -3,6 +3,7 @@
 #include "graphviz.hpp"
 #include "defs/material_def_t.hpp"
 #include "../utils/gl/textures/texture.hpp"
+#include "../utils/gl/models/model_loader.hpp"
 #include <boost/container/flat_map.hpp>
 
 using namespace rltk;
@@ -210,6 +211,36 @@ void read_texture_index() noexcept {
         lua_pop(lua_state, 1);
     }
     textures::load_textures(textures_to_load);
+}
+
+void read_model_index() noexcept {
+    std::vector<std::pair<int, std::string>> models_to_load;
+
+    lua_getglobal(lua_state, "model_index");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0)
+    {
+        const std::string key = lua_tostring(lua_state, -2);
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+
+        std::string model_file = "";
+        int model_index = 0;
+        while (lua_next(lua_state, -2) != 0) {
+            const std::string field = lua_tostring(lua_state, -2);
+            if (field == "model") model_file = std::string("world_defs/models/") + lua_tostring(lua_state, -1);
+            if (field == "index") model_index = lua_tonumber(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        models_to_load.emplace_back(std::make_pair(model_index, model_file));
+
+        lua_pop(lua_state, 1);
+    }
+    for (const auto &model : models_to_load) {
+        gl::setup_model(model.first, model.second);
+    }
 }
 
 void build_material_acquisition_tech_tree(graphviz_t *tree) {

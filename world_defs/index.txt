@@ -1,4 +1,5 @@
 glyphs.lua
+model_texture.lua
 materials.lua
 vegetation.lua
 stockpiles.lua

@@ -44,7 +44,7 @@ void splash_screen::tick(const double duration_ms) {
 		splash_loader_thread->join();
 		splash_loader_thread.reset();
 		read_texture_index();
-        gl::setup_model(1, "world_defs/models/ladder_down.obj");
+        read_model_index();
 		done_loading = true;
 	}
 }

@@ -49,5 +49,10 @@ void read_material_types() noexcept;
  */
 void read_texture_index() noexcept;
 
+/*
+ * Reads the model index from the relevant file.
+ */
+void read_model_index() noexcept;
+
 void build_material_tech_tree(graphviz_t * tree);
 void build_material_acquisition_tech_tree(graphviz_t * tree);
