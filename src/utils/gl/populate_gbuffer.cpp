@@ -334,7 +334,7 @@ namespace map_render {
                         (float)r.c.foreground.b / 255.0f,
                         it->first,
                         region::above_ground(it->first),
-                        light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, 0.0f, tx, ty
+                        light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, tx, ty
                     );
                 }
             }
@@ -348,21 +348,36 @@ namespace map_render {
                 for (const auto &rl : it->second) {
                     float light_r, light_g, light_b, light_x, light_y, light_z;
                     gl::set_light(it->first, light_r, light_g, light_b, light_x, light_y, light_z);
-                    
+
                     for (const auto &r : rl) {
                         float tx = ((r.c.glyph % 16) * 24.0f) / 384.0f;
                         float ty = ((r.c.glyph / 16) * 24.0f) / 768.0f;
-                        bucket.add_renderable(
-                                r.x,
-                                r.y,
-                                (float)z,
-                                (float)r.c.foreground.r / 255.0f,
-                                (float)r.c.foreground.g / 255.0f,
-                                (float)r.c.foreground.b / 255.0f,
-                                it->first,
-                                region::above_ground(it->first),
-                                light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, 0.0f, tx, ty
-                        );
+
+                        if (camera->camera_mode == TOP_DOWN) {
+                            bucket.add_renderable(
+                                    r.x,
+                                    r.y,
+                                    (float) z,
+                                    (float) r.c.foreground.r / 255.0f,
+                                    (float) r.c.foreground.g / 255.0f,
+                                    (float) r.c.foreground.b / 255.0f,
+                                    it->first,
+                                    region::above_ground(it->first),
+                                    light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, tx, ty
+                            );
+                        } else {
+                            bucket.add_billboard(
+                                    r.x,
+                                    r.y,
+                                    (float) z,
+                                    (float) r.c.foreground.r / 255.0f,
+                                    (float) r.c.foreground.g / 255.0f,
+                                    (float) r.c.foreground.b / 255.0f,
+                                    it->first,
+                                    region::above_ground(it->first),
+                                    light_r, light_g, light_b, light_x, light_y, light_z, 8.0f, tx, ty
+                            );
+                        }
                     }
                 }
             }

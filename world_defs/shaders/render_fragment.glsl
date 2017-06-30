@@ -47,15 +47,17 @@ void main() {
         // Add sun/moon light
         vec3 light_dir = normalize(sun_moon_position.xyz - position.xyz);
         base_color.xyz += diffuse_light(normal.xyz, sun_moon_color, light_dir);
-        base_color.xyz += specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, light_dir, flags.g);
+        if (flags.b < 1.0f) {
+            base_color.xyz += specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, light_dir, flags.g);
+        }
     } else {
         base_color.xyz *= vec3(0.2, 0.2, 0.2);
     }
 
     // If the tile is lit, we need to apply the lighting
-    if (light_position.x > 0.0) {
-        vec3 light_dir = normalize(light_position.xyz - position.xyz);
-        base_color.xyz += diffuse_light(normal.xyz, light_color, light_dir);
+    vec3 light_dir = normalize(light_position.xyz - position.xyz);
+    base_color.xyz += diffuse_light(normal.xyz, light_color, light_dir);
+    if (light_position.x > 0.0 && flags.b < 1.0f) {
         base_color.xyz += specular_light(position.xyz, normal.xyz, light_color.rgb, light_dir, flags.g);
     }
 
