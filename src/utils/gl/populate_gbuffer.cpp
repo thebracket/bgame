@@ -271,27 +271,26 @@ namespace map_render {
 
             glUniform1i(model_my_color_texture_loc, 0);
 
+            glBindBuffer(GL_ARRAY_BUFFER, m->vbo_id);
+
+            // Bind the vertex buffer
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(3, GL_FLOAT, gl::num_model_items * sizeof(float), 0);
+
+            glVertexAttribPointer(model_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
+                                  ((char *) nullptr + 3 * sizeof(float)));
+            glEnableVertexAttribArray(model_normal_loc);
+
+            glVertexAttribPointer(model_texture_position_loc, 2, GL_FLOAT, GL_FALSE,
+                                  gl::num_model_items * sizeof(float),
+                                  ((char *) nullptr + 6 * sizeof(float)));
+            glEnableVertexAttribArray(model_texture_position_loc);
+
             for (const auto &model : it->second) {
                 glUniform3f(model_world_position_loc, model.x, model.y-0.5f, model.z);
                 glUniform3f(model_flags_loc, model.above_ground ? 255.0f : 1.0f, 8.0f, 0.0f);
                 glUniform3f(model_light_position_loc, model.light_x, model.light_y, model.light_z);
                 glUniform3f(model_light_color_loc, model.light_r, model.light_g, model.light_b);
-
-                auto m = gl::get_model(model.model_id);
-                glBindBuffer(GL_ARRAY_BUFFER, m->vbo_id);
-
-                // Bind the vertex buffer
-                glEnableClientState(GL_VERTEX_ARRAY);
-                glVertexPointer(3, GL_FLOAT, gl::num_model_items * sizeof(float), 0);
-
-                glVertexAttribPointer(model_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
-                                      ((char *) nullptr + 3 * sizeof(float)));
-                glEnableVertexAttribArray(model_normal_loc);
-
-                glVertexAttribPointer(model_texture_position_loc, 2, GL_FLOAT, GL_FALSE,
-                                      gl::num_model_items * sizeof(float),
-                                      ((char *) nullptr + 6 * sizeof(float)));
-                glEnableVertexAttribArray(model_texture_position_loc);
 
                 // Render it
                 glDrawArrays(GL_TRIANGLES, 0, m->items.size() / gl::num_model_items);
