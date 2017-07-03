@@ -195,7 +195,9 @@ namespace map_render {
                 // Rendering
 
                 int cull_pos = it->second.z_offsets[offset];
-                if (cull_pos > 0) glDrawArrays(GL_QUADS, 0, cull_pos);
+                if (cull_pos > 0) {
+                    glDrawArrays(GL_QUADS, 0, cull_pos);
+                }
 
                 glDisableClientState(GL_VERTEX_ARRAY);
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
