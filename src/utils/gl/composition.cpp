@@ -18,6 +18,7 @@ namespace map_render {
     GLint render_sun_moon_position_loc;
     GLint render_sun_moon_color_loc;
     GLint render_flag_tex_loc;
+    GLint render_camera_position_loc;
 
     void load_render_shader() {
         render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
@@ -33,6 +34,7 @@ namespace map_render {
         render_sun_moon_position_loc = render_shader->get_uniform_location("sun_moon_position");
         render_sun_moon_color_loc = render_shader->get_uniform_location("sun_moon_color");
         render_flag_tex_loc = render_shader->get_uniform_location("flag_tex");
+        render_camera_position_loc = render_shader->get_uniform_location("cameraPosition");
     }
 
     void render_test_texture(float left, float top, float right, float bottom, GLuint &target_texture) {
@@ -107,6 +109,7 @@ namespace map_render {
         glUniform3fv(render_ambient_color_loc, 1, glm::value_ptr(ambient_color));
         glUniform3fv(render_sun_moon_position_loc, 1, glm::value_ptr(sun_position));
         glUniform3fv(render_sun_moon_color_loc, 1, glm::value_ptr(sun_color));
+        glUniform3fv(render_camera_position_loc, 1, glm::value_ptr(camera_position_v));
 
         glColor3f(1, 1, 1);
         glBegin(GL_QUADS);

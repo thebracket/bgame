@@ -117,25 +117,24 @@ namespace map_render {
 
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
-        glm::vec3 position;
 
         switch (camera->camera_mode) {
             case FRONT : {
                 // Nice X-perspective view
-                position = { (float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f) };
+                camera_position_v = { (float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f) };
             } break;
 
             case TOP_DOWN : {
                 // Top-down
-                position = {(float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + 0.1f};
+                camera_position_v = {(float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + 0.1f};
             } break;
 
             case DIAGONAL : {
                 // Diagonal
-                position = {(float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + (float)camera->zoom_level};
+                camera_position_v = {(float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + (float)camera->zoom_level};
             } break;
         }
-        camera_modelview_matrix = glm::lookAt(position, target, up);
+        camera_modelview_matrix = glm::lookAt(camera_position_v, target, up);
     }
 
     void render_bucket(const gl::chunk_t &chunk, const gl::terrain_bucket_t &bucket ) {

@@ -15,6 +15,8 @@ namespace map_render {
     glm::vec3 ambient_color;
     glm::vec3 sun_position;
     glm::vec3 sun_color;
+    glm::vec3 camera_position_v; // This needs to be used in the shader for camera position, rather than the raw pos to provide real reflectivity
+
 
     inline float calc_sun_time() {
         return (float)calendar->hour + ((float)calendar->minute/60.0f);

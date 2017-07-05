@@ -45,19 +45,20 @@ void main() {
     vec3 ambient = flags.r > 0.0 ? ambient_color : vec3(0.3, 0.3, 0.3);
     base_color.xyz *= ambient;
 
+    // Apply light from the sun
     vec3 sun_dir = normalize(sun_moon_position.xyz - position.xyz);
     vec3 sun_diffuse = diffuse_light(normal.xyz, sun_moon_color, sun_dir);
     vec3 sun_specular = specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, sun_dir, flags.g);
-
     float sun_diffuse_factor = flags.r > 0.0 ? 1.0 : 0.0;
     float sun_specular_factor = flags.r > 0.0 && flags.b < 1.0 ? 1.0 : 0.0;
     base_color.xyz += sun_diffuse * sun_diffuse_factor;
     base_color.xyz += sun_specular * sun_specular_factor;
 
+    // Apply light from in-game light sources
     vec3 light_dir = normalize(light_position.xyz - position.xyz);
     base_color.xyz += diffuse_light(normal.xyz, light_color, light_dir);
     float light_component = light_position.x > 0.0 && flags.b < 1.0f ? 1.0 : 0.0;
-    base_color.xyz += specular_light(position.xyz, normal.xyz, light_color.rgb, light_dir, flags.g) * light_component;
+    base_color.xyz += specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * light_component;
 
     gl_FragColor = base_color;
 }
