@@ -3,7 +3,6 @@
 // Pass the matrices in as uniforms
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
-uniform vec3 camera_position;
 
 // World position is part of the VBO
 attribute vec3 world_position;
@@ -13,6 +12,7 @@ attribute vec2 texture_position;
 attribute vec3 flags;
 attribute vec3 light_position;
 attribute vec3 light_color;
+attribute vec2 normal_position;
 
 // Outputs
 varying vec3 tint;
@@ -22,6 +22,7 @@ varying vec4 interpolated_position;
 varying vec3 flag_out;
 varying vec3 light_pos;
 varying vec3 light_col;
+varying vec4 normal_tex_position;
 
 void main() {
     vec3 tangent;
@@ -30,11 +31,7 @@ void main() {
     vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0));
     vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
 
-    if (length(c1)>length(c2)) {
-        tangent = c1;
-    } else {
-        tangent = c2;
-    }
+    tangent = length(c1) > length(c2) ? c1 : c2;
     tangent = normalize(tangent);
     bitangent = normalize(cross(normal, tangent));
 
@@ -47,10 +44,6 @@ void main() {
     position.xyz += world_position.xzy;
     gl_Position = projection_matrix * (view_matrix * position);
     tint = color;
-    if (world_position.z < camera_position.z) {
-        float darken = (camera_position.z - world_position.z) * 0.05f;
-        tint.rgb -= darken;
-    }
     gl_TexCoord[0] = vec4(texture_position, 0.0, 0.0);
     world_pos = world_position;
     interpolated_position = position;
@@ -58,4 +51,5 @@ void main() {
     flag_out = flags;
     light_pos = light_position;
     light_col = light_color;
+    normal_tex_position = vec4(normal_position, 0.0, 0.0);
 }

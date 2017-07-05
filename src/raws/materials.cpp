@@ -214,7 +214,7 @@ void read_texture_index() noexcept {
 }
 
 void read_model_index() noexcept {
-    std::vector<std::pair<int, std::string>> models_to_load;
+    std::vector<std::tuple<int, std::string, int>> models_to_load;
 
     lua_getglobal(lua_state, "model_index");
     lua_pushnil(lua_state);
@@ -227,19 +227,21 @@ void read_model_index() noexcept {
 
         std::string model_file = "";
         int model_index = 0;
+        int model_texture = 0;
         while (lua_next(lua_state, -2) != 0) {
             const std::string field = lua_tostring(lua_state, -2);
             if (field == "model") model_file = std::string("world_defs/models/") + lua_tostring(lua_state, -1);
             if (field == "index") model_index = lua_tonumber(lua_state, -1);
+            if (field == "texture") model_texture = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }
-        models_to_load.emplace_back(std::make_pair(model_index, model_file));
+        models_to_load.emplace_back(std::make_tuple(model_index, model_file, model_texture));
 
         lua_pop(lua_state, 1);
     }
     for (const auto &model : models_to_load) {
-        gl::setup_model(model.first, model.second);
+        gl::setup_model(std::get<0>(model), std::get<1>(model), std::get<2>(model));
     }
 }
 

@@ -23,12 +23,11 @@ namespace map_render {
     GLint terrain_texture_position_loc;
     GLint terrain_projection_matrix_loc;
     GLint terrain_view_matrix_loc;
-    GLint terrain_camera_position_loc;
     GLint terrain_my_color_texture_loc;
-    GLint terrain_my_normal_texture_loc;
     GLint terrain_flags_loc;
     GLint terrain_light_position_loc;
     GLint terrain_light_color_loc;
+    GLint terrain_normal_position_loc;
 
     GLint model_world_position_loc;
     GLint model_normal_loc;
@@ -68,12 +67,11 @@ namespace map_render {
         terrain_texture_position_loc = terrain_chunk_shader->get_attribute_location("texture_position");
         terrain_projection_matrix_loc = terrain_chunk_shader->get_uniform_location("projection_matrix");
         terrain_view_matrix_loc = terrain_chunk_shader->get_uniform_location("view_matrix");
-        terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
         terrain_my_color_texture_loc = terrain_chunk_shader->get_uniform_location("my_color_texture");
-        terrain_my_normal_texture_loc = terrain_chunk_shader->get_uniform_location("my_normal_texture");
         terrain_flags_loc = terrain_chunk_shader->get_attribute_location("flags");
         terrain_light_position_loc = terrain_chunk_shader->get_attribute_location("light_position");
         terrain_light_color_loc = terrain_chunk_shader->get_attribute_location("light_color");
+        terrain_normal_position_loc = terrain_chunk_shader->get_attribute_location("normal_position");
 
         model_world_position_loc = static_model_shader->get_uniform_location("world_position");
         model_normal_loc = static_model_shader->get_attribute_location("normal");
@@ -140,67 +138,56 @@ namespace map_render {
         camera_modelview_matrix = glm::lookAt(position, target, up);
     }
 
-    void render_buckets(const gl::chunk_t &chunk, const boost::container::flat_map<int, gl::terrain_bucket_t> &buckets ) {
-        for (auto it=buckets.begin(); it != buckets.end(); ++it) {
-            const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
-            if (offset > 0) {
+    void render_bucket(const gl::chunk_t &chunk, const gl::terrain_bucket_t &bucket ) {
+        const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
+        if (offset > 0) {
 
-                // Bind the texture VBO and map the attributes
-                glBindBuffer(GL_ARRAY_BUFFER, it->second.vbo_id);
+            // Bind the texture VBO and map the attributes
+            glBindBuffer(GL_ARRAY_BUFFER, bucket.vbo_id);
 
-                glEnableClientState(GL_VERTEX_ARRAY);
-                glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
 
-                glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 3 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_world_position_loc);
+            glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 3 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_world_position_loc);
 
-                glVertexAttribPointer(terrain_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 6 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_normal_loc);
+            glVertexAttribPointer(terrain_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 6 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_normal_loc);
 
-                glVertexAttribPointer(terrain_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 9 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_color_loc);
+            glVertexAttribPointer(terrain_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 9 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_color_loc);
 
-                glVertexAttribPointer(terrain_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 12 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_texture_position_loc);
+            glVertexAttribPointer(terrain_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 12 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_texture_position_loc);
 
-                glVertexAttribPointer(terrain_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 14 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_flags_loc);
+            glVertexAttribPointer(terrain_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 14 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_flags_loc);
 
-                glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 17 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_light_position_loc);
+            glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 17 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_light_position_loc);
 
-                glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                      ((char *) nullptr + 20 * sizeof(float)));
-                glEnableVertexAttribArray(terrain_light_color_loc);
+            glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 20 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_light_color_loc);
 
-                // Bind the textures bucket
-                const int texture_id = it->first;
-                const auto tex = textures::get_texture_by_id(texture_id);
-                glActiveTexture(GL_TEXTURE0);
-                glEnable(GL_TEXTURE_2D);
-                glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+            glVertexAttribPointer(terrain_normal_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 23 * sizeof(float)));
+            glEnableVertexAttribArray(terrain_normal_position_loc);
 
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, tex->normal_id);
+            // Rendering
 
-                glUniform1i(terrain_my_color_texture_loc, 0);
-                glUniform1i(terrain_my_normal_texture_loc, 1);
-
-                // Rendering
-
-                int cull_pos = it->second.z_offsets[offset];
-                if (cull_pos > 0) {
-                    glDrawArrays(GL_QUADS, 0, cull_pos);
-                }
-
-                glDisableClientState(GL_VERTEX_ARRAY);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            int cull_pos = bucket.z_offsets[offset];
+            if (cull_pos > 0) {
+                //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+                glDrawArrays(GL_QUADS, 0, cull_pos);
+                //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+                //std::cout << "Emitted " << cull_pos << " quads for rendering\n";
             }
         }
     }
@@ -210,9 +197,9 @@ namespace map_render {
         if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
 
-        render_buckets(chunk, chunk.geometry->buckets);
+        render_bucket(chunk, chunk.geometry->bucket);
         if (chunk.vegetation) {
-            render_buckets(chunk, chunk.vegetation->buckets);
+            render_bucket(chunk, chunk.vegetation->bucket);
         }
     }
 
@@ -226,11 +213,13 @@ namespace map_render {
         glUniformMatrix4fv(terrain_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
         glUniformMatrix4fv(terrain_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
-        // Pass along the camera information
-        glUniform3f(terrain_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
-
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
+
+        // Bind the textures bucket
+        glActiveTexture(GL_TEXTURE0);
+        textures::bind_atlas();
+        glUniform1i(terrain_my_color_texture_loc, 0);
 
         for (const gl::chunk_t &chunk : gl::chunks) {
             if (chunk.has_geometry &&
@@ -238,16 +227,23 @@ namespace map_render {
             {
                 map_render::render_terrain_chunk(chunk);
                 // Copy the chunk's models over to the render queue
-                //models.insert(models.end(), std::begin(chunk.static_models), std::end(chunk.static_models));
                 for (const auto &m : chunk.static_models) {
-                    models.add_model_request(m.model_id, m);
+                    if (m.z <= camera_position->region_z) models.add_model_request(m.model_id, m);
                 }
             }
         }
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glDisableVertexAttribArray(terrain_world_position_loc);
+        glDisableVertexAttribArray(terrain_normal_loc);
+        glDisableVertexAttribArray(terrain_texture_position_loc);
+        glDisableVertexAttribArray(terrain_flags_loc);
+        glDisableVertexAttribArray(terrain_light_position_loc);
+        glDisableVertexAttribArray(terrain_light_color_loc);
+        glDisableVertexAttribArray(terrain_normal_position_loc);
         glUseProgram(0);
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
     }
 
     void render_static_models(gl::model_request_t &models) {
@@ -269,7 +265,7 @@ namespace map_render {
             const auto tex = textures::get_texture_by_id(texture_id);
             glActiveTexture(GL_TEXTURE0);
             glEnable(GL_TEXTURE_2D);
-            glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+            textures::bind_atlas();
 
             glUniform1i(model_my_color_texture_loc, 0);
 
@@ -289,7 +285,7 @@ namespace map_render {
             glEnableVertexAttribArray(model_texture_position_loc);
 
             for (const auto &model : it->second) {
-                glUniform3f(model_world_position_loc, model.x, model.y-0.5f, model.z);
+                glUniform3f(model_world_position_loc, model.x, model.y, model.z);
                 glUniform3f(model_flags_loc, model.above_ground ? 255.0f : 1.0f, 8.0f, 0.0f);
                 glUniform3f(model_light_position_loc, model.light_x, model.light_y, model.light_z);
                 glUniform3f(model_light_color_loc, model.light_r, model.light_g, model.light_b);
@@ -299,6 +295,8 @@ namespace map_render {
             }
         }
 
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -436,6 +434,9 @@ namespace map_render {
 
         // Cleanup
         glDeleteBuffers(1, &bucket.vbo_id);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         //glUseProgram(0);
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);

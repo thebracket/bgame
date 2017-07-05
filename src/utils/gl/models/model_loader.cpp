@@ -8,13 +8,14 @@
 #include <GL/glu.h>
 #endif
 #include <iostream>
+#include "../textures/texture.hpp"
 
 namespace gl {
 
     boost::container::flat_map<int, std::unique_ptr<model_t>> models;
 
     // Shamelessly based on: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
-    std::unique_ptr<model_t> load_model(const std::string &filename) {
+    std::unique_ptr<model_t> load_model(const std::string &filename, const int texture_id) {
         std::unique_ptr<model_t> result;
 
         std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
@@ -77,6 +78,14 @@ namespace gl {
         }
 
         result = std::make_unique<model_t>();
+        result->texture_id = texture_id;
+
+        auto texture = textures::get_texture_by_id(texture_id);
+        auto texid = texture->texture_id;
+        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
+        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         // For each vertex of each triangle
         for (unsigned int i = 0; i < vertexIndices.size(); i++) {
@@ -91,8 +100,8 @@ namespace gl {
             result->items.emplace_back(normal.x);
             result->items.emplace_back(normal.y);
             result->items.emplace_back(normal.z);
-            result->items.emplace_back(uv.x);
-            result->items.emplace_back(uv.y);
+            result->items.emplace_back((uv.x * tex_width) + tex_x);
+            result->items.emplace_back((uv.y * tex_height) + tex_y);
         }
 
         glGenBuffers(1, &result->vbo_id); // Generate the VBO
@@ -108,8 +117,8 @@ namespace gl {
         return result;
     }
 
-    void setup_model(const int &idx, const std::string &filename) {
-        models[idx] = std::move(load_model(filename));
+    void setup_model(const int &idx, const std::string &filename, const int &texture_id) {
+        models[idx] = std::move(load_model(filename, texture_id));
     }
 
     model_t * get_model(const int &idx) {

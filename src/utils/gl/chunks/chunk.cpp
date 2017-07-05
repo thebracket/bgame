@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include "geometry_buffer.hpp"
+#include "../textures/texture.hpp"
 
 namespace gl {
 
@@ -156,10 +157,11 @@ namespace gl {
             if (!skip) {
                 if (tiletype == tile_type::FLOOR && wang>0) {
                     // Add a floor
+                    auto vegtex = textures::get_texture_by_id(8);
                     chunk.has_vegetation = true;
                     float light_r, light_g, light_b, light_x, light_y, light_z;
                     set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
-                    chunk.vegetation->add_veg(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z, wang);
+                    chunk.vegetation->add_veg(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z, wang, vegtex->texture_id, vegtex->normal_id );
                 }
             }
         });

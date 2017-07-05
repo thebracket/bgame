@@ -15,8 +15,8 @@ function tex(name)
 end
 
 model_index = {
-    ladder = { index = 1, model = "ladder_down.obj" },
-    battery_bank = { index = 2, model = "battery_bank.obj" }
+    ladder = { index = 1, model = "ladder_down.obj", texture = tex("steel") },
+    battery_bank = { index = 2, model = "battery_bank.obj", texture = tex("steel") }
 }
 
 function model(name)

@@ -13,8 +13,9 @@ namespace gl {
          * 6,7      Texture UV
          */
         unsigned int vbo_id;
+        int texture_id;
     };
 
-    void setup_model(const int &idx, const std::string &filename);
+    void setup_model(const int &idx, const std::string &filename, const int &texture_id);
     model_t * get_model(const int &idx);
 }
