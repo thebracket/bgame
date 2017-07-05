@@ -7,7 +7,9 @@ texture_index = {
     sand = { index = 6, texture = "sand_t.jpg", normal = "sand_n.jpg" },
     silt = { index = 7, texture = "silt_t.jpg", normal = "silt_n.jpg" },
     grass = { index = 8, texture = "grass_t.jpg", normal = "grass_n.jpg" },
-    steel = { index = 9, texture = "steel_t.jpg", normal = "steel_t.jpg" },
+    steel = { index = 9, texture = "steel_t.jpg", normal = "steel_n.jpg" },
+    bark = { index = 10, texture = "bark_t.jpg", normal = "bark_n.jpg" },
+    foliage = { index = 11, texture = "foliage_t.png", normal = "foliage_n.png" },
 }
 
 function tex(name)

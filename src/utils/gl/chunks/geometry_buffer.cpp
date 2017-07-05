@@ -460,8 +460,15 @@ namespace gl {
         const std::size_t material_idx = region::material(idx);
         const bool constructed = region::flag(idx, CONSTRUCTION);
         const material_def_t * mat = get_material(material_idx);
-        const int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
-        const int wall_texture_idx = constructed ? mat->constructed_wall_texture : mat->wall_texture;
+        int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
+        int wall_texture_idx = constructed ? mat->constructed_wall_texture : mat->wall_texture;
+        if (region::tile_type(idx) == tile_type::TREE_TRUNK) {
+            floor_texture_idx = 10;
+            wall_texture_idx = 10;
+        } else if (region::tile_type(idx) == tile_type::TREE_LEAF) {
+            floor_texture_idx = 11;
+            wall_texture_idx = 11;
+        }
         const float shininess = mat->shininess;
         const float r = (float)mat->fg.r/255.0f;
         const float g = (float)mat->fg.g/255.0f;
