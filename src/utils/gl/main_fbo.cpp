@@ -56,7 +56,7 @@ namespace map_render {
         // Create the interpolated position target texture
         glGenTextures(1, &interpolated_pos_texture);
         glBindTexture(GL_TEXTURE_2D, interpolated_pos_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_SHORT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
