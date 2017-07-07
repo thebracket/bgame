@@ -54,6 +54,12 @@ namespace gl {
                        const float &light_x, const float &light_y, const float &light_z, const float &shininess,
                        const float &wang, const int &texture_id, const int &normal_id);
 
+        void add_water(const float x, const float y, const float z, float r, float g, float b,
+                       const int &idx, const bool &above_ground,
+                       const float &light_r, const float &light_g, const float &light_b,
+                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                       const int &texture_id, const int &normal_id, const uint8_t &water_level);
+
         void add_renderable(const float x, const float y, const float z, float r, float g, float b,
                      const int &idx, const bool &above_ground,
                      const float &light_r, const float &light_g, const float &light_b,
@@ -105,6 +111,11 @@ namespace gl {
                        const bool &above_ground,
                        const float &light_r, const float &light_g, const float &light_b,
                        const float &light_x, const float &light_y, const float &light_z);
+
+        void add_water(const float x, const float y, const float z,
+                       const bool &above_ground,
+                       const float &light_r, const float &light_g, const float &light_b,
+                       const float &light_x, const float &light_y, const float &light_z, const uint8_t water_level);
 
         void add_veg(const float x, const float y, const float z,
                        const bool &above_ground,

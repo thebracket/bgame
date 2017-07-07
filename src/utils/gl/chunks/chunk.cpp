@@ -114,6 +114,14 @@ namespace gl {
                     chunk.static_models.emplace_back(static_model_t{1, (float)x, (float)y, (float)z, region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z});
                 }
             }
+
+            const uint8_t water_level = region::water_level(idx);
+            if (water_level > 0) {
+                chunk.has_geometry = true;
+                float light_r, light_g, light_b, light_x, light_y, light_z;
+                set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
+                chunk.geometry->add_water(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z, water_level);
+            }
         });
         chunk.dirty = false;
         if (chunk.has_geometry) {

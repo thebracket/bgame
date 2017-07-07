@@ -72,6 +72,60 @@ namespace gl {
         n_quads += 4;
     }
 
+    void terrain_bucket_t::add_water(const float x, const float y, const float z, float r, float g, float b,
+                   const int &idx, const bool &above_ground,
+                   const float &light_r, const float &light_g, const float &light_b,
+                   const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                   const int &texture_id, const int &normal_id, const uint8_t &water_level)
+    {
+        const float ground_indicator = above_ground ? 255.0f : 0.0f;
+        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
+        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
+        const float height = ((float)water_level * 0.1f) - 0.5f;
+
+        add_to_items(-0.5f, height, -0.5f);        // Vertex 0
+        add_to_items(x, y, z);                    // World position 0
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 0
+        add_to_items(r, g, b);                    // Color 0
+        add_to_items(tex_x, tex_y);                     // Texture 0
+        add_to_items(ground_indicator, shininess, 0.0f);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+        add_to_items(norm_x, norm_y);
+
+        add_to_items(-0.5f, height,  0.5f);        // Vertex 1
+        add_to_items(x, y, z);                    // World position 1
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 1
+        add_to_items(r, g, b);                    // Color 1
+        add_to_items(tex_x, tex_y + tex_height);           // Texture 1
+        add_to_items(ground_indicator, shininess, 0.0f);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+        add_to_items(norm_x, norm_y + tex_height);
+
+        add_to_items(0.5f, height,  0.5f);         // Vertex 2
+        add_to_items(x, y, z);                    // World position 2
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 2
+        add_to_items(r, g, b);                    // Color 2
+        add_to_items(tex_x + tex_width, tex_y + tex_height); // Texture 2
+        add_to_items(ground_indicator, shininess, 0.0f);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+        add_to_items(norm_x + tex_width, norm_y + tex_height);
+
+        add_to_items(0.5f, height, -0.5f);         // Vertex 3
+        add_to_items(x, y, z);                    // World position 3
+        add_to_items(0.0f, 1.0f, 0.0f);           // Normal 3
+        add_to_items(r, g, b);                    // Color 3
+        add_to_items(tex_x + tex_width, tex_y);           // Texture 3
+        add_to_items(ground_indicator, shininess, 0.0f);
+        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
+        add_to_items(norm_x + tex_width, norm_y);
+
+        n_quads += 4;
+    }
+
     void terrain_bucket_t::add_veg(const float x, const float y, const float z, float r, float g, float b,
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
@@ -539,6 +593,24 @@ namespace gl {
         int floor_normalid = floor_tex->normal_id;
 
         bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid);
+    }
+
+    void geometry_buffer_t::add_water(const float x, const float y, const float z,
+                                      const bool &above_ground, const float &light_r,
+                                      const float &light_g, const float &light_b, const float &light_x,
+                                      const float &light_y, const float &light_z, const uint8_t water_level)
+    {
+        const int idx = mapidx(x,y,z);
+        const float shininess = 1.0f;
+        constexpr float r = 1.0f;
+        constexpr float g = 1.0f;
+        constexpr float b = 1.0f;
+
+        auto floor_tex = textures::get_texture_by_id(15);
+        int floor_texid = floor_tex->texture_id;
+        int floor_normalid = floor_tex->normal_id;
+
+        bucket.add_water(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, water_level);
     }
 
     void geometry_buffer_t::add_veg(const float x, const float y, const float z,
