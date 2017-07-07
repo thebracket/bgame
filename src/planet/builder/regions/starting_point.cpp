@@ -33,7 +33,7 @@ std::pair<int,int> builder_select_starting_region(planet_t &planet) {
         if (planet.landblocks[planet.idx(coords.first, coords.second)].type == block_type::WATER) ok = false;
         if (planet.biomes[planet.landblocks[planet.idx(coords.first, coords.second)].biome_idx].mean_altitude < planet.water_height+2) ok = false;
         if (!has_civilization(planet, coords.first, coords.second)) ok = false;
-        //if (!has_river(planet, coords.first, coords.second)) ok = false;
+        if (!has_river(planet, coords.first, coords.second)) ok = false;
         if (blighted(planet, coords.first, coords.second)) ok = false; // Force blight region for debug
 
         if (!ok) {
