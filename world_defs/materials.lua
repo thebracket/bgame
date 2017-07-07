@@ -3,7 +3,10 @@ materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
         hit_points = 110, mines_to="alabaster_powder",
-        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     aluminium_rock = { name="Raw Aluminium", type="rock", layer="igneous", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
@@ -170,7 +173,11 @@ materials = {
     },
     mudstone = { name="Marble", type="rock", layer="sedimentary", 
         glyph=glyphs['double_wave'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     obsidian = { name="Marble", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
@@ -219,7 +226,10 @@ materials = {
     rock_salt = { name="Rock Salt", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['white'], bg=colors['grey'],
         hit_points = 50, mines_to="stone_boulder",
-        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     rutile = { name="Rutile", type="rock", layer="igneous", 
         glyph=glyphs['backtick'], fg=colors['purple'], bg=colors['grey'],
@@ -231,7 +241,11 @@ materials = {
     },
     sandstone = { name="Sandstone", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 50, mines_to="sand"
+        hit_points = 50, mines_to="sand",
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     serpentine = { name="Serpentine", type="rock", layer="igneous", 
         glyph=glyphs['double_wave'], fg=colors['green'], bg=colors['grey'],
@@ -239,11 +253,19 @@ materials = {
     },
     shale = { name="Shale", type="rock", layer="sedimentary", 
         glyph=glyphs['period'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 50, mines_to="oil"
+        hit_points = 50, mines_to="oil",
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     siltstone = { name="Shale", type="rock", layer="sedimentary", 
         glyph=glyphs['percent'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 50, mines_to="oil"
+        hit_points = 50, mines_to="oil",
+        floor_texture=tex('sand'),
+        wall_texture=tex('sand'),
+        constructed_floor_texture=tex('soil_constructed'),
+        constructed_wall_texture=tex('soil_wall')
     },
     silver_rock = { name="Native Silver", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['white'], bg=colors['grey'],
