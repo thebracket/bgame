@@ -28,6 +28,7 @@ namespace map_render {
     GLint terrain_light_position_loc;
     GLint terrain_light_color_loc;
     GLint terrain_normal_position_loc;
+    GLint terrain_camera_position_loc;
 
     GLint model_world_position_loc;
     GLint model_normal_loc;
@@ -72,6 +73,7 @@ namespace map_render {
         terrain_light_position_loc = terrain_chunk_shader->get_attribute_location("light_position");
         terrain_light_color_loc = terrain_chunk_shader->get_attribute_location("light_color");
         terrain_normal_position_loc = terrain_chunk_shader->get_attribute_location("normal_position");
+        terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
 
         model_world_position_loc = static_model_shader->get_uniform_location("world_position");
         model_normal_loc = static_model_shader->get_attribute_location("normal");
@@ -211,6 +213,7 @@ namespace map_render {
         // Pass along the matrices
         glUniformMatrix4fv(terrain_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
         glUniformMatrix4fv(terrain_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniform3f(terrain_camera_position_loc, camera_position->region_x, camera_position->region_z, camera_position->region_y);
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);

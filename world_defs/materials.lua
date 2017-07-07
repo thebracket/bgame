@@ -443,9 +443,9 @@ materials = {
         -- Plasteel is synthetic, so always use a constructed texture
         floor_texture=tex('tiled_floor'),
         wall_texture=tex('girder'),
-        constructed_floor_texture=tex('tiled_floor'),
+        constructed_floor_texture=tex('girder_floor'),
         constructed_wall_texture=tex('girder'),
-        shininess = 64
+        shininess = 4
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],

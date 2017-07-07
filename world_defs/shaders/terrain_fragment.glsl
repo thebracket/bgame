@@ -1,6 +1,7 @@
 #version 120
 
 uniform sampler2D my_color_texture;
+
 varying vec3 tint;
 varying vec3 world_pos;
 varying mat3 TBN;

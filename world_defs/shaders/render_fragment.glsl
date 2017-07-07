@@ -23,13 +23,7 @@ vec3 diffuse_light(vec3 surface_normal, vec3 color, vec3 light_dir) {
 
 vec3 specular_light(vec3 surface_pos, vec3 surface_normal, vec3 color, vec3 light_dir, float shininess) {
     float specular_strength = 0.7;
-    shininess = 2;
 
-    /*vec3 view_dir = normalize(cameraPosition - surface_pos);
-    vec3 reflect_dir = reflect(-light_dir, surface_normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess);
-    vec3 result = specular_strength * spec * color;
-    return result;*/
     vec3 incidence_vector = -light_dir;
     vec3 reflection_vector = reflect(incidence_vector, surface_normal);
     vec3 surface_to_camera = normalize(cameraPosition - surface_pos);

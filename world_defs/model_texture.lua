@@ -10,6 +10,7 @@ texture_index = {
     steel = { index = 9, texture = "steel_t.jpg", normal = "steel_n.jpg" },
     bark = { index = 10, texture = "bark_t.jpg", normal = "bark_n.jpg" },
     foliage = { index = 11, texture = "foliage_t.png", normal = "foliage_n.png" },
+    girder_floor = { index = 12, texture = "girder_floor_t.jpg", normal = "girder_floor_n.jpg" },
 }
 
 function tex(name)

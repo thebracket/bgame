@@ -3,6 +3,7 @@
 // Pass the matrices in as uniforms
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
+uniform vec3 camera_position;
 
 // World position is part of the VBO
 attribute vec3 world_position;
@@ -44,6 +45,10 @@ void main() {
     position.xyz += world_position.xzy;
     gl_Position = projection_matrix * (view_matrix * position);
     tint = color;
+    float darken = (camera_position.y - world_position.z) * 0.05;
+    tint.r -= darken;
+    tint.g -= darken;
+    tint.b -= darken;
     gl_TexCoord[0] = vec4(texture_position, 0.0, 0.0);
     world_pos = world_position;
     interpolated_position = position;
