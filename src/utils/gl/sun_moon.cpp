@@ -40,8 +40,8 @@ namespace map_render {
         }
 
         // Setup ambient light
-        rltk::color_t dark_moon{143,143,191};
-        const rltk::color_t dawn_light{143,164,191};
+        rltk::color_t dark_moon{180,180,205};
+        const rltk::color_t dawn_light{180,190,205};
         const rltk::color_t noon_sun{201, 226, 255};
 
         if (moon_mode) {
@@ -54,9 +54,10 @@ namespace map_render {
 
             int moon_phase = calendar->days_elapsed % 56;
             if (moon_phase > 28) moon_phase = 56 - moon_phase;
-            dark_moon.r += moon_phase/3;
-            dark_moon.g += moon_phase/3;
-            dark_moon.b += moon_phase/3;
+            const int moon_phase_light = moon_phase/3;
+            dark_moon.r += moon_phase_light;
+            dark_moon.g += moon_phase_light;
+            dark_moon.b += moon_phase_light;
 
             auto ambient_rltk = rltk::lerp(dark_moon, dawn_light, lerp_percent);
             ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
