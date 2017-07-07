@@ -11,6 +11,9 @@ texture_index = {
     bark = { index = 10, texture = "bark_t.jpg", normal = "bark_n.jpg" },
     foliage = { index = 11, texture = "foliage_t.png", normal = "foliage_n.png" },
     girder_floor = { index = 12, texture = "girder_floor_t.jpg", normal = "girder_floor_n.jpg" },
+    rock_face = { index = 13, texture = "rock_face_t.jpg", normal = "rock_face_n.jpg" },
+    rock_floor = { index = 14, texture = "rock_floor_t.jpg", normal = "rock_floor_n.jpg" },
+    water = { index = 15, texture = "water_t.jpg", normal = "water_n.jpg" },
 }
 
 function tex(name)

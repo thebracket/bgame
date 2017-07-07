@@ -14,15 +14,27 @@ materials = {
     },
     alunite = { name="Alunite", type="rock", layer="igneous", 
         glyph=glyphs['backtick'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     andesite = { name="Andesite", type="rock", layer="igneous", 
         glyph=glyphs['infinity'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     basalt = { name="Basalt", type="rock", layer="igneous", 
         glyph=glyphs['hash'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     bauxite = { name="Bauxite", type="rock", layer="sedimentary", 
         glyph=glyphs['plus'], fg=colors['red'], bg=colors['grey'],
@@ -50,7 +62,11 @@ materials = {
     },
     chert = { name="Chert", type="rock", layer="sedimentary", 
         glyph=glyphs['equals'], fg=colors['purple'], bg=colors['grey'],
-        hit_points = 75, mines_to="flint", mines_to_also="stone_boulder"
+        hit_points = 75, mines_to="flint", mines_to_also="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     chromite = { name="Chromite", type="rock", layer="igneous", 
         glyph=glyphs['equals'], fg=colors['white'], bg=colors['grey'],
@@ -58,11 +74,19 @@ materials = {
     },
     cinnabar = { name="Cinnabar", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['red'], bg=colors['grey'],
-        hit_points = 115, mines_to="mercury_ore" -- TODO: Mercury should be treated differently
+        hit_points = 115, mines_to="mercury_ore", -- TODO: Mercury should be treated differently
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     claystone = { name="Claystone", type="rock", layer="sedimentary", 
         glyph=glyphs['comma'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 75, mines_to="stone_boulder"
+        hit_points = 75, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     cobaltite = { name="Cobaltite", type="rock", layer="igneous", 
         glyph=glyphs['urk'], fg=colors['blue'], bg=colors['grey'],
@@ -70,7 +94,11 @@ materials = {
     },
     conglomerate = { name="Conglomerate", type="rock", layer="sedimentary", 
         glyph=glyphs['infinity'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 75, mines_to="stone_boulder"
+        hit_points = 75, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     copper_rock = { name="Native Copper", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['copper'], bg=colors['grey'],
@@ -78,19 +106,35 @@ materials = {
     },
     dacite = { name="Dacite", type="rock", layer="igneous", 
         glyph=glyphs['period'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     diorite = { name="Diorite", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     dolomite = { name="Dolomite", type="rock", layer="sedimentary", 
         glyph=glyphs['backtick'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     gabbro = { name="Gabbro", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     galena = { name="Galena", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['white'], bg=colors['grey'],
@@ -102,7 +146,11 @@ materials = {
     },
     gneiss = { name="Gneiss", type="rock", layer="igneous", 
         glyph=glyphs['equals'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     gold_rock = { name="Native Gold", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['yellow'], bg=colors['grey'],
@@ -110,11 +158,20 @@ materials = {
     },
     granite = { name="Granite", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     graphite = { name="Graphite", type="rock", layer="cluster_rock", parent="gneiss",
         glyph=glyphs['circle'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall'),
+        shininess = 64
     },
     gypsum = { name="Gypsum", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['yellow'], bg=colors['grey'],
@@ -131,11 +188,19 @@ materials = {
     },
     hornblende = { name="Hornblende", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     jet = { name="Jet", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     kaolinite = { name="Kaolinite", type="rock", layer="sedimentary", 
         glyph=glyphs['equals'], fg=colors['red'], bg=colors['grey'],
@@ -148,7 +213,10 @@ materials = {
     limestone = { name="Limestone", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
         hit_points = 100, mines_to="stone_boulder",
-        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     limonite = { name="Limonite", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['yellow'], bg=colors['grey'],
@@ -165,11 +233,18 @@ materials = {
     marble = { name="Marble", type="rock", layer="sedimentary", 
         glyph=glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['grey'],
         hit_points = 100, mines_to="stone_boulder",
-        floor_texture=7, wall_texture=0, constructed_floor_texture=2, constructed_wall_texture=3
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     microcline = { name="Microcline", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['cyan'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     mudstone = { name="Marble", type="rock", layer="sedimentary", 
         glyph=glyphs['double_wave'], fg=colors['yellow'], bg=colors['grey'],
@@ -181,23 +256,43 @@ materials = {
     },
     obsidian = { name="Marble", type="rock", layer="igneous", 
         glyph=glyphs['one_quarter_solid'], fg=colors['dark_grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder", damage_bonus=1
+        hit_points = 100, mines_to="stone_boulder", damage_bonus=1,
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall'), shininess = 1
     },
     olivine = { name="Olivine", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['green'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     orpiment = { name="Marble", type="rock", layer="igneous", 
         glyph=glyphs['yellow'], fg=colors['tilde'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     orthoclase = { name="Orthoclase", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     phylite = { name="Phylite", type="rock", layer="sedimentary", 
         glyph=glyphs['minus'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     pitchblende = { name="Pitchblende", type="rock", layer="igneous", 
         glyph=glyphs['star'], fg=colors['purple'], bg=colors['grey'],
@@ -209,11 +304,19 @@ materials = {
     },
     pyrolusite = { name="Pyrolusite", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     quartzite = { name="Quartzite", type="rock", layer="igneous", 
         glyph=glyphs['minus'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     realgar = { name="Realgar", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['red'], bg=colors['grey'],
@@ -221,7 +324,11 @@ materials = {
     },
     rhyolite = { name="Rhyolite", type="rock", layer="igneous", 
         glyph=glyphs['comma'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     rock_salt = { name="Rock Salt", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['white'], bg=colors['grey'],
@@ -249,7 +356,11 @@ materials = {
     },
     serpentine = { name="Serpentine", type="rock", layer="igneous", 
         glyph=glyphs['double_wave'], fg=colors['green'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     shale = { name="Shale", type="rock", layer="sedimentary", 
         glyph=glyphs['period'], fg=colors['grey'], bg=colors['grey'],
@@ -277,7 +388,11 @@ materials = {
     },
     stibnite = { name="Stibnite", type="rock", layer="igneous", 
         glyph=glyphs['percent'], fg=colors['white'], bg=colors['grey'],
-        hit_points = 100, mines_to="stone_boulder"
+        hit_points = 100, mines_to="stone_boulder",
+        floor_texture=tex('rock_floor'),
+        wall_texture=tex('rock_face'),
+        constructed_floor_texture=tex('tiled_floor'),
+        constructed_wall_texture=tex('soil_wall')
     },
     tetrahedrite = { name="Tetrahedrite", type="rock", layer="igneous", 
         glyph=glyphs['ukp'], fg=colors['copper'], bg=colors['grey'],
