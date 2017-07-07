@@ -96,6 +96,12 @@ namespace gl {
                        const float &light_x, const float &light_y, const float &light_z, const float &shininess,
                        const int &texture_id, const int &normal_id);
 
+        void add_slope(const float x, const float y, const float z, float r, float g, float b,
+                       const int &idx, const bool &above_ground,
+                       const float &light_r, const float &light_g, const float &light_b,
+                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                       const int &texture_id, const int &normal_id, const float nwy, const float ney, const float swy, const float sey);
+
         void make_vbo();
     };
 
@@ -124,6 +130,7 @@ namespace gl {
                        const int texid, const int normid);
 
         void add_cube(const float x, const float y, const float z);
+        void add_ramp(const float x, const float y, const float z);
 
         void mark_z_level_end(const int &z);
         void finish_z_map(const int &base_z);
