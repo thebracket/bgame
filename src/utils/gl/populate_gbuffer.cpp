@@ -284,8 +284,8 @@ namespace map_render {
 
                         if (camera->camera_mode == TOP_DOWN) {
                             bucket.add_renderable(
-                                    r.x,
-                                    r.y,
+                                    r.x + r.offsetX,
+                                    r.y + r.offsetY,
                                     (float) z,
                                     (float) r.c.foreground.r / 255.0f,
                                     (float) r.c.foreground.g / 255.0f,
@@ -296,8 +296,8 @@ namespace map_render {
                             );
                         } else {
                             bucket.add_billboard(
-                                    r.x,
-                                    r.y,
+                                    r.x + r.offsetX,
+                                    r.y + r.offsetY,
                                     (float) z,
                                     (float) r.c.foreground.r / 255.0f,
                                     (float) r.c.foreground.g / 255.0f,
