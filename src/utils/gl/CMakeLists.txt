@@ -1,6 +1,7 @@
 add_subdirectory(textures)
 add_subdirectory(chunks)
 add_subdirectory(models)
+add_subdirectory(shaders)
 add_library(gl STATIC gl_utils.cpp
         worldgen_render.cpp
         map_render.cpp
@@ -9,5 +10,5 @@ add_library(gl STATIC gl_utils.cpp
         populate_gbuffer.cpp
         composition.cpp
         )
-target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region textures chunks models)
+target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region textures chunks models shaders)
 #cotire(gl)

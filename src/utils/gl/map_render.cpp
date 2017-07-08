@@ -22,7 +22,7 @@
 #include "../../main/game_mode.hpp"
 #include "../../main/game_selections.hpp"
 #include "chunks/chunk.hpp"
-#include "base_shader.hpp"
+#include "shaders/base_shader.hpp"
 #include "../../main/game_calendar.hpp"
 
 #include <glm/glm.hpp>
@@ -71,8 +71,6 @@ namespace map_render
 
 void map_render_t::render() {
     // Check that the environment is ready
-    if (!map_render::loaded_terrain_shader) map_render::load_terrain_shader();
-    if (!map_render::loaded_render_shader) map_render::load_render_shader();
     if (!map_render::loaded_fbo) map_render::load_fbo();
     if (!map_render::built_chunk_buffer) map_render::build_chunk_buffer();
 

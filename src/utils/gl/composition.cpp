@@ -3,39 +3,10 @@
 #include "main_fbo.hpp"
 #include "sun_moon.hpp"
 #include "textures/texture.hpp"
+#include "shaders/shader_storage.hpp"
+#include "shaders/render_shader.hpp"
 
 namespace map_render {
-
-    bool loaded_render_shader = false;
-    std::unique_ptr<gl::base_shader_t> render_shader;
-
-    GLint render_albedo_tex_loc;
-    GLint render_position_tex_loc;
-    GLint render_normal_tex_loc;
-    GLint render_ambient_color_loc;
-    GLint render_light_pos_tex_loc;
-    GLint render_light_col_tex_loc;
-    GLint render_sun_moon_position_loc;
-    GLint render_sun_moon_color_loc;
-    GLint render_flag_tex_loc;
-    GLint render_camera_position_loc;
-
-    void load_render_shader() {
-        render_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/render_vertex.glsl",
-                                                            "world_defs/shaders/render_fragment.glsl");
-        loaded_render_shader = true;
-
-        render_albedo_tex_loc = render_shader->get_uniform_location("albedo_tex");
-        render_position_tex_loc = render_shader->get_uniform_location("position_tex");
-        render_normal_tex_loc = render_shader->get_uniform_location("normal_tex");
-        render_ambient_color_loc = render_shader->get_uniform_location("ambient_color");
-        render_light_pos_tex_loc = render_shader->get_uniform_location("light_pos_tex");
-        render_light_col_tex_loc = render_shader->get_uniform_location("light_col_tex");
-        render_sun_moon_position_loc = render_shader->get_uniform_location("sun_moon_position");
-        render_sun_moon_color_loc = render_shader->get_uniform_location("sun_moon_color");
-        render_flag_tex_loc = render_shader->get_uniform_location("flag_tex");
-        render_camera_position_loc = render_shader->get_uniform_location("cameraPosition");
-    }
 
     void render_test_texture(float left, float top, float right, float bottom, GLuint &target_texture) {
         glActiveTexture(GL_TEXTURE0);
@@ -84,7 +55,8 @@ namespace map_render {
     }
 
     void render_mixed_texture(float left, float top, float right, float bottom) {
-        glUseProgram(map_render::render_shader->program_id);
+        using namespace gl;
+        glUseProgram(render_shader->program_id);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, map_render::render_texture); // Texture slot 0 = albedo
@@ -99,17 +71,17 @@ namespace map_render {
         glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_2D, map_render::flag_texture); // Texture slot 4 = light color
 
-        glUniform1i(render_albedo_tex_loc, 0);
-        glUniform1i(render_position_tex_loc, 1);
-        glUniform1i(render_normal_tex_loc, 2);
-        glUniform1i(render_light_pos_tex_loc, 3);
-        glUniform1i(render_light_col_tex_loc, 4);
-        glUniform1i(render_flag_tex_loc, 5);
+        glUniform1i(render_shader->albedo_tex_loc, 0);
+        glUniform1i(render_shader->position_tex_loc, 1);
+        glUniform1i(render_shader->normal_tex_loc, 2);
+        glUniform1i(render_shader->light_pos_tex_loc, 3);
+        glUniform1i(render_shader->light_col_tex_loc, 4);
+        glUniform1i(render_shader->flag_tex_loc, 5);
 
-        glUniform3fv(render_ambient_color_loc, 1, glm::value_ptr(ambient_color));
-        glUniform3fv(render_sun_moon_position_loc, 1, glm::value_ptr(sun_position));
-        glUniform3fv(render_sun_moon_color_loc, 1, glm::value_ptr(sun_color));
-        glUniform3fv(render_camera_position_loc, 1, glm::value_ptr(camera_position_v));
+        glUniform3fv(render_shader->ambient_color_loc, 1, glm::value_ptr(ambient_color));
+        glUniform3fv(render_shader->sun_moon_position_loc, 1, glm::value_ptr(sun_position));
+        glUniform3fv(render_shader->sun_moon_color_loc, 1, glm::value_ptr(sun_color));
+        glUniform3fv(render_shader->camera_position_loc, 1, glm::value_ptr(camera_position_v));
 
         glColor3f(1, 1, 1);
         glBegin(GL_QUADS);

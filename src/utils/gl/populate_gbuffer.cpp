@@ -7,97 +7,16 @@
 #include "chunks/constants.hpp"
 #include "models/model_loader.hpp"
 #include "../../systems/render/renderables_system.hpp"
+#include "shaders/shader_storage.hpp"
+#include "shaders/terrain_chunk_shader.hpp"
+#include "shaders/static_model_shader.hpp"
+#include "shaders/renderable_shader.hpp"
 
 namespace map_render {
-    bool loaded_terrain_shader = false;
-    std::unique_ptr<gl::base_shader_t> terrain_chunk_shader;
-    std::unique_ptr<gl::base_shader_t> static_model_shader;
-    std::unique_ptr<gl::base_shader_t> renderable_shader;
+
     glm::mat4 camera_projection_matrix;
     glm::mat4 camera_modelview_matrix;
 
-    // Uniform/attribute locations
-    GLint terrain_world_position_loc;
-    GLint terrain_normal_loc;
-    GLint terrain_color_loc;
-    GLint terrain_texture_position_loc;
-    GLint terrain_projection_matrix_loc;
-    GLint terrain_view_matrix_loc;
-    GLint terrain_my_color_texture_loc;
-    GLint terrain_flags_loc;
-    GLint terrain_light_position_loc;
-    GLint terrain_light_color_loc;
-    GLint terrain_normal_position_loc;
-    GLint terrain_camera_position_loc;
-
-    GLint model_world_position_loc;
-    GLint model_normal_loc;
-    GLint model_texture_position_loc;
-    GLint model_projection_matrix_loc;
-    GLint model_view_matrix_loc;
-    GLint model_camera_position_loc;
-    GLint model_my_color_texture_loc;
-    GLint model_flags_loc;
-    GLint model_light_position_loc;
-    GLint model_light_color_loc;
-
-    GLint renderable_world_position_loc;
-    GLint renderable_normal_loc;
-    GLint renderable_color_loc;
-    GLint renderable_texture_position_loc;
-    GLint renderable_projection_matrix_loc;
-    GLint renderable_view_matrix_loc;
-    GLint renderable_camera_position_loc;
-    GLint renderable_my_color_texture_loc;
-    GLint renderable_flags_loc;
-    GLint renderable_light_position_loc;
-    GLint renderable_light_color_loc;
-
-    void load_terrain_shader() {
-        terrain_chunk_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/terrain_vertex.glsl",
-                                                                   "world_defs/shaders/terrain_fragment.glsl");
-        static_model_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/model_vertex.glsl",
-                                                                   "world_defs/shaders/model_fragment.glsl");
-        renderable_shader = std::make_unique<gl::base_shader_t>("world_defs/shaders/renderable_vertex.glsl",
-                                                                  "world_defs/shaders/renderable_fragment.glsl");
-        loaded_terrain_shader = true;
-
-        terrain_world_position_loc = terrain_chunk_shader->get_attribute_location("world_position");
-        terrain_normal_loc = terrain_chunk_shader->get_attribute_location("normal");
-        terrain_color_loc = terrain_chunk_shader->get_attribute_location("color");
-        terrain_texture_position_loc = terrain_chunk_shader->get_attribute_location("texture_position");
-        terrain_projection_matrix_loc = terrain_chunk_shader->get_uniform_location("projection_matrix");
-        terrain_view_matrix_loc = terrain_chunk_shader->get_uniform_location("view_matrix");
-        terrain_my_color_texture_loc = terrain_chunk_shader->get_uniform_location("my_color_texture");
-        terrain_flags_loc = terrain_chunk_shader->get_attribute_location("flags");
-        terrain_light_position_loc = terrain_chunk_shader->get_attribute_location("light_position");
-        terrain_light_color_loc = terrain_chunk_shader->get_attribute_location("light_color");
-        terrain_normal_position_loc = terrain_chunk_shader->get_attribute_location("normal_position");
-        terrain_camera_position_loc = terrain_chunk_shader->get_uniform_location("camera_position");
-
-        model_world_position_loc = static_model_shader->get_uniform_location("world_position");
-        model_normal_loc = static_model_shader->get_attribute_location("normal");
-        model_texture_position_loc = static_model_shader->get_attribute_location("texture_position");
-        model_projection_matrix_loc = static_model_shader->get_uniform_location("projection_matrix");
-        model_view_matrix_loc = static_model_shader->get_uniform_location("view_matrix");
-        model_camera_position_loc = static_model_shader->get_uniform_location("camera_position");
-        model_my_color_texture_loc = static_model_shader->get_uniform_location("my_color_texture");
-        model_flags_loc = static_model_shader->get_uniform_location("flags");
-        model_light_position_loc = static_model_shader->get_uniform_location("light_position");
-        model_light_color_loc = static_model_shader->get_uniform_location("light_color");
-
-        renderable_world_position_loc = renderable_shader->get_attribute_location("world_position");
-        renderable_normal_loc = renderable_shader->get_attribute_location("normal");
-        renderable_color_loc = renderable_shader->get_attribute_location("color");
-        renderable_texture_position_loc = renderable_shader->get_attribute_location("texture_position");
-        renderable_projection_matrix_loc = renderable_shader->get_uniform_location("projection_matrix");
-        renderable_view_matrix_loc = renderable_shader->get_uniform_location("view_matrix");
-        renderable_camera_position_loc = renderable_shader->get_uniform_location("camera_position");
-        renderable_my_color_texture_loc = renderable_shader->get_uniform_location("my_color_texture");
-        renderable_flags_loc = renderable_shader->get_attribute_location("flags");
-        renderable_light_position_loc = renderable_shader->get_attribute_location("light_position");
-        renderable_light_color_loc = renderable_shader->get_attribute_location("light_color");
-    }
 
     void setup_matrices() {
         auto screen_size = rltk::get_window()->getSize();
@@ -140,6 +59,7 @@ namespace map_render {
     }
 
     void render_bucket(const gl::chunk_t &chunk, const gl::terrain_bucket_t &bucket ) {
+        using namespace gl;
         const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
         if (offset > 0) {
 
@@ -149,37 +69,37 @@ namespace map_render {
             glEnableClientState(GL_VERTEX_ARRAY);
             glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
 
-            glVertexAttribPointer(terrain_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_world_position_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->world_position_loc);
 
-            glVertexAttribPointer(terrain_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 6 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_normal_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->normal_loc);
 
-            glVertexAttribPointer(terrain_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 9 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_color_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->color_loc);
 
-            glVertexAttribPointer(terrain_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 12 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_texture_position_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->texture_position_loc);
 
-            glVertexAttribPointer(terrain_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 14 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_flags_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->flags_loc);
 
-            glVertexAttribPointer(terrain_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 17 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_light_position_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->light_position_loc);
 
-            glVertexAttribPointer(terrain_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 20 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_light_color_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->light_color_loc);
 
-            glVertexAttribPointer(terrain_normal_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+            glVertexAttribPointer(terrain_chunk_shader->normal_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 23 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_normal_position_loc);
+            glEnableVertexAttribArray(terrain_chunk_shader->normal_position_loc);
 
             // Rendering
 
@@ -205,15 +125,16 @@ namespace map_render {
     }
 
     void render_terrain_to_gbuffer(gl::model_request_t &models) {
-        glUseProgram(map_render::terrain_chunk_shader->program_id);
+        using namespace gl;
+        glUseProgram(terrain_chunk_shader->program_id);
         glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         map_render::setup_matrices();
 
         // Pass along the matrices
-        glUniformMatrix4fv(terrain_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-        glUniformMatrix4fv(terrain_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
-        glUniform3f(terrain_camera_position_loc, camera_position->region_x, camera_position->region_z, camera_position->region_y);
+        glUniformMatrix4fv(terrain_chunk_shader->projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(terrain_chunk_shader->view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniform3f(terrain_chunk_shader->camera_position_loc, camera_position->region_x, camera_position->region_z, camera_position->region_y);
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
@@ -221,7 +142,7 @@ namespace map_render {
         // Bind the textures bucket
         glActiveTexture(GL_TEXTURE0);
         textures::bind_atlas();
-        glUniform1i(terrain_my_color_texture_loc, 0);
+        glUniform1i(terrain_chunk_shader->my_color_texture_loc, 0);
 
         for (const gl::chunk_t &chunk : gl::chunks) {
             if (chunk.has_geometry &&
@@ -236,28 +157,29 @@ namespace map_render {
         }
         glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glDisableVertexAttribArray(terrain_world_position_loc);
-        glDisableVertexAttribArray(terrain_normal_loc);
-        glDisableVertexAttribArray(terrain_texture_position_loc);
-        glDisableVertexAttribArray(terrain_flags_loc);
-        glDisableVertexAttribArray(terrain_light_position_loc);
-        glDisableVertexAttribArray(terrain_light_color_loc);
-        glDisableVertexAttribArray(terrain_normal_position_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->world_position_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->normal_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->texture_position_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->flags_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->light_position_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->light_color_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->normal_position_loc);
         glUseProgram(0);
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
     }
 
     void render_static_models(gl::model_request_t &models) {
-        glUseProgram(map_render::static_model_shader->program_id);
+        using namespace gl;
+        glUseProgram(static_model_shader->program_id);
         //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
 
         // Pass along the matrices
-        glUniformMatrix4fv(model_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-        glUniformMatrix4fv(model_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniformMatrix4fv(static_model_shader->projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(static_model_shader->view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
         // Pass along the camera information
-        glUniform3f(model_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
+        glUniform3f(static_model_shader->camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
         for (auto it = models.models.begin(); it != models.models.end(); ++it) {
             auto m = gl::get_model(it->first);
@@ -269,7 +191,7 @@ namespace map_render {
             glEnable(GL_TEXTURE_2D);
             textures::bind_atlas();
 
-            glUniform1i(model_my_color_texture_loc, 0);
+            glUniform1i(static_model_shader->my_color_texture_loc, 0);
 
             glBindBuffer(GL_ARRAY_BUFFER, m->vbo_id);
 
@@ -277,20 +199,20 @@ namespace map_render {
             glEnableClientState(GL_VERTEX_ARRAY);
             glVertexPointer(3, GL_FLOAT, gl::num_model_items * sizeof(float), 0);
 
-            glVertexAttribPointer(model_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
+            glVertexAttribPointer(static_model_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
                                   ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(model_normal_loc);
+            glEnableVertexAttribArray(static_model_shader->normal_loc);
 
-            glVertexAttribPointer(model_texture_position_loc, 2, GL_FLOAT, GL_FALSE,
+            glVertexAttribPointer(static_model_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE,
                                   gl::num_model_items * sizeof(float),
                                   ((char *) nullptr + 6 * sizeof(float)));
-            glEnableVertexAttribArray(model_texture_position_loc);
+            glEnableVertexAttribArray(static_model_shader->texture_position_loc);
 
             for (const auto &model : it->second) {
-                glUniform3f(model_world_position_loc, model.x, model.y, model.z);
-                glUniform3f(model_flags_loc, model.above_ground ? 255.0f : 1.0f, 8.0f, 0.0f);
-                glUniform3f(model_light_position_loc, model.light_x, model.light_y, model.light_z);
-                glUniform3f(model_light_color_loc, model.light_r, model.light_g, model.light_b);
+                glUniform3f(static_model_shader->world_position_loc, model.x, model.y, model.z);
+                glUniform3f(static_model_shader->flags_loc, model.above_ground ? 255.0f : 1.0f, 8.0f, 0.0f);
+                glUniform3f(static_model_shader->light_position_loc, model.light_x, model.light_y, model.light_z);
+                glUniform3f(static_model_shader->light_color_loc, model.light_r, model.light_g, model.light_b);
 
                 // Render it
                 glDrawArrays(GL_TRIANGLES, 0, m->items.size() / gl::num_model_items);
@@ -305,16 +227,17 @@ namespace map_render {
     }
 
     void add_renderables(gl::model_request_t &models) {
-        glUseProgram(map_render::renderable_shader->program_id);
+        using namespace gl;
+        glUseProgram(renderable_shader->program_id);
         //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
         //map_render::setup_matrices();
 
         // Pass along the matrices
-        glUniformMatrix4fv(renderable_projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-        glUniformMatrix4fv(renderable_view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniformMatrix4fv(renderable_shader->projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
+        glUniformMatrix4fv(renderable_shader->view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
 
         // Pass along the camera information
-        glUniform3f(renderable_camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
+        glUniform3f(renderable_shader->camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
         Frustrum frustrum;
         frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
@@ -398,38 +321,38 @@ namespace map_render {
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
 
-        glVertexAttribPointer(renderable_world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 3 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_world_position_loc);
+        glEnableVertexAttribArray(renderable_shader->world_position_loc);
 
-        glVertexAttribPointer(renderable_normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 6 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_normal_loc);
+        glEnableVertexAttribArray(renderable_shader->normal_loc);
 
-        glVertexAttribPointer(renderable_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 9 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_color_loc);
+        glEnableVertexAttribArray(renderable_shader->color_loc);
 
-        glVertexAttribPointer(renderable_texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 12 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_texture_position_loc);
+        glEnableVertexAttribArray(renderable_shader->texture_position_loc);
 
-        glVertexAttribPointer(renderable_flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 14 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_flags_loc);
+        glEnableVertexAttribArray(renderable_shader->flags_loc);
 
-        glVertexAttribPointer(renderable_light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 17 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_light_position_loc);
+        glEnableVertexAttribArray(renderable_shader->light_position_loc);
 
-        glVertexAttribPointer(renderable_light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+        glVertexAttribPointer(renderable_shader->light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                               ((char *) nullptr + 20 * sizeof(float)));
-        glEnableVertexAttribArray(renderable_light_color_loc);
+        glEnableVertexAttribArray(renderable_shader->light_color_loc);
 
         glActiveTexture(GL_TEXTURE0);
         glEnable(GL_TEXTURE_2D);
         sf::Texture::bind(rltk::get_texture(term(1)->get_font_tag()));
-        glUniform1i(renderable_my_color_texture_loc, 0);
+        glUniform1i(renderable_shader->my_color_texture_loc, 0);
         
         // Render
         glDrawArrays(GL_QUADS, 0, bucket.n_quads);

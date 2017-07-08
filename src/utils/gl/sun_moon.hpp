@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "base_shader.hpp"
+#include "shaders/base_shader.hpp"
 #include "chunks/chunk.hpp"
 #define GLM_COMPILER 0
 #include <glm/glm.hpp>
