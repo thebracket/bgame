@@ -11,12 +11,9 @@
 #include "shaders/terrain_chunk_shader.hpp"
 #include "shaders/static_model_shader.hpp"
 #include "shaders/renderable_shader.hpp"
+#include "camera.hpp"
 
 namespace map_render {
-
-    glm::mat4 camera_projection_matrix;
-    glm::mat4 camera_modelview_matrix;
-
 
     void setup_matrices() {
         auto screen_size = rltk::get_window()->getSize();
@@ -28,34 +25,7 @@ namespace map_render {
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         glViewport(0,0,screen_size.x,screen_size.y);
 
-        //glMatrixMode(GL_PROJECTION);
-        //glLoadIdentity();
-        //gluPerspective(90.f, 1.f, 1.f, 300.0f);
-        camera_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
-
-        //glMatrixMode(GL_MODELVIEW);
-        //glLoadIdentity();
-
-        const glm::vec3 up{0.0f, 1.0f, 0.0f};
-        const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
-
-        switch (camera->camera_mode) {
-            case FRONT : {
-                // Nice X-perspective view
-                camera_position_v = { (float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level,((float) camera_position->region_y) + ((float)camera->zoom_level/3.0f) };
-            } break;
-
-            case TOP_DOWN : {
-                // Top-down
-                camera_position_v = {(float) camera_position->region_x, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + 0.1f};
-            } break;
-
-            case DIAGONAL : {
-                // Diagonal
-                camera_position_v = {(float) camera_position->region_x + (float)camera->zoom_level, ((float) camera_position->region_z) + (float)camera->zoom_level, ((float) camera_position->region_y) + (float)camera->zoom_level};
-            } break;
-        }
-        camera_modelview_matrix = glm::lookAt(camera_position_v, target, up);
+        gl::setup_camera();
     }
 
     void render_bucket(const gl::chunk_t &chunk, const gl::terrain_bucket_t &bucket ) {
@@ -98,12 +68,12 @@ namespace map_render {
         map_render::setup_matrices();
 
         // Pass along the matrices
-        glUniformMatrix4fv(terrain_chunk_shader->projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-        glUniformMatrix4fv(terrain_chunk_shader->view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniformMatrix4fv(terrain_chunk_shader->projection_matrix_loc, 1, false, glm::value_ptr( gl::camera_projection_matrix ));
+        glUniformMatrix4fv(terrain_chunk_shader->view_matrix_loc, 1, false, glm::value_ptr( gl::camera_modelview_matrix ));
         glUniform3f(terrain_chunk_shader->camera_position_loc, camera_position->region_x, camera_position->region_z, camera_position->region_y);
 
         Frustrum frustrum;
-        frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
+        frustrum.update(gl::camera_projection_matrix * gl::camera_modelview_matrix);
 
         // Bind the textures bucket
         glActiveTexture(GL_TEXTURE0);
@@ -130,8 +100,8 @@ namespace map_render {
         //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
 
         // Pass along the matrices
-        glUniformMatrix4fv(static_model_shader->projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-        glUniformMatrix4fv(static_model_shader->view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniformMatrix4fv(static_model_shader->projection_matrix_loc, 1, false, glm::value_ptr( gl::camera_projection_matrix ));
+        glUniformMatrix4fv(static_model_shader->view_matrix_loc, 1, false, glm::value_ptr( gl::camera_modelview_matrix ));
 
         // Pass along the camera information
         glUniform3f(static_model_shader->camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
@@ -177,14 +147,14 @@ namespace map_render {
         //map_render::setup_matrices();
 
         // Pass along the matrices
-        glUniformMatrix4fv(renderable_shader->projection_matrix_loc, 1, false, glm::value_ptr( map_render::camera_projection_matrix ));
-        glUniformMatrix4fv(renderable_shader->view_matrix_loc, 1, false, glm::value_ptr( map_render::camera_modelview_matrix ));
+        glUniformMatrix4fv(renderable_shader->projection_matrix_loc, 1, false, glm::value_ptr( gl::camera_projection_matrix ));
+        glUniformMatrix4fv(renderable_shader->view_matrix_loc, 1, false, glm::value_ptr( gl::camera_modelview_matrix ));
 
         // Pass along the camera information
         glUniform3f(renderable_shader->camera_position_loc, (float)camera_position->region_x, (float)camera_position->region_y, (float)camera_position->region_z);
 
         Frustrum frustrum;
-        frustrum.update(map_render::camera_projection_matrix * map_render::camera_modelview_matrix);
+        frustrum.update(gl::camera_projection_matrix * gl::camera_modelview_matrix);
 
         gl::terrain_bucket_t bucket;
 

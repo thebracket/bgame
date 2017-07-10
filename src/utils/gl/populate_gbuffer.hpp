@@ -10,9 +10,6 @@
 #include "model_requests_t.hpp"
 
 namespace map_render {
-    extern glm::mat4 camera_projection_matrix;
-    extern glm::mat4 camera_modelview_matrix;
-
     void setup_matrices();
     void render_terrain_chunk(const gl::chunk_t &chunk);
     void render_terrain_to_gbuffer(gl::model_request_t &models);

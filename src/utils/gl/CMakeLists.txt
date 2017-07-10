@@ -9,6 +9,7 @@ add_library(gl STATIC gl_utils.cpp
         sun_moon.cpp
         populate_gbuffer.cpp
         composition.cpp
+        camera.cpp
         )
 target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region textures chunks models shaders)
 #cotire(gl)
