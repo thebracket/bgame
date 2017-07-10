@@ -29,7 +29,7 @@ void mouse_input_system::update(const double ms) {
 	// Read back from the texture to find out where we really are in GL-land!
 	auto mouse_pos = map_render::readback_texture_pixel(mouse::x, mouse::y);
 	std::tie(mouse::mouse_world_x, mouse::mouse_world_y, mouse::mouse_world_z) = mouse_pos;
-    mouse::mouse_world_z = camera_position->region_z;
+    //mouse::mouse_world_z = camera_position->region_z;
 	if (mouse::mouse_world_x >= REGION_WIDTH) mouse::mouse_world_x = 1;
 	if (mouse::mouse_world_y >= REGION_HEIGHT) mouse::mouse_world_y = 1;
 	if (mouse::mouse_world_z >= REGION_DEPTH) mouse::mouse_world_z = 1;
