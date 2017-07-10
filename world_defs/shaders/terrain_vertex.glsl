@@ -6,6 +6,7 @@ uniform mat4 view_matrix;
 uniform vec3 camera_position;
 
 // World position is part of the VBO
+attribute vec3 in_position;
 attribute vec3 world_position;
 attribute vec3 normal;
 attribute vec3 color;
@@ -41,7 +42,7 @@ void main() {
     vec3 N = normalize(normal);
     TBN = mat3(T, B, N);
 
-    vec4 position = gl_Vertex;
+    vec4 position = vec4(in_position, 1.0);
     position.xyz += world_position.xzy;
     gl_Position = projection_matrix * (view_matrix * position);
     tint = color;

@@ -5,6 +5,7 @@ namespace gl {
         load("world_defs/shaders/terrain_vertex.glsl",
              "world_defs/shaders/terrain_fragment.glsl");
 
+        in_position_loc = get_attribute_location("in_position");
         world_position_loc = get_attribute_location("world_position");
         normal_loc = get_attribute_location("normal");
         color_loc = get_attribute_location("color");

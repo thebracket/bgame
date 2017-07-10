@@ -63,43 +63,7 @@ namespace map_render {
         const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
         if (offset > 0) {
 
-            // Bind the texture VBO and map the attributes
-            glBindBuffer(GL_ARRAY_BUFFER, bucket.vbo_id);
-
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
-
-            glVertexAttribPointer(terrain_chunk_shader->world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->world_position_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 6 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->normal_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 9 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->color_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 12 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->texture_position_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 14 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->flags_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 17 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->light_position_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 20 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->light_color_loc);
-
-            glVertexAttribPointer(terrain_chunk_shader->normal_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 23 * sizeof(float)));
-            glEnableVertexAttribArray(terrain_chunk_shader->normal_position_loc);
+            glBindVertexArrayAPPLE(bucket.vao_id);
 
             // Rendering
 
@@ -110,6 +74,8 @@ namespace map_render {
                 //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
                 //std::cout << "Emitted " << cull_pos << " quads for rendering\n";
             }
+
+            glBindVertexArrayAPPLE(0);
         }
     }
 
@@ -155,7 +121,7 @@ namespace map_render {
                 }
             }
         }
-        glDisableClientState(GL_VERTEX_ARRAY);
+        /*glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glDisableVertexAttribArray(terrain_chunk_shader->world_position_loc);
         glDisableVertexAttribArray(terrain_chunk_shader->normal_loc);
@@ -163,7 +129,7 @@ namespace map_render {
         glDisableVertexAttribArray(terrain_chunk_shader->flags_loc);
         glDisableVertexAttribArray(terrain_chunk_shader->light_position_loc);
         glDisableVertexAttribArray(terrain_chunk_shader->light_color_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->normal_position_loc);
+        glDisableVertexAttribArray(terrain_chunk_shader->normal_position_loc);*/
         glUseProgram(0);
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/

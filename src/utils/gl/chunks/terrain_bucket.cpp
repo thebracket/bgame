@@ -1,11 +1,14 @@
 #include "terrain_bucket.hpp"
 #include "../textures/texture.hpp"
+#include <iostream>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
 #else
 #include <GL/glew.h>
 #include <GL/glu.h>
 #endif
+#include "../shaders/shader_storage.hpp"
+#include "../shaders/terrain_chunk_shader.hpp"
 
 namespace gl {
     constexpr float tx = 0.0f;
@@ -546,13 +549,55 @@ namespace gl {
         }
 
         if (items.size() > 0) {
-            glGenBuffers(1, &vbo_id); // Generate the VBO
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_id);
+            if (vao_id == 0) glGenVertexArraysAPPLE(1, &vao_id);
+            //std::cout << "Created VAO #" << vao_id << "\n";
+            glBindVertexArrayAPPLE(vao_id);
 
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLfloat) * items.size(),
-                         &items[0], GL_STATIC_DRAW);
+            // Populate the vertex array
+            if (vbo_id == 0) glGenBuffers(1, &vbo_id); // Generate the VBO
+            glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * items.size(), &items[0], GL_STATIC_DRAW);
+
+            // Apply bindings
+            glEnableVertexAttribArray(terrain_chunk_shader->in_position_loc);
+            glVertexAttribPointer(terrain_chunk_shader->in_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float), 0);
+
+            glEnableVertexAttribArray(terrain_chunk_shader->world_position_loc);
+            glVertexAttribPointer(terrain_chunk_shader->world_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 3 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->normal_loc);
+            glVertexAttribPointer(terrain_chunk_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 6 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->color_loc);
+            glVertexAttribPointer(terrain_chunk_shader->color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 9 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->texture_position_loc);
+            glVertexAttribPointer(terrain_chunk_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 12 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->flags_loc);
+            glVertexAttribPointer(terrain_chunk_shader->flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 14 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->light_position_loc);
+            glVertexAttribPointer(terrain_chunk_shader->light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 17 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->light_color_loc);
+            glVertexAttribPointer(terrain_chunk_shader->light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 20 * sizeof(float)));
+
+            glEnableVertexAttribArray(terrain_chunk_shader->normal_position_loc);
+            glVertexAttribPointer(terrain_chunk_shader->normal_position_loc, 2, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
+                                  ((char *) nullptr + 23 * sizeof(float)));
+
+            // Clean up
+            glBindVertexArrayAPPLE(0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             generated_vbo = true;
         }

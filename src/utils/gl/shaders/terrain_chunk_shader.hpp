@@ -6,6 +6,7 @@ namespace gl {
     struct terrain_chunk_shader_t : public base_shader_t {
         terrain_chunk_shader_t();
 
+        GLint in_position_loc;
         GLint world_position_loc;
         GLint normal_loc;
         GLint color_loc;
