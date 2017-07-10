@@ -1,3 +1,9 @@
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glew.h>
+#include <GL/glu.h>
+#endif
 #include "populate_gbuffer.hpp"
 #include "../../main/game_camera.hpp"
 #include "main_fbo.hpp"
@@ -227,7 +233,11 @@ namespace map_render {
         }
         //std::cout << i << " composite renderables to enqueue\n";
 
-        bucket.make_vbo();
+        //bucket.make_vbo(); // Doing this manually to avoid creating a VAO we'll simply delete
+        glGenBuffers(1, &bucket.vbo_id); // Generate the VBO
+        glBindBuffer(GL_ARRAY_BUFFER, bucket.vbo_id);
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * bucket.items.size(), &bucket.items[0], GL_STATIC_DRAW);
 
         // Bind attributes and texture
         glBindBuffer(GL_ARRAY_BUFFER, bucket.vbo_id);
