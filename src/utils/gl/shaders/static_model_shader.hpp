@@ -6,6 +6,7 @@ namespace gl {
     struct static_model_shader_t : public base_shader_t {
         static_model_shader_t();
 
+        GLint in_position_loc;
         GLint world_position_loc;
         GLint normal_loc;
         GLint texture_position_loc;

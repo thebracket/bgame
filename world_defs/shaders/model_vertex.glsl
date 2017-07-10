@@ -6,6 +6,7 @@ uniform mat4 view_matrix;
 uniform vec3 camera_position;
 
 uniform vec3 world_position;
+attribute vec3 in_position;
 attribute vec3 normal;
 attribute vec2 texture_position;
 uniform vec3 flags;
@@ -23,7 +24,7 @@ varying vec3 normal_out;
 
 void main() {
 
-    vec4 position = gl_Vertex;
+    vec4 position = vec4(in_position, 1.0);
     position.xyz += world_position.xzy;
     gl_Position = projection_matrix * (view_matrix * position);
     tint = vec3(1.0, 1.0, 1.0);

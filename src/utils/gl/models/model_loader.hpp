@@ -13,6 +13,7 @@ namespace gl {
          * 6,7      Texture UV
          */
         unsigned int vbo_id;
+        unsigned int vao_id;
         int texture_id;
     };
 

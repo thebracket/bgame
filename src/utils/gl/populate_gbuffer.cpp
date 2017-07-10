@@ -121,18 +121,7 @@ namespace map_render {
                 }
             }
         }
-        /*glDisableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glDisableVertexAttribArray(terrain_chunk_shader->world_position_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->normal_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->texture_position_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->flags_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->light_position_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->light_color_loc);
-        glDisableVertexAttribArray(terrain_chunk_shader->normal_position_loc);*/
         glUseProgram(0);
-        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
     }
 
     void render_static_models(gl::model_request_t &models) {
@@ -159,20 +148,7 @@ namespace map_render {
 
             glUniform1i(static_model_shader->my_color_texture_loc, 0);
 
-            glBindBuffer(GL_ARRAY_BUFFER, m->vbo_id);
-
-            // Bind the vertex buffer
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(3, GL_FLOAT, gl::num_model_items * sizeof(float), 0);
-
-            glVertexAttribPointer(static_model_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
-                                  ((char *) nullptr + 3 * sizeof(float)));
-            glEnableVertexAttribArray(static_model_shader->normal_loc);
-
-            glVertexAttribPointer(static_model_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE,
-                                  gl::num_model_items * sizeof(float),
-                                  ((char *) nullptr + 6 * sizeof(float)));
-            glEnableVertexAttribArray(static_model_shader->texture_position_loc);
+            glBindVertexArrayAPPLE(m->vao_id);
 
             for (const auto &model : it->second) {
                 glUniform3f(static_model_shader->world_position_loc, model.x, model.y, model.z);
@@ -183,6 +159,8 @@ namespace map_render {
                 // Render it
                 glDrawArrays(GL_TRIANGLES, 0, m->items.size() / gl::num_model_items);
             }
+
+            glBindVertexArrayAPPLE(0);
         }
 
         glDisableClientState(GL_VERTEX_ARRAY);

@@ -9,6 +9,8 @@
 #endif
 #include <iostream>
 #include "../textures/texture.hpp"
+#include "../shaders/shader_storage.hpp"
+#include "../shaders/static_model_shader.hpp"
 
 namespace gl {
 
@@ -104,13 +106,29 @@ namespace gl {
             result->items.emplace_back((uv.y * tex_height) + tex_y);
         }
 
+        glGenVertexArraysAPPLE(1, &result->vao_id);
+        glBindVertexArrayAPPLE(result->vao_id);
         glGenBuffers(1, &result->vbo_id); // Generate the VBO
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->vbo_id);
+        glBindBuffer(GL_ARRAY_BUFFER, result->vbo_id);
 
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLfloat) * result->items.size(),
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * result->items.size(),
                      &result->items[0], GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glEnableVertexAttribArray(static_model_shader->in_position_loc);
+        glVertexAttribPointer(static_model_shader->in_position_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float), 0);
+
+        glEnableVertexAttribArray(static_model_shader->normal_loc);
+        glVertexAttribPointer(static_model_shader->normal_loc, 3, GL_FLOAT, GL_FALSE, gl::num_model_items * sizeof(float),
+                              ((char *) nullptr + 3 * sizeof(float)));
+
+        glEnableVertexAttribArray(static_model_shader->texture_position_loc);
+        glVertexAttribPointer(static_model_shader->texture_position_loc, 2, GL_FLOAT, GL_FALSE,
+                              gl::num_model_items * sizeof(float),
+                              ((char *) nullptr + 6 * sizeof(float)));
+
+
+        glBindVertexArrayAPPLE(result->vao_id);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         std::cout << "VBO " << result->vbo_id << " bound to model " << filename << "\n";
 
         fclose(file);
