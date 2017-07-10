@@ -11,6 +11,7 @@
 #include "../../components/receives_signal.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../raws/defs/material_def_t.hpp"
+#include "../../utils/gl/chunks/chunk.hpp"
 
 using namespace region;
 
@@ -90,6 +91,8 @@ void topology_system::recalculate(const perform_mining_message &e) {
                 if (e.x + X > 0 && e.x + X < REGION_WIDTH && e.y+Y > 0 && e.y + Y < REGION_HEIGHT && e.z +Z > 0 && e.z+Z<REGION_DEPTH) {
                     reveal(mapidx(e.x + X, e.y + Y, e.z + Z));
                     tile_calculate(e.x + X, e.y + Y, e.z + Z);
+                    const int chunk_index = gl::chunk_idx(e.x + X/gl::CHUNK_SIZE, e.y + Y/gl::CHUNK_SIZE, e.z + Z/gl::CHUNK_SIZE);
+                    gl::chunks[chunk_index].dirty = true;
                 }
             }
         }

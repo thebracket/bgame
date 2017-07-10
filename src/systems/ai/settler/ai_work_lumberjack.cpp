@@ -16,6 +16,7 @@
 #include "../../../raws/materials.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/defs/item_def_t.hpp"
+#include "../../../utils/gl/chunks/chunk.hpp"
 
 using namespace region;
 
@@ -198,6 +199,9 @@ void ai_work_lumberjack::update(const double duration_ms)
                                 make_open_space(idx);
                                 tile_calculate(x,y,z);
                                 ++number_of_logs;
+
+                                const int chunk_index = gl::chunk_idx(x/gl::CHUNK_SIZE, y/gl::CHUNK_SIZE, z/gl::CHUNK_SIZE);
+                                gl::chunks[chunk_index].dirty = true;
                             }
                         }
                     }
