@@ -103,8 +103,8 @@ void mode_play_system::show_tooltip(const int world_x, const int world_y, const 
 			case tile_type::STAIRS_DOWN : ss << "Down Stairs (" << material_name(material(tile_idx)) << ")"; break;
 			case tile_type::STAIRS_UPDOWN : ss << "Spiral Stairs (" << material_name(material(tile_idx)) << ")"; break;
 			case tile_type::FLOOR : ss << "Floor (" << material_name(material(tile_idx)) << ")"; break;
-			case tile_type::TREE_TRUNK : ss << "Tree Trunk"; break;
-			case tile_type::TREE_LEAF : ss << "Tree Foliage"; break;
+			case tile_type::TREE_TRUNK : ss << "Tree Trunk #" << tree_id(tile_idx); break;
+			case tile_type::TREE_LEAF : ss << "Tree Foliage #" << tree_id(tile_idx); break;
 			case tile_type::WINDOW : ss << "Window"; break;
 			case tile_type::CLOSED_DOOR : ss << "Closed Door (" << material_name(material(tile_idx)) << ")"; break;
 			default : ss << "Unknown!";

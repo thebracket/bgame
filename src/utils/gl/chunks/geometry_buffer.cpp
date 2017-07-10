@@ -11,6 +11,8 @@
 #include "../../../raws/materials.hpp"
 #include "constants.hpp"
 #include "../textures/texture.hpp"
+#include "../../../main/game_mode.hpp"
+#include "../../../main/game_designations.hpp"
 
 namespace gl {
 
@@ -20,19 +22,34 @@ namespace gl {
         const std::size_t material_idx = region::material(idx);
         const bool constructed = region::flag(idx, CONSTRUCTION);
         const material_def_t * mat = get_material(material_idx);
+        float r = (float)mat->fg.r/255.0f;
+        float g = (float)mat->fg.g/255.0f;
+        float b = (float)mat->fg.b/255.0f;
+        float shininess = mat->shininess;
         int floor_texture_idx = constructed ? mat->constructed_floor_texture : mat->floor_texture;
         int wall_texture_idx = constructed ? mat->constructed_wall_texture : mat->wall_texture;
         if (region::tile_type(idx) == tile_type::TREE_TRUNK) {
             floor_texture_idx = 10;
             wall_texture_idx = 10;
+
+            // If we are in chopping mode, show tree highlights
+            if (game_master_mode == DESIGN && game_design_mode == CHOPPING && designations->chopping.find(region::tree_id(idx)) != designations->chopping.end()) {
+                r = 1.0f;
+                g = 0.0f;
+                b = 0.0f;
+                shininess = 1.0f;
+            }
         } else if (region::tile_type(idx) == tile_type::TREE_LEAF) {
             floor_texture_idx = 11;
             wall_texture_idx = 11;
+            // If we are in chopping mode, show tree highlights
+            if (game_master_mode == DESIGN && game_design_mode == CHOPPING && designations->chopping.find(region::tree_id(idx)) != designations->chopping.end()) {
+                r = 1.0f;
+                g = 0.0f;
+                b = 0.0f;
+                shininess = 1.0f;
+            }
         }
-        const float shininess = mat->shininess;
-        const float r = (float)mat->fg.r/255.0f;
-        const float g = (float)mat->fg.g/255.0f;
-        const float b = (float)mat->fg.b/255.0f;
 
         auto floor_tex = textures::get_texture_by_id(floor_texture_idx);
         int floor_texid = floor_tex->texture_id;

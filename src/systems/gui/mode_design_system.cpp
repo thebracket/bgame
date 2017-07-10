@@ -14,6 +14,8 @@
 #include "../../main/game_camera.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/defs/plant_t.hpp"
+#include "../../utils/gl/chunks/constants.hpp"
+#include "../../utils/gl/chunks/chunk.hpp"
 #include <vector>
 
 using namespace rltk;
@@ -69,6 +71,8 @@ void mode_design_system::digging() {
                 case MINING_DELETE : designations->mining.erase(idx); break;
             }
             emit(map_dirty_message{});
+            const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+            gl::chunks[chunk_index].dirty = true;
         }
     }
 
@@ -256,6 +260,7 @@ void mode_design_system::chopping() {
                         tree_pos.x = mouse::mouse_world_x+x;
                         tree_pos.y = mouse::mouse_world_y+y;
                         tree_pos.z = lowest_z;
+
                     }
                 }
             }
@@ -264,9 +269,14 @@ void mode_design_system::chopping() {
 
         designations->chopping[(int)tree_id] = tree_pos;
         emit(map_dirty_message{});
+
+        const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+        gl::chunks[chunk_index].dirty = true;
     } else if (get_mouse_button_state(rltk::button::RIGHT) && tree_id > 0) {
         designations->chopping.erase((int)tree_id);
         emit(map_dirty_message{});
+        const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+        gl::chunks[chunk_index].dirty = true;
     }
 }
 
@@ -287,7 +297,11 @@ void mode_design_system::guardposts() {
             for (const auto &g : designations->guard_points) {
                 if (mapidx(g.second) == idx) found = true;
             }
-            if (!found) designations->guard_points.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
+            if (!found) {
+                designations->guard_points.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
+                const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+                gl::chunks[chunk_index].dirty = true;
+            }
         } else if (get_mouse_button_state(rltk::button::RIGHT)) {
             designations->guard_points.erase(std::remove_if(
                     designations->guard_points.begin(),
@@ -295,6 +309,9 @@ void mode_design_system::guardposts() {
                     [&idx] (std::pair<bool,position_t> p) { return idx == mapidx(p.second); }
                 ),
                 designations->guard_points.end());
+            const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+            gl::chunks[chunk_index].dirty = true;
+
         }
     }
 }
@@ -331,6 +348,9 @@ void mode_design_system::harvest() {
             if (!found) {
                 designations->harvest.push_back(std::make_pair(false, position_t{world_x, world_y, world_z}));
                 emit_deferred(harvestmap_changed_message{});
+                const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+                gl::chunks[chunk_index].dirty = true;
+
             }
         } else if (get_mouse_button_state(rltk::button::RIGHT)) {
             designations->harvest.erase(std::remove_if(
@@ -340,6 +360,9 @@ void mode_design_system::harvest() {
                                              ),
                                              designations->harvest.end());
             emit_deferred(harvestmap_changed_message{});
+            const int chunk_index = gl::chunk_idx(mouse::mouse_world_x/gl::CHUNK_SIZE, mouse::mouse_world_y/gl::CHUNK_SIZE, mouse::mouse_world_z/gl::CHUNK_SIZE);
+            gl::chunks[chunk_index].dirty = true;
+
         }
     }
 
