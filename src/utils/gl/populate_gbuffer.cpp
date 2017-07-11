@@ -30,6 +30,8 @@ namespace map_render {
         glShadeModel(GL_SMOOTH);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         glViewport(0,0,screen_size.x,screen_size.y);
+        glEnable(GL_POLYGON_SMOOTH);
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
         gl::setup_camera();
     }

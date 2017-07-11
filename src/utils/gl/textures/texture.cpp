@@ -90,7 +90,14 @@ namespace textures {
                 has_displacement = true;
             }
             atlas[texture_id] = texture_t{tex_id, normal_id, has_normal, specular_id, has_specular, displacement_id, has_displacement};
-            std::cout << "Loaded texture " << texture_id << " as " << tex_id << " / " << normal_id << "\n";
+            //std::cout << "Loaded texture " << texture_id << " as " << tex_id << " / " << normal_id << "\n";
+
+            // Finally set some texture parameters
+            bind_atlas();
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+            glGenerateMipmap(GL_TEXTURE_2D);
+
         }
     }
 
