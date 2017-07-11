@@ -5,4 +5,5 @@ add_library(shaders STATIC
         static_model_shader.cpp
         renderable_shader.cpp
         render_shader.cpp
+        final_shader.cpp
 )
