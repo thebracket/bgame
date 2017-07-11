@@ -19,5 +19,6 @@ namespace gl {
         normal_position_loc = get_attribute_location("normal_position");
         camera_position_loc = get_uniform_location("camera_position");
         specular_tex_position_loc = get_attribute_location("specular_position");
+        displacement_position_loc = get_attribute_location("displacement_position");
     }
 }

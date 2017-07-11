@@ -20,6 +20,7 @@ namespace map_render {
     GLuint light_color_texture;
     GLuint flag_texture;
     GLuint specular_texture;
+    GLuint displacement_texture;
 
     void load_fbo() {
         // Create and bind the framebuffer for mouse-picking output

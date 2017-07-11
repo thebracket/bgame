@@ -40,11 +40,13 @@ namespace gl {
         int floor_texid = floor_tex->texture_id;
         int floor_normalid = floor_tex->normal_id;
         int floor_specularid = floor_tex->specular_id;
+        int floor_displaceid = floor_tex->displacement_id;
 
         auto wall_tex = textures::get_texture_by_id(wall_texture_idx);
         int wall_texid = wall_tex->texture_id;
         int wall_normalid = wall_tex->normal_id;
         int wall_specularid = wall_tex->specular_id;
+        int wall_displaceid = wall_tex->displacement_id;
 
         //std::cout << "Material: " << mat->name << ", floor # " << floor_texture_idx << ", tile " << floor_texid << "\n";
 
@@ -73,14 +75,14 @@ namespace gl {
         }
 
         // Add floor and ceiling with the appropriate texture
-        bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid);
-        bucket.add_floor(x, y, z+1.0f, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid);
+        bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, floor_displaceid);
+        bucket.add_floor(x, y, z+1.0f, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, floor_displaceid);
 
         // Add walls with the appropriate texture
-        if (!region::solid(mapidx(x-1, y, z))) bucket.add_left(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid);
-        if (!region::solid(mapidx(x+1, y, z))) bucket.add_right(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid);
-        if (!region::solid(mapidx(x, y-1, z))) bucket.add_north(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid);
-        if (!region::solid(mapidx(x, y+1, z))) bucket.add_south(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid);
+        if (!region::solid(mapidx(x-1, y, z))) bucket.add_left(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
+        if (!region::solid(mapidx(x+1, y, z))) bucket.add_right(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
+        if (!region::solid(mapidx(x, y-1, z))) bucket.add_north(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
+        if (!region::solid(mapidx(x, y+1, z))) bucket.add_south(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
     }
 
     void geometry_buffer_t::add_ramp(const float x, const float y, const float z)
@@ -107,11 +109,13 @@ namespace gl {
         int floor_texid = floor_tex->texture_id;
         int floor_normalid = floor_tex->normal_id;
         int floor_specularid = floor_tex->specular_id;
+        int floor_displaceid = floor_tex->displacement_id;
 
         auto wall_tex = textures::get_texture_by_id(wall_texture_idx);
         int wall_texid = wall_tex->texture_id;
         int wall_normalid = wall_tex->normal_id;
         int wall_specularid = wall_tex->specular_id;
+        int wall_displaceid = wall_tex->displacement_id;
 
         //std::cout << "Material: " << mat->name << ", floor # " << floor_texture_idx << ", tile " << floor_texid << "\n";
 
@@ -140,7 +144,7 @@ namespace gl {
         }
 
         // Add floor and ceiling with the appropriate texture
-        bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid);
+        bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, floor_displaceid);
 
         float nwy = 0.0f;
         float ney = 0.0f;
@@ -157,7 +161,7 @@ namespace gl {
             sey = 1.0f; swy = 1.0f;
         }
 
-        bucket.add_slope(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, nwy,ney,swy,sey);
+        bucket.add_slope(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, floor_displaceid, nwy,ney,swy,sey);
     }
 
     void geometry_buffer_t::add_floor(const float x, const float y, const float z,
@@ -179,8 +183,9 @@ namespace gl {
         int floor_texid = floor_tex->texture_id;
         int floor_normalid = floor_tex->normal_id;
         int floor_specularid = floor_tex->specular_id;
+        int floor_displaceid = floor_tex->displacement_id;
 
-        bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid);
+        bucket.add_floor(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, floor_displaceid);
     }
 
     void geometry_buffer_t::add_water(const float x, const float y, const float z,
@@ -198,21 +203,22 @@ namespace gl {
         int floor_texid = floor_tex->texture_id;
         int floor_normalid = floor_tex->normal_id;
         int floor_specularid = floor_tex->specular_id;
+        int floor_displaceid = floor_tex->displacement_id;
 
-        bucket.add_water(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, water_level, floor_specularid);
+        bucket.add_water(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, water_level, floor_specularid, floor_displaceid);
     }
 
     void geometry_buffer_t::add_veg(const float x, const float y, const float z,
                                       const bool &above_ground, const float &light_r,
                                       const float &light_g, const float &light_b, const float &light_x,
-                                      const float &light_y, const float &light_z, const int &wang, const int texid, const int normid, const int specid)
+                                      const float &light_y, const float &light_z, const int &wang, const int texid, const int normid, const int specid, const int dispid)
     {
         const int idx = mapidx(x,y,z);
         constexpr float shininess = 8.0f;
         constexpr float r = 1.0f;
         constexpr float g = 1.0f;
         constexpr float b = 1.0f;
-        bucket.add_veg(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, (float)wang, texid, normid, specid);
+        bucket.add_veg(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, (float)wang, texid, normid, specid, dispid);
     }
 
     void geometry_buffer_t::mark_z_level_end(const int &z) {

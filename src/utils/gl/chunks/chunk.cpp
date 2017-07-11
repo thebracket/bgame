@@ -172,7 +172,7 @@ namespace gl {
                     float light_r, light_g, light_b, light_x, light_y, light_z;
                     set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
                     chunk.vegetation->add_veg(x,y,z,region::above_ground(idx), light_r, light_g, light_b, light_x, light_y, light_z,
-                                              wang, vegtex->texture_id, vegtex->normal_id, vegtex->specular_id );
+                                              wang, vegtex->texture_id, vegtex->normal_id, vegtex->specular_id, vegtex->displacement_id );
                 }
             }
         });

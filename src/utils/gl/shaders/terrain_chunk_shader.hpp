@@ -20,6 +20,7 @@ namespace gl {
         GLint normal_position_loc;
         GLint camera_position_loc;
         GLint specular_tex_position_loc;
+        GLint displacement_position_loc;
     };
 
 }

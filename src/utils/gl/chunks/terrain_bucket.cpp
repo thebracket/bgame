@@ -20,7 +20,7 @@ namespace gl {
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
                                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                     const int &texture_id, const int &normal_id, const int &specular_id)
+                                     const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -29,6 +29,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -40,6 +42,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         add_to_items(-0.5f, -0.5f,  0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -49,6 +52,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -58,6 +62,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f, -0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -67,6 +72,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         n_quads += 4;
     }
@@ -75,7 +81,7 @@ namespace gl {
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
                                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                     const int &texture_id, const int &normal_id, const uint8_t &water_level, const int &specular_id)
+                                     const int &texture_id, const int &normal_id, const uint8_t &water_level, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -84,6 +90,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
         const float height = ((float)water_level * 0.1f) - 0.5f;
@@ -96,6 +104,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         add_to_items(-0.5f, height,  0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -105,6 +114,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, height,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -114,6 +124,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_width);
 
         add_to_items(0.5f, height, -0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -123,6 +134,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         n_quads += 4;
     }
@@ -131,7 +143,7 @@ namespace gl {
                                    const int &idx, const bool &above_ground,
                                    const float &light_r, const float &light_g, const float &light_b,
                                    const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                   const float &wang, const int &texture_id, const int &normal_id, const int &specular_id)
+                                   const float &wang, const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -140,6 +152,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -151,6 +165,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, wang);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         add_to_items(-0.5f, -0.5f,  0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -160,6 +175,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, wang);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -169,6 +185,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, wang);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f, -0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -178,6 +195,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, wang);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         n_quads += 4;
     }
@@ -199,7 +217,7 @@ namespace gl {
         add_to_items(tex_x, tex_y);                     // Texture 0
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         add_to_items(-0.5f, -0.5f,  0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -208,7 +226,7 @@ namespace gl {
         add_to_items(tex_x, tex_y + tsize_sprite_y);           // Texture 1
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         add_to_items(0.5f, -0.5f,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -217,7 +235,7 @@ namespace gl {
         add_to_items(tex_x + tsize_sprite_x, tex_y + tsize_sprite_y); // Texture 2
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         add_to_items(0.5f, -0.5f, -0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -226,7 +244,7 @@ namespace gl {
         add_to_items(tex_x + tsize_sprite_x, tex_y);           // Texture 3
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         n_quads += 4;
     }
@@ -249,7 +267,7 @@ namespace gl {
         add_to_items(tex_x, tex_y + tsize_sprite_y);           // Texture 0
         add_to_items(ground_indicator, shininess, billboard);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         add_to_items(0.5f, -0.5f,  0.0f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -258,7 +276,7 @@ namespace gl {
         add_to_items(tex_x + tsize_sprite_x, tex_y + tsize_sprite_y); // Texture 1
         add_to_items(ground_indicator, shininess, billboard);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         add_to_items(0.5f, 0.5f,  0.0f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -267,7 +285,7 @@ namespace gl {
         add_to_items(tex_x + tsize_sprite_x, tex_y);           // Texture 2
         add_to_items(ground_indicator, shininess, billboard);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         add_to_items(-0.5f, 0.5f, 0.0f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -276,7 +294,7 @@ namespace gl {
         add_to_items(tex_x, tex_y);                     // Texture 3
         add_to_items(ground_indicator, shininess, billboard);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f);
+        add_to_items(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
         n_quads += 4;
     }
@@ -285,7 +303,7 @@ namespace gl {
                                     const int &idx, const bool &above_ground,
                                     const float &light_r, const float &light_g, const float &light_b,
                                     const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                    const int &texture_id, const int &normal_id, const int &specular_id)
+                                    const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -294,6 +312,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -305,6 +325,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(-0.5f, 0.5f,  -0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -314,6 +335,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(-0.5f, 0.5f,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -323,6 +345,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         add_to_items(-0.5f, -0.5f, 0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -332,6 +355,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         n_quads += 4;
     }
@@ -340,7 +364,7 @@ namespace gl {
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
                                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                     const int &texture_id, const int &normal_id, const int &specular_id)
+                                     const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -349,6 +373,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -360,6 +386,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, 0.5f,  -0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -369,6 +396,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -378,6 +406,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         add_to_items(0.5f, -0.5f, 0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -387,6 +416,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         n_quads += 4;
     }
@@ -395,7 +425,7 @@ namespace gl {
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
                                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                     const int &texture_id, const int &normal_id, const int &specular_id)
+                                     const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -404,6 +434,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -415,6 +447,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f,  -0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -424,6 +457,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(0.5f, 0.5f,  -0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -433,6 +467,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         add_to_items(-0.5f, 0.5f, -0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -442,6 +477,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         n_quads += 4;
     }
@@ -450,7 +486,7 @@ namespace gl {
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
                                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                     const int &texture_id, const int &normal_id, const int &specular_id)
+                                     const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
         const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
@@ -459,6 +495,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -470,6 +508,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f,  0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -479,6 +518,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(0.5f, 0.5f,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -488,6 +528,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         add_to_items(-0.5f, 0.5f, 0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -497,6 +538,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         n_quads += 4;
     }
@@ -505,7 +547,7 @@ namespace gl {
                                      const int &idx, const bool &above_ground,
                                      const float &light_r, const float &light_g, const float &light_b,
                                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                                     const int &texture_id, const int &normal_id, const int &specular_id,
+                                     const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id,
                                      const float nwy, const float ney, const float swy, const float sey)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
@@ -515,6 +557,8 @@ namespace gl {
         const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
         const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
+        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
+        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
         constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
         constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
@@ -529,6 +573,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y, spec_x, spec_y);
+        add_to_items(disp_x, disp_y);
 
         add_to_items(-0.5f, -0.5f + nwy,  0.5f);        // Vertex 1
         add_to_items(x, y, z);                    // World position 1
@@ -538,6 +583,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x, norm_y + tex_height, spec_x, spec_y + tex_height);
+        add_to_items(disp_x, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f + ney,  0.5f);         // Vertex 2
         add_to_items(x, y, z);                    // World position 2
@@ -547,6 +593,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y + tex_height, spec_x + tex_width, spec_y + tex_height);
+        add_to_items(disp_x + tex_width, disp_y + tex_height);
 
         add_to_items(0.5f, -0.5f + sey, -0.5f);         // Vertex 3
         add_to_items(x, y, z);                    // World position 3
@@ -556,6 +603,7 @@ namespace gl {
         add_to_items(ground_indicator, shininess, 0.0f);
         add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
         add_to_items(norm_x + tex_width, norm_y, spec_x + tex_width, spec_y);
+        add_to_items(disp_x + tex_width, disp_y);
 
         n_quads += 4;
     }
