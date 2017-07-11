@@ -59,10 +59,12 @@ void main() {
     base_color.xyz += sun_specular * sun_specular_factor;
 
     // Apply light from in-game light sources
+    float light_distance = distance(light_position.xyz, position.xyz);
+    float attenuation = 1.0 / light_distance;
     vec3 light_dir = normalize(light_position.xyz - position.xyz);
-    base_color.xyz += diffuse_light(normal.xyz, light_color, light_dir);
+    base_color.xyz += (diffuse_light(normal.xyz, light_color, light_dir) * attenuation );
     float light_component = light_position.x > 0.0 && flags.b < 1.0f ? 1.0 : 0.0;
-    base_color.xyz += specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * specular_mod.r * light_component;
+    base_color.xyz += (specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * specular_mod.r * light_component * attenuation);
 
     // Add some scan-line noise
     //float scan_mod = mod(gl_FragCoord.y, 4.0);
