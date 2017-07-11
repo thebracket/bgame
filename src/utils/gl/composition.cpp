@@ -69,7 +69,9 @@ namespace map_render {
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D, map_render::light_color_texture); // Texture slot 4 = light color
         glActiveTexture(GL_TEXTURE5);
-        glBindTexture(GL_TEXTURE_2D, map_render::flag_texture); // Texture slot 4 = light color
+        glBindTexture(GL_TEXTURE_2D, map_render::flag_texture); // Texture slot 5 = flags
+        glActiveTexture(GL_TEXTURE6);
+        glBindTexture(GL_TEXTURE_2D, map_render::specular_texture); // Texture slot 6 = specular
 
         glUniform1i(render_shader->albedo_tex_loc, 0);
         glUniform1i(render_shader->position_tex_loc, 1);
@@ -77,6 +79,7 @@ namespace map_render {
         glUniform1i(render_shader->light_pos_tex_loc, 3);
         glUniform1i(render_shader->light_col_tex_loc, 4);
         glUniform1i(render_shader->flag_tex_loc, 5);
+        glUniform1i(render_shader->specular_tex_loc, 6);
 
         glUniform3fv(render_shader->ambient_color_loc, 1, glm::value_ptr(ambient_color));
         glUniform3fv(render_shader->sun_moon_position_loc, 1, glm::value_ptr(sun_position));

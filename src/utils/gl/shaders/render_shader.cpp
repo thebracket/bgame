@@ -15,5 +15,6 @@ namespace gl {
         sun_moon_color_loc = get_uniform_location("sun_moon_color");
         flag_tex_loc = get_uniform_location("flag_tex");
         camera_position_loc = get_uniform_location("cameraPosition");
+        specular_tex_loc = get_uniform_location("specular_tex");
     }
 }

@@ -21,6 +21,7 @@ void main() {
         gl_FragData[5] = vec4(light_pos, 1.0);
         gl_FragData[4] = vec4(light_col, 1.0);
         gl_FragData[6] = vec4(flag_out.rgb/255.0, 1.0);
+        gl_FragData[7] = vec4(1.0, 1.0, 1.0, 1.0);
     } else {
         discard;
     }

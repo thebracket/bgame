@@ -19,6 +19,7 @@ namespace map_render {
     extern GLuint light_position_texture;
     extern GLuint light_color_texture;
     extern GLuint flag_texture;
+    extern GLuint specular_texture;
 
     void load_fbo();
 }

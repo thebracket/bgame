@@ -6,6 +6,7 @@ uniform sampler2D normal_tex;
 uniform sampler2D light_pos_tex;
 uniform sampler2D light_col_tex;
 uniform sampler2D flag_tex;
+uniform sampler2D specular_tex;
 
 uniform vec3 cameraPosition;
 uniform vec3 ambient_color;
@@ -42,6 +43,7 @@ void main() {
     vec4 light_position = texture2D( light_pos_tex, tex_coord.xy ) * 255.0;
     vec3 light_color = texture2D( light_col_tex, tex_coord.xy ).rgb;
     vec3 flags = texture2D( flag_tex, tex_coord.xy ).rgb * 255.0;
+    vec3 specular_mod = texture2D( specular_tex, tex_coord.xy ).rgb;
 
     // Calculate the ambient component
     vec3 ambient = flags.r > 0.0 ? ambient_color : vec3(0.3, 0.3, 0.3);
@@ -50,7 +52,7 @@ void main() {
     // Apply light from the sun
     vec3 sun_dir = normalize(sun_moon_position.xyz - position.xyz);
     vec3 sun_diffuse = diffuse_light(normal.xyz, sun_moon_color, sun_dir);
-    vec3 sun_specular = specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, sun_dir, flags.g);
+    vec3 sun_specular = specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, sun_dir, flags.g) * specular_mod.r;
     float sun_diffuse_factor = flags.r > 0.0 ? 1.0 : 0.0;
     float sun_specular_factor = flags.r > 0.0 && flags.b < 1.0 ? 1.0 : 0.0;
     base_color.xyz += sun_diffuse * sun_diffuse_factor;
@@ -60,7 +62,7 @@ void main() {
     vec3 light_dir = normalize(light_position.xyz - position.xyz);
     base_color.xyz += diffuse_light(normal.xyz, light_color, light_dir);
     float light_component = light_position.x > 0.0 && flags.b < 1.0f ? 1.0 : 0.0;
-    base_color.xyz += specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * light_component;
+    base_color.xyz += specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * specular_mod.r * light_component;
 
     // Add some scan-line noise
     //float scan_mod = mod(gl_FragCoord.y, 4.0);

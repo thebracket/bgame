@@ -184,7 +184,7 @@ void read_material_types() noexcept
 }
 
 void read_texture_index() noexcept {
-    std::vector<std::tuple<int, std::string, std::string>> textures_to_load;
+    std::vector<std::tuple<int, std::string, std::string, std::string, std::string>> textures_to_load;
 
     lua_getglobal(lua_state, "texture_index");
     lua_pushnil(lua_state);
@@ -197,16 +197,20 @@ void read_texture_index() noexcept {
 
         std::string texture_file = "";
         std::string normal_file = "";
+        std::string specular_file = "";
+        std::string displacement_file = "";
         int texture_index = 0;
         while (lua_next(lua_state, -2) != 0) {
             const std::string field = lua_tostring(lua_state, -2);
             if (field == "texture") texture_file = std::string("world_defs/textures/") + lua_tostring(lua_state, -1);
             if (field == "normal") normal_file = std::string("world_defs/textures/") + lua_tostring(lua_state, -1);
+            if (field == "specular") specular_file = std::string("world_defs/textures/") + lua_tostring(lua_state, -1);
+            if (field == "bump") displacement_file = std::string("world_defs/textures/") + lua_tostring(lua_state, -1);
             if (field == "index") texture_index = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }
-        textures_to_load.emplace_back(std::make_tuple(texture_index, texture_file, normal_file));
+        textures_to_load.emplace_back(std::make_tuple(texture_index, texture_file, normal_file, specular_file, displacement_file));
 
         lua_pop(lua_state, 1);
     }

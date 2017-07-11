@@ -28,7 +28,7 @@ namespace gl {
                        const bool &above_ground,
                        const float &light_r, const float &light_g, const float &light_b,
                        const float &light_x, const float &light_y, const float &light_z, const int &wang,
-                       const int texid, const int normid);
+                       const int texid, const int normid, const int specid);
 
         void add_cube(const float x, const float y, const float z);
         void add_ramp(const float x, const float y, const float z);

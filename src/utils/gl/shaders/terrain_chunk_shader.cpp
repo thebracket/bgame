@@ -18,5 +18,6 @@ namespace gl {
         light_color_loc = get_attribute_location("light_color");
         normal_position_loc = get_attribute_location("normal_position");
         camera_position_loc = get_uniform_location("camera_position");
+        specular_tex_position_loc = get_attribute_location("specular_position");
     }
 }

@@ -16,5 +16,6 @@ namespace gl {
         GLint sun_moon_color_loc;
         GLint flag_tex_loc;
         GLint camera_position_loc;
+        GLint specular_tex_loc;
     };
 }

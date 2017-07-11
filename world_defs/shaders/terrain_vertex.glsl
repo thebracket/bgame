@@ -15,6 +15,7 @@ attribute vec3 flags;
 attribute vec3 light_position;
 attribute vec3 light_color;
 attribute vec2 normal_position;
+attribute vec2 specular_position;
 
 // Outputs
 varying vec3 tint;
@@ -25,6 +26,7 @@ varying vec3 flag_out;
 varying vec3 light_pos;
 varying vec3 light_col;
 varying vec4 normal_tex_position;
+varying vec4 specular_tex_position;
 
 void main() {
     vec3 tangent;
@@ -58,4 +60,5 @@ void main() {
     light_pos = light_position;
     light_col = light_color;
     normal_tex_position = vec4(normal_position, 0.0, 0.0);
+    specular_tex_position = vec4(specular_position, 0.0, 0.0);
 }

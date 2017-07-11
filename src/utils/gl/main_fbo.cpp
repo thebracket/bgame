@@ -19,6 +19,7 @@ namespace map_render {
     GLuint light_position_texture;
     GLuint light_color_texture;
     GLuint flag_texture;
+    GLuint specular_texture;
 
     void load_fbo() {
         // Create and bind the framebuffer for mouse-picking output
@@ -90,6 +91,15 @@ namespace map_render {
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT6, GL_TEXTURE_2D, flag_texture, 0);
 
+        // Create the specular texture
+        glGenTextures(1, &specular_texture);
+        glBindTexture(GL_TEXTURE_2D, specular_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen_size.x, screen_size.y, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT7, GL_TEXTURE_2D, specular_texture, 0);
+
         // Create a depth-buffer for the render target
         glGenRenderbuffers(1, &mouse_pick_depth);
         glBindRenderbuffer(GL_RENDERBUFFER, mouse_pick_depth);
@@ -99,8 +109,8 @@ namespace map_render {
 
         GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT,
                              GL_COLOR_ATTACHMENT3_EXT, GL_COLOR_ATTACHMENT4_EXT, GL_COLOR_ATTACHMENT5_EXT,
-                             GL_COLOR_ATTACHMENT6_EXT };
-        glDrawBuffers(7, buffers);
+                             GL_COLOR_ATTACHMENT6_EXT, GL_COLOR_ATTACHMENT7_EXT };
+        glDrawBuffers(8, buffers);
 
         // Return to regular render mode
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
