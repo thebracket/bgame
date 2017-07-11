@@ -21,5 +21,9 @@ namespace map_render {
     extern GLuint flag_texture;
     extern GLuint specular_texture;
 
+    extern GLuint intermediate_fbo;
+    extern GLuint intermediate_texture;
+
     void load_fbo();
+    void load_intermediate_fbo();
 }

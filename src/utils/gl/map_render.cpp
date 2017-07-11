@@ -87,10 +87,11 @@ void map_render_t::render() {
     map_render::add_renderables(render_models);
     map_render::render_static_models(render_models);
 
-    // Phase 2 render: composition
+    // Phase 2 render: composition, rendered to the intermediate buffer
     map_render::render_composition();
 
-    // Phase 3 render: effects
+    // Phase 3 render: effects etc. while we splat to the screen
+    map_render::render_final();
 
     // Done
     glUseProgram(0);

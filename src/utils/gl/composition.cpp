@@ -110,6 +110,7 @@ namespace map_render {
     void render_composition() {
         constexpr bool test_mode = false;
 
+        glBindFramebuffer(GL_FRAMEBUFFER, intermediate_fbo);
         auto sz = rltk::get_window()->getSize();
         const float W = (float)sz.x;
         const float H = (float)sz.y;
@@ -119,6 +120,9 @@ namespace map_render {
         glViewport(0, 0, sz.x, sz.y);
         glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
 
+        // Use the intermediate framebuffer, Disable depth testing for this part
+        glDisable(GL_DEPTH_TEST);
+
         if (test_mode) {
             render_test_texture(W / 2.0f, 0.0f, W, H / 2.0f, map_render::render_texture);
         } else {
@@ -127,5 +131,19 @@ namespace map_render {
             //render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::normal_texture);
             //render_texture_atlas(W / 2.0f, 0.0f, W, H / 2.0f);
         }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void render_final() {
+        auto sz = rltk::get_window()->getSize();
+        const float W = (float)sz.x;
+        const float H = (float)sz.y;
+        push_gl_states();
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glViewport(0, 0, sz.x, sz.y);
+        glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
+        render_test_texture(0.0f, 0.0f, W, H, map_render::intermediate_texture);
     }
 }

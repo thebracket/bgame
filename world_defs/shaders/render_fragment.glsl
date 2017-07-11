@@ -69,5 +69,5 @@ void main() {
     //float scan_effect = 1.0 - (scan_mod/20.0f);
     //base_color.rgb *= scan_effect;
 
-    gl_FragColor = base_color;
+    gl_FragData[0] = base_color;
 }

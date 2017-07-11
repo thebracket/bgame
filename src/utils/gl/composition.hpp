@@ -14,4 +14,5 @@ namespace map_render {
     void render_mixed_texture(float left, float top, float right, float bottom);
     void load_render_shader();
     void render_composition();
+    void render_final();
 }

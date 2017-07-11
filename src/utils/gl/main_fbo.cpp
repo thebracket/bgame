@@ -20,7 +20,9 @@ namespace map_render {
     GLuint light_color_texture;
     GLuint flag_texture;
     GLuint specular_texture;
-    GLuint displacement_texture;
+
+    GLuint intermediate_fbo;
+    GLuint intermediate_texture;
 
     void load_fbo() {
         // Create and bind the framebuffer for mouse-picking output
@@ -116,6 +118,34 @@ namespace map_render {
         // Return to regular render mode
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        load_intermediate_fbo();
         loaded_fbo = true;
+    }
+
+    void load_intermediate_fbo() {
+        const auto screen_size = rltk::get_window()->getSize();
+
+        // Create and bind the framebuffer for mouse-picking output
+        glGenFramebuffers(1, &intermediate_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, intermediate_fbo);
+
+        // Create the render target texture
+        glGenTextures(1, &intermediate_texture);
+        glBindTexture(GL_TEXTURE_2D, intermediate_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, intermediate_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, intermediate_texture, 0);
+
+        // Attach to the existing depth buffer for forward-rendering stages
+        glBindFramebuffer(GL_FRAMEBUFFER, intermediate_fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mouse_pick_depth);
+
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT };
+        glDrawBuffers(1, buffers);
+
+        // Return to regular render mode
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }
