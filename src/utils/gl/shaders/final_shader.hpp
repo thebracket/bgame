@@ -7,6 +7,6 @@ namespace gl {
         final_shader_t();
 
         GLint intermediate_tex_loc;
-        GLint gamma_loc;
+        GLint exposure_loc;
     };
 }

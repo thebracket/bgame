@@ -1,4 +1,5 @@
 #ifdef __APPLE__
+#include <GL/glew.h>
 #include <OpenGL/glu.h>
 #else
 #include <GL/glew.h>
@@ -42,7 +43,7 @@ namespace map_render {
         // Create the render target texture
         glGenTextures(1, &render_texture);
         glBindTexture(GL_TEXTURE_2D, render_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screen_size.x, screen_size.y, 0, GL_RGBA, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, mouse_pick_fbo);
@@ -132,7 +133,7 @@ namespace map_render {
         // Create the render target texture
         glGenTextures(1, &intermediate_texture);
         glBindTexture(GL_TEXTURE_2D, intermediate_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen_size.x, screen_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screen_size.x, screen_size.y, 0, GL_RGBA, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, intermediate_fbo);

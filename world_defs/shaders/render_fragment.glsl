@@ -16,14 +16,14 @@ uniform vec3 sun_moon_color;
 varying vec4 tex_coord;
 
 vec3 diffuse_light(vec3 surface_normal, vec3 color, vec3 light_dir) {
-    float diffuse_strength = 0.5;
+    float diffuse_strength = 0.3;
     vec3 result = color;
     result.xyz *= dot(light_dir, surface_normal) * diffuse_strength;
     return result;
 }
 
 vec3 specular_light(vec3 surface_pos, vec3 surface_normal, vec3 color, vec3 light_dir, float shininess) {
-    float specular_strength = 0.7;
+    float specular_strength = 0.3;
 
     vec3 incidence_vector = -light_dir;
     vec3 reflection_vector = reflect(incidence_vector, surface_normal);
@@ -60,16 +60,11 @@ void main() {
 
     // Apply light from in-game light sources
     float light_distance = distance(light_position.xyz, position.xyz);
-    float attenuation = 1.0 / light_distance;
+    float attenuation = 1.0 / (light_distance * 0.7);
     vec3 light_dir = normalize(light_position.xyz - position.xyz);
     base_color.xyz += (diffuse_light(normal.xyz, light_color, light_dir) * attenuation );
     float light_component = light_position.x > 0.0 && flags.b < 1.0f ? 1.0 : 0.0;
     base_color.xyz += (specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * specular_mod.r * light_component * attenuation);
-
-    // Add some scan-line noise
-    //float scan_mod = mod(gl_FragCoord.y, 4.0);
-    //float scan_effect = 1.0 - (scan_mod/20.0f);
-    //base_color.rgb *= scan_effect;
 
     gl_FragData[0] = base_color;
 }

@@ -6,6 +6,6 @@ namespace gl {
              "world_defs/shaders/final_fragment.glsl");
 
         intermediate_tex_loc = get_uniform_location("intermediate_tex");
-        gamma_loc = get_uniform_location("gamma");
+        exposure_loc = get_uniform_location("exposure");
     }
 }

@@ -147,7 +147,7 @@ namespace map_render {
         glOrtho(0, sz.x, 0, sz.y, 0.0f, 1.0f);
         glUseProgram(gl::final_shader->program_id);
         glUniform1i(gl::final_shader->intermediate_tex_loc, 0);
-        glUniform1f(gl::final_shader->gamma_loc, 2.2f);
+        glUniform1f(gl::final_shader->exposure_loc, 2.0f);
         render_test_texture(0.0f, 0.0f, W, H, map_render::intermediate_texture);
         glUseProgram(0);
     }

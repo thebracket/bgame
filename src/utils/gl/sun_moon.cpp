@@ -40,8 +40,8 @@ namespace map_render {
         }
 
         // Setup ambient light
-        rltk::color_t dark_moon{180,180,205};
-        const rltk::color_t dawn_light{180,190,205};
+        rltk::color_t dark_moon{90,131,170};
+        const rltk::color_t dawn_light{143,164,191};
         const rltk::color_t noon_sun{201, 226, 255};
 
         if (moon_mode) {
