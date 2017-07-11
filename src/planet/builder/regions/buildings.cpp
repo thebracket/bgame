@@ -44,12 +44,13 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"));
     } else if (tag == "cordex") {
-        new_building->assign(viewshed_t{16, false})
-            ->assign(lightsource_t{16, rltk::colors::WHITE, true});
+        new_building->assign(viewshed_t{16, false})->assign(lightsource_t{16, rltk::colors::WHITE, true});
+    } else if (tag == "lamp") {
+        new_building->assign(lightsource_t{16, rltk::colors::WHITE, true});
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {
-        new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{8, rltk::colors::LIGHT_GREEN, false});
+        new_building->assign(construct_power_t{0,1,0})->assign(lightsource_t{10, rltk::colors::LIGHT_GREEN, false});
     } else if (tag == "solar_panel") {
         new_building->assign(construct_power_t{00,0,1});
     } else if (tag == "camp_fire") {
@@ -62,8 +63,6 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         new_building->assign(viewshed_t{8, false});
         new_building->assign(turret_t{8, 2, 3, 8, 3, civ_owner});
         new_building->assign(initiative_t{});
-    } else if (tag == "cryo_bed") {
-        new_building->assign(lightsource_t{4, rltk::colors::RED, true});
     }
 }
 
@@ -78,8 +77,8 @@ void add_construction(const int x, const int y, const int z, const std::string t
     if (type == "ship_wall") {
         set_tile(idx, tile_type::WALL, true, true, plasteel, 0, true, true);
     } else if (type == "ship_window") {
-        //set_tile(idx, tile_type::WINDOW, true, false, plasteel, 0, true, true);
-        set_tile(idx, tile_type::WALL, true, true, plasteel, 0, true, true);
+        set_tile(idx, tile_type::WINDOW, true, false, plasteel, 0, true, true);
+        //set_tile(idx, tile_type::WALL, true, true, plasteel, 0, true, true);
     } else if (type == "ship_floor") {
         set_tile(idx, tile_type::FLOOR, false, false, plasteel, 0, true, true);
     } else if (type == "hut_wall") {
@@ -119,8 +118,9 @@ void add_construction(const int x, const int y, const int z, const std::string t
     } else if (type == "ship_door") {
         add_building("energy_door", x, y, z, civ_owner);
     } else if (type == "door") {
-        //std::cout << "Door owner: " << civ_owner << "\n";
         add_building("door", x, y, z, civ_owner);
+    } else if (type == "ship_lamp") {
+        add_building("lamp", x, y, z, civ_owner);
     } else {
         std::cout << "Don't know how to build a " << type << "\n";
     }
@@ -140,7 +140,7 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
 				if (output != nullptr && !xp::is_transparent(output)) {
                     if (output->glyph == 219) {
                         add_construction(x, y, z, "ship_wall", true, 0);
-                    } else if (output->glyph == 177) {
+                    } else if (output->glyph == 'W') {
                         add_construction(x, y, z, "ship_window", true, 0);
                     } else if (output->glyph == 176) {
                         add_construction(x, y, z, "ship_floor", false, 0);
@@ -173,6 +173,8 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
                         add_construction(x, y, z, "rtg", false, 0);
                     } else if (output->glyph == 197) {
                         add_construction(x, y, z, "ship_door", false, 0);
+                    } else if (output->glyph == 'L') {
+                        add_construction(x, y, z, "ship_lamp", false, 0);
                     } else {
                         if (output->glyph != 32)
                             std::cout << "Warning: No handler for " << (char)output->glyph << " (" << +output->glyph << ")\n";

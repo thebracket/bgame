@@ -63,9 +63,9 @@ void main() {
     base_color.xyz += specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * light_component;
 
     // Add some scan-line noise
-    float scan_mod = mod(gl_FragCoord.y, 4.0);
-    float scan_effect = 1.0 - (scan_mod/20.0f);
-    base_color.rgb *= scan_effect;
+    //float scan_mod = mod(gl_FragCoord.y, 4.0);
+    //float scan_effect = 1.0 - (scan_mod/20.0f);
+    //base_color.rgb *= scan_effect;
 
     gl_FragColor = base_color;
 }

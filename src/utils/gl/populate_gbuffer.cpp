@@ -149,8 +149,9 @@ namespace map_render {
     void add_renderables(gl::model_request_t &models) {
         using namespace gl;
         glUseProgram(renderable_shader->program_id);
-        //glBindFramebuffer(GL_FRAMEBUFFER, map_render::mouse_pick_fbo);
-        //map_render::setup_matrices();
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_TRUE);
 
         // Pass along the matrices
         glUniformMatrix4fv(renderable_shader->projection_matrix_loc, 1, false, glm::value_ptr( gl::camera_projection_matrix ));
@@ -239,9 +240,6 @@ namespace map_render {
 
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * bucket.items.size(), &bucket.items[0], GL_STATIC_DRAW);
 
-        // Bind attributes and texture
-        glBindBuffer(GL_ARRAY_BUFFER, bucket.vbo_id);
-
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, gl::n_floats * sizeof(float), 0);
 
@@ -279,7 +277,7 @@ namespace map_render {
         glUniform1i(renderable_shader->my_color_texture_loc, 0);
         
         // Render
-        glDrawArrays(GL_QUADS, 0, bucket.n_quads);
+        glDrawArrays(GL_QUADS, 0, (bucket.items.size()/n_floats));
 
         // Cleanup
         glDeleteBuffers(1, &bucket.vbo_id);
