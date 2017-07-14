@@ -23,6 +23,7 @@
 #include <libproc.h>
 #endif
 #include <GL/glew.h>
+#include "main/game_fps.hpp"
 
 using namespace rltk;
 using namespace rltk::colors;
@@ -53,6 +54,9 @@ bool has_init = false;
 sf::Clock deltaClock;
 
 void tick(double duration_ms) {
+    timing::last_frame_time = duration_ms;
+    timing::fps = 1000.0 / duration_ms;
+
     // Initial ImGui call
     if (!has_init) {
         ImGuiIO& io = ImGui::GetIO();

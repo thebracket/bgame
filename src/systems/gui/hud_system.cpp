@@ -9,6 +9,8 @@
 #include "../../main/game_designations.hpp"
 #include "../../main/game_camera.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../main/game_fps.hpp"
+#include <iomanip>
 
 const std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
 const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
@@ -35,7 +37,7 @@ void hud_system::update(const double ms) {
 
     // Display cash
     std::stringstream cash_ss;
-	cash_ss << " Cash: " << designations->current_cash << " Mcr";
+	cash_ss << " FPS: " << std::fixed << std::setw(5) << std::setprecision(0) << timing::fps;
     std::stringstream power_ss;
     power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
     std::stringstream pause_ss;

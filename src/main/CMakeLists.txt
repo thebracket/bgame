@@ -16,6 +16,7 @@ add_library(bfmain STATIC
 	game_logger.cpp
 	game_selections.cpp
 	game_rng.cpp
+    game_fps.cpp
 )
 target_link_libraries(bfmain planet rltk components systems utils gl shaders)
 cotire(bfmain)
