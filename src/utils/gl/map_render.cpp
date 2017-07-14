@@ -85,7 +85,10 @@ void map_render_t::render() {
     gl::model_request_t render_models;
     map_render::render_terrain_to_gbuffer(render_models);
     map_render::add_renderables(render_models);
-    map_render::render_static_models(render_models);
+    //map_render::render_static_models(render_models);
+    glUseProgram(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Phase 2 render: composition, rendered to the intermediate buffer
     map_render::render_composition();
@@ -96,7 +99,7 @@ void map_render_t::render() {
     // Done
     glUseProgram(0);
 
-    pop_gl_states();
+    //pop_gl_states();
 
     // Restore state
     pop_gl_states();

@@ -32,29 +32,6 @@ namespace map_render {
         glEnd();
     }
 
-    void render_texture_atlas(float left, float top, float right, float bottom) {
-        glActiveTexture(GL_TEXTURE0);
-        glEnableClientState(GL_TEXTURE_2D);
-        textures::bind_atlas();
-
-        glColor3f(1, 1, 1);
-        glBegin(GL_QUADS);
-
-        glTexCoord2f(0, 1);
-        glVertex2f(left, bottom);
-
-        glTexCoord2f(0, 0);
-        glVertex2f(left, top);
-
-        glTexCoord2f(1, 0);
-        glVertex2f(right, top);
-
-        glTexCoord2f(1, 1);
-        glVertex2f(right, bottom);
-
-        glEnd();
-    }
-
     void render_mixed_texture(float left, float top, float right, float bottom) {
         using namespace gl;
         glUseProgram(render_shader->program_id);

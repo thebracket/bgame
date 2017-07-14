@@ -1,6 +1,9 @@
 #version 120
 
 uniform sampler2D my_color_texture;
+uniform sampler2D my_normal_texture;
+uniform sampler2D my_specular_texture;
+uniform sampler2D my_displacement_texture;
 uniform vec3 camera_position;
 
 varying vec3 tint;
@@ -16,7 +19,7 @@ varying vec4 displacement_tex_position;
 
 vec2 parallax_mapping(vec2 tex_coords, vec3 view_dir) {
     const float height_scale = 0.1f;
-    float height = texture2D(my_color_texture, displacement_tex_position.st).r;
+    float height = texture2D(my_displacement_texture, displacement_tex_position.st).r;
     vec2 p = view_dir.xy / view_dir.z * (height * height_scale);
     return tex_coords - p;
 }
@@ -29,7 +32,7 @@ void main() {
     vec2 tex_coords_n = parallax_mapping(normal_tex_position.st, view_dir);
     vec2 tex_coords_s = parallax_mapping(specular_tex_position.st, view_dir);
 
-    vec3 calc_normal = texture2D(my_color_texture, tex_coords_n).rgb;
+    vec3 calc_normal = texture2D(my_normal_texture, tex_coords_n).rgb;
     calc_normal = normalize(calc_normal * 2.0 - 1.0);
     calc_normal = normalize(TBN * calc_normal);
 
@@ -41,5 +44,5 @@ void main() {
     gl_FragData[5] = vec4(light_pos, 1.0);
     gl_FragData[4] = vec4(light_col, 1.0);
     gl_FragData[6] = vec4(flag_out.rgb/255.0, 1.0);
-    gl_FragData[7] = texture2D(my_color_texture, tex_coords_s);
+    gl_FragData[7] = texture2D(my_specular_texture, tex_coords_s);
 }

@@ -38,5 +38,4 @@ namespace textures {
 
     void load_textures(std::vector<std::tuple<int, std::string, std::string, std::string, std::string>> textures);
     texture_t * get_texture_by_id(const int &id);
-    void bind_atlas();
 }

@@ -8,57 +8,34 @@
 #endif
 #include <boost/container/flat_map.hpp>
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include "stb_image.h"
 
 namespace textures {
 
-    sf::RenderTexture atlas_texture;
-    unsigned int next_texture_id = 0;
-
     boost::container::flat_map<int, texture_t> atlas;
 
-    void bind_atlas() {
-        sf::Texture::bind(&atlas_texture.getTexture());
-    }
+    int load_new_texture(const std::string filename)
+    {
+        unsigned int texture_id = 0;
+        int width, height, bpp;
+        stbi_set_flip_vertically_on_load(true);
 
-    int load_new_texture(const std::string filename) {
-        sf::Texture tex;
-        tex.loadFromFile(filename);
+        unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+        if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(filename));
+        glGenTextures(1, &texture_id);
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        stbi_image_free(image_data);
 
-        sf::Vector2f atlas_position((next_texture_id % SHEET_CHARS) * TEX_IN_ATLAS_WIDTH, (next_texture_id / SHEET_CHARS) * TEX_IN_ATLAS_HEIGHT);
-        std::cout << "Selected atlas position: " << atlas_position.x << " / " << atlas_position.y << "; " << filename << "\n";
-
-        auto size = tex.getSize();
-        float scale_x = 1.0f;
-        float scale_y = 1.0f;
-        bool rescale = false;
-        if (size.x != (float)TEX_IN_ATLAS_WIDTH) {
-            scale_x = size.x / (float)TEX_IN_ATLAS_WIDTH;
-            std::cout << "Warning: X scaling " << filename << "\n";
-            rescale = true;
-        }
-        if (size.y != (float)TEX_IN_ATLAS_HEIGHT) {
-            scale_y = size.y / (float)TEX_IN_ATLAS_HEIGHT;
-            std::cout << "Warning: Y scaling " << filename << "\n";
-            rescale = true;
-        }
-
-        sf::Sprite sprite(tex);
-        sprite.setPosition(atlas_position);
-        if (rescale) sprite.setScale(scale_x, scale_y);
-        atlas_texture.draw(sprite);
-
-        int id = next_texture_id;
-        ++next_texture_id;
-        return id;
+        return texture_id;
     }
 
     void load_textures(std::vector<std::tuple<int, std::string, std::string, std::string, std::string>> textures)
     {
-        // First we create the backing texture
-        atlas_texture.create(ATLAS_WIDTH, ATLAS_HEIGHT);
-        atlas_texture.clear();
-
         // Now we load textures and splat them into the texture
         for (const auto &tex : textures) {
             const int texture_id = std::get<0>(tex);
@@ -93,14 +70,6 @@ namespace textures {
             //std::cout << "Loaded texture " << texture_id << " as " << tex_id << " / " << normal_id << "\n";
 
             // Finally set some texture parameters
-            bind_atlas();
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-            glGenerateMipmap(GL_TEXTURE_2D);
-            /*float aniso = 0.0f;
-            glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);*/
-
         }
     }
 

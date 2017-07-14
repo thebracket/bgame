@@ -11,7 +11,7 @@ namespace gl {
      * A geometry buffer contains buckets divided by texture binding, which in turn contain the actual geometry.
      */
     struct geometry_buffer_t {
-        terrain_bucket_t bucket;
+        boost::container::flat_map<int, terrain_bucket_t> buckets;
         int base_z = 0;
 
         void add_floor(const float x, const float y, const float z,

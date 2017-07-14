@@ -62,9 +62,32 @@ namespace map_render {
         if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
 
-        render_bucket(chunk, chunk.geometry->bucket);
-        if (chunk.vegetation) {
-            render_bucket(chunk, chunk.vegetation->bucket);
+        for (const auto &bucket : chunk.geometry->buckets) {
+            auto tex = textures::get_texture_by_id(bucket.first);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, tex->normal_id);
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, tex->specular_id);
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, tex->displacement_id);
+            render_bucket(chunk, bucket.second);
+
+        }
+        for (const auto &bucket : chunk.vegetation->buckets) {
+            if (chunk.vegetation) {
+                auto tex = textures::get_texture_by_id(bucket.first);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, tex->texture_id);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, tex->normal_id);
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, tex->specular_id);
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, tex->displacement_id);
+                render_bucket(chunk, bucket.second);
+            }
         }
     }
 
@@ -84,9 +107,10 @@ namespace map_render {
         frustrum.update(gl::camera_projection_matrix * gl::camera_modelview_matrix);
 
         // Bind the textures bucket
-        glActiveTexture(GL_TEXTURE0);
-        textures::bind_atlas();
         glUniform1i(terrain_chunk_shader->my_color_texture_loc, 0);
+        glUniform1i(terrain_chunk_shader->my_normal_texture_loc, 1);
+        glUniform1i(terrain_chunk_shader->my_specular_texture_loc, 2);
+        glUniform1i(terrain_chunk_shader->my_displacement_texture_loc, 3);
 
         for (const gl::chunk_t &chunk : gl::chunks) {
             if (chunk.has_geometry &&
@@ -122,7 +146,7 @@ namespace map_render {
             const auto tex = textures::get_texture_by_id(texture_id);
             glActiveTexture(GL_TEXTURE0);
             glEnable(GL_TEXTURE_2D);
-            textures::bind_atlas();
+            //textures::bind_atlas();
 
             glUniform1i(static_model_shader->my_color_texture_loc, 0);
 

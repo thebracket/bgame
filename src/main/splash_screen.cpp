@@ -46,7 +46,7 @@ void splash_screen::tick(const double duration_ms) {
 		splash_loader_thread.reset();
 		gl::load_shaders();
 		read_texture_index();
-        read_model_index();
+        //read_model_index();
 		done_loading = true;
 	}
 }

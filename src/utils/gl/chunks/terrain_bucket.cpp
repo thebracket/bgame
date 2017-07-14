@@ -11,10 +11,16 @@
 #include "../shaders/terrain_chunk_shader.hpp"
 
 namespace gl {
-    constexpr float tx = 0.0f;
-    constexpr float ty = 0.0f;
-    constexpr float tsize_x = 1.0f;
-    constexpr float tsize_y = 1.0f;
+    constexpr float tex_x = 0.0f;
+    constexpr float tex_y = 0.0f;
+    constexpr float norm_x = 0.0f;
+    constexpr float norm_y = 0.0f;
+    constexpr float spec_x = 0.0f;
+    constexpr float spec_y = 0.0f;
+    constexpr float disp_x = 0.0f;
+    constexpr float disp_y = 0.0f;
+    constexpr float tex_width = 1.0f;
+    constexpr float tex_height = 1.0f;
 
     void terrain_bucket_t::add_floor(const float x, const float y, const float z, float r, float g, float b,
                                      const int &idx, const bool &above_ground,
@@ -23,16 +29,6 @@ namespace gl {
                                      const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
         add_to_items(x, y, z);                    // World position 0
@@ -84,16 +80,6 @@ namespace gl {
                                      const int &texture_id, const int &normal_id, const uint8_t &water_level, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
         const float height = ((float)water_level * 0.1f) - 0.5f;
 
         add_to_items(-0.5f, height, -0.5f);        // Vertex 0
@@ -146,16 +132,6 @@ namespace gl {
                                    const float &wang, const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
         add_to_items(x, y, z);                    // World position 0
@@ -306,16 +282,6 @@ namespace gl {
                                     const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
         add_to_items(x, y, z);                    // World position 0
@@ -367,16 +333,6 @@ namespace gl {
                                      const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         add_to_items(0.5f, -0.5f, -0.5f);        // Vertex 0
         add_to_items(x, y, z);                    // World position 0
@@ -428,16 +384,6 @@ namespace gl {
                                      const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         add_to_items(-0.5f, -0.5f, -0.5f);        // Vertex 0
         add_to_items(x, y, z);                    // World position 0
@@ -489,16 +435,6 @@ namespace gl {
                                      const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         add_to_items(-0.5f, -0.5f, 0.5f);        // Vertex 0
         add_to_items(x, y, z);                    // World position 0
@@ -551,16 +487,6 @@ namespace gl {
                                      const float nwy, const float ney, const float swy, const float sey)
     {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
-        const float tex_x = ((float)(texture_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float tex_y = 1.0f - (((float)(texture_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float norm_x = ((float)(normal_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float norm_y = 1.0f - (((float)(normal_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float spec_x = ((float)(specular_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float spec_y = 1.0f - (((float)(specular_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        const float disp_x = ((float)(displacement_id % textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_WIDTH) / textures::ATLAS_WIDTH_F;
-        const float disp_y = 1.0f - (((float)(displacement_id / textures::SHEET_CHARS) * (float)textures::TEX_IN_ATLAS_HEIGHT) / textures::ATLAS_HEIGHT_F);
-        constexpr float tex_width = (float)textures::TEX_IN_ATLAS_WIDTH / textures::ATLAS_WIDTH_F;
-        constexpr float tex_height = 0.0f - ((float)textures::TEX_IN_ATLAS_HEIGHT / textures::ATLAS_HEIGHT_F);
 
         const float x_normal = ney - nwy;
         const float y_normal = ney - sey;
