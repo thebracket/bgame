@@ -15,11 +15,8 @@ namespace gl {
      * 14,15,16 = Flags
      * 17,18,19 = Light position
      * 20,21,22 = Light color
-     * 23,24 = Normal Position
-     * 25,26 = Specular Position
-     * 27,28 = Displacement Position
      */
-    constexpr int n_floats = 29;
+    constexpr int n_floats = 23;
 
     /*
      * A geometry bucket contains geometry for a single texture

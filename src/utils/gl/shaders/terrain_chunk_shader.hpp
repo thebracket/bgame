@@ -17,10 +17,7 @@ namespace gl {
         GLint flags_loc;
         GLint light_position_loc;
         GLint light_color_loc;
-        GLint normal_position_loc;
         GLint camera_position_loc;
-        GLint specular_tex_position_loc;
-        GLint displacement_position_loc;
         GLint my_normal_texture_loc;
         GLint my_specular_texture_loc;
         GLint my_displacement_texture_loc;

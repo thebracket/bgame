@@ -16,10 +16,7 @@ namespace gl {
         flags_loc = get_attribute_location("flags");
         light_position_loc = get_attribute_location("light_position");
         light_color_loc = get_attribute_location("light_color");
-        normal_position_loc = get_attribute_location("normal_position");
         camera_position_loc = get_uniform_location("camera_position");
-        specular_tex_position_loc = get_attribute_location("specular_position");
-        displacement_position_loc = get_attribute_location("displacement_position");
         my_normal_texture_loc = get_uniform_location("my_normal_texture");
         my_specular_texture_loc = get_uniform_location("my_specular_texture");
         my_displacement_texture_loc = get_uniform_location("my_displacement_texture");

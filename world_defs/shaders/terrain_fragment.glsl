@@ -13,13 +13,10 @@ varying vec4 interpolated_position;
 varying vec3 flag_out;
 varying vec3 light_pos;
 varying vec3 light_col;
-varying vec4 normal_tex_position;
-varying vec4 specular_tex_position;
-varying vec4 displacement_tex_position;
 
 vec2 parallax_mapping(vec2 tex_coords, vec3 view_dir) {
     const float height_scale = 0.1f;
-    float height = texture2D(my_displacement_texture, displacement_tex_position.st).r;
+    float height = texture2D(my_displacement_texture, gl_TexCoord[0].st).r;
     vec2 p = view_dir.xy / view_dir.z * (height * height_scale);
     return tex_coords - p;
 }
@@ -29,8 +26,8 @@ void main() {
     vec3 tangent_frag_pos = TBN * interpolated_position.xyz;
     vec3 view_dir = normalize(tangent_view_pos - tangent_frag_pos);
     vec2 tex_coords_t = parallax_mapping(gl_TexCoord[0].st, view_dir);
-    vec2 tex_coords_n = parallax_mapping(normal_tex_position.st, view_dir);
-    vec2 tex_coords_s = parallax_mapping(specular_tex_position.st, view_dir);
+    vec2 tex_coords_n = parallax_mapping(gl_TexCoord[0].st, view_dir);
+    vec2 tex_coords_s = parallax_mapping(gl_TexCoord[0].st, view_dir);
 
     vec3 calc_normal = texture2D(my_normal_texture, tex_coords_n).rgb;
     calc_normal = normalize(calc_normal * 2.0 - 1.0);
