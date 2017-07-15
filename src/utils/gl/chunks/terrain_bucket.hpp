@@ -30,7 +30,7 @@ namespace gl {
         bool generated_vbo = false;
         unsigned int vbo_id = 0;
         unsigned int vao_id = 0;
-        std::array<std::size_t, CHUNK_SIZE> z_offsets{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        std::array<std::size_t, CHUNK_SIZE> z_offsets{};
 
         template<typename T> inline T add_to_items_impl(T arg) { items.emplace_back(arg); return arg; }
 
