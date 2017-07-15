@@ -7,7 +7,6 @@ namespace gl {
 
         in_position_loc = get_attribute_location("in_position");
         world_position_loc = get_attribute_location("world_position");
-        normal_loc = get_attribute_location("normal");
         color_loc = get_attribute_location("color");
         texture_position_loc = get_attribute_location("texture_position");
         projection_matrix_loc = get_uniform_location("projection_matrix");
@@ -20,5 +19,6 @@ namespace gl {
         my_normal_texture_loc = get_uniform_location("my_normal_texture");
         my_specular_texture_loc = get_uniform_location("my_specular_texture");
         my_displacement_texture_loc = get_uniform_location("my_displacement_texture");
+        rotation_loc = get_attribute_location("rotation");
     }
 }

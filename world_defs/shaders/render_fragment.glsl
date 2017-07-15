@@ -9,9 +9,6 @@ uniform sampler2D flag_tex;
 uniform sampler2D specular_tex;
 
 uniform vec3 cameraPosition;
-uniform vec3 ambient_color;
-uniform vec3 sun_moon_position;
-uniform vec3 sun_moon_color;
 
 varying vec4 tex_coord;
 
@@ -46,25 +43,15 @@ void main() {
     vec3 specular_mod = texture2D( specular_tex, tex_coord.xy ).rgb;
 
     // Calculate the ambient component
-    vec3 ambient = flags.r > 0.0 ? ambient_color : vec3(0.3, 0.3, 0.3);
+    vec3 ambient = vec3(0.1, 0.1, 0.1);
     base_color.xyz *= ambient;
-
-    // Apply light from the sun
-    vec3 sun_dir = normalize(sun_moon_position.xyz - position.xyz);
-    vec3 sun_diffuse = diffuse_light(normal.xyz, sun_moon_color, sun_dir);
-    vec3 sun_specular = specular_light(position.xyz, normal.xyz, sun_moon_color.rgb, sun_dir, flags.g) * specular_mod.r;
-    float sun_diffuse_factor = flags.r > 0.0 ? 1.0 : 0.0;
-    float sun_specular_factor = flags.r > 0.0 && flags.b < 1.0 ? 1.0 : 0.0;
-    base_color.xyz += sun_diffuse * sun_diffuse_factor;
-    base_color.xyz += sun_specular * sun_specular_factor;
 
     // Apply light from in-game light sources
     float light_distance = distance(light_position.xyz, position.xyz);
-    float attenuation = 1.0 / (light_distance * 0.7);
     vec3 light_dir = normalize(light_position.xyz - position.xyz);
-    base_color.xyz += (diffuse_light(normal.xyz, light_color, light_dir) * attenuation );
+    base_color.xyz += (diffuse_light(normal.xyz, light_color, light_dir)  );
     float light_component = light_position.x > 0.0 && flags.b < 1.0f ? 1.0 : 0.0;
-    base_color.xyz += (specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * specular_mod.r * light_component * attenuation);
+    base_color.xyz += (specular_light(position.xyz, normal.xyz, light_color, light_dir, flags.g) * specular_mod.r * light_component );
 
     gl_FragData[0] = base_color;
 }

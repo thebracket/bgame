@@ -14,7 +14,7 @@ namespace textures {
 
     boost::container::flat_map<int, texture_t> atlas;
 
-    int load_new_texture(const std::string filename)
+    int load_new_texture(const std::string filename, const bool srgb=false)
     {
         unsigned int texture_id = 0;
         int width, height, bpp;
@@ -26,7 +26,11 @@ namespace textures {
         glBindTexture(GL_TEXTURE_2D, texture_id);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+        if (srgb) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+        } else {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+        }
         glGenerateMipmap(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
         stbi_image_free(image_data);
@@ -52,18 +56,18 @@ namespace textures {
             bool has_specular = false;
             bool has_displacement = false;
             if (!texture_filename.empty()) {
-                tex_id = load_new_texture(texture_filename);
+                tex_id = load_new_texture(texture_filename, true);
             }
             if (!normal_filename.empty()) {
                 normal_id = load_new_texture(normal_filename);
                 has_normal = true;
             }
             if (!specular_filename.empty()) {
-                specular_id = load_new_texture(specular_filename);
+                specular_id = load_new_texture(specular_filename, true);
                 has_specular = true;
             }
             if (!displacement_filename.empty()) {
-                displacement_id = load_new_texture(displacement_filename);
+                displacement_id = load_new_texture(displacement_filename, true);
                 has_displacement = true;
             }
             atlas[texture_id] = texture_t{tex_id, normal_id, has_normal, specular_id, has_specular, displacement_id, has_displacement};

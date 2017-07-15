@@ -40,9 +40,9 @@ namespace map_render {
         }
 
         // Setup ambient light
-        rltk::color_t dark_moon{90,131,170};
-        const rltk::color_t dawn_light{143,164,191};
-        const rltk::color_t noon_sun{201, 226, 255};
+        rltk::color_t dark_moon{100, 100, 105};
+        const rltk::color_t dawn_light{100, 100, 105};
+        const rltk::color_t noon_sun{100, 100, 105};
 
         if (moon_mode) {
             float lerp_percent;
@@ -52,16 +52,16 @@ namespace map_render {
                 lerp_percent = (24.0f - ((float)calendar->hour) + ((float)calendar->minute/60.0f)/100.0f) / 6.0f;
             }
 
-            int moon_phase = calendar->days_elapsed % 56;
+            /*int moon_phase = calendar->days_elapsed % 56;
             if (moon_phase > 28) moon_phase = 56 - moon_phase;
             const int moon_phase_light = moon_phase/3;
             dark_moon.r += moon_phase_light;
             dark_moon.g += moon_phase_light;
-            dark_moon.b += moon_phase_light;
+            dark_moon.b += moon_phase_light;*/
 
             auto ambient_rltk = rltk::lerp(dark_moon, dawn_light, lerp_percent);
             ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
-            sun_color = glm::vec3{ 0.7f, 0.7f, 0.8f };
+            sun_color = glm::vec3{ 1.0f, 1.0f, 1.0f };
         } else {
             float lerp_percent;
             if (calendar->hour < 12) {
@@ -71,7 +71,7 @@ namespace map_render {
             }
             auto ambient_rltk = rltk::lerp(dawn_light, noon_sun, lerp_percent);
             ambient_color = glm::vec3{ (float)ambient_rltk.r / 255.0f, (float)ambient_rltk.g / 255.0f, (float)ambient_rltk.b / 255.0f };
-            sun_color = glm::vec3{ 1.0f, 1.0f, 0.97f };
+            sun_color = glm::vec3{ 1.0f, 1.0f, 1.0f };
         }
         sun_position = glm::vec3{ sun_x, sun_y, sun_z };
     }

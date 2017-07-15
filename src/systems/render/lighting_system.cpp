@@ -69,7 +69,9 @@ void lighting_system::update(double time_ms) {
 	}
     std::queue<power_changed_message> * power_change = mbox<power_changed_message>();
 	while (!power_change->empty()) {
-		dirty = true;
+        each<position_t, lightsource_t>([] (entity_t &e, position_t &pos, lightsource_t &l) {
+            if (l.alert_status) update_normal_light(e, pos, l);
+        });
 		power_change->pop();
 	}
 

@@ -7,16 +7,14 @@
 namespace gl {
     /*
      * Layout:
-     * 0,1,2 = Vertex Position
-     * 3,4,5 = World Position
-     * 6,7,8 = Normal
-     * 9,10,11 = Color
-     * 12,13 = Texture Position
-     * 14,15,16 = Flags
-     * 17,18,19 = Light position
-     * 20,21,22 = Light color
+     * 0,1,2 = World Position
+     * 3,4,5,6 = Rotation
+     * 7,8,9 = Color
+     * 10,11,12 = Flags
+     * 13,14,15 = Light position
+     * 16,17,18 = Light color
      */
-    constexpr int n_floats = 23;
+    constexpr int n_floats = 19;
 
     /*
      * A geometry bucket contains geometry for a single texture

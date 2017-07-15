@@ -7,6 +7,7 @@
 #endif
 #include "main_fbo.hpp"
 #include <rltk.hpp>
+#include "chunks/base_geometry.cpp"
 
 namespace map_render {
     bool loaded_fbo = false;
@@ -120,6 +121,8 @@ namespace map_render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         load_intermediate_fbo();
+
+        gl::build_base_geometry();
         loaded_fbo = true;
     }
 

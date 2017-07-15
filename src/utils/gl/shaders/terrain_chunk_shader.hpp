@@ -8,7 +8,6 @@ namespace gl {
 
         GLint in_position_loc;
         GLint world_position_loc;
-        GLint normal_loc;
         GLint color_loc;
         GLint texture_position_loc;
         GLint projection_matrix_loc;
@@ -21,6 +20,7 @@ namespace gl {
         GLint my_normal_texture_loc;
         GLint my_specular_texture_loc;
         GLint my_displacement_texture_loc;
+        GLint rotation_loc;
 
     };
 

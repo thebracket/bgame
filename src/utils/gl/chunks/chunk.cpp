@@ -4,6 +4,7 @@
 #include <vector>
 #include "geometry_buffer.hpp"
 #include "../textures/texture.hpp"
+#include "../sun_moon.hpp"
 
 namespace gl {
 

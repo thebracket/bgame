@@ -12,7 +12,7 @@ void main() {
     vec3 mapped = vec3(1.0) - exp( -hdr_color * exposure );
 
     // Gamma correction
-    //mapped = pow(mapped, vec3(1.0/gamma));
+    mapped = pow(mapped, vec3(1.0/2.2));
 
     // Add some scan-line noise
     //float scan_mod = mod(gl_FragCoord.y, 4.0);

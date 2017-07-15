@@ -59,9 +59,6 @@ namespace map_render {
         glUniform1i(render_shader->flag_tex_loc, 5);
         glUniform1i(render_shader->specular_tex_loc, 6);
 
-        glUniform3fv(render_shader->ambient_color_loc, 1, glm::value_ptr(ambient_color));
-        glUniform3fv(render_shader->sun_moon_position_loc, 1, glm::value_ptr(sun_position));
-        glUniform3fv(render_shader->sun_moon_color_loc, 1, glm::value_ptr(sun_color));
         glUniform3fv(render_shader->camera_position_loc, 1, glm::value_ptr(camera_position_v));
 
         glColor3f(1, 1, 1);
@@ -126,6 +123,9 @@ namespace map_render {
         glUniform1i(gl::final_shader->intermediate_tex_loc, 0);
         glUniform1f(gl::final_shader->exposure_loc, 2.0f);
         render_test_texture(0.0f, 0.0f, W, H, map_render::intermediate_texture);
+        //render_test_texture(0.0f, 0.0f, W, H, map_render::render_texture);
+        //render_test_texture(0.0f, H / 2.0f, W / 2.0f, H, map_render::normal_texture);
+        //render_test_texture(W / 2.0f, 0.0f, W, H / 2.0f, map_render::light_color_texture);
         glUseProgram(0);
     }
 }

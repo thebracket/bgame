@@ -47,8 +47,8 @@ namespace map_render {
 
             int cull_pos = bucket.z_offsets[offset];
             if (cull_pos > 0) {
-                //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-                glDrawArrays(GL_QUADS, 0, cull_pos);
+               // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+                glDrawArraysInstancedARB(GL_TRIANGLES, 0, 6, cull_pos);
                 //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
                 //std::cout << "Emitted " << cull_pos << " quads for rendering\n";
             }

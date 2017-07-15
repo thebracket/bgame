@@ -5,6 +5,7 @@
 #include "../../main/game_calendar.hpp"
 
 void power_system::calculate(int consumption) {
+    auto old_total = designations->current_power;
     designations->total_capacity = 0;
     int total_always_on = 0;
     int total_solar = 0;
@@ -19,7 +20,7 @@ void power_system::calculate(int consumption) {
     if (designations->current_power > designations->total_capacity) designations->current_power = designations->total_capacity;    
     designations->current_power -= consumption;
 
-    if (has_run) emit(power_changed_message{});
+    if (designations->current_power != old_total) emit(power_changed_message{});
 }
 
 void power_system::configure() {

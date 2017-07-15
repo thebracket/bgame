@@ -13,6 +13,7 @@
 #include "../textures/texture.hpp"
 #include "../../../main/game_mode.hpp"
 #include "../../../main/game_designations.hpp"
+#include "../sun_moon.hpp"
 
 namespace gl {
 

@@ -84,7 +84,7 @@ void map_render_t::render() {
     map_render::place_sun_moon();
     gl::model_request_t render_models;
     map_render::render_terrain_to_gbuffer(render_models);
-    map_render::add_renderables(render_models);
+    //map_render::add_renderables(render_models);
     //map_render::render_static_models(render_models);
     glUseProgram(0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
