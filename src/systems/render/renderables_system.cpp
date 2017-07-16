@@ -197,8 +197,8 @@ void renderables_system::update(const double time_elapsed) {
                 if (b->height == 3) offset_y = -1;
 
                 if (b->model_idx > 0) {
-                    float light_r, light_g, light_b, light_x, light_y, light_z;
-                    gl::set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
+                    //float light_r, light_g, light_b, light_x, light_y, light_z;
+                    //gl::set_light(idx, light_r, light_g, light_b, light_x, light_y, light_z);
                     renderable_models[mapidx(pos->x, pos->y, pos->z)].emplace_back(
                         gl::static_model_t{
                                 b->model_idx, (float)pos->x-0.5f, (float)pos->y, (float)pos->z,

@@ -12,7 +12,24 @@ namespace gl {
      * 7,8,9 = Color
      * 10,11,12 = Flags
      */
-    constexpr int n_floats = 13;
+
+    struct terrain_instance_t {
+        float x;
+        float y; 
+        float z;
+        float rot_x; 
+        float rot_y; 
+        float rot_z; 
+        float rot_angle;
+        float r;
+        float g; 
+        float b; 
+        float ground_indicator;
+        float shininess;
+        float wang;
+    };
+    constexpr int terrain_instance_size = sizeof(terrain_instance_t);
+    constexpr int n_floats = terrain_instance_size / sizeof(float);
 
     /*
      * A geometry bucket contains geometry for a single texture
@@ -20,40 +37,22 @@ namespace gl {
     struct terrain_bucket_t {
 
         terrain_bucket_t() {
-            items.reserve(75000);
+            // Reserve - need to identify size.
         }
 
-        std::vector<float> items;
+        std::vector<terrain_instance_t> items;
         int n_quads = 0;
         bool generated_vbo = false;
         unsigned int vbo_id = 0;
         unsigned int vao_id = 0;
         std::array<std::size_t, CHUNK_SIZE> z_offsets{};
 
-        template<typename T> inline T add_to_items_impl(T arg) { items.emplace_back(arg); return arg; }
-
-        template<typename... T>
-        inline void add_to_items(T... args) {
-            float float_array[] = { add_to_items_impl(args)... };
-        }
+        void add_geometry(const terrain_instance_t &i);
 
         void add_floor(const float x, const float y, const float z, float r, float g, float b,
                        const int &idx, const bool &above_ground,
-                       const float &light_r, const float &light_g, const float &light_b,
-                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                       const float &shininess,
                        const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id);
-
-        void add_veg(const float x, const float y, const float z, float r, float g, float b,
-                     const int &idx, const bool &above_ground,
-                     const float &light_r, const float &light_g, const float &light_b,
-                     const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                     const float &wang, const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id);
-
-        void add_water(const float x, const float y, const float z, float r, float g, float b,
-                       const int &idx, const bool &above_ground,
-                       const float &light_r, const float &light_g, const float &light_b,
-                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
-                       const int &texture_id, const int &normal_id, const uint8_t &water_level, const int &specular_id, const int &displacement_id);
 
         void add_renderable(const float x, const float y, const float z, float r, float g, float b,
                             const int &idx, const bool &above_ground,
@@ -69,26 +68,22 @@ namespace gl {
 
         void add_left(const float x, const float y, const float z, float r, float g, float b,
                       const int &idx, const bool &above_ground,
-                      const float &light_r, const float &light_g, const float &light_b,
-                      const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                      const float &shininess,
                       const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id);
 
         void add_right(const float x, const float y, const float z, float r, float g, float b,
                        const int &idx, const bool &above_ground,
-                       const float &light_r, const float &light_g, const float &light_b,
-                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                       const float &shininess,
                        const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id);
 
         void add_north(const float x, const float y, const float z, float r, float g, float b,
                        const int &idx, const bool &above_ground,
-                       const float &light_r, const float &light_g, const float &light_b,
-                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                       const float &shininess,
                        const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id);
 
         void add_south(const float x, const float y, const float z, float r, float g, float b,
                        const int &idx, const bool &above_ground,
-                       const float &light_r, const float &light_g, const float &light_b,
-                       const float &light_x, const float &light_y, const float &light_z, const float &shininess,
+                       const float &shininess,
                        const int &texture_id, const int &normal_id, const int &specular_id, const int &displacement_id);
 
         void add_slope(const float x, const float y, const float z, float r, float g, float b,

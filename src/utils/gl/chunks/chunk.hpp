@@ -30,11 +30,8 @@ namespace gl {
         int base_x, base_y, base_z;
         bool dirty = true;
         bool has_geometry = false;
-        bool veg_dirty = true;
-        bool has_vegetation = false;
 
         std::unique_ptr<geometry_buffer_t> geometry;
-        std::unique_ptr<geometry_buffer_t> vegetation;
         std::vector<static_model_t> static_models;
 
         template<typename FUNC>

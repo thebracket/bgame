@@ -57,33 +57,7 @@ namespace map_render {
         if (chunk.base_z+gl::CHUNK_SIZE < camera_position->region_z-10) return; // Not interested in chunks below the camera
         if (chunk.base_z > camera_position->region_z) return; // Not interested in chunks below the camera
 
-        for (const auto &bucket : chunk.geometry->buckets) {
-            auto tex = textures::get_texture_by_id(bucket.first);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, tex->texture_id);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, tex->normal_id);
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, tex->specular_id);
-            glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, tex->displacement_id);
-            render_bucket(chunk, bucket.second);
-
-        }
-        for (const auto &bucket : chunk.vegetation->buckets) {
-            if (chunk.vegetation) {
-                auto tex = textures::get_texture_by_id(bucket.first);
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, tex->texture_id);
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, tex->normal_id);
-                glActiveTexture(GL_TEXTURE2);
-                glBindTexture(GL_TEXTURE_2D, tex->specular_id);
-                glActiveTexture(GL_TEXTURE3);
-                glBindTexture(GL_TEXTURE_2D, tex->displacement_id);
-                render_bucket(chunk, bucket.second);
-            }
-        }
+        render_bucket(chunk, chunk.geometry->bucket);
     }
 
     void render_terrain_to_gbuffer(gl::model_request_t &models) {
@@ -102,6 +76,7 @@ namespace map_render {
         frustrum.update(gl::camera_projection_matrix * gl::camera_modelview_matrix);
 
         // Bind the textures bucket
+        // TODO: Array binding goes here
         glUniform1i(terrain_chunk_shader->my_color_texture_loc, 0);
         glUniform1i(terrain_chunk_shader->my_normal_texture_loc, 1);
         glUniform1i(terrain_chunk_shader->my_specular_texture_loc, 2);
@@ -168,6 +143,7 @@ namespace map_render {
     }
 
     void add_renderables(gl::model_request_t &models) {
+        /*
         using namespace gl;
         glUseProgram(renderable_shader->program_id);
         glEnable(GL_DEPTH_TEST);
@@ -315,6 +291,7 @@ namespace map_render {
                 models.add_model_request(m.model_id, m);
             }
         }
+        */
     }
 
 }
