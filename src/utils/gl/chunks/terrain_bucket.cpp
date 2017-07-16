@@ -21,10 +21,9 @@ namespace gl {
         const float ground_indicator = above_ground ? 255.0f : 0.0f;
 
         add_to_items(x, y, z); // World position
-        add_to_items(0.0f, 0.0f, 0.0f, 0.0f); // Rotation
+        add_to_items(0.0f, 1.0f, 0.0f, 3.14159f); // Rotation
         add_to_items(r, g, b); // Color
         add_to_items(ground_indicator, shininess, 0.0f);
-        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
         ++n_quads;
     }
@@ -224,7 +223,6 @@ namespace gl {
         add_to_items(0.0f, 0.0f, -1.0f, 1.5708f); // Rotation
         add_to_items(r, g, b); // Color
         add_to_items(ground_indicator, shininess, 0.0f);
-        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
         ++n_quads;
     }
@@ -241,7 +239,6 @@ namespace gl {
         add_to_items(0.0f, 0.0f, 1.0f, 1.5708f); // Rotation
         add_to_items(r, g, b); // Color
         add_to_items(ground_indicator, shininess, 0.0f);
-        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
         ++n_quads;
     }
@@ -258,7 +255,6 @@ namespace gl {
         add_to_items(-1.0f, 0.0f, 0.0f, 1.5708f); // Rotation
         add_to_items(r, g, b); // Color
         add_to_items(ground_indicator, shininess, 0.0f);
-        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
         ++n_quads;
     }
@@ -275,7 +271,6 @@ namespace gl {
         add_to_items(1.0f, 0.0f, 0.0f, 1.5708f); // Rotation
         add_to_items(r, g, b); // Color
         add_to_items(ground_indicator, shininess, 0.0f);
-        add_to_items(light_r, light_g, light_b, light_x, light_y, light_z);
 
         ++n_quads;
     }
@@ -379,18 +374,6 @@ namespace gl {
             glVertexAttribPointer(terrain_chunk_shader->flags_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
                                   ((char *) nullptr + 10 * sizeof(float)));
             glVertexAttribDivisorARB(terrain_chunk_shader->flags_loc, 1);
-
-            // Position 13 = Light Position
-            glEnableVertexAttribArray(terrain_chunk_shader->light_position_loc);
-            glVertexAttribPointer(terrain_chunk_shader->light_position_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 13 * sizeof(float)));
-            glVertexAttribDivisorARB(terrain_chunk_shader->light_position_loc, 1);
-
-            // Position 16 = Light Color
-            glEnableVertexAttribArray(terrain_chunk_shader->light_color_loc);
-            glVertexAttribPointer(terrain_chunk_shader->light_color_loc, 3, GL_FLOAT, GL_FALSE, gl::n_floats * sizeof(float),
-                                  ((char *) nullptr + 16 * sizeof(float)));
-            glVertexAttribDivisorARB(terrain_chunk_shader->light_color_loc, 1);
 
             // Clean up
             glBindVertexArray(0);

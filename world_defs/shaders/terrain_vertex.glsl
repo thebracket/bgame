@@ -12,11 +12,6 @@ attribute vec4 rotation;
 attribute vec3 color;
 attribute vec2 texture_position;
 attribute vec3 flags;
-attribute vec3 light_position;
-attribute vec3 light_color;
-attribute vec2 normal_position;
-attribute vec2 specular_position;
-attribute vec2 displacement_position;
 
 // Outputs
 varying vec3 tint;
@@ -24,8 +19,6 @@ varying vec3 world_pos;
 varying mat3 TBN;
 varying vec4 interpolated_position;
 varying vec3 flag_out;
-varying vec3 light_pos;
-varying vec3 light_col;
 
 mat4 rotationMatrix(vec3 axis, float angle)
 {
@@ -56,7 +49,7 @@ void main() {
     vec4 position = vec4(in_position, 1.0);
     mat4 model_view_matrix = view_matrix * translation_matrix * rotation_matrix;
     gl_Position = projection_matrix * model_view_matrix * position;
-    vec4 normal_v4 = vec4(0.0, 1.0, 0.0, 1.0) * rotation_matrix;
+    vec4 normal_v4 = vec4(0.0, -1.0, 0.0, 1.0) * rotation_matrix;
     vec3 normal = normal_v4.xyz;
 
     // Parallax
@@ -85,6 +78,4 @@ void main() {
     interpolated_position = translation_matrix * position;
 
     flag_out = flags;
-    light_pos = light_position;
-    light_col = light_color;
 }

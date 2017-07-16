@@ -11,10 +11,8 @@ namespace gl {
      * 3,4,5,6 = Rotation
      * 7,8,9 = Color
      * 10,11,12 = Flags
-     * 13,14,15 = Light position
-     * 16,17,18 = Light color
      */
-    constexpr int n_floats = 19;
+    constexpr int n_floats = 13;
 
     /*
      * A geometry bucket contains geometry for a single texture

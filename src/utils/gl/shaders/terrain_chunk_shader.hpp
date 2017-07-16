@@ -14,12 +14,9 @@ namespace gl {
         GLint view_matrix_loc;
         GLint my_color_texture_loc;
         GLint flags_loc;
-        GLint light_position_loc;
-        GLint light_color_loc;
         GLint camera_position_loc;
         GLint my_normal_texture_loc;
         GLint my_specular_texture_loc;
-//        GLint my_displacement_texture_loc;
         GLint rotation_loc;
 
     };

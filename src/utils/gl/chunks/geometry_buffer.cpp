@@ -75,8 +75,8 @@ namespace gl {
         buckets[floor_texid].add_floor(x, y, z+1.0f, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, floor_texid, floor_normalid, floor_specularid, floor_displaceid);
 
         // Add walls with the appropriate texture
-        if (!region::solid(mapidx(x-1, y, z))) buckets[wall_texid].add_left(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
-        if (!region::solid(mapidx(x+1, y, z))) buckets[wall_texid].add_right(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
+        if (!region::solid(mapidx(x+1, y, z))) buckets[wall_texid].add_left(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
+        if (!region::solid(mapidx(x-1, y, z))) buckets[wall_texid].add_right(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
         if (!region::solid(mapidx(x, y-1, z))) buckets[wall_texid].add_north(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
         if (!region::solid(mapidx(x, y+1, z))) buckets[wall_texid].add_south(x, y, z, r, g, b, idx, above_ground, light_r, light_g, light_b, light_x, light_y, light_z, shininess, wall_texid, wall_normalid, wall_specularid, wall_displaceid);
     }

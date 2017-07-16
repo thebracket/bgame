@@ -101,8 +101,8 @@ namespace gl {
             result->items.emplace_back((uv.y * tex_height) + tex_y);
         }
 
-        glGenVertexArraysAPPLE(1, &result->vao_id);
-        glBindVertexArrayAPPLE(result->vao_id);
+        glGenVertexArrays(1, &result->vao_id);
+        glBindVertexArray(result->vao_id);
         glGenBuffers(1, &result->vbo_id); // Generate the VBO
         glBindBuffer(GL_ARRAY_BUFFER, result->vbo_id);
 
@@ -122,7 +122,7 @@ namespace gl {
                               ((char *) nullptr + 6 * sizeof(float)));
 
 
-        glBindVertexArrayAPPLE(result->vao_id);
+        glBindVertexArray(result->vao_id);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         std::cout << "VBO " << result->vbo_id << " bound to model " << filename << "\n";
 

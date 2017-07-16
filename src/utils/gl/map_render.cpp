@@ -73,9 +73,6 @@ void map_render_t::render() {
     // Update any chunks of the world that are dirty
     gl::update_dirty_chunks();
 
-    // Push state
-    push_gl_states();
-
     // Phase 1: Populate the basic g-buffer
     map_render::place_sun_moon();
     gl::model_request_t render_models;
@@ -94,11 +91,6 @@ void map_render_t::render() {
 
     // Done
     glUseProgram(0);
-
-    //pop_gl_states();
-
-    // Restore state
-    pop_gl_states();
 }
 
 
