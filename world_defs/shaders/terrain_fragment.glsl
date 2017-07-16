@@ -1,4 +1,5 @@
 #version 120
+#extension GL_EXT_texture_array : enable
 
 uniform sampler2D my_color_texture;
 uniform sampler2D my_normal_texture;
