@@ -19,7 +19,7 @@ namespace gl {
         GLint camera_position_loc;
         GLint my_normal_texture_loc;
         GLint my_specular_texture_loc;
-        GLint my_displacement_texture_loc;
+//        GLint my_displacement_texture_loc;
         GLint rotation_loc;
 
     };

@@ -3,7 +3,6 @@
 uniform sampler2D my_color_texture;
 uniform sampler2D my_normal_texture;
 uniform sampler2D my_specular_texture;
-uniform sampler2D my_displacement_texture;
 uniform vec3 camera_position;
 
 varying vec3 tint;
@@ -15,7 +14,6 @@ varying vec3 light_pos;
 varying vec3 light_col;
 
 void main() {
-    float displacement = texture2D(my_displacement_texture, gl_TexCoord[0].st).r;
 
     vec3 calc_normal = texture2D(my_normal_texture, gl_TexCoord[0].st).rgb;
     calc_normal = normalize(calc_normal * 2.0 - 1.0);

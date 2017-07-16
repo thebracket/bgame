@@ -1,12 +1,7 @@
 #include "geometry_buffer.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../../../systems/render/lighting_system.hpp"
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "../gl_include.hpp"
 #include "../../../raws/defs/material_def_t.hpp"
 #include "../../../raws/materials.hpp"
 #include "constants.hpp"

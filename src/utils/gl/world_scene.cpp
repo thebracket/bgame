@@ -1,11 +1,7 @@
 #include "world_scene.hpp"
 #include <vector>
 #include <rltk.hpp>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 #include "../../systems/render/map_render_system.hpp"
 #include "../../systems/render/lighting_system.hpp"
 #include "render_block.hpp"

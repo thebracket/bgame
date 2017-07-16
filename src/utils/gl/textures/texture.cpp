@@ -1,11 +1,6 @@
 #include "texture.hpp"
 #include "stb_image.h"
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "../gl_include.hpp"
 #include <boost/container/flat_map.hpp>
 #include <iostream>
 #include "stb_image.h"

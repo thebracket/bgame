@@ -18,7 +18,7 @@ namespace gl {
         camera_position_loc = get_uniform_location("camera_position");
         my_normal_texture_loc = get_uniform_location("my_normal_texture");
         my_specular_texture_loc = get_uniform_location("my_specular_texture");
-        my_displacement_texture_loc = get_uniform_location("my_displacement_texture");
+        //my_displacement_texture_loc = get_uniform_location("my_displacement_texture");
         rotation_loc = get_attribute_location("rotation");
     }
 }

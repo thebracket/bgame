@@ -1,12 +1,7 @@
 #include "terrain_bucket.hpp"
 #include "../textures/texture.hpp"
 #include <iostream>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "../gl_include.hpp"
 #include "../shaders/shader_storage.hpp"
 #include "../shaders/terrain_chunk_shader.hpp"
 #include "base_geometry.hpp"
@@ -339,9 +334,9 @@ namespace gl {
         }
 
         if (items.size() > 0) {
-            if (vao_id == 0) glGenVertexArraysAPPLE(1, &vao_id);
+            if (vao_id == 0) glGenVertexArrays(1, &vao_id);
             //std::cout << "Created VAO #" << vao_id << "\n";
-            glBindVertexArrayAPPLE(vao_id);
+            glBindVertexArray(vao_id);
 
             // Bind the minimal geometry to repeat
             glBindBuffer(GL_ARRAY_BUFFER, triangle_vbo);
@@ -398,7 +393,7 @@ namespace gl {
             glVertexAttribDivisorARB(terrain_chunk_shader->light_color_loc, 1);
 
             // Clean up
-            glBindVertexArrayAPPLE(0);
+            glBindVertexArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             generated_vbo = true;

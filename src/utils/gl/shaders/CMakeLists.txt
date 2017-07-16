@@ -7,3 +7,4 @@ add_library(shaders STATIC
         render_shader.cpp
         final_shader.cpp
 )
+cotire(shaders)

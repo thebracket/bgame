@@ -12,4 +12,4 @@ add_library(gl STATIC gl_utils.cpp
         camera.cpp
         )
 target_link_libraries(gl rltk ${SFML_LIBRARIES} render input raws bfmain region textures chunks models shaders)
-#cotire(gl)
+cotire(gl)

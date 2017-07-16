@@ -2,11 +2,7 @@
 #include "map_render.hpp"
 #include "gl_utils.hpp"
 #include <rltk.hpp>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 #include <iostream>
 #include "gl_utils.hpp"
 #include "../../systems/render/lighting_system.hpp"

@@ -1,12 +1,7 @@
 #pragma once
 
 #include <rltk.hpp>
-#include <rltk.hpp>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 
 struct v3d {
     GLfloat x, y, z;

@@ -1,10 +1,4 @@
-#ifdef __APPLE__
-#include <GL/glew.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 #include "main_fbo.hpp"
 #include <rltk.hpp>
 #include "chunks/base_geometry.cpp"

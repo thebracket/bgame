@@ -1,11 +1,6 @@
 #pragma once
 
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 #include <array>
 #include <math.h>
 #include <glm/glm.hpp>

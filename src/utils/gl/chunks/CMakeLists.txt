@@ -5,3 +5,4 @@ add_library(chunks STATIC
         base_geometry.cpp
 )
 target_link_libraries(chunks shaders)
+cotire(chunks)

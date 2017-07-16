@@ -1,12 +1,7 @@
 #include "model_loader.hpp"
 #include <glm/glm.hpp>
 #include <boost/container/flat_map.hpp>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "../gl_include.hpp"
 #include <iostream>
 #include "../textures/texture.hpp"
 #include "../shaders/shader_storage.hpp"

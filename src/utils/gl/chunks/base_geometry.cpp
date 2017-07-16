@@ -1,12 +1,7 @@
 #include "base_geometry.hpp"
 #include <vector>
 #include <iostream>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "../gl_include.hpp"
 
 namespace gl {
     unsigned int triangle_vbo = 0;

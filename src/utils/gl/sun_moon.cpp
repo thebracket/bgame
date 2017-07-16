@@ -1,9 +1,5 @@
 #include "sun_moon.hpp"
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 #include "../../main/game_calendar.hpp"
 #include "gl_utils.hpp"
 #include "populate_gbuffer.hpp"

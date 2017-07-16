@@ -1,9 +1,4 @@
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glew.h>
-#include <GL/glu.h>
-#endif
+#include "gl_include.hpp"
 #include "populate_gbuffer.hpp"
 #include "../../main/game_camera.hpp"
 #include "main_fbo.hpp"
@@ -41,7 +36,7 @@ namespace map_render {
         const int offset = std::min(camera_position->region_z - chunk.base_z, gl::CHUNK_SIZE-1);
         if (offset > 0) {
 
-            glBindVertexArrayAPPLE(bucket.vao_id);
+            glBindVertexArray(bucket.vao_id);
 
             // Rendering
 
@@ -53,7 +48,7 @@ namespace map_render {
                 //std::cout << "Emitted " << cull_pos << " quads for rendering\n";
             }
 
-            glBindVertexArrayAPPLE(0);
+            glBindVertexArray(0);
         }
     }
 
@@ -110,7 +105,7 @@ namespace map_render {
         glUniform1i(terrain_chunk_shader->my_color_texture_loc, 0);
         glUniform1i(terrain_chunk_shader->my_normal_texture_loc, 1);
         glUniform1i(terrain_chunk_shader->my_specular_texture_loc, 2);
-        glUniform1i(terrain_chunk_shader->my_displacement_texture_loc, 3);
+        //glUniform1i(terrain_chunk_shader->my_displacement_texture_loc, 3);
 
         for (const gl::chunk_t &chunk : gl::chunks) {
             if (chunk.has_geometry &&
@@ -150,7 +145,7 @@ namespace map_render {
 
             glUniform1i(static_model_shader->my_color_texture_loc, 0);
 
-            glBindVertexArrayAPPLE(m->vao_id);
+            glBindVertexArray(m->vao_id);
 
             for (const auto &model : it->second) {
                 glUniform3f(static_model_shader->world_position_loc, model.x, model.y, model.z);
@@ -162,7 +157,7 @@ namespace map_render {
                 glDrawArrays(GL_TRIANGLES, 0, m->items.size() / gl::num_model_items);
             }
 
-            glBindVertexArrayAPPLE(0);
+            glBindVertexArray(0);
         }
 
         glDisableClientState(GL_VERTEX_ARRAY);
