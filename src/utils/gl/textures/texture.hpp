@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <tuple>
 
 /*
  * Provides an automated texture atlas.
