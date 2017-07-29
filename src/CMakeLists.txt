@@ -22,31 +22,26 @@ endif(CCACHE_FOUND)
 	#	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
 	#endif()
 
-include_directories(external/rltk)
-
-# Require Lua
-find_package(Lua 5 REQUIRED)
-include_directories(${LUA_INCLUDE_DIR})
-
-# Require SFML
-find_package(SFML 2.3 COMPONENTS system window graphics network REQUIRED)
-include_directories(${SFML_INCLUDE_DIR})
+find_package(PkgConfig REQUIRED)
 
 # Require GLEW
 find_package(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})
 link_libraries(${GLEW_LIBRARIES})
 
+# Require GLFW
+pkg_search_module(GLFW REQUIRED glfw3)
+include_directories(${GLFW_INCLUDE_DIRS})
+link_libraries(${GLFW_LIBRARIES})
+
 # Require OpenGL
 find_package(OpenGL REQUIRED)
-#find_package(GLUT REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS})
 link_libraries(${OPENGL_LIBRARIES})
 
-# Require RLTK, FastNoise
-include_directories(external/rltk/rltk)
-include_directories(external/FastNoise)
-include_directories(external)
+# Require GLM
+find_package(GLM REQUIRED)
+include_directories(${GLM_INCLUDE_DIRS})
 
 # Require Boost
 set(Boost_USE_STATIC_LIBS OFF)
@@ -55,63 +50,17 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
-add_subdirectory(external)
+# Cereal
+find_package(cereal REQUIRED)
+include_directories(${CEREAL_INCLUDE_DIR})
 
-add_subdirectory(components)
-add_subdirectory(planet)
-add_subdirectory(raws)
-add_subdirectory(systems)
-add_subdirectory(utils)
-add_subdirectory(main)
+# Zlib
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIRS})
+link_libraries(${ZLIB_LIBS})
 
-add_executable(bgame main.cpp)
+add_subdirectory(bengine)
+add_executable(noxfutura main.cpp)
+target_link_libraries(noxfutura bengine)
 
-target_link_libraries(bgame)
-target_link_libraries(bgame ${SFML_LIBRARIES})
-target_link_libraries(bgame rltk)
-target_link_libraries(bgame FastNoise)
-target_link_libraries(bgame components)
-target_link_libraries(bgame planet)
-target_link_libraries(bgame raws)
-target_link_libraries(bgame bfmain)
-target_link_libraries(bgame utils)
-target_link_libraries(bgame systems)
-target_link_libraries(bgame sqlite)
-target_link_libraries(bgame imgui)
-target_link_libraries(bgame imgui-sfml)
-target_link_libraries(bgame ${LUA_LIBRARIES})
-target_link_libraries(bgame ${Boost_LIBRARIES})
-
-
-if (APPLE)
-	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
-    set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2015-Present Bracket Productions")
-    set(MACOSX_BUNDLE_BUNDLE_NAME "Nox Futura")
-    set(MACOSX_BUNDLE_ICON_FILE "icon")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "0.10.0")
-    set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/../assets/icon.icns)
-    set_source_files_properties(${myApp_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    add_executable(bf MACOSX_BUNDLE ${myApp_ICON} main.cpp)
-    target_link_libraries(bf)
-    target_link_libraries(bf ${SFML_LIBRARIES})
-    target_link_libraries(bf rltk)
-    target_link_libraries(bf FastNoise)
-    target_link_libraries(bf components)
-    target_link_libraries(bf planet)
-    target_link_libraries(bf raws)
-    target_link_libraries(bf bfmain)
-    target_link_libraries(bf utils)
-    target_link_libraries(bf systems)
-    target_link_libraries(bf sqlite)
-    target_link_libraries(bf imgui)
-    target_link_libraries(bf imgui-sfml)
-    target_link_libraries(bf ${LUA_LIBRARIES})
-    target_link_libraries(bf ${Boost_LIBRARIES})
-
-    install(CODE "
-	include (BundleUtilities)
-	fixup_bundle(${CMAKE_INSTALL_PREFIX}/bf.app \"\" \"\")
-	" COMPONENT bf)
-endif()
-cotire(bgame)
-cotire(bf)
+cotire(noxfutura)

@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SFML-system
+Description: The Simple and Fast Multimedia Library, system module.
+URL: http://www.sfml-dev.org
+Version: 2.4.2
+Libs: -L${libdir} -lsfml-system
+Cflags: -I${includedir}

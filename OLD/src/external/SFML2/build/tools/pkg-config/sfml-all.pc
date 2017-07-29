@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SFML-all
+Description: The Simple and Fast Multimedia Library, all modules.
+URL: http://www.sfml-dev.org
+Version: 2.4.2
+Requires: sfml-system, sfml-window, sfml-graphics, sfml-audio, sfml-network
