@@ -60,7 +60,10 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 link_libraries(${ZLIB_LIBS})
 
 add_subdirectory(bengine)
+add_subdirectory(main_loops)
+add_subdirectory(global_assets)
+
 add_executable(noxfutura main.cpp)
-target_link_libraries(noxfutura bengine)
+target_link_libraries(noxfutura bengine mainloops globalassets)
 
 cotire(noxfutura)

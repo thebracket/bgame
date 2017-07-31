@@ -1,0 +1,6 @@
+#include "texture_storage.hpp"
+#include "../bengine/textures.hpp"
+
+namespace assets {
+    std::unique_ptr<bengine::texture_t> bracket_logo;
+}

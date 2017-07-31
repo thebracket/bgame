@@ -1,15 +1,13 @@
 #include <iostream>
 #include "bengine/main_window.hpp"
+#include "main_loops/splash_screen.hpp"
 
 using namespace bengine;
 
-void tick(const double &duration_ms) {
-
-}
-
 int main() {
     init();
-    main_func = tick;
+    splash_screen::init();
+    main_func = splash_screen::tick;
     run();
 
     return 0;
