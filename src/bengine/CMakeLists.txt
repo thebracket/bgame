@@ -4,5 +4,8 @@ add_library(bengine
         textures.cpp
         shaders.cpp
         simple_sprite.cpp
+        imgui.cpp
+        imgui_impl_glfw_gl3.cpp
+        imgui_draw.cpp
         )
 cotire(bengine)

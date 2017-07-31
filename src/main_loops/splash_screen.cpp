@@ -4,6 +4,8 @@
 #include "../global_assets/shader_storage.hpp"
 #include "../bengine/shaders.hpp"
 #include "../bengine/simple_sprite.hpp"
+#include "../bengine/imgui.h"
+#include "../bengine/imgui_impl_glfw_gl3.h"
 #include <iostream>
 
 using namespace bengine;
@@ -37,5 +39,11 @@ namespace splash_screen {
         }
 
         display_sprite(bracket_logo->texture_id, scale, scale, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, angle, darken);
+
+        ImGui_ImplGlfwGL3_NewFrame();
+        ImGui::Begin("Hello World");
+        ImGui::Text("Lorem ipseum decor est");
+        ImGui::End();
+        ImGui::Render();
     }
 }

@@ -1,6 +1,8 @@
 #include <stdexcept>
 #include "main_window.hpp"
 #include "gl_include.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw_gl3.h"
 
 namespace bengine {
 
@@ -47,6 +49,8 @@ namespace bengine {
         }
 
         finalize_glfw();
+
+        ImGui_ImplGlfwGL3_Init(main_window, true);
     }
 
     void run() {
