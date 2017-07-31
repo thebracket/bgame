@@ -24,6 +24,11 @@ endif(CCACHE_FOUND)
 
 find_package(PkgConfig REQUIRED)
 
+# Require Lua
+find_package(Lua 5 REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
+link_libraries(${LUA_LIBRARIES})
+
 # Require GLEW
 find_package(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})

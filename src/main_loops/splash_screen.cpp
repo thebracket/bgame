@@ -6,6 +6,7 @@
 #include "../bengine/simple_sprite.hpp"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
+#include "../bengine/threadpool.h"
 #include <iostream>
 #include <sstream>
 
@@ -19,6 +20,8 @@ namespace splash_screen {
     constexpr float angle_step = 0.0174533f * 5.0f;
     float darken = 0.0f;
 
+    bool initialized_thread_pool = false;
+
     /* Loads enough to get things started. */
     void init() {
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
@@ -27,6 +30,8 @@ namespace splash_screen {
     }
 
     void tick(const double &duration_ms) {
+        // TODO: Worker threads to load assets and raws, and then forward to main menu.
+
         run_time += duration_ms;
         if (run_time > 0.1 && run_time < 500.0f) {
             scale = std::min(0.5f, scale + 0.01f);
@@ -41,14 +46,19 @@ namespace splash_screen {
 
         display_sprite(bracket_logo->texture_id, scale, scale, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, angle, darken);
 
-        std::stringstream ss;
-        ss << "Frame time: " << duration_ms << " ms. (" << 1000.0f/duration_ms << " fps)";
-        std::string display = ss.str();
-
         ImGui_ImplGlfwGL3_NewFrame();
-        ImGui::Begin("Hello World");
-        ImGui::Text(display.c_str());
+        ImGui::Begin("Nox Futura is loading");
+        if (initialized_thread_pool) {
+            ImGui::BulletText("%s", "Initialized thread pool");
+        } else {
+            ImGui::BulletText("%s", "Initializing thread pool");
+        }
         ImGui::End();
         ImGui::Render();
+
+        if (!initialized_thread_pool) {
+            initialized_thread_pool = true;
+            init_thread_pool();
+        }
     }
 }

@@ -7,5 +7,6 @@ add_library(bengine
         imgui.cpp
         imgui_impl_glfw_gl3.cpp
         imgui_draw.cpp
+        threadpool.cpp
         )
 cotire(bengine)
