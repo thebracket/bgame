@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include <sys/stat.h>
+
 #endif
 
 bool directory_exists(const char *path)

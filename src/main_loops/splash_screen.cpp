@@ -7,6 +7,7 @@
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../bengine/threadpool.h"
+#include "../raws/raws.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -21,12 +22,20 @@ namespace splash_screen {
     float darken = 0.0f;
 
     bool initialized_thread_pool = false;
+    std::atomic<bool> initialized_raws{false};
+    std::atomic<bool> raw_load_started{false};
 
     /* Loads enough to get things started. */
     void init() {
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
         spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
         init_simple_sprite();
+    }
+
+    void init_raws(int id) {
+        std::cout << "Seen thread " << id << "\n";
+        load_raws();
+        initialized_raws.store(true);
     }
 
     void tick(const double &duration_ms) {
@@ -53,12 +62,22 @@ namespace splash_screen {
         } else {
             ImGui::BulletText("%s", "Initializing thread pool");
         }
+        if (initialized_raws) {
+            ImGui::BulletText("%s", "Loaded RAW files");
+        } else {
+            ImGui::BulletText("%s", "Loading RAW files");
+        }
         ImGui::End();
         ImGui::Render();
 
         if (!initialized_thread_pool) {
             initialized_thread_pool = true;
             init_thread_pool();
+        } else {
+            if (!initialized_raws && !raw_load_started) {
+                raw_load_started.store(true);
+                thread_pool->push(std::ref(init_raws));
+            }
         }
     }
 }
