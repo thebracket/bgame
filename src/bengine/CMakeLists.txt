@@ -12,5 +12,6 @@ add_library(bengine
         color_t.cpp
         pcg_basic.c
         random_number_generator.cpp
+        string_utils.cpp
         )
 cotire(bengine)

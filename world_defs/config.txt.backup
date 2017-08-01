@@ -1,0 +1,14 @@
+window_width=1024
+window_height=768
+game_font=24x24
+gui_font=8x16
+game_font_small=8x8
+tooltip_fadein=yes
+tooltip_speed=100.0
+autosave_minutes=0
+fullscreen=0
+gui_ttf=DroidSans.ttf
+gui_ttf_size=18
+scale_factor=1.0
+allow_calling_home=yes
+online_username=anonymouse

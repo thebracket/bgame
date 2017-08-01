@@ -8,6 +8,6 @@ namespace bengine {
 
     extern std::function<void(const double &)> main_func;
 
-    void init();
+    void init(bool fullscreen, int width, int height, std::string gui_font, int gui_font_size);
     void run();
 }

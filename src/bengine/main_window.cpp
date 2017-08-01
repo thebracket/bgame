@@ -3,6 +3,7 @@
 #include "gl_include.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw_gl3.h"
+#include "IconsFontAwesome.h"
 
 namespace bengine {
 
@@ -30,25 +31,45 @@ namespace bengine {
         glewInit();
     }
 
-    void init() {
+    void init(bool fullscreen, int width, int height, std::string gui_font, int gui_font_size) {
         init_glfw();
         init_glfw_window_hints();
 
-        GLFWmonitor * monitor = glfwGetPrimaryMonitor();
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        if (fullscreen) {
+            GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+            glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+            main_window = glfwCreateWindow(mode->width, mode->height, "Nox Futura", monitor, nullptr);
+        } else {
+            GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+            glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-        main_window = glfwCreateWindow(mode->width, mode->height, "Nox Futura", monitor, nullptr);
+            main_window = glfwCreateWindow(width, height, "Nox Futura", nullptr, nullptr);
+        }
         if (!main_window) {
             glfwTerminate();
             throw std::runtime_error("Unable to initialize window");
         }
 
         finalize_glfw();
+
+        ImGuiIO& io = ImGui::GetIO();
+        const std::string font_path = std::string("game_assets/") + gui_font;
+        //io.Fonts->AddFontDefault();
+        //std::cout << "Loading " << font_path << ", at size " << game_config.gui_ttf_size << " pixels\n";
+        io.Fonts->AddFontFromFileTTF(font_path.c_str(), gui_font_size);
+        ImFontConfig config;
+        config.MergeMode = true;
+        const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+        io.Fonts->AddFontFromFileTTF("game_assets/fontawesome-webfont.ttf", gui_font_size, &config, icon_ranges);
 
         ImGui_ImplGlfwGL3_Init(main_window, true);
     }

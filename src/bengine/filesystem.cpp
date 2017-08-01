@@ -59,3 +59,14 @@ bool exists(const std::string &filename) noexcept {
     struct stat buffer;
     return (stat (filename.c_str(), &buffer) == 0);
 }
+
+void remove_from_path(std::string &s, const std::string needle) {
+    //std::cout << "Searching " << s << " for " << needle << "\n";
+    const std::size_t location = s.find_last_of(needle);
+    if (location == std::string::npos) {
+        //std::cout << "Not found\n";
+    } else {
+        //std::cout << "Found at location " << location << "\n";
+        s = s.substr(0, location);
+    }
+}
