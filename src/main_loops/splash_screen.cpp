@@ -8,6 +8,8 @@
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../bengine/threadpool.h"
 #include "../raws/raws.hpp"
+#include "../bengine/main_window.hpp"
+#include "main_menu.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -24,6 +26,8 @@ namespace splash_screen {
     bool initialized_thread_pool = false;
     std::atomic<bool> initialized_raws{false};
     std::atomic<bool> raw_load_started{false};
+    bool loaded_textures = false;
+    int tex_idx = 0;
 
     /* Loads enough to get things started. */
     void init() {
@@ -39,7 +43,7 @@ namespace splash_screen {
     }
 
     void tick(const double &duration_ms) {
-        // TODO: Worker threads to load assets and raws, and then forward to main menu.
+        // TODO: Start telemetry
 
         run_time += duration_ms;
         if (run_time > 0.1 && run_time < 500.0f) {
@@ -56,7 +60,7 @@ namespace splash_screen {
         display_sprite(bracket_logo->texture_id, scale, scale, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, angle, darken);
 
         ImGui_ImplGlfwGL3_NewFrame();
-        ImGui::Begin("Nox Futura is loading");
+        ImGui::Begin("Nox Futura is loading", nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
         if (initialized_thread_pool) {
             ImGui::BulletText("%s", "Initialized thread pool");
         } else {
@@ -66,6 +70,11 @@ namespace splash_screen {
             ImGui::BulletText("%s", "Loaded RAW files");
         } else {
             ImGui::BulletText("%s", "Loading RAW files");
+        }
+        if (!loaded_textures) {
+            ImGui::BulletText("%s", "Loading game images");
+        } else {
+            ImGui::BulletText("%s", "Loaded game images");
         }
         ImGui::End();
         ImGui::Render();
@@ -78,6 +87,20 @@ namespace splash_screen {
                 raw_load_started.store(true);
                 thread_pool->push(std::ref(init_raws));
             }
+        }
+
+        if (!loaded_textures) {
+            switch (tex_idx) {
+                case 0 : background_image = std::make_unique<texture_t>("game_assets/background_image.jpg"); break;
+                case 1 : game_logo = std::make_unique<texture_t>("game_assets/gamelogo.png"); break;
+                default: loaded_textures = true;
+            }
+            ++tex_idx;
+        }
+
+        if (initialized_thread_pool && initialized_raws && loaded_textures && angle==0.0f) {
+            // We're done - time to move on!
+            main_func = main_menu::tick;
         }
     }
 }

@@ -12,5 +12,5 @@ namespace bengine {
                         const float &rotate_y = 0.0f,
                         const float &rotate_z = 0.0f,
                         const float &angle = 0.0f,
-                        const float &darken = 0.0f);
+                        const float &darken = 1.0f);
 }

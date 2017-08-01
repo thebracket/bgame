@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "../bengine/random_number_generator.hpp"
 
 namespace string_tables {
 
@@ -14,10 +15,10 @@ namespace string_tables {
     struct string_table_t {
         std::vector<std::string> strings;
 
-        /*inline std::string random_entry(rltk::random_number_generator rng = rltk::random_number_generator()) {
+        inline std::string random_entry(bengine::random_number_generator rng = bengine::random_number_generator()) {
             const int position = rng.roll_dice(1, static_cast<int>(strings.size())) - 1;
             return strings[position];
-        }*/
+        }
     };
 
     void load_string_table(const int index, const std::string filename);

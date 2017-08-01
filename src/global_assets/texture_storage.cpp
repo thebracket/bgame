@@ -3,4 +3,6 @@
 
 namespace assets {
     std::unique_ptr<bengine::texture_t> bracket_logo;
+    std::unique_ptr<bengine::texture_t> background_image;
+    std::unique_ptr<bengine::texture_t> game_logo;
 }

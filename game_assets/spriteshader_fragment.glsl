@@ -7,5 +7,10 @@ uniform float darken;
 
 void main()
 {
-    FragColor = texture(spriteTexture, TexCoord) * vec4(darken, darken, darken, 1.0);
+    vec4 texturedPixel = texture(spriteTexture, TexCoord);
+    if (texturedPixel.a >0.9) {
+        FragColor = texturedPixel * vec4(darken, darken, darken, 1.0);
+    } else {
+        discard;
+    }
 }

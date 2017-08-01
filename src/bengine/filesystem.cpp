@@ -55,4 +55,7 @@ std::string get_save_path()
 
 #endif
 
-
+bool exists(const std::string &filename) noexcept {
+    struct stat buffer;
+    return (stat (filename.c_str(), &buffer) == 0);
+}

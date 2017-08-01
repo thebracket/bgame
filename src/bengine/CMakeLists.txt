@@ -10,5 +10,7 @@ add_library(bengine
         threadpool.cpp
         filesystem.cpp
         color_t.cpp
+        pcg_basic.c
+        random_number_generator.cpp
         )
 cotire(bengine)
