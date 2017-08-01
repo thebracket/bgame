@@ -10,12 +10,23 @@
 #include "../bengine/filesystem.hpp"
 #include "../bengine/main_window.hpp"
 #include "../bengine/gl_include.hpp"
+#include "../bengine/IconsFontAwesome.h"
+#include "../global_assets/game_config.hpp"
 
 namespace main_menu {
     bool initialized = false;
     bool world_exists = false;
     std::string tagline = "";
     bool show_options = false;
+    const std::string win_options = std::string(ICON_FA_WRENCH) + " Options";
+    const std::string btn_save = std::string(ICON_FA_FLOPPY_O) + " Save Changes";
+    const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
+    const std::string menu_play = std::string(ICON_FA_PLAY) + " Play the Game";
+    const std::string menu_gen = std::string(ICON_FA_MAP) + " Generate the World";
+    const std::string menu_opts = std::string(ICON_FA_WRENCH) + " Options";
+    const std::string menu_quit = std::string(ICON_FA_TIMES) + " Quit the Game";
+
+    std::string online_username = "";
 
     std::string get_descriptive_noun() {
         using namespace string_tables;
@@ -48,6 +59,8 @@ namespace main_menu {
         }
 
         tagline += "of " + first_noun + " and " + second_noun;
+
+        online_username = config::game_config.online_username;
 
         initialized = true;
     }
@@ -88,20 +101,61 @@ namespace main_menu {
                          ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
             ImGui::TextColored(red, "%s", tagline.c_str());
             if (world_exists) {
-                if (ImGui::Button("Play the Game")) {
+                if (ImGui::Button(menu_play.c_str())) {
                 }
             }
-            if (ImGui::Button("Generate the World")) {
+            if (ImGui::Button(menu_gen.c_str())) {
             }
-            if (ImGui::Button("Options")) {
+            if (ImGui::Button(menu_opts.c_str())) {
+                show_options = true;
             }
-            if (ImGui::Button("Quit")) {
+            if (ImGui::Button(menu_quit.c_str())) {
                 glfwSetWindowShouldClose(bengine::main_window, true);
             }
             ImGui::TextColored(red, "%s", kylah.c_str());
             ImGui::End();
         } else {
+            using namespace config;
+
             // Show the options window
+            ImGui::SetNextWindowPosCenter();
+            ImGui::Begin(win_options.c_str(), nullptr, ImVec2{600, 400}, 0.7f,
+                         ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+            ImGui::Text("Options won't take effect until you restart.");
+            ImGui::Text("Full Screen Mode");
+            ImGui::SameLine();
+            ImGui::Checkbox("## Full Screen", &game_config.fullscreen);
+            ImGui::Text("Window Height");
+            ImGui::SameLine();
+            ImGui::InputInt("## Window Mode Width", &game_config.window_width);
+            ImGui::SameLine();
+            ImGui::Text("Width");
+            ImGui::SameLine();
+            ImGui::InputInt(" ## Window Mode Height", &game_config.window_height);
+            ImGui::Text("Autosave Every X Minutes (0=never)");
+            ImGui::SameLine();
+            ImGui::InputInt("## Auto save every X minutes (0 none)", &game_config.autosave_minutes);
+            ImGui::Text("Allow telemetry to phone home");
+            ImGui::SameLine();
+            ImGui::Checkbox("## Allow telemetry to phone home", &game_config.allow_calling_home);
+            ImGui::Text("Online Username");
+            ImGui::SameLine();
+            ImGui::InputText("Online Username", (char *) &online_username, 254);
+            ImGui::Text("UI Scale Factor");
+            ImGui::InputFloat("## Scale Factor", &game_config.scale_factor);
+            ImGui::Text("Show Entity ID Numbers");
+            ImGui::SameLine();
+            ImGui::Checkbox("## Entity ID", &game_config.show_entity_ids);
+            if (ImGui::Button(btn_save.c_str())) {
+                game_config.online_username = std::string(online_username);
+                game_config.save();
+                show_options = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(btn_close.c_str())) {
+                show_options = false;
+            }
+            ImGui::End();
         }
 
         ImGui::Render();
