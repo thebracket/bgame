@@ -24,6 +24,11 @@ endif(CCACHE_FOUND)
 
 find_package(PkgConfig REQUIRED)
 
+# Require CURL (for telemetry)
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIRS})
+link_libraries(${CURL_LIBRARIES})
+
 # Require Lua
 find_package(Lua 5 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})

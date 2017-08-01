@@ -13,5 +13,6 @@ add_library(bengine
         pcg_basic.c
         random_number_generator.cpp
         string_utils.cpp
+        telemetry.cpp
         )
 cotire(bengine)

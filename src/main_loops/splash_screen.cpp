@@ -10,6 +10,8 @@
 #include "../raws/raws.hpp"
 #include "../bengine/main_window.hpp"
 #include "main_menu.hpp"
+#include "../bengine/telemetry.hpp"
+#include "../global_assets/game_config.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -27,6 +29,8 @@ namespace splash_screen {
     std::atomic<bool> initialized_raws{false};
     std::atomic<bool> raw_load_started{false};
     bool loaded_textures = false;
+    bool started_telemetry = false;
+    bool sent_telemetry = false;
     int tex_idx = 0;
 
     /* Loads enough to get things started. */
@@ -76,6 +80,12 @@ namespace splash_screen {
         } else {
             ImGui::BulletText("%s", "Loaded game images");
         }
+        if (!started_telemetry) {
+            ImGui::BulletText("%s", "Starting telemetry");
+        } else {
+            ImGui::BulletText("%s", "Started telemetry (if permitted)");
+        }
+
         ImGui::End();
         ImGui::Render();
 
@@ -98,7 +108,19 @@ namespace splash_screen {
             ++tex_idx;
         }
 
-        if (initialized_thread_pool && initialized_raws && loaded_textures && angle==0.0f) {
+        if (!started_telemetry) {
+            start_telemetry();
+            started_telemetry = true;
+        } else if (!sent_telemetry) {
+            call_home("Startup");
+            call_home("Startup-FullScreen", std::to_string(config::game_config.fullscreen));
+            call_home("Startup-Resolution", std::to_string(config::game_config.window_width) + std::string("x") + std::to_string(config::game_config.window_height));
+            call_home("Startup-GUI-Font", config::game_config.gui_ttf + std::string(" / ") + std::to_string(config::game_config.gui_ttf_size));
+            call_home("Startup-Scaling", std::to_string(config::game_config.scale_factor));
+            sent_telemetry = true;
+        }
+
+        if (initialized_thread_pool && initialized_raws && loaded_textures && angle==0.0f && started_telemetry && sent_telemetry) {
             // We're done - time to move on!
             main_func = main_menu::tick;
         }

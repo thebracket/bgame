@@ -12,6 +12,8 @@
 #include "../bengine/gl_include.hpp"
 #include "../bengine/IconsFontAwesome.h"
 #include "../global_assets/game_config.hpp"
+#include "worldgen.hpp"
+#include "../bengine/telemetry.hpp"
 
 namespace main_menu {
     bool initialized = false;
@@ -62,6 +64,8 @@ namespace main_menu {
 
         online_username = config::game_config.online_username;
 
+        call_home("MainMenu", "Opened");
+
         initialized = true;
     }
 
@@ -82,7 +86,7 @@ namespace main_menu {
         bengine::display_sprite(assets::game_logo->texture_id, 0.4f, 0.2f, 0.5f, 0.7f);
 
         // Supporters list; TODO: make this read a file
-        ImGui::Begin("Thanks to our awesome supporters:", nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("Thanks to our supporters:", nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
         ImGui::BulletText("%s", "Noah Bogart via Patreon");
         ImGui::End();
 
@@ -105,11 +109,13 @@ namespace main_menu {
                 }
             }
             if (ImGui::Button(menu_gen.c_str())) {
+                bengine::main_func = worldgen::tick;
             }
             if (ImGui::Button(menu_opts.c_str())) {
                 show_options = true;
             }
             if (ImGui::Button(menu_quit.c_str())) {
+                stop_telemetry();
                 glfwSetWindowShouldClose(bengine::main_window, true);
             }
             ImGui::TextColored(red, "%s", kylah.c_str());
