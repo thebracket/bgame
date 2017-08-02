@@ -15,8 +15,6 @@ namespace rltk {
 template<typename... T>
 inline void component_to_xml(xml_node * c, const T... args);
 
-namespace serial {
-
 // Forward declarations
 template<typename... T>
 inline void component_to_xml(xml_node * c, const T... args);

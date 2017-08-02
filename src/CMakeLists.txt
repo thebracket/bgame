@@ -73,8 +73,10 @@ add_subdirectory(bengine)
 add_subdirectory(main_loops)
 add_subdirectory(global_assets)
 add_subdirectory(raws)
+add_subdirectory(planet)
+add_subdirectory(components)
 
 add_executable(noxfutura main.cpp)
-target_link_libraries(noxfutura bengine mainloops globalassets raws)
+target_link_libraries(noxfutura bengine mainloops globalassets raws planet components)
 
 cotire(noxfutura)

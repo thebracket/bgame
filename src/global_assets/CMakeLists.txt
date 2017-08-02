@@ -2,5 +2,7 @@ add_library(globalassets
         shader_storage.cpp
         texture_storage.cpp
         game_config.cpp
+        rng.cpp
+        spatial_db.cpp
         )
 cotire(globalassets)

@@ -1,10 +1,10 @@
 #include "health_factory.hpp"
-//#include "../main/game_rng.hpp"
+#include "../global_assets/rng.hpp"
 #include "creatures.hpp"
 #include "defs/raw_creature_t.hpp"
 #include "defs/civilization_t.hpp"
 
-/*health_t create_health_component_sentient(const raw_species_t * species, const int base_hp)
+health_t create_health_component_sentient(const raw_species_t * species, const int base_hp)
 {
     health_t result;
 
@@ -80,4 +80,4 @@ health_t create_health_component_creature(const std::string &tag) {
 
     return result;
 }
- */
+

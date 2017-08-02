@@ -14,5 +14,10 @@ add_library(bengine
         random_number_generator.cpp
         string_utils.cpp
         telemetry.cpp
+        ecs.cpp
+        FastNoise.cpp
+        geometry.cpp
+        rexspeeder.cpp
+        octree.cpp
         )
 cotire(bengine)

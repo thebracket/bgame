@@ -1,10 +1,10 @@
 #pragma once
 
-//#include <rltk.hpp>
+#include "../bengine/random_number_generator.hpp"
 
 struct profession_t; // Forward
 
-//profession_t * get_random_profession(rltk::random_number_generator &rng);
+profession_t * get_random_profession(bengine::random_number_generator &rng);
 
 /*
  * Lua reader

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "../../bengine/color_t.hpp"
 
 /*
  * Defines a material type. Used by just about everything.

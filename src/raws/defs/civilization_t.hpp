@@ -56,7 +56,7 @@ struct civ_unit_natural_attack_t {
 };
 
 struct civ_equipment_t {
-    //std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
+    std::vector< std::tuple< uint8_t, std::string, std::string >> starting_clothes;
     std::string melee = "";
     std::string ranged = "";
     std::string ammo = "";
@@ -73,7 +73,7 @@ struct civ_unit_sentient_t {
     int hp_dice = 10;
     int hp_mod = 0;
     std::string gender = "male";
-    //std::vector<civ_unit_natural_attack_t> natural_attacks;
+    std::vector<civ_unit_natural_attack_t> natural_attacks;
     civ_equipment_t equipment;
 };
 
@@ -82,7 +82,7 @@ struct civ_unit_t {
     uint8_t bp_per_turn = 0;
     uint8_t speed = 0;
     std::string name = "";
-    //std::vector<civ_unit_sentient_t> sentients;
+    std::vector<civ_unit_sentient_t> sentients;
     int worldgen_strength = 1;
 };
 

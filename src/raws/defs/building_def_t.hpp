@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../reaction_input.hpp"
+#include "../../bengine/rexspeeder.hpp"
 
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door,
     provides_wall, provides_floor, provides_stairs_up, provides_stairs_down, provides_stairs_updown,
@@ -22,8 +23,8 @@ struct building_def_t {
     std::vector<building_provides_t> provides;
     int width = 1;
     int height = 1;
-    //std::vector<rltk::vchar> glyphs;
-    //std::vector<rltk::vchar> glyphs_ascii;
+    std::vector<xp::vchar> glyphs;
+    std::vector<xp::vchar> glyphs_ascii;
     bool emits_smoke = false;
     bool structure = false;
 };

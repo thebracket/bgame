@@ -1,9 +1,9 @@
 #pragma once
 
-//#include <rltk.hpp>
 #include <string>
 #include <vector>
 #include <utility>
+#include "../../bengine/color_t.hpp"
 
 /*
  * Defines a region biome type.

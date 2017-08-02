@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pcg_basic.h"
+#include <string>
 
 namespace bengine {
     class random_number_generator

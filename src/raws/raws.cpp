@@ -1,9 +1,9 @@
 #include "raws.hpp"
 #include "lua_bridge.hpp"
-//#include "../components/position.hpp"
-//#include "../components/renderable.hpp"
-//#include "../components/item.hpp"
-//#include "../components/item_stored.hpp"
+#include "../components/position.hpp"
+#include "../components/renderable.hpp"
+#include "../components/item.hpp"
+#include "../components/item_stored.hpp"
 #include "string_table.hpp"
 #include "creatures.hpp"
 #include "species.hpp"
@@ -15,12 +15,13 @@
 #include "reactions.hpp"
 #include "clothing.hpp"
 #include "materials.hpp"
-//#include "../systems/ai/movement_system.hpp"
+#include "../global_assets/spatial_db.hpp"
 #include "graphviz.hpp"
-//#include "../main/game_config.hpp"
+#include "../global_assets/game_config.hpp"
 #include "defs/item_def_t.hpp"
 #include "defs/material_def_t.hpp"
 #include "items.hpp"
+#include "../bengine/ecs.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -105,7 +106,6 @@ void load_raws() {
 	load_game_tables();
 }
 
-/*
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
     auto finder = get_item_def(tag);
     if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
@@ -113,7 +113,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     auto mat = get_material(material);
     if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
-    auto entity = create_entity()
+    auto entity = bengine::create_entity()
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
@@ -121,14 +121,14 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 }
 
-entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
+bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
     auto finder = get_item_def(tag);
     if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
     auto mat = get_material(material);
     if (!mat) throw std::runtime_error(std::string("Unknown material tag: ") + std::to_string(material));
 
-    auto entity = create_entity()
+    auto entity = bengine::create_entity()
             ->assign(position_t{ x,y,z })
             ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
             ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
@@ -144,7 +144,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     std::cout << "Spawning [" << tag << "], glyph " << +finder->glyph << "\n";
 
-    create_entity()
+    bengine::create_entity()
         ->assign(item_stored_t{ container_id })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
@@ -156,9 +156,8 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 
     auto mat = get_material(material);
 
-    create_entity()
+    bengine::create_entity()
         ->assign(item_carried_t{ loc, holder_id })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
         ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
 }
-*/

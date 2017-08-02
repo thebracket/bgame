@@ -11,5 +11,11 @@ namespace bengine {
         float r=0.0;
         float g=0.0;
         float b=0.0;
+
+        template<class Archive>
+        void serialize(Archive & archive)
+        {
+            archive( r, g, b ); // serialize things by passing them to the archive
+        }
     };
 }
