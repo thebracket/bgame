@@ -78,6 +78,7 @@ namespace telemetry {
         if (msg_thread) {
             quitting = true;
             msg_thread->join();
+            msg_thread.reset();
         }
     }
 }
