@@ -38,6 +38,7 @@ namespace splash_screen {
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
         spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
         init_simple_sprite();
+        worldgenshader = load_shaders("game_assets/worldgenshader_vertex.glsl", "game_assets/worldgenshader_fragment.glsl");
     }
 
     void init_raws(int id) {

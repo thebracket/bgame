@@ -6,6 +6,7 @@
 #include "builder/river_builder.hpp"
 #include "../raws/biomes.hpp"
 #include "../raws/defs/biome_type_t.hpp"
+#include "../global_assets/game_planet.hpp"
 
 std::atomic<bool> planet_build_done;
 std::mutex planet_builder_lock;
@@ -132,7 +133,6 @@ void build_planet(const int &seed, const int &water_divisor, const int &plains_d
 	planet_build_done.store(false);
 
 	bengine::random_number_generator rng(seed);
-	planet_t planet;
 	planet.rng_seed = seed;
 	const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
 	planet.perlin_seed = perlin_seed;

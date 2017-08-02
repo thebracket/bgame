@@ -4,5 +4,6 @@ add_library(globalassets
         game_config.cpp
         rng.cpp
         spatial_db.cpp
+        game_planet.cpp
         )
 cotire(globalassets)
