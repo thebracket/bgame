@@ -27,6 +27,7 @@ namespace worldgen {
     }
 
     void start_thread() {
+        setup_build_planet();
         world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown);
     }
 

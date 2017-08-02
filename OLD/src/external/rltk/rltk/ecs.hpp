@@ -19,6 +19,7 @@
 #include <atomic>
 #include "serialization_utils.hpp"
 #include "xml.hpp"
+#include <cereal/archives/xml.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "ecs_impl.hpp"
 

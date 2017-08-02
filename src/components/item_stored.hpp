@@ -1,9 +1,9 @@
 #pragma once
 
+#include "../bengine/ecs_impl.hpp"
 #include <string>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
 
 struct item_stored_t {
 	std::size_t stored_in;

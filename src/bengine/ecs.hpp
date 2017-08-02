@@ -17,7 +17,7 @@
 #include <mutex>
 #include <typeinfo>
 #include <atomic>
-#include <cereal/types/polymorphic.hpp>
+#include "cereal_include.hpp"
 #include "ecs_impl.hpp"
 
 namespace bengine {

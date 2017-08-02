@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw_gl3.h"
 #include "IconsFontAwesome.h"
+#include "telemetry.hpp"
 
 namespace bengine {
 
@@ -86,6 +87,7 @@ namespace bengine {
             glfwSwapBuffers(main_window);
             duration_ms = ((clock() - start_time) * 1000.0) / CLOCKS_PER_SEC;
         }
+        stop_telemetry();
         glfwTerminate();
     }
 }
