@@ -1,4 +1,4 @@
-add_library(bengine
+add_library(bengine STATIC
         main_window.cpp
         stb_image.cpp
         textures.cpp
@@ -20,4 +20,5 @@ add_library(bengine
         rexspeeder.cpp
         octree.cpp
         )
+target_link_libraries(bengine ${ZLIB_LIBS})
 cotire(bengine)

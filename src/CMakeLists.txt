@@ -67,7 +67,7 @@ include_directories(${CEREAL_INCLUDE_DIR})
 # Zlib
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
-link_libraries(${ZLIB_LIBS})
+link_libraries(${ZLIB_LIBRARIES})
 
 add_subdirectory(bengine)
 add_subdirectory(main_loops)

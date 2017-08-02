@@ -8,6 +8,7 @@
 #include "../bengine/textures.hpp"
 #include "../bengine/main_window.hpp"
 #include "main_menu.hpp"
+#include "../planet/planet_builder.hpp"
 
 namespace worldgen {
     enum world_gen_mode_t { WG_MENU, WG_RUNNING };
@@ -26,7 +27,7 @@ namespace worldgen {
     }
 
     void start_thread() {
-        //world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown);
+        world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown);
     }
 
     void render_menu() {
@@ -56,6 +57,19 @@ namespace worldgen {
 
         if (mode == WG_MENU) {
             render_menu();
+        } else {
+            // Render status
+            planet_builder_lock.lock();
+            ImGui::Begin("World Generation Progress");
+            ImGui::Text("%s",planet_builder_status.c_str());
+            ImGui::End();
+            planet_builder_lock.unlock();
+
+            // TODO: Render progress
+
+            if (is_planet_build_complete()) {
+                bengine::main_func = main_menu::tick;
+            }
         }
 
         ImGui::Render();
