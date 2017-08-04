@@ -8,10 +8,7 @@
 #include "planet.hpp"
 
 struct worldgen_display_t {
-    bengine::color_t background{0.0f, 0.0f, 0.0f};
-    bengine::color_t foreground{1.0f, 1.0f, 1.0f};
-    uint16_t terrain_glyph = 0;
-    uint16_t unit_glyph = 0;
+    int texture_id = 0;
     uint8_t altitude = 0;
 };
 

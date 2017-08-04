@@ -12,6 +12,7 @@
 #include "main_menu.hpp"
 #include "../bengine/telemetry.hpp"
 #include "../global_assets/game_config.hpp"
+#include "../bengine/stb_image.h"
 #include <iostream>
 #include <sstream>
 
@@ -33,6 +34,21 @@ namespace splash_screen {
     bool sent_telemetry = false;
     int tex_idx = 0;
 
+    std::vector<std::string> worldgen_textures_to_load{
+            {"game_assets/worldgen/water-t.jpg"},
+            {"game_assets/worldgen/water-n.jpg"},
+            {"game_assets/worldgen/grass-t.jpg"},
+            {"game_assets/worldgen/grass-n.jpg"},
+            {"game_assets/worldgen/hill-t.jpg"},
+            {"game_assets/worldgen/hill-n.jpg"},
+            {"game_assets/worldgen/marsh-t.jpg"},
+            {"game_assets/worldgen/marsh-n.jpg"},
+            {"game_assets/worldgen/plateau-t.jpg"},
+            {"game_assets/worldgen/plateau-n.jpg"},
+            {"game_assets/worldgen/highlands-t.jpg"},
+            {"game_assets/worldgen/highlands-n.jpg"}
+    };
+
     /* Loads enough to get things started. */
     void init() {
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
@@ -45,6 +61,44 @@ namespace splash_screen {
         std::cout << "Seen thread " << id << "\n";
         load_raws();
         initialized_raws.store(true);
+    }
+
+    void load_worldgen_textures() {
+        glGenTextures(1, &assets::worldgen_texture_array);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, assets::worldgen_texture_array);
+
+        glTexStorage3D( GL_TEXTURE_2D_ARRAY,
+                        8, // No mip-maps yet
+                        GL_RGBA8, // Internal format
+                        128, 128, // Width and height
+                        worldgen_textures_to_load.size()
+        );
+
+        for (unsigned int i=0; i<worldgen_textures_to_load.size(); ++i) {
+            int width, height, bpp;
+            stbi_set_flip_vertically_on_load(true);
+            unsigned char *image_data = stbi_load(worldgen_textures_to_load[i].c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+            if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(worldgen_textures_to_load[i]));
+
+            glTexSubImage3D(
+                GL_TEXTURE_2D_ARRAY,
+                0, // Mipmap number
+                0, 0, i, // x/y/z offsets
+                128, 128, 1, // width, height, depth
+                GL_RGBA, // format
+                GL_UNSIGNED_BYTE, // type
+                image_data // Color data
+            );
+
+            stbi_image_free(image_data);
+        }
+
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+        glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
     void tick(const double &duration_ms) {
@@ -104,6 +158,8 @@ namespace splash_screen {
             switch (tex_idx) {
                 case 0 : background_image = std::make_unique<texture_t>("game_assets/background_image.jpg"); break;
                 case 1 : game_logo = std::make_unique<texture_t>("game_assets/gamelogo.png"); break;
+                case 2 : starfield = std::make_unique<texture_t>("game_assets/starfield.jpg"); break;
+                case 3 : load_worldgen_textures(); break;
                 default: loaded_textures = true;
             }
             ++tex_idx;

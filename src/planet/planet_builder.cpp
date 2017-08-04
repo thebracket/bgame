@@ -28,6 +28,25 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
 
     // Set the altitude component
     (*planet_builder_display.get())[idx].altitude = planet.landblocks[block_idx].height / 3;
+
+    switch (planet.landblocks[block_idx].type) {
+        case block_type::NONE : (*planet_builder_display.get())[idx].texture_id = 0; break;
+        case block_type::WATER : (*planet_builder_display.get())[idx].texture_id = 0; break;
+        case block_type::PLAINS : (*planet_builder_display.get())[idx].texture_id = 2; break;
+        case block_type::HILLS : (*planet_builder_display.get())[idx].texture_id = 4; break;
+        case block_type::MARSH : (*planet_builder_display.get())[idx].texture_id = 6; break;
+        case block_type::PLATEAU : (*planet_builder_display.get())[idx].texture_id = 8; break;
+        case block_type::HIGHLANDS : (*planet_builder_display.get())[idx].texture_id = 10; break;
+        case block_type::COASTAL : (*planet_builder_display.get())[idx].texture_id = 2; break;
+        case block_type::SALT_MARSH : (*planet_builder_display.get())[idx].texture_id = 6; break;
+        case block_type::MOUNTAINS : (*planet_builder_display.get())[idx].texture_id = 8; break;
+        default : {
+            std::cout << "Default texture for block type " << +planet.landblocks[block_idx].type << "\n";
+            (*planet_builder_display.get())[idx].texture_id = 0;
+        } break;
+    }
+
+    /*
     (*planet_builder_display.get())[idx].background = bengine::color_t{0.0f, 0.0f, 0.0f};
 
     const uint8_t zero = 0;
@@ -90,7 +109,7 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         } else {
             (*planet_builder_display.get())[idx].unit_glyph = 0;
         }
-    }
+    }*/
 }
 
 void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y) {

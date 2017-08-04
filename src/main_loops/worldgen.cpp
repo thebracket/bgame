@@ -11,6 +11,8 @@
 #include "../planet/planet_builder.hpp"
 #include "../global_assets/game_planet.hpp"
 #include "../global_assets/shader_storage.hpp"
+#include "../global_assets/rng.hpp"
+
 #define GLM_COMPILER 0
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,36 +32,36 @@ namespace worldgen {
     glm::mat4 view_matrix;
     glm::mat4 model_matrix;
     unsigned int vbo = 0;
+    unsigned int vao = 0;
     unsigned int projloc = -1;
     unsigned int viewloc = -1;
     unsigned int modelloc = -1;
+    int screen_w, screen_h;
+    int n_vertices = 0;
 
     float world_spin = 0.0f;
 
     void init() {
         call_home("WorldGen", "Opened");
         initialized = true;
+        seed = rng.roll_dice(1, std::numeric_limits<int>::max());
+        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+        if (vbo == 0) glGenBuffers(1, &vbo);
+        if (vao == 0) glGenVertexArrays(1, &vao);
     }
 
     void start_thread() {
-        int screen_w, screen_h;
-        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
-
         setup_build_planet();
 
         assert(assets::worldgenshader != 0);
-        projection_matrix = glm::perspective(90.0, 1.0, 1.0, 300.0);
-        view_matrix = glm::lookAt(glm::vec3(100.0f, 100.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        projection_matrix = glm::perspective(90.0, (double)screen_w/(double)screen_h, 1.0, 300.0);
+        view_matrix = glm::lookAt(glm::vec3(1.0f, 100.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::mat4(); // Identity
         projloc = glGetUniformLocation(assets::worldgenshader, "projection_mat");
         viewloc = glGetUniformLocation(assets::worldgenshader, "view");
         modelloc = glGetUniformLocation(assets::worldgenshader, "model");
         assert(projloc != -1);
         assert(viewloc != -1);
-        glUniformMatrix4fv(projloc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-        glUniformMatrix4fv(viewloc, 1, GL_FALSE, glm::value_ptr(view_matrix));
-        glUniformMatrix4fv(modelloc, 1, GL_FALSE, glm::value_ptr(model_matrix));
-        std::cout << "Set uniforms " << projloc << "/" << viewloc << "\n";
 
         world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown);
     }
@@ -84,79 +86,108 @@ namespace worldgen {
         ImGui::End();
     }
 
-    constexpr float latitude_per_tile = 180.0f / WORLD_HEIGHT;
-    constexpr float longitude_per_tile = 360.0f / WORLD_WIDTH;
-    constexpr float PI = 3.14159265359F;
-    constexpr float TO_RADIANS = PI / 180.0f;
+    constexpr float TO_RADIANS = 0.0174533;
+    constexpr float latitude_per_tile = (180.0f / WORLD_HEIGHT) * TO_RADIANS;
+    constexpr float longitude_per_tile = (360.0f / WORLD_WIDTH) * TO_RADIANS;
+    constexpr float ONE_EIGHTY_RAD = 180.0f * TO_RADIANS;
+    constexpr float THREE_SIXY_RAD = 360.0f * TO_RADIANS;
+    constexpr float ALTITUDE_DIVISOR = 3.0f;
+    constexpr float ALTITUDE_BASE = 50.0f;
 
-    float latitude_for_world_tile(const int y) {
-        return (static_cast<float>(y) * latitude_per_tile);
-    }
-
-    float longitude_for_world_tile(const int &x) {
-        return (static_cast<float>(x) * longitude_per_tile);
-    }
-
-    void render_globe() {
-        int screen_w, screen_h;
-        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
-        model_matrix = glm::mat4();
-        model_matrix = glm::rotate(model_matrix, world_spin, glm::vec3(1.0, 0.0, 0.0));
-
+    void build_globe_buffer() {
         planet_builder_lock.lock();
 
         std::vector<float> vertices;
+        vertices.reserve(589824);
 
-        for (int y=0; y<WORLD_HEIGHT-1; ++y) {
-            const float lat = latitude_for_world_tile(y);
-            const float lat1 = latitude_for_world_tile(y+1);
-            const float phi = lat * TO_RADIANS;
-            const float phi1 = lat1 * TO_RADIANS;
-            for (int x = 0; x < WORLD_WIDTH - 1; ++x) {
-                const float lon = longitude_for_world_tile(x);
-                const float lon1 = longitude_for_world_tile(x+1);
+        int y = 0;
+        for (float b=0.0f; b<=ONE_EIGHTY_RAD; b+=latitude_per_tile) {
+            int x = 0;
+            for (float a=0.0f; a<=THREE_SIXY_RAD; a+=longitude_per_tile) {
                 const int idx = planet.idx(x,y);
-                const float altitude = 50.0f + ((*planet_builder_display.get())[idx].altitude/2.0f);
-                //const float altitude = 50.0f;
+                const float texture_id = (*planet_builder_display.get())[idx].texture_id;
 
-                const float theta = lon * TO_RADIANS;
-                const float theta1 = lon1 * TO_RADIANS;
+                float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
+                vertices.emplace_back(altitude * cos(b));
+                vertices.emplace_back(altitude * cos(a) * sin(b));
+                vertices.emplace_back(altitude * sin(a) * sin(b));
+                vertices.emplace_back(0.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
 
-                const float X = altitude * sin(phi) * cos(theta);
-                const float Y = altitude * sin(phi) * sin(theta);
-                const float Z = altitude * cos(phi);
+                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x,y+1)].altitude/ALTITUDE_DIVISOR);
+                vertices.emplace_back(altitude * cos(b + latitude_per_tile));
+                vertices.emplace_back(altitude * cos(a) * sin(b + latitude_per_tile));
+                vertices.emplace_back(altitude * sin(a) * sin(b + latitude_per_tile));
+                vertices.emplace_back(0.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
 
-                //std::cout << X << "/" << Y << "/" << Z << "\n";
+                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y+1)].altitude/ALTITUDE_DIVISOR);
+                vertices.emplace_back(altitude * cos(b + latitude_per_tile));
+                vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b + latitude_per_tile));
+                vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b + latitude_per_tile));
+                vertices.emplace_back(1.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
 
-                const float X1 = altitude * sin(phi1) * cos(theta1);
-                const float Y1 = altitude * sin(phi1) * sin(theta1);
-                const float Z1 = altitude * cos(phi1);
+                // Second triangle
+                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y+1)].altitude/ALTITUDE_DIVISOR);
+                vertices.emplace_back(altitude * cos(b + latitude_per_tile));
+                vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b + latitude_per_tile));
+                vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b + latitude_per_tile));
+                vertices.emplace_back(1.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
 
-                vertices.emplace_back(X); vertices.emplace_back(Y); vertices.emplace_back(Z);
+                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y)].altitude/ALTITUDE_DIVISOR);
+                vertices.emplace_back(altitude * cos(b));
+                vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b));
+                vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b));
+                vertices.emplace_back(1.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
+
+                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
+                vertices.emplace_back(altitude * cos(b));
+                vertices.emplace_back(altitude * cos(a) * sin(b));
+                vertices.emplace_back(altitude * sin(a) * sin(b));
+                vertices.emplace_back(0.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
+
+                ++x;
             }
+            ++y;
         }
-        //std::cout << "Points to render: " << vertices.size() << "\n";
 
         planet_builder_lock.unlock();
-
-        glViewport(0, 0, screen_w, screen_h);
-        glUseProgram(assets::worldgenshader);
-        if (vbo == 0) glGenBuffers(1, &vbo);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
+        glBindVertexArray(vao);
+
+        // Send location
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        // Send texture location
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), ((char *) nullptr + 3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
+        glBindVertexArray(0);
+
+        n_vertices = (int)vertices.size();
+    }
+
+    void render_globe() {
+        bengine::display_sprite(assets::starfield->texture_id);
+
+        model_matrix = glm::mat4();
+        model_matrix = glm::rotate(model_matrix, world_spin, glm::vec3(1.0, 0.0, 0.0));
+
+        glUseProgram(assets::worldgenshader);
+        glBindVertexArray(vao);
 
         glUniformMatrix4fv(projloc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
         glUniformMatrix4fv(viewloc, 1, GL_FALSE, glm::value_ptr(view_matrix));
         glUniformMatrix4fv(modelloc, 1, GL_FALSE, glm::value_ptr(model_matrix));
 
-        glFlush();
-        glDrawArrays(GL_POINTS, 0, vertices.size());
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
 
+        glDrawArrays(GL_TRIANGLES, 0, n_vertices/3);
+        glDisable(GL_DEPTH_TEST);
         glUseProgram(0);
     }
 
@@ -170,6 +201,8 @@ namespace worldgen {
         if (mode == WG_MENU) {
             render_menu();
         } else {
+            build_globe_buffer();
+
             // Render status
             planet_builder_lock.lock();
             ImGui::Begin("World Generation Progress");
