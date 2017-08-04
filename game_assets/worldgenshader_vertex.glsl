@@ -1,6 +1,7 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 texture_info;
+layout (location = 2) in float rivers;
 
 uniform mat4 projection_mat;
 uniform mat4 view;
@@ -9,6 +10,7 @@ uniform mat4 model;
 out vec3 texture_position;
 out vec3 frag_pos;
 out mat3 TBN;
+out float river;
 
 void main()
 {
@@ -32,4 +34,6 @@ void main()
     vec3 B = bitangent;
     vec3 N = normalize(normal);
     TBN = mat3(T, B, N);
+
+    river = rivers;
 }

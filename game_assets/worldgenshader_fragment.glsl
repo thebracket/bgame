@@ -6,6 +6,7 @@ uniform sampler2DArray textureArray;
 in vec3 texture_position;
 in vec3 frag_pos;
 in mat3 TBN;
+in float river;
 
 void main()
 {
@@ -14,6 +15,7 @@ void main()
     norm = normalize(TBN * norm);
 
     vec3 base_color = texture(textureArray, texture_position).rgb;
+    if (river > 0.0) base_color.b = 1.0f;
     vec3 light_pos = vec3(1.0f, 100.0f, 0.0f);
     vec3 ambient = base_color * 0.1;
 

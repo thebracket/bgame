@@ -10,6 +10,7 @@
 struct worldgen_display_t {
     int texture_id = 0;
     uint8_t altitude = 0;
+    bool rivers = false;
 };
 
 void build_planet(const int &seed, const int &water_divisor, const int &plains_divisor, const int &starting_settlers,

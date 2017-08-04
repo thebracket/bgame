@@ -19,7 +19,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace worldgen {
-    enum world_gen_mode_t { WG_MENU, WG_RUNNING };
+    enum world_gen_mode_t { WG_MENU, WG_RUNNING, WG_MAP };
     bool initialized = false;
     int seed;
     int plains = 3;
@@ -106,24 +106,28 @@ namespace worldgen {
             for (float a=0.0f; a<=THREE_SIXY_RAD; a+=longitude_per_tile) {
                 const int idx = planet.idx(x,y);
                 const float texture_id = (*planet_builder_display.get())[idx].texture_id;
+                const float rivers = (*planet_builder_display.get())[idx].rivers ? 1.0f : 0.0f;
 
                 float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
                 vertices.emplace_back(altitude * cos(b));
                 vertices.emplace_back(altitude * cos(a) * sin(b));
                 vertices.emplace_back(altitude * sin(a) * sin(b));
                 vertices.emplace_back(0.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
+                vertices.emplace_back(rivers);
 
                 altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x,y+1)].altitude/ALTITUDE_DIVISOR);
                 vertices.emplace_back(altitude * cos(b + latitude_per_tile));
                 vertices.emplace_back(altitude * cos(a) * sin(b + latitude_per_tile));
                 vertices.emplace_back(altitude * sin(a) * sin(b + latitude_per_tile));
                 vertices.emplace_back(0.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
+                vertices.emplace_back(rivers);
 
                 altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y+1)].altitude/ALTITUDE_DIVISOR);
                 vertices.emplace_back(altitude * cos(b + latitude_per_tile));
                 vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b + latitude_per_tile));
                 vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b + latitude_per_tile));
                 vertices.emplace_back(1.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
+                vertices.emplace_back(rivers);
 
                 // Second triangle
                 altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y+1)].altitude/ALTITUDE_DIVISOR);
@@ -131,18 +135,21 @@ namespace worldgen {
                 vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b + latitude_per_tile));
                 vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b + latitude_per_tile));
                 vertices.emplace_back(1.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
+                vertices.emplace_back(rivers);
 
                 altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y)].altitude/ALTITUDE_DIVISOR);
                 vertices.emplace_back(altitude * cos(b));
                 vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b));
                 vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b));
                 vertices.emplace_back(1.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
+                vertices.emplace_back(rivers);
 
                 altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
                 vertices.emplace_back(altitude * cos(b));
                 vertices.emplace_back(altitude * cos(a) * sin(b));
                 vertices.emplace_back(altitude * sin(a) * sin(b));
                 vertices.emplace_back(0.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
+                vertices.emplace_back(rivers);
 
                 ++x;
             }
@@ -158,12 +165,16 @@ namespace worldgen {
 
         // Send location
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
         // Send texture location
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), ((char *) nullptr + 3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), ((char *) nullptr + 3 * sizeof(float)));
         glEnableVertexAttribArray(1);
+
+        // Send terrain indicator
+        glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), ((char *) nullptr + 6 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
         glBindVertexArray(0);
 

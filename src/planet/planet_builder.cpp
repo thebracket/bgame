@@ -46,6 +46,17 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         } break;
     }
 
+    for (const river_t &r : planet.rivers) {
+        if (planet.idx(r.start_x, r.start_y) == block_idx) {
+            (*planet_builder_display.get())[idx].rivers = true;
+        }
+        for (const river_step_t &s : r.steps) {
+            if (planet.idx(s.x, s.y) == block_idx) {
+                (*planet_builder_display.get())[idx].rivers = true;
+            }
+        }
+    }
+
     /*
     (*planet_builder_display.get())[idx].background = bengine::color_t{0.0f, 0.0f, 0.0f};
 
