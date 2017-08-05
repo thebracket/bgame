@@ -17,7 +17,7 @@ void main()
     vec3 base_color = texture(textureArray, texture_position).rgb;
     if (river > 0.0) base_color.b = 1.0f;
     vec3 light_pos = vec3(1.0f, 100.0f, 0.0f);
-    vec3 ambient = base_color * 0.1;
+    vec3 ambient = base_color * 0.3;
 
     vec3 lightDir = normalize(light_pos - frag_pos);
     float diff = max(dot(norm, lightDir), 0.0);

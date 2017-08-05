@@ -38,6 +38,7 @@ namespace worldgen {
     unsigned int modelloc = -1;
     int screen_w, screen_h;
     int n_vertices = 0;
+    float world_flatten_lerp = 0.0f;
 
     float world_spin = 0.0f;
 
@@ -92,7 +93,44 @@ namespace worldgen {
     constexpr float ONE_EIGHTY_RAD = 180.0f * TO_RADIANS;
     constexpr float THREE_SIXY_RAD = 360.0f * TO_RADIANS;
     constexpr float ALTITUDE_DIVISOR = 3.0f;
-    constexpr float ALTITUDE_BASE = 50.0f;
+    constexpr float ALTITUDE_BASE = 60.0f;
+
+    void lerp_vertex(std::vector<float> &vertices, const int &world_x, const int &world_y, const int &idx, const float &a, const float &b, const bool &rivers, const float &texture_id, const float &tx, const float &ty, const float &amount) {
+        const float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
+        const float x_sphere = altitude * cos(b);
+        const float y_sphere = altitude * cos(a) * sin(b);
+        const float z_sphere = altitude * sin(a) * sin(b);
+
+        const float x_map = 90.0f - altitude;
+        const float y_map = ((float)world_x + tx - (WORLD_WIDTH/2.0f)) * 1.5f;
+        const float z_map = ((float)world_y + ty - (WORLD_HEIGHT/2.0f)) * 1.5f;
+
+        const float xdiff = x_map - x_sphere;
+        const float ydiff = y_map - y_sphere;
+        const float zdiff = z_map - z_sphere;
+
+        float x = x_sphere + (xdiff * amount);
+        float y = y_sphere + (ydiff * amount);
+        float z = z_sphere + (zdiff * amount);
+
+        vertices.emplace_back(x); vertices.emplace_back(y); vertices.emplace_back(z);
+        vertices.emplace_back(tx); vertices.emplace_back(ty); vertices.emplace_back(texture_id);
+        vertices.emplace_back(rivers);
+    }
+
+    void lerp_world_tile(std::vector<float> &vertices, const float &amount, const int &x, const int &y, const float &a, const float &b) {
+        const int idx = planet.idx(x,y);
+        const float texture_id = (*planet_builder_display.get())[idx].texture_id;
+        const float rivers = (*planet_builder_display.get())[idx].rivers ? 1.0f : 0.0f;
+
+        lerp_vertex(vertices, x, y, idx, a, b, rivers, texture_id, 0.0f, 0.0f, amount);
+        lerp_vertex(vertices, x, y, planet.idx(x, y+1), a, b+latitude_per_tile, rivers, texture_id, 0.0f, 1.0f, amount);
+        lerp_vertex(vertices, x, y, planet.idx(x+1, y+1), a+longitude_per_tile, b+latitude_per_tile, rivers, texture_id, 1.0f, 1.0f, amount);
+        // Second triangle
+        lerp_vertex(vertices, x, y, planet.idx(x+1, y+1), a+longitude_per_tile, b+latitude_per_tile, rivers, texture_id, 1.0f, 1.0f, amount);
+        lerp_vertex(vertices, x, y, planet.idx(x+1, y), a+longitude_per_tile, b, rivers, texture_id, 1.0f, 0.0f, amount);
+        lerp_vertex(vertices, x, y, idx, a, b, rivers, texture_id, 0.0f, 0.0f, amount);
+    }
 
     void build_globe_buffer() {
         planet_builder_lock.lock();
@@ -104,52 +142,7 @@ namespace worldgen {
         for (float b=0.0f; b<=ONE_EIGHTY_RAD; b+=latitude_per_tile) {
             int x = 0;
             for (float a=0.0f; a<=THREE_SIXY_RAD; a+=longitude_per_tile) {
-                const int idx = planet.idx(x,y);
-                const float texture_id = (*planet_builder_display.get())[idx].texture_id;
-                const float rivers = (*planet_builder_display.get())[idx].rivers ? 1.0f : 0.0f;
-
-                float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
-                vertices.emplace_back(altitude * cos(b));
-                vertices.emplace_back(altitude * cos(a) * sin(b));
-                vertices.emplace_back(altitude * sin(a) * sin(b));
-                vertices.emplace_back(0.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
-                vertices.emplace_back(rivers);
-
-                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x,y+1)].altitude/ALTITUDE_DIVISOR);
-                vertices.emplace_back(altitude * cos(b + latitude_per_tile));
-                vertices.emplace_back(altitude * cos(a) * sin(b + latitude_per_tile));
-                vertices.emplace_back(altitude * sin(a) * sin(b + latitude_per_tile));
-                vertices.emplace_back(0.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
-                vertices.emplace_back(rivers);
-
-                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y+1)].altitude/ALTITUDE_DIVISOR);
-                vertices.emplace_back(altitude * cos(b + latitude_per_tile));
-                vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b + latitude_per_tile));
-                vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b + latitude_per_tile));
-                vertices.emplace_back(1.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
-                vertices.emplace_back(rivers);
-
-                // Second triangle
-                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y+1)].altitude/ALTITUDE_DIVISOR);
-                vertices.emplace_back(altitude * cos(b + latitude_per_tile));
-                vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b + latitude_per_tile));
-                vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b + latitude_per_tile));
-                vertices.emplace_back(1.0f); vertices.emplace_back(1.0f); vertices.emplace_back(texture_id);
-                vertices.emplace_back(rivers);
-
-                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[planet.idx(x+1,y)].altitude/ALTITUDE_DIVISOR);
-                vertices.emplace_back(altitude * cos(b));
-                vertices.emplace_back(altitude * cos(a + longitude_per_tile) * sin(b));
-                vertices.emplace_back(altitude * sin(a + longitude_per_tile) * sin(b));
-                vertices.emplace_back(1.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
-                vertices.emplace_back(rivers);
-
-                altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
-                vertices.emplace_back(altitude * cos(b));
-                vertices.emplace_back(altitude * cos(a) * sin(b));
-                vertices.emplace_back(altitude * sin(a) * sin(b));
-                vertices.emplace_back(0.0f); vertices.emplace_back(0.0f); vertices.emplace_back(texture_id);
-                vertices.emplace_back(rivers);
+                lerp_world_tile(vertices, world_flatten_lerp, x, y, a, b);
 
                 ++x;
             }
@@ -182,7 +175,7 @@ namespace worldgen {
     }
 
     void render_globe() {
-        bengine::display_sprite(assets::starfield->texture_id);
+        bengine::display_sprite(assets::starfield->texture_id, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f - world_flatten_lerp);
 
         model_matrix = glm::mat4();
         model_matrix = glm::rotate(model_matrix, world_spin, glm::vec3(1.0, 0.0, 0.0));
@@ -218,14 +211,22 @@ namespace worldgen {
             planet_builder_lock.lock();
             ImGui::Begin("World Generation Progress");
             ImGui::Text("%s",planet_builder_status.c_str());
+            ImGui::Text("Rotation: %f degrees.", world_spin);
             ImGui::End();
+            if (planet_builder_status == "Initializing starting settlements") mode = WG_MAP;
             planet_builder_lock.unlock();
 
             run_time += duration_ms;
             if (run_time > 33.0) {
                 run_time = 0;
-                world_spin += 0.01f;
-                if (world_spin > 360.0f) world_spin = 0.0f;
+                if (mode == WG_RUNNING || (mode == WG_MAP && world_spin < 350.0f)) {
+                    world_spin += 0.01f;
+                    if (world_spin > 360.0f) world_spin = 0.0f;
+                }
+                if (mode == WG_MAP) {
+                    world_flatten_lerp += 0.02f;
+                    if (world_flatten_lerp > 1.0f) world_flatten_lerp = 1.0f;
+                }
             }
             render_globe();
 
