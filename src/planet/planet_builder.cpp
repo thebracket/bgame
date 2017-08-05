@@ -29,6 +29,7 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
     // Set the altitude component
     (*planet_builder_display.get())[idx].altitude = planet.landblocks[block_idx].height / 3;
 
+    // Display base layer
     switch (planet.landblocks[block_idx].type) {
         case block_type::NONE : (*planet_builder_display.get())[idx].texture_id = 0; break;
         case block_type::WATER : (*planet_builder_display.get())[idx].texture_id = 0; break;
@@ -46,6 +47,7 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         } break;
     }
 
+    // Display rivers
     for (const river_t &r : planet.rivers) {
         if (planet.idx(r.start_x, r.start_y) == block_idx) {
             (*planet_builder_display.get())[idx].rivers = true;
@@ -56,6 +58,16 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
             }
         }
     }
+
+    // Optionally override by biome display; this is an opportunity to insert tree models also
+    const auto biome_idx = planet.landblocks[block_idx].biome_idx;
+    if (biome_idx > 0 && !planet.biomes.empty() && biome_idx <planet.biomes.size() && planet.biomes[biome_idx].type > 0) {
+        const auto biome_def = get_biome_def(planet.biomes[biome_idx].type);
+        //std::cout << "Biome detected: " << biome_def->name << "\n";
+        if (biome_def->worldgen_texture_index > 0) (*planet_builder_display.get())[idx].texture_id = biome_def->worldgen_texture_index;
+    }
+
+    // TODO: Display units and improvements
 
     /*
     (*planet_builder_display.get())[idx].background = bengine::color_t{0.0f, 0.0f, 0.0f};

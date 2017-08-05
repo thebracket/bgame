@@ -48,7 +48,15 @@ namespace splash_screen {
             {"game_assets/worldgen/highlands-t.jpg"},
             {"game_assets/worldgen/highlands-n.jpg"},
             {"game_assets/worldgen/mountains-t.jpg"},
-            {"game_assets/worldgen/mountains-n.jpg"}
+            {"game_assets/worldgen/mountains-n.jpg"},
+            {"game_assets/worldgen/desert-t.jpg"},
+            {"game_assets/worldgen/desert-n.jpg"},
+            {"game_assets/worldgen/cold-desert-t.jpg"},
+            {"game_assets/worldgen/cold-desert-n.jpg"},
+            {"game_assets/worldgen/tundra-t.jpg"},
+            {"game_assets/worldgen/tundra-n.jpg"},
+            {"game_assets/worldgen/ice-t.jpg"},
+            {"game_assets/worldgen/ice-n.jpg"}
     };
 
     /* Loads enough to get things started. */

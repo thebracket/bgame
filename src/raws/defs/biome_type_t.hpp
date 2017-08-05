@@ -19,8 +19,7 @@ struct biome_type_t {
     uint8_t soil_pct = 50;
     uint8_t sand_pct = 50;
     std::vector<uint8_t> occurs;
-    uint8_t worldgen_glyph;
-    bengine::color_t worldgen_color;
+    unsigned int worldgen_texture_index = 0;
     std::vector<std::pair<std::string,int>> plants;
     std::vector<std::string> wildlife;
     int deciduous_tree_chance = 0;

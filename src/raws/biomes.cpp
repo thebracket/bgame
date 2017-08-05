@@ -64,6 +64,7 @@ void read_biome_types() noexcept
             if (field == "max_rain") b.max_rain = lua_tonumber(lua_state, -1);
             if (field == "min_mutation") b.min_mutation = lua_tonumber(lua_state, -1);
             if (field == "max_mutation") b.max_mutation = lua_tonumber(lua_state, -1);
+            if (field == "worldgen_texture_index") b.worldgen_texture_index = lua_tonumber(lua_state, -1);
             if (field == "soils") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
@@ -80,17 +81,6 @@ void read_biome_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     b.occurs.push_back(lua_tonumber(lua_state, -1));
-                    lua_pop(lua_state, 1);
-                }
-            }
-            if (field == "worldgen_render") {
-                // Load glyph and color
-                lua_pushstring(lua_state, field.c_str());
-                lua_gettable(lua_state, -2);
-                while (lua_next(lua_state, -2) != 0) {
-                    std::string sub_field = lua_tostring(lua_state, -2);
-                    if (sub_field == "glyph") b.worldgen_glyph = lua_tonumber(lua_state, -1);
-                    if (sub_field == "color") b.worldgen_color = read_lua_color("color");
                     lua_pop(lua_state, 1);
                 }
             }
