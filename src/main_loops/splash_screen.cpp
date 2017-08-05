@@ -46,7 +46,9 @@ namespace splash_screen {
             {"game_assets/worldgen/plateau-t.jpg"},
             {"game_assets/worldgen/plateau-n.jpg"},
             {"game_assets/worldgen/highlands-t.jpg"},
-            {"game_assets/worldgen/highlands-n.jpg"}
+            {"game_assets/worldgen/highlands-n.jpg"},
+            {"game_assets/worldgen/mountains-t.jpg"},
+            {"game_assets/worldgen/mountains-n.jpg"}
     };
 
     /* Loads enough to get things started. */

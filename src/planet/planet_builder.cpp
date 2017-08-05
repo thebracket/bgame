@@ -39,7 +39,7 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         case block_type::HIGHLANDS : (*planet_builder_display.get())[idx].texture_id = 10; break;
         case block_type::COASTAL : (*planet_builder_display.get())[idx].texture_id = 2; break;
         case block_type::SALT_MARSH : (*planet_builder_display.get())[idx].texture_id = 6; break;
-        case block_type::MOUNTAINS : (*planet_builder_display.get())[idx].texture_id = 8; break;
+        case block_type::MOUNTAINS : (*planet_builder_display.get())[idx].texture_id = 12; break;
         default : {
             std::cout << "Default texture for block type " << +planet.landblocks[block_idx].type << "\n";
             (*planet_builder_display.get())[idx].texture_id = 0;
