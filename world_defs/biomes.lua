@@ -7,12 +7,15 @@ biome_textures = {
     plateau = { index=8, texture="game_assets/worldgen/plateau-t.jpg", normal="game_assets/worldgen/plateau-n.jpg" },
     highlands = { index=10, texture="game_assets/worldgen/highlands-t.jpg", normal="game_assets/worldgen/highlands-n.jpg" },
     mountains = { index=12, texture="game_assets/worldgen/mountains-t.jpg", normal="game_assets/worldgen/mountains-n.jpg" },
+    blight = { index=14, texture="game_assets/worldgen/blight-t.jpg", normal="game_assets/worldgen/blight-n.jpg" },
 
     -- User area - you can add/remove as you wish
-    desert = { index=14, texture="game_assets/worldgen/desert-t.jpg", normal="game_assets/worldgen/desert-n.jpg" },
-    cold_desert = { index=16, texture="game_assets/worldgen/cold-desert-t.jpg", normal="game_assets/worldgen/cold-desert-n.jpg" },
-    tundra = { index=18, texture="game_assets/worldgen/tundra-t.jpg", normal="game_assets/worldgen/tundra-n.jpg" },
-    ice = { index=20, texture="game_assets/worldgen/ice-t.jpg", normal="game_assets/worldgen/ice-n.jpg" },
+    desert = { index=16, texture="game_assets/worldgen/desert-t.jpg", normal="game_assets/worldgen/desert-n.jpg" },
+    cold_desert = { index=18, texture="game_assets/worldgen/cold-desert-t.jpg", normal="game_assets/worldgen/cold-desert-n.jpg" },
+    tundra = { index=20, texture="game_assets/worldgen/tundra-t.jpg", normal="game_assets/worldgen/tundra-n.jpg" },
+    ice = { index=22, texture="game_assets/worldgen/ice-t.jpg", normal="game_assets/worldgen/ice-n.jpg" },
+    brown_grass = { index=24, texture="game_assets/worldgen/brown-grass-t.jpg", normal="game_assets/worldgen/brown-grass-n.jpg" },
+    badlands = { index=26, texture="game_assets/worldgen/badlands-t.jpg", normal="game_assets/worldgen/badlands-n.jpg" },
 }
 
 function biomeTex(name) return biome_textures[name].index end
@@ -127,7 +130,8 @@ biomes = {
         occurs = { biome_types["salt_marsh"] }, soils = { soil=50, sand=50 },
         trees = { deciduous = 15, evergreen = 0 },
         wildlife = { "deer","boar"},
-        nouns = { "Badlands", "Waste", "Flats", "Alkali Flat" }
+        nouns = { "Badlands", "Waste", "Flats", "Alkali Flat" },
+        worldgen_texture_index = biomeTex("badlands")
     },
 
     -- Flatlands
@@ -163,7 +167,8 @@ biomes = {
         plants = { none=3, grass=25, reeds_giant=2, sage=1, daisy=1, reeds=2, strawberry=1,asparagus=1, string_bean=1, broad_bean=1, caper=1, carrot=1, cassava=1, celery=1, chickpea=1, chickory=1, cowpea=1, cucumber=1, eggplant=1, garlic=1, horned_melon=1, lentil=1, lettuce=1, mung_bean=1, onion=1, parsnip=1, peanut=1, pepper=1, soybean=1, spinach=1, squash=1, sweet_potato=1, tomatillo=1, watermelon=1, yam=1, reeds_paper=2, jute=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 20, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","elephant","antelope","horse"},
-        nouns = { "Savannah", "Grassland", "Heath", "Scrub", "Level" }
+        nouns = { "Savannah", "Grassland", "Heath", "Scrub", "Level" },
+        worldgen_texture_index = biomeTex("brown_grass")
     },
 
     -- Hills
@@ -198,7 +203,8 @@ biomes = {
         plants = { none=5, grass=20, sage=1, daisy=1, reeds=2,asparagus=1, cabbage=1, caper=1, carrot=1, celery=1, chickpea=1, chickory=1, eggplant=1, lentil=1, onion=1, peanut=1, pepper=1, soybean=1, jute=1, ramie=1, cotton=1 },
         trees = { deciduous = 10, evergreen = 0 },
         wildlife = { "deer","boar","elephant","antelope","horse"},
-        nouns = { "Savannah Hills", "Hill", "Rolling Savannah", "Savannah Moor" }
+        nouns = { "Savannah Hills", "Hill", "Rolling Savannah", "Savannah Moor" },
+        worldgen_texture_index = biomeTex("brown_grass")
     },
 
      -- Plateau
@@ -233,14 +239,16 @@ biomes = {
         plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, strawberry=1, asparagus=1, bambara_groundnut=1, goya=1, cabbage=1, caper=1, celery=1, chickpea=1, chickory=1, cucumber=1, eggplant=1, horned_melon=1, lentil=1, onion=1, soybean=1, tomatillo=1, hemp=1, ramie=1, cotton=1 },
         trees = { deciduous = 25, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","antelope","horse"},
-        nouns = { "Upland", "Table", "Plateau" }
+        nouns = { "Upland", "Table", "Plateau" },
+        worldgen_texture_index = biomeTex("brown_grass")
     },
     badland_plateau = {
         name = "Badlands", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 20, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["plateau"] }, soils = { soil=50, sand=50 },
         trees = { deciduous = 1, evergreen = 0 },
         wildlife = { "deer","armadillo"},
-        nouns = { "Devil's Table", "Badland Plateau" }
+        nouns = { "Devil's Table", "Badland Plateau" },
+        worldgen_texture_index = biomeTex("badlands")
     },
 
     -- Highlands
@@ -274,7 +282,8 @@ biomes = {
         plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, beetroot=1, strawberry=1, goya=1, cabbage=1, hemp=1 },
         trees = { deciduous = 20, evergreen = 1 },
         wildlife = { "deer","armadillo","boar","horse"},
-        nouns = { "Savannah Hills", "Highlands", "Uplands", "Peaks", "Mounds" }
+        nouns = { "Savannah Hills", "Highlands", "Uplands", "Peaks", "Mounds" },
+        worldgen_texture_index = biomeTex("brown_grass")
     },
     badland_highlands = {
         name = "Badland Highlands", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 20, min_mutation = 0, max_mutation = 100,       
@@ -315,14 +324,16 @@ biomes = {
         plants = { none=2, grass=20, sage=1, daisy=1, reeds=2, goya=1, hemp=1 },
         trees = { deciduous = 3, evergreen = 0 },
         wildlife = { "deer","armadillo","boar","horse"},
-        nouns = { "Mountains", "Peaks", "Pikes", "Alps" }
+        nouns = { "Mountains", "Peaks", "Pikes", "Alps" },
+        worldgen_texture_index = biomeTex("brown_grass")
     },
     badland_mountains = {
         name = "Badlands", min_temp = 25, max_temp = 55, min_rain = 0, max_rain = 20, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["mountains"] }, soils = { soil=10, sand=90 },
         trees = { deciduous = 1, evergreen = 0 },
         wildlife = { "deer","armadillo"},
-        nouns = { "Mountains", "Peaks", "Pikes", "Alps" }
+        nouns = { "Mountains", "Peaks", "Pikes", "Alps" },
+        worldgen_texture_index = biomeTex("badlands")
     },
 
     -- Low precipitation desert areas
@@ -358,7 +369,8 @@ biomes = {
         trees = { deciduous = 1, evergreen = 0 },
         wildlife = { "deer","armadillo","horse"},
         nouns = { "Barrens", "Platter" },
-        worldgen_texture_index = biomeTex("desert")
+        worldgen_texture_index = biomeTex("desert"),
+        worldgen_texture_index = biomeTex("badlands")
     },
 
     -- High-precipitation areas

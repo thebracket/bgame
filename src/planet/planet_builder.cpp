@@ -67,6 +67,8 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         if (biome_def->worldgen_texture_index > 0) (*planet_builder_display.get())[idx].texture_id = biome_def->worldgen_texture_index;
     }
 
+
+
     // TODO: Display units and improvements
 
     /*
