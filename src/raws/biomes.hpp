@@ -2,8 +2,11 @@
 
 #include <string>
 #include <functional>
+#include <vector>
+#include <utility>
 
 struct biome_type_t;
+extern std::vector<std::string> biome_textures;
 
 /*
  * Retrieve a biome type by index
@@ -19,6 +22,11 @@ void sanity_check_biomes() noexcept;
  * Load the biomes from Lua
  */
 void read_biome_types() noexcept;
+
+/*
+ * Load the biome texture list for displaying world-gen
+ */
+void read_biome_textures();
 
 /*
  * Iterate all biomes

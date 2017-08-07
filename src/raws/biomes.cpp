@@ -3,8 +3,10 @@
 #include "creatures.hpp"
 #include "defs/biome_type_t.hpp"
 #include <iostream>
+#include <map>
 
 std::vector<biome_type_t> biome_defs;
+std::vector<std::string> biome_textures;
 
 biome_type_t * get_biome_def(const std::size_t &index) {
     return &biome_defs[index];
@@ -130,5 +132,43 @@ void read_biome_types() noexcept
         biome_defs.push_back(b);
 
         lua_pop(lua_state, 1);
+    }
+}
+
+void read_biome_textures() {
+    std::map<int, std::pair<std::string, std::string>> tmp_tex;
+
+    lua_getglobal(lua_state, "biome_textures");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0) {
+        std::string key = lua_tostring(lua_state, -2);
+        std::cout << key << "\n";
+
+        int idx = 0;
+        std::string tex = "";
+        std::string norm = "";
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+            //std::cout << field << "\n";
+
+            if (field == "index") idx = lua_tonumber(lua_state, -1);
+            if (field == "texture") tex = lua_tostring(lua_state, -1);
+            if (field == "normal") norm = lua_tostring(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        tmp_tex[idx] = std::make_pair(tex, norm);
+
+        lua_pop(lua_state, 1);
+    }
+
+    biome_textures.clear();
+    for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
+        biome_textures.emplace_back(i->second.first);
+        biome_textures.emplace_back(i->second.second);
     }
 }

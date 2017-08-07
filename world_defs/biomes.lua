@@ -1,3 +1,22 @@
+biome_textures = {
+    -- Reserved area
+    water = { index=0, texture="game_assets/worldgen/water-t.jpg", normal="game_assets/worldgen/water-n.jpg" },
+    grass = { index=2, texture="game_assets/worldgen/grass-t.jpg", normal="game_assets/worldgen/grass-n.jpg" },
+    hill = { index=4, texture="game_assets/worldgen/hill-t.jpg", normal="game_assets/worldgen/hill-n.jpg" },
+    marsh = { index=6, texture="game_assets/worldgen/marsh-t.jpg", normal="game_assets/worldgen/marsh-n.jpg" },
+    plateau = { index=8, texture="game_assets/worldgen/plateau-t.jpg", normal="game_assets/worldgen/plateau-n.jpg" },
+    highlands = { index=10, texture="game_assets/worldgen/highlands-t.jpg", normal="game_assets/worldgen/highlands-n.jpg" },
+    mountains = { index=12, texture="game_assets/worldgen/mountains-t.jpg", normal="game_assets/worldgen/mountains-n.jpg" },
+
+    -- User area - you can add/remove as you wish
+    desert = { index=14, texture="game_assets/worldgen/desert-t.jpg", normal="game_assets/worldgen/desert-n.jpg" },
+    cold_desert = { index=16, texture="game_assets/worldgen/cold-desert-t.jpg", normal="game_assets/worldgen/cold-desert-n.jpg" },
+    tundra = { index=18, texture="game_assets/worldgen/tundra-t.jpg", normal="game_assets/worldgen/tundra-n.jpg" },
+    ice = { index=20, texture="game_assets/worldgen/ice-t.jpg", normal="game_assets/worldgen/ice-n.jpg" },
+}
+
+function biomeTex(name) return biome_textures[name].index end
+
 biome_types = {
     ocean=1,
     plains=2,
@@ -19,7 +38,7 @@ biomes = {
         plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}, nouns = { "Arctic", "Pole", "Frozen Sea" },
-        worldgen_texture_index = 20
+        worldgen_texture_index = biomeTex("ice")
     },
     icy_ocean = {
         name = "Icy Ocean", min_temp = -10, max_temp = 10, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -27,7 +46,7 @@ biomes = {
         plants = { none=10, grass=20, lavendar=1, daisy=1, reeds=2, potato=1, radish=1, turnip=1 },
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer"}, nouns = { "Arctic", "Ice Sea", "Sea of Razors", "Iceberg" },
-        worldgen_texture_index = 20
+        worldgen_texture_index = biomeTex("ice")
     },
     ocean = {
         name = "Ocean", min_temp = 0, max_temp = 30, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -51,14 +70,15 @@ biomes = {
         plants = { none=20, grass=20, lavendar=1, daisy=1, reeds=2, heather=2 },
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"}, nouns = { "Ice Cliffs", "Ice Shelf", "Glacier", "Needles" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("ice")
     },
     cold_coastal = {
         name = "Cold Coast", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
         occurs = { biome_types["coast"] }, soils = { soil=50, sand=50 },
         plants = { none=10, grass=20, lavendar=1, daisy=1, reeds=2, heather=2, cabbage=1, cress=1, garlic=1, leek=1, onion=1, parsnip=1, potato=1, radish=1, turnip=1, hemp=1 },
         trees = { deciduous = 0, evergreen = 5 },
-        wildlife = { "deer","boar" }, nouns = { "Coast", "Seashore", "Littoral" }
+        wildlife = { "deer","boar" }, nouns = { "Coast", "Seashore", "Littoral" },
+        worldgen_texture_idnex = biomeTex("tundra")
     },
     temperate_coastal = {
         name = "Temperate Coast", min_temp = 5, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -84,7 +104,7 @@ biomes = {
         trees = { deciduous = 0, evergreen = 5 },
         wildlife = { "deer","mammoth"},
         nouns = { "Arctic", "Tundra", "Devil's Icebox" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("tundra")
     },
     cold_salt = {
         name = "Cold Coast", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -93,7 +113,7 @@ biomes = {
         trees = { deciduous = 3, evergreen = 10 },
         wildlife = { "deer","mammoth"},
         nouns = { "Tundra", "Cold Desert" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("tundra")
     },
     temperate_salt = {
         name = "Temperate Coast", min_temp = 5, max_temp = 25, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -118,7 +138,7 @@ biomes = {
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer","mammoth"},
         nouns = { "Permafrost", "Tundra", "Frozen Plain" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("tundra")
     },
     rocky_plain = {
         name = "Rocky Plain", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -154,7 +174,7 @@ biomes = {
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer","mammoth"},
         nouns = { "Ice Hill", "Hill", "Mound", "Roughs" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("tundra")
     },
     rocky_hills = {
         name = "Rocky Hills", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -189,7 +209,7 @@ biomes = {
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"},
         nouns = { "Glacier", "Plateau", "Ice Plain", "Steppe" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("tundra")
     },
     rocky_plateau = {
         name = "Rocky Plateau", min_temp = -5, max_temp = 5, min_rain = 0, max_rain = 100, min_mutation = 0, max_mutation = 100,       
@@ -313,7 +333,7 @@ biomes = {
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"},
         nouns = { "Tundra", "Waste", "Ice Waste" },
-        worldgen_texture_index = 18
+        worldgen_texture_index = biomeTex("tundra")
     },
     cold_desert = {
         name = "Cold Desert", min_temp = 1, max_temp = 10, min_rain = 0, max_rain = 10, min_mutation = 0, max_mutation = 100,       
@@ -322,7 +342,7 @@ biomes = {
         trees = { deciduous = 0, evergreen = 1 },
         wildlife = { "deer"},
         nouns = { "Semi-Tundra", "Expanse", "Steppe" },
-        worldgen_texture_index = 16
+        worldgen_texture_index = biomeTex("cold_desert")
     },
     sand_desert = {
         name = "Sand Desert", min_temp = 9, max_temp = 100, min_rain = 0, max_rain = 10, min_mutation = 0, max_mutation = 100,       
@@ -330,7 +350,7 @@ biomes = {
         trees = { deciduous = 1, evergreen = 0 },
         wildlife = { "deer","horse"},
         nouns = { "Desert", "Waste", "Wild", "Dunes", "Barren" },
-        worldgen_texture_index = 14
+        worldgen_texture_index = biomeTex("desert")
     },
     rock_desert = {
         name = "Rocky Desert", min_temp = 9, max_temp = 100, min_rain = 0, max_rain = 10, min_mutation = 0, max_mutation = 100,       
@@ -338,7 +358,7 @@ biomes = {
         trees = { deciduous = 1, evergreen = 0 },
         wildlife = { "deer","armadillo","horse"},
         nouns = { "Barrens", "Platter" },
-        worldgen_texture_index = 14
+        worldgen_texture_index = biomeTex("desert")
     },
 
     -- High-precipitation areas

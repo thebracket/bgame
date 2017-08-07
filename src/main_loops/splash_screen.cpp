@@ -8,6 +8,7 @@
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../bengine/threadpool.h"
 #include "../raws/raws.hpp"
+#include "../raws/biomes.hpp"
 #include "../bengine/main_window.hpp"
 #include "main_menu.hpp"
 #include "../bengine/telemetry.hpp"
@@ -32,32 +33,8 @@ namespace splash_screen {
     bool loaded_textures = false;
     bool started_telemetry = false;
     bool sent_telemetry = false;
+    bool loaded_worldgen = false;
     int tex_idx = 0;
-
-    std::vector<std::string> worldgen_textures_to_load{
-            {"game_assets/worldgen/water-t.jpg"},
-            {"game_assets/worldgen/water-n.jpg"},
-            {"game_assets/worldgen/grass-t.jpg"},
-            {"game_assets/worldgen/grass-n.jpg"},
-            {"game_assets/worldgen/hill-t.jpg"},
-            {"game_assets/worldgen/hill-n.jpg"},
-            {"game_assets/worldgen/marsh-t.jpg"},
-            {"game_assets/worldgen/marsh-n.jpg"},
-            {"game_assets/worldgen/plateau-t.jpg"},
-            {"game_assets/worldgen/plateau-n.jpg"},
-            {"game_assets/worldgen/highlands-t.jpg"},
-            {"game_assets/worldgen/highlands-n.jpg"},
-            {"game_assets/worldgen/mountains-t.jpg"},
-            {"game_assets/worldgen/mountains-n.jpg"},
-            {"game_assets/worldgen/desert-t.jpg"},
-            {"game_assets/worldgen/desert-n.jpg"},
-            {"game_assets/worldgen/cold-desert-t.jpg"},
-            {"game_assets/worldgen/cold-desert-n.jpg"},
-            {"game_assets/worldgen/tundra-t.jpg"},
-            {"game_assets/worldgen/tundra-n.jpg"},
-            {"game_assets/worldgen/ice-t.jpg"},
-            {"game_assets/worldgen/ice-n.jpg"}
-    };
 
     /* Loads enough to get things started. */
     void init() {
@@ -79,17 +56,17 @@ namespace splash_screen {
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::worldgen_texture_array);
 
         glTexStorage3D( GL_TEXTURE_2D_ARRAY,
-                        8, // No mip-maps yet
+                        8, // 8-levels of mipmap
                         GL_RGBA8, // Internal format
                         128, 128, // Width and height
-                        worldgen_textures_to_load.size()
+                        biome_textures.size()
         );
 
-        for (unsigned int i=0; i<worldgen_textures_to_load.size(); ++i) {
+        for (unsigned int i=0; i<biome_textures.size(); ++i) {
             int width, height, bpp;
             stbi_set_flip_vertically_on_load(true);
-            unsigned char *image_data = stbi_load(worldgen_textures_to_load[i].c_str(), &width, &height, &bpp, STBI_rgb_alpha);
-            if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(worldgen_textures_to_load[i]));
+            unsigned char *image_data = stbi_load(biome_textures[i].c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+            if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(biome_textures[i]));
 
             glTexSubImage3D(
                 GL_TEXTURE_2D_ARRAY,
@@ -112,8 +89,6 @@ namespace splash_screen {
     }
 
     void tick(const double &duration_ms) {
-        // TODO: Start telemetry
-
         run_time += duration_ms;
         if (run_time > 0.1 && run_time < 500.0f) {
             scale = std::min(0.5f, scale + 0.01f);
@@ -150,6 +125,11 @@ namespace splash_screen {
         } else {
             ImGui::BulletText("%s", "Started telemetry (if permitted)");
         }
+        if (!loaded_worldgen) {
+            ImGui::BulletText("%s", "Loading worldgen textures");
+        } else {
+            ImGui::BulletText("%s", "Loaded worldgen textures");
+        }
 
         ImGui::End();
         ImGui::Render();
@@ -169,7 +149,6 @@ namespace splash_screen {
                 case 0 : background_image = std::make_unique<texture_t>("game_assets/background_image.jpg"); break;
                 case 1 : game_logo = std::make_unique<texture_t>("game_assets/gamelogo.png"); break;
                 case 2 : starfield = std::make_unique<texture_t>("game_assets/starfield.jpg"); break;
-                case 3 : load_worldgen_textures(); break;
                 default: loaded_textures = true;
             }
             ++tex_idx;
@@ -187,7 +166,12 @@ namespace splash_screen {
             sent_telemetry = true;
         }
 
-        if (initialized_thread_pool && initialized_raws && loaded_textures && angle==0.0f && started_telemetry && sent_telemetry) {
+        if (initialized_raws && !loaded_worldgen) {
+            load_worldgen_textures();
+            loaded_worldgen = true;
+        }
+
+        if (initialized_thread_pool && initialized_raws && loaded_textures && angle==0.0f && started_telemetry && sent_telemetry && loaded_worldgen) {
             // We're done - time to move on!
             main_func = main_menu::tick;
         }

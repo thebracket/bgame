@@ -73,6 +73,7 @@ void load_game_tables()
     read_reactions();
     read_plant_types();
     read_biome_types();
+    read_biome_textures();
     read_species_types();
     read_creature_types();
 
