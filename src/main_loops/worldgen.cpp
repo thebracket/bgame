@@ -102,8 +102,8 @@ namespace worldgen {
         const float z_sphere = altitude * sin(a) * sin(b);
 
         const float x_map = 90.0f - altitude;
-        const float y_map = ((float)world_x + tx - (WORLD_WIDTH/2.0f)) * 1.5f;
-        const float z_map = ((float)world_y + ty - (WORLD_HEIGHT/2.0f)) * 1.5f;
+        const float z_map = ((float)world_x + tx - (WORLD_WIDTH/2.0f)) * 1.5f;
+        const float y_map = ((float)world_y + ty - (WORLD_HEIGHT/2.0f)) * 1.5f;
 
         const float xdiff = x_map - x_sphere;
         const float ydiff = y_map - y_sphere;
@@ -219,7 +219,7 @@ namespace worldgen {
             run_time += duration_ms;
             if (run_time > 33.0) {
                 run_time = 0;
-                if (mode == WG_RUNNING || (mode == WG_MAP && world_spin < 350.0f)) {
+                if (mode == WG_RUNNING) {
                     world_spin += 0.01f;
                     if (world_spin > 360.0f) world_spin = 0.0f;
                 }

@@ -67,6 +67,12 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
         if (biome_def->worldgen_texture_index > 0) (*planet_builder_display.get())[idx].texture_id = biome_def->worldgen_texture_index;
     }
 
+    // Display blight
+    if (!planet.civs.region_info.empty()) {
+        if (planet.civs.region_info[block_idx].blight_level > 0) {
+            (*planet_builder_display.get())[idx].texture_id = 14;
+        }
+    }
 
 
     // TODO: Display units and improvements
