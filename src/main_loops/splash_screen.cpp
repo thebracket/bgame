@@ -42,6 +42,7 @@ namespace splash_screen {
         spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
         init_simple_sprite();
         worldgenshader = load_shaders("game_assets/worldgenshader_vertex.glsl", "game_assets/worldgenshader_fragment.glsl");
+        chunkshader = load_shaders("game_assets/chunkshader_vertex.glsl", "game_assets/chunkshader_fragment.glsl");
     }
 
     void init_raws(int id) {
