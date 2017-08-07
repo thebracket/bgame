@@ -14,6 +14,7 @@
 #include "../global_assets/game_config.hpp"
 #include "worldgen.hpp"
 #include "../bengine/telemetry.hpp"
+#include "play_game.hpp"
 
 namespace main_menu {
     bool initialized = false;
@@ -106,6 +107,7 @@ namespace main_menu {
             ImGui::TextColored(red, "%s", tagline.c_str());
             if (world_exists) {
                 if (ImGui::Button(menu_play.c_str())) {
+                    bengine::main_func = play_game::tick;
                 }
             }
             if (ImGui::Button(menu_gen.c_str())) {
