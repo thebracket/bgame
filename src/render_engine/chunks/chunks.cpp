@@ -4,6 +4,8 @@
 #include "../../planet/indices.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../raws/materials.hpp"
+#include "../../raws/defs/material_def_t.hpp"
 #include <boost/container/flat_set.hpp>
 
 namespace chunks {
@@ -63,19 +65,40 @@ namespace chunks {
     }
 
     unsigned int get_floor_tex(const int &idx) {
-        // TODO: Determine the type of floor from a combination of material and vegetation cover
-        return 1;
+        if (region::veg_type(idx) > 0) return 0; // Grass is determined to be index 0
+        auto material_idx = region::material(idx);
+        auto material = get_material(material_idx);
+        if (!material) return 0;
+
+        if (region::flag(idx, CONSTRUCTION)) {
+            return material->constructed_texture_id;
+        } else {
+            return material->base_texture_id;
+        }
     }
 
     unsigned int get_cube_tex(const int &idx) {
-        // TODO: Determine the type of cube from material
-        return 1;
+        auto material_idx = region::material(idx);
+        auto material = get_material(material_idx);
+        if (!material) return 0;
+
+        if (region::flag(idx, CONSTRUCTION)) {
+            return material->constructed_texture_id;
+        } else {
+            return material->base_texture_id;
+        }
     }
 
     bool is_cube(const uint8_t type) {
         switch (type) {
             case tile_type::SOLID : return true;
             case tile_type::WALL : return true;
+            case tile_type::TREE_LEAF: return true;
+            case tile_type::TREE_TRUNK: return true;
+            case tile_type::WINDOW: return true; // TODO: Handle these separately
+            case tile_type::RAMP: return true; // TODO: Handle separately
+            case tile_type::SEMI_MOLTEN_ROCK: return true;
+            case tile_type::CLOSED_DOOR: return true;
             default: return false;
         }
     }
@@ -238,18 +261,6 @@ namespace chunks {
         //std::cout << "Reduced " << n_cubes << " CUBES to " << layers[layer].cube_vertices.size() << " items of geometry.\n";
     }
 
-    void add(std::vector<float> &v, const float &x, const float &y, const float &z, const float &id, const float &nx, const float &ny, const float &nz) {
-        v.emplace_back(x);
-        v.emplace_back(y);
-        v.emplace_back(z);
-        v.emplace_back(id);
-        v.emplace_back(nx);
-        v.emplace_back(ny);
-        v.emplace_back(nz);
-
-        //std::cout << x << "/" << y << "/" << z << "\n";
-    }
-
     void chunk_t::update_buffer() {
         for (auto &layer : layers) {
             if (layer.vertices.empty()) {
@@ -264,7 +275,76 @@ namespace chunks {
 
                 // Generate the actual geometry
                 for (const auto &item : layer.vertices) {
-                    if (item.type == 0.0f) {
+                    const float x0 = -0.5f + item.x;
+                    const float x1 = x0 + item.width;
+                    const float y0 = -0.5f + item.z;
+                    const float y1 = y0 + 1.0f;
+                    const float z0 = -0.5f + item.y;
+                    const float z1 = z0 + item.height;
+                    const float TI = item.texture_id;
+                    constexpr float T0 = 0.0f;
+                    const float TW = item.width;
+                    const float TH = item.height;
+
+                    if (item.type < 1.0f) {
+                        // It's a floor - normal inverted
+
+                        v.insert(v.end(), {
+                                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                                x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+                                x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                                x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                                x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+                                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
+                        });
+                    } else {
+                        // It's a cube
+                        v.insert(v.end(), {
+                                x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
+                                x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
+                                x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+                                x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+                                x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+                                x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+
+                                x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
+                                x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f,
+                                x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
+                                x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
+                                x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f,
+                                x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
+
+                                x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
+                                x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f,
+                                x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
+                                x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
+                                x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f,
+                                x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
+
+                                x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
+                                x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f,
+                                x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
+                                x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
+                                x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f,
+                                x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
+
+                                x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
+                                x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f,
+                                x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
+                                x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
+                                x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f,
+                                x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
+
+                                x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                                x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+                                x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                                x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                                x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+                                x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
+                        });
+                    }
+
+                    /*if (item.type == 0.0f) {
                         // It's a floor
                         add(v, -0.5f + item.x, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, 1.0f, 0.0f);
                         add(v, 0.5f + item.x + item.width, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, 1.0f, 0.0f);
@@ -282,7 +362,7 @@ namespace chunks {
                         add(v, 0.5f + item.x + item.width, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, -1.0f, 0.0f);
                         add(v, -0.5f + item.x, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, -1.0f, 0.0f);
                         add(v, -0.5f + item.x, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, -1.0f, 0.0f);
-                    }
+                    }*/
                 }
                 layer.vertices.clear();
 
@@ -292,13 +372,13 @@ namespace chunks {
                 glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), &v[0], GL_STATIC_DRAW);
 
                 glBindBuffer(GL_ARRAY_BUFFER, layer.vbo);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
                 glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-                glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-                glEnableVertexAttribArray(1); // 1 = Texture ID
+                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+                glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 4 * sizeof(float));
+                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
                 glEnableVertexAttribArray(2); // 2 = Normals
 
                 glBindVertexArray(0);

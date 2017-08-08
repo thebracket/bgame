@@ -3,11 +3,13 @@
 #include "graphviz.hpp"
 #include "defs/material_def_t.hpp"
 #include <boost/container/flat_map.hpp>
+#include <map>
 
 //using namespace rltk;
 
 boost::container::flat_map<std::string, std::size_t> material_defs_idx;
 std::vector<material_def_t> material_defs;
+std::vector<std::string> material_textures;
 
 /*
  * Retrieve a material by ID
@@ -159,6 +161,8 @@ void read_material_types() noexcept
             }
             if (field == "damage_bonus") m.damage_bonus = lua_tonumber(lua_state, -1);
             if (field == "ac_bonus") m.ac_bonus = lua_tonumber(lua_state, -1);
+            if (field == "texture") m.base_texture_id = lua_tonumber(lua_state, -1);
+            if (field == "constructed") m.constructed_texture_id = lua_tonumber(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }
@@ -204,4 +208,42 @@ void build_material_tech_tree(graphviz_t *tree) {
             tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag_second);
         }
     }*/
+}
+
+void read_material_textures() {
+    std::map<int, std::pair<std::string, std::string>> tmp_tex;
+
+    lua_getglobal(lua_state, "terrain_textures");
+    lua_pushnil(lua_state);
+
+    while(lua_next(lua_state, -2) != 0) {
+        std::string key = lua_tostring(lua_state, -2);
+        std::cout << key << "\n";
+
+        int idx = 0;
+        std::string tex = "";
+        std::string norm = "";
+
+        lua_pushstring(lua_state, key.c_str());
+        lua_gettable(lua_state, -2);
+        while (lua_next(lua_state, -2) != 0) {
+            std::string field = lua_tostring(lua_state, -2);
+            //std::cout << field << "\n";
+
+            if (field == "index") idx = lua_tonumber(lua_state, -1);
+            if (field == "texture") tex = lua_tostring(lua_state, -1);
+            if (field == "normal") norm = lua_tostring(lua_state, -1);
+
+            lua_pop(lua_state, 1);
+        }
+        tmp_tex[idx] = std::make_pair(tex, norm);
+
+        lua_pop(lua_state, 1);
+    }
+
+    material_textures.clear();
+    for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
+        material_textures.emplace_back(i->second.first);
+        //material_textures.emplace_back(i->second.second);
+    }
 }

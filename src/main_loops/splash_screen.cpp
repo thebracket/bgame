@@ -14,6 +14,7 @@
 #include "../bengine/telemetry.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../bengine/stb_image.h"
+#include "../raws/materials.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -34,6 +35,7 @@ namespace splash_screen {
     bool started_telemetry = false;
     bool sent_telemetry = false;
     bool loaded_worldgen = false;
+    bool loaded_chunk = false;
     int tex_idx = 0;
 
     /* Loads enough to get things started. */
@@ -89,6 +91,46 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
+    void load_chunk_textures() {
+        constexpr int TEX_SIZE = 2048; // This is probably too high
+
+        glGenTextures(1, &assets::chunk_texture_array);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
+
+        glTexStorage3D( GL_TEXTURE_2D_ARRAY,
+                        2, // 4-levels of mipmap
+                        GL_RGBA8, // Internal format
+                        TEX_SIZE, TEX_SIZE, // Width and height
+                        material_textures.size()
+        );
+
+        for (unsigned int i=0; i<material_textures.size(); ++i) {
+            int width, height, bpp;
+            stbi_set_flip_vertically_on_load(true);
+            unsigned char *image_data = stbi_load(material_textures[i].c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+            if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(material_textures[i]));
+
+            glTexSubImage3D(
+                    GL_TEXTURE_2D_ARRAY,
+                    0, // Mipmap number
+                    0, 0, i, // x/y/z offsets
+                    TEX_SIZE, TEX_SIZE, 1, // width, height, depth
+                    GL_RGBA, // format
+                    GL_UNSIGNED_BYTE, // type
+                    image_data // Color data
+            );
+
+            stbi_image_free(image_data);
+        }
+
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_S,GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_T,GL_REPEAT);
+        glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    }
+
     void tick(const double &duration_ms) {
         run_time += duration_ms;
         if (run_time > 0.1 && run_time < 500.0f) {
@@ -131,6 +173,11 @@ namespace splash_screen {
         } else {
             ImGui::BulletText("%s", "Loaded worldgen textures");
         }
+        if (!loaded_chunk) {
+            ImGui::BulletText("%s", "Loading terrain textures");
+        } else {
+            ImGui::BulletText("%s", "Loaded terrain textures");
+        }
 
         ImGui::End();
         ImGui::Render();
@@ -172,7 +219,13 @@ namespace splash_screen {
             loaded_worldgen = true;
         }
 
-        if (initialized_thread_pool && initialized_raws && loaded_textures && angle==0.0f && started_telemetry && sent_telemetry && loaded_worldgen) {
+        if (loaded_worldgen && !loaded_chunk) {
+            load_chunk_textures();
+            loaded_chunk = true;
+        }
+
+        if (initialized_thread_pool && initialized_raws && loaded_textures && started_telemetry
+                && sent_telemetry && loaded_worldgen && loaded_chunk) {
             // We're done - time to move on!
             main_func = main_menu::tick;
         }

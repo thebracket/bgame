@@ -13,4 +13,5 @@ namespace assets {
     extern std::unique_ptr<bengine::texture_t> game_logo;
     extern std::unique_ptr<bengine::texture_t> starfield;
     extern unsigned int worldgen_texture_array;
+    extern unsigned int chunk_texture_array;
 }

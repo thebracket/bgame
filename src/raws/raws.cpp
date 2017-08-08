@@ -64,6 +64,7 @@ void build_tech_tree_files() {
 void load_game_tables()
 {
     read_material_types();
+    read_material_textures();
     read_clothing();
     read_life_events();
     read_professions();

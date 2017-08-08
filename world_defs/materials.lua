@@ -1,3 +1,27 @@
+function tfn(name) return "game_assets/terrain/" .. name end
+
+terrain_textures = {
+    -- Hard coded for engine use
+    grass = { index=0, texture=tfn("grass-t.jpg") },
+    red_plastic = { index=1, texture=tfn("redplastic-t.jpg") }, -- This is used to indicate a missing texture
+
+    -- Rock Types
+    sandstone = { index=2, texture=tfn("sandstone-t.jpg") },
+
+    -- Constructed Types
+    blocks_rough = { index=6, texture=tfn("blocksrough-t.jpg") },
+
+    -- Soils
+    sandy_soil = { index=3, texture=tfn("sandsoil-t.jpg") },
+    dry_dirt = { index=4, texture=tfn("drydirt-t.jpg") },
+    dry_brown_dirt = { index=5, texture=tfn("drybrowndirt-t.jpg") },
+
+    -- Synthetic
+    titanium = { index=7, texture=tfn("titanium-t.jpg") }
+}
+
+function chunkTex(name) return terrain_textures[name].index end
+
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],
@@ -225,7 +249,8 @@ materials = {
     },
     sandstone = { name="Sandstone", type="rock", layer="sedimentary", 
         glyph=glyphs['hash'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 50, mines_to="sand"
+        hit_points = 50, mines_to="sand",
+        texture = chunkTex("sandstone"), constructed = chunkTex("blocks_rough")
     },
     serpentine = { name="Serpentine", type="rock", layer="igneous", 
         glyph=glyphs['double_wave'], fg=colors['green'], bg=colors['grey'],
@@ -256,45 +281,57 @@ materials = {
         hit_points = 100, mines_to="ore", ore_materials = {"copper", "silver"}
     },
 
+    -- Soils
+
     clay_soil = { name="Clay", type="soil",
         glyph = glyphs['solid_square'], fg=colors['red'], bg=colors['black'],
-        hit_points = 20, mines_to="clay"
+        hit_points = 20, mines_to="clay",
+        texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt")
     },
     clay_loam = { name="Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
-        hit_points = 20, mines_to="clay"
+        hit_points = 20, mines_to="clay",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     loam = { name="Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     loamy_sand = { name="Loamy Sand", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     peat = { name="Peat", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt")
     },
     sandy_clay = { name="Sandy Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['red'],
-        hit_points = 15, mines_to="clay"
+        hit_points = 15, mines_to="clay",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     sandy_clay_loam = { name="Sandy Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['yellow'],
-        hit_points = 15, mines_to="topsoil", mines_to_also="clay"
+        hit_points = 15, mines_to="topsoil", mines_to_also="clay",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     silt = { name="Silt", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['black'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     silty_clay = { name="Silty Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
-        hit_points = 15, mines_to="clay"
+        hit_points = 15, mines_to="clay",
+        texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt")
     },
     silty_clay_loam = { name="Silty Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
-        hit_points = 15, mines_to="topsoil"
+        hit_points = 15, mines_to="topsoil",
+        texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt")
     },
     silt_loam = { name="Silt Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
@@ -302,23 +339,28 @@ materials = {
     },
     sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['red'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil")
     },
     black_sand = { name="Black Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil")
     },
     red_sand = { name="Red Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['red_sand'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil")
     },
     white_sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['white_sand'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil")
     },
     yellow_sand = { name="Yellow Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow_sand'], bg=colors['black'],
-        hit_points = 10, mines_to="sand"
+        hit_points = 10, mines_to="sand",
+        texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil")
     },
 
 -- Other materials needed
@@ -366,7 +408,8 @@ materials = {
 -- Synthetic Materials - only occur after refining
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
-        hit_points = 200
+        hit_points = 200,
+        texture = chunkTex("titanium"), constructed = chunkTex("titanium")
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],

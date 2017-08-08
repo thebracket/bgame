@@ -182,6 +182,8 @@ namespace worldgen {
 
         glUseProgram(assets::worldgenshader);
         glBindVertexArray(vao);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, assets::worldgen_texture_array);
 
         glUniformMatrix4fv(projloc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
         glUniformMatrix4fv(viewloc, 1, GL_FALSE, glm::value_ptr(view_matrix));

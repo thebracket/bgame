@@ -9,13 +9,14 @@
 #include "../global_assets/game_camera.hpp"
 #include "frustrum.hpp"
 #include "../global_assets/shader_storage.hpp"
+#include "../global_assets/texture_storage.hpp"
 
 namespace render {
     bool camera_moved = true;
     glm::mat4 camera_projection_matrix;
     glm::mat4 camera_modelview_matrix;
     glm::mat4 camera_proj_model_view_matrix;
-    boost::container::flat_set<int> visible_chunks;
+    boost::container::flat_set<int, std::greater<int>> visible_chunks;
     Frustrum frustrum;
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
@@ -74,15 +75,19 @@ namespace render {
         glUniformMatrix4fv(projection_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(view_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
 
+        // Assign the texture array
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
+
         // This is temporary and will change a lot!
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         for (const auto &idx : visible_chunks) {
             //std::cout << idx << ", " << chunks::chunks[idx].has_geometry << "\n";
             if (chunks::chunks[idx].has_geometry && chunks::chunks[idx].ready) {
                 // Render backwards to maximize z-buffer efficiency
                 for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
                     const int layer_z = z + chunks::chunks[idx].base_z;
-                    if (layer_z <= camera_position->region_z && chunks::chunks[idx].layers[z].vao > 0) {
+                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10 && chunks::chunks[idx].layers[z].vao > 0) {
                         //std::cout << "Activating array " << idx << ":" << layer_z << ", " << chunks::chunks[idx].layers[z].n_elements << "\n";
                         glBindVertexArray(chunks::chunks[idx].layers[z].vao);
                         glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
@@ -90,7 +95,7 @@ namespace render {
                 }
             }
         }
-        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
     void render_gl() {
@@ -105,6 +110,12 @@ namespace render {
 
         chunk_maintenance();
         if (camera_moved) update_camera();
+
+        //glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
         render_chunks();
+        glDisable(GL_DEPTH_TEST);
+        //glDisable(GL_CULL_FACE);
     }
 }

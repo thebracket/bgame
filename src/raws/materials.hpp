@@ -8,6 +8,8 @@
 struct material_def_t;
 struct graphviz_t;
 
+extern std::vector<std::string> material_textures;
+
 /*
  * Retrieve a material by tag.
  */
@@ -45,3 +47,5 @@ void sanity_check_materials() noexcept;
 void read_material_types() noexcept;
 void build_material_tech_tree(graphviz_t * tree);
 void build_material_acquisition_tech_tree(graphviz_t * tree);
+
+void read_material_textures();
