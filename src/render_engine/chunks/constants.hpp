@@ -3,7 +3,7 @@
 #include "../../planet/constants.hpp"
 
 namespace chunks {
-    constexpr int CHUNK_SIZE = 32;
+    constexpr int CHUNK_SIZE = 64;
     constexpr int CHUNK_WIDTH = REGION_WIDTH / CHUNK_SIZE;
     constexpr int CHUNK_HEIGHT = REGION_HEIGHT / CHUNK_SIZE;
     constexpr int CHUNK_DEPTH = REGION_DEPTH / CHUNK_SIZE;

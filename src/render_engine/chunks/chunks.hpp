@@ -19,9 +19,20 @@ namespace chunks {
         float texture_id;
     };
 
+    struct light_geometry_t {
+        float type;
+        float x;
+        float y;
+        float z;
+        float width;
+        float height;
+        float depth;
+    };
+
     /* Represents a single z-layer inside a chunk */
     struct layer_t {
         std::vector<geometry_t> vertices;
+        std::vector<float> v;
 
         unsigned int vao = 0;
         unsigned int vbo = 0;
@@ -38,6 +49,9 @@ namespace chunks {
             base_x = x;
             base_y = y;
             base_z = z;
+            for (auto &layer : layers) {
+                layer.v.reserve(54756);
+            }
         }
 
         int index = 0;
@@ -51,6 +65,7 @@ namespace chunks {
         void greedy_floors(boost::container::flat_map<int, unsigned int> &floors, const int &layer);
         void greedy_cubes(boost::container::flat_map<int, unsigned int> &cubes, const int &layer);
         void update_buffer();
+        void build_buffer();
     };
 
     extern std::array<chunk_t, CHUNKS_TOTAL> chunks;

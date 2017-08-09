@@ -10,6 +10,9 @@
 #include "frustrum.hpp"
 #include "../global_assets/shader_storage.hpp"
 #include "../global_assets/texture_storage.hpp"
+#include "fbo/depth_fbo.hpp"
+#include "../bengine/main_window.hpp"
+#include "sunlight.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -20,6 +23,8 @@ namespace render {
     Frustrum frustrum;
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
+
+
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -35,7 +40,7 @@ namespace render {
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 camera_position_v;
-        camera->camera_mode = DIAGONAL;
+        //camera->camera_mode = DIAGONAL;
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -59,7 +64,7 @@ namespace render {
         frustrum.update(camera_proj_model_view_matrix);
         visible_chunks.clear();
         for (const auto &chunk : chunks::chunks) {
-            if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE)) {
+            if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE*2)) {
                 visible_chunks.insert(chunk.index);
             }
         }
@@ -98,7 +103,11 @@ namespace render {
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
+
     void render_gl() {
+        int screen_w, screen_h;
+        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
         if (projection_mat_loc < 1) {
             projection_mat_loc = glGetUniformLocation(assets::chunkshader, "projection_matrix");
             assert(projection_mat_loc > -1);
@@ -110,12 +119,17 @@ namespace render {
 
         chunk_maintenance();
         if (camera_moved) update_camera();
+        sunlight::update(screen_w, screen_h);
 
-        //glEnable(GL_CULL_FACE);
-        glEnable(GL_DEPTH_TEST);
+
+        /*glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         render_chunks();
-        glDisable(GL_DEPTH_TEST);
-        //glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);*/
+
+        sunlight::render_test_quad();
+
+
+
     }
 }

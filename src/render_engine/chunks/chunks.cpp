@@ -6,6 +6,7 @@
 #include "../../bengine/gl_include.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
+#include "../sunlight.hpp"
 #include <boost/container/flat_set.hpp>
 
 namespace chunks {
@@ -59,6 +60,7 @@ namespace chunks {
         std::lock_guard<std::mutex> lock(dirty_mutex);
         for (int i=0; i<CHUNKS_TOTAL; ++i) {
             if (dirty[i]) {
+                dirty[i] = false;
                 bengine::thread_pool->push(update_chunk, i);
             }
         }
@@ -104,10 +106,14 @@ namespace chunks {
     }
 
     void chunk_t::update() {
-        dirty[index] = false; // We're guaranteed to already be mutex-protected
+        //dirty[index] = false; // We're guaranteed to already be mutex-protected
+
+        for (auto &layer : layers) layer.vertices.clear();
+
         for (int chunk_z = 0; chunk_z < CHUNK_SIZE; ++chunk_z) {
             layer_requires_render.reset(chunk_z);
             has_geometry = false;
+
 
             boost::container::flat_map<int, unsigned int> floors;
             boost::container::flat_map<int, unsigned int> cubes;
@@ -119,14 +125,14 @@ namespace chunks {
                     const int region_x = chunk_x + base_x;
                     const int idx = mapidx(region_x, region_y, region_z);
 
-                    if (region::revealed(idx)) {
+                    //if (region::revealed(idx)) {
                         const auto tiletype = region::tile_type(idx);
                         if (tiletype == tile_type::FLOOR) {
                             floors[idx] = get_floor_tex(idx);
                         } else if (is_cube(tiletype)) {
                             cubes[idx] = get_cube_tex(idx);
                         }
-                    }
+                    //}
                 }
             }
 
@@ -135,10 +141,15 @@ namespace chunks {
             if (!cubes.empty()) greedy_cubes(cubes, chunk_z);
 
             if (!floors.empty() || !cubes.empty()) layer_requires_render.set(chunk_z);
-            enqueue_vertex_update(index);
         }
 
         has_geometry = layer_requires_render.count() > 0;
+
+        // Transform to actual usable geometry
+        build_buffer();
+
+        // Tell GL to update
+        enqueue_vertex_update(index);
     }
 
     void chunk_t::greedy_floors(boost::container::flat_map<int, unsigned int> &floors, const int &layer) {
@@ -261,7 +272,88 @@ namespace chunks {
         //std::cout << "Reduced " << n_cubes << " CUBES to " << layers[layer].cube_vertices.size() << " items of geometry.\n";
     }
 
+    void chunk_t::build_buffer() {
+        for (auto &layer : layers) {
+            // Bind and map the geometry
+            layer.v.clear();
+
+            // Generate the actual geometry
+            for (const auto &item : layer.vertices) {
+                const float x0 = -0.5f + item.x;
+                const float x1 = x0 + item.width;
+                const float y0 = -0.5f + item.z;
+                const float y1 = y0 + 1.0f;
+                const float z0 = -0.5f + item.y;
+                const float z1 = z0 + item.height;
+                const float TI = item.texture_id;
+                constexpr float T0 = 0.0f;
+                const float TW = item.width;
+                const float TH = item.height;
+
+                if (item.type < 1.0f) {
+                    // It's a floor - normal inverted
+
+                    layer.v.insert(layer.v.end(), {
+                            x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                            x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+                            x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                            x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                            x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+                            x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
+                    });
+                } else {
+                    // It's a cube
+                    layer.v.insert(layer.v.end(), {
+                            x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
+                            x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
+                            x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+                            x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+                            x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+                            x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+
+                            x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
+                            x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f,
+                            x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
+                            x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
+                            x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f,
+                            x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
+
+                            x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
+                            x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f,
+                            x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
+                            x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
+                            x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f,
+                            x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
+
+                            x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
+                            x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f,
+                            x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
+                            x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
+                            x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f,
+                            x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
+
+                            x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
+                            x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f,
+                            x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
+                            x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
+                            x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f,
+                            x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
+
+                            x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                            x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+                            x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                            x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                            x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+                            x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
+                    });
+                }
+            }
+            //std::cout << layer.v.size() << "\n";
+        }
+    }
+
     void chunk_t::update_buffer() {
+        // Regular geometry
         for (auto &layer : layers) {
             if (layer.vertices.empty()) {
                 //if (layer.vao > 0) glDeleteVertexArrays(1, &layer.vao);
@@ -270,106 +362,10 @@ namespace chunks {
                 if (layer.vao == 0) glGenVertexArrays(1, &layer.vao);
                 if (layer.vbo == 0) glGenBuffers(1, &layer.vbo);
 
-                // Bind and map the geometry
-                std::vector<float> v;
-
-                // Generate the actual geometry
-                for (const auto &item : layer.vertices) {
-                    const float x0 = -0.5f + item.x;
-                    const float x1 = x0 + item.width;
-                    const float y0 = -0.5f + item.z;
-                    const float y1 = y0 + 1.0f;
-                    const float z0 = -0.5f + item.y;
-                    const float z1 = z0 + item.height;
-                    const float TI = item.texture_id;
-                    constexpr float T0 = 0.0f;
-                    const float TW = item.width;
-                    const float TH = item.height;
-
-                    if (item.type < 1.0f) {
-                        // It's a floor - normal inverted
-
-                        v.insert(v.end(), {
-                                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-                                x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
-                                x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
-                                x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
-                                x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
-                                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
-                        });
-                    } else {
-                        // It's a cube
-                        v.insert(v.end(), {
-                                x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
-                                x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
-                                x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
-                                x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
-                                x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
-                                x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
-
-                                x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
-                                x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f,
-                                x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
-                                x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
-                                x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f,
-                                x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
-
-                                x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
-                                x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f,
-                                x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
-                                x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
-                                x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f,
-                                x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
-
-                                x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
-                                x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f,
-                                x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
-                                x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
-                                x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f,
-                                x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
-
-                                x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
-                                x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f,
-                                x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
-                                x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
-                                x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f,
-                                x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
-
-                                x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
-                                x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
-                                x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-                                x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-                                x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
-                                x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
-                        });
-                    }
-
-                    /*if (item.type == 0.0f) {
-                        // It's a floor
-                        add(v, -0.5f + item.x, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, 1.0f, 0.0f);
-                        add(v, 0.5f + item.x + item.width, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, 1.0f, 0.0f);
-                        add(v, 0.5f + item.x + item.width, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, 1.0f, 0.0f);
-                        add(v, 0.5f + item.x + item.width, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, 1.0f, 0.0f);
-                        add(v, -0.5f + item.x, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, 1.0f, 0.0f);
-                        add(v, -0.5f + item.x, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, 1.0f, 0.0f);
-                    } else {
-                        // It's a cube; add all 6 sides eventually
-
-                        // Floor
-                        add(v, -0.5f + item.x, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, -1.0f, 0.0f);
-                        add(v, 0.5f + item.x + item.width, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, -1.0f, 0.0f);
-                        add(v, 0.5f + item.x + item.width, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, -1.0f, 0.0f);
-                        add(v, 0.5f + item.x + item.width, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, -1.0f, 0.0f);
-                        add(v, -0.5f + item.x, -0.5f + item.z, 0.5f + item.y + item.height, item.texture_id, 0.0f, -1.0f, 0.0f);
-                        add(v, -0.5f + item.x, -0.5f + item.z, -0.5f + item.y, item.texture_id, 0.0f, -1.0f, 0.0f);
-                    }*/
-                }
-                layer.vertices.clear();
-
                 // Bind and map
                 glBindVertexArray(layer.vao);
                 glBindBuffer(GL_ARRAY_BUFFER, layer.vbo);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), &v[0], GL_STATIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * layer.v.size(), &layer.v[0], GL_STATIC_DRAW);
 
                 glBindBuffer(GL_ARRAY_BUFFER, layer.vbo);
                 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
@@ -384,20 +380,22 @@ namespace chunks {
                 glBindVertexArray(0);
 
                 //std::cout << "Bound " << v.size() << " elements to VBO " << layer.vao << "/" << layer.vbo << "\n";
-                layer.n_elements = v.size();
+                layer.n_elements = layer.v.size();
                 has_geometry = true;
             }
         }
+
     }
 
     void update_buffers() {
         std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
-        for (const auto &idx : dirty_buffers) {
-            std::cout << "Updating buffer " << idx << "\n";
-            chunks[idx].update_buffer();
-            chunks[idx].ready.store(true);
-        }
-        dirty_buffers.clear();
+        if (dirty_buffers.empty()) return;
+
+        const int idx = *dirty_buffers.begin();
+        dirty_buffers.erase(idx);
+        chunks[idx].update_buffer();
+        chunks[idx].ready.store(true);
+        render::sunlight::sun_changed.store(true);
     }
 
 }

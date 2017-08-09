@@ -85,7 +85,7 @@ namespace play_game {
             render::render_gl();
 
             ImGui::Begin("Please wait - not written yet");
-            ImGui::Text("Play game...");
+            ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
             ImGui::End();
         }
 
