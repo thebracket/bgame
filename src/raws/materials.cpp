@@ -230,7 +230,7 @@ void read_material_textures() {
             std::string field = lua_tostring(lua_state, -2);
             //std::cout << field << "\n";
 
-            if (field == "index") idx = lua_tonumber(lua_state, -1);
+            if (field == "index") idx = (int)lua_tonumber(lua_state, -1);
             if (field == "texture") tex = lua_tostring(lua_state, -1);
             if (field == "normal") norm = lua_tostring(lua_state, -1);
 
@@ -244,6 +244,7 @@ void read_material_textures() {
     material_textures.clear();
     for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
         material_textures.emplace_back(i->second.first);
-        //material_textures.emplace_back(i->second.second);
+        material_textures.emplace_back(i->second.second);
+        std::cout << i->second.first << "/" << i->second.second << "\n";
     }
 }

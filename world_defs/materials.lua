@@ -2,22 +2,22 @@ function tfn(name) return "game_assets/terrain/" .. name end
 
 terrain_textures = {
     -- Hard coded for engine use
-    grass = { index=0, texture=tfn("grass-t.jpg") },
-    red_plastic = { index=1, texture=tfn("redplastic-t.jpg") }, -- This is used to indicate a missing texture
+    grass = { index=0, texture=tfn("grass-t.jpg"), normal=tfn("grass-n.jpg") },
+    red_plastic = { index=2, texture=tfn("redplastic-t.jpg"), normal=tfn("redplastic-n.jpg") }, -- This is used to indicate a missing texture
 
     -- Rock Types
-    sandstone = { index=2, texture=tfn("sandstone-t.jpg") },
+    sandstone = { index=4, texture=tfn("sandstone-t.jpg"), normal=tfn("sandstone-n.jpg") },
 
     -- Constructed Types
-    blocks_rough = { index=6, texture=tfn("blocksrough-t.jpg") },
+    blocks_rough = { index=12, texture=tfn("blocksrough-t.jpg"), normal=tfn("blocksrough-n.jpg") },
 
     -- Soils
-    sandy_soil = { index=3, texture=tfn("sandsoil-t.jpg") },
-    dry_dirt = { index=4, texture=tfn("drydirt-t.jpg") },
-    dry_brown_dirt = { index=5, texture=tfn("drybrowndirt-t.jpg") },
+    sandy_soil = { index=6, texture=tfn("sandsoil-t.jpg"), normal=tfn("sandsoil-n.jpg") },
+    dry_dirt = { index=8, texture=tfn("drydirt-t.jpg"), normal=tfn("drydirt-n.jpg") },
+    dry_brown_dirt = { index=10, texture=tfn("drybrowndirt-t.jpg"), normal=tfn("drybrowndirt-n.jpg") },
 
     -- Synthetic
-    titanium = { index=7, texture=tfn("titanium-t.jpg") }
+    titanium = { index=7, texture=tfn("titanium-t.jpg"), normal=tfn("titanium-n.jpg") }
 }
 
 function chunkTex(name) return terrain_textures[name].index end

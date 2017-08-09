@@ -135,7 +135,7 @@ namespace render {
         render_chunks();
         glDisable(GL_DEPTH_TEST);
 
-        render_test_quad(gbuffer->position_tex);
+        render_test_quad(gbuffer->normal_tex);
 
 
         glCheckError();
