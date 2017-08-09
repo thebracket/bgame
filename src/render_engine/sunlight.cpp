@@ -43,6 +43,7 @@ namespace render {
             glUniformMatrix4fv(glGetUniformLocation(assets::directional_light_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(lightView));
 
             glClear(GL_DEPTH_BUFFER_BIT);
+            glCheckError();
             for (const auto &chunk : chunks::chunks) {
                 const auto idx = chunk.index;
                 //std::cout << idx << ", " << chunks::chunks[idx].has_geometry << "\n";
@@ -62,6 +63,7 @@ namespace render {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, screen_w, screen_h);
             glDisable(GL_DEPTH_TEST);
+            glCheckError();
 
             sun_changed = false;
         }
@@ -88,14 +90,16 @@ namespace render {
                 glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
                 glEnableVertexAttribArray(1);
                 glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+                glCheckError();
             }
 
             // Render the depth buffer to the screen
             glUseProgram(assets::depthquad_shader);
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE, sun_fbo->depth_map);
+            glBindTexture(GL_TEXTURE_2D, sun_fbo->depth_map);
             glBindVertexArray(quadVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
+            glCheckError();
         }
 
     }

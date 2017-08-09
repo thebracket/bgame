@@ -359,8 +359,8 @@ namespace chunks {
                 //if (layer.vao > 0) glDeleteVertexArrays(1, &layer.vao);
                 //if (layer.vbo > 0) glDeleteBuffers(1, &layer.vbo);
             } else {
-                if (layer.vao == 0) glGenVertexArrays(1, &layer.vao);
-                if (layer.vbo == 0) glGenBuffers(1, &layer.vbo);
+                if (layer.vao == 0) { glGenVertexArrays(1, &layer.vao); glCheckError(); }
+                if (layer.vbo == 0) { glGenBuffers(1, &layer.vbo); glCheckError(); }
 
                 // Bind and map
                 glBindVertexArray(layer.vao);
@@ -378,6 +378,8 @@ namespace chunks {
                 glEnableVertexAttribArray(2); // 2 = Normals
 
                 glBindVertexArray(0);
+
+                glCheckError();
 
                 //std::cout << "Bound " << v.size() << " elements to VBO " << layer.vao << "/" << layer.vbo << "\n";
                 layer.n_elements = layer.v.size();

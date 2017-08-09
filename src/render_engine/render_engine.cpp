@@ -105,6 +105,7 @@ namespace render {
 
 
     void render_gl() {
+        glCheckError();
         int screen_w, screen_h;
         glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
@@ -130,6 +131,6 @@ namespace render {
         sunlight::render_test_quad();
 
 
-
+        glCheckError();
     }
 }
