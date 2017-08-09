@@ -13,6 +13,7 @@
 #include "fbo/depth_fbo.hpp"
 #include "../bengine/main_window.hpp"
 #include "sunlight.hpp"
+#include "fbo/buffertest.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -128,7 +129,7 @@ namespace render {
         render_chunks();
         glDisable(GL_DEPTH_TEST);*/
 
-        sunlight::render_test_quad();
+        render_test_quad(sunlight::sun_fbo->depth_map);
 
 
         glCheckError();

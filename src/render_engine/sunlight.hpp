@@ -14,6 +14,5 @@ namespace render {
         extern glm::mat4 lightSpaceMatrix;
 
         void update(const int &screen_w, const int &screen_h);
-        void render_test_quad();
     }
 }
