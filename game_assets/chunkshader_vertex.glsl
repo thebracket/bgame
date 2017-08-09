@@ -7,9 +7,11 @@ uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
 
 out vec3 tex_pos;
+out vec3 world_pos;
 
 void main()
 {
     gl_Position = projection_matrix * (view_matrix * vec4(aPos, 1.0));
     tex_pos = texture_info;
+    world_pos = aPos;
 }

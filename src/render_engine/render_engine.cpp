@@ -14,6 +14,7 @@
 #include "../bengine/main_window.hpp"
 #include "sunlight.hpp"
 #include "fbo/buffertest.hpp"
+#include "fbo/gbuffer.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -24,7 +25,7 @@ namespace render {
     Frustrum frustrum;
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
-
+    std::unique_ptr<gbuffer_t> gbuffer;
 
 
     inline void chunk_maintenance() {
@@ -76,6 +77,8 @@ namespace render {
     inline void render_chunks() {
         // Use the program
         glUseProgram(assets::chunkshader);
+        glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         // Assign the uniforms
         glUniformMatrix4fv(projection_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
@@ -102,6 +105,7 @@ namespace render {
             }
         }
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
 
@@ -109,6 +113,8 @@ namespace render {
         glCheckError();
         int screen_w, screen_h;
         glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
+        if (!gbuffer) gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
 
         if (projection_mat_loc < 1) {
             projection_mat_loc = glGetUniformLocation(assets::chunkshader, "projection_matrix");
@@ -124,12 +130,12 @@ namespace render {
         sunlight::update(screen_w, screen_h);
 
 
-        /*glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         render_chunks();
-        glDisable(GL_DEPTH_TEST);*/
+        glDisable(GL_DEPTH_TEST);
 
-        render_test_quad(sunlight::sun_fbo->depth_map);
+        render_test_quad(gbuffer->position_tex);
 
 
         glCheckError();
