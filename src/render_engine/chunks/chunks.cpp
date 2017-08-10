@@ -18,7 +18,7 @@ namespace chunks {
     std::mutex dirty_mutex;
 
     // Vertex geometry updates; need to not be multi-threaded
-    boost::container::flat_set<int> dirty_buffers;
+    boost::container::flat_set<int, std::greater<int>> dirty_buffers;
     std::mutex dirty_buffer_mutex;
 
     void mark_chunk_dirty(const int &idx) {
@@ -70,25 +70,31 @@ namespace chunks {
         if (region::veg_type(idx) > 0) return 0; // Grass is determined to be index 0
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
-        if (!material) return 0;
+        if (!material) return 2;
 
+        unsigned int use_id = 2;
         if (region::flag(idx, CONSTRUCTION)) {
-            return material->constructed_texture_id;
+            use_id = (unsigned int)material->constructed_texture_id;
         } else {
-            return material->base_texture_id;
+            use_id = (unsigned int)material->base_texture_id;
         }
+        //if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        return use_id;
     }
 
     unsigned int get_cube_tex(const int &idx) {
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
-        if (!material) return 0;
+        if (!material) return 2;
 
+        unsigned int use_id = 2;
         if (region::flag(idx, CONSTRUCTION)) {
-            return material->constructed_texture_id;
+            use_id = (unsigned int)material->constructed_texture_id;
         } else {
-            return material->base_texture_id;
+            use_id = (unsigned int)material->base_texture_id;
         }
+        //if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        return use_id;
     }
 
     bool is_cube(const uint8_t type) {
@@ -125,14 +131,14 @@ namespace chunks {
                     const int region_x = chunk_x + base_x;
                     const int idx = mapidx(region_x, region_y, region_z);
 
-                    //if (region::revealed(idx)) {
+                    if (region::revealed(idx)) {
                         const auto tiletype = region::tile_type(idx);
                         if (tiletype == tile_type::FLOOR) {
                             floors[idx] = get_floor_tex(idx);
                         } else if (is_cube(tiletype)) {
                             cubes[idx] = get_cube_tex(idx);
                         }
-                    //}
+                    }
                 }
             }
 
@@ -393,11 +399,13 @@ namespace chunks {
         std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
         if (dirty_buffers.empty()) return;
 
-        const int idx = *dirty_buffers.begin();
-        dirty_buffers.erase(idx);
-        chunks[idx].update_buffer();
-        chunks[idx].ready.store(true);
-        render::sunlight::sun_changed.store(true);
+        while (!dirty_buffers.empty()) {
+            const int idx = *dirty_buffers.begin();
+            dirty_buffers.erase(idx);
+            chunks[idx].update_buffer();
+            chunks[idx].ready.store(true);
+            render::sunlight::sun_changed.store(true);
+        }
     }
 
 }

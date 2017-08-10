@@ -245,6 +245,6 @@ void read_material_textures() {
     for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
         material_textures.emplace_back(i->second.first);
         material_textures.emplace_back(i->second.second);
-        std::cout << i->second.first << "/" << i->second.second << "\n";
+        std::cout << material_textures.size()-2 << " : " << i->second.first << " / " << i->second.second << "\n";
     }
 }

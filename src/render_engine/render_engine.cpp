@@ -16,6 +16,7 @@
 #include "fbo/buffertest.hpp"
 #include "fbo/gbuffer.hpp"
 #include "fbo/lbuffer.hpp"
+#include "fbo/base_lit_buffer.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -33,6 +34,7 @@ namespace render {
     int dirlight_lightcol_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
     std::unique_ptr<lbuffer_t> lbuffer;
+    std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -48,7 +50,7 @@ namespace render {
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 camera_position_v;
-        camera->camera_mode = DIAGONAL;
+        //camera->camera_mode = DIAGONAL;
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -143,27 +145,7 @@ namespace render {
         }
     }
 
-    void render_gl() {
-        glCheckError();
-        int screen_w, screen_h;
-        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
-
-        if (!gbuffer) gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
-        if (!lbuffer) lbuffer = std::make_unique<lbuffer_t>(screen_w, screen_h);
-        set_uniform_locs();
-
-        chunk_maintenance();
-        if (camera_moved) update_camera();
-
-        // Update lighting buffers
-        sunlight::update(screen_w, screen_h);
-
-        // Render a pre-pass to put color, normal, etc. into the gbuffer
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        render_chunks();
-
-
+    void render_sun_buffer() {
         // Render sunlight to the lbuffer
         glUseProgram(assets::dirlight_apply_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, lbuffer->fbo_id);
@@ -175,15 +157,57 @@ namespace render {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, sunlight::sun_fbo->depth_map);
         do_chunk_render();
+    }
 
+    void render_gl(const double &duration_ms) {
+        glCheckError();
+        int screen_w, screen_h;
+        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
+        if (!gbuffer) {
+            gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
+            set_uniform_locs();
+            if (!lbuffer) lbuffer = std::make_unique<lbuffer_t>(screen_w, screen_h);
+            if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
+        }
+
+        chunk_maintenance();
+        if (camera_moved) update_camera();
+
+        // Update lighting buffers
+        sunlight::update(screen_w, screen_h, duration_ms);
+
+        // Render a pre-pass to put color, normal, etc. into the gbuffer
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        render_chunks();
+
+        // Render sunlight
+        render_sun_buffer();
         // TODO: Render other lights to the gbuffer
-
         // Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        // Render the combined light buffer
+        glUseProgram(assets::lightstage_shader);
+        glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, gbuffer->normal_tex);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, lbuffer->position_tex);
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, lbuffer->color_tex);
+        render_buffer_quad();
+
         // Render some test results
-        render_test_quad(lbuffer->position_tex);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        render_test_quad(light_stage_buffer->color_tex);
 
         // TODO: Final combination and post-process
 

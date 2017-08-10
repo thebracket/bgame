@@ -16,6 +16,6 @@ namespace render {
         extern glm::vec3 light_position;
         extern glm::vec3 light_color;
 
-        void update(const int &screen_w, const int &screen_h);
+        void update(const int &screen_w, const int &screen_h, const double &duration_ms);
     }
 }

@@ -9,18 +9,25 @@ terrain_textures = {
     sandstone = { index=4, texture=tfn("sandstone-t.jpg"), normal=tfn("sandstone-n.jpg") },
 
     -- Constructed Types
-    blocks_rough = { index=12, texture=tfn("blocksrough-t.jpg"), normal=tfn("blocksrough-n.jpg") },
+    blocks_rough = { index=6, texture=tfn("blocksrough-t.jpg"), normal=tfn("blocksrough-n.jpg") },
 
     -- Soils
-    sandy_soil = { index=6, texture=tfn("sandsoil-t.jpg"), normal=tfn("sandsoil-n.jpg") },
-    dry_dirt = { index=8, texture=tfn("drydirt-t.jpg"), normal=tfn("drydirt-n.jpg") },
-    dry_brown_dirt = { index=10, texture=tfn("drybrowndirt-t.jpg"), normal=tfn("drybrowndirt-n.jpg") },
+    sandy_soil = { index=8, texture=tfn("sandsoil-t.jpg"), normal=tfn("sandsoil-n.jpg") },
+    dry_dirt = { index=10, texture=tfn("drydirt-t.jpg"), normal=tfn("drydirt-n.jpg") },
+    dry_brown_dirt = { index=12, texture=tfn("drybrowndirt-t.jpg"), normal=tfn("drybrowndirt-n.jpg") },
 
     -- Synthetic
-    titanium = { index=7, texture=tfn("titanium-t.jpg"), normal=tfn("titanium-n.jpg") }
+    titanium = { index=14, texture=tfn("titanium-t.jpg"), normal=tfn("titanium-n.jpg") }
 }
 
-function chunkTex(name) return terrain_textures[name].index end
+function chunkTex(name)
+    if terrain_textures[name] ~= nil then
+        return terrain_textures[name].index
+    else
+        print("Unknown texture: "..name)
+    end
+    return 0
+end
 
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 

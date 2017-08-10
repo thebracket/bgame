@@ -7,4 +7,5 @@ namespace assets {
     unsigned int directional_light_shader = 0;
     unsigned int depthquad_shader = 0;
     unsigned int dirlight_apply_shader = 0;
+    unsigned int lightstage_shader = 0;
 }
