@@ -8,6 +8,8 @@
 #include "../../raws/defs/material_def_t.hpp"
 #include "../sunlight.hpp"
 #include <boost/container/flat_set.hpp>
+#include <set>
+#include <unordered_map>
 
 namespace chunks {
     std::array<chunk_t, CHUNKS_TOTAL> chunks;
@@ -18,7 +20,7 @@ namespace chunks {
     std::mutex dirty_mutex;
 
     // Vertex geometry updates; need to not be multi-threaded
-    boost::container::flat_set<int, std::greater<int>> dirty_buffers;
+    std::set<int, std::greater<int>> dirty_buffers;
     std::mutex dirty_buffer_mutex;
 
     void mark_chunk_dirty(const int &idx) {
@@ -51,7 +53,6 @@ namespace chunks {
     }
 
     void update_chunk(int thread_num, const int &idx) {
-        mark_chunk_clean(idx);
         chunks[idx].ready.store(false);
         chunks[idx].update();
     }
@@ -114,7 +115,7 @@ namespace chunks {
     void chunk_t::update() {
         //dirty[index] = false; // We're guaranteed to already be mutex-protected
 
-        for (auto &layer : layers) layer.vertices.clear();
+        for (auto &layer : layers) layer.v.clear();
 
         for (int chunk_z = 0; chunk_z < CHUNK_SIZE; ++chunk_z) {
             layer_requires_render.reset(chunk_z);
@@ -142,7 +143,6 @@ namespace chunks {
                 }
             }
 
-            layers[chunk_z].vertices.clear();
             if (!floors.empty()) greedy_floors(floors, chunk_z);
             if (!cubes.empty()) greedy_cubes(cubes, chunk_z);
 
@@ -152,7 +152,7 @@ namespace chunks {
         has_geometry = layer_requires_render.count() > 0;
 
         // Transform to actual usable geometry
-        build_buffer();
+        //build_buffer();
 
         // Tell GL to update
         enqueue_vertex_update(index);
@@ -212,9 +212,10 @@ namespace chunks {
 
             // TODO: Emit geometry
             //std::cout << floors.size() << " floors remain\n";
-            layers[layer].vertices.emplace_back(
-                    geometry_t{ 0.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
-            );
+            add_floor_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
+            //layers[layer].vertices.emplace_back(
+            //        geometry_t{ 0.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
+            //);
         }
         //std::cout << "Reduced " << n_floors << " FLOORS to " << layers[layer].floor_vertices.size() << " items of geometry.\n";
     }
@@ -271,102 +272,106 @@ namespace chunks {
 
             // TODO: Emit geometry
             //std::cout << floors.size() << " floors remain\n";
-            layers[layer].vertices.emplace_back(
-                    geometry_t{ 1.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
-            );
+            //layers[layer].vertices.emplace_back(
+            //        geometry_t{ 1.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
+            //);
+            add_cube_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
         }
         //std::cout << "Reduced " << n_cubes << " CUBES to " << layers[layer].cube_vertices.size() << " items of geometry.\n";
     }
 
-    void chunk_t::build_buffer() {
-        for (auto &layer : layers) {
-            // Bind and map the geometry
-            layer.v.clear();
+    void chunk_t::add_floor_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+                                     const float &width, const float &height, const float &texture_id)
+    {
+        const float x0 = -0.5f + x;
+        const float x1 = x0 + width;
+        const float y0 = -0.5f + z;
+        const float y1 = y0 + 1.0f;
+        const float z0 = -0.5f + y;
+        const float z1 = z0 + height;
+        const float TI = texture_id;
+        constexpr float T0 = 0.0f;
+        const float TW = width;
+        const float TH = height;
 
-            // Generate the actual geometry
-            for (const auto &item : layer.vertices) {
-                const float x0 = -0.5f + item.x;
-                const float x1 = x0 + item.width;
-                const float y0 = -0.5f + item.z;
-                const float y1 = y0 + 1.0f;
-                const float z0 = -0.5f + item.y;
-                const float z1 = z0 + item.height;
-                const float TI = item.texture_id;
-                constexpr float T0 = 0.0f;
-                const float TW = item.width;
-                const float TH = item.height;
+        v.insert(v.end(), {
+                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+                x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
+        });
+    }
 
-                if (item.type < 1.0f) {
-                    // It's a floor - normal inverted
+    void chunk_t::add_cube_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+                                     const float &width, const float &height, const float &texture_id)
+    {
+        const float x0 = -0.5f + x;
+        const float x1 = x0 + width;
+        const float y0 = -0.5f + z;
+        const float y1 = y0 + 1.0f;
+        const float z0 = -0.5f + y;
+        const float z1 = z0 + height;
+        const float TI = texture_id;
+        constexpr float T0 = 0.0f;
+        const float TW = width;
+        const float TH = height;
 
-                    layer.v.insert(layer.v.end(), {
-                            x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-                            x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
-                            x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
-                            x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
-                            x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
-                            x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
-                    });
-                } else {
-                    // It's a cube
-                    layer.v.insert(layer.v.end(), {
-                            x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
-                            x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
-                            x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
-                            x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
-                            x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
-                            x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+        v.insert(v.end(), {
+                x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
+                x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
+                x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+                x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+                x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+                x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
 
-                            x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
-                            x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f,
-                            x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
-                            x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
-                            x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f,
-                            x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
+                x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
+                x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f,
+                x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
+                x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
+                x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f,
+                x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
 
-                            x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
-                            x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f,
-                            x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
-                            x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
-                            x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f,
-                            x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
+                x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
+                x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f,
+                x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
+                x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
+                x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f,
+                x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
 
-                            x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
-                            x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f,
-                            x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
-                            x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
-                            x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f,
-                            x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
+                x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
+                x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f,
+                x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
+                x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
+                x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f,
+                x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
 
-                            x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
-                            x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f,
-                            x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
-                            x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
-                            x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f,
-                            x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
+                x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
+                x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f,
+                x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
+                x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
+                x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f,
+                x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
 
-                            x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
-                            x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
-                            x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-                            x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-                            x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
-                            x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
-                    });
-                }
-            }
-            //std::cout << layer.v.size() << "\n";
-        }
+                x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+                x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+                x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+                x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+                x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
+        });
     }
 
     void chunk_t::update_buffer() {
         // Regular geometry
         for (auto &layer : layers) {
-            if (layer.vertices.empty()) {
+            if (layer.v.empty()) {
                 //if (layer.vao > 0) glDeleteVertexArrays(1, &layer.vao);
                 //if (layer.vbo > 0) glDeleteBuffers(1, &layer.vbo);
             } else {
-                if (layer.vao == 0) { glGenVertexArrays(1, &layer.vao); glCheckError(); }
-                if (layer.vbo == 0) { glGenBuffers(1, &layer.vbo); glCheckError(); }
+                if (layer.vao < 1) { glGenVertexArrays(1, &layer.vao); glCheckError(); }
+                if (layer.vbo < 1) { glGenBuffers(1, &layer.vbo); glCheckError(); }
 
                 // Bind and map
                 glBindVertexArray(layer.vao);
@@ -385,9 +390,7 @@ namespace chunks {
 
                 glBindVertexArray(0);
 
-                glCheckError();
-
-                //std::cout << "Bound " << v.size() << " elements to VBO " << layer.vao << "/" << layer.vbo << "\n";
+                //std::cout << "Bound " << layer.v.size() << " elements to VBO " << layer.vao << "/" << layer.vbo << "\n";
                 layer.n_elements = layer.v.size();
                 has_geometry = true;
             }
@@ -396,16 +399,16 @@ namespace chunks {
     }
 
     void update_buffers() {
-        std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
-        if (dirty_buffers.empty()) return;
-
-        while (!dirty_buffers.empty()) {
-            const int idx = *dirty_buffers.begin();
+        int idx;
+        {
+            std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
+            if (dirty_buffers.empty()) return;
+            idx = *dirty_buffers.begin();
             dirty_buffers.erase(idx);
-            chunks[idx].update_buffer();
-            chunks[idx].ready.store(true);
-            render::sunlight::sun_changed.store(true);
         }
+        chunks[idx].update_buffer();
+        chunks[idx].ready.store(true);
+        render::sunlight::sun_changed.store(true);
     }
 
 }

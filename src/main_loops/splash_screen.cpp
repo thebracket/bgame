@@ -47,7 +47,6 @@ namespace splash_screen {
         chunkshader = load_shaders("game_assets/chunkshader_vertex.glsl", "game_assets/chunkshader_fragment.glsl");
         directional_light_shader = load_shaders("game_assets/dirlight_vertex.glsl", "game_assets/dirlight_fragment.glsl");
         depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
-        dirlight_apply_shader = load_shaders("game_assets/dirlightapply_vertex.glsl", "game_assets/dirlightapply_fragment.glsl");
         lightstage_shader = load_shaders("game_assets/lightpass_vertex.glsl", "game_assets/lightpass_fragment.glsl");
     }
 
@@ -96,7 +95,7 @@ namespace splash_screen {
     }
 
     void load_chunk_textures() {
-        constexpr int TEX_SIZE = 2048; // This is probably too high
+        constexpr int TEX_SIZE = 256; // This is probably too high
 
         glGenTextures(1, &assets::chunk_texture_array);
         glActiveTexture(GL_TEXTURE0);

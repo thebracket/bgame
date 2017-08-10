@@ -6,6 +6,5 @@ namespace assets {
     extern unsigned int chunkshader;
     extern unsigned int directional_light_shader;
     extern unsigned int depthquad_shader;
-    extern unsigned int dirlight_apply_shader;
     extern unsigned int lightstage_shader;
 }

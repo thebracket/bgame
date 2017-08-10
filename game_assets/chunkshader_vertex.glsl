@@ -5,10 +5,12 @@ layout (location = 2) in vec3 aNormal;
 
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
+uniform mat4 lightSpaceMatrix;
 
 out vec3 tex_pos;
 out vec3 world_pos;
 out mat3 TBN;
+out vec4 FragPosLightSpace;
 
 void main()
 {
@@ -17,17 +19,19 @@ void main()
     world_pos = aPos;
 
     vec3 tangent;
-        vec3 bitangent;
+    vec3 bitangent;
 
-        vec3 c1 = cross(aNormal, vec3(0.0, 0.0, 1.0));
-        vec3 c2 = cross(aNormal, vec3(0.0, 1.0, 0.0));
+    vec3 c1 = cross(aNormal, vec3(0.0, 0.0, 1.0));
+    vec3 c2 = cross(aNormal, vec3(0.0, 1.0, 0.0));
 
-        tangent = length(c1) > length(c2) ? c1 : c2;
-        tangent = normalize(tangent);
-        bitangent = normalize(cross(aNormal, tangent));
+    tangent = length(c1) > length(c2) ? c1 : c2;
+    tangent = normalize(tangent);
+    bitangent = normalize(cross(aNormal, tangent));
 
-        vec3 T = tangent;
-        vec3 B = bitangent;
-        vec3 N = normalize(aNormal);
-        TBN = mat3(T, B, N);
+    vec3 T = tangent;
+    vec3 B = bitangent;
+    vec3 N = normalize(aNormal);
+    TBN = mat3(T, B, N);
+
+    FragPosLightSpace = lightSpaceMatrix * vec4(aPos, 1.0);
 }

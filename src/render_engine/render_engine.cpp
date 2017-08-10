@@ -15,7 +15,6 @@
 #include "sunlight.hpp"
 #include "fbo/buffertest.hpp"
 #include "fbo/gbuffer.hpp"
-#include "fbo/lbuffer.hpp"
 #include "fbo/base_lit_buffer.hpp"
 
 namespace render {
@@ -27,13 +26,10 @@ namespace render {
     Frustrum frustrum;
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
-    int dirlight_projection_loc = -1;
-    int dirlight_view_loc = -1;
-    int dirlight_lightpos_loc = -1;
-    int dirlight_lightmatrix_loc = -1;
-    int dirlight_lightcol_loc = -1;
+    int lightpos_loc = -1;
+    int lightmatrix_loc = -1;
+    int lightcol_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
-    std::unique_ptr<lbuffer_t> lbuffer;
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
 
     inline void chunk_maintenance() {
@@ -88,9 +84,11 @@ namespace render {
                 // Render backwards to maximize z-buffer efficiency
                 for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
                     const int layer_z = z + chunks::chunks[idx].base_z;
-                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10 && chunks::chunks[idx].layers[z].vao > 0) {
+                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10 && chunks::chunks[idx].layers[z].vao > 0
+                            && chunks::chunks[idx].layers[z].n_elements > 0) {
                         glBindVertexArray(chunks::chunks[idx].layers[z].vao);
                         glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
+                        //glCheckError();
                     }
                 }
             }
@@ -106,10 +104,19 @@ namespace render {
         // Assign the uniforms
         glUniformMatrix4fv(projection_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(view_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+        glUniformMatrix4fv(lightmatrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightSpaceMatrix));
+        glUniform3fv(lightpos_loc, 1, glm::value_ptr(sunlight::light_position));
+        glUniform3fv(lightcol_loc, 1, glm::value_ptr(sunlight::light_color));
 
         // Assign the texture array
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, sunlight::sun_fbo->depth_map);
+
+        glUniform1i(glGetUniformLocation(assets::chunkshader, "textureArray"), 0);
+        glUniform1i(glGetUniformLocation(assets::chunkshader, "shadowMap"), 1);
 
         do_chunk_render();
     }
@@ -123,41 +130,21 @@ namespace render {
             view_mat_loc = glGetUniformLocation(assets::chunkshader, "view_matrix");
             assert(view_mat_loc > -1);
         }
-        if (dirlight_lightpos_loc < 1) {
-            dirlight_lightpos_loc = glGetUniformLocation(assets::dirlight_apply_shader, "lightPos");
-            assert(dirlight_lightpos_loc > -1);
+        if (lightpos_loc < 1) {
+            lightpos_loc = glGetUniformLocation(assets::chunkshader, "lightPos");
+            assert(lightpos_loc > -1);
         }
-        if (dirlight_projection_loc < 1) {
-            dirlight_projection_loc = glGetUniformLocation(assets::dirlight_apply_shader, "projection_matrix");
-            assert(dirlight_projection_loc > -1);
+        if (lightmatrix_loc < 1) {
+            lightmatrix_loc = glGetUniformLocation(assets::chunkshader, "lightSpaceMatrix");
+            assert(lightmatrix_loc > -0);
         }
-        if (dirlight_view_loc < 1) {
-            dirlight_view_loc = glGetUniformLocation(assets::dirlight_apply_shader, "view_matrix");
-            assert(dirlight_view_loc > -1);
-        }
-        if (dirlight_lightmatrix_loc < 1) {
-            dirlight_lightmatrix_loc = glGetUniformLocation(assets::dirlight_apply_shader, "lightSpaceMatrix");
-            assert(dirlight_lightmatrix_loc > -0);
-        }
-        if (dirlight_lightcol_loc < 1) {
-            dirlight_lightcol_loc = glGetUniformLocation(assets::dirlight_apply_shader, "lightColor");
-            assert(dirlight_lightcol_loc > -0);
+        if (lightcol_loc < 1) {
+            lightcol_loc = glGetUniformLocation(assets::chunkshader, "lightColor");
+            assert(lightcol_loc > -0);
         }
     }
 
-    void render_sun_buffer() {
-        // Render sunlight to the lbuffer
-        glUseProgram(assets::dirlight_apply_shader);
-        glBindFramebuffer(GL_FRAMEBUFFER, lbuffer->fbo_id);
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        glUniform3fv(dirlight_lightpos_loc, 1, glm::value_ptr(sunlight::light_position));
-        glUniformMatrix4fv(dirlight_projection_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-        glUniformMatrix4fv(dirlight_view_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-        glUniformMatrix4fv(dirlight_lightmatrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightSpaceMatrix));
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, sunlight::sun_fbo->depth_map);
-        do_chunk_render();
-    }
+    constexpr int SUN_BUFFER_SIZE = 512;
 
     void render_gl(const double &duration_ms) {
         glCheckError();
@@ -167,7 +154,7 @@ namespace render {
         if (!gbuffer) {
             gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
             set_uniform_locs();
-            if (!lbuffer) lbuffer = std::make_unique<lbuffer_t>(screen_w, screen_h);
+            if (!sunlight::sun_fbo) sunlight::sun_fbo = std::make_unique<depth_fbo_t>(SUN_BUFFER_SIZE);
             if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
         }
 
@@ -177,21 +164,24 @@ namespace render {
         // Update lighting buffers
         sunlight::update(screen_w, screen_h, duration_ms);
 
-        // Render a pre-pass to put color, normal, etc. into the gbuffer
+        // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         render_chunks();
+        glCheckError();
 
-        // Render sunlight
-        render_sun_buffer();
         // TODO: Render other lights to the gbuffer
         // Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Render the combined light buffer
         glUseProgram(assets::lightstage_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "albedo_tex"), 0);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "normal_tex"), 1);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "position_tex"), 2);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_position_tex"), 3);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_color_tex"), 4);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
@@ -200,13 +190,14 @@ namespace render {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
         glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, lbuffer->position_tex);
+        glBindTexture(GL_TEXTURE_2D, gbuffer->lposition_tex);
         glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, lbuffer->color_tex);
+        glBindTexture(GL_TEXTURE_2D, gbuffer->lcolor_tex);
         render_buffer_quad();
 
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(light_stage_buffer->color_tex);
 
         // TODO: Final combination and post-process

@@ -1,7 +1,7 @@
 #version 330 core
 
-layout (location = 0) out vec3 gLightPos;
-layout (location = 1) out vec3 gLightCol;
+layout (location = 3) out vec3 gLightPos;
+layout (location = 4) out vec3 gLightCol;
 
 in vec4 FragPosLightSpace;
 

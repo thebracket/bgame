@@ -9,29 +9,8 @@
 
 namespace chunks {
 
-    struct geometry_t {
-        float type;
-        float x;
-        float y;
-        float z;
-        float width;
-        float height;
-        float texture_id;
-    };
-
-    struct light_geometry_t {
-        float type;
-        float x;
-        float y;
-        float z;
-        float width;
-        float height;
-        float depth;
-    };
-
     /* Represents a single z-layer inside a chunk */
     struct layer_t {
-        std::vector<geometry_t> vertices;
         std::vector<float> v;
 
         unsigned int vao = 0;
@@ -65,7 +44,10 @@ namespace chunks {
         void greedy_floors(boost::container::flat_map<int, unsigned int> &floors, const int &layer);
         void greedy_cubes(boost::container::flat_map<int, unsigned int> &cubes, const int &layer);
         void update_buffer();
-        void build_buffer();
+        void add_floor_geometry(std::vector<float> &v, const float &tile_x, const float &tile_y, const float &tile_z,
+                                const float &width, const float &height, const float &texture_id);
+        void add_cube_geometry(std::vector<float> &v, const float &tile_x, const float &tile_y, const float &tile_z,
+        const float &width, const float &height, const float &texture_id);
     };
 
     extern std::array<chunk_t, CHUNKS_TOTAL> chunks;
