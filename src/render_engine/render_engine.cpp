@@ -15,6 +15,7 @@
 #include "sunlight.hpp"
 #include "fbo/buffertest.hpp"
 #include "fbo/gbuffer.hpp"
+#include "fbo/lbuffer.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -25,8 +26,13 @@ namespace render {
     Frustrum frustrum;
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
+    int dirlight_projection_loc = -1;
+    int dirlight_view_loc = -1;
+    int dirlight_lightpos_loc = -1;
+    int dirlight_lightmatrix_loc = -1;
+    int dirlight_lightcol_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
-
+    std::unique_ptr<lbuffer_t> lbuffer;
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -42,7 +48,7 @@ namespace render {
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 camera_position_v;
-        //camera->camera_mode = DIAGONAL;
+        camera->camera_mode = DIAGONAL;
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -74,6 +80,21 @@ namespace render {
         camera_moved = false;
     }
 
+    inline void do_chunk_render() {
+        for (const auto &idx : visible_chunks) {
+            if (chunks::chunks[idx].has_geometry && chunks::chunks[idx].ready) {
+                // Render backwards to maximize z-buffer efficiency
+                for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
+                    const int layer_z = z + chunks::chunks[idx].base_z;
+                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10 && chunks::chunks[idx].layers[z].vao > 0) {
+                        glBindVertexArray(chunks::chunks[idx].layers[z].vao);
+                        glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
+                    }
+                }
+            }
+        }
+    }
+
     inline void render_chunks() {
         // Use the program
         glUseProgram(assets::chunkshader);
@@ -88,34 +109,10 @@ namespace render {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
 
-        // This is temporary and will change a lot!
-        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-        for (const auto &idx : visible_chunks) {
-            //std::cout << idx << ", " << chunks::chunks[idx].has_geometry << "\n";
-            if (chunks::chunks[idx].has_geometry && chunks::chunks[idx].ready) {
-                // Render backwards to maximize z-buffer efficiency
-                for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
-                    const int layer_z = z + chunks::chunks[idx].base_z;
-                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10 && chunks::chunks[idx].layers[z].vao > 0) {
-                        //std::cout << "Activating array " << idx << ":" << layer_z << ", " << chunks::chunks[idx].layers[z].n_elements << "\n";
-                        glBindVertexArray(chunks::chunks[idx].layers[z].vao);
-                        glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
-                    }
-                }
-            }
-        }
-        //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        do_chunk_render();
     }
 
-
-    void render_gl() {
-        glCheckError();
-        int screen_w, screen_h;
-        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
-
-        if (!gbuffer) gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
-
+    inline void set_uniform_locs() {
         if (projection_mat_loc < 1) {
             projection_mat_loc = glGetUniformLocation(assets::chunkshader, "projection_matrix");
             assert(projection_mat_loc > -1);
@@ -124,19 +121,71 @@ namespace render {
             view_mat_loc = glGetUniformLocation(assets::chunkshader, "view_matrix");
             assert(view_mat_loc > -1);
         }
+        if (dirlight_lightpos_loc < 1) {
+            dirlight_lightpos_loc = glGetUniformLocation(assets::dirlight_apply_shader, "lightPos");
+            assert(dirlight_lightpos_loc > -1);
+        }
+        if (dirlight_projection_loc < 1) {
+            dirlight_projection_loc = glGetUniformLocation(assets::dirlight_apply_shader, "projection_matrix");
+            assert(dirlight_projection_loc > -1);
+        }
+        if (dirlight_view_loc < 1) {
+            dirlight_view_loc = glGetUniformLocation(assets::dirlight_apply_shader, "view_matrix");
+            assert(dirlight_view_loc > -1);
+        }
+        if (dirlight_lightmatrix_loc < 1) {
+            dirlight_lightmatrix_loc = glGetUniformLocation(assets::dirlight_apply_shader, "lightSpaceMatrix");
+            assert(dirlight_lightmatrix_loc > -0);
+        }
+        if (dirlight_lightcol_loc < 1) {
+            dirlight_lightcol_loc = glGetUniformLocation(assets::dirlight_apply_shader, "lightColor");
+            assert(dirlight_lightcol_loc > -0);
+        }
+    }
+
+    void render_gl() {
+        glCheckError();
+        int screen_w, screen_h;
+        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
+        if (!gbuffer) gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
+        if (!lbuffer) lbuffer = std::make_unique<lbuffer_t>(screen_w, screen_h);
+        set_uniform_locs();
 
         chunk_maintenance();
         if (camera_moved) update_camera();
+
+        // Update lighting buffers
         sunlight::update(screen_w, screen_h);
 
-
+        // Render a pre-pass to put color, normal, etc. into the gbuffer
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         render_chunks();
+
+
+        // Render sunlight to the lbuffer
+        glUseProgram(assets::dirlight_apply_shader);
+        glBindFramebuffer(GL_FRAMEBUFFER, lbuffer->fbo_id);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        glUniform3fv(dirlight_lightpos_loc, 1, glm::value_ptr(sunlight::light_position));
+        glUniformMatrix4fv(dirlight_projection_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+        glUniformMatrix4fv(dirlight_view_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+        glUniformMatrix4fv(dirlight_lightmatrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightSpaceMatrix));
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, sunlight::sun_fbo->depth_map);
+        do_chunk_render();
+
+        // TODO: Render other lights to the gbuffer
+
+        // Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        render_test_quad(gbuffer->normal_tex);
+        // Render some test results
+        render_test_quad(lbuffer->position_tex);
 
+        // TODO: Final combination and post-process
 
         glCheckError();
     }

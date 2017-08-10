@@ -11,12 +11,14 @@
 
 namespace render {
     namespace sunlight {
-        constexpr int SUN_BUFFER_SIZE = 512;
+        constexpr int SUN_BUFFER_SIZE = 2048;
         std::unique_ptr<depth_fbo_t> sun_fbo;
         std::atomic<bool> sun_changed{true};
         glm::mat4 lightProjection;
         glm::mat4 lightView;
         glm::mat4 lightSpaceMatrix;
+        glm::vec3 light_position;
+        glm::vec3 light_color;
 
         void update(const int &screen_w, const int &screen_h) {
             if (!sun_changed) return;
@@ -24,8 +26,12 @@ namespace render {
             // If it doesn't exist, create the FBO
             if (!sun_fbo) sun_fbo = std::make_unique<depth_fbo_t>(SUN_BUFFER_SIZE);
 
+            // For now, just use a static light position
+            light_position = glm::vec3(128.0f, 384.0f, 10.0f);
+            light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+
             lightProjection = glm::ortho(-192.0f, 192.0f, -192.0f, 192.0f, 32.0f, 512.0f);
-            lightView = glm::lookAt(glm::vec3(0.0f, 384.0f, 10.0f),
+            lightView = glm::lookAt(light_position,
                                               glm::vec3((float)REGION_WIDTH/2.0f, (float)REGION_DEPTH/2.0f, (float)REGION_HEIGHT/2.0f),
                                               glm::vec3( 0.0f, 1.0f,  0.0f));
             lightSpaceMatrix = lightProjection * lightView;

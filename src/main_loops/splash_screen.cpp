@@ -47,6 +47,7 @@ namespace splash_screen {
         chunkshader = load_shaders("game_assets/chunkshader_vertex.glsl", "game_assets/chunkshader_fragment.glsl");
         directional_light_shader = load_shaders("game_assets/dirlight_vertex.glsl", "game_assets/dirlight_fragment.glsl");
         depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
+        dirlight_apply_shader = load_shaders("game_assets/dirlightapply_vertex.glsl", "game_assets/dirlightapply_fragment.glsl");
     }
 
     void init_raws(int id) {
