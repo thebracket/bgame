@@ -5,12 +5,10 @@ layout (location = 2) in vec3 aNormal;
 
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
-uniform mat4 lightSpaceMatrix;
 
 out vec3 tex_pos;
 out vec3 world_pos;
 out mat3 TBN;
-out vec4 FragPosLightSpace;
 
 void main()
 {
@@ -32,6 +30,4 @@ void main()
     vec3 B = bitangent;
     vec3 N = normalize(aNormal);
     TBN = mat3(T, B, N);
-
-    FragPosLightSpace = lightSpaceMatrix * vec4(aPos, 1.0);
 }

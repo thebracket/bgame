@@ -27,7 +27,8 @@ namespace render {
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
     int lightpos_loc = -1;
-    int lightmatrix_loc = -1;
+    int light_view_matrix_loc = -1;
+    int light_proj_matrix_loc = -1;
     int lightcol_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
@@ -46,7 +47,7 @@ namespace render {
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 camera_position_v;
-        //camera->camera_mode = DIAGONAL;
+        camera->camera_mode = DIAGONAL;
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -84,11 +85,13 @@ namespace render {
                 // Render backwards to maximize z-buffer efficiency
                 for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
                     const int layer_z = z + chunks::chunks[idx].base_z;
-                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10 && chunks::chunks[idx].layers[z].vao > 0
+                    if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10) {
+                        if (chunks::chunks[idx].layers[z].vao > 0
                             && chunks::chunks[idx].layers[z].n_elements > 0) {
-                        glBindVertexArray(chunks::chunks[idx].layers[z].vao);
-                        glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
-                        //glCheckError();
+                            glBindVertexArray(chunks::chunks[idx].layers[z].vao);
+                            glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
+                            //glCheckError();
+                        }
                     }
                 }
             }
@@ -104,7 +107,8 @@ namespace render {
         // Assign the uniforms
         glUniformMatrix4fv(projection_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(view_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-        glUniformMatrix4fv(lightmatrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightSpaceMatrix));
+        glUniformMatrix4fv(light_proj_matrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightProjection));
+        glUniformMatrix4fv(light_view_matrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightView));
         glUniform3fv(lightpos_loc, 1, glm::value_ptr(sunlight::light_position));
         glUniform3fv(lightcol_loc, 1, glm::value_ptr(sunlight::light_color));
 
@@ -134,9 +138,13 @@ namespace render {
             lightpos_loc = glGetUniformLocation(assets::chunkshader, "lightPos");
             assert(lightpos_loc > -1);
         }
-        if (lightmatrix_loc < 1) {
-            lightmatrix_loc = glGetUniformLocation(assets::chunkshader, "lightSpaceMatrix");
-            assert(lightmatrix_loc > -0);
+        if (light_view_matrix_loc < 1) {
+            light_view_matrix_loc = glGetUniformLocation(assets::chunkshader, "light_view_matrix");
+            assert(light_view_matrix_loc > -0);
+        }
+        if (light_proj_matrix_loc < 1) {
+            light_proj_matrix_loc = glGetUniformLocation(assets::chunkshader, "light_projection_matrix");
+            assert(light_proj_matrix_loc > -0);
         }
         if (lightcol_loc < 1) {
             lightcol_loc = glGetUniformLocation(assets::chunkshader, "lightColor");
@@ -198,6 +206,7 @@ namespace render {
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        //render_test_quad(sunlight::sun_fbo->depth_map);
         render_test_quad(light_stage_buffer->color_tex);
 
         // TODO: Final combination and post-process

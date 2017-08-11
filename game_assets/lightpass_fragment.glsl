@@ -20,7 +20,7 @@ void main()
     vec3 light_color = texture(light_color_tex, TexCoords).rgb;
 
     // Calculate initial ambient
-    float ambient_strength = 0.1;
+    float ambient_strength = 0.3;
     vec3 ambient = base_color * ambient_strength;
 
     // Lambert lighting for diffuse

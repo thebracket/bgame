@@ -132,12 +132,20 @@ namespace chunks {
                     const int region_x = chunk_x + base_x;
                     const int idx = mapidx(region_x, region_y, region_z);
 
-                    if (region::revealed(idx)) {
-                        const auto tiletype = region::tile_type(idx);
-                        if (tiletype == tile_type::FLOOR) {
-                            floors[idx] = get_floor_tex(idx);
-                        } else if (is_cube(tiletype)) {
-                            cubes[idx] = get_cube_tex(idx);
+                    const auto tiletype = region::tile_type(idx);
+                    if (tiletype != tile_type::OPEN_SPACE) {
+                        if (region::revealed(idx)) {
+                            if (tiletype == tile_type::FLOOR) {
+                                floors[idx] = get_floor_tex(idx);
+                            } else if (is_cube(tiletype)) {
+                                cubes[idx] = get_cube_tex(idx);
+                            }
+                        } else {
+                            if (tiletype == tile_type::FLOOR) {
+                                floors[idx] = 2;
+                            } else if (is_cube(tiletype)) {
+                                cubes[idx] = 2;
+                            }
                         }
                     }
                 }
