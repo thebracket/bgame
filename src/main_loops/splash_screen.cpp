@@ -45,7 +45,6 @@ namespace splash_screen {
         init_simple_sprite();
         worldgenshader = load_shaders("game_assets/worldgenshader_vertex.glsl", "game_assets/worldgenshader_fragment.glsl");
         chunkshader = load_shaders("game_assets/chunkshader_vertex.glsl", "game_assets/chunkshader_fragment.glsl");
-        directional_light_shader = load_shaders("game_assets/dirlight_vertex.glsl", "game_assets/dirlight_fragment.glsl");
         depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
         lightstage_shader = load_shaders("game_assets/lightpass_vertex.glsl", "game_assets/lightpass_fragment.glsl");
     }

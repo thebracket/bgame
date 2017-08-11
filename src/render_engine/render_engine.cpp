@@ -10,9 +10,7 @@
 #include "frustrum.hpp"
 #include "../global_assets/shader_storage.hpp"
 #include "../global_assets/texture_storage.hpp"
-#include "fbo/depth_fbo.hpp"
 #include "../bengine/main_window.hpp"
-#include "sunlight.hpp"
 #include "fbo/buffertest.hpp"
 #include "fbo/gbuffer.hpp"
 #include "fbo/base_lit_buffer.hpp"
@@ -26,10 +24,6 @@ namespace render {
     Frustrum frustrum;
     int projection_mat_loc = -1;
     int view_mat_loc = -1;
-    int lightpos_loc = -1;
-    int light_view_matrix_loc = -1;
-    int light_proj_matrix_loc = -1;
-    int lightcol_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
 
@@ -107,20 +101,12 @@ namespace render {
         // Assign the uniforms
         glUniformMatrix4fv(projection_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(view_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-        glUniformMatrix4fv(light_proj_matrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightProjection));
-        glUniformMatrix4fv(light_view_matrix_loc, 1, GL_FALSE, glm::value_ptr(sunlight::lightView));
-        glUniform3fv(lightpos_loc, 1, glm::value_ptr(sunlight::light_position));
-        glUniform3fv(lightcol_loc, 1, glm::value_ptr(sunlight::light_color));
 
         // Assign the texture array
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
 
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, sunlight::sun_fbo->depth_map);
-
         glUniform1i(glGetUniformLocation(assets::chunkshader, "textureArray"), 0);
-        glUniform1i(glGetUniformLocation(assets::chunkshader, "shadowMap"), 1);
 
         do_chunk_render();
     }
@@ -134,25 +120,7 @@ namespace render {
             view_mat_loc = glGetUniformLocation(assets::chunkshader, "view_matrix");
             assert(view_mat_loc > -1);
         }
-        if (lightpos_loc < 1) {
-            lightpos_loc = glGetUniformLocation(assets::chunkshader, "lightPos");
-            assert(lightpos_loc > -1);
-        }
-        if (light_view_matrix_loc < 1) {
-            light_view_matrix_loc = glGetUniformLocation(assets::chunkshader, "light_view_matrix");
-            assert(light_view_matrix_loc > -0);
-        }
-        if (light_proj_matrix_loc < 1) {
-            light_proj_matrix_loc = glGetUniformLocation(assets::chunkshader, "light_projection_matrix");
-            assert(light_proj_matrix_loc > -0);
-        }
-        if (lightcol_loc < 1) {
-            lightcol_loc = glGetUniformLocation(assets::chunkshader, "lightColor");
-            assert(lightcol_loc > -0);
-        }
     }
-
-    constexpr int SUN_BUFFER_SIZE = 512;
 
     void render_gl(const double &duration_ms) {
         glCheckError();
@@ -162,15 +130,11 @@ namespace render {
         if (!gbuffer) {
             gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
             set_uniform_locs();
-            if (!sunlight::sun_fbo) sunlight::sun_fbo = std::make_unique<depth_fbo_t>(SUN_BUFFER_SIZE);
             if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
         }
 
         chunk_maintenance();
         if (camera_moved) update_camera();
-
-        // Update lighting buffers
-        sunlight::update(screen_w, screen_h, duration_ms);
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);
@@ -206,7 +170,6 @@ namespace render {
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        //render_test_quad(sunlight::sun_fbo->depth_map);
         render_test_quad(light_stage_buffer->color_tex);
 
         // TODO: Final combination and post-process

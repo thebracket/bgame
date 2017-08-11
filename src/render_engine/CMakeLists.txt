@@ -1,6 +1,5 @@
 add_library(render_engine STATIC
         render_engine.cpp
-        sunlight.cpp
         )
 cotire(render_engine)
 add_subdirectory(chunks)

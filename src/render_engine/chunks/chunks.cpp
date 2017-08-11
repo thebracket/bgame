@@ -6,7 +6,6 @@
 #include "../../bengine/gl_include.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
-#include "../sunlight.hpp"
 #include <boost/container/flat_set.hpp>
 #include <set>
 #include <unordered_map>
@@ -416,7 +415,6 @@ namespace chunks {
         }
         chunks[idx].update_buffer();
         chunks[idx].ready.store(true);
-        render::sunlight::sun_changed.store(true);
     }
 
 }
