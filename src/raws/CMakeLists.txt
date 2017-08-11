@@ -15,5 +15,5 @@ add_library(raws STATIC
     buildings.cpp
     reactions.cpp
 )
-target_link_libraries(raws ${LUA_LIBRARIES} )
+target_link_libraries(raws globalassets ${LUA_LIBRARIES} )
 

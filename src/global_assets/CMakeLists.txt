@@ -1,4 +1,4 @@
-add_library(globalassets
+add_library(globalassets STATIC
         shader_storage.cpp
         texture_storage.cpp
         game_config.cpp
