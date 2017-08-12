@@ -1,32 +1,38 @@
 function tfn(name) return "game_assets/terrain/" .. name end
+next_texture_id = 6
+function tid()
+    tmp = next_texture_id
+    next_texture_id = next_texture_id + 3
+    return tmp
+end
 
 terrain_textures = {
     -- Hard coded for engine use
-    grass = { index=0, texture=tfn("grass-t.jpg"), normal=tfn("grass-n.jpg") },
-    red_plastic = { index=2, texture=tfn("redplastic-t.jpg"), normal=tfn("redplastic-n.jpg") }, -- This is used to indicate a missing texture
+    grass = { index=0, texture=tfn("grass-t.jpg"), normal=tfn("grass-n.jpg"), ao=tfn("grass-ao.jpg") },
+    red_plastic = { index=3, texture=tfn("redplastic-t.jpg"), normal=tfn("redplastic-n.jpg"), ao=tfn("redplastic-ao.jpg") }, -- This is used to indicate a missing texture
 
     -- Rock Types
-    sandstone = { index=4, texture=tfn("sandstone-t.jpg"), normal=tfn("sandstone-n.jpg") },
-    copper_rock = { index=16, texture=tfn("copperrock-t.jpg"), normal=tfn("copperrock-n.jpg") },
-    red_rock = { index=20, texture=tfn("redrock-t.jpg"), normal=tfn("redrock-n.jpg") },
-    limestone = { index=22, texture=tfn("limestone-t.jpg"), normal=tfn("limestone-n.jpg") },
-    granite = { index=24, texture=tfn("granite-t.jpg"), normal=tfn("granite-n.jpg") },
-    greypocked = { index=26, texture=tfn("greypocked-t.jpg"), normal=tfn("greypocked-n.jpg") },
-    granite = { index=28, texture=tfn("granite-t.jpg"), normal=tfn("granite-n.jpg") },
-    slate = { index=30, texture=tfn("slate-t.jpg"), normal=tfn("slate-n.jpg") },
-    blackrock = { index=32, texture=tfn("blackrock-t.jpg"), normal=tfn("blackrock-n.jpg") },
+    sandstone = { index=tid(), texture=tfn("sandstone-t.jpg"), normal=tfn("sandstone-n.jpg"), ao=tfn("sandstone-ao.jpg") },
+    copper_rock = { index=tid(), texture=tfn("copperrock-t.jpg"), normal=tfn("copperrock-n.jpg"), ao=tfn("copperrock-ao.jpg") },
+    red_rock = { index=tid(), texture=tfn("redrock-t.jpg"), normal=tfn("redrock-n.jpg"), ao=tfn("redrock-ao.jpg") },
+    limestone = { index=tid(), texture=tfn("limestone-t.jpg"), normal=tfn("limestone-n.jpg"), ao=tfn("limestone-ao.jpg") },
+    granite = { index=tid(), texture=tfn("granite-t.jpg"), normal=tfn("granite-n.jpg"), ao=tfn("granite-ao.jpg") },
+    greypocked = { index=tid(), texture=tfn("greypocked-t.jpg"), normal=tfn("greypocked-n.jpg"), ao=tfn("greypocked-ao.jpg") },
+    granite = { index=tid(), texture=tfn("granite-t.jpg"), normal=tfn("granite-n.jpg"), ao=tfn("granite-ao.jpg") },
+    slate = { index=tid(), texture=tfn("slate-t.jpg"), normal=tfn("slate-n.jpg"), ao=tfn("slate-ao.jpg") },
+    blackrock = { index=tid(), texture=tfn("blackrock-t.jpg"), normal=tfn("blackrock-n.jpg"), ao=tfn("blackrock-ao.jpg") },
 
     -- Constructed Types
-    blocks_rough = { index=6, texture=tfn("blocksrough-t.jpg"), normal=tfn("blocksrough-n.jpg") },
-    cobbles = { index=18, texture=tfn("cobbles-t.jpg"), normal=tfn("cobbles-n.jpg") },
+    blocks_rough = { index=tid(), texture=tfn("blocksrough-t.jpg"), normal=tfn("blocksrough-n.jpg"), ao=tfn("blocksrough-ao.jpg") },
+    cobbles = { index=tid(), texture=tfn("cobbles-t.jpg"), normal=tfn("cobbles-n.jpg"), ao=tfn("cobbles-ao.jpg") },
 
     -- Soils
-    sandy_soil = { index=8, texture=tfn("sandsoil-t.jpg"), normal=tfn("sandsoil-n.jpg") },
-    dry_dirt = { index=10, texture=tfn("drydirt-t.jpg"), normal=tfn("drydirt-n.jpg") },
-    dry_brown_dirt = { index=12, texture=tfn("drybrowndirt-t.jpg"), normal=tfn("drybrowndirt-n.jpg") },
+    sandy_soil = { index=tid(), texture=tfn("sandsoil-t.jpg"), normal=tfn("sandsoil-n.jpg"), ao=tfn("sandsoil-ao.jpg") },
+    dry_dirt = { index=tid(), texture=tfn("drydirt-t.jpg"), normal=tfn("drydirt-n.jpg"), ao=tfn("drydirt-ao.jpg") },
+    dry_brown_dirt = { index=tid(), texture=tfn("drybrowndirt-t.jpg"), normal=tfn("drybrowndirt-n.jpg"), ao=tfn("drybrowndirt-ao.jpg") },
 
     -- Synthetic
-    titanium = { index=14, texture=tfn("titanium-t.jpg"), normal=tfn("titanium-n.jpg") }
+    titanium = { index=tid(), texture=tfn("titanium-t.jpg"), normal=tfn("titanium-n.jpg"), ao=tfn("titanium-ao.jpg") }
 }
 
 function chunkTex(name)

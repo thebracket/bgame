@@ -8,6 +8,7 @@ uniform sampler2D normal_tex;
 uniform sampler2D position_tex;
 uniform sampler2D light_position_tex;
 uniform sampler2D light_color_tex;
+uniform sampler2D ao_tex;
 
 uniform vec3 camera_position;
 
@@ -21,7 +22,8 @@ void main()
 
     // Calculate initial ambient
     float ambient_strength = 0.3;
-    vec3 ambient = base_color * ambient_strength;
+    vec3 ambient_occluded = texture(ao_tex, TexCoords).rgb;
+    vec3 ambient = base_color * ambient_strength * ambient_occluded;
 
     // Lambert lighting for diffuse
     float diffuse_strength = 0.5;

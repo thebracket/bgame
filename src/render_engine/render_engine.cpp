@@ -154,6 +154,7 @@ namespace render {
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "albedo_tex"), 0);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "normal_tex"), 1);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "position_tex"), 2);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "ao_tex"), 5);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_position_tex"), 3);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_color_tex"), 4);
         glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
@@ -168,13 +169,15 @@ namespace render {
         glBindTexture(GL_TEXTURE_2D, gbuffer->lposition_tex);
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D, gbuffer->lcolor_tex);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
         render_buffer_quad();
 
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        //render_test_quad(light_stage_buffer->color_tex);
-        render_test_quad(gbuffer->albedo_tex);
+        render_test_quad(light_stage_buffer->color_tex);
+        //render_test_quad(gbuffer->albedo_tex);
 
         // TODO: Final combination and post-process
 

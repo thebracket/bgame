@@ -10,8 +10,9 @@ in mat3 TBN;
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec3 gAlbedo;
-layout (location = 3) out vec3 gLightPos;
-layout (location = 4) out vec3 gLightCol;
+layout (location = 3) out vec3 gAmbientOcclusion;
+layout (location = 4) out vec3 gLightPos;
+layout (location = 5) out vec3 gLightCol;
 
 out vec4 FragColor;
 
@@ -28,4 +29,5 @@ void main() {
 
     gLightCol = vec3(0.0);
     gLightPos = vec3(0.0);
+    gAmbientOcclusion = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).rgb, vec3(gamma));
 }
