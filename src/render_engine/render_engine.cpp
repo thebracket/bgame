@@ -138,10 +138,10 @@ namespace render {
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-        glEnable(GL_CULL_FACE);
+        glDepthFunc(GL_LESS);
+        //glEnable(GL_CULL_FACE);
         render_chunks();
-        glDisable(GL_CULL_FACE);
+        //glDisable(GL_CULL_FACE);
         glCheckError();
 
         // TODO: Render other lights to the gbuffer

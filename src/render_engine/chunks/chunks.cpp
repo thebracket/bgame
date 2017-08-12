@@ -194,6 +194,9 @@ namespace chunks {
 
             //std::cout << "Merging " << width << " tiles horizontally\n";
 
+            // Y-merging is giving problems;
+            // TODO: Fix this
+            /*
             if (tile_y < REGION_HEIGHT-1) {
                 int y_progress = tile_y + 1;
 
@@ -202,7 +205,7 @@ namespace chunks {
                     for (int gx = tile_x; gx < tile_x + width; ++gx) {
                         const int candidate_idx = mapidx(gx, y_progress, tile_z);
                         auto vfinder = floors.find(candidate_idx);
-                        if (!(vfinder != floors.end() && vfinder->second == texture_id)) possible = false;
+                        if (vfinder == floors.end() || vfinder->second != texture_id) possible = false;
                     }
                     if (possible) {
                         ++height;
@@ -214,7 +217,7 @@ namespace chunks {
 
                     ++y_progress;
                 }
-            }
+            }*/
             //std::cout << "Merging with " << height << " tiles vertically\n";
 
             // TODO: Emit geometry
@@ -254,6 +257,8 @@ namespace chunks {
 
             //std::cout << "Merging " << width << " tiles horizontally\n";
 
+            // TODO: Fix this
+            /*
             if (tile_y < REGION_HEIGHT-1) {
                 int y_progress = tile_y + 1;
 
@@ -274,7 +279,7 @@ namespace chunks {
 
                     ++y_progress;
                 }
-            }
+            }*/
             //std::cout << "Merging with " << height << " tiles vertically\n";
 
             // TODO: Emit geometry
@@ -324,7 +329,6 @@ namespace chunks {
     void chunk_t::add_cube_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
                                      const float &width, const float &height, const float &texture_id)
     {
-        /*
         const float x0 = -0.5f + x;
         const float x1 = x0 + width;
         const float y0 = -0.5f + z;
@@ -379,7 +383,6 @@ namespace chunks {
                 x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
                 x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
         });
-         */
     }
 
     void chunk_t::update_buffer() {
