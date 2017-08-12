@@ -213,9 +213,9 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
     }
 
     if (announce) {
-        emit_deferred(log_message{
-                LOG().col(bengine::color_t{1.0f, 0.0f, 0.0f})->text(species_finder->name)->text(" ")->col(bengine::color_t{1.0f, 1.0f, 1.0f})->text(
-                        " has arrived.")->chars});
+        //emit_deferred(log_message{
+                //LOG().col(bengine::color_t{1.0f, 0.0f, 0.0f})->text(species_finder->name)->text(" ")->col(bengine::color_t{1.0f, 1.0f, 1.0f})->text(
+                //        " has arrived.")->chars});
     }
 
     planet.civs.civs[civ_id].met_cordex = true;

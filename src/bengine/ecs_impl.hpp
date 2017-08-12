@@ -6,6 +6,9 @@
 #include <cereal/types/bitset.hpp>
 #include <cereal/types/vector.hpp>
 #include <queue>
+#include <thread>
+#include <mutex>
+#include <algorithm>
 
 namespace bengine {
 
