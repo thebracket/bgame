@@ -139,7 +139,9 @@ namespace render {
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
+        glEnable(GL_CULL_FACE);
         render_chunks();
+        glDisable(GL_CULL_FACE);
         glCheckError();
 
         // TODO: Render other lights to the gbuffer
@@ -171,7 +173,8 @@ namespace render {
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        render_test_quad(light_stage_buffer->color_tex);
+        //render_test_quad(light_stage_buffer->color_tex);
+        render_test_quad(gbuffer->albedo_tex);
 
         // TODO: Final combination and post-process
 

@@ -78,7 +78,7 @@ namespace chunks {
         } else {
             use_id = (unsigned int)material->base_texture_id;
         }
-        //if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
         return use_id;
     }
 
@@ -293,27 +293,38 @@ namespace chunks {
         const float x0 = -0.5f + x;
         const float x1 = x0 + width;
         const float y0 = -0.5f + z;
-        const float y1 = y0 + 1.0f;
+        //const float y1 = y0 + 1.0f; // We don't use y1 for floors
         const float z0 = -0.5f + y;
         const float z1 = z0 + height;
         const float TI = texture_id;
         constexpr float T0 = 0.0f;
         const float TW = width;
         const float TH = height;
+        constexpr float ceiling_gap = 0.001f;
 
         v.insert(v.end(), {
+                // Upwards facing floor
                 x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
                 x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
                 x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
                 x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
                 x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
-                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
+                x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+
+                // Downwards facing ceiling - wound the other way
+                x0, y0 - ceiling_gap, z0, T0, T0, TI,  0.0f,  -1.0f,  0.0f,
+                x1, y0 - ceiling_gap, z0, TW, T0, TI,  0.0f,  -1.0f,  0.0f,
+                x1, y0 - ceiling_gap, z1, TW, TH, TI,  0.0f,  -1.0f,  0.0f,
+                x1, y0 - ceiling_gap, z1, TW, TH, TI,  0.0f,  -1.0f,  0.0f,
+                x0, y0 - ceiling_gap, z1, T0, TH, TI,  0.0f,  -1.0f,  0.0f,
+                x0, y0 - ceiling_gap, z0, T0, T0, TI,  0.0f,  -1.0f,  0.0f
         });
     }
 
     void chunk_t::add_cube_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
                                      const float &width, const float &height, const float &texture_id)
     {
+        /*
         const float x0 = -0.5f + x;
         const float x1 = x0 + width;
         const float y0 = -0.5f + z;
@@ -368,6 +379,7 @@ namespace chunks {
                 x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
                 x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
         });
+         */
     }
 
     void chunk_t::update_buffer() {
