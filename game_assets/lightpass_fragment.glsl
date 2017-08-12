@@ -29,7 +29,10 @@ void main()
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuse = base_color * diff * light_color;
 
+    vec3 eyeDir = normalize(camera_position - position);
+
     // Final color
-    vec3 final_color = ambient + diffuse;
+    float gamma = 2.2;
+    vec3 final_color = pow(ambient + diffuse, vec3(1.0/gamma));
     FragColor = vec4(final_color, 1.0);
 }

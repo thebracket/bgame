@@ -41,7 +41,7 @@ namespace render {
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 camera_position_v;
-        camera->camera_mode = DIAGONAL;
+        //camera->camera_mode = DIAGONAL;
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -138,7 +138,7 @@ namespace render {
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LEQUAL);
         render_chunks();
         glCheckError();
 
@@ -154,6 +154,7 @@ namespace render {
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "position_tex"), 2);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_position_tex"), 3);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_color_tex"), 4);
+        glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
