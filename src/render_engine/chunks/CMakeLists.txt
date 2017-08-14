@@ -1,2 +1,2 @@
-add_library(chunks STATIC chunks.cpp)
+add_library(chunks chunks.cpp)
 cotire(chunks)

@@ -1,4 +1,4 @@
-add_library(regions STATIC
+add_library(regions
         starting_point.cpp
         heightmap.cpp
         water_features.cpp

@@ -1,4 +1,4 @@
-add_library(components STATIC
+add_library(components
 	calendar.cpp
 	game_stats.cpp
 	item.cpp

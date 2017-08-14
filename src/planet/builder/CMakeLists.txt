@@ -1,5 +1,5 @@
 add_subdirectory(regions)
-add_library(builder STATIC
+add_library(builder
         settler_builder.cpp
         map_builder.cpp
         biome_builder.cpp

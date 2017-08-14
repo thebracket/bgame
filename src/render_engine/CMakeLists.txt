@@ -1,4 +1,4 @@
-add_library(render_engine STATIC
+add_library(render_engine
         render_engine.cpp
         )
 cotire(render_engine)

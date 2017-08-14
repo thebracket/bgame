@@ -1,4 +1,4 @@
-add_library(fbo STATIC
+add_library(fbo
         buffertest.cpp
         gbuffer.cpp
         base_lit_buffer.cpp
