@@ -14,6 +14,7 @@
 #include "fbo/buffertest.hpp"
 #include "fbo/gbuffer.hpp"
 #include "fbo/base_lit_buffer.hpp"
+#include "world_textures/world_textures.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -105,8 +106,11 @@ namespace render {
         // Assign the texture array
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_3D, outdoors_y_z_tex);
 
         glUniform1i(glGetUniformLocation(assets::chunkshader, "textureArray"), 0);
+        glUniform1i(glGetUniformLocation(assets::chunkshader, "world_data"), 1);
 
         do_chunk_render();
     }
@@ -135,6 +139,7 @@ namespace render {
 
         chunk_maintenance();
         if (camera_moved) update_camera();
+        update_world_textures();
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);

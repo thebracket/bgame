@@ -56,7 +56,7 @@ namespace play_game {
          // Loading the region
         std::cout << "Loading the region\n";
         region::load_current_region(region_x, region_y);
-
+        region::tile_recalc_all();
 
         // Setup systems
         std::cout << "Setting up systems\n";

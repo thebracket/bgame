@@ -1,7 +1,7 @@
 #version 330 core
 
 uniform sampler2DArray textureArray;
-uniform sampler2D shadowMap;
+uniform sampler3D world_data;
 
 in vec3 tex_pos;
 in vec3 world_pos;
@@ -20,14 +20,17 @@ void main() {
     float gamma = 2.2;
     vec3 base_color = pow(texture(textureArray, tex_pos).rgb, vec3(gamma));
     gAlbedo = base_color;
-    gPosition = vec3(world_pos.x/256.0, world_pos.y/256.0, world_pos.z/256.0);
+    gPosition = vec3((world_pos.x+0.5)/256.0, (world_pos.z+0.5)/256.0, (world_pos.y+0.5)/128.0);
 
     vec3 norm = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+1)).rgb;
     norm = normalize(norm * 2.0 - 1.0);
     norm = normalize(TBN * norm);
     gNormal = norm;
 
-    gLightCol = vec3(0.0);
-    gLightPos = vec3(0.0);
+    vec3 world_info = texture(world_data, gPosition).rgb;
+
+    gLightCol = vec3(1.0);
+    gLightPos = world_info.r > 0.0 ? vec3(40, 256, 128) : vec3(0.0);
     gAmbientOcclusion = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).rgb, vec3(gamma));
+    //gAlbedo = world_info;
 }

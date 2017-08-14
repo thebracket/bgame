@@ -506,15 +506,14 @@ namespace region {
 		}
 
 		// Is it underground?
-		if (z == REGION_DEPTH - 1) {
-			above_ground[idx] = true;
-		} else {
-			bool underground = false;
-			for (int z = REGION_DEPTH - 1; z > 0; --z) {
-				if (tile_type[idx] == tile_type::SOLID) underground = true;
-			}
-			above_ground[idx] = !underground;
-		}
+		int test_z = z+1;
+        bool ag = true;
+        while (test_z < REGION_DEPTH-1) {
+            const int testidx = mapidx(x,y,test_z);
+            if (solid[testidx] || tile_type[testidx] == tile_type::FLOOR || tile_type[testidx] == tile_type::WALL || tile_type[testidx] == tile_type::SOLID || flag(testidx, CAN_STAND_HERE)) ag = false;
+            ++test_z;
+        }
+        above_ground[idx] = ag;
 
 		tile_pathing(x, y, z);
 	}

@@ -4,4 +4,5 @@ add_library(render_engine
 cotire(render_engine)
 add_subdirectory(chunks)
 add_subdirectory(fbo)
-target_link_libraries(render_engine chunks fbo)
+add_subdirectory(world_textures)
+target_link_libraries(render_engine chunks fbo world_textures)
