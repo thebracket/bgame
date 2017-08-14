@@ -9,6 +9,7 @@
 #include <thread>
 #include <mutex>
 #include <algorithm>
+#include <array>
 
 namespace bengine {
 

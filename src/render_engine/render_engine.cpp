@@ -108,9 +108,15 @@ namespace render {
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_3D, outdoors_y_z_tex);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_3D, lightpos_tex);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_3D, lightcol_tex);
 
         glUniform1i(glGetUniformLocation(assets::chunkshader, "textureArray"), 0);
         glUniform1i(glGetUniformLocation(assets::chunkshader, "world_data"), 1);
+        glUniform1i(glGetUniformLocation(assets::chunkshader, "light_location"), 2);
+        glUniform1i(glGetUniformLocation(assets::chunkshader, "light_color"), 3);
 
         do_chunk_render();
     }
@@ -182,7 +188,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(light_stage_buffer->color_tex);
-        //render_test_quad(gbuffer->albedo_tex);
+        //render_test_quad(gbuffer->normal_tex);
 
         // TODO: Final combination and post-process
 

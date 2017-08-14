@@ -70,7 +70,7 @@ namespace chunks {
         if (region::veg_type(idx) > 0) return 0; // Grass is determined to be index 0
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
-        if (!material) return 3;
+        if (!material) return 2;
 
         unsigned int use_id = 2;
         if (region::flag(idx, CONSTRUCTION)) {
@@ -78,14 +78,14 @@ namespace chunks {
         } else {
             use_id = (unsigned int)material->base_texture_id;
         }
-        if (use_id == 3) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
         return use_id;
     }
 
     unsigned int get_cube_tex(const int &idx) {
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
-        if (!material) return 3;
+        if (!material) return 2;
 
         unsigned int use_id = 2;
         if (region::flag(idx, CONSTRUCTION)) {
@@ -93,7 +93,7 @@ namespace chunks {
         } else {
             use_id = (unsigned int)material->base_texture_id;
         }
-        //if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
         return use_id;
     }
 

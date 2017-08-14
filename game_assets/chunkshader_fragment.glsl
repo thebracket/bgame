@@ -2,6 +2,8 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler3D world_data;
+uniform sampler3D light_location;
+uniform sampler3D light_color;
 
 in vec3 tex_pos;
 in vec3 world_pos;
@@ -28,9 +30,12 @@ void main() {
     gNormal = norm;
 
     vec3 world_info = texture(world_data, gPosition).rgb;
+    vec3 lightLocation = texture(light_location, gPosition).rgb;
+    vec3 lightColor = texture(light_color, gPosition).rgb;
 
-    gLightCol = vec3(1.0);
-    gLightPos = world_info.r > 0.0 ? vec3(40, 256, 128) : vec3(0.0);
+    gLightCol = world_info.r > 0.0 ? vec3(1.0) : lightColor;
+    gLightPos = world_info.r > 0.0 ? vec3(40, 256, 128) : lightLocation * 256.0;
+
     gAmbientOcclusion = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).rgb, vec3(gamma));
-    //gAlbedo = world_info;
+    //gAlbedo = lightColor;
 }
