@@ -22,7 +22,7 @@ void main()
 
     // Calculate initial ambient
     float ambient_strength = 0.3;
-    vec3 ambient_occluded = texture(ao_tex, TexCoords).rgb;
+    float ambient_occluded = texture(ao_tex, TexCoords).r;
     vec3 ambient = base_color * ambient_strength * ambient_occluded;
 
     // Lambert lighting for diffuse

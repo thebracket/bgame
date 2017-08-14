@@ -188,7 +188,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(light_stage_buffer->color_tex);
-        //render_test_quad(gbuffer->normal_tex);
+        //render_test_quad(gbuffer->ao_tex);
 
         // TODO: Final combination and post-process
 
