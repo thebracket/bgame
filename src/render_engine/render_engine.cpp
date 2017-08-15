@@ -106,17 +106,8 @@ namespace render {
         // Assign the texture array
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_3D, outdoors_y_z_tex);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_3D, lightpos_tex);
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_3D, lightcol_tex);
 
         glUniform1i(glGetUniformLocation(assets::chunkshader, "textureArray"), 0);
-        glUniform1i(glGetUniformLocation(assets::chunkshader, "world_data"), 1);
-        glUniform1i(glGetUniformLocation(assets::chunkshader, "light_location"), 2);
-        glUniform1i(glGetUniformLocation(assets::chunkshader, "light_color"), 3);
 
         do_chunk_render();
     }
@@ -164,9 +155,10 @@ namespace render {
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "albedo_tex"), 0);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "normal_tex"), 1);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "position_tex"), 2);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "ao_tex"), 5);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_position_tex"), 3);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_color_tex"), 4);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "ao_tex"), 3);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "info_tex"), 4);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_pos_tex"), 5);
+        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_col_tex"), 6);
         glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
@@ -176,11 +168,13 @@ namespace render {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
         glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, gbuffer->lposition_tex);
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, gbuffer->lcolor_tex);
-        glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_3D, outdoors_y_z_tex);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_3D, lightpos_tex);
+        glActiveTexture(GL_TEXTURE6);
+        glBindTexture(GL_TEXTURE_3D, lightcol_tex);
         render_buffer_quad();
 
         // Render some test results

@@ -12,7 +12,5 @@ namespace render {
         unsigned int albedo_tex = 0;
         unsigned int normal_tex = 0;
         unsigned int ao_tex = 0;
-        unsigned int lposition_tex = 0;
-        unsigned int lcolor_tex = 0;
     };
 }
