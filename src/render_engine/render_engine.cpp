@@ -155,7 +155,6 @@ namespace render {
         //glDisable(GL_CULL_FACE);
         glCheckError();
 
-        // TODO: Render other lights to the gbuffer
         // Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
 
@@ -188,7 +187,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(light_stage_buffer->color_tex);
-        //render_test_quad(gbuffer->ao_tex);
+        //render_test_quad(gbuffer->normal_tex);
 
         // TODO: Final combination and post-process
 

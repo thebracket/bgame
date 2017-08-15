@@ -34,7 +34,6 @@ void main()
     vec3 eyeDir = normalize(camera_position - position);
 
     // Final color
-    float gamma = 2.2;
-    vec3 final_color = pow(ambient + diffuse, vec3(1.0/gamma));
+    vec3 final_color = ambient + diffuse;
     FragColor = vec4(final_color, 1.0);
 }

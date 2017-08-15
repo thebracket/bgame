@@ -78,7 +78,9 @@ namespace chunks {
         } else {
             use_id = (unsigned int)material->base_texture_id;
         }
-        if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        if (use_id == 3) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+
+        //std::cout << material->name << "=" << use_id << "\n";
         return use_id;
     }
 
@@ -93,7 +95,7 @@ namespace chunks {
         } else {
             use_id = (unsigned int)material->base_texture_id;
         }
-        if (use_id == 2) std::cout << "Material [" << material->name << "] is lacking a texture\n";
+        if (use_id == 3) std::cout << "Material [" << material->name << "] is lacking a texture\n";
         return use_id;
     }
 

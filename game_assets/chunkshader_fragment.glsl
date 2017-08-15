@@ -19,8 +19,7 @@ layout (location = 5) out vec3 gLightCol;
 out vec4 FragColor;
 
 void main() {
-    float gamma = 2.2;
-    vec3 base_color = pow(texture(textureArray, tex_pos).rgb, vec3(gamma));
+    vec3 base_color = texture(textureArray, tex_pos).rgb;
     gAlbedo = base_color;
     gPosition = vec3((world_pos.x+0.5)/256.0, (world_pos.z+0.5)/256.0, (world_pos.y+0.5)/128.0);
 
@@ -36,8 +35,8 @@ void main() {
     gLightCol = world_info.r > 0.0 ? vec3(1.0) : lightColor;
     gLightPos = world_info.r > 0.0 ? vec3(40, 256, 128) / 256.0 : lightLocation / 256.0;
 
-    gAmbientOcclusion.r = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r, gamma);
-    gAmbientOcclusion.g = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).g, gamma);
-    gAmbientOcclusion.b = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).b, gamma);
+    gAmbientOcclusion.r = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r;
+    gAmbientOcclusion.g = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).g;
+    gAmbientOcclusion.b = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).b;
     //gAlbedo = lightColor;
 }

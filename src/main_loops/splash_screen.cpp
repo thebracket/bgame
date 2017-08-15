@@ -93,16 +93,19 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
+    constexpr int TEX_SIZE = 256; // This is probably too high
+
     std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string filename) {
         int width, height, bpp;
         stbi_set_flip_vertically_on_load(true);
-        unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+        unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + filename);
+        std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
+        assert(width == TEX_SIZE && height == TEX_SIZE);
         return std::make_tuple(image_data, width, height, bpp);
     }
 
     void load_chunk_textures() {
-        constexpr int TEX_SIZE = 256; // This is probably too high
         const int num_actual_textures = static_cast<int>(material_textures.size() * 3);
 
         glGenTextures(1, &assets::chunk_texture_array);
@@ -111,7 +114,7 @@ namespace splash_screen {
 
         glTexStorage3D( GL_TEXTURE_2D_ARRAY,
                         2, // 4-levels of mipmap
-                        GL_RGBA8, // Internal format
+                        GL_RGB8, // Internal format
                         TEX_SIZE, TEX_SIZE, // Width and height
                         num_actual_textures
         );
@@ -126,10 +129,10 @@ namespace splash_screen {
             const std::string rough = stem + "-r.jpg";
 
             auto albedo_tex = load_texture_to_ram(albedo);
-            auto normal_tex = load_texture_to_ram(albedo);
-            auto occlusion_tex = load_texture_to_ram(albedo);
-            auto metal_tex = load_texture_to_ram(albedo);
-            auto rough_tex = load_texture_to_ram(albedo);
+            auto normal_tex = load_texture_to_ram(normal);
+            auto occlusion_tex = load_texture_to_ram(occlusion);
+            auto metal_tex = load_texture_to_ram(metal);
+            auto rough_tex = load_texture_to_ram(rough);
 
             // Albedo and normal are stored directly as idx+0, idx+1
             glTexSubImage3D(
@@ -137,7 +140,7 @@ namespace splash_screen {
                     0, // Mipmap number
                     0, 0, load_index, // x/y/z offsets
                     TEX_SIZE, TEX_SIZE, 1, // width, height, depth
-                    GL_RGBA, // format
+                    GL_RGB, // format
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(albedo_tex) // Color data
             );
@@ -146,27 +149,26 @@ namespace splash_screen {
                     0, // Mipmap number
                     0, 0, load_index+1, // x/y/z offsets
                     TEX_SIZE, TEX_SIZE, 1, // width, height, depth
-                    GL_RGBA, // format
+                    GL_RGB, // format
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(normal_tex) // Color data
             );
 
             // We need to combine occlusion, metal and rough into one texture
             std::vector<uint8_t> texbytes;
-            constexpr int num_bytes = TEX_SIZE * TEX_SIZE * 4;
+            constexpr int num_bytes = TEX_SIZE * TEX_SIZE * 3;
             texbytes.resize(num_bytes);
-            for (int i=0; i<num_bytes; i+=4) {
+            for (int i=0; i<num_bytes; i+=3) {
                 texbytes[i] = std::get<0>(occlusion_tex)[i];
                 texbytes[i+1] = std::get<0>(metal_tex)[i];
                 texbytes[i+2] = std::get<0>(rough_tex)[i];
-                texbytes[i+3] = 255;
             }
             glTexSubImage3D(
                     GL_TEXTURE_2D_ARRAY,
                     0, // Mipmap number
                     0, 0, load_index+2, // x/y/z offsets
                     TEX_SIZE, TEX_SIZE, 1, // width, height, depth
-                    GL_RGBA, // format
+                    GL_RGB, // format
                     GL_UNSIGNED_BYTE, // type
                     &texbytes[0] // Color data
             );
