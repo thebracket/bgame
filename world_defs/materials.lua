@@ -1,38 +1,38 @@
 function tfn(name) return "game_assets/terrain/" .. name end
-next_texture_id = 6
+next_texture_id = 10
 function tid()
     tmp = next_texture_id
-    next_texture_id = next_texture_id + 5
+    next_texture_id = next_texture_id + 3
     return tmp
 end
 
 terrain_textures = {
     -- Hard coded for engine use
-    grass = { index=0, texture=tfn("grass-t.jpg"), normal=tfn("grass-n.jpg"), ao=tfn("grass-ao.jpg"), m=tfn("grass-m.jpg"), r=tfn("grass-r.jpg") },
-    red_plastic = { index=3, texture=tfn("redplastic-t.jpg"), normal=tfn("redplastic-n.jpg"), ao=tfn("redplastic-ao.jpg"), m=tfn("redplastic-m.jpg"), r=tfn("redplastic-r.jpg") }, -- This is used to indicate a missing texture
+    grass = { index=0, texture=tfn("grass") },
+    red_plastic = { index=5, texture=tfn("redplastic") }, -- This is used to indicate a missing texture
 
     -- Rock Types
-    sandstone = { index=tid(), texture=tfn("sandstone-t.jpg"), normal=tfn("sandstone-n.jpg"), ao=tfn("sandstone-ao.jpg"), m=tfn("sandstone-m.jpg"), r=tfn("sandstone-r.jpg") },
-    copper_rock = { index=tid(), texture=tfn("copperrock-t.jpg"), normal=tfn("copperrock-n.jpg"), ao=tfn("copperrock-ao.jpg"), m=tfn("copperrock-m.jpg"), r=tfn("copperrock-r.jpg") },
-    red_rock = { index=tid(), texture=tfn("redrock-t.jpg"), normal=tfn("redrock-n.jpg"), ao=tfn("redrock-ao.jpg"), m=tfn("redrock-m.jpg"), r=tfn("redrock-r.jpg") },
-    limestone = { index=tid(), texture=tfn("limestone-t.jpg"), normal=tfn("limestone-n.jpg"), ao=tfn("limestone-ao.jpg"), m=tfn("limestone-m.jpg"), r=tfn("limestone-r.jpg") },
-    granite = { index=tid(), texture=tfn("granite-t.jpg"), normal=tfn("granite-n.jpg"), ao=tfn("granite-ao.jpg"), m=tfn("granite-m.jpg"), r=tfn("granite-r.jpg") },
-    greypocked = { index=tid(), texture=tfn("greypocked-t.jpg"), normal=tfn("greypocked-n.jpg"), ao=tfn("greypocked-ao.jpg"), m=tfn("greypocked-m.jpg"), r=tfn("greypocked-r.jpg") },
-    granite = { index=tid(), texture=tfn("granite-t.jpg"), normal=tfn("granite-n.jpg"), ao=tfn("granite-ao.jpg"), m=tfn("granite-m.jpg"), r=tfn("granite-r.jpg") },
-    slate = { index=tid(), texture=tfn("slate-t.jpg"), normal=tfn("slate-n.jpg"), ao=tfn("slate-ao.jpg"), m=tfn("slate-m.jpg"), r=tfn("slate-r.jpg") },
-    blackrock = { index=tid(), texture=tfn("blackrock-t.jpg"), normal=tfn("blackrock-n.jpg"), ao=tfn("blackrock-ao.jpg"), m=tfn("blackrock-m.jpg"), r=tfn("blackrock-r.jpg") },
+    sandstone = { index=tid(), texture=tfn("sandstone") },
+    copper_rock = { index=tid(), texture=tfn("copperrock") },
+    red_rock = { index=tid(), texture=tfn("redrock") },
+    limestone = { index=tid(), texture=tfn("limestone") },
+    granite = { index=tid(), texture=tfn("granite") },
+    greypocked = { index=tid(), texture=tfn("greypocked") },
+    granite = { index=tid(), texture=tfn("granite") },
+    slate = { index=tid(), texture=tfn("slate") },
+    blackrock = { index=tid(), texture=tfn("blackrock") },
 
     -- Constructed Types
-    blocks_rough = { index=tid(), texture=tfn("blocksrough-t.jpg"), normal=tfn("blocksrough-n.jpg"), ao=tfn("blocksrough-ao.jpg"), m=tfn("blocksrough-m.jpg"), r=tfn("blocksrough-r.jpg") },
-    cobbles = { index=tid(), texture=tfn("cobbles-t.jpg"), normal=tfn("cobbles-n.jpg"), ao=tfn("cobbles-ao.jpg"), m=tfn("cobbles-m.jpg"), r=tfn("cobbles-r.jpg") },
+    blocks_rough = { index=tid(), texture=tfn("blocksrough") },
+    cobbles = { index=tid(), texture=tfn("cobbles") },
 
     -- Soils
-    sandy_soil = { index=tid(), texture=tfn("sandsoil-t.jpg"), normal=tfn("sandsoil-n.jpg"), ao=tfn("sandsoil-ao.jpg"), m=tfn("sandsoil-m.jpg"), r=tfn("sandsoil-r.jpg") },
-    dry_dirt = { index=tid(), texture=tfn("drydirt-t.jpg"), normal=tfn("drydirt-n.jpg"), ao=tfn("drydirt-ao.jpg"), m=tfn("drydirt-m.jpg"), r=tfn("drydirt-r.jpg") },
-    dry_brown_dirt = { index=tid(), texture=tfn("drybrowndirt-t.jpg"), normal=tfn("drybrowndirt-n.jpg"), ao=tfn("drybrowndirt-ao.jpg"), m=tfn("drybrowndirt-m.jpg"), r=tfn("drybrowndirt-r.jpg") },
+    sandy_soil = { index=tid(), texture=tfn("sandsoil") },
+    dry_dirt = { index=tid(), texture=tfn("drydirt") },
+    dry_brown_dirt = { index=tid(), texture=tfn("drybrowndirt") },
 
     -- Synthetic
-    titanium = { index=tid(), texture=tfn("titanium-t.jpg"), normal=tfn("titanium-n.jpg"), ao=tfn("titanium-ao.jpg"), m=tfn("titanium-m.jpg"), r=tfn("titanium-r.jpg") }
+    titanium = { index=tid(), texture=tfn("titanium") }
 }
 
 function chunkTex(name)

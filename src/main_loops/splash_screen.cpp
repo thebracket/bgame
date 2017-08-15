@@ -93,8 +93,17 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
+    std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string filename) {
+        int width, height, bpp;
+        stbi_set_flip_vertically_on_load(true);
+        unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+        if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + filename);
+        return std::make_tuple(image_data, width, height, bpp);
+    }
+
     void load_chunk_textures() {
         constexpr int TEX_SIZE = 256; // This is probably too high
+        const int num_actual_textures = static_cast<int>(material_textures.size() * 3);
 
         glGenTextures(1, &assets::chunk_texture_array);
         glActiveTexture(GL_TEXTURE0);
@@ -104,26 +113,72 @@ namespace splash_screen {
                         2, // 4-levels of mipmap
                         GL_RGBA8, // Internal format
                         TEX_SIZE, TEX_SIZE, // Width and height
-                        material_textures.size()
+                        num_actual_textures
         );
 
-        for (unsigned int i=0; i<material_textures.size(); ++i) {
-            int width, height, bpp;
-            stbi_set_flip_vertically_on_load(true);
-            unsigned char *image_data = stbi_load(material_textures[i].c_str(), &width, &height, &bpp, STBI_rgb_alpha);
-            if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(material_textures[i]));
+        int load_index = 0;
+        for (std::size_t i=0; i<material_textures.size(); ++i) {
+            const std::string stem = material_textures[i];
+            const std::string albedo = stem + "-t.jpg";
+            const std::string normal = stem + "-n.jpg";
+            const std::string occlusion = stem + "-ao.jpg";
+            const std::string metal = stem + "-m.jpg";
+            const std::string rough = stem + "-r.jpg";
 
+            auto albedo_tex = load_texture_to_ram(albedo);
+            auto normal_tex = load_texture_to_ram(albedo);
+            auto occlusion_tex = load_texture_to_ram(albedo);
+            auto metal_tex = load_texture_to_ram(albedo);
+            auto rough_tex = load_texture_to_ram(albedo);
+
+            // Albedo and normal are stored directly as idx+0, idx+1
             glTexSubImage3D(
                     GL_TEXTURE_2D_ARRAY,
                     0, // Mipmap number
-                    0, 0, i, // x/y/z offsets
+                    0, 0, load_index, // x/y/z offsets
                     TEX_SIZE, TEX_SIZE, 1, // width, height, depth
                     GL_RGBA, // format
                     GL_UNSIGNED_BYTE, // type
-                    image_data // Color data
+                    std::get<0>(albedo_tex) // Color data
+            );
+            glTexSubImage3D(
+                    GL_TEXTURE_2D_ARRAY,
+                    0, // Mipmap number
+                    0, 0, load_index+1, // x/y/z offsets
+                    TEX_SIZE, TEX_SIZE, 1, // width, height, depth
+                    GL_RGBA, // format
+                    GL_UNSIGNED_BYTE, // type
+                    std::get<0>(normal_tex) // Color data
             );
 
-            stbi_image_free(image_data);
+            // We need to combine occlusion, metal and rough into one texture
+            std::vector<uint8_t> texbytes;
+            constexpr int num_bytes = TEX_SIZE * TEX_SIZE * 4;
+            texbytes.resize(num_bytes);
+            for (int i=0; i<num_bytes; i+=4) {
+                texbytes[i] = std::get<0>(occlusion_tex)[i];
+                texbytes[i+1] = std::get<0>(metal_tex)[i];
+                texbytes[i+2] = std::get<0>(rough_tex)[i];
+                texbytes[i+3] = 255;
+            }
+            glTexSubImage3D(
+                    GL_TEXTURE_2D_ARRAY,
+                    0, // Mipmap number
+                    0, 0, load_index+2, // x/y/z offsets
+                    TEX_SIZE, TEX_SIZE, 1, // width, height, depth
+                    GL_RGBA, // format
+                    GL_UNSIGNED_BYTE, // type
+                    &texbytes[0] // Color data
+            );
+
+
+            stbi_image_free(std::get<0>(albedo_tex));
+            stbi_image_free(std::get<0>(normal_tex));
+            stbi_image_free(std::get<0>(occlusion_tex));
+            stbi_image_free(std::get<0>(metal_tex));
+            stbi_image_free(std::get<0>(rough_tex));
+
+            load_index += 3;
         }
 
         glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);

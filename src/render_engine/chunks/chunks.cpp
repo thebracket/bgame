@@ -70,9 +70,9 @@ namespace chunks {
         if (region::veg_type(idx) > 0) return 0; // Grass is determined to be index 0
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
-        if (!material) return 2;
+        if (!material) return 3;
 
-        unsigned int use_id = 2;
+        unsigned int use_id = 3;
         if (region::flag(idx, CONSTRUCTION)) {
             use_id = (unsigned int)material->constructed_texture_id;
         } else {
@@ -85,9 +85,9 @@ namespace chunks {
     unsigned int get_cube_tex(const int &idx) {
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
-        if (!material) return 2;
+        if (!material) return 3;
 
-        unsigned int use_id = 2;
+        unsigned int use_id = 3;
         if (region::flag(idx, CONSTRUCTION)) {
             use_id = (unsigned int)material->constructed_texture_id;
         } else {

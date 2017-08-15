@@ -34,10 +34,10 @@ void main() {
     vec3 lightColor = texture(light_color, gPosition).rgb;
 
     gLightCol = world_info.r > 0.0 ? vec3(1.0) : lightColor;
-    gLightPos = world_info.r > 0.0 ? vec3(40, 256, 128) : lightLocation * 256.0;
+    gLightPos = world_info.r > 0.0 ? vec3(40, 256, 128) / 256.0 : lightLocation / 256.0;
 
     gAmbientOcclusion.r = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r, gamma);
-    gAmbientOcclusion.g = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+3)).r, gamma);
-    gAmbientOcclusion.b = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+4)).r, gamma);
+    gAmbientOcclusion.g = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).g, gamma);
+    gAmbientOcclusion.b = pow(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).b, gamma);
     //gAlbedo = lightColor;
 }

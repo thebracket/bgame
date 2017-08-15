@@ -17,7 +17,7 @@ void main()
     vec3 base_color = texture(albedo_tex, TexCoords).rgb;
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb * 256.0;
-    vec3 light_position = texture(light_position_tex, TexCoords).rgb * 256.0;
+    vec3 light_position = (texture(light_position_tex, TexCoords).rgb * 256.0) + 0.5;
     vec3 light_color = texture(light_color_tex, TexCoords).rgb;
 
     // Calculate initial ambient

@@ -212,7 +212,7 @@ void build_material_tech_tree(graphviz_t *tree) {
 }
 
 void read_material_textures() {
-    std::map<int, std::tuple<std::string, std::string, std::string, std::string, std::string>> tmp_tex;
+    std::map<int, std::string> tmp_tex;
 
     lua_getglobal(lua_state, "terrain_textures");
     lua_pushnil(lua_state);
@@ -222,11 +222,7 @@ void read_material_textures() {
         std::cout << key << "\n";
 
         int idx = 0;
-        std::string tex = "";
-        std::string norm = "";
-        std::string ao = "";
-        std::string metal = "";
-        std::string rough = "";
+        std::string tex;
 
         lua_pushstring(lua_state, key.c_str());
         lua_gettable(lua_state, -2);
@@ -236,25 +232,16 @@ void read_material_textures() {
 
             if (field == "index") idx = (int)lua_tonumber(lua_state, -1);
             if (field == "texture") tex = lua_tostring(lua_state, -1);
-            if (field == "normal") norm = lua_tostring(lua_state, -1);
-            if (field == "ao") ao = lua_tostring(lua_state, -1);
-            if (field == "m") metal = lua_tostring(lua_state, -1);
-            if (field == "r") rough = lua_tostring(lua_state, -1);
 
             lua_pop(lua_state, 1);
         }
-        tmp_tex[idx] = std::make_tuple(tex, norm, ao, metal, rough);
+        tmp_tex[idx] = tex;
 
         lua_pop(lua_state, 1);
     }
 
     material_textures.clear();
     for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
-        material_textures.emplace_back(std::get<0>(i->second));
-        material_textures.emplace_back(std::get<1>(i->second));
-        material_textures.emplace_back(std::get<2>(i->second));
-        material_textures.emplace_back(std::get<3>(i->second));
-        material_textures.emplace_back(std::get<4>(i->second));
-        std::cout << material_textures.size()-5 << " : " << std::get<0>(i->second) << " / " << std::get<1>(i->second) << "\n";
+        material_textures.emplace_back(i->second);
     }
 }
