@@ -16,6 +16,7 @@
 #include "fbo/base_lit_buffer.hpp"
 #include "world_textures/world_textures.hpp"
 #include "fbo/hdr_buffer.hpp"
+#include "fbo/bloom_ping_pong.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -29,6 +30,7 @@ namespace render {
     std::unique_ptr<gbuffer_t> gbuffer;
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
     std::unique_ptr<hdr_buffer_t> hdr_buffer;
+    std::unique_ptr<bloom_pingpong_t> bloom_buffer;
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -155,14 +157,42 @@ namespace render {
         render_buffer_quad();
     }
 
+    void bloom_blur() {
+        glUseProgram(assets::bloom_shader);
+        glActiveTexture(GL_TEXTURE0);
+        bool horizontal = true, first_iteration = true;
+        constexpr int amount = 10;
+        for (unsigned int i=0; i<amount; ++i) {
+            if (horizontal) {
+                glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer->fbo1_id);
+                glUniform1i(glGetUniformLocation(assets::bloom_shader, "horizontal"), 1);
+                if (first_iteration) {
+                    glBindTexture(GL_TEXTURE_2D, light_stage_buffer->bright_tex);
+                } else {
+                    glBindTexture(GL_TEXTURE_2D, bloom_buffer->blur_tex2);
+                }
+            } else {
+                glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer->fbo2_id);
+                glUniform1i(glGetUniformLocation(assets::bloom_shader, "horizontal"), 0);
+                glBindTexture(GL_TEXTURE_2D, bloom_buffer->blur_tex1);
+            }
+            render_buffer_quad();
+            horizontal = !horizontal;
+            if (first_iteration) first_iteration = false;
+        }
+    }
+
     void tone_map_scene() {
         glUseProgram(assets::tonemap_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
         // Setup uniforms
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUniform1i(glGetUniformLocation(assets::tonemap_shader, "hdr_tex"), 0);
+        glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, bloom_buffer->blur_tex1);
         render_buffer_quad();
     }
 
@@ -176,6 +206,7 @@ namespace render {
             set_uniform_locs();
             if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
             if (!hdr_buffer) hdr_buffer = std::make_unique<hdr_buffer_t>(screen_w, screen_h);
+            if (!bloom_buffer) bloom_buffer = std::make_unique<bloom_pingpong_t>(screen_w, screen_h);
         }
 
         chunk_maintenance();
@@ -196,6 +227,9 @@ namespace render {
         // Render the combined light buffer
         render_to_light_buffer();
 
+        // Bloom
+        bloom_blur();
+
         // Tone mapping
         tone_map_scene();
 
@@ -203,7 +237,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(gbuffer->albedo_tex);
+        //render_test_quad(light_stage_buffer->bright_tex);
 
         // TODO: Final combination and post-process
 

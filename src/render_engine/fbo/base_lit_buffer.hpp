@@ -9,5 +9,6 @@ namespace render {
         unsigned int rbo_id = 0;
 
         unsigned int color_tex = 0;
+        unsigned int bright_tex = 0;
     };
 }

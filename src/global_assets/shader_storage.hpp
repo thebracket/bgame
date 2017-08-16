@@ -7,4 +7,5 @@ namespace assets {
     extern unsigned int depthquad_shader;
     extern unsigned int lightstage_shader;
     extern unsigned int tonemap_shader;
+    extern unsigned int bloom_shader;
 }
