@@ -15,6 +15,7 @@
 #include "fbo/gbuffer.hpp"
 #include "fbo/base_lit_buffer.hpp"
 #include "world_textures/world_textures.hpp"
+#include "fbo/hdr_buffer.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -27,6 +28,7 @@ namespace render {
     int view_mat_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
+    std::unique_ptr<hdr_buffer_t> hdr_buffer;
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -124,33 +126,7 @@ namespace render {
         }
     }
 
-    void render_gl(const double &duration_ms) {
-        glCheckError();
-        int screen_w, screen_h;
-        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
-
-        if (!gbuffer) {
-            gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
-            set_uniform_locs();
-            if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
-        }
-
-        chunk_maintenance();
-        if (camera_moved) update_camera();
-        update_world_textures();
-
-        // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        //glEnable(GL_CULL_FACE);
-        render_chunks();
-        //glDisable(GL_CULL_FACE);
-        glCheckError();
-
-        // Stop writing to the gbuffer and depth-testing
-        glDisable(GL_DEPTH_TEST);
-
-        // Render the combined light buffer
+    void render_to_light_buffer() {
         glUseProgram(assets::lightstage_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "albedo_tex"), 0);
@@ -177,11 +153,56 @@ namespace render {
         glActiveTexture(GL_TEXTURE6);
         glBindTexture(GL_TEXTURE_3D, lightcol_tex);
         render_buffer_quad();
+    }
+
+    void tone_map_scene() {
+        glUseProgram(assets::tonemap_shader);
+        glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
+        // Setup uniforms
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUniform1i(glGetUniformLocation(assets::tonemap_shader, "hdr_tex"), 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
+        render_buffer_quad();
+    }
+
+    void render_gl(const double &duration_ms) {
+        glCheckError();
+        int screen_w, screen_h;
+        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
+        if (!gbuffer) {
+            gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
+            set_uniform_locs();
+            if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
+            if (!hdr_buffer) hdr_buffer = std::make_unique<hdr_buffer_t>(screen_w, screen_h);
+        }
+
+        chunk_maintenance();
+        if (camera_moved) update_camera();
+        update_world_textures();
+
+        // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        //glEnable(GL_CULL_FACE);
+        render_chunks();
+        //glDisable(GL_CULL_FACE);
+        glCheckError();
+
+        // Stop writing to the gbuffer and depth-testing
+        glDisable(GL_DEPTH_TEST);
+
+        // Render the combined light buffer
+        render_to_light_buffer();
+
+        // Tone mapping
+        tone_map_scene();
 
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        render_test_quad(light_stage_buffer->color_tex);
+        render_test_quad(hdr_buffer->color_tex);
         //render_test_quad(gbuffer->albedo_tex);
 
         // TODO: Final combination and post-process

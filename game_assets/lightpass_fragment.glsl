@@ -51,13 +51,17 @@ vec3 cooktorrance_specular(in float NdL, in float NdV, in float NdH, in vec3 spe
     return (1.0 / rim) * specular * G * D;
 }
 
+vec3 degamma(vec3 col) {
+    return pow(col, vec3(2.2));
+}
+
 void main()
 {
     // TODO: Make this a uniform
     vec3 sun_position = vec3(128.0, 256.0, 128.0);
     vec3 sun_color = vec3(1.0);
 
-    vec3 base_color = texture(albedo_tex, TexCoords).rgb;
+    vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb;
     vec3 world_sampler_pos = vec3((position.x + 0.5) / 256.0, (position.z + 0.5) / 256.0, (position.y + 0.5) / 128.0);
@@ -72,7 +76,7 @@ void main()
     // Retrieve information from the world texture
     vec3 outdoor_x_y = texture(info_tex, world_sampler_pos).rgb;
     vec3 light_position = texture(light_pos_tex, world_sampler_pos).rgb * 256.0;
-    vec3 light_color = texture(light_col_tex, world_sampler_pos).rgb;
+    vec3 light_color = degamma(texture(light_col_tex, world_sampler_pos).rgb);
 
     // Output components
     vec3 ambient_ref = base_color * ambient_occlusion;

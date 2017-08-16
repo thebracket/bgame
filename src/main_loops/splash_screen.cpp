@@ -47,6 +47,7 @@ namespace splash_screen {
         chunkshader = load_shaders("game_assets/chunkshader_vertex.glsl", "game_assets/chunkshader_fragment.glsl");
         depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
         lightstage_shader = load_shaders("game_assets/lightpass_vertex.glsl", "game_assets/lightpass_fragment.glsl");
+        tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");
     }
 
     void init_raws(int id) {

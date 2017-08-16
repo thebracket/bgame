@@ -6,4 +6,5 @@ namespace assets {
     unsigned int chunkshader = 0;
     unsigned int depthquad_shader = 0;
     unsigned int lightstage_shader = 0;
+    unsigned int tonemap_shader = 0;
 }

@@ -1,7 +1,7 @@
-#include "base_lit_buffer.hpp"
+#include "hdr_buffer.hpp"
 
 namespace render {
-    base_lit_buffer_t::base_lit_buffer_t(const int &w, const int &h) {
+    hdr_buffer_t::hdr_buffer_t(const int &w, const int &h) {
         width = w;
         height = h;
 
@@ -10,7 +10,7 @@ namespace render {
         // position color buffer
         glGenTextures(1, &color_tex);
         glBindTexture(GL_TEXTURE_2D, color_tex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex, 0);
@@ -27,7 +27,7 @@ namespace render {
 
         // finally check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer baselight not complete!" << std::endl;
+            std::cout << "Framebuffer hdr not complete!" << std::endl;
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }
