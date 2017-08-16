@@ -32,6 +32,7 @@ terrain_textures = {
     dry_brown_dirt = { index=tid(), texture=tfn("drybrowndirt") },
 
     -- Synthetic
+    rubber = { index=tid(), texture=tfn("rubber") },
     titanium = { index=tid(), texture=tfn("titanium") }
 }
 
@@ -495,7 +496,7 @@ materials = {
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
-        texture = chunkTex("titanium"), constructed = chunkTex("titanium")
+        texture = chunkTex("rubber"), constructed = chunkTex("rubber")
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
