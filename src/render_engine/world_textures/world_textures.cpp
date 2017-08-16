@@ -7,6 +7,7 @@
 #include "../../components/lightsource.hpp"
 #include "../../bengine/geometry.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_camera.hpp"
 
 namespace render {
     constexpr int tex_width = REGION_WIDTH;
@@ -58,9 +59,19 @@ namespace render {
         if (finder == lit_tiles.end()) {
             lit_tiles[idx] = std::make_pair(light_pos, view.color);
         } else {
-            const int new_light_level = view.color.r + view.color.g + view.color.b;
-            const int old_light_level = finder->second.second.r + finder->second.second.g + finder->second.second.b;
-            if (new_light_level > old_light_level) {
+            int tx, ty, tz;
+            std::tie(tx, ty, tz) = idxmap(idx);
+
+            int lx, ly, lz;
+            std::tie(lx, ly, lz) = idxmap(finder->second.first);
+
+            int nx, ny, nz;
+            std::tie(nx, ny, nz) = idxmap(light_pos);
+
+            const float distance_new_light = bengine::distance3d_squared(tx, ty, tz, nx, ny, nz);
+            const float distance_old_light = bengine::distance3d_squared(tx, ty, tz, lx, ly, lz);
+
+            if (distance_new_light < distance_old_light) {
                 finder->second.first = light_pos;
                 finder->second.second = view.color;
             }
@@ -78,24 +89,28 @@ namespace render {
             }
             bool blocked = region::opaque(idx);
             reveal(idx, view, mapidx(pos));
+            //std::cout << "Lit tile at " << X << "/" << Y << "/" << Z << "\n";
             return !blocked;
         });
     }
 
     void update_normal_light(bengine::entity_t &e, position_t &pos, lightsource_t &view) {
+        //std::cout << "Updating light at: " << pos.x << "/" << pos.y << "/" << pos.z << " [camera @" << camera_position->region_x << "/" << camera_position->region_y << "/" << camera_position->region_z << "]\n";
+
         if (view.alert_status) {
             view.color = bengine::color_t{1.0f, 0.0f, 0.0f};
         }
         const int idx = mapidx(pos);
         lit_tiles[idx] = std::make_pair(idx, view.color); // Always light yourself
-        for (int z=(0-view.radius); z<view.radius; ++z) {
+        int z = 0;
+        //for (int z=(0-view.radius); z<view.radius; ++z) {
             for (int i=0-view.radius; i<view.radius; ++i) {
                 internal_light_to(pos, view, i, 0-view.radius, z);
                 internal_light_to(pos, view, i, view.radius, z);
                 internal_light_to(pos, view, 0-view.radius, i, z);
                 internal_light_to(pos, view, view.radius, i, z);
             }
-        }
+        //}
     }
 
     void build_world_light() {

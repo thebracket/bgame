@@ -5,6 +5,14 @@ buildings = {
 		skill = { name="Construction", difficulty=25 },
 		render_rex = "cordex.xp"
 	},
+	lamp = {
+		name = "Lamp",
+		components = { { item="lamp_kit", qty=1} },
+		skill = { name="Construction", difficulty=25 },
+		render = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black']} } },
+		render_ascii = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black'] } } },
+		provides = { light={radius=5, color = colors['white']} },
+	},
 	ship_defense_turret = {
 	    name = "Ship Defense Turret",
 	    component = { { item="ship_turret_kit", qty=1 } },

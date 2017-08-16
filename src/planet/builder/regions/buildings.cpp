@@ -46,6 +46,8 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     } else if (tag == "cordex") {
         new_building->assign(viewshed_t{16, false})
             ->assign(lightsource_t{16, bengine::color_t{1.0f, 1.0f, 1.0f}, true});
+    }  else if (tag == "lamp") {
+        new_building->assign(lightsource_t{16, bengine::color_t{1.0f, 1.0f, 1.0f}, true});
     } else if (tag == "battery") {
         new_building->assign(construct_power_t{20,0,0});
     } else if (tag == "rtg") {
@@ -115,6 +117,8 @@ void add_construction(const int x, const int y, const int z, const std::string t
         add_building("camp_fire", x, y, z, civ_owner);
     } else if (type == "ship_door") {
         add_building("energy_door", x, y, z, civ_owner);
+    } else if (type == "ship_lamp") {
+        add_building("lamp", x, y, z, civ_owner);
     } else if (type == "door") {
         //std::cout << "Door owner: " << civ_owner << "\n";
         add_building("door", x, y, z, civ_owner);
@@ -170,6 +174,8 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
                         add_construction(x, y, z, "rtg", false, 0);
                     } else if (output->glyph == 197) {
                         add_construction(x, y, z, "ship_door", false, 0);
+                    } else if (output->glyph == 'L') {
+                            add_construction(x, y, z, "ship_lamp", false, 0);
                     } else {
                         if (output->glyph != 32)
                             std::cout << "Warning: No handler for " << (char)output->glyph << " (" << +output->glyph << ")\n";

@@ -317,14 +317,6 @@ namespace chunks {
                 x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
                 x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
                 x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
-
-                // Downwards facing ceiling - wound the other way
-                x0, y0 - ceiling_gap, z0, T0, T0, TI,  0.0f,  -1.0f,  0.0f,
-                x1, y0 - ceiling_gap, z0, TW, T0, TI,  0.0f,  -1.0f,  0.0f,
-                x1, y0 - ceiling_gap, z1, TW, TH, TI,  0.0f,  -1.0f,  0.0f,
-                x1, y0 - ceiling_gap, z1, TW, TH, TI,  0.0f,  -1.0f,  0.0f,
-                x0, y0 - ceiling_gap, z1, T0, TH, TI,  0.0f,  -1.0f,  0.0f,
-                x0, y0 - ceiling_gap, z0, T0, T0, TI,  0.0f,  -1.0f,  0.0f
         });
     }
 

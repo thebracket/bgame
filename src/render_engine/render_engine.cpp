@@ -81,6 +81,7 @@ namespace render {
                 for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
                     const int layer_z = z + chunks::chunks[idx].base_z;
                     if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10) {
+                    //if (layer_z == camera_position->region_z) {
                         if (chunks::chunks[idx].layers[z].vao > 0
                             && chunks::chunks[idx].layers[z].n_elements > 0) {
                             glBindVertexArray(chunks::chunks[idx].layers[z].vao);

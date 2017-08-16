@@ -9,6 +9,7 @@ uniform mat4 view_matrix;
 out vec3 tex_pos;
 out vec3 world_pos;
 out mat3 TBN;
+out vec3 base_normal;
 
 void main()
 {
@@ -30,4 +31,6 @@ void main()
     vec3 B = bitangent;
     vec3 N = normalize(aNormal);
     TBN = mat3(T, B, N);
+
+    base_normal = normalize(aNormal);
 }
