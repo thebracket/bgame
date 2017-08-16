@@ -57,8 +57,10 @@ include_directories(${GLM_INCLUDE_DIRS})
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+link_libraries(${Boost_FILESYSTEM_LIBRARY})
+link_libraries(${Boost_SYSTEM_LIBRARY})
 
 # Cereal
 find_package(cereal REQUIRED)

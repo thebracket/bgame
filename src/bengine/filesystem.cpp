@@ -1,23 +1,12 @@
 #include "filesystem.hpp"
+#include <boost/filesystem.hpp>
 
-#ifndef WIN32
-#include <unistd.h>
-#include <sys/types.h>
-#include <pwd.h>
-#include <sys/stat.h>
+bool directory_exists(const char *path) {
+    return boost::filesystem::exists(path);
+}
 
-#endif
-
-bool directory_exists(const char *path)
-{
-    struct stat info;
-
-    if(stat( path, &info ) != 0)
-        return false;
-    else if(info.st_mode & S_IFDIR)
-        return true;
-    else
-        return false;
+bool exists(const std::string &filename) noexcept {
+    return boost::filesystem::exists(filename);
 }
 
 #ifndef WIN32
@@ -54,11 +43,6 @@ std::string get_save_path()
 }
 
 #endif
-
-bool exists(const std::string &filename) noexcept {
-    struct stat buffer;
-    return (stat (filename.c_str(), &buffer) == 0);
-}
 
 void remove_from_path(std::string &s, const std::string needle) {
     //std::cout << "Searching " << s << " for " << needle << "\n";
