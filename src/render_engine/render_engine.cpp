@@ -19,6 +19,8 @@
 #include "fbo/bloom_ping_pong.hpp"
 #include "vox/voxreader.hpp"
 #include "vox/voxel_model.hpp"
+#include "../components/position.hpp"
+#include "../components/building.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -33,6 +35,8 @@ namespace render {
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
     std::unique_ptr<hdr_buffer_t> hdr_buffer;
     std::unique_ptr<bloom_pingpong_t> bloom_buffer;
+    std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
+    bool models_changed = true;
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -200,7 +204,7 @@ namespace render {
     }
 
     void render_voxel_models() {
-        auto model = vox::get_model(1);
+
 
         glUseProgram(assets::voxel_shader);
         //glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id); // removeme!
@@ -212,18 +216,30 @@ namespace render {
         glUniform1f(glGetUniformLocation(assets::voxel_shader, "texSize"), 32.0f);
         glCheckError();
 
-        // This is temporary!
-        std::vector<vox::instance_t> instance_list{ {
-                                                            (float)camera_position->region_x-2.0f,
-                                                            (float)camera_position->region_z,
-                                                            (float)camera_position->region_y,
-                                                            0.0f,
-                                                            0.0f,
-                                                            0.0f,
-                                                            0.0f
-                                                    } };
-        // Setup uniforms
-        model->render_instances(instance_list);
+        if (models_changed) {
+            models_to_render->clear();
+            bengine::each<building_t, position_t>(
+                    [] (bengine::entity_t &e, building_t &b, position_t &pos) {
+                        if (b.vox_model > 0) {
+                            auto finder = models_to_render->find(b.vox_model);
+                            if (finder != models_to_render->end()) {
+                                finder->second.push_back(vox::instance_t{
+                                        (float) pos.x, (float) pos.z, (float) pos.y, 0.0f, 0.0f, 0.0f, 0.0f
+                                });
+                            } else {
+                                models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
+                                        (float) pos.x, (float) pos.z, (float) pos.y, 0.0f, 0.0f, 0.0f, 0.0f
+                                }}));
+                            }
+                        }
+                    });
+            models_changed = false;
+        }
+
+        for (auto &m : *models_to_render) {
+            auto model = vox::get_model(m.first);
+            model->render_instances(m.second);
+        }
     }
 
     void render_gl(const double &duration_ms) {
@@ -237,6 +253,7 @@ namespace render {
             if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
             if (!hdr_buffer) hdr_buffer = std::make_unique<hdr_buffer_t>(screen_w, screen_h);
             if (!bloom_buffer) bloom_buffer = std::make_unique<bloom_pingpong_t>(screen_w, screen_h);
+            models_to_render = std::make_unique<boost::container::flat_map<int, std::vector<vox::instance_t>>>();
         }
 
         chunk_maintenance();
