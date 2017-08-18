@@ -8,4 +8,5 @@ namespace assets {
     extern unsigned int lightstage_shader;
     extern unsigned int tonemap_shader;
     extern unsigned int bloom_shader;
+    extern unsigned int voxel_shader;
 }

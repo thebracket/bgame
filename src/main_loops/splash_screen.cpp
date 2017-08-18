@@ -15,6 +15,7 @@
 #include "../global_assets/game_config.hpp"
 #include "../bengine/stb_image.h"
 #include "../raws/materials.hpp"
+#include "../render_engine/vox/voxreader.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -49,6 +50,7 @@ namespace splash_screen {
         lightstage_shader = load_shaders("game_assets/lightpass_vertex.glsl", "game_assets/lightpass_fragment.glsl");
         tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");
         bloom_shader = load_shaders("game_assets/bloom_vertex.glsl", "game_assets/bloom_fragment.glsl");
+        voxel_shader = load_shaders("game_assets/voxel_vertex.glsl", "game_assets/voxel_fragment.glsl");
     }
 
     void init_raws(int id) {
@@ -192,6 +194,10 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
+    void load_voxel_models() {
+        vox::load_vox("game_assets/vox/cryobed32.vox", "cryobed");
+    }
+
     void tick(const double &duration_ms) {
         run_time += duration_ms;
         if (run_time > 0.1 && run_time < 500.0f) {
@@ -282,6 +288,7 @@ namespace splash_screen {
 
         if (loaded_worldgen && !loaded_chunk) {
             load_chunk_textures();
+            load_voxel_models();
             loaded_chunk = true;
         }
 

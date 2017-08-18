@@ -8,4 +8,5 @@ namespace assets {
     unsigned int lightstage_shader = 0;
     unsigned int tonemap_shader = 0;
     unsigned int bloom_shader = 0;
+    unsigned int voxel_shader = 0;
 }

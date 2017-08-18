@@ -17,6 +17,8 @@
 #include "world_textures/world_textures.hpp"
 #include "fbo/hdr_buffer.hpp"
 #include "fbo/bloom_ping_pong.hpp"
+#include "vox/voxreader.hpp"
+#include "vox/voxel_model.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -46,7 +48,8 @@ namespace render {
         const glm::vec3 up{0.0f, 1.0f, 0.0f};
         const glm::vec3 target{(float) camera_position->region_x, (float) camera_position->region_z, (float) camera_position->region_y};
         glm::vec3 camera_position_v;
-        //camera->camera_mode = DIAGONAL;
+        camera->camera_mode = DIAGONAL;
+        camera->zoom_level = 2;
 
         switch (camera->camera_mode) {
             case FRONT : {
@@ -196,6 +199,33 @@ namespace render {
         render_buffer_quad();
     }
 
+    void render_voxel_models() {
+        auto model = vox::get_model(1);
+
+        glUseProgram(assets::voxel_shader);
+        //glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id); // removeme!
+        //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        glUniformMatrix4fv(glGetUniformLocation(assets::voxel_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+        glUniformMatrix4fv(glGetUniformLocation(assets::voxel_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+        glCheckError();
+        glUniform1i(glGetUniformLocation(assets::voxel_shader, "coltex"), 0);
+        glUniform1f(glGetUniformLocation(assets::voxel_shader, "texSize"), 32.0f);
+        glCheckError();
+
+        // This is temporary!
+        std::vector<vox::instance_t> instance_list{ {
+                                                            (float)camera_position->region_x-2.0f,
+                                                            (float)camera_position->region_z,
+                                                            (float)camera_position->region_y,
+                                                            0.0f,
+                                                            0.0f,
+                                                            0.0f,
+                                                            0.0f
+                                                    } };
+        // Setup uniforms
+        model->render_instances(instance_list);
+    }
+
     void render_gl(const double &duration_ms) {
         glCheckError();
         int screen_w, screen_h;
@@ -221,6 +251,10 @@ namespace render {
         //glDisable(GL_CULL_FACE);
         glCheckError();
 
+        // TODO: Render windows and other transparency
+
+        render_voxel_models();
+
         // Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
 
@@ -237,7 +271,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(light_stage_buffer->bright_tex);
+        //render_test_quad(gbuffer->albedo_tex);
 
         // TODO: Final combination and post-process
 

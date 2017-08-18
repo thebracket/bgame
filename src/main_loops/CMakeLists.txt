@@ -4,5 +4,5 @@ add_library(mainloops
         worldgen.cpp
         play_game.cpp
         )
-target_link_libraries(mainloops bengine)
+target_link_libraries(mainloops bengine vox)
 cotire(mainloops)

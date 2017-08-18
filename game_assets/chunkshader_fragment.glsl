@@ -19,10 +19,10 @@ void main() {
     gAlbedo = base_color;
     gPosition = vec3(world_pos);
 
-    //vec3 norm = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+1)).rgb;
-    //norm = normalize(norm * 2.0 - 1.0);
-    //norm = normalize(TBN * norm);
-    gNormal = base_normal;
+    vec3 norm = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+1)).rgb;
+    norm = normalize(norm * 2.0 - 1.0);
+    norm = normalize(TBN * norm);
+    gNormal = norm;
 
     gAmbientOcclusion.r = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r;
     gAmbientOcclusion.g = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).g;
