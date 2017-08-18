@@ -27,4 +27,5 @@ struct building_def_t {
     std::vector<xp::vchar> glyphs_ascii;
     bool emits_smoke = false;
     bool structure = false;
+    int vox_model = 0;
 };
