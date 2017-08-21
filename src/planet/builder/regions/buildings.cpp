@@ -24,12 +24,15 @@ using namespace region;
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
     auto building = get_building_def(tag);
-    if (building == nullptr) std::cout << "Warning: do not know how to build " << tag << "\n";
+    if (building == nullptr) {
+        throw std::runtime_error("Warning: do not know how to build: " + tag);
+    }
 
     auto new_building = bengine::create_entity()
         ->assign(position_t{x, y, z})
         ->assign(building_t{ tag, building->width, building->height, building->glyphs,
                              building->glyphs_ascii, true, civ_owner, 10, 10, building->vox_model });
+    std::cout << tag << " : " << building->vox_model << "\n";
 
     for (const building_provides_t &provides : building->provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});

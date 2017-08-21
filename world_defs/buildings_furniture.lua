@@ -32,7 +32,8 @@ buildings["storage_locker"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['cabinet'], foreground = colors['white'], background = colors['black']}
         }
-    }
+    },
+    vox=4
 };
 
 buildings["personal_survival_shelter"] = {

@@ -196,6 +196,10 @@ namespace splash_screen {
 
     void load_voxel_models() {
         vox::load_vox("game_assets/vox/cryobed32.vox", "cryobed");
+        vox::load_vox("game_assets/vox/floorlight.vox", "floorlight");
+        vox::load_vox("game_assets/vox/rtg.vox", "rtg");
+        vox::load_vox("game_assets/vox/cabinet.vox", "cabinet");
+        vox::load_vox("game_assets/vox/battery.vox", "battery");
     }
 
     void tick(const double &duration_ms) {

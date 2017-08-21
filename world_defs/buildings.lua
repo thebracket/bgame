@@ -12,6 +12,7 @@ buildings = {
 		render = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black']} } },
 		render_ascii = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black'] } } },
 		provides = { light={radius=5, color = colors['white']} },
+        vox=2
 	},
 	ship_defense_turret = {
 	    name = "Ship Defense Turret",

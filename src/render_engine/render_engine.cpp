@@ -221,6 +221,7 @@ namespace render {
             bengine::each<building_t, position_t>(
                     [] (bengine::entity_t &e, building_t &b, position_t &pos) {
                         if (b.vox_model > 0) {
+                            std::cout << "Found model #" << b.vox_model << "\n";
                             auto finder = models_to_render->find(b.vox_model);
                             if (finder != models_to_render->end()) {
                                 finder->second.push_back(vox::instance_t{
@@ -288,7 +289,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(gbuffer->albedo_tex);
+        //render_test_quad(gbuffer->ao_tex);
 
         // TODO: Final combination and post-process
 

@@ -77,6 +77,7 @@ void main()
     // Retrieve information from the world texture
     vec3 outdoor_x_y = texture(info_tex, world_sampler_pos).rgb;
     vec3 light_position = texture(light_pos_tex, world_sampler_pos).rgb * 256.0;
+    light_position.y += 0.48;
     vec3 light_color = degamma(texture(light_col_tex, world_sampler_pos).rgb);
 
     // Output components

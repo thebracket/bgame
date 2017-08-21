@@ -31,7 +31,8 @@ buildings["battery"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['plus_minus'], foreground = colors['red'], background = colors['black']}
         }
-    }
+    },
+    vox=5
 };
 
 buildings["rtg"] = {
@@ -48,5 +49,6 @@ buildings["rtg"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['plus_minus'], foreground = colors['green'], background = colors['black']}
         }
-    }
+    },
+    vox=3
 };
