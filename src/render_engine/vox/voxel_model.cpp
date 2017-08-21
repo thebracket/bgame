@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include "../../bengine/gl_include.hpp"
+#include <boost/container/flat_map.hpp>
 
 namespace vox {
 
@@ -16,7 +17,7 @@ namespace vox {
 
     void voxel_model::build_model() {
         // Build a cube map
-        std::unordered_map<int, subvoxel> cubes;
+        boost::container::flat_map<int, subvoxel> cubes;
         for (const auto cube : voxels) {
             const int idx = voxidx(width, depth, height, cube.x, cube.z, cube.y);
             cubes[idx] = cube;
@@ -46,11 +47,11 @@ namespace vox {
                 right_finder = cubes.find(idx_grow_right);
             }
 
-            /*if (voxel_info.y < height) {
+            if (voxel_info.y < height) {
                 int y_progress = voxel_info.y + 1;
 
-                while (y_progress < height) {
-                    bool possible = true;
+                bool possible = true;
+                while (possible && y_progress < height) {
                     for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
                         const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
                         auto vfinder = cubes.find(candidate_idx);
@@ -66,7 +67,9 @@ namespace vox {
 
                     ++y_progress;
                 }
-            }*/
+            }
+
+            // TODO: Add z-merging
 
             add_cube_geometry(geometry, voxel_info, W, H, 3);
             ++cube_count;

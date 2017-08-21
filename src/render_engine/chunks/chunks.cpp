@@ -196,14 +196,11 @@ namespace chunks {
 
             //std::cout << "Merging " << width << " tiles horizontally\n";
 
-            // Y-merging is giving problems;
-            // TODO: Fix this
-            /*
             if (tile_y < REGION_HEIGHT-1) {
                 int y_progress = tile_y + 1;
 
-                while (y_progress < base_y + CHUNK_SIZE && y_progress < REGION_HEIGHT-1) {
-                    bool possible = true;
+                bool possible = true;
+                while (possible && y_progress < base_y + CHUNK_SIZE && y_progress < REGION_HEIGHT-1) {
                     for (int gx = tile_x; gx < tile_x + width; ++gx) {
                         const int candidate_idx = mapidx(gx, y_progress, tile_z);
                         auto vfinder = floors.find(candidate_idx);
@@ -219,7 +216,7 @@ namespace chunks {
 
                     ++y_progress;
                 }
-            }*/
+            }
             //std::cout << "Merging with " << height << " tiles vertically\n";
 
             // TODO: Emit geometry
@@ -259,13 +256,11 @@ namespace chunks {
 
             //std::cout << "Merging " << width << " tiles horizontally\n";
 
-            // TODO: Fix this
-            /*
             if (tile_y < REGION_HEIGHT-1) {
                 int y_progress = tile_y + 1;
 
-                while (y_progress < base_y + CHUNK_SIZE && y_progress < REGION_HEIGHT-1) {
-                    bool possible = true;
+                bool possible = true;
+                while (possible && y_progress < base_y + CHUNK_SIZE && y_progress < REGION_HEIGHT-1) {
                     for (int gx = tile_x; gx < tile_x + width; ++gx) {
                         const int candidate_idx = mapidx(gx, y_progress, tile_z);
                         auto vfinder = cubes.find(candidate_idx);
@@ -281,7 +276,7 @@ namespace chunks {
 
                     ++y_progress;
                 }
-            }*/
+            }
             //std::cout << "Merging with " << height << " tiles vertically\n";
 
             // TODO: Emit geometry
@@ -326,7 +321,7 @@ namespace chunks {
         const float x0 = -0.5f + x;
         const float x1 = x0 + width;
         const float y0 = -0.5f + z;
-        const float y1 = y0 + 1.0f;
+        const float y1 = y0 + 0.98f;
         const float z0 = -0.5f + y;
         const float z1 = z0 + height;
         const float TI = texture_id;
