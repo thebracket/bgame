@@ -32,6 +32,6 @@ namespace systems {
     }
 
     void run(const double &duration_ms) {
-        run_system(camera::run, duration_ms, CAMERA_SYSTEM);
+        run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
     }
 }
