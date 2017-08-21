@@ -164,6 +164,7 @@ namespace render {
         render_buffer_quad();
     }
 
+    /*
     void bloom_blur() {
         glUseProgram(assets::bloom_shader);
         glActiveTexture(GL_TEXTURE0);
@@ -187,7 +188,7 @@ namespace render {
             horizontal = !horizontal;
             if (first_iteration) first_iteration = false;
         }
-    }
+    }*/
 
     void tone_map_scene() {
         glUseProgram(assets::tonemap_shader);
@@ -195,7 +196,7 @@ namespace render {
         // Setup uniforms
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUniform1i(glGetUniformLocation(assets::tonemap_shader, "hdr_tex"), 0);
-        glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
+        //glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
         glActiveTexture(GL_TEXTURE1);
@@ -276,9 +277,6 @@ namespace render {
 
         // Render the combined light buffer
         render_to_light_buffer();
-
-        // Bloom
-        bloom_blur();
 
         // Tone mapping
         tone_map_scene();
