@@ -30,6 +30,7 @@ namespace bengine {
         glfwMakeContextCurrent(main_window);
         glewExperimental = GL_TRUE;
         glewInit();
+        glfwSwapInterval(1);
     }
 
     void init(bool fullscreen, int width, int height, std::string gui_font, int gui_font_size) {
