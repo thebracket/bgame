@@ -78,6 +78,7 @@ add_subdirectory(raws)
 add_subdirectory(planet)
 add_subdirectory(components)
 add_subdirectory(render_engine)
+add_subdirectory(systems)
 
 add_executable(noxfutura main.cpp)
 target_link_libraries(noxfutura bengine mainloops globalassets raws planet components render_engine)

@@ -14,6 +14,7 @@
 #include "../components/designations.hpp"
 #include "../components/logger.hpp"
 #include "../global_assets/game_camera.hpp"
+#include "../systems/run_systems.hpp"
 
 namespace play_game {
 
@@ -61,6 +62,7 @@ namespace play_game {
         // Setup systems
         std::cout << "Setting up systems\n";
         //add_systems_to_ecs();
+        systems::init();
 
         std::cout << "ECS Config\n";
         ecs_configure();
@@ -87,6 +89,8 @@ namespace play_game {
             ImGui::Begin("Please wait - not written yet");
             ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
             ImGui::End();
+
+            systems::run(duration_ms);
         }
 
         ImGui::Render();

@@ -204,8 +204,6 @@ namespace render {
     }
 
     void render_voxel_models() {
-
-
         glUseProgram(assets::voxel_shader);
         //glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id); // removeme!
         //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -220,7 +218,7 @@ namespace render {
             models_to_render->clear();
             bengine::each<building_t, position_t>(
                     [] (bengine::entity_t &e, building_t &b, position_t &pos) {
-                        if (b.vox_model > 0) {
+                        if (b.vox_model > 0 && pos.z > camera_position->region_z-10 && pos.z <= camera_position->region_z) {
                             std::cout << "Found model #" << b.vox_model << "\n";
                             auto finder = models_to_render->find(b.vox_model);
                             if (finder != models_to_render->end()) {
