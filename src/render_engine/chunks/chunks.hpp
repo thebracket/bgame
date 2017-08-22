@@ -13,8 +13,8 @@ namespace chunks {
     struct layer_t {
         std::vector<float> v;
 
-        unsigned int vao = 0;
-        unsigned int vbo = 0;
+        //unsigned int vao = 0;
+        //unsigned int vbo = 0;
         std::size_t n_elements = 0;
     };
 
@@ -39,6 +39,9 @@ namespace chunks {
         std::array<layer_t, CHUNK_SIZE> layers;
         std::atomic<bool> ready{false};
         bool has_geometry = false;
+
+        unsigned int vao = 0;
+        unsigned int vbo = 0;
 
         void update();
         void greedy_floors(boost::container::flat_map<int, unsigned int> &floors, const int &layer);

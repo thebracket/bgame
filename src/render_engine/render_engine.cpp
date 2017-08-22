@@ -77,7 +77,9 @@ namespace render {
         frustrum.update(camera_proj_model_view_matrix);
         visible_chunks.clear();
         for (const auto &chunk : chunks::chunks) {
-            if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE*2)) {
+            if (chunk.base_z < camera_position->region_z-10 &&
+                    frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE*2))
+            {
                 visible_chunks.insert(chunk.index);
             }
         }
@@ -87,12 +89,26 @@ namespace render {
 
     inline void do_chunk_render() {
         for (const auto &idx : visible_chunks) {
-            if (chunks::chunks[idx].has_geometry && chunks::chunks[idx].ready) {
-                // Render backwards to maximize z-buffer efficiency
-                for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
-                    const int layer_z = z + chunks::chunks[idx].base_z;
+            chunks::chunk_t * target = &chunks::chunks[idx];
+            if (target->has_geometry && target->ready) {
+                int n_elements = 0;
+                for (int z=0; z<chunks::CHUNK_SIZE; ++z) {
+                    const int layer_z = z + target->base_z;
                     if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10) {
-                    //if (layer_z == camera_position->region_z) {
+                        n_elements += target->layers[z].n_elements;
+                    }
+                }
+
+                if (n_elements > 0) {
+                    glBindVertexArray(target->vao);
+                    glDrawArrays(GL_TRIANGLES, 0, n_elements);
+                }
+
+                // Render backwards to maximize z-buffer efficiency
+                /*for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
+                    const int layer_z = z + chunks::chunks[idx].base_z;
+                    //if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10) {
+                    if (layer_z == camera_position->region_z) {
                         if (chunks::chunks[idx].layers[z].vao > 0
                             && chunks::chunks[idx].layers[z].n_elements > 0) {
                             glBindVertexArray(chunks::chunks[idx].layers[z].vao);
@@ -100,7 +116,7 @@ namespace render {
                             //glCheckError();
                         }
                     }
-                }
+                }*/
             }
         }
     }
@@ -268,9 +284,9 @@ namespace render {
         //glDisable(GL_CULL_FACE);
         glCheckError();
 
-        // TODO: Render windows and other transparency
-
         render_voxel_models();
+
+        // TODO: Render windows and other transparency
 
         // Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);

@@ -116,7 +116,10 @@ namespace chunks {
     void chunk_t::update() {
         //dirty[index] = false; // We're guaranteed to already be mutex-protected
 
-        for (auto &layer : layers) layer.v.clear();
+        for (auto &layer : layers) {
+            layer.v.clear();
+            layer.n_elements = 0;
+        }
 
         for (int chunk_z = 0; chunk_z < CHUNK_SIZE; ++chunk_z) {
             layer_requires_render.reset(chunk_z);
@@ -140,12 +143,6 @@ namespace chunks {
                                 floors[idx] = get_floor_tex(idx);
                             } else if (is_cube(tiletype)) {
                                 cubes[idx] = get_cube_tex(idx);
-                            }
-                        } else {
-                            if (tiletype == tile_type::FLOOR) {
-                                floors[idx] = 2;
-                            } else if (is_cube(tiletype)) {
-                                cubes[idx] = 2;
                             }
                         }
                     }
@@ -222,6 +219,7 @@ namespace chunks {
             // TODO: Emit geometry
             //std::cout << floors.size() << " floors remain\n";
             add_floor_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
+            layers[layer].n_elements += 6;
             //layers[layer].vertices.emplace_back(
             //        geometry_t{ 0.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
             //);
@@ -285,6 +283,7 @@ namespace chunks {
             //        geometry_t{ 1.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
             //);
             add_cube_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
+            layers[layer].n_elements += 36;
         }
         //std::cout << "Reduced " << n_cubes << " CUBES to " << layers[layer].cube_vertices.size() << " items of geometry.\n";
     }
@@ -375,6 +374,34 @@ namespace chunks {
     }
 
     void chunk_t::update_buffer() {
+        if (vao < 1) { glGenVertexArrays(1, &vao); glCheckError(); }
+        if (vbo < 1) { glGenBuffers(1, &vbo); glCheckError(); }
+
+        // Combine the layers into a temporary structure
+        std::vector<float> data;
+        for (auto &layer : layers) {
+            data.insert(std::end(data), layer.v.begin(), layer.v.end());
+            has_geometry = true;
+            layer.v.clear();
+        }
+
+        glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0); // 0 = Vertex Position
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+        glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
+
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+        glEnableVertexAttribArray(2); // 2 = Normals
+
+        glBindVertexArray(0);
+
+        /*
         // Regular geometry
         for (auto &layer : layers) {
             if (layer.v.empty()) {
@@ -406,7 +433,7 @@ namespace chunks {
                 has_geometry = true;
             }
         }
-
+        */
     }
 
     void update_buffers() {
