@@ -1,4 +1,5 @@
 add_library(systems run_systems.cpp)
 add_subdirectory(io)
-target_link_libraries(systems io)
+add_subdirectory(gui)
+target_link_libraries(systems io gui)
 cotire(systems)

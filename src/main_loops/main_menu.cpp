@@ -117,7 +117,7 @@ namespace main_menu {
                 show_options = true;
             }
             if (ImGui::Button(menu_quit.c_str())) {
-                stop_telemetry();
+                //stop_telemetry();
                 glfwSetWindowShouldClose(bengine::main_window, true);
             }
             ImGui::TextColored(red, "%s", kylah.c_str());

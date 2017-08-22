@@ -1,6 +1,7 @@
 #include <ctime>
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
+#include "gui/hud_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -29,9 +30,11 @@ namespace systems {
 
     void init() {
         system_names[CAMERA_SYSTEM] = "Camera System";
+        system_names[HUD_SYSTEM] = "HUD System";
     }
 
     void run(const double &duration_ms) {
         run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
+        run_system(hud::run, duration_ms, HUD_SYSTEM);
     }
 }
