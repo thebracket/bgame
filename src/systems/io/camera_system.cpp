@@ -61,6 +61,20 @@ namespace systems {
                 render::camera_moved = true;
                 render::models_changed = true;
             }
+
+            if (ImGui::IsKeyDown(GLFW_KEY_PAGE_UP)) {
+                --camera->zoom_level;
+                if (camera->zoom_level < 5) camera->zoom_level = 5;
+                render::camera_moved = true;
+                render::models_changed = true;
+            }
+
+            if (ImGui::IsKeyDown(GLFW_KEY_PAGE_DOWN)) {
+                ++camera->zoom_level;
+                if (camera->zoom_level > 50) camera->zoom_level = 50;
+                render::camera_moved = true;
+                render::models_changed = true;
+            }
         }
     }
 }
