@@ -27,7 +27,7 @@ namespace vox {
 
     private:
         void add_cube_geometry(std::vector<float> &v, const subvoxel &voxel,
-                               const float &width, const float &height, const float &texture_id);
+                               const float &width, const float &height, const float &depth, const float &texture_id);
 
         void build_vbo(std::vector<float> &v);
     };

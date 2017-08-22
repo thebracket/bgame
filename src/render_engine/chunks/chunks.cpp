@@ -374,6 +374,9 @@ namespace chunks {
     }
 
     void chunk_t::update_buffer() {
+        if (vbo > 0) glDeleteBuffers(1, &vbo);
+        if (vao > 0) glDeleteVertexArrays(1, &vao);
+
         if (vao < 1) { glGenVertexArrays(1, &vao); glCheckError(); }
         if (vbo < 1) { glGenBuffers(1, &vbo); glCheckError(); }
 

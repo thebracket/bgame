@@ -29,10 +29,10 @@ namespace render {
         glDrawBuffers(2, attachments);
 
         // create and attach depth buffer (renderbuffer)
-        /*glGenRenderbuffers(1, &rbo_id);
+        glGenRenderbuffers(1, &rbo_id);
         glBindRenderbuffer(GL_RENDERBUFFER, rbo_id);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_id);*/
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
 
         // finally check if framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

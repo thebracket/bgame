@@ -34,6 +34,7 @@ namespace vox {
 
             int W = 1;
             int H = 1;
+            int D = 1;
             cubes.erase(base_idx);
 
             int idx_grow_right = base_idx + 1;
@@ -69,9 +70,33 @@ namespace vox {
                 }
             }
 
-            // TODO: Add z-merging
+            if (voxel_info.z < depth) {
+                int z_progress = voxel_info.z + 1;
 
-            add_cube_geometry(geometry, voxel_info, W, H, 3);
+                bool possible = true;
+                while (possible && z_progress < depth) {
+                    for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
+                        for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+                            const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
+                            auto vfinder = cubes.find(candidate_idx);
+                            if (!(vfinder != cubes.end())) possible = false;
+                        }
+                    }
+                    if (possible) {
+                        ++D;
+                        for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
+                            for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+                                const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
+                                cubes.erase(candidate_idx);
+                            }
+                        }
+                    }
+
+                    ++z_progress;
+                }
+            }
+
+            add_cube_geometry(geometry, voxel_info, W, H, D, 3);
             ++cube_count;
         }
         std::cout << "Reduced to " << cube_count << " cubes, " << geometry.size() << " triangles.\n";
@@ -83,11 +108,11 @@ namespace vox {
     }
 
     void voxel_model::add_cube_geometry(std::vector<float> &v, const subvoxel &voxel,
-                                        const float &W, const float &H, const float &texture_id) {
+                                        const float &W, const float &H, const float &D, const float &texture_id) {
         const float x0 = -0.5f + voxel.x;
         const float x1 = x0 + W;
         const float y0 = -0.5f + voxel.z;
-        const float y1 = y0 + 1.0f;
+        const float y1 = y0 + D;
         const float z0 = -0.5f + voxel.y;
         const float z1 = z0 + H;
 

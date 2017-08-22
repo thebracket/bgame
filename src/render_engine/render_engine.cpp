@@ -154,6 +154,7 @@ namespace render {
     void render_to_light_buffer() {
         glUseProgram(assets::lightstage_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "albedo_tex"), 0);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "normal_tex"), 1);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "position_tex"), 2);
@@ -162,7 +163,6 @@ namespace render {
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_pos_tex"), 5);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_col_tex"), 6);
         glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);

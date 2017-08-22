@@ -5,3 +5,4 @@ bool major_tick = false;
 bool slow_tick = false;
 bool day_elapsed = false;
 bool hour_elapsed = false;
+bool show_profiler = true;

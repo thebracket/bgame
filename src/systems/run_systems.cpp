@@ -8,24 +8,29 @@
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
+#include "../bengine/imgui.h"
+#include "../bengine/imgui_impl_glfw_gl3.h"
+#include "../bengine/gl_include.hpp"
+#include <chrono>
 
 namespace systems {
-    boost::container::flat_map<int, std::pair<int, std::vector<double>>> run_time;
+    boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
 
     template <typename F>
     inline void run_system(F &run_func, const double &duration_ms, const int SYSTEM) {
-        clock_t start_time = clock();
+        auto start_time = std::chrono::high_resolution_clock::now();
         run_func(duration_ms);
-        const double system_running_time = ((clock() - start_time) * 1000.0) / CLOCKS_PER_SEC;
+        auto end_time = std::chrono::high_resolution_clock::now();
+        const double system_running_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
         auto finder = run_time.find(SYSTEM);
         if (finder == run_time.end()) {
-            std::vector<double> timer;
+            std::vector<float> timer;
             timer.resize(100);
-            timer[0] = system_running_time;
+            timer[0] = static_cast<float>(system_running_time);
             run_time.insert(std::make_pair(SYSTEM, std::make_pair(1, timer)));
         } else {
-            finder->second.second[finder->second.first] = system_running_time;
+            finder->second.second[finder->second.first] = static_cast<float>(system_running_time);
             ++finder->second.first;
             if (finder->second.first > 100) finder->second.first = 0;
         }
@@ -39,6 +44,10 @@ namespace systems {
     }
 
     void run(const double &duration_ms) {
+        if (ImGui::IsKeyDown(GLFW_KEY_P)) {
+            show_profiler = !show_profiler;
+        }
+
         run_system(tick::run, duration_ms, TICK_SYSTEM);
         run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
         run_system(hud::run, duration_ms, HUD_SYSTEM);
@@ -46,6 +55,20 @@ namespace systems {
         // Items that only run if the simulation has ticked
         if (major_tick) {
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
+        }
+
+        // Profiler
+        if (show_profiler) {
+            ImGui::Begin("Systems Profile");
+            ImGui::Text("Frame time: %f", duration_ms);
+            for (auto sys_finder=run_time.begin(); sys_finder != run_time.end(); ++sys_finder) {
+                const int id = sys_finder->first;
+                auto name_finder = system_names.find(id);
+                if (name_finder != system_names.end()) {
+                    ImGui::PlotLines(name_finder->second.c_str(), (const float *)&sys_finder->second.second.at(0), 100);
+                }
+            }
+            ImGui::End();
         }
     }
 }
