@@ -1,5 +1,5 @@
 function tfn(name) return "game_assets/terrain/" .. name end
-next_texture_id = 6
+next_texture_id = 12
 function tid()
     tmp = next_texture_id
     next_texture_id = next_texture_id + 3
@@ -9,7 +9,9 @@ end
 terrain_textures = {
     -- Hard coded for engine use
     grass = { index=0, texture=tfn("grass") },
-    red_plastic = { index=5, texture=tfn("redplastic") }, -- This is used to indicate a missing texture
+    red_plastic = { index=3, texture=tfn("redplastic") }, -- This is used to indicate a missing texture
+    bark = { index=6, texture=tfn("bark") }, -- This is used to indicate a missing texture
+    leaf = { index=9, texture=tfn("leaf") }, -- This is used to indicate a missing texture
 
     -- Rock Types
     sandstone = { index=tid(), texture=tfn("sandstone") },

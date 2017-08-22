@@ -85,6 +85,10 @@ namespace chunks {
     }
 
     unsigned int get_cube_tex(const int &idx) {
+        auto tt = region::tile_type(idx);
+        if (tt == tile_type::TREE_TRUNK) return 6;
+        if (tt == tile_type::TREE_LEAF) return 9;
+
         auto material_idx = region::material(idx);
         auto material = get_material(material_idx);
         if (!material) return 3;
