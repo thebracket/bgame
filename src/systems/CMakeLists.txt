@@ -1,5 +1,6 @@
 add_library(systems run_systems.cpp)
 add_subdirectory(io)
 add_subdirectory(gui)
-target_link_libraries(systems io gui)
+add_subdirectory(scheduler)
+target_link_libraries(systems io gui scheduler)
 cotire(systems)

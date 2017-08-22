@@ -2,6 +2,9 @@
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
 #include "gui/hud_system.hpp"
+#include "scheduler/tick_system.hpp"
+#include "../global_assets/game_pause.hpp"
+#include "scheduler/calendar_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -31,10 +34,18 @@ namespace systems {
     void init() {
         system_names[CAMERA_SYSTEM] = "Camera System";
         system_names[HUD_SYSTEM] = "HUD System";
+        system_names[TICK_SYSTEM] = "Tick System";
+        system_names[CALENDAR_SYSTEM] = "Calendar System";
     }
 
     void run(const double &duration_ms) {
+        run_system(tick::run, duration_ms, TICK_SYSTEM);
         run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
         run_system(hud::run, duration_ms, HUD_SYSTEM);
+
+        // Items that only run if the simulation has ticked
+        if (major_tick) {
+            run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
+        }
     }
 }

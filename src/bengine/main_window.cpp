@@ -5,6 +5,7 @@
 #include "imgui_impl_glfw_gl3.h"
 #include "IconsFontAwesome.h"
 #include "telemetry.hpp"
+#include <chrono>
 
 namespace bengine {
 
@@ -79,14 +80,15 @@ namespace bengine {
     void run() {
         double duration_ms = 0.0;
         while (!glfwWindowShouldClose(main_window)) {
-            clock_t start_time = clock();
+            auto start_time = std::chrono::high_resolution_clock::now();
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             main_func(duration_ms);
 
             glfwSwapBuffers(main_window);
-            duration_ms = ((clock() - start_time) * 1000.0) / CLOCKS_PER_SEC;
+            auto end_time = std::chrono::high_resolution_clock::now();
+            duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
         }
         stop_telemetry();
         glfwTerminate();

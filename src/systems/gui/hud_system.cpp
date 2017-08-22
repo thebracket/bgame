@@ -8,6 +8,7 @@
 #include "../../bengine/main_window.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/game_calendar.hpp"
+#include "../../global_assets/game_pause.hpp"
 #include <string>
 #include <sstream>
 
@@ -38,9 +39,9 @@ namespace systems {
             std::stringstream power_ss;
             power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
             std::stringstream pause_ss;
-            //if (pause_mode) {
-            //    pause_ss << "*PAUSED* (SPACE to unpause, . for single-step) ";
-            //}
+            if (pause_mode) {
+                pause_ss << "*PAUSED* (SPACE to unpause, . for single-step) ";
+            }
             const std::string cash_str = pause_ss.str() + std::string(ICON_FA_CALENDAR) + std::string(" ") + calendar->get_date_time() + std::string(" ") + std::string(ICON_FA_LIGHTBULB_O) + power_ss.str() + std::string(ICON_FA_MONEY) + cash_ss.str();
 
             // Setup the main menu

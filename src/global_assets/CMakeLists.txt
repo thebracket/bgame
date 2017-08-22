@@ -8,5 +8,6 @@ add_library(globalassets
         game_camera.cpp
         game_calendar.cpp
         game_designations.cpp
+        game_pause.cpp
         )
 cotire(globalassets)
