@@ -15,6 +15,8 @@
 #include "../components/logger.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../systems/run_systems.hpp"
+#include "../global_assets/game_calendar.hpp"
+#include "../global_assets/game_designations.hpp"
 
 namespace play_game {
 
@@ -44,12 +46,12 @@ namespace play_game {
         each<world_position_t, calendar_t, designations_t, logger_t, camera_options_t>([&region_x, &region_y]
                                                                                                (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design,
                                                                                                 logger_t &log, camera_options_t &camera_prefs) {
-            //camera_entity = entity.id;
+            camera_entity = entity.id;
             region_x = pos.world_x;
             region_y = pos.world_y;
             camera_position = &pos;
-            //calendar = &cal;
-            //designations = &design;
+            calendar = &cal;
+            designations = &design;
             //logger = &log;
             camera = &camera_prefs;
         });
@@ -86,9 +88,9 @@ namespace play_game {
             // Game render goes here
             render::render_gl(duration_ms);
 
-            ImGui::Begin("Please wait - not written yet");
-            ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
-            ImGui::End();
+            //ImGui::Begin("Please wait - not written yet");
+            //ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
+            //ImGui::End();
 
             systems::run(duration_ms);
         }

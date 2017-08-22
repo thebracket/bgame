@@ -6,6 +6,8 @@
 #include "../../render_engine/render_engine.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../bengine/main_window.hpp"
+#include "../../global_assets/game_designations.hpp"
+#include "../../global_assets/game_calendar.hpp"
 #include <string>
 #include <sstream>
 
@@ -32,14 +34,14 @@ namespace systems {
         void run(const double &duration_ms) {
             // Display cash
             std::stringstream cash_ss;
-            //cash_ss << " Cash: " << designations->current_cash << " Mcr";
+            cash_ss << " Cash: " << designations->current_cash << " Mcr";
             std::stringstream power_ss;
-            //power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
+            power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
             std::stringstream pause_ss;
             //if (pause_mode) {
             //    pause_ss << "*PAUSED* (SPACE to unpause, . for single-step) ";
             //}
-            //const std::string cash_str = pause_ss.str() + std::string(ICON_FA_CALENDAR) + std::string(" ") + calendar->get_date_time() + std::string(" ") + std::string(ICON_FA_LIGHTBULB_O) + power_ss.str() + std::string(ICON_FA_MONEY) + cash_ss.str();
+            const std::string cash_str = pause_ss.str() + std::string(ICON_FA_CALENDAR) + std::string(" ") + calendar->get_date_time() + std::string(" ") + std::string(ICON_FA_LIGHTBULB_O) + power_ss.str() + std::string(ICON_FA_MONEY) + cash_ss.str();
 
             // Setup the main menu
             ImGui::BeginMainMenuBar();
@@ -147,9 +149,9 @@ namespace systems {
                 ImGui::EndMenu();
             }
 
-            //auto status_size = ImGui::CalcTextSize(cash_str.c_str());
-            //ImGui::SameLine(ImGui::GetWindowWidth()-(status_size.x + 10));
-            //ImGui::Text("%s", cash_str.c_str());
+            auto status_size = ImGui::CalcTextSize(cash_str.c_str());
+            ImGui::SameLine(ImGui::GetWindowWidth()-(status_size.x + 10));
+            ImGui::Text("%s", cash_str.c_str());
             ImGui::EndMainMenuBar();
         }
     }

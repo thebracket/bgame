@@ -6,5 +6,7 @@ add_library(globalassets
         spatial_db.cpp
         game_planet.cpp
         game_camera.cpp
+        game_calendar.cpp
+        game_designations.cpp
         )
 cotire(globalassets)
