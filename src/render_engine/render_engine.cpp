@@ -21,6 +21,7 @@
 #include "vox/voxel_model.hpp"
 #include "../components/position.hpp"
 #include "../components/building.hpp"
+#include "../components/renderable_composite.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -219,7 +220,7 @@ namespace render {
             bengine::each<building_t, position_t>(
                     [] (bengine::entity_t &e, building_t &b, position_t &pos) {
                         if (b.vox_model > 0 && pos.z > camera_position->region_z-10 && pos.z <= camera_position->region_z) {
-                            std::cout << "Found model #" << b.vox_model << "\n";
+                            //std::cout << "Found model #" << b.vox_model << "\n";
                             auto finder = models_to_render->find(b.vox_model);
                             auto x = (float)pos.x;
                             const auto y = (float)pos.z;
@@ -240,6 +241,21 @@ namespace render {
                             }
                         }
                     });
+
+            bengine::each<renderable_composite_t, position_t>([] (bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+                auto finder = models_to_render->find(7);
+                auto x = (float)pos.x;
+                const auto y = (float)pos.z;
+                auto z = (float)pos.y;
+                if (finder != models_to_render->end()) {
+                    finder->second.push_back(vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f});
+                } else {
+                    models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
+                            x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+                    }}));
+                }
+            });
+
             models_changed = false;
         }
 
