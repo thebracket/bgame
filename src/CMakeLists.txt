@@ -40,7 +40,7 @@ include_directories(${GLEW_INCLUDE_DIRS})
 link_libraries(${GLEW_LIBRARIES})
 
 # Require GLFW
-pkg_search_module(GLFW REQUIRED glfw3)
+find_package(GLFW)
 include_directories(${GLFW_INCLUDE_DIRS})
 link_libraries(${GLFW_LIBRARIES})
 
