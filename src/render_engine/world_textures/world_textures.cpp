@@ -138,9 +138,9 @@ namespace render {
             texels_loc[texidx] = (uint8_t)light_x;
             texels_loc[texidx+1] = (uint8_t)light_z;
             texels_loc[texidx+2] = (uint8_t)light_y;
-            texels_col[texidx] = 255;
-            texels_col[texidx+1] = 255;
-            texels_col[texidx+2] = 255;
+            texels_col[texidx] = static_cast<uint8_t>(color.r * 255.0f);
+            texels_col[texidx+1] = static_cast<uint8_t>(color.g * 255.0f);
+            texels_col[texidx+2] = static_cast<uint8_t>(color.b * 255.0f);
             //std::cout << "Light tile " << tile_x << "/" << tile_y << "/" << tile_z << " with light from " << light_x << "/" << light_y << "/" << light_z << "\n";
         }
 

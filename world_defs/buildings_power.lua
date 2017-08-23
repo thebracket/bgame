@@ -14,7 +14,8 @@ buildings["solar_panel"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['hash'], foreground = colors['cyan'], background = colors['white']}
         }
-    }
+    },
+    vox=9
 };
 
 buildings["battery"] = {

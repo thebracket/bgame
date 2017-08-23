@@ -203,6 +203,7 @@ namespace splash_screen {
         vox::load_vox("game_assets/vox/cordex.vox", "cordex");
         vox::load_vox("game_assets/vox/person-base.vox", "person-base");
         vox::load_vox("game_assets/vox/replicator-small.vox", "replicator-small");
+        vox::load_vox("game_assets/vox/solarpanel.vox", "solarpanel");
     }
 
     void tick(const double &duration_ms) {

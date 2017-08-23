@@ -243,16 +243,18 @@ namespace render {
                     });
 
             bengine::each<renderable_composite_t, position_t>([] (bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
-                auto finder = models_to_render->find(7);
-                auto x = (float)pos.x;
-                const auto y = (float)pos.z;
-                auto z = (float)pos.y;
-                if (finder != models_to_render->end()) {
-                    finder->second.push_back(vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f});
-                } else {
-                    models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
-                            x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
-                    }}));
+                if (pos.z > camera_position->region_z-10 && pos.z <= camera_position->region_z) {
+                    auto finder = models_to_render->find(7);
+                    auto x = (float) pos.x;
+                    const auto y = (float) pos.z;
+                    auto z = (float) pos.y;
+                    if (finder != models_to_render->end()) {
+                        finder->second.push_back(vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f});
+                    } else {
+                        models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
+                                x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+                        }}));
+                    }
                 }
             });
 
