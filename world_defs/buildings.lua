@@ -3,7 +3,8 @@ buildings = {
 		name = "Cordex",
 		components = { { item="cordex_core", qty=1} },
 		skill = { name="Construction", difficulty=25 },
-		render_rex = "cordex.xp"
+		render_rex = "cordex.xp",
+        vox=6
 	},
 	lamp = {
 		name = "Lamp",

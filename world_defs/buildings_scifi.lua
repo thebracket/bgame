@@ -17,7 +17,8 @@ buildings["small_replicator"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['square_root'], foreground = colors['cyan'], background = colors['black']}
         }
-    }
+    },
+    vox=8
 };
 
 reactions["replicate_tea_earl_grey_hot"] = {

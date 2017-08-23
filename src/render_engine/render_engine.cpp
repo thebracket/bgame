@@ -77,8 +77,7 @@ namespace render {
         frustrum.update(camera_proj_model_view_matrix);
         visible_chunks.clear();
         for (const auto &chunk : chunks::chunks) {
-            if (chunk.base_z < camera_position->region_z-10 &&
-                    frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE*2))
+            if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE*2))
             {
                 visible_chunks.insert(chunk.index);
             }
@@ -90,7 +89,7 @@ namespace render {
     inline void do_chunk_render() {
         for (const auto &idx : visible_chunks) {
             chunks::chunk_t * target = &chunks::chunks[idx];
-            if (target->has_geometry && target->ready) {
+            if (target->ready && target->has_geometry) {
                 int n_elements = 0;
                 for (int z=0; z<chunks::CHUNK_SIZE; ++z) {
                     const int layer_z = z + target->base_z;
@@ -103,20 +102,6 @@ namespace render {
                     glBindVertexArray(target->vao);
                     glDrawArrays(GL_TRIANGLES, 0, n_elements);
                 }
-
-                // Render backwards to maximize z-buffer efficiency
-                /*for (int z=chunks::CHUNK_SIZE-1; z>=0; --z) {
-                    const int layer_z = z + chunks::chunks[idx].base_z;
-                    //if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10) {
-                    if (layer_z == camera_position->region_z) {
-                        if (chunks::chunks[idx].layers[z].vao > 0
-                            && chunks::chunks[idx].layers[z].n_elements > 0) {
-                            glBindVertexArray(chunks::chunks[idx].layers[z].vao);
-                            glDrawArrays(GL_TRIANGLES, 0, chunks::chunks[idx].layers[z].n_elements);
-                            //glCheckError();
-                        }
-                    }
-                }*/
             }
         }
     }
@@ -222,8 +207,6 @@ namespace render {
 
     void render_voxel_models() {
         glUseProgram(assets::voxel_shader);
-        //glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id); // removeme!
-        //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glUniformMatrix4fv(glGetUniformLocation(assets::voxel_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(glGetUniformLocation(assets::voxel_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
         glCheckError();
@@ -238,13 +221,21 @@ namespace render {
                         if (b.vox_model > 0 && pos.z > camera_position->region_z-10 && pos.z <= camera_position->region_z) {
                             std::cout << "Found model #" << b.vox_model << "\n";
                             auto finder = models_to_render->find(b.vox_model);
+                            auto x = (float)pos.x;
+                            const auto y = (float)pos.z;
+                            auto z = (float)pos.y;
+
+                            //std::cout << b.width << " x " << b.height << "\n";
+                            if (b.width == 3) x -= 1.0f;
+                            if (b.height == 3) z -= 1.0f;
+
                             if (finder != models_to_render->end()) {
                                 finder->second.push_back(vox::instance_t{
-                                        (float) pos.x, (float) pos.z, (float) pos.y, 0.0f, 0.0f, 0.0f, 0.0f
+                                        x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
                                 });
                             } else {
                                 models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-                                        (float) pos.x, (float) pos.z, (float) pos.y, 0.0f, 0.0f, 0.0f, 0.0f
+                                        x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
                                 }}));
                             }
                         }

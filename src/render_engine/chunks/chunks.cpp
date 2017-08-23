@@ -61,6 +61,7 @@ namespace chunks {
         for (int i=0; i<CHUNKS_TOTAL; ++i) {
             if (dirty[i]) {
                 dirty[i] = false;
+                chunks[i].ready.store(false);
                 bengine::thread_pool->push(update_chunk, i);
             }
         }
@@ -445,6 +446,7 @@ namespace chunks {
 
     void update_buffers() {
         int idx;
+        chunks[idx].ready.store(false);
         {
             std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
             if (dirty_buffers.empty()) return;

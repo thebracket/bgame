@@ -226,8 +226,8 @@ void read_buildings() noexcept
                 }
             }
             if (field == "render_rex") {
-                std::string filename = "rex/" + std::string(lua_tostring(lua_state, -1));
-                /*xp::rex_sprite sprite(filename);
+                std::string filename = "game_assets/rex/" + std::string(lua_tostring(lua_state, -1));
+                xp::rex_sprite sprite(filename);
                 c.width = sprite.get_width();
                 c.height = sprite.get_height();
                 for (int y=0; y<c.height; ++y) {
@@ -235,7 +235,8 @@ void read_buildings() noexcept
                         c.glyphs.push_back(*sprite.get_tile(0,x,y));
                         c.glyphs_ascii.push_back(*sprite.get_tile(0,x,y));
                     }
-                }*/
+                }
+                std::cout << "Loaded REX file: " << filename << ", " << c.width << " x " << c.height << "\n";
             }
 
             lua_pop(lua_state, 1);

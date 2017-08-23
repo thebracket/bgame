@@ -86,6 +86,7 @@ namespace bengine {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             main_func(duration_ms);
 
+            glFlush();
             glfwSwapBuffers(main_window);
             auto end_time = std::chrono::high_resolution_clock::now();
             duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();

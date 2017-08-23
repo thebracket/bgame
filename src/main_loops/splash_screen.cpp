@@ -200,6 +200,9 @@ namespace splash_screen {
         vox::load_vox("game_assets/vox/rtg.vox", "rtg");
         vox::load_vox("game_assets/vox/cabinet.vox", "cabinet");
         vox::load_vox("game_assets/vox/battery.vox", "battery");
+        vox::load_vox("game_assets/vox/cordex.vox", "cordex");
+        vox::load_vox("game_assets/vox/person-base.vox", "person-base");
+        vox::load_vox("game_assets/vox/replicator-small.vox", "replicator-small");
     }
 
     void tick(const double &duration_ms) {
