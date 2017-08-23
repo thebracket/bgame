@@ -325,9 +325,9 @@ bool    ImGui_ImplGlfwGL3_Init(GLFWwindow* window, bool install_callbacks)
     io.SetClipboardTextFn = ImGui_ImplGlfwGL3_SetClipboardText;
     io.GetClipboardTextFn = ImGui_ImplGlfwGL3_GetClipboardText;
     io.ClipboardUserData = g_Window;
-#ifdef _WIN32
-    io.ImeWindowHandle = glfwGetWin32Window(g_Window);
-#endif
+//#ifdef _WIN32
+//    io.ImeWindowHandle = glfwGetWin32Window(g_Window);
+//#endif
 
     if (install_callbacks)
     {
