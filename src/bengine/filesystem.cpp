@@ -10,6 +10,8 @@ bool exists(const std::string &filename) noexcept {
 }
 
 #ifndef WIN32
+#include <pwd.h>
+#include <sys/stat.h>
 std::string get_save_path()
 {
     struct passwd *pw = getpwuid(getuid());
