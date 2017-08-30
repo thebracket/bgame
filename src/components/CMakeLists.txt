@@ -6,4 +6,4 @@ add_library(components
 	species.cpp
 )
 target_link_libraries(components planet)
-cotire(components)
+#cotire(components)

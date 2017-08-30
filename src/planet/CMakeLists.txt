@@ -5,4 +5,4 @@ add_library(planet
 	planet_builder.cpp
 )
 target_link_libraries(planet builder raws)
-cotire(planet)
+#cotire(planet)

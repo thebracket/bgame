@@ -3,6 +3,7 @@ extern "C" {
 #include <zlib.h>
 }
 #include <stdexcept>
+#include <string>
 
 //===========================================================================================================//
 //    Safe I/O (where "safe" means "will throw errors")                                                      //

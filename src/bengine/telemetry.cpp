@@ -4,6 +4,10 @@
 #include "../global_assets/constants.hpp"
 #include <iostream>
 #include <curl/curl.h>
+#include <atomic>
+#include <chrono>
+#include <ctime>
+#include <sstream>
 
 struct telemetry_t {
     std::string event;

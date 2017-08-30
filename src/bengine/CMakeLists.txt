@@ -20,5 +20,5 @@ add_library(bengine STATIC
         rexspeeder.cpp
         octree.cpp
         )
-target_link_libraries(bengine ${ZLIB_LIBS})
-cotire(bengine)
+#target_link_libraries(bengine ${Boost_LIBRARIES})
+#cotire(bengine)

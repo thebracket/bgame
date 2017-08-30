@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 namespace bengine {
     struct color_t {
         color_t() {}

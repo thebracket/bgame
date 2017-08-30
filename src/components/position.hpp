@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../bengine/ecs.hpp"
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
 
 struct position_t {
 	int x=0;

@@ -1,12 +1,12 @@
 #include "filesystem.hpp"
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 bool directory_exists(const char *path) {
-    return boost::filesystem::exists(path);
+	return std::experimental::filesystem::exists(path);
 }
 
 bool exists(const std::string &filename) noexcept {
-    return boost::filesystem::exists(filename);
+	return std::experimental::filesystem::exists(filename);
 }
 
 #ifndef WIN32

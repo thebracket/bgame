@@ -5,4 +5,4 @@ add_library(fbo
         hdr_buffer.cpp
         bloom_ping_pong.cpp
         )
-cotire(fbo)
+#cotire(fbo)

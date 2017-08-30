@@ -10,4 +10,4 @@ add_library(globalassets
         game_designations.cpp
         game_pause.cpp
         )
-cotire(globalassets)
+#cotire(globalassets)

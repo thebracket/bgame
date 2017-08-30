@@ -163,9 +163,7 @@ namespace vox {
             if ((char *) chunk >= buf + len) break;
         }
 
-        return (parsed_vox) {
-                numModels, sizeChunks, voxelChunks, palette
-        };
+        return parsed_vox{ numModels, sizeChunks, voxelChunks, palette };
     }
 
     /* Frees the arrays allocated by parseVox */

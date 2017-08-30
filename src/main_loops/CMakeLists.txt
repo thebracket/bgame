@@ -5,4 +5,4 @@ add_library(mainloops
         play_game.cpp
         )
 target_link_libraries(mainloops bengine vox systems)
-cotire(mainloops)
+#cotire(mainloops)

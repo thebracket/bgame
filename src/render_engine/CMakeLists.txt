@@ -1,7 +1,7 @@
 add_library(render_engine
         render_engine.cpp
         )
-cotire(render_engine)
+#cotire(render_engine)
 add_subdirectory(chunks)
 add_subdirectory(fbo)
 add_subdirectory(world_textures)

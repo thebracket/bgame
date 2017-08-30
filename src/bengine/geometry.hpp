@@ -1,5 +1,11 @@
 #pragma once
 
+#include <utility>
+#include <math.h>
+#include <functional>
+#include <string>
+#include <stdexcept>
+
 namespace bengine {
     /*
  * From a given point x/y, project forward radius units (generally tiles) at an angle of degrees_radians degrees

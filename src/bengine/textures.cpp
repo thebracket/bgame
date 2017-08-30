@@ -1,5 +1,6 @@
 #include "textures.hpp"
 #include "stb_image.h"
+#include <tuple>
 
 namespace bengine {
     std::tuple<unsigned int, int, int, int> load_texture(const std::string &filename) {

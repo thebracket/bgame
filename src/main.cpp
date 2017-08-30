@@ -3,8 +3,8 @@
 #include "main_loops/splash_screen.hpp"
 #ifdef __APPLE__
 #include <libproc.h>
-#endif
 #include <unistd.h>
+#endif
 #include "bengine/filesystem.hpp"
 #include "global_assets/game_config.hpp"
 

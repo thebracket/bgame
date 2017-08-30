@@ -9,4 +9,4 @@ add_library(regions
         blight_builder.cpp
         )
 target_link_libraries(regions raws region)
-cotire(regions)
+#cotire(regions)
