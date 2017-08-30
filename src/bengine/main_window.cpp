@@ -5,6 +5,7 @@
 #include "imgui_impl_glfw_gl3.h"
 #include "IconsFontAwesome.h"
 #include "telemetry.hpp"
+#include "filesystem.hpp"
 #include <chrono>
 
 namespace bengine {
@@ -33,6 +34,9 @@ namespace bengine {
         glewInit();
         glfwSwapInterval(1);
     }
+
+	ImFontConfig config;
+	const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 
     void init(bool fullscreen, int width, int height, std::string gui_font, int gui_font_size) {
         init_glfw();
@@ -67,12 +71,13 @@ namespace bengine {
         ImGuiIO& io = ImGui::GetIO();
         const std::string font_path = std::string("game_assets/") + gui_font;
         //io.Fonts->AddFontDefault();
-        //std::cout << "Loading " << font_path << ", at size " << game_config.gui_ttf_size << " pixels\n";
+        std::cout << "Loading " << font_path << ", at size " << gui_font_size << " pixels\n";
         io.Fonts->AddFontFromFileTTF(font_path.c_str(), gui_font_size);
-        ImFontConfig config;
         config.MergeMode = true;
-        const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-        io.Fonts->AddFontFromFileTTF("game_assets/fontawesome-webfont.ttf", gui_font_size, &config, icon_ranges);
+        // TODO: Why does this fail?
+		const std::string fontawesome_path = "game_assets/fontawesome-webfont.ttf";
+		if (!exists(fontawesome_path)) throw std::runtime_error("Unable to load Font Awesome");
+		io.Fonts->AddFontFromFileTTF(fontawesome_path.c_str(), gui_font_size, &config, icon_ranges);
 
         ImGui_ImplGlfwGL3_Init(main_window, true);
     }
