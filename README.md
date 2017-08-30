@@ -21,3 +21,11 @@ RLTK updates periodically, so it's a good idea to update it when you pull a new 
 *Unstable Builds*
 
 I'm still getting the machinery together to post unstable builds. Right now, there is a repeatable - scripted - build setup, but it requires that I remember to run it on three different platforms! These are just starting to come together, so for now I can't make any promises that these will work at all... but you can download periodic builds [here](http://bfnightly.bracketproductions.com/)
+
+*Windows Builds*
+
+Edit the CMakeSettings.json to point to your vcpkg installation, install packages (see below), open in VS2017 and you should be able to build it.
+
+Packages: boost (which pulls in zlib for you), curl, cereal, lua, glfw3, glew, glm. Sadly, this will take a while; on my Core i7 with 12 Gb RAM it took over an hour. The good news is that you only have to do it the once.
+
+After that, you need to use the base as your working directory - so it can see game_assets and world_defs.x

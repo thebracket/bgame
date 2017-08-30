@@ -22,25 +22,25 @@ endif(CCACHE_FOUND)
 	#	set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
 	#endif()
 
-find_package(PkgConfig REQUIRED)
+#find_package(PkgConfig REQUIRED)
 
 # Require CURL (for telemetry)
-find_package(CURL REQUIRED)
+find_package(curl REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
 link_libraries(${CURL_LIBRARIES})
 
 # Require Lua
-find_package(Lua 5 REQUIRED)
+find_package(lua REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 link_libraries(${LUA_LIBRARIES})
 
 # Require GLEW
-find_package(GLEW REQUIRED)
+find_package(Glew REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})
 link_libraries(${GLEW_LIBRARIES})
 
 # Require GLFW
-find_package(GLFW)
+find_package(GLFW3)
 include_directories(${GLFW_INCLUDE_DIRS})
 link_libraries(${GLFW_LIBRARIES})
 
@@ -50,14 +50,14 @@ include_directories( ${OPENGL_INCLUDE_DIRS})
 link_libraries(${OPENGL_LIBRARIES})
 
 # Require GLM
-find_package(GLM REQUIRED)
+find_package(Glm REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})
 
 # Require Boost
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(boost COMPONENTS system filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 link_libraries(${Boost_FILESYSTEM_LIBRARY})
 link_libraries(${Boost_SYSTEM_LIBRARY})
@@ -67,7 +67,7 @@ find_package(cereal REQUIRED)
 include_directories(${CEREAL_INCLUDE_DIR})
 
 # Zlib
-find_package(ZLIB REQUIRED)
+find_package(zlib REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
 link_libraries(${ZLIB_LIBRARIES})
 
