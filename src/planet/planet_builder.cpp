@@ -19,7 +19,7 @@ bool is_planet_build_complete() {
 
 void setup_build_planet() {
 	planet_builder_display = std::make_unique<std::vector<worldgen_display_t>>();
-	planet_builder_display->resize(WORLD_TILES_COUNT);
+	planet_builder_display->resize(WORLD_TILES_COUNT+1);
 	std::fill(planet_builder_display->begin(), planet_builder_display->end(), worldgen_display_t{});
 }
 

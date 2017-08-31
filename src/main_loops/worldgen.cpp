@@ -95,8 +95,9 @@ namespace worldgen {
     constexpr float ALTITUDE_DIVISOR = 3.0f;
     constexpr float ALTITUDE_BASE = 60.0f;
 
-    void lerp_vertex(std::vector<float> &vertices, const int &world_x, const int &world_y, const int &idx, const float &a, const float &b, const bool &rivers, const float &texture_id, const float &tx, const float &ty, const float &amount) {
-        const float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx].altitude/ALTITUDE_DIVISOR);
+    void lerp_vertex(std::vector<float> &vertices, const int &world_x, const int &world_y, const int idx, const float &a, const float &b, const bool &rivers, const float &texture_id, const float &tx, const float &ty, const float &amount) {
+		const int idx_real = planet.idx(world_x, world_y);
+        const float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx_real].altitude/ALTITUDE_DIVISOR);
         const float x_sphere = altitude * cos(b);
         const float y_sphere = altitude * cos(a) * sin(b);
         const float z_sphere = altitude * sin(a) * sin(b);
