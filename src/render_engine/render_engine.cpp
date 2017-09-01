@@ -30,13 +30,12 @@ namespace render {
     glm::mat4 camera_proj_model_view_matrix;
     boost::container::flat_set<int, std::greater<int>> visible_chunks;
     Frustrum frustrum;
-    int projection_mat_loc = -1;
-    int view_mat_loc = -1;
     std::unique_ptr<gbuffer_t> gbuffer;
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
     std::unique_ptr<hdr_buffer_t> hdr_buffer;
     std::unique_ptr<bloom_pingpong_t> bloom_buffer;
     std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
+	std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
     bool models_changed = true;
 
     inline void chunk_maintenance() {
@@ -109,32 +108,21 @@ namespace render {
 
     inline void render_chunks() {
         // Use the program
-        glUseProgram(assets::chunkshader);
+		assets::chunkshader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         // Assign the uniforms
-        glUniformMatrix4fv(projection_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-        glUniformMatrix4fv(view_mat_loc, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+        glUniformMatrix4fv(assets::chunkshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+        glUniformMatrix4fv(assets::chunkshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
 
         // Assign the texture array
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
 
-        glUniform1i(glGetUniformLocation(assets::chunkshader, "textureArray"), 0);
+        glUniform1i(assets::chunkshader->textureArray, 0);
 
         do_chunk_render();
-    }
-
-    inline void set_uniform_locs() {
-        if (projection_mat_loc < 1) {
-            projection_mat_loc = glGetUniformLocation(assets::chunkshader, "projection_matrix");
-            assert(projection_mat_loc > -1);
-        }
-        if (view_mat_loc < 1) {
-            view_mat_loc = glGetUniformLocation(assets::chunkshader, "view_matrix");
-            assert(view_mat_loc > -1);
-        }
     }
 
     void render_to_light_buffer() {
@@ -206,64 +194,77 @@ namespace render {
         render_buffer_quad();
     }
 
+	void build_voxel_render_list() {
+		if (models_changed) {
+			models_to_render->clear();
+			model_buffers.clear();
+			bengine::each<building_t, position_t>(
+				[](bengine::entity_t &e, building_t &b, position_t &pos) {
+				if (b.vox_model > 0 && pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
+					//std::cout << "Found model #" << b.vox_model << "\n";
+					auto finder = models_to_render->find(b.vox_model);
+					auto x = (float)pos.x;
+					const auto y = (float)pos.z;
+					auto z = (float)pos.y;
+
+					//std::cout << b.width << " x " << b.height << "\n";
+					if (b.width == 3) x -= 1.0f;
+					if (b.height == 3) z -= 1.0f;
+
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+						});
+					}
+					else {
+						models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+						}}));
+					}
+				}
+			});
+
+			bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+				if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
+					auto finder = models_to_render->find(7);
+					auto x = (float)pos.x;
+					const auto y = (float)pos.z;
+					auto z = (float)pos.y;
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(vox::instance_t{ x, y, z, 0.0f, 0.0f, 0.0f, 0.0f });
+					}
+					else {
+						models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+						}}));
+					}
+				}
+			});
+
+			models_changed = false;
+
+			assets::voxel_shader->use();
+			for (auto &m : *models_to_render) {
+				auto model = vox::get_model(m.first);
+				auto mb = std::make_unique<vox::voxel_render_buffer_t>();
+				model->build_buffer(m.second, mb.get());
+				model_buffers.emplace_back( std::move(mb) );
+			}
+			glUseProgram(0);
+		}
+	}
+
     void render_voxel_models() {
-        glUseProgram(assets::voxel_shader);
-        glUniformMatrix4fv(glGetUniformLocation(assets::voxel_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-        glUniformMatrix4fv(glGetUniformLocation(assets::voxel_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+		assets::voxel_shader->use();
+		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
+		glUniformMatrix4fv(assets::voxel_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+        glUniformMatrix4fv(assets::voxel_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
         glCheckError();
-        glUniform1i(glGetUniformLocation(assets::voxel_shader, "coltex"), 0);
-        glUniform1f(glGetUniformLocation(assets::voxel_shader, "texSize"), 32.0f);
-        glCheckError();
+        glUniform1f(assets::voxel_shader->texSize, 32.0f);
+        glCheckError();        
 
-        if (models_changed) {
-            models_to_render->clear();
-            bengine::each<building_t, position_t>(
-                    [] (bengine::entity_t &e, building_t &b, position_t &pos) {
-                        if (b.vox_model > 0 && pos.z > camera_position->region_z-10 && pos.z <= camera_position->region_z) {
-                            //std::cout << "Found model #" << b.vox_model << "\n";
-                            auto finder = models_to_render->find(b.vox_model);
-                            auto x = (float)pos.x;
-                            const auto y = (float)pos.z;
-                            auto z = (float)pos.y;
-
-                            //std::cout << b.width << " x " << b.height << "\n";
-                            if (b.width == 3) x -= 1.0f;
-                            if (b.height == 3) z -= 1.0f;
-
-                            if (finder != models_to_render->end()) {
-                                finder->second.push_back(vox::instance_t{
-                                        x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
-                                });
-                            } else {
-                                models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-                                        x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
-                                }}));
-                            }
-                        }
-                    });
-
-            bengine::each<renderable_composite_t, position_t>([] (bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
-                if (pos.z > camera_position->region_z-10 && pos.z <= camera_position->region_z) {
-                    auto finder = models_to_render->find(7);
-                    auto x = (float) pos.x;
-                    const auto y = (float) pos.z;
-                    auto z = (float) pos.y;
-                    if (finder != models_to_render->end()) {
-                        finder->second.push_back(vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f});
-                    } else {
-                        models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
-                                x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
-                        }}));
-                    }
-                }
-            });
-
-            models_changed = false;
-        }
-
-        for (auto &m : *models_to_render) {
-            auto model = vox::get_model(m.first);
-            model->render_instances(m.second);
+        for (const auto &m : model_buffers) {
+			m->model->render_instances(*m);
         }
     }
 
@@ -274,7 +275,6 @@ namespace render {
 
         if (!gbuffer) {
             gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
-            set_uniform_locs();
             if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
             if (!hdr_buffer) hdr_buffer = std::make_unique<hdr_buffer_t>(screen_w, screen_h);
             if (!bloom_buffer) bloom_buffer = std::make_unique<bloom_pingpong_t>(screen_w, screen_h);
@@ -284,6 +284,8 @@ namespace render {
         chunk_maintenance();
         if (camera_moved) update_camera();
         update_world_textures();
+		build_voxel_render_list();
+		glCheckError();
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         glEnable(GL_DEPTH_TEST);

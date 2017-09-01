@@ -10,4 +10,5 @@ add_library(globalassets
         game_designations.cpp
         game_pause.cpp
         )
+target_link_libraries(globalassets shaders)
 #cotire(globalassets)

@@ -71,8 +71,6 @@ namespace bengine {
             printf("%s\n", &FragmentShaderErrorMessage[0]);
         }
 
-
-
         // Link the program
         printf("Linking program\n");
         GLuint ProgramID = glCreateProgram();
@@ -96,7 +94,23 @@ namespace bengine {
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
 
+		std::cout << "Setup as shader #" << ProgramID << "\n";
+
         return ProgramID;
     }
 
+	void base_shader_t::load_shader(const std::string vertex, const std::string fragment) {
+		shader_id = load_shaders(vertex.c_str(), fragment.c_str());
+	}
+
+	void base_shader_t::use() {
+		glUseProgram(shader_id);
+	}
+
+	int base_shader_t::get_uniform(const std::string name) {
+		int result = glGetUniformLocation(shader_id, name.c_str());
+		std::cout << "Uniform [" << name << "] assigned to shader " << shader_id << ", slot " << result << "\n";
+		glCheckError();
+		return result;
+	}
 }

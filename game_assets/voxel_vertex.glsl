@@ -42,7 +42,7 @@ void main()
     vec4 position = vec4(shunk_pos, 1.0);
     mat4 rotation = rotationMatrix(instanceRotation.xyz, instanceRotation.w);
     mat4 translation = translate(instancePos.x, instancePos.y, instancePos.z);
-    mat4 model_view_matrix = view_matrix * translation * rotation;
+    mat4 model_view_matrix = view_matrix * translation;
     gl_Position = projection_matrix * model_view_matrix * position;
     world_pos = shunk_pos + instancePos;
     base_normal = normalize(aNormal);

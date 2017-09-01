@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <iostream>
 #include <assert.h>
-#include "../../bengine/gl_include.hpp"
 #include <boost/container/flat_map.hpp>
 
 namespace vox {
@@ -23,7 +22,6 @@ namespace vox {
             cubes[idx] = cube;
         }
         std::cout << "Starting with " << cubes.size() << " cubes (" << cubes.size() * 36 << " triangles).\n";
-        std::vector<float> geometry;
 
         // Perform greedy voxels on it
         int cube_count = 0;
@@ -173,49 +171,61 @@ namespace vox {
         glGenBuffers(1, &instance_vbo_id);
     }
 
-    void voxel_model::render_instances(std::vector<instance_t> &instances) {
-        glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_STATIC_DRAW);
+	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render) 
+	{
+		assert(render->tmp_vao > 0);
 
-        unsigned int tmp_vao = 0;
-        glGenVertexArrays(1, &tmp_vao);
-        glBindVertexArray(tmp_vao);
+		// Build the instance buffer
+		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_STATIC_DRAW);
+		glCheckError();
 
-        // Bind the consistent elements
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0); // 0 = Vertex Position
+		// Create the VAO to hold this data
+		glBindVertexArray(render->tmp_vao);
+		glCheckError();
 
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-        glEnableVertexAttribArray(1); // 1 = Normals
-        glCheckError();
+		// Bind the consistent elements
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-        glEnableVertexAttribArray(2); // 2 = Color
-        glCheckError();
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+		glEnableVertexAttribArray(1); // 1 = Normals
+		glCheckError();
 
-        // Bind the per-element items
-        glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+		glEnableVertexAttribArray(2); // 2 = Color
+		glCheckError();
 
-        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(3); // 0 = Instance Position
-        glVertexAttribDivisor(3, 1);
+		// Bind the per-element items
+		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-        glEnableVertexAttribArray(4); // 1 = Instance Rotation
-        glVertexAttribDivisor(4, 1);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(3); // 0 = Instance Position
+		glVertexAttribDivisor(3, 1);
 
-        glCheckError();
-        glBindVertexArray(0);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+		glEnableVertexAttribArray(4); // 1 = Instance Rotation
+		glVertexAttribDivisor(4, 1);
+
+		glCheckError();
+		glBindVertexArray(0);
+		glCheckError();
+
+		render->n_instances = instances.size();
+		render->model = this;
+	}
+
+    void voxel_model::render_instances(voxel_render_buffer_t &buffer) {
 
         // Perform the render
-        //glDrawArraysInstanced(GL_TRIANGLES, 0, (int)instances.size(), n_elements);
-        glBindVertexArray(tmp_vao);
+        glBindVertexArray(buffer.tmp_vao);
         //glDrawArrays(GL_TRIANGLES, 0, n_elements);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, n_elements, (int)instances.size());
+		//std::cout << n_elements << "\n";
+		//std::cout << "Rendering " << n_elements << ", " << buffer.n_instances << " times\n";
+        glDrawArraysInstanced(GL_TRIANGLES, 0, n_elements, (int)buffer.n_instances);
         glCheckError();
 
         glBindVertexArray(0);
-        glDeleteVertexArrays(1, &tmp_vao);
     }
 }
