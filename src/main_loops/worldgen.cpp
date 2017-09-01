@@ -68,7 +68,7 @@ namespace worldgen {
     }
 
     void render_menu() {
-        bengine::display_sprite(assets::background_image->texture_id);
+        bengine::display_sprite(assets::background_image->texture_id, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
         ImGui::Begin("World Generation", nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
 
         ImGui::InputInt("World Seed", &seed);
