@@ -13,6 +13,7 @@ uniform sampler3D light_pos_tex;
 uniform sampler3D light_col_tex;
 
 uniform vec3 camera_position;
+uniform vec3 sun_position;
 
 #define PI 3.1415926
 
@@ -59,7 +60,7 @@ vec3 degamma(vec3 col) {
 void main()
 {
     // TODO: Make this a uniform
-    vec3 sun_position = vec3(128.0, 256.0, 128.0);
+    //vec3 sun_position = vec3(128.0, 256.0, 128.0);
     vec3 sun_color = vec3(1.0);
 
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);

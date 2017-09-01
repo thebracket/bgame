@@ -4,6 +4,7 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aColor;
 layout (location = 3) in vec3 instancePos;
 layout (location = 4) in vec4 instanceRotation;
+layout (location = 5) in vec3 instanceTint;
 
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
@@ -13,6 +14,7 @@ out vec3 tex_pos;
 out vec3 world_pos;
 out vec3 base_normal;
 out vec3 color;
+out vec3 tint;
 
 mat4 translate(float x, float y, float z){
     return mat4(
@@ -47,4 +49,5 @@ void main()
     world_pos = shunk_pos + instancePos;
     base_normal = normalize(aNormal);
     color = aColor;
+    tint = instanceTint;
 }

@@ -40,6 +40,7 @@ terrain_textures = {
 
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
+        print(name .. " : " .. terrain_textures[name].index)
         return terrain_textures[name].index
     else
         print("Unknown texture: "..name)

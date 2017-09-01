@@ -15,6 +15,7 @@ namespace vox {
     struct instance_t {
         float x,y,z;
         float axis1, axis2, axis3, rot_angle;
+		float tint_r, tint_g, tint_b;
     };
 
 	struct voxel_render_buffer_t;

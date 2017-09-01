@@ -15,19 +15,14 @@ struct calendar_t {
 	uint8_t hour = 0;
 	uint8_t minute = 0;
 	uint8_t second = 0;
+	float sun_x = 0.0f;
+	float sun_y = 0.0f;
+	float sun_z = 0.0f;
 
 	std::vector<shift_t> defined_shifts;
 
 	std::string get_date_time() const;
 	void next_minute();
-
-	inline float sun_arc_percent() { 
-		if (hour < 12) {
-			return (hour/12.0F) + ((minute/60.0F)/1000.0F);
-		} else {
-			return ((24.0F-hour)/12.0F) - ((minute/60.0F)/1000.0F);
-		}
-	}
 
     template<class Archive>
     void serialize(Archive & archive)

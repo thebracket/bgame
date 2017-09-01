@@ -22,6 +22,7 @@
 #include "../components/position.hpp"
 #include "../components/building.hpp"
 #include "../components/renderable_composite.hpp"
+#include "../global_assets/game_calendar.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -137,6 +138,7 @@ namespace render {
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_pos_tex"), 5);
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_col_tex"), 6);
         glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
+		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "sun_position"), calendar->sun_x, calendar->sun_y, calendar->sun_z);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);
@@ -213,12 +215,12 @@ namespace render {
 
 					if (finder != models_to_render->end()) {
 						finder->second.push_back(vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
 						});
 					}
 					else {
 						models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
 						}}));
 					}
 				}
@@ -231,11 +233,11 @@ namespace render {
 					const auto y = (float)pos.z;
 					auto z = (float)pos.y;
 					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{ x, y, z, 0.0f, 0.0f, 0.0f, 0.0f });
+						finder->second.push_back(vox::instance_t{ x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f });
 					}
 					else {
 						models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
 						}}));
 					}
 				}

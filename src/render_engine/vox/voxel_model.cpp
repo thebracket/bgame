@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include <boost/container/flat_map.hpp>
+#include <map>
 
 namespace vox {
 
@@ -16,7 +17,7 @@ namespace vox {
 
     void voxel_model::build_model() {
         // Build a cube map
-        boost::container::flat_map<int, subvoxel> cubes;
+        std::map<int, subvoxel> cubes;
         for (const auto cube : voxels) {
             const int idx = voxidx(width, depth, height, cube.x, cube.z, cube.y);
             cubes[idx] = cube;
@@ -54,7 +55,7 @@ namespace vox {
                     for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
                         const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
                         auto vfinder = cubes.find(candidate_idx);
-                        if (!(vfinder != cubes.end())) possible = false;
+                        if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
                     }
                     if (possible) {
                         ++H;
@@ -77,7 +78,7 @@ namespace vox {
                         for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
                             const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
                             auto vfinder = cubes.find(candidate_idx);
-                            if (!(vfinder != cubes.end())) possible = false;
+                            if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
                         }
                     }
                     if (possible) {
@@ -200,13 +201,17 @@ namespace vox {
 		// Bind the per-element items
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(3); // 0 = Instance Position
 		glVertexAttribDivisor(3, 1);
 
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-		glEnableVertexAttribArray(4); // 1 = Instance Rotation
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+		glEnableVertexAttribArray(4); // 1 = Instance Rotataion (vec4)
 		glVertexAttribDivisor(4, 1);
+
+		glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (char *) nullptr + 7 * sizeof(float));
+		glEnableVertexAttribArray(5); // 2 = Tint
+		glVertexAttribDivisor(5, 1);
 
 		glCheckError();
 		glBindVertexArray(0);
