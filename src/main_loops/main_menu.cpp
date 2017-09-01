@@ -80,11 +80,12 @@ namespace main_menu {
         int screen_w, screen_h;
         glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
-        ImGui_ImplGlfwGL3_NewFrame();
 
         // Display the background image centered, and the logo
-        bengine::display_sprite(assets::background_image->texture_id);
-        bengine::display_sprite(assets::game_logo->texture_id, 0.4f, 0.2f, 0.5f, 0.7f);
+        bengine::display_sprite(assets::background_image->texture_id, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+        bengine::display_sprite(assets::game_logo->texture_id, 0.4f, 0.2f, 0.5f, 0.7f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+
+		ImGui_ImplGlfwGL3_NewFrame();
 
         // Supporters list; TODO: make this read a file
         ImGui::Begin("Thanks to our supporters:", nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
