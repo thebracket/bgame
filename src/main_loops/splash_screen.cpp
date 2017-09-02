@@ -111,6 +111,7 @@ namespace splash_screen {
 
     void load_chunk_textures() {
         const int num_actual_textures = static_cast<int>(material_textures.size() * 3);
+		std::cout << "# Textures in array: " << num_actual_textures << "\n";
 
         glGenTextures(1, &assets::chunk_texture_array);
         glActiveTexture(GL_TEXTURE0);
@@ -148,6 +149,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(albedo_tex) // Color data
             );
+			std::cout << albedo << " = " << load_index << "\n";
             glTexSubImage3D(
                     GL_TEXTURE_2D_ARRAY,
                     0, // Mipmap number
@@ -157,6 +159,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(normal_tex) // Color data
             );
+			std::cout << normal << " = " << load_index+1 << "\n";
 
             // We need to combine occlusion, metal and rough into one texture
             std::vector<uint8_t> texbytes;
@@ -176,7 +179,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     &texbytes[0] // Color data
             );
-
+			std::cout << "Combined = " << load_index+2 << "\n";
 
             stbi_image_free(std::get<0>(albedo_tex));
             stbi_image_free(std::get<0>(normal_tex));

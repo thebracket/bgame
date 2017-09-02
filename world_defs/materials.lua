@@ -1,5 +1,5 @@
 function tfn(name) return "game_assets/terrain/" .. name end
-next_texture_id = 12
+next_texture_id = 0
 function tid()
     tmp = next_texture_id
     next_texture_id = next_texture_id + 3
@@ -8,10 +8,10 @@ end
 
 terrain_textures = {
     -- Hard coded for engine use
-    grass = { index=0, texture=tfn("grass") },
-    red_plastic = { index=3, texture=tfn("redplastic") }, -- This is used to indicate a missing texture
-    bark = { index=6, texture=tfn("bark") }, -- This is used to indicate a missing texture
-    leaf = { index=9, texture=tfn("leaf") }, -- This is used to indicate a missing texture
+    grass = { index=tid(), texture=tfn("grass") },
+    red_plastic = { index=tid(), texture=tfn("redplastic") }, -- This is used to indicate a missing texture
+    bark = { index=tid(), texture=tfn("bark") },
+    leaf = { index=tid(), texture=tfn("leaf") },
 
     -- Rock Types
     sandstone = { index=tid(), texture=tfn("sandstone") },
@@ -40,8 +40,9 @@ terrain_textures = {
 
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
-        print(name .. " : " .. terrain_textures[name].index)
-        return terrain_textures[name].index
+        texidx = terrain_textures[name].index-3
+        print(name .. " : " .. texidx)
+        return texidx
     else
         print("Unknown texture: "..name)
     end

@@ -123,7 +123,7 @@ void main()
 
     // Final color
     //vec3 final_color = ambient + diffuse;
-    vec3 final_color = (ambient_ref * 0.3) + (diffuse_ref * 0.7) + specular_ref;
+    vec3 final_color = (ambient_ref * 0.1) + (diffuse_ref * 0.7) + specular_ref;
     FragColor = final_color;
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
