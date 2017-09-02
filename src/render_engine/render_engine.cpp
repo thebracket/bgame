@@ -23,6 +23,7 @@
 #include "../components/building.hpp"
 #include "../components/renderable_composite.hpp"
 #include "../global_assets/game_calendar.hpp"
+#include "vox/renderables.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -35,9 +36,6 @@ namespace render {
     std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
     std::unique_ptr<hdr_buffer_t> hdr_buffer;
     std::unique_ptr<bloom_pingpong_t> bloom_buffer;
-    std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
-	std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
-    bool models_changed = true;
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -196,80 +194,6 @@ namespace render {
         render_buffer_quad();
     }
 
-	void build_voxel_render_list() {
-		if (models_changed) {
-			models_to_render->clear();
-			model_buffers.clear();
-			bengine::each<building_t, position_t>(
-				[](bengine::entity_t &e, building_t &b, position_t &pos) {
-				if (b.vox_model > 0 && pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
-					//std::cout << "Found model #" << b.vox_model << "\n";
-					auto finder = models_to_render->find(b.vox_model);
-					auto x = (float)pos.x;
-					const auto y = (float)pos.z;
-					auto z = (float)pos.y;
-
-					//std::cout << b.width << " x " << b.height << "\n";
-					if (b.width == 3) x -= 1.0f;
-					if (b.height == 3) z -= 1.0f;
-
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						});
-					}
-					else {
-						models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						}}));
-					}
-				}
-			});
-
-			bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
-				if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
-					auto finder = models_to_render->find(7);
-					auto x = (float)pos.x;
-					const auto y = (float)pos.z;
-					auto z = (float)pos.y;
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{ x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f });
-					}
-					else {
-						models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						}}));
-					}
-				}
-			});
-
-			models_changed = false;
-
-			assets::voxel_shader->use();
-			for (auto &m : *models_to_render) {
-				auto model = vox::get_model(m.first);
-				auto mb = std::make_unique<vox::voxel_render_buffer_t>();
-				model->build_buffer(m.second, mb.get());
-				model_buffers.emplace_back( std::move(mb) );
-			}
-			glUseProgram(0);
-		}
-	}
-
-    void render_voxel_models() {
-		assets::voxel_shader->use();
-		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
-		glUniformMatrix4fv(assets::voxel_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-        glUniformMatrix4fv(assets::voxel_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-        glCheckError();
-        glUniform1f(assets::voxel_shader->texSize, 32.0f);
-        glCheckError();        
-
-        for (const auto &m : model_buffers) {
-			m->model->render_instances(*m);
-        }
-    }
-
     void render_gl(const double &duration_ms) {
         glCheckError();
         int screen_w, screen_h;
@@ -280,7 +204,6 @@ namespace render {
             if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
             if (!hdr_buffer) hdr_buffer = std::make_unique<hdr_buffer_t>(screen_w, screen_h);
             if (!bloom_buffer) bloom_buffer = std::make_unique<bloom_pingpong_t>(screen_w, screen_h);
-            models_to_render = std::make_unique<boost::container::flat_map<int, std::vector<vox::instance_t>>>();
         }
 
         chunk_maintenance();
@@ -297,7 +220,7 @@ namespace render {
         //glDisable(GL_CULL_FACE);
         glCheckError();
 
-        render_voxel_models();
+        render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
 
         // TODO: Render windows and other transparency
 

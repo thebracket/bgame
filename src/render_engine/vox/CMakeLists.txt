@@ -1,2 +1,2 @@
-add_library(vox voxreader.cpp voxel_model.cpp)
+add_library(vox voxreader.cpp voxel_model.cpp renderables.cpp)
 #cotire (vox)
