@@ -13,7 +13,7 @@ uniform sampler3D light_pos_tex;
 uniform sampler3D light_col_tex;
 
 uniform vec3 camera_position;
-uniform vec3 sun_position;
+uniform vec3 sun_direction;
 
 #define PI 3.1415926
 
@@ -60,7 +60,6 @@ vec3 degamma(vec3 col) {
 void main()
 {
     // TODO: Make this a uniform
-    //vec3 sun_position = vec3(128.0, 256.0, 128.0);
     vec3 sun_color = vec3(1.0);
 
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
@@ -87,7 +86,7 @@ void main()
     vec3 specular_ref = vec3(0.0);
 
     // Calculated variables
-    vec3 Lsun = normalize(sun_position - position);     // Lx - light position minus world position
+    vec3 Lsun = normalize(sun_direction);     // Lx - light position minus world position
     vec3 Llight = normalize(light_position - position);
     vec3 V = normalize(-position); // V - negative position
     vec3 Hsun = normalize(Lsun + V);
