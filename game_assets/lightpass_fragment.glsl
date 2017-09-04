@@ -103,8 +103,10 @@ void main()
     float NdHmoon = max(0.001, dot(N, Hmoon));
     float NdHlight = max(0.001, dot(N, Hlight));
     float HsundV = max(0.001, dot(Hsun, V));
+    float HmoondV = max(0.001, dot(Hmoon, V));
     float HlightdV = max(0.001, dot(Hlight, V));
     float LsundV = max(0.001, dot(Lsun, V));
+    float LmoondV = max(0.001, dot(Lmoon, V));
     float LlightdV = max(0.001, dot(Lsun, V));
 
     // Sunlight
@@ -116,8 +118,8 @@ void main()
     // Moonlight
     vec3 moon_diffuse_color = base_color;
     diffuse_ref += outdoor_x_y.r > 0.0 ? lambert_diffuse(NdLmoon, base_color, moon_color) : vec3(0.0);
-    vec3 specMoonfresnel = fresnel_factor(specular_color, HsundV);
-    specular_ref += cooktorrance_specular(NdLsun, NdV, NdHsun, specMoonfresnel, roughness) * NdLmoon;
+    vec3 specMoonfresnel = fresnel_factor(specular_color, HmoondV);
+    specular_ref += cooktorrance_specular(NdLsun, NdV, NdHmoon, specMoonfresnel, roughness) * NdLmoon;
 
     // Game lights
     vec3 light_diffuse_color = base_color;

@@ -36,20 +36,20 @@ namespace systems {
 			// Sun color; a bit blue at dawn, white at noon, a bit red at sunset
 			if (calendar->hour > 5 && calendar->hour < 13) {
 				const float sun_pct = (calendar->hour - 6.0f)/6.0f;
-				calendar->sun_r = rgb_lerp(sun_pct, 0.8f, 1.0f);
-				calendar->sun_g = rgb_lerp(sun_pct, 0.8f, 1.0f);
+				calendar->sun_r = rgb_lerp(sun_pct, 0.6f, 1.0f);
+				calendar->sun_g = rgb_lerp(sun_pct, 0.6f, 1.0f);
 				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 1.0f);
 			}
 			else if (calendar->hour > 12 && calendar->hour < 19) {
 				const float sun_pct = (calendar->hour - 12.0f) / 6.0f;
 				calendar->sun_r = rgb_lerp(sun_pct, 1.0f, 1.0f);
-				calendar->sun_g = rgb_lerp(sun_pct, 1.0f, 0.8f);
-				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 0.8f);
+				calendar->sun_g = rgb_lerp(sun_pct, 1.0f, 0.6f);
+				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 0.6f);
 			}
 			else {
-				calendar->sun_r = 149.0f / 255.0f;
-				calendar->sun_g = 208.0f / 255.0f;
-				calendar->sun_b = 171.0f / 255.0f;
+				calendar->moon_r = 34.0f / 255.0f;
+				calendar->moon_g = 63.0f / 255.0f;
+				calendar->moon_b = 89.0f / 255.0f;
 			}
 
 			//std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
