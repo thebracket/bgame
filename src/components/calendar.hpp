@@ -18,6 +18,15 @@ struct calendar_t {
 	float sun_x = 0.0f;
 	float sun_y = 0.0f;
 	float sun_z = 0.0f;
+	float sun_r = 1.0f;
+	float sun_g = 1.0f;
+	float sun_b = 1.0f;
+	float moon_x = 0.0f;
+	float moon_y = 0.0f;
+	float moon_z = 0.0f;
+	float moon_r = 149.0f / 255.0f;
+	float moon_g = 208.0f / 255.0f;
+	float moon_b = 171.0f / 255.0f;
 
 	std::vector<shift_t> defined_shifts;
 

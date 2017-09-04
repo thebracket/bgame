@@ -137,7 +137,10 @@ namespace render {
         glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_col_tex"), 6);
         glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
 		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "sun_direction"), calendar->sun_x, calendar->sun_y, calendar->sun_z);
-        glActiveTexture(GL_TEXTURE0);
+		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "moon_direction"), calendar->moon_x, calendar->moon_y, calendar->moon_z);
+		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "sun_color"), calendar->sun_r, calendar->sun_g, calendar->sun_b);
+		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "moon_color"), calendar->moon_r, calendar->moon_g, calendar->moon_b);
+		glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, gbuffer->normal_tex);

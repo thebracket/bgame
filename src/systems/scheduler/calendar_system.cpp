@@ -7,6 +7,12 @@
 
 namespace systems {
     namespace calendarsys {
+		float rgb_lerp(const float percent, const float start, const float end) {
+			const float difference = end - start;
+			const float addititve = difference * percent;
+			return start + addititve;
+		}
+
         void run(const double duration_ms) {
             auto hour = calendar->hour;
             auto day = calendar->day;
@@ -23,7 +29,30 @@ namespace systems {
 			calendar->sun_y = sun_pos.second;
 			calendar->sun_z = static_cast<float>(latitude_sun);
 
-			std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
+			calendar->moon_x = 0.0f - calendar->sun_x;
+			calendar->moon_y = 0.0f - calendar->sun_y;
+			calendar->moon_z = calendar->sun_z;
+
+			// Sun color; a bit blue at dawn, white at noon, a bit red at sunset
+			if (calendar->hour > 5 && calendar->hour < 13) {
+				const float sun_pct = (calendar->hour - 6.0f)/6.0f;
+				calendar->sun_r = rgb_lerp(sun_pct, 0.8f, 1.0f);
+				calendar->sun_g = rgb_lerp(sun_pct, 0.8f, 1.0f);
+				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 1.0f);
+			}
+			else if (calendar->hour > 12 && calendar->hour < 19) {
+				const float sun_pct = (calendar->hour - 12.0f) / 6.0f;
+				calendar->sun_r = rgb_lerp(sun_pct, 1.0f, 1.0f);
+				calendar->sun_g = rgb_lerp(sun_pct, 1.0f, 0.8f);
+				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 0.8f);
+			}
+			else {
+				calendar->sun_r = 149.0f / 255.0f;
+				calendar->sun_g = 208.0f / 255.0f;
+				calendar->sun_b = 171.0f / 255.0f;
+			}
+
+			//std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
         }
     }
 }

@@ -14,6 +14,9 @@ uniform sampler3D light_col_tex;
 
 uniform vec3 camera_position;
 uniform vec3 sun_direction;
+uniform vec3 sun_color;
+uniform vec3 moon_direction;
+uniform vec3 moon_color;
 
 #define PI 3.1415926
 
@@ -59,9 +62,6 @@ vec3 degamma(vec3 col) {
 
 void main()
 {
-    // TODO: Make this a uniform
-    vec3 sun_color = vec3(1.0);
-
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb;
@@ -87,16 +87,20 @@ void main()
 
     // Calculated variables
     vec3 Lsun = normalize(sun_direction);     // Lx - light position minus world position
+    vec3 Lmoon = normalize(moon_direction);
     vec3 Llight = normalize(light_position - position);
     vec3 V = normalize(-position); // V - negative position
     vec3 Hsun = normalize(Lsun + V);
+    vec3 Hmoon = normalize(Lmoon + V);
     vec3 Hlight = normalize(Llight + V);
     vec3 N = normal;
 
     float NdLsun = max(0.0, dot(N, Lsun));
+    float NdLmoon = max(0.0, dot(N, Lmoon));
     float NdLlight = max(0.0, dot(N, Llight));
     float NdV = max(0.001, dot(N, V));
     float NdHsun = max(0.001, dot(N, Hsun));
+    float NdHmoon = max(0.001, dot(N, Hmoon));
     float NdHlight = max(0.001, dot(N, Hlight));
     float HsundV = max(0.001, dot(Hsun, V));
     float HlightdV = max(0.001, dot(Hlight, V));
@@ -108,6 +112,12 @@ void main()
     diffuse_ref += outdoor_x_y.r > 0.0 ? lambert_diffuse(NdLsun, base_color, sun_color) : vec3(0.0);
     vec3 specSunfresnel = fresnel_factor(specular_color, HsundV);
     specular_ref += cooktorrance_specular(NdLsun, NdV, NdHsun, specSunfresnel, roughness) * NdLsun;
+
+    // Moonlight
+    vec3 moon_diffuse_color = base_color;
+    diffuse_ref += outdoor_x_y.r > 0.0 ? lambert_diffuse(NdLmoon, base_color, moon_color) : vec3(0.0);
+    vec3 specMoonfresnel = fresnel_factor(specular_color, HsundV);
+    specular_ref += cooktorrance_specular(NdLsun, NdV, NdHsun, specMoonfresnel, roughness) * NdLmoon;
 
     // Game lights
     vec3 light_diffuse_color = base_color;
