@@ -78,10 +78,12 @@ void main()
     vec3 outdoor_x_y = texture(info_tex, world_sampler_pos).rgb;
     vec3 light_position = texture(light_pos_tex, world_sampler_pos).rgb * 256.0;
     light_position.y += 0.48;
+    light_position.z += 1.0;
     vec3 light_color = degamma(texture(light_col_tex, world_sampler_pos).rgb);
 
     // Output components
-    vec3 ambient_ref = base_color * ambient_occlusion;
+    vec3 ambient_color = outdoor_x_y.r > 0.0 ? vec3(1.0, 1.0, 1.0) : light_color;
+    vec3 ambient_ref = base_color * ambient_occlusion * ambient_color;
     vec3 diffuse_ref = vec3(0.0);
     vec3 specular_ref = vec3(0.0);
 
@@ -127,7 +129,7 @@ void main()
     float attenuation = 1.0/light_distance;
     diffuse_ref += lambert_diffuse(NdLlight, base_color, light_color) * attenuation;
     vec3 specLightfresnel = fresnel_factor(specular_color, HlightdV);
-    specular_ref += cooktorrance_specular(NdLlight, NdV, NdHlight, specLightfresnel, roughness) * NdLlight;
+    specular_ref += cooktorrance_specular(NdLlight, NdV, NdHlight, specLightfresnel, roughness) * NdLlight * light_color;
 
     // Limit the total light delivery
     //vec3 diffuse_amount = (vec3(1.0) - (specLightfresnel + specSunfresnel));
