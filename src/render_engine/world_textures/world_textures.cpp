@@ -8,6 +8,7 @@
 #include "../../bengine/geometry.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../global_assets/game_camera.hpp"
+#include "../../global_assets/game_designations.hpp"
 
 namespace render {
     constexpr int tex_width = REGION_WIDTH;
@@ -98,7 +99,8 @@ namespace render {
         //std::cout << "Updating light at: " << pos.x << "/" << pos.y << "/" << pos.z << " [camera @" << camera_position->region_x << "/" << camera_position->region_y << "/" << camera_position->region_z << "]\n";
 
         if (view.alert_status) {
-            view.color = bengine::color_t{1.0f, 0.0f, 0.0f};
+			const float power_percent = static_cast<float>(designations->current_power) / static_cast<float>(designations->total_capacity);
+            view.color = bengine::color_t{1.0f, power_percent, power_percent };
         }
         const int idx = mapidx(pos);
         lit_tiles[idx] = std::make_pair(idx, view.color); // Always light yourself

@@ -5,6 +5,7 @@
 #include "scheduler/tick_system.hpp"
 #include "../global_assets/game_pause.hpp"
 #include "scheduler/calendar_system.hpp"
+#include "power/power_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -14,6 +15,12 @@
 #include <chrono>
 
 namespace systems {
+	constexpr int CAMERA_SYSTEM = 1;
+	constexpr int HUD_SYSTEM = 2;
+	constexpr int TICK_SYSTEM = 3;
+	constexpr int CALENDAR_SYSTEM = 4;
+	constexpr int POWER_SYSTEM = 5;
+
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
 
@@ -41,6 +48,7 @@ namespace systems {
         system_names[HUD_SYSTEM] = "HUD System";
         system_names[TICK_SYSTEM] = "Tick System";
         system_names[CALENDAR_SYSTEM] = "Calendar System";
+		system_names[POWER_SYSTEM] = "Power System";
     }
 
     void run(const double &duration_ms) {
@@ -55,6 +63,7 @@ namespace systems {
         // Items that only run if the simulation has ticked
         if (major_tick) {
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
+			run_system(power::run, duration_ms, POWER_SYSTEM);
         }
 
         // Profiler
