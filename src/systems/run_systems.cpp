@@ -6,6 +6,7 @@
 #include "../global_assets/game_pause.hpp"
 #include "scheduler/calendar_system.hpp"
 #include "power/power_system.hpp"
+#include "scheduler/initiative_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -20,6 +21,7 @@ namespace systems {
 	constexpr int TICK_SYSTEM = 3;
 	constexpr int CALENDAR_SYSTEM = 4;
 	constexpr int POWER_SYSTEM = 5;
+	constexpr int INITIATIVE_SYSTEM = 6;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -44,11 +46,12 @@ namespace systems {
     }
 
     void init() {
-        system_names[CAMERA_SYSTEM] = "Camera System";
-        system_names[HUD_SYSTEM] = "HUD System";
-        system_names[TICK_SYSTEM] = "Tick System";
-        system_names[CALENDAR_SYSTEM] = "Calendar System";
-		system_names[POWER_SYSTEM] = "Power System";
+        system_names[CAMERA_SYSTEM] = "Camera";
+        system_names[HUD_SYSTEM] = "HUD";
+        system_names[TICK_SYSTEM] = "Tick";
+        system_names[CALENDAR_SYSTEM] = "Calendar";
+		system_names[POWER_SYSTEM] = "Power";
+		system_names[INITIATIVE_SYSTEM] = "Initiative";
     }
 
     void run(const double &duration_ms) {
@@ -63,6 +66,7 @@ namespace systems {
         // Items that only run if the simulation has ticked
         if (major_tick) {
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
+			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
         }
 

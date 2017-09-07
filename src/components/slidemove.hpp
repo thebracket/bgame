@@ -1,10 +1,8 @@
 #pragma once
 
-#include <rltk.hpp>
+#include "../bengine/ecs_impl.hpp"
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-
-using namespace rltk;
 
 struct slidemove_t {
     float offsetX = 0;
@@ -23,4 +21,4 @@ struct slidemove_t {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<slidemove_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<slidemove_t>>)
