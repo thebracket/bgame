@@ -7,6 +7,7 @@
 #include "scheduler/calendar_system.hpp"
 #include "power/power_system.hpp"
 #include "scheduler/initiative_system.hpp"
+#include "physics/fluid_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -22,6 +23,7 @@ namespace systems {
 	constexpr int CALENDAR_SYSTEM = 4;
 	constexpr int POWER_SYSTEM = 5;
 	constexpr int INITIATIVE_SYSTEM = 6;
+	constexpr int FLUID_SYSTEM = 7;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -52,6 +54,7 @@ namespace systems {
         system_names[CALENDAR_SYSTEM] = "Calendar";
 		system_names[POWER_SYSTEM] = "Power";
 		system_names[INITIATIVE_SYSTEM] = "Initiative";
+		system_names[FLUID_SYSTEM] = "Fluids";
     }
 
     void run(const double &duration_ms) {
@@ -66,6 +69,7 @@ namespace systems {
         // Items that only run if the simulation has ticked
         if (major_tick) {
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
+			run_system(fluids::run, duration_ms, FLUID_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
         }
