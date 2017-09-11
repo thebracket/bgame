@@ -2,6 +2,7 @@
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
 #include "gui/hud_system.hpp"
+#include "gui/log_system.hpp"
 #include "scheduler/tick_system.hpp"
 #include "../global_assets/game_pause.hpp"
 #include "scheduler/calendar_system.hpp"
@@ -24,6 +25,7 @@ namespace systems {
 	constexpr int POWER_SYSTEM = 5;
 	constexpr int INITIATIVE_SYSTEM = 6;
 	constexpr int FLUID_SYSTEM = 7;
+	constexpr int LOG_SYSTEM = 8;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -55,6 +57,7 @@ namespace systems {
 		system_names[POWER_SYSTEM] = "Power";
 		system_names[INITIATIVE_SYSTEM] = "Initiative";
 		system_names[FLUID_SYSTEM] = "Fluids";
+		system_names[LOG_SYSTEM] = "Logging";
     }
 
     void run(const double &duration_ms) {
@@ -68,11 +71,15 @@ namespace systems {
 
         // Items that only run if the simulation has ticked
         if (major_tick) {
+			logging::age_log();
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
 			run_system(fluids::run, duration_ms, FLUID_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
         }
+
+		// Logging goes at the end to catch new messages
+		run_system(logging::run, duration_ms, LOG_SYSTEM);
 
         // Profiler
         if (show_profiler) {

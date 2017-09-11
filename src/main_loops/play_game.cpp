@@ -17,6 +17,7 @@
 #include "../systems/run_systems.hpp"
 #include "../global_assets/game_calendar.hpp"
 #include "../global_assets/game_designations.hpp"
+#include "../global_assets/game_logger.hpp"
 
 namespace play_game {
 
@@ -52,7 +53,7 @@ namespace play_game {
             camera_position = &pos;
             calendar = &cal;
             designations = &design;
-            //logger = &log;
+            logger = &log;
             camera = &camera_prefs;
         });
 

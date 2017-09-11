@@ -14,6 +14,10 @@ namespace bengine {
         float g=0.0;
         float b=0.0;
 
+		bool operator ==(const color_t &B) const {
+			return r == B.r && g == B.g && b == B.b;
+		}
+
         template<class Archive>
         void serialize(Archive & archive)
         {
