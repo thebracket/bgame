@@ -64,7 +64,7 @@ namespace systems {
 
             if (ImGui::IsKeyDown(GLFW_KEY_PAGE_UP)) {
                 --camera->zoom_level;
-                if (camera->zoom_level < 5) camera->zoom_level = 5;
+                if (camera->zoom_level < 2) camera->zoom_level = 2;
                 render::camera_moved = true;
                 render::models_changed = true;
             }
