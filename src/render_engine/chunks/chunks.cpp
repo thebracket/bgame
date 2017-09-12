@@ -110,7 +110,6 @@ namespace chunks {
             case tile_type::WALL : return true;
             case tile_type::TREE_LEAF: return true;
             case tile_type::TREE_TRUNK: return true;
-            case tile_type::WINDOW: return true; // TODO: Handle these separately
             case tile_type::RAMP: return true; // TODO: Handle separately
             case tile_type::SEMI_MOLTEN_ROCK: return true;
             case tile_type::CLOSED_DOOR: return true;
@@ -124,12 +123,14 @@ namespace chunks {
         for (auto &layer : layers) {
             layer.v.clear();
             layer.n_elements = 0;
+			layer.trans.clear();
+			layer.n_trans = 0;
         }
 
         for (int chunk_z = 0; chunk_z < CHUNK_SIZE; ++chunk_z) {
             layer_requires_render.reset(chunk_z);
             has_geometry = false;
-
+			has_transparency = false;
 
             boost::container::flat_map<int, unsigned int> floors;
             boost::container::flat_map<int, unsigned int> cubes;
@@ -144,13 +145,24 @@ namespace chunks {
                     const auto tiletype = region::tile_type(idx);
                     if (tiletype != tile_type::OPEN_SPACE) {
                         if (region::revealed(idx)) {
-                            if (tiletype == tile_type::FLOOR) {
+							if (tiletype == tile_type::WINDOW) {
+								// TODO: Windows go into transparency buffer
+								std::cout << "Added window\n";
+								add_cube_geometry(layers[chunk_z].trans, region_x, region_y, region_z, 1.0f, 1.0f, 15);
+								layers[chunk_z].n_trans += 36;
+								layer_requires_transparency.set(chunk_z);
+							} else if (tiletype == tile_type::FLOOR) {
                                 floors[idx] = get_floor_tex(idx);
                             } else if (is_cube(tiletype)) {
                                 cubes[idx] = get_cube_tex(idx);
-                            }
+							}
                         }
                     }
+					if (region::water_level(idx) > 0) {
+						add_water_geometry(layers[chunk_z].trans, region_x, region_y, region_z, 1.0f, 1.0f, 12, region::water_level(idx));
+						layers[chunk_z].n_trans += 6;
+						layer_requires_transparency.set(chunk_z);
+					}
                 }
             }
 
@@ -161,9 +173,7 @@ namespace chunks {
         }
 
         has_geometry = layer_requires_render.count() > 0;
-
-        // Transform to actual usable geometry
-        //build_buffer();
+		has_transparency = layer_requires_transparency.count() > 0;
 
         // Tell GL to update
         enqueue_vertex_update(index);
@@ -378,6 +388,33 @@ namespace chunks {
         });
     }
 
+	void chunk_t::add_water_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+		const float &width, const float &height, const float &texture_id, const uint8_t &water_level)
+	{
+		const float water_y = static_cast<float>(water_level) / 10.0f;
+		const float x0 = -0.5f + x;
+		const float x1 = x0 + width;
+		const float y0 = -0.5f + z + water_y;
+		//const float y1 = y0 + 1.0f; // We don't use y1 for floors
+		const float z0 = -0.5f + y + water_y;
+		const float z1 = z0 + height;
+		const float TI = texture_id;
+		constexpr float T0 = 0.0f;
+		const float TW = width;
+		const float TH = height;
+		constexpr float ceiling_gap = 0.001f;
+
+		v.insert(v.end(), {
+			// Upwards facing floor
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
+			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+		});
+	}
+
     void chunk_t::update_buffer() {
         if (vbo > 0) glDeleteBuffers(1, &vbo);
         if (vao > 0) glDeleteVertexArrays(1, &vao);
@@ -408,41 +445,39 @@ namespace chunks {
         glEnableVertexAttribArray(2); // 2 = Normals
 
         glBindVertexArray(0);
-
-        /*
-        // Regular geometry
-        for (auto &layer : layers) {
-            if (layer.v.empty()) {
-                //if (layer.vao > 0) glDeleteVertexArrays(1, &layer.vao);
-                //if (layer.vbo > 0) glDeleteBuffers(1, &layer.vbo);
-            } else {
-                if (layer.vao < 1) { glGenVertexArrays(1, &layer.vao); glCheckError(); }
-                if (layer.vbo < 1) { glGenBuffers(1, &layer.vbo); glCheckError(); }
-
-                // Bind and map
-                glBindVertexArray(layer.vao);
-                glBindBuffer(GL_ARRAY_BUFFER, layer.vbo);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * layer.v.size(), &layer.v[0], GL_STATIC_DRAW);
-
-                glBindBuffer(GL_ARRAY_BUFFER, layer.vbo);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
-                glEnableVertexAttribArray(0); // 0 = Vertex Position
-
-                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-                glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
-
-                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-                glEnableVertexAttribArray(2); // 2 = Normals
-
-                glBindVertexArray(0);
-
-                //std::cout << "Bound " << layer.v.size() << " elements to VBO " << layer.vao << "/" << layer.vbo << "\n";
-                layer.n_elements = layer.v.size();
-                has_geometry = true;
-            }
-        }
-        */
     }
+
+	void chunk_t::update_trans_buffer() {
+		if (tvbo > 0) glDeleteBuffers(1, &tvbo);
+		if (tvao > 0) glDeleteVertexArrays(1, &tvao);
+
+		if (tvao < 1) { glGenVertexArrays(1, &tvao); glCheckError(); }
+		if (tvbo < 1) { glGenBuffers(1, &tvbo); glCheckError(); }
+
+		// Combine the layers into a temporary structure
+		std::vector<float> data;
+		for (auto &layer : layers) {
+			data.insert(std::end(data), layer.trans.begin(), layer.trans.end());
+			has_transparency = true;
+			layer.trans.clear();
+		}
+
+		glBindVertexArray(tvao);
+		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0); // 0 = Vertex Position
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+		glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
+
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+		glEnableVertexAttribArray(2); // 2 = Normals
+
+		glBindVertexArray(0);
+	}
 
     void update_buffers() {
         int idx;
@@ -454,6 +489,7 @@ namespace chunks {
             dirty_buffers.erase(idx);
         }
         chunks[idx].update_buffer();
+		chunks[idx].update_trans_buffer();
         chunks[idx].ready.store(true);
     }
 

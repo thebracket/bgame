@@ -36,7 +36,7 @@
         "generator": "Visual Studio 15 2017 Win64",
         "configurationType": "Debug",
         "buildRoot": "${env.USERPROFILE}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
-        "cmakeCommandArgs": "",
+        "cmakeCommandArgs": "-DCMAKE_CXX_FLAGS:STRING=\"/bigobj /EHsc\" -DWIN32:STRING=\"1\"",
         "buildCommandArgs": "-m -v:minimal",
         "ctestCommandArgs": "",
         "variables": [
@@ -51,7 +51,7 @@
         "generator": "Visual Studio 15 2017 Win64",
         "configurationType": "Release",
         "buildRoot": "${env.USERPROFILE}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
-        "cmakeCommandArgs": "",
+        "cmakeCommandArgs": "-DCMAKE_CXX_FLAGS:STRING=\"/Zo /bigobj /EHsc\" -DWIN32:STRING=\"1\"",
         "buildCommandArgs": "-m -v:minimal",
         "ctestCommandArgs": "",
         "variables": [

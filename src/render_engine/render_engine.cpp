@@ -105,6 +105,26 @@ namespace render {
         }
     }
 
+	inline void do_trans_chunk_render() {
+		for (const auto &idx : visible_chunks) {
+			chunks::chunk_t * target = &chunks::chunks[idx];
+			if (target->ready && target->has_transparency) {
+				int n_elements = 0;
+				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
+					const int layer_z = z + target->base_z;
+					if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z - 10) {
+						n_elements += target->layers[z].n_trans;
+					}
+				}
+
+				if (n_elements > 0) {
+					glBindVertexArray(target->tvao);
+					glDrawArrays(GL_TRIANGLES, 0, n_elements);
+				}
+			}
+		}
+	}
+
     inline void render_chunks() {
         // Use the program
 		assets::chunkshader->use();
@@ -122,6 +142,7 @@ namespace render {
         glUniform1i(assets::chunkshader->textureArray, 0);
 
         do_chunk_render();
+		do_trans_chunk_render();
     }
 
     void render_to_light_buffer() {

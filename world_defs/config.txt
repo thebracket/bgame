@@ -1,5 +1,5 @@
-window_width=800
-window_height=600
+window_width=1200
+window_height=900
 game_font=24x24
 gui_font=8x16
 game_font_small=8x8

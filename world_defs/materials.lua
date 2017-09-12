@@ -12,6 +12,8 @@ terrain_textures = {
     red_plastic = { index=tid(), texture=tfn("redplastic") }, -- This is used to indicate a missing texture
     bark = { index=tid(), texture=tfn("bark") },
     leaf = { index=tid(), texture=tfn("leaf") },
+    water = { index=tid(), texture=tfn("water") },
+    window = { index=tid(), texture=tfn("window") },
 
     -- Rock Types
     sandstone = { index=tid(), texture=tfn("sandstone") },

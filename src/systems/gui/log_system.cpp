@@ -44,7 +44,7 @@ namespace systems {
 			process_log_messages();
 
 			if (game_master_mode == PLAY) {
-				std::cout << "Log system render\n";
+				//std::cout << "Log system render\n";
 				if (first_run) {
 					int w, h;
 					glfwGetWindowSize(bengine::main_window, &w, &h);
