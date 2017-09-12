@@ -68,6 +68,7 @@ namespace chunks {
 
     extern bool chunks_initialized;
     void initialize_chunks();
+	void mark_chunk_dirty_by_tileidx(const int &idx);
     void mark_chunk_dirty(const int &idx);
     void mark_chunk_clean(const int &idx);
     void update_dirty_chunks();

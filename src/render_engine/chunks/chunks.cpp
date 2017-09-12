@@ -22,6 +22,12 @@ namespace chunks {
     std::set<int, std::greater<int>> dirty_buffers;
     std::mutex dirty_buffer_mutex;
 
+	void mark_chunk_dirty_by_tileidx(const int &idx) {
+		int x, y, z;
+		std::tie(x, y, z) = idxmap(idx);
+		mark_chunk_dirty(chunk_idx(x / CHUNK_SIZE, y / CHUNK_SIZE, z / CHUNK_SIZE));
+	}
+
     void mark_chunk_dirty(const int &idx) {
         std::lock_guard<std::mutex> lock(dirty_mutex);
         dirty[idx] = true;

@@ -7,6 +7,7 @@
 #include "../../components/game_stats.hpp"
 #include "../../components/health.hpp"
 #include "../../components/water_spawner.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
 #include <vector>
 
 using namespace bengine;
@@ -44,6 +45,7 @@ namespace systems {
 					calc_render(idx);
 					calc_render(idx_west);
 					did_something = true;
+					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
 				else if (x<REGION_WIDTH - 1 && !solid(idx_east) && water_level(idx_east)<my_water_level && water_level(idx_east)<10) {
 					add_water(idx_east);
@@ -51,6 +53,7 @@ namespace systems {
 					calc_render(idx);
 					calc_render(idx_east);
 					did_something = true;
+					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
 				else if (y>0 && !solid(idx_north) && water_level(idx_north)<my_water_level && water_level(idx_north)<10) {
 					add_water(idx_north);
@@ -58,6 +61,7 @@ namespace systems {
 					calc_render(idx);
 					calc_render(idx_north);
 					did_something = true;
+					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
 				else if (y<REGION_HEIGHT - 1 && !solid(idx_south) && water_level(idx_south)<my_water_level && water_level(idx_south)<10) {
 					add_water(idx_south);
@@ -65,6 +69,7 @@ namespace systems {
 					calc_render(idx);
 					calc_render(idx_south);
 					did_something = true;
+					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
 			}
 
@@ -128,11 +133,17 @@ namespace systems {
 				const auto idx = mapidx(pos.x, pos.y, pos.z);
 				if (w.spawner_type == 1 || w.spawner_type == 2) {
 					// TODO: When rainfall is implemented, type 1 only spawns when it rains
-					if (water_level(idx) < 10) set_water_level(idx, 10);
+					if (water_level(idx) < 10) {
+						set_water_level(idx, 10);
+						chunks::mark_chunk_dirty_by_tileidx(idx);
+					}
 				}
 				else {
 					// Type 3 removes water - used to make rivers flow downhill
-					if (water_level(idx) > 0) set_water_level(idx, 0);
+					if (water_level(idx) > 0) {
+						set_water_level(idx, 0);
+						chunks::mark_chunk_dirty_by_tileidx(idx);
+					}
 				}
 			});
 		}
