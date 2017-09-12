@@ -110,7 +110,6 @@ namespace chunks {
             case tile_type::WALL : return true;
             case tile_type::TREE_LEAF: return true;
             case tile_type::TREE_TRUNK: return true;
-            case tile_type::RAMP: return true; // TODO: Handle separately
             case tile_type::SEMI_MOLTEN_ROCK: return true;
             case tile_type::CLOSED_DOOR: return true;
             default: return false;
@@ -147,7 +146,6 @@ namespace chunks {
                         if (region::revealed(idx)) {
 							if (tiletype == tile_type::WINDOW) {
 								// TODO: Windows go into transparency buffer
-								std::cout << "Added window\n";
 								add_cube_geometry(layers[chunk_z].trans, region_x, region_y, region_z, 1.0f, 1.0f, 15);
 								layers[chunk_z].n_trans += 36;
 								layer_requires_transparency.set(chunk_z);
@@ -155,6 +153,14 @@ namespace chunks {
                                 floors[idx] = get_floor_tex(idx);
                             } else if (is_cube(tiletype)) {
                                 cubes[idx] = get_cube_tex(idx);
+							} else if (tiletype == tile_type::RAMP) {
+								// TODO - write me!
+								float ne = 0.0f, se = 0.0f, sw = 0.0f, nw = 0.0f;
+								if (region::solid(idx - 1)) { sw = 1.0f; nw = 1.0f; }
+								else if (region::solid(idx + 1)) { se = 1.0f; ne = 1.0f; }
+								else if (region::solid(idx + REGION_WIDTH)) { nw = 1.0f; ne = 1.0f; }
+								else if (region::solid(idx - REGION_WIDTH)) { sw = 1.0f; se = 1.0f; }
+								add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
 							}
                         }
                     }
@@ -412,6 +418,32 @@ namespace chunks {
 			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
 			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
 			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+		});
+	}
+
+	void chunk_t::add_ramp_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+		const float &width, const float &height, const float &texture_id, const float &ne, const float &se, const float &sw, const float &nw)
+	{
+		const float x0 = -0.5f + x;
+		const float x1 = x0 + width;
+		const float y0 = -0.5f + z;
+		//const float y1 = y0 + 1.0f; // We don't use y1 for floors
+		const float z0 = -0.5f + y;
+		const float z1 = z0 + height;
+		const float TI = texture_id;
+		constexpr float T0 = 0.0f;
+		const float TW = width;
+		const float TH = height;
+		constexpr float ceiling_gap = 0.001f;
+
+		v.insert(v.end(), {
+			// Upwards facing floor
+			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, // NE
+			x1, y0 + se, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, // SE
+			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, // SW
+			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, // SW
+			x0, y0 + nw, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, // NW
+			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, // NE
 		});
 	}
 
