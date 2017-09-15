@@ -24,6 +24,7 @@
 #include "../components/renderable_composite.hpp"
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
+#include "../systems/mouse.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -125,6 +126,10 @@ namespace render {
 		}
 	}
 
+	inline void render_cursor() {
+		// TODO
+	}
+
     inline void render_chunks() {
         // Use the program
 		assets::chunkshader->use();
@@ -143,6 +148,7 @@ namespace render {
 
         do_chunk_render();
 		do_trans_chunk_render();
+		render_cursor();
     }
 
     void render_to_light_buffer() {

@@ -25,7 +25,7 @@ namespace systems {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		mouse_wx = pixels[0] + 0.5f;
-		mouse_wz = pixels[1];
+		mouse_wz = pixels[1] + 0.6f;
 		mouse_wy = pixels[2] + 0.5f;
 
 		//std::cout << mouse_wx << " / " << mouse_wy << " / " << mouse_wz << "\n";

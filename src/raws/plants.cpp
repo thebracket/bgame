@@ -20,6 +20,8 @@ std::size_t get_plant_idx(const std::string &tag) noexcept
 
 plant_t * get_plant_def(const std::size_t &index) noexcept
 {
+	if (index < 0) return nullptr;
+	if (index > plant_defs.size()) return nullptr;
     return &plant_defs[index];
 }
 
