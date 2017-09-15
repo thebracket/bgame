@@ -167,6 +167,7 @@ namespace chunks {
 								else if (region::solid(idx + REGION_WIDTH)) { nw = 1.0f; ne = 1.0f; }
 								else if (region::solid(idx - REGION_WIDTH)) { sw = 1.0f; se = 1.0f; }
 								add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
+								layers[chunk_z].n_elements += 6;
 							}
                         }
                     }
