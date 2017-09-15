@@ -20,44 +20,48 @@ uniform vec3 moon_color;
 
 #define PI 3.1415926
 
-vec3 lambert_diffuse(float NdL, vec3 base_color, vec3 light_color) {
-    return NdL * base_color * light_color;
-}
-
-vec3 fresnel_factor(in vec3 f0, in float product)
-{
-    return mix(f0, vec3(1.0), pow(1.01 - product, 5.0));
-}
-
-float D_GGX(in float roughness, in float NdH)
-{
-    float m = roughness * roughness;
-    float m2 = m * m;
-    float d = (NdH * m2 - NdH) * NdH + 1.0;
-    return m2 / (PI * d * d);
-}
-
-float G_schlick(in float roughness, in float NdV, in float NdL)
-{
-    float k = roughness * roughness * 0.5;
-    float V = NdV * (1.0 - k) + k;
-    float L = NdL * (1.0 - k) + k;
-    return 0.25 / (V * L);
-}
-
-vec3 cooktorrance_specular(in float NdL, in float NdV, in float NdH, in vec3 specular, in float roughness)
-{
-    float rimLight = 1.0;
-
-    float D = D_GGX(roughness, NdH);
-    float G = G_schlick(roughness, NdV, NdL);
-    float rim = mix(1.0 - roughness * rimLight * 0.9, 1.0, NdV);
-
-    return (1.0 / rim) * specular * G * D;
-}
-
 vec3 degamma(vec3 col) {
     return pow(col, vec3(2.2));
+}
+
+float DistributionGGX(vec3 N, vec3 H, float roughness)
+{
+    float a = roughness*roughness;
+    float a2 = a*a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return nom / denom;
+}
+
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
+}
+
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 void main()
@@ -77,67 +81,53 @@ void main()
     // Retrieve information from the world texture
     vec3 outdoor_x_y = texture(info_tex, world_sampler_pos).rgb;
     vec3 light_position = texture(light_pos_tex, world_sampler_pos).rgb * 256.0;
-    //light_position.y += 0.48;
-    light_position.xyz += 0.5;
+    light_position.y += 0.5;
     vec3 light_color = degamma(texture(light_col_tex, world_sampler_pos).rgb);
 
-    // Output components
-    vec3 ambient_color = outdoor_x_y.r > 0.0 ? vec3(1.0, 1.0, 1.0) : light_color;
-    vec3 ambient_ref = base_color * ambient_occlusion * ambient_color;
-    vec3 diffuse_ref = vec3(0.0);
-    vec3 specular_ref = vec3(0.0);
-
-    // Calculated variables
-    vec3 Lsun = normalize(sun_direction);     // Lx - light position minus world position
-    vec3 Lmoon = normalize(moon_direction);
-    vec3 Llight = normalize(light_position - position);
-    vec3 V = normalize(-position); // V - negative position
-    vec3 Hsun = normalize(Lsun + V);
-    vec3 Hmoon = normalize(Lmoon + V);
-    vec3 Hlight = normalize(Llight + V);
+    // Use https://learnopengl.com/code_viewer_gh.php?code=src/6.pbr/1.2.lighting_textured/1.2.pbr.fs
+    vec3 albedo = degamma(texture(albedo_tex, TexCoords).rgb);
     vec3 N = normal;
+    vec3 V = normalize(camera_position - position);
+    vec3 F0 = vec3(0.04); 
+    F0 = mix(F0, albedo, metallic);
 
-    float NdLsun = max(0.0, dot(N, Lsun));
-    float NdLmoon = max(0.0, dot(N, Lmoon));
-    float NdLlight = max(0.0, dot(N, Llight));
-    float NdV = max(0.001, dot(N, V));
-    float NdHsun = max(0.001, dot(N, Hsun));
-    float NdHmoon = max(0.001, dot(N, Hmoon));
-    float NdHlight = max(0.001, dot(N, Hlight));
-    float HsundV = max(0.001, dot(Hsun, V));
-    float HmoondV = max(0.001, dot(Hmoon, V));
-    float HlightdV = max(0.001, dot(Hlight, V));
-    float LsundV = max(0.001, dot(Lsun, V));
-    float LmoondV = max(0.001, dot(Lmoon, V));
-    float LlightdV = max(0.001, dot(Lsun, V));
+    vec3 Lo = vec3(0.0); // Light Output
 
-    // Sunlight
-    vec3 sun_diffuse_color = base_color;
-    diffuse_ref += outdoor_x_y.r > 0.0 ? lambert_diffuse(NdLsun, base_color, sun_color) : vec3(0.0);
-    vec3 specSunfresnel = fresnel_factor(specular_color, HsundV);
-    specular_ref += cooktorrance_specular(NdLsun, NdV, NdHsun, specSunfresnel, roughness) * NdLsun;
+    // For the game-defined light
+    vec3 L = normalize(light_position.xyz - position);
+    vec3 H = normalize(V + L);
+    float distance = length(light_position.xyz - position);
+    float attenuation = (1.0 / (distance)) * 1.5;
+    vec3 radiance = light_color * attenuation;
+    
+    float NDF = DistributionGGX(N, H, roughness);   
+    float G   = GeometrySmith(N, V, L, roughness);      
+    vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        
+    vec3 nominator    = NDF * G * F; 
+    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+    vec3 specular = nominator / denominator;
+    
+    // kS is equal to Fresnel
+    vec3 kS = F;
+    // for energy conservation, the diffuse and specular light can't
+    // be above 1.0 (unless the surface emits light); to preserve this
+    // relationship the diffuse component (kD) should equal 1.0 - kS.
+    vec3 kD = vec3(1.0) - kS;
+    // multiply kD by the inverse metalness such that only non-metals 
+    // have diffuse lighting, or a linear blend if partly metal (pure metals
+    // have no diffuse light).
+    kD *= 1.0 - metallic;	  
 
-    // Moonlight
-    vec3 moon_diffuse_color = base_color;
-    diffuse_ref += outdoor_x_y.r > 0.0 ? lambert_diffuse(NdLmoon, base_color, moon_color) : vec3(0.0);
-    vec3 specMoonfresnel = fresnel_factor(specular_color, HmoondV);
-    specular_ref += cooktorrance_specular(NdLsun, NdV, NdHmoon, specMoonfresnel, roughness) * NdLmoon;
+    // scale light by NdotL
+    float NdotL = max(dot(N, L), 0.0);        
 
-    // Game lights
-    vec3 light_diffuse_color = base_color;
-    float light_distance = distance(light_position, position);
-    float attenuation = 1.0/light_distance;
-    diffuse_ref += lambert_diffuse(NdLlight, base_color, light_color) * attenuation;
-    vec3 specLightfresnel = fresnel_factor(specular_color, HlightdV);
-    specular_ref += cooktorrance_specular(NdLlight, NdV, NdHlight, specLightfresnel, roughness) * NdLlight * light_color;
-
-    // Limit the total light delivery
-    //vec3 diffuse_amount = (vec3(1.0) - (specLightfresnel + specSunfresnel));
+    // add to outgoing radiance Lo
+    Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 
     // Final color
-    //vec3 final_color = ambient + diffuse;
-    vec3 final_color = (ambient_ref * 0.1) + (diffuse_ref * 0.7) + specular_ref;
-    FragColor = final_color;
+    vec3 ambient = vec3(0.03) * albedo * ambient_occlusion;
+    FragColor = ambient + Lo;
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0) BrightColor = FragColor.rgb;

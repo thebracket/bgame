@@ -69,8 +69,8 @@ namespace render {
             int nx, ny, nz;
             std::tie(nx, ny, nz) = idxmap(light_pos);
 
-            const float distance_new_light = bengine::distance3d_squared(tx, ty, tz, nx, ny, nz);
-            const float distance_old_light = bengine::distance3d_squared(tx, ty, tz, lx, ly, lz);
+            const float distance_new_light = bengine::distance3d(tx, ty, tz, nx, ny, nz);
+            const float distance_old_light = bengine::distance3d(tx, ty, tz, lx, ly, lz);
 
             if (distance_new_light < distance_old_light) {
                 finder->second.first = light_pos;
