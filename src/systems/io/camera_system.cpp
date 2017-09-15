@@ -6,6 +6,7 @@
 #include "../../planet/constants.hpp"
 #include "../../render_engine/render_engine.hpp"
 #include "../keydamper.hpp"
+#include "../mouse.hpp"
 
 namespace systems {
     namespace camerasys {
@@ -63,14 +64,14 @@ namespace systems {
                 render::models_changed = true;
             }
 
-            if (is_key_down(GLFW_KEY_PAGE_UP, false)) {
+            if (is_key_down(GLFW_KEY_PAGE_UP, false) || wheel_up) {
                 --camera->zoom_level;
                 if (camera->zoom_level < 2) camera->zoom_level = 2;
                 render::camera_moved = true;
                 render::models_changed = true;
             }
 
-            if (is_key_down(GLFW_KEY_PAGE_DOWN, false)) {
+            if (is_key_down(GLFW_KEY_PAGE_DOWN, false) || wheel_down) {
                 ++camera->zoom_level;
                 if (camera->zoom_level > 50) camera->zoom_level = 50;
                 render::camera_moved = true;

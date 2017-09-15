@@ -16,6 +16,7 @@
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../bengine/gl_include.hpp"
 #include "keydamper.hpp"
+#include "mouse.hpp"
 #include <chrono>
 
 namespace systems {
@@ -67,6 +68,7 @@ namespace systems {
         }
 
 		add_time(duration_ms); // Add time to the key damper
+		poll_mouse();
 
         run_system(tick::run, duration_ms, TICK_SYSTEM);
         run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);

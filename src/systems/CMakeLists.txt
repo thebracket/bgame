@@ -1,4 +1,4 @@
-add_library(systems run_systems.cpp keydamper.cpp)
+add_library(systems run_systems.cpp keydamper.cpp mouse.cpp)
 add_subdirectory(io)
 add_subdirectory(gui)
 add_subdirectory(scheduler)
