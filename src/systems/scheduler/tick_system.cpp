@@ -3,6 +3,7 @@
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../../bengine/gl_include.hpp"
+#include "../keydamper.hpp"
 
 namespace systems {
     namespace tick {
@@ -16,14 +17,14 @@ namespace systems {
             hour_elapsed = false;
             day_elapsed = false;
 
-            if (ImGui::IsKeyDown(GLFW_KEY_SPACE)) {
+            if (is_key_down(GLFW_KEY_SPACE)) {
                 if (pause_mode == PAUSED) {
                     pause_mode = RUNNING;
                 } else {
                     pause_mode = PAUSED;
                 }
             }
-            if (ImGui::IsKeyDown(GLFW_KEY_PERIOD)) {
+            if (is_key_down(GLFW_KEY_SLASH)) {
                 pause_mode = ONE_STEP;
             }
 
