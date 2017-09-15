@@ -64,6 +64,48 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+vec3 calculateLightOutput(vec3 albedo, vec3 N, vec3 V, vec3 F0, vec3 L, vec3 radiance, float roughness, float metallic) {
+    vec3 H = normalize(V + L);
+    float NDF = DistributionGGX(N, H, roughness);   
+    float G   = GeometrySmith(N, V, L, roughness);      
+    vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        
+    vec3 nominator    = NDF * G * F; 
+    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+    vec3 specular = nominator / denominator;
+    
+    // kS is equal to Fresnel
+    vec3 kS = F;
+    // for energy conservation, the diffuse and specular light can't
+    // be above 1.0 (unless the surface emits light); to preserve this
+    // relationship the diffuse component (kD) should equal 1.0 - kS.
+    vec3 kD = vec3(1.0) - kS;
+    // multiply kD by the inverse metalness such that only non-metals 
+    // have diffuse lighting, or a linear blend if partly metal (pure metals
+    // have no diffuse light).
+    kD *= 1.0 - metallic;	  
+
+    // scale light by NdotL
+    float NdotL = max(dot(N, L), 0.0);
+
+    return (kD * albedo / PI + specular) * radiance * NdotL;
+}
+
+vec3 gameLight(vec3 albedo, vec3 N, vec3 V, vec3 F0, float roughness, float metallic, vec3 light_position, vec3 position, vec3 light_color) {
+    vec3 L = normalize(light_position.xyz - position);    
+    float distance = length(light_position.xyz - position);
+    float attenuation = (1.0 / (distance)) * 1.5;
+    vec3 radiance = light_color * attenuation;
+
+    return calculateLightOutput(albedo, N, V, F0, L, radiance, roughness, metallic);
+}
+
+vec3 celestialLight(vec3 albedo, vec3 N, vec3 V, vec3 F0, float roughness, float metallic, vec3 light_direction, vec3 light_color) {
+    vec3 L = normalize(light_direction);    
+
+    return calculateLightOutput(albedo, N, V, F0, L, light_color, roughness, metallic);
+}
+
 void main()
 {
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
@@ -94,36 +136,11 @@ void main()
     vec3 Lo = vec3(0.0); // Light Output
 
     // For the game-defined light
-    vec3 L = normalize(light_position.xyz - position);
-    vec3 H = normalize(V + L);
-    float distance = length(light_position.xyz - position);
-    float attenuation = (1.0 / (distance)) * 1.5;
-    vec3 radiance = light_color * attenuation;
-    
-    float NDF = DistributionGGX(N, H, roughness);   
-    float G   = GeometrySmith(N, V, L, roughness);      
-    vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
-        
-    vec3 nominator    = NDF * G * F; 
-    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
-    vec3 specular = nominator / denominator;
-    
-    // kS is equal to Fresnel
-    vec3 kS = F;
-    // for energy conservation, the diffuse and specular light can't
-    // be above 1.0 (unless the surface emits light); to preserve this
-    // relationship the diffuse component (kD) should equal 1.0 - kS.
-    vec3 kD = vec3(1.0) - kS;
-    // multiply kD by the inverse metalness such that only non-metals 
-    // have diffuse lighting, or a linear blend if partly metal (pure metals
-    // have no diffuse light).
-    kD *= 1.0 - metallic;	  
+    Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz, position.xyz, light_color.rgb);
 
-    // scale light by NdotL
-    float NdotL = max(dot(N, L), 0.0);        
-
-    // add to outgoing radiance Lo
-    Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+    // Sun/moon
+    Lo += celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
+    Lo += celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
 
     // Final color
     vec3 ambient = vec3(0.03) * albedo * ambient_occlusion;
