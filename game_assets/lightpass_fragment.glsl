@@ -65,7 +65,7 @@ void main()
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb;
-    vec3 world_sampler_pos = vec3((position.x + 0.5) / 256.0, (position.z + 0.5) / 256.0, (position.y + 0.5) / 128.0);
+    vec3 world_sampler_pos = vec3((position.x + 0.5) / 256.0, (position.z + 0.5) / 256.0, (position.y + 0.6) / 128.0);
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;
@@ -77,8 +77,8 @@ void main()
     // Retrieve information from the world texture
     vec3 outdoor_x_y = texture(info_tex, world_sampler_pos).rgb;
     vec3 light_position = texture(light_pos_tex, world_sampler_pos).rgb * 256.0;
-    light_position.y += 0.48;
-    light_position.z += 1.0;
+    //light_position.y += 0.48;
+    light_position.xyz += 0.5;
     vec3 light_color = degamma(texture(light_col_tex, world_sampler_pos).rgb);
 
     // Output components
