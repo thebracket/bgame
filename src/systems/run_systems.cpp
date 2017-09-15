@@ -1,6 +1,7 @@
 #include <ctime>
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
+#include "gui/tooltip_system.hpp"
 #include "gui/hud_system.hpp"
 #include "gui/log_system.hpp"
 #include "scheduler/tick_system.hpp"
@@ -28,6 +29,7 @@ namespace systems {
 	constexpr int INITIATIVE_SYSTEM = 6;
 	constexpr int FLUID_SYSTEM = 7;
 	constexpr int LOG_SYSTEM = 8;
+	constexpr int TOOLTIP_SYSTEM = 9;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -60,6 +62,7 @@ namespace systems {
 		system_names[INITIATIVE_SYSTEM] = "Initiative";
 		system_names[FLUID_SYSTEM] = "Fluids";
 		system_names[LOG_SYSTEM] = "Logging";
+		system_names[TOOLTIP_SYSTEM] = "Tooltips";
     }
 
     void run(const double &duration_ms) {
@@ -73,6 +76,7 @@ namespace systems {
         run_system(tick::run, duration_ms, TICK_SYSTEM);
         run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
         run_system(hud::run, duration_ms, HUD_SYSTEM);
+		run_system(tooltips::run, duration_ms, TOOLTIP_SYSTEM);
 
         // Items that only run if the simulation has ticked
         if (major_tick) {

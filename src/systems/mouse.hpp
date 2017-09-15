@@ -8,6 +8,9 @@ namespace systems {
 	extern bool middle_click;
 	extern bool wheel_up;
 	extern bool wheel_down;
+	extern int mouse_wx;
+	extern int mouse_wy;
+	extern int mouse_wz;
 
 	void poll_mouse();
 }
