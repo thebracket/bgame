@@ -15,6 +15,7 @@
 #include "worldgen.hpp"
 #include "../bengine/telemetry.hpp"
 #include "play_game.hpp"
+#include <algorithm>
 
 namespace main_menu {
     bool initialized = false;
@@ -70,6 +71,10 @@ namespace main_menu {
         initialized = true;
     }
 
+	float calc_indent(const float window_width, const float text_width) {
+		return window_width / 2.0f - text_width / 2.0f;
+	}
+
     void tick(const double &duration_ms) {
         if (!initialized) init();
 
@@ -102,25 +107,46 @@ namespace main_menu {
 
         // Main Menu Buttons
         if (!show_options) {
-            ImGui::SetNextWindowPosCenter();
-            ImGui::Begin("MainMenu", nullptr, ImVec2{400, 400}, 0.0f,
+			constexpr int BUTTON_ADD = 20;
+			const auto tagline_size = ImGui::CalcTextSize(tagline.c_str());
+			const auto kylah_size = ImGui::CalcTextSize(kylah.c_str());
+			const float window_width = std::max(tagline_size.x, kylah_size.x);
+			const float play_size = ImGui::CalcTextSize(menu_play.c_str()).x + BUTTON_ADD;
+			const float gen_size = ImGui::CalcTextSize(menu_gen.c_str()).x + BUTTON_ADD;
+			const float opts_size = ImGui::CalcTextSize(menu_opts.c_str()).x + BUTTON_ADD;
+			const float quit_size = ImGui::CalcTextSize(menu_quit.c_str()).x + BUTTON_ADD;
+			const float tagline_indent = calc_indent(window_width, tagline_size.x);
+			const float play_indent = calc_indent(window_width, play_size);
+			const float gen_indent = calc_indent(window_width, gen_size);
+			const float opts_indent = calc_indent(window_width, opts_size);
+			const float quit_indent = calc_indent(window_width, quit_size);
+			const float kylah_indent = calc_indent(window_width, kylah_size.x);
+
+			ImGui::SetNextWindowPosCenter();
+            ImGui::Begin("MainMenu", nullptr, ImVec2{window_width, 400}, 0.0f,
                          ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
+			ImGui::SetCursorPosX(tagline_indent);
             ImGui::TextColored(red, "%s", tagline.c_str());
             if (world_exists) {
+				ImGui::SetCursorPosX(play_indent);
                 if (ImGui::Button(menu_play.c_str())) {
                     bengine::main_func = play_game::tick;
                 }
             }
-            if (ImGui::Button(menu_gen.c_str())) {
+			ImGui::SetCursorPosX(gen_indent);
+			if (ImGui::Button(menu_gen.c_str())) {
                 bengine::main_func = worldgen::tick;
             }
+			ImGui::SetCursorPosX(opts_indent);
             if (ImGui::Button(menu_opts.c_str())) {
                 show_options = true;
             }
-            if (ImGui::Button(menu_quit.c_str())) {
+			ImGui::SetCursorPosX(quit_indent);
+			if (ImGui::Button(menu_quit.c_str())) {
                 //stop_telemetry();
                 glfwSetWindowShouldClose(bengine::main_window, true);
             }
+			ImGui::SetCursorPosX(kylah_indent);
             ImGui::TextColored(red, "%s", kylah.c_str());
             ImGui::End();
         } else {
