@@ -78,6 +78,7 @@ namespace systems {
 					}
 					lines.push_back(ss.str());
 				}
+				// TODO: Fix me!
 				/*if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
 					if (veg_type(tile_idx) > 0) {
 						std::stringstream ss;

@@ -6,6 +6,7 @@
 #include "IconsFontAwesome.h"
 #include "telemetry.hpp"
 #include "filesystem.hpp"
+#include "imgui_style.hpp"
 #include <chrono>
 
 namespace bengine {
@@ -78,6 +79,8 @@ namespace bengine {
 		const std::string fontawesome_path = "game_assets/fontawesome-webfont.ttf";
 		if (!exists(fontawesome_path)) throw std::runtime_error("Unable to load Font Awesome");
 		io.Fonts->AddFontFromFileTTF(fontawesome_path.c_str(), gui_font_size, &config, icon_ranges);
+
+		setup_imgui_style();
 
         ImGui_ImplGlfwGL3_Init(main_window, true);
     }
