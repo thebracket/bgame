@@ -108,6 +108,6 @@ namespace bengine {
 	}
 
 	inline void setup_imgui_style() {
-		setup_imgui_style_light();
+		setup_imgui_style_green();
 	}
 }

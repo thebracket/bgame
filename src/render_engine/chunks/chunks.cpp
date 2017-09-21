@@ -500,6 +500,7 @@ namespace chunks {
 			has_transparency = true;
 			layer.trans.clear();
 		}
+		if (data.size() == 0) return;
 
 		glBindVertexArray(tvao);
 		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
@@ -519,12 +520,12 @@ namespace chunks {
 	}
 
     void update_buffers() {
-        int idx;
-        chunks[idx].ready.store(false);
+        int idx;        
         {
             std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
             if (dirty_buffers.empty()) return;
             idx = *dirty_buffers.begin();
+			chunks[idx].ready.store(false);
             dirty_buffers.erase(idx);
         }
         chunks[idx].update_buffer();

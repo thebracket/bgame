@@ -63,7 +63,7 @@ uint32_t pcg32_random_r(pcg32_random_t* rng)
     rng->state = oldstate * 6364136223846793005ULL + rng->inc;
     uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
     uint32_t rot = oldstate >> 59u;
-    return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+    return (uint32_t)((xorshifted >> rot) | (xorshifted << ((-rot) & 31)));
 }
 
 uint32_t pcg32_random()

@@ -174,7 +174,8 @@ namespace vox {
 
     /* Allocates a buffer and reads the contents of the file into it */
     void read_file(const char *path, size_t *len, char **buf) {
-        FILE *handle = fopen(path, "rb");
+		FILE *handle;
+		handle = fopen(path, "rb");
         if (!handle) {
             fputs("Error: Could not read file, are you sure it exists?\n", stderr);
             exit(-1);

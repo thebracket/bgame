@@ -18,6 +18,7 @@
 #include "../global_assets/game_calendar.hpp"
 #include "../global_assets/game_designations.hpp"
 #include "../global_assets/game_logger.hpp"
+#include "../global_assets/game_mode.hpp"
 
 namespace play_game {
 
@@ -70,6 +71,8 @@ namespace play_game {
         std::cout << "ECS Config\n";
         ecs_configure();
         std::cout << "Go!\n";
+
+		game_master_mode = PLAY;
 
         loaded = true;
     }

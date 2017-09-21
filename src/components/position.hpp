@@ -11,8 +11,8 @@ struct position_t {
     float offsetZ = 0;
 
 	position_t() {}
-	position_t(const int &X, const int &Y, const int &Z) : x(static_cast<float>(X)), y(static_cast<float>(Y)), z(Z) {}
-    position_t(const float &X, const float &Y, const int &Z) : x(X), y(Y), z(Z) {}
+	position_t(const int &X, const int &Y, const int &Z) : x(static_cast<int>(X)), y(static_cast<int>(Y)), z(Z) {}
+    position_t(const float &X, const float &Y, const int &Z) : x(static_cast<int>(X)), y(static_cast<int>(Y)), z(Z) {}
 	bool operator==(position_t &rhs) { return (x==rhs.x && y==rhs.y && z==rhs.z); }
 
 	template<class Archive>

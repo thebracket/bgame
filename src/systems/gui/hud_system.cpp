@@ -9,6 +9,7 @@
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/game_calendar.hpp"
 #include "../../global_assets/game_pause.hpp"
+#include "../../global_assets/game_mode.hpp"
 #include <string>
 #include <sstream>
 
@@ -138,9 +139,8 @@ namespace systems {
                     emit_deferred(map_dirty_message{});*/
                 }
                 if (ImGui::MenuItem(menu_units_civs.c_str())) {
-                    /*game_master_mode = CIVS;
+                    game_master_mode = CIVS;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});*/
                 }
                 if (ImGui::MenuItem(menu_units_standing_orders.c_str())) {
                     /*game_master_mode = STANDING_ORDERS;

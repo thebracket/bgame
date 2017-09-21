@@ -4,6 +4,7 @@
 #include "gui/tooltip_system.hpp"
 #include "gui/hud_system.hpp"
 #include "gui/log_system.hpp"
+#include "gui/civ_ui_system.hpp"
 #include "scheduler/tick_system.hpp"
 #include "../global_assets/game_pause.hpp"
 #include "scheduler/calendar_system.hpp"
@@ -18,6 +19,7 @@
 #include "../bengine/gl_include.hpp"
 #include "keydamper.hpp"
 #include "mouse.hpp"
+#include "../global_assets/game_mode.hpp"
 #include <chrono>
 
 namespace systems {
@@ -30,6 +32,7 @@ namespace systems {
 	constexpr int FLUID_SYSTEM = 7;
 	constexpr int LOG_SYSTEM = 8;
 	constexpr int TOOLTIP_SYSTEM = 9;
+	constexpr int CIVUI_SYSTEM = 10;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -63,20 +66,26 @@ namespace systems {
 		system_names[FLUID_SYSTEM] = "Fluids";
 		system_names[LOG_SYSTEM] = "Logging";
 		system_names[TOOLTIP_SYSTEM] = "Tooltips";
+		system_names[CIVUI_SYSTEM] = "Civ UI";
+		game_master_mode = PLAY;
     }
 
-    void run(const double &duration_ms) {
-        if (ImGui::IsKeyDown(GLFW_KEY_P)) {
-            show_profiler = !show_profiler;
-        }
+	void run(const double &duration_ms) {
+		if (ImGui::IsKeyDown(GLFW_KEY_P)) {
+			show_profiler = !show_profiler;
+		}
 
 		add_time(duration_ms); // Add time to the key damper
 		poll_mouse();
 
-        run_system(tick::run, duration_ms, TICK_SYSTEM);
-        run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
-        run_system(hud::run, duration_ms, HUD_SYSTEM);
+		run_system(tick::run, duration_ms, TICK_SYSTEM);
+		run_system(camerasys::run, duration_ms, CAMERA_SYSTEM);
+		run_system(hud::run, duration_ms, HUD_SYSTEM);
 		run_system(tooltips::run, duration_ms, TOOLTIP_SYSTEM);
+		if (game_master_mode == CIVS || game_master_mode == CIV_NEGOTIATE)
+		{
+			run_system(civ_ui::run, duration_ms, CIVUI_SYSTEM);
+		}
 
         // Items that only run if the simulation has ticked
         if (major_tick) {
