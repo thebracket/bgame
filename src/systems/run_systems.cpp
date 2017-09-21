@@ -5,6 +5,8 @@
 #include "gui/hud_system.hpp"
 #include "gui/log_system.hpp"
 #include "gui/civ_ui_system.hpp"
+#include "gui/settler_info_system.hpp"
+#include "gui/units_info_system.hpp"
 #include "scheduler/tick_system.hpp"
 #include "../global_assets/game_pause.hpp"
 #include "scheduler/calendar_system.hpp"
@@ -33,6 +35,8 @@ namespace systems {
 	constexpr int LOG_SYSTEM = 8;
 	constexpr int TOOLTIP_SYSTEM = 9;
 	constexpr int CIVUI_SYSTEM = 10;
+	constexpr int SETTLERUI_SYSTEM = 11;
+	constexpr int UNITSUI_SYSTEM = 12;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -67,6 +71,8 @@ namespace systems {
 		system_names[LOG_SYSTEM] = "Logging";
 		system_names[TOOLTIP_SYSTEM] = "Tooltips";
 		system_names[CIVUI_SYSTEM] = "Civ UI";
+		system_names[SETTLERUI_SYSTEM] = "Settler UI";
+		system_names[UNITSUI_SYSTEM] = "Units UI";
 		game_master_mode = PLAY;
     }
 
@@ -85,6 +91,12 @@ namespace systems {
 		if (game_master_mode == CIVS || game_master_mode == CIV_NEGOTIATE)
 		{
 			run_system(civ_ui::run, duration_ms, CIVUI_SYSTEM);
+		}
+		else if (game_master_mode == UNITS) {
+			run_system(units_ui::run, duration_ms, UNITSUI_SYSTEM);
+		}
+		else if (game_master_mode == SETTLER) {
+			run_system(settler_ui::run, duration_ms, SETTLERUI_SYSTEM);
 		}
 
         // Items that only run if the simulation has ticked

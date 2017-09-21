@@ -228,42 +228,6 @@
     <ClCompile Include="..\..\src\components\species.cpp">
       <Filter>Source Files\components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_calendar.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_camera.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_config.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_designations.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_logger.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_mode.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_pause.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\game_planet.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\rng.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\shader_storage.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\spatial_db.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\texture_storage.cpp">
-      <Filter>Header Files\global_assets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\main_loops\main_menu.cpp">
       <Filter>Source Files\main_loops</Filter>
     </ClCompile>
@@ -452,6 +416,48 @@
     </ClCompile>
     <ClCompile Include="..\..\src\raws\buildings_raw.cpp">
       <Filter>Source Files\raws</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_calendar.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_camera.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_config.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_designations.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_logger.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_mode.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_pause.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_planet.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\rng.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\shader_storage.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\spatial_db.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\texture_storage.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp">
+      <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -764,45 +770,6 @@
     <ClInclude Include="..\..\src\components\helpers\unbuild_t.hpp">
       <Filter>Header Files\components\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\constants.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_calendar.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_camera.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_config.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_designations.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_logger.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_mode.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_pause.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\game_planet.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\rng.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\shader_storage.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\spatial_db.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\global_assets\texture_storage.hpp">
-      <Filter>Source Files\global_assets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\main_loops\main_menu.hpp">
       <Filter>Header Files\main_loops</Filter>
     </ClInclude>
@@ -1057,6 +1024,51 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\scheduler\tick_system.hpp">
       <Filter>Header Files\systems\scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\settler_info_system.hpp">
+      <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\texture_storage.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\constants.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_calendar.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_camera.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_config.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_designations.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_logger.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_mode.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_pause.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_planet.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\rng.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\shader_storage.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\spatial_db.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp">
+      <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -208,7 +208,9 @@
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\tooltip_system.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\io\camera_system.cpp" />
     <ClCompile Include="..\..\src\systems\keydamper.cpp" />
     <ClCompile Include="..\..\src\systems\mouse.cpp" />
@@ -411,7 +413,9 @@
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\settler_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\tooltip_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\io\camera_system.hpp" />
     <ClInclude Include="..\..\src\systems\keydamper.hpp" />
     <ClInclude Include="..\..\src\systems\mouse.hpp" />

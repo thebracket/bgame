@@ -129,9 +129,8 @@ namespace systems {
             }
             if (ImGui::BeginMenu(menu_units.c_str())) {
                 if (ImGui::MenuItem(menu_units_units.c_str())) {
-                    /*game_master_mode = UNITS;
+                    game_master_mode = UNITS;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});*/
                 }
                 if (ImGui::MenuItem(menu_units_workflow.c_str())) {
                     /*game_master_mode = WORKFLOW;
