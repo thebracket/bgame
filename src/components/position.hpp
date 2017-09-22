@@ -9,16 +9,19 @@ struct position_t {
     float offsetX = 0;
     float offsetY = 0;
     float offsetZ = 0;
+	int rotation = 0;
 
 	position_t() {}
-	position_t(const int &X, const int &Y, const int &Z) : x(static_cast<int>(X)), y(static_cast<int>(Y)), z(Z) {}
+	position_t(const int &X, const int &Y, const int &Z) : x(X), y(Y), z(Z) {}
     position_t(const float &X, const float &Y, const int &Z) : x(static_cast<int>(X)), y(static_cast<int>(Y)), z(Z) {}
+	position_t(const int &X, const int &Y, const int &Z, const int &rot) : x(X), y(Y), z(Z), rotation(rot) {}
+	position_t(const float &X, const float &Y, const int &Z, const int &rot) : x(static_cast<int>(X)), y(static_cast<int>(Y)), z(Z), rotation(rot) {}
 	bool operator==(position_t &rhs) { return (x==rhs.x && y==rhs.y && z==rhs.z); }
 
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( x, y, z, offsetX, offsetY, offsetZ ); // serialize things by passing them to the archive
+		archive( x, y, z, offsetX, offsetY, offsetZ, rotation ); // serialize things by passing them to the archive
 	}
 };
 

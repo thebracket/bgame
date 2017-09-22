@@ -207,7 +207,11 @@ namespace splash_screen {
         vox::load_vox("game_assets/vox/person-base.vox", "person-base");
         vox::load_vox("game_assets/vox/replicator-small.vox", "replicator-small");
         vox::load_vox("game_assets/vox/solarpanel.vox", "solarpanel");
-    }
+		vox::load_vox("game_assets/vox/person-hair-short.vox", "shorthair");
+		vox::load_vox("game_assets/vox/person-hair-long.vox", "longhair");
+		vox::load_vox("game_assets/vox/person-hair-pigtails.vox", "pigtails");
+		vox::load_vox("game_assets/vox/person-hair-mohawk.vox", "mohawk");
+	}
 
     void tick(const double &duration_ms) {
         run_time += duration_ms;

@@ -54,11 +54,11 @@ namespace render {
 		const auto y = (float)pos.z;
 		auto z = (float)pos.y;
 		if (finder != models_to_render->end()) {
-			finder->second.push_back(vox::instance_t{ x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, color.r, color.g, color.b });
+			finder->second.push_back(vox::instance_t{ x, y, z, 0.0f, 1.0f, 0.0f, pos.rotation * 0.0174533f, color.r, color.g, color.b });
 		}
 		else {
-			models_to_render->insert(std::make_pair(7, std::vector<vox::instance_t>{vox::instance_t{
-				x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, color.r, color.g, color.b
+			models_to_render->insert(std::make_pair(model_id, std::vector<vox::instance_t>{vox::instance_t{
+				x, y, z, 0.0f, 1.0f, 0.0f, pos.rotation * 0.0174533f, color.r, color.g, color.b
 			}}));
 		}
 	}
@@ -69,6 +69,16 @@ namespace render {
 		if (!species) return;
 
 		add_composite_layer(7, pos, species->skin_color.second);
+
+		switch (species->hair_style) {
+		case SHORT_HAIR: add_composite_layer(10, pos, species->hair_color.second);
+		case LONG_HAIR: add_composite_layer(11, pos, species->hair_color.second);
+		case PIGTAILS: add_composite_layer(12, pos, species->hair_color.second);
+		case MOHAWK: add_composite_layer(13, pos, species->hair_color.second);
+		case BALDING: add_composite_layer(10, pos, species->hair_color.second);
+		case TRIANGLE: add_composite_layer(10, pos, species->hair_color.second);
+		default: {}
+		}
 	}
 
 	void render_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
