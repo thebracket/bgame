@@ -1,5 +1,6 @@
 glyphs.lua
 materials.lua
+voxel_models.lua
 vegetation.lua
 stockpiles.lua
 clothing.lua

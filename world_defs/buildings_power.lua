@@ -15,7 +15,7 @@ buildings["solar_panel"] = {
             {glyph=glyphs['hash'], foreground = colors['cyan'], background = colors['white']}
         }
     },
-    vox=9
+    vox=voxelId("solar_panel")
 };
 
 buildings["battery"] = {
@@ -33,7 +33,7 @@ buildings["battery"] = {
             {glyph=glyphs['plus_minus'], foreground = colors['red'], background = colors['black']}
         }
     },
-    vox=5
+    vox=voxelId("battery")
 };
 
 buildings["rtg"] = {
@@ -51,5 +51,5 @@ buildings["rtg"] = {
             {glyph=glyphs['plus_minus'], foreground = colors['green'], background = colors['black']}
         }
     },
-    vox=3
+    vox=voxelId("rtg")
 };

@@ -65,6 +65,7 @@ void load_game_tables()
 {
     read_material_types();
     read_material_textures();
+	read_voxel_models();
     read_clothing();
     read_life_events();
     read_professions();

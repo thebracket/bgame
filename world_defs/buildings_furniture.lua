@@ -15,7 +15,7 @@ buildings["cryo_bed"] = {
             {glyph=glyphs['eight'], foreground = colors['white'], background = colors['black']}
         }
     },
-    vox=1
+    vox=voxelId("cryobed")
 };
 
 buildings["storage_locker"] = {

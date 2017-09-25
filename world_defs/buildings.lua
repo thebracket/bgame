@@ -4,7 +4,7 @@ buildings = {
 		components = { { item="cordex_core", qty=1} },
 		skill = { name="Construction", difficulty=25 },
 		render_rex = "cordex.xp",
-        vox=6
+        vox=voxelId("cordex")
 	},
 	lamp = {
 		name = "Lamp",
@@ -13,7 +13,7 @@ buildings = {
 		render = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black']} } },
 		render_ascii = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black'] } } },
 		provides = { light={radius=5, color = colors['white']} },
-        vox=2
+        vox=voxelId("floorlight")
 	},
 	ship_defense_turret = {
 	    name = "Ship Defense Turret",

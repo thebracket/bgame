@@ -108,7 +108,7 @@ namespace render {
 			build_voxel_buildings();
 			// TODO: Regular old renderables!
 
-			build_composites();
+			//build_composites();
 
 			models_changed = false;
 

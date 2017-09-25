@@ -242,7 +242,7 @@ void read_buildings() noexcept
             lua_pop(lua_state, 1);
         }
         building_defs[key] = c;
-        std::cout << "Read schematics for building: " << key << "\n";
+        std::cout << "Read schematics for building: " << key << " (VOX " << building_defs[key].vox_model << ")\n";
         lua_pop(lua_state, 1);
     }
 }

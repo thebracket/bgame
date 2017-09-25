@@ -18,7 +18,7 @@ buildings["small_replicator"] = {
             {glyph=glyphs['square_root'], foreground = colors['cyan'], background = colors['black']}
         }
     },
-    vox=8
+    vox=voxelId("replicator_small")
 };
 
 reactions["replicate_tea_earl_grey_hot"] = {

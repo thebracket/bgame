@@ -24,7 +24,7 @@ void main() {
     gNormal = base_normal;
 
     gAmbientOcclusion.r = 1.0; // No ambient occlusion
-    gAmbientOcclusion.g = 0.0; // No metal
-    gAmbientOcclusion.b = 0.5; // 50% rough
+    gAmbientOcclusion.g = 0.04; // No metal
+    gAmbientOcclusion.b = 0.25; // 50% rough
     //gAlbedo = lightColor;
 }

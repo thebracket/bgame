@@ -11,6 +11,7 @@
 boost::container::flat_map<std::string, std::size_t> material_defs_idx;
 std::vector<material_def_t> material_defs;
 std::vector<std::string> material_textures;
+std::vector<std::pair<std::string, std::string>> voxel_models_to_load;
 
 /*
  * Retrieve a material by ID
@@ -175,73 +176,108 @@ void read_material_types() noexcept
     std::sort(material_defs.begin(), material_defs.end(), [] (material_def_t a, material_def_t b) {
         return a.tag < b.tag;
     });
-    for (std::size_t material_index = 0; material_index < material_defs.size(); ++material_index) {
-        material_defs_idx[material_defs[material_index].tag] = material_index;
-    }
+for (std::size_t material_index = 0; material_index < material_defs.size(); ++material_index) {
+	material_defs_idx[material_defs[material_index].tag] = material_index;
+}
 }
 
 void build_material_acquisition_tech_tree(graphviz_t *tree) {
-    tree->add_trees();
-    for (const auto &mat : material_defs) {
-        switch (mat.spawn_type) {
-            case no_spawn_type : tree->add_node("None", mat.tag); break;
-            case cluster_rock : tree->add_node("Cluster Rock", mat.tag); break;
-            case rock : tree->add_node("Rock", mat.tag); break;
-            case soil : tree->add_node("Soil", mat.tag); break;
-            case sand : tree->add_node("Sand", mat.tag); break;
-            case metal : tree->add_node("Metal", mat.tag); break;
-            case synthetic : tree->add_node("Synthetic", mat.tag); break;
-            case organic : tree->add_node("Organic", mat.tag); break;
-            case leather : tree->add_node("Leather", mat.tag); break;
-            case food : tree->add_node("Food", mat.tag); break;
-            case spice : tree->add_node("Spice", mat.tag); break;
-            case blight : tree->add_node("Blight", mat.tag); break;
-        }
-    }
+	tree->add_trees();
+	for (const auto &mat : material_defs) {
+		switch (mat.spawn_type) {
+		case no_spawn_type: tree->add_node("None", mat.tag); break;
+		case cluster_rock: tree->add_node("Cluster Rock", mat.tag); break;
+		case rock: tree->add_node("Rock", mat.tag); break;
+		case soil: tree->add_node("Soil", mat.tag); break;
+		case sand: tree->add_node("Sand", mat.tag); break;
+		case metal: tree->add_node("Metal", mat.tag); break;
+		case synthetic: tree->add_node("Synthetic", mat.tag); break;
+		case organic: tree->add_node("Organic", mat.tag); break;
+		case leather: tree->add_node("Leather", mat.tag); break;
+		case food: tree->add_node("Food", mat.tag); break;
+		case spice: tree->add_node("Spice", mat.tag); break;
+		case blight: tree->add_node("Blight", mat.tag); break;
+		}
+	}
 }
 
 void build_material_tech_tree(graphviz_t *tree) {
-    /*for (const auto &mat : material_defs) {
-        if (mat.mines_to_tag != "") {
-            tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag);
-        }
-        if (mat.mines_to_tag_second != "") {
-            tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag_second);
-        }
-    }*/
+	/*for (const auto &mat : material_defs) {
+		if (mat.mines_to_tag != "") {
+			tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag);
+		}
+		if (mat.mines_to_tag_second != "") {
+			tree.add_node(mat.tag, std::string("item_") + mat.mines_to_tag_second);
+		}
+	}*/
 }
 
 void read_material_textures() {
-    std::map<int, std::string> tmp_tex;
+	std::map<int, std::string> tmp_tex;
 
-    lua_getglobal(lua_state, "terrain_textures");
-    lua_pushnil(lua_state);
+	lua_getglobal(lua_state, "terrain_textures");
+	lua_pushnil(lua_state);
 
-    while(lua_next(lua_state, -2) != 0) {
-        std::string key = lua_tostring(lua_state, -2);
-        std::cout << key << "\n";
+	while (lua_next(lua_state, -2) != 0) {
+		std::string key = lua_tostring(lua_state, -2);
+		std::cout << key << "\n";
 
-        int idx = 0;
-        std::string tex;
+		int idx = 0;
+		std::string tex;
 
-        lua_pushstring(lua_state, key.c_str());
-        lua_gettable(lua_state, -2);
-        while (lua_next(lua_state, -2) != 0) {
-            std::string field = lua_tostring(lua_state, -2);
-            //std::cout << field << "\n";
+		lua_pushstring(lua_state, key.c_str());
+		lua_gettable(lua_state, -2);
+		while (lua_next(lua_state, -2) != 0) {
+			std::string field = lua_tostring(lua_state, -2);
+			//std::cout << field << "\n";
 
-            if (field == "index") idx = (int)lua_tonumber(lua_state, -1);
-            if (field == "texture") tex = lua_tostring(lua_state, -1);
+			if (field == "index") idx = (int)lua_tonumber(lua_state, -1);
+			if (field == "texture") tex = lua_tostring(lua_state, -1);
 
-            lua_pop(lua_state, 1);
-        }
-        tmp_tex[idx] = tex;
+			lua_pop(lua_state, 1);
+		}
+		tmp_tex[idx] = tex;
 
-        lua_pop(lua_state, 1);
-    }
+		lua_pop(lua_state, 1);
+	}
 
-    material_textures.clear();
-    for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
-        material_textures.emplace_back(i->second);
-    }
+	material_textures.clear();
+	for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
+		material_textures.emplace_back(i->second);
+	}
+}
+
+void read_voxel_models() {
+	lua_getglobal(lua_state, "voxel_models");
+	lua_pushnil(lua_state);
+
+	std::map<int, std::pair<std::string, std::string>> vox;
+
+	while (lua_next(lua_state, -2) != 0) {
+		std::string key = lua_tostring(lua_state, -2);
+		std::cout << key << "\n";
+
+		int idx = 0;
+		std::string modelfile{ "" };
+
+		lua_pushstring(lua_state, key.c_str());
+		lua_gettable(lua_state, -2);
+		while (lua_next(lua_state, -2) != 0) {
+			std::string field = lua_tostring(lua_state, -2);
+			std::cout << field << "\n";
+
+			if (field == "model") modelfile = lua_tostring(lua_state, -1);
+			if (field == "id") idx = lua_tonumber(lua_state, -1);
+
+			lua_pop(lua_state, 1);
+		}
+		vox[idx] = std::make_pair(key, modelfile);
+
+		lua_pop(lua_state, 1);
+
+		voxel_models_to_load.clear();
+		for (auto it = vox.begin(); it != vox.end(); ++it) {
+			voxel_models_to_load.emplace_back(it->second);
+		}
+	}
 }

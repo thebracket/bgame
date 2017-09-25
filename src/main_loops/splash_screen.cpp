@@ -198,6 +198,8 @@ namespace splash_screen {
     }
 
     void load_voxel_models() {
+		
+		/*
         vox::load_vox("game_assets/vox/cryobed32.vox", "cryobed");
         vox::load_vox("game_assets/vox/floorlight.vox", "floorlight");
         vox::load_vox("game_assets/vox/rtg.vox", "rtg");
@@ -211,6 +213,11 @@ namespace splash_screen {
 		vox::load_vox("game_assets/vox/person-hair-long.vox", "longhair");
 		vox::load_vox("game_assets/vox/person-hair-pigtails.vox", "pigtails");
 		vox::load_vox("game_assets/vox/person-hair-mohawk.vox", "mohawk");
+		*/
+
+		for (const auto &vm : voxel_models_to_load) {
+			vox::load_vox(vm.second, vm.first);
+		}
 	}
 
     void tick(const double &duration_ms) {

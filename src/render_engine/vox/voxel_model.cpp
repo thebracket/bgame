@@ -222,7 +222,7 @@ namespace vox {
 	}
 
     void voxel_model::render_instances(voxel_render_buffer_t &buffer) {
-
+		//std::cout << "Voxel render\n";
         // Perform the render
         glBindVertexArray(buffer.tmp_vao);
         //glDrawArrays(GL_TRIANGLES, 0, n_elements);
