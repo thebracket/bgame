@@ -51,6 +51,25 @@ function chunkTex(name)
     return 0
 end
 
+mob_textures = {
+    base_male = { index=0, texture="base-male-human.png" },
+    base_female = { index=1, texture="base-female-human.png" },
+    underpants = { index=2, texture="underpants.png" },
+    sportsbriefs = { index=3, texture="sportsbriefs.png" },
+    bra = { index=4, texture="bra.png" },
+}
+
+function mobTex(name)
+    if mob_textures[name] ~= nil then
+        texidx = mob_textures[name].index
+        print(name .. " : " .. texidx)
+        return texidx
+    else
+        print("Unknown texture: "..name)
+    end
+    return 0
+end
+
 materials = {
     alabaster = { name="Alabaster", type="cluster_rock", parent="gypsum", 
         glyph=glyphs['power_of'], fg=colors['white'], bg=colors['grey'],

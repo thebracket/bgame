@@ -50,6 +50,7 @@ namespace splash_screen {
         lightstage_shader = load_shaders("game_assets/lightpass_vertex.glsl", "game_assets/lightpass_fragment.glsl");
         tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");
         bloom_shader = load_shaders("game_assets/bloom_vertex.glsl", "game_assets/bloom_fragment.glsl");
+		sprite_shader = load_shaders("game_assets/sprite_shader_vertex.glsl", "game_assets/sprite_shader_fragment.glsl");
 		voxel_shader = std::make_unique<voxel_shader_t>();
     }
 
@@ -98,6 +99,7 @@ namespace splash_screen {
     }
 
     constexpr int TEX_SIZE = 256; // This is probably too high
+	constexpr int MOB_SIZE = 512;
 
     std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string filename) {
         int width, height, bpp;
@@ -108,6 +110,16 @@ namespace splash_screen {
         assert(width == TEX_SIZE && height == TEX_SIZE);
         return std::make_tuple(image_data, width, height, bpp);
     }
+
+	std::tuple<unsigned char *, int, int, int> load_mobtexture_to_ram(const std::string filename) {
+		int width, height, bpp;
+		stbi_set_flip_vertically_on_load(true);
+		unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+		if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + filename);
+		std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
+		assert(width == MOB_SIZE && height == MOB_SIZE);
+		return std::make_tuple(image_data, width, height, bpp);
+	}
 
     void load_chunk_textures() {
         const int num_actual_textures = static_cast<int>(material_textures.size() * 3);
@@ -196,6 +208,52 @@ namespace splash_screen {
         glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_T,GL_REPEAT);
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
+
+	void load_mob_textures() {
+		const int num_actual_textures = static_cast<int>(mob_textures.size());
+		std::cout << "# MobTetures in array: " << num_actual_textures << "\n";
+
+		glGenTextures(1, &assets::mob_texture_array);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, assets::mob_texture_array);
+
+		glTexStorage3D(GL_TEXTURE_2D_ARRAY,
+			2, // 4-levels of mipmap
+			GL_RGBA8, // Internal format
+			MOB_SIZE, MOB_SIZE, // Width and height
+			num_actual_textures
+		);
+
+		int load_index = 0;
+		for (std::size_t i = 0; i<mob_textures.size(); ++i) {
+			const std::string stem = mob_textures[i];
+			const std::string albedo = "game_assets/mobs/original/" + stem;
+
+			auto albedo_tex = load_mobtexture_to_ram(albedo);
+
+			// Albedo and normal are stored directly as idx+0, idx+1
+			glTexSubImage3D(
+				GL_TEXTURE_2D_ARRAY,
+				0, // Mipmap number
+				0, 0, load_index, // x/y/z offsets
+				MOB_SIZE, MOB_SIZE, 1, // width, height, depth
+				GL_RGBA, // format
+				GL_UNSIGNED_BYTE, // type
+				std::get<0>(albedo_tex) // Color data
+			);
+			std::cout << albedo << " = " << load_index << "\n";
+
+			stbi_image_free(std::get<0>(albedo_tex));
+
+			load_index += 1;
+		}
+
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	}
 
     void load_voxel_models() {
 		
@@ -311,6 +369,7 @@ namespace splash_screen {
         if (loaded_worldgen && !loaded_chunk) {
             load_chunk_textures();
             load_voxel_models();
+			load_mob_textures();
             loaded_chunk = true;
         }
 

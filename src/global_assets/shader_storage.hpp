@@ -12,5 +12,6 @@ namespace assets {
     extern unsigned int lightstage_shader;
     extern unsigned int tonemap_shader;
     extern unsigned int bloom_shader;
+	extern unsigned int sprite_shader;
     extern std::unique_ptr<voxel_shader_t> voxel_shader;
 }
