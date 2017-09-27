@@ -33,6 +33,7 @@ item_t::item_t(const std::string name) : item_tag(name), type(CLOTHING) {
         if (finder2) {
             item_name = finder2->name;
             clothing_glyph = finder2->clothing_glyph;
+			clothing_layer = finder2->clothing_layer;
             if (finder2->colors.size() > 0) {
                 clothing_color = colname_to_col(finder2->colors[rng.roll_dice(1, finder2->colors.size())-1]);
             }

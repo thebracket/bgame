@@ -6,6 +6,8 @@
 #include "../../components/building.hpp"
 #include "../../components/renderable_composite.hpp"
 #include "../../components/species.hpp"
+#include "../../components/item.hpp"
+#include "../../components/item_carried.hpp"
 #include "voxel_model.hpp"
 #include "voxreader.hpp"
 #include "../../global_assets/shader_storage.hpp"
@@ -85,6 +87,8 @@ namespace render {
 	}
 
 	void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+		using namespace bengine;
+
 		// TODO: Add sprite
 		auto species = e.component<species_t>();
 		if (!species) return;
@@ -101,6 +105,15 @@ namespace render {
 			add_sprite(pos, 4, bengine::color_t(1.0f, 1.0f, 1.0f));
 		} break;
 		}
+
+		// TODO: Hair
+
+		// Items/Clothing
+		each<item_t, item_carried_t>([&pos, &e](entity_t &E, item_t &item, item_carried_t &carried) {
+			if (carried.carried_by == e.id && item.clothing_layer > 0) {
+				add_sprite(pos, item.clothing_layer, item.clothing_color);
+			}
+		});
 	}
 
 	void render_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {

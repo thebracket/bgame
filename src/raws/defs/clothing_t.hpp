@@ -13,4 +13,5 @@ struct clothing_t {
     std::string description = "";
     float armor_class = 0.0F;
     uint16_t clothing_glyph = 0;
+	int clothing_layer = 0;
 };

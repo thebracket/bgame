@@ -21,6 +21,7 @@ struct item_t {
 	int stack_size = 1;
 	uint16_t clothing_glyph = 0;
     bengine::color_t clothing_color;
+	int clothing_layer = 0;
 
 	item_t() {}
 	item_t(const std::string name);
@@ -30,7 +31,7 @@ struct item_t {
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( item_name, item_tag, category, type, material, claimed, stack_size, clothing_glyph, clothing_color ); // serialize things by passing them to the archive
+		archive( item_name, item_tag, category, type, material, claimed, stack_size, clothing_glyph, clothing_color, clothing_layer ); // serialize things by passing them to the archive
 	}
 };
 

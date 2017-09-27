@@ -2,18 +2,20 @@ clothing = {
 	batman_hat = {
 		name = "Batman Hat",
 		slot = "head",
-		colors = {"black"},
+		colors = {"black", "blue"},
 		description = "A black helmet with bat-ear protrusions and a face-mask. Be the hero Cordex needs!",
 		ac = 0.5,
-		glyph = 368
+		glyph = 368,
+		layer = mobTex("batman_hat")
 	},
 	police_hat = {
 		name = "Police Hat",
 		slot = "head",
-		colors = {"black"},
+		colors = {"black", "blue"},
 		description = "A black, flat hat. Typically part of a uniform.",
 		ac = 0.5,
-		glyph = 369
+		glyph = 369,
+		layer = mobTex("police_hat")
 	},
 	cat_ears = {
 		name = "Cat Ears",
@@ -21,15 +23,17 @@ clothing = {
 		colors = {"black"},
 		description = "Clip on, prosthetic cat ears (not made from a real cat).",
 		ac = 0.5,
-		glyph = 370
+		glyph = 370,
+		layer = mobTex("cat_ears")
 	},
 	tiara = {
 		name = "Tiara",
 		slot = "head",
-		colors = {"black"},
+		colors = {"white"},
 		description = "Plastic tiara, perfect for your wannabe princess.",
 		ac = 0.5,
-		glyph = 371
+		glyph = 371,
+		layer = mobTex("tiara")
 	},
 	formal_shirt = {
 		name = "Formal Shirt",
@@ -37,7 +41,8 @@ clothing = {
 		colors = {"white"},
 		description = "A nice shirt with a collar and button-up cuffs. Ideal for the office.",
 		ac = 0.5,
-		glyph = 372
+		glyph = 372,
+		layer = mobTex("formal_shirt")
 	},
 	formal_blouse = {
 		name = "Formal Blouse",
@@ -45,7 +50,8 @@ clothing = {
 		colors = {"white"},
 		description = "A nice blouse with a collar and button-up cuffs. Ideal for the office.",
 		ac = 0.5,
-		glyph = 373
+		glyph = 373,
+		layer = mobTex("formal_blouse")
 	},
 	bathrobe = {
 		name = "Bathrobe",
@@ -53,7 +59,8 @@ clothing = {
 		colors = {"red", "blue", "yellow"},
 		description = "A comfortable, silk bath-robe. Ideal for running a sleazy mansion, pretending to be a wizard, or taking a bath.",
 		ac = 0.5,
-		glyph = 374
+		glyph = 374,
+		layer = mobTex("bathrobe")
 	},
 	spandex_shirt = {
 		name = "Spandex Shirt",
@@ -61,7 +68,8 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green"},
 		description = "A tight, spandex shirt. Ideal for the gymnasium, or unleashing your inner super-hero.",
 		ac = 0.5,
-		glyph = 375
+		glyph = 375,
+		layer = mobTex("spandex-shirt")
 	},
 	spandex_blouse = {
 		name = "Spandex Blouse",
@@ -69,7 +77,8 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green"},
 		description = "A tight, spandex blouse. Ideal for the gymnasium, or unleashing your inner super-hero.",
 		ac = 0.5,
-		glyph = 376
+		glyph = 376,
+		layer = mobTex("spandex-blouse")
 	},
 	sports_shirt = {
 		name = "Sports Shirt",
@@ -77,7 +86,8 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "yellow"},
 		description = "A sporting shirt, showing the colors of your favorite team.",
 		ac = 0.5,
-		glyph = 377
+		glyph = 377,
+		layer = mobTex("sports_shirt")
 	},
 	t_shirt = {
 		name = "T-Shirt",
@@ -85,7 +95,8 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "yellow"},
 		description = "A sleeveless T-shirt, with a witty message on it.",
 		ac = 0.5,
-		glyph = 378
+		glyph = 378,
+		layer = mobTex("sports_shirt")
 	},
 	cargo_pants = {
 		name = "Cargo Pants",
@@ -93,7 +104,8 @@ clothing = {
 		colors = {"grey", "khaki", "blue", "navy", "black"},
 		description = "A pair of sturdy trousers, featuring many pockets. Practical and comfortable, and who knows what will be found in the pockets?",
 		ac = 0.5,
-		glyph = 379
+		glyph = 379,
+		layer = mobTex("cargo_pants")
 	},
 	long_skirt = {
 		name = "Long Skirt",
@@ -101,7 +113,8 @@ clothing = {
 		colors = {"grey", "khaki", "blue", "navy", "black"},
 		description = "A formal skirt, covering from waist to knees.",
 		ac = 0.5,
-		glyph = 380
+		glyph = 380,
+		layer = mobTex("long_skirt")
 	},
 	hawaiian_shorts = {
 		name = "Hawaiian Shorts",
@@ -109,7 +122,8 @@ clothing = {
 		colors = {"red", "yellow", "blue", "green", "pink"},
 		description = "A pair of silky shorts, colored to ensure visibility even from orbit. Never lose your waist again.",
 		ac = 0.5,
-		glyph = 381
+		glyph = 381,
+		layer = mobTex("hawaiianshorts")
 	},
 	sports_shorts = {
 		name = "Sports Shorts",
@@ -117,7 +131,8 @@ clothing = {
 		colors = {"red", "yellow", "blue", "green", "pink"},
 		description = "A pair of sporting shorts, ideal for exercise, running away, or following your favorite team.",
 		ac = 0.5,
-		glyph = 381
+		glyph = 381,
+		layer = mobTex("hawaiianshorts")
 	},
 	spandex_pants = {
 		name = "Spandex Pants",
@@ -125,7 +140,8 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green"},
 		description = "Tight, spandex pants. Show off your legs, or horrify your neighbors.",
 		ac = 0.5,
-		glyph = 383
+		glyph = 383,
+		layer = mobTex("spandex_pants")
 	},
 	miniskirt = {
 		name = "Miniskirt",
@@ -133,7 +149,8 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "grey", "black", "white"},
 		description = "A short skirt, leaving little to the imagination.",
 		ac = 0.5,
-		glyph = 382
+		glyph = 382,
+		layer = mobTex("miniskirt")
 	},
 	leather_shoes = {
 		name = "Leather Shoes",
@@ -141,7 +158,8 @@ clothing = {
 		colors = {"brown", "black"},
 		description = "A pair of sturdy leather shoes. Very boring, and very practical.",
 		ac = 1.0,
-		glyph = 384
+		glyph = 384,
+		layer = mobTex("leather_shoes")
 	},
 	sandals = {
 		name = "Sandals",
@@ -149,7 +167,8 @@ clothing = {
 		colors = {"brown", "black"},
 		description = "A pair of sandals, offering minimal protection to the feet and freeing the wearer from the tyranny of shoelaces.",
 		ac = 0.5,
-		glyph = 384
+		glyph = 384,
+		layer = mobTex("leather_shoes")
 	},
 	combat_boots = {
 		name = "Combat Boots",
@@ -157,7 +176,8 @@ clothing = {
 		colors = {"brown", "black"},
 		description = "Practical leather boots, with reinforced ankles. Kick some butt. Available in a wide range of TactiCool(TM) designs.",
 		ac = 1.0,
-		glyph = 384
+		glyph = 384,
+		layer = mobTex("combat_boots")
 	},
 	high_boots = {
 		name = "High Boots",
@@ -165,7 +185,8 @@ clothing = {
 		colors = {"brown", "black", "red", "green", "yellow"},
 		description = "Leather boots that come up over the knee. Great for fishing, looking good, or kicking some butt.",
 		ac = 1.0,
-		glyph = 384
+		glyph = 384,
+		layer = mobTex("high_boots")
 	},
 	sneakers = {
 		name = "Sneakers",
@@ -173,7 +194,8 @@ clothing = {
 		colors = {"brown", "black", "red", "green", "yellow"},
 		description = "Comfortable running shoes, complete with oxygenated layer to protect your feet and a patented No-Stink technology.",
 		ac = 0.5,
-		glyph = 384
+		glyph = 384,
+		layer = mobTex("sneakers")
 	},
 
 	-- Stone-age clothing
