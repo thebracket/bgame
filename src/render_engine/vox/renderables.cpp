@@ -106,7 +106,14 @@ namespace render {
 		} break;
 		}
 
-		// TODO: Hair
+		// Hair
+		switch (species->hair_style) {
+		case SHORT_HAIR: add_sprite(pos, 24, species->hair_color.second); break;
+		case LONG_HAIR: add_sprite(pos, 25, species->hair_color.second); break;
+		case PIGTAILS: add_sprite(pos, 26, species->hair_color.second); break;
+		case MOHAWK: add_sprite(pos, 27, species->hair_color.second); break;
+		case TRIANGLE: add_sprite(pos, 25, species->hair_color.second); break;
+		}
 
 		// Items/Clothing
 		each<item_t, item_carried_t>([&pos, &e](entity_t &E, item_t &item, item_carried_t &carried) {

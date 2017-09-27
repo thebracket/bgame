@@ -76,6 +76,10 @@ mob_textures = {
     combat_boots = { index=21, texture="combatboots.png" },
     high_boots = { index=22, texture="highboots.png" },
     sneakers = { index=23, texture="sneakers.png" },
+    hair_short = { index=24, texture="hair-short.png" },
+    hair_long = { index=25, texture="hair-long.png" },
+    hair_pigtails = { index=26, texture="hair-pigtails.png" },
+    hair_spiked = { index=27, texture="hair-spiked.png" },
 }
 
 function mobTex(name)
