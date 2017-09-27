@@ -13,6 +13,7 @@
 #include "power/power_system.hpp"
 #include "scheduler/initiative_system.hpp"
 #include "physics/fluid_system.hpp"
+#include "ai/ai_status_effects.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -37,6 +38,7 @@ namespace systems {
 	constexpr int CIVUI_SYSTEM = 10;
 	constexpr int SETTLERUI_SYSTEM = 11;
 	constexpr int UNITSUI_SYSTEM = 12;
+	constexpr int AI_STATUS_SYSTEM = 13;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -73,6 +75,7 @@ namespace systems {
 		system_names[CIVUI_SYSTEM] = "Civ UI";
 		system_names[SETTLERUI_SYSTEM] = "Settler UI";
 		system_names[UNITSUI_SYSTEM] = "Units UI";
+		system_names[AI_STATUS_SYSTEM] = "AI Status";
 		game_master_mode = PLAY;
     }
 
@@ -106,6 +109,7 @@ namespace systems {
 			run_system(fluids::run, duration_ms, FLUID_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
+			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
         }
 
 		// Logging goes at the end to catch new messages

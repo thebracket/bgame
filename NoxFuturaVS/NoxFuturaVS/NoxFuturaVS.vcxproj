@@ -205,6 +205,7 @@
     <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
     <ClCompile Include="..\..\src\render_engine\world_textures\world_textures.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\ai_status_effects.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
@@ -410,6 +411,7 @@
     <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
     <ClInclude Include="..\..\src\render_engine\world_textures\world_textures.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />

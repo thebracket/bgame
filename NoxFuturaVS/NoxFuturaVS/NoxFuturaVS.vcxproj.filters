@@ -148,6 +148,12 @@
     <Filter Include="Source Files\systems\scheduler">
       <UniqueIdentifier>{3dd4648f-2ad6-41eb-9f0f-0f6c759898a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\systems\ai">
+      <UniqueIdentifier>{7f9e30b2-8a21-469f-9187-4088bc5e0cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\systems\ai">
+      <UniqueIdentifier>{1ace16fa-e404-407d-bda2-2f861830e17a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -458,6 +464,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp">
       <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\ai_status_effects.cpp">
+      <Filter>Source Files\systems\ai</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1069,6 +1078,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp">
       <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp">
+      <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
