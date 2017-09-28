@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
     <ClCompile Include="..\..\src\render_engine\world_textures\world_textures.cpp" />
     <ClCompile Include="..\..\src\systems\ai\ai_status_effects.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\ai_stuck.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
@@ -216,6 +217,7 @@
     <ClCompile Include="..\..\src\systems\keydamper.cpp" />
     <ClCompile Include="..\..\src\systems\mouse.cpp" />
     <ClCompile Include="..\..\src\systems\physics\fluid_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\movement_system.cpp" />
     <ClCompile Include="..\..\src\systems\power\power_system.cpp" />
     <ClCompile Include="..\..\src\systems\run_systems.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\calendar_system.cpp" />
@@ -412,6 +414,7 @@
     <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
     <ClInclude Include="..\..\src\render_engine\world_textures\world_textures.hpp" />
     <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\ai_stuck.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />
@@ -422,11 +425,13 @@
     <ClInclude Include="..\..\src\systems\keydamper.hpp" />
     <ClInclude Include="..\..\src\systems\mouse.hpp" />
     <ClInclude Include="..\..\src\systems\physics\fluid_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\movement_system.hpp" />
     <ClInclude Include="..\..\src\systems\power\power_system.hpp" />
     <ClInclude Include="..\..\src\systems\run_systems.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\calendar_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\initiative_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\tick_system.hpp" />
+    <ClInclude Include="..\..\src\utils\thread_safe_message_queue.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,6 +14,8 @@
 #include "scheduler/initiative_system.hpp"
 #include "physics/fluid_system.hpp"
 #include "ai/ai_status_effects.hpp"
+#include "ai/ai_stuck.hpp"
+#include "physics/movement_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -39,6 +41,8 @@ namespace systems {
 	constexpr int SETTLERUI_SYSTEM = 11;
 	constexpr int UNITSUI_SYSTEM = 12;
 	constexpr int AI_STATUS_SYSTEM = 13;
+	constexpr int AI_STUCK_SYSTEM = 14;
+	constexpr int MOVEMENT_SYSTEM = 15;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -76,6 +80,8 @@ namespace systems {
 		system_names[SETTLERUI_SYSTEM] = "Settler UI";
 		system_names[UNITSUI_SYSTEM] = "Units UI";
 		system_names[AI_STATUS_SYSTEM] = "AI Status";
+		system_names[AI_STUCK_SYSTEM] = "AI Stuck";
+		system_names[MOVEMENT_SYSTEM] = "Movement";
 		game_master_mode = PLAY;
     }
 
@@ -110,6 +116,8 @@ namespace systems {
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
+			run_system(ai_stuck::run, duration_ms, AI_STUCK_SYSTEM);
+			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
         }
 
 		// Logging goes at the end to catch new messages

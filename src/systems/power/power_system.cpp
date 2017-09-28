@@ -4,18 +4,20 @@
 #include "../../components/construct_power.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../render_engine/world_textures/world_textures.hpp"
-#include <thread>
-#include <mutex>
-#include <queue>
+#include "../../utils/thread_safe_message_queue.hpp"
 
 namespace systems {
 	namespace power {
-		std::mutex power_mutex;
-		std::queue<consumed_power_t> drains;
+		struct consumed_power_t {
+			std::string source = "";
+			int amount = 0;
+		};
 
-		void consume_power(consumed_power_t drain) {
-			std::lock_guard<std::mutex> lock(power_mutex);
-			drains.push(drain);
+
+		thread_safe_message_queue<consumed_power_t> drains;
+
+		void consume_power(const std::string &source, const int amount) {
+			drains.enqueue(consumed_power_t{ source, amount });
 		}
 
 		void run(const double &duration_ms) {
@@ -38,12 +40,9 @@ namespace systems {
 			if (designations->current_power > designations->total_capacity) designations->current_power = designations->total_capacity;
 
 			int consumption = 0;
-			std::lock_guard<std::mutex> lock(power_mutex);
-			while (!drains.empty()) {
-				auto drain = drains.front();
-				drains.pop();
+			drains.process_all([&consumption](consumed_power_t drain) {
 				consumption += drain.amount;
-			}
+			});
 
 			designations->current_power -= consumption;
 
