@@ -16,6 +16,7 @@
 #include "ai/ai_status_effects.hpp"
 #include "ai/ai_stuck.hpp"
 #include "physics/movement_system.hpp"
+#include "overworld/world_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -43,6 +44,7 @@ namespace systems {
 	constexpr int AI_STATUS_SYSTEM = 13;
 	constexpr int AI_STUCK_SYSTEM = 14;
 	constexpr int MOVEMENT_SYSTEM = 15;
+	constexpr int WORLD_SYSTEM = 16;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -82,6 +84,7 @@ namespace systems {
 		system_names[AI_STATUS_SYSTEM] = "AI Status";
 		system_names[AI_STUCK_SYSTEM] = "AI Stuck";
 		system_names[MOVEMENT_SYSTEM] = "Movement";
+		system_names[WORLD_SYSTEM] = "World";
 		game_master_mode = PLAY;
     }
 
@@ -113,6 +116,7 @@ namespace systems {
 			logging::age_log();
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
 			run_system(fluids::run, duration_ms, FLUID_SYSTEM);
+			run_system(world::run, duration_ms, WORLD_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
