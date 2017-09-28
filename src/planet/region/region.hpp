@@ -256,4 +256,6 @@ namespace region {
 
     /* Run a function on every tile. */
     void for_all_tiles(const std::function<void(int)> &func);
+
+	int ground_z(const int x, const int y);
 }

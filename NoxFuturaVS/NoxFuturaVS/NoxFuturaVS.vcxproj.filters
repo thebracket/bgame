@@ -64,9 +64,6 @@
     <Filter Include="Header Files\planet\builder\regions">
       <UniqueIdentifier>{5af18141-8593-4884-8f69-6f3a37058c73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\planet\regions">
-      <UniqueIdentifier>{754acf2a-03f4-4014-bfbe-1f709a1f9521}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\raws">
       <UniqueIdentifier>{4cff4228-229d-4107-9ae1-cd3dce4e9429}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,15 @@
     </Filter>
     <Filter Include="Header Files\utils">
       <UniqueIdentifier>{0283d413-ba5f-48fb-81ee-181afddfec04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\systems\world">
+      <UniqueIdentifier>{73dc8586-2355-4b99-80d5-5394b31a2dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems\world">
+      <UniqueIdentifier>{0f143cbb-af27-49d3-a444-8ec21511a7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\planet\builder\regions">
+      <UniqueIdentifier>{754acf2a-03f4-4014-bfbe-1f709a1f9521}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -280,28 +286,28 @@
       <Filter>Source Files\planet\builder</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\blight_builder.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\buildings.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\decorators.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\heightmap.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\starting_point.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\strata.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\trees.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\planet\builder\regions\water_features.cpp">
-      <Filter>Source Files\planet\regions</Filter>
+      <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\raws\biomes.cpp">
       <Filter>Source Files\raws</Filter>
@@ -476,6 +482,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\physics\movement_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\overworld\world_system.cpp">
+      <Filter>Source Files\systems\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\overworld\settler_spawner_system.cpp">
+      <Filter>Source Files\systems\world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1099,6 +1111,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\utils\thread_safe_message_queue.hpp">
       <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\overworld\world_system.hpp">
+      <Filter>Header Files\systems\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\overworld\settler_spawner_system.hpp">
+      <Filter>Header Files\systems\world</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

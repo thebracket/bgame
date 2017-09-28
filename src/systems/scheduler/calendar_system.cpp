@@ -13,13 +13,7 @@ namespace systems {
 			return start + addititve;
 		}
 
-        void run(const double duration_ms) {
-            auto hour = calendar->hour;
-            auto day = calendar->day;
-            calendar->next_minute();
-            if (calendar->hour != hour) hour_elapsed = true;
-            if (calendar->day != day) day_elapsed = true;
-
+		void calculate_sun_moon() {
 			const double latitude_sun = ((camera_position->world_y / (double)WORLD_HEIGHT) * REGION_HEIGHT);
 			const double time_overall = (calendar->hour - 6) + (calendar->minute / 60.0f);
 			const double time_as_float = time_overall / 24.0f;
@@ -35,7 +29,7 @@ namespace systems {
 
 			// Sun color; a bit blue at dawn, white at noon, a bit red at sunset
 			if (calendar->hour > 5 && calendar->hour < 13) {
-				const float sun_pct = (calendar->hour - 6.0f)/6.0f;
+				const float sun_pct = (calendar->hour - 6.0f) / 6.0f;
 				calendar->sun_r = rgb_lerp(sun_pct, 0.6f, 1.0f);
 				calendar->sun_g = rgb_lerp(sun_pct, 0.6f, 1.0f);
 				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 1.0f);
@@ -53,6 +47,17 @@ namespace systems {
 			}
 
 			//std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
+		}
+
+        void run(const double duration_ms) {
+            auto hour = calendar->hour;
+            auto day = calendar->day;
+            calendar->next_minute();
+			hour_elapsed = false;
+			day_elapsed = false;
+            if (calendar->hour != hour) hour_elapsed = true;
+            if (calendar->day != day) day_elapsed = true;
+			calculate_sun_moon();
         }
     }
 }
