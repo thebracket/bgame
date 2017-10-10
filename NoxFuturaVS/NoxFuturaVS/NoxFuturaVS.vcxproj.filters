@@ -531,6 +531,12 @@
     <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp">
       <Filter>Source Files\systems\ai</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\workflow_system.cpp">
+      <Filter>Source Files\systems\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\helpers\workflow_assistant.cpp">
+      <Filter>Source Files\systems\helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1195,6 +1201,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp">
       <Filter>Header Files\systems\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\workflow_system.hpp">
+      <Filter>Header Files\systems\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\helpers\workflow_assistant.hpp">
+      <Filter>Header Files\systems\helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
