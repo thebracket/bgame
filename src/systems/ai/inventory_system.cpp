@@ -65,6 +65,10 @@ namespace systems {
 
 		bool dirty = true;
 
+		void drop_item(const std::size_t &ID, const int &X, const int &Y, const int &Z) {
+			dropped_items.enqueue(drop_item_message{ ID, X, Y, Z });
+		}
+
 		void run(const double &duration_ms) {
 			inventory_changes.process_all([](inventory_changed_message &msg) {
 				dirty = true;

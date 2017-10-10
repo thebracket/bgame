@@ -23,6 +23,7 @@
 #include "ai/inventory_system.hpp"
 #include "ai/stockpile_system.hpp"
 #include "ai/workflow_system.hpp"
+#include "ai/settler/ai_visibility_scan.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -69,6 +70,7 @@ namespace systems {
 	constexpr int INVENTORY_SYSTEM = 26;
 	constexpr int STOCKPILE_SYSTEM = 27;
 	constexpr int WORKFLOW_SYSTEM = 28;
+	constexpr int VISIBILITY_SCAN_SYSTEM = 29;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -121,6 +123,7 @@ namespace systems {
 		system_names[INVENTORY_SYSTEM] = "Inventory";
 		system_names[STOCKPILE_SYSTEM] = "Stockpiles";
 		system_names[WORKFLOW_SYSTEM] = "Workflow";
+		system_names[VISIBILITY_SCAN_SYSTEM] = "AI Visibility";
 		game_master_mode = PLAY;
     }
 
@@ -169,6 +172,7 @@ namespace systems {
 			run_system(workflow_system::run, duration_ms, WORKFLOW_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
 			run_system(ai_stuck::run, duration_ms, AI_STUCK_SYSTEM);
+			run_system(ai_visibility_scan::run, duration_ms, VISIBILITY_SCAN_SYSTEM);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
         }
 

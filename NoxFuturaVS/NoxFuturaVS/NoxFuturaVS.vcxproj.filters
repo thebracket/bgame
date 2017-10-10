@@ -169,6 +169,12 @@
     <Filter Include="Source Files\systems\helpers">
       <UniqueIdentifier>{2d7a7f3e-0333-4978-a557-06f0b9c5dad8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\systems\ai\settler">
+      <UniqueIdentifier>{8217cd8e-04cb-4db3-a5a7-a00ba93864a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems\ai\settler">
+      <UniqueIdentifier>{0aa5a9fc-13b2-4762-acd8-afd6db1e1ff3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -535,6 +541,12 @@
       <Filter>Source Files\systems\ai</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\systems\helpers\workflow_assistant.cpp">
+      <Filter>Source Files\systems\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\helpers\weapons_helper.cpp">
       <Filter>Source Files\systems\helpers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1206,6 +1218,12 @@
       <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\helpers\workflow_assistant.hpp">
+      <Filter>Header Files\systems\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\helpers\weapons_helper.hpp">
       <Filter>Header Files\systems\helpers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -212,6 +212,7 @@
     <ClCompile Include="..\..\src\systems\ai\inventory_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\mining_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp" />
     <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\wildlife_population.cpp" />
     <ClCompile Include="..\..\src\systems\ai\workflow_system.cpp" />
@@ -222,6 +223,7 @@
     <ClCompile Include="..\..\src\systems\gui\tooltip_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\inventory_assistant.cpp" />
+    <ClCompile Include="..\..\src\systems\helpers\weapons_helper.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\workflow_assistant.cpp" />
     <ClCompile Include="..\..\src\systems\io\camera_system.cpp" />
     <ClCompile Include="..\..\src\systems\keydamper.cpp" />
@@ -436,6 +438,7 @@
     <ClInclude Include="..\..\src\systems\ai\inventory_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\mining_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\sentient_ai_system.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp" />
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
     <ClInclude Include="..\..\src\systems\ai\workflow_system.hpp" />
@@ -446,6 +449,7 @@
     <ClInclude Include="..\..\src\systems\gui\tooltip_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\inventory_assistant.hpp" />
+    <ClInclude Include="..\..\src\systems\helpers\weapons_helper.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\workflow_assistant.hpp" />
     <ClInclude Include="..\..\src\systems\io\camera_system.hpp" />
     <ClInclude Include="..\..\src\systems\keydamper.hpp" />

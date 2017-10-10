@@ -59,6 +59,14 @@ namespace systems {
 			move_requests.enqueue(std::move(msg));
 		}
 
+		void request_flee(std::size_t id, std::size_t flee_from) {
+			flee_requests.enqueue(entity_wants_to_flee_message{id, flee_from});
+		}
+
+		void request_charge(std::size_t id, std::size_t charge_to) {
+			charge_requests.enqueue(entity_wants_to_charge_message{ id, charge_to });
+		}
+
 		void process_wandering() {
 			using namespace bengine;
 			using namespace region;
