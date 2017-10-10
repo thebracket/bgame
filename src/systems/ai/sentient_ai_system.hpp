@@ -1,8 +1,7 @@
 #pragma once
 
 namespace systems {
-	namespace wildlife_population {
+	namespace sentient_ai_system {
 		void run(const double &duration_ms);
-		extern bool first_run;
 	}
 }

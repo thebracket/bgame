@@ -26,6 +26,7 @@ namespace systems {
 		using namespace bengine;
 
 		std::array<uint8_t, 4> group_populations;
+		bool first_run = true;
 
 		void count_wildlife_populations() {
 			std::fill(group_populations.begin(), group_populations.end(), 0);
@@ -124,6 +125,18 @@ namespace systems {
 		}
 
 		void run(const double &duration_ms) {
+			if (first_run) {
+				// Check existing population groups
+				count_wildlife_populations();
+
+				// If there are none, then run the re-stocker
+				spawn_wildlife();
+
+				first_run = false;
+			}
+
+			count_wildlife_populations();
+			spawn_wildlife();
 		}
 	}
 }

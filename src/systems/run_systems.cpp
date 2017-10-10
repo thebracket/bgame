@@ -17,6 +17,7 @@
 #include "ai/ai_stuck.hpp"
 #include "ai/distance_map_system.hpp"
 #include "ai/wildlife_population.hpp"
+#include "ai/sentient_ai_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -57,6 +58,7 @@ namespace systems {
 	constexpr int DOOR_SYSTEM = 20;
 	constexpr int DISTANCE_MAP_SYSTEM = 21;
 	constexpr int WILDLIFE_POPULATION_SYSTEM = 22;
+	constexpr int SENTIENT_AI_SYSTEM = 23;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -103,6 +105,7 @@ namespace systems {
 		system_names[DOOR_SYSTEM] = "Doors";
 		system_names[DISTANCE_MAP_SYSTEM] = "Dijkstra";
 		system_names[WILDLIFE_POPULATION_SYSTEM] = "Fisheries and Wildlife";
+		system_names[SENTIENT_AI_SYSTEM] = "Sentient AI";
 		game_master_mode = PLAY;
     }
 
@@ -134,7 +137,7 @@ namespace systems {
 			logging::age_log();
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
 			if (hour_elapsed) run_system(settler_spawner::run, duration_ms, SETTLER_SPAWNER_SYSTEM);
-			if (day_elapsed) run_system(wildlife_population::run, duration_ms, WILDLIFE_POPULATION_SYSTEM);
+			if (day_elapsed || wildlife_population::first_run) run_system(wildlife_population::run, duration_ms, WILDLIFE_POPULATION_SYSTEM);
 			run_system(fluids::run, duration_ms, FLUID_SYSTEM);
 			run_system(explosives::run, duration_ms, EXPLOSIVE_SYSTEM);
 			run_system(doors::run, duration_ms, DOOR_SYSTEM);
@@ -142,6 +145,7 @@ namespace systems {
 			run_system(distance_map::run, duration_ms, DISTANCE_MAP_SYSTEM);
 			run_system(world::run, duration_ms, WORLD_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
+			if (day_elapsed) run_system(sentient_ai_system::run, duration_ms, SENTIENT_AI_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
 			run_system(ai_stuck::run, duration_ms, AI_STUCK_SYSTEM);
