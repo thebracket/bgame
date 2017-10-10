@@ -1,12 +1,10 @@
 #pragma once
 
-#include <rltk.hpp>
 #include <bitset>
 #include <cereal/cereal.hpp>
 #include <cereal/types/bitset.hpp>
 #include <cereal/types/polymorphic.hpp>
-
-using namespace rltk;
+#include "../bengine/ecs.hpp"
 
 struct stockpile_t {
 
@@ -21,4 +19,4 @@ struct stockpile_t {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<stockpile_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<stockpile_t>>)

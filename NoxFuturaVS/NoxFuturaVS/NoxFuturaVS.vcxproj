@@ -212,6 +212,7 @@
     <ClCompile Include="..\..\src\systems\ai\inventory_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\mining_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\wildlife_population.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
@@ -433,6 +434,7 @@
     <ClInclude Include="..\..\src\systems\ai\inventory_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\mining_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\sentient_ai_system.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />

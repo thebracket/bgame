@@ -528,6 +528,9 @@
     <ClCompile Include="..\..\src\systems\ai\inventory_system.cpp">
       <Filter>Source Files\systems\ai</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp">
+      <Filter>Source Files\systems\ai</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1188,6 +1191,9 @@
       <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\inventory_system.hpp">
+      <Filter>Header Files\systems\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp">
       <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
   </ItemGroup>

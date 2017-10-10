@@ -21,6 +21,7 @@
 #include "ai/sentient_ai_system.hpp"
 #include "ai/mining_system.hpp"
 #include "ai/inventory_system.hpp"
+#include "ai/stockpile_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -65,6 +66,7 @@ namespace systems {
 	constexpr int CORPSE_SYSTEM = 24;
 	constexpr int MINING_SYSTEM = 25;
 	constexpr int INVENTORY_SYSTEM = 26;
+	constexpr int STOCKPILE_SYSTEM = 27;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -115,6 +117,7 @@ namespace systems {
 		system_names[CORPSE_SYSTEM] = "Corpses";
 		system_names[MINING_SYSTEM] = "Mining";
 		system_names[INVENTORY_SYSTEM] = "Inventory";
+		system_names[STOCKPILE_SYSTEM] = "Stockpiles";
 		game_master_mode = PLAY;
     }
 
@@ -158,6 +161,7 @@ namespace systems {
 			run_system(corpse_system::run, duration_ms, CORPSE_SYSTEM);
 			run_system(mining_system::run, duration_ms, MINING_SYSTEM);
 			run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
+			run_system(stockpile_system::run, duration_ms, STOCKPILE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
 			run_system(ai_stuck::run, duration_ms, AI_STUCK_SYSTEM);
