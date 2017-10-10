@@ -20,6 +20,7 @@
 #include "overworld/world_system.hpp"
 #include "overworld/settler_spawner_system.hpp"
 #include "physics/gravity_system.hpp"
+#include "physics/door_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -51,6 +52,7 @@ namespace systems {
 	constexpr int SETTLER_SPAWNER_SYSTEM = 17;
 	constexpr int GRAVITY_SYSTEM = 18;
 	constexpr int EXPLOSIVE_SYSTEM = 19;
+	constexpr int DOOR_SYSTEM = 20;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -94,6 +96,7 @@ namespace systems {
 		system_names[SETTLER_SPAWNER_SYSTEM] = "Settler Spawner";
 		system_names[GRAVITY_SYSTEM] = "Gravity";
 		system_names[EXPLOSIVE_SYSTEM] = "Explosions";
+		system_names[DOOR_SYSTEM] = "Doors";
 		game_master_mode = PLAY;
     }
 
@@ -127,6 +130,7 @@ namespace systems {
 			if (hour_elapsed) run_system(settler_spawner::run, duration_ms, SETTLER_SPAWNER_SYSTEM);
 			run_system(fluids::run, duration_ms, FLUID_SYSTEM);
 			run_system(explosives::run, duration_ms, EXPLOSIVE_SYSTEM);
+			run_system(doors::run, duration_ms, DOOR_SYSTEM);
 			run_system(gravity::run, duration_ms, GRAVITY_SYSTEM);
 			run_system(world::run, duration_ms, WORLD_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
