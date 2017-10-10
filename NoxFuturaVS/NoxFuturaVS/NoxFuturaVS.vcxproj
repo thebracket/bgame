@@ -218,7 +218,9 @@
     <ClCompile Include="..\..\src\systems\mouse.cpp" />
     <ClCompile Include="..\..\src\systems\overworld\settler_spawner_system.cpp" />
     <ClCompile Include="..\..\src\systems\overworld\world_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\explosive_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\fluid_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\gravity_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\movement_system.cpp" />
     <ClCompile Include="..\..\src\systems\power\power_system.cpp" />
     <ClCompile Include="..\..\src\systems\run_systems.cpp" />
@@ -428,7 +430,9 @@
     <ClInclude Include="..\..\src\systems\mouse.hpp" />
     <ClInclude Include="..\..\src\systems\overworld\settler_spawner_system.hpp" />
     <ClInclude Include="..\..\src\systems\overworld\world_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\explosive_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\fluid_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\gravity_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\movement_system.hpp" />
     <ClInclude Include="..\..\src\systems\power\power_system.hpp" />
     <ClInclude Include="..\..\src\systems\run_systems.hpp" />

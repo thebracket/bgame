@@ -489,6 +489,12 @@
     <ClCompile Include="..\..\src\systems\overworld\settler_spawner_system.cpp">
       <Filter>Source Files\systems\world</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\physics\gravity_system.cpp">
+      <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\physics\explosive_system.cpp">
+      <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1117,6 +1123,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\overworld\settler_spawner_system.hpp">
       <Filter>Header Files\systems\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\physics\gravity_system.hpp">
+      <Filter>Header Files\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\physics\explosive_system.hpp">
+      <Filter>Header Files\systems\physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
