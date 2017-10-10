@@ -209,6 +209,7 @@
     <ClCompile Include="..\..\src\systems\ai\ai_status_effects.cpp" />
     <ClCompile Include="..\..\src\systems\ai\ai_stuck.cpp" />
     <ClCompile Include="..\..\src\systems\ai\distance_map_system.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\wildlife_population.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp" />
     <ClInclude Include="..\..\src\systems\ai\ai_stuck.hpp" />
     <ClInclude Include="..\..\src\systems\ai\distance_map_system.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />

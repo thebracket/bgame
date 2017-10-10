@@ -513,6 +513,9 @@
     <ClCompile Include="..\..\src\global_assets\game_building.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\wildlife_population.cpp">
+      <Filter>Source Files\systems\ai</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1159,6 +1162,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\global_assets\game_building.hpp">
       <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp">
+      <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
