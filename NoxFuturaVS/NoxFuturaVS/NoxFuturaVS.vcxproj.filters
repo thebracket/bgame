@@ -163,6 +163,12 @@
     <Filter Include="Source Files\planet\builder\regions">
       <UniqueIdentifier>{754acf2a-03f4-4014-bfbe-1f709a1f9521}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\systems\helpers">
+      <UniqueIdentifier>{e7f01155-5949-41d9-914a-de211d7df063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems\helpers">
+      <UniqueIdentifier>{2d7a7f3e-0333-4978-a557-06f0b9c5dad8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -497,6 +503,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\physics\door_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\distance_map_system.cpp">
+      <Filter>Source Files\systems\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\helpers\inventory_assistant.cpp">
+      <Filter>Source Files\systems\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_building.cpp">
+      <Filter>Source Files\global_assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1135,6 +1150,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\physics\door_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\distance_map_system.hpp">
+      <Filter>Header Files\systems\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\helpers\inventory_assistant.hpp">
+      <Filter>Header Files\systems\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_building.hpp">
+      <Filter>Header Files\global_assets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

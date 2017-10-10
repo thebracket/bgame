@@ -15,6 +15,7 @@
 #include "physics/fluid_system.hpp"
 #include "ai/ai_status_effects.hpp"
 #include "ai/ai_stuck.hpp"
+#include "ai/distance_map_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -53,6 +54,7 @@ namespace systems {
 	constexpr int GRAVITY_SYSTEM = 18;
 	constexpr int EXPLOSIVE_SYSTEM = 19;
 	constexpr int DOOR_SYSTEM = 20;
+	constexpr int DISTANCE_MAP_SYSTEM = 21;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -97,6 +99,7 @@ namespace systems {
 		system_names[GRAVITY_SYSTEM] = "Gravity";
 		system_names[EXPLOSIVE_SYSTEM] = "Explosions";
 		system_names[DOOR_SYSTEM] = "Doors";
+		system_names[DISTANCE_MAP_SYSTEM] = "Dijkstra";
 		game_master_mode = PLAY;
     }
 
@@ -132,6 +135,7 @@ namespace systems {
 			run_system(explosives::run, duration_ms, EXPLOSIVE_SYSTEM);
 			run_system(doors::run, duration_ms, DOOR_SYSTEM);
 			run_system(gravity::run, duration_ms, GRAVITY_SYSTEM);
+			run_system(distance_map::run, duration_ms, DISTANCE_MAP_SYSTEM);
 			run_system(world::run, duration_ms, WORLD_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
