@@ -19,6 +19,7 @@
 #include "ai/distance_map_system.hpp"
 #include "ai/wildlife_population.hpp"
 #include "ai/sentient_ai_system.hpp"
+#include "ai/mining_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -60,7 +61,8 @@ namespace systems {
 	constexpr int DISTANCE_MAP_SYSTEM = 21;
 	constexpr int WILDLIFE_POPULATION_SYSTEM = 22;
 	constexpr int SENTIENT_AI_SYSTEM = 23;
-	constexpr int CORPSE_SYSEM = 24;
+	constexpr int CORPSE_SYSTEM = 24;
+	constexpr int MINING_SYSTEM = 25;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -108,7 +110,8 @@ namespace systems {
 		system_names[DISTANCE_MAP_SYSTEM] = "Dijkstra";
 		system_names[WILDLIFE_POPULATION_SYSTEM] = "Fisheries and Wildlife";
 		system_names[SENTIENT_AI_SYSTEM] = "Sentient AI";
-		system_names[CORPSE_SYSEM] = "Corpses";
+		system_names[CORPSE_SYSTEM] = "Corpses";
+		system_names[MINING_SYSTEM] = "Mining";
 		game_master_mode = PLAY;
     }
 
@@ -149,7 +152,8 @@ namespace systems {
 			run_system(world::run, duration_ms, WORLD_SYSTEM);
 			run_system(initiative::run, duration_ms, INITIATIVE_SYSTEM);
 			if (day_elapsed) run_system(sentient_ai_system::run, duration_ms, SENTIENT_AI_SYSTEM);
-			run_system(corpse_system::run, duration_ms, CORPSE_SYSEM);
+			run_system(corpse_system::run, duration_ms, CORPSE_SYSTEM);
+			run_system(mining_system::run, duration_ms, MINING_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
 			run_system(ai_stuck::run, duration_ms, AI_STUCK_SYSTEM);

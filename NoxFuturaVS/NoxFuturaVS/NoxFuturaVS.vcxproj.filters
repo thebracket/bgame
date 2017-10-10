@@ -522,6 +522,9 @@
     <ClCompile Include="..\..\src\systems\scheduler\corpse_system.cpp">
       <Filter>Source Files\systems\scheduler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\mining_system.cpp">
+      <Filter>Source Files\systems\ai</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1177,6 +1180,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\scheduler\corpse_system.hpp">
       <Filter>Header Files\systems\scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\mining_system.hpp">
+      <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
