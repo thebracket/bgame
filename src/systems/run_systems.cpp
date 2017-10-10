@@ -20,6 +20,7 @@
 #include "ai/wildlife_population.hpp"
 #include "ai/sentient_ai_system.hpp"
 #include "ai/mining_system.hpp"
+#include "ai/inventory_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -63,6 +64,7 @@ namespace systems {
 	constexpr int SENTIENT_AI_SYSTEM = 23;
 	constexpr int CORPSE_SYSTEM = 24;
 	constexpr int MINING_SYSTEM = 25;
+	constexpr int INVENTORY_SYSTEM = 26;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -112,6 +114,7 @@ namespace systems {
 		system_names[SENTIENT_AI_SYSTEM] = "Sentient AI";
 		system_names[CORPSE_SYSTEM] = "Corpses";
 		system_names[MINING_SYSTEM] = "Mining";
+		system_names[INVENTORY_SYSTEM] = "Inventory";
 		game_master_mode = PLAY;
     }
 
@@ -154,6 +157,7 @@ namespace systems {
 			if (day_elapsed) run_system(sentient_ai_system::run, duration_ms, SENTIENT_AI_SYSTEM);
 			run_system(corpse_system::run, duration_ms, CORPSE_SYSTEM);
 			run_system(mining_system::run, duration_ms, MINING_SYSTEM);
+			run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(ai_status_effects::run, duration_ms, AI_STATUS_SYSTEM);
 			run_system(ai_stuck::run, duration_ms, AI_STUCK_SYSTEM);
