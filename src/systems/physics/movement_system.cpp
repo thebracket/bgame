@@ -55,6 +55,10 @@ namespace systems {
 			move_requests.enqueue(entity_wants_to_move_message{ e.id, dest });
 		}
 
+		void move_to(const std::size_t id, const position_t &dest) {
+			move_requests.enqueue(entity_wants_to_move_message{ id, dest });
+		}
+
 		void request_move(entity_wants_to_move_message &msg) {
 			move_requests.enqueue(std::move(msg));
 		}

@@ -18,5 +18,6 @@ namespace systems {
 		extern dijkstra::dijkstra_map harvest_map;
 
 		void refresh_bed_map();
+		void refresh_axe_map();
 	}
 }

@@ -217,6 +217,7 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_sleep_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_lumberjack.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\jobs_board.cpp" />
     <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp" />
@@ -230,6 +231,7 @@
     <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\dijkstra_map.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\inventory_assistant.cpp" />
+    <ClCompile Include="..\..\src\systems\helpers\pathfinding.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\weapons_helper.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\workflow_assistant.cpp" />
     <ClCompile Include="..\..\src\systems\io\camera_system.cpp" />
@@ -450,6 +452,8 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_sleep_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_lumberjack.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_template.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\jobs_board.hpp" />
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
@@ -463,6 +467,7 @@
     <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\dijkstra_map.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\inventory_assistant.hpp" />
+    <ClInclude Include="..\..\src\systems\helpers\pathfinding.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\weapons_helper.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\workflow_assistant.hpp" />
     <ClInclude Include="..\..\src\systems\io\camera_system.hpp" />
