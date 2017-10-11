@@ -549,6 +549,9 @@
     <ClCompile Include="..\..\src\systems\helpers\weapons_helper.cpp">
       <Filter>Source Files\systems\helpers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1225,6 +1228,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\helpers\weapons_helper.hpp">
       <Filter>Header Files\systems\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
