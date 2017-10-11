@@ -20,182 +20,7 @@
 namespace systems {
 	namespace distance_map {
 
-		constexpr int16_t MAX_DIJSTRA_DISTANCE = 512;
-
-		struct dijkstra_map {
-			dijkstra_map();
-			void update(const std::vector<int> starting_points);
-			void update_architecture(const std::vector<int> starting_points);
-			position_t find_destination(const position_t &pos);
-			int16_t get(const std::size_t &idx);
-
-		private:
-			std::mutex map_lock;
-			std::vector<int16_t> distance_map;
-			void update_async(const std::vector<int> &starting_points);
-			void update_architecture_async(const std::vector<int> &starting_points);
-		};
-
-		dijkstra_map::dijkstra_map() {
-			distance_map.resize(REGION_TILES_COUNT);
-			std::fill(distance_map.begin(), distance_map.end(), MAX_DIJSTRA_DISTANCE);
-		}
-
-		int16_t dijkstra_map::get(const std::size_t &idx) {
-			std::lock_guard<std::mutex> lock(map_lock);
-			return distance_map[idx];
-		}
-
-		inline void dm_add_candidate(std::deque<std::pair<int, int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
-			using namespace region;
-			const int idx = mapidx(x, y, z);
-			if (water_level(idx) < 4) {
-				open_nodes.emplace_back(std::make_pair(idx, distance));
-			}
-		}
-
-		void dijkstra_map::update(const std::vector<int> starting_points) {
-			std::thread{ &dijkstra_map::update_async, this, starting_points }.detach();
-		}
-
-		void dijkstra_map::update_architecture(const std::vector<int> starting_points) {
-			std::thread{ &dijkstra_map::update_architecture_async, this, starting_points }.detach();
-		}
-
-		void dijkstra_map::update_async(const std::vector<int> &starting_points)
-		{
-			using namespace region;
-			std::vector<int16_t> new_map;
-			new_map.resize(REGION_TILES_COUNT);
-			std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
-
-			// Populate the open list with starting points
-			std::deque<std::pair<int, int>> open_nodes;
-			for (const int &sp : starting_points) {
-				open_nodes.emplace_back(std::make_pair(sp, 0));
-			}
-
-			// Iterate open nodes list
-			while (!open_nodes.empty()) {
-				const std::pair<int, int> open_node = open_nodes.front();
-				open_nodes.pop_front();
-
-				if (new_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
-				{
-					new_map[open_node.first] = open_node.second;
-
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(open_node.first);
-
-					if (x < REGION_WIDTH - 1 && flag(open_node.first, CAN_GO_EAST)) {
-						dm_add_candidate(open_nodes, x + 1, y, z, open_node.second + 1);
-					}
-					if (x > 0 && flag(open_node.first, CAN_GO_WEST)) {
-						dm_add_candidate(open_nodes, x - 1, y, z, open_node.second + 1);
-					}
-					if (y < REGION_WIDTH - 1 && flag(open_node.first, CAN_GO_SOUTH)) {
-						dm_add_candidate(open_nodes, x, y + 1, z, open_node.second + 1);
-					}
-					if (y > 0 && flag(open_node.first, CAN_GO_WEST)) {
-						dm_add_candidate(open_nodes, x, y - 1, z, open_node.second + 1);
-					}
-					if (z > 0 && flag(open_node.first, CAN_GO_DOWN)) {
-						dm_add_candidate(open_nodes, x, y, z - 1, open_node.second + 1);
-					}
-					if (z < REGION_DEPTH - 1 && flag(open_node.first, CAN_GO_UP)) {
-						dm_add_candidate(open_nodes, x, y, z + 1, open_node.second + 1);
-					}
-				}
-			}
-
-			std::lock_guard<std::mutex> lock(map_lock);
-			distance_map = new_map;
-		}
-
-		void dijkstra_map::update_architecture_async(const std::vector<int> &starting_points)
-		{
-			using namespace region;
-			std::vector<int16_t> new_map;
-			new_map.resize(REGION_TILES_COUNT);
-			std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
-
-			// Populate the open list with starting points
-			std::deque<std::pair<int, int>> open_nodes;
-			for (const int &sp : starting_points) {
-				open_nodes.emplace_back(std::make_pair(sp, 0));
-			}
-
-			// Iterate open nodes list
-			while (!open_nodes.empty()) {
-				const std::pair<int, int> open_node = open_nodes.front();
-				open_nodes.pop_front();
-
-				if (new_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
-				{
-					new_map[open_node.first] = open_node.second;
-
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(open_node.first);
-
-					if (x < REGION_WIDTH - 1 && (flag(open_node.first, CAN_GO_EAST) || open_node.second == 0)) {
-						dm_add_candidate(open_nodes, x + 1, y, z, open_node.second + 1);
-					}
-					if (x > 0 && (flag(open_node.first, CAN_GO_WEST) || open_node.second == 0)) {
-						dm_add_candidate(open_nodes, x - 1, y, z, open_node.second + 1);
-					}
-					if (y < REGION_WIDTH - 1 && (flag(open_node.first, CAN_GO_SOUTH) || open_node.second == 0)) {
-						dm_add_candidate(open_nodes, x, y + 1, z, open_node.second + 1);
-					}
-					if (y > 0 && (flag(open_node.first, CAN_GO_WEST) || open_node.second == 0)) {
-						dm_add_candidate(open_nodes, x, y - 1, z, open_node.second + 1);
-					}
-					if (z > 0 && flag(open_node.first, CAN_GO_DOWN)) {
-						dm_add_candidate(open_nodes, x, y, z - 1, open_node.second + 1);
-					}
-					if (z < REGION_DEPTH - 1 && flag(open_node.first, CAN_GO_UP)) {
-						dm_add_candidate(open_nodes, x, y, z + 1, open_node.second + 1);
-					}
-				}
-			}
-
-			std::lock_guard<std::mutex> lock(map_lock);
-			distance_map = new_map;
-		}
-
-		position_t dijkstra_map::find_destination(const position_t &pos) {
-			using namespace region;
-			std::lock_guard<std::mutex> lock(map_lock);
-
-			const int idx = mapidx(pos);
-			std::map<int16_t, int> candidates;
-			if (pos.x > 0 && flag(idx, CAN_GO_WEST)) {
-				const int destidx = mapidx(pos.x - 1, pos.y, pos.z);
-				candidates.insert(std::make_pair(distance_map[destidx], destidx));
-			}
-			if (pos.x < REGION_WIDTH - 1 && flag(idx, CAN_GO_EAST)) {
-				const int destidx = mapidx(pos.x + 1, pos.y, pos.z);
-				candidates.insert(std::make_pair(distance_map[destidx], destidx));
-			}
-			if (pos.y > 0 && flag(idx, CAN_GO_NORTH)) {
-				const int destidx = mapidx(pos.x, pos.y - 1, pos.z);
-				candidates.insert(std::make_pair(distance_map[destidx], destidx));
-			}
-			if (pos.y < REGION_HEIGHT - 1 && flag(idx, CAN_GO_SOUTH)) {
-				const int destidx = mapidx(pos.x, pos.y + 1, pos.z);
-				candidates.insert(std::make_pair(distance_map[destidx], destidx));
-			}
-			if (pos.z > 0 && flag(idx, CAN_GO_DOWN)) {
-				const int destidx = mapidx(pos.x, pos.y, pos.z - 1);
-				candidates.insert(std::make_pair(distance_map[destidx], destidx));
-			}
-			if (pos.z < REGION_DEPTH - 1 && flag(idx, CAN_GO_UP)) {
-				const int destidx = mapidx(pos.x, pos.y, pos.z + 1);
-				candidates.insert(std::make_pair(distance_map[destidx], destidx));
-			}
-			int dx, dy, dz;
-			std::tie(dx, dy, dz) = idxmap(candidates.begin()->second);
-			return position_t{ dx, dy, dz };
-		}
+		using namespace dijkstra;
 
 		dijkstra_map huntables_map;
 		dijkstra_map butcherables_map;
@@ -209,7 +34,22 @@ namespace systems {
 		dijkstra_map harvest_map;
 		bool dijkstra_debug = false;
 
+		bool huntables_dirty = true;
+		bool butcherables_dirty = true;
+		bool beds_dirty = true;
+		bool settlers_dirty = true;
+		bool architecutre_dirty = true;
+		bool blocks_dirty = true;
+		bool levers_dirty = true;
+		bool axes_dirty = true;
+		bool picks_dirty = true;
+		bool harvest_dirty = true;
+
 		using namespace bengine;
+
+		void refresh_bed_map() {
+			beds_dirty = true;
+		}
 
 		void update_hunting_map() {
 			std::vector<int> huntables;
@@ -346,6 +186,55 @@ namespace systems {
 		}
 
 		void run(const double &duration_ms) {
+			if (huntables_dirty) {
+				update_hunting_map();
+				huntables_dirty = false;
+			}
+
+			if (butcherables_dirty) {
+				update_butcher_map();
+				butcherables_dirty = false;
+			}
+
+			if (beds_dirty) {
+				update_bed_map();
+				beds_dirty = false;
+			}
+
+			if (settlers_dirty) {
+				update_settler_map();
+				settlers_dirty = false;
+			}
+
+			if (architecutre_dirty) {
+				update_architecure_map();
+				architecutre_dirty = false;
+			}
+
+			if (blocks_dirty) {
+				update_blocks_map();
+				blocks_dirty = false;
+			}
+
+			if (levers_dirty) {
+				update_levers_map();
+				levers_dirty = false;
+			}
+
+			if (axes_dirty) {
+				update_axe_map();
+				axes_dirty = false;
+			}
+
+			if (picks_dirty) {
+				update_pick_map();
+				picks_dirty = false;
+			}
+
+			if (harvest_dirty) {
+				update_harvest_map();
+				harvest_dirty = false;
+			}
 		}
 	}
 }

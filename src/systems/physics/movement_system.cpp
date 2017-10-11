@@ -67,6 +67,10 @@ namespace systems {
 			charge_requests.enqueue(entity_wants_to_charge_message{ id, charge_to });
 		}
 
+		void request_random_move(std::size_t id) {
+			wander_requests.enqueue(entity_wants_to_move_randomly_message{ id });
+		}
+
 		void process_wandering() {
 			using namespace bengine;
 			using namespace region;

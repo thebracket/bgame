@@ -212,8 +212,10 @@
     <ClCompile Include="..\..\src\systems\ai\inventory_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\mining_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_sleep_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\jobs_board.cpp" />
     <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp" />
@@ -225,6 +227,7 @@
     <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\tooltip_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp" />
+    <ClCompile Include="..\..\src\systems\helpers\dijkstra_map.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\inventory_assistant.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\weapons_helper.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\workflow_assistant.cpp" />
@@ -441,8 +444,10 @@
     <ClInclude Include="..\..\src\systems\ai\inventory_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\mining_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\sentient_ai_system.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_sleep_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\jobs_board.hpp" />
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
@@ -454,6 +459,7 @@
     <ClInclude Include="..\..\src\systems\gui\settler_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\tooltip_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp" />
+    <ClInclude Include="..\..\src\systems\helpers\dijkstra_map.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\inventory_assistant.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\weapons_helper.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\workflow_assistant.hpp" />
