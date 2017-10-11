@@ -213,7 +213,9 @@
     <ClCompile Include="..\..\src\systems\ai\mining_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\jobs_board.cpp" />
     <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\wildlife_population.cpp" />
     <ClCompile Include="..\..\src\systems\ai\workflow_system.cpp" />
@@ -440,7 +442,9 @@
     <ClInclude Include="..\..\src\systems\ai\mining_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\sentient_ai_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\jobs_board.hpp" />
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
     <ClInclude Include="..\..\src\systems\ai\workflow_system.hpp" />

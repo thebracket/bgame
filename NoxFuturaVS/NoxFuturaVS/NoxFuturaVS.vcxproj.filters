@@ -552,6 +552,12 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\jobs_board.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1230,6 +1236,12 @@
       <Filter>Header Files\systems\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\jobs_board.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>

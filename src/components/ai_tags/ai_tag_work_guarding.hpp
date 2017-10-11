@@ -1,11 +1,10 @@
 #pragma once
 
-#include <rltk.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../position.hpp"
-
-using namespace rltk;
+#include "../../bengine/ecs.hpp"
+#include "../../bengine/path_finding.hpp"
 
 struct ai_tag_work_guarding {
 
@@ -16,7 +15,7 @@ struct ai_tag_work_guarding {
     bool has_post = false;
     position_t guard_post;
 
-    std::shared_ptr<rltk::navigation_path<position_t>> current_path; // Not serialized
+    std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
 
     template<class Archive>
     void serialize(Archive & archive)
@@ -26,4 +25,4 @@ struct ai_tag_work_guarding {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<ai_tag_work_guarding>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_guarding>>)
