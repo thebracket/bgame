@@ -579,6 +579,12 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_mining.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_guard.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_harvest.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1287,6 +1293,12 @@
       <Filter>Header Files\systems\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_mining.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_guard.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_harvest.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
