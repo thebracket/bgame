@@ -219,6 +219,7 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_architect.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_building.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_butcher.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_guard.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_harvest.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_hunt.cpp" />
@@ -462,6 +463,7 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_architect.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_building.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_butcher.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_guard.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_harvest.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_hunt.hpp" />
