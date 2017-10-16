@@ -6,6 +6,7 @@
 #include "../../components/initiative.hpp"
 #include "../../components/riding_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
+#include "trigger_system.hpp"
 
 namespace systems {
 	namespace movement {
@@ -35,15 +36,7 @@ namespace systems {
 			entity_wants_to_charge_message(std::size_t id, std::size_t charge_to) : entity_id(id), charge_to_id(charge_to) {}
 			std::size_t entity_id;
 			std::size_t charge_to_id;
-		};
-
-		struct entity_moved_message {
-			entity_moved_message() {}
-			entity_moved_message(std::size_t id, const position_t &orig, const position_t &dest) : entity_id(id), origin(orig), destination(dest) {}
-			std::size_t entity_id;
-			position_t origin;
-			position_t destination;
-		};
+		};		
 
 		thread_safe_message_queue<entity_wants_to_move_message> move_requests;
 		thread_safe_message_queue<entity_wants_to_move_randomly_message> wander_requests;
@@ -253,6 +246,8 @@ namespace systems {
 				// TODO: Map update notifications
 				//if (e && e->component<settler_ai_t>()) {
 				//	emit(settler_moved_message{});
+
+				triggers::entry_trigger_firing(msg);
 			});
 
 		}

@@ -38,6 +38,8 @@
 #include "ai/settler/ai_work_order.hpp"
 #include "ai/settler/ai_work_architect.hpp"
 #include "ai/settler/ai_work_hunt.hpp"
+#include "ai/settler/ai_idle.hpp"
+#include "physics/trigger_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -99,6 +101,8 @@ namespace systems {
 	constexpr int AI_WORK_ORDER = 41;
 	constexpr int AI_WORK_ARCHITECT = 42;
 	constexpr int AI_WORK_HUNT = 43;
+	constexpr int AI_IDLE = 44;
+	constexpr int TRIGGER_SYSTEM = 45;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -166,6 +170,8 @@ namespace systems {
 		system_names[AI_WORK_ARCHITECT] = "AI Architect";
 		system_names[AI_WORK_ORDER] = "AI Workorders";
 		system_names[AI_WORK_HUNT] = "AI Hunting";
+		system_names[AI_IDLE] = "AI Idle";
+		system_names[TRIGGER_SYSTEM] = "Trigger System";
 		game_master_mode = PLAY;
     }
 
@@ -229,7 +235,9 @@ namespace systems {
 			run_system(ai_workorder::run, duration_ms, AI_WORK_ORDER);
 			run_system(ai_architect::run, duration_ms, AI_WORK_ARCHITECT);
 			run_system(ai_hunt::run, duration_ms, AI_WORK_HUNT);
+			run_system(ai_idle::run, duration_ms, AI_IDLE);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
+			run_system(triggers::run, duration_ms, TRIGGER_SYSTEM);
         }
 
 		// Logging goes at the end to catch new messages

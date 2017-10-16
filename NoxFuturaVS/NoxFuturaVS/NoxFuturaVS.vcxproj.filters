@@ -603,6 +603,12 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_butcher.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_idle.cpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\physics\trigger_system.cpp">
+      <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1336,6 +1342,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_butcher.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp">
+      <Filter>Header Files\systems\physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

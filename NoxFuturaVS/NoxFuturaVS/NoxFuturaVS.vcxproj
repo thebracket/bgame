@@ -212,6 +212,7 @@
     <ClCompile Include="..\..\src\systems\ai\inventory_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\mining_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_idle.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp" />
@@ -253,6 +254,7 @@
     <ClCompile Include="..\..\src\systems\physics\fluid_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\gravity_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\movement_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\trigger_system.cpp" />
     <ClCompile Include="..\..\src\systems\power\power_system.cpp" />
     <ClCompile Include="..\..\src\systems\run_systems.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\calendar_system.cpp" />
@@ -456,6 +458,7 @@
     <ClInclude Include="..\..\src\systems\ai\inventory_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\mining_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\sentient_ai_system.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp" />
@@ -498,6 +501,7 @@
     <ClInclude Include="..\..\src\systems\physics\fluid_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\gravity_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\movement_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp" />
     <ClInclude Include="..\..\src\systems\power\power_system.hpp" />
     <ClInclude Include="..\..\src\systems\run_systems.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\calendar_system.hpp" />

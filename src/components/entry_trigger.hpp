@@ -1,10 +1,8 @@
 #pragma once
 
-#include <rltk.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-
-using namespace rltk;
+#include "../bengine/ecs.hpp"
 
 enum trigger_type { trigger_cage, trigger_stonefall, trigger_blade };
 
@@ -23,4 +21,4 @@ struct entry_trigger_t {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<entry_trigger_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<entry_trigger_t>>)
