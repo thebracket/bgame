@@ -33,6 +33,7 @@
 #include "ai/settler/ai_work_mining.hpp"
 #include "ai/settler/ai_work_guard.hpp"
 #include "ai/settler/ai_work_harvest.hpp"
+#include "ai/settler/ai_work_lever_pull.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -89,6 +90,7 @@ namespace systems {
 	constexpr int AI_WORK_MINING = 36;
 	constexpr int AI_WORK_GUARD = 37;
 	constexpr int AI_WORK_HARVEST = 38;
+	constexpr int AI_WORK_LEVER_PULL = 39;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -151,6 +153,7 @@ namespace systems {
 		system_names[AI_WORK_MINING] = "AI Mining";
 		system_names[AI_WORK_GUARD] = "AI Guarding";
 		system_names[AI_WORK_HARVEST] = "AI Harvest";
+		system_names[AI_WORK_LEVER_PULL] = "AI Lever Pull";
 		game_master_mode = PLAY;
     }
 
@@ -209,6 +212,7 @@ namespace systems {
 			run_system(ai_mining::run, duration_ms, AI_WORK_MINING);
 			run_system(ai_guard::run, duration_ms, AI_WORK_GUARD);
 			run_system(ai_harvest::run, duration_ms, AI_WORK_HARVEST);
+			run_system(ai_lever::run, duration_ms, AI_WORK_LEVER_PULL);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
         }
 

@@ -1,11 +1,9 @@
 #pragma once
 
-#include <rltk.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../position.hpp"
-
-using namespace rltk;
+#include "../../bengine/ecs.hpp"
 
 struct ai_tag_work_pull_lever {
 
@@ -22,4 +20,4 @@ struct ai_tag_work_pull_lever {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<ai_tag_work_pull_lever>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_pull_lever>>)
