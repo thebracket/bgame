@@ -1,12 +1,10 @@
 #pragma once
 
-#include <rltk.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../position.hpp"
 #include "../designations.hpp"
-
-using namespace rltk;
+#include "../../bengine/ecs.hpp"
 
 struct ai_tag_work_building {
 
@@ -17,7 +15,7 @@ struct ai_tag_work_building {
     building_designation_t building_target;
     std::size_t current_tool;
 
-    std::shared_ptr<rltk::navigation_path<position_t>> current_path; // Not serialized
+    std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
 
     template<class Archive>
     void serialize(Archive & archive)
@@ -27,4 +25,4 @@ struct ai_tag_work_building {
     }
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<ai_tag_work_building>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_building>>)

@@ -217,6 +217,7 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_sleep_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_visibility_scan.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_building.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_guard.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_harvest.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_lever_pull.cpp" />
@@ -456,6 +457,7 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_sleep_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_visibility_scan.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_building.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_guard.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_harvest.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_lever_pull.hpp" />

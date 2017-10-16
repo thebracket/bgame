@@ -588,6 +588,9 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_lever_pull.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_building.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1305,6 +1308,9 @@
       <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_lever_pull.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_building.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
