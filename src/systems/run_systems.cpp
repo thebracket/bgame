@@ -30,6 +30,7 @@
 #include "ai/settler/ai_sleep_time.hpp"
 #include "ai/settler/ai_work_time.hpp"
 #include "ai/settler/ai_work_lumberjack.hpp"
+#include "ai/settler/ai_work_mining.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
 #include "overworld/world_system.hpp"
@@ -83,6 +84,7 @@ namespace systems {
 	constexpr int AI_SLEEP_TIME = 33;
 	constexpr int AI_WORK_TIME = 34;
 	constexpr int AI_WORK_LUMBERJACK = 35;
+	constexpr int AI_WORK_MINING = 36;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -142,6 +144,7 @@ namespace systems {
 		system_names[AI_SLEEP_TIME] = "AI Sleep";
 		system_names[AI_WORK_TIME] = "AI Work";
 		system_names[AI_WORK_LUMBERJACK] = "AI Lumberjack";
+		system_names[AI_WORK_MINING] = "AI Mining";
 		game_master_mode = PLAY;
     }
 
@@ -197,6 +200,7 @@ namespace systems {
 			run_system(ai_sleep_time::run, duration_ms, AI_SLEEP_TIME);
 			run_system(ai_work_time::run, duration_ms, AI_WORK_TIME);
 			run_system(ai_work_lumberjack::run, duration_ms, AI_WORK_LUMBERJACK);
+			run_system(ai_mining::run, duration_ms, AI_WORK_MINING);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
         }
 

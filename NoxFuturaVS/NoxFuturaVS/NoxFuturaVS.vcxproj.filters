@@ -576,6 +576,9 @@
     <ClCompile Include="..\..\src\systems\helpers\pathfinding.cpp">
       <Filter>Source Files\systems\helpers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_mining.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1282,6 +1285,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\helpers\pathfinding.hpp">
       <Filter>Header Files\systems\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_mining.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
