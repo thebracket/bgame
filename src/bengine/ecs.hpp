@@ -132,60 +132,6 @@ namespace bengine {
         ecs_garbage_collect(default_ecs);
     }
 
-    template <class MSG>
-    inline void emit(ecs &ECS, MSG message) {
-        ECS.emit<MSG>(message);
-    }
-
-    template <class MSG>
-    inline void emit(MSG message) {
-        default_ecs.emit<MSG>(message);
-    }
-
-    template <class MSG>
-    inline void emit_deferred(ecs &ECS, MSG message) {
-        ECS.emit_deferred<MSG>(message);
-    }
-
-    template <class MSG>
-    inline void emit_deferred(MSG message) {
-        emit_deferred<MSG>(default_ecs, message);
-    }
-
-    template<typename S, typename ...Args>
-    inline void add_system( ecs &ECS, Args && ... args ) {
-        ECS.add_system<S, Args...>(args...);
-    }
-
-    template<typename S, typename ...Args>
-    inline void add_system( Args && ... args ) {
-        add_system<S, Args...>(default_ecs, args...);
-    }
-
-    inline void delete_all_systems(ecs &ECS) {
-        ECS.delete_all_systems();
-    }
-
-    inline void delete_all_systems() {
-        delete_all_systems(default_ecs);
-    }
-
-    inline void ecs_configure(ecs &ECS) {
-        ECS.ecs_configure();
-    }
-
-    inline void ecs_configure() {
-        ecs_configure(default_ecs);
-    }
-
-    inline void ecs_tick(ecs &ECS, const double duration_ms) {
-        ECS.ecs_tick(duration_ms);
-    }
-
-    inline void ecs_tick(const double duration_ms) {
-        ecs_tick(default_ecs, duration_ms);
-    }
-
     inline void ecs_save(ecs &ECS, std::unique_ptr<std::ofstream> &lbfile) {
         ECS.ecs_save(lbfile);
     }

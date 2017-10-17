@@ -576,56 +576,6 @@ namespace bengine {
             }
         }
 
-        /*
-         * Submits a message for delivery. It will be delivered to every system that has issued a subscribe or subscribe_mbox
-         * call.
-         */
-        template <class MSG>
-        inline void emit(MSG message) {
-            impl::message_t<MSG> handle(message);
-            if (pubsub_holder.size() > handle.family_id) {
-                for (auto &func : static_cast<impl::subscription_holder_t<MSG> *>(pubsub_holder[handle.family_id].get())->subscriptions) {
-                    if (std::get<0>(func) && std::get<1>(func)) {
-                        std::get<1>(func)(message);
-                    } else {
-                        // It is destined for the system's mailbox queue.
-                        auto finder = std::get<2>(func)->mailboxes.find(handle.family_id);
-                        if (finder != std::get<2>(func)->mailboxes.end()) {
-                            static_cast<impl::mailbox_t<MSG> *>(finder->second.get())->messages.push(message);
-                        }
-                    }
-                }
-            }
-        }
-
-        /*
-         * Submits a message for delivery. It will be delivered to every system that has issued a subscribe or subscribe_mbox
-         * call at the end of the next system execution. This is thead-safe, so you can emit_defer from within a parallel_each.
-         */
-        template <class MSG>
-        inline void emit_deferred(MSG message) {
-            impl::message_t<MSG> handle(message);
-            if (pubsub_holder.size() > handle.family_id) {
-
-                auto * subholder = static_cast<impl::subscription_holder_t<MSG> *>(pubsub_holder[handle.family_id].get());
-                std::lock_guard<std::mutex> postlock(subholder->delivery_mutex);
-                subholder->delivery_queue.push(message);
-            }
-        }
-
-        /* Add a system to the mix */
-        template<typename S, typename ...Args>
-        inline void add_system( Args && ... args ) {
-            system_store.push_back(std::make_unique<S>( std::forward<Args>(args) ... ));
-            system_profiling.push_back(system_profiling_t{});
-        }
-
-        void delete_all_systems();
-
-        void ecs_configure();
-
-        void ecs_tick(const double duration_ms);
-
         void ecs_save(std::unique_ptr<std::ofstream> &lbfile);
 
         void ecs_load(std::unique_ptr<std::ifstream> &lbfile);
@@ -653,13 +603,6 @@ namespace bengine {
             if (finder != entity_store.end()) {
                 finder->second.component_mask.reset(family_id);
                 if (delete_if_empty && finder->second.component_mask.none()) finder->second.deleted = true;
-            }
-        }
-
-        /* Delivers the queue; called at the end of each system call */
-        inline void deliver_messages() {
-            for (auto &holder : pubsub_holder) {
-                if (holder) holder->deliver_messages();
             }
         }
 
@@ -702,34 +645,6 @@ namespace bengine {
                 }
             }
             return result;
-        }
-
-        template<class MSG>
-        inline void subscribe(ecs &ECS, base_system &B, std::function<void(MSG &message)> destination) {
-            MSG empty_message{};
-            impl::message_t<MSG> handle(empty_message);
-            if (ECS.pubsub_holder.size() < handle.family_id + 1) {
-                ECS.pubsub_holder.resize(handle.family_id + 1);
-            }
-            if (!ECS.pubsub_holder[handle.family_id]) {
-                ECS.pubsub_holder[handle.family_id] = std::move(std::make_unique<subscription_holder_t<MSG>>());
-            }
-            static_cast<subscription_holder_t<MSG> *>(ECS.pubsub_holder[handle.family_id].get())->subscriptions.push_back(std::make_tuple(true,destination,nullptr));
-        }
-
-        template<class MSG>
-        inline void subscribe_mbox(ecs &ECS, base_system &B) {
-            MSG empty_message{};
-            impl::message_t<MSG> handle(empty_message);
-            if (ECS.pubsub_holder.size() < handle.family_id + 1) {
-                ECS.pubsub_holder.resize(handle.family_id + 1);
-            }
-            if (!ECS.pubsub_holder[handle.family_id]) {
-                ECS.pubsub_holder[handle.family_id] = std::move(std::make_unique<subscription_holder_t<MSG>>());
-            }
-            std::function<void(MSG &message)> destination; // Deliberately empty
-            static_cast<impl::subscription_holder_t<MSG> *>(ECS.pubsub_holder[handle.family_id].get())->subscriptions.push_back(std::make_tuple(false,destination,&B));
-            B.mailboxes[handle.family_id] = std::make_unique<impl::mailbox_t<MSG>>();
         }
 
         inline void unset_component_mask(ecs &ECS, const std::size_t id, const std::size_t family_id, bool delete_if_empty) {

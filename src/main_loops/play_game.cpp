@@ -68,8 +68,6 @@ namespace play_game {
         //add_systems_to_ecs();
         systems::init();
 
-        std::cout << "ECS Config\n";
-        ecs_configure();
         std::cout << "Go!\n";
 
 		game_master_mode = PLAY;

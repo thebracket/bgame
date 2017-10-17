@@ -47,36 +47,6 @@ void ecs::each(std::function<void(entity_t &)> &&func) {
 	}
 }
 
-
-void ecs::delete_all_systems() {
-	system_store.clear();
-	system_profiling.clear();
-	pubsub_holder.clear();
-}
-
-void ecs::ecs_configure() {
-	for (std::unique_ptr<base_system> & sys : system_store) {
-		sys->configure();
-	}
-}
-
-void ecs::ecs_tick(const double duration_ms) {
-	std::size_t count = 0;
-	for (std::unique_ptr<base_system> & sys : system_store) {
-		std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-		sys->update(duration_ms);
-		deliver_messages();
-		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-		double duration = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count());
-
-		system_profiling[count].last = duration;
-		if (duration > system_profiling[count].worst) system_profiling[count].worst = duration;
-		if (duration < system_profiling[count].best) system_profiling[count].best = duration;
-		++count;
-	}
-	ecs_garbage_collect();
-}
-
 void ecs::ecs_save(std::unique_ptr<std::ofstream> &lbfile) {
     cereal::XMLOutputArchive oarchive(*lbfile);
     oarchive(*this);

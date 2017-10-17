@@ -221,7 +221,7 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is trapped in a cage!");
-										emit_deferred(log_message{ ss.chars });
+										logging::log(logging::log_message{ ss.chars });
 									}
 
 									// TODO: Add a random chance with some dex involved
@@ -249,7 +249,7 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a falling rock trap!");
-										emit_deferred(log_message{ ss.chars });
+										logging::log(logging::log_message{ ss.chars });
 									}
 
 									// TODO: Add a random chance with some dex involved
@@ -267,7 +267,7 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
-										emit_deferred(log_message{ ss.chars });
+										logging::log(logging::log_message{ ss.chars });
 									}
 
 									// TODO: Add a random chance with some dex involved
