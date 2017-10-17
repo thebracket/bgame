@@ -264,6 +264,7 @@
     <ClCompile Include="..\..\src\systems\physics\movement_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\topology_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\trigger_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\vegetation_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\visibility_system.cpp" />
     <ClCompile Include="..\..\src\systems\power\power_system.cpp" />
     <ClCompile Include="..\..\src\systems\run_systems.cpp" />
@@ -521,6 +522,7 @@
     <ClInclude Include="..\..\src\systems\physics\movement_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\topology_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\vegetation_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\visibility_system.hpp" />
     <ClInclude Include="..\..\src\systems\power\power_system.hpp" />
     <ClInclude Include="..\..\src\systems\run_systems.hpp" />
