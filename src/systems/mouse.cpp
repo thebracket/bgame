@@ -24,9 +24,9 @@ namespace systems {
 		glReadPixels(mouse_x, screen_height - mouse_y, 1, 1, GL_RGB, GL_FLOAT, &pixels[0]);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		mouse_wx = pixels[0] + 0.5f;
-		mouse_wz = pixels[1] + 0.6f;
-		mouse_wy = pixels[2] + 0.5f;
+		mouse_wx = static_cast<int>(pixels[0] + 0.5f);
+		mouse_wz = static_cast<int>(pixels[1] + 0.6f);
+		mouse_wy = static_cast<int>(pixels[2] + 0.5f);
 
 		//std::cout << mouse_wx << " / " << mouse_wy << " / " << mouse_wz << "\n";
 	}
@@ -37,8 +37,8 @@ namespace systems {
 
 		ImGuiIO& io = ImGui::GetIO();
 		if (!io.WantCaptureMouse) {
-			mouse_x = io.MousePos.x;
-			mouse_y = io.MousePos.y;
+			mouse_x = static_cast<int>(io.MousePos.x);
+			mouse_y = static_cast<int>(io.MousePos.y);
 			left_click = io.MouseDown[0];
 			right_click = io.MouseDown[1];
 			middle_click = io.MouseDown[2];

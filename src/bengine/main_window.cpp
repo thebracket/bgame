@@ -73,12 +73,12 @@ namespace bengine {
         const std::string font_path = std::string("game_assets/") + gui_font;
         //io.Fonts->AddFontDefault();
         std::cout << "Loading " << font_path << ", at size " << gui_font_size << " pixels\n";
-        io.Fonts->AddFontFromFileTTF(font_path.c_str(), gui_font_size);
+        io.Fonts->AddFontFromFileTTF(font_path.c_str(), static_cast<float>(gui_font_size));
         config.MergeMode = true;
         // TODO: Why does this fail?
 		const std::string fontawesome_path = "game_assets/fontawesome-webfont.ttf";
 		if (!exists(fontawesome_path)) throw std::runtime_error("Unable to load Font Awesome");
-		io.Fonts->AddFontFromFileTTF(fontawesome_path.c_str(), gui_font_size, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF(fontawesome_path.c_str(), static_cast<float>(gui_font_size), &config, icon_ranges);
 
 		setup_imgui_style();
 
@@ -97,7 +97,7 @@ namespace bengine {
             glFlush();
             glfwSwapBuffers(main_window);
             auto end_time = std::chrono::high_resolution_clock::now();
-            duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+            duration_ms = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count());
         }
         stop_telemetry();
         glfwTerminate();

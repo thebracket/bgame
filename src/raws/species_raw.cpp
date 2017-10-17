@@ -70,7 +70,7 @@ void read_civ_types() noexcept
             if (field == "species_def") civ.species_tag = lua_tostring(lua_state, -1);
             if (field == "ai") civ.ai = lua_tostring(lua_state, -1);
             if (field == "name_generator") civ.name_generator = lua_tostring(lua_state, -1);
-            if (field == "tech_level") civ.tech_level = lua_tonumber(lua_state, -1);
+            if (field == "tech_level") civ.tech_level = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
             if (field == "units") {
                 // Read the units table
 
@@ -85,10 +85,10 @@ void read_civ_types() noexcept
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
                         std::string ufield = lua_tostring(lua_state, -2);
-                        if (ufield == "bp_per_turn") unit.bp_per_turn = lua_tonumber(lua_state, -1);
-                        if (ufield == "speed") unit.speed = lua_tonumber(lua_state, -1);
+                        if (ufield == "bp_per_turn") unit.bp_per_turn = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
+                        if (ufield == "speed") unit.speed = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
                         if (ufield == "name") unit.name = lua_tostring(lua_state, -1);
-                        if (ufield == "worldgen_strength") unit.worldgen_strength = lua_tonumber(lua_state, -1);
+                        if (ufield == "worldgen_strength") unit.worldgen_strength = static_cast<int>(lua_tonumber(lua_state, -1));
 
                         if (ufield == "sentients") {
                             lua_pushstring(lua_state, ufield.c_str());
@@ -102,13 +102,13 @@ void read_civ_types() noexcept
                                 lua_gettable(lua_state, -2);
                                 while (lua_next(lua_state, -2) != 0) {
                                     std::string sfield = lua_tostring(lua_state, -2);
-                                    if (sfield == "n") sentient.n_present = lua_tonumber(lua_state, -1);
+                                    if (sfield == "n") sentient.n_present = static_cast<int>(lua_tonumber(lua_state, -1));
                                     if (sfield == "name") sentient.name = lua_tostring(lua_state, -1);
-                                    if (sfield == "level") sentient.base_level = lua_tonumber(lua_state, -1);
-                                    if (sfield == "armor_class") sentient.base_armor_class = lua_tonumber(lua_state, -1);
-                                    if (sfield == "hp_n") sentient.hp_n = lua_tonumber(lua_state, -1);
-                                    if (sfield == "hp_dice") sentient.hp_dice = lua_tonumber(lua_state, -1);
-                                    if (sfield == "hp_mod") sentient.hp_mod = lua_tonumber(lua_state, -1);
+                                    if (sfield == "level") sentient.base_level = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
+                                    if (sfield == "armor_class") sentient.base_armor_class = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
+                                    if (sfield == "hp_n") sentient.hp_n = static_cast<int>(lua_tonumber(lua_state, -1));
+                                    if (sfield == "hp_dice") sentient.hp_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+                                    if (sfield == "hp_mod") sentient.hp_mod = static_cast<int>(lua_tonumber(lua_state, -1));
                                     if (sfield == "gender") sentient.gender = lua_tostring(lua_state, -1);
                                     if (sfield == "natural_attacks") {
                                         civ_unit_natural_attack_t nattack;
@@ -117,11 +117,11 @@ void read_civ_types() noexcept
                                         while (lua_next(lua_state, -2) != 0) {
                                             std::string afield = lua_tostring(lua_state, -2);
                                             if (afield == "type") nattack.type = lua_tostring(lua_state, -1);
-                                            if (afield == "hit_bonus") nattack.hit_bonus = lua_tonumber(lua_state, -1);
-                                            if (afield == "n_dice") nattack.n_dice = lua_tonumber(lua_state, -1);
-                                            if (afield == "die_type") nattack.die_type = lua_tonumber(lua_state, -1);
-                                            if (afield == "die_mod") nattack.die_mod = lua_tonumber(lua_state, -1);
-                                            if (afield == "range") nattack.range = lua_tonumber(lua_state, -1);
+                                            if (afield == "hit_bonus") nattack.hit_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
+                                            if (afield == "n_dice") nattack.n_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+                                            if (afield == "die_type") nattack.die_type = static_cast<int>(lua_tonumber(lua_state, -1));
+                                            if (afield == "die_mod") nattack.die_mod = static_cast<int>(lua_tonumber(lua_state, -1));
+                                            if (afield == "range") nattack.range = static_cast<int>(lua_tonumber(lua_state, -1));
 
                                             lua_pop(lua_state, 1);
                                         }
@@ -226,7 +226,7 @@ void read_species_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string subfield = lua_tostring(lua_state, -2);
-                    int value = lua_tonumber(lua_state, -1);
+                    int value = static_cast<int>(lua_tonumber(lua_state, -1));
                     s.stat_mods.insert(std::make_pair(subfield, value));
                     lua_pop(lua_state, 1);
                 }
@@ -264,8 +264,8 @@ void read_species_types() noexcept
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
                         std::string part_field = lua_tostring(lua_state, -2);
-                        if (part_field == "qty") std::get<1>(part) = lua_tonumber(lua_state, -1);
-                        if (part_field == "size") std::get<2>(part) = lua_tonumber(lua_state, -1);
+                        if (part_field == "qty") std::get<1>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
+                        if (part_field == "size") std::get<2>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
                         lua_pop(lua_state, 1);
                     }
                     s.body_parts.push_back(part);
@@ -273,15 +273,15 @@ void read_species_types() noexcept
                     lua_pop(lua_state, 1);
                 }
             }
-            if (field == "max_age") s.max_age = lua_tonumber(lua_state, -1);
-            if (field == "infant_age") s.infant_age = lua_tonumber(lua_state, -1);
-            if (field == "child_age") s.child_age = lua_tonumber(lua_state, -1);
-            if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
-            if (field == "glyph_ascii") s.glyph = lua_tonumber(lua_state, -1);
-            if (field == "worldgen_glyph") s.worldgen_glyph = lua_tonumber(lua_state, -1);
+            if (field == "max_age") s.max_age = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "infant_age") s.infant_age = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "child_age") s.child_age = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "glyph") s.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
+            if (field == "glyph_ascii") s.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
+            if (field == "worldgen_glyph") s.worldgen_glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "composite_render") s.render_composite = lua_toboolean(lua_state, -1);
-            if (field == "base_male_glyph") s.base_male_glyph = lua_tonumber(lua_state, -1);
-            if (field == "base_female_glyph") s.base_female_glyph = lua_tonumber(lua_state, -1);
+            if (field == "base_male_glyph") s.base_male_glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
+            if (field == "base_female_glyph") s.base_female_glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "skin_colors") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);

@@ -152,7 +152,7 @@ namespace chunks {
                         if (region::revealed(idx)) {
 							if (tiletype == tile_type::WINDOW) {
 								// TODO: Windows go into transparency buffer
-								add_cube_geometry(layers[chunk_z].trans, region_x, region_y, region_z, 1.0f, 1.0f, 15);
+								add_cube_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 15);
 								layers[chunk_z].n_trans += 36;
 								layer_requires_transparency.set(chunk_z);
 							} else if (tiletype == tile_type::FLOOR) {
@@ -172,7 +172,7 @@ namespace chunks {
                         }
                     }
 					if (region::water_level(idx) > 0) {
-						add_water_geometry(layers[chunk_z].trans, region_x, region_y, region_z, 1.0f, 1.0f, 12, region::water_level(idx));
+						add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));
 						layers[chunk_z].n_trans += 6;
 						layer_requires_transparency.set(chunk_z);
 					}

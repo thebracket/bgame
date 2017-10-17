@@ -302,7 +302,7 @@ namespace region {
         current_region = std::make_unique<region_t>();
         current_region ->region_x = x;
         current_region->region_y = y;
-        current_region->biome_idx = biome;
+        current_region->biome_idx = static_cast<int>(biome);
         zero_map();
     }
 

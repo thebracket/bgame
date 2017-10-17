@@ -95,7 +95,7 @@ namespace vox {
                 }
             }
 
-            add_cube_geometry(geometry, voxel_info, W, H, D, 3);
+            add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
             ++cube_count;
         }
         std::cout << "Reduced to " << cube_count << " cubes, " << geometry.size() << " triangles.\n";

@@ -90,7 +90,7 @@ namespace render {
         for (const auto &idx : visible_chunks) {
             chunks::chunk_t * target = &chunks::chunks[idx];
             if (target->ready && target->has_geometry) {
-                int n_elements = 0;
+                size_t n_elements = 0;
                 for (int z=0; z<chunks::CHUNK_SIZE; ++z) {
                     const int layer_z = z + target->base_z;
                     if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z-10) {
@@ -110,7 +110,7 @@ namespace render {
 		for (const auto &idx : visible_chunks) {
 			chunks::chunk_t * target = &chunks::chunks[idx];
 			if (target->ready && target->has_transparency) {
-				int n_elements = 0;
+				size_t n_elements = 0;
 				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
 					const int layer_z = z + target->base_z;
 					if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z - 10) {

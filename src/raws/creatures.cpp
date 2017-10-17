@@ -53,7 +53,7 @@ void read_creature_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string subfield = lua_tostring(lua_state, -2);
-                    int value = lua_tonumber(lua_state, -1);
+                    int value = static_cast<int>(lua_tonumber(lua_state, -1));
                     s.stats.insert(std::make_pair(subfield, value));
                     lua_pop(lua_state, 1);
                 }
@@ -69,8 +69,8 @@ void read_creature_types() noexcept
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
                         std::string part_field = lua_tostring(lua_state, -2);
-                        if (part_field == "qty") std::get<1>(part) = lua_tonumber(lua_state, -1);
-                        if (part_field == "size") std::get<2>(part) = lua_tonumber(lua_state, -1);
+                        if (part_field == "qty") std::get<1>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
+                        if (part_field == "size") std::get<2>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
                         lua_pop(lua_state, 1);
                     }
                     s.body_parts.push_back(part);
@@ -83,7 +83,7 @@ void read_creature_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string cname = lua_tostring(lua_state, -2);
-                    if (cname == "armor_class") s.armor_class = lua_tonumber(lua_state, -1);
+                    if (cname == "armor_class") s.armor_class = static_cast<int>(lua_tonumber(lua_state, -1));
                     if (cname == "attacks") {
                         lua_pushstring(lua_state, cname.c_str());
                         lua_gettable(lua_state, -2);
@@ -95,10 +95,10 @@ void read_creature_types() noexcept
                             while (lua_next(lua_state, -2) != 0) {
                                 std::string attack_field = lua_tostring(lua_state, -2);
                                 if (attack_field == "type") attack.type = lua_tostring(lua_state, -1);
-                                if (attack_field == "hit_bonus") attack.hit_bonus = lua_tonumber(lua_state, -1);
-                                if (attack_field == "n_dice") attack.damage_n_dice = lua_tonumber(lua_state, -1);
-                                if (attack_field == "die_type") attack.damage_dice = lua_tonumber(lua_state, -1);
-                                if (attack_field == "die_mod") attack.damage_mod = lua_tonumber(lua_state, -1);
+                                if (attack_field == "hit_bonus") attack.hit_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
+                                if (attack_field == "n_dice") attack.damage_n_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+                                if (attack_field == "die_type") attack.damage_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+                                if (attack_field == "die_mod") attack.damage_mod = static_cast<int>(lua_tonumber(lua_state, -1));
                                 lua_pop(lua_state, 1);
                             }
                             //std::cout << attack.type << attack_name << "\n";
@@ -115,7 +115,7 @@ void read_creature_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string yield_type = lua_tostring(lua_state, -2);
-                    int value = lua_tonumber(lua_state, -1);
+                    int value = static_cast<int>(lua_tonumber(lua_state, -1));
                     if (yield_type == "meat") s.yield_meat = value;
                     if (yield_type == "hide") s.yield_hide = value;
                     if (yield_type == "bone") s.yield_bone = value;
@@ -127,14 +127,14 @@ void read_creature_types() noexcept
                 std::string ai_type = lua_tostring(lua_state, -1);
                 if (ai_type == "grazer") s.ai = creature_grazer;
             }
-            if (field == "glyph") s.glyph = lua_tonumber(lua_state, -1);
-            if (field == "glyph") s.glyph_ascii = lua_tonumber(lua_state, -1);
-            if (field == "hp_n") s.hp_n = lua_tonumber(lua_state, -1);
-            if (field == "hp_dice") s.hp_dice = lua_tonumber(lua_state, -1);
-            if (field == "hp_mod") s.hp_mod = lua_tonumber(lua_state, -1);
-            if (field == "group_size_n_dice") s.group_size_n_dice = lua_tonumber(lua_state, -1);
-            if (field == "group_size_dice") s.group_size_dice = lua_tonumber(lua_state, -1);
-            if (field == "group_size_mod") s.group_size_mod = lua_tonumber(lua_state, -1);
+            if (field == "glyph") s.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
+            if (field == "glyph") s.glyph_ascii = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
+            if (field == "hp_n") s.hp_n = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "hp_dice") s.hp_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "hp_mod") s.hp_mod = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "group_size_n_dice") s.group_size_n_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "group_size_dice") s.group_size_dice = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "group_size_mod") s.group_size_mod = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "color") s.fg = read_lua_color("color");
 
             lua_pop(lua_state, 1);

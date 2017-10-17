@@ -102,9 +102,9 @@ bengine::color_t read_lua_color(std::string field) {
     lua_gettable(lua_state, -2);
     while (lua_next(lua_state, -2) != 0) {
         std::string subfield = lua_tostring(lua_state, -2);
-        if (subfield == "r") col.r = lua_tonumber(lua_state, -1) / 255.0f;
-        if (subfield == "g") col.g = lua_tonumber(lua_state, -1) / 255.0f;
-        if (subfield == "b") col.b = lua_tonumber(lua_state, -1) / 255.0f;
+        if (subfield == "r") col.r = static_cast<float>(lua_tonumber(lua_state, -1)) / 255.0f;
+        if (subfield == "g") col.g = static_cast<float>(lua_tonumber(lua_state, -1)) / 255.0f;
+        if (subfield == "b") col.b = static_cast<float>(lua_tonumber(lua_state, -1)) / 255.0f;
         lua_pop(lua_state, 1);
     }
     return col;

@@ -146,10 +146,10 @@ void read_material_types() noexcept
 
             }
             if (field == "parent") m.parent_material_tag = lua_tostring(lua_state, -1);
-            if (field == "glyph") m.glyph = lua_tonumber(lua_state, -1);
+            if (field == "glyph") m.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "fg") m.fg = read_lua_color("fg");
             if (field == "bg") m.bg = read_lua_color("bg");
-            if (field == "hit_points") m.hit_points = lua_tonumber(lua_state, -1);
+            if (field == "hit_points") m.hit_points = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
             if (field == "mines_to") m.mines_to_tag = lua_tostring(lua_state, -1);
             if (field == "mines_to_also") m.mines_to_tag_second = lua_tostring(lua_state, -1);
             if (field == "layer") m.layer = lua_tostring(lua_state, -1);
@@ -162,10 +162,10 @@ void read_material_types() noexcept
                     lua_pop(lua_state, 1);
                 }
             }
-            if (field == "damage_bonus") m.damage_bonus = lua_tonumber(lua_state, -1);
-            if (field == "ac_bonus") m.ac_bonus = lua_tonumber(lua_state, -1);
-            if (field == "texture") m.base_texture_id = lua_tonumber(lua_state, -1);
-            if (field == "constructed") m.constructed_texture_id = lua_tonumber(lua_state, -1);
+            if (field == "damage_bonus") m.damage_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "ac_bonus") m.ac_bonus = static_cast<float>(lua_tonumber(lua_state, -1));
+            if (field == "texture") m.base_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "constructed") m.constructed_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
 
             lua_pop(lua_state, 1);
         }
@@ -268,7 +268,7 @@ void read_voxel_models() {
 			std::cout << field << "\n";
 
 			if (field == "model") modelfile = lua_tostring(lua_state, -1);
-			if (field == "id") idx = lua_tonumber(lua_state, -1);
+			if (field == "id") idx = static_cast<int>(lua_tonumber(lua_state, -1));
 
 			lua_pop(lua_state, 1);
 		}

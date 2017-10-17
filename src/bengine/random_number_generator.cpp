@@ -14,7 +14,7 @@ namespace bengine {
 
     random_number_generator::random_number_generator(const std::string seed) {
         std::hash<std::string> hash_func;
-        initial_seed = hash_func(seed);
+        initial_seed = static_cast<int>(hash_func(seed));
         pcg32_srandom_r(&rng, initial_seed, (intptr_t)&rng);
     }
 

@@ -52,7 +52,7 @@ void read_reactions() noexcept
             if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
             if (field == "workshop") c.workshop = lua_tostring(lua_state, -1);
             if (field == "skill") c.skill = lua_tostring(lua_state, -1);
-            if (field == "difficulty") c.difficulty = lua_tonumber(lua_state, -1);
+            if (field == "difficulty") c.difficulty = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "inputs") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
@@ -66,7 +66,7 @@ void read_reactions() noexcept
                     while (lua_next(lua_state, -2) != 0) {
                         std::string f = lua_tostring(lua_state, -2);
                         if (f == "item") input.tag = lua_tostring(lua_state, -1);
-                        if (f == "qty") input.quantity = lua_tonumber(lua_state, -1);
+                        if (f == "qty") input.quantity = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (f == "material") {
                             std::string mat_name = lua_tostring(lua_state, -1);
                             auto matfinder = get_material_by_tag(mat_name);
@@ -119,7 +119,7 @@ void read_reactions() noexcept
                     while (lua_next(lua_state, -2) != 0) {
                         std::string f = lua_tostring(lua_state, -2);
                         if (f == "item") comp.first = lua_tostring(lua_state, -1);
-                        if (f == "qty") comp.second = lua_tonumber(lua_state, -1);
+                        if (f == "qty") comp.second = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (f == "special") {
                             const std::string special = lua_tostring(lua_state, -1);
                             if (special == "cooking") c.specials.set(special_reaction_cooking);
@@ -134,7 +134,7 @@ void read_reactions() noexcept
                 }
             }
             if (field == "automatic") c.automatic = lua_toboolean(lua_state, -1);
-            if (field == "power_drain") c.power_drain = lua_tonumber(lua_state, -1);
+            if (field == "power_drain") c.power_drain = static_cast<int>(lua_tonumber(lua_state, -1));
 
             lua_pop(lua_state, 1);
         }

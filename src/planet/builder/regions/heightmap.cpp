@@ -18,7 +18,7 @@ void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &noise, st
         for (int x=0; x<REGION_WIDTH; ++x) {
             const double nx = noise_x(target.first, x);
             const double ny = noise_y(target.second, y);
-            const double nh = noise.GetNoise ( nx, ny );
+            const float nh = noise.GetNoise ( nx, ny );
             const uint8_t altitude = noise_to_planet_height(nh);
             const int cell_idx = (y * REGION_WIDTH) + x;
             heightmap[cell_idx] = altitude - planet.water_height + 5;

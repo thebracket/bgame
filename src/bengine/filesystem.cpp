@@ -35,13 +35,16 @@ std::string get_save_path()
     WCHAR path[MAX_PATH];
     if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, path))) {
     	const std::wstring p(path);
-	const std::string ps = std::string(p.begin(), p.end()) + std::string("/noxfutura");
-	std::cout << ps << "\n";
-	if (!directory_exists(ps.c_str())) {
-	    CreateDirectory(ps.c_str(), nullptr);
-	}
+		const std::string ps = std::string(p.begin(), p.end()) + std::string("/noxfutura");
+		std::cout << ps << "\n";
+		if (!directory_exists(ps.c_str())) {
+			CreateDirectory(ps.c_str(), nullptr);
+		}
         return ps;
-    }
+	}
+	else {
+		throw std::runtime_error("Unable to locate save path");
+	}
 }
 
 //#endif

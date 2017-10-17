@@ -54,11 +54,11 @@ namespace systems {
 			const std::string btn_view = std::string(ICON_FA_USER_CIRCLE) + " View";
 			if (ImGui::Button(btn_view.c_str())) {
 				game_master_mode = SETTLER;
-				selected_settler = settlers[current_settler].first;
+				selected_settler = static_cast<int>(settlers[current_settler].first);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(btn_goto.c_str())) {
-				selected_settler = settlers[current_settler].first;
+				selected_settler = static_cast<int>(settlers[current_settler].first);
 				auto the_settler = entity(selected_settler);
 				if (the_settler) {
 					auto pos = the_settler->component<position_t>();
@@ -70,7 +70,7 @@ namespace systems {
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(btn_rogue.c_str())) {
-				selected_settler = settlers[current_settler].first;
+				selected_settler = static_cast<int>(settlers[current_settler].first);
 				auto the_settler = entity(selected_settler);
 				if (the_settler) {
 					auto pos = the_settler->component<position_t>();

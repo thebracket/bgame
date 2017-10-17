@@ -19,8 +19,8 @@ namespace systems {
 			const double time_as_float = time_overall / 24.0f;
 			const double time_as_radians = (time_as_float * 6.28319);
 			auto sun_pos = bengine::project_angle(0, 0, 1000.0f, time_as_radians);
-			calendar->sun_x = sun_pos.first;
-			calendar->sun_y = sun_pos.second;
+			calendar->sun_x = static_cast<float>(sun_pos.first);
+			calendar->sun_y = static_cast<float>(sun_pos.second);
 			calendar->sun_z = static_cast<float>(latitude_sun);
 
 			calendar->moon_x = 0.0f - calendar->sun_x;

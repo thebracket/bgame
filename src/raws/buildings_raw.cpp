@@ -57,7 +57,7 @@ void read_buildings() noexcept
             std::string field = lua_tostring(lua_state, -2);
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
-            if (field == "vox") c.vox_model = lua_tonumber(lua_state, -1);
+            if (field == "vox") c.vox_model = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "structure") c.structure = true;
             if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
             if (field == "components") {
@@ -75,7 +75,7 @@ void read_buildings() noexcept
                         std::string f = lua_tostring(lua_state, -2);
 
                         if (f == "item") comp.tag = lua_tostring(lua_state, -1);
-                        if (f == "qty") comp.quantity = lua_tonumber(lua_state, -1);
+                        if (f == "qty") comp.quantity = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (f == "material") {
                             std::string mat_name = lua_tostring(lua_state, -1);
                             auto matfinder = get_material_by_tag(mat_name);
@@ -120,7 +120,7 @@ void read_buildings() noexcept
                 while (lua_next(lua_state, -2) != 0) {
                     std::string type = lua_tostring(lua_state, -2);
                     if (type == "name") c.skill.first = lua_tostring(lua_state, -1);
-                    if (type == "difficulty") c.skill.second = lua_tonumber(lua_state, -1);
+                    if (type == "difficulty") c.skill.second = static_cast<int>(lua_tonumber(lua_state, -1));
                     lua_pop(lua_state, 1);
                 }
             }
@@ -153,8 +153,8 @@ void read_buildings() noexcept
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
                         std::string inner_type = lua_tostring(lua_state, -2);
-                        if (inner_type == "energy_cost") provisions.energy_cost = lua_tonumber(lua_state, -1);
-                        if (inner_type == "radius") provisions.radius = lua_tonumber(lua_state, -1);
+                        if (inner_type == "energy_cost") provisions.energy_cost = static_cast<int>(lua_tonumber(lua_state, -1));
+                        if (inner_type == "radius") provisions.radius = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (inner_type == "color") provisions.color = read_lua_color("color");
                         lua_pop(lua_state, 1);
                     }
@@ -168,8 +168,8 @@ void read_buildings() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string type = lua_tostring(lua_state, -2);
-                    if (type == "width") c.width = lua_tonumber(lua_state, -1);
-                    if (type == "height") c.height = lua_tonumber(lua_state, -1);
+                    if (type == "width") c.width = static_cast<int>(lua_tonumber(lua_state, -1));
+                    if (type == "height") c.height = static_cast<int>(lua_tonumber(lua_state, -1));
                     if (type == "tiles") {
                         lua_pushstring(lua_state, type.c_str());
                         lua_gettable(lua_state, -2);
@@ -199,8 +199,8 @@ void read_buildings() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string type = lua_tostring(lua_state, -2);
-                    if (type == "width") c.width = lua_tonumber(lua_state, -1);
-                    if (type == "height") c.height = lua_tonumber(lua_state, -1);
+                    if (type == "width") c.width = static_cast<int>(lua_tonumber(lua_state, -1));
+                    if (type == "height") c.height = static_cast<int>(lua_tonumber(lua_state, -1));
                     if (type == "tiles") {
                         lua_pushstring(lua_state, type.c_str());
                         lua_gettable(lua_state, -2);

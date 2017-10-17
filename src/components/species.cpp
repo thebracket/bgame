@@ -14,6 +14,7 @@ std::string species_t::gender_pronoun() {
     switch (gender) {
         case MALE : return "He";
         case FEMALE : return "She";
+		default: return "Xi";
     }
 }
 
@@ -22,6 +23,7 @@ std::string species_t::sexuality_str() {
         case HETEROSEXUAL : return "Heterosexual";
         case HOMOSEXUAL : return "Homosexual";
         case BISEXUAL : return "Bi-sexual";
+		default: return "Unknown";
     }
 }
 
@@ -71,5 +73,6 @@ std::string species_t::hair_style_str() {
         case MOHAWK : return "in a mowhawk";
         case BALDING : return "balding";
         case TRIANGLE : return "cut into a triangle shape";
+		default: return "unknown";
     }
 }

@@ -214,7 +214,7 @@ namespace vox {
 
         size_chunk * current_size = nullptr;
         voxel_model model;
-        for (auto i=0; i<parsed.numModels; ++i) {
+        for (uint32_t i=0; i<parsed.numModels; ++i) {
             current_size = parsed.sizeChunks[i];
             std::cout << "Model size: " << current_size->x << " x " << current_size->y << " x " << current_size->z << "\n";
             model.width = current_size->x;

@@ -17,7 +17,7 @@ std::string get_random_species(bengine::random_number_generator &rng, const int 
     });
 
     if (eligible.empty()) throw std::runtime_error("No suitable civs available!");
-    return eligible[rng.roll_dice(1, eligible.size())-1];
+    return eligible[rng.roll_dice(1, static_cast<int>(eligible.size()))-1];
 }
 
 void planet_build_initial_civs(planet_t &planet, bengine::random_number_generator &rng) {
@@ -69,8 +69,8 @@ void planet_build_initial_civs(planet_t &planet, bengine::random_number_generato
 
         // Appearance
         if (get_species_def(civ_finder->species_tag)->render_composite) {
-            civ.skin_color = get_species_def(civ_finder->species_tag)->skin_colors[rng.roll_dice(1, get_species_def(civ_finder->species_tag)->skin_colors.size())-1];
-            civ.hair_color = get_species_def(civ_finder->species_tag)->hair_colors[rng.roll_dice(1, get_species_def(civ_finder->species_tag)->hair_colors.size())-1];
+            civ.skin_color = get_species_def(civ_finder->species_tag)->skin_colors[rng.roll_dice(1, static_cast<int>(get_species_def(civ_finder->species_tag)->skin_colors.size()))-1];
+            civ.hair_color = get_species_def(civ_finder->species_tag)->hair_colors[rng.roll_dice(1, static_cast<int>(get_species_def(civ_finder->species_tag)->hair_colors.size()))-1];
 
             civ.hair_style = BALD;
             const int style_roll = rng.roll_dice(1, 4);
@@ -117,7 +117,7 @@ std::string random_unit_type(const civilization_t &civ, bengine::random_number_g
         if (it->second.tag != "garrison") available.push_back(it->first);
     }
 
-    int roll = rng.roll_dice(1, available.size())-1;
+    int roll = rng.roll_dice(1, static_cast<int>(available.size()))-1;
     return available[roll];
 }
 
@@ -202,7 +202,7 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
         // Evolve!
         bp = 0;
         ++civ.tech_level;
-        int roll = rng.roll_dice(1, civ_f->evolves_into.size())-1;
+        int roll = rng.roll_dice(1, static_cast<int>(civ_f->evolves_into.size()))-1;
         civ.species_tag = civ_f->evolves_into[roll];
         auto civ2_f = get_civ_def(civ.species_tag);
         const std::string civ_name_func = "civ_name_gen_" + civ2_f->name_generator;
@@ -214,7 +214,7 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
     }
 
     // Consider new units
-    const int unit_cap = towns.size() + civ.tech_level + 1;
+    const int unit_cap = static_cast<int>(towns.size()) + civ.tech_level + 1;
     //std::cout << "Unit count: " << unit_count << ", cap " << unit_cap << "\n";
     while (bp > 5 && unit_count < unit_cap) {
         unit_t unit;
@@ -241,11 +241,11 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
                 if (unit.world_y < WORLD_HEIGHT-2 && planet.landblocks[planet.idx(unit.world_x, unit.world_y+1)].type != block_type::WATER) candidates.insert(planet.idx(unit.world_x, unit.world_y + 1));
 
                 if (!candidates.empty()) {
-                    const int roll = rng.roll_dice(1, candidates.size())-1;
+                    const int roll = rng.roll_dice(1, static_cast<int>(candidates.size()))-1;
                     int i=0;
                     for (auto it = candidates.begin(); it!=candidates.end(); ++it) {
                         if (i == roll) {
-                            const int pidx = *it;
+                            const size_t pidx = *it;
                             unit.world_x = pidx % WORLD_WIDTH;
                             unit.world_y = pidx / WORLD_WIDTH;
                         }

@@ -60,20 +60,20 @@ void read_biome_types() noexcept
             std::string field = lua_tostring(lua_state, -2);
 
             if (field == "name") b.name = lua_tostring(lua_state, -1);
-            if (field == "min_temp") b.min_temp = lua_tonumber(lua_state, -1);
-            if (field == "max_temp") b.max_temp = lua_tonumber(lua_state, -1);
-            if (field == "min_rain") b.min_rain = lua_tonumber(lua_state, -1);
-            if (field == "max_rain") b.max_rain = lua_tonumber(lua_state, -1);
-            if (field == "min_mutation") b.min_mutation = lua_tonumber(lua_state, -1);
-            if (field == "max_mutation") b.max_mutation = lua_tonumber(lua_state, -1);
-            if (field == "worldgen_texture_index") b.worldgen_texture_index = lua_tonumber(lua_state, -1);
+            if (field == "min_temp") b.min_temp = static_cast<int8_t>(lua_tonumber(lua_state, -1));
+            if (field == "max_temp") b.max_temp = static_cast<int8_t>(lua_tonumber(lua_state, -1));
+            if (field == "min_rain") b.min_rain = static_cast<int8_t>(lua_tonumber(lua_state, -1));
+            if (field == "max_rain") b.max_rain = static_cast<int8_t>(lua_tonumber(lua_state, -1));
+            if (field == "min_mutation") b.min_mutation = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
+            if (field == "max_mutation") b.max_mutation = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
+            if (field == "worldgen_texture_index") b.worldgen_texture_index = static_cast<unsigned int>(lua_tonumber(lua_state, -1));
             if (field == "soils") {
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string soil_type = lua_tostring(lua_state, -2);
-                    if (soil_type == "soil" ) b.soil_pct = lua_tonumber(lua_state, -1);
-                    if (soil_type == "sand" ) b.soil_pct = lua_tonumber(lua_state, -1);
+                    if (soil_type == "soil" ) b.soil_pct = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
+                    if (soil_type == "sand" ) b.soil_pct = static_cast<uint8_t>(lua_tonumber(lua_state, -1));
                     lua_pop(lua_state, 1);
                 }
             }
@@ -82,7 +82,7 @@ void read_biome_types() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    b.occurs.push_back(lua_tonumber(lua_state, -1));
+                    b.occurs.push_back(static_cast<uint8_t>(lua_tonumber(lua_state, -1)));
                     lua_pop(lua_state, 1);
                 }
             }
@@ -91,7 +91,7 @@ void read_biome_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string plant_name = lua_tostring(lua_state, -2);
-                    int frequency = lua_tonumber(lua_state, -1);
+                    int frequency = static_cast<int>(lua_tonumber(lua_state, -1));
                     b.plants.push_back(std::make_pair(plant_name, frequency));
                     lua_pop(lua_state, 1);
                 }
@@ -101,7 +101,7 @@ void read_biome_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string tree_type = lua_tostring(lua_state, -2);
-                    int frequency = lua_tonumber(lua_state, -1);
+                    int frequency = static_cast<int>(lua_tonumber(lua_state, -1));
                     if (tree_type == "deciduous") b.deciduous_tree_chance = frequency;
                     if (tree_type == "evergreen") b.evergreen_tree_chance = frequency;
                     lua_pop(lua_state, 1);
@@ -155,7 +155,7 @@ void read_biome_textures() {
             std::string field = lua_tostring(lua_state, -2);
             //std::cout << field << "\n";
 
-            if (field == "index") idx = lua_tonumber(lua_state, -1);
+            if (field == "index") idx = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "texture") tex = lua_tostring(lua_state, -1);
             if (field == "normal") norm = lua_tostring(lua_state, -1);
 

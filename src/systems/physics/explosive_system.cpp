@@ -170,9 +170,9 @@ namespace systems {
 
 							float vx = 0.0f, vy = 0.0f, vz = 0.0f;
 
-							vx = pos.x - x;
-							vy = pos.y - y;
-							vz = pos.z - z;
+							vx = static_cast<float>(pos.x - x);
+							vy = static_cast<float>(pos.y - y);
+							vz = static_cast<float>(pos.z - z);
 							const float distance = distance3d(x, y, z, (int)vx, (int)vy, (int)vz);
 							if (distance > 0) {
 								vx /= distance;

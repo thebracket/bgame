@@ -42,7 +42,7 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 			int n_tiles = 0;
 			for (int y1=0; y1<REGION_HEIGHT/REGION_FRACTION_TO_CONSIDER; ++y1) {
 				for (int x1=0; x1<REGION_WIDTH/REGION_FRACTION_TO_CONSIDER; ++x1) {
-					const double nh = noise.GetNoise ( noise_x(x,x1*REGION_FRACTION_TO_CONSIDER), noise_y(y,y1*REGION_FRACTION_TO_CONSIDER) );
+					const float nh = noise.GetNoise ( noise_x(x,x1*REGION_FRACTION_TO_CONSIDER), noise_y(y,y1*REGION_FRACTION_TO_CONSIDER) );
 					//std::cout << nh << "\n";
 					const uint8_t n = noise_to_planet_height(nh);
 					if (n < min) min = n;
@@ -51,11 +51,11 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 					++n_tiles;
 				}
 			}
-			planet.landblocks[planet.idx(x,y)].height = total_height / n_tiles;
+			planet.landblocks[planet.idx(x,y)].height = static_cast<uint8_t>(total_height / n_tiles);
 			planet.landblocks[planet.idx(x,y)].type = 0;
 			planet.landblocks[planet.idx(x,y)].variance = max - min;
 			const float altitude_deduction = std::abs(planet.landblocks[planet.idx(x,y)].height-planet.water_height) / 10.0F;
-			planet.landblocks[planet.idx(x,y)].temperature_c = base_temp_by_latitude - altitude_deduction;
+			planet.landblocks[planet.idx(x,y)].temperature_c = static_cast<int8_t>(base_temp_by_latitude - altitude_deduction);
             if (planet.landblocks[planet.idx(x,y)].temperature_c < -55) planet.landblocks[planet.idx(x,y)].temperature_c = -55;
             if (planet.landblocks[planet.idx(x,y)].temperature_c > 55) planet.landblocks[planet.idx(x,y)].temperature_c = 55;
 

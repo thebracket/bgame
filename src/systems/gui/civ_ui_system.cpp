@@ -45,7 +45,7 @@ namespace systems {
 			ImGui::ListBox("## ", &selected_civ, &civ_listbox_items[0], civs.size(), 10);
 
 			if (ImGui::Button("Negotiate")) {
-				negotiating_civ = civs[selected_civ].first;
+				negotiating_civ = static_cast<int>(civs[selected_civ].first);
 				game_master_mode = CIV_NEGOTIATE;
 			}
 

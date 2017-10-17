@@ -86,8 +86,8 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	// Height/Weight
 	if (species.gender == MALE)
 	{
-		species.height_cm = 147.0F + (rng.roll_dice(2, 10) * 2.5F);
-		species.weight_kg = 54.0F + (rng.roll_dice(2, 8) * 0.45);
+		species.height_cm = 147.0F + static_cast<float>(rng.roll_dice(2, 10) * 2.5F);
+		species.weight_kg = 54.0F + static_cast<float>(rng.roll_dice(2, 8) * 0.45);
 	}
 	else
 	{
