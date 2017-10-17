@@ -53,6 +53,8 @@
 #include "damage/turret_ranged_attack_system.hpp"
 #include "damage/damage_system.hpp"
 #include "damage/kill_system.hpp"
+#include "damage/healing_system.hpp"
+#include "physics/topology_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -117,6 +119,8 @@ namespace systems {
 	constexpr int TURRET_ATTACKS = 50;
 	constexpr int DAMAGE_SYSTEM = 51;
 	constexpr int KILL_SYSTEM = 52;
+	constexpr int HEALING_SYSTEM = 53;
+	constexpr int TOPOLOGY_SYSTEM = 54;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -192,6 +196,8 @@ namespace systems {
 		system_names[TURRET_ATTACKS] = "Turret Attacks";
 		system_names[DAMAGE_SYSTEM] = "Damage System";
 		system_names[KILL_SYSTEM] = "Kill System";
+		system_names[HEALING_SYSTEM] = "Healing System";
+		system_names[TOPOLOGY_SYSTEM] = "Topology System";
 		game_master_mode = PLAY;
     }
 
@@ -265,6 +271,8 @@ namespace systems {
 			run_system(turret_attacks::run, duration_ms, TURRET_ATTACKS);
 			run_system(damage_system::run, duration_ms, DAMAGE_SYSTEM);
 			run_system(kill_system::run, duration_ms, KILL_SYSTEM);
+			if (hour_elapsed) run_system(healing_system::run, duration_ms, HEALING_SYSTEM);
+			run_system(topology::run, duration_ms, TOPOLOGY_SYSTEM);
         }
 
 		// Logging goes at the end to catch new messages

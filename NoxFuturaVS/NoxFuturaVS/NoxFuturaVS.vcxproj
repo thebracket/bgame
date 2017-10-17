@@ -235,6 +235,7 @@
     <ClCompile Include="..\..\src\systems\ai\workflow_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\creature_attacks_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\damage_system.cpp" />
+    <ClCompile Include="..\..\src\systems\damage\healing_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\kill_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\sentient_attacks_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\settler_melee_attacks_system.cpp" />
@@ -261,6 +262,7 @@
     <ClCompile Include="..\..\src\systems\physics\fluid_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\gravity_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\movement_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\topology_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\trigger_system.cpp" />
     <ClCompile Include="..\..\src\systems\power\power_system.cpp" />
     <ClCompile Include="..\..\src\systems\run_systems.cpp" />
@@ -489,6 +491,7 @@
     <ClInclude Include="..\..\src\systems\ai\workflow_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\creature_attacks_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\damage_system.hpp" />
+    <ClInclude Include="..\..\src\systems\damage\healing_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\kill_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\sentient_attacks_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\settler_melee_attacks_system.hpp" />
@@ -515,6 +518,7 @@
     <ClInclude Include="..\..\src\systems\physics\fluid_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\gravity_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\movement_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\topology_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp" />
     <ClInclude Include="..\..\src\systems\power\power_system.hpp" />
     <ClInclude Include="..\..\src\systems\run_systems.hpp" />
