@@ -642,6 +642,9 @@
     <ClCompile Include="..\..\src\systems\physics\topology_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\physics\visibility_system.cpp">
+      <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1407,6 +1410,9 @@
       <Filter>Header Files\systems\damage</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\physics\topology_system.hpp">
+      <Filter>Header Files\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\physics\visibility_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
     </ClInclude>
   </ItemGroup>

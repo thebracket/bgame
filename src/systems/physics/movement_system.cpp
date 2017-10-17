@@ -7,6 +7,7 @@
 #include "../../components/riding_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
 #include "trigger_system.hpp"
+#include "visibility_system.hpp"
 
 namespace systems {
 	namespace movement {
@@ -248,6 +249,7 @@ namespace systems {
 				//	emit(settler_moved_message{});
 
 				triggers::entry_trigger_firing(msg);
+				visibility::on_entity_moved(msg.entity_id);
 			});
 
 		}
