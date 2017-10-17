@@ -633,6 +633,9 @@
     <ClCompile Include="..\..\src\systems\damage\damage_system.cpp">
       <Filter>Source Files\systems\damage</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\damage\kill_system.cpp">
+      <Filter>Source Files\systems\damage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1389,6 +1392,9 @@
       <Filter>Header Files\systems\damage</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\damage\damage_system.hpp">
+      <Filter>Header Files\systems\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\damage\kill_system.hpp">
       <Filter>Header Files\systems\damage</Filter>
     </ClInclude>
   </ItemGroup>
