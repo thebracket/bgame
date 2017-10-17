@@ -46,6 +46,8 @@
 #include "overworld/settler_spawner_system.hpp"
 #include "physics/gravity_system.hpp"
 #include "physics/door_system.hpp"
+#include "damage/settler_ranged_attack_system.hpp"
+#include "damage/settler_melee_attacks_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -103,6 +105,8 @@ namespace systems {
 	constexpr int AI_WORK_HUNT = 43;
 	constexpr int AI_IDLE = 44;
 	constexpr int TRIGGER_SYSTEM = 45;
+	constexpr int SETTLER_RANGED_ATTACK = 46;
+	constexpr int SETTLER_MELEE_ATTACK = 47;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -172,6 +176,8 @@ namespace systems {
 		system_names[AI_WORK_HUNT] = "AI Hunting";
 		system_names[AI_IDLE] = "AI Idle";
 		system_names[TRIGGER_SYSTEM] = "Trigger System";
+		system_names[SETTLER_RANGED_ATTACK] = "Settler Ranged";
+		system_names[SETTLER_MELEE_ATTACK] = "Settler Melee";
 		game_master_mode = PLAY;
     }
 
@@ -238,6 +244,8 @@ namespace systems {
 			run_system(ai_idle::run, duration_ms, AI_IDLE);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
 			run_system(triggers::run, duration_ms, TRIGGER_SYSTEM);
+			run_system(settler_ranged_attack::run, duration_ms, SETTLER_RANGED_ATTACK);
+			run_system(settler_melee_attack::run, duration_ms, SETTLER_MELEE_ATTACK);
         }
 
 		// Logging goes at the end to catch new messages

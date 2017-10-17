@@ -233,6 +233,8 @@
     <ClCompile Include="..\..\src\systems\ai\stockpile_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\wildlife_population.cpp" />
     <ClCompile Include="..\..\src\systems\ai\workflow_system.cpp" />
+    <ClCompile Include="..\..\src\systems\damage\settler_melee_attacks_system.cpp" />
+    <ClCompile Include="..\..\src\systems\damage\settler_ranged_attack_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
@@ -480,6 +482,8 @@
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
     <ClInclude Include="..\..\src\systems\ai\workflow_system.hpp" />
+    <ClInclude Include="..\..\src\systems\damage\settler_melee_attacks_system.hpp" />
+    <ClInclude Include="..\..\src\systems\damage\settler_ranged_attack_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />

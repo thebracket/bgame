@@ -175,6 +175,12 @@
     <Filter Include="Source Files\systems\ai\settler">
       <UniqueIdentifier>{0aa5a9fc-13b2-4762-acd8-afd6db1e1ff3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\systems\damage">
+      <UniqueIdentifier>{9fb49975-da16-44fa-8ee8-36c262b46264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems\damage">
+      <UniqueIdentifier>{e8e5aab8-7781-41e1-a53d-b482d472f648}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -608,6 +614,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\physics\trigger_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\damage\settler_ranged_attack_system.cpp">
+      <Filter>Source Files\systems\damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\damage\settler_melee_attacks_system.cpp">
+      <Filter>Source Files\systems\damage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1348,6 +1360,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\damage\settler_ranged_attack_system.hpp">
+      <Filter>Header Files\systems\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\damage\settler_melee_attacks_system.hpp">
+      <Filter>Header Files\systems\damage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

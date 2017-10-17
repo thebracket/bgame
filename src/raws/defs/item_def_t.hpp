@@ -3,6 +3,7 @@
 #include <string>
 #include <bitset>
 //#include <rltk.hpp>
+#include "../../bengine/color_t.hpp"
 
 constexpr int NUMBER_OF_ITEM_CATEGORIES = 64;
 constexpr int COMPONENT = 0;
