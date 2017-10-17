@@ -49,6 +49,7 @@
 #include "damage/settler_ranged_attack_system.hpp"
 #include "damage/settler_melee_attacks_system.hpp"
 #include "damage/sentient_attacks_system.hpp"
+#include "damage/creature_attacks_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -109,6 +110,7 @@ namespace systems {
 	constexpr int SETTLER_RANGED_ATTACK = 46;
 	constexpr int SETTLER_MELEE_ATTACK = 47;
 	constexpr int SENTIENT_ATTACKS = 48;
+	constexpr int CREATURE_ATTACKS = 49;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -180,6 +182,7 @@ namespace systems {
 		system_names[TRIGGER_SYSTEM] = "Trigger System";
 		system_names[SETTLER_RANGED_ATTACK] = "Settler Ranged";
 		system_names[SETTLER_MELEE_ATTACK] = "Settler Melee";
+		system_names[CREATURE_ATTACKS] = "Creature Attacks";
 		game_master_mode = PLAY;
     }
 
@@ -249,6 +252,7 @@ namespace systems {
 			run_system(settler_ranged_attack::run, duration_ms, SETTLER_RANGED_ATTACK);
 			run_system(settler_melee_attack::run, duration_ms, SETTLER_MELEE_ATTACK);
 			run_system(sentient_attacks::run, duration_ms, SENTIENT_ATTACKS);
+			run_system(creature_attacks::run, duration_ms, CREATURE_ATTACKS);
         }
 
 		// Logging goes at the end to catch new messages
