@@ -18,6 +18,7 @@
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../raws/health_factory.hpp"
+#include "distance_map_system.hpp"
 #include <array>
 
 namespace systems {
@@ -118,7 +119,7 @@ namespace systems {
 								->assign(ai_mode_idle_t{});
 							std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
 						}
-						// TODO: emit_deferred(huntable_moved_message{});
+						distance_map::refresh_hunting_map();
 					}
 				}
 			}

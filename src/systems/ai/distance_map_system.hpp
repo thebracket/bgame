@@ -19,5 +19,10 @@ namespace systems {
 
 		void refresh_bed_map();
 		void refresh_axe_map();
+		void refresh_hunting_map();
+		void refresh_blocks_map();
+		void refresh_architecture_map();
+		void refresh_butcherables_map();
+		void refresh_pick_map();
 	}
 }

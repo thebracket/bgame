@@ -13,6 +13,12 @@
 #include "../../physics/movement_system.hpp"
 #include "../../../components/riding_t.hpp"
 #include "../../helpers/weapons_helper.hpp"
+#include "../../damage/creature_attacks_system.hpp"
+#include "../distance_map_system.hpp"
+#include "../../damage/sentient_attacks_system.hpp"
+#include "../../damage/settler_melee_attacks_system.hpp"
+#include "../../damage/settler_ranged_attack_system.hpp"
+#include "../../damage/turret_ranged_attack_system.hpp"
 
 namespace systems {
 	namespace ai_visibility_scan {
@@ -183,15 +189,15 @@ namespace systems {
 						auto health = entity(e.id)->component<health_t>();
 						if (health) {
 							if (!health->unconscious) {
-								// TODO: emit_deferred(creature_attack_message{ e.id, hostile.closest_fear });
-								// TODO: emit_deferred(huntable_moved_message{});
+								creature_attacks::request_attack(creature_attacks::creature_attack_message{ e.id, hostile.closest_fear });
+								distance_map::refresh_hunting_map();
 								delete_component<ai_tag_my_turn_t>(e.id);
 							}
 						}
 					}
 					else {
 						systems::movement::request_flee(e.id, hostile.closest_fear);
-						// TODO: emit_deferred(huntable_moved_message{});
+						distance_map::refresh_hunting_map();
 						delete_component<ai_tag_my_turn_t>(e.id);
 					}
 				}
@@ -203,17 +209,17 @@ namespace systems {
 					const float range = weapons::shooting_range(e, pos);
 					if (hostile.terror_distance < 1.5F) {
 						// Hit it with melee weapon
-						// TODO: emit_deferred(sentient_attack_message{ e.id, hostile.closest_fear });
+						sentient_attacks::request_attack(sentient_attacks::sentient_attack_message{ e.id, hostile.closest_fear });
 						initiative->initiative_modifier += weapons::get_weapon_initiative_penalty(weapons::get_melee_id(e));
 						delete_component<ai_tag_my_turn_t>(e.id);
 						if (mounted) {
 							// Let the mount attack also
-							// TODO: emit_deferred(creature_attack_message(mounted->riding, hostile.closest_fear));
+							creature_attacks::request_attack(creature_attacks::creature_attack_message(mounted->riding, hostile.closest_fear));
 						}
 					}
 					else if (range != -1 && range < hostile.terror_distance) {
 						// Shoot it
-						// TODO: emit_deferred(sentient_ranged_attack_message{ e.id, hostile.closest_fear });
+						sentient_attacks::request_ranged_attack(sentient_attacks::sentient_ranged_attack_message{ e.id, hostile.closest_fear });
 						initiative->initiative_modifier += weapons::get_weapon_initiative_penalty(weapons::get_ranged_and_ammo_id(e).first);
 						delete_component<ai_tag_my_turn_t>(e.id);
 					}
@@ -229,22 +235,22 @@ namespace systems {
 					const int range = weapons::shooting_range(e, pos);
 					if (hostile.terror_distance < 1.5F) {
 						// Hit it with melee weapon
-						// TODO: emit_deferred(settler_attack_message{ e.id, hostile.closest_fear });
+						settler_melee_attack::request_melee(settler_melee_attack::settler_attack_message{ e.id, hostile.closest_fear });
 						initiative->initiative_modifier += weapons::get_weapon_initiative_penalty(weapons::get_melee_id(e));
 					}
 					else if (range != -1 && range < hostile.terror_distance) {
 						// Shoot it
-						// TODO: emit_deferred(settler_ranged_attack_message{ e.id, hostile.closest_fear });
+						settler_ranged_attack::request_settler_ranged_attack(settler_ranged_attack::settler_ranged_attack_message{ e.id, hostile.closest_fear });
 						initiative->initiative_modifier += weapons::get_weapon_initiative_penalty(weapons::get_ranged_and_ammo_id(e).first);
 					}
 					else {
-						// TODO: emit_deferred(entity_wants_to_flee_message{ e.id, hostile.closest_fear });
+						movement::request_flee(e.id, hostile.closest_fear);
 					}
 				}
 				else if (turret) {
 					const int range = weapons::shooting_range(e, pos);
 					if (range <= turret->range) {
-						// TODO: emit_deferred(turret_ranged_attack_message{ e.id, hostile.closest_fear });
+						turret_attacks::request_attack(turret_attacks::turret_ranged_attack_message{ e.id, hostile.closest_fear });
 					}
 				}
 			});

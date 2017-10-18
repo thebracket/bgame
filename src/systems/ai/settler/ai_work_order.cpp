@@ -8,6 +8,8 @@
 #include "../../helpers/inventory_assistant.hpp"
 #include "../../../raws/reactions.hpp"
 #include "../../../raws/defs/reaction_t.hpp"
+#include "../inventory_system.hpp"
+#include "../../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace ai_workorder {
@@ -125,7 +127,7 @@ namespace systems {
 				else if (w.step == ai_tag_work_order::work_steps::COLLECT_INPUT) {
 					//std::cout << "Collect input\n";
 					// Find the component, remove any position or stored components, add a carried_by component
-					// TODO: emit(pickup_item_message{ w.current_tool, e.id });
+					inventory_system::pickup_item(w.current_tool, e.id );
 
 					w.step = ai_tag_work_order::work_steps::GO_TO_WORKSHOP;
 					auto reactor_pos = entity(w.reaction_target.building_id)->component<position_t>();
@@ -137,7 +139,7 @@ namespace systems {
 					work.follow_path(w, pos, e, [&w, &e, &pos]() {
 						// Cancel
 						unclaim_by_id(w.current_tool);
-						// TODO: emit(drop_item_message{ w.current_tool, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(w.current_tool, pos.x, pos.y, pos.z );
 						delete_component<ai_tag_work_order>(e.id);
 						//std::cout << "Bailing - no path to workshop\n";
 					}, [&w, &pos, &e]() {
@@ -150,7 +152,7 @@ namespace systems {
 				else if (w.step == ai_tag_work_order::work_steps::DROP_INPUT) {
 					//std::cout << "Drop input\n";
 					if (w.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
-					// TODO: emit(drop_item_message{ w.current_tool, pos.x, pos.y, pos.z });
+					inventory_system::drop_item(w.current_tool, pos.x, pos.y, pos.z );
 					w.current_tool = 0;
 					w.step = ai_tag_work_order::work_steps::SELECT_INPUT;
 					return;
@@ -222,9 +224,9 @@ namespace systems {
 
 						// Finish
 						free_workshop(w.reaction_target.building_id);
-						// TODO: emit(renderables_changed_message{});
-						// TODO: emit(inventory_changed_message{});
-						// TODO: emit(blocks_changed_message{});
+						render::models_changed = true;
+						inventory_system::inventory_has_changed();
+						distance_map::refresh_blocks_map();
 
 						// Become idle
 						work.cancel_work_tag(e);

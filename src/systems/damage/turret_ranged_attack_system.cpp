@@ -7,6 +7,7 @@
 #include "../../components/logger.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../helpers/weapons_helper.hpp"
+#include "damage_system.hpp"
 
 namespace systems {
 	namespace turret_attacks {
@@ -39,7 +40,7 @@ namespace systems {
 				if (die_roll > armor_class) {
 					const int damage = std::max(1, rng.roll_dice(turret->damage_dice, turret->damage_dice) + turret->damage_bonus);
 					ss.text("The turret hits for " + std::to_string(damage) + " points of damage.");
-					// TODO: emit(inflict_damage_message{ msg.victim, damage, "turret" });
+					damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.victim, damage, "turret" });
 				}
 				else {
 					ss.text("The turret misses.");

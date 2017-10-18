@@ -8,6 +8,7 @@
 #include "../../global_assets/rng.hpp"
 #include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
+#include "kill_system.hpp"
 
 namespace systems {
 	namespace damage_system {
@@ -65,7 +66,7 @@ namespace systems {
 						}
 						else {
 							logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" is dead!")->chars });
-							// TODO: emit(entity_slain_message{ msg.victim, msg.damage_type });
+							kill_system::fatality(kill_system::entity_slain_message{ msg.victim, msg.damage_type });
 						}
 					}
 
@@ -90,7 +91,7 @@ namespace systems {
 							}
 							else if (hit_part->part == "head" && hit_part->current_hitpoints < -9) {
 								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text("'s head is knocked clean off! Death is the inevitable result.'")->chars });
-								// TODO: emit(entity_slain_message{ msg.victim, msg.damage_type });
+								kill_system::fatality(kill_system::entity_slain_message{ msg.victim, msg.damage_type });
 							}
 							else if (hit_part->current_hitpoints > -10) {
 								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" passes out from ")->text(hit_part->part)->text(" trauma.")->chars });
@@ -98,7 +99,7 @@ namespace systems {
 							}
 							else {
 								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" dies from ")->text(hit_part->part)->text(" trauma.")->chars });
-								// TODO: emit(entity_slain_message{ msg.victim, msg.damage_type });
+								kill_system::fatality(kill_system::entity_slain_message{ msg.victim, msg.damage_type });
 							}
 						}
 					}

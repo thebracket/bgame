@@ -17,6 +17,7 @@
 #include "../../raws/clothing.hpp"
 #include "../../raws/defs/clothing_t.hpp"
 #include "../../raws/defs/reaction_t.hpp"
+#include "../ai/inventory_system.hpp"
 
 using namespace bengine;
 using namespace buildings;
@@ -68,7 +69,7 @@ namespace inventory {
 		if (distance_sorted.empty()) return 0;
 
 		std::size_t closest_matching_id = distance_sorted.begin()->second;
-		// TODO: emit(item_claimed_message{ closest_matching_id, true });
+		systems::inventory_system::claim_item(closest_matching_id, true );
 
 		return closest_matching_id;
 	}
@@ -90,7 +91,7 @@ namespace inventory {
 		if (distance_sorted.empty()) return 0;
 
 		std::size_t closest_matching_id = distance_sorted.begin()->second;
-		// TODO: emit(item_claimed_message{ closest_matching_id, true });
+		systems::inventory_system::claim_item(closest_matching_id, true );
 
 		return closest_matching_id;
 	}
@@ -224,7 +225,7 @@ namespace inventory {
 	}
 
 	void delete_item(const std::size_t &id) {
-		// TODO: emit(destroy_item_message{ id });
+		systems::inventory_system::destroy_item(id);
 	}
 
 	int available_items_by_tag(const std::string &tag) {
@@ -273,7 +274,7 @@ namespace inventory {
 			if (i.item_tag == tag && i.claimed == false) result = e.id;
 		});
 		if (result != 0) {
-			// TODO: emit(item_claimed_message{ result, true });
+			systems::inventory_system::claim_item(result, true );
 		}
 		return result;
 	}
@@ -293,13 +294,13 @@ namespace inventory {
 			}
 		});
 		if (result != 0 && really_claim) {
-			// TODO: emit(item_claimed_message{ result, true });
+			systems::inventory_system::claim_item(result, true);
 		}
 		return result;
 	}
 
 	void unclaim_by_id(const std::size_t &id) {
-		// TODO: emit(item_claimed_message{ id, false });
+		systems::inventory_system::claim_item(id, false);
 	}
 
 	bool is_better_armor(const std::string &item_tag, std::unordered_map<int, float> &ac_by_loc) {

@@ -12,6 +12,7 @@
 #include "../../components/logger.hpp"
 #include "../gui/log_system.hpp"
 #include "../../global_assets/rng.hpp"
+#include "damage_system.hpp"
 
 namespace systems {
 	namespace settler_ranged_attack {
@@ -75,7 +76,7 @@ namespace systems {
 				if (die_roll > armor_class) {
 					const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
 					ss.text("The attack hits for " + std::to_string(damage) + " points of damage.");
-					// TODO: emit(inflict_damage_message{ msg.victim, damage, weapon_name });
+					damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.victim, damage, weapon_name });
 					gain_skill_from_success(msg.attacker, *attacker_stats, "Ranged Attacks", armor_class, rng);
 				}
 				else {

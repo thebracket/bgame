@@ -11,6 +11,8 @@
 #include "../helpers/inventory_assistant.hpp"
 #include "../../components/building.hpp"
 #include "../../global_assets/game_camera.hpp"
+#include "../../render_engine/vox/renderables.hpp"
+#include "distance_map_system.hpp"
 
 namespace systems {
 	namespace inventory_system {
@@ -65,8 +67,28 @@ namespace systems {
 
 		bool dirty = true;
 
+		void claim_item(const std::size_t i, const bool c) {
+			claimed_items.enqueue(item_claimed_message{ i, c });
+		}
+
 		void drop_item(const std::size_t &ID, const int &X, const int &Y, const int &Z) {
 			dropped_items.enqueue(drop_item_message{ ID, X, Y, Z });
+		}
+
+		void pickup_item(const std::size_t &ID, const std::size_t &holder) {
+			pickup_items.enqueue(pickup_item_message{ ID, holder });
+		}
+
+		void pickup_item(const std::size_t &ID, const std::size_t &holder, const item_location_t &LOC) {
+			pickup_items.enqueue(pickup_item_message{ ID, holder, LOC });
+		}
+
+		void destroy_item(const std::size_t ID) {
+			destroy_items.enqueue(destroy_item_message{ ID });
+		}
+
+		void inventory_has_changed() {
+			inventory_changes.enqueue(inventory_changed_message{});
 		}
 
 		void run(const double &duration_ms) {
@@ -87,7 +109,7 @@ namespace systems {
 				entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
 				entity_octree.add_node(octree_location_t{ msg.x,msg.y,msg.z,msg.id });
 				dirty = true;
-				// TODO: emit(blocks_changed_message{});
+				distance_map::refresh_blocks_map();
 			});
 
 			pickup_items.process_all([](pickup_item_message &msg) {
@@ -100,8 +122,8 @@ namespace systems {
 				delete_component<item_stored_t>(msg.id);
 				entity(msg.id)->assign(item_carried_t{ msg.loc, msg.collector });
 				dirty = true;
-				// TODO: emit(renderables_changed_message{});
-				// TODO: emit(blocks_changed_message{});
+				render::models_changed = true;
+				distance_map::refresh_blocks_map();
 			});
 
 			destroy_items.process_all([](destroy_item_message &msg) {
@@ -113,7 +135,7 @@ namespace systems {
 				}
 
 				delete_entity(msg.id);
-				// TODO: emit(blocks_changed_message{});
+				distance_map::refresh_blocks_map();
 			});
 
 			claimed_items.process_all([](item_claimed_message &msg) {
@@ -122,7 +144,7 @@ namespace systems {
 					auto item = e->component<item_t>();
 					if (item) item->claimed = msg.claimed;
 				}
-				// TODO: emit(blocks_changed_message{});
+				distance_map::refresh_blocks_map();
 			});
 
 			building_requests.process_all([](build_request_message &msg) {

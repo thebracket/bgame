@@ -9,6 +9,7 @@
 #include "../gui/log_system.hpp"
 #include "../../components/logger.hpp"
 #include "../../global_assets/rng.hpp"
+#include "damage_system.hpp"
 
 namespace systems {
 	namespace creature_attacks {
@@ -50,7 +51,7 @@ namespace systems {
 					else {
 						const int damage = std::max(1, rng.roll_dice(weapon.damage_n_dice, weapon.damage_dice) + weapon.damage_mod);
 						ss.text(std::string("The attack hits, for ") + std::to_string(damage) + std::string(" points of damage."));
-						// TODO: emit(inflict_damage_message{ msg.victim, damage, weapon.type });
+						damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.victim, damage, weapon.type });
 					}
 					logging::log(logging::log_message{ ss.chars });
 				}

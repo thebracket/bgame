@@ -5,6 +5,7 @@
 #include "../../components/position.hpp"
 #include "../physics/movement_system.hpp"
 #include "../../bengine/path_finding.hpp"
+#include "../../render_engine/vox/renderables.hpp"
 #include <functional>
 
 namespace tasks {
@@ -26,7 +27,7 @@ namespace tasks {
 		ai.current_path->steps.pop_front();
 		if (can_enter_tile(next_step)) {
 			systems::movement::move_to(e, pos, next_step);
-			// TODO: emit_deferred(renderables_changed_message{});
+			render::models_changed = true;
 			return SUCCESS;
 		}
 		else {

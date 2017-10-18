@@ -10,6 +10,8 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../components/bridge.hpp"
 #include "../../../components/receives_signal.hpp"
+#include "../inventory_system.hpp"
+#include "../../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -59,9 +61,9 @@ namespace systems {
 						return;
 					}
 					std::cout << "Collected block\n";
-					// TODO: emit(item_claimed_message{ block_id, true });
-					// TODO: emit(pickup_item_message{ block_id, e.id });
-					// TODO: emit(blocks_changed_message{});
+					inventory_system::claim_item(block_id, true);
+					inventory_system::pickup_item(block_id, e.id);
+					distance_map::refresh_blocks_map();
 					a.current_tool = block_id;
 					a.step = ai_tag_work_architect::architect_steps::GOTO_SITE;
 					return;
@@ -70,7 +72,7 @@ namespace systems {
 					const int idx = mapidx(pos);
 					const auto distance = architecure_map.get(idx);
 					if (distance >= MAX_DIJSTRA_DISTANCE) {
-						// TODO: emit(drop_item_message{ a.current_tool, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
 						work.cancel_work_tag(e);
 						return;
 					}
@@ -104,7 +106,7 @@ namespace systems {
 								material = Item->material;
 							}
 						}
-						// TODO: emit(destroy_item_message{ a.current_tool });
+						inventory_system::destroy_item(a.current_tool);
 						a.current_tool = 0;
 
 						set_flag(bidx, CONSTRUCTION);
@@ -165,13 +167,13 @@ namespace systems {
 						}
 
 						designations->architecture.erase(bidx);
-						// TODO: emit(architecture_changed_message{});
-						// TODO: emit(renderables_changed_message{});
+						distance_map::refresh_architecture_map();
+						render::models_changed = true;
 						// TODO: emit(map_changed_message{});
 						call_home("architecture", std::to_string(build_type));
 					}
 					else {
-						// TODO: emit(drop_item_message{ a.current_tool, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z );
 						work.cancel_work_tag(e);
 						return;
 					}

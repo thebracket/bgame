@@ -12,6 +12,8 @@
 #include "../../components/species.hpp"
 #include "../../components/corpse_harvestable.hpp"
 #include "../../global_assets/spatial_db.hpp"
+#include "../ai/inventory_system.hpp"
+#include "../ai/distance_map_system.hpp"
 
 namespace systems {
 	namespace kill_system {
@@ -32,7 +34,7 @@ namespace systems {
 				// Any items carried are dropped
 				each<item_carried_t>([&msg, pos](entity_t &e, item_carried_t &item) {
 					if (item.carried_by == msg.victim) {
-						// TODO: emit(drop_item_message{ e.id, pos->x, pos->y, pos->z });
+						inventory_system::drop_item(e.id, pos->x, pos->y, pos->z );
 					}
 				});
 
@@ -73,7 +75,7 @@ namespace systems {
 							->assign(renderable_t{ old_render->glyph, old_render->glyph_ascii, color_t{0.5f, 0.5f, 0.5f}, color_t{0.f, 0.f, 0.f} })
 							->assign(corpse_harvestable{ tag })
 							->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") });
-						// TODO: emit_deferred(butcherable_moved_message{});
+						distance_map::refresh_butcherables_map();
 					}
 					call_home("other_death", tag);
 				}

@@ -10,6 +10,8 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/creatures.hpp"
 #include "../../../raws/defs/raw_creature_t.hpp"
+#include "../inventory_system.hpp"
+#include "../distance_map_system.hpp"
 
 namespace systems {
 	namespace ai_butcher {
@@ -63,8 +65,8 @@ namespace systems {
 					}
 
 					// Pick up the corpse
-					// TODO: emit_deferred(pickup_item_message{ b.target_corpse, e.id });
-					// TODO: emit_deferred(butcherable_moved_message{});
+					inventory_system::pickup_item(b.target_corpse, e.id );
+					distance_map::refresh_butcherables_map();
 
 					// Find the butcher's shop and go there
 					position_t butcher_pos;
@@ -73,7 +75,7 @@ namespace systems {
 					});
 					b.current_path = find_path(pos, butcher_pos);
 					if (!b.current_path) {
-						// TODO: emit(drop_item_message{ b.target_corpse, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(b.target_corpse, pos.x, pos.y, pos.z );
 						work.cancel_work_tag(e);
 						return;
 					}
@@ -83,7 +85,7 @@ namespace systems {
 				else if (b.step == ai_tag_work_butcher::butcher_steps::GO_TO_SHOP) {
 					work.follow_path(b, pos, e, [&e, &work, &b, &pos]() {
 						// Cancel
-						// TODO: emit(drop_item_message{ b.target_corpse, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(b.target_corpse, pos.x, pos.y, pos.z);
 						work.cancel_work_tag(e);
 					}, [&b]() {
 						// Arrived
@@ -149,7 +151,7 @@ namespace systems {
 					}
 
 					delete_entity(b.target_corpse); // Destroy the corpse
-													// TODO: emit_deferred(butcherable_moved_message{});
+					distance_map::refresh_butcherables_map();
 					work.cancel_work_tag(e);
 					return;
 				}

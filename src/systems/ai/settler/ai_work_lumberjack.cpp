@@ -10,6 +10,8 @@
 #include "../../../components/game_stats.hpp"
 #include "../../helpers/pathfinding.hpp"
 #include "../../../bengine/telemetry.hpp"
+#include "../inventory_system.hpp"
+#include "../../damage/damage_system.hpp"
 
 namespace systems {
 	namespace ai_work_lumberjack {
@@ -68,7 +70,7 @@ namespace systems {
 					// Check that we're still a go
 					if (designations->chopping.empty()) {
 						// There is no tree - cancel
-						// TODO: emit(drop_item_message{ lj.current_axe, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						delete_component<ai_tag_work_lumberjack>(e.id);
 						return;
@@ -94,7 +96,7 @@ namespace systems {
 					}
 
 					if (tree_id == 0) {
-						// TODO: emit(drop_item_message{ lj.current_axe, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
 						return;
@@ -126,7 +128,7 @@ namespace systems {
 					// Are we good to go?
 					if (!lj.current_path) {
 						// There is no path - cancel
-						// TODO: emit(drop_item_message{ lj.current_axe, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
 						return;
@@ -168,7 +170,7 @@ namespace systems {
 
 					auto stats = e.component<game_stats_t>();
 					if (!stats) {
-						// TODO: emit(drop_item_message{ lj.current_axe, pos.x, pos.y, pos.z });
+						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
 						return;
@@ -230,12 +232,12 @@ namespace systems {
 					}
 					else if (skill_check == CRITICAL_FAIL) {
 						// Damage yourself
-						// TODO: emit_deferred(inflict_damage_message{ e.id, 1, "Lumberjacking Accident" });
+						damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, 1, "Lumberjacking Accident" });
 					}
 					return;
 				}
 				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS) {
-					// TODO: emit(drop_item_message{ lj.current_axe, pos.x, pos.y, pos.z });
+					inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 					distance_map::refresh_axe_map();
 					work.cancel_work_tag(e);
 					return;

@@ -8,6 +8,7 @@
 #include "../../global_assets/spatial_db.hpp"
 #include "trigger_system.hpp"
 #include "visibility_system.hpp"
+#include "../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace movement {
@@ -238,6 +239,7 @@ namespace systems {
 			}
 
 			move_completions.process_all([](entity_moved_message msg) {
+				render::models_changed = true;
 				octree_location_t start = octree_location_t{ static_cast<int>(msg.origin.x), static_cast<int>(msg.origin.y), msg.origin.z, msg.entity_id };
 				octree_location_t end = octree_location_t{ static_cast<int>(msg.destination.x), static_cast<int>(msg.destination.y), msg.destination.z, msg.entity_id };
 				entity_octree.remove_node(start);

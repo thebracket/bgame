@@ -15,6 +15,11 @@
 #include "../../../components/lever.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/smoke_emitter.hpp"
+#include "../inventory_system.hpp"
+#include "../../physics/visibility_system.hpp"
+#include "../workflow_system.hpp"
+#include "../../physics/topology_system.hpp"
+#include "../../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace ai_building {
@@ -100,7 +105,7 @@ namespace systems {
 					return;
 				}
 				else if (b.step == ai_tag_work_building::building_steps::COLLECT_COMPONENT) {
-					// TODO: emit(pickup_item_message{ b.current_tool, e.id });
+					inventory_system::pickup_item(b.current_tool, e.id );
 					b.step = ai_tag_work_building::building_steps::GO_TO_BUILDING;
 					return;
 				}
@@ -146,7 +151,7 @@ namespace systems {
 					return;
 				}
 				else if (b.step == ai_tag_work_building::building_steps::DROP_COMPONENT) {
-					// TODO: emit(drop_item_message{ b.current_tool, pos.x, pos.y, pos.z });
+					inventory_system::drop_item(b.current_tool, pos.x, pos.y, pos.z );
 					b.current_tool = 0;
 					b.step = ai_tag_work_building::building_steps::SELECT_COMPONENT;
 					return;
@@ -180,7 +185,7 @@ namespace systems {
 						// Place the building, and assign any provide tags
 						call_home("new_building", finder->tag);
 						entity(b.building_target.building_entity)->component<building_t>()->complete = true;
-						// TODO: emit(opacity_changed_message{});
+						visibility::opacity_is_dirty();
 
 						for (const building_provides_t &provides : finder->provides) {
 							if (provides.provides == provides_sleep) {
@@ -199,8 +204,9 @@ namespace systems {
 								provides.provides == provides_stairs_updown
 								|| provides.provides == provides_ramp || provides.provides == provides_stonefall_trap
 								|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap
-								|| provides.provides == provides_spikes) {
-								// TODO: emit(perform_construction_message{ b.building_target.building_entity, tag, material });
+								|| provides.provides == provides_spikes) 
+							{
+								topology::perform_construction(b.building_target.building_entity, tag, material );
 							}
 							else if (provides.provides == provides_signal_recipient) {
 								entity(b.building_target.building_entity)->assign(receives_signal_t{});
@@ -213,9 +219,9 @@ namespace systems {
 							entity(b.building_target.building_entity)->assign(smoke_emitter_t{});
 						}
 
-						// TODO: emit_deferred(renderables_changed_message{});
-						// TODO: emit_deferred(inventory_changed_message{});
-						// TODO: emit_deferred(update_workflow_message{});
+						render::models_changed = true;
+						inventory_system::inventory_has_changed();
+						workflow_system::update_workflow();
 						// TODO: emit(map_changed_message{});
 
 						// Become idle

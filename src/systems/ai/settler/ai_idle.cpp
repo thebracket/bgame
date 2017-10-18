@@ -14,6 +14,8 @@
 #include "../../physics/movement_system.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
+#include "../distance_map_system.hpp"
+#include "../../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace ai_idle {
@@ -35,7 +37,7 @@ namespace systems {
 			}
 			else {
 				request_random_move(e.id);
-				// TODO: emit(huntable_moved_message{});
+				distance_map::refresh_hunting_map();
 			}
 
 			const int poop_chance = rng.roll_dice(1, 100);
@@ -76,7 +78,7 @@ namespace systems {
 				if (settler_map.get(idx) < MAX_DIJSTRA_DISTANCE - 1) {
 					position_t destination = settler_map.find_destination(*pos);
 					move_to(e.id, destination);
-					// TODO: emit(renderables_changed_message{});
+					render::models_changed = true;
 				}
 				else {
 					sentient.goal = SENTIENT_GOAL_IDLE;

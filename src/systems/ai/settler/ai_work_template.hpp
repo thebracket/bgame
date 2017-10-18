@@ -19,6 +19,7 @@
 #include "../../helpers/pathfinding.hpp"
 #include "../../../components/item_stored.hpp"
 #include "../../../components/item_carried.hpp"
+#include "../inventory_system.hpp"
 
 template<typename TAG>
 class ai_work_template {
@@ -86,7 +87,7 @@ public:
 		});
 		if (tool_id > 0) {
 			out_tool = tool_id;
-			// TODO: emit(pickup_item_message{ out_tool, e.id });
+			systems::inventory_system::pickup_item(out_tool, e.id );
 			//emit(MSG{});
 			success();
 		}

@@ -55,6 +55,26 @@ namespace systems {
 			axes_dirty = true;
 		}
 
+		void refresh_hunting_map() {
+			huntables_dirty = true;
+		}
+
+		void refresh_blocks_map() {
+			blocks_dirty = true;
+		}
+
+		void refresh_architecture_map() {
+			architecutre_dirty = true;
+		}
+
+		void refresh_butcherables_map() {
+			butcherables_dirty = true;
+		}
+
+		void refresh_pick_map() {
+			picks_dirty = true;
+		}
+
 		void update_hunting_map() {
 			std::vector<int> huntables;
 			each<grazer_ai, position_t>([&huntables](entity_t &e, grazer_ai &ai, position_t &pos) {

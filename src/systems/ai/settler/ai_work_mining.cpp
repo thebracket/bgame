@@ -11,6 +11,11 @@
 #include "../mining_system.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../../physics/movement_system.hpp"
+#include "../../physics/topology_system.hpp"
+#include "../inventory_system.hpp"
+#include "../../damage/damage_system.hpp"
+#include "../distance_map_system.hpp"
+#include "../mining_system.hpp"
 
 namespace systems {
 	namespace ai_mining {
@@ -133,24 +138,24 @@ namespace systems {
 						call_home("mining", std::to_string(target_operation));
 
 						if (target_operation > 0) {
-							// TODO: emit(perform_mining_message{ target_idx, designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z });
+							topology::perform_mining( target_idx, designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z );
 							designations->mining.erase(target_idx);
-							// TODO: emit(recalculate_mining_message{});
+							mining_system::mining_map_changed();
 						}
 						m.step = ai_tag_work_miner::mining_steps::DROP_TOOLS;
 						return;
 					}
 					else {
 						// Failed!
-						// TODO: if (skill_check == CRITICAL_FAIL) emit_deferred(inflict_damage_message{ e.id, 1, "Mining Accident" });
+						if (skill_check == CRITICAL_FAIL) damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, 1, "Mining Accident" });
 						return;
 					}
 
 					return;
 				}
 				else if (m.step == ai_tag_work_miner::mining_steps::DROP_TOOLS) {
-					// TODO: emit(drop_item_message{ m.current_pick, pos.x, pos.y, pos.z });
-					// TODO: emit(pickmap_changed_message{});
+					inventory_system::drop_item(m.current_pick, pos.x, pos.y, pos.z );
+					distance_map::refresh_pick_map();
 					work.cancel_work_tag(e);
 					return;
 				}

@@ -12,6 +12,7 @@
 #include "../../raws/defs/building_def_t.hpp"
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
+#include "../../render_engine/vox/renderables.hpp"
 #include "trigger_system.hpp"
 
 using namespace bengine;
@@ -242,6 +243,7 @@ namespace systems {
 				std::cout << "Deleted entity\n";
 			}
 			// TODO: emit(renderables_changed_message{});
+			render::models_changed = true;
 			// TODO: emit(map_changed_message{});
 		}
 
