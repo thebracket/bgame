@@ -42,4 +42,5 @@ struct item_def_t {
     int initiative_penalty = 0;
     std::string damage_stat = "";
     int stockpile_idx = 0;
+	int voxel_model = 0;
 };

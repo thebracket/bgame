@@ -10,7 +10,8 @@ items["wood_log"] = {
     glyph_ascii = glyphs['single_line'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['wood'].id
+    stockpile = stockpiles['wood'].id,
+    vox = voxelId("wood_logs")
 };
 
 -- Stone boulders are the by-product of cutting non-economic rock. They can also spawn in region-gen.

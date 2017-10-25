@@ -22,6 +22,7 @@
 #include "defs/material_def_t.hpp"
 #include "items.hpp"
 #include "../bengine/ecs.hpp"
+#include "../render_engine/vox/renderables.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -123,6 +124,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
         ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
     //std::cout << "Spawned item on ground: " << entity->id << ", " << entity->component<item_t>()->item_tag << "\n";
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
+	render::models_changed = true;
 }
 
 bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
@@ -137,6 +139,7 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
             ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
             ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
+	render::models_changed = true;
     return entity;
 }
 

@@ -8,6 +8,7 @@
 #include "../../components/species.hpp"
 #include "../../components/item.hpp"
 #include "../../components/item_carried.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 #include "voxel_model.hpp"
 #include "voxreader.hpp"
 #include "../../global_assets/shader_storage.hpp"
@@ -45,6 +46,28 @@ namespace render {
 				}
 				else {
 					models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
+						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+					}}));
+				}
+			}
+		});
+	}
+
+	void build_voxel_items() {
+		bengine::each<item_t, position_t>([](bengine::entity_t &e, item_t &i, position_t &pos) {
+			auto item_def = get_item_def(i.item_tag);
+			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z && item_def && item_def->voxel_model > 0) {
+				auto finder = models_to_render->find(item_def->voxel_model);
+				auto x = (float)pos.x;
+				const auto y = (float)pos.z;
+				auto z = (float)pos.y;
+				if (finder != models_to_render->end()) {
+					finder->second.push_back(vox::instance_t{
+						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+					});
+				}
+				else {
+					models_to_render->insert(std::make_pair(item_def->voxel_model, std::vector<vox::instance_t>{vox::instance_t{
 						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
 					}}));
 				}
@@ -156,6 +179,7 @@ namespace render {
 			n_sprites = 0;
 			
 			build_voxel_buildings();
+			build_voxel_items();
 			// TODO: Regular old renderables!
 
 			build_composites();

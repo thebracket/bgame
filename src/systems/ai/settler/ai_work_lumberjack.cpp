@@ -231,6 +231,7 @@ namespace systems {
 						// Spawn wooden logs
 						number_of_logs = (number_of_logs / 20) + 1;
 						for (int i = 0; i<number_of_logs; ++i) {
+							std::cout << "Spawning wood\n";
 							spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"));
 						}
 

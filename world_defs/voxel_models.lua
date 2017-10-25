@@ -8,7 +8,8 @@ voxel_models = {
     battery = { model=vfn("battery"), id=5 },
     cordex = { model=vfn("cordex"), id=6 },
     replicator_small = { model=vfn("replicator-small"), id=7 },
-    solar_panel = { model=vfn("solarpanel"), id=8 }
+    solar_panel = { model=vfn("solarpanel"), id=8 },
+    wood_logs = { model=vfn("woodlogs"), id=9 }
 }
 
 function voxelId(name)
