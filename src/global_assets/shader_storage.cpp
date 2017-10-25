@@ -10,4 +10,5 @@ namespace assets {
     unsigned int bloom_shader = 0;
 	unsigned int sprite_shader = 0;
 	std::unique_ptr<voxel_shader_t> voxel_shader;
+	unsigned int cursor_shader;
 }

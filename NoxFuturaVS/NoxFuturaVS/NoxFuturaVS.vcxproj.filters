@@ -648,6 +648,9 @@
     <ClCompile Include="..\..\src\systems\physics\vegetation_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\chunks\cursors.cpp">
+      <Filter>Source Files\render_engine\chunks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1420,6 +1423,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\physics\vegetation_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\cursors.hpp">
+      <Filter>Header Files\render_engine\chunks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

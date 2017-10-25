@@ -25,6 +25,7 @@
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
 #include "../systems/mouse.hpp"
+#include "chunks/cursors.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -124,11 +125,7 @@ namespace render {
 				}
 			}
 		}
-	}
-
-	inline void render_cursor() {
-		// TODO
-	}
+	}	
 
     inline void render_chunks() {
         // Use the program
@@ -148,7 +145,6 @@ namespace render {
 
         do_chunk_render();
 		do_trans_chunk_render();
-		render_cursor();
     }
 
     void render_to_light_buffer() {
@@ -240,6 +236,7 @@ namespace render {
         if (camera_moved) update_camera();
         update_world_textures();
 		build_voxel_render_list();
+		build_cursor_geometry();
 		glCheckError();
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
@@ -259,6 +256,10 @@ namespace render {
 
         // Render the combined light buffer
         render_to_light_buffer();
+
+		// Add in translucent cursors
+		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+		render_cursor(camera_projection_matrix, camera_modelview_matrix);
 
         // Tone mapping
         tone_map_scene();

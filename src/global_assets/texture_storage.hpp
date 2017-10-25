@@ -15,4 +15,5 @@ namespace assets {
     extern unsigned int worldgen_texture_array;
     extern unsigned int chunk_texture_array;
 	extern unsigned int mob_texture_array;
+	extern unsigned int cursor_texture_array;
 }
