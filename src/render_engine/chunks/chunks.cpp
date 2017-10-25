@@ -41,6 +41,8 @@ namespace chunks {
     void enqueue_vertex_update(const int &idx) {
         std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
         dirty_buffers.insert(idx);
+		mark_chunk_clean(idx);
+		std::cout << "Enqueued buffer update\n";
     }
 
     void initialize_chunks() {
@@ -455,8 +457,8 @@ namespace chunks {
 	}
 
     void chunk_t::update_buffer() {
-        if (vbo > 0) glDeleteBuffers(1, &vbo);
-        if (vao > 0) glDeleteVertexArrays(1, &vao);
+        //if (vbo > 0) glDeleteBuffers(1, &vbo);
+        //if (vao > 0) glDeleteVertexArrays(1, &vao);
 
         if (vao < 1) { glGenVertexArrays(1, &vao); glCheckError(); }
         if (vbo < 1) { glGenBuffers(1, &vbo); glCheckError(); }
@@ -531,6 +533,7 @@ namespace chunks {
         chunks[idx].update_buffer();
 		chunks[idx].update_trans_buffer();
         chunks[idx].ready.store(true);
+		std::cout << "Buffer Updated\n";
     }
 
 }

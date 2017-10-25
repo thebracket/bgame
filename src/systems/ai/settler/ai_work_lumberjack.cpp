@@ -12,64 +12,79 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../inventory_system.hpp"
 #include "../../damage/damage_system.hpp"
+#include "../../../render_engine/chunks/chunks.hpp"
 
-namespace systems {
-	namespace ai_work_lumberjack {
+using namespace bengine;
+using namespace jobs_board;
+using namespace region;
+using namespace systems::distance_map;
+using namespace systems::dijkstra;
 
-		using namespace bengine;
-		using namespace jobs_board;
-		using namespace region;
-		using namespace distance_map;
+namespace jobs_board {
+	void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
+		if (designations->chopping.empty()) return; // Nothing to cut down
 
-		namespace jobs_board {
-			void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-				if (designations->chopping.empty()) return; // Nothing to cut down
+		auto axe_distance = axe_map.get(mapidx(pos));
+		if (axe_distance > MAX_DIJSTRA_DISTANCE - 1) return; // No axe available
 
-				auto axe_distance = axe_map.get(mapidx(pos));
-				if (axe_distance > dijkstra::MAX_DIJSTRA_DISTANCE - 1) return; // No axe available
-
-																	 // Evaluate the closest tree to chop
-				std::size_t i = 0;
-				float distance = std::numeric_limits<float>().max();
-				std::size_t selected = 0;
-				for (const auto &chop : designations->chopping) {
-					const float d = distance3d(pos.x, pos.y, pos.z, chop.second.x, chop.second.y, chop.second.z);
-					if (d < distance) {
-						distance = d;
-						selected = i;
-					}
-					++i;
-				}
-
-				board.insert(std::make_pair(distance + axe_distance, jt));
+																	   // Evaluate the closest tree to chop
+		std::size_t i = 0;
+		float distance = std::numeric_limits<float>().max();
+		std::size_t selected = 0;
+		for (const auto &chop : designations->chopping) {
+			const float d = distance3d(pos.x, pos.y, pos.z, chop.second.x, chop.second.y, chop.second.z);
+			if (d < distance) {
+				distance = d;
+				selected = i;
 			}
+			++i;
 		}
 
+		board.insert(std::make_pair(distance + axe_distance, jt));
+	}
+}
+
+namespace systems {
+	namespace ai_work_lumberjack {		
+
+		bool first_run = true;
+
 		void run(const double &duration_ms) {
+			if (first_run) {
+				first_run = false;
+				jobs_board::register_job_offer<ai_tag_work_lumberjack>(jobs_board::evaluate_lumberjacking);
+			}
+
 			ai_work_template<ai_tag_work_lumberjack> work;
 			work.do_ai([&work](entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
 				work.set_status(e, "Lumberjacking");
 				if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
+					//std::cout << "LJ: Get Axe\n";
 					work.folllow_path(axe_map, pos, e, [&e]() {
 						// On cancel
+						//std::cout << "LJ: Cancel Get Axe\n";
 						delete_component<ai_tag_work_lumberjack>(e.id);
 						return;
 					}, [&e, &pos, &lj, &work] {
 						// On success
 						work.pickup_tool(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj]() {
 							// On cancel
+							//std::cout << "LJ: Pickup Tool - cancel\n";
 							delete_component<ai_tag_work_lumberjack>(e.id);
 							return;
 						}, [&lj]() {
 							// On success
+							//std::cout << "LJ: Pickup Tool - success\n";
 							lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
 						});
 					});
 				}
 				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE) {
+					//std::cout << "LJ: Find Tree\n";
 					// Check that we're still a go
 					if (designations->chopping.empty()) {
 						// There is no tree - cancel
+						//std::cout << "LJ: Give up - drop axe\n";
 						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						delete_component<ai_tag_work_lumberjack>(e.id);
@@ -96,6 +111,7 @@ namespace systems {
 					}
 
 					if (tree_id == 0) {
+						//std::cout << "No tree - cancel\n";
 						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
@@ -128,6 +144,7 @@ namespace systems {
 					// Are we good to go?
 					if (!lj.current_path) {
 						// There is no path - cancel
+						//std::cout << "No path - cancel\n";
 						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
 						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
@@ -139,6 +156,7 @@ namespace systems {
 					}
 				}
 				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GOTO_TREE) {
+					//std::cout << "Go to tree\n";
 					// Check that it is still a valid tree
 					auto tree_finder = designations->chopping.find(lj.target_tree);
 					if (tree_finder == designations->chopping.end()) {
@@ -149,10 +167,12 @@ namespace systems {
 					// Go there
 					work.follow_path(lj, pos, e, [&lj]() {
 						// Cancel
+						//std::cout << "Go to tree - cancel\n";
 						lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
 						return;
 					}, [&lj]() {
 						// We've arrived
+						//std::cout << "Arrive at tree\n";
 						lj.current_path.reset();
 						lj.step = ai_tag_work_lumberjack::lumberjack_steps::CHOP;
 						return;
@@ -160,6 +180,7 @@ namespace systems {
 					return;
 				}
 				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::CHOP) {
+					//std::cout << "Chop tree\n";
 					//std::cout << "Chop\n";
 					// Check that it is still a valid tree
 					auto tree_finder = designations->chopping.find(lj.target_tree);
@@ -218,7 +239,8 @@ namespace systems {
 							for (int Y = -10; Y<10; ++Y) {
 								for (int X = -10; X<10; ++X) {
 									tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
-									tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+									//tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
+									chunks::mark_chunk_dirty_by_tileidx(mapidx(pos.x + X, pos.y + Y, pos.z + Z));
 								}
 							}
 						}

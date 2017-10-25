@@ -246,8 +246,8 @@ namespace systems {
 			}
 
 			if (axes_dirty) {
-				update_axe_map();
 				axes_dirty = false;
+				update_axe_map();
 			}
 
 			if (picks_dirty) {

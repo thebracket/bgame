@@ -57,6 +57,8 @@
 #include "physics/topology_system.hpp"
 #include "physics/visibility_system.hpp"
 #include "physics/vegetation_system.hpp"
+#include "gui/design_mode.hpp"
+#include "gui/design_lumberjack.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
 #include <vector>
@@ -125,6 +127,8 @@ namespace systems {
 	constexpr int TOPOLOGY_SYSTEM = 54;
 	constexpr int VISIBILITY_SYSTEM = 55;
 	constexpr int VEGETATION_SYSTEM = 56;
+	constexpr int DESIGN_LUMBERJACK_SYSTEM = 57;
+	constexpr int DESIGN_MODE_SYSTEM = 58;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -204,6 +208,8 @@ namespace systems {
 		system_names[TOPOLOGY_SYSTEM] = "Topology System";
 		system_names[VISIBILITY_SYSTEM] = "Visibility System";
 		system_names[VEGETATION_SYSTEM] = "Vegetation";
+		system_names[DESIGN_LUMBERJACK_SYSTEM] = "Design - Lumberjack";
+		system_names[DESIGN_MODE_SYSTEM] = "Design";
 		game_master_mode = PLAY;
     }
 
@@ -280,8 +286,12 @@ namespace systems {
 			if (hour_elapsed) run_system(healing_system::run, duration_ms, HEALING_SYSTEM);
 			run_system(topology::run, duration_ms, TOPOLOGY_SYSTEM);
 			run_system(visibility::run, duration_ms, VISIBILITY_SYSTEM);
-			run_system(vegetation::run, duration_ms, VEGETATION_SYSTEM);
+			run_system(vegetation::run, duration_ms, VEGETATION_SYSTEM);			
         }
+		run_system(design_mode::run, duration_ms, DESIGN_MODE_SYSTEM);
+		if (game_master_mode == DESIGN) {
+			if (game_design_mode == CHOPPING) run_system(design_lumberjack::run, duration_ms, DESIGN_LUMBERJACK_SYSTEM);
+		}
 
 		// Logging goes at the end to catch new messages
 		run_system(logging::run, duration_ms, LOG_SYSTEM);

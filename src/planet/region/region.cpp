@@ -6,6 +6,7 @@
 #include "../../raws/defs/material_def_t.hpp"
 #include "../../raws/defs/plant_t.hpp"
 #include "../../bengine/serialization_utils.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
 
 namespace region {
 

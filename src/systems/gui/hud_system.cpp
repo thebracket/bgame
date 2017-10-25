@@ -96,10 +96,9 @@ namespace systems {
                     game_design_mode = BUILDING;*/
                 }
                 if (ImGui::MenuItem(menu_design_tree_cutting.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                    game_design_mode = CHOPPING;*/
+                    game_design_mode = CHOPPING;
                 }
                 if (ImGui::MenuItem(menu_design_guard.c_str())) {
                     /*game_master_mode = DESIGN;
