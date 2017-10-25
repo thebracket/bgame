@@ -143,7 +143,7 @@ void main()
     Lo += celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
 
     // Final color
-    vec3 ambient = vec3(0.03) * albedo * ambient_occlusion;
+    vec3 ambient = vec3(0.4) * albedo * ambient_occlusion;
     FragColor = ambient + Lo;
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
