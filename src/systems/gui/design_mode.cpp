@@ -20,7 +20,7 @@ namespace systems {
 				if (is_key_down(GLFW_KEY_T, false)) game_design_mode = CHOPPING;
 				if (is_key_down(GLFW_KEY_ESCAPE)) game_master_mode = PLAY;
 
-				ImGui::Begin(win_design.c_str());
+				ImGui::Begin(win_design.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
 				ImGui::RadioButton("(M)ining", (int *)&game_design_mode, 0); ImGui::SameLine();
 				ImGui::RadioButton("(B)uilding", (int *)&game_design_mode, 1); ImGui::SameLine();
 				ImGui::RadioButton("(T)ree Chopping", (int *)&game_design_mode, 2); ImGui::SameLine();
