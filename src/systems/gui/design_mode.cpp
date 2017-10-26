@@ -2,9 +2,15 @@
 #include "../keydamper.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../../bengine/IconsFontAwesome.h"
+#include "../../bengine/imgui.h"
+#include "../../bengine/imgui_impl_glfw_gl3.h"
 
 namespace systems {
 	namespace design_mode {
+
+		const std::string win_design = std::string(ICON_FA_PENCIL_SQUARE) + " Design Mode";
+		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
 		void run(const double &duration_ms) {
 			if (game_master_mode == PLAY) {
@@ -13,6 +19,20 @@ namespace systems {
 			else if (game_master_mode == DESIGN) {
 				if (is_key_down(GLFW_KEY_T, false)) game_design_mode = CHOPPING;
 				if (is_key_down(GLFW_KEY_ESCAPE)) game_master_mode = PLAY;
+
+				ImGui::Begin(win_design.c_str());
+				ImGui::RadioButton("(M)ining", (int *)&game_design_mode, 0); ImGui::SameLine();
+				ImGui::RadioButton("(B)uilding", (int *)&game_design_mode, 1); ImGui::SameLine();
+				ImGui::RadioButton("(T)ree Chopping", (int *)&game_design_mode, 2); ImGui::SameLine();
+				ImGui::RadioButton("(G)uardpoints", (int *)&game_design_mode, 3); ImGui::SameLine();
+				ImGui::RadioButton("(S)tockpiles", (int *)&game_design_mode, 4); ImGui::SameLine();
+				ImGui::RadioButton("(H)arvest", (int *)&game_design_mode, 5); ImGui::SameLine();
+				ImGui::RadioButton("(A)rchitecture", (int *)&game_design_mode, 6);
+
+				if (ImGui::Button(btn_close.c_str())) {
+					game_master_mode = PLAY;
+				}
+				ImGui::End();
 			}
 		}
 	}
