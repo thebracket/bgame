@@ -90,7 +90,7 @@ namespace render {
     inline void do_chunk_render() {
         for (const auto &idx : visible_chunks) {
             chunks::chunk_t * target = &chunks::chunks[idx];
-            if (target->ready && target->has_geometry) {
+            if (target->has_geometry) {
                 size_t n_elements = 0;
                 for (int z=0; z<chunks::CHUNK_SIZE; ++z) {
                     const int layer_z = z + target->base_z;
@@ -110,7 +110,7 @@ namespace render {
 	inline void do_trans_chunk_render() {
 		for (const auto &idx : visible_chunks) {
 			chunks::chunk_t * target = &chunks::chunks[idx];
-			if (target->ready && target->has_transparency) {
+			if (target->has_transparency) {
 				size_t n_elements = 0;
 				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
 					const int layer_z = z + target->base_z;

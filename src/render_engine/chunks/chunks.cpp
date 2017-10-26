@@ -1,6 +1,6 @@
 #include "chunks.hpp"
 #include <mutex>
-#include "../../bengine/threadpool.h"
+//#include "../../bengine/threadpool.h"
 #include "../../planet/indices.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/gl_include.hpp"
@@ -16,11 +16,11 @@ namespace chunks {
 
     // Dirty chunks
     std::vector<bool> dirty;
-    std::mutex dirty_mutex;
+    //std::mutex dirty_mutex;
 
     // Vertex geometry updates; need to not be multi-threaded
     std::set<int, std::greater<int>> dirty_buffers;
-    std::mutex dirty_buffer_mutex;
+    //std::mutex dirty_buffer_mutex;
 
 	void mark_chunk_dirty_by_tileidx(const int &idx) {
 		int x, y, z;
@@ -29,17 +29,17 @@ namespace chunks {
 	}
 
     void mark_chunk_dirty(const int &idx) {
-        std::lock_guard<std::mutex> lock(dirty_mutex);
+        //std::lock_guard<std::mutex> lock(dirty_mutex);
         dirty[idx] = true;
     }
 
     void mark_chunk_clean(const int &idx) {
-        std::lock_guard<std::mutex> lock(dirty_mutex);
+        //std::lock_guard<std::mutex> lock(dirty_mutex);
         dirty[idx] = false;
     }
 
     void enqueue_vertex_update(const int &idx) {
-        std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
+        //std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
         dirty_buffers.insert(idx);
 		mark_chunk_clean(idx);
 		std::cout << "Enqueued buffer update\n";
@@ -60,17 +60,18 @@ namespace chunks {
     }
 
     void update_chunk(int thread_num, const int &idx) {
-        chunks[idx].ready.store(false);
+        //chunks[idx].ready.store(false);
         chunks[idx].update();
     }
 
     void update_dirty_chunks() {
-        std::lock_guard<std::mutex> lock(dirty_mutex);
+        //std::lock_guard<std::mutex> lock(dirty_mutex);
         for (int i=0; i<CHUNKS_TOTAL; ++i) {
             if (dirty[i]) {
                 dirty[i] = false;
-                chunks[i].ready.store(false);
-                bengine::thread_pool->push(update_chunk, i);
+                //chunks[i].ready.store(false);
+                //bengine::thread_pool->push(update_chunk, i);
+				update_chunk(0, i);
             }
         }
     }
@@ -522,18 +523,17 @@ namespace chunks {
 	}
 
     void update_buffers() {
-        int idx;        
-        {
-            std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
-            if (dirty_buffers.empty()) return;
-            idx = *dirty_buffers.begin();
-			chunks[idx].ready.store(false);
-            dirty_buffers.erase(idx);
-        }
-        chunks[idx].update_buffer();
-		chunks[idx].update_trans_buffer();
-        chunks[idx].ready.store(true);
-		std::cout << "Buffer Updated\n";
+		while (!dirty_buffers.empty()) {
+			int idx;
+			//std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
+			idx = *dirty_buffers.begin();
+			//chunks[idx].ready.store(false);
+			dirty_buffers.erase(idx);
+			chunks[idx].update_buffer();
+			chunks[idx].update_trans_buffer();
+			//chunks[idx].ready.store(true);
+			std::cout << "Buffer Updated\n";
+		}
     }
 
 }

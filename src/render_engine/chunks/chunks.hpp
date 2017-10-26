@@ -3,7 +3,6 @@
 #include <array>
 #include "constants.hpp"
 #include <bitset>
-#include <atomic>
 #include <boost/container/flat_map.hpp>
 #include <vector>
 
@@ -40,7 +39,6 @@ namespace chunks {
         std::bitset<CHUNK_SIZE> layer_requires_render{};
 		std::bitset<CHUNK_SIZE> layer_requires_transparency{};
 		std::array<layer_t, CHUNK_SIZE> layers;
-        std::atomic<bool> ready{false};
         bool has_geometry = false;
 		bool has_transparency = false;
 
