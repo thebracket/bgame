@@ -20,7 +20,8 @@ buildings = {
 	    component = { { item="ship_turret_kit", qty=1 } },
 	    skill = { name="Construction", difficulty=25 },
 	    render = { width=1, height=1, tiles={ {glyph=glyphs['greater_than_equal'], foreground = colors['red'], background = colors['black']} } },
-	    render_ascii = { width=1, height=1, tiles={ {glyph=glyphs['greater_than_equal'], foreground = colors['red'], background = colors['black'] } } }
+		render_ascii = { width=1, height=1, tiles={ {glyph=glyphs['greater_than_equal'], foreground = colors['red'], background = colors['black'] } } },
+		vox=voxelId("turret")
 	},
 	wall = {
 		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,

@@ -34,7 +34,8 @@ items["fire_axe"] = {
     glyph_ascii = glyphs['paragraph'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['tool'].id
+    stockpile = stockpiles['tool'].id,
+    vox = voxelId("axe")
 };
 
 -- Pickaxe (to allow digging at the start)

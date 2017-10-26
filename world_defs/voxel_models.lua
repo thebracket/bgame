@@ -9,7 +9,9 @@ voxel_models = {
     cordex = { model=vfn("cordex"), id=6 },
     replicator_small = { model=vfn("replicator-small"), id=7 },
     solar_panel = { model=vfn("solarpanel"), id=8 },
-    wood_logs = { model=vfn("woodlogs"), id=9 }
+    wood_logs = { model=vfn("woodlogs"), id=9 },
+    turret = { model=vfn("turret"), id=10 },
+    axe = { model=vfn("simpleaxe"), id=11 }
 }
 
 function voxelId(name)
