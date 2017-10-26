@@ -124,31 +124,8 @@ namespace systems {
 					lines.push_back(n + std::string("x ") + it->first);
 				}
 
-				// Storage lockers and similar
-				items.clear();
-				each<construct_container_t, position_t>([&world_x, &world_y, &items](entity_t &storage_entity, construct_container_t &container, position_t &pos) {
-					if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
-						// It is a container and it is here - look inside!
-						each<item_t, item_stored_t>([&items, &world_x, &world_y, &storage_entity](entity_t &entity, item_t &item, item_stored_t &stored) {
-							if (stored.stored_in == storage_entity.id) {
-								auto finder = items.find(item.item_name);
-								if (finder == items.end()) {
-									items[item.item_name] = 1;
-								}
-								else {
-									++finder->second;
-								}
-							}
-						});
-					}
-				});
-				for (auto it = items.begin(); it != items.end(); ++it) {
-					std::string n = std::to_string(it->second);
-					lines.push_back(n + std::string("x ") + it->first);
-				}
-
 				// Buildings
-				each<building_t, position_t>([&lines, &world_x, &world_y](entity_t &building_entity, building_t &building, position_t &pos) {
+				each<building_t, position_t>([&lines, &world_x, &world_y, &items](entity_t &building_entity, building_t &building, position_t &pos) {
 					bool on_building = false;
 
 					if (pos.z == camera_position->region_z) {
@@ -180,6 +157,28 @@ namespace systems {
 							}
 						}
 						lines.push_back(building_name);
+
+						auto container = building_entity.component<construct_container_t>();
+						if (container) {
+							//std::cout << "It's a container\n";
+							items.clear();
+							each<item_t, item_stored_t>([&items, &world_x, &world_y, &building_entity](entity_t &entity, item_t &item, item_stored_t &stored) {
+								if (stored.stored_in == building_entity.id) {
+									auto finder = items.find(item.item_name);
+									if (finder == items.end()) {
+										items[item.item_name] = 1;
+									}
+									else {
+										++finder->second;
+									}
+								}
+							});
+
+							for (auto it = items.begin(); it != items.end(); ++it) {
+								std::string n = std::to_string(it->second);
+								lines.push_back(n + std::string("x ") + it->first);
+							}
+						}
 					}
 				});
 				if (stockpile_id(mapidx(world_x, world_y, camera_position->region_z))>0) {

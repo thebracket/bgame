@@ -18,6 +18,7 @@
 #include "../../../components/camera_options.hpp"
 #include "../../../components/turret_t.hpp"
 #include "../../../components/initiative.hpp"
+#include "../../../components/construct_container.hpp"
 #include "../../../bengine/geometry.hpp"
 
 using namespace region;
@@ -36,6 +37,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 
     for (const building_provides_t &provides : building->provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
+		if (provides.provides == provides_storage) new_building->assign(construct_container_t{});
     }
 
     if (tag == "storage_locker") {

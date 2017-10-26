@@ -148,6 +148,7 @@ void read_buildings() noexcept
                     if (type == "spike_trap") provisions.provides = provides_spikes;
                     if (type == "lever") provisions.provides = provides_lever;
                     if (type == "signal") provisions.provides = provides_signal_recipient;
+					if (type == "storage") provisions.provides = provides_storage;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
