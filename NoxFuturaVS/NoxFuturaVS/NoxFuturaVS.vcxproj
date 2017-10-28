@@ -247,6 +247,7 @@
     <ClCompile Include="..\..\src\systems\gui\design_mode.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\particle_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\tooltip_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp" />
@@ -508,6 +509,7 @@
     <ClInclude Include="..\..\src\systems\gui\design_mode.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\particle_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\settler_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\tooltip_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp" />

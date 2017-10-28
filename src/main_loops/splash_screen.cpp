@@ -53,7 +53,8 @@ namespace splash_screen {
 		sprite_shader = load_shaders("game_assets/sprite_shader_vertex.glsl", "game_assets/sprite_shader_fragment.glsl");
 		voxel_shader = std::make_unique<voxel_shader_t>();
 		cursor_shader = load_shaders("game_assets/highlight_vertex.glsl", "game_assets/highlight_fragment.glsl");
-    }
+		particle_shader = load_shaders("game_assets/particle_vertex.glsl", "game_assets/particle_fragment.glsl");
+	}
 
     void init_raws(int id) {
         std::cout << "Seen thread " << id << "\n";

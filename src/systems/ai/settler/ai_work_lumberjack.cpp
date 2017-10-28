@@ -13,6 +13,7 @@
 #include "../inventory_system.hpp"
 #include "../../damage/damage_system.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
+#include "../../gui/particle_system.hpp"
 
 using namespace bengine;
 using namespace jobs_board;
@@ -219,6 +220,8 @@ namespace systems {
 										make_open_space(idx);
 										tile_calculate(x, y, z);
 										++number_of_logs;
+										particles::emit_particle(x, y, z, 0.0f, 1.0f, 0.0f, 10.0f, particles::PARTICLE_SMOKE);
+										chunks::mark_chunk_dirty_by_tileidx(mapidx(x, y, z));
 									}
 								}
 							}
@@ -241,7 +244,6 @@ namespace systems {
 								for (int X = -10; X<10; ++X) {
 									tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
 									//tile_calculate(pos.x + X, pos.y + Y, pos.z + Z);
-									chunks::mark_chunk_dirty_by_tileidx(mapidx(pos.x + X, pos.y + Y, pos.z + Z));
 								}
 							}
 						}

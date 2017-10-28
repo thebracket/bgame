@@ -26,6 +26,7 @@
 #include "vox/renderables.hpp"
 #include "../systems/mouse.hpp"
 #include "chunks/cursors.hpp"
+#include "../systems/gui/particle_system.hpp"
 
 namespace render {
     bool camera_moved = true;
@@ -237,6 +238,7 @@ namespace render {
         update_world_textures();
 		build_voxel_render_list();
 		build_cursor_geometry();
+		systems::particles::build_buffers();
 		glCheckError();
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
@@ -248,6 +250,7 @@ namespace render {
         glCheckError();
 
         render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
+		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
 
         // TODO: Render windows and other transparency
 
