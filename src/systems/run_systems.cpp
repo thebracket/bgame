@@ -59,6 +59,7 @@
 #include "physics/vegetation_system.hpp"
 #include "gui/design_mode.hpp"
 #include "gui/design_lumberjack.hpp"
+#include "gui/design_buildings.hpp"
 #include "gui/particle_system.hpp"
 #include <string>
 #include <boost/container/flat_map.hpp>
@@ -131,6 +132,7 @@ namespace systems {
 	constexpr int DESIGN_LUMBERJACK_SYSTEM = 57;
 	constexpr int DESIGN_MODE_SYSTEM = 58;
 	constexpr int PARTICLE_SYSTEM = 59;
+	constexpr int DESIGN_BUILDINGS_SYSTEM = 60;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -213,6 +215,7 @@ namespace systems {
 		system_names[DESIGN_LUMBERJACK_SYSTEM] = "Design - Lumberjack";
 		system_names[DESIGN_MODE_SYSTEM] = "Design";
 		system_names[PARTICLE_SYSTEM] = "Particles";
+		system_names[DESIGN_BUILDINGS_SYSTEM] = "Design - Buildings";
 		game_master_mode = PLAY;
     }
 
@@ -294,6 +297,7 @@ namespace systems {
 		run_system(design_mode::run, duration_ms, DESIGN_MODE_SYSTEM);
 		if (game_master_mode == DESIGN) {
 			if (game_design_mode == CHOPPING) run_system(design_lumberjack::run, duration_ms, DESIGN_LUMBERJACK_SYSTEM);
+			if (game_design_mode == BUILDING) run_system(design_buildings::run, duration_ms, DESIGN_BUILDINGS_SYSTEM);
 		}
 		run_system(particles::run, duration_ms, PARTICLE_SYSTEM);
 

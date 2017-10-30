@@ -243,6 +243,7 @@
     <ClCompile Include="..\..\src\systems\damage\settler_ranged_attack_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\turret_ranged_attack_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\design_buildings.cpp" />
     <ClCompile Include="..\..\src\systems\gui\design_lumberjack.cpp" />
     <ClCompile Include="..\..\src\systems\gui\design_mode.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
@@ -505,6 +506,7 @@
     <ClInclude Include="..\..\src\systems\damage\settler_ranged_attack_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\turret_ranged_attack_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp" />
     <ClInclude Include="..\..\src\systems\gui\design_lumberjack.hpp" />
     <ClInclude Include="..\..\src\systems\gui\design_mode.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />

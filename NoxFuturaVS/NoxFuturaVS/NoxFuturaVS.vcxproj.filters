@@ -660,6 +660,9 @@
     <ClCompile Include="..\..\src\systems\gui\particle_system.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\design_buildings.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1443,6 +1446,9 @@
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\particle_system.hpp">
+      <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
