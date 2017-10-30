@@ -11,6 +11,6 @@ uniform mat4 view_matrix;
 void main()
 {
     color = aColor;
-    gl_PointSize = aSize;
+    gl_PointSize = 10.0;
     gl_Position = projection_matrix * (view_matrix * vec4(aPos, 1.0));
 }

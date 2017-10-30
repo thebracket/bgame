@@ -6,6 +6,7 @@
 #include "../fbo/base_lit_buffer.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_designations.hpp"
+#include "../../systems/gui/particle_system.hpp"
 #include <vector>
 
 namespace render {
@@ -89,6 +90,8 @@ namespace render {
 		float mouse_y = static_cast<float>(systems::mouse_wy);
 		float mouse_z = static_cast<float>(systems::mouse_wz);
 		add_cube_geometry(data, n_elements_cursor_elements, mouse_x, mouse_y, mouse_z, 1, 1, 0);
+		// TEMPORARY
+		//systems::particles::block_destruction_effect(mouse_x, mouse_y, mouse_z, 1.0f, 1.0f, 1.0f, systems::particles::PARTICLE_LUMBERJACK);
 
 		// Lumberjacking
 		if (game_master_mode == DESIGN && game_design_mode == CHOPPING) {

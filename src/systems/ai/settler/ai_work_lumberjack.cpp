@@ -220,7 +220,7 @@ namespace systems {
 										make_open_space(idx);
 										tile_calculate(x, y, z);
 										++number_of_logs;
-										particles::emit_particle(x, y, z, 0.0f, 1.0f, 0.0f, 10.0f, particles::PARTICLE_SMOKE);
+										particles::block_destruction_effect(x, y, z, 0.0f, 1.0f, 0.0f, particles::PARTICLE_LUMBERJACK);
 										chunks::mark_chunk_dirty_by_tileidx(mapidx(x, y, z));
 									}
 								}

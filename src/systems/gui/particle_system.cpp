@@ -7,6 +7,7 @@
 #include "../../global_assets/rng.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../global_assets/shader_storage.hpp"
+#include "../../render_engine/fbo/gbuffer.hpp"
 
 namespace systems {
 	namespace particles {
@@ -33,6 +34,20 @@ namespace systems {
 			positions.emplace_back(particle_t{ x, z, y, r, g, b, size, mode, 0.0f });
 		}
 
+		void block_destruction_effect(int x, int y, int z, float r, float g, float b, uint8_t mode) {
+			for (float i = 0.0f; i < 1.0f; i += 0.1f) {
+				for (float j = 0.0f; j < 1.0f; j += 0.1f) {
+					for (float k = 0.0f; k < 1.0f; k += 0.1f) {
+						const float X = static_cast<float>(x) +i;
+						const float Y = static_cast<float>(y) + j;
+						const float Z = static_cast<float>(z) + k;
+
+						positions.emplace_back(particle_t{ X, Z, Y, r, g, b, 1.0f, mode, 0.0f });
+					}
+				}
+			}
+		}
+
 		void run(const double &duration_ms) {
 			// Automated particle spawners
 			if (major_tick) {
@@ -41,8 +56,8 @@ namespace systems {
 					const int n_smoke = rng.roll_dice(1, 10);
 					for (int i = 0; i < n_smoke; ++i) {
 						float x = static_cast<float>(pos.x) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
-						float y = static_cast<float>(pos.y) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
-						float z = static_cast<float>(pos.z) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
+						float y = static_cast<float>(pos.z) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
+						float z = static_cast<float>(pos.y) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
 						float grey = static_cast<float>(rng.roll_dice(1, 255)) / 255.0f;
 						emit_particle(x, y, z, grey, grey, grey, 1.0f, PARTICLE_SMOKE);
 					}
@@ -56,7 +71,7 @@ namespace systems {
 				p.age += duration_ms;
 				p.size += duration_ms;
 
-				if (p.pmode == PARTICLE_SMOKE) {
+				if (p.pmode == PARTICLE_SMOKE || p.pmode == PARTICLE_LUMBERJACK) {
 					p.y += 0.01f;
 				}
 			}
@@ -82,7 +97,7 @@ namespace systems {
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(particle_t), (char *) nullptr + 3 * sizeof(float));
 			glEnableVertexAttribArray(1); // 1 = R/G/B
 
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(particle_t), (char *) nullptr + 6 * sizeof(float));
+			glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(particle_t), (char *) nullptr + 6 * sizeof(float));
 			glEnableVertexAttribArray(2); // 2 = Size (1 float)
 
 			// We're skipping mode and age
@@ -104,6 +119,7 @@ namespace systems {
 
 			// Splat out particle info
 			glDrawArrays(GL_POINTS, 0, positions.size());
+			std::cout << "Rendered " << positions.size() << " particles\n";
 
 			// Cleanup
 			glBindVertexArray(0);
