@@ -42,7 +42,7 @@ namespace systems {
 						const float Y = static_cast<float>(y) + j;
 						const float Z = static_cast<float>(z) + k;
 
-						positions.emplace_back(particle_t{ X, Z, Y, r, g, b, 1.0f, mode, 0.0f });
+						positions.emplace_back(particle_t{ X, Z, Y, r, g, b, 1.0f, mode, 500.0f });
 					}
 				}
 			}
@@ -69,10 +69,13 @@ namespace systems {
 			// Expand particles
 			for (auto &p : positions) {
 				p.age += duration_ms;
-				p.size += duration_ms;
 
 				if (p.pmode == PARTICLE_SMOKE || p.pmode == PARTICLE_LUMBERJACK) {
 					p.y += 0.01f;
+					p.size += 0.25f;
+					p.r = std::max(0.0f, p.r - 0.01f);
+					p.g = std::max(0.0f, p.g - 0.01f);
+					p.b = std::max(0.0f, p.b - 0.01f);
 				}
 			}
 
@@ -116,10 +119,11 @@ namespace systems {
 			// Set uniforms
 			glUniformMatrix4fv(glGetUniformLocation(assets::particle_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
 			glUniformMatrix4fv(glGetUniformLocation(assets::particle_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 			// Splat out particle info
 			glDrawArrays(GL_POINTS, 0, positions.size());
-			std::cout << "Rendered " << positions.size() << " particles\n";
+			//std::cout << "Rendered " << positions.size() << " particles\n";
 
 			// Cleanup
 			glBindVertexArray(0);
