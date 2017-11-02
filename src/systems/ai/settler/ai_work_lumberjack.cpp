@@ -21,39 +21,41 @@ using namespace region;
 using namespace systems::distance_map;
 using namespace systems::dijkstra;
 
-namespace jobs_board {
-	void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-		if (designations->chopping.empty()) return; // Nothing to cut down
-
-		auto axe_distance = axe_map.get(mapidx(pos));
-		if (axe_distance > MAX_DIJSTRA_DISTANCE - 1) return; // No axe available
-
-																	   // Evaluate the closest tree to chop
-		std::size_t i = 0;
-		float distance = std::numeric_limits<float>().max();
-		std::size_t selected = 0;
-		for (const auto &chop : designations->chopping) {
-			const float d = distance3d(pos.x, pos.y, pos.z, chop.second.x, chop.second.y, chop.second.z);
-			if (d < distance) {
-				distance = d;
-				selected = i;
-			}
-			++i;
-		}
-
-		board.insert(std::make_pair(distance + axe_distance, jt));
-	}
-}
-
 namespace systems {
-	namespace ai_work_lumberjack {		
+	namespace ai_work_lumberjack {
+
+		using namespace jobs_board;
+
+		namespace jobs_board {
+			void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
+				if (designations->chopping.empty()) return; // Nothing to cut down
+
+				auto axe_distance = axe_map.get(mapidx(pos));
+				if (axe_distance > MAX_DIJSTRA_DISTANCE - 1) return; // No axe available
+
+																	 // Evaluate the closest tree to chop
+				std::size_t i = 0;
+				float distance = std::numeric_limits<float>().max();
+				std::size_t selected = 0;
+				for (const auto &chop : designations->chopping) {
+					const float d = distance3d(pos.x, pos.y, pos.z, chop.second.x, chop.second.y, chop.second.z);
+					if (d < distance) {
+						distance = d;
+						selected = i;
+					}
+					++i;
+				}
+
+				board.insert(std::make_pair(distance + axe_distance, jt));
+			}
+		}
 
 		bool first_run = true;
 
 		void run(const double &duration_ms) {
 			if (first_run) {
 				first_run = false;
-				jobs_board::register_job_offer<ai_tag_work_lumberjack>(jobs_board::evaluate_lumberjacking);
+				register_job_offer<ai_tag_work_lumberjack>(jobs_board::evaluate_lumberjacking);
 			}
 
 			ai_work_template<ai_tag_work_lumberjack> work;

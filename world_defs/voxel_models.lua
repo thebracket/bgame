@@ -11,7 +11,11 @@ voxel_models = {
     solar_panel = { model=vfn("solarpanel"), id=8 },
     wood_logs = { model=vfn("woodlogs"), id=9 },
     turret = { model=vfn("turret"), id=10 },
-    axe = { model=vfn("simpleaxe"), id=11 }
+    axe = { model=vfn("simpleaxe"), id=11 },
+    campfire_kit = { model=vfn("crate-fakefire"), id=12 },
+    tent_kit = { model=vfn("crate-tent"), id=13 },
+    fakefire = { model=vfn("campfire-fake"), id=14 },
+    tent = { model=vfn("tent"), id=15 }
 }
 
 function voxelId(name)

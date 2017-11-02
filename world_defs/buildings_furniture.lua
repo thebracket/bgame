@@ -50,7 +50,8 @@ buildings["personal_survival_shelter"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['arch'], foreground = colors['green'], background = colors['black']}
         }
-    }
+    },
+    vox=voxelId("tent")
 };
 
 buildings["table"] = {

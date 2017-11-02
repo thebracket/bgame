@@ -3,6 +3,7 @@
 #include <vector>
 #include "../../components/item.hpp"
 #include "../../components/item_carried.hpp"
+#include "../../global_assets/game_building.hpp"
 
 namespace systems {
 	namespace inventory_system {
@@ -12,6 +13,7 @@ namespace systems {
 		void pickup_item(const std::size_t &ID, const std::size_t &holder);
 		void pickup_item(const std::size_t &ID, const std::size_t &holder, const item_location_t &LOC);
 		void destroy_item(const std::size_t ID);
+		void building_request(int x, int y, int z, buildings::available_building_t building);
 		void inventory_has_changed();
 	}
 }

@@ -20,6 +20,7 @@
 #include "../workflow_system.hpp"
 #include "../../physics/topology_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
+#include "../../../render_engine/world_textures/world_textures.hpp"
 
 namespace systems {
 	namespace ai_building {
@@ -45,7 +46,14 @@ namespace systems {
 			}
 		}
 
+		bool first_run = true;
+
 		void run(const double &duration_ms) {
+			if (first_run) {
+				first_run = false;
+				register_job_offer<ai_tag_work_building>(jobs_board::evaluate_building);
+			}
+
 			ai_work_template<ai_tag_work_building> work;
 			work.do_ai([&work](entity_t &e, ai_tag_work_building &b, ai_tag_my_turn_t &t, position_t &pos) {
 				work.set_status(e, "Construction");
@@ -192,8 +200,8 @@ namespace systems {
 								entity(b.building_target.building_entity)->assign(construct_provides_sleep_t{});
 							}
 							else if (provides.provides == provides_light) {
-								entity(b.building_target.building_entity)->assign(
-									lightsource_t{ provides.radius, provides.color });
+								entity(b.building_target.building_entity)->assign(lightsource_t{ provides.radius, provides.color });
+								render::light_changed = true;
 							}
 							else if (provides.provides == provides_door) {
 								entity(b.building_target.building_entity)->assign(construct_door_t{});
@@ -216,6 +224,7 @@ namespace systems {
 							}
 						}
 						if (finder->emits_smoke) {
+							std::cout << "Assigned smoke emitter\n";
 							entity(b.building_target.building_entity)->assign(smoke_emitter_t{});
 						}
 

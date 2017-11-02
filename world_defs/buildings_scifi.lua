@@ -72,7 +72,8 @@ buildings["fake_camp_fire"] = {
             {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
         }
     },
-    emits_smoke = true
+    emits_smoke = true,
+    vox = voxelId("fakefire")
 };
 
 reactions["replicate_tiny_marshmallow"] = {

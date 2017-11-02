@@ -12,6 +12,8 @@
 #include "../../components/building.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../render_engine/vox/renderables.hpp"
+#include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 #include "distance_map_system.hpp"
 
 namespace systems {
@@ -89,6 +91,10 @@ namespace systems {
 
 		void inventory_has_changed() {
 			inventory_changes.enqueue(inventory_changed_message{});
+		}
+
+		void building_request(int x, int y, int z, buildings::available_building_t building) {
+			building_requests.enqueue(build_request_message{ x,y,z,building });
 		}
 
 		void run(const double &duration_ms) {
@@ -170,10 +176,13 @@ namespace systems {
 					designate.component_ids.push_back(std::make_pair(component_id, false));
 				}
 
+				auto building_def = get_building_def(designate.tag);
+				if (!building_def) throw std::runtime_error("Unknown building tag");
+
 				auto building_template = create_entity()
 					->assign(position_t{ msg.x, msg.y, msg.z })
 					->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs,
-						designate.glyphs_ascii, false, 0, 10, 10, 0 }); // TODO : Mark the last parameter as the voxel model
+						designate.glyphs_ascii, false, 0, 10, 10, building_def->vox_model });
 				designate.building_entity = building_template->id;
 				for (int y = msg.y; y<msg.y + designate.height; ++y) {
 					for (int x = msg.x; x < msg.x + designate.width; ++x) {
@@ -196,6 +205,8 @@ namespace systems {
 						region::calc_render(idx);
 					}
 				}
+
+				render::models_changed = true;
 			});
 
 			dirty = false;

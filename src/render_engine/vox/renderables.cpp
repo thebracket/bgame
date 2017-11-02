@@ -13,6 +13,13 @@
 #include "voxreader.hpp"
 #include "../../global_assets/shader_storage.hpp"
 #include "../../global_assets/texture_storage.hpp"
+#include "../../global_assets/game_mode.hpp"
+#include "../../global_assets/game_building.hpp"
+#include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
+#include "../../systems/mouse.hpp"
+#include "../../planet/region/region.hpp"
+#include "../../systems/ai/inventory_system.hpp"
 #include <memory>
 #include <vector>
 #include <boost/container/flat_map.hpp>
@@ -39,18 +46,79 @@ namespace render {
 				if (b.width == 3) x -= 1.0f;
 				if (b.height == 3) z -= 1.0f;
 
+				float red = 1.0f;
+				float green = 1.0f;
+				float blue = 1.0f;
+
+				if (!b.complete) blue = 0.0f;
+
 				if (finder != models_to_render->end()) {
 					finder->second.push_back(vox::instance_t{
-						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
 					});
 				}
 				else {
 					models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
 					}}));
 				}
 			}
 		});
+
+		if (game_master_mode == DESIGN && game_design_mode == BUILDING && buildings::has_build_mode_building) {
+			// We have a building selected; determine if it can be built and show it
+			const auto tag = buildings::build_mode_building.tag;
+			auto building_def = get_building_def(tag);
+			if (building_def && building_def->vox_model > 0) {
+				// We have the model and the definition; see if its possible to build
+				bool can_build = true;
+
+				for (int y = systems::mouse_wy; y < systems::mouse_wy + building_def->height; ++y) {
+					for (int x = systems::mouse_wx; x < systems::mouse_wx + building_def->width; ++x) {
+						const auto idx = mapidx(x, y, systems::mouse_wz);
+						if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
+						if (region::flag(idx, CONSTRUCTION)) can_build = false;
+					}
+				}
+
+				auto finder = models_to_render->find(building_def->vox_model);
+				auto x = (float)systems::mouse_wx;
+				const auto y = (float)systems::mouse_wz;
+				auto z = (float)systems::mouse_wy;
+
+				if (can_build) {					
+
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+						});
+					}
+					else {
+						models_to_render->insert(std::make_pair(building_def->vox_model, std::vector<vox::instance_t>{ vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+						} }));
+					}
+
+					if (systems::left_click) {
+						// Perform the building
+						systems::inventory_system::building_request(systems::mouse_wx, systems::mouse_wy, systems::mouse_wz, buildings::build_mode_building);
+						buildings::has_build_mode_building = false;
+					}
+				}
+				else {
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f
+						});
+					}
+					else {
+						models_to_render->insert(std::make_pair(building_def->vox_model, std::vector<vox::instance_t>{ vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f
+						} }));
+					}
+				}
+			}
+		}
 	}
 
 	void build_voxel_items() {

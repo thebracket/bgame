@@ -6,6 +6,7 @@
 #include "../mouse.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../helpers/inventory_assistant.hpp"
+#include "../../render_engine/vox/renderables.hpp"
 #include <vector>
 #include <string>
 #include <utility>
@@ -19,6 +20,8 @@ namespace systems {
 		const std::string win_building = std::string(ICON_FA_BUILDING_O) + " Building";
 
 		void run(const double &duration_ms) {
+			render::models_changed = true; // Models always change while in design mode - buildings
+
 			std::vector<std::pair<std::string, std::string>> buildings;
 
 			bool rendered_selected = false;

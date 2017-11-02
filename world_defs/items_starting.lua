@@ -10,7 +10,8 @@ items["personal_survival_shelter_kit"] = {
     glyph_ascii = glyphs['kit'],
     foreground = colors['green'],
     background = colors['black'],
-    stockpile = stockpiles['kit'].id
+    stockpile = stockpiles['kit'].id,
+    vox = voxelId("tent_kit")
 };
 
 -- Easy camp fire
@@ -22,7 +23,8 @@ items["camp_fire_kit"] = {
     glyph_ascii = glyphs['kit'],
     foreground = colors['red'],
     background = colors['black'],
-    stockpile = stockpiles['kit'].id
+    stockpile = stockpiles['kit'].id,
+    vox = voxelId("campfire_kit")
 };
 
 -- Fire axe (to allow tree chopping at the start)
