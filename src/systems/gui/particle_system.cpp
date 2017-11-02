@@ -53,13 +53,13 @@ namespace systems {
 			if (major_tick) {
 				// Smoke from fires
 				each<smoke_emitter_t, position_t>([] (entity_t &e, smoke_emitter_t &smoke, position_t &pos) {
-					const int n_smoke = rng.roll_dice(1, 10);
+					const int n_smoke = rng.roll_dice(3, 10);
 					for (int i = 0; i < n_smoke; ++i) {
-						float x = static_cast<float>(pos.x) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
-						float y = static_cast<float>(pos.z) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
-						float z = static_cast<float>(pos.y) + (static_cast<float>(rng.roll_dice(1, 9)) / 10.0f);
+						float x = static_cast<float>(pos.x) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f) - 0.5f;
+						float y = static_cast<float>(pos.z) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f);
+						float z = static_cast<float>(pos.y) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f) - 0.5f;
 						float grey = static_cast<float>(rng.roll_dice(1, 255)) / 255.0f;
-						emit_particle(x, y, z, grey, grey, grey, 1.0f, PARTICLE_SMOKE);
+						positions.emplace_back(particle_t{ x, y, z, grey, grey, grey, 1.0f, PARTICLE_SMOKE, -2000.0f });
 					}
 				});
 
@@ -71,8 +71,8 @@ namespace systems {
 				p.age += duration_ms;
 
 				if (p.pmode == PARTICLE_SMOKE || p.pmode == PARTICLE_LUMBERJACK) {
-					p.y += 0.01f;
-					p.size += 0.25f;
+					p.pmode == PARTICLE_SMOKE ? p.y += 0.05f : p.y += 0.01f;
+					p.size += 0.1f;
 					p.r = std::max(0.0f, p.r - 0.01f);
 					p.g = std::max(0.0f, p.g - 0.01f);
 					p.b = std::max(0.0f, p.b - 0.01f);

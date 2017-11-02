@@ -224,7 +224,6 @@ namespace systems {
 							}
 						}
 						if (finder->emits_smoke) {
-							std::cout << "Assigned smoke emitter\n";
 							entity(b.building_target.building_entity)->assign(smoke_emitter_t{});
 						}
 
