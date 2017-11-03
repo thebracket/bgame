@@ -9,12 +9,17 @@ buildings["bonecarver"] = {
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render = {
-        width=2, height=2, tiles= {
+        width=3, height=3, tiles= {
             {glyph= glyphs['bonecarver_1'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['bonecarver_2'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['bonecarver_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['bonecarver_4'], foreground = colors['white'], background = colors['black']}
-        }
+        },
     },
     render_ascii = {
         width=2, height=2, tiles= {
@@ -24,5 +29,6 @@ buildings["bonecarver"] = {
             {glyph= glyphs['vertical_line'], foreground = colors['white'], background = colors['black']}
         }
     },
+    vox=voxelId("bonecarver")    
 };
 
