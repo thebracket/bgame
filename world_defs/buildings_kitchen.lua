@@ -93,9 +93,13 @@ buildings["butcher"] = {
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render = {
-        width=2, height=2, tiles= {
+        width=3, height=3, tiles= {
             {glyph= glyphs['butcher_1'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['butcher_2'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
+            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['butcher_4'], foreground = colors['white'], background = colors['black']}
         }
@@ -108,4 +112,5 @@ buildings["butcher"] = {
             {glyph= glyphs['paragraph'], foreground = colors['red'], background = colors['black']}
         }
     },
+    vox=voxelId("butcher")
 };
