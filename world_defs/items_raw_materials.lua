@@ -167,7 +167,8 @@ items["wood_waste"] = {
     glyph_ascii = glyphs['three_bar'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['waste'].id
+    stockpile = stockpiles['waste'].id,
+    vox=voxelId("woodwaste")
 };
 
 -- Blocks are the base building item for a LOT of things.
@@ -179,7 +180,8 @@ items["block"] = {
     glyph_ascii = glyphs['inset_square'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['block'].id
+    stockpile = stockpiles['block'].id,
+    vox=voxelId("block")
 };
 
 -- Animal bones

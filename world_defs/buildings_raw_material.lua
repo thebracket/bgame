@@ -9,11 +9,10 @@ buildings["sawmill"] = {
     components = { { item="wood_log", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render = {
-        width=2, height=2, tiles= {
+        width=3, height=1, tiles= {
             {glyph= glyphs['sawmill_1'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['sawmill_2'], foreground = colors['white'], background = colors['black']},
             {glyph= glyphs['sawmill_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sawmill_4'], foreground = colors['white'], background = colors['black']}
         }
     },
     render_ascii = {
@@ -24,6 +23,7 @@ buildings["sawmill"] = {
             {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']}
         }
     },
+    vox=voxelId("sawmill")
 };
 
 reactions["cut_wooden_planks"] = {

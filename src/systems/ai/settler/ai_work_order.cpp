@@ -10,6 +10,7 @@
 #include "../../../raws/defs/reaction_t.hpp"
 #include "../inventory_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
+#include "../../gui/particle_system.hpp"
 
 namespace systems {
 	namespace ai_workorder {
@@ -42,7 +43,14 @@ namespace systems {
 			}
 		}
 
+		bool first_run = true;
+
 		void run(const double &duration_ms) {
+			if (first_run) {
+				register_job_offer<ai_tag_work_order>(jobs_board::evaluate_work_orders);
+				first_run = false;
+			}
+
 			ai_work_template<ai_tag_work_order> work;
 			work.do_ai([&work](entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) {
 				work.set_status(e, "Fulfilling Work Orders");
@@ -227,6 +235,7 @@ namespace systems {
 						render::models_changed = true;
 						inventory_system::inventory_has_changed();
 						distance_map::refresh_blocks_map();
+						particles::block_destruction_effect(pos.x, pos.y, pos.z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_LUMBERJACK);
 
 						// Become idle
 						work.cancel_work_tag(e);

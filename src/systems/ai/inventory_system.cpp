@@ -14,6 +14,8 @@
 #include "../../render_engine/vox/renderables.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/defs/building_def_t.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
+#include "../../planet/region/region.hpp"
 #include "distance_map_system.hpp"
 
 namespace systems {
@@ -187,6 +189,7 @@ namespace systems {
 				for (int y = msg.y; y<msg.y + designate.height; ++y) {
 					for (int x = msg.x; x < msg.x + designate.width; ++x) {
 						entity_octree.add_node(octree_location_t{ x,y,msg.z,building_template->id });
+						chunks::mark_chunk_dirty_by_tileidx( mapidx(x, y, msg.z) );
 					}
 				}
 
@@ -206,7 +209,7 @@ namespace systems {
 					}
 				}
 
-				render::models_changed = true;
+				render::models_changed = true;				
 			});
 
 			dirty = false;

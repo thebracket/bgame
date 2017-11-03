@@ -21,6 +21,7 @@
 #include "../../physics/topology_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../../render_engine/world_textures/world_textures.hpp"
+#include "../../gui/particle_system.hpp"
 
 namespace systems {
 	namespace ai_building {
@@ -231,6 +232,10 @@ namespace systems {
 						inventory_system::inventory_has_changed();
 						workflow_system::update_workflow();
 						// TODO: emit(map_changed_message{});
+						auto pos = entity(b.building_target.building_entity)->component<position_t>();
+						if (pos) {
+							particles::block_destruction_effect(pos->x, pos->y, pos->z, 0.5f, 0.5f, 0.5f, particles::PARTICLE_LUMBERJACK);
+						}
 
 						// Become idle
 						work.cancel_work_tag(e);
