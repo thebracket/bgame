@@ -258,7 +258,6 @@ namespace systems {
 			if (day_elapsed) run_system(sentient_ai_system::run, duration_ms, SENTIENT_AI_SYSTEM);
 			run_system(corpse_system::run, duration_ms, CORPSE_SYSTEM);
 			run_system(mining_system::run, duration_ms, MINING_SYSTEM);
-			run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
 			run_system(stockpile_system::run, duration_ms, STOCKPILE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(workflow_system::run, duration_ms, WORKFLOW_SYSTEM);
@@ -299,6 +298,7 @@ namespace systems {
 			if (game_design_mode == CHOPPING) run_system(design_lumberjack::run, duration_ms, DESIGN_LUMBERJACK_SYSTEM);
 			if (game_design_mode == BUILDING) run_system(design_buildings::run, duration_ms, DESIGN_BUILDINGS_SYSTEM);
 		}
+		run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
 		run_system(particles::run, duration_ms, PARTICLE_SYSTEM);
 
 		// Logging goes at the end to catch new messages

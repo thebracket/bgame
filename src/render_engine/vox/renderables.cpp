@@ -50,7 +50,11 @@ namespace render {
 				float green = 1.0f;
 				float blue = 1.0f;
 
-				if (!b.complete) blue = 0.0f;
+				if (!b.complete) {
+					red = 0.1f;
+					green = 0.1f;
+					blue = 0.1f;
+				}
 
 				if (finder != models_to_render->end()) {
 					finder->second.push_back(vox::instance_t{
@@ -73,11 +77,13 @@ namespace render {
 				// We have the model and the definition; see if its possible to build
 				bool can_build = true;
 
+				std::vector<int> target_tiles;
 				for (int y = systems::mouse_wy; y < systems::mouse_wy + building_def->height; ++y) {
 					for (int x = systems::mouse_wx; x < systems::mouse_wx + building_def->width; ++x) {
 						const auto idx = mapidx(x, y, systems::mouse_wz);
 						if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
 						if (region::flag(idx, CONSTRUCTION)) can_build = false;
+						target_tiles.emplace_back(idx);
 					}
 				}
 
@@ -103,6 +109,9 @@ namespace render {
 						// Perform the building
 						systems::inventory_system::building_request(systems::mouse_wx, systems::mouse_wy, systems::mouse_wz, buildings::build_mode_building);
 						buildings::has_build_mode_building = false;
+						for (const auto &idx : target_tiles) {
+							region::set_flag(idx, CONSTRUCTION);
+						}
 					}
 				}
 				else {

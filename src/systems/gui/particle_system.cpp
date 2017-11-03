@@ -55,9 +55,9 @@ namespace systems {
 				each<smoke_emitter_t, position_t>([] (entity_t &e, smoke_emitter_t &smoke, position_t &pos) {
 					const int n_smoke = rng.roll_dice(3, 10);
 					for (int i = 0; i < n_smoke; ++i) {
-						float x = static_cast<float>(pos.x) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f) - 0.5f;
+						float x = static_cast<float>(pos.x) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f);
 						float y = static_cast<float>(pos.z) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f);
-						float z = static_cast<float>(pos.y) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f) - 0.5f;
+						float z = static_cast<float>(pos.y) + (static_cast<float>(rng.roll_dice(1, 3)) / 10.0f);
 						float grey = static_cast<float>(rng.roll_dice(1, 255)) / 255.0f;
 						positions.emplace_back(particle_t{ x, y, z, grey, grey, grey, 1.0f, PARTICLE_SMOKE, -2000.0f });
 					}
