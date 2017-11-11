@@ -20,7 +20,9 @@ voxel_models = {
     block = { model=vfn("block"), id=17 },
     woodwaste = { model=vfn("wastewood"), id=18 },
     bonecarver = { model=vfn("bonecarver"), id=19 },
-    butcher = { model=vfn("butcher"), id=20 }
+    butcher = { model=vfn("butcher"), id=20 },
+    carpenter = { model=vfn("carpenter"), id=21 },
+    chemist = { model=vfn("chemist"), id=22 }
 }
 
 function voxelId(name)

@@ -23,6 +23,7 @@ buildings["carpenter"] = {
             {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
+    vox = voxelId("carpenter")
 };
 
 reactions["make_wooden_table"] = {

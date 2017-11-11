@@ -23,6 +23,7 @@ buildings["simple_chemist"] = {
             {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
+    vox=voxelId("chemist")
 };
 
 reactions["make_black_powder"] = {
