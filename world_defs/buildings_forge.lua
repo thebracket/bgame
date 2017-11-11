@@ -24,6 +24,7 @@ buildings["primitive_forge"] = {
             {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['black']}
         }
     },
+    vox=voxelId("forge")
 };
 
 reactions["make_metal_table"] = {

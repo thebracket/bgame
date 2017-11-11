@@ -26,7 +26,8 @@ voxel_models = {
     stairs_up = { model=vfn("stairs-up"), id=23 },
     stairs_down = { model=vfn("stairs-down"), id=24 },
     stairs_updown = { model=vfn("stairs-updown"), id=25 },
-    tailor = { model=vfn("tailor"), id=26 }
+    tailor = { model=vfn("tailor"), id=26 },
+    forge = { model=vfn("forge"), id=27 }
 }
 
 function voxelId(name)
