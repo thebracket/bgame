@@ -39,6 +39,7 @@ namespace chunks {
         std::bitset<CHUNK_SIZE> layer_requires_render{};
 		std::bitset<CHUNK_SIZE> layer_requires_transparency{};
 		std::array<layer_t, CHUNK_SIZE> layers;
+		boost::container::flat_map<int, std::tuple<int, int, int>> static_voxel_models;
         bool has_geometry = false;
 		bool has_transparency = false;
 

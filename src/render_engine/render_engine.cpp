@@ -236,7 +236,7 @@ namespace render {
         chunk_maintenance();
         if (camera_moved) update_camera();
         update_world_textures();
-		build_voxel_render_list();
+		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
 		systems::particles::build_buffers();
 		glCheckError();

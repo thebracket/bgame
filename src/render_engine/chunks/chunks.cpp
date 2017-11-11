@@ -134,6 +134,7 @@ namespace chunks {
 			layer.trans.clear();
 			layer.n_trans = 0;
         }
+		static_voxel_models.clear();
 
         for (int chunk_z = 0; chunk_z < CHUNK_SIZE; ++chunk_z) {
             layer_requires_render.reset(chunk_z);
@@ -172,7 +173,16 @@ namespace chunks {
 								add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
 								layers[chunk_z].n_elements += 6;
 							}
-                        }
+							else if (tiletype == tile_type::STAIRS_DOWN) {
+								static_voxel_models.insert(std::make_pair(24, std::make_tuple(region_x, region_y, region_z)));
+							}
+							else if (tiletype == tile_type::STAIRS_UP) {
+								static_voxel_models.insert(std::make_pair(23, std::make_tuple(region_x, region_y, region_z)));
+							}
+							else if (tiletype == tile_type::STAIRS_UPDOWN) {
+								static_voxel_models.insert(std::make_pair(25, std::make_tuple(region_x, region_y, region_z)));
+							}
+						}
                     }
 					if (region::water_level(idx) > 0) {
 						add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));

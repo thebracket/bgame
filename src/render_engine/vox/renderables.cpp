@@ -20,6 +20,7 @@
 #include "../../systems/mouse.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../systems/ai/inventory_system.hpp"
+#include "../chunks/chunks.hpp"
 #include <memory>
 #include <vector>
 #include <boost/container/flat_map.hpp>
@@ -241,7 +242,27 @@ namespace render {
 	unsigned int sprite_vao = 0;
 	unsigned int sprite_vbo = 0;
 
-	void build_voxel_render_list() {
+	void build_chunk_models(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
+		for (const auto &idx : visible_chunks) {
+			chunks::chunk_t * target = &chunks::chunks[idx];
+			if (!target->static_voxel_models.empty()) {
+				for (const auto &model : target->static_voxel_models) {
+					if (std::get<2>(model.second) <= camera_position->region_z) {
+						auto finder = models_to_render->find(model.first);
+						vox::instance_t render_model{ std::get<0>(model.second), std::get<2>(model.second), std::get<1>(model.second), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+						if (finder != models_to_render->end()) {
+							finder->second.push_back(render_model);
+						}
+						else {
+							models_to_render->insert(std::make_pair(model.first, std::vector<vox::instance_t>{ render_model }));
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
 		if (sprite_vao == 0) glGenVertexArrays(1, &sprite_vao);
 		if (sprite_vbo == 0) glGenBuffers(1, &sprite_vbo);
 
@@ -255,6 +276,7 @@ namespace render {
 			sprite_buffer.clear();
 			n_sprites = 0;
 			
+			build_chunk_models(visible_chunks);
 			build_voxel_buildings();
 			build_voxel_items();
 			// TODO: Regular old renderables!

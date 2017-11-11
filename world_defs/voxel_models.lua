@@ -22,7 +22,10 @@ voxel_models = {
     bonecarver = { model=vfn("bonecarver"), id=19 },
     butcher = { model=vfn("butcher"), id=20 },
     carpenter = { model=vfn("carpenter"), id=21 },
-    chemist = { model=vfn("chemist"), id=22 }
+    chemist = { model=vfn("chemist"), id=22 },
+    stairs_up = { model=vfn("stairs-up"), id=23 },
+    stairs_down = { model=vfn("stairs-down"), id=24 },
+    stairs_updown = { model=vfn("stairs-updown"), id=25 },
 }
 
 function voxelId(name)
