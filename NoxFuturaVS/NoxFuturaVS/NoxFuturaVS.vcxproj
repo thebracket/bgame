@@ -110,15 +110,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointModel>Fast</FloatingPointModel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
@@ -291,7 +293,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\astar.hpp" />
-    <ClInclude Include="..\..\src\bengine\bitset8.hpp" />
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />
     <ClInclude Include="..\..\src\bengine\color_t.hpp" />
     <ClInclude Include="..\..\src\bengine\ctpl.h" />
@@ -552,6 +553,9 @@
     <ClInclude Include="..\..\src\systems\scheduler\initiative_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\tick_system.hpp" />
     <ClInclude Include="..\..\src\utils\thread_safe_message_queue.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\bengine\bitset8.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

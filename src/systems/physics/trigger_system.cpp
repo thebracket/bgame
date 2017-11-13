@@ -228,8 +228,7 @@ namespace systems {
 									// Spawn a cage object
 									auto building = trigger_entity->component<building_t>();
 									std::size_t material = get_material_by_tag(building->built_with[0].first);
-									int x, y, z;
-									std::tie(x, y, z) = idxmap(tile_index);
+									auto &[x,y,z] = idxmap(tile_index);
 									auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material);
 
 									// Add a stored component
@@ -344,8 +343,7 @@ namespace systems {
 							if (receiver->active) {
 								renderable->glyph = 325;
 								// Attack everything in the tile
-								int x, y, z;
-								std::tie(x, y, z) = idxmap(mapidx(*target_pos));
+								auto &[x,y,z] = idxmap(mapidx(*target_pos));
 								std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
 								for (const auto &v : visible_here) {
 									auto victim_entity = entity(v);

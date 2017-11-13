@@ -188,8 +188,7 @@ namespace systems {
 				if (grazer || settler || sentient || turret) {
 					view.visible_entities.clear();
 					for (const int &idx : view.visible_cache) {
-						int x, y, z;
-						std::tie(x, y, z) = idxmap(idx);
+						auto& [x,y,z] = idxmap(idx);
 						std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
 						for (const auto &v : visible_here) {
 							view.visible_entities.insert(v);

@@ -55,15 +55,13 @@ namespace systems {
 
 		void dig(const perform_mining_message &e) {
 			make_floor(e.target_idx);
-			int x, y, z;
-			std::tie(x, y, z) = idxmap(e.target_idx);
+			auto &[x,y,z] = idxmap(e.target_idx);
 			// TODO: emit_deferred(tile_removed_message{ x,y,z });
 		}
 
 		void channel(const perform_mining_message &e) {
 			make_open_space(e.target_idx);
-			int x, y, z;
-			std::tie(x, y, z) = idxmap(e.target_idx);
+			auto &[x,y,z] = idxmap(e.target_idx);
 			// TODO: emit_deferred(tile_removed_message{ x,y,z });
 
 			// Add ramp
@@ -111,8 +109,7 @@ namespace systems {
 		void spawn_mining_result_impl(const perform_mining_message &e, std::string tag) {
 			if (tag == "") return;
 
-			int X, Y, Z;
-			std::tie(X, Y, Z) = idxmap(e.target_idx);
+			auto& [X,Y,Z] = idxmap(e.target_idx);
 
 			auto finder = get_item_def(tag);
 			if (finder != nullptr) {
@@ -194,8 +191,7 @@ namespace systems {
 				else if (provides.provides == provides_cage_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(index);
+					auto& [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_cage });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -203,8 +199,7 @@ namespace systems {
 				else if (provides.provides == provides_stonefall_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(index);
+					auto &[x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_stonefall });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -212,8 +207,7 @@ namespace systems {
 				else if (provides.provides == provides_blades_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(index);
+					auto &[x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_blade });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -221,8 +215,7 @@ namespace systems {
 				else if (provides.provides == provides_spikes) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(index);
+					auto& [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(receives_signal_t{});
 					entity_should_be_deleted = false;
 				}

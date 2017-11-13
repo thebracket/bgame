@@ -8,6 +8,8 @@
 #include <chrono>
 #include <ctime>
 #include <sstream>
+#include <thread>
+#include <chrono>
 
 struct telemetry_t {
     std::string event;
@@ -24,6 +26,7 @@ namespace telemetry {
 
     void message_loop() {
         do {
+			using namespace std::chrono_literals;
             std::this_thread::sleep_for(2s);
             telemetry_t msg;
             while (msg_queue.try_pop(msg)) {

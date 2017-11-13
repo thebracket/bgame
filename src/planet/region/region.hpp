@@ -6,7 +6,6 @@
 #include <vector>
 #include "../tile.hpp"
 #include "../constants.hpp"
-#include "../../bengine/bitset8.hpp"
 #include "../../components/position.hpp"
 #include "../indices.hpp"
 #include <functional>
@@ -66,7 +65,7 @@ namespace region {
     std::size_t material(const int idx);
 
     /* How many hit points does a cell have? */
-    uint8_t tile_hit_points(const int idx);
+    uint16_t tile_hit_points(const int idx);
 
     /* Set the tile material for a cell. */
     void set_tile_material(const int idx, const std::size_t material);

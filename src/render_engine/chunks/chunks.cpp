@@ -23,8 +23,7 @@ namespace chunks {
     //std::mutex dirty_buffer_mutex;
 
 	void mark_chunk_dirty_by_tileidx(const int &idx) {
-		int x, y, z;
-		std::tie(x, y, z) = idxmap(idx);
+		auto &[x,y,z] = idxmap(idx);
 		mark_chunk_dirty(chunk_idx(x / CHUNK_SIZE, y / CHUNK_SIZE, z / CHUNK_SIZE));
 	}
 
@@ -215,8 +214,7 @@ namespace chunks {
             const auto base_region_idx = first_floor->first;
             const auto texture_id = first_floor->second;
 
-            int tile_x, tile_y, tile_z;
-            std::tie(tile_x, tile_y, tile_z) = idxmap(base_region_idx);
+			auto &[tile_x, tile_y, tile_z] = idxmap(base_region_idx);
             int width = 1;
             int height = 1;
 
@@ -276,8 +274,7 @@ namespace chunks {
             const auto base_region_idx = first_floor->first;
             const auto texture_id = first_floor->second;
 
-            int tile_x, tile_y, tile_z;
-            std::tie(tile_x, tile_y, tile_z) = idxmap(base_region_idx);
+			auto &[tile_x, tile_y, tile_z] = idxmap(base_region_idx);
             int width = 1;
             int height = 1;
 

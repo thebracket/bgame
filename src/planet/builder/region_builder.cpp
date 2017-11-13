@@ -89,8 +89,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     settler_spawn_points.push_back(std::make_tuple(crash_x + 1, crash_y, crash_z+1));
 
     for (int i=0; i<planet.starting_settlers; ++i) {
-        int sx, sy, sz;
-        std::tie(sx, sy, sz) = settler_spawn_points[i % settler_spawn_points.size()];
+		auto &[sx, sy, sz] = settler_spawn_points[i % settler_spawn_points.size()];
         create_settler(planet, sx, sy, sz, rng, i % 3);
     }
 

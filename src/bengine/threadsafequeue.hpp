@@ -6,12 +6,10 @@
 #include <queue>
 #include <vector>
 
-using namespace std;
-
 template<class T>
 class concurrent_queue {
 private:
-    queue<T> the_queue;
+    std::queue<T> the_queue;
     mutable std::mutex the_mutex;
     std::condition_variable the_condition_variable;
 public:

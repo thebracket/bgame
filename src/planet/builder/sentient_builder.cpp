@@ -93,8 +93,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         ai.hostile = true;
     }
 
-    int x,y,z;
-    std::tie(x,y,z) = start;
+	auto &[x, y, z] = start;
     auto sentient = bengine::create_entity()
             ->assign(position_t{x, y, z})
             ->assign(name_t{unit.name,

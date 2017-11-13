@@ -64,8 +64,7 @@ strata_t build_strata(std::vector<uint8_t> &heightmap, bengine::random_number_ge
             std::get<2>(result.counts[i]) /= std::get<0>(result.counts[i]);
             std::get<3>(result.counts[i]) /= std::get<0>(result.counts[i]);
 
-            int n,x,y,z;
-            std::tie(n,x,y,z) = result.counts[i];
+			auto &[n,x,y,z] = result.counts[i];
             const uint8_t altitude_at_center = heightmap[(y * REGION_WIDTH) + x] + REGION_DEPTH/2;
 
             if (z>altitude_at_center-(1+rng.roll_dice(1,4))) {

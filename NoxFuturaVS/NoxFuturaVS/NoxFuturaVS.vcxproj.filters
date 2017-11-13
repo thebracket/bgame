@@ -671,9 +671,6 @@
     <ClInclude Include="..\..\src\bengine\astar.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bengine\bitset8.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
@@ -1451,5 +1448,10 @@
     <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\bengine\bitset8.hpp">
+      <Filter>Header Files\bengine</Filter>
+    </None>
   </ItemGroup>
 </Project>

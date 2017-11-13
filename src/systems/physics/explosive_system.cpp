@@ -106,8 +106,7 @@ namespace systems {
 						if (boom.tiles_hit.find(boomidx) == boom.tiles_hit.end()) {
 							boom.tiles_hit.insert(boomidx);
 
-							int x, y, z;
-							std::tie(x, y, z) = idxmap(boomidx);
+							auto &[x,y,z] = idxmap(boomidx);
 
 							// Create a smoke effect
 							// TODO: emit(emit_particles_message{ PARTICLE_SMOKE, x, y, z });

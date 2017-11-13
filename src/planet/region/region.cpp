@@ -7,6 +7,7 @@
 #include "../../raws/defs/plant_t.hpp"
 #include "../../bengine/serialization_utils.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
+#include "../../bengine/bitset8.hpp"
 
 namespace region {
 
@@ -51,7 +52,7 @@ namespace region {
 		std::vector<uint16_t> tile_vegetation_ticker;
 		std::vector<uint8_t> tile_vegetation_lifecycle;
 		std::vector<std::size_t> stockpile_id;
-		std::vector<bitset8> tile_flags;
+		std::vector<bengine::bitset8> tile_flags;
 		std::vector<uint8_t> water_level;
 		std::vector<bool> above_ground;
 		std::vector<bool> blood_stains;
@@ -118,7 +119,7 @@ namespace region {
     }
 
     bool revealed(const int idx) { return current_region->revealed[idx]; }
-    uint8_t tile_hit_points(const int idx) { return current_region->hit_points[idx]; }
+    uint16_t tile_hit_points(const int idx) { return current_region->hit_points[idx]; }
     std::size_t stockpile_id(const int idx) { return current_region->stockpile_id[idx]; }
     std::size_t bridge_id(const int idx) { return current_region->bridge_id[idx]; }
 

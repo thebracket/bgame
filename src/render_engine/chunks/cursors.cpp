@@ -98,8 +98,7 @@ namespace render {
 			for (size_t i = 0; i < REGION_TILES_COUNT; ++i) {
 				auto tree_id = region::tree_id(i);
 				if (tree_id > 0) {
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(i);
+					auto& [x, y, z] = idxmap(i);
 					if (designations->chopping.find(tree_id) != designations->chopping.end()) {						
 						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 1);
 						//std::cout << "Highlighting tree at " << x << ", " << y << ", " << z << "\n";

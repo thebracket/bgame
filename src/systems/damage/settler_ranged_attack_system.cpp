@@ -38,8 +38,7 @@ namespace systems {
 
 				// TODO: civ_dislike_attacker(defender);
 
-				std::size_t weapon_id, ammo_id;
-				std::tie(weapon_id, ammo_id) = get_ranged_and_ammo_id(msg.attacker);
+				auto& [weapon_id, ammo_id] = get_ranged_and_ammo_id(msg.attacker);
 				std::string weapon_name = "fists";
 				int weapon_n = 1;
 				int weapon_d = 4;

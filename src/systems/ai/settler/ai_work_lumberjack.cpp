@@ -230,8 +230,7 @@ namespace systems {
 						}
 						make_floor(tree_idx);
 						tile_calculate(lj.target_x, lj.target_y, lj.target_z);
-						int tx, ty, tz;
-						std::tie(tx, ty, tz) = idxmap(tree_idx);
+						auto& [tx, ty, tz] = idxmap(tree_idx);
 
 						// Spawn wooden logs
 						number_of_logs = (number_of_logs / 20) + 1;

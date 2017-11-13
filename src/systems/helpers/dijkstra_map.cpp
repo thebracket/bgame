@@ -52,8 +52,7 @@ namespace systems {
 				{
 					new_map[open_node.first] = open_node.second;
 
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(open_node.first);
+					auto& [x,y,z] = idxmap(open_node.first);
 
 					if (x < REGION_WIDTH - 1 && flag(open_node.first, CAN_GO_EAST)) {
 						dm_add_candidate(open_nodes, x + 1, y, z, open_node.second + 1);
@@ -102,8 +101,7 @@ namespace systems {
 				{
 					new_map[open_node.first] = open_node.second;
 
-					int x, y, z;
-					std::tie(x, y, z) = idxmap(open_node.first);
+					auto &[x,y,z] = idxmap(open_node.first);
 
 					if (x < REGION_WIDTH - 1 && (flag(open_node.first, CAN_GO_EAST) || open_node.second == 0)) {
 						dm_add_candidate(open_nodes, x + 1, y, z, open_node.second + 1);
@@ -160,8 +158,7 @@ namespace systems {
 				const int destidx = mapidx(pos.x, pos.y, pos.z + 1);
 				candidates.insert(std::make_pair(distance_map[destidx], destidx));
 			}
-			int dx, dy, dz;
-			std::tie(dx, dy, dz) = idxmap(candidates.begin()->second);
+			auto &[dx,dy,dz] = idxmap(candidates.begin()->second);
 			return position_t{ dx, dy, dz };
 		}
 
