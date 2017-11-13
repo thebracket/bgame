@@ -155,7 +155,7 @@ namespace systems {
 							}
 						}
 
-						auto& [cx, cy, cz] = idxmap(bidx);
+						auto [cx, cy, cz] = idxmap(bidx);
 						tile_calculate(cx, cy, cz);
 						for (int Z = -2; Z<3; ++Z) {
 							for (int Y = -2; Y<3; ++Y) {

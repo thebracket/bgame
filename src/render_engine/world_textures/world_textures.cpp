@@ -60,9 +60,9 @@ namespace render {
         if (finder == lit_tiles.end()) {
             lit_tiles[idx] = std::make_pair(light_pos, view.color);
         } else {
-			auto& [tx, ty, tz] = idxmap(idx);
-			auto& [lx, ly, lz] = idxmap(finder->second.first);
-			auto& [nx, ny, nz] = idxmap(light_pos);
+			auto [tx, ty, tz] = idxmap(idx);
+			auto [lx, ly, lz] = idxmap(finder->second.first);
+			auto [nx, ny, nz] = idxmap(light_pos);
 
             const float distance_new_light = bengine::distance3d(tx, ty, tz, nx, ny, nz);
             const float distance_old_light = bengine::distance3d(tx, ty, tz, lx, ly, lz);
@@ -125,8 +125,8 @@ namespace render {
         std::fill(texels_col.begin(), texels_col.end(), 0); // Clear the buffer to 0
 
         for (auto &ls : lit_tiles) {
-			auto& [tile_x, tile_y, tile_z] = idxmap(ls.first);
-			auto& [light_x, light_y, light_z] = idxmap(ls.second.first);
+			auto [tile_x, tile_y, tile_z] = idxmap(ls.first);
+			auto [light_x, light_y, light_z] = idxmap(ls.second.first);
             auto color = ls.second.second;
 
             const int texidx = (((tex_width * tex_height) * tile_z) + (tex_width * tile_y) + tile_x) * 3;

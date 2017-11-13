@@ -109,7 +109,7 @@ namespace systems {
 		void spawn_mining_result_impl(const perform_mining_message &e, std::string tag) {
 			if (tag == "") return;
 
-			auto& [X,Y,Z] = idxmap(e.target_idx);
+			auto [X,Y,Z] = idxmap(e.target_idx);
 
 			auto finder = get_item_def(tag);
 			if (finder != nullptr) {
@@ -191,7 +191,7 @@ namespace systems {
 				else if (provides.provides == provides_cage_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					auto& [x,y,z] = idxmap(index);
+					auto [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_cage });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -215,7 +215,7 @@ namespace systems {
 				else if (provides.provides == provides_spikes) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					auto& [x,y,z] = idxmap(index);
+					auto [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(receives_signal_t{});
 					entity_should_be_deleted = false;
 				}

@@ -52,7 +52,7 @@ namespace systems {
 				{
 					new_map[open_node.first] = open_node.second;
 
-					auto& [x,y,z] = idxmap(open_node.first);
+					auto [x,y,z] = idxmap(open_node.first);
 
 					if (x < REGION_WIDTH - 1 && flag(open_node.first, CAN_GO_EAST)) {
 						dm_add_candidate(open_nodes, x + 1, y, z, open_node.second + 1);
