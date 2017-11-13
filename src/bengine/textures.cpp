@@ -25,7 +25,7 @@ namespace bengine {
     }
 
     texture_t::texture_t(const std::string &filename) {
-		const auto [texture_id, width, height, bpp] = load_texture(filename);
+		std::tie(texture_id, width, height, bpp) = load_texture(filename);
     }
 
     texture_t::~texture_t() {
