@@ -86,6 +86,7 @@ namespace bengine {
     }
 
     void run() {
+		glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE); // Move z-buffer to 0..1 instead of +1..-1.
         double duration_ms = 0.0;
         while (!glfwWindowShouldClose(main_window)) {
             auto start_time = std::chrono::high_resolution_clock::now();
