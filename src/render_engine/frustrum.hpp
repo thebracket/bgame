@@ -1,8 +1,6 @@
 #pragma once
 
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "../stdafx.h"
 
 // Credit: https://github.com/SaschaWillems/Vulkan/blob/master/base/frustum.hpp
 class Frustrum {

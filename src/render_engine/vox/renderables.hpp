@@ -1,9 +1,7 @@
 #pragma once
 
+#include "../../stdafx.h"
 #include "../fbo/gbuffer.hpp"
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_mat4x4.hpp>
-#include <boost/container/flat_set.hpp>
 
 namespace render {
 	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<int>> &visible_chunks);

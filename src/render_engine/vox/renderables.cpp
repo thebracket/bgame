@@ -21,10 +21,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../systems/ai/inventory_system.hpp"
 #include "../chunks/chunks.hpp"
-#include <memory>
-#include <vector>
-#include <boost/container/flat_map.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "../../stdafx.h"
 
 namespace render {
 

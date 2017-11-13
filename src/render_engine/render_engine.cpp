@@ -1,9 +1,5 @@
+#include "../stdafx.h"
 #include "../bengine/gl_include.hpp"
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <boost/container/flat_set.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "render_engine.hpp"
 #include "chunks/chunks.hpp"
 #include "../global_assets/game_camera.hpp"

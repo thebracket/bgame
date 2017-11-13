@@ -26,8 +26,16 @@
 #include <sstream>
 #include <thread>
 #include <boost/container/flat_map.hpp>
+#include <boost/container/flat_set.hpp>
 #include <utility>
 #include <stdexcept>
 #include <fstream>
 #include <mutex>
 #include <cctype>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>

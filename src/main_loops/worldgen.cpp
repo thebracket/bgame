@@ -12,11 +12,7 @@
 #include "../global_assets/game_planet.hpp"
 #include "../global_assets/shader_storage.hpp"
 #include "../global_assets/rng.hpp"
-
-#define GLM_COMPILER 0
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "../stdafx.h"
 
 namespace worldgen {
     enum world_gen_mode_t { WG_MENU, WG_RUNNING, WG_MAP };

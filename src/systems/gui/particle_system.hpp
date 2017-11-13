@@ -1,10 +1,7 @@
 #pragma once
 
+#include "../../stdafx.h"
 #include <stdint.h>
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace systems {
 	namespace particles {
