@@ -2,8 +2,7 @@
 extern "C" {
 #include <zlib.h>
 }
-#include <stdexcept>
-#include <string>
+#include "../stdafx.h"
 
 //===========================================================================================================//
 //    Safe I/O (where "safe" means "will throw errors")                                                      //

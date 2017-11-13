@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "../stdafx.h"
 
 struct clothing_t;
 

@@ -2,8 +2,7 @@
 #include "lua_bridge.hpp"
 #include "creatures.hpp"
 #include "defs/biome_type_t.hpp"
-#include <iostream>
-#include <map>
+#include "../stdafx.h"
 
 std::vector<biome_type_t> biome_defs;
 std::vector<std::string> biome_textures;

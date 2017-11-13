@@ -1,8 +1,5 @@
 #include "workflow_assistant.hpp"
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-#include <string>
+#include "../../stdafx.h"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "inventory_assistant.hpp"

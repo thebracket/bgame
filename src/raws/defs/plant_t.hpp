@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-#include <bitset>
-#include <vector>
+#include "../../stdafx.h"
 
 constexpr int PLANT_SPREADS = 0;
 constexpr int PLANT_ANNUAL = 1;

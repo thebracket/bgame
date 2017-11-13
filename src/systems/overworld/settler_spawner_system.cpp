@@ -1,6 +1,5 @@
 #include "settler_spawner_system.hpp"
-#include <string>
-#include <vector>
+#include "../../stdafx.h"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../global_assets/rng.hpp"

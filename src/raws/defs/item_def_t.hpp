@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-#include <bitset>
+#include "../../stdafx.h"
 //#include <rltk.hpp>
 #include "../../bengine/color_t.hpp"
 

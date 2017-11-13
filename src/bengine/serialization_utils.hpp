@@ -1,11 +1,7 @@
 #pragma once
 
-#include <fstream>
-#include <string>
-#include <vector>
+#include "../stdafx.h"
 #include <zlib.h>
-#include <utility>
-#include <sstream>
 #include "color_t.hpp"
 
 namespace serial {

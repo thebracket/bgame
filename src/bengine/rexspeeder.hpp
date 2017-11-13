@@ -7,10 +7,7 @@
  */
 
 /*For version 1.02 of REXPaint*/
-#include <iostream>
 #include <stdint.h>
-#include <array>
-#include <vector>
 #include "color_t.hpp"
 
 namespace xp {

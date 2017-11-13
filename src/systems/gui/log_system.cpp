@@ -9,8 +9,7 @@
 #include "../../bengine/color_t.hpp"
 #include "../../bengine/rexspeeder.hpp"
 #include "../../bengine/main_window.hpp"
-#include <string>
-#include <iostream>
+#include "../../stdafx.h"
 
 namespace systems {
 	namespace logging {

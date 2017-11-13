@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "../../stdafx.h"
 
 namespace systems {
 	namespace kill_system {

@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <functional>
+#include "../stdafx.h"
 
 struct reaction_t; // Forward
 struct graphviz_t; // Forward

@@ -4,7 +4,7 @@
 #include "../../raws/defs/building_def_t.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../../bengine/ecs.hpp"
-#include <string>
+#include "../../stdafx.h"
 
 namespace inventory {
 	int item_category_available(const int &category);

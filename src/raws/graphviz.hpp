@@ -1,11 +1,7 @@
 #pragma once
 
-#include <string>
+#include "../stdafx.h"
 #include "../bengine/filesystem.hpp"
-#include <memory>
-#include <vector>
-#include <fstream>
-#include <set>
 
 struct graphviz_t {
     enum graphviz_shape_t { OVAL, PARALLELOGRAM, HOUSE };

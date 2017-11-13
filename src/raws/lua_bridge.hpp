@@ -5,9 +5,7 @@ extern "C" {
 #include "lualib.h"
 #include "lauxlib.h"
 }
-#include <functional>
-#include <string>
-#include <unordered_map>
+#include "../stdafx.h"
 #include "../bengine/color_t.hpp"
 
 extern lua_State* lua_state;

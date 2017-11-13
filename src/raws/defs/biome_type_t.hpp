@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <utility>
+#include "../../stdafx.h"
 #include "../../bengine/color_t.hpp"
 
 /*

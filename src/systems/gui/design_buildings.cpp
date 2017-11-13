@@ -7,9 +7,7 @@
 #include "../../global_assets/game_building.hpp"
 #include "../helpers/inventory_assistant.hpp"
 #include "../../render_engine/vox/renderables.hpp"
-#include <vector>
-#include <string>
-#include <utility>
+#include "../../stdafx.h"
 
 namespace systems {
 	namespace design_buildings {

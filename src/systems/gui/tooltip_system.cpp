@@ -19,9 +19,7 @@
 #include "../../components/bridge.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../global_assets/game_config.hpp"
-#include <vector>
-#include <string>
-#include <sstream>
+#include "../../stdafx.h"
 
 namespace systems {
 	namespace tooltips {

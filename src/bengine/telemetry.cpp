@@ -2,14 +2,10 @@
 #include "threadsafequeue.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../global_assets/constants.hpp"
-#include <iostream>
 #include <curl/curl.h>
-#include <atomic>
-#include <chrono>
 #include <ctime>
-#include <sstream>
-#include <thread>
 #include <chrono>
+#include "../stdafx.h"
 
 struct telemetry_t {
     std::string event;

@@ -1,9 +1,7 @@
 #include "voxel_model.hpp"
 #include <unordered_map>
-#include <iostream>
+#include "../../stdafx.h"
 #include <assert.h>
-#include <boost/container/flat_map.hpp>
-#include <map>
 
 namespace vox {
 

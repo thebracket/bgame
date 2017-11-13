@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "../../stdafx.h"
 #include "voxel_model.hpp"
 
 namespace vox {

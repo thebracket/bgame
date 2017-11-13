@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "../stdafx.h"
 
 std::string get_save_path();
 bool exists(const std::string &filename) noexcept;

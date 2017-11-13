@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-#include <tuple>
-#include <vector>
+#include "../../stdafx.h"
 
 /*
  * Defines a starting profession.

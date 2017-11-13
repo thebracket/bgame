@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include "../stdafx.h"
 #include "../bengine/random_number_generator.hpp"
 
 namespace string_tables {

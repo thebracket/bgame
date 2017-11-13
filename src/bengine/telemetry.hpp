@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "../stdafx.h"
 
 void start_telemetry();
 void stop_telemetry();

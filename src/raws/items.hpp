@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-#include <functional>
+#include "../stdafx.h"
 
 struct item_def_t;
 struct stockpile_def_t;

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "main_menu.hpp"
 #include "../bengine/simple_sprite.hpp"
 #include "../global_assets/texture_storage.hpp"
@@ -15,7 +14,7 @@
 #include "worldgen.hpp"
 #include "../bengine/telemetry.hpp"
 #include "play_game.hpp"
-#include <algorithm>
+#include "../stdafx.h"
 
 namespace main_menu {
     bool initialized = false;

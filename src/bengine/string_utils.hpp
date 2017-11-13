@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <string>
+#include "../stdafx.h"
 
 std::vector<std::string> split ( const std::string &str, const char &delimiter );
 std::string to_proper_noun_case(const std::string &original);

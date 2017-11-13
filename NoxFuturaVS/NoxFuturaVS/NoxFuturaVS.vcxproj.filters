@@ -216,9 +216,6 @@
     <ClCompile Include="..\..\src\bengine\octree.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\bengine\pcg_basic.c">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bengine\random_number_generator.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
@@ -662,6 +659,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\design_buildings.cpp">
       <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bengine\pcg_basic.cpp">
+      <Filter>Source Files\bengine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1447,6 +1450,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp">
       <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stdafx.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

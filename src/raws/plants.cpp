@@ -1,8 +1,7 @@
 #include "plants.hpp"
 #include "lua_bridge.hpp"
 #include "defs/plant_t.hpp"
-#include <iostream>
-#include <algorithm>
+#include "../stdafx.h"
 
 std::unordered_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;

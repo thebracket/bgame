@@ -10,8 +10,7 @@
 #include "../../global_assets/game_calendar.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/game_mode.hpp"
-#include <string>
-#include <sstream>
+#include "../../stdafx.h"
 
 namespace systems {
     namespace hud {

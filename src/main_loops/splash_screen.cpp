@@ -16,8 +16,7 @@
 #include "../bengine/stb_image.h"
 #include "../raws/materials.hpp"
 #include "../render_engine/vox/voxreader.hpp"
-#include <iostream>
-#include <sstream>
+#include "../stdafx.h"
 
 using namespace bengine;
 using namespace assets;

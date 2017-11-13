@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "../stdafx.h"
 #include "../components/item_carried.hpp"
 
 // Initializer

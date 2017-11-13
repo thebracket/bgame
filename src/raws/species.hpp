@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-#include <functional>
+#include "../stdafx.h"
 
 struct graphviz_t; // Forward
 struct raw_species_t; // Forward

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include <iostream>
 #include "../../bengine/gl_include.hpp"
 
 namespace vox {

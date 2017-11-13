@@ -1,6 +1,5 @@
 #include "world_system.hpp"
-
-#include <string>
+#include "../../stdafx.h"
 
 namespace systems {
 	namespace world {

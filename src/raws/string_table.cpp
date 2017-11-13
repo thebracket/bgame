@@ -1,7 +1,5 @@
 #include "string_table.hpp"
-#include <unordered_map>
-#include <fstream>
-#include <string>
+#include "../stdafx.h"
 
 namespace string_tables {
 

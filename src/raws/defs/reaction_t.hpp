@@ -1,9 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <utility>
-#include <bitset>
+#include "../../stdafx.h"
 #include "../reaction_input.hpp"
 
 constexpr int special_reaction_cooking = 0;

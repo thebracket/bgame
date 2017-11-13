@@ -1,6 +1,5 @@
 #pragma once
 #include "gl_include.hpp"
-#include <string>
 
 namespace bengine {
 

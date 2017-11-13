@@ -28,7 +28,6 @@ std::string get_save_path()
 
 #include <Shlobj.h>
 #include <windows.h>
-#include <iostream>
 
 std::string get_save_path()
 {

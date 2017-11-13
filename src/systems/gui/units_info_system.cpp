@@ -12,8 +12,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_camera.hpp"
-#include <string>
-#include <vector>
+#include "../../stdafx.h"
 
 namespace systems {
 	namespace units_ui {

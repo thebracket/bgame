@@ -2,7 +2,7 @@
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 #include "defs/raw_creature_t.hpp"
-#include <iostream>
+#include "../stdafx.h"
 
 std::unordered_map<std::string, raw_creature_t> creature_defs;
 

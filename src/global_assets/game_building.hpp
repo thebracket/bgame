@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../raws/reaction_input.hpp"
-#include <string>
-#include <vector>
+#include "../stdafx.h"
 
 namespace buildings {
 	struct available_building_t {

@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include "../../stdafx.h"
 #include "../../bengine/color_t.hpp"
 
 /*

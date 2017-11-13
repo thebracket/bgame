@@ -1,9 +1,6 @@
 #pragma once
 
-#include <mutex>
-#include <vector>
-#include <string>
-#include <memory>
+#include "../stdafx.h"
 #include "region/region.hpp"
 #include "planet.hpp"
 

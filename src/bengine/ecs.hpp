@@ -1,22 +1,5 @@
 #pragma once
 
-#include <bitset>
-#include <vector>
-#include <iostream>
-#include <unordered_map>
-#include <unordered_set>
-#include <memory>
-#include <functional>
-#include <algorithm>
-#include <fstream>
-#include <chrono>
-#include <sstream>
-#include <iomanip>
-#include <queue>
-#include <future>
-#include <mutex>
-#include <typeinfo>
-#include <atomic>
 #include "cereal_include.hpp"
 #include "ecs_impl.hpp"
 

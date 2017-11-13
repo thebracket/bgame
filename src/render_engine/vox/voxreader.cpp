@@ -1,8 +1,5 @@
 #include "voxreader.hpp"
-#include <memory>
-#include <iostream>
-#include <boost/container/flat_map.hpp>
-#include <vector>
+#include "../../stdafx.h"
 #include "voxel_model.hpp"
 
 // Credit to vox2png for some of this code. https://github.com/StijnBrouwer/vox2png/blob/master/vox2png.c
