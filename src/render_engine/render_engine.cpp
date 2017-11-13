@@ -7,11 +7,7 @@
 #include "../global_assets/texture_storage.hpp"
 #include "../bengine/main_window.hpp"
 #include "fbo/buffertest.hpp"
-#include "fbo/gbuffer.hpp"
-#include "fbo/base_lit_buffer.hpp"
 #include "world_textures/world_textures.hpp"
-#include "fbo/hdr_buffer.hpp"
-#include "fbo/bloom_ping_pong.hpp"
 #include "vox/voxreader.hpp"
 #include "vox/voxel_model.hpp"
 #include "../components/position.hpp"
@@ -23,12 +19,10 @@
 #include "chunks/cursors.hpp"
 #include "../systems/gui/particle_system.hpp"
 #include "camera.hpp"
+#include "renderbuffers.hpp"
 
 namespace render {
-    std::unique_ptr<gbuffer_t> gbuffer;
-    std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
-    std::unique_ptr<hdr_buffer_t> hdr_buffer;
-    std::unique_ptr<bloom_pingpong_t> bloom_buffer;
+
 
     inline void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
@@ -177,12 +171,10 @@ namespace render {
         glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
         if (!gbuffer) {
-            gbuffer = std::make_unique<gbuffer_t>(screen_w, screen_h);
-            if (!light_stage_buffer) light_stage_buffer = std::make_unique<base_lit_buffer_t>(screen_w, screen_h);
-            if (!hdr_buffer) hdr_buffer = std::make_unique<hdr_buffer_t>(screen_w, screen_h);
-            if (!bloom_buffer) bloom_buffer = std::make_unique<bloom_pingpong_t>(screen_w, screen_h);
+			build_framebuffers(screen_w, screen_h);
         }
 
+		// Handle building all of our GL buffers
         chunk_maintenance();
         if (camera_moved) update_camera();
         update_world_textures();
