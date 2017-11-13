@@ -666,6 +666,9 @@
     <ClCompile Include="..\..\src\bengine\pcg_basic.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\camera.cpp">
+      <Filter>Source Files\render_engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1453,6 +1456,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\stdafx.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\camera.hpp">
+      <Filter>Header Files\render_engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
