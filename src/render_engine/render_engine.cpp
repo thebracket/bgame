@@ -109,6 +109,9 @@ namespace render {
 		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "moon_direction"), calendar->moon_x, calendar->moon_y, calendar->moon_z);
 		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "sun_color"), calendar->sun_r, calendar->sun_g, calendar->sun_b);
 		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "moon_color"), calendar->moon_r, calendar->moon_g, calendar->moon_b);
+		glUniform1i(glGetUniformLocation(assets::lightstage_shader, "sun_depth_tex"), 7);
+		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "sun_projection"), 1, GL_FALSE, glm::value_ptr(sun_projection_matrix));
+		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "sun_modelview"), 1, GL_FALSE, glm::value_ptr(sun_modelview_matrix));
 		glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);
@@ -123,6 +126,8 @@ namespace render {
         glBindTexture(GL_TEXTURE_3D, lightpos_tex);
         glActiveTexture(GL_TEXTURE6);
         glBindTexture(GL_TEXTURE_3D, lightcol_tex);
+		glActiveTexture(GL_TEXTURE7);
+		glBindTexture(GL_TEXTURE_2D, sun_buffer->depth_tex);
         render_buffer_quad();
     }
 
@@ -249,7 +254,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        render_test_quad(sun_buffer->depth_tex);
+        //render_test_quad(sun_buffer->depth_tex);
 
         // TODO: Final combination and post-process
 

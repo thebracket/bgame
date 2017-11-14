@@ -11,12 +11,15 @@ uniform sampler2D ao_tex;
 uniform sampler3D info_tex;
 uniform sampler3D light_pos_tex;
 uniform sampler3D light_col_tex;
+uniform sampler2D sun_depth_tex;
 
 uniform vec3 camera_position;
 uniform vec3 sun_direction;
 uniform vec3 sun_color;
 uniform vec3 moon_direction;
 uniform vec3 moon_color;
+uniform mat4 sun_projection;
+uniform mat4 sun_modelview;
 
 #define PI 3.1415926
 
@@ -136,14 +139,14 @@ void main()
     vec3 Lo = vec3(0.0); // Light Output
 
     // For the game-defined light
-    Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz, position.xyz, light_color.rgb);
+    vec3 gamelighttemp = gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz, position.xyz, light_color.rgb);
 
     // Sun/moon
-    Lo += celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
-    Lo += celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
+    vec3 suntemp = celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
+    vec3 moontemp = celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
 
     // Final color
-    vec3 ambient = vec3(0.4) * albedo * ambient_occlusion;
+    vec3 ambient = vec3(0.6) * albedo * ambient_occlusion;
     FragColor = ambient + Lo;
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
