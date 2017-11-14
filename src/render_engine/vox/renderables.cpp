@@ -332,7 +332,7 @@ namespace render {
 		// Render the sprite buffer
 		//std::cout << n_sprites << "\n";
 		if (n_sprites > 0) {
-			glDepthFunc(GL_LEQUAL);
+			glDepthFunc(GL_GEQUAL);
 			glUseProgram(assets::sprite_shader);
 			glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
 			glUniformMatrix4fv(glGetUniformLocation(assets::sprite_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));

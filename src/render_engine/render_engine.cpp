@@ -76,6 +76,7 @@ namespace render {
         // Use the program
 		assets::chunkshader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
+		glClearDepth(0.0f); // We're using an inverted Z-buffer
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         // Assign the uniforms
@@ -165,6 +166,17 @@ namespace render {
         render_buffer_quad();
     }
 
+	inline void update_buffers() {
+		chunk_maintenance();
+		if (camera_moved) update_camera();
+		if (sun_moved) update_sun_camera();
+		update_world_textures();
+		build_voxel_render_list(visible_chunks);
+		build_cursor_geometry();
+		systems::particles::build_buffers();
+		glCheckError();
+	}
+
     void render_gl(const double &duration_ms) {
         glCheckError();
         int screen_w, screen_h;
@@ -175,22 +187,46 @@ namespace render {
         }
 
 		// Handle building all of our GL buffers
-        chunk_maintenance();
-        if (camera_moved) update_camera();
-        update_world_textures();
-		build_voxel_render_list(visible_chunks);
-		build_cursor_geometry();
-		systems::particles::build_buffers();
+		update_buffers();
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_GREATER);
+
+		// Render the scene from the point-of-view of the sun
+		// Bind the directional light shader
+		glUseProgram(assets::dirlight_shader);
+		// Bind the SUN FBO
+		glBindFramebuffer(GL_FRAMEBUFFER, sun_buffer->fbo_id);
+		// Set uniforms
+		glUniformMatrix4fv(glGetUniformLocation(assets::dirlight_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(sun_projection_matrix));
+		glUniformMatrix4fv(glGetUniformLocation(assets::dirlight_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(sun_modelview_matrix));
+		// Render everything to it
+		glClearDepth(0.0f); // Inverted
+		glClear(GL_DEPTH_BUFFER_BIT);
+		for (const auto target: chunks::chunks) {
+			if (target.has_geometry) {
+				size_t n_elements = 0;
+				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
+					const int layer_z = z + target.base_z;
+					if (layer_z > camera_position->region_z - 10) {
+						n_elements += target.layers[z].n_elements;
+					}
+				}
+
+				if (n_elements > 0) {
+					glBindVertexArray(target.vao);
+					glDrawArrays(GL_TRIANGLES, 0, n_elements);
+				}
+			}
+		}
 		glCheckError();
 
-        // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        //glEnable(GL_CULL_FACE);
-        render_chunks();
-        //glDisable(GL_CULL_FACE);
-        glCheckError();
+		// TODO: Render the scene from the POV of the moon
+		// TODO: Render cube-maps from lights
 
+        // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
+        render_chunks();
+        glCheckError();
         render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
 		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
 
@@ -213,7 +249,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(gbuffer->depth_tex);
+        render_test_quad(sun_buffer->depth_tex);
 
         // TODO: Final combination and post-process
 

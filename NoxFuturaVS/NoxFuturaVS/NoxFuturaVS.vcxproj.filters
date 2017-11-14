@@ -672,6 +672,9 @@
     <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp">
       <Filter>Source Files\render_engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\directional_light_buffer.cpp">
+      <Filter>Source Files\render_engine\fbo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1465,6 +1468,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp">
       <Filter>Header Files\render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\directional_light_buffer.hpp">
+      <Filter>Header Files\render_engine\fbo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -213,6 +213,7 @@
     <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\bloom_ping_pong.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\directional_light_buffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\gbuffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\hdr_buffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp" />
@@ -478,6 +479,7 @@
     <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\bloom_ping_pong.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\directional_light_buffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\gbuffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\hdr_buffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\frustrum.hpp" />

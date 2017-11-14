@@ -1,17 +1,36 @@
 #include "camera.hpp"
 #include "../global_assets/game_camera.hpp"
+#include "../global_assets/game_calendar.hpp"
 #include "chunks/chunks.hpp"
 
 namespace render {
 	bool camera_moved = true;
+	bool sun_moved = true;
 	glm::mat4 camera_projection_matrix;
 	glm::mat4 camera_modelview_matrix;
 	glm::mat4 camera_proj_model_view_matrix;
 	Frustrum frustrum;
 	boost::container::flat_set<int, std::greater<int>> visible_chunks;
 
+	glm::mat4 sun_projection_matrix;
+	glm::mat4 sun_modelview_matrix;
+	glm::mat4 sun_proj_model_view_matrix;
+
+	constexpr float NINETY_DEGREES = 1.5708f;
+
+	glm::mat4 MakeInfReversedZProjRH(float fovY_radians, float aspectWbyH, float zNear)
+	{
+		float f = 1.0f / tan(fovY_radians / 2.0f);
+		return glm::mat4(
+			f / aspectWbyH, 0.0f, 0.0f, 0.0f,
+			0.0f, f, 0.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, -1.0f,
+			0.0f, 0.0f, zNear, 0.0f);
+	}
+
 	void update_camera() {
-		camera_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
+		//camera_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
+		camera_projection_matrix = MakeInfReversedZProjRH(NINETY_DEGREES, 1.0f, 1.0f);
 
 		const glm::vec3 up{ 0.0f, 1.0f, 0.0f };
 		const glm::vec3 target{ (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y };
@@ -48,5 +67,16 @@ namespace render {
 		}
 
 		camera_moved = false;
+	}
+
+	void update_sun_camera() {
+		sun_projection_matrix = glm::perspective(120.0f, 1.0f, 1.0f, 1000.0f);
+		const glm::vec3 up{ 0.0f, 1.0f, 0.0f };
+		const glm::vec3 target{ (float)REGION_WIDTH / 2.0f, (float)REGION_DEPTH / 2.0f, (float)REGION_HEIGHT / 2.0f };
+		const glm::vec3 at{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
+		sun_modelview_matrix = glm::lookAt(at, target, up);
+		sun_proj_model_view_matrix = sun_projection_matrix * sun_modelview_matrix;
+
+		sun_moved = false;
 	}
 }

@@ -4,9 +4,12 @@
 #include "../../global_assets/game_camera.hpp"
 #include "../../bengine/geometry.hpp"
 #include "../../planet/constants.hpp"
+#include "../../render_engine/camera.hpp"
 
 namespace systems {
     namespace calendarsys {
+		constexpr float sun_distance = 600.0f;
+
 		float rgb_lerp(const float percent, const float start, const float end) {
 			const float difference = end - start;
 			const float addititve = difference * percent;
@@ -14,14 +17,15 @@ namespace systems {
 		}
 
 		void calculate_sun_moon() {
+			render::sun_moved = true;
 			const double latitude_sun = ((camera_position->world_y / (double)WORLD_HEIGHT) * REGION_HEIGHT);
 			const double time_overall = (calendar->hour - 6) + (calendar->minute / 60.0f);
 			const double time_as_float = time_overall / 24.0f;
 			const double time_as_radians = (time_as_float * 6.28319);
-			auto sun_pos = bengine::project_angle(0, 0, 1000.0f, time_as_radians);
-			calendar->sun_x = static_cast<float>(sun_pos.first);
-			calendar->sun_y = static_cast<float>(sun_pos.second);
-			calendar->sun_z = static_cast<float>(latitude_sun);
+			auto sun_pos = bengine::project_angle(0, 0, sun_distance, time_as_radians);
+			calendar->sun_x = static_cast<float>(sun_pos.first) + (static_cast<float>(REGION_WIDTH)/2.0f);
+			calendar->sun_y = static_cast<float>(sun_pos.second) + (static_cast<float>(REGION_DEPTH) / 2.0f);
+			calendar->sun_z = static_cast<float>(latitude_sun) + (static_cast<float>(REGION_HEIGHT) / 2.0f);
 
 			calendar->moon_x = 0.0f - calendar->sun_x;
 			calendar->moon_y = 0.0f - calendar->sun_y;
