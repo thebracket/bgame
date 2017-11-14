@@ -8,7 +8,7 @@
 
 namespace systems {
     namespace calendarsys {
-		constexpr float sun_distance = 600.0f;
+		constexpr float sun_distance = 64.0f;
 
 		float rgb_lerp(const float percent, const float start, const float end) {
 			const float difference = end - start;
@@ -18,50 +18,56 @@ namespace systems {
 
 		void calculate_sun_moon() {
 			render::sun_moved = true;
-			const double latitude_sun = ((camera_position->world_y / (double)WORLD_HEIGHT) * REGION_HEIGHT);
-			const double time_overall = (calendar->hour - 6) + (calendar->minute / 60.0f);
-			const double time_as_float = time_overall / 24.0f;
+			const double time_overall = (calendar->hour - 6.0f + (static_cast<float>(calendar->minute)/60.0f)) / 24.0f;
+			const double time_as_float = time_overall;
 			const double time_as_radians = (time_as_float * 6.28319);
-			auto sun_pos = bengine::project_angle(0, 0, sun_distance, time_as_radians);
-			calendar->sun_x = static_cast<float>(sun_pos.first) + (static_cast<float>(REGION_WIDTH)/2.0f);
-			calendar->sun_y = static_cast<float>(sun_pos.second) + (static_cast<float>(REGION_DEPTH) / 2.0f);
-			calendar->sun_z = static_cast<float>(latitude_sun) + (static_cast<float>(REGION_HEIGHT) / 2.0f);
+			//auto sun_pos = bengine::project_angle(0, 0, sun_distance, time_as_radians);
+			const float X = std::cos(time_as_radians) * 129.0f;
+			const float Y = std::sin(time_as_radians) * 129.0f;
+			calendar->sun_x = X + 128.0f;
+			calendar->sun_y = Y + 128.0f;
+			calendar->sun_z = static_cast<float>(129.0f);
 
 			calendar->moon_x = 0.0f - calendar->sun_x;
 			calendar->moon_y = 0.0f - calendar->sun_y;
 			calendar->moon_z = calendar->sun_z;
 
 			// Sun color; a bit blue at dawn, white at noon, a bit red at sunset
-			if (calendar->hour > 5 && calendar->hour < 13) {
+			/*if (calendar->hour > 5 && calendar->hour < 13) {
 				const float sun_pct = (calendar->hour - 6.0f) / 6.0f;
-				calendar->sun_r = rgb_lerp(sun_pct, 0.6f, 1.0f);
-				calendar->sun_g = rgb_lerp(sun_pct, 0.6f, 1.0f);
-				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 1.0f);
+				calendar->sun_r = rgb_lerp(sun_pct, 0.9f, 1.5f);
+				calendar->sun_g = rgb_lerp(sun_pct, 0.9f, 1.5f);
+				calendar->sun_b = rgb_lerp(sun_pct, 1.5f, 1.5f);
 			}
 			else if (calendar->hour > 12 && calendar->hour < 19) {
 				const float sun_pct = (calendar->hour - 12.0f) / 6.0f;
-				calendar->sun_r = rgb_lerp(sun_pct, 1.0f, 1.0f);
-				calendar->sun_g = rgb_lerp(sun_pct, 1.0f, 0.6f);
-				calendar->sun_b = rgb_lerp(sun_pct, 1.0f, 0.6f);
+				calendar->sun_r = rgb_lerp(sun_pct, 1.5f, 1.5f);
+				calendar->sun_g = rgb_lerp(sun_pct, 1.5f, 0.9f);
+				calendar->sun_b = rgb_lerp(sun_pct, 1.5f, 0.9f);
 			}
 			else {
 				calendar->moon_r = 34.0f / 255.0f;
 				calendar->moon_g = 63.0f / 255.0f;
 				calendar->moon_b = 89.0f / 255.0f;
-			}
+			}*/
+			calendar->sun_r = 4.0f;
+			calendar->sun_g = 4.0f;
+			calendar->sun_b = 4.0f;
 
 			//std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
 		}
 
         void run(const double duration_ms) {
+			bool do_sun = false;
             auto hour = calendar->hour;
             auto day = calendar->day;
+			if (calendar->minute % 10 == 0) do_sun = true;
             calendar->next_minute();
 			hour_elapsed = false;
 			day_elapsed = false;
             if (calendar->hour != hour) hour_elapsed = true;
             if (calendar->day != day) day_elapsed = true;
-			calculate_sun_moon();
+			if (do_sun) calculate_sun_moon();
         }
     }
 }

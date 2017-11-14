@@ -13,6 +13,7 @@ namespace render {
 	extern std::unique_ptr<hdr_buffer_t> hdr_buffer;
 	extern std::unique_ptr<bloom_pingpong_t> bloom_buffer;
 	extern std::unique_ptr<directional_light_buffer_t> sun_buffer;
+	extern std::unique_ptr<directional_light_buffer_t> moon_buffer;
 
 	void build_framebuffers(const int &screen_w, const int &screen_h);
 }

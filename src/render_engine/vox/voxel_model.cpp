@@ -176,12 +176,12 @@ namespace vox {
 
 		// Build the instance buffer
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_STATIC_DRAW);
-		glCheckError();
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
+		//glCheckError();
 
 		// Create the VAO to hold this data
 		glBindVertexArray(render->tmp_vao);
-		glCheckError();
+		//glCheckError();
 
 		// Bind the consistent elements
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
@@ -190,11 +190,11 @@ namespace vox {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
 		glEnableVertexAttribArray(1); // 1 = Normals
-		glCheckError();
+		//glCheckError();
 
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
 		glEnableVertexAttribArray(2); // 2 = Color
-		glCheckError();
+		//glCheckError();
 
 		// Bind the per-element items
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
@@ -211,9 +211,9 @@ namespace vox {
 		glEnableVertexAttribArray(5); // 2 = Tint
 		glVertexAttribDivisor(5, 1);
 
-		glCheckError();
+		//glCheckError();
 		glBindVertexArray(0);
-		glCheckError();
+		//glCheckError();
 
 		render->n_instances = instances.size();
 		render->model = this;

@@ -7,6 +7,6 @@ namespace bengine {
  */
     std::pair<int, int> project_angle(const int &x, const int &y, const double &radius, const double &degrees_radians) noexcept
     {
-        return std::make_pair(static_cast<int>(x + radius * std::cos(degrees_radians)), static_cast<int>(y + radius * std::sin(degrees_radians)));
+        return std::make_pair(static_cast<int>(x + (radius * std::cos(degrees_radians))), static_cast<int>(y + (radius * std::sin(degrees_radians))));
     }
 }

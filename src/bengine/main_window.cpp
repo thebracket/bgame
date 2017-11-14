@@ -23,7 +23,7 @@ namespace bengine {
 
     void init_glfw_window_hints() {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
@@ -86,7 +86,7 @@ namespace bengine {
     }
 
     void run() {
-		glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE); // Move z-buffer to 0..1 instead of +1..-1.
+		//glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE); // Move z-buffer to 0..1 instead of +1..-1.
         double duration_ms = 0.0;
         while (!glfwWindowShouldClose(main_window)) {
             auto start_time = std::chrono::high_resolution_clock::now();

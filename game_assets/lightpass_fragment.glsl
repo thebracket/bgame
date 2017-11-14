@@ -145,8 +145,18 @@ void main()
     vec3 suntemp = celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
     vec3 moontemp = celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
 
+    vec4 fragPosLightSpace = sun_projection * (sun_modelview * vec4(position, 1.0));
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5; 
+    float closestDepth = texture(sun_depth_tex, projCoords.xy).r;     
+    float currentDepth = projCoords.z;
+    //float bias = 0.005;
+    float bias = max(0.05 * (1.0 - dot(N, normalize(sun_direction))), 0.005); 
+    float shadow = currentDepth - bias > closestDepth  ? 0.0 : 1.0;  
+    Lo += (suntemp * shadow);
+
     // Final color
-    vec3 ambient = vec3(0.6) * albedo * ambient_occlusion;
+    vec3 ambient = albedo * ambient_occlusion;
     FragColor = ambient + Lo;
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));

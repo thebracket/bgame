@@ -182,6 +182,9 @@ namespace chunks {
 								static_voxel_models.insert(std::make_pair(25, std::make_tuple(region_x, region_y, region_z)));
 							}
 						}
+						else {
+							cubes[idx] = 3;
+						}
                     }
 					if (region::water_level(idx) > 0) {
 						add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));
