@@ -16,6 +16,11 @@ namespace render {
 	extern glm::mat4 sun_modelview_matrix;
 	extern glm::mat4 sun_proj_model_view_matrix;
 
+	extern glm::mat4 moon_projection_matrix;
+	extern glm::mat4 moon_modelview_matrix;
+	extern glm::mat4 moon_proj_model_view_matrix;
+
+
 	void update_camera();
 	void update_sun_camera();
 }

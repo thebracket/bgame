@@ -17,6 +17,10 @@ namespace render {
 	glm::mat4 sun_modelview_matrix;
 	glm::mat4 sun_proj_model_view_matrix;
 
+	glm::mat4 moon_projection_matrix;
+	glm::mat4 moon_modelview_matrix;
+	glm::mat4 moon_proj_model_view_matrix;
+
 	constexpr float NINETY_DEGREES = 1.5708f;
 
 	glm::mat4 MakeInfReversedZProjRH(float fovY_radians, float aspectWbyH, float zNear)
@@ -85,6 +89,11 @@ namespace render {
 		// Temporarily zoom the camera around with the sun to see what we're doing wrong
 		//camera_modelview_matrix = sun_modelview_matrix;
 		//camera_projection_matrix = sun_projection_matrix;
+
+		moon_projection_matrix = sun_projection_matrix;
+		const glm::vec3 moon_at{ calendar->moon_x, calendar->moon_y, calendar->moon_z };
+		moon_modelview_matrix = glm::lookAt(moon_at, target, up);
+		moon_proj_model_view_matrix = moon_projection_matrix * moon_modelview_matrix;
 
 		sun_moved = false;
 	}

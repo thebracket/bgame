@@ -19,8 +19,10 @@ namespace systems {
 		void calculate_sun_moon() {
 			render::sun_moved = true;
 			const double time_overall = (calendar->hour - 6.0f + (static_cast<float>(calendar->minute)/60.0f)) / 24.0f;
+			const double moon_time_overall = (calendar->hour - 18.0f + (static_cast<float>(calendar->minute) / 60.0f)) / 24.0f;
 			const double time_as_float = time_overall;
 			const double time_as_radians = (time_as_float * 6.28319);
+			const double moon_time_as_radians = (moon_time_overall * 6.28319);
 			//auto sun_pos = bengine::project_angle(0, 0, sun_distance, time_as_radians);
 			const float X = std::cos(time_as_radians) * 129.0f;
 			const float Y = std::sin(time_as_radians) * 129.0f;
@@ -28,8 +30,10 @@ namespace systems {
 			calendar->sun_y = Y + 128.0f;
 			calendar->sun_z = static_cast<float>(129.0f);
 
-			calendar->moon_x = 0.0f - calendar->sun_x;
-			calendar->moon_y = 0.0f - calendar->sun_y;
+			const float MX = std::sin(moon_time_as_radians) * 129.0f;
+			const float MY = std::cos(moon_time_as_radians) * 129.0f;
+			calendar->moon_x = MX + 128.0f;
+			calendar->moon_y = MY + 128.0f;
 			calendar->moon_z = calendar->sun_z;
 
 			// Sun color; a bit blue at dawn, white at noon, a bit red at sunset
@@ -53,6 +57,9 @@ namespace systems {
 			calendar->sun_r = 4.0f;
 			calendar->sun_g = 4.0f;
 			calendar->sun_b = 4.0f;
+			calendar->moon_r = 0.5f;
+			calendar->moon_g = 0.5;
+			calendar->moon_b = 2.0f;
 
 			//std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
 		}

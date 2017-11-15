@@ -112,6 +112,9 @@ namespace render {
 		glUniform1i(glGetUniformLocation(assets::lightstage_shader, "sun_depth_tex"), 7);
 		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "sun_projection"), 1, GL_FALSE, glm::value_ptr(sun_projection_matrix));
 		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "sun_modelview"), 1, GL_FALSE, glm::value_ptr(sun_modelview_matrix));
+		glUniform1i(glGetUniformLocation(assets::lightstage_shader, "moon_depth_tex"), 8);
+		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "moon_projection"), 1, GL_FALSE, glm::value_ptr(moon_projection_matrix));
+		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "moon_modelview"), 1, GL_FALSE, glm::value_ptr(moon_modelview_matrix));
 		glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);
@@ -128,6 +131,8 @@ namespace render {
         glBindTexture(GL_TEXTURE_3D, lightcol_tex);
 		glActiveTexture(GL_TEXTURE7);
 		glBindTexture(GL_TEXTURE_2D, sun_buffer->depth_tex);
+		glActiveTexture(GL_TEXTURE8);
+		glBindTexture(GL_TEXTURE_2D, moon_buffer->depth_tex);
         render_buffer_quad();
     }
 
@@ -244,6 +249,7 @@ namespace render {
 
 		// Render the scene from the point-of-view of the sun
 		render_to_celestial_buffer(sun_projection_matrix, sun_modelview_matrix, sun_buffer->fbo_id);
+		render_to_celestial_buffer(moon_projection_matrix, moon_modelview_matrix, moon_buffer->fbo_id);
 
 		// TODO: Render the scene from the POV of the moon
 		// TODO: Render cube-maps from lights
@@ -273,7 +279,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(sun_buffer->depth_tex);
+        //render_test_quad(moon_buffer->depth_tex);
 
         // TODO: Final combination and post-process
 

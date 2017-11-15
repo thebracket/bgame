@@ -12,6 +12,7 @@ uniform sampler3D info_tex;
 uniform sampler3D light_pos_tex;
 uniform sampler3D light_col_tex;
 uniform sampler2D sun_depth_tex;
+uniform sampler2D moon_depth_tex;
 
 uniform vec3 camera_position;
 uniform vec3 sun_direction;
@@ -20,6 +21,8 @@ uniform vec3 moon_direction;
 uniform vec3 moon_color;
 uniform mat4 sun_projection;
 uniform mat4 sun_modelview;
+uniform mat4 moon_projection;
+uniform mat4 moon_modelview;
 
 #define PI 3.1415926
 
@@ -109,6 +112,19 @@ vec3 celestialLight(vec3 albedo, vec3 N, vec3 V, vec3 F0, float roughness, float
     return calculateLightOutput(albedo, N, V, F0, L, light_color, roughness, metallic);
 }
 
+float celestialShadow(mat4 proj, mat4 modelview, vec3 position, vec3 N, vec3 light_direction, sampler2D depth_tex) 
+{
+    vec4 fragPosLightSpace = proj * (modelview * vec4(position, 1.0));
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5; 
+    float closestDepth = texture(depth_tex, projCoords.xy).r;     
+    float currentDepth = projCoords.z;
+    //float bias = 0.005;
+    float bias = max(0.05 * (1.0 - dot(N, normalize(light_direction))), 0.005); 
+    float shadow = currentDepth - bias > closestDepth  ? 0.0 : 1.0; 
+    return shadow;
+}
+
 void main()
 {
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
@@ -145,15 +161,8 @@ void main()
     vec3 suntemp = celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
     vec3 moontemp = celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
 
-    vec4 fragPosLightSpace = sun_projection * (sun_modelview * vec4(position, 1.0));
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5; 
-    float closestDepth = texture(sun_depth_tex, projCoords.xy).r;     
-    float currentDepth = projCoords.z;
-    //float bias = 0.005;
-    float bias = max(0.05 * (1.0 - dot(N, normalize(sun_direction))), 0.005); 
-    float shadow = currentDepth - bias > closestDepth  ? 0.0 : 1.0;  
-    Lo += (suntemp * shadow);
+    Lo += ( suntemp * celestialShadow(sun_projection, sun_modelview, position, N, sun_direction, sun_depth_tex) );
+    Lo += ( moontemp * celestialShadow(moon_projection, moon_modelview, position, N, moon_direction, moon_depth_tex) );
 
     // Final color
     vec3 ambient = albedo * ambient_occlusion;
