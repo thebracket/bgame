@@ -158,11 +158,12 @@ void main()
     vec3 gamelighttemp = gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz, position.xyz, light_color.rgb);
 
     // Sun/moon
-    vec3 suntemp = celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
-    vec3 moontemp = celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
-
-    Lo += ( suntemp * celestialShadow(sun_projection, sun_modelview, position, N, sun_direction, sun_depth_tex) );
-    Lo += ( moontemp * celestialShadow(moon_projection, moon_modelview, position, N, moon_direction, moon_depth_tex) );
+    if (outdoor_x_y.x > 0.0f) {
+        vec3 suntemp = celestialLight(albedo, N, V, F0, roughness, metallic, sun_direction, sun_color);
+        vec3 moontemp = celestialLight(albedo, N, V, F0, roughness, metallic, moon_direction, moon_color);
+        Lo += ( suntemp * celestialShadow(sun_projection, sun_modelview, position, N, sun_direction, sun_depth_tex) );
+        Lo += ( moontemp * celestialShadow(moon_projection, moon_modelview, position, N, moon_direction, moon_depth_tex) );
+    }
 
     // Final color
     vec3 ambient = albedo * ambient_occlusion;

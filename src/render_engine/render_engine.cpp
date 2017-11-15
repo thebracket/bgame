@@ -180,7 +180,7 @@ namespace render {
 		chunk_maintenance();
 		if (camera_moved) update_camera();
 		if (sun_moved) update_sun_camera();
-		//update_world_textures();
+		update_world_textures();
 		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
 		systems::particles::build_buffers();
