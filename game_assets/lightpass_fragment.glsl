@@ -1,6 +1,7 @@
 #version 330 core
 layout (location = 0) out vec3 FragColor;
 layout (location = 1) out vec3 BrightColor;
+layout (location = 2) out vec3 Shininess;
 
 in vec2 TexCoords;
 
@@ -172,4 +173,5 @@ void main()
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0) BrightColor = FragColor.rgb;
+    Shininess = vec3(1.0 - roughness);
 }

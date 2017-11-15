@@ -136,33 +136,7 @@ namespace render {
         render_buffer_quad();
     }
 
-    /*
-    void bloom_blur() {
-        glUseProgram(assets::bloom_shader);
-        glActiveTexture(GL_TEXTURE0);
-        bool horizontal = true, first_iteration = true;
-        constexpr int amount = 10;
-        for (unsigned int i=0; i<amount; ++i) {
-            if (horizontal) {
-                glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer->fbo1_id);
-                glUniform1i(glGetUniformLocation(assets::bloom_shader, "horizontal"), 1);
-                if (first_iteration) {
-                    glBindTexture(GL_TEXTURE_2D, light_stage_buffer->bright_tex);
-                } else {
-                    glBindTexture(GL_TEXTURE_2D, bloom_buffer->blur_tex2);
-                }
-            } else {
-                glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer->fbo2_id);
-                glUniform1i(glGetUniformLocation(assets::bloom_shader, "horizontal"), 0);
-                glBindTexture(GL_TEXTURE_2D, bloom_buffer->blur_tex1);
-            }
-            render_buffer_quad();
-            horizontal = !horizontal;
-            if (first_iteration) first_iteration = false;
-        }
-    }*/
-
-    void tone_map_scene() {
+	void tone_map_scene() {
         glUseProgram(assets::tonemap_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
         // Setup uniforms
@@ -279,7 +253,7 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(moon_buffer->depth_tex);
+        render_test_quad(light_stage_buffer->shiny_tex);
 
         // TODO: Final combination and post-process
 

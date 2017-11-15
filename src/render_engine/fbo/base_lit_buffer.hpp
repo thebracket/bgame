@@ -10,5 +10,6 @@ namespace render {
 
         unsigned int color_tex = 0;
         unsigned int bright_tex = 0;
+		unsigned int shiny_tex = 0;
     };
 }
