@@ -156,6 +156,7 @@ void main()
 
     // For the game-defined light
     vec3 gamelighttemp = gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz, position.xyz, light_color.rgb);
+    Lo += gamelighttemp * 4.0;
 
     // Sun/moon
     if (outdoor_x_y.x > 0.0f) {

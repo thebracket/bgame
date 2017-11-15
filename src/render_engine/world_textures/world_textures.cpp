@@ -167,6 +167,6 @@ namespace render {
         }
 
         build_world_flags();
-        //build_world_light();
+        build_world_light();
     }
 }
