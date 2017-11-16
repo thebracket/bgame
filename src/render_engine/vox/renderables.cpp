@@ -26,11 +26,16 @@
 namespace render {
 
 	bool models_changed = true;
-	std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
-	std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
-	std::vector<float> sprite_buffer;
+	static std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
+	static std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
+	static std::vector<float> sprite_buffer;
+	static std::vector<std::tuple<int, int, int, bengine::color_t, uint16_t>> glyphs;
+	static unsigned int sprite_vao = 0;
+	static unsigned int sprite_vbo = 0;
+	static unsigned int glyph_vao = 0;
+	static unsigned int glyph_vbo = 0;
 
-	void build_voxel_buildings() {
+	static void build_voxel_buildings() {
 		bengine::each<building_t, position_t>(
 			[](bengine::entity_t &e, building_t &b, position_t &pos) {
 			if (b.vox_model > 0 && pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
@@ -128,7 +133,7 @@ namespace render {
 		}
 	}
 
-	void build_voxel_items() {
+	static void build_voxel_items() {
 		bengine::each<item_t, position_t>([](bengine::entity_t &e, item_t &i, position_t &pos) {
 			auto item_def = get_item_def(i.item_tag);
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z && item_def && item_def->voxel_model > 0) {
@@ -152,7 +157,7 @@ namespace render {
 
 	int n_sprites = 0;
 
-	void add_sprite(const position_t &pos, const int &sprite_id, const bengine::color_t &color) {
+	static void add_sprite(const position_t &pos, const int &sprite_id, const bengine::color_t &color) {
 		constexpr float width = 1.0f;
 		constexpr float height = 1.0f;
 		const float x0 = -0.5f;
@@ -184,7 +189,7 @@ namespace render {
 		++n_sprites;
 	}
 
-	void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		using namespace bengine;
 
 		// TODO: Add sprite
@@ -221,11 +226,11 @@ namespace render {
 		});
 	}
 
-	void render_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+	static void render_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		// TODO: Add sprite
 	}
 
-	void build_composites() {
+	static void build_composites() {
 		bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				switch (r.render_mode) {
@@ -236,10 +241,7 @@ namespace render {
 		});
 	}
 
-	unsigned int sprite_vao = 0;
-	unsigned int sprite_vbo = 0;
-
-	void build_chunk_models(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
+	static void build_chunk_models(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
 		for (const auto &idx : visible_chunks) {
 			chunks::chunk_t * target = &chunks::chunks[idx];
 			if (!target->static_voxel_models.empty()) {
@@ -271,6 +273,7 @@ namespace render {
 			models_to_render->clear();
 			model_buffers.clear();
 			sprite_buffer.clear();
+			glyphs.clear();
 			n_sprites = 0;
 			
 			build_chunk_models(visible_chunks);
@@ -313,6 +316,8 @@ namespace render {
 			glEnableVertexAttribArray(4); // 4 = Translate
 
 			glBindVertexArray(0);
+
+			// Build the glyphs buffer
 		}
 	}
 
