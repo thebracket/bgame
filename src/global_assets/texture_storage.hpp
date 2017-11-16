@@ -16,4 +16,5 @@ namespace assets {
     extern unsigned int chunk_texture_array;
 	extern unsigned int mob_texture_array;
 	extern unsigned int cursor_texture_array;
+	extern std::unique_ptr<bengine::texture_t> ascii_texture;
 }
