@@ -23,8 +23,7 @@
 
 namespace render {
 
-
-    inline void chunk_maintenance() {
+    static void chunk_maintenance() {
         if (!chunks::chunks_initialized) {
             chunks::initialize_chunks();
         }
@@ -32,7 +31,7 @@ namespace render {
         chunks::update_buffers();
     }
 
-    inline void do_chunk_render() {
+    static void do_chunk_render() {
         for (const auto &idx : visible_chunks) {
             chunks::chunk_t * target = &chunks::chunks[idx];
             if (target->has_geometry) {
@@ -52,7 +51,7 @@ namespace render {
         }
     }
 
-	inline void do_trans_chunk_render() {
+	static void do_trans_chunk_render() {
 		for (const auto &idx : visible_chunks) {
 			chunks::chunk_t * target = &chunks::chunks[idx];
 			if (target->has_transparency) {
@@ -72,7 +71,7 @@ namespace render {
 		}
 	}	
 
-    inline void render_chunks() {
+    static void render_chunks() {
         // Use the program
 		assets::chunkshader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
@@ -93,7 +92,7 @@ namespace render {
 		do_trans_chunk_render();
     }
 
-    void render_to_light_buffer() {
+    static void render_to_light_buffer() {
         glUseProgram(assets::lightstage_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -136,7 +135,7 @@ namespace render {
         render_buffer_quad();
     }
 
-	void tone_map_scene() {
+	static void tone_map_scene() {
         glUseProgram(assets::tonemap_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
         // Setup uniforms
@@ -150,7 +149,7 @@ namespace render {
         render_buffer_quad();
     }
 
-	inline void update_buffers() {
+	static void update_buffers() {
 		chunk_maintenance();
 		if (camera_moved) update_camera();
 		if (sun_moved) update_sun_camera();
@@ -161,7 +160,7 @@ namespace render {
 		glCheckError();
 	}
 
-	void render_to_celestial_buffer(glm::mat4 &projection, glm::mat4 &modelview, GLuint &fbo) {
+	static void render_to_celestial_buffer(glm::mat4 &projection, glm::mat4 &modelview, GLuint &fbo) {
 		// Bind the directional light shader
 		glUseProgram(assets::dirlight_shader);
 		// Bind the SUN FBO

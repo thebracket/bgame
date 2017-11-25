@@ -331,6 +331,7 @@ namespace render {
 			glBindVertexArray(0);
 
 			// Build the glyphs buffer
+			/*
 			glyph_buffer.clear();
 			for (const auto &g : glyphs) {
 				// Insert the render info
@@ -388,7 +389,7 @@ namespace render {
 			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 11 * sizeof(float));
 			glEnableVertexAttribArray(4); // 4 = Translate
 
-			glBindVertexArray(0);
+			glBindVertexArray(0);*/
 
 		}
 	}
