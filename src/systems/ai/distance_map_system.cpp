@@ -75,6 +75,10 @@ namespace systems {
 			picks_dirty = true;
 		}
 
+		void refresh_harvest_map() {
+			harvest_dirty = true;
+		}
+
 		void update_hunting_map() {
 			std::vector<int> huntables;
 			each<grazer_ai, position_t>([&huntables](entity_t &e, grazer_ai &ai, position_t &pos) {

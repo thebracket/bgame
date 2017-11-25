@@ -19,6 +19,8 @@ namespace systems {
 			else if (game_master_mode == DESIGN) {
 				if (is_key_down(GLFW_KEY_T, false)) game_design_mode = CHOPPING;
 				if (is_key_down(GLFW_KEY_B, false)) game_design_mode = BUILDING;
+				if (is_key_down(GLFW_KEY_G, false)) game_design_mode = GUARDPOINTS;
+				if (is_key_down(GLFW_KEY_H, false)) game_design_mode = HARVEST;
 				if (is_key_down(GLFW_KEY_ESCAPE)) game_master_mode = PLAY;
 
 				ImGui::Begin(win_design.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);

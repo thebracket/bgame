@@ -94,18 +94,30 @@ namespace render {
 		//systems::particles::block_destruction_effect(mouse_x, mouse_y, mouse_z, 1.0f, 1.0f, 1.0f, systems::particles::PARTICLE_LUMBERJACK);
 
 		// Lumberjacking
-		if (game_master_mode == DESIGN && game_design_mode == CHOPPING) {
-			for (size_t i = 0; i < REGION_TILES_COUNT; ++i) {
-				auto tree_id = region::tree_id(i);
-				if (tree_id > 0) {
-					auto [x, y, z] = idxmap(i);
-					if (designations->chopping.find(tree_id) != designations->chopping.end()) {						
-						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 1);
-						//std::cout << "Highlighting tree at " << x << ", " << y << ", " << z << "\n";
+		if (game_master_mode == DESIGN) {
+			if (game_design_mode == CHOPPING) {
+				for (size_t i = 0; i < REGION_TILES_COUNT; ++i) {
+					auto tree_id = region::tree_id(i);
+					if (tree_id > 0) {
+						auto[x, y, z] = idxmap(i);
+						if (designations->chopping.find(tree_id) != designations->chopping.end()) {
+							add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 1);
+							//std::cout << "Highlighting tree at " << x << ", " << y << ", " << z << "\n";
+						}
+						//else {
+						//	add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 2);
+						//}
 					}
-					//else {
-					//	add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 2);
-					//}
+				}
+			}
+			else if (game_design_mode == GUARDPOINTS) {
+				for (const auto& gp : designations->guard_points) {
+					add_cube_geometry(data, n_elements_cursor_elements, gp.second.x, gp.second.y, gp.second.z, 1, 1, 4);
+				}
+			}
+			else if (game_design_mode == HARVEST) {
+				for (const auto& gp : designations->harvest) {
+					add_cube_geometry(data, n_elements_cursor_elements, gp.second.x, gp.second.y, gp.second.z, 1, 1, 3);
 				}
 			}
 		}

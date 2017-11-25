@@ -60,6 +60,8 @@
 #include "gui/design_mode.hpp"
 #include "gui/design_lumberjack.hpp"
 #include "gui/design_buildings.hpp"
+#include "gui/design_harvest.hpp"
+#include "gui/design_guardpoints.hpp"
 #include "gui/particle_system.hpp"
 #include "../stdafx.h"
 #include "../bengine/imgui.h"
@@ -130,6 +132,8 @@ namespace systems {
 	constexpr int DESIGN_MODE_SYSTEM = 58;
 	constexpr int PARTICLE_SYSTEM = 59;
 	constexpr int DESIGN_BUILDINGS_SYSTEM = 60;
+	constexpr int DESIGN_GUARDPOINTS_SYSTEM = 61;
+	constexpr int DESIGN_HARVEST_SYSTEM = 62;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -213,6 +217,8 @@ namespace systems {
 		system_names[DESIGN_MODE_SYSTEM] = "Design";
 		system_names[PARTICLE_SYSTEM] = "Particles";
 		system_names[DESIGN_BUILDINGS_SYSTEM] = "Design - Buildings";
+		system_names[DESIGN_HARVEST_SYSTEM] = "Design - Harvest";
+		system_names[DESIGN_GUARDPOINTS_SYSTEM] = "Design - Guardpoints";
 		game_master_mode = PLAY;
     }
 
@@ -294,6 +300,8 @@ namespace systems {
 		if (game_master_mode == DESIGN) {
 			if (game_design_mode == CHOPPING) run_system(design_lumberjack::run, duration_ms, DESIGN_LUMBERJACK_SYSTEM);
 			if (game_design_mode == BUILDING) run_system(design_buildings::run, duration_ms, DESIGN_BUILDINGS_SYSTEM);
+			if (game_design_mode == HARVEST) run_system(design_harvest::run, duration_ms, DESIGN_HARVEST_SYSTEM);
+			if (game_design_mode == GUARDPOINTS) run_system(design_guardpoints::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
 		}
 		run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
 		run_system(particles::run, duration_ms, PARTICLE_SYSTEM);

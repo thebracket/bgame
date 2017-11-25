@@ -24,5 +24,6 @@ namespace systems {
 		void refresh_architecture_map();
 		void refresh_butcherables_map();
 		void refresh_pick_map();
+		void refresh_harvest_map();
 	}
 }
