@@ -8,6 +8,7 @@
 #include "../../components/species.hpp"
 #include "../../components/item.hpp"
 #include "../../components/item_carried.hpp"
+#include "../../components/renderable.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "voxel_model.hpp"
 #include "voxreader.hpp"
@@ -29,7 +30,9 @@ namespace render {
 	static std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
 	static std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
 	static std::vector<float> sprite_buffer;
+	static int n_sprites = 0;
 	static std::vector<std::tuple<int, int, int, bengine::color_t, uint16_t>> glyphs;
+	static std::vector<float> glyph_buffer;
 	static unsigned int sprite_vao = 0;
 	static unsigned int sprite_vbo = 0;
 	static unsigned int glyph_vao = 0;
@@ -38,37 +41,39 @@ namespace render {
 	static void build_voxel_buildings() {
 		bengine::each<building_t, position_t>(
 			[](bengine::entity_t &e, building_t &b, position_t &pos) {
-			if (b.vox_model > 0 && pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
-				//std::cout << "Found model #" << b.vox_model << "\n";
-				auto finder = models_to_render->find(b.vox_model);
-				auto x = (float)pos.x;
-				const auto y = (float)pos.z;
-				auto z = (float)pos.y;
+			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
+				if (b.vox_model > 0) {
+					//std::cout << "Found model #" << b.vox_model << "\n";
+					auto finder = models_to_render->find(b.vox_model);
+					auto x = (float)pos.x;
+					const auto y = (float)pos.z;
+					auto z = (float)pos.y;
 
-				//std::cout << b.width << " x " << b.height << "\n";
-				if (b.width == 3) x -= 1.0f;
-				if (b.height == 3) z -= 1.0f;
+					//std::cout << b.width << " x " << b.height << "\n";
+					if (b.width == 3) x -= 1.0f;
+					if (b.height == 3) z -= 1.0f;
 
-				float red = 1.0f;
-				float green = 1.0f;
-				float blue = 1.0f;
+					float red = 1.0f;
+					float green = 1.0f;
+					float blue = 1.0f;
 
-				if (!b.complete) {
-					red = 0.1f;
-					green = 0.1f;
-					blue = 0.1f;
-				}
+					if (!b.complete) {
+						red = 0.1f;
+						green = 0.1f;
+						blue = 0.1f;
+					}
 
-				if (finder != models_to_render->end()) {
-					finder->second.push_back(vox::instance_t{
-						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
-					});
-				}
-				else {
-					models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
-					}}));
-				}
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
+						});
+					}
+					else {
+						models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
+						}}));
+					}
+				} // TODO: Add ASCII support
 			}
 		});
 
@@ -136,26 +141,29 @@ namespace render {
 	static void build_voxel_items() {
 		bengine::each<item_t, position_t>([](bengine::entity_t &e, item_t &i, position_t &pos) {
 			auto item_def = get_item_def(i.item_tag);
-			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z && item_def && item_def->voxel_model > 0) {
-				auto finder = models_to_render->find(item_def->voxel_model);
-				auto x = (float)pos.x;
-				const auto y = (float)pos.z;
-				auto z = (float)pos.y;
-				if (finder != models_to_render->end()) {
-					finder->second.push_back(vox::instance_t{
-						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-					});
+			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z && item_def) {
+				if (item_def->voxel_model > 0) {
+					auto finder = models_to_render->find(item_def->voxel_model);
+					auto x = (float)pos.x;
+					const auto y = (float)pos.z;
+					auto z = (float)pos.y;
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+						});
+					}
+					else {
+						models_to_render->insert(std::make_pair(item_def->voxel_model, std::vector<vox::instance_t>{ vox::instance_t{
+							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+						} }));
+					}
 				}
-				else {
-					models_to_render->insert(std::make_pair(item_def->voxel_model, std::vector<vox::instance_t>{vox::instance_t{
-						x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-					}}));
+				else if (item_def->glyph > 0) {
+					glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, item_def->fg, item_def->glyph_ascii });
 				}
 			}
 		});
 	}
-
-	int n_sprites = 0;
 
 	static void add_sprite(const position_t &pos, const int &sprite_id, const bengine::color_t &color) {
 		constexpr float width = 1.0f;
@@ -264,6 +272,8 @@ namespace render {
 	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
 		if (sprite_vao == 0) glGenVertexArrays(1, &sprite_vao);
 		if (sprite_vbo == 0) glGenBuffers(1, &sprite_vbo);
+		if (glyph_vao == 0) glGenVertexArrays(1, &glyph_vao);
+		if (glyph_vbo == 0) glGenBuffers(1, &glyph_vbo);
 
 		if (!models_to_render) {
 			models_to_render = std::make_unique<boost::container::flat_map<int, std::vector<vox::instance_t>>>();
@@ -275,11 +285,14 @@ namespace render {
 			sprite_buffer.clear();
 			glyphs.clear();
 			n_sprites = 0;
-			
+
 			build_chunk_models(visible_chunks);
 			build_voxel_buildings();
 			build_voxel_items();
-			// TODO: Regular old renderables!
+			// Regular old renderables!
+			bengine::each<position_t, renderable_t>([](bengine::entity_t &e, position_t &pos, renderable_t &r) {
+				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, r.foreground, r.glyph_ascii });
+			});
 
 			build_composites();
 
@@ -318,6 +331,65 @@ namespace render {
 			glBindVertexArray(0);
 
 			// Build the glyphs buffer
+			glyph_buffer.clear();
+			for (const auto &g : glyphs) {
+				// Insert the render info
+				const auto&[x, z, y, color, ch] = g;
+
+				constexpr float width = 1.0f;
+				constexpr float height = 1.0f;
+				const float x0 = -0.5f;
+				const float x1 = x0 + width;
+				const float y0 = -0.5f;
+				const float y1 = y0 + 1.0f; // We don't use y1 for floors
+				const float z0 = -0.5f;
+				const float z1 = z0 + height;
+				constexpr float ceiling_gap = 0.001f;
+
+				const float posx = static_cast<float>(x);
+				const float posy = static_cast<float>(z);
+				const float posz = static_cast<float>(y);
+
+				const float char_x = static_cast<float>(ch % 16) * 1024.0f;
+				const float char_y = static_cast<float>(ch / 16) * 1024.0f;
+				constexpr float char_size_gl = 16.0f / 1024.0f;
+				const float T0 = char_x / 1024.0f;
+				const float T1 = char_y / 1024.0f;
+				const float TW = char_size_gl;
+				const float TH = char_size_gl;
+
+				glyph_buffer.insert(sprite_buffer.end(), {
+					// Upwards facing floor; this will need to change per camera type
+					x0, y0, z1, T0, T1, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
+					x1, y0, z1, TW, T1, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
+					x1, y1, z1, TW, TH, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
+					x1, y1, z1, TW, TH, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
+					x0, y1, z1, T0, TH, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
+					x0, y0, z1, T0, T1, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz
+				});
+			}
+			glBindVertexArray(glyph_vao);
+			glBindBuffer(GL_ARRAY_BUFFER, glyph_vbo);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * glyph_buffer.size(), &glyph_buffer[0], GL_STATIC_DRAW);
+
+			glBindBuffer(GL_ARRAY_BUFFER, glyph_vao);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0); // 0 = Vertex Position
+
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glEnableVertexAttribArray(1); // 1 = TexX/Y
+
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 5 * sizeof(float));
+			glEnableVertexAttribArray(2); // 2 = Normals
+
+			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 8 * sizeof(float));
+			glEnableVertexAttribArray(3); // 3 = Colors
+
+			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 11 * sizeof(float));
+			glEnableVertexAttribArray(4); // 4 = Translate
+
+			glBindVertexArray(0);
+
 		}
 	}
 
