@@ -7,6 +7,7 @@
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../systems/gui/particle_system.hpp"
+#include "../../global_assets/game_camera.hpp"
 #include <vector>
 
 namespace render {
@@ -118,6 +119,31 @@ namespace render {
 			else if (game_design_mode == HARVEST) {
 				for (const auto& gp : designations->harvest) {
 					add_cube_geometry(data, n_elements_cursor_elements, gp.second.x, gp.second.y, gp.second.z, 1, 1, 3);
+				}
+			}
+			else if (game_design_mode == STOCKPILES) {
+
+			}
+			else if (game_design_mode == ARCHITECTURE) {
+
+			}
+			else if (game_design_mode == DIGGING) {
+				for (const auto &mine : designations->mining) {
+					auto[x, y, z] = idxmap(mine.first);
+					if (z == camera_position->region_z) {
+						int glyph = 1;
+						switch (mine.second) {
+						case 1: glyph = 4; break; // Dig
+						case 2: glyph = 4; break; // Channel
+						case 3: glyph = 4; break; // Ramp
+						case 4: glyph = 4; break; // Up
+						case 5: glyph = 4; break; // Down
+						case 6: glyph = 4; break; // Up-Down
+						default: std::cout << "Warning: Unknown mining type\n";
+						}
+
+						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
+					}
 				}
 			}
 		}
