@@ -33,7 +33,14 @@ namespace systems {
 			}
 		}
 
+		static bool first_run = true;
+
 		void run(const double &duration_ms) {
+			if (first_run) {
+				first_run = false;
+				register_job_offer<ai_tag_work_hunting>(jobs_board::evaluate_hunting);
+			}
+
 			ai_work_template<ai_tag_work_hunting> work;
 
 			work.do_ai([&work](entity_t &e, ai_tag_work_hunting &h, ai_tag_my_turn_t &t, position_t &pos) {

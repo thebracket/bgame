@@ -30,7 +30,14 @@ namespace systems {
 			}
 		}
 
+		static bool first_run = true;
+
 		void run(const double &duration_ms) {
+			if (first_run) {
+				first_run = false;
+				register_job_offer<ai_tag_work_butcher>(jobs_board::evaluate_butchering);
+			}
+
 			ai_work_template<ai_tag_work_butcher> work;
 
 			work.do_ai([&work](entity_t &e, ai_tag_work_butcher &b, ai_tag_my_turn_t &t, position_t &pos) {
