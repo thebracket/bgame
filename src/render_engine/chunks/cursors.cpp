@@ -11,10 +11,10 @@
 #include <vector>
 
 namespace render {
-	unsigned int cursors_vao = 0;
-	unsigned int cursors_vbo = 0;
+	static unsigned int cursors_vao = 0;
+	static unsigned int cursors_vbo = 0;
 
-	void add_cube_geometry(std::vector<float> &v, int &n_elements, const float &x, const float &y, const float &z,
+	static void add_cube_geometry(std::vector<float> &v, int &n_elements, const float &x, const float &y, const float &z,
 		const float &width, const float &height, const float &texture_id)
 	{
 		const float x0 = -0.5f + x;
@@ -74,7 +74,7 @@ namespace render {
 		});
 	}
 
-	int n_elements_cursor_elements = 0;
+	static int n_elements_cursor_elements = 0;
 
 	void build_cursor_geometry() {
 		n_elements_cursor_elements = 0;
@@ -122,7 +122,13 @@ namespace render {
 				}
 			}
 			else if (game_design_mode == STOCKPILES) {
-
+				for (size_t i = 0; i < REGION_TILES_COUNT; ++i) {
+					auto stockpile_id = region::stockpile_id(i);
+					if (stockpile_id > 0 && stockpile_id == current_stockpile) {
+						auto[x, y, z] = idxmap(i);
+						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 1);
+					}
+				}
 			}
 			else if (game_design_mode == ARCHITECTURE) {
 
