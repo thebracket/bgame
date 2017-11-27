@@ -38,7 +38,7 @@ namespace systems {
 		bool butcherables_dirty = true;
 		bool beds_dirty = true;
 		bool settlers_dirty = true;
-		bool architecutre_dirty = true;
+		bool architecture_dirty = true;
 		bool blocks_dirty = true;
 		bool levers_dirty = true;
 		bool axes_dirty = true;
@@ -64,7 +64,7 @@ namespace systems {
 		}
 
 		void refresh_architecture_map() {
-			architecutre_dirty = true;
+			architecture_dirty = true;
 		}
 
 		void refresh_butcherables_map() {
@@ -77,6 +77,10 @@ namespace systems {
 
 		void refresh_harvest_map() {
 			harvest_dirty = true;
+		}
+		
+		void refresh_architecture_map() {
+			architecture_dirty = true;
 		}
 
 		void update_hunting_map() {
@@ -234,9 +238,9 @@ namespace systems {
 				settlers_dirty = false;
 			}
 
-			if (architecutre_dirty) {
+			if (architecture_dirty) {
 				update_architecure_map();
-				architecutre_dirty = false;
+				architecture_dirty = false;
 			}
 
 			if (blocks_dirty) {
