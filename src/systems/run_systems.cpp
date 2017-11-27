@@ -62,6 +62,9 @@
 #include "gui/design_buildings.hpp"
 #include "gui/design_harvest.hpp"
 #include "gui/design_guardpoints.hpp"
+#include "gui/design_architecture.hpp"
+#include "gui/design_mining.hpp"
+#include "gui/design_stockpiles.hpp"
 #include "gui/particle_system.hpp"
 #include "../stdafx.h"
 #include "../bengine/imgui.h"
@@ -134,6 +137,9 @@ namespace systems {
 	constexpr int DESIGN_BUILDINGS_SYSTEM = 60;
 	constexpr int DESIGN_GUARDPOINTS_SYSTEM = 61;
 	constexpr int DESIGN_HARVEST_SYSTEM = 62;
+	constexpr int DESIGN_ARCHITECTURE_SYSTEM = 63;
+	constexpr int DESIGN_MINING_SYSTEM = 64;
+	constexpr int DESIGN_STOCKPILES_SYSTEM = 65;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -219,6 +225,9 @@ namespace systems {
 		system_names[DESIGN_BUILDINGS_SYSTEM] = "Design - Buildings";
 		system_names[DESIGN_HARVEST_SYSTEM] = "Design - Harvest";
 		system_names[DESIGN_GUARDPOINTS_SYSTEM] = "Design - Guardpoints";
+		system_names[DESIGN_ARCHITECTURE_SYSTEM] = "Design - Architecture";
+		system_names[DESIGN_MINING_SYSTEM] = "Design - Mining";
+		system_names[DESIGN_STOCKPILES_SYSTEM] = "Design - Stockpiles";
 		game_master_mode = PLAY;
     }
 
@@ -302,6 +311,9 @@ namespace systems {
 			if (game_design_mode == BUILDING) run_system(design_buildings::run, duration_ms, DESIGN_BUILDINGS_SYSTEM);
 			if (game_design_mode == HARVEST) run_system(design_harvest::run, duration_ms, DESIGN_HARVEST_SYSTEM);
 			if (game_design_mode == GUARDPOINTS) run_system(design_guardpoints::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
+			if (game_design_mode == ARCHITECTURE) run_system(design_architecture::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
+			if (game_design_mode == DIGGING) run_system(design_mining::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
+			if (game_design_mode == STOCKPILES) run_system(design_stockpiles::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
 		}
 		run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
 		run_system(particles::run, duration_ms, PARTICLE_SYSTEM);

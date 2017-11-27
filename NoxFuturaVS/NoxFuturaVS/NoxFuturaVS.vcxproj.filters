@@ -681,6 +681,15 @@
     <ClCompile Include="..\..\src\systems\gui\design_harvest.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\design_architecture.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\design_mining.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\design_stockpiles.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1482,6 +1491,15 @@
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_harvest.hpp">
+      <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\design_architecture.hpp">
+      <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\design_mining.hpp">
+      <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\design_stockpiles.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
