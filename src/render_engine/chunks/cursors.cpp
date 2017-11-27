@@ -133,12 +133,12 @@ namespace render {
 					if (z == camera_position->region_z) {
 						int glyph = 1;
 						switch (mine.second) {
-						case 1: glyph = 4; break; // Dig
-						case 2: glyph = 4; break; // Channel
-						case 3: glyph = 4; break; // Ramp
-						case 4: glyph = 4; break; // Up
-						case 5: glyph = 4; break; // Down
-						case 6: glyph = 4; break; // Up-Down
+						case 1: glyph = 5; break; // Dig
+						case 2: glyph = 6; break; // Channel
+						case 3: glyph = 7; break; // Ramp
+						case 4: glyph = 8; break; // Up
+						case 5: glyph = 9; break; // Down
+						case 6: glyph = 10; break; // Up-Down
 						default: std::cout << "Warning: Unknown mining type\n";
 						}
 

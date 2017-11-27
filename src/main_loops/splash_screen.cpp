@@ -270,7 +270,8 @@ namespace splash_screen {
 	}
 
 	void load_cursor_textures() {
-		std::vector<std::string> cursor_textures{ "base_cursor.png", "chop_cursor.png", "tree_cursor.png", "farm_cursor.png", "guard_cursor.png" };
+		std::vector<std::string> cursor_textures{ "base_cursor.png", "chop_cursor.png", "tree_cursor.png", "farm_cursor.png", "guard_cursor.png",
+			"dig_cursor.png", "channel_cursor.png", "ramp_cursor.png", "downstairs_cursor.png", "upstairs_cursor.png", "updownstairs_cursor.png" };
 		const int num_actual_textures = static_cast<int>(cursor_textures.size());
 		std::cout << "# CursorTextures in array: " << num_actual_textures << "\n";
 
