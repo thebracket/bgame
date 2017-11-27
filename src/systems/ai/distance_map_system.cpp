@@ -78,10 +78,6 @@ namespace systems {
 		void refresh_harvest_map() {
 			harvest_dirty = true;
 		}
-		
-		void refresh_architecture_map() {
-			architecture_dirty = true;
-		}
 
 		void update_hunting_map() {
 			std::vector<int> huntables;
