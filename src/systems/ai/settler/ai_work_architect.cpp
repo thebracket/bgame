@@ -12,6 +12,7 @@
 #include "../../../components/receives_signal.hpp"
 #include "../inventory_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
+#include "../../../render_engine/chunks/chunks.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -171,6 +172,7 @@ namespace systems {
 								}
 							}
 						}
+						chunks::mark_chunk_dirty_by_tileidx(bidx);
 
 						designations->architecture.erase(bidx);
 						distance_map::refresh_architecture_map();
