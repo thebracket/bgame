@@ -309,6 +309,7 @@ namespace render {
 
 			// Build the sprite buffer
 			glBindVertexArray(sprite_vao);
+			glInvalidateBufferData(sprite_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, sprite_vbo);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sprite_buffer.size(), &sprite_buffer[0], GL_STATIC_DRAW);
 

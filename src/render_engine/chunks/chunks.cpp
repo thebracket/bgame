@@ -484,6 +484,7 @@ namespace chunks {
         }
 
         glBindVertexArray(vao);
+		glInvalidateBufferData(vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
 
