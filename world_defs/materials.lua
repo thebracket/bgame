@@ -37,7 +37,8 @@ terrain_textures = {
 
     -- Synthetic
     rubber = { index=tid(), texture=tfn("rubber") },
-    titanium = { index=tid(), texture=tfn("titanium") }
+    titanium = { index=tid(), texture=tfn("titanium") },
+    wood = { index=tid(), texture=tfn("bamboo") }
 }
 
 function chunkTex(name)
@@ -501,7 +502,8 @@ materials = {
 -- Other materials needed
     wood = { name = "Wood", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['black'],
-        hit_points = 20
+        hit_points = 20,
+        texture = chunkTex("bark"), constructed = chunkTex("wood")
     },
     brick = { name = "Brick", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['black'],
