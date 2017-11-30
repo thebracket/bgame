@@ -10,6 +10,7 @@
 #include "../../global_assets/game_calendar.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../keydamper.hpp"
 #include "../../stdafx.h"
 
 namespace systems {
@@ -151,6 +152,10 @@ namespace systems {
             ImGui::SameLine(ImGui::GetWindowWidth()-(status_size.x + 10));
             ImGui::Text("%s", cash_str.c_str());
             ImGui::EndMainMenuBar();
-        }
+
+			// Keyboard shortcuts
+			if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
+			if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
+		}
     }
 }
