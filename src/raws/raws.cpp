@@ -106,6 +106,7 @@ void load_raws() {
 	for (const std::string &filename : string_table(-1)->strings) {
 		load_lua_script("world_defs/" + filename);
 	}
+	std::cout << "Loading tables\n";
 
 	// Extract game tables
 	load_game_tables();

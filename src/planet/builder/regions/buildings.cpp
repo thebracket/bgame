@@ -146,7 +146,7 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
 				if (output != nullptr && !xp::is_transparent(output)) {
                     if (output->glyph == 219) {
                         add_construction(x, y, z, "ship_wall", true, 0);
-                    } else if (output->glyph == 177) {
+                    } else if (output->glyph == 'W') {
                         add_construction(x, y, z, "ship_window", true, 0);
                     } else if (output->glyph == 176) {
                         add_construction(x, y, z, "ship_floor", false, 0);

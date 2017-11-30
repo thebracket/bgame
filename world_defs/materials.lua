@@ -1,5 +1,5 @@
 function tfn(name) return "game_assets/terrain/" .. name end
-next_texture_id = 0
+next_texture_id = 3
 function tid()
     tmp = next_texture_id
     next_texture_id = next_texture_id + 3
@@ -44,7 +44,7 @@ terrain_textures = {
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
         texidx = terrain_textures[name].index-3
-        print(name .. " : " .. texidx)
+        print("chunkTex mapping: " .. name .. " : " .. texidx)
         return texidx
     else
         print("Unknown texture: "..name)

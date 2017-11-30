@@ -221,7 +221,7 @@ void read_material_textures() {
 
 	while (lua_next(lua_state, -2) != 0) {
 		std::string key = lua_tostring(lua_state, -2);
-		std::cout << key << "\n";
+		std::cout << "Material texture key: " << key << "\n";
 
 		int idx = 0;
 		std::string tex;

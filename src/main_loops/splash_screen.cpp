@@ -58,9 +58,10 @@ namespace splash_screen {
 	}
 
     void init_raws(int id) {
-        std::cout << "Seen thread " << id << "\n";
+        std::cout << "RAW INIT - Seen thread " << id << "\n";
         load_raws();
         initialized_raws.store(true);
+		std::cout << "RAW INIT DONE\n";
     }
 
     void load_worldgen_textures() {
