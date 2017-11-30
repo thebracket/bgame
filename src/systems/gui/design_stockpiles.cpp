@@ -36,7 +36,9 @@ namespace systems {
 			ImGui::Begin(win_stockpiles.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
 			ImGui::TextWrapped("Stockpiles - select a stockpile from the right panel, click to add, right click to remove.");
 			ImGui::PushItemWidth(-1);
-			ImGui::ListBox("## Stockpiles", &selected_stockpile, &stockpile_listbox_items.at(0), stockpiles.size(), 10);
+			if (!stockpile_listbox_items.empty()) {
+				ImGui::ListBox("## Stockpiles", &selected_stockpile, &stockpile_listbox_items.at(0), stockpile_listbox_items.size(), 10);
+			}
 			if (ImGui::Button("+ Add Stockpile")) {
 				auto sp = create_entity()->assign(stockpile_t{});
 				current_stockpile = sp->id;
