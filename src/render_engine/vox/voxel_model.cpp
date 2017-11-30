@@ -178,11 +178,11 @@ namespace vox {
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 		glInvalidateBufferData(instance_vbo_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
-		//glCheckError();
+		glCheckError();
 
 		// Create the VAO to hold this data
 		glBindVertexArray(render->tmp_vao);
-		//glCheckError();
+		glCheckError();
 
 		// Bind the consistent elements
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);

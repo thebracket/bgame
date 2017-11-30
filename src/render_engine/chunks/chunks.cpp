@@ -499,6 +499,7 @@ namespace chunks {
         glEnableVertexAttribArray(2); // 2 = Normals
 
         glBindVertexArray(0);
+		glCheckError();
     }
 
 	void chunk_t::update_trans_buffer() {
@@ -518,6 +519,7 @@ namespace chunks {
 		if (data.size() == 0) return;
 
 		glBindVertexArray(tvao);
+		glInvalidateBufferData(tvbo);
 		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
 
@@ -532,6 +534,7 @@ namespace chunks {
 		glEnableVertexAttribArray(2); // 2 = Normals
 
 		glBindVertexArray(0);
+		glCheckError();
 	}
 
     void update_buffers() {
