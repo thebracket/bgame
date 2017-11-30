@@ -3,7 +3,7 @@
 
 LOG * LOG::text(const std::string &txt) {
     for (std::size_t i=0; i<txt.size(); ++i) {
-        chars.push_back(xp::vchar{ (uint16_t)txt[i], fg, bengine::color_t{0.0f, 0.0f, 0.0f} });
+        chars.push_back(xp::vchar{ (uint16_t)txt[i], fg, bengine::color_t{1.0f, 1.0f, 1.0f} });
     }
     return this;
 }

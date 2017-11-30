@@ -68,7 +68,7 @@ namespace systems {
 								else {
 									first = false;
 								}
-								ImVec4 col{ static_cast<float>(current.r) / 255.0f, static_cast<float>(current.g) / 255.0f, static_cast<float>(current.b) / 255.0f, 1.0f };
+								ImVec4 col{ current.r, current.g, current.b, 1.0f };
 								ImGui::TextColored(col, "%s", output.c_str());
 								output = c.glyph;
 								current = c.foreground;
@@ -81,7 +81,7 @@ namespace systems {
 							else {
 								first = false;
 							}
-							ImVec4 col{ static_cast<float>(current.r) / 255.0f, static_cast<float>(current.g) / 255.0f, static_cast<float>(current.b) / 255.0f, 1.0f };
+							ImVec4 col{ current.r, current.g, current.b, 1.0f };
 							ImGui::TextColored(col, "%s", output.c_str());
 							output = "";
 						}
