@@ -328,6 +328,7 @@ namespace region {
         current_region->tile_flags[idx].reset(CAN_STAND_HERE);
         current_region->tile_flags[idx].reset(CONSTRUCTION);
         current_region->tile_vegetation_type[idx] = 0;
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
     void make_floor(const int idx) {
@@ -336,6 +337,7 @@ namespace region {
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
     void make_ramp(const int idx) {
@@ -344,6 +346,7 @@ namespace region {
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
     void make_stairs_up(const int idx) {
@@ -352,6 +355,7 @@ namespace region {
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
     void make_stairs_down(const int idx) {
@@ -360,6 +364,7 @@ namespace region {
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
     void make_stairs_updown(const int idx) {
@@ -368,6 +373,7 @@ namespace region {
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
     void make_wall(const int idx, const std::size_t mat) {
@@ -378,6 +384,7 @@ namespace region {
         current_region->tile_flags[idx].set(CONSTRUCTION);
         current_region->tile_vegetation_type[idx] = 0;
         set_tile_material(idx, mat);
+		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
 	void save_current_region() {
