@@ -17,10 +17,10 @@
 #include "../stdafx.h"
 
 namespace main_menu {
-    bool initialized = false;
-    bool world_exists = false;
-    std::string tagline = "";
-    bool show_options = false;
+    static bool initialized = false;
+    static bool world_exists = false;
+    static std::string tagline = "";
+    static bool show_options = false;
     const std::string win_options = std::string(ICON_FA_WRENCH) + " Options";
     const std::string btn_save = std::string(ICON_FA_FLOPPY_O) + " Save Changes";
     const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
@@ -29,19 +29,23 @@ namespace main_menu {
     const std::string menu_opts = std::string(ICON_FA_WRENCH) + " Options";
     const std::string menu_quit = std::string(ICON_FA_TIMES) + " Quit the Game";
 
-    std::string online_username = "";
+    static std::string online_username = "";
 
-    std::string get_descriptive_noun() {
+    static std::string get_descriptive_noun() {
         using namespace string_tables;
 
         bengine::random_number_generator rng;
         return string_table(MENU_SUBTITLES)->random_entry(rng);
     }
 
-    void init() {
-        if (exists(get_save_path() + std::string("/savegame.dat"))) {
-            world_exists = true;
-        }
+	void check_world_exists() {
+		if (exists(get_save_path() + std::string("/savegame.dat"))) {
+			world_exists = true;
+		}
+	}
+
+    static void init() {
+		check_world_exists();
 
         bengine::random_number_generator rng;
         switch (rng.roll_dice(1,8)) {
@@ -70,7 +74,7 @@ namespace main_menu {
         initialized = true;
     }
 
-	float calc_indent(const float window_width, const float text_width) {
+	static float calc_indent(const float window_width, const float text_width) {
 		return window_width / 2.0f - text_width / 2.0f;
 	}
 

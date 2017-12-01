@@ -13,6 +13,7 @@
 #include "../global_assets/shader_storage.hpp"
 #include "../global_assets/rng.hpp"
 #include "../stdafx.h"
+#include "main_menu.hpp"
 
 namespace worldgen {
     enum world_gen_mode_t { WG_MENU, WG_RUNNING, WG_MAP };
@@ -231,6 +232,7 @@ namespace worldgen {
 
             if (is_planet_build_complete()) {
                 glDeleteBuffers(1, &vbo);
+				main_menu::check_world_exists();
                 bengine::main_func = main_menu::tick;
             }
         }
