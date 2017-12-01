@@ -8,6 +8,7 @@
 #include "../../bengine/serialization_utils.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../../bengine/bitset8.hpp"
+#include "../../render_engine/world_textures/world_textures.hpp"
 
 namespace region {
 
@@ -518,6 +519,7 @@ namespace region {
         above_ground[idx] = ag;
 
 		tile_pathing(x, y, z);
+		render::world_changed = true;
 	}
 
 	void region_t::tile_pathing(const int &x, const int &y, const int &z) {
