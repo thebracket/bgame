@@ -164,8 +164,8 @@ void read_material_types() noexcept
             }
             if (field == "damage_bonus") m.damage_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "ac_bonus") m.ac_bonus = static_cast<float>(lua_tonumber(lua_state, -1));
-            if (field == "texture") m.base_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
-            if (field == "constructed") m.constructed_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "texture") m.base_texture_id = static_cast<int>(lua_tonumber(lua_state, -1)+3);
+            if (field == "constructed") m.constructed_texture_id = static_cast<int>(lua_tonumber(lua_state, -1)+3);
 
             lua_pop(lua_state, 1);
         }
@@ -244,6 +244,7 @@ void read_material_textures() {
 
 	material_textures.clear();
 	for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
+		std::cout << i->first << " == " << i->second << "\n";
 		material_textures.emplace_back(i->second);
 	}
 }

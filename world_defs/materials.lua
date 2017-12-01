@@ -1,5 +1,5 @@
 function tfn(name) return "game_assets/terrain/" .. name end
-next_texture_id = 3
+next_texture_id = 0
 function tid()
     tmp = next_texture_id
     next_texture_id = next_texture_id + 3

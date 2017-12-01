@@ -302,16 +302,18 @@ void planet_build_run_year(const int year, planet_t &planet, bengine::random_num
                     }
 
                     for (auto &uid : cit->second) {
-                        const std::string ut = planet.civs.units[uid].unit_type;
-                        const std::string st = planet.civs.civs[cit->first].species_tag;
-                        //std::cout << st << ":" << ut << "\n";
-                        auto civ_f = get_civ_def(st);
-                        if (civ_f != nullptr) {
-                            auto u_f = civ_f->units.find(ut);
-                            if (u_f != civ_f->units.end()) {
-                                str += u_f->second.worldgen_strength;
-                            }
-                        }
+						if (planet.civs.civs.size() < cit->first) {
+							const std::string ut = planet.civs.units[uid].unit_type;
+							const std::string st = planet.civs.civs[cit->first].species_tag;
+							//std::cout << st << ":" << ut << "\n";
+							auto civ_f = get_civ_def(st);
+							if (civ_f != nullptr) {
+								auto u_f = civ_f->units.find(ut);
+								if (u_f != civ_f->units.end()) {
+									str += u_f->second.worldgen_strength;
+								}
+							}
+						}
                     }
                     strengths[cit->first] = str + rng.roll_dice(2, 6);
                 }
