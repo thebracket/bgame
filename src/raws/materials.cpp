@@ -166,6 +166,8 @@ void read_material_types() noexcept
             if (field == "ac_bonus") m.ac_bonus = static_cast<float>(lua_tonumber(lua_state, -1));
             if (field == "texture") m.base_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "constructed") m.constructed_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
+			if (field == "floor") m.floor_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
+			if (field == "floor_constructed") m.constructed_floor_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
 
             lua_pop(lua_state, 1);
         }

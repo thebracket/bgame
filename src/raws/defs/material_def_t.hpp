@@ -23,4 +23,6 @@ struct material_def_t {
     float ac_bonus = 0.0F;
     int base_texture_id = 2;
     int constructed_texture_id = 2;
+	int floor_texture_id = 2;
+	int constructed_floor_texture_id = 2;
 };

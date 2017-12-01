@@ -83,9 +83,9 @@ namespace chunks {
 
         unsigned int use_id = 3;
         if (region::flag(idx, CONSTRUCTION)) {
-            use_id = (unsigned int)material->constructed_texture_id;
+            use_id = (unsigned int)material->constructed_floor_texture_id;
         } else {
-            use_id = (unsigned int)material->base_texture_id;
+            use_id = (unsigned int)material->floor_texture_id;
         }
         if (use_id == 3) std::cout << "Material [" << material->name << "] is lacking a texture\n";
 
