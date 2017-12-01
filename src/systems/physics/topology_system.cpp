@@ -14,6 +14,7 @@
 #include "../../components/receives_signal.hpp"
 #include "../../render_engine/vox/renderables.hpp"
 #include "trigger_system.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
 
 using namespace bengine;
 
@@ -237,6 +238,7 @@ namespace systems {
 			}
 			// TODO: emit(renderables_changed_message{});
 			render::models_changed = true;
+			chunks::mark_chunk_dirty_by_tileidx(index);
 			// TODO: emit(map_changed_message{});
 		}
 
