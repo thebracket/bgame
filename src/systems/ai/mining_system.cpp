@@ -107,11 +107,11 @@ namespace systems {
 			}
 		}
 
-		bool first_run = false;
+		bool first_run = true;
 
 		void run(const double &duration_ms) {
 			if (first_run) {
-				first_run = true;
+				first_run = false;
 				mining_map.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
 				mining_targets.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
 			}
