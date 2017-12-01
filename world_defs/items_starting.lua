@@ -49,5 +49,6 @@ items["pickaxe"] = {
     glyph_ascii = glyphs['paragraph'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['tool'].id
+    stockpile = stockpiles['tool'].id,
+    vox = voxelId("pick")
 };
