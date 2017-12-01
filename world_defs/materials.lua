@@ -6,44 +6,55 @@ function tid()
     return tmp
 end
 
-terrain_textures = {
-    -- Hard coded for engine use
-    grass = { index=tid(), texture=tfn("grass") },
-    red_plastic = { index=tid(), texture=tfn("redplastic") }, -- This is used to indicate a missing texture
-    bark = { index=tid(), texture=tfn("bark") },
-    leaf = { index=tid(), texture=tfn("leaf") },
-    water = { index=tid(), texture=tfn("water") },
-    window = { index=tid(), texture=tfn("window") },
+terrain_textures = {}
 
-    -- Rock Types
-    sandstone = { index=tid(), texture=tfn("sandstone") },
-    copper_rock = { index=tid(), texture=tfn("copperrock") },
-    red_rock = { index=tid(), texture=tfn("redrock") },
-    limestone = { index=tid(), texture=tfn("limestone") },
-    granite = { index=tid(), texture=tfn("granite") },
-    greypocked = { index=tid(), texture=tfn("greypocked") },
-    granite = { index=tid(), texture=tfn("granite") },
-    slate = { index=tid(), texture=tfn("slate") },
-    blackrock = { index=tid(), texture=tfn("blackrock") },
+function registerTerrainTexture(name, filename)
+    if terrain_textures[name] ~= nil then
+        print("WARNING: Duplicate texture name mapping: " .. name)
+    else
+        terrain_textures[name] = { index=tid(), texture=tfn(filename) }
+        print("Texture: " .. name .. ", index " .. terrain_textures[name].index .. ", filename: " .. terrain_textures[name].texture)
+    end
+end
 
-    -- Constructed Types
-    blocks_rough = { index=tid(), texture=tfn("blocksrough") },
-    cobbles = { index=tid(), texture=tfn("cobbles") },
+-- These textures have hard-coded ID numbers. Be careful.
+registerTerrainTexture("grass", "grass")
+registerTerrainTexture("red_plastic", "redplastic")
+registerTerrainTexture("bark", "bark")
+registerTerrainTexture("leaf", "leaf")
+registerTerrainTexture("water", "water")
+registerTerrainTexture("window", "window")
 
-    -- Soils
-    sandy_soil = { index=tid(), texture=tfn("sandsoil") },
-    dry_dirt = { index=tid(), texture=tfn("drydirt") },
-    dry_brown_dirt = { index=tid(), texture=tfn("drybrowndirt") },
+-- These textures are all references by the materials system, and are dynamically assigned.
+-- They get baked into save games, so if you change them - generate a new world.
 
-    -- Synthetic
-    rubber = { index=tid(), texture=tfn("rubber") },
-    titanium = { index=tid(), texture=tfn("titanium") },
-    wood = { index=tid(), texture=tfn("bamboo") }
-}
+-- Rock types
+registerTerrainTexture("sandstone", "sandstone")
+registerTerrainTexture("copper_rock", "copperrock")
+registerTerrainTexture("red_rock", "redrock")
+registerTerrainTexture("limestone", "limestone")
+registerTerrainTexture("granite", "granite")
+registerTerrainTexture("greypocked", "greypocked")
+registerTerrainTexture("slate", "slate")
+registerTerrainTexture("blackrock", "blackrock")
+
+-- Constructed types
+registerTerrainTexture("blocks_rough", "blocksrough")
+registerTerrainTexture("cobbles", "cobbles")
+
+-- Soils
+registerTerrainTexture("sandy_soil", "sandsoil")
+registerTerrainTexture("dry_dirt", "drydirt")
+registerTerrainTexture("dry_brown_dirt", "drybrowndirt")
+
+-- Synthetic
+registerTerrainTexture("rubber", "rubber")
+registerTerrainTexture("titanium", "titanium")
+registerTerrainTexture("wood", "bamboo")
 
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
-        texidx = terrain_textures[name].index-3
+        texidx = terrain_textures[name].index
         print("chunkTex mapping: " .. name .. " : " .. texidx)
         return texidx
     else

@@ -14,7 +14,7 @@ void add_dig_target(int X, int Y, int radius, int depth, std::unordered_map<int,
             const int actual_x = X + x;
             const int actual_y = Y + y;
             const int idx = (actual_y * REGION_WIDTH) + actual_x;
-            if (heightmap[idx] < min_altitude) min_altitude = heightmap[idx];
+            if (idx > 0 && heightmap[idx] < min_altitude) min_altitude = heightmap[idx];
         }
     }
 

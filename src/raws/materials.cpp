@@ -164,8 +164,8 @@ void read_material_types() noexcept
             }
             if (field == "damage_bonus") m.damage_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "ac_bonus") m.ac_bonus = static_cast<float>(lua_tonumber(lua_state, -1));
-            if (field == "texture") m.base_texture_id = static_cast<int>(lua_tonumber(lua_state, -1)+3);
-            if (field == "constructed") m.constructed_texture_id = static_cast<int>(lua_tonumber(lua_state, -1)+3);
+            if (field == "texture") m.base_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
+            if (field == "constructed") m.constructed_texture_id = static_cast<int>(lua_tonumber(lua_state, -1));
 
             lua_pop(lua_state, 1);
         }
