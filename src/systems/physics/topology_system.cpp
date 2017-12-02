@@ -101,6 +101,7 @@ namespace systems {
 						if (e.x + X > 0 && e.x + X < REGION_WIDTH && e.y + Y > 0 && e.y + Y < REGION_HEIGHT && e.z + Z > 0 && e.z + Z<REGION_DEPTH) {
 							reveal(mapidx(e.x + X, e.y + Y, e.z + Z));
 							tile_calculate(e.x + X, e.y + Y, e.z + Z);
+							chunks::mark_chunk_dirty_by_tileidx(mapidx(e.x + X, e.y + Y, e.z + Z));
 						}
 					}
 				}

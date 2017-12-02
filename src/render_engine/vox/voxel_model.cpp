@@ -175,8 +175,8 @@ namespace vox {
 		assert(render->tmp_vao > 0);
 
 		// Build the instance buffer
-		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 		glInvalidateBufferData(instance_vbo_id);
+		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
 		glCheckError();
 
