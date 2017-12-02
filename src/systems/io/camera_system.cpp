@@ -7,6 +7,7 @@
 #include "../../render_engine/render_engine.hpp"
 #include "../keydamper.hpp"
 #include "../mouse.hpp"
+#include "../../render_engine/design_render.hpp"
 
 namespace systems {
     namespace camerasys {
@@ -45,6 +46,7 @@ namespace systems {
                 if (camera_position->region_z > REGION_DEPTH-1) camera_position->region_z = REGION_DEPTH-1;
                 render::camera_moved = true;
                 render::models_changed = true;
+				render::mode_change = true;
             }
 
             if (is_key_down(GLFW_KEY_PERIOD)) {
@@ -52,6 +54,7 @@ namespace systems {
                 if (camera_position->region_z < 1) camera_position->region_z = 1;
                 render::camera_moved = true;
                 render::models_changed = true;
+				render::mode_change = true;
             }
 
             if (is_key_down(GLFW_KEY_TAB)) {

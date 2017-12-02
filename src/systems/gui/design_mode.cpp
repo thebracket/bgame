@@ -2,9 +2,11 @@
 #include "../keydamper.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../../global_assets/game_pause.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
+#include "../../render_engine/design_render.hpp"
 
 namespace systems {
 	namespace design_mode {
@@ -14,9 +16,13 @@ namespace systems {
 
 		void run(const double &duration_ms) {
 			if (game_master_mode == PLAY) {
-				if (is_key_down(GLFW_KEY_D, false)) game_master_mode = DESIGN;
+				if (is_key_down(GLFW_KEY_D, false)) {
+					game_master_mode = DESIGN;
+					render::mode_change = true;
+				}
 			}
 			else if (game_master_mode == DESIGN) {
+				pause_mode = PAUSED; // Always pause while designing
 				if (is_key_down(GLFW_KEY_T, false)) game_design_mode = CHOPPING;
 				if (is_key_down(GLFW_KEY_B, false)) game_design_mode = BUILDING;
 				if (is_key_down(GLFW_KEY_G, false)) game_design_mode = GUARDPOINTS;

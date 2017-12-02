@@ -161,6 +161,7 @@ namespace systems {
 					return;
 				}
 				else if (m.step == ai_tag_work_miner::mining_steps::DROP_TOOLS) {
+					std::cout << "Mining - drop tools\n";
 					inventory_system::drop_item(m.current_pick, pos.x, pos.y, pos.z );
 					distance_map::refresh_pick_map();
 					work.cancel_work_tag(e);

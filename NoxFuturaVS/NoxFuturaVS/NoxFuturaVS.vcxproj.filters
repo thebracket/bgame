@@ -690,6 +690,12 @@
     <ClCompile Include="..\..\src\systems\gui\design_stockpiles.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\design_render.cpp">
+      <Filter>Source Files\render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp">
+      <Filter>Source Files\render_engine\chunks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1501,6 +1507,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_stockpiles.hpp">
       <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\design_render.hpp">
+      <Filter>Header Files\render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp">
+      <Filter>Header Files\render_engine\chunks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

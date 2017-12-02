@@ -149,7 +149,7 @@ namespace render {
 			else if (game_design_mode == DIGGING) {
 				for (const auto &mine : designations->mining) {
 					auto[x, y, z] = idxmap(mine.first);
-					if (z == camera_position->region_z) {
+					//if (z == camera_position->region_z) {
 						int glyph = 1;
 						switch (mine.second) {
 						case 1: glyph = 5; break; // Dig
@@ -162,7 +162,7 @@ namespace render {
 						}
 
 						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
-					}
+					//}
 				}
 			}
 		}

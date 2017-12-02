@@ -20,6 +20,8 @@
 #include "../systems/gui/particle_system.hpp"
 #include "camera.hpp"
 #include "renderbuffers.hpp"
+#include "../global_assets/game_mode.hpp"
+#include "design_render.hpp"
 
 namespace render {
 
@@ -88,8 +90,14 @@ namespace render {
 
         glUniform1i(assets::chunkshader->textureArray, 0);
 
-        do_chunk_render();
-		do_trans_chunk_render();
+		if (game_master_mode == DESIGN) {
+			// Render single layer
+			do_design_render();
+		}
+		else {
+			do_chunk_render();
+			do_trans_chunk_render();
+		}
     }
 
     static void render_to_light_buffer() {
@@ -157,6 +165,7 @@ namespace render {
 		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
 		systems::particles::build_buffers();
+		if (game_master_mode == DESIGN) update_design_buffers();
 		glCheckError();
 	}
 
@@ -230,8 +239,10 @@ namespace render {
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
         glCheckError();
-        render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
-		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
+		if (game_master_mode == PLAY) {
+			render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
+			systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
+		}
 
         // TODO: Render windows and other transparency
 

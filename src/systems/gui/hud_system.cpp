@@ -12,6 +12,7 @@
 #include "../../global_assets/game_mode.hpp"
 #include "../keydamper.hpp"
 #include "../../stdafx.h"
+#include "../../render_engine/design_render.hpp"
 
 namespace systems {
     namespace hud {
@@ -83,17 +84,16 @@ namespace systems {
             }
             if (ImGui::BeginMenu(menu_design.c_str())) {
                 if (ImGui::MenuItem(menu_design_mining.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
                     game_design_mode = DIGGING;
-                    world_changed=true;*/
+					render::mode_change = true;
                 }
                 if (ImGui::MenuItem(menu_design_building.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                    game_design_mode = BUILDING;*/
+                    game_design_mode = BUILDING;
+					render::mode_change = true;
                 }
                 if (ImGui::MenuItem(menu_design_tree_cutting.c_str())) {
                     game_master_mode = DESIGN;
@@ -101,28 +101,28 @@ namespace systems {
                     game_design_mode = CHOPPING;
                 }
                 if (ImGui::MenuItem(menu_design_guard.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                    game_design_mode = GUARDPOINTS;*/
+                    game_design_mode = GUARDPOINTS;
+					render::mode_change = true;
                 }
                 if (ImGui::MenuItem(menu_design_stockpiles.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                    game_design_mode = STOCKPILES;*/
+                    game_design_mode = STOCKPILES;
+					render::mode_change = true;
                 }
                 if (ImGui::MenuItem(menu_design_harvest.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                    game_design_mode = HARVEST;*/
+                    game_design_mode = HARVEST;
+					render::mode_change = true;
                 }
                 if (ImGui::MenuItem(menu_design_architecture.c_str())) {
-                    /*game_master_mode = DESIGN;
+                    game_master_mode = DESIGN;
                     pause_mode = PAUSED;
-                    emit_deferred(map_dirty_message{});
-                    game_design_mode = ARCHITECTURE;*/
+                    game_design_mode = ARCHITECTURE;
+					render::mode_change = true;
                 }
                 ImGui::EndMenu();
             }
@@ -154,8 +154,10 @@ namespace systems {
             ImGui::EndMainMenuBar();
 
 			// Keyboard shortcuts
-			if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
-			if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
+			if (game_master_mode == PLAY) {
+				if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
+				if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
+			}
 		}
     }
 }

@@ -53,14 +53,6 @@ namespace chunks {
         void greedy_cubes(boost::container::flat_map<int, unsigned int> &cubes, const int &layer);
         void update_buffer();
 		void update_trans_buffer();
-        void add_floor_geometry(std::vector<float> &v, const float &tile_x, const float &tile_y, const float &tile_z,
-                                const float &width, const float &height, const float &texture_id);
-        void add_cube_geometry(std::vector<float> &v, const float &tile_x, const float &tile_y, const float &tile_z,
-								const float &width, const float &height, const float &texture_id);
-		void add_water_geometry(std::vector<float> &v, const float &tile_x, const float &tile_y, const float &tile_z,
-			const float &width, const float &height, const float &texture_id, const uint8_t &water_level);
-		void add_ramp_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
-			const float &width, const float &height, const float &texture_id, const float &ne, const float &se, const float &sw, const float &nw);
 	};
 
     extern std::array<chunk_t, CHUNKS_TOTAL> chunks;

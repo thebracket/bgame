@@ -210,6 +210,8 @@
     <ClCompile Include="..\..\src\render_engine\camera.cpp" />
     <ClCompile Include="..\..\src\render_engine\chunks\chunks.cpp" />
     <ClCompile Include="..\..\src\render_engine\chunks\cursors.cpp" />
+    <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp" />
+    <ClCompile Include="..\..\src\render_engine\design_render.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\bloom_ping_pong.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp" />
@@ -481,6 +483,8 @@
     <ClInclude Include="..\..\src\render_engine\chunks\chunks.hpp" />
     <ClInclude Include="..\..\src\render_engine\chunks\constants.hpp" />
     <ClInclude Include="..\..\src\render_engine\chunks\cursors.hpp" />
+    <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp" />
+    <ClInclude Include="..\..\src\render_engine\design_render.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\bloom_ping_pong.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp" />
