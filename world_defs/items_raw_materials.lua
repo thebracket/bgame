@@ -19,7 +19,8 @@ items["stone_boulder"] = {
     name = "Boulder",	description = "A large stone boulder",
     itemtype = {"component"}, glyph = glyphs['boulder'], foreground = colors['white'], background = colors['black'],
     glyph_ascii = glyphs['small_circle'],
-    stockpile = stockpiles['stone'].id
+    stockpile = stockpiles['stone'].id,
+    vox = voxelId("boulder")
 };
 
 -- Ore is a generic category for unrefined metals. They can be smelted to make metals, and are created by mining.
@@ -27,7 +28,8 @@ items["ore"] = {
     name = "Ore", description = "A lump of unrefined metal",
     itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['white'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['ore'].id
+    stockpile = stockpiles['ore'].id,
+    vox = voxelId("ore")
 };
 
 -- Saltpeter is handled separately because it isn't smelted. It goes into gunpowder.
@@ -35,7 +37,8 @@ items["saltpeter_ore"] = {
     name = "Saltpeter Ore", description = "A lump of unrefined saltpeter",
     itemtype = {"component"}, glyph = glyphs['star'], foreground = colors['white'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['ore'].id
+    stockpile = stockpiles['ore'].id,
+    vox = voxelId("ore")
 };
 
 -- Alabaster powder is used for making plaster, casts and similar.
@@ -43,7 +46,8 @@ items["alabaster_powder"] = {
     name = "Alabaster Powder", description = "A lump of unrefined alabaster powder",
     itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['white'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['powder'].id
+    stockpile = stockpiles['powder'].id,
+    vox = voxelId("powder")
 };
 
 -- Gypsum is used in cement
@@ -51,7 +55,8 @@ items["gypsum_powder"] = {
     name = "Gypsum Powder", description = "A lump of unrefined gypsum powder",
     itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['white'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['powder'].id
+    stockpile = stockpiles['powder'].id,
+    vox = voxelId("powder")
 };
 
 -- Coal is a burnable substance, used for fuel in various reactions.
@@ -59,7 +64,8 @@ items["coal"] = {
     name = "Coal", description = "A lump of unrefined coal",
     itemtype = {"component"}, glyph = glyphs['ore'], foreground = colors['dark_grey'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['stone'].id
+    stockpile = stockpiles['stone'].id,
+    vox = voxelId("boulder")
 };
 
 -- Sulphur is a separate powder that will eventually be used in a lot of things.
@@ -67,7 +73,8 @@ items["sulphur"] = {
     name = "Sulphur", description = "A lump of sulphur",
     itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['yellow'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['stone'].id
+    stockpile = stockpiles['stone'].id,
+    vox = voxelId("powder")
 };
 
 -- Flint can be knapped into weaponry
@@ -75,7 +82,8 @@ items["flint"] = {
     name = "Flint", description = "A piece of flint",
     itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['brown'], background = colors['black'],
     glyph_ascii = glyphs['star'],
-    stockpile = stockpiles['stone'].id
+    stockpile = stockpiles['stone'].id,
+    vox = voxelId("boulder")
 };
 
 -- Sand is the basis of the glass and silicon industries
@@ -83,7 +91,8 @@ items["sand"] = {
     name = "Sand", description = "A lump of raw sand",
     itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['yellow'], background = colors['black'],
     glyph_ascii = glyphs['double_wave'],
-    stockpile = stockpiles['sand'].id
+    stockpile = stockpiles['sand'].id,
+    vox = voxelId("powder")
 };
 
 -- Oil will be a fuel and go into plastics
@@ -91,7 +100,8 @@ items["oil"] = {
     name = "Oil", description = "A blob of viscous oil",
     itemtype = {"component"}, glyph = glyphs['oil'], foreground = colors['white'], background = colors['black'],
     glyph_ascii = glyphs['double_wave'],
-    stockpile = stockpiles['oil'].id
+    stockpile = stockpiles['oil'].id,
+    vox = voxelId("oil")
 };
 
 -- Clay is baked into bricks
@@ -99,7 +109,8 @@ items["clay"] = {
     name = "Clay", description = "A blob of clay",
     itemtype = {"component"}, glyph = glyphs['inset_square'], foreground = colors['dark_red'], background = colors['black'],
     glyph_ascii = glyphs['inset_square'],
-    stockpile = stockpiles['stone'].id
+    stockpile = stockpiles['stone'].id,
+    vox = voxelId("boulder")
 };
 
 -- Topsoil will be used in farming
@@ -107,7 +118,8 @@ items["topsoil"] = {
     name = "Topsoil", description = "A lump of rich topsoil",
     itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['brown'], background = colors['black'],
     glyph_ascii = glyphs['double_wave'],
-    stockpile = stockpiles['soil'].id
+    stockpile = stockpiles['soil'].id,
+    vox = voxelId("powder")
 };
 
 -- Charcoal is the primary burnable fuel. It is made from wooden offcuts, or coal.

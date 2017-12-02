@@ -28,7 +28,11 @@ voxel_models = {
     stairs_updown = { model=vfn("stairs-updown"), id=25 },
     tailor = { model=vfn("tailor"), id=26 },
     forge = { model=vfn("forge"), id=27 },
-    pick = { model=vfn("simplepick"), id=28 }
+    pick = { model=vfn("simplepick"), id=28 },
+    boulder = { model=vfn("boulder"), id=29 },
+    ore = { model=vfn("ore"), id=30 },
+    powder = { model=vfn("powder"), id=31 },
+    oil = { model=vfn("oil"), id=32 }
 }
 
 function voxelId(name)
