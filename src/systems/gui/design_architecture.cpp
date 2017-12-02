@@ -56,9 +56,9 @@ namespace systems {
 			// Options for wall/floor/up/down/updown/ramp/bridge
 			ImGui::RadioButton("Wall", &architecture_mode, 0); ImGui::SameLine();
 			ImGui::RadioButton("Floor", &architecture_mode, 1); ImGui::SameLine();
-			//ImGui::RadioButton("Up", &architecture_mode, 2); ImGui::SameLine();
-			//ImGui::RadioButton("Down", &architecture_mode, 3);
-			//ImGui::RadioButton("Up/Down", &architecture_mode, 4); ImGui::SameLine();
+			ImGui::RadioButton("Up", &architecture_mode, 2); ImGui::SameLine();
+			ImGui::RadioButton("Down", &architecture_mode, 3);
+			ImGui::RadioButton("Up/Down", &architecture_mode, 4); ImGui::SameLine();
 			ImGui::RadioButton("Ramp", &architecture_mode, 5); ImGui::SameLine();
 			ImGui::RadioButton("Bridge", &architecture_mode, 6);
 
