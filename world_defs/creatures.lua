@@ -41,7 +41,8 @@ creatures = {
         glyph = glyphs['H'], color=colors['wood_brown'],
         glyph_ascii = glyphs['d'],
         hp_n = 1, hp_dice = 10, hp_mod = 0,
-        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
+        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0,
+        vox = voxelId("horse")
     },
     armadillo = {
         name = "Armadillo", male_name = "Male", female_name = "Female", group_name = "Armadillos",
@@ -61,7 +62,8 @@ creatures = {
         glyph = glyphs['armadillo'], color=colors['wood_brown'],
         glyph_ascii = glyphs['a'],
         hp_n = 1, hp_dice = 4, hp_mod = 0,
-        group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
+        group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0,
+        vox = voxelId("armadillo")
     },
     badger = {
         name = "Badger", male_name = "Male", female_name = "Female", group_name = "Badgers",
@@ -81,7 +83,8 @@ creatures = {
         glyph = glyphs['badger'], color=colors['wood_brown'],
         glyph_ascii = glyphs['b'],
         hp_n = 1, hp_dice = 8, hp_mod = 5,
-        group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0
+        group_size_n_dice = 1, group_size_dice = 8, group_size_mod = 0,
+        vox = voxelId("badger")
     },
     boar = {
         name = "Boar", male_name = "Male", female_name = "Female", group_name = "Boars",
@@ -183,6 +186,7 @@ creatures = {
         glyph = glyphs['d'], color=colors['wood_brown'],
         glyph_ascii = glyphs['d'],
         hp_n = 1, hp_dice = 8, hp_mod = 2,
-        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
+        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0,
+        vox = voxelId("deer")
     }
 }

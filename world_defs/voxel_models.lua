@@ -35,7 +35,10 @@ voxel_models = {
     oil = { model=vfn("oil"), id=32 },
     stonecutter = { model=vfn("stonecutter"), id=33 },
     smelter = { model=vfn("smelter"), id=34 },
-    deer = { model=vfn("deer"), id=35 }
+    deer = { model=vfn("deer"), id=35 },
+    horse = { model=vfn("horse"), id=36 },
+    armadillo = { model=vfn("armadillo"), id=37 },
+    badger = { model=vfn("badget"), id=38 }
 }
 
 function voxelId(name)
