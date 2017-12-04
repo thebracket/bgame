@@ -95,6 +95,7 @@ buildings["stonecutter"] = {
             {glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']}
         }
     },
+    vox = voxelId("stonecutter")
 };
 
 reactions["cut_stone"] = {
@@ -156,6 +157,7 @@ buildings["smelter"] = {
             {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
         }
     },
+    vox = voxelId("smelter")
 };
 
 reactions["smelt_ore"] = {

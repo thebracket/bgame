@@ -90,7 +90,7 @@ namespace render {
 
         glUniform1i(assets::chunkshader->textureArray, 0);
 
-		if (game_master_mode == DESIGN) {
+		if (game_master_mode == DESIGN && game_design_mode == DIGGING) {
 			// Render single layer
 			do_design_render();
 		}
@@ -165,7 +165,7 @@ namespace render {
 		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
 		systems::particles::build_buffers();
-		if (game_master_mode == DESIGN) update_design_buffers();
+		if (game_master_mode == DESIGN && game_design_mode == DIGGING) update_design_buffers();
 		glCheckError();
 	}
 
@@ -239,10 +239,8 @@ namespace render {
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
         glCheckError();
-		if (game_master_mode == PLAY) {
-			render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
-			systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
-		}
+		render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
+		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
 
         // TODO: Render windows and other transparency
 
