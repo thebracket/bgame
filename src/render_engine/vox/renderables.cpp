@@ -273,7 +273,7 @@ namespace render {
 	static void build_creature_models() {
 		bengine::each<position_t, renderable_t, grazer_ai>([](bengine::entity_t &e, position_t &pos, renderable_t &r, grazer_ai &g) {
 			if (r.vox != 0) {
-				std::cout << "Found critter " << r.vox << "\n";
+				//std::cout << "Found critter " << r.vox << "\n";
 				auto finder = models_to_render->find(r.vox);
 				vox::instance_t render_model{ pos.x, pos.z, pos.y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
 				if (finder != models_to_render->end()) {
