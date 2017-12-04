@@ -22,6 +22,7 @@ namespace systems {
 		const std::string win_wildlife_list = std::string(ICON_FA_PAW) + " Wildlife";
 		const std::string win_natives_list = std::string(ICON_FA_USER_SECRET) + " Natives";
 		const std::string btn_goto = std::string(ICON_FA_MAP_MARKER) + " Go To";
+		const std::string btn_goto_creature = std::string(ICON_FA_MAP_MARKER) + " Go To Creature";
 		const std::string btn_rogue = std::string(ICON_FA_USER) + " Control (Rogue Mode)";
 		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
@@ -107,7 +108,7 @@ namespace systems {
 			//ImGui::Begin(win_wildlife_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 			ImGui::PushItemWidth(-1);
 			ImGui::ListBox("## Critters", &current_critter, &creature_listbox_items[0], critters.size(), 10);
-			if (ImGui::Button(btn_goto.c_str())) {
+			if (ImGui::Button(btn_goto_creature.c_str())) {
 				auto selected_critter = critters[current_settler].first;
 				auto the_critter = entity(selected_critter);
 				if (the_critter) {

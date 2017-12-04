@@ -9,6 +9,7 @@
 #include "../../components/item.hpp"
 #include "../../components/item_carried.hpp"
 #include "../../components/renderable.hpp"
+#include "../../components/grazer_ai.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "voxel_model.hpp"
 #include "voxreader.hpp"
@@ -269,6 +270,25 @@ namespace render {
 		}
 	}
 
+	static void build_creature_models() {
+		bengine::each<position_t, renderable_t, grazer_ai>([](bengine::entity_t &e, position_t &pos, renderable_t &r, grazer_ai &g) {
+			if (r.vox != 0) {
+				std::cout << "Found critter " << r.vox << "\n";
+				auto finder = models_to_render->find(r.vox);
+				vox::instance_t render_model{ pos.x, pos.z, pos.y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+				if (finder != models_to_render->end()) {
+					finder->second.push_back(render_model);
+				}
+				else {
+					models_to_render->insert(std::make_pair(r.vox, std::vector<vox::instance_t>{ render_model }));
+				}
+			}
+			else {
+				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.z, pos.y, r.foreground, r.glyph_ascii });
+			}
+		});
+	}
+
 	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
 		if (sprite_vao == 0) glGenVertexArrays(1, &sprite_vao);
 		if (sprite_vbo == 0) glGenBuffers(1, &sprite_vbo);
@@ -289,10 +309,9 @@ namespace render {
 			build_chunk_models(visible_chunks);
 			build_voxel_buildings();
 			build_voxel_items();
+			build_creature_models();
 			// Regular old renderables!
-			bengine::each<position_t, renderable_t>([](bengine::entity_t &e, position_t &pos, renderable_t &r) {
-				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, r.foreground, r.glyph_ascii });
-			});
+			
 
 			build_composites();
 

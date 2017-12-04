@@ -78,7 +78,7 @@ namespace systems {
 						if (rng.roll_dice(1, 4) <= 2) male = false;
 
 						position_t pos{ base_x, base_y, base_z };
-						renderable_t render{ critter_def.glyph, critter_def.glyph_ascii, critter_def.fg, color_t(0.0F,0.0F,0.0F) };
+						renderable_t render{ critter_def.glyph, critter_def.glyph_ascii, critter_def.fg, color_t(0.0F,0.0F,0.0F), critter_def.vox };
 						name_t name{};
 						name.first_name = critter_def.name;
 						if (male) {

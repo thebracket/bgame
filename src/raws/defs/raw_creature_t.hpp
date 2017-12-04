@@ -40,6 +40,7 @@ struct raw_creature_t {
     creature_ai_t ai;
     uint16_t glyph;
     uint16_t glyph_ascii;
+	int vox = 0;
     bengine::color_t fg;
     int hp_n, hp_dice, hp_mod;
     int group_size_n_dice, group_size_dice, group_size_mod;

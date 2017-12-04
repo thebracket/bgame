@@ -34,7 +34,8 @@ voxel_models = {
     powder = { model=vfn("powder"), id=31 },
     oil = { model=vfn("oil"), id=32 },
     stonecutter = { model=vfn("stonecutter"), id=33 },
-    smelter = { model=vfn("smelter"), id=34 }
+    smelter = { model=vfn("smelter"), id=34 },
+    deer = { model=vfn("deer"), id=35 }
 }
 
 function voxelId(name)

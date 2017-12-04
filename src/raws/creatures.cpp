@@ -129,7 +129,8 @@ void read_creature_types() noexcept
             }
             if (field == "glyph") s.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "glyph") s.glyph_ascii = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
-            if (field == "hp_n") s.hp_n = static_cast<int>(lua_tonumber(lua_state, -1));
+			if (field == "vox") s.vox = static_cast<int>(lua_tonumber(lua_state, -1));
+			if (field == "hp_n") s.hp_n = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "hp_dice") s.hp_dice = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "hp_mod") s.hp_mod = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "group_size_n_dice") s.group_size_n_dice = static_cast<int>(lua_tonumber(lua_state, -1));

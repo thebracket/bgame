@@ -17,7 +17,8 @@ creatures = {
         glyph = glyphs['deer'], color=colors['wood_brown'],
         glyph_ascii = glyphs['d'],
         hp_n = 1, hp_dice = 10, hp_mod = 0,
-        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0
+        group_size_n_dice = 1, group_size_dice = 4, group_size_mod = 0,
+        vox = voxelId("deer")
     },
     horse = {
         name = "Horse", male_name = "Stallion", female_name = "Mare", group_name = "Horses",
