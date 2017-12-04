@@ -15,6 +15,7 @@
 #include "../../render_engine/vox/renderables.hpp"
 #include "trigger_system.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
+#include "../gui/particle_system.hpp"
 
 using namespace bengine;
 
@@ -56,13 +57,13 @@ namespace systems {
 
 		void dig(const perform_mining_message &e) {
 			make_floor(e.target_idx);
-			auto &[x,y,z] = idxmap(e.target_idx);
+			//auto &[x,y,z] = idxmap(e.target_idx);
 			// TODO: emit_deferred(tile_removed_message{ x,y,z });
 		}
 
 		void channel(const perform_mining_message &e) {
 			make_open_space(e.target_idx);
-			auto &[x,y,z] = idxmap(e.target_idx);
+			//auto &[x,y,z] = idxmap(e.target_idx);
 			// TODO: emit_deferred(tile_removed_message{ x,y,z });
 
 			// Add ramp
@@ -232,6 +233,7 @@ namespace systems {
 					}
 				}
 			}
+			particles::block_destruction_effect(construction_pos->x, construction_pos->y, construction_pos->z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_LUMBERJACK);
 
 			if (entity_should_be_deleted) {
 				delete_entity(e.entity_id);
