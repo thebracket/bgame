@@ -5,6 +5,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../raws/plants.hpp"
 #include "../../raws/defs/plant_t.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
 
 using namespace bengine;
 using namespace region;
@@ -29,12 +30,13 @@ namespace systems {
 			damage.process_all([](const vegetation_damage_message &msg) {
 				damage_vegetation(msg.idx, msg.damage);
 
-				if (veg_hp(msg.idx) < 1) {
+				if (veg_hp(msg.idx) < 1 && veg_hp(msg.idx)>0) {
 					// We've destroyed the vegetation!
 					//std::cout << "Vegetation Destroyed\n";
 					set_veg_type(msg.idx, 0);
 					calc_render(msg.idx);
 					// TODO: emit(map_dirty_message{});
+					//chunks::mark_chunk_dirty_by_tileidx(msg.idx);
 				}
 			});
 

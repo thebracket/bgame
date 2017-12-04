@@ -16,6 +16,7 @@
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
+#include "../../physics/vegetation_system.hpp"
 
 namespace systems {
 	namespace ai_idle {
@@ -32,8 +33,10 @@ namespace systems {
 
 			// Grazers simply eat vegetation or move
 			const auto idx = mapidx(pos->x, pos->y, pos->z);
-			if (veg_type(idx) > 0) {
-				// TODO: if (rng.roll_dice(1, 6) == 1) emit_deferred(vegetation_damage_message{ idx, 1 });
+			if (veg_type(idx) > 0 && rng.roll_dice(1,6)>3) {
+				if (rng.roll_dice(1, 6) == 1) {
+					vegetation::inflict_damage(idx, 1);
+				}
 			}
 			else {
 				request_random_move(e.id);

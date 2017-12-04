@@ -38,7 +38,7 @@ voxel_models = {
     deer = { model=vfn("deer"), id=35 },
     horse = { model=vfn("horse"), id=36 },
     armadillo = { model=vfn("armadillo"), id=37 },
-    badger = { model=vfn("badget"), id=38 }
+    badger = { model=vfn("badger"), id=38 }
 }
 
 function voxelId(name)
