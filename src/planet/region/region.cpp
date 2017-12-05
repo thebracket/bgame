@@ -36,10 +36,10 @@ namespace region {
 		}
 
 		int region_x, region_y, biome_idx;
-		std::vector<bool> revealed;
-		std::vector<bool> visible;
-		std::vector<bool> solid;
-		std::vector<bool> opaque;
+		std::vector<char> revealed;
+		std::vector<char> visible;
+		std::vector<char> solid;
+		std::vector<char> opaque;
 
 		// New tile format data
 		std::vector<uint8_t> tile_type;
@@ -55,8 +55,8 @@ namespace region {
 		std::vector<std::size_t> stockpile_id;
 		std::vector<bengine::bitset8> tile_flags;
 		std::vector<uint8_t> water_level;
-		std::vector<bool> above_ground;
-		std::vector<bool> blood_stains;
+		std::vector<char> above_ground;
+		std::vector<char> blood_stains;
 
 		void tile_recalc_all();
 
@@ -398,10 +398,10 @@ namespace region {
 		deflate.serialize(current_region->biome_idx);
 		deflate.serialize(current_region->next_tree_id);
 
-		deflate.serialize_vector_bool(current_region->revealed);
-		deflate.serialize_vector_bool(current_region->visible);
-		deflate.serialize_vector_bool(current_region->solid);
-		deflate.serialize_vector_bool(current_region->opaque);
+		deflate.serialize(current_region->revealed);
+		deflate.serialize(current_region->visible);
+		deflate.serialize(current_region->solid);
+		deflate.serialize(current_region->opaque);
 		deflate.serialize(current_region->tile_type);
 		deflate.serialize(current_region->tile_material);
 		deflate.serialize(current_region->hit_points);
@@ -413,7 +413,7 @@ namespace region {
 		deflate.serialize(current_region->tile_vegetation_lifecycle);
 		deflate.serialize(current_region->tile_flags);
 		deflate.serialize(current_region->water_level);
-		deflate.serialize_vector_bool(current_region->blood_stains);
+		deflate.serialize(current_region->blood_stains);
 		deflate.serialize(current_region->stockpile_id);
 		deflate.serialize(current_region->bridge_id);
 	}
