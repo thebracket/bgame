@@ -1,5 +1,6 @@
 #include "dijkstra_map.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../bengine/threadpool.h"
 
 namespace systems {
 	namespace dijkstra {
@@ -23,14 +24,18 @@ namespace systems {
 		}
 
 		void dijkstra_map::update(const std::vector<int> starting_points) {
-			std::thread{ &dijkstra_map::update_async, this, starting_points }.detach();
+			bengine::thread_pool->push([this, starting_points](int id) {
+				this->update_async(id, starting_points);
+			});
 		}
 
 		void dijkstra_map::update_architecture(const std::vector<int> starting_points) {
-			std::thread{ &dijkstra_map::update_architecture_async, this, starting_points }.detach();
+			bengine::thread_pool->push([this, starting_points](int id) {
+				this->update_architecture_async(starting_points);
+			});
 		}
 
-		void dijkstra_map::update_async(const std::vector<int> &starting_points)
+		void dijkstra_map::update_async(int thread_id, const std::vector<int> &starting_points)
 		{
 			using namespace region;
 			std::vector<int16_t> new_map;

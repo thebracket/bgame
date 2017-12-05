@@ -18,7 +18,7 @@ namespace systems {
 		private:
 			std::mutex map_lock;
 			std::vector<int16_t> distance_map;
-			void update_async(const std::vector<int> &starting_points);
+			void update_async(int thread_id, const std::vector<int> &starting_points);
 			void update_architecture_async(const std::vector<int> &starting_points);
 		};
 
