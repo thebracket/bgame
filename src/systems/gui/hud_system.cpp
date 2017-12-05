@@ -157,6 +157,7 @@ namespace systems {
 			if (game_master_mode == PLAY) {
 				if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
 				if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
+				if (is_key_down(GLFW_KEY_APOSTROPHE)) render::depth_test_render = !render::depth_test_render;
 			}
 		}
     }

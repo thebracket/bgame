@@ -446,7 +446,7 @@ namespace render {
 	}
 
 	void render_voxel_models_shadow(glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix) {
-		//assets::voxel_shader->use();
+		assets::voxel_shadow_shader->use();
 		//glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
 		glUniformMatrix4fv(assets::voxel_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
 		glUniformMatrix4fv(assets::voxel_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));

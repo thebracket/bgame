@@ -2,6 +2,7 @@
 
 #include "../render_engine/shaders/chunk_shader.hpp"
 #include "../render_engine/shaders/voxel_shader.hpp"
+#include "../render_engine/shaders/voxel_shadow_shader.hpp"
 #include "../render_engine/shaders/lightstage_shader.hpp"
 #include <memory>
 
@@ -15,6 +16,7 @@ namespace assets {
     extern unsigned int bloom_shader;
 	extern unsigned int sprite_shader;
     extern std::unique_ptr<voxel_shader_t> voxel_shader;
+	extern std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
 	extern unsigned int cursor_shader;
 	extern unsigned int particle_shader;
 	extern unsigned int dirlight_shader;

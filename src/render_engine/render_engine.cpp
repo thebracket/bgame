@@ -213,9 +213,11 @@ namespace render {
 				}
 			}
 		}
-		//render_voxel_models_shadow(camera_projection_matrix, camera_modelview_matrix);
+		render_voxel_models_shadow(projection, modelview);
 		glCheckError();
 	}
+
+	bool depth_test_render = false;
 
     void render_gl(const double &duration_ms) {
         glCheckError();
@@ -266,7 +268,8 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
-        //render_test_quad(light_stage_buffer->bright_tex);
+
+		if (depth_test_render) render_test_quad(sun_buffer->depth_tex);
 
         // TODO: Final combination and post-process
 

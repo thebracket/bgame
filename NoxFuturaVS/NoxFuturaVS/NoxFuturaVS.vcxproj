@@ -224,6 +224,7 @@
     <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
@@ -499,6 +500,7 @@
     <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
