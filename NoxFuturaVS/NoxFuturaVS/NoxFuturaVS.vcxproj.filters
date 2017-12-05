@@ -696,6 +696,9 @@
     <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp">
       <Filter>Source Files\render_engine\chunks</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp">
+      <Filter>Source Files\render_engine\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1513,6 +1516,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp">
       <Filter>Header Files\render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp">
+      <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

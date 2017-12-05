@@ -101,27 +101,30 @@ namespace render {
     }
 
     static void render_to_light_buffer() {
-        glUseProgram(assets::lightstage_shader);
+		using assets::lightstage_shader;
+		lightstage_shader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "albedo_tex"), 0);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "normal_tex"), 1);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "position_tex"), 2);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "ao_tex"), 3);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "info_tex"), 4);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_pos_tex"), 5);
-        glUniform1i(glGetUniformLocation(assets::lightstage_shader, "light_col_tex"), 6);
-        glUniform3f(glGetUniformLocation(assets::lightstage_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
-		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "sun_direction"), calendar->sun_x, calendar->sun_y, calendar->sun_z);
-		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "moon_direction"), calendar->moon_x, calendar->moon_y, calendar->moon_z);
-		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "sun_color"), calendar->sun_r, calendar->sun_g, calendar->sun_b);
-		glUniform3f(glGetUniformLocation(assets::lightstage_shader, "moon_color"), calendar->moon_r, calendar->moon_g, calendar->moon_b);
-		glUniform1i(glGetUniformLocation(assets::lightstage_shader, "sun_depth_tex"), 7);
-		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "sun_projection"), 1, GL_FALSE, glm::value_ptr(sun_projection_matrix));
-		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "sun_modelview"), 1, GL_FALSE, glm::value_ptr(sun_modelview_matrix));
-		glUniform1i(glGetUniformLocation(assets::lightstage_shader, "moon_depth_tex"), 8);
-		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "moon_projection"), 1, GL_FALSE, glm::value_ptr(moon_projection_matrix));
-		glUniformMatrix4fv(glGetUniformLocation(assets::lightstage_shader, "moon_modelview"), 1, GL_FALSE, glm::value_ptr(moon_modelview_matrix));
+
+        glUniform1i(lightstage_shader->albedo_tex, 0);
+        glUniform1i(lightstage_shader->normal_tex, 1);
+        glUniform1i(lightstage_shader->position_tex, 2);
+        glUniform1i(lightstage_shader->ao_tex, 3);
+        glUniform1i(lightstage_shader->info_tex, 4);
+        glUniform1i(lightstage_shader->light_pos_tex, 5);
+        glUniform1i(lightstage_shader->light_col_tex, 6);
+        glUniform3f(lightstage_shader->camera_position, (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
+		glUniform3f(lightstage_shader->sun_direction, calendar->sun_x, calendar->sun_y, calendar->sun_z);
+		glUniform3f(lightstage_shader->moon_direction, calendar->moon_x, calendar->moon_y, calendar->moon_z);
+		glUniform3f(lightstage_shader->sun_color, calendar->sun_r, calendar->sun_g, calendar->sun_b);
+		glUniform3f(lightstage_shader->moon_color, calendar->moon_r, calendar->moon_g, calendar->moon_b);
+		glUniform1i(lightstage_shader->sun_depth_tex, 7);
+		glUniformMatrix4fv(lightstage_shader->sun_projection, 1, GL_FALSE, glm::value_ptr(sun_projection_matrix));
+		glUniformMatrix4fv(lightstage_shader->sun_modelview, 1, GL_FALSE, glm::value_ptr(sun_modelview_matrix));
+		glUniform1i(lightstage_shader->moon_depth_tex, 8);
+		glUniformMatrix4fv(lightstage_shader->moon_projection, 1, GL_FALSE, glm::value_ptr(moon_projection_matrix));
+		glUniformMatrix4fv(lightstage_shader->moon_modelview, 1, GL_FALSE, glm::value_ptr(moon_modelview_matrix));
+
 		glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);

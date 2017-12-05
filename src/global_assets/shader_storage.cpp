@@ -5,7 +5,7 @@ namespace assets {
     unsigned int worldgenshader = 0;
 	std::unique_ptr<chunk_shader_t> chunkshader;
     unsigned int depthquad_shader = 0;
-    unsigned int lightstage_shader = 0;
+	std::unique_ptr<lightstage_shader_t> lightstage_shader;
     unsigned int tonemap_shader = 0;
     unsigned int bloom_shader = 0;
 	unsigned int sprite_shader = 0;
