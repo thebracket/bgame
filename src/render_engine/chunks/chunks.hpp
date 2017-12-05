@@ -29,9 +29,9 @@ namespace chunks {
             base_x = x;
             base_y = y;
             base_z = z;
-            for (auto &layer : layers) {
-                layer.v.reserve(54756);
-            }
+            //for (auto &layer : layers) {
+            //    layer.v.reserve(54756);
+            //}
         }
 
         int index = 0;

@@ -283,11 +283,16 @@ namespace chunks {
     }       
 	
     void chunk_t::update_buffer() {
-        //if (vbo > 0) glDeleteBuffers(1, &vbo);
-        //if (vao > 0) glDeleteVertexArrays(1, &vao);
-
-        if (vao < 1) { glGenVertexArrays(1, &vao); glCheckError(); }
-        if (vbo < 1) { glGenBuffers(1, &vbo); glCheckError(); }
+		bool reset_vao = false;
+        if (vao < 1) { 
+			glGenVertexArrays(1, &vao); 
+			glCheckError(); 
+			reset_vao = true;
+		}
+        if (vbo < 1) { 
+			glGenBuffers(1, &vbo); 
+			glCheckError(); 
+		}
 
         // Combine the layers into a temporary structure
         std::vector<float> data;
@@ -295,33 +300,41 @@ namespace chunks {
             data.insert(std::end(data), layer.v.begin(), layer.v.end());
             has_geometry = true;
             layer.v.clear();
+			layer.v.shrink_to_fit();
         }
 
-        glBindVertexArray(vao);
 		glInvalidateBufferData(vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0); // 0 = Vertex Position
+		if (reset_vao) {
+			glBindVertexArray(vao);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-        glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-        glEnableVertexAttribArray(2); // 2 = Normals
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+			glEnableVertexAttribArray(2); // 2 = Normals
 
-        glBindVertexArray(0);
-		glCheckError();
+			glBindVertexArray(0);
+			glCheckError();
+		}
     }
 
 	void chunk_t::update_trans_buffer() {
-		if (tvbo > 0) glDeleteBuffers(1, &tvbo);
-		if (tvao > 0) glDeleteVertexArrays(1, &tvao);
-
-		if (tvao < 1) { glGenVertexArrays(1, &tvao); glCheckError(); }
-		if (tvbo < 1) { glGenBuffers(1, &tvbo); glCheckError(); }
+		bool reset_vao = false;
+		if (tvao < 1) { 
+			glGenVertexArrays(1, &tvao); 
+			glCheckError(); 
+			reset_vao = true;
+		}
+		if (tvbo < 1) { 
+			glGenBuffers(1, &tvbo); 
+			glCheckError(); 
+		}
 
 		// Combine the layers into a temporary structure
 		std::vector<float> data;
@@ -329,26 +342,29 @@ namespace chunks {
 			data.insert(std::end(data), layer.trans.begin(), layer.trans.end());
 			has_transparency = true;
 			layer.trans.clear();
+			layer.trans.shrink_to_fit();
 		}
 		if (data.size() == 0) return;
 
-		glBindVertexArray(tvao);
 		glInvalidateBufferData(tvbo);
 		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0); // 0 = Vertex Position
+		if (reset_vao) {
+			glBindVertexArray(tvao);
+			glBindBuffer(GL_ARRAY_BUFFER, tvbo);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-		glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-		glEnableVertexAttribArray(2); // 2 = Normals
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+			glEnableVertexAttribArray(2); // 2 = Normals
 
-		glBindVertexArray(0);
-		glCheckError();
+			glBindVertexArray(0);
+			glCheckError();
+		}
 	}
 
     void update_buffers() {
