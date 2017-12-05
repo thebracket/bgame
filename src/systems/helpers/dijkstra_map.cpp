@@ -44,6 +44,7 @@ namespace systems {
 
 			// Populate the open list with starting points
 			std::deque<std::pair<int, int>> open_nodes;
+			open_nodes.resize(REGION_TILES_COUNT);
 			for (const int &sp : starting_points) {
 				open_nodes.emplace_back(std::make_pair(sp, 0));
 			}
@@ -93,6 +94,7 @@ namespace systems {
 
 			// Populate the open list with starting points
 			std::deque<std::pair<int, int>> open_nodes;
+			open_nodes.resize(REGION_TILES_COUNT);
 			for (const int &sp : starting_points) {
 				open_nodes.emplace_back(std::make_pair(sp, 0));
 			}
