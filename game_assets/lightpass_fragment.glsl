@@ -185,14 +185,7 @@ void main()
 
     // SSAO
     const float kernelSize = 64.0;
-    const float radius = 0.1;
-
-    vec2 screenSize = textureSize(albedo_tex, 0);
-    vec2 noiseScale = screenSize/4.0;
-    vec3 randomVec = texture(noise_tex, TexCoords * noiseScale).xyz;
-    vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
-    vec3 bitangent = cross(normal, tangent);
-    mat3 TBN = mat3(tangent, bitangent, normal);
+    const float radius = 0.01;
 
     vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
     float occlusion = 0;
