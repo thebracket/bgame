@@ -702,6 +702,9 @@
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp">
       <Filter>Source Files\render_engine\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\ssao.cpp">
+      <Filter>Source Files\render_engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1525,6 +1528,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp">
       <Filter>Header Files\render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\ssao.hpp">
+      <Filter>Header Files\render_engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

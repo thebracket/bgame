@@ -22,6 +22,7 @@
 #include "renderbuffers.hpp"
 #include "../global_assets/game_mode.hpp"
 #include "design_render.hpp"
+#include "ssao.hpp"
 
 namespace render {
 
@@ -124,6 +125,10 @@ namespace render {
 		glUniform1i(lightstage_shader->moon_depth_tex, 8);
 		glUniformMatrix4fv(lightstage_shader->moon_projection, 1, GL_FALSE, glm::value_ptr(moon_projection_matrix));
 		glUniformMatrix4fv(lightstage_shader->moon_modelview, 1, GL_FALSE, glm::value_ptr(moon_modelview_matrix));
+		glUniform1i(lightstage_shader->noise_tex, 9);
+		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+		glUniform1i(lightstage_shader->gbuffer_depth_tex, 10);
+		send_samples_to_shader();
 
 		glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
@@ -143,6 +148,10 @@ namespace render {
 		glBindTexture(GL_TEXTURE_2D, sun_buffer->depth_tex);
 		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_2D, moon_buffer->depth_tex);
+		glActiveTexture(GL_TEXTURE9);
+		glBindTexture(GL_TEXTURE_2D, noise_tex);
+		glActiveTexture(GL_TEXTURE10);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->depth_tex);
         render_buffer_quad();
     }
 
@@ -227,6 +236,9 @@ namespace render {
         if (!gbuffer) {
 			build_framebuffers(screen_w, screen_h);
         }
+		if (!ssao_setup) {
+			setup_ssao();
+		}
 
 		// Handle building all of our GL buffers
 		update_buffers();
@@ -269,7 +281,7 @@ namespace render {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         render_test_quad(hdr_buffer->color_tex);
 
-		if (depth_test_render) render_test_quad(sun_buffer->depth_tex);
+		if (depth_test_render) render_test_quad(light_stage_buffer->shiny_tex);
 
         // TODO: Final combination and post-process
 

@@ -14,6 +14,8 @@ struct lightstage_shader_t : public bengine::base_shader_t {
 	unsigned int light_col_tex;
 	unsigned int sun_depth_tex;
 	unsigned int moon_depth_tex;
+	unsigned int noise_tex;
+	unsigned int gbuffer_depth_tex;
 
 	unsigned int camera_position;
 	unsigned int sun_direction;
@@ -24,5 +26,10 @@ struct lightstage_shader_t : public bengine::base_shader_t {
 	unsigned int sun_modelview;
 	unsigned int moon_projection;
 	unsigned int moon_modelview;
+	unsigned int projection;
 
+	void set_vec3(const std::string &name, const glm::vec3 &value) const
+	{
+		glUniform3fv(glGetUniformLocation(shader_id, name.c_str()), 1, &value[0]);
+	}
 };

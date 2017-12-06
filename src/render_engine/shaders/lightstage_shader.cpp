@@ -12,6 +12,8 @@ lightstage_shader_t::lightstage_shader_t() {
 	light_col_tex = get_uniform("light_col_tex");
 	sun_depth_tex = get_uniform("sun_depth_tex");
 	moon_depth_tex = get_uniform("moon_depth_tex");
+	noise_tex = get_uniform("noise_tex");
+	gbuffer_depth_tex = get_uniform("gbuffer_depth_tex");
 
 	camera_position = get_uniform("camera_position");
 	sun_direction = get_uniform("sun_direction");
@@ -22,4 +24,5 @@ lightstage_shader_t::lightstage_shader_t() {
 	sun_modelview = get_uniform("sun_modelview");
 	moon_projection = get_uniform("moon_projection");
 	moon_modelview = get_uniform("moon_modelview");
+	projection = get_uniform("projection");
 }

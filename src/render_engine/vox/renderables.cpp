@@ -457,22 +457,5 @@ namespace render {
 		for (const auto &m : model_buffers) {
 			m->model->render_instances(*m);
 		}
-
-		// Render the sprite buffer
-		//std::cout << n_sprites << "\n";
-		if (n_sprites > 0) {
-			glDepthFunc(GL_LEQUAL);
-			//glUseProgram(assets::sprite_shader);
-			//glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
-			glUniformMatrix4fv(glGetUniformLocation(assets::sprite_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-			glUniformMatrix4fv(glGetUniformLocation(assets::sprite_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D_ARRAY, assets::mob_texture_array);
-			glUniform1i(glGetUniformLocation(assets::sprite_shader, "textureArray"), 0);
-			glCheckError();
-			glBindVertexArray(sprite_vao);
-			glDrawArrays(GL_TRIANGLES, 0, sprite_buffer.size());
-			glCheckError();
-		}
 	}
 }

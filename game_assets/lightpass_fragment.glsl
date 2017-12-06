@@ -14,6 +14,8 @@ uniform sampler3D light_pos_tex;
 uniform sampler3D light_col_tex;
 uniform sampler2D sun_depth_tex;
 uniform sampler2D moon_depth_tex;
+uniform sampler2D noise_tex;
+uniform sampler2D gbuffer_depth_tex;
 
 uniform vec3 camera_position;
 uniform vec3 sun_direction;
@@ -24,6 +26,9 @@ uniform mat4 sun_projection;
 uniform mat4 sun_modelview;
 uniform mat4 moon_projection;
 uniform mat4 moon_modelview;
+
+uniform mat4 projection;
+uniform vec3 samples[64];
 
 #define PI 3.1415926
 
@@ -171,7 +176,39 @@ void main()
     vec3 ambient = albedo * ambient_occlusion;
     FragColor = ambient + Lo;
 
+    // Output a brightness for blue purposes (bloom)
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0) BrightColor = FragColor.rgb;
+
+    // Output a shininess, eventually used for reflection
     Shininess = vec3(1.0 - roughness);
+
+    // SSAO
+    const float kernelSize = 64.0;
+    const float radius = 1.0;
+    const float bias = 0.0;
+
+    vec2 screenSize = textureSize(albedo_tex, 0);
+    vec2 noiseScale = screenSize/4.0;
+    vec3 randomVec = texture(noise_tex, TexCoords * noiseScale).xyz;
+    vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
+    vec3 bitangent = cross(normal, tangent);
+    mat3 TBN = mat3(tangent, bitangent, normal);
+
+    vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
+    float occlusion = 0;
+    for (int i=0; i<kernelSize; ++i) {
+        vec3 sample = TBN * samples[i];
+        sample = FragPos + sample * radius;
+        
+        vec4 offset = vec4(sample, 1.0);
+        offset      = projection * offset;    // from view to clip-space
+        offset.xyz /= offset.w;               // perspective divide
+        offset.xyz  = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
+
+        float sampleDepth = texture(gbuffer_depth_tex, offset.xy).r;
+        occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0);
+    }
+    float SSAO = 1.0 - (occlusion / kernelSize);
+    FragColor *= SSAO;
 }
