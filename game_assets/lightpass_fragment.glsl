@@ -185,8 +185,8 @@ void main()
 
     // SSAO
     const float kernelSize = 64.0;
-    const float radius = 1.0;
-    const float bias = 0.0;
+    const float radius = 2.00;
+    const float bias = 0.025;
 
     vec2 screenSize = textureSize(albedo_tex, 0);
     vec2 noiseScale = screenSize/4.0;
