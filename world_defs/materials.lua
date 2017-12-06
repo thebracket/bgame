@@ -70,6 +70,7 @@ registerTerrainTexture("slicedrock_blue", "slicedrockblue")
 registerTerrainTexture("slipperystone_yellow", "slipperystoneyellow")
 registerTerrainTexture("cement", "cement")
 registerTerrainTexture("oakfloor", "oakfloor")
+registerTerrainTexture("plasteelfloor", "plasteelfloor")
 
 mob_textures = {
     base_male = { index=0, texture="base-male-human.png" },
@@ -740,7 +741,7 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
         texture = chunkTex("rubber"), constructed = chunkTex("rubber"),
-        floor = chunkTex("cavefloor"), floor_constructed=chunkTex("titanium")
+        floor = chunkTex("titanium"), floor_constructed=chunkTex("plasteelfloor")
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
