@@ -739,7 +739,8 @@ materials = {
     plasteel = { name = "Plasteel", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
-        texture = chunkTex("rubber"), constructed = chunkTex("rubber")
+        texture = chunkTex("rubber"), constructed = chunkTex("rubber"),
+        floor = chunkTex("cavefloor"), floor_constructed=chunkTex("titanium")
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
