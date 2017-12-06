@@ -185,8 +185,7 @@ void main()
 
     // SSAO
     const float kernelSize = 64.0;
-    const float radius = 2.00;
-    const float bias = 0.025;
+    const float radius = 0.1;
 
     vec2 screenSize = textureSize(albedo_tex, 0);
     vec2 noiseScale = screenSize/4.0;
@@ -198,17 +197,10 @@ void main()
     vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
     float occlusion = 0;
     for (int i=0; i<kernelSize; ++i) {
-        vec3 sample = TBN * samples[i];
-        sample = FragPos + sample * radius;
-        
-        vec4 offset = vec4(sample, 1.0);
-        offset      = projection * offset;    // from view to clip-space
-        offset.xyz /= offset.w;               // perspective divide
-        offset.xyz  = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
-
-        float sampleDepth = texture(gbuffer_depth_tex, offset.xy).r;
-        occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0);
+        vec2 sample = FragPos.xy + (samples[i].xy * radius);
+        float sampleDepth = texture(gbuffer_depth_tex, sample).r;
+        occlusion += sampleDepth <= FragPos.z ? 1.0 : 0.0;
     }
-    float SSAO = 1.0 - (occlusion / kernelSize);
+    float SSAO = 1.0 - (occlusion / kernelSize);    
     FragColor *= SSAO;
 }

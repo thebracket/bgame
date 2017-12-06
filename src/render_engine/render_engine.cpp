@@ -126,7 +126,7 @@ namespace render {
 		glUniformMatrix4fv(lightstage_shader->moon_projection, 1, GL_FALSE, glm::value_ptr(moon_projection_matrix));
 		glUniformMatrix4fv(lightstage_shader->moon_modelview, 1, GL_FALSE, glm::value_ptr(moon_modelview_matrix));
 		glUniform1i(lightstage_shader->noise_tex, 9);
-		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix * camera_modelview_matrix));
 		glUniform1i(lightstage_shader->gbuffer_depth_tex, 10);
 		send_samples_to_shader();
 
