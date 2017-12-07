@@ -165,24 +165,24 @@ namespace vox {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), &v[0], GL_STATIC_DRAW);
         n_elements = (int)v.size() / 6;
-        std::cout << "Bound as VBO #" << vbo_id << "\n";
-
-        glGenBuffers(1, &instance_vbo_id);
+        std::cout << "Bound as VBO #" << vbo_id << "\n";        
     }
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render) 
 	{
+		constexpr size_t instance_t_size_bytes = 10 * sizeof(float);
 		assert(render->tmp_vao > 0);
 
 		// Build the instance buffer
+		if (instance_vbo_id < 1) glGenBuffers(1, &instance_vbo_id);
 		glInvalidateBufferData(instance_vbo_id);
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sizeof(instance_t) * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
-		glCheckError();
+		glBufferData(GL_ARRAY_BUFFER, instance_t_size_bytes * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
+		//glCheckError();
 
 		// Create the VAO to hold this data
 		glBindVertexArray(render->tmp_vao);
-		glCheckError();
+		//glCheckError();
 
 		// Bind the consistent elements
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
