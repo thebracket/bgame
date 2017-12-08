@@ -56,6 +56,16 @@ namespace systems {
 				std::cout << "BEGIN MINING TASK for " << e.id << "\n";
 				work.set_status(e, "Mining");
 				if (m.step == ai_tag_work_miner::mining_steps::GET_PICK) {
+					// Do I already have a pick?
+					bool have_pick = false;
+					each<item_t, item_carried_t>([&e, &have_pick](entity_t &E, item_t &i, item_carried_t &ic) {
+						if (ic.carried_by == e.id && i.type == TOOL_DIGGING) have_pick = true;
+					});
+					if (have_pick) {
+						std::cout << "Skipping get pick - we already have one!\n";
+						m.step == ai_tag_work_miner::mining_steps::GOTO_SITE;
+					}
+
 					std::cout << "GET PICK\n";
 					work.folllow_path(pick_map, pos, e, [&e, &work]() {
 						// On cancel
@@ -82,6 +92,12 @@ namespace systems {
 					if (mining_map[idx] == 0) {
 						// We're at a minable site
 						m.step = ai_tag_work_miner::mining_steps::DIG;
+						return;
+					}
+					if (idx == std::numeric_limits<uint8_t>::max()) {
+						// There's nothing to do - someone else must have done it.
+						std::cout << "Cancelling because of lack of mining tasks\n";
+						m.step = ai_tag_work_miner::mining_steps::DROP_TOOLS;
 						return;
 					}
 
@@ -167,6 +183,14 @@ namespace systems {
 					return;
 				}
 				else if (m.step == ai_tag_work_miner::mining_steps::DROP_TOOLS) {
+					// Is there more mining to do?
+					const auto idx = mapidx(pos.x, pos.y, pos.z);
+					if (mining_map[idx] < std::numeric_limits<uint8_t>::max()) {
+						std::cout << "Keep mining...\n";
+						m.step = ai_tag_work_miner::mining_steps::DIG;
+						return;
+					}
+
 					std::cout << "Mining - drop tools, pick ID# " << m.current_pick << "\n";
 					inventory_system::drop_item(m.current_pick, pos.x, pos.y, pos.z );
 					distance_map::refresh_pick_map();

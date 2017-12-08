@@ -307,6 +307,7 @@ buildings["kiln"] = {
             {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
         }
     },
+    vox = voxelId("kiln")
 };
 
 reactions["bake_bricks"] = {

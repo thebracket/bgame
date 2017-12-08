@@ -17,6 +17,7 @@
 #include "../../components/item_stored.hpp"
 #include "../../components/building.hpp"
 #include "../../components/bridge.hpp"
+#include "../../components/claimed_t.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../global_assets/game_config.hpp"
 #include "../../stdafx.h"
@@ -110,7 +111,9 @@ namespace systems {
 					if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
 						auto finder = items.find(item.item_name);
 						if (finder == items.end()) {
-							items[item.item_name] = 1;
+							std::string claimed = "";
+							if (entity.component<claimed_t>() != nullptr) claimed = " (c)";
+							items[item.item_name + claimed] = 1;
 						}
 						else {
 							++finder->second;
