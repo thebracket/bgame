@@ -75,6 +75,7 @@ buildings["still"] = {
             {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
+    vox = voxelId("still")
 };
 
 reactions["make_booze"] = {

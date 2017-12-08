@@ -248,6 +248,7 @@ buildings["glass_furnace"] = {
             {glyph= glyphs['arch'], foreground = colors['light_green'], background = colors['black']}
         }
     },
+    vox = voxelId("glass_furnace")
 };
 
 reactions["make_raw_glass"] = {
