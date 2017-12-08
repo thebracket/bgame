@@ -126,6 +126,7 @@ buildings["charcoal_hut"] = {
             {glyph= glyphs['arch'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
+    vox = voxelId("charcoal_hut")
 };
 
 reactions["charcoal_waste"] = {
