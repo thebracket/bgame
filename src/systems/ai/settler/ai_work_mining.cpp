@@ -35,6 +35,7 @@ namespace systems {
 				if (pick_distance > MAX_DIJSTRA_DISTANCE - 1) return; // No pick available
 
 				const auto idx = mapidx(pos);
+				if (mining_map[idx] == std::numeric_limits<uint8_t>::max()) return; // No mining to do
 				const int distance = mining_map[idx] + pick_distance;
 
 				board.insert(std::make_pair(distance, jt));

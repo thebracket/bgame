@@ -119,6 +119,7 @@ namespace systems {
 				entity_octree.add_node(octree_location_t{ msg.x,msg.y,msg.z,msg.id });
 				dirty = true;
 				distance_map::refresh_blocks_map();
+				render::models_changed = true;
 			});
 
 			pickup_items.process_all([](pickup_item_message &msg) {
