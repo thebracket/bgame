@@ -340,6 +340,7 @@ buildings["loom"] = {
             {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
         }
     },
+    vox = voxelId("loom")
 };
 
 reactions["weave_thread_reed"] = {

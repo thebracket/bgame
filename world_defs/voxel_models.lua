@@ -42,7 +42,8 @@ voxel_models = {
     kiln = { model=vfn("kiln"), id=39 },
     charcoal_hut = { model=vfn("charcoal_hut"), id=40 },
     still = { model=vfn("still"), id=41 },
-    glass_furnace = { model=vfn("glass_furnace"), id=42 }
+    loom = { model=vfn("loom"), id=42 },
+    glass_furnace = { model=vfn("glass_furnace"), id=43 },
 }
 
 function voxelId(name)
