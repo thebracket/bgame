@@ -10,6 +10,7 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../components/bridge.hpp"
 #include "../../../components/receives_signal.hpp"
+#include "../../../components/claimed_t.hpp"
 #include "../inventory_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
@@ -60,7 +61,8 @@ namespace systems {
 				else if (a.step == ai_tag_work_architect::architect_steps::COLLECT_BLOCK) {
 					std::size_t block_id = 0;
 					each<item_t, position_t>([&pos, &block_id](entity_t &E, item_t &i, position_t &block) {
-						if (block == pos && i.claimed == false && i.item_tag == "block") {
+						auto is_claimed = E.component<claimed_t>();
+						if (block == pos && !is_claimed && i.item_tag == "block") {
 							block_id = E.id;
 						}
 					});

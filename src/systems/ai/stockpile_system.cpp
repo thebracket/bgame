@@ -4,6 +4,7 @@
 #include "../../components/stockpile.hpp"
 #include "../../components/item_stored.hpp"
 #include "../../components/item.hpp"
+#include "../../components/claimed_t.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/items.hpp"
 
@@ -65,7 +66,7 @@ namespace systems {
 				}
 
 				// If the item is claimed, do nothing
-				if (i.claimed) return;
+				if (e.component<claimed_t>() != nullptr) return;
 
 				// Determine the destination stockpile; Clothing is a special case
 				int item_stockpile_idx = 0;

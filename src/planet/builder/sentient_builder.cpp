@@ -22,6 +22,7 @@
 #include "../../raws/creatures.hpp"
 #include "../../components/riding_t.hpp"
 #include "../../components/item_carried.hpp"
+#include "../../components/claimed_t.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -143,7 +144,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         auto weapon = bengine::create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_MELEE, sentient->id});
         weapon->component<item_t>()->stack_size = finder->stack_size;
         weapon->component<item_t>()->category = finder->categories;
-        weapon->component<item_t>()->claimed = true;
+		weapon->assign(claimed_t{});
     }
     if (unit.equipment.ranged != "") {
         auto cs = split(unit.equipment.ranged, '/');
@@ -156,8 +157,8 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         auto weapon = bengine::create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_RANGED, sentient->id});
         weapon->component<item_t>()->stack_size = finder->stack_size;
         weapon->component<item_t>()->category = finder->categories;
-        weapon->component<item_t>()->claimed = true;
-    }
+		weapon->assign(claimed_t{});
+	}
     if (unit.equipment.ammo != "") {
         auto cs = split(unit.equipment.ammo, '/');
         const std::string item_name = cs[0];
@@ -169,7 +170,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         auto ammo = bengine::create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_AMMO, sentient->id});
         ammo->component<item_t>()->stack_size = finder->stack_size;
         ammo->component<item_t>()->category = finder->categories;
-        ammo->component<item_t>()->claimed = true;
+		ammo->assign(claimed_t{});
     }
     if (unit.equipment.mount != "") {
         std::cout << "Spawning a mount: " << unit.equipment.mount << "\n";

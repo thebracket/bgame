@@ -126,8 +126,9 @@ namespace systems {
 			std::unordered_set<int> used;
 			std::vector<int> targets;
 
-			each_if<item_t>([](entity_t &e, item_t &i) { return i.claimed == false && i.item_tag == "block"; },
-				[&used, &targets](entity_t &e, item_t &i) {
+			each_if<item_t>([](entity_t &e, item_t &i) { return i.item_tag == "block"; }, [&used, &targets](entity_t &e, item_t &i) {
+				auto is_claimed = e.component<claimed_t>();
+				if (is_claimed != nullptr) return;
 				auto pos = inventory::get_item_location(e.id);
 				if (pos) {
 					const int idx = mapidx(*pos);
@@ -159,7 +160,6 @@ namespace systems {
 			each<item_t>([&targets](entity_t &e, item_t &item) {
 				if (!item.category.test(TOOL_CHOPPING)) return; // Not an axe!
 				if (e.component<claimed_t>() != nullptr) return; // Don't touch claimed items
-				if (item.claimed) return;
 
 				auto pos = e.component<position_t>();
 				if (pos != nullptr) {
@@ -184,7 +184,6 @@ namespace systems {
 			each<item_t>([&targets](entity_t &e, item_t &item) {
 				if (!item.category.test(TOOL_DIGGING)) return; // Not an axe!
 				if (e.component<claimed_t>() != nullptr) return; // Don't touch claimed items
-				if (item.claimed) return;
 
 				auto pos = e.component<position_t>();
 				if (pos != nullptr) {

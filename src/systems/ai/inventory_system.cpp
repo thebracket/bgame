@@ -6,6 +6,7 @@
 #include "../../components/position.hpp"
 #include "../../global_assets/spatial_db.hpp"
 #include "../../components/item_stored.hpp"
+#include "../../components/claimed_t.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../helpers/inventory_assistant.hpp"
@@ -113,7 +114,7 @@ namespace systems {
 
 				auto item = E->component<item_t>();
 				if (!item) return;
-				entity(msg.id)->component<item_t>()->claimed = false;
+				if (entity(msg.id)->component<claimed_t>()) delete_component<claimed_t>(msg.id);
 				entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
 				entity_octree.add_node(octree_location_t{ msg.x,msg.y,msg.z,msg.id });
 				dirty = true;
@@ -129,6 +130,7 @@ namespace systems {
 				}
 				delete_component<item_stored_t>(msg.id);
 				entity(msg.id)->assign(item_carried_t{ msg.loc, msg.collector });
+				if (entity(msg.id)->component<claimed_t>() == nullptr) entity(msg.id)->assign(claimed_t{ msg.collector });
 				dirty = true;
 				render::models_changed = true;
 				distance_map::refresh_blocks_map();
@@ -150,7 +152,14 @@ namespace systems {
 				auto e = entity(msg.id);
 				if (e) {
 					auto item = e->component<item_t>();
-					if (item) item->claimed = msg.claimed;
+					if (item) {
+						if (msg.claimed) {
+							e->assign(claimed_t{});
+						}
+						else {
+							delete_component<claimed_t>(e->id);
+						}
+					}
 				}
 				distance_map::refresh_blocks_map();
 			});

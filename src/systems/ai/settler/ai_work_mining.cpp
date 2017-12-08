@@ -52,14 +52,18 @@ namespace systems {
 			ai_work_template<ai_tag_work_miner> work;
 
 			work.do_ai([&work](entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
+				std::cout << "BEGIN MINING TASK for " << e.id << "\n";
 				work.set_status(e, "Mining");
 				if (m.step == ai_tag_work_miner::mining_steps::GET_PICK) {
+					std::cout << "GET PICK\n";
 					work.folllow_path(pick_map, pos, e, [&e, &work]() {
 						// On cancel
+						std::cout << "GET PICK - CANCEL\n";
 						work.cancel_work_tag(e);
 						return;
 					}, [&e, &pos, &m, &work] {
 						// On success
+						std::cout << "GET PICK - SUCCESS\n";
 						work.pickup_tool(e, pos, TOOL_DIGGING, m.current_pick, [&e, &work]() {
 							// On cancel
 							work.cancel_work_tag(e);
@@ -129,6 +133,7 @@ namespace systems {
 					return;
 				}
 				else if (m.step == ai_tag_work_miner::mining_steps::DIG) {
+					std::cout << "DIG\n";
 					auto stats = e.component<game_stats_t>();
 					if (!stats) {
 						m.step = ai_tag_work_miner::mining_steps::DROP_TOOLS;
@@ -165,6 +170,7 @@ namespace systems {
 					inventory_system::drop_item(m.current_pick, pos.x, pos.y, pos.z );
 					distance_map::refresh_pick_map();
 					work.cancel_work_tag(e);
+					std::cout << "Finished MINING for " << e.id << "\n";
 					return;
 				}
 			});
