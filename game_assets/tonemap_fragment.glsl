@@ -26,7 +26,8 @@ void main()
     //hdrColor += bloomColor;
 
     //vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
-    vec3 mapped = Uncharted2Tonemap(hdrColor);
+    //vec3 mapped = Uncharted2Tonemap(hdrColor);
+    vec3 mapped = hdrColor; // Disable tone-mapping
     mapped = pow(mapped, vec3(1.0 / gamma)); // Apply gamma correction
 
     FragColor = vec4(mapped, 1.0);

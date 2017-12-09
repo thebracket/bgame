@@ -181,8 +181,8 @@ void main()
     Shininess = vec3(1.0 - roughness);
 
     // SSAO & Ambient
-    const float kernelSize = 64.0;
-    const float radius = 0.01;
+    const float kernelSize = 16.0;
+    const float radius = 0.02;
 
     vec3 ambient_color = albedo * 5.0;
     vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
@@ -191,14 +191,15 @@ void main()
         vec2 sample = FragPos.xy + (samples[i].xy * radius);
         float sampleDepth = texture(gbuffer_depth_tex, sample).r;
         vec3 sampleColor = texture(albedo_tex, sample).rgb;
-        occlusion += sampleDepth <= FragPos.z ? 1.0 : 0.0;
+        occlusion += sampleDepth <= FragPos.z ? 0.75 : 0.0;
         ambient_color += sampleDepth <= FragPos.z ? sampleColor : albedo;
     }
-    float SSAO = 1.0 - (occlusion / kernelSize);    
+    float SSAO = clamp(1.0 - (occlusion / kernelSize), 0.0, 1.0);    
     ambient_color /= kernelSize+5.0;
 
     // Final color
     vec3 ambient = ambient_color * ambient_occlusion;
     FragColor = ambient + Lo;
     FragColor *= SSAO;
+    //FragColor = vec3(SSAO);
 }
