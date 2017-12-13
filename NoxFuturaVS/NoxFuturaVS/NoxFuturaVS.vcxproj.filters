@@ -186,9 +186,6 @@
     <ClCompile Include="..\..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\bengine\color_t.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bengine\ecs.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>

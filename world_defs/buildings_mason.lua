@@ -23,6 +23,7 @@ buildings["mason"] = {
             {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
         }
     },
+    vox = voxelId("mason")
 };
 
 reactions["make_stone_table"] = {

@@ -132,7 +132,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\bengine\color_t.cpp" />
     <ClCompile Include="..\..\src\bengine\ecs.cpp" />
     <ClCompile Include="..\..\src\bengine\FastNoise.cpp" />
     <ClCompile Include="..\..\src\bengine\filesystem.cpp" />
