@@ -260,8 +260,25 @@ namespace systems {
 				recalculate(e);
 				auto[x, y, z] = idxmap(e.target_idx);
 				particles::block_destruction_effect(x, y, z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-				// TODO: emit(map_dirty_message{});
-				// TODO: emit(map_changed_message{});
+
+				std::vector<int> target_chunks{ e.target_idx };
+				if (x > 0) target_chunks.emplace_back(e.target_idx - 1);
+				if (x > 1) target_chunks.emplace_back(e.target_idx - 2);
+				if (x < REGION_WIDTH - 1) target_chunks.emplace_back(e.target_idx + 1);
+				if (x < REGION_WIDTH - 2) target_chunks.emplace_back(e.target_idx + 2);
+				if (y > 0) target_chunks.emplace_back(e.target_idx - REGION_WIDTH);
+				if (y > 1) target_chunks.emplace_back(e.target_idx - REGION_WIDTH - REGION_WIDTH);
+				if (y < REGION_HEIGHT - 1) target_chunks.emplace_back(e.target_idx + REGION_WIDTH);
+				if (y < REGION_HEIGHT - 2) target_chunks.emplace_back(e.target_idx + REGION_WIDTH + REGION_WIDTH);
+				if (x > 0 && y > 0) target_chunks.emplace_back(mapidx(x - 1, y - 1, z));
+				if (x < REGION_WIDTH-1 && y > 0) target_chunks.emplace_back(mapidx(x + 1, y - 1, z));
+				if (x < REGION_WIDTH - 1 && y < REGION_HEIGHT-1) target_chunks.emplace_back(mapidx(x + 1, y + 1, z));
+				if (x > 0 && y < REGION_HEIGHT-1) target_chunks.emplace_back(mapidx(x - 1, y + 1, z));
+
+				for (const auto &idx : target_chunks) {
+					region::reveal(idx);
+					chunks::mark_chunk_dirty_by_tileidx(idx);
+				}
 			});
 
 			construction.process_all(build_construction);
