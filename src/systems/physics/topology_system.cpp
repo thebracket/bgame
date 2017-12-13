@@ -16,6 +16,7 @@
 #include "trigger_system.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../gui/particle_system.hpp"
+#include "../ai/mining_system.hpp"
 
 using namespace bengine;
 
@@ -274,11 +275,14 @@ namespace systems {
 				if (x < REGION_WIDTH-1 && y > 0) target_chunks.emplace_back(mapidx(x + 1, y - 1, z));
 				if (x < REGION_WIDTH - 1 && y < REGION_HEIGHT-1) target_chunks.emplace_back(mapidx(x + 1, y + 1, z));
 				if (x > 0 && y < REGION_HEIGHT-1) target_chunks.emplace_back(mapidx(x - 1, y + 1, z));
+				if (z > 0) target_chunks.emplace_back(mapidx(x, y, z - 1));
+				if (z < REGION_DEPTH-1) target_chunks.emplace_back(mapidx(x, y, z + 1));
 
 				for (const auto &idx : target_chunks) {
 					region::reveal(idx);
 					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
+				mining_system::mining_map_changed();
 			});
 
 			construction.process_all(build_construction);

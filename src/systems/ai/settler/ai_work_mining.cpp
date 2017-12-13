@@ -187,7 +187,7 @@ namespace systems {
 					const auto idx = mapidx(pos.x, pos.y, pos.z);
 					if (mining_map[idx] < std::numeric_limits<uint8_t>::max()) {
 						std::cout << "Keep mining...\n";
-						m.step = ai_tag_work_miner::mining_steps::DIG;
+						m.step = ai_tag_work_miner::mining_steps::GOTO_SITE;
 						return;
 					}
 
