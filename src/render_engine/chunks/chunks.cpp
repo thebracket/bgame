@@ -107,8 +107,7 @@ namespace chunks {
                         if (region::revealed(idx)) {
 							if (tiletype == tile_type::WINDOW) {
 								// TODO: Windows go into transparency buffer
-								add_cube_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 15);
-								layers[chunk_z].n_trans += 36;
+								layers[chunk_z].n_trans += add_cube_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 15);
 								layer_requires_transparency.set(chunk_z);
 							} else if (tiletype == tile_type::FLOOR) {
                                 floors[idx] = get_floor_tex(idx);
@@ -121,8 +120,7 @@ namespace chunks {
 								else if (region::solid(idx + 1)) { se = 1.0f; ne = 1.0f; }
 								else if (region::solid(idx + REGION_WIDTH)) { nw = 1.0f; ne = 1.0f; }
 								else if (region::solid(idx - REGION_WIDTH)) { sw = 1.0f; se = 1.0f; }
-								add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
-								layers[chunk_z].n_elements += 6;
+								layers[chunk_z].n_elements += add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
 							}
 							else if (tiletype == tile_type::STAIRS_DOWN) {
 								static_voxel_models.insert(std::make_pair(24, std::make_tuple(region_x, region_y, region_z)));
@@ -140,8 +138,7 @@ namespace chunks {
 						}*/
                     }
 					if (region::water_level(idx) > 0) {
-						add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));
-						layers[chunk_z].n_trans += 6;
+						layers[chunk_z].n_trans += add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));
 						layer_requires_transparency.set(chunk_z);
 					}
                 }
@@ -213,8 +210,7 @@ namespace chunks {
 
             // TODO: Emit geometry
             //std::cout << floors.size() << " floors remain\n";
-            add_floor_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
-            layers[layer].n_elements += 6;
+			layers[layer].n_elements += add_floor_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
             //layers[layer].vertices.emplace_back(
             //        geometry_t{ 0.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
             //);
@@ -276,8 +272,7 @@ namespace chunks {
             //layers[layer].vertices.emplace_back(
             //        geometry_t{ 1.0f, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id }
             //);
-            add_cube_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
-            layers[layer].n_elements += 36;
+			layers[layer].n_elements += add_cube_geometry(layers[layer].v, (float)tile_x, (float)tile_y, (float)tile_z, (float)width, (float)height, (float)texture_id);
         }
         //std::cout << "Reduced " << n_cubes << " CUBES to " << layers[layer].cube_vertices.size() << " items of geometry.\n";
     }       

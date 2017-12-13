@@ -55,7 +55,7 @@ namespace chunks {
 		}
 	}
 
-	void add_floor_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+	int add_floor_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
 		const float &width, const float &height, const float &texture_id)
 	{
 		const float x0 = -0.5f + x;
@@ -79,9 +79,10 @@ namespace chunks {
 			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
 			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
 		});
+		return 6;
 	}
 
-	void add_cube_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+	int add_cube_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
 		const float &width, const float &height, const float &texture_id, float depth)
 	{
 		const float x0 = -0.5f + x;
@@ -96,13 +97,15 @@ namespace chunks {
 		const float TH = height;
 
 		v.insert(v.end(), {
+			// Back side
 			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
 			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
 			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
 			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
 			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
-			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+			x0, y0, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
 
+			// Front side
 			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
 			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f,
 			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f,
@@ -110,6 +113,7 @@ namespace chunks {
 			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f,
 			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f,
 
+			// Left side
 			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
 			x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f,
 			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f,
@@ -117,6 +121,7 @@ namespace chunks {
 			x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f,
 			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f,
 
+			// Right side
 			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
 			x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f,
 			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f,
@@ -124,6 +129,7 @@ namespace chunks {
 			x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f,
 			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f,
 
+			// Underside
 			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
 			x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f,
 			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f,
@@ -131,6 +137,7 @@ namespace chunks {
 			x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f,
 			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f,
 
+			// Top
 			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
 			x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f,
 			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
@@ -138,9 +145,10 @@ namespace chunks {
 			x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
 			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
 		});
+		return 36;
 	}
 
-	void add_water_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+	int add_water_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
 		const float &width, const float &height, const float &texture_id, const uint8_t &water_level)
 	{
 		const float water_y = static_cast<float>(water_level) / 10.0f;
@@ -165,9 +173,10 @@ namespace chunks {
 			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
 			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
 		});
+		return 6;
 	}
 
-	void add_ramp_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
+	int add_ramp_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
 		const float &width, const float &height, const float &texture_id, const float &ne, const float &se, const float &sw, const float &nw)
 	{
 		const float x0 = -0.5f + x;
@@ -191,5 +200,6 @@ namespace chunks {
 			x0, y0 + nw, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, // NW
 			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, // NE
 		});
+		return 6;
 	}
 }

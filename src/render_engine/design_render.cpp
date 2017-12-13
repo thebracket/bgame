@@ -36,23 +36,19 @@ namespace render {
 				if (region::tile_type(idx) != tile_type::OPEN_SPACE) {
 					if (!region::revealed(idx)) {
 						// Add an unrevealed cube
-						chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 3, DESIGN_DEPTH);
-						n_elements += 36;
+						n_elements += chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 3, DESIGN_DEPTH);
 					}
 					else {
 						// Determine what to render
 						const uint8_t tt = region::tile_type(idx);
 						if (tt == tile_type::WINDOW) {
-							chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 15, DESIGN_DEPTH);
-							n_elements += 36;
+							n_elements += chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 15, DESIGN_DEPTH);
 						}
 						else if (tt == tile_type::FLOOR) {
-							chunks::add_floor_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, chunks::get_floor_tex(idx));
-							n_elements += 6;
+							n_elements += chunks::add_floor_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, chunks::get_floor_tex(idx));
 						}
 						else if (chunks::is_cube(tt)) {
-							chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, chunks::get_cube_tex(idx), DESIGN_DEPTH);
-							n_elements += 36;
+							n_elements += chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, chunks::get_cube_tex(idx), DESIGN_DEPTH);
 						}
 						else if (tt == tile_type::RAMP) {
 							// TODO - write me!
@@ -61,8 +57,7 @@ namespace render {
 							else if (region::solid(idx + 1)) { se = 1.0f; ne = 1.0f; }
 							else if (region::solid(idx + REGION_WIDTH)) { nw = 1.0f; ne = 1.0f; }
 							else if (region::solid(idx - REGION_WIDTH)) { sw = 1.0f; se = 1.0f; }
-							chunks::add_ramp_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, chunks::get_floor_tex(idx), ne, se, sw, nw);
-							n_elements += 6;
+							n_elements += chunks::add_ramp_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, chunks::get_floor_tex(idx), ne, se, sw, nw);
 						}
 						else if (tt == tile_type::STAIRS_DOWN) {
 							static_design_voxel_models.insert(std::make_pair(24, std::make_tuple(x, y, camera_position->region_z)));
