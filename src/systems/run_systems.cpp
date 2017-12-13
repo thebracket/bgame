@@ -66,6 +66,7 @@
 #include "gui/design_mining.hpp"
 #include "gui/design_stockpiles.hpp"
 #include "gui/particle_system.hpp"
+#include "gui/workflow_ui_system.hpp"
 #include "../stdafx.h"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
@@ -140,6 +141,7 @@ namespace systems {
 	constexpr int DESIGN_ARCHITECTURE_SYSTEM = 63;
 	constexpr int DESIGN_MINING_SYSTEM = 64;
 	constexpr int DESIGN_STOCKPILES_SYSTEM = 65;
+	constexpr int WORKFLOW_UI_SYSTEM = 66;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -228,6 +230,7 @@ namespace systems {
 		system_names[DESIGN_ARCHITECTURE_SYSTEM] = "Design - Architecture";
 		system_names[DESIGN_MINING_SYSTEM] = "Design - Mining";
 		system_names[DESIGN_STOCKPILES_SYSTEM] = "Design - Stockpiles";
+		system_names[WORKFLOW_UI_SYSTEM] = "Workflow UI";
 		game_master_mode = PLAY;
     }
 
@@ -252,6 +255,9 @@ namespace systems {
 		}
 		else if (game_master_mode == SETTLER) {
 			run_system(settler_ui::run, duration_ms, SETTLERUI_SYSTEM);
+		}
+		else if (game_master_mode == WORKFLOW) {
+			run_system(workflow_ui::run, duration_ms, WORKFLOW_UI_SYSTEM);
 		}
 
         // Items that only run if the simulation has ticked
