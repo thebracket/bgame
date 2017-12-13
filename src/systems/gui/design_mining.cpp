@@ -15,6 +15,16 @@ namespace systems {
 		static const std::string win_mining = std::string(ICON_FA_DIAMOND) + " Mining";
 
 		static bool is_mining_designation_valid(const int &x, const int &y, const int &z, const game_mining_mode_t &mode) {
+			const int idx = mapidx(x, y, z);
+			const uint8_t tt = region::tile_type(idx);
+			if (mode == DIG || mode == UP || mode == UPDOWN) {
+				if (tt == tile_type::SOLID || tt == tile_type::WALL) return true;
+				return false;
+			}
+			else if (mode == CHANNEL || mode == RAMP || mode == DOWN) {
+				if (tt == tile_type::SOLID || tt == tile_type::WALL || tt == tile_type::FLOOR) return true;
+				return false;
+			}
 			return true;
 		}
 
