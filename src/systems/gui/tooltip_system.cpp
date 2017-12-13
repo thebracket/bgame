@@ -34,6 +34,7 @@ namespace systems {
 				const int world_z = mouse_wz;
 				if (world_x < 0 || world_x > REGION_WIDTH - 1 || world_y < 0 || world_y > REGION_HEIGHT - 1) return;
 				const int tile_idx = mapidx(world_x, world_y, world_z);
+				if (!region::revealed(tile_idx)) return;
 
 				std::vector<std::string> lines;
 
