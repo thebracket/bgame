@@ -23,6 +23,7 @@ buildings["mechanic"] = {
             {glyph= glyphs['star'], foreground = colors['red'], background = colors['black']}
         }
     },
+    vox = voxelId("mechanic")
 };
 
 reactions["make_simple_mechanism"] = {

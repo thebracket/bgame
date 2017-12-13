@@ -45,6 +45,7 @@ voxel_models = {
     loom = { model=vfn("loom"), id=42 },
     glass_furnace = { model=vfn("glass_furnace"), id=43 },
     mason = { model=vfn("mason"), id=44 },
+    mechanic = { model=vfn("mechanic"), id=45 },
 }
 
 function voxelId(name)
