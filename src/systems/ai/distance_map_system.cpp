@@ -79,6 +79,17 @@ namespace systems {
 			harvest_dirty = true;
 		}
 
+		void refresh_all_distance_maps() {
+			beds_dirty = true;
+			axes_dirty = true;
+			huntables_dirty = true;
+			blocks_dirty = true;
+			architecture_dirty = true;
+			butcherables_dirty = true;
+			picks_dirty = true;
+			harvest_dirty = true;
+		}
+
 		void update_hunting_map() {
 			std::vector<int> huntables;
 			each<grazer_ai, position_t>([&huntables](entity_t &e, grazer_ai &ai, position_t &pos) {

@@ -14,6 +14,7 @@
 #include "../inventory_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
+#include "../mining_system.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -177,7 +178,8 @@ namespace systems {
 						chunks::mark_chunk_dirty_by_tileidx(bidx);
 
 						designations->architecture.erase(bidx);
-						distance_map::refresh_architecture_map();
+						mining_system::mining_map_changed();
+						distance_map::refresh_all_distance_maps();
 						render::models_changed = true;
 						// TODO: emit(map_changed_message{});
 						call_home("architecture", std::to_string(build_type));

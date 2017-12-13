@@ -17,6 +17,7 @@
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../gui/particle_system.hpp"
 #include "../ai/mining_system.hpp"
+#include "../ai/distance_map_system.hpp"
 
 using namespace bengine;
 
@@ -283,6 +284,7 @@ namespace systems {
 					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
 				mining_system::mining_map_changed();
+				distance_map::refresh_all_distance_maps();
 			});
 
 			construction.process_all(build_construction);
