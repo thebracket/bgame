@@ -6,12 +6,14 @@
 #include "../../planet/builder/settler_builder.hpp"
 #include "../gui/log_system.hpp"
 #include "../../components/logger.hpp"
+#include "../gui/particle_system.hpp"
+#include "../../global_assets/game_pause.hpp"
 
 namespace systems {
 	namespace settler_spawner {
 		void run(const double &duration_ms) {
 			// New arrivals
-			if (planet.remaining_settlers > 0) {
+			if (day_elapsed && planet.remaining_settlers > 0) {
 				++planet.migrant_counter;
 				if (planet.migrant_counter > 14 && !planet.strict_beamdown) { // Every 2 weeks
 					const int crash_x = REGION_WIDTH / 2;
@@ -41,6 +43,7 @@ namespace systems {
 					for (auto i = 0; i < new_settler_count; ++i) {
 						const position_t spawn_point = settler_arrival_points[i % settler_arrival_points.size()];
 						create_settler(planet, spawn_point.x, spawn_point.y, spawn_point.z, rng, rng.roll_dice(1, 3) - 1);
+						particles::block_destruction_effect(spawn_point.x, spawn_point.y, spawn_point.z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 				}
 			}
