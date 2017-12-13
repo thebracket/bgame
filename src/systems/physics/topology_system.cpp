@@ -258,6 +258,8 @@ namespace systems {
 				}
 				spawn_mining_result(e);
 				recalculate(e);
+				auto[x, y, z] = idxmap(e.target_idx);
+				particles::block_destruction_effect(x, y, z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 				// TODO: emit(map_dirty_message{});
 				// TODO: emit(map_changed_message{});
 			});
