@@ -8,6 +8,7 @@
 #include "../mouse.hpp"
 #include "../keydamper.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../ai/mining_system.hpp"
 
 namespace systems {
 	namespace design_mining {
@@ -39,6 +40,8 @@ namespace systems {
 					case UPDOWN: designations->mining[idx] = 6; break;
 					case MINING_DELETE: designations->mining.erase(idx); break;
 					}
+					//std::cout << "Added mining designation\n";
+					mining_system::mining_map_changed();
 				}
 			}
 

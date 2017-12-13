@@ -13,10 +13,11 @@
 #include <cereal/types/utility.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../bengine/ecs_impl.hpp"
+#include <boost/container/flat_map.hpp>
 
 struct designations_t {
 
-	std::unordered_map<int, uint8_t> mining;
+	boost::container::flat_map<int, uint8_t> mining;
 	std::unordered_map<int, uint8_t> architecture;
 	std::unordered_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
