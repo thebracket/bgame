@@ -60,6 +60,7 @@ buildings["tanner"] = {
             {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
+    vox = voxelId("tanner")
 };
 
 reactions["tan_leather"] = {
