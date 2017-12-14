@@ -131,7 +131,8 @@ items["charcoal"] = {
     glyph_ascii = glyphs['inset_square'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['fuel'].id
+    stockpile = stockpiles['fuel'].id,
+    vox = voxelId("charcoal")
 };
 
 -- Ash is a byproduct of burning wood. It will be used to make lye.

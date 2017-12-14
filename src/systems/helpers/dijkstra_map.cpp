@@ -43,8 +43,7 @@ namespace systems {
 			std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
 
 			// Populate the open list with starting points
-			std::deque<std::pair<int, int>> open_nodes;
-			open_nodes.resize(REGION_TILES_COUNT);
+			std::deque<std::pair<int, int>> open_nodes(REGION_TILES_COUNT*2);
 			for (const int &sp : starting_points) {
 				open_nodes.emplace_back(std::make_pair(sp, 0));
 			}
