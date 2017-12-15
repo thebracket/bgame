@@ -125,7 +125,7 @@ void read_civ_types() noexcept
 
                                             lua_pop(lua_state, 1);
                                         }
-                                        //sentient.natural_attacks.push_back(nattack);
+                                        sentient.natural_attacks.push_back(nattack);
                                     }
                                     if (sfield == "equipment") {
                                         civ_equipment_t equip;
@@ -159,7 +159,7 @@ void read_civ_types() noexcept
 
                                     lua_pop(lua_state, 1);
                                 }
-                                //unit.sentients.push_back(sentient);
+                                unit.sentients.push_back(sentient);
                                 lua_pop(lua_state, 1);
                             }
                         }

@@ -23,6 +23,7 @@
 #include "../../components/riding_t.hpp"
 #include "../../components/item_carried.hpp"
 #include "../../components/claimed_t.hpp"
+#include "../../bengine/telemetry.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -36,6 +37,8 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
                      const civ_unit_sentient_t &unit, const std::string species_tag, const std::size_t civ_id,
                      bool announce)
 {
+	call_home("Spawn", "Sentient", species_tag);
+
     // Species definition
     species_t species;
     species.tag = species_tag;
