@@ -47,7 +47,7 @@ namespace systems {
 						->assign(renderable_t{ 2, 2, color_t{1.0f, 1.0f, 0.0f}, color_t{1.0f, 0.0f, 0.0f} })
 						->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
 						->assign(corpse_settler{ msg.cause_of_death });
-					call_home("settler_death");
+					call_home("combat", "settler_death");
 				}
 				else if (victim->component<sentient_ai>()) {
 					// It's a dead native

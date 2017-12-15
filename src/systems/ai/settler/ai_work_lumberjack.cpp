@@ -203,7 +203,7 @@ namespace systems {
 					auto skill_check = skill_roll(e.id, *stats, rng, "Lumberjacking", DIFICULTY_TOUGH);
 
 					if (skill_check >= SUCCESS) {
-						call_home("tree_chop");
+						call_home("action", "tree_chop");
 
 						// Tree is going down!
 						int number_of_logs = 0;

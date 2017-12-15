@@ -100,7 +100,7 @@ namespace systems {
 					});
 				}
 				else if (b.step == ai_tag_work_butcher::butcher_steps::CHOP) {
-					call_home("butcher");
+					call_home("action", "butcher");
 					auto corpse = entity(b.target_corpse)->component<corpse_harvestable>();
 					const auto food_idx = get_material_by_tag("food");
 

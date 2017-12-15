@@ -28,7 +28,7 @@ namespace play_game {
     void do_load_game() {
         using namespace bengine;
 
-        call_home("playgame");
+        call_home("menu", "playgame");
         // Load the game
         std::cout << "Loading the planet\n";
         planet = load_planet();

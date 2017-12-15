@@ -99,6 +99,7 @@ namespace bengine {
             glfwSwapBuffers(main_window);
             auto end_time = std::chrono::high_resolution_clock::now();
             duration_ms = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count());
+			telemetry::on_tick();
         }
         stop_telemetry();
         glfwTerminate();

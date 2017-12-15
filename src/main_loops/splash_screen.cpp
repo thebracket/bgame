@@ -418,11 +418,11 @@ namespace splash_screen {
             start_telemetry();
             started_telemetry = true;
         } else if (!sent_telemetry) {
-            call_home("Startup");
-            call_home("Startup-FullScreen", std::to_string(config::game_config.fullscreen));
-            call_home("Startup-Resolution", std::to_string(config::game_config.window_width) + std::string("x") + std::to_string(config::game_config.window_height));
-            call_home("Startup-GUI-Font", config::game_config.gui_ttf + std::string(" / ") + std::to_string(config::game_config.gui_ttf_size));
-            call_home("Startup-Scaling", std::to_string(config::game_config.scale_factor));
+            call_home("game", "Startup");
+            call_home("game", "Startup-FullScreen", std::to_string(config::game_config.fullscreen));
+            call_home("game", "Startup-Resolution", std::to_string(config::game_config.window_width) + std::string("x") + std::to_string(config::game_config.window_height));
+            call_home("game", "Startup-GUI-Font", config::game_config.gui_ttf + std::string(" / ") + std::to_string(config::game_config.gui_ttf_size));
+            call_home("game", "Startup-Scaling", std::to_string(config::game_config.scale_factor));
             sent_telemetry = true;
         }
 

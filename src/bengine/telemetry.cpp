@@ -2,14 +2,26 @@
 #include "threadsafequeue.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../global_assets/constants.hpp"
-#include <curl/curl.h>
-#include <ctime>
-#include <chrono>
 #include "../stdafx.h"
+#include "analytics.hpp"
+#include "filesystem.hpp"
+#include <boost/optional.hpp>
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+
+static const char * tracking_id = "UA-44498023-6";
 
 struct telemetry_t {
-    std::string event;
-    std::string details;
+	telemetry_t() {}
+	telemetry_t(std::string cat, std::string act) : category(cat), action(act) {}
+	telemetry_t(std::string cat, std::string act, std::string lab) : category(cat), action(act), label(lab) {}
+	telemetry_t(std::string cat, std::string act, std::string lab, uint32_t val) : category(cat), action(act), label(lab), value(val) {}
+
+    std::string category = "";
+    std::string action = "";
+	boost::optional<std::string> label;
+	boost::optional<uint32_t> value;
 };
 
 namespace telemetry {
@@ -26,64 +38,67 @@ namespace telemetry {
             std::this_thread::sleep_for(2s);
             telemetry_t msg;
             while (msg_queue.try_pop(msg)) {
-                // Populate the body
-                std::ostringstream ss;
-                ss << "game=bf&user=" << username << "&session=" << session_stamp << "&version=" << VERSION << "&event=" << msg.event << "&details=" << msg.details;
-
-                CURL *curl;
-                CURLcode res;
-
-                curl_global_init(CURL_GLOBAL_ALL);
-                curl = curl_easy_init();
-                if (curl) {
-                    std::string body = ss.str();
-                    curl_easy_setopt(curl, CURLOPT_URL, "http://bfnightly.bracketproductions.com/telemetry-post.php");
-                    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
-                    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L);
-                    struct curl_slist *headers = nullptr;
-                    curl_slist_append(headers, "Expect:");
-                    curl_slist_append(headers, "Content-Type: application/json");
-                    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-                    res = curl_easy_perform(curl);
-                    if (res != CURLE_OK) fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-                    curl_easy_cleanup(curl);
-                }
-                curl_global_cleanup();
-
-                /*
-                sf::Http::Request request("/telemetry-post.php", sf::Http::Request::Post);
-                std::ostringstream stream;
-                stream << "game=bf&user=" << username << "&session=" << session_stamp << "&version=" << VERSION << "&event=" << msg.event << "&details=" << msg.details;
-                request.setBody(stream.str());
-                sf::Http http("http://bfnightly.bracketproductions.com/");
-                sf::Http::Response response = http.sendRequest(request);
-                // We don't really care if it worked, ignore the result
-                 */
-
-
+				// Send it
+				if (msg.label) {
+					if (msg.value) {
+						bengine::analytics::on_event(msg.category.c_str(), msg.action.c_str(), msg.label.get().c_str(), msg.value.get());
+					}
+					else {
+						bengine::analytics::on_event(msg.category.c_str(), msg.action.c_str(), msg.label.get().c_str());
+					}
+				}
+				else {
+					bengine::analytics::on_event(msg.category.c_str(), msg.action.c_str());
+				}
             }
         } while (!quitting);
     }
 
+	std::string get_guid() {
+		std::string guid = "";
+
+		std::string guid_path = get_save_path() + "/userid.conf";
+		if (exists(guid_path)) {
+			// Load it
+			std::ifstream f(guid_path);
+			std::string line;
+			while (getline(f, line))
+			{
+				if (!line.empty()) guid = line;
+			}
+		}
+		else {
+			// Create it
+			boost::uuids::uuid uuid = boost::uuids::random_generator()();
+			guid = boost::uuids::to_string(uuid);
+			std::ofstream f(guid_path);
+			f << guid << "\n";
+		}
+
+		return guid;
+	}
+
     void report_startup() {
         if (allow_telemetry) {
-            std::cout << "Starting telemetry system. Username is: " << username << "\n";
             msg_thread = std::make_unique<std::thread>(message_loop);
-        } else {
-            std::cout << "Skipping telemetry\n";
+			std::string guid = get_guid();
+			std::cout << "GUID: " << guid << "\n";
+			bengine::analytics::init(tracking_id, guid.c_str());
         }
     }
 
     void report_stop() {
-        if (allow_telemetry) {
-            std::cout << "Stopping telemetry\n";
-        }
         if (msg_thread) {
             quitting = true;
             msg_thread->join();
             msg_thread.reset();
+			bengine::analytics::shutdown();
         }
     }
+
+	void on_tick() {
+		bengine::analytics::update_tick();
+	}
 }
 
 void start_telemetry() {
@@ -96,8 +111,17 @@ void stop_telemetry() {
     telemetry::report_stop();
 }
 
-void call_home(const std::string &event, const std::string details) {
-    if (telemetry::allow_telemetry) {
-        telemetry::msg_queue.push(telemetry_t{event, details});
-    }
+void call_home(const std::string &category, const std::string &action) {
+	if (!telemetry::allow_telemetry) return;
+	telemetry::msg_queue.push(telemetry_t{ category, action });
+}
+
+void call_home(const std::string &category, const std::string &action, const std::string &label) {
+	if (!telemetry::allow_telemetry) return;
+	telemetry::msg_queue.push(telemetry_t{ category, action, label });
+}
+
+void call_home(const std::string &category, const std::string &action, const std::string &label, const uint32_t &value) {
+	if (!telemetry::allow_telemetry) return;
+	telemetry::msg_queue.push(telemetry_t{ category, action, label, value });
 }

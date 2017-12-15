@@ -705,6 +705,9 @@
     <ClCompile Include="..\..\src\systems\gui\workflow_ui_system.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bengine\analytics.cpp">
+      <Filter>Source Files\bengine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1534,6 +1537,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\workflow_ui_system.hpp">
       <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bengine\analytics.hpp">
+      <Filter>Header Files\bengine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
