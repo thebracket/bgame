@@ -192,7 +192,7 @@ namespace systems {
 						}
 
 						// Place the building, and assign any provide tags
-						call_home("new_building", finder->tag);
+						call_home("AI", "Building", finder->tag);
 						entity(b.building_target.building_entity)->component<building_t>()->complete = true;
 						visibility::opacity_is_dirty();
 

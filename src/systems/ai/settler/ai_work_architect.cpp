@@ -15,6 +15,7 @@
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../mining_system.hpp"
+#include "../../../bengine/telemetry.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -126,26 +127,32 @@ namespace systems {
 						if (build_type == 0) {
 							// Wall
 							make_wall(bidx, material);
+							call_home("AI", "Architecture", "Wall");
 						}
 						else if (build_type == 1) {
 							// Floor
 							make_floor(bidx);
+							call_home("AI", "Architecture", "Floor");
 						}
 						else if (build_type == 2) {
 							// Up
 							make_stairs_up(bidx);
+							call_home("AI", "Architecture", "Up");
 						}
 						else if (build_type == 3) {
 							// Down
 							make_stairs_down(bidx);
+							call_home("AI", "Architecture", "Down");
 						}
 						else if (build_type == 4) {
 							// UpDown
 							make_stairs_updown(bidx);
+							call_home("AI", "Architecture", "UpDown");
 						}
 						else if (build_type == 5) {
 							// Ramp
 							make_ramp(bidx);
+							call_home("AI", "Architecture", "Ramp");
 						}
 						else if (build_type == 6) {
 							make_floor(bidx);
@@ -164,6 +171,7 @@ namespace systems {
 								entity(bid)->component<bridge_t>()->complete = true;
 								entity(bid)->assign(receives_signal_t{});
 							}
+							call_home("AI", "Architecture", "Bridge");
 						}
 
 						auto [cx, cy, cz] = idxmap(bidx);

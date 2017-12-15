@@ -11,6 +11,7 @@
 #include "../inventory_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../gui/particle_system.hpp"
+#include "../../../bengine/telemetry.hpp"
 
 namespace systems {
 	namespace ai_workorder {
@@ -231,6 +232,7 @@ namespace systems {
 						// TODO: if (finder->power_drain != 0) emit(power_consumed_message{ finder->power_drain });
 
 						// Finish
+						call_home("AI", "Work", w.reaction_target.reaction_tag);
 						free_workshop(w.reaction_target.building_id);
 						render::models_changed = true;
 						inventory_system::inventory_has_changed();

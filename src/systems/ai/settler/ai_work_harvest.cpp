@@ -86,7 +86,7 @@ namespace systems {
 					set_veg_ticker(idx, 0);
 
 					// Become idle - done
-					call_home("harvest", result);
+					call_home("AI", "Harvest", result);
 					work.cancel_work_tag(e);
 					return;
 				}

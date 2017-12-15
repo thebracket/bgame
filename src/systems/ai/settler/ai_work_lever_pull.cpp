@@ -6,6 +6,7 @@
 #include "../../../global_assets/game_designations.hpp"
 #include "../../../components/ai_tags/ai_tag_work_pull_lever.hpp"
 #include "../../../components/lever.hpp"
+#include "../../../bengine/telemetry.hpp"
 
 namespace systems {
 	namespace ai_lever {
@@ -71,6 +72,7 @@ namespace systems {
 
 					// Idle
 					work.cancel_work_tag(e);
+					call_home("AI", "Lever Pull");
 					return;
 				}
 			});

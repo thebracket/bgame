@@ -143,10 +143,12 @@ namespace main_menu {
 			ImGui::SetCursorPosX(opts_indent);
             if (ImGui::Button(menu_opts.c_str())) {
                 show_options = true;
+				call_home("game", "Options");
             }
 			ImGui::SetCursorPosX(quit_indent);
 			if (ImGui::Button(menu_quit.c_str())) {
                 //stop_telemetry();
+				call_home("game", "Quit");
                 glfwSetWindowShouldClose(bengine::main_window, true);
             }
 			ImGui::SetCursorPosX(kylah_indent);

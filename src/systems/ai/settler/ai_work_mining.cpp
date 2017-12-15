@@ -164,7 +164,7 @@ namespace systems {
 						const auto idx = mapidx(pos.x, pos.y, pos.z);
 						const int target_idx = mining_targets[idx];
 						const int target_operation = designations->mining[target_idx];
-						call_home("mining", std::to_string(target_operation));
+						call_home("AI", "Mining", std::to_string(target_operation));
 
 						if (target_operation > 0) {
 							topology::perform_mining( target_idx, designations->mining[target_idx], static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z );
