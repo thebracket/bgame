@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\src\global_assets\spatial_db.cpp" />
     <ClCompile Include="..\..\src\global_assets\texture_storage.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\main_loops\first_run_screen.cpp" />
     <ClCompile Include="..\..\src\main_loops\main_menu.cpp" />
     <ClCompile Include="..\..\src\main_loops\play_game.cpp" />
     <ClCompile Include="..\..\src\main_loops\splash_screen.cpp" />
@@ -428,6 +429,7 @@
     <ClInclude Include="..\..\src\global_assets\shader_storage.hpp" />
     <ClInclude Include="..\..\src\global_assets\spatial_db.hpp" />
     <ClInclude Include="..\..\src\global_assets\texture_storage.hpp" />
+    <ClInclude Include="..\..\src\main_loops\first_run_screen.hpp" />
     <ClInclude Include="..\..\src\main_loops\main_menu.hpp" />
     <ClInclude Include="..\..\src\main_loops\play_game.hpp" />
     <ClInclude Include="..\..\src\main_loops\splash_screen.hpp" />

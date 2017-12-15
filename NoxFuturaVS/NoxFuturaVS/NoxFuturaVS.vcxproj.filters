@@ -708,6 +708,9 @@
     <ClCompile Include="..\..\src\bengine\analytics.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\main_loops\first_run_screen.cpp">
+      <Filter>Source Files\main_loops</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1540,6 +1543,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\analytics.hpp">
       <Filter>Header Files\bengine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\main_loops\first_run_screen.hpp">
+      <Filter>Header Files\main_loops</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
