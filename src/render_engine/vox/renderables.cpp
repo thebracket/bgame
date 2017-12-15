@@ -236,11 +236,14 @@ namespace render {
 	}
 
 	static void render_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
-		// TODO: Add sprite
+		// TODO: This should follow a different code path
+		//std::cout << "Render sentient\n";
+		render_settler(e, r, pos);
 	}
 
 	static void build_composites() {
 		bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+			//std::cout << r.render_mode << "\n";
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				switch (r.render_mode) {
 				case RENDER_SETTLER: render_settler(e, r, pos); break;

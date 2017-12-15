@@ -23,6 +23,7 @@ namespace systems {
 		const std::string win_natives_list = std::string(ICON_FA_USER_SECRET) + " Natives";
 		const std::string btn_goto = std::string(ICON_FA_MAP_MARKER) + " Go To";
 		const std::string btn_goto_creature = std::string(ICON_FA_MAP_MARKER) + " Go To Creature";
+		const std::string btn_goto_native = std::string(ICON_FA_MAP_MARKER) + " Go To NPC";
 		const std::string btn_rogue = std::string(ICON_FA_USER) + " Control (Rogue Mode)";
 		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
@@ -139,7 +140,7 @@ namespace systems {
 			//ImGui::Begin(win_natives_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 			ImGui::PushItemWidth(-1);
 			ImGui::ListBox("## Natives", &current_native, &native_listbox_items[0], natives.size(), 10);
-			if (ImGui::Button(std::string(btn_goto + std::string(" ")).c_str())) {
+			if (ImGui::Button(std::string(btn_goto_native + std::string(" ")).c_str())) {
 				auto selected_critter = natives[current_native].first;
 				auto the_critter = entity(selected_critter);
 				if (the_critter) {
