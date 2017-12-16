@@ -2,6 +2,9 @@
 #include <unordered_map>
 #include "../../stdafx.h"
 #include <assert.h>
+#include <future>
+#include <thread>
+#include <chrono>
 
 namespace vox {
 
@@ -13,7 +16,86 @@ namespace vox {
         return a.r == b.r && a.g == b.g && a.b == b.b;
     }
 
-    void voxel_model::build_model() {
+	void voxel_model::greedy_voxels(std::map<int, subvoxel> &cubes) {
+		int cube_count = 0;
+		while (!cubes.empty()) {
+			const auto first_cube = cubes.begin();
+			const auto base_idx = first_cube->first;
+			const auto voxel_info = first_cube->second;
+
+			int W = 1;
+			int H = 1;
+			int D = 1;
+			cubes.erase(base_idx);
+
+			int idx_grow_right = base_idx + 1;
+			int x_coordinate = voxel_info.x;
+			auto right_finder = cubes.find(idx_grow_right);
+			while (x_coordinate < width && right_finder != cubes.end() && is_same(voxel_info, right_finder->second)) {
+				cubes.erase(idx_grow_right);
+				++W;
+				++idx_grow_right;
+				++x_coordinate;
+				right_finder = cubes.find(idx_grow_right);
+			}
+
+			if (voxel_info.y < height) {
+				int y_progress = voxel_info.y + 1;
+
+				bool possible = true;
+				while (possible && y_progress < height) {
+					for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+						const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
+						auto vfinder = cubes.find(candidate_idx);
+						if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
+					}
+					if (possible) {
+						++H;
+						for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+							const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
+							cubes.erase(candidate_idx);
+						}
+					}
+
+					++y_progress;
+				}
+			}
+
+			if (voxel_info.z < depth) {
+				int z_progress = voxel_info.z + 1;
+
+				bool possible = true;
+				while (possible && z_progress < depth) {
+					for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
+						for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+							const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
+							auto vfinder = cubes.find(candidate_idx);
+							if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
+						}
+					}
+					if (possible) {
+						++D;
+						for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
+							for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+								const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
+								cubes.erase(candidate_idx);
+							}
+						}
+					}
+
+					++z_progress;
+				}
+			}
+
+			add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
+			++cube_count;
+		}
+		std::cout << "Reduced to " << cube_count << " cubes, " << geometry.size() << " triangles.\n";
+	}
+
+	generator voxel_model::build_model_async() {
+		using namespace std::chrono_literals;
+
         // Build a cube map
         std::map<int, subvoxel> cubes;
         for (const auto cube : voxels) {
@@ -21,87 +103,28 @@ namespace vox {
             cubes[idx] = cube;
         }
         std::cout << "Starting with " << cubes.size() << " cubes (" << cubes.size() * 36 << " triangles).\n";
+		co_yield 0;
 
         // Perform greedy voxels on it
-        int cube_count = 0;
-        while (!cubes.empty()) {
-            const auto first_cube = cubes.begin();
-            const auto base_idx = first_cube->first;
-            const auto voxel_info = first_cube->second;
-
-            int W = 1;
-            int H = 1;
-            int D = 1;
-            cubes.erase(base_idx);
-
-            int idx_grow_right = base_idx + 1;
-            int x_coordinate = voxel_info.x;
-            auto right_finder = cubes.find(idx_grow_right);
-            while (x_coordinate < width && right_finder != cubes.end() && is_same(voxel_info, right_finder->second)) {
-                cubes.erase(idx_grow_right);
-                ++W;
-                ++idx_grow_right;
-                ++x_coordinate;
-                right_finder = cubes.find(idx_grow_right);
-            }
-
-            if (voxel_info.y < height) {
-                int y_progress = voxel_info.y + 1;
-
-                bool possible = true;
-                while (possible && y_progress < height) {
-                    for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-                        const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
-                        auto vfinder = cubes.find(candidate_idx);
-                        if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
-                    }
-                    if (possible) {
-                        ++H;
-                        for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-                            const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
-                            cubes.erase(candidate_idx);
-                        }
-                    }
-
-                    ++y_progress;
-                }
-            }
-
-            if (voxel_info.z < depth) {
-                int z_progress = voxel_info.z + 1;
-
-                bool possible = true;
-                while (possible && z_progress < depth) {
-                    for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
-                        for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-                            const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
-                            auto vfinder = cubes.find(candidate_idx);
-                            if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
-                        }
-                    }
-                    if (possible) {
-                        ++D;
-                        for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
-                            for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-                                const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
-                                cubes.erase(candidate_idx);
-                            }
-                        }
-                    }
-
-                    ++z_progress;
-                }
-            }
-
-            add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
-            ++cube_count;
-        }
-        std::cout << "Reduced to " << cube_count << " cubes, " << geometry.size() << " triangles.\n";
+		//greedy_voxels(cubes);
+		auto future = std::async(std::launch::async, [&cubes, this] {
+			this->greedy_voxels(cubes);
+		});
+		
+		bool waiting = true;
+		while (waiting) {
+			auto status = future.wait_for(0ms);
+			if (status == std::future_status::ready) {
+				waiting = false;
+			}
+			co_yield 0;
+		}
 
         // Build VAO/VBO and associate geometry with it
         build_vbo(geometry);
 
         // voxels.clear();
+		co_yield 0;
     }
 
     void voxel_model::add_cube_geometry(std::vector<float> &v, const subvoxel &voxel,

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../bengine/gl_include.hpp"
+#include "../../utils/coroutine_generator.hpp"
 
 namespace vox {
 
@@ -24,9 +25,11 @@ namespace vox {
         unsigned int instance_vbo_id = 0;
         int n_elements = 0;
 
-        void build_model();
         void render_instances(voxel_render_buffer_t &buffer);
 		void build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render);
+
+		generator build_model_async();
+		void greedy_voxels(std::map<int, subvoxel> &cubes);
 
     private:
 		std::vector<float> geometry;

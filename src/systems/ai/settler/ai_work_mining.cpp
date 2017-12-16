@@ -63,7 +63,7 @@ namespace systems {
 					});
 					if (have_pick) {
 						std::cout << "Skipping get pick - we already have one!\n";
-						m.step == ai_tag_work_miner::mining_steps::GOTO_SITE;
+						m.step = ai_tag_work_miner::mining_steps::GOTO_SITE;
 					}
 
 					std::cout << "GET PICK\n";

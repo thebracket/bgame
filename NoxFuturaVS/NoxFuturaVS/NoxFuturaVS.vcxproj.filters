@@ -711,6 +711,9 @@
     <ClCompile Include="..\..\src\main_loops\first_run_screen.cpp">
       <Filter>Source Files\main_loops</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\main_loops\asset_loader.cpp">
+      <Filter>Source Files\main_loops</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1546,6 +1549,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\main_loops\first_run_screen.hpp">
       <Filter>Header Files\main_loops</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\main_loops\asset_loader.hpp">
+      <Filter>Header Files\main_loops</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\coroutine_generator.hpp">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
