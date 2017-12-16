@@ -8,11 +8,11 @@
 
 namespace vox {
 
-    constexpr int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) {
+    static constexpr int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) {
         return (w * h * z) + (w * y) + x;
     }
 
-    bool is_same(const subvoxel &a, const subvoxel &b) {
+    static inline bool is_same(const subvoxel &a, const subvoxel &b) {
         return a.r == b.r && a.g == b.g && a.b == b.b;
     }
 
@@ -48,6 +48,7 @@ namespace vox {
 						const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
 						auto vfinder = cubes.find(candidate_idx);
 						if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
+						if (!possible) break;
 					}
 					if (possible) {
 						++H;
@@ -71,6 +72,7 @@ namespace vox {
 							const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
 							auto vfinder = cubes.find(candidate_idx);
 							if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
+							if (!possible) break;
 						}
 					}
 					if (possible) {
