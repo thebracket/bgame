@@ -7,7 +7,6 @@
 #include "../global_assets/texture_storage.hpp"
 #include "../bengine/main_window.hpp"
 #include "fbo/buffertest.hpp"
-#include "world_textures/world_textures.hpp"
 #include "vox/voxreader.hpp"
 #include "vox/voxel_model.hpp"
 #include "../components/position.hpp"
@@ -158,51 +157,6 @@ namespace render {
 		glCheckError();
 	}
 
-	static void render_to_celestial_buffer(glm::mat4 &projection, glm::mat4 &modelview, GLuint &fbo) {
-		// Bind the directional light shader
-		glUseProgram(assets::dirlight_shader);
-		// Bind the SUN FBO
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		// Set uniforms
-		glUniformMatrix4fv(glGetUniformLocation(assets::dirlight_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(glGetUniformLocation(assets::dirlight_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(modelview));
-
-		// Render everything to it - chunks
-		glClear(GL_DEPTH_BUFFER_BIT);
-		for (const auto target : chunks::chunks) {
-			if (target.has_geometry) {
-				size_t n_elements = 0;
-				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
-					const int layer_z = z + target.base_z;
-					n_elements += target.layers[z].n_elements;
-				}
-
-				if (n_elements > 0) {
-					glBindVertexArray(target.vao);
-					glDrawArrays(GL_TRIANGLES, 0, n_elements);
-				}
-			}
-		}
-
-		// Render everything - trans
-		for (const auto target : chunks::chunks) {
-			if (target.has_transparency) {
-				size_t n_elements = 0;
-				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
-					const int layer_z = z + target.base_z;
-					n_elements += target.layers[z].n_trans;
-				}
-
-				if (n_elements > 0) {
-					glBindVertexArray(target.tvao);
-					glDrawArrays(GL_TRIANGLES, 0, n_elements);
-				}
-			}
-		}
-		render_voxel_models_shadow(projection, modelview);
-		glCheckError();
-	}
-
 	bool depth_test_render = false;
 
     void render_gl(const double &duration_ms) {
@@ -222,13 +176,6 @@ namespace render {
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-
-		// Render the scene from the point-of-view of the sun
-		render_to_celestial_buffer(sun_projection_matrix, sun_modelview_matrix, sun_buffer->fbo_id);
-		render_to_celestial_buffer(moon_projection_matrix, moon_modelview_matrix, moon_buffer->fbo_id);
-
-		// TODO: Render the scene from the POV of the moon
-		// TODO: Render cube-maps from lights
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();

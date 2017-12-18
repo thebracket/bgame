@@ -8,7 +8,6 @@
 #include "../../bengine/serialization_utils.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../../bengine/bitset8.hpp"
-#include "../../render_engine/world_textures/world_textures.hpp"
 
 namespace region {
 

@@ -20,7 +20,6 @@
 #include "../workflow_system.hpp"
 #include "../../physics/topology_system.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
-#include "../../../render_engine/world_textures/world_textures.hpp"
 #include "../../gui/particle_system.hpp"
 
 namespace systems {

@@ -3,7 +3,6 @@
 #include "../../global_assets/game_calendar.hpp"
 #include "../../components/construct_power.hpp"
 #include "../../bengine/ecs.hpp"
-#include "../../render_engine/world_textures/world_textures.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 
 namespace systems {

@@ -660,9 +660,6 @@
     <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp">
       <Filter>Source Files\render_engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\directional_light_buffer.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\design_guardpoints.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
@@ -1495,9 +1492,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp">
       <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\directional_light_buffer.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_guardpoints.hpp">
       <Filter>Header Files\systems\gui</Filter>
