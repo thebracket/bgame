@@ -45,8 +45,6 @@ namespace systems {
 			});
 
 			designations->current_power -= consumption;
-
-			if (starting_power != designations->current_power) render::light_changed = true;
 		}
 	}
 }

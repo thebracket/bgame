@@ -112,22 +112,11 @@ namespace render {
         glUniform1i(lightstage_shader->position_tex, 2);
         glUniform1i(lightstage_shader->ao_tex, 3);
         glUniform1i(lightstage_shader->info_tex, 4);
-        glUniform1i(lightstage_shader->light_pos_tex, 5);
-        glUniform1i(lightstage_shader->light_col_tex, 6);
         glUniform3f(lightstage_shader->camera_position, (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
-		glUniform3f(lightstage_shader->sun_direction, calendar->sun_x, calendar->sun_y, calendar->sun_z);
-		glUniform3f(lightstage_shader->moon_direction, calendar->moon_x, calendar->moon_y, calendar->moon_z);
-		glUniform3f(lightstage_shader->sun_color, calendar->sun_r, calendar->sun_g, calendar->sun_b);
 		glUniform3f(lightstage_shader->moon_color, calendar->moon_r, calendar->moon_g, calendar->moon_b);
-		glUniform1i(lightstage_shader->sun_depth_tex, 7);
-		glUniformMatrix4fv(lightstage_shader->sun_projection, 1, GL_FALSE, glm::value_ptr(sun_projection_matrix));
-		glUniformMatrix4fv(lightstage_shader->sun_modelview, 1, GL_FALSE, glm::value_ptr(sun_modelview_matrix));
-		glUniform1i(lightstage_shader->moon_depth_tex, 8);
-		glUniformMatrix4fv(lightstage_shader->moon_projection, 1, GL_FALSE, glm::value_ptr(moon_projection_matrix));
-		glUniformMatrix4fv(lightstage_shader->moon_modelview, 1, GL_FALSE, glm::value_ptr(moon_modelview_matrix));
-		glUniform1i(lightstage_shader->noise_tex, 9);
+		glUniform1i(lightstage_shader->noise_tex, 5);
 		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix * camera_modelview_matrix));
-		glUniform1i(lightstage_shader->gbuffer_depth_tex, 10);
+		glUniform1i(lightstage_shader->gbuffer_depth_tex, 6);
 		send_samples_to_shader();
 
 		glActiveTexture(GL_TEXTURE0);
@@ -140,17 +129,9 @@ namespace render {
         glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_3D, outdoors_y_z_tex);
-        glActiveTexture(GL_TEXTURE5);
-        glBindTexture(GL_TEXTURE_3D, lightpos_tex);
-        glActiveTexture(GL_TEXTURE6);
-        glBindTexture(GL_TEXTURE_3D, lightcol_tex);
-		glActiveTexture(GL_TEXTURE7);
-		glBindTexture(GL_TEXTURE_2D, sun_buffer->depth_tex);
-		glActiveTexture(GL_TEXTURE8);
-		glBindTexture(GL_TEXTURE_2D, moon_buffer->depth_tex);
-		glActiveTexture(GL_TEXTURE9);
+		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, noise_tex);
-		glActiveTexture(GL_TEXTURE10);
+		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, gbuffer->depth_tex);
         render_buffer_quad();
     }

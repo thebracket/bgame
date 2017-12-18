@@ -520,7 +520,7 @@ namespace region {
         bool ag = true;
         while (test_z < REGION_DEPTH-1) {
             const int testidx = mapidx(x,y,test_z);
-            if (solid[testidx] || tile_type[testidx] == tile_type::FLOOR || tile_type[testidx] == tile_type::WALL || tile_type[testidx] == tile_type::SOLID || flag(testidx, CAN_STAND_HERE)) ag = false;
+            if (tile_type[testidx] == tile_type::FLOOR || tile_type[testidx] == tile_type::WALL || tile_type[testidx] == tile_type::SOLID) ag = false;
             ++test_z;
         }
         above_ground[idx] = ag;

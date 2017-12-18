@@ -202,7 +202,6 @@ namespace systems {
 							}
 							else if (provides.provides == provides_light) {
 								entity(b.building_target.building_entity)->assign(lightsource_t{ provides.radius, provides.color });
-								render::light_changed = true;
 							}
 							else if (provides.provides == provides_door) {
 								entity(b.building_target.building_entity)->assign(construct_door_t{});
