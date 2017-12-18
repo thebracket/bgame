@@ -221,6 +221,7 @@
     <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\gbuffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\fbo\hdr_buffer.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp" />
     <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp" />
     <ClCompile Include="..\..\src\render_engine\render_engine.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp" />
@@ -499,6 +500,7 @@
     <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\gbuffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\fbo\hdr_buffer.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp" />
     <ClInclude Include="..\..\src\render_engine\frustrum.hpp" />
     <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp" />
     <ClInclude Include="..\..\src\render_engine\render_engine.hpp" />

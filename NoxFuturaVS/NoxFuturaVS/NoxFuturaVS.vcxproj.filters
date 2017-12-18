@@ -702,6 +702,9 @@
     <ClCompile Include="..\..\src\main_loops\asset_loader.cpp">
       <Filter>Source Files\main_loops</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp">
+      <Filter>Source Files\render_engine\fbo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1537,6 +1540,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\utils\coroutine_generator.hpp">
       <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp">
+      <Filter>Header Files\render_engine\fbo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
