@@ -9,9 +9,6 @@ uniform sampler2D albedo_tex;
 uniform sampler2D normal_tex;
 uniform sampler2D position_tex;
 uniform sampler2D ao_tex;
-uniform sampler3D info_tex;
-uniform sampler3D light_pos_tex;
-uniform sampler3D light_col_tex;
 uniform sampler2D noise_tex;
 uniform sampler2D gbuffer_depth_tex;
 
@@ -32,15 +29,11 @@ void main()
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb;
-    vec3 world_sampler_pos = vec3((position.x + 0.5) / 256.0, (position.z + 0.5) / 256.0, (position.y + 0.6) / 128.0);
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;
     float ambient_occlusion = material_lookup.r;
     float roughness = material_lookup.b;
-
-    // Retrieve information from the world texture
-    vec3 outdoor_x_y = texture(info_tex, world_sampler_pos).rgb;
 
     // Use https://learnopengl.com/code_viewer_gh.php?code=src/6.pbr/1.2.lighting_textured/1.2.pbr.fs
     vec3 albedo = degamma(texture(albedo_tex, TexCoords).rgb);

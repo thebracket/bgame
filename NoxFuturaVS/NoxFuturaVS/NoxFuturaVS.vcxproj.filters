@@ -103,12 +103,6 @@
     <Filter Include="Source Files\render_engine\vox">
       <UniqueIdentifier>{c85c5b69-88d4-4975-b2d8-db71daacd1e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\render_engine\world_textures">
-      <UniqueIdentifier>{b0310bf1-190e-4182-ab18-24da872d83b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine\world_textures">
-      <UniqueIdentifier>{811962d4-9f45-4497-b518-5484d876eec2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\systems">
       <UniqueIdentifier>{dc4a2726-6f01-4003-983a-f28e481775a0}</UniqueIdentifier>
     </Filter>
@@ -395,9 +389,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp">
       <Filter>Source Files\render_engine\vox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\world_textures\world_textures.cpp">
-      <Filter>Source Files\render_engine\world_textures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\systems\keydamper.cpp">
       <Filter>Source Files\systems</Filter>
@@ -1234,9 +1225,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp">
       <Filter>Header Files\render_engine\vox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\world_textures\world_textures.hpp">
-      <Filter>Header Files\render_engine\world_textures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\keydamper.hpp">
       <Filter>Header Files\systems</Filter>

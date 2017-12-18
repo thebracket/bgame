@@ -111,12 +111,11 @@ namespace render {
         glUniform1i(lightstage_shader->normal_tex, 1);
         glUniform1i(lightstage_shader->position_tex, 2);
         glUniform1i(lightstage_shader->ao_tex, 3);
-        glUniform1i(lightstage_shader->info_tex, 4);
         glUniform3f(lightstage_shader->camera_position, (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
 		glUniform3f(lightstage_shader->moon_color, calendar->moon_r, calendar->moon_g, calendar->moon_b);
-		glUniform1i(lightstage_shader->noise_tex, 5);
+		glUniform1i(lightstage_shader->noise_tex, 4);
 		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix * camera_modelview_matrix));
-		glUniform1i(lightstage_shader->gbuffer_depth_tex, 6);
+		glUniform1i(lightstage_shader->gbuffer_depth_tex, 5);
 		send_samples_to_shader();
 
 		glActiveTexture(GL_TEXTURE0);
@@ -127,11 +126,9 @@ namespace render {
         glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_3D, outdoors_y_z_tex);
-		glActiveTexture(GL_TEXTURE5);
+		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, noise_tex);
-		glActiveTexture(GL_TEXTURE6);
+		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, gbuffer->depth_tex);
         render_buffer_quad();
     }
@@ -154,7 +151,6 @@ namespace render {
 		chunk_maintenance();
 		if (camera_moved) update_camera();
 		if (sun_moved) update_sun_camera();
-		update_world_textures();
 		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
 		systems::particles::build_buffers();

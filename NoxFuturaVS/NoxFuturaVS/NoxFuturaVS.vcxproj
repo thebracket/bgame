@@ -232,7 +232,6 @@
     <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\world_textures\world_textures.cpp" />
     <ClCompile Include="..\..\src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -513,7 +512,6 @@
     <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\world_textures\world_textures.hpp" />
     <ClInclude Include="..\..\src\stdafx.h" />
     <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp" />
     <ClInclude Include="..\..\src\systems\ai\ai_stuck.hpp" />
