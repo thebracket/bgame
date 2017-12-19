@@ -165,24 +165,16 @@ namespace render {
 	static float radius;
 	void update_light_buffers(int &screen_w, int &screen_h, glm::mat4 &projection, glm::mat4 &modelview) {
 		// Initially we're just going to do one light
-		/*bengine::each<lightsource_t, position_t>([](bengine::entity_t &e, lightsource_t &l, position_t &pos) {
+		bengine::each<lightsource_t, position_t>([](bengine::entity_t &e, lightsource_t &l, position_t &pos) {
 			light_pos = glm::vec3{ (float)pos.x, (float)pos.z, (float)pos.y };
 			radius = l.radius;
-		});*/
-		radius = 8.0f;
-		light_pos = glm::vec3{ (float)systems::mouse_wx, (float)systems::mouse_wz, (float)systems::mouse_wy };
+		});
+		//radius = 8.0f;
+		//light_pos = glm::vec3{ (float)systems::mouse_wx, (float)systems::mouse_wz, (float)systems::mouse_wy };
 
 		// Build the matrices to view from this light
 		glm::mat4 light_projection_matrix = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, radius);
 		std::vector<glm::mat4> shadowTransforms;
-		/*
-		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
-		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
-		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
-		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
-		*/
 
 		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
 		shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
@@ -213,9 +205,7 @@ namespace render {
 				size_t n_elements = 0;
 				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
 					const int layer_z = z + target->base_z;
-					if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z - 10) {
-						n_elements += target->layers[z].n_elements;
-					}
+					n_elements += target->layers[z].n_elements;
 				}
 
 				if (n_elements > 0) {
@@ -234,21 +224,36 @@ namespace render {
 
 		// Set uniforms
 		glUniform3f(glGetUniformLocation(assets::lighter_shader, "light_position"), light_pos.x, light_pos.y, light_pos.z);
+		glUniform3f(glGetUniformLocation(assets::lighter_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
+		glUniform3f(glGetUniformLocation(assets::lighter_shader, "light_color"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(assets::lighter_shader, "far_plane"), radius);
 		glUniform1i(glGetUniformLocation(assets::lighter_shader, "world_position"), 0);
 		glUniform1i(glGetUniformLocation(assets::lighter_shader, "depthMap"), 1);
+		glUniform1i(glGetUniformLocation(assets::lighter_shader, "albedo_tex"), 2);
+		glUniform1i(glGetUniformLocation(assets::lighter_shader, "normal_tex"), 3);
+		glUniform1i(glGetUniformLocation(assets::lighter_shader, "ao_tex"), 4);
 
 		// Bind textures
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, pointlight_buffer->depth_cubemap);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->normal_tex);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
 
 		// TODO: Setup a blend mode
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
 
 		// Render it
 		render_buffer_quad();
 		glCheckError();
+
+		glDisable(GL_BLEND);
 	}
 
     void render_gl(const double &duration_ms) {
