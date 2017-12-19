@@ -24,6 +24,7 @@
 #include "ssao.hpp"
 #include "../components/lightsource.hpp"
 #include "../systems/mouse.hpp"
+#include "pointlights.hpp"
 
 namespace render {
 
@@ -274,7 +275,8 @@ namespace render {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		update_light_buffers(screen_w, screen_h, camera_projection_matrix, camera_modelview_matrix);
+		//update_light_buffers(screen_w, screen_h, camera_projection_matrix, camera_modelview_matrix);
+		update_pointlights();
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
@@ -287,7 +289,8 @@ namespace render {
 
         // Render the combined light buffer
         render_to_light_buffer();
-		render_pointlight();
+		//render_pointlight();
+		render_pointlights();
 
 		// Add in translucent cursors
 		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
