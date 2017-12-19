@@ -3,6 +3,7 @@
 #include "../global_assets/game_calendar.hpp"
 #include "chunks/chunks.hpp"
 #include "../systems/mouse.hpp"
+#include "../bengine/main_window.hpp"
 
 namespace render {
 	bool camera_moved = true;
@@ -34,7 +35,9 @@ namespace render {
 	}
 
 	void update_camera() {
-		camera_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
+		int screen_w, screen_h;
+		glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+		camera_projection_matrix = glm::perspective(glm::radians(90.0f), (float)screen_w / (float)screen_h, 1.0f, 300.0f);
 		//camera_projection_matrix = MakeInfReversedZProjRH(NINETY_DEGREES, 1.0f, 1.0f);
 
 		const glm::vec3 up{ 0.0f, 1.0f, 0.0f };

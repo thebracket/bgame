@@ -47,10 +47,8 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"));
 		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"));
-        new_building->assign(lightsource_t{16, bengine::color_t{1.0f, 1.0f, 1.0f}, true});
     } else if (tag == "cordex") {
-        new_building->assign(viewshed_t{16, false})
-            ->assign(lightsource_t{16, bengine::color_t{1.0f, 1.0f, 1.0f}, true});
+		new_building->assign(viewshed_t{ 16, false });
     }  else if (tag == "lamp") {
         new_building->assign(lightsource_t{16, bengine::color_t{1.0f, 1.0f, 1.0f}, true});
     } else if (tag == "battery") {

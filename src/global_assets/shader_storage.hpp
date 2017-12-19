@@ -21,4 +21,5 @@ namespace assets {
 	extern unsigned int particle_shader;
 	extern unsigned int dirlight_shader;
 	extern unsigned int pointlight_shader;
+	extern unsigned int lighter_shader;
 }

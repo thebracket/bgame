@@ -15,4 +15,5 @@ namespace assets {
 	unsigned int particle_shader;
 	unsigned int dirlight_shader;
 	unsigned int pointlight_shader;
+	unsigned int lighter_shader;
 }
