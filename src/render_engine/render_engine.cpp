@@ -152,7 +152,6 @@ namespace render {
 	static void update_buffers() {
 		chunk_maintenance();
 		if (camera_moved) update_camera();
-		if (sun_moved) update_sun_camera();
 		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
 		systems::particles::build_buffers();

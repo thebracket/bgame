@@ -118,7 +118,7 @@ vec3 calculateLightOutput(vec3 albedo, vec3 N, vec3 V, vec3 F0, vec3 L, vec3 rad
 vec3 gameLight(vec3 albedo, vec3 N, vec3 V, vec3 F0, float roughness, float metallic, vec3 light_position, vec3 position, vec3 light_color) {
     vec3 L = normalize(light_position.xyz - position);    
     float distance = distance(light_position.xyz, position);
-    float attenuation = (1.0 / (distance));
+    float attenuation = far_plane > 64.0 ? 1.0 : (1.0 / (distance));
     vec3 radiance = light_color * attenuation;
 
     return calculateLightOutput(albedo, N, V, F0, L, radiance, roughness, metallic);

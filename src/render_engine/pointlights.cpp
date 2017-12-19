@@ -11,6 +11,7 @@
 #include "chunks/chunks.hpp"
 #include "fbo/buffertest.hpp"
 #include "../global_assets/game_camera.hpp"
+#include "../global_assets/game_calendar.hpp"
 #include <map>
 #include <memory>
 
@@ -18,7 +19,7 @@ namespace render {
 	struct pointlight_t {
 		int size = 128;
 		bool new_light = true;
-		uint8_t cycle = 0;
+		uint8_t cycle_tick = 0;
 		glm::vec3 light_pos;
 		glm::vec3 light_col;
 		float radius;
@@ -126,13 +127,30 @@ namespace render {
 		pointlights[id].light_pos = glm::vec3{ (float)pos.x, (float)pos.z, (float)pos.y };
 		pointlights[id].light_col = glm::vec3{ l.color.r, l.color.g, l.color.b };
 		pointlights[id].radius = l.radius;
-		pointlights[id].cycle = id % 20;
+		pointlights[id].cycle_tick = id % 20;
 		pointlights[id].make_mats();
 		pointlights[id].make_buffer();
 	}
 
+	static bool first_run = true;
+
 	void update_pointlights() {
 		using namespace bengine;
+
+		if (first_run) {
+			const std::size_t id = std::numeric_limits<std::size_t>::max();
+			pointlights[id] = pointlight_t{};
+
+			pointlights[id].size = 256;
+			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
+			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
+			pointlights[id].radius = 200.0f;
+			pointlights[id].cycle_tick = id % 20;
+			pointlights[id].make_mats();
+			pointlights[id].make_buffer();
+
+			first_run = false;
+		}
 
 		// List current lights
 		each<lightsource_t, position_t>([](entity_t &e, lightsource_t &l, position_t &pos) {
@@ -144,7 +162,15 @@ namespace render {
 		});
 
 		for (auto &l : pointlights) {
-			if (l.second.new_light || l.second.cycle == cycle) l.second.draw_depth_buffer();
+			if (l.second.new_light || l.second.cycle_tick == cycle) {
+				if (l.first == std::numeric_limits<std::size_t>::max()) {
+					pointlights[std::numeric_limits<std::size_t>::max()].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
+					//std::cout << "UPDATING THE SUN\n";
+					//std::cout << calendar->sun_x << "," << calendar->sun_y << "," << calendar->sun_z << "\n";
+					l.second.make_mats();
+				}
+				l.second.draw_depth_buffer();
+			}
 		}
 
 		++cycle;

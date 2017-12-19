@@ -14,14 +14,6 @@ namespace render {
 	Frustrum frustrum;
 	boost::container::flat_set<int, std::greater<int>> visible_chunks;
 
-	glm::mat4 sun_projection_matrix;
-	glm::mat4 sun_modelview_matrix;
-	glm::mat4 sun_proj_model_view_matrix;
-
-	glm::mat4 moon_projection_matrix;
-	glm::mat4 moon_modelview_matrix;
-	glm::mat4 moon_proj_model_view_matrix;
-
 	constexpr float NINETY_DEGREES = 1.5708f;
 
 	glm::mat4 MakeInfReversedZProjRH(float fovY_radians, float aspectWbyH, float zNear)
@@ -75,29 +67,5 @@ namespace render {
 		}
 
 		camera_moved = false;
-	}
-
-	void update_sun_camera() {
-		//sun_projection_matrix = glm::perspective(90.0f, 1.0f, 1.0f, 300.0f);
-		float near_plane = 0.0f, far_plane = 384.0f;
-		sun_projection_matrix = glm::ortho(-192.0f, 192.0f, -192.0f, 192.0f, near_plane, far_plane);
-		const glm::vec3 up{ 0.0f, 1.0f, 0.0f };
-		const glm::vec3 target{ (float)REGION_WIDTH / 2.0f, (float)REGION_DEPTH / 2.0f, (float)REGION_HEIGHT / 2.0f };
-		//const glm::vec3 target{ systems::mouse_wx + 10.0f, systems::mouse_wz, systems::mouse_wy };
-		const glm::vec3 at{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
-		//const glm::vec3 at{ systems::mouse_wx, systems::mouse_wz, systems::mouse_wy };
-		sun_modelview_matrix = glm::lookAt(at, target, up);
-		sun_proj_model_view_matrix = sun_projection_matrix * sun_modelview_matrix;
-
-		// Temporarily zoom the camera around with the sun to see what we're doing wrong
-		//camera_modelview_matrix = sun_modelview_matrix;
-		//camera_projection_matrix = sun_projection_matrix;
-
-		moon_projection_matrix = sun_projection_matrix;
-		const glm::vec3 moon_at{ calendar->moon_x, calendar->moon_y, calendar->moon_z };
-		moon_modelview_matrix = glm::lookAt(moon_at, target, up);
-		moon_proj_model_view_matrix = moon_projection_matrix * moon_modelview_matrix;
-
-		sun_moved = false;
 	}
 }

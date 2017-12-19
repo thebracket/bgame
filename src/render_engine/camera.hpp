@@ -12,15 +12,5 @@ namespace render {
 	extern Frustrum frustrum;
 	extern boost::container::flat_set<int, std::greater<int>> visible_chunks;
 
-	extern glm::mat4 sun_projection_matrix;
-	extern glm::mat4 sun_modelview_matrix;
-	extern glm::mat4 sun_proj_model_view_matrix;
-
-	extern glm::mat4 moon_projection_matrix;
-	extern glm::mat4 moon_modelview_matrix;
-	extern glm::mat4 moon_proj_model_view_matrix;
-
-
 	void update_camera();
-	void update_sun_camera();
 }
