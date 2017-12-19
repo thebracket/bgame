@@ -3,8 +3,8 @@
 
 namespace render {
 	point_light_buffer_t::point_light_buffer_t(const int &w, const int &h) {
-		width = 128;
-		height = 128;
+		width = w;
+		height = w;
 
 		glGenFramebuffers(1, &fbo_id);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);

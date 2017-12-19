@@ -17,6 +17,8 @@
 namespace render {
 	struct pointlight_t {
 		int size = 128;
+		bool new_light = true;
+		uint8_t cycle = 0;
 		glm::vec3 light_pos;
 		glm::vec3 light_col;
 		float radius;
@@ -34,7 +36,7 @@ namespace render {
 		}
 
 		void make_buffer() {
-			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(128, 128);
+			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(size, size);
 		}
 
 		void draw_depth_buffer() {
@@ -53,7 +55,7 @@ namespace render {
 			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
 
 			// Render everything to it - chunks
-			glViewport(0, 0, 128, 128);
+			glViewport(0, 0, size, size);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for (const auto &idx : visible_chunks) {
 				chunks::chunk_t * target = &chunks::chunks[idx];
@@ -72,6 +74,7 @@ namespace render {
 			}
 			//render_voxel_models_shadow(projection, modelview);
 			glViewport(0, 0, screen_w, screen_h);
+			new_light = false;
 		}
 
 		void render_light() {
@@ -114,13 +117,16 @@ namespace render {
 	};
 
 	static std::map<std::size_t, pointlight_t> pointlights;
+	static uint8_t cycle = 0;
 
 	static void add_lightsource(const std::size_t &id, const lightsource_t &l, const position_t &pos) {
 		pointlights[id] = pointlight_t{};
 
+		pointlights[id].size = 128;
 		pointlights[id].light_pos = glm::vec3{ (float)pos.x, (float)pos.z, (float)pos.y };
 		pointlights[id].light_col = glm::vec3{ l.color.r, l.color.g, l.color.b };
 		pointlights[id].radius = l.radius;
+		pointlights[id].cycle = id % 20;
 		pointlights[id].make_mats();
 		pointlights[id].make_buffer();
 	}
@@ -138,9 +144,11 @@ namespace render {
 		});
 
 		for (auto &l : pointlights) {
-			l.second.draw_depth_buffer();
+			if (l.second.new_light || l.second.cycle == cycle) l.second.draw_depth_buffer();
 		}
 
+		++cycle;
+		if (cycle > 20) cycle = 0;
 	}
 
 	void render_pointlights() {
