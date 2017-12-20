@@ -18,8 +18,9 @@
 #include <set>
 
 namespace render {
+	static constexpr int size = 128;
+
 	struct pointlight_t {
-		int size = 128;
 		bool new_light = true;
 		uint8_t cycle_tick = 0;
 		glm::vec3 light_pos;
@@ -144,7 +145,6 @@ namespace render {
 			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
 			pointlights[id].radius = 512.0f;
 			pointlights[id].cycle_tick = id % 20;
-			pointlights[id].size = 128;
 			pointlights[id].make_mats();
 			pointlights[id].make_buffer();
 			first_run = false;
@@ -191,7 +191,7 @@ namespace render {
 
 	void render_pointlights() {
 		for (auto &l : pointlights) {
-			if (l.first == std::numeric_limits<std::size_t>::max() && (calendar->hour < 6 || calendar->hour > 18)) break;
+			if (l.first == std::numeric_limits<std::size_t>::max() && (calendar->hour < 7 || calendar->hour > 17)) break;
 			l.second.render_light();
 		}
 	}

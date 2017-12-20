@@ -33,6 +33,8 @@ namespace systems {
 			//std::cout << "At: " << +calendar->hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
 		}
 
+		static bool first_calendar = true;
+
         void run(const double duration_ms) {
             auto hour = calendar->hour;
             auto day = calendar->day;
@@ -41,7 +43,10 @@ namespace systems {
 			day_elapsed = false;
             if (calendar->hour != hour) hour_elapsed = true;
             if (calendar->day != day) day_elapsed = true;
-			calculate_sun_moon();
+			if (hour_elapsed || first_calendar) {
+				calculate_sun_moon();
+				first_calendar = false;
+			}
         }
     }
 }

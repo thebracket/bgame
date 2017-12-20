@@ -487,5 +487,6 @@ namespace render {
 				m->model->render_instances(*m);
 			}
 		}
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureId, 0);
 	}
 }

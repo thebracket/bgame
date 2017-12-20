@@ -19,6 +19,7 @@
 #include "../global_assets/game_designations.hpp"
 #include "../global_assets/game_logger.hpp"
 #include "../global_assets/game_mode.hpp"
+#include "../global_assets/game_pause.hpp"
 
 namespace play_game {
 
@@ -71,6 +72,7 @@ namespace play_game {
         std::cout << "Go!\n";
 
 		game_master_mode = PLAY;
+		pause_mode = ONE_STEP;
 
         loaded = true;
     }
