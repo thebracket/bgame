@@ -10,6 +10,7 @@
 #include "../../components/item_carried.hpp"
 #include "../../components/renderable.hpp"
 #include "../../components/grazer_ai.hpp"
+#include "../../components/sentient_ai.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "voxel_model.hpp"
 #include "voxreader.hpp"
@@ -19,6 +20,8 @@
 #include "../../global_assets/game_building.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/defs/building_def_t.hpp"
+#include "../../raws/species.hpp"
+#include "../../raws/defs/civilization_t.hpp"
 #include "../../systems/mouse.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../systems/ai/inventory_system.hpp"
@@ -235,9 +238,10 @@ namespace render {
 		});
 	}
 
-	static void render_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+	static void render_composite_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		// TODO: This should follow a different code path
 		//std::cout << "Render sentient\n";
+
 		render_settler(e, r, pos);
 	}
 
@@ -247,7 +251,7 @@ namespace render {
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				switch (r.render_mode) {
 				case RENDER_SETTLER: render_settler(e, r, pos); break;
-				case RENDER_SENTIENT: render_sentient(e, r, pos); break;
+				case RENDER_SENTIENT: render_composite_sentient(e, r, pos); break;
 				}
 			}
 		});
@@ -288,6 +292,26 @@ namespace render {
 			}
 			else {
 				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.z, pos.y, r.foreground, r.glyph_ascii });
+			}
+		});
+
+		// Render sentients who don't have a composite component
+		bengine::each<position_t, sentient_ai, species_t>([](bengine::entity_t &e, position_t &pos, sentient_ai &g, species_t &species) {
+			if (e.component<renderable_composite_t>() == nullptr) {
+				auto def = get_species_def(species.tag);
+				if (def == nullptr) return;
+
+				if (def->voxel_model != 0) {
+					//std::cout << "Found critter " << r.vox << "\n";
+					auto finder = models_to_render->find(def->voxel_model);
+					vox::instance_t render_model{ pos.x, pos.z, pos.y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+					if (finder != models_to_render->end()) {
+						finder->second.push_back(render_model);
+					}
+					else {
+						models_to_render->insert(std::make_pair(def->voxel_model, std::vector<vox::instance_t>{ render_model }));
+					}
+				}
 			}
 		});
 	}

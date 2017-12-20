@@ -37,6 +37,7 @@ struct raw_species_t {
     bool render_composite = false;
     uint16_t base_male_glyph = 352;
     uint16_t base_female_glyph = 353;
+	int voxel_model = 0;
     std::vector<std::pair<std::string, bengine::color_t>> skin_colors;
     std::vector<std::pair<std::string, bengine::color_t>> hair_colors;
 };

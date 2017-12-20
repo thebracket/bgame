@@ -280,6 +280,7 @@ void read_species_types() noexcept
             if (field == "glyph_ascii") s.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "worldgen_glyph") s.worldgen_glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "composite_render") s.render_composite = lua_toboolean(lua_state, -1);
+			if (field == "vox") s.voxel_model = lua_tonumber(lua_state, -1);
             if (field == "base_male_glyph") s.base_male_glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "base_female_glyph") s.base_female_glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
             if (field == "skin_colors") {

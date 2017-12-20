@@ -8,7 +8,8 @@ species_sentient['emmet4'] = {
     ethics = { diet = "omnivore", blight = true, alignment="devour" },
     max_age = 20, infant_age = 1, child_age = 2,
     glyph = glyphs['ant_dark'], ascii_glyph = glyphs['a'],
-    worldgen_glyph = glyphs['ant_dark']
+    worldgen_glyph = glyphs['ant_dark'],
+    composite_render=false, vox = voxelId("ant")
 }
 
 emmet_queen4 = {
