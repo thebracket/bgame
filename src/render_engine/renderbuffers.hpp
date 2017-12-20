@@ -12,7 +12,6 @@ namespace render {
 	extern std::unique_ptr<base_lit_buffer_t> light_stage_buffer;
 	extern std::unique_ptr<hdr_buffer_t> hdr_buffer;
 	extern std::unique_ptr<bloom_pingpong_t> bloom_buffer;
-	extern std::unique_ptr<point_light_buffer_t> pointlight_buffer;
 
 	void build_framebuffers(const int &screen_w, const int &screen_h);
 }

@@ -4,6 +4,8 @@
 #include "../../components/construct_power.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
+#include "../../components/lightsource.hpp"
+#include "../../bengine/color_t.hpp"
 
 namespace systems {
 	namespace power {
@@ -44,6 +46,28 @@ namespace systems {
 			});
 
 			designations->current_power -= consumption;
+
+			if (designations->current_power != starting_power) {
+				float power_percent = (float)designations->current_power / (float)designations->total_capacity;
+				bengine::color_t alert_color;
+				if (power_percent < 0.3) {
+					alert_color = color_t(1.0f, 0.0f, 0.0f);
+				}
+				else if (power_percent < 0.5) {
+					alert_color = color_t(1.0f, 0.5f, 0.0f);
+				}
+				else if (power_percent < 0.75) {
+					alert_color = color_t(1.0f, 1.0f, 0.0f);
+				}
+				else {
+					alert_color = { 1.0f, 1.0f, 1.0f };
+				}
+				bengine::each<lightsource_t>([&alert_color](bengine::entity_t &e, lightsource_t &l) {
+					if (l.alert_status) {
+						l.color = alert_color;
+					}
+				});
+			}
 		}
 	}
 }

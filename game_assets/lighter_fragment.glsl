@@ -136,7 +136,8 @@ void main()
     }
     
     // Discard if the light can't see it
-    if (shadow(fragToLight) < 0.1) {
+    float shadowFactor = shadow(fragToLight);
+    if (shadowFactor < 0.1) {
         discard;
     }
 

@@ -14,10 +14,10 @@
 #include "../global_assets/game_calendar.hpp"
 #include <map>
 #include <memory>
+#include <set>
 
 namespace render {
 	struct pointlight_t {
-		int size = 128;
 		bool new_light = true;
 		uint8_t cycle_tick = 0;
 		glm::vec3 light_pos;
@@ -27,7 +27,8 @@ namespace render {
 		std::unique_ptr<point_light_buffer_t> buffer;
 
 		void make_mats() {
-			glm::mat4 light_projection_matrix = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, radius);
+			shadowTransforms.clear();
+			glm::mat4 light_projection_matrix = glm::perspective(glm::radians(90.0f), 1.0f, 0.25f, radius);
 			shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
 			shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
 			shadowTransforms.push_back(light_projection_matrix * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
@@ -37,14 +38,14 @@ namespace render {
 		}
 
 		void make_buffer() {
-			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(size, size);
+			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(128, 128);
 		}
 
 		void draw_depth_buffer() {
 			int screen_w, screen_h;
 			glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, pointlight_buffer->fbo_id);
+			glBindFramebuffer(GL_FRAMEBUFFER, buffer->fbo_id);
 			glUseProgram(assets::pointlight_shader);
 			glUniform3f(glGetUniformLocation(assets::pointlight_shader, "lightPos"), light_pos.x, light_pos.y, light_pos.z);
 			glUniform1f(glGetUniformLocation(assets::pointlight_shader, "far_plane"), radius);
@@ -56,7 +57,7 @@ namespace render {
 			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
 
 			// Render everything to it - chunks
-			glViewport(0, 0, size, size);
+			glViewport(0, 0, 128, 128);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for (const auto &idx : visible_chunks) {
 				chunks::chunk_t * target = &chunks::chunks[idx];
@@ -97,7 +98,7 @@ namespace render {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
 			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, pointlight_buffer->depth_cubemap);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, buffer->depth_cubemap);
 			glActiveTexture(GL_TEXTURE2);
 			glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
 			glActiveTexture(GL_TEXTURE3);
@@ -123,7 +124,6 @@ namespace render {
 	static void add_lightsource(const std::size_t &id, const lightsource_t &l, const position_t &pos) {
 		pointlights[id] = pointlight_t{};
 
-		pointlights[id].size = 128;
 		pointlights[id].light_pos = glm::vec3{ (float)pos.x, (float)pos.z, (float)pos.y };
 		pointlights[id].light_col = glm::vec3{ l.color.r, l.color.g, l.color.b };
 		pointlights[id].radius = l.radius;
@@ -132,25 +132,8 @@ namespace render {
 		pointlights[id].make_buffer();
 	}
 
-	static bool first_run = true;
-
 	void update_pointlights() {
 		using namespace bengine;
-
-		if (first_run) {
-			const std::size_t id = std::numeric_limits<std::size_t>::max();
-			pointlights[id] = pointlight_t{};
-
-			pointlights[id].size = 256;
-			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
-			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
-			pointlights[id].radius = 200.0f;
-			pointlights[id].cycle_tick = id % 20;
-			pointlights[id].make_mats();
-			pointlights[id].make_buffer();
-
-			first_run = false;
-		}
 
 		// List current lights
 		each<lightsource_t, position_t>([](entity_t &e, lightsource_t &l, position_t &pos) {
@@ -159,16 +142,23 @@ namespace render {
 				// Insert a light
 				add_lightsource(e.id, l, pos);
 			}
+			else {				
+				bool changed = false;
+				if (pos.x != finder->second.light_pos.x) { changed = true; finder->second.light_pos.x = (float)pos.x; }
+				if (pos.y != finder->second.light_pos.z) { changed = true; finder->second.light_pos.z = (float)pos.y; }
+				if (pos.z != finder->second.light_pos.y) { changed = true; finder->second.light_pos.y = (float)pos.z; }
+				if (changed) {
+					std::cout << "Light updated!\n";
+					finder->second.make_mats();
+				}
+				if (l.color.r != finder->second.light_col.r) finder->second.light_col.r = l.color.r;
+				if (l.color.g != finder->second.light_col.g) finder->second.light_col.g = l.color.g;
+				if (l.color.b != finder->second.light_col.b) finder->second.light_col.b = l.color.b;
+			}
 		});
 
 		for (auto &l : pointlights) {
 			if (l.second.new_light || l.second.cycle_tick == cycle) {
-				if (l.first == std::numeric_limits<std::size_t>::max()) {
-					pointlights[std::numeric_limits<std::size_t>::max()].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
-					//std::cout << "UPDATING THE SUN\n";
-					//std::cout << calendar->sun_x << "," << calendar->sun_y << "," << calendar->sun_z << "\n";
-					l.second.make_mats();
-				}
 				l.second.draw_depth_buffer();
 			}
 		}
