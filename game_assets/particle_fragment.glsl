@@ -2,7 +2,7 @@
 
 in vec3 color;
 
-layout (location = 2) out vec3 gAlbedo;
+layout (location = 0) out vec3 gAlbedo;
 
 out vec4 FragColor;
 

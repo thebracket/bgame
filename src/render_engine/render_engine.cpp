@@ -186,7 +186,6 @@ namespace render {
         render_chunks();
         glCheckError();
 		render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
-		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
 
 		// Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
@@ -199,6 +198,7 @@ namespace render {
 		// Add in translucent cursors
 		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
 		render_cursor(camera_projection_matrix, camera_modelview_matrix);
+		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
 
 		// TODO: Downsample buffers here
 

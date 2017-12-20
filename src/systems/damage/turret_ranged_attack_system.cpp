@@ -8,6 +8,7 @@
 #include "../../global_assets/rng.hpp"
 #include "../helpers/weapons_helper.hpp"
 #include "damage_system.hpp"
+#include "../gui/particle_system.hpp"
 
 namespace systems {
 	namespace turret_attacks {
@@ -30,6 +31,8 @@ namespace systems {
 
 				auto attacker_pos = attacker->component<position_t>();
 				auto defender_pos = defender->component<position_t>();
+				if (!attacker_pos || !defender_pos) return;
+				particles::ranged_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 1.0f });
 
 				// Send the bolt on its way
 				// TODO: emit(emit_particles_message{ 3, attacker_pos->x, attacker_pos->y, attacker_pos->z, defender_pos->x, defender_pos->y, defender_pos->z });

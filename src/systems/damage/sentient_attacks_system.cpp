@@ -14,6 +14,7 @@
 #include "../../raws/defs/material_def_t.hpp"
 #include "../../components/game_stats.hpp"
 #include "damage_system.hpp"
+#include "../gui/particle_system.hpp"
 
 namespace systems {
 	namespace sentient_attacks {
@@ -44,6 +45,11 @@ namespace systems {
 
 			auto defender = entity(msg.victim);
 			if (!defender) return;
+
+			auto attacker_pos = entity(msg.attacker)->component<position_t>();
+			auto defender_pos = entity(msg.victim)->component<position_t>();
+			if (!attacker_pos || !defender_pos) return;
+			particles::melee_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 0.0f });
 
 			const int die_roll = rng.roll_dice(1, 20) + hit_bonus;
 			const int armor_class = calculate_armor_class(*defender);
@@ -104,6 +110,8 @@ namespace systems {
 				auto attacker_stats = attacker->component<game_stats_t>();
 				auto attacker_pos = attacker->component<position_t>();
 				auto defender_pos = defender->component<position_t>();
+				if (!attacker_pos || !defender_pos) return;
+				particles::ranged_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 0.0f });
 
 				// TODO: civ_dislike_attacker(defender);
 

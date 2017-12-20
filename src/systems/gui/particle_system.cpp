@@ -8,6 +8,7 @@
 #include "../../bengine/gl_include.hpp"
 #include "../../global_assets/shader_storage.hpp"
 #include "../../render_engine/fbo/gbuffer.hpp"
+#include "../../bengine/geometry.hpp"
 
 namespace systems {
 	namespace particles {
@@ -46,6 +47,39 @@ namespace systems {
 					}
 				}
 			}
+		}
+
+		static void particle_line(const float x1, const float y1, const float z1, const float x2, const float y2, const float z2, const bengine::color_t &color) {
+			const float length = bengine::distance3d(x1, y1, z1, x2, y2, z2);
+			const float num_steps = length * 100.0f;
+			const float x_diff = x2 - x1;
+			const float y_diff = y2 - y1;
+			const float z_diff = z2 - z1;
+			const float x_step = x_diff / num_steps;
+			const float y_step = y_diff / num_steps;
+			const float z_step = z_diff / num_steps;
+			const int n_steps = static_cast<int>(num_steps);
+
+			float x = x1;
+			float y = y1;
+			float z = z1;
+
+			for (int i = 0; i < n_steps; ++i) {
+
+				positions.emplace_back(particle_t{ x, y, z, color.r, color.g, color.b, 1.0f, PARTICLE_LUMBERJACK, 900.0f) });
+
+				x += x_step;
+				y += y_step;
+				z += z_step;
+			}
+		}
+
+		void ranged_attack(position_t &start, position_t &end, bengine::color_t &color) {
+			particle_line(start.x, start.z, start.y, end.x, end.z, end.y, color);
+		}
+
+		void melee_attack(position_t &start, position_t &end, bengine::color_t &color) {
+			particle_line(start.x, start.z, start.y, end.x, end.z, end.y, color);
 		}
 
 		void run(const double &duration_ms) {

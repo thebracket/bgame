@@ -13,6 +13,7 @@
 #include "../gui/log_system.hpp"
 #include "../../global_assets/rng.hpp"
 #include "damage_system.hpp"
+#include "../gui/particle_system.hpp"
 
 namespace systems {
 	namespace settler_ranged_attack {
@@ -35,6 +36,8 @@ namespace systems {
 				auto attacker_stats = attacker->component<game_stats_t>();
 				auto attacker_pos = attacker->component<position_t>();
 				auto defender_pos = defender->component<position_t>();
+				if (!attacker_pos || !defender_pos) return;
+				particles::ranged_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 1.0f });
 
 				// TODO: civ_dislike_attacker(defender);
 

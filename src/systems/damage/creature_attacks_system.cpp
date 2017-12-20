@@ -10,6 +10,7 @@
 #include "../../components/logger.hpp"
 #include "../../global_assets/rng.hpp"
 #include "damage_system.hpp"
+#include "../gui/particle_system.hpp"
 
 namespace systems {
 	namespace creature_attacks {
@@ -38,6 +39,12 @@ namespace systems {
 
 				auto defender = entity(msg.victim);
 				if (!defender) return;
+
+				auto attacker_pos = entity(msg.attacker)->component<position_t>();
+				auto defender_pos = entity(msg.victim)->component<position_t>();
+				if (!attacker_pos || !defender_pos) return;
+				particles::melee_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 0.0f });
+
 				auto defender_stats = defender->component<game_stats_t>();
 
 				for (const creature_attack_t &weapon : creature.attacks) {
