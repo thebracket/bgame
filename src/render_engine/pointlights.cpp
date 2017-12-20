@@ -18,6 +18,7 @@
 
 namespace render {
 	struct pointlight_t {
+		int size = 128;
 		bool new_light = true;
 		uint8_t cycle_tick = 0;
 		glm::vec3 light_pos;
@@ -38,7 +39,7 @@ namespace render {
 		}
 
 		void make_buffer() {
-			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(128, 128);
+			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(size, size);
 		}
 
 		void draw_depth_buffer() {
@@ -57,7 +58,7 @@ namespace render {
 			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
 
 			// Render everything to it - chunks
-			glViewport(0, 0, 128, 128);
+			glViewport(0, 0, size, size);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for (const auto &idx : visible_chunks) {
 				chunks::chunk_t * target = &chunks::chunks[idx];
@@ -120,6 +121,7 @@ namespace render {
 
 	static std::map<std::size_t, pointlight_t> pointlights;
 	static uint8_t cycle = 0;
+	static bool first_run = true;
 
 	static void add_lightsource(const std::size_t &id, const lightsource_t &l, const position_t &pos) {
 		pointlights[id] = pointlight_t{};
@@ -134,6 +136,18 @@ namespace render {
 
 	void update_pointlights() {
 		using namespace bengine;
+
+		if (first_run) {
+			const std::size_t id = std::numeric_limits<std::size_t>::max();
+			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
+			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
+			pointlights[id].radius = 512.0f;
+			pointlights[id].cycle_tick = id % 20;
+			pointlights[id].size = 256;
+			pointlights[id].make_mats();
+			pointlights[id].make_buffer();
+			first_run = false;
+		}
 
 		// List current lights
 		each<lightsource_t, position_t>([](entity_t &e, lightsource_t &l, position_t &pos) {
@@ -159,6 +173,13 @@ namespace render {
 
 		for (auto &l : pointlights) {
 			if (l.second.new_light || l.second.cycle_tick == cycle) {
+				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {
+					l.second.light_pos.x = calendar->sun_x;
+					l.second.light_pos.y = calendar->sun_y;
+					l.second.light_pos.z = calendar->sun_z;
+					l.second.make_mats();
+					render::sun_moved = false;
+				}
 				l.second.draw_depth_buffer();
 			}
 		}
@@ -169,6 +190,7 @@ namespace render {
 
 	void render_pointlights() {
 		for (auto &l : pointlights) {
+			if (l.first == std::numeric_limits<std::size_t>::max() && (calendar->hour < 6 || calendar->hour > 18)) break;
 			l.second.render_light();
 		}
 	}

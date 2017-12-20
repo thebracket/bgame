@@ -153,8 +153,9 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
             }
             
             // Populate the surface tile at z-1
-            reveal(mapidx(x,y,z-1));
-            set_tile_type(mapidx(x,y,z-1), tile_type::FLOOR);
+            reveal(mapidx(x, y, z - 1));
+			reveal(mapidx(x, y, z - 2));
+			set_tile_type(mapidx(x,y,z-1), tile_type::FLOOR);
             if (wet) {
                 set_water_level(mapidx(x,y,z-1), 10); // Below the water line; flood it!
             } else {

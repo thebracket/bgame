@@ -18,30 +18,30 @@ namespace systems {
 
 		void calculate_sun_moon() {
 			render::sun_moved = true;
-			const double time_overall = (calendar->hour + 6.0f + (static_cast<float>(calendar->minute)/60.0f)) / 24.0f;
-			const double time_as_float = time_overall;
-			const double time_as_radians = (time_as_float * 6.28319);
+			const float minutes_fraction = calendar->minute / 60.0f;
+			const float hours_fraction = (float)calendar->hour + minutes_fraction - 6.0f;
+			const float time_overall = hours_fraction / 24.0f;
+			const float time_as_float = time_overall; // Should be in the range 0-1
+			const float time_as_radians = (time_as_float * 6.28319f);
 			//auto sun_pos = bengine::project_angle(0, 0, sun_distance, time_as_radians);
-			const float X = std::cos(time_as_radians) * 129.0f;
-			const float Y = std::sin(time_as_radians) * 129.0f;
+			const float X = std::cos(time_as_radians) * 256.0f;
+			const float Y = std::sin(time_as_radians) * 256.0f;
 			calendar->sun_x = X + 128.0f;
 			calendar->sun_y = Y + 128.0f;
 			calendar->sun_z = static_cast<float>(129.0f);
 
-			//std::cout << "At: " << +hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
+			//std::cout << "At: " << +calendar->hour << ":" << +calendar->minute << ", sun is at " << calendar->sun_x << ", " << calendar->sun_y << ", " << calendar->sun_z << "\n";
 		}
 
         void run(const double duration_ms) {
-			bool do_sun = false;
             auto hour = calendar->hour;
             auto day = calendar->day;
-			if (calendar->minute % 10 == 0) do_sun = true;
             calendar->next_minute();
 			hour_elapsed = false;
 			day_elapsed = false;
             if (calendar->hour != hour) hour_elapsed = true;
             if (calendar->day != day) day_elapsed = true;
-			if (do_sun) calculate_sun_moon();
+			calculate_sun_moon();
         }
     }
 }

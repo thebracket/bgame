@@ -77,7 +77,7 @@ namespace chunks {
 			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
 			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f,
 			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f,
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f,
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
 		});
 		return 6;
 	}
