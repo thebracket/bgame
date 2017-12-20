@@ -125,7 +125,7 @@ namespace vox {
                 /* Store the amount of models */
                 const pack_chunk *pack = (pack_chunk *) chunk;
                 numModels = pack->numModels;
-                printf("Found %i models\n", numModels);
+                //printf("Found %i models\n", numModels);
             }
             else if (id == size_id) {
                 /* Create an array of SizeChunks if we don't have one already */
@@ -151,7 +151,7 @@ namespace vox {
                 /* Store the palette */
                 palette_chunk *pal = (palette_chunk *) chunk;
                 palette = &pal->colors[0];
-                puts("Found a palette");
+                //puts("Found a palette");
             }
 
             /* Step to the next chunk */
@@ -213,7 +213,6 @@ namespace vox {
 		if (finder == voxel_index.end()) {
 
 			// Loader
-			std::cout << "Loading VOX model: " << filename << "\n";
 			char *voxBuffer;
 			std::size_t voxLength;
 			read_file(filename.c_str(), &voxLength, &voxBuffer);
@@ -224,7 +223,6 @@ namespace vox {
 			voxel_model model;
 			for (uint32_t i = 0; i < parsed.numModels; ++i) {
 				current_size = parsed.sizeChunks[i];
-				std::cout << "Model size: " << current_size->x << " x " << current_size->y << " x " << current_size->z << "\n";
 				model.width = current_size->x;
 				model.height = current_size->y;
 				model.depth = current_size->z;
@@ -240,7 +238,6 @@ namespace vox {
 					const uint8_t r = (color & 0x00ff0000) >> 16;
 					const uint8_t g = (color & 0x0000ff00) >> 8;
 					const uint8_t b = (color & 0x000000ff);
-					//std::cout << color << " = " << +r << "/" << +g << "/" << +b << "/" << +a << "\n";
 
 					subvoxel v{
 						current_voxel.x,
@@ -250,7 +247,6 @@ namespace vox {
 						(float)g / 256.0f,
 						(float)r / 256.0f
 					};
-					//std::cout << v.x << "," << v.y << "," << v.z << "\n";
 
 					model.voxels.emplace_back(v);
 				}
@@ -269,7 +265,6 @@ namespace vox {
 
 			free_parsed_vox(parsed);
 			free(voxBuffer);
-			std::cout << "Loaded VOX model as tag " << tag << ", index " << index << ".\n";
 			co_yield 0;
 		}
 		else {

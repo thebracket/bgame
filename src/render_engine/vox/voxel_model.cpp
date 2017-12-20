@@ -92,7 +92,6 @@ namespace vox {
 			add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
 			++cube_count;
 		}
-		std::cout << "Reduced to " << cube_count << " cubes, " << geometry.size() << " triangles.\n";
 	}
 
 	generator voxel_model::build_model_async() {
@@ -104,7 +103,6 @@ namespace vox {
             const int idx = voxidx(width, depth, height, cube.x, cube.z, cube.y);
             cubes[idx] = cube;
         }
-        std::cout << "Starting with " << cubes.size() << " cubes (" << cubes.size() * 36 << " triangles).\n";
 		co_yield 0;
 
         // Perform greedy voxels on it
@@ -137,8 +135,6 @@ namespace vox {
         const float y1 = y0 + D;
         const float z0 = -0.5f + voxel.y;
         const float z1 = z0 + H;
-
-        //std::cout << "Cube: " << x0 << "-" << y0 << "-" << z0 << " " << W << "x" << H << "\n";
 
         v.insert(v.end(), {
                 x0, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
@@ -190,7 +186,6 @@ namespace vox {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), &v[0], GL_STATIC_DRAW);
         n_elements = (int)v.size() / 6;
-        std::cout << "Bound as VBO #" << vbo_id << "\n";        
     }
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render) 
@@ -246,12 +241,8 @@ namespace vox {
 	}
 
     void voxel_model::render_instances(voxel_render_buffer_t &buffer) {
-		//std::cout << "Voxel render\n";
         // Perform the render
         glBindVertexArray(buffer.tmp_vao);
-        //glDrawArrays(GL_TRIANGLES, 0, n_elements);
-		//std::cout << n_elements << "\n";
-		//std::cout << "Rendering " << n_elements << ", " << buffer.n_instances << " times\n";
         glDrawArraysInstanced(GL_TRIANGLES, 0, n_elements, (int)buffer.n_instances);
         glCheckError();
 

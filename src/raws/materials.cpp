@@ -223,7 +223,7 @@ void read_material_textures() {
 
 	while (lua_next(lua_state, -2) != 0) {
 		std::string key = lua_tostring(lua_state, -2);
-		std::cout << "Material texture key: " << key << "\n";
+		//std::cout << "Material texture key: " << key << "\n";
 
 		int idx = 0;
 		std::string tex;
@@ -246,7 +246,7 @@ void read_material_textures() {
 
 	material_textures.clear();
 	for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
-		std::cout << i->first << " == " << i->second << "\n";
+		//std::cout << i->first << " == " << i->second << "\n";
 		material_textures.emplace_back(i->second);
 	}
 }

@@ -13,7 +13,7 @@ function registerTerrainTexture(name, filename)
         print("WARNING: Duplicate texture name mapping: " .. name)
     else
         terrain_textures[name] = { index=tid(), texture=tfn(filename) }
-        print("Texture: " .. name .. ", index " .. terrain_textures[name].index .. ", filename: " .. terrain_textures[name].texture)
+        //print("Texture: " .. name .. ", index " .. terrain_textures[name].index .. ", filename: " .. terrain_textures[name].texture)
     end
 end
 

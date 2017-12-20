@@ -40,7 +40,7 @@ namespace bengine {
 
 
         // Compile Vertex Shader
-        printf("Compiling shader : %s\n", vertex_file_path);
+        //printf("Compiling shader : %s\n", vertex_file_path);
         char const * VertexSourcePointer = VertexShaderCode.c_str();
         glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
         glCompileShader(VertexShaderID);
@@ -51,13 +51,13 @@ namespace bengine {
         if ( InfoLogLength > 0 ){
             std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
             glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-            printf("%s\n", &VertexShaderErrorMessage[0]);
+            //printf("%s\n", &VertexShaderErrorMessage[0]);
         }
 
 
 
         // Compile Fragment Shader
-        printf("Compiling shader : %s\n", fragment_file_path);
+        //printf("Compiling shader : %s\n", fragment_file_path);
         char const * FragmentSourcePointer = FragmentShaderCode.c_str();
         glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
         glCompileShader(FragmentShaderID);
@@ -72,7 +72,7 @@ namespace bengine {
         }
 
         // Link the program
-        printf("Linking program\n");
+        //printf("Linking program\n");
         GLuint ProgramID = glCreateProgram();
         glAttachShader(ProgramID, VertexShaderID);
         glAttachShader(ProgramID, FragmentShaderID);
@@ -146,7 +146,7 @@ namespace bengine {
 
 
 		// Compile Vertex Shader
-		printf("Compiling shader : %s\n", vertex_file_path);
+		//printf("Compiling shader : %s\n", vertex_file_path);
 		char const * VertexSourcePointer = VertexShaderCode.c_str();
 		glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
 		glCompileShader(VertexShaderID);
@@ -163,7 +163,7 @@ namespace bengine {
 
 
 		// Compile Fragment Shader
-		printf("Compiling shader : %s\n", fragment_file_path);
+		//printf("Compiling shader : %s\n", fragment_file_path);
 		char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 		glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
 		glCompileShader(FragmentShaderID);
@@ -178,7 +178,7 @@ namespace bengine {
 		}
 
 		// Compile Geometry Shader
-		printf("Compiling shader : %s\n", geometry_file_path);
+		//printf("Compiling shader : %s\n", geometry_file_path);
 		char const * GeometrySourcePointer = GeometryShaderCode.c_str();
 		glShaderSource(GeometryShaderID, 1, &GeometrySourcePointer, NULL);
 		glCompileShader(GeometryShaderID);
@@ -193,7 +193,7 @@ namespace bengine {
 		}
 
 		// Link the program
-		printf("Linking program\n");
+		//printf("Linking program\n");
 		GLuint ProgramID = glCreateProgram();
 		glAttachShader(ProgramID, VertexShaderID);
 		glAttachShader(ProgramID, FragmentShaderID);
@@ -218,7 +218,7 @@ namespace bengine {
 		glDeleteShader(FragmentShaderID);
 		glDeleteShader(GeometryShaderID);
 
-		std::cout << "Setup as shader #" << ProgramID << "\n";
+		//std::cout << "Setup as shader #" << ProgramID << "\n";
 
 		return ProgramID;
 	}
