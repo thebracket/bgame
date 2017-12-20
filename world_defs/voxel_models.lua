@@ -54,7 +54,7 @@ voxel_models = {
 function voxelId(name)
     if voxel_models[name] ~= nil then
         voxid = voxel_models[name].id
-        print(name .. " : " .. voxid)
+        --print(name .. " : " .. voxid)
         return voxid
     else
         print("Unknown model: "..name)

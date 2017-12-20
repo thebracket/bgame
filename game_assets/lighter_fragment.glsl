@@ -34,7 +34,7 @@ float shadow(vec3 fragToLight) {
     float currentDepth = length(fragToLight);
     for(int i = 0; i < samples; ++i)
     {
-        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
+        float closestDepth = texture(depthMap, fragToLight + (gridSamplingDisk[i]*0.6) * diskRadius).r;
         closestDepth *= far_plane;   // undo mapping [0;1]
         if(currentDepth - bias > closestDepth)
             shadow += 1.0;

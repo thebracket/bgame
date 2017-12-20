@@ -13,7 +13,7 @@ function registerTerrainTexture(name, filename)
         print("WARNING: Duplicate texture name mapping: " .. name)
     else
         terrain_textures[name] = { index=tid(), texture=tfn(filename) }
-        //print("Texture: " .. name .. ", index " .. terrain_textures[name].index .. ", filename: " .. terrain_textures[name].texture)
+        --print("Texture: " .. name .. ", index " .. terrain_textures[name].index .. ", filename: " .. terrain_textures[name].texture)
     end
 end
 
@@ -106,7 +106,7 @@ mob_textures = {
 function mobTex(name)
     if mob_textures[name] ~= nil then
         texidx = mob_textures[name].index
-        print(name .. " : " .. texidx)
+        --print(name .. " : " .. texidx)
         return texidx
     else
         print("Unknown texture: "..name)
@@ -117,7 +117,7 @@ end
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
         texidx = terrain_textures[name].index
-        print("chunkTex mapping: " .. name .. " : " .. texidx)
+        --print("chunkTex mapping: " .. name .. " : " .. texidx)
         return texidx
     else
         print("Unknown texture: "..name)
