@@ -162,5 +162,5 @@ void main()
     vec3 Lo = vec3(0.0); // Light Output
     Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz + vec3(0.0, 0.5, 0.0), position.xyz, light_color.rgb) * 4.0;
 
-    FragColor = Lo;
+    FragColor = Lo * shadowFactor;
 }

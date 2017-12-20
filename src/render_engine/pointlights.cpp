@@ -12,6 +12,7 @@
 #include "fbo/buffertest.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../global_assets/game_calendar.hpp"
+#include "vox/renderables.hpp"
 #include <map>
 #include <memory>
 #include <set>
@@ -75,7 +76,7 @@ namespace render {
 					}
 				}
 			}
-			//render_voxel_models_shadow(projection, modelview);
+			render_voxel_models_shadow(radius, light_pos, shadowTransforms, buffer->depth_cubemap);
 			glViewport(0, 0, screen_w, screen_h);
 			new_light = false;
 		}
@@ -143,7 +144,7 @@ namespace render {
 			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
 			pointlights[id].radius = 512.0f;
 			pointlights[id].cycle_tick = id % 20;
-			pointlights[id].size = 256;
+			pointlights[id].size = 128;
 			pointlights[id].make_mats();
 			pointlights[id].make_buffer();
 			first_run = false;

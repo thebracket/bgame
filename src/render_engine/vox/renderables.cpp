@@ -26,6 +26,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../systems/ai/inventory_system.hpp"
 #include "../chunks/chunks.hpp"
+#include "../renderbuffers.hpp"
 #include "../../stdafx.h"
 
 namespace render {
@@ -472,17 +473,19 @@ namespace render {
 		}
 	}
 
-	void render_voxel_models_shadow(glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix) {
+	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int textureId) {
 		assets::voxel_shadow_shader->use();
-		//glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
-		glUniformMatrix4fv(assets::voxel_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-		glUniformMatrix4fv(assets::voxel_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-		glCheckError();
-		glUniform1f(assets::voxel_shader->texSize, 32.0f);
-		glCheckError();
+		//glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+		for (int i = 0; i < 6; ++i) {
+			glUniformMatrix4fv(assets::voxel_shadow_shader->combined_matrix, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
+			glUniform1f(assets::voxel_shadow_shader->texSize, 32.0f);
+			glUniform1f(assets::voxel_shadow_shader->far_plane, radius);
+			glUniform3f(assets::voxel_shadow_shader->lightPos, light_pos.x, light_pos.y, light_pos.z);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, textureId, 0);
 
-		for (const auto &m : model_buffers) {
-			m->model->render_instances(*m);
+			for (const auto &m : model_buffers) {
+				m->model->render_instances(*m);
+			}
 		}
 	}
 }
