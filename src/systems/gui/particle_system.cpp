@@ -66,7 +66,7 @@ namespace systems {
 
 			for (int i = 0; i < n_steps; ++i) {
 
-				positions.emplace_back(particle_t{ x, y, z, color.r, color.g, color.b, 1.0f, PARTICLE_LUMBERJACK, 900.0f) });
+				positions.emplace_back(particle_t{ x, y, z, color.r, color.g, color.b, 1.0f, PARTICLE_LUMBERJACK, 900.0f });
 
 				x += x_step;
 				y += y_step;
