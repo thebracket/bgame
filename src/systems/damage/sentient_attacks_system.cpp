@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "sentient_attacks_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../gui/log_system.hpp"
 #include "../../components/logger.hpp"

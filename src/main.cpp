@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "bengine/main_window.hpp"
 #include "main_loops/splash_screen.hpp"
 #ifdef __APPLE__

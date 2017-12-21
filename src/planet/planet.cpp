@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "planet.hpp"
 #include <cereal/archives/binary.hpp>
 #include "../bengine/filesystem.hpp"

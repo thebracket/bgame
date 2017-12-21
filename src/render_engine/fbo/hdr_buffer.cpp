@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "hdr_buffer.hpp"
-#include "../../bengine/gl_include.hpp"
 
 namespace render {
     hdr_buffer_t::hdr_buffer_t(const int &w, const int &h) {

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "gbuffer.hpp"
-#include "../../bengine/gl_include.hpp"
 
 namespace render {
     gbuffer_t::gbuffer_t(const int &w, const int &h) {

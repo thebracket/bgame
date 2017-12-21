@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "telemetry.hpp"
 #include "threadsafequeue.hpp"
 #include "../global_assets/game_config.hpp"

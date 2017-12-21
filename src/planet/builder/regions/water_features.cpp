@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "water_features.hpp"
 #include "../../planet_builder.hpp"
 #include "../../region/region.hpp"

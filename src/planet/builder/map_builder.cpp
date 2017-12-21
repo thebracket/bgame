@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "map_builder.hpp"
 #include "../planet_builder.hpp"
 #include "noise_helper.hpp"

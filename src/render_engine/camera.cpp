@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "camera.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../global_assets/game_calendar.hpp"

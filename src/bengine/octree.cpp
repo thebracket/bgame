@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "octree.hpp"
 
 void octree_t::add_node(const octree_location_t loc) {

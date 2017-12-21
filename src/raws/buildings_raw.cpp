@@ -1,9 +1,9 @@
+#include "stdafx.h"
 #include "buildings.hpp"
 #include "lua_bridge.hpp"
 #include "items.hpp"
 #include "materials.hpp"
 #include "defs/building_def_t.hpp"
-#include <boost/container/flat_map.hpp>
 #include "graphviz.hpp"
 
 

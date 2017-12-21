@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "analytics.hpp"
 
 #include <curl/curl.h>

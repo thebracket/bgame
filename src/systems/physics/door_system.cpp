@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "door_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../components/position.hpp"
 #include "../../components/construct_provides_door.hpp"
-#include <vector>
 
 using namespace bengine;
 using namespace region;

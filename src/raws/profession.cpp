@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "profession.hpp"
 #include "lua_bridge.hpp"
 #include "clothing.hpp"

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "voxreader.hpp"
-#include "../../stdafx.h"
 #include "voxel_model.hpp"
 
 // Credit to vox2png for some of this code. https://github.com/StijnBrouwer/vox2png/blob/master/vox2png.c

@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "log_system.hpp"
-#include <queue>
-#include <mutex>
 #include "../../global_assets/game_logger.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
@@ -9,7 +8,6 @@
 #include "../../bengine/color_t.hpp"
 #include "../../bengine/rexspeeder.hpp"
 #include "../../bengine/main_window.hpp"
-#include "../../stdafx.h"
 
 namespace systems {
 	namespace logging {

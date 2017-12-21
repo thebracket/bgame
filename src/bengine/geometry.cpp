@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "geometry.hpp"
 
 namespace bengine {

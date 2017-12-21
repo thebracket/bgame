@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "string_table.hpp"
 #include "../stdafx.h"
 

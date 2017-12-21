@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "rexspeeder.hpp"
 extern "C" {
 #include <zlib.h>

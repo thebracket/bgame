@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "weapons_helper.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/item_carried.hpp"
 #include "../../components/item.hpp"
 #include "../../raws/items.hpp"

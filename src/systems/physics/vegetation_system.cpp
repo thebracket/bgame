@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "explosive_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../planet/region/region.hpp"

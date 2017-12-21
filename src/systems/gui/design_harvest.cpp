@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "design_harvest.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
@@ -10,7 +11,6 @@
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../ai/distance_map_system.hpp"
-#include <string>
 
 namespace systems {
 	namespace design_harvest {

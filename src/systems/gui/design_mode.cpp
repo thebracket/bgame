@@ -1,6 +1,6 @@
+#include "stdafx.h"
 #include "design_mode.hpp"
 #include "../keydamper.hpp"
-#include "../../bengine/gl_include.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../bengine/IconsFontAwesome.h"

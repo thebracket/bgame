@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_sleep_time.hpp"
-#include "../../../bengine/ecs.hpp"
 #include "../../../global_assets/game_pause.hpp"
 #include "../../../components/sleep_clock_t.hpp"
 #include "../../../components/settler_ai.hpp"

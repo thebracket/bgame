@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_stuck.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../components/position.hpp"
 #include "../../components/settler_ai.hpp"

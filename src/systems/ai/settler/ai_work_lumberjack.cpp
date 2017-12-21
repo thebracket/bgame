@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_work_lumberjack.hpp"
-#include "../../../bengine/ecs.hpp"
 #include "jobs_board.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../distance_map_system.hpp"

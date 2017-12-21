@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/wildlife_group.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../raws/biomes.hpp"
@@ -20,7 +20,6 @@
 #include "../../raws/health_factory.hpp"
 #include "../../bengine/telemetry.hpp"
 #include "distance_map_system.hpp"
-#include <array>
 
 namespace systems {
 	namespace wildlife_population {

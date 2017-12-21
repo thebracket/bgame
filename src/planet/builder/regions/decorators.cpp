@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "decorators.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../planet_builder.hpp"

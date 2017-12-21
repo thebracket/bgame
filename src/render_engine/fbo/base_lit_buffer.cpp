@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "base_lit_buffer.hpp"
-#include "../../bengine/gl_include.hpp"
 
 namespace render {
     base_lit_buffer_t::base_lit_buffer_t(const int &w, const int &h) {

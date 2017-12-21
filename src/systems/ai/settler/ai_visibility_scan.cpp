@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_visibility_scan.hpp"
-#include "../../../bengine/ecs.hpp"
 #include "../../../components/sentient_ai.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/grazer_ai.hpp"

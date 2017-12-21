@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "initiative_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/position.hpp"
 #include "../../components/slidemove.hpp"
 #include "../../components/settler_ai.hpp"

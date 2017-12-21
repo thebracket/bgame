@@ -1,7 +1,6 @@
+#include "stdafx.h"
 #include "renderables.hpp"
-#include "../../bengine/gl_include.hpp"
 #include "../../global_assets/game_camera.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/position.hpp"
 #include "../../components/building.hpp"
 #include "../../components/renderable_composite.hpp"

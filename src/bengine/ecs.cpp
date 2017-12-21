@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ecs.hpp"
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/archives/xml.hpp>

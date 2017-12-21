@@ -1,4 +1,4 @@
-#include <stdexcept>
+#include "stdafx.h"
 #include "main_window.hpp"
 #include "gl_include.hpp"
 #include "imgui.h"
@@ -7,7 +7,6 @@
 #include "telemetry.hpp"
 #include "filesystem.hpp"
 #include "imgui_style.hpp"
-#include <chrono>
 
 namespace bengine {
 

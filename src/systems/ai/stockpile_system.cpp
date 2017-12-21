@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "stockpile_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../components/stockpile.hpp"
 #include "../../components/item_stored.hpp"

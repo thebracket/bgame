@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "calendar_system.hpp"
 #include "../../global_assets/game_calendar.hpp"
 #include "../../global_assets/game_pause.hpp"

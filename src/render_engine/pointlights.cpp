@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "pointlights.hpp"
-#include "../bengine/gl_include.hpp"
-#include "../bengine/ecs.hpp"
 #include "../components/lightsource.hpp"
 #include "../components/position.hpp"
 #include "fbo/point_light_buffer.hpp"
@@ -13,9 +12,6 @@
 #include "../global_assets/game_camera.hpp"
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
-#include <map>
-#include <memory>
-#include <set>
 
 namespace render {
 	static constexpr int size = 128;

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "settler_ranged_attack_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/position.hpp"

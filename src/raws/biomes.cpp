@@ -1,8 +1,8 @@
+#include "stdafx.h"
 #include "biomes.hpp"
 #include "lua_bridge.hpp"
 #include "creatures.hpp"
 #include "defs/biome_type_t.hpp"
-#include "../stdafx.h"
 
 std::vector<biome_type_t> biome_defs;
 std::vector<std::string> biome_textures;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "items.hpp"
 #include "lua_bridge.hpp"
 #include "defs/item_def_t.hpp"

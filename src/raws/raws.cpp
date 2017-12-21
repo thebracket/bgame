@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "raws.hpp"
 #include "lua_bridge.hpp"
 #include "../components/position.hpp"
@@ -21,7 +22,6 @@
 #include "defs/item_def_t.hpp"
 #include "defs/material_def_t.hpp"
 #include "items.hpp"
-#include "../bengine/ecs.hpp"
 #include "../render_engine/vox/renderables.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "kill_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/position.hpp"
 #include "../../components/item_carried.hpp"

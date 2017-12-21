@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "plants.hpp"
 #include "lua_bridge.hpp"
 #include "defs/plant_t.hpp"

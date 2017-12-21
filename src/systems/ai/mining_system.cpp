@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_designations.hpp"
 

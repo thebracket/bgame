@@ -1,10 +1,6 @@
+#include "stdafx.h"
 #include "voxel_model.hpp"
-#include <unordered_map>
-#include "../../stdafx.h"
 #include <assert.h>
-#include <future>
-#include <thread>
-#include <chrono>
 
 namespace vox {
 

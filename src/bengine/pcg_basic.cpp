@@ -1,3 +1,4 @@
+#include "stdafx.h"
 /*
  * PCG Random Number Generation for C.
  *

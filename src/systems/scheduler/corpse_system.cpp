@@ -1,7 +1,5 @@
+#include "stdafx.h"
 #include "corpse_system.hpp"
-#include <vector>
-#include <mutex>
-#include "../../bengine/ecs.hpp"
 #include "../../components/corpse_settler.hpp"
 #include "../../components/corpse_harvestable.hpp"
 #include "../../components/position.hpp"

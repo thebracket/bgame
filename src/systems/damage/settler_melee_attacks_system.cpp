@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "settler_melee_attacks_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/game_stats.hpp"
 #include "../helpers/weapons_helper.hpp"

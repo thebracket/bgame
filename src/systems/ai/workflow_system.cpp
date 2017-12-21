@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "stockpile_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../helpers/workflow_assistant.hpp"
 #include "../../components/building.hpp"
 #include "../../raws/buildings.hpp"

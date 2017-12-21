@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "lua_bridge.hpp"
 #include "../stdafx.h"
 

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "bloom_ping_pong.hpp"
-#include "../../bengine/gl_include.hpp"
 
 namespace render {
     bloom_pingpong_t::bloom_pingpong_t(const int &w, const int &h) {

@@ -1,10 +1,9 @@
+#include "stdafx.h"
 #include "workflow_assistant.hpp"
-#include "../../stdafx.h"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "inventory_assistant.hpp"
 #include "../../global_assets/game_designations.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/building.hpp"
 #include "../ai/workflow_system.hpp"
 

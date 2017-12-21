@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "point_light_buffer.hpp"
-#include "../../bengine/gl_include.hpp"
 
 namespace render {
 	point_light_buffer_t::point_light_buffer_t(const int &w, const int &h) {

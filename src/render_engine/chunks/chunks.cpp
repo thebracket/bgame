@@ -1,15 +1,11 @@
+#include "stdafx.h"
 #include "chunks.hpp"
-#include <mutex>
 //#include "../../bengine/threadpool.h"
 #include "../../planet/indices.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../bengine/gl_include.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "geometry_helper.hpp"
-#include <boost/container/flat_set.hpp>
-#include <set>
-#include <unordered_map>
 
 namespace chunks {
     std::array<chunk_t, CHUNKS_TOTAL> chunks;

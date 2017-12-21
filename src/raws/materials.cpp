@@ -1,10 +1,8 @@
+#include "stdafx.h"
 #include "materials.hpp"
 #include "lua_bridge.hpp"
 #include "graphviz.hpp"
 #include "defs/material_def_t.hpp"
-#include <boost/container/flat_map.hpp>
-#include <map>
-#include <algorithm>
 
 //using namespace rltk;
 

@@ -1,6 +1,6 @@
+#include "stdafx.h"
 #include "cursors.hpp"
 #include "../../systems/mouse.hpp"
-#include "../../bengine/gl_include.hpp"
 #include "../../global_assets/texture_storage.hpp"
 #include "../../global_assets/shader_storage.hpp"
 #include "../fbo/base_lit_buffer.hpp"
@@ -8,7 +8,6 @@
 #include "../../global_assets/game_designations.hpp"
 #include "../../systems/gui/particle_system.hpp"
 #include "../../global_assets/game_camera.hpp"
-#include <vector>
 
 namespace render {
 	static unsigned int cursors_vao = 0;

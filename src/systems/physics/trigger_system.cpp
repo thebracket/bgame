@@ -1,7 +1,6 @@
+#include "stdafx.h"
 #include "door_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include <unordered_map>
 #include "../../components/entry_trigger.hpp"
 #include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
@@ -13,7 +12,6 @@
 #include "../../components/construct_provides_door.hpp"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../bengine/gl_include.hpp"
 #include "../../components/receives_signal.hpp"
 #include "../../components/building.hpp"
 #include "../../components/grazer_ai.hpp"

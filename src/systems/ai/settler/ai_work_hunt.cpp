@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_sleep_time.hpp"
-#include "../../../bengine/ecs.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/building.hpp"

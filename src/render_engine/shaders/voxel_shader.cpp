@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "voxel_shader.hpp"
 
 voxel_shader_t::voxel_shader_t() {

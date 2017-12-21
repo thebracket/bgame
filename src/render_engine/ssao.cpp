@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ssao.hpp"
-#include "../stdafx.h"
 #include <random>
 #include "../global_assets/shader_storage.hpp"
 

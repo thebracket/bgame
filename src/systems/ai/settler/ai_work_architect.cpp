@@ -1,5 +1,5 @@
-#include "ai_sleep_time.hpp"
-#include "../../../bengine/ecs.hpp"
+#include "stdafx.h"
+#include "ai_work_architect.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../distance_map_system.hpp"

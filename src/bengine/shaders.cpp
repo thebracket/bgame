@@ -1,7 +1,6 @@
+#include "stdafx.h"
 #include "shaders.hpp"
 #include "gl_include.hpp"
-#include <fstream>
-#include <vector>
 
 namespace bengine {
 

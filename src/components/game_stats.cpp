@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "game_stats.hpp"
 #include "../messages/log_message.hpp"
 #include "../components/logger.hpp"

@@ -1,7 +1,6 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/sentient_ai.hpp"
-#include <array>
 
 namespace systems {
 	namespace sentient_ai_system {

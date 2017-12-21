@@ -1,11 +1,9 @@
+#include "stdafx.h"
 #include "particle_system.hpp"
-#include <vector>
-#include "../../bengine/ecs.hpp"
 #include "../../components/smoke_emitter.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../bengine/gl_include.hpp"
 #include "../../global_assets/shader_storage.hpp"
 #include "../../render_engine/fbo/gbuffer.hpp"
 #include "../../bengine/geometry.hpp"

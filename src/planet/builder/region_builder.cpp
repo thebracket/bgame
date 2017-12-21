@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "region_builder.hpp"
 #include "../../raws/biomes.hpp"
 #include "../planet_builder.hpp"

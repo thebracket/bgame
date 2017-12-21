@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "strata.hpp"
 #include "../../planet_builder.hpp"
 #include "../../../components/water_spawner.hpp"

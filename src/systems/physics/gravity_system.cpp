@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 namespace systems {
 	namespace gravity {

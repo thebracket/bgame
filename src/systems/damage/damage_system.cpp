@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "damage_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/building.hpp"
 #include "../../components/logger.hpp"

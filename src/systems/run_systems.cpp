@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <ctime>
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
@@ -38,7 +39,7 @@
 #include "ai/settler/ai_work_order.hpp"
 #include "ai/settler/ai_work_architect.hpp"
 #include "ai/settler/ai_work_hunt.hpp"
-#include "ai/settler/ai_idle.hpp"
+#include "ai/settler/ai_idle_time.hpp"
 #include "physics/trigger_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
@@ -70,7 +71,6 @@
 #include "../stdafx.h"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
-#include "../bengine/gl_include.hpp"
 #include "keydamper.hpp"
 #include "mouse.hpp"
 #include "../global_assets/game_mode.hpp"
@@ -296,7 +296,7 @@ namespace systems {
 			run_system(ai_workorder::run, duration_ms, AI_WORK_ORDER);
 			run_system(ai_architect::run, duration_ms, AI_WORK_ARCHITECT);
 			run_system(ai_hunt::run, duration_ms, AI_WORK_HUNT);
-			run_system(ai_idle::run, duration_ms, AI_IDLE);
+			run_system(ai_idle_time::run, duration_ms, AI_IDLE);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
 			run_system(triggers::run, duration_ms, TRIGGER_SYSTEM);
 			run_system(settler_ranged_attack::run, duration_ms, SETTLER_RANGED_ATTACK);

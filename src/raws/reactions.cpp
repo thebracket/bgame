@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "reactions.hpp"
 #include "lua_bridge.hpp"
 #include "materials.hpp"
@@ -7,7 +8,6 @@
 #include "defs/item_def_t.hpp"
 #include "graphviz.hpp"
 #include "defs/reaction_t.hpp"
-#include <boost/container/flat_map.hpp>
 
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;

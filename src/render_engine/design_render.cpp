@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "design_render.hpp"
-#include "../bengine/gl_include.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../planet/region/region.hpp"
 #include "chunks/geometry_helper.hpp"

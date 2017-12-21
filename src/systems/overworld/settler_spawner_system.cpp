@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "settler_spawner_system.hpp"
 #include "../../stdafx.h"
 #include "../../planet/region/region.hpp"

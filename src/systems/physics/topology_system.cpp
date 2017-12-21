@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "door_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../components/item.hpp"

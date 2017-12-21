@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "filesystem.hpp"
 #include <filesystem>
 

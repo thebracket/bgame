@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "threadpool.h"
-#include <thread>
-#include <algorithm>
 
 namespace bengine {
     std::unique_ptr<ctpl::thread_pool> thread_pool;

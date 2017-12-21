@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "worldgen.hpp"
 #include "../bengine/IconsFontAwesome.h"
 #include "../bengine/imgui.h"

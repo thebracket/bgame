@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "first_run_screen.hpp"
 #include "../bengine/filesystem.hpp"
 #include "splash_screen.hpp"

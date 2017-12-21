@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_work_time.hpp"
-#include "../../../bengine/ecs.hpp"
 #include "jobs_board.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/ai_tags/ai_tag_work_shift.hpp"

@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "string_utils.hpp"
-#include <sstream>
-#include <cctype>
 
 std::vector<std::string> split ( const std::string &str, const char &delimiter )
 {

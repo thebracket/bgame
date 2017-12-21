@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "splash_screen.hpp"
 #include "../global_assets/texture_storage.hpp"
 #include "../bengine/textures.hpp"

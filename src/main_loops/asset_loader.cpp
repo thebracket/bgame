@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "asset_loader.hpp"
-#include "../stdafx.h"
 #include "../raws/materials.hpp"
 #include "../render_engine/vox/voxreader.hpp"
 #include "../global_assets/texture_storage.hpp"

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "distance_map_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/position.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../planet/region/region.hpp"
@@ -14,8 +14,6 @@
 #include "../helpers/inventory_assistant.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/items.hpp"
-#include <mutex>
-#include <vector>
 
 namespace systems {
 	namespace distance_map {

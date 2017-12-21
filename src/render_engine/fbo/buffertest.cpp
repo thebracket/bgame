@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "buffertest.hpp"
-#include "../../bengine/gl_include.hpp"
 #include "../../global_assets/shader_storage.hpp"
 
 namespace render {

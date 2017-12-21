@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/item_carried.hpp"
 #include "../../components/item.hpp"

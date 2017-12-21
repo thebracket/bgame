@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/health.hpp"
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
 

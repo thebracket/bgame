@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "main_menu.hpp"
 #include "../bengine/simple_sprite.hpp"
 #include "../global_assets/texture_storage.hpp"
@@ -8,7 +9,6 @@
 #include "../raws/string_table.hpp"
 #include "../bengine/filesystem.hpp"
 #include "../bengine/main_window.hpp"
-#include "../bengine/gl_include.hpp"
 #include "../bengine/IconsFontAwesome.h"
 #include "../global_assets/game_config.hpp"
 #include "worldgen.hpp"

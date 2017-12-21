@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "trees.hpp"
 #include "../../region/region.hpp"
 #include "../../../bengine/geometry.hpp"

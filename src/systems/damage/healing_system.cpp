@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "healing_system.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/health.hpp"
 
 namespace systems {

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "inventory_assistant.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../components/item.hpp"
 #include "../../components/building.hpp"
 #include "../../components/item_stored.hpp"

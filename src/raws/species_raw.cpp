@@ -1,10 +1,9 @@
+#include "stdafx.h"
 #include "species.hpp"
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 #include "defs/civilization_t.hpp"
-#include <boost/container/flat_map.hpp>
 #include "graphviz.hpp"
-#include "../stdafx.h"
 
 boost::container::flat_map<std::string, raw_species_t> species_defs;
 boost::container::flat_map<std::string, civilization_t> civ_defs;

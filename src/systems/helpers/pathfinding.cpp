@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "pathfinding.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/geometry.hpp"

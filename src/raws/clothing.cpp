@@ -1,8 +1,8 @@
+#include "stdafx.h"
 #include "clothing.hpp"
 #include "apihelper.hpp"
 #include "lua_bridge.hpp"
 #include "defs/clothing_t.hpp"
-#include "../stdafx.h"
 
 std::unordered_map<std::string, clothing_t> clothing_types;
 

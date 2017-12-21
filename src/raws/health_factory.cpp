@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "health_factory.hpp"
 #include "../global_assets/rng.hpp"
 #include "creatures.hpp"
