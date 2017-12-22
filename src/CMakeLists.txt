@@ -28,7 +28,7 @@ include_directories(${CURL_INCLUDE_DIRS})
 link_libraries(${CURL_LIBRARIES})
 
 # Require Lua
-find_package(lua 5.1 REQUIRED)
+find_package(lua REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 link_libraries(${LUA_LIBRARIES})
 
@@ -53,13 +53,15 @@ find_package(Glm REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})
 
 # Require Boost
-#set(Boost_USE_STATIC_LIBS OFF)
-#set(Boost_USE_MULTITHREADED OFF)
-#set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(boost COMPONENTS system filesystem REQUIRED)
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(boost COMPONENTS system filesystem options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
-link_libraries(${Boost_FILESYSTEM_LIBRARY})
+link_directories(${Boost_LIBRARY_DIR})
 link_libraries(${Boost_SYSTEM_LIBRARY})
+link_libraries(${Boost_PROGRAM_OPTIONS_LIBRARIES})
+link_libraries(${Boost_FILESYSTEM_LIBRARY})
 
 # Cereal
 find_package(cereal REQUIRED)
@@ -88,7 +90,7 @@ add_subdirectory(render_engine)
 add_subdirectory(systems)
 
 add_executable(noxfutura stdafx.cpp main.cpp)
-target_link_libraries(noxfutura ${LUA_LIBRARIES} ${Boost_LIBRARIES} bengine mainloops globalassets raws planet components render_engine glfw)
+target_link_libraries(noxfutura ${LUA_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARIES} ${Boost_FILESYSTEM_LIBRARIES} ${Boost_SYSTEM_LIBRARIES} bengine mainloops globalassets raws planet components render_engine glfw)
 
 #set_target_properties(noxfutura PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
 #cotire(noxfutura)

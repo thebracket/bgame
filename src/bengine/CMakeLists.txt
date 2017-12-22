@@ -1,4 +1,4 @@
-add_library(bengine STATIC
+add_library(bengine
         analytics.cpp
         color_t.cpp
         ecs.cpp
@@ -21,5 +21,5 @@ add_library(bengine STATIC
         textures.cpp
         threadpool.cpp
         )
-target_link_libraries(bengine ${Boost_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
-cotire(bengine)
+target_link_libraries(bengine ${Boost_PROGRAM_OPTIONS_LIBRARIES} ${Boost_FILESYSTEM_LIBRARIES} ${Boost_SYSTEM_LIBRARIES})
+#cotire(bengine)
