@@ -1,8 +1,20 @@
 add_library(gui 
-	hud_system.cpp
-	log_system.cpp
-	tooltip_system.cpp
-	civ_ui_system.cpp
+		civ_ui_system.cpp
+		design_architecture.cpp
+		design_buildings.cpp
+		design_guardpoints.cpp
+		design_harvest.cpp
+		design_lumberjack.cpp
+		design_mining.cpp
+		design_mode.cpp
+		design_stockpiles.cpp
+		hud_system.cpp
+		log_system.cpp
+		particle_system.cpp
+		settler_info_system.cpp
+		tooltip_system.cpp
+		units_info_system.cpp
+		workflow_ui_system.cpp
 )
-target_link_libraries(gui components globalassets)
+target_link_libraries(gui components globalassets helpers)
 #cotire(gui)

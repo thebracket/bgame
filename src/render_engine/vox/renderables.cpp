@@ -26,7 +26,6 @@
 #include "../../systems/ai/inventory_system.hpp"
 #include "../chunks/chunks.hpp"
 #include "../renderbuffers.hpp"
-#include "../../stdafx.h"
 
 namespace render {
 
@@ -261,10 +260,11 @@ namespace render {
 		for (const auto &idx : visible_chunks) {
 			chunks::chunk_t * target = &chunks::chunks[idx];
 			if (!target->static_voxel_models.empty()) {
-				for (const auto &model : target->static_voxel_models) {
+				for (auto &model : target->static_voxel_models) {
 					if (std::get<2>(model.second) <= camera_position->region_z) {
 						auto finder = models_to_render->find(model.first);
-						vox::instance_t render_model{ std::get<0>(model.second), std::get<2>(model.second), std::get<1>(model.second), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+						const auto &[a, c, b] = model.second;
+						vox::instance_t render_model{ static_cast<float>(a), static_cast<float>(b), static_cast<float>(c), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
 						if (finder != models_to_render->end()) {
 							finder->second.push_back(render_model);
 						}
@@ -282,7 +282,7 @@ namespace render {
 			if (r.vox != 0) {
 				//std::cout << "Found critter " << r.vox << "\n";
 				auto finder = models_to_render->find(r.vox);
-				vox::instance_t render_model{ pos.x, pos.z, pos.y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+				vox::instance_t render_model{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
 				if (finder != models_to_render->end()) {
 					finder->second.push_back(render_model);
 				}
@@ -291,7 +291,7 @@ namespace render {
 				}
 			}
 			else {
-				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.z, pos.y, r.foreground, r.glyph_ascii });
+				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), r.foreground, r.glyph_ascii });
 			}
 		});
 
@@ -304,7 +304,7 @@ namespace render {
 				if (def->voxel_model != 0) {
 					//std::cout << "Found critter " << r.vox << "\n";
 					auto finder = models_to_render->find(def->voxel_model);
-					vox::instance_t render_model{ pos.x, pos.z, pos.y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+					vox::instance_t render_model{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
 					if (finder != models_to_render->end()) {
 						finder->second.push_back(render_model);
 					}

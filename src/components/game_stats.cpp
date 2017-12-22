@@ -110,7 +110,8 @@ void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, 
 		finder->second.experience_gained += difficulty;
 		const int gain_bonus_at = (finder->second.skill_level+1) * 100;
 		if (finder->second.experience_gained > gain_bonus_at) {
-			systems::logging::log(systems::logging::log_message{LOG{}.settler_name(settler_id)->text(" has improved their skill in ")->text(skill)->chars});
+			systems::logging::log_message msg{LOG{}.settler_name(settler_id)->text(" has improved their skill in ")->text(skill)->chars};
+			systems::logging::log(msg);
 			finder->second.experience_gained = 0;
 			++finder->second.skill_level;
 
@@ -129,7 +130,8 @@ void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, 
 						case ethics : attribute_target = stats.ethics; break;
 					}
 					if (stat_gain_roll < attribute_target) {
-						systems::logging::log(systems::logging::log_message{LOG{}.settler_name(settler_id)->text(" has gained an attribute point.")->chars});
+                        systems::logging::log_message msg{LOG{}.settler_name(settler_id)->text(" has gained an attribute point.")->chars};
+						systems::logging::log(msg);
 						switch (relevant_attribute->second) {
 							case strength : ++stats.strength; break;
 							case dexterity : ++stats.dexterity; break;

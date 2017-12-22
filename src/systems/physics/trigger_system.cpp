@@ -219,14 +219,15 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is trapped in a cage!");
-										logging::log(logging::log_message{ ss.chars });
+										logging::log_message msg{ ss.chars };
+										logging::log(msg);
 									}
 
 									// TODO: Add a random chance with some dex involved
 									// Spawn a cage object
 									auto building = trigger_entity->component<building_t>();
 									std::size_t material = get_material_by_tag(building->built_with[0].first);
-									auto &[x,y,z] = idxmap(tile_index);
+									const auto &[x,y,z] = idxmap(tile_index);
 									auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material);
 
 									// Add a stored component
@@ -246,7 +247,8 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a falling rock trap!");
-										logging::log(logging::log_message{ ss.chars });
+										logging::log_message msg{ ss.chars };
+										logging::log(msg);
 									}
 
 									// TODO: Add a random chance with some dex involved
@@ -264,7 +266,8 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
-										logging::log(logging::log_message{ ss.chars });
+										logging::log_message msg{ ss.chars };
+										logging::log(msg);
 									}
 
 									// TODO: Add a random chance with some dex involved
@@ -341,7 +344,7 @@ namespace systems {
 							if (receiver->active) {
 								renderable->glyph = 325;
 								// Attack everything in the tile
-								auto &[x,y,z] = idxmap(mapidx(*target_pos));
+								const auto &[x,y,z] = idxmap(mapidx(*target_pos));
 								std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
 								for (const auto &v : visible_here) {
 									auto victim_entity = entity(v);

@@ -30,12 +30,14 @@ namespace systems {
 			const int scaled_damage = msg.damage_amount / 10;
 			if (building->hit_points <= scaled_damage) {
 				// Building is destroyed
-				logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(std::string(" is destroyed!"))->chars });
+				logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(std::string(" is destroyed!"))->chars };
+				logging::log(lmsg);
 				delete_entity(msg.victim);
 			}
 			else {
 				building->hit_points -= scaled_damage;
-				logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(std::string(" suffers ") + std::to_string(msg.damage_amount) + std::string(" points of damage. Source: " + msg.damage_type))->chars });
+				logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(std::string(" suffers ") + std::to_string(msg.damage_amount) + std::string(" points of damage. Source: " + msg.damage_type))->chars };
+				logging::log(lmsg);
 			}
 		}
 
@@ -58,14 +60,17 @@ namespace systems {
 						total_size += p.size;
 					}
 
-					logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(std::string(" suffers ") + std::to_string(msg.damage_amount) + std::string(" points of damage. Source: " + msg.damage_type))->chars });
+					logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(std::string(" suffers ") + std::to_string(msg.damage_amount) + std::string(" points of damage. Source: " + msg.damage_type))->chars };
+					logging::log(lmsg);
 					if (h->current_hitpoints < 1) {
 						if (h->current_hitpoints > -10) {
 							h->unconscious = true;
-							logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" is unconscious!")->chars });
+							logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(" is unconscious!")->chars};
+							logging::log(lmsg);
 						}
 						else {
-							logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" is dead!")->chars });
+							logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(" is dead!")->chars };
+							logging::log(lmsg);
 							kill_system::fatality(kill_system::entity_slain_message{ msg.victim, msg.damage_type });
 						}
 					}
@@ -86,19 +91,23 @@ namespace systems {
 						hit_part->current_hitpoints -= msg.damage_amount;
 						if (hit_part->current_hitpoints < 0) {
 							if (hit_part->part == "head" && hit_part->current_hitpoints > -10) {
-								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" passes out from head trauma.")->chars });
+								logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(" passes out from head trauma.")->chars };
+								logging::log(lmsg);
 								h->unconscious = true;
 							}
 							else if (hit_part->part == "head" && hit_part->current_hitpoints < -9) {
-								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text("'s head is knocked clean off! Death is the inevitable result.'")->chars });
+								logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text("'s head is knocked clean off! Death is the inevitable result.'")->chars };
+								logging::log(lmsg);
 								kill_system::fatality(kill_system::entity_slain_message{ msg.victim, msg.damage_type });
 							}
 							else if (hit_part->current_hitpoints > -10) {
-								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" passes out from ")->text(hit_part->part)->text(" trauma.")->chars });
+								logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(" passes out from ")->text(hit_part->part)->text(" trauma.")->chars };
+								logging::log(lmsg);
 								h->unconscious = true;
 							}
 							else {
-								logging::log(logging::log_message{ LOG{}.other_name(msg.victim)->text(" dies from ")->text(hit_part->part)->text(" trauma.")->chars });
+								logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text(" dies from ")->text(hit_part->part)->text(" trauma.")->chars };
+								logging::log(lmsg);
 								kill_system::fatality(kill_system::entity_slain_message{ msg.victim, msg.damage_type });
 							}
 						}

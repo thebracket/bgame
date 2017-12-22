@@ -1,5 +1,7 @@
-add_library(scheduler tick_system.cpp
-        calendar_system.cpp
+add_library(scheduler
+		calendar_system.cpp
+		corpse_system.cpp
 		initiative_system.cpp
+		tick_system.cpp
         )
 #cotire(scheduler)

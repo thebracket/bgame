@@ -32,7 +32,8 @@ namespace systems {
 				auto attacker_pos = attacker->component<position_t>();
 				auto defender_pos = defender->component<position_t>();
 				if (!attacker_pos || !defender_pos) return;
-				particles::ranged_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 1.0f });
+				color_t magenta{ 1.0f, 0.0f, 1.0f };
+				particles::ranged_attack(*attacker_pos, *defender_pos, magenta);
 
 				// Send the bolt on its way
 				// TODO: emit(emit_particles_message{ 3, attacker_pos->x, attacker_pos->y, attacker_pos->z, defender_pos->x, defender_pos->y, defender_pos->z });
@@ -48,7 +49,8 @@ namespace systems {
 				else {
 					ss.text("The turret misses.");
 				}
-				logging::log(logging::log_message{ ss.chars });
+				logging::log_message lmsg{ ss.chars };
+				logging::log(lmsg);
 			});
 		}
 	}

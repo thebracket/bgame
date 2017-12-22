@@ -102,7 +102,7 @@ namespace bengine {
 
 						char strerr[2048];
 						sprintf(strerr, "[Error] TAnalytics_Update() failed for URL '%s' with error %ld\n", urlp ? urlp : "?", response_code);
-						assert(response_code == 200 && strerr);
+						//assert(response_code == 200 && strerr);
 					}
 					curl_multi_remove_handle(curl_multi_handle, pMsg->easy_handle);
 					curl_easy_cleanup(pMsg->easy_handle);

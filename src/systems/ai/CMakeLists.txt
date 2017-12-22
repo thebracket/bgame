@@ -1,0 +1,31 @@
+add_library(ai
+        ai_status_effects.cpp
+        ai_stuck.cpp
+        distance_map_system.cpp
+        inventory_system.cpp
+        mining_system.cpp
+        sentient_ai_system.cpp
+        stockpile_system.cpp
+        wildlife_population.cpp
+        workflow_system.cpp
+        settler/ai_idle_time.cpp
+        settler/ai_leisure_time.cpp
+        settler/ai_new_arrival.cpp
+        settler/ai_scheduler.cpp
+        settler/ai_sleep_time.cpp
+        settler/ai_visibility_scan.cpp
+        settler/ai_work_architect.cpp
+        settler/ai_work_building.cpp
+        settler/ai_work_butcher.cpp
+        settler/ai_work_guard.cpp
+        settler/ai_work_harvest.cpp
+        settler/ai_work_hunt.cpp
+        settler/ai_work_lever_pull.cpp
+        settler/ai_work_lumberjack.cpp
+        settler/ai_work_mining.cpp
+        settler/ai_work_order.cpp
+        settler/ai_work_time.cpp
+        settler/jobs_board.cpp
+        )
+target_link_libraries(ai damage)
+#cotire(systems)

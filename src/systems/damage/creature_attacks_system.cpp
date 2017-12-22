@@ -43,13 +43,16 @@ namespace systems {
 				auto attacker_pos = entity(msg.attacker)->component<position_t>();
 				auto defender_pos = entity(msg.victim)->component<position_t>();
 				if (!attacker_pos || !defender_pos) return;
-				particles::melee_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 0.0f });
+				color_t red{ 1.0f, 0.0f, 0.0f };
+				particles::melee_attack(*attacker_pos, *defender_pos, red);
 
 				auto defender_stats = defender->component<game_stats_t>();
 
 				for (const creature_attack_t &weapon : creature.attacks) {
 					LOG ss;
-					ss.other_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with its ")->col(color_t{ 1.0f, 1.0f, 0.f })->text(weapon.type)->col(color_t{ 1.0f, 1.0f, 1.0f })->text(". ");
+					color_t yellow{ 1.0f, 1.0f, 0.f };
+					color_t white{ 1.0f, 1.0f, 1.0f };
+					ss.other_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with its ")->col(yellow)->text(weapon.type)->col(white)->text(". ");
 					const int hit_roll = rng.roll_dice(1, 20) + weapon.hit_bonus;
 					const int target = calculate_armor_class(*defender) + stat_modifier(defender_stats->dexterity);
 					if (hit_roll < target) {
@@ -60,7 +63,8 @@ namespace systems {
 						ss.text(std::string("The attack hits, for ") + std::to_string(damage) + std::string(" points of damage."));
 						damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.victim, damage, weapon.type });
 					}
-					logging::log(logging::log_message{ ss.chars });
+					logging::log_message lmsg{ ss.chars };
+					logging::log(lmsg);
 				}
 			});
 		}

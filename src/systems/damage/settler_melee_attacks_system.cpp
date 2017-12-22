@@ -35,7 +35,8 @@ namespace systems {
 				auto attacker_pos = entity(msg.attacker)->component<position_t>();
 				auto defender_pos = entity(msg.victim)->component<position_t>();
 				if (!attacker_pos || !defender_pos) return;
-				particles::melee_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 0.0f });
+				color_t red{ 1.0f, 0.0f, 0.0f };
+				particles::melee_attack(*attacker_pos, *defender_pos, red);
 
 				auto attacker_stats = attacker->component<game_stats_t>();
 
@@ -74,7 +75,8 @@ namespace systems {
 					ss.text("The attack misses.");
 				}
 
-				logging::log(logging::log_message{ ss.chars });
+				logging::log_message lmsg{ ss.chars };
+				logging::log(lmsg);
 			});
 		}
 	}

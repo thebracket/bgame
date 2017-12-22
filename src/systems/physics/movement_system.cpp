@@ -95,7 +95,8 @@ namespace systems {
 
 					if (water_level(dest)>2 && water_level(tile_index)<3) can_go = false;
 
-					if (can_go && !(pos == *original)) request_move(entity_wants_to_move_message{ msg.entity_id, pos });
+					entity_wants_to_move_message msg{ msg.entity_id, pos };
+					if (can_go && !(pos == *original)) request_move(msg);
 				}
 			});
 		}

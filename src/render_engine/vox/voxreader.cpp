@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #include "voxreader.hpp"
+#include "../../stdafx.h"
 #include "voxel_model.hpp"
 
 // Credit to vox2png for some of this code. https://github.com/StijnBrouwer/vox2png/blob/master/vox2png.c
@@ -125,7 +125,7 @@ namespace vox {
                 /* Store the amount of models */
                 const pack_chunk *pack = (pack_chunk *) chunk;
                 numModels = pack->numModels;
-                //printf("Found %i models\n", numModels);
+                printf("Found %i models\n", numModels);
             }
             else if (id == size_id) {
                 /* Create an array of SizeChunks if we don't have one already */
@@ -151,7 +151,7 @@ namespace vox {
                 /* Store the palette */
                 palette_chunk *pal = (palette_chunk *) chunk;
                 palette = &pal->colors[0];
-                //puts("Found a palette");
+                puts("Found a palette");
             }
 
             /* Step to the next chunk */
@@ -171,8 +171,8 @@ namespace vox {
 
     /* Allocates a buffer and reads the contents of the file into it */
     void read_file(const char *path, size_t *len, char **buf) {
-		FILE *handle;
-		handle = fopen(path, "rb");
+        FILE *handle;
+        handle = fopen(path, "rb");
         if (!handle) {
             fputs("Error: Could not read file, are you sure it exists?\n", stderr);
             exit(-1);
@@ -198,80 +198,62 @@ namespace vox {
         return palette[((int) index - 1 + 0xFF) % 0xFF];
     }
 
-	std::string vox_to_load = "";
-	std::string vox_to_load_tag = "";
+    void load_vox(const std::string &filename, const std::string &tag)
+    {
+        auto finder = voxel_index.find(tag);
+        if (finder != voxel_index.end()) return; // Do not load duplicates
 
-	generator load_vox() {
-		assert(vox_to_load != "");
-		assert(vox_to_load_tag != "");
+        std::cout << "Loading VOX model: " << filename << "\n";
+        char *voxBuffer;
+        std::size_t voxLength;
+        read_file(filename.c_str(), &voxLength, &voxBuffer);
+        parsed_vox parsed = parse_vox(voxLength, voxBuffer);
 
-		const std::string filename = vox_to_load;
-		const std::string tag = vox_to_load_tag;
+        size_chunk * current_size = nullptr;
+        voxel_model model;
+        for (uint32_t i=0; i<parsed.numModels; ++i) {
+            current_size = parsed.sizeChunks[i];
+            std::cout << "Model size: " << current_size->x << " x " << current_size->y << " x " << current_size->z << "\n";
+            model.width = current_size->x;
+            model.height = current_size->y;
+            model.depth = current_size->z;
+            auto voxel_count = parsed.voxelChunks[i]->numVoxels;
 
-		// Duplicate check
-		auto finder = voxel_index.find(tag);
-		if (finder == voxel_index.end()) {
+            const voxel *voxels = get_voxels(parsed.voxelChunks[i]);
 
-			// Loader
-			char *voxBuffer;
-			std::size_t voxLength;
-			read_file(filename.c_str(), &voxLength, &voxBuffer);
-			parsed_vox parsed = parse_vox(voxLength, voxBuffer);
-			co_yield 0;
+            for (auto j=0; j<voxel_count; ++j) {
+                voxel current_voxel = voxels[j];
+                uint32_t color = get_color(parsed.palette, current_voxel.colorIndex);
 
-			size_chunk * current_size = nullptr;
-			voxel_model model;
-			for (uint32_t i = 0; i < parsed.numModels; ++i) {
-				current_size = parsed.sizeChunks[i];
-				model.width = current_size->x;
-				model.height = current_size->y;
-				model.depth = current_size->z;
-				auto voxel_count = parsed.voxelChunks[i]->numVoxels;
+                const uint8_t a = (color & 0xff000000) >> 24;
+                const uint8_t r = (color & 0x00ff0000) >> 16;
+                const uint8_t g = (color & 0x0000ff00) >> 8;
+                const uint8_t b = (color & 0x000000ff);
+                //std::cout << color << " = " << +r << "/" << +g << "/" << +b << "/" << +a << "\n";
 
-				const voxel *voxels = get_voxels(parsed.voxelChunks[i]);
+                subvoxel v{
+                        current_voxel.x,
+                        current_voxel.y,
+                        current_voxel.z,
+                        (float)b / 256.0f,
+                        (float)g / 256.0f,
+                        (float)r / 256.0f
+                };
+                //std::cout << v.x << "," << v.y << "," << v.z << "\n";
 
-				for (auto j = 0; j < voxel_count; ++j) {
-					voxel current_voxel = voxels[j];
-					uint32_t color = get_color(parsed.palette, current_voxel.colorIndex);
+                model.voxels.emplace_back(v);
+            }
+        }
+        auto index = voxel_models.size()+1;
+        model.build_model();
+        voxel_models.emplace_back(model);
+        voxel_index.insert(std::make_pair(tag, index));
 
-					const uint8_t a = (color & 0xff000000) >> 24;
-					const uint8_t r = (color & 0x00ff0000) >> 16;
-					const uint8_t g = (color & 0x0000ff00) >> 8;
-					const uint8_t b = (color & 0x000000ff);
+        free_parsed_vox(parsed);
+        free(voxBuffer);
+        std::cout << "Loaded VOX model as tag " << tag << ", index " << index << ".\n";
 
-					subvoxel v{
-						current_voxel.x,
-						current_voxel.y,
-						current_voxel.z,
-						(float)b / 256.0f,
-						(float)g / 256.0f,
-						(float)r / 256.0f
-					};
-
-					model.voxels.emplace_back(v);
-				}
-			}
-			auto index = voxel_models.size() + 1;
-			co_yield 0;
-
-			auto model_builder_async = model.build_model_async();
-			while (model_builder_async.move_next()) {
-				auto result = model_builder_async.current_value();
-				co_yield 0;
-			}
-
-			voxel_models.emplace_back(model);
-			voxel_index.insert(std::make_pair(tag, index));
-
-			free_parsed_vox(parsed);
-			free(voxBuffer);
-			co_yield 0;
-		}
-		else {
-			std::cout << "Not loading duplicate\n";
-			co_yield 0;
-		}
-	}
+    }
 
     std::size_t model_index(const std::string tag) {
         auto finder = voxel_index.find(tag);

@@ -29,3 +29,20 @@ Edit the CMakeSettings.json to point to your vcpkg installation, install package
 Packages: boost (which pulls in zlib for you), curl, cereal, lua, glfw3, glew, glm. Sadly, this will take a while; on my Core i7 with 12 Gb RAM it took over an hour. The good news is that you only have to do it the once.
 
 After that, you need to use the base as your working directory - so it can see game_assets and world_defs.x
+
+*NEW - In Progress*
+
+If you are using MSYS2 to build, you need:
+
+* libcurl-devel
+* mingw64/mingw-w64-x86_64-lua51
+* mingw64/mingw-w64-x86_64-glew
+* mingw64/mingw-w64-x86_64-glfw
+* mingw64/mingw-w64-x86_64-boost
+* mingw64/mingw-w64-x86_64-cereal
+* mingw64/mingw-w64-x86_64-glm
+* mingw64/mingw-w64-x86_64-libc++
+* mingw64/mingw-w64-x86_64-ccache (to speed up compilation)
+* mingw64/mingw-w64-x86_64-cotire (to speed up compilation)
+
+

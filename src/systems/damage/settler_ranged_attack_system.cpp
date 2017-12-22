@@ -37,7 +37,8 @@ namespace systems {
 				auto attacker_pos = attacker->component<position_t>();
 				auto defender_pos = defender->component<position_t>();
 				if (!attacker_pos || !defender_pos) return;
-				particles::ranged_attack(*attacker_pos, *defender_pos, color_t{ 1.0f, 0.0f, 1.0f });
+				color_t magenta{ 1.0f, 0.0f, 1.0f };
+				particles::ranged_attack(*attacker_pos, *defender_pos, magenta);
 
 				// TODO: civ_dislike_attacker(defender);
 
@@ -84,7 +85,8 @@ namespace systems {
 				else {
 					ss.text("The attack misses.");
 				}
-				logging::log(log_message{ ss.chars });
+				log_message lmsg{ ss.chars };
+				logging::log(lmsg);
 			});
 		}
 	}

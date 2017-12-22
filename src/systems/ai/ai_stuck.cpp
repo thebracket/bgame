@@ -27,7 +27,8 @@ namespace systems {
 			using namespace bengine;
 			each<ai_tag_my_turn_t, position_t, settler_ai_t>([](entity_t &e, ai_tag_my_turn_t &turn, position_t &pos, settler_ai_t &ai) {
 				if (is_stuck_or_invalid(pos)) {
-					logging::log(logging::log_message{ LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars });
+					logging::log_message msg{ LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars };
+					logging::log(msg);
 					std::cout << "Warning - stuck settler!\n";
 					bool done = false;
 					each<position_t, construct_provides_sleep_t>([&e, &pos, &done](entity_t &E, position_t &P, construct_provides_sleep_t &S) {

@@ -71,7 +71,8 @@ namespace systems {
 						// There is no bed - sleep rough
 						sleep.is_sleeping = true;
 						// TODO: Bad thoughts!
-						logging::log(logging::log_message{ LOG{}.settler_name(e.id)->text(" cannot find a bed, and is sleeping rough.")->chars });
+						logging::log_message msg{ LOG{}.settler_name(e.id)->text(" cannot find a bed, and is sleeping rough.")->chars };
+						logging::log(msg);
 						return;
 					}
 					else {

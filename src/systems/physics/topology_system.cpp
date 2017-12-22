@@ -196,7 +196,7 @@ namespace systems {
 				else if (provides.provides == provides_cage_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					auto [x,y,z] = idxmap(index);
+					const auto [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_cage });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -204,7 +204,7 @@ namespace systems {
 				else if (provides.provides == provides_stonefall_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					auto &[x,y,z] = idxmap(index);
+					const auto &[x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_stonefall });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -212,7 +212,7 @@ namespace systems {
 				else if (provides.provides == provides_blades_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					auto &[x,y,z] = idxmap(index);
+					const auto &[x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_blade });
 					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
@@ -220,7 +220,7 @@ namespace systems {
 				else if (provides.provides == provides_spikes) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
-					auto [x,y,z] = idxmap(index);
+					const auto [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(receives_signal_t{});
 					entity_should_be_deleted = false;
 				}

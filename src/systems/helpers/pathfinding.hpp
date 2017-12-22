@@ -18,12 +18,12 @@ namespace tasks {
 	}
 
 	template<class T>
-	inline follow_result_t follow_path(const bengine::entity_t &e, T &ai, position_t &pos) {
+	inline follow_result_t follow_path(bengine::entity_t &e, T &ai, position_t &pos) {
 		if (!ai.current_path) return FAIL;
 		if (pos == ai.current_path->destination) return AT_DESTINATION;
 		if (ai.current_path->steps.empty()) return AT_DESTINATION;
 
-		const position_t next_step = ai.current_path->steps.front();
+		position_t next_step = ai.current_path->steps.front();
 		ai.current_path->steps.pop_front();
 		if (can_enter_tile(next_step)) {
 			systems::movement::move_to(e, pos, next_step);
@@ -36,7 +36,7 @@ namespace tasks {
 	}
 
 	template<class T>
-	inline void try_path(const bengine::entity_t &e, const T &ai, position_t &pos,
+	inline void try_path(bengine::entity_t &e, const T &ai, position_t &pos,
 		const std::function<void()> &on_success,
 		const std::function<void()> &on_reached,
 		const std::function<void()> &on_fail)

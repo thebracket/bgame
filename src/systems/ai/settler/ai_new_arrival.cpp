@@ -25,7 +25,8 @@ namespace systems {
 
 				if (arrival.turns_since_arrival == 0 && rng.roll_dice(1, 6) == 1) {
 					const std::string quip = string_tables::string_table(string_tables::NEW_ARRIVAL_QUIPS)->random_entry(rng);
-					logging::log(logging::log_message{ LOG{}.settler_name(e.id)->text("says ")->col(color_t{1.0f, 1.0f, 0.0f})->text(quip)->chars });
+					logging::log_message msg{ LOG{}.settler_name(e.id)->text("says ")->col(color_t{1.0f, 1.0f, 0.0f})->text(quip)->chars };
+					logging::log(msg);
 				}
 
 				++arrival.turns_since_arrival;

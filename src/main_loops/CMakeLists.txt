@@ -1,8 +1,9 @@
 add_library(mainloops
-        splash_screen.cpp
+        first_run_screen.cpp
         main_menu.cpp
-        worldgen.cpp
         play_game.cpp
+        splash_screen.cpp
+        worldgen.cpp
         )
 target_link_libraries(mainloops bengine vox systems)
-#cotire(mainloops)
+cotire(mainloops)

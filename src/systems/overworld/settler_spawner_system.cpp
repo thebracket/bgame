@@ -39,7 +39,8 @@ namespace systems {
 					planet.remaining_settlers -= new_settler_count;
 					std::stringstream ss;
 					ss << "Ark auto-repair has managed to make the teleporter work! " << new_settler_count << " settlers have beamed down.";
-					logging::log(logging::log_message{ LOG{}.text(ss.str())->chars });
+					logging::log_message lmsg{ LOG{}.text(ss.str())->chars };
+					logging::log(lmsg);
 
 					for (auto i = 0; i < new_settler_count; ++i) {
 						const position_t spawn_point = settler_arrival_points[i % settler_arrival_points.size()];

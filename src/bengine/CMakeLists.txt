@@ -1,24 +1,25 @@
 add_library(bengine STATIC
-        main_window.cpp
-        stb_image.cpp
-        textures.cpp
-        shaders.cpp
-        simple_sprite.cpp
-        imgui.cpp
-        imgui_impl_glfw_gl3.cpp
-        imgui_draw.cpp
-        threadpool.cpp
-        filesystem.cpp
+        analytics.cpp
         color_t.cpp
-        pcg_basic.c
-        random_number_generator.cpp
-        string_utils.cpp
-        telemetry.cpp
         ecs.cpp
         FastNoise.cpp
+        filesystem.cpp
         geometry.cpp
-        rexspeeder.cpp
+        imgui.cpp
+        imgui_draw.cpp
+        imgui_impl_glfw_gl3.cpp
+        main_window.cpp
         octree.cpp
+        pcg_basic.cpp
+        random_number_generator.cpp
+        rexspeeder.cpp
+        shaders.cpp
+        simple_sprite.cpp
+        stb_image.cpp
+        string_utils.cpp
+        telemetry.cpp
+        textures.cpp
+        threadpool.cpp
         )
-#target_link_libraries(bengine ${Boost_LIBRARIES})
-#cotire(bengine)
+target_link_libraries(bengine ${Boost_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+cotire(bengine)

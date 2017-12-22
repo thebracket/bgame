@@ -17,7 +17,7 @@
 
 struct designations_t {
 
-	boost::container::flat_map<int, uint8_t> mining;
+	std::unordered_map<int, uint8_t> mining;
 	std::unordered_map<int, uint8_t> architecture;
 	std::unordered_map<int, position_t> chopping;
 	std::vector<building_designation_t> buildings;
