@@ -15,6 +15,6 @@ add_library(raws STATIC
 		species_raw.cpp
 		string_table.cpp
 )
-target_link_libraries(raws ${LUA_LIBRARIES} globalassets  )
-cotire(raws)
+target_link_libraries(raws globalassets)
+#cotire(raws)
 

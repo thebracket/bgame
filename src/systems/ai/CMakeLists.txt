@@ -28,4 +28,4 @@ add_library(ai
         settler/jobs_board.cpp
         )
 target_link_libraries(ai damage)
-#cotire(systems)
+cotire(ai)
