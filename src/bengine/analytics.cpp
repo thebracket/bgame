@@ -2,10 +2,6 @@
 #include "analytics.hpp"
 
 #include <curl/curl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <assert.h>
 
 namespace bengine {
 	namespace analytics {
