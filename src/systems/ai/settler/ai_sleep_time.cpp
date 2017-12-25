@@ -1,17 +1,16 @@
+#include <systems/ai/distance_map_system.hpp>
+#include <systems/gui/log_system.hpp>
+#include <components/logger.hpp>
+#include <systems/physics/movement_system.hpp>
 #include "stdafx.h"
 #include "ai_sleep_time.hpp"
 #include "../../../global_assets/game_pause.hpp"
 #include "../../../components/sleep_clock_t.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../../components/position.hpp"
 #include "../../../components/construct_provides_sleep.hpp"
 #include "../../../components/claimed_t.hpp"
 #include "../../../components/ai_tags/ai_tag_sleep_shift.hpp"
-#include "../../ai/distance_map_system.hpp"
-#include "../../physics/movement_system.hpp"
-#include "../../gui/log_system.hpp"
-#include "../../../components/logger.hpp"
 
 namespace systems {
 	namespace ai_sleep_time {

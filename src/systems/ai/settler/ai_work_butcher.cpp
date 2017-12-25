@@ -1,8 +1,6 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
-#include "../distance_map_system.hpp"
 #include "ai_work_hunt.hpp"
 #include "../../../components/ai_tags/ai_tag_work_butcher.hpp"
 #include "../../../components/corpse_harvestable.hpp"
@@ -10,8 +8,6 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/creatures.hpp"
 #include "../../../raws/defs/raw_creature_t.hpp"
-#include "../inventory_system.hpp"
-#include "../distance_map_system.hpp"
 
 namespace systems {
 	namespace ai_butcher {

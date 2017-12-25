@@ -1,8 +1,6 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
-#include "../distance_map_system.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "../../../components/ai_tags/ai_tag_work_pull_lever.hpp"
 #include "../../../components/lever.hpp"

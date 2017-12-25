@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../global_assets/game_designations.hpp"
@@ -8,8 +7,6 @@
 #include "../../helpers/inventory_assistant.hpp"
 #include "../../../raws/reactions.hpp"
 #include "../../../raws/defs/reaction_t.hpp"
-#include "../inventory_system.hpp"
-#include "../../../render_engine/vox/renderables.hpp"
 #include "../../gui/particle_system.hpp"
 #include "../../../bengine/telemetry.hpp"
 

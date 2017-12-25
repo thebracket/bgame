@@ -1,9 +1,7 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/building.hpp"
-#include "../distance_map_system.hpp"
 #include "../../../components/ai_tags/ai_tag_work_hunting.hpp"
 
 namespace systems {

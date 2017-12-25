@@ -2,20 +2,14 @@
 #include "ai_work_architect.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
-#include "../distance_map_system.hpp"
 #include "../../../components/ai_tags/ai_tag_work_architect.hpp"
-#include "../../physics/movement_system.hpp"
 #include "../../../global_assets/game_designations.hpp"
-#include "../../../planet/region/region.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../components/bridge.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/claimed_t.hpp"
-#include "../inventory_system.hpp"
-#include "../../../render_engine/vox/renderables.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../mining_system.hpp"
-#include "../../../bengine/telemetry.hpp"
 
 namespace systems {
 	namespace ai_architect {

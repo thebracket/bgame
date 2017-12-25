@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../global_assets/game_designations.hpp"
@@ -15,11 +14,9 @@
 #include "../../../components/lever.hpp"
 #include "../../../components/receives_signal.hpp"
 #include "../../../components/smoke_emitter.hpp"
-#include "../inventory_system.hpp"
 #include "../../physics/visibility_system.hpp"
 #include "../workflow_system.hpp"
 #include "../../physics/topology_system.hpp"
-#include "../../../render_engine/vox/renderables.hpp"
 #include "../../gui/particle_system.hpp"
 
 namespace systems {

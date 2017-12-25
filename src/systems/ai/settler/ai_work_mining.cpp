@@ -1,21 +1,14 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "../../../components/position.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/ai_tags/ai_tag_work_mining.hpp"
 #include "../../../global_assets/game_designations.hpp"
-#include "../../helpers/dijkstra_map.hpp"
-#include "../distance_map_system.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../mining_system.hpp"
-#include "../../../planet/region/region.hpp"
-#include "../../physics/movement_system.hpp"
 #include "../../physics/topology_system.hpp"
 #include "../inventory_system.hpp"
 #include "../../damage/damage_system.hpp"
-#include "../distance_map_system.hpp"
-#include "../mining_system.hpp"
 
 namespace systems {
 	namespace ai_mining {

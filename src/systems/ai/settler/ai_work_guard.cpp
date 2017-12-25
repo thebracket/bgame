@@ -1,7 +1,5 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
-#include "../../../components/position.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "../../helpers/weapons_helper.hpp"
 #include "../../../bengine/geometry.hpp"
