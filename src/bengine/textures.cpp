@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "textures.hpp"
 #include "stb_image.h"
+#include "filesystem.hpp"
 #include <tuple>
 
 namespace bengine {
     std::tuple<unsigned int, int, int, int> load_texture(const std::string &filename) {
+        if (!exists(filename)) throw std::runtime_error("Unable to open " + filename);
         int width, height, bpp;
         GLuint texture_id;
         stbi_set_flip_vertically_on_load(true);
+        std::cout << "Loading: " << filename << "\n";
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(filename));
 

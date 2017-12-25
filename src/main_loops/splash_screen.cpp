@@ -41,10 +41,10 @@ namespace splash_screen {
 
     /* Loads enough to get things started. */
     void init() {
+        init_simple_sprite();
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
         ascii_texture = std::make_unique<texture_t>("game_assets/hack_square_64x64.png");
         spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
-        init_simple_sprite();
         worldgenshader = load_shaders("game_assets/worldgenshader_vertex.glsl", "game_assets/worldgenshader_fragment.glsl");
         chunkshader = std::make_unique<chunk_shader_t>();
         depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
