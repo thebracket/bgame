@@ -696,9 +696,6 @@
     <ClCompile Include="..\..\src\main_loops\first_run_screen.cpp">
       <Filter>Source Files\main_loops</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\main_loops\asset_loader.cpp">
-      <Filter>Source Files\main_loops</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp">
       <Filter>Source Files\render_engine\fbo</Filter>
     </ClCompile>

@@ -172,7 +172,6 @@
     <ClCompile Include="..\..\src\global_assets\spatial_db.cpp" />
     <ClCompile Include="..\..\src\global_assets\texture_storage.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\main_loops\asset_loader.cpp" />
     <ClCompile Include="..\..\src\main_loops\first_run_screen.cpp" />
     <ClCompile Include="..\..\src\main_loops\main_menu.cpp" />
     <ClCompile Include="..\..\src\main_loops\play_game.cpp" />

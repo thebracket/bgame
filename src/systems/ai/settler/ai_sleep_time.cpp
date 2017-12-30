@@ -1,8 +1,8 @@
-#include <systems/ai/distance_map_system.hpp>
-#include <systems/gui/log_system.hpp>
-#include <components/logger.hpp>
-#include <systems/physics/movement_system.hpp>
 #include "stdafx.h"
+#include "../distance_map_system.hpp"
+#include "../../gui/log_system.hpp"
+#include "../../../components/logger.hpp"
+#include "../../physics/movement_system.hpp"
 #include "ai_sleep_time.hpp"
 #include "../../../global_assets/game_pause.hpp"
 #include "../../../components/sleep_clock_t.hpp"

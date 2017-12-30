@@ -34,7 +34,7 @@ float shadow(vec3 fragToLight) {
     float currentDepth = length(fragToLight);
     for(int i = 0; i < samples; ++i)
     {
-        float closestDepth = texture(depthMap, fragToLight + (gridSamplingDisk[i]*0.6) * diskRadius).r;
+        float closestDepth = texture(depthMap, fragToLight + (gridSamplingDisk[i] * 0.6) * diskRadius).r;
         closestDepth *= far_plane;   // undo mapping [0;1]
         if(currentDepth - bias > closestDepth)
             shadow += 1.0;
@@ -137,7 +137,7 @@ void main()
     
     // Discard if the light can't see it
     float shadowFactor = shadow(fragToLight);
-    if (shadowFactor < 0.1) {
+    if (shadowFactor < 0.9) {
         discard;
     }
 
@@ -162,5 +162,6 @@ void main()
     vec3 Lo = vec3(0.0); // Light Output
     Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz + vec3(0.0, 0.5, 0.0), position.xyz, light_color.rgb) * 4.0;
 
-    FragColor = Lo * shadowFactor;
+    //FragColor = Lo * shadowFactor;
+    FragColor = shadowFactor;
 }
