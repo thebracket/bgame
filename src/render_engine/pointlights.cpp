@@ -105,7 +105,7 @@ namespace render {
 			glActiveTexture(GL_TEXTURE4);
 			glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
 
-			// TODO: Setup a blend mode
+			// Setup a blend mode
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 

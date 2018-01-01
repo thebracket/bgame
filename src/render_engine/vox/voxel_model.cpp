@@ -55,6 +55,7 @@ namespace vox {
 						const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
 						auto vfinder = cubes.find(candidate_idx);
 						if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
+						if (!possible) break;
 					}
 					if (possible) {
 						++H;
@@ -78,6 +79,7 @@ namespace vox {
 							const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
 							auto vfinder = cubes.find(candidate_idx);
 							if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
+							if (!possible) break;
 						}
 					}
 					if (possible) {
@@ -215,19 +217,14 @@ namespace vox {
 
 		//glCheckError();
 		glBindVertexArray(0);
-		//glCheckError();
+		glCheckError();
 
 		render->n_instances = instances.size();
 		render->model = this;
 	}
 
 	void voxel_model::render_instances(voxel_render_buffer_t &buffer) {
-		//std::cout << "Voxel render\n";
-		// Perform the render
 		glBindVertexArray(buffer.tmp_vao);
-		//glDrawArrays(GL_TRIANGLES, 0, n_elements);
-		//std::cout << n_elements << "\n";
-		//std::cout << "Rendering " << n_elements << ", " << buffer.n_instances << " times\n";
 		glDrawArraysInstanced(GL_TRIANGLES, 0, n_elements, (int)buffer.n_instances);
 		glCheckError();
 

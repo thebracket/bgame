@@ -191,7 +191,6 @@ namespace render {
 
         // Render the combined light buffer
         render_to_light_buffer();
-		//render_pointlight();
 		render_pointlights();
 
 		// Add in translucent cursors

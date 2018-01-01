@@ -58,6 +58,7 @@ namespace splash_screen {
         particle_shader = load_shaders("game_assets/particle_vertex.glsl", "game_assets/particle_fragment.glsl");
         dirlight_shader = load_shaders("game_assets/dirlight_vertex.glsl", "game_assets/dirlight_fragment.glsl");
         lighter_shader = load_shaders("game_assets/lighter_vertex.glsl", "game_assets/lighter_fragment.glsl");
+		pointlight_shader = load_shaders("game_assets/pointlight_vertex.glsl", "game_assets/pointlight_fragment.glsl", "game_assets/pointlight_geometry.glsl");
     }
 
     void init_raws(int id) {
@@ -323,22 +324,6 @@ namespace splash_screen {
     }
 
     void load_voxel_models() {
-
-        /*
-        vox::load_vox("game_assets/vox/cryobed32.vox", "cryobed");
-        vox::load_vox("game_assets/vox/floorlight.vox", "floorlight");
-        vox::load_vox("game_assets/vox/rtg.vox", "rtg");
-        vox::load_vox("game_assets/vox/cabinet.vox", "cabinet");
-        vox::load_vox("game_assets/vox/battery.vox", "battery");
-        vox::load_vox("game_assets/vox/cordex.vox", "cordex");
-        vox::load_vox("game_assets/vox/person-base.vox", "person-base");
-        vox::load_vox("game_assets/vox/replicator-small.vox", "replicator-small");
-        vox::load_vox("game_assets/vox/solarpanel.vox", "solarpanel");
-        vox::load_vox("game_assets/vox/person-hair-short.vox", "shorthair");
-        vox::load_vox("game_assets/vox/person-hair-long.vox", "longhair");
-        vox::load_vox("game_assets/vox/person-hair-pigtails.vox", "pigtails");
-        vox::load_vox("game_assets/vox/person-hair-mohawk.vox", "mohawk");
-        */
 
         for (const auto &vm : voxel_models_to_load) {
             vox::load_vox(vm.second, vm.first);
