@@ -49,7 +49,7 @@ human_hair_colors = {
     DarkestGrey = { r=113, g=99, b=93 },
     MediumGrey = { r=183, g=166, b=158 },
     LightGrey = { r=214, g=196, b=194 },
-    WhiteBlonde = { r=255, g=24, b=255 },
+    WhiteBlonde = { r=255, g=245, b=225 },
     PlatinumBlonde = { r=202, g=191, b=177 },
     RussetRed = { r=141, g=74, b=67 },
     Terracotta = { r=181, g=82, b=57 }

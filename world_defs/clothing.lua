@@ -211,7 +211,8 @@ clothing = {
 		slot = "torso",
 		colors = {"brown", "black", "grey"},
 		description = "A simple tunic.",
-		ac = 1.0, glyph = 378
+		ac = 1.0, glyph = 378,
+		layer = voxelId("clothes_simple_tunic")
 	},
 	britches = {
 		name = "Britches",
@@ -219,7 +220,8 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A simple pair of pants.",
 		ac = 1.0,
-		glyph = 379
+		glyph = 379,
+		layer = voxelId("clothes_britches_simple")
 	},
 	skirt_simple = {
 		name = "Simple Skirt",
@@ -227,7 +229,8 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A simple skirt.",
 		ac = 1.0,
-		glyph = 382
+		glyph = 382,
+		layer = voxelId("clothes_longskirt")
 	},
 	sandals = {
 		name = "Sandals",
@@ -235,14 +238,16 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A simple pair of sandals.",
 		ac = 1.0,
-		glyph = 384
+		glyph = 384,
+		layer = voxelId("clothes_shoes")
 	},
 	cap = {
 		name = "Armored Cap",
 		slot = "head",
 		colors = {"brown", "black", "grey"},
 		description = "An armored cap, offering minimal head protection.",
-		ac = 1.5
+		ac = 1.5,
+		layer = voxelId("clothes_cap_simple")
 	},
 
 	-- Bronze age clothing
