@@ -515,16 +515,6 @@ namespace region {
 			}
 		}
 
-		// Is it underground?
-		int test_z = z+1;
-        bool ag = true;
-        while (test_z < REGION_DEPTH-1) {
-            const int testidx = mapidx(x,y,test_z);
-            if (tile_type[testidx] == tile_type::FLOOR || tile_type[testidx] == tile_type::WALL || tile_type[testidx] == tile_type::SOLID) ag = false;
-            ++test_z;
-        }
-        above_ground[idx] = ag;
-
 		tile_pathing(x, y, z);
 	}
 
