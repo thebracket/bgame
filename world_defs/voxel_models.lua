@@ -49,6 +49,14 @@ voxel_models = {
     tanner = { model=vfn("tanner"), id=46 },
     charcoal = { model=vfn("charcoal"), id=47 },
     ant = { model=vfn("ant"), id=48 },
+
+    person_base = { model=vfn("person_base"), id=49 },
+    person_hair_short = { model=vfn("person_hair_short"), id=50 },
+    person_hair_long = { model=vfn("person_hair_long"), id=51 },
+    person_hair_pigtails = { model=vfn("person_hair_pigtails"), id=52 },
+    person_hair_mohawk = { model=vfn("person_hair_mohawk"), id=53 },
+    person_hair_balding = { model=vfn("person_hair_balding"), id=54 },
+    person_hair_triangle = { model=vfn("person_hair_triangle"), id=55 },
 }
 
 function voxelId(name)

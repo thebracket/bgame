@@ -41,13 +41,22 @@ namespace render {
 	static unsigned int glyph_vao = 0;
 	static unsigned int glyph_vbo = 0;
 
+	static void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue) {
+		auto finder = models_to_render->find(model);
+		if (finder != models_to_render->end()) {
+			finder->second.push_back(vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue});
+		}
+		else {
+			models_to_render->insert(std::make_pair(model, std::vector<vox::instance_t>{vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue}}));
+		}
+	}
+
 	static void build_voxel_buildings() {
 		bengine::each<building_t, position_t>(
 			[](bengine::entity_t &e, building_t &b, position_t &pos) {
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				if (b.vox_model > 0) {
 					//std::cout << "Found model #" << b.vox_model << "\n";
-					auto finder = models_to_render->find(b.vox_model);
 					auto x = (float)pos.x;
 					const auto y = (float)pos.z;
 					auto z = (float)pos.y;
@@ -66,16 +75,7 @@ namespace render {
 						blue = 0.1f;
 					}
 
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
-						});
-					}
-					else {
-						models_to_render->insert(std::make_pair(b.vox_model, std::vector<vox::instance_t>{vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue
-						}}));
-					}
+					add_voxel_model(b.vox_model, x, y, z, red, green, blue);
 				} // TODO: Add ASCII support
 			}
 		});
@@ -98,23 +98,13 @@ namespace render {
 					}
 				}
 
-				auto finder = models_to_render->find(building_def->vox_model);
 				auto x = (float)systems::mouse_wx;
 				const auto y = (float)systems::mouse_wz;
 				auto z = (float)systems::mouse_wy;
 
 				if (can_build) {					
 
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						});
-					}
-					else {
-						models_to_render->insert(std::make_pair(building_def->vox_model, std::vector<vox::instance_t>{ vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						} }));
-					}
+					add_voxel_model(building_def->vox_model, x, y, z, 1.0f, 1.0f, 1.0f);
 
 					if (systems::left_click) {
 						// Perform the building
@@ -126,16 +116,7 @@ namespace render {
 					}
 				}
 				else {
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f
-						});
-					}
-					else {
-						models_to_render->insert(std::make_pair(building_def->vox_model, std::vector<vox::instance_t>{ vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f
-						} }));
-					}
+					add_voxel_model(building_def->vox_model, x, y, z, 1.0f, 0.0f, 0.0f);
 				}
 			}
 		}
@@ -146,20 +127,10 @@ namespace render {
 			auto item_def = get_item_def(i.item_tag);
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z && item_def) {
 				if (item_def->voxel_model > 0) {
-					auto finder = models_to_render->find(item_def->voxel_model);
 					auto x = (float)pos.x;
 					const auto y = (float)pos.z;
 					auto z = (float)pos.y;
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						});
-					}
-					else {
-						models_to_render->insert(std::make_pair(item_def->voxel_model, std::vector<vox::instance_t>{ vox::instance_t{
-							x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
-						} }));
-					}
+					add_voxel_model(item_def->voxel_model, x, y, z, 1.0f, 1.0f, 1.0f);
 				}
 				else if (item_def->glyph > 0) {
 					glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, item_def->fg, item_def->glyph_ascii });
@@ -201,6 +172,37 @@ namespace render {
 	}
 
 	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+		auto species = e.component<species_t>();
+		if (!species) return;
+
+		// For now, everything uses voxel 49!
+		if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
+			const float X = static_cast<float>(pos.x);
+			const float Y = static_cast<float>(pos.z);
+			const float Z = static_cast<float>(pos.y);
+
+			// Clip check passed - add the model
+			add_voxel_model(49, X, Y, Z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b);
+
+			// Add hair
+			int hair_vox;
+			switch (species->hair_style) {
+				case SHORT_HAIR : hair_vox = 50; break;
+				case LONG_HAIR: hair_vox = 51; break;
+				case PIGTAILS: hair_vox = 52; break;
+				case MOHAWK: hair_vox = 53; break;
+				case BALDING: hair_vox = 54; break;
+				case TRIANGLE: hair_vox = 55; break;
+				default : hair_vox = 0;
+			}
+			if (hair_vox > 0) {
+				add_voxel_model(hair_vox, X, Y, Z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b);
+			}
+
+			// Add items
+		}
+
+		/*
 		using namespace bengine;
 
 		// TODO: Add sprite
@@ -234,7 +236,7 @@ namespace render {
 			if (carried.carried_by == e.id && item.clothing_layer > 0) {
 				add_sprite(pos, item.clothing_layer, item.clothing_color);
 			}
-		});
+		});*/
 	}
 
 	static void render_composite_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
