@@ -32,8 +32,6 @@ namespace render {
 	bool models_changed = true;
 	static std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
 	static std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
-	static std::vector<float> sprite_buffer;
-	static int n_sprites = 0;
 	static std::vector<std::tuple<int, int, int, bengine::color_t, uint16_t>> glyphs;
 	static std::vector<float> glyph_buffer;
 	static unsigned int sprite_vao = 0;
@@ -139,38 +137,6 @@ namespace render {
 		});
 	}
 
-	static void add_sprite(const position_t &pos, const int &sprite_id, const bengine::color_t &color) {
-		constexpr float width = 1.0f;
-		constexpr float height = 1.0f;
-		const float x0 = -0.5f;
-		const float x1 = x0 + width;
-		const float y0 = -0.5f;
-		const float y1 = y0 + 1.0f; // We don't use y1 for floors
-		const float z0 = -0.5f;
-		const float z1 = z0 + height;
-		const float TI = sprite_id;
-		constexpr float T0 = 0.0f;
-		const float TW = width;
-		const float TH = height;
-		constexpr float ceiling_gap = 0.001f;
-
-		const float posx = static_cast<float>(pos.x);
-		const float posy = static_cast<float>(pos.z);
-		const float posz = static_cast<float>(pos.y);
-
-		sprite_buffer.insert(sprite_buffer.end(), {
-			// Upwards facing floor; this will need to change per camera type
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz
-		});
-
-		++n_sprites;
-	}
-
 	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		auto species = e.component<species_t>();
 		if (!species) return;
@@ -200,43 +166,13 @@ namespace render {
 			}
 
 			// Add items
+			using namespace bengine;
+			each<item_t, item_carried_t>([&pos, &e, &X, &Y, &Z](entity_t &E, item_t &item, item_carried_t &carried) {
+				if (carried.carried_by == e.id && item.clothing_layer > 0) {
+					add_voxel_model(item.clothing_layer, X, Y, Z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b);
+				}
+			});
 		}
-
-		/*
-		using namespace bengine;
-
-		// TODO: Add sprite
-		auto species = e.component<species_t>();
-		if (!species) return;
-
-		// Gender-based base sprite
-		switch (species->gender) {
-		case MALE: { 
-			add_sprite(pos, 0, species->skin_color.second); 
-			add_sprite(pos, 2, bengine::color_t( 1.0f, 1.0f, 1.0f ));
-		} break;
-		case FEMALE: { 
-			add_sprite(pos, 1, species->skin_color.second); 
-			add_sprite(pos, 3, bengine::color_t(1.0f, 1.0f, 1.0f));
-			add_sprite(pos, 4, bengine::color_t(1.0f, 1.0f, 1.0f));
-		} break;
-		}
-
-		// Hair
-		switch (species->hair_style) {
-		case SHORT_HAIR: add_sprite(pos, 24, species->hair_color.second); break;
-		case LONG_HAIR: add_sprite(pos, 25, species->hair_color.second); break;
-		case PIGTAILS: add_sprite(pos, 26, species->hair_color.second); break;
-		case MOHAWK: add_sprite(pos, 27, species->hair_color.second); break;
-		case TRIANGLE: add_sprite(pos, 25, species->hair_color.second); break;
-		}
-
-		// Items/Clothing
-		each<item_t, item_carried_t>([&pos, &e](entity_t &E, item_t &item, item_carried_t &carried) {
-			if (carried.carried_by == e.id && item.clothing_layer > 0) {
-				add_sprite(pos, item.clothing_layer, item.clothing_color);
-			}
-		});*/
 	}
 
 	static void render_composite_sentient(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
@@ -331,9 +267,7 @@ namespace render {
 		if (models_changed) {
 			models_to_render->clear();
 			model_buffers.clear();
-			sprite_buffer.clear();
 			glyphs.clear();
-			n_sprites = 0;
 
 			build_chunk_models(visible_chunks);
 			build_voxel_buildings();
@@ -354,30 +288,6 @@ namespace render {
 				model_buffers.emplace_back(std::move(mb));
 			}
 			glUseProgram(0);
-
-			// Build the sprite buffer
-			glBindVertexArray(sprite_vao);
-			glInvalidateBufferData(sprite_vbo);
-			glBindBuffer(GL_ARRAY_BUFFER, sprite_vbo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * sprite_buffer.size(), &sprite_buffer[0], GL_STATIC_DRAW);
-
-			glBindBuffer(GL_ARRAY_BUFFER, sprite_vbo);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0); // 0 = Vertex Position
-
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
-
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-			glEnableVertexAttribArray(2); // 2 = Normals
-
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 9 * sizeof(float));
-			glEnableVertexAttribArray(3); // 3 = Colors
-
-			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 12 * sizeof(float));
-			glEnableVertexAttribArray(4); // 4 = Translate
-
-			glBindVertexArray(0);
 
 			// Build the glyphs buffer
 			/*
@@ -454,23 +364,6 @@ namespace render {
 
 		for (const auto &m : model_buffers) {
 			m->model->render_instances(*m);
-		}
-
-		// Render the sprite buffer
-		//std::cout << n_sprites << "\n";
-		if (n_sprites > 0) {
-			glDepthFunc(GL_LEQUAL);
-			glUseProgram(assets::sprite_shader);
-			glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
-			glUniformMatrix4fv(glGetUniformLocation(assets::sprite_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-			glUniformMatrix4fv(glGetUniformLocation(assets::sprite_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D_ARRAY, assets::mob_texture_array);
-			glUniform1i(glGetUniformLocation(assets::sprite_shader, "textureArray"), 0);
-			glCheckError();
-			glBindVertexArray(sprite_vao);
-			glDrawArrays(GL_TRIANGLES, 0, sprite_buffer.size());
-			glCheckError();
 		}
 	}
 

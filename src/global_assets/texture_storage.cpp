@@ -10,7 +10,6 @@ namespace assets {
     std::unique_ptr<bengine::texture_t> starfield;
     unsigned int worldgen_texture_array;
     unsigned int chunk_texture_array;
-	unsigned int mob_texture_array;
 	unsigned int cursor_texture_array;
 	std::unique_ptr<bengine::texture_t> ascii_texture;
 }

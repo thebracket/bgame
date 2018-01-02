@@ -57,6 +57,24 @@ voxel_models = {
     person_hair_mohawk = { model=vfn("person_hair_mohawk"), id=53 },
     person_hair_balding = { model=vfn("person_hair_balding"), id=54 },
     person_hair_triangle = { model=vfn("person_hair_triangle"), id=55 },
+
+    clothes_batman_hat = { model=vfn("clothes_batman_hat"), id=56 },
+    clothes_police_hat = { model=vfn("clothes_police_hat"), id=57 },
+    clothes_cat_ears = { model=vfn("clothes_cat_ears"), id=58 },
+    clothes_tiara = { model=vfn("clothes_tiara"), id=59 },
+    clothes_formal_shirt = { model=vfn("clothes_formal_shirt"), id=60 },
+    clothes_bathrobe = { model=vfn("clothes_bathrobe"), id=61 },
+    clothes_spandex_shirt = { model=vfn("clothes_spandex_shirt"), id=62 },
+    clothes_sports_shirt = { model=vfn("clothes_sports_shirt"), id=63 },
+    clothes_tshirt = { model=vfn("clothes_tshirt"), id=64 },
+    clothes_cargopants = { model=vfn("clothes_cargopants"), id=65 },
+    clothes_longskirt = { model=vfn("clothes_longskirt"), id=66 },
+    clothes_hawaiian_shorts = { model=vfn("clothes_hawaiian_shorts"), id=67 },
+    clothes_spandex_pants = { model=vfn("clothes_spandex_pants"), id=68 },
+    clothes_miniskirt = { model=vfn("clothes_miniskirt"), id=69 },
+    clothes_shoes = { model=vfn("clothes_shoes"), id=70 },
+    clothes_boots = { model=vfn("clothes_boots"), id=71 },
+    
 }
 
 function voxelId(name)

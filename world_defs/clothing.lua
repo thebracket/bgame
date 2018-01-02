@@ -1,4 +1,5 @@
 clothing = {
+	-- Headware
 	batman_hat = {
 		name = "Batman Hat",
 		slot = "head",
@@ -6,7 +7,7 @@ clothing = {
 		description = "A black helmet with bat-ear protrusions and a face-mask. Be the hero Cordex needs!",
 		ac = 0.5,
 		glyph = 368,
-		layer = mobTex("batman_hat")
+		layer = voxelId("clothes_batman_hat")
 	},
 	police_hat = {
 		name = "Police Hat",
@@ -15,7 +16,7 @@ clothing = {
 		description = "A black, flat hat. Typically part of a uniform.",
 		ac = 0.5,
 		glyph = 369,
-		layer = mobTex("police_hat")
+		layer = voxelId("clothes_police_hat")
 	},
 	cat_ears = {
 		name = "Cat Ears",
@@ -24,7 +25,7 @@ clothing = {
 		description = "Clip on, prosthetic cat ears (not made from a real cat).",
 		ac = 0.5,
 		glyph = 370,
-		layer = mobTex("cat_ears")
+		layer = voxelId("clothes_cat_ears")
 	},
 	tiara = {
 		name = "Tiara",
@@ -33,8 +34,10 @@ clothing = {
 		description = "Plastic tiara, perfect for your wannabe princess.",
 		ac = 0.5,
 		glyph = 371,
-		layer = mobTex("tiara")
+		layer = voxelId("clothes_tiara")
 	},
+
+	-- Torso wear
 	formal_shirt = {
 		name = "Formal Shirt",
 		slot = "torso",
@@ -42,7 +45,7 @@ clothing = {
 		description = "A nice shirt with a collar and button-up cuffs. Ideal for the office.",
 		ac = 0.5,
 		glyph = 372,
-		layer = mobTex("formal_shirt")
+		layer = voxelId("clothes_formal_shirt")
 	},
 	formal_blouse = {
 		name = "Formal Blouse",
@@ -51,7 +54,7 @@ clothing = {
 		description = "A nice blouse with a collar and button-up cuffs. Ideal for the office.",
 		ac = 0.5,
 		glyph = 373,
-		layer = mobTex("formal_blouse")
+		layer = voxelId("clothes_formal_shirt")
 	},
 	bathrobe = {
 		name = "Bathrobe",
@@ -60,7 +63,7 @@ clothing = {
 		description = "A comfortable, silk bath-robe. Ideal for running a sleazy mansion, pretending to be a wizard, or taking a bath.",
 		ac = 0.5,
 		glyph = 374,
-		layer = mobTex("bathrobe")
+		layer = voxelId("clothes_bathrobe")
 	},
 	spandex_shirt = {
 		name = "Spandex Shirt",
@@ -69,7 +72,7 @@ clothing = {
 		description = "A tight, spandex shirt. Ideal for the gymnasium, or unleashing your inner super-hero.",
 		ac = 0.5,
 		glyph = 375,
-		layer = mobTex("spandex-shirt")
+		layer = voxelId("clothes_spandex_shirt")
 	},
 	spandex_blouse = {
 		name = "Spandex Blouse",
@@ -78,7 +81,7 @@ clothing = {
 		description = "A tight, spandex blouse. Ideal for the gymnasium, or unleashing your inner super-hero.",
 		ac = 0.5,
 		glyph = 376,
-		layer = mobTex("spandex-blouse")
+		layer = voxelId("clothes_spandex_shirt")
 	},
 	sports_shirt = {
 		name = "Sports Shirt",
@@ -87,7 +90,7 @@ clothing = {
 		description = "A sporting shirt, showing the colors of your favorite team.",
 		ac = 0.5,
 		glyph = 377,
-		layer = mobTex("sports_shirt")
+		layer = voxelId("clothes_sports_shirt")
 	},
 	t_shirt = {
 		name = "T-Shirt",
@@ -96,8 +99,10 @@ clothing = {
 		description = "A sleeveless T-shirt, with a witty message on it.",
 		ac = 0.5,
 		glyph = 378,
-		layer = mobTex("sports_shirt")
+		layer = voxelId("clothes_tshirt")
 	},
+
+	-- Legwear
 	cargo_pants = {
 		name = "Cargo Pants",
 		slot = "legs",
@@ -105,7 +110,7 @@ clothing = {
 		description = "A pair of sturdy trousers, featuring many pockets. Practical and comfortable, and who knows what will be found in the pockets?",
 		ac = 0.5,
 		glyph = 379,
-		layer = mobTex("cargo_pants")
+		layer = voxelId("clothes_cargopants")
 	},
 	long_skirt = {
 		name = "Long Skirt",
@@ -114,7 +119,7 @@ clothing = {
 		description = "A formal skirt, covering from waist to knees.",
 		ac = 0.5,
 		glyph = 380,
-		layer = mobTex("long_skirt")
+		layer = voxelId("clothes_longskirt")
 	},
 	hawaiian_shorts = {
 		name = "Hawaiian Shorts",
@@ -123,7 +128,7 @@ clothing = {
 		description = "A pair of silky shorts, colored to ensure visibility even from orbit. Never lose your waist again.",
 		ac = 0.5,
 		glyph = 381,
-		layer = mobTex("hawaiianshorts")
+		layer = voxelId("clothes_hawaiian_shorts")
 	},
 	sports_shorts = {
 		name = "Sports Shorts",
@@ -132,7 +137,7 @@ clothing = {
 		description = "A pair of sporting shorts, ideal for exercise, running away, or following your favorite team.",
 		ac = 0.5,
 		glyph = 381,
-		layer = mobTex("hawaiianshorts")
+		layer = voxelId("clothes_hawaiian_shorts")
 	},
 	spandex_pants = {
 		name = "Spandex Pants",
@@ -141,7 +146,7 @@ clothing = {
 		description = "Tight, spandex pants. Show off your legs, or horrify your neighbors.",
 		ac = 0.5,
 		glyph = 383,
-		layer = mobTex("spandex_pants")
+		layer = voxelId("clothes_spandex_pants")
 	},
 	miniskirt = {
 		name = "Miniskirt",
@@ -150,8 +155,10 @@ clothing = {
 		description = "A short skirt, leaving little to the imagination.",
 		ac = 0.5,
 		glyph = 382,
-		layer = mobTex("miniskirt")
+		layer = voxelId("clothes_miniskirt")
 	},
+
+	-- Footwear
 	leather_shoes = {
 		name = "Leather Shoes",
 		slot = "shoes",
@@ -159,7 +166,7 @@ clothing = {
 		description = "A pair of sturdy leather shoes. Very boring, and very practical.",
 		ac = 1.0,
 		glyph = 384,
-		layer = mobTex("leather_shoes")
+		layer = voxelId("clothes_shoes")
 	},
 	sandals = {
 		name = "Sandals",
@@ -168,7 +175,7 @@ clothing = {
 		description = "A pair of sandals, offering minimal protection to the feet and freeing the wearer from the tyranny of shoelaces.",
 		ac = 0.5,
 		glyph = 384,
-		layer = mobTex("leather_shoes")
+		layer = voxelId("clothes_shoes")
 	},
 	combat_boots = {
 		name = "Combat Boots",
@@ -177,7 +184,7 @@ clothing = {
 		description = "Practical leather boots, with reinforced ankles. Kick some butt. Available in a wide range of TactiCool(TM) designs.",
 		ac = 1.0,
 		glyph = 384,
-		layer = mobTex("combat_boots")
+		layer = voxelId("clothes_boots")
 	},
 	high_boots = {
 		name = "High Boots",
@@ -186,7 +193,7 @@ clothing = {
 		description = "Leather boots that come up over the knee. Great for fishing, looking good, or kicking some butt.",
 		ac = 1.0,
 		glyph = 384,
-		layer = mobTex("high_boots")
+		layer = voxelId("clothes_boots")
 	},
 	sneakers = {
 		name = "Sneakers",
@@ -195,7 +202,7 @@ clothing = {
 		description = "Comfortable running shoes, complete with oxygenated layer to protect your feet and a patented No-Stink technology.",
 		ac = 0.5,
 		glyph = 384,
-		layer = mobTex("sneakers")
+		layer = voxelId("clothes_shoes")
 	},
 
 	-- Stone-age clothing

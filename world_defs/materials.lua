@@ -72,48 +72,6 @@ registerTerrainTexture("cement", "cement")
 registerTerrainTexture("oakfloor", "oakfloor")
 registerTerrainTexture("plasteelfloor", "plasteelfloor")
 
-mob_textures = {
-    base_male = { index=0, texture="base-male-human.png" },
-    base_female = { index=1, texture="base-female-human.png" },
-    underpants = { index=2, texture="underpants.png" },
-    sportsbriefs = { index=3, texture="sportsbriefs.png" },
-    bra = { index=4, texture="bra.png" },
-    batman_hat = { index=5, texture="batmanhat.png" },
-    police_hat = { index=6, texture="policehat.png" },
-    cat_ears = { index=7, texture="catears.png" },
-    tiara = { index=8, texture="tiara.png" },
-    formal_shirt = { index=9, texture="formalshirt.png" },
-    formal_blouse = { index=10, texture="formalblouse.png" },
-    bathrobe = { index=11, texture="bathrobe-female.png" },
-    spandex_shirt = { index=12, texture="spandexshirt.png" },
-    spandex_blouse = { index=13, texture="spandexblouse.png" },
-    sports_shirt = { index=14, texture="sportsshirt.png" },
-    cargo_pants = { index=15, texture="cargopants.png" },
-    long_skirt = { index=16, texture="longskirt.png" },
-    hawaiianshorts = { index=17, texture="hawaiianshorts.png" },
-    spandex_pants = { index=18, texture="spandexpants.png" },
-    miniskirt = { index=19, texture="miniskirt.png" },
-    leather_shoes = { index=20, texture="leathershoes.png" },
-    combat_boots = { index=21, texture="combatboots.png" },
-    high_boots = { index=22, texture="highboots.png" },
-    sneakers = { index=23, texture="sneakers.png" },
-    hair_short = { index=24, texture="hair-short.png" },
-    hair_long = { index=25, texture="hair-long.png" },
-    hair_pigtails = { index=26, texture="hair-pigtails.png" },
-    hair_spiked = { index=27, texture="hair-spiked.png" },
-}
-
-function mobTex(name)
-    if mob_textures[name] ~= nil then
-        texidx = mob_textures[name].index
-        --print(name .. " : " .. texidx)
-        return texidx
-    else
-        print("Unknown texture: "..name)
-    end
-    return 0
-end
-
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
         texidx = terrain_textures[name].index

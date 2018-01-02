@@ -10,7 +10,6 @@ boost::container::flat_map<std::string, std::size_t> material_defs_idx;
 std::vector<material_def_t> material_defs;
 std::vector<std::string> material_textures;
 std::vector<std::pair<std::string, std::string>> voxel_models_to_load;
-std::vector<std::string> mob_textures;
 
 /*
  * Retrieve a material by ID
@@ -281,40 +280,5 @@ void read_voxel_models() {
 		for (auto it = vox.begin(); it != vox.end(); ++it) {
 			voxel_models_to_load.emplace_back(it->second);
 		}
-	}
-}
-
-void read_mob_textures() {
-	std::map<int, std::string> tmp_tex;
-
-	lua_getglobal(lua_state, "mob_textures");
-	lua_pushnil(lua_state);
-
-	while (lua_next(lua_state, -2) != 0) {
-		std::string key = lua_tostring(lua_state, -2);
-		std::cout << key << "\n";
-
-		int idx = 0;
-		std::string tex;
-
-		lua_pushstring(lua_state, key.c_str());
-		lua_gettable(lua_state, -2);
-		while (lua_next(lua_state, -2) != 0) {
-			std::string field = lua_tostring(lua_state, -2);
-			//std::cout << field << "\n";
-
-			if (field == "index") idx = (int)lua_tonumber(lua_state, -1);
-			if (field == "texture") tex = lua_tostring(lua_state, -1);
-
-			lua_pop(lua_state, 1);
-		}
-		tmp_tex[idx] = tex;
-
-		lua_pop(lua_state, 1);
-	}
-
-	mob_textures.clear();
-	for (auto i = tmp_tex.begin(); i != tmp_tex.end(); ++i) {
-		mob_textures.emplace_back(i->second);
 	}
 }
