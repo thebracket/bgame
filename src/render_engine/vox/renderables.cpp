@@ -39,13 +39,13 @@ namespace render {
 	static unsigned int glyph_vao = 0;
 	static unsigned int glyph_vbo = 0;
 
-	static void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue) {
+	static void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue, float angle=0.0f, float x_rot=0.0f, float y_rot=0.0f, float z_rot=0.0f) {
 		auto finder = models_to_render->find(model);
 		if (finder != models_to_render->end()) {
-			finder->second.push_back(vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue});
+			finder->second.push_back(vox::instance_t{x, y, z, angle, x_rot, y_rot, z_rot, red, green, blue});
 		}
 		else {
-			models_to_render->insert(std::make_pair(model, std::vector<vox::instance_t>{vox::instance_t{x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, red, green, blue}}));
+			models_to_render->insert(std::make_pair(model, std::vector<vox::instance_t>{vox::instance_t{x, y, z, x_rot, y_rot, z_rot, angle, red, green, blue}}));
 		}
 	}
 
@@ -146,9 +146,10 @@ namespace render {
 			const float X = static_cast<float>(pos.x);
 			const float Y = static_cast<float>(pos.z);
 			const float Z = static_cast<float>(pos.y);
+			const float rotation = (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f;
 
 			// Clip check passed - add the model
-			add_voxel_model(49, X, Y, Z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b);
+			add_voxel_model(49, X, Y, Z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
 
 			// Add hair
 			int hair_vox;
@@ -162,14 +163,14 @@ namespace render {
 				default : hair_vox = 0;
 			}
 			if (hair_vox > 0) {
-				add_voxel_model(hair_vox, X, Y, Z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b);
+				add_voxel_model(hair_vox, X, Y, Z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
 			}
 
 			// Add items
 			using namespace bengine;
-			each<item_t, item_carried_t>([&pos, &e, &X, &Y, &Z](entity_t &E, item_t &item, item_carried_t &carried) {
+			each<item_t, item_carried_t>([&pos, &e, &X, &Y, &Z, &rotation](entity_t &E, item_t &item, item_carried_t &carried) {
 				if (carried.carried_by == e.id && item.clothing_layer > 0) {
-					add_voxel_model(item.clothing_layer, X, Y, Z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b);
+					add_voxel_model(item.clothing_layer, X, Y, Z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, 0.0f, 1.0f, 0.0f);
 				}
 			});
 		}

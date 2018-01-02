@@ -261,7 +261,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	settler_ai_t ai;
 	ai.shift_id = shift_id;
 
-	int angle = 180;
+	int angle = 0;
 	settler->assign(position_t{ x,y,z,angle })
 		->assign(renderable_composite_t{ RENDER_SETTLER, 2 })
 		->assign(name_t{ first_name, last_name })

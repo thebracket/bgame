@@ -100,7 +100,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
 
 	auto &[x, y, z] = start;
     auto sentient = bengine::create_entity()
-            ->assign(position_t{x, y, z})
+            ->assign(position_t{x, y, z, 0})
             ->assign(name_t{unit.name,
                             ""})
             ->assign(viewshed_t{6, false, false})

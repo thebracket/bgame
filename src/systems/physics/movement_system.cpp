@@ -133,6 +133,22 @@ namespace systems {
 				const int dX = msg.destination.x - epos->x;
 				const int dY = msg.destination.y - epos->y;
 				const int dZ = msg.destination.z - epos->z;
+				if (dX > 0) {
+					// East
+					epos->rotation = 270;
+				}
+				else if (dX < 0) {
+					// West
+					epos->rotation = 90;
+				}
+				else if (dY < 0) {
+					// North
+					epos->rotation = 180;
+				}
+				else if (dY > 0) {
+					// South
+					epos->rotation = 0;
+				}
 
 				if (initiative) {
 					const float deltaX = (float)dX / (float)initiative->initiative;
