@@ -145,7 +145,7 @@ void read_civ_types() noexcept
                                                     int gender_tag = 0;
                                                     if (afield == "male") gender_tag = 1;
                                                     if (afield == "female") gender_tag = 2;
-                                                    //equip.starting_clothes.push_back(std::make_tuple( gender_tag, slot, item ));
+                                                    equip.starting_clothes.push_back(std::make_tuple( gender_tag, slot, item ));
 
                                                     lua_pop(lua_state, 1);
                                                 }

@@ -7,7 +7,9 @@ species_sentient['neolithic_orc'] = {
     ethics = { diet="omnivore", alignment="evil" },
     max_age = 65, infant_age=3, child_age=16,
     glyph = glyphs['o'], worldgen_glyph = glyphs['caveorc'],
-    composite_render=false, base_male=glyphs['base_male'], base_female=glyphs['base_female']
+    composite_render=true, base_male=glyphs['base_male'], base_female=glyphs['base_female'],
+    skin_colors = human_skin_tones, hair_colors = human_hair_colors,
+    base_male_glyph = 352, base_female_glyph = 353
 }
 
 neolithic_orc_leader = {
