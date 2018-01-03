@@ -22,9 +22,10 @@ include_directories(${CURL_INCLUDE_DIRS})
 link_libraries(${CURL_LIBRARIES})
 
 # Require Lua
-find_package(Lua 5.3 REQUIRED)
-include_directories(${LUA_INCLUDE_DIR})
-link_libraries(${LUA_LIBRARIES})
+#find_package(Lua 5.1 REQUIRED)
+#include_directories(${LUA_INCLUDE_DIR})
+#link_libraries(${LUA_LIBRARIES})
+#message("Lua libraries detected (should be both liblua and liblualib): " ${LUA_LIBRARIES} ${LUA_LIBRARY})
 
 # Require GLEW
 find_package(Glew REQUIRED)
@@ -72,6 +73,9 @@ link_libraries(${GLM_LIBRARIES})
 
 # Include the main src folder, to keep stdafx happy
 include_directories(${PROJECT_SOURCE_DIR})
+
+add_subdirectory(lua)
+include_directories(${PROJECT_SOURCE_DIR}/lua/src)
 
 add_executable(noxfutura
         stdafx.cpp
@@ -277,7 +281,8 @@ add_executable(noxfutura
 		systems/scheduler/initiative_system.cpp
 		systems/scheduler/tick_system.cpp
 )
-target_link_libraries(noxfutura ${LUA_LIBRARIES})
+#target_link_libraries(noxfutura ${LUA_LIBRARIES})
+target_link_libraries(noxfutura liblua)
 target_link_libraries(noxfutura ${Boost_LIBRARIES})
 target_link_libraries(noxfutura glfw)
 cotire(noxfutura)
