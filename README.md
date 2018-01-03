@@ -30,12 +30,13 @@ Packages: boost (which pulls in zlib for you), curl, cereal, lua, glfw3, glew, g
 
 After that, you need to use the base as your working directory - so it can see game_assets and world_defs.x
 
-*NEW - In Progress*
+There is an included Visual Studio project to make this easier.
 
-If you are using MSYS2 to build, you need:
+*Windows builds with MSYS2 - Unix compatibility*
 
-* libcurl-devel
-* mingw64/mingw-w64-x86_64-lua51
+If you are using MSYS2 to build, you need to install (with `pacman -S`):
+
+* mingw64/mingw-w64-x86_64-libcurl-devel
 * mingw64/mingw-w64-x86_64-glew
 * mingw64/mingw-w64-x86_64-glfw
 * mingw64/mingw-w64-x86_64-boost
@@ -44,5 +45,20 @@ If you are using MSYS2 to build, you need:
 * mingw64/mingw-w64-x86_64-libc++
 * mingw64/mingw-w64-x86_64-ccache (to speed up compilation)
 * mingw64/mingw-w64-x86_64-cotire (to speed up compilation)
+* tar (yes, that really isn't included by default...)
 
+The Lua libraries bundled with MSYS2 do not work (at least for me), so I bundled Lua in the source directory.
 
+Change directory to wherever you checked out bgame, and:
+
+* `mkdir build`
+* `cd build`
+* `cmake -G"Unix Makefiles" ../src`
+* `make -j4`
+* `cp lua/liblua.dll .`
+* `ln -s ../world_defs .`
+* `ln -s ../game_assets .`
+
+You can now run `./noxfutura.exe` to run the game.
+
+This basic setup also worked with CLion on my machine.
