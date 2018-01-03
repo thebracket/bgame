@@ -13,10 +13,6 @@ namespace chunks {
 		// Regular elements
         std::vector<float> v;
         std::size_t n_elements = 0;
-
-		// Transparent elements
-		std::vector<float> trans;
-		std::size_t n_trans = 0;
     };
 
     /* Represents a 32x32 segment of the world */
@@ -37,7 +33,6 @@ namespace chunks {
         int index = 0;
         int base_x=0, base_y=0, base_z=0;
         std::bitset<CHUNK_SIZE> layer_requires_render{};
-		std::bitset<CHUNK_SIZE> layer_requires_transparency{};
 		std::array<layer_t, CHUNK_SIZE> layers;
 		boost::container::flat_map<int, std::tuple<int, int, int>> static_voxel_models;
         bool has_geometry = false;
@@ -52,7 +47,6 @@ namespace chunks {
         void greedy_floors(boost::container::flat_map<int, unsigned int> &floors, const int &layer);
         void greedy_cubes(boost::container::flat_map<int, unsigned int> &cubes, const int &layer);
         void update_buffer();
-		void update_trans_buffer();
 	};
 
     extern std::array<chunk_t, CHUNKS_TOTAL> chunks;

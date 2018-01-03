@@ -24,6 +24,7 @@
 #include "../components/lightsource.hpp"
 #include "../systems/mouse.hpp"
 #include "pointlights.hpp"
+#include "chunks/water_render.hpp"
 
 namespace render {
 
@@ -55,26 +56,6 @@ namespace render {
         }
     }
 
-	static void do_trans_chunk_render() {
-		for (const auto &idx : visible_chunks) {
-			chunks::chunk_t * target = &chunks::chunks[idx];
-			if (target->has_transparency) {
-				size_t n_elements = 0;
-				for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
-					const int layer_z = z + target->base_z;
-					if (layer_z <= camera_position->region_z && layer_z > camera_position->region_z - 10) {
-						n_elements += target->layers[z].n_trans;
-					}
-				}
-
-				if (n_elements > 0) {
-					glBindVertexArray(target->tvao);
-					glDrawArrays(GL_TRIANGLES, 0, n_elements);
-				}
-			}
-		}
-	}	
-
     static void render_chunks() {
         // Use the program
 		assets::chunkshader->use();
@@ -98,7 +79,6 @@ namespace render {
 		}
 		else {
 			do_chunk_render();
-			do_trans_chunk_render();
 		}
     }
 
@@ -150,6 +130,8 @@ namespace render {
 
 	static void update_buffers() {
 		chunk_maintenance();
+
+		build_water_geometry();
 		if (camera_moved) update_camera();
 		build_voxel_render_list(visible_chunks);
 		build_cursor_geometry();
@@ -185,6 +167,8 @@ namespace render {
         render_chunks();
         glCheckError();
 		render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
+		glCheckError();
+		render_water(camera_projection_matrix, camera_modelview_matrix);
 
 		// Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);

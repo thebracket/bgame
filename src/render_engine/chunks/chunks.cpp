@@ -78,8 +78,6 @@ namespace chunks {
         for (auto &layer : layers) {
             layer.v.clear();
             layer.n_elements = 0;
-			layer.trans.clear();
-			layer.n_trans = 0;
         }
 		static_voxel_models.clear();
 
@@ -103,8 +101,9 @@ namespace chunks {
                         if (region::revealed(idx)) {
 							if (tiletype == tile_type::WINDOW) {
 								// TODO: Windows go into transparency buffer
-								layers[chunk_z].n_trans += add_cube_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 15);
-								layer_requires_transparency.set(chunk_z);
+								//layers[chunk_z].n_elements += add_cube_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 15);
+								//layer_requires_transparency.set(chunk_z);
+								cubes[idx] = 15;
 							} else if (tiletype == tile_type::FLOOR) {
                                 floors[idx] = get_floor_tex(idx);
                             } else if (is_cube(tiletype)) {
@@ -133,10 +132,10 @@ namespace chunks {
 							cubes[idx] = 3;
 						}*/
                     }
-					if (region::water_level(idx) > 0) {
+					/*if (region::water_level(idx) > 0) {
 						layers[chunk_z].n_trans += add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));
 						layer_requires_transparency.set(chunk_z);
-					}
+					}*/
                 }
             }
 
@@ -147,7 +146,6 @@ namespace chunks {
         }
 
         has_geometry = layer_requires_render.count() > 0;
-		has_transparency = layer_requires_transparency.count() > 0;
 
         // Tell GL to update
         enqueue_vertex_update(index);
@@ -313,50 +311,7 @@ namespace chunks {
 			glBindVertexArray(0);
 			glCheckError();
 		}
-    }
-
-	void chunk_t::update_trans_buffer() {
-		bool reset_vao = false;
-		if (tvao < 1) { 
-			glGenVertexArrays(1, &tvao); 
-			glCheckError(); 
-			reset_vao = true;
-		}
-		if (tvbo < 1) { 
-			glGenBuffers(1, &tvbo); 
-			glCheckError(); 
-		}
-
-		// Combine the layers into a temporary structure
-		std::vector<float> data;
-		for (auto &layer : layers) {
-			data.insert(std::end(data), layer.trans.begin(), layer.trans.end());
-			has_transparency = true;
-			layer.trans.clear();
-			layer.trans.shrink_to_fit();
-		}
-		if (data.size() == 0) return;
-
-		glInvalidateBufferData(tvbo);
-		glBindBuffer(GL_ARRAY_BUFFER, tvbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_STATIC_DRAW);
-
-		if (reset_vao) {
-			glBindVertexArray(tvao);
-			glBindBuffer(GL_ARRAY_BUFFER, tvbo);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0); // 0 = Vertex Position
-
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
-
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-			glEnableVertexAttribArray(2); // 2 = Normals
-
-			glBindVertexArray(0);
-			glCheckError();
-		}
-	}
+    }	
 
     void update_buffers() {
 		while (!dirty_buffers.empty()) {
@@ -366,7 +321,6 @@ namespace chunks {
 			//chunks[idx].ready.store(false);
 			dirty_buffers.erase(idx);
 			chunks[idx].update_buffer();
-			chunks[idx].update_trans_buffer();
 			//chunks[idx].ready.store(true);
 			std::cout << "Buffer Updated\n";
 		}
