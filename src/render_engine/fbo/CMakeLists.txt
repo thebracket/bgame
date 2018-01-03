@@ -1,9 +1,0 @@
-add_library(fbo
-        base_lit_buffer.cpp
-        bloom_ping_pong.cpp
-        buffertest.cpp
-        gbuffer.cpp
-        hdr_buffer.cpp
-        point_light_buffer.cpp
-        )
-#cotire(fbo)
