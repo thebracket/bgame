@@ -71,7 +71,7 @@ This is on the latest Linux Mint (18.3 at the time of writing). For some reason,
   sudo apt-get update
   sudo apt-get install gcc-7 g++-7
 
-You need to install the following packages (I did this on Ubuntu; other distros may vary): `build-essential`, `git`, `cmake`, `extra-cmake-modules`, `libcurl4-openssl-dev`, `libglew-dev`, `libglfw3-dev`, `libglm-dev`, `libboost-dev`, `libboost-system-dev`, `libboost-filesystem-dev`, `zlibc`, `libcereal-dev`, `libncurses5-dev`, `libreadline-dev`, `liblua5.3-dev`
+You need to install the following packages (I did this on Ubuntu; other distros may vary): `build-essential`, `git`, `cmake`, `extra-cmake-modules`, `libcurl4-openssl-dev`, `libglew-dev`, `libglfw3-dev`, `libglm-dev`, `libboost-dev`, `libboost-system-dev`, `libboost-filesystem-dev`, `zlibc`, `libcereal-dev`, `libncurses5-dev`, `libreadline-dev`, `liblua5.3-dev`, `libglew-dev`
 
 To build it:
 
