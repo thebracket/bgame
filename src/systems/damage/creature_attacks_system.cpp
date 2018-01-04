@@ -30,6 +30,10 @@ namespace systems {
 				auto attacker = entity(msg.attacker);
 				if (!attacker) return;
 				auto attack_species = attacker->component<species_t>();
+				if (!attack_species) {
+					std::cout << "WARNING: Attacker has no species\n";
+					return;
+				}
 				auto creaturefinder = get_creature_def(attack_species->tag);
 				if (!creaturefinder) {
 					std::cout << "Unable to find creature: " << attack_species->tag << "\n";

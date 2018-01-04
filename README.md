@@ -62,3 +62,24 @@ Change directory to wherever you checked out bgame, and:
 You can now run `./noxfutura.exe` to run the game.
 
 This basic setup also worked with CLion on my machine.
+
+*Linux Builds*
+
+This is on the latest Linux Mint (18.3 at the time of writing). For some reason, it ships with old developer tools (disappointing!). This should fix that:
+
+  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  sudo apt-get update
+  sudo apt-get install gcc-7 g++-7
+
+You need to install the following packages (I did this on Ubuntu; other distros may vary): `build-essential`, `git`, `cmake`, `extra-cmake-modules`, `libcurl4-openssl-dev`, `libglew-dev`, `libglfw3-dev`, `libglm-dev`, `libboost-dev`, `libboost-system-dev`, `libboost-filesystem-dev`, `zlibc`, `libcereal-dev`, `libncurses5-dev`, `libreadline-dev`, `liblua5.3-dev`
+
+To build it:
+
+* Clone the github repo into a folder. `git clone https://github.com/thebracket/bgame`.
+* Enter the bgame folder, `cd bgame`.
+* Make a build folder, `mkdir build`, and enter it with `cd build`.
+* Tell CMake to create a build structure. `cmake -G"Unix Makefiles" ../src`.
+* Build the app with `make -j4` (replace the 4 with how many CPUs you would like to use)
+* `ln -s ../world_defs .`
+* `ln -s ../game_assets .`
+* You can now launch the game with `./noxfutura`
