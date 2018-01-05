@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "analytics.hpp"
 
+#include <stdarg.h>
 #include <curl/curl.h>
 
 namespace bengine {

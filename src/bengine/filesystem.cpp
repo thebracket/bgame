@@ -10,7 +10,7 @@ bool exists(const std::string &filename) noexcept {
 	return boost::filesystem::exists(filename);
 }
 
-/*#ifndef WIN32
+#ifndef WIN32
 #include <pwd.h>
 #include <sys/stat.h>
 std::string get_save_path()
@@ -25,7 +25,7 @@ std::string get_save_path()
 
     return result;
 }
-#else*/
+#else
 
 #include <Shlobj.h>
 #include <windows.h>
@@ -47,7 +47,7 @@ std::string get_save_path()
 	}
 }
 
-//#endif
+#endif
 
 void remove_from_path(std::string &s, const std::string needle) {
     //std::cout << "Searching " << s << " for " << needle << "\n";
