@@ -1,8 +1,18 @@
 # Nox Futura (formerly Black Future)
 
-An open-source game combining elements of Dwarf Fortress, Civilization, Warhammer, Douglass Adams, and more.
+An open-source game combining elements of Dwarf Fortress, Civilization, Warhammer, Douglass Adams, and more. It's very much in development, so don't expect miracles - or a finished experience - yet!
 
 Please visit [our website](http://bracketproductions.com/index.php/blackfuture/) for more information, download links, etc.
+
+## Contributions
+
+I hope one day to release this on various platforms, so I'm not merging in PRs. It's open source, because I firmly believe that users should be able to see what they are running - but I'm not really looking for collaboration at this time. Sorry! If you do want to submit a change, I'll need to talk to you about license assignment - I need to be able to release re-licensed builds (and possibly one day make money off them), and I don't want to get into the nightmare of "I made $5, now I have to get $0.10 to contributor X, $0.05 to contributor Y, etc.".
+
+As the game gets more mature, I'm hoping that providing the source will make life easier for modders, extenders and fans.
+
+If you see something you like, feel free to use it (subject to the GPL license). I'm all in favor of assisting others.
+
+## Build Instructions by Platform
 
 *Unstable Builds*
 
