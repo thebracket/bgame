@@ -10,7 +10,7 @@ bool exists(const std::string &filename) noexcept {
 	return boost::filesystem::exists(filename);
 }
 
-#ifndef WIN32
+#ifndef _MSC_VER
 #include <pwd.h>
 #include <sys/stat.h>
 std::string get_save_path()
