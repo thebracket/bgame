@@ -157,6 +157,7 @@ namespace systems {
 				if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
 				if (is_key_down(GLFW_KEY_W, false)) game_master_mode = WORKFLOW;
 				if (is_key_down(GLFW_KEY_APOSTROPHE)) render::depth_test_render = !render::depth_test_render;
+				if (is_key_down(GLFW_KEY_TAB)) camera->ascii_mode = !camera->ascii_mode;
 			}
 		}
     }
