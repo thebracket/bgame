@@ -72,8 +72,7 @@ namespace systems {
                         render::models_changed = true;
                     }
                     if (ImGui::MenuItem("Toggle ASCII")) {
-                        //camera->ascii_mode = !camera->ascii_mode;
-                        //region::tile_recalc_all();
+                        camera->ascii_mode = !camera->ascii_mode;
                     }
                     ImGui::EndMenu();
                 }
