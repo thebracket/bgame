@@ -179,7 +179,7 @@ void builder_save_planet(planet_t &planet) {
 }
 
 void build_planet(const int &seed, const int &water_divisor, const int &plains_divisor, const int &starting_settlers,
-    const bool &strict_beamdown)
+    const bool &strict_beamdown, const bool &ascii_mode)
 {
 	planet_build_done.store(false);
 
@@ -226,7 +226,7 @@ void build_planet(const int &seed, const int &water_divisor, const int &plains_d
 	planet_display_update_zoomed(planet, crash_site.first, crash_site.second);
 
 	// Materialize this region
-	build_region(planet, crash_site, rng, noise);
+	build_region(planet, crash_site, rng, noise, ascii_mode);
 	save_planet(planet);
 
 	planet_build_done.store(true);

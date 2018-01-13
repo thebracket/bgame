@@ -191,7 +191,7 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
     }
 }
 
-void build_game_components(const int crash_x, const int crash_y, const int crash_z) {
+void build_game_components(const int crash_x, const int crash_y, const int crash_z, const bool &ascii_mode) {
     calendar_t calendar;
 	calendar.defined_shifts.push_back(shift_t{"Early Shift", {
 		WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT }
@@ -208,7 +208,7 @@ void build_game_components(const int crash_x, const int crash_y, const int crash
 		->assign(std::move(calendar))
 		->assign(designations_t{})
         ->assign(logger_t{})
-        ->assign(camera_options_t{});
+        ->assign(camera_options_t{TOP_DOWN, ascii_mode, 12});
 }
 
 int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {

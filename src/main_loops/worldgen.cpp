@@ -24,6 +24,7 @@ namespace worldgen {
     int water = 3;
     int starting_settlers = 10;
     bool strict_beamdown = false;
+	bool ascii_mode = false;
     world_gen_mode_t mode = WG_MENU;
     std::unique_ptr<std::thread> world_thread;
     glm::mat4 projection_matrix;
@@ -62,7 +63,7 @@ namespace worldgen {
         assert(projloc != -1);
         assert(viewloc != -1);
 
-        world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown);
+        world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown, ascii_mode);
     }
 
     void render_menu() {
@@ -74,7 +75,8 @@ namespace worldgen {
         ImGui::SliderInt("Plains Level", &plains, 1, 4);
         ImGui::SliderInt("Starting Settlers", &starting_settlers, 1, 20);
         ImGui::Checkbox("Require Teleport Beacon for Beamdown", &strict_beamdown);
-        if (ImGui::Button("Create World")) {
+		ImGui::Checkbox("Play in ASCII mode", &ascii_mode);
+		if (ImGui::Button("Create World")) {
             mode = WG_RUNNING;
             start_thread();
         }

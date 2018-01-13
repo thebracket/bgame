@@ -20,7 +20,7 @@ inline std::pair<biome_t, biome_type_t> get_biome_for_region(planet_t &planet, c
     return std::make_pair( planet.biomes[biome_idx], *get_biome_def(planet.biomes[biome_idx].type) );
 }
 
-void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::random_number_generator &rng, FastNoise &noise) {
+void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::random_number_generator &rng, FastNoise &noise, const bool &ascii_mode) {
     // Builder region
     region::new_region(target_region.first, target_region.second, planet.landblocks[planet.idx(target_region.first, target_region.second)].biome_idx);
 
@@ -68,7 +68,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
 	const int crash_z = region::ground_z(crash_x, crash_y);
     
     // Add game components
-    build_game_components(crash_x, crash_y, crash_z);
+    build_game_components(crash_x, crash_y, crash_z, ascii_mode);
 
     // Trail of debris
     build_debris_trail(crash_x, crash_y);
