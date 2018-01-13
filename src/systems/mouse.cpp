@@ -4,6 +4,7 @@
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../bengine/main_window.hpp"
 #include "../render_engine/render_engine.hpp"
+#include "../global_assets/game_camera.hpp"
 
 namespace systems {
 	int mouse_x = 0;
@@ -19,16 +20,21 @@ namespace systems {
 	int mouse_wz = 0;
 
 	void read_gl_position(const int &screen_height) {
-		glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer->fbo_id);
-		float pixels[3];
-		glReadPixels(mouse_x, screen_height - mouse_y, 1, 1, GL_RGB, GL_FLOAT, &pixels[0]);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if (camera->ascii_mode) {
+			// TODO: Read-back ASCII mode position
+		}
+		else {
+			glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer->fbo_id);
+			float pixels[3];
+			glReadPixels(mouse_x, screen_height - mouse_y, 1, 1, GL_RGB, GL_FLOAT, &pixels[0]);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		mouse_wx = static_cast<int>(pixels[0] + 0.5f);
-		mouse_wz = static_cast<int>(pixels[1] + 0.6f);
-		mouse_wy = static_cast<int>(pixels[2] + 0.5f);
+			mouse_wx = static_cast<int>(pixels[0] + 0.5f);
+			mouse_wz = static_cast<int>(pixels[1] + 0.6f);
+			mouse_wy = static_cast<int>(pixels[2] + 0.5f);
 
-		//std::cout << mouse_wx << " / " << mouse_wy << " / " << mouse_wz << "\n";
+			//std::cout << mouse_wx << " / " << mouse_wy << " / " << mouse_wz << "\n";
+		}
 	}
 
 	void poll_mouse() {
