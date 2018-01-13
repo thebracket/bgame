@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp" />
     <ClCompile Include="..\..\src\bengine\analytics.cpp" />
     <ClCompile Include="..\..\src\bengine\ecs.cpp" />
     <ClCompile Include="..\..\src\bengine\FastNoise.cpp" />
@@ -314,6 +315,7 @@
     <ClCompile Include="..\..\src\systems\scheduler\tick_system.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp" />
     <ClInclude Include="..\..\src\bengine\analytics.hpp" />
     <ClInclude Include="..\..\src\bengine\astar.hpp" />
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />

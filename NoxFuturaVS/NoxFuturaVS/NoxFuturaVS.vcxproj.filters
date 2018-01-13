@@ -175,6 +175,12 @@
     <Filter Include="Source Files\systems\damage">
       <UniqueIdentifier>{e8e5aab8-7781-41e1-a53d-b482d472f648}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ascii_engine">
+      <UniqueIdentifier>{d66fbf4e-f0e9-4e0b-8ec3-318f317653ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ascii_engine">
+      <UniqueIdentifier>{45274e9d-f981-4510-852e-898e69a00be6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -707,6 +713,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\render_engine\chunks\water_render.cpp">
       <Filter>Source Files\render_engine\chunks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp">
+      <Filter>Source Files\ascii_engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1555,6 +1564,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\chunks\water_render.hpp">
       <Filter>Header Files\render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp">
+      <Filter>Header Files\ascii_engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

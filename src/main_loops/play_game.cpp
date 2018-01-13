@@ -20,6 +20,7 @@
 #include "../global_assets/game_logger.hpp"
 #include "../global_assets/game_mode.hpp"
 #include "../global_assets/game_pause.hpp"
+#include "../ascii_engine/ascii_mode.hpp"
 
 namespace play_game {
 
@@ -90,7 +91,12 @@ namespace play_game {
             ImGui::End();
         } else {
             // Game render goes here
-            render::render_gl(duration_ms);
+			if (camera->ascii_mode) {
+				render::ascii_render(duration_ms);
+			}
+			else {
+				render::render_gl(duration_ms);
+			}
 
             //ImGui::Begin("Please wait - not written yet");
             //ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
