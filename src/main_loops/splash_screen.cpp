@@ -43,7 +43,7 @@ namespace splash_screen {
     void init() {
         init_simple_sprite();
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
-        ascii_texture = std::make_unique<texture_t>("game_assets/hack_square_64x64.png");
+        ascii_texture = std::make_unique<texture_t>("game_assets/hack_square_64x64.jpg", false);
         spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
         worldgenshader = load_shaders("game_assets/worldgenshader_vertex.glsl", "game_assets/worldgenshader_fragment.glsl");
         chunkshader = std::make_unique<chunk_shader_t>();
@@ -59,6 +59,7 @@ namespace splash_screen {
         dirlight_shader = load_shaders("game_assets/dirlight_vertex.glsl", "game_assets/dirlight_fragment.glsl");
         lighter_shader = load_shaders("game_assets/lighter_vertex.glsl", "game_assets/lighter_fragment.glsl");
 		pointlight_shader = load_shaders("game_assets/pointlight_vertex.glsl", "game_assets/pointlight_fragment.glsl", "game_assets/pointlight_geometry.glsl");
+		ascii_shader = load_shaders("game_assets/ascii_vertex.glsl", "game_assets/ascii_fragment.glsl");
     }
 
     void init_raws(int id) {

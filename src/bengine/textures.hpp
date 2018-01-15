@@ -4,7 +4,7 @@
 namespace bengine {
 
     struct texture_t {
-        texture_t(const std::string &filename);
+        texture_t(const std::string &filename, bool invert=true);
         ~texture_t();
 
         int width, height, bpp;

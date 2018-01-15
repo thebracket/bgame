@@ -22,4 +22,5 @@ namespace assets {
 	extern unsigned int dirlight_shader;
 	extern unsigned int pointlight_shader;
 	extern unsigned int lighter_shader;
+	extern unsigned int ascii_shader;
 }

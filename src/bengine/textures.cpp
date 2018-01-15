@@ -5,11 +5,11 @@
 #include <tuple>
 
 namespace bengine {
-    std::tuple<unsigned int, int, int, int> load_texture(const std::string &filename) {
+    std::tuple<unsigned int, int, int, int> load_texture(const std::string &filename, bool invert) {
         if (!exists(filename)) throw std::runtime_error("Unable to open " + filename);
         int width, height, bpp;
         GLuint texture_id;
-        stbi_set_flip_vertically_on_load(true);
+        stbi_set_flip_vertically_on_load(invert);
         std::cout << "Loading: " << filename << "\n";
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(filename));
@@ -28,8 +28,8 @@ namespace bengine {
         return std::make_tuple(texture_id, width, height, bpp);
     }
 
-    texture_t::texture_t(const std::string &filename) {
-		std::tie(texture_id, width, height, bpp) = load_texture(filename);
+    texture_t::texture_t(const std::string &filename, bool invert) {
+		std::tie(texture_id, width, height, bpp) = load_texture(filename, invert);
     }
 
     texture_t::~texture_t() {
