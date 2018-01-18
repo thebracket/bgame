@@ -9,6 +9,8 @@
 #include "../global_assets/shader_storage.hpp"
 #include "../bengine/textures.hpp"
 #include "../render_engine/fbo/buffertest.hpp"
+#include "../raws/plants.hpp"
+#include "../raws/defs/plant_t.hpp"
 #include <array>
 
 namespace render {
@@ -141,16 +143,81 @@ glCheckError();
 
 		glyph_t get_floor_tile(const int &idx) {
 			if (region::flag(idx, CONSTRUCTION)) {
-				return get_material_glyph(idx, 197);
+				return get_material_glyph(idx, '+');
 			}
 			else {
-				if (region::set_veg_type > 0) {
+				if (region::veg_type(idx) > 0) {
 					return glyph_t{ '"', 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 				}
 				else {
 					return get_material_glyph(idx, '.');
 				}
 			}
+		}
+
+		glyph_t get_wall_tile(const int &idx) {
+			uint8_t wall_mask = 0;
+			if (region::tile_type(idx - 1) == tile_type::WALL) wall_mask += 1;
+			if (region::tile_type(idx + 1) == tile_type::WALL) wall_mask += 2;
+			if (region::tile_type(idx - REGION_WIDTH) == tile_type::WALL) wall_mask += 4;
+			if (region::tile_type(idx + REGION_WIDTH) == tile_type::WALL) wall_mask += 8;
+
+			uint8_t glyph = 0;
+			switch (wall_mask) {
+			case 0:
+				glyph = 79;
+				break; // Isolated
+			case 1:
+				glyph = 181;
+				break; // West only
+			case 2:
+				glyph = 198;
+				break; // East only
+			case 3:
+				glyph = 205;
+				break; // East and West
+			case 4:
+				glyph = 208;
+				break; // North only
+			case 5:
+				glyph = 188;
+				break; // North and west
+			case 6:
+				glyph = 200;
+				break; // North and east
+			case 7:
+				glyph = 202;
+				break; // North and east/west
+			case 8:
+				glyph = 210;
+				break; // South only
+			case 9:
+				glyph = 187;
+				break; // South and west
+			case 10:
+				glyph = 201;
+				break; // South and east
+			case 11:
+				glyph = 203;
+				break; // South east/west
+			case 12:
+				glyph = 186;
+				break; // North and South
+			case 13:
+				glyph = 185;
+				break; // North/South/West
+			case 14:
+				glyph = 204;
+				break; // North/South/East
+			case 15:
+				glyph = 206;
+				break; // All
+			default: {
+				std::cout << "WARNING: Wall calculator hit a case of " << +wall_mask << "\n";
+				glyph = 79;
+			}
+			}
+			return get_material_glyph(idx, glyph);
 		}
 
 		void populate_ascii() {
@@ -168,7 +235,7 @@ glCheckError();
 						switch (ttype) {
 						case tile_type::SEMI_MOLTEN_ROCK: terminal[tidx] = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
 						case tile_type::SOLID: terminal[tidx] = get_material_glyph(idx); break;
-						case tile_type::WALL: terminal[tidx] = get_material_glyph(idx, 219); break;
+						case tile_type::WALL: terminal[tidx] = get_wall_tile(idx); break;
 						case tile_type::RAMP: terminal[tidx] = get_material_glyph(idx, 30); break;
 						case tile_type::STAIRS_UP: terminal[tidx] = get_material_glyph(idx, '<'); break;
 						case tile_type::STAIRS_DOWN: terminal[tidx] = get_material_glyph(idx, '>'); break;
