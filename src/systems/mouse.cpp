@@ -5,6 +5,8 @@
 #include "../bengine/main_window.hpp"
 #include "../render_engine/render_engine.hpp"
 #include "../global_assets/game_camera.hpp"
+#include "../ascii_engine/ascii_mode.hpp"
+#include "../planet/region/region.hpp"
 
 namespace systems {
 	int mouse_x = 0;
@@ -22,6 +24,20 @@ namespace systems {
 	void read_gl_position(const int &screen_height) {
 		if (camera->ascii_mode) {
 			// TODO: Read-back ASCII mode position
+			glBindFramebuffer(GL_FRAMEBUFFER, render::ascii::ascii_fbo);
+			float pixels[3];
+			glReadPixels(mouse_x, screen_height - mouse_y, 1, 1, GL_RGB, GL_FLOAT, &pixels[0]);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+			mouse_wx = static_cast<int>(pixels[0] + 0.5f);
+			mouse_wz = static_cast<int>(pixels[2] + 0.6f);
+			mouse_wy = static_cast<int>(pixels[1] + 0.5f);
+
+			if (mouse_wx < 1) mouse_wx = 1;
+			if (mouse_wx > REGION_WIDTH-1) mouse_wx = REGION_WIDTH - 1;
+			if (mouse_wy < 1) mouse_wy = 1;
+			if (mouse_wy > REGION_HEIGHT - 1) mouse_wy = REGION_HEIGHT - 1;
+			mouse_wz = camera_position->region_z;
 		}
 		else {
 			glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer->fbo_id);

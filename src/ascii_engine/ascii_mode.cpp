@@ -40,7 +40,7 @@ namespace render {
 		unsigned int ascii_vao = 0;
 		unsigned int ascii_vbo = 0;
 		unsigned int ascii_fbo = 0;
-		unsigned int position_tex = 0;
+		unsigned int ascii_position_tex = 0;
 		unsigned int albedo_tex = 0;
 
 		struct glyph_t {
@@ -63,12 +63,12 @@ namespace render {
 			glBindFramebuffer(GL_FRAMEBUFFER, ascii_fbo);
 
 			// position color buffer
-			glGenTextures(1, &position_tex);
-			glBindTexture(GL_TEXTURE_2D, position_tex);
+			glGenTextures(1, &ascii_position_tex);
+			glBindTexture(GL_TEXTURE_2D, ascii_position_tex);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, position_tex, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ascii_position_tex, 0);
 
 			// color buffer
 			glGenTextures(1, &albedo_tex);
