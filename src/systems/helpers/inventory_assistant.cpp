@@ -143,8 +143,8 @@ namespace inventory {
 				building.height = it->height;
 				building.width = it->width;
 				building.components = it->components;
-				//building.glyphs = it->glyphs;
-				//building.glyphs_ascii = it->glyphs_ascii;
+				building.glyphs = it->glyphs;
+				building.glyphs_ascii = it->glyphs_ascii;
 				result.emplace_back(building);
 			}
 		});

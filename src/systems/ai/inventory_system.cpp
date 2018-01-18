@@ -179,8 +179,8 @@ namespace systems {
 				designate.components = building.components;
 				designate.width = building.width;
 				designate.height = building.height;
-				//designate.glyphs = building.glyphs;
-				//designate.glyphs_ascii = building.glyphs_ascii;
+				designate.glyphs = building.glyphs;
+				designate.glyphs_ascii = building.glyphs_ascii;
 
 				for (const auto &requested_component : building.components) {
 					const std::size_t component_id = inventory::claim_item_by_reaction_input(requested_component);

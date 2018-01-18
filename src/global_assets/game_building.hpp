@@ -2,6 +2,7 @@
 
 #include "../raws/reaction_input.hpp"
 #include "../stdafx.h"
+#include "../bengine/rexspeeder.hpp"
 
 namespace buildings {
 	struct available_building_t {
@@ -13,8 +14,8 @@ namespace buildings {
 		std::vector<reaction_input_t> components;
 		int width = 0;
 		int height = 0;
-		//std::vector<bengine::vchar> glyphs;
-		//std::vector<bengine::vchar> glyphs_ascii;
+		std::vector<xp::vchar> glyphs;
+		std::vector<xp::vchar> glyphs_ascii;
 		int n_existing = 0;
 		std::string get_name() const noexcept {
 			return name + std::string(" (") + std::to_string(n_existing) + std::string(")");

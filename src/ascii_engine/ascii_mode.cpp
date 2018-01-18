@@ -17,6 +17,10 @@
 #include "../systems/mouse.hpp"
 #include "../global_assets/game_mode.hpp"
 #include "../global_assets/game_designations.hpp"
+#include "../global_assets/game_building.hpp"
+#include "../raws/buildings.hpp"
+#include "../raws/defs/building_def_t.hpp"
+#include "../systems/ai/inventory_system.hpp"
 #include <array>
 
 namespace render {
@@ -287,12 +291,75 @@ namespace render {
 					int offY = b.height == 3 ? -1 : 0;
 					for (int y = 0; y < b.height; ++y) {
 						for (int x = 0; x < b.width; ++x) {
-							terminal[termidx(pos.x + x + offX, pos.y + y + offY)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), b.glyphs_ascii[i].foreground.r, b.glyphs_ascii[i].foreground.g, b.glyphs_ascii[i].foreground.b, b.glyphs_ascii[i].background.r, b.glyphs_ascii[i].background.g, b.glyphs_ascii[i].background.b };
+							const float R = b.complete ? b.glyphs_ascii[i].foreground.r : 0.3f;
+							const float G = b.complete ? b.glyphs_ascii[i].foreground.g : 0.3f;
+							const float B = b.complete ? b.glyphs_ascii[i].foreground.b : 0.3f;
+							const float BR = b.complete ? b.glyphs_ascii[i].background.r : 0.0f;
+							const float BG = b.complete ? b.glyphs_ascii[i].background.g : 0.0f;
+							const float BB = b.complete ? b.glyphs_ascii[i].background.b : 0.0f;
+							terminal[termidx(pos.x + x + offX, pos.y + y + offY)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), R, G, B, BR, BG, BB };
 							++i;
 						}
 					}
 				}
 			});
+
+			if (game_master_mode == DESIGN && game_design_mode == BUILDING && buildings::has_build_mode_building) {
+				// We have a building selected; determine if it can be built and show it
+				const auto tag = buildings::build_mode_building.tag;
+				auto building_def = get_building_def(tag);
+				if (building_def) {
+					// We have the model and the definition; see if its possible to build
+					bool can_build = true;
+
+					std::vector<int> target_tiles;
+					for (int y = systems::mouse_wy; y < systems::mouse_wy + building_def->height; ++y) {
+						for (int x = systems::mouse_wx; x < systems::mouse_wx + building_def->width; ++x) {
+							const auto idx = mapidx(x, y, camera_position->region_z);
+							if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
+							if (region::flag(idx, CONSTRUCTION)) can_build = false;
+							target_tiles.emplace_back(idx);
+						}
+					}
+
+					auto x = (float)systems::mouse_wx;
+					const auto z = (float)camera_position->region_z;
+					auto y = (float)systems::mouse_wy;
+
+					if (building_def->glyphs_ascii.empty()) {
+						std::cout << "WARNING: Building [" << building_def->tag << "] has no ASCII data.\n";
+					}
+					else {
+
+						int i = 0;
+						int offX = building_def->width == 3 ? -1 : 0;
+						int offY = building_def->height == 3 ? -1 : 0;
+						for (int Y = 0; Y < building_def->height; ++Y) {
+							for (int X = 0; X < building_def->width; ++X) {
+								const float R = can_build ? building_def->glyphs_ascii[i].foreground.r : 1.0f;
+								const float G = can_build ? building_def->glyphs_ascii[i].foreground.g : 0.3f;
+								const float B = can_build ? building_def->glyphs_ascii[i].foreground.b : 0.3f;
+								const float BR = can_build ? building_def->glyphs_ascii[i].background.r : 0.0f;
+								const float BG = can_build ? building_def->glyphs_ascii[i].background.g : 0.0f;
+								const float BB = can_build ? building_def->glyphs_ascii[i].background.b : 0.0f;
+								terminal[termidx(x + X + offX, Y + y + offY)] = glyph_t{ static_cast<uint8_t>(building_def->glyphs_ascii[i].glyph), R, G, B, BR, BG, BB };
+								++i;
+							}
+						}
+
+						if (can_build) {
+							if (systems::left_click) {
+								// Perform the building
+								systems::inventory_system::building_request(systems::mouse_wx, systems::mouse_wy, systems::mouse_wz, buildings::build_mode_building);
+								buildings::has_build_mode_building = false;
+								for (const auto &idx : target_tiles) {
+									region::set_flag(idx, CONSTRUCTION);
+								}
+							}
+						}
+					}
+				}
+			}
 
 			// Add renderables
 			bengine::each<renderable_t, position_t>([](bengine::entity_t &e, renderable_t &r, position_t &pos) {
@@ -309,9 +376,11 @@ namespace render {
 
 		void render_cursors() {
 			// Highlight the mouse position in yellow background
-			terminal[termidx(systems::mouse_wx, systems::mouse_wy)].br = 1.0f;
-			terminal[termidx(systems::mouse_wx, systems::mouse_wy)].bg = 1.0f;
-			terminal[termidx(systems::mouse_wx, systems::mouse_wy)].bb = 0.0f;
+			if (game_master_mode != DESIGN) {
+				terminal[termidx(systems::mouse_wx, systems::mouse_wy)].br = 1.0f;
+				terminal[termidx(systems::mouse_wx, systems::mouse_wy)].bg = 1.0f;
+				terminal[termidx(systems::mouse_wx, systems::mouse_wy)].bb = 0.0f;
+			}
 
 			if (game_master_mode == DESIGN) {
 				if (game_design_mode == CHOPPING) {
@@ -371,7 +440,7 @@ namespace render {
 						case 5: glyph = 30; break; // Ramp
 						case 6: glyph = '#'; break; // Bridge
 						}
-						terminal[termidx(x, y)] = glyph_t{ glyph, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f};
+						terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 					}
 				}
 				else if (game_design_mode == DIGGING) {
@@ -390,7 +459,7 @@ namespace render {
 							default: std::cout << "Warning: Unknown mining type: " << mine.second << "\n";
 							}
 
-							terminal[termidx(x, y)] = glyph_t{ glyph, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f };
+							terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 						}
 					}
 				}
