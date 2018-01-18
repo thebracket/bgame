@@ -107,6 +107,8 @@ add_executable(noxfutura
 		bengine/textures.cpp
 		bengine/threadpool.cpp
 
+		ascii_engine/ascii_mode.cpp
+
 		components/calendar.cpp
 		components/game_stats.cpp
 		components/item.cpp
