@@ -11,6 +11,9 @@
 #include "../render_engine/fbo/buffertest.hpp"
 #include "../raws/plants.hpp"
 #include "../raws/defs/plant_t.hpp"
+#include "../components/renderable.hpp"
+#include "../components/building.hpp"
+#include "../components/renderable_composite.hpp"
 #include <array>
 
 namespace render {
@@ -106,13 +109,13 @@ namespace render {
 			glEnableVertexAttribArray(2); // 2 = Texture
 
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, N_VERTICES * sizeof(float), (char *) nullptr + 7 * sizeof(float));
-glEnableVertexAttribArray(3); // 3 = Background
+			glEnableVertexAttribArray(3); // 3 = Background
 
-glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, N_VERTICES * sizeof(float), (char *) nullptr + 10 * sizeof(float));
-glEnableVertexAttribArray(4); // 4 = Foreground
+			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, N_VERTICES * sizeof(float), (char *) nullptr + 10 * sizeof(float));
+			glEnableVertexAttribArray(4); // 4 = Foreground
 
-glBindVertexArray(0);
-glCheckError();
+			glBindVertexArray(0);
+			glCheckError();
 		}
 
 		void ascii_camera() {
@@ -270,8 +273,40 @@ glCheckError();
 			}
 
 			// Add buildings
+			bengine::each<building_t, position_t>([](bengine::entity_t &e, building_t &b, position_t &pos) {
+				if (pos.z == camera_position->region_z) {
+					if (b.glyphs_ascii.empty()) {
+						std::cout << "WARNING: Building [" << b.tag << "] is lacking ASCII render data.\n";
+						return;
+					}
+					if (b.width == 1 && b.height == 1) {
+						terminal[termidx(pos.x, pos.y)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[0].glyph), b.glyphs_ascii[0].foreground.r, b.glyphs_ascii[0].foreground.g, b.glyphs_ascii[0].foreground.b, b.glyphs_ascii[0].background.r, b.glyphs_ascii[0].background.g, b.glyphs_ascii[0].background.b };
+					}
+					else {
+						int i = 0;
+						int offX = b.width == 3 ? -1 : 0;
+						int offY = b.height == 3 ? -1 : 0;
+						for (int y = 0; y < b.height; ++y) {
+							for (int x = 0; x < b.width; ++x) {
+								terminal[termidx(pos.x + x + offX, pos.y + y + offY)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), b.glyphs_ascii[i].foreground.r, b.glyphs_ascii[i].foreground.g, b.glyphs_ascii[i].foreground.b, b.glyphs_ascii[i].background.r, b.glyphs_ascii[i].background.g, b.glyphs_ascii[i].background.b };
+								++i;
+							}
+						}
+					}
+				}
+			});
 
 			// Add renderables
+			bengine::each<renderable_t, position_t>([](bengine::entity_t &e, renderable_t &r, position_t &pos) {
+				if (pos.z == camera_position->region_z) {
+					terminal[termidx(pos.x, pos.y)] = glyph_t{ static_cast<uint8_t>(r.glyph_ascii), r.foreground.r, r.foreground.g, r.foreground.b, r.background.r, r.background.g, r.background.b };
+				}
+			});
+			bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+				if (pos.z == camera_position->region_z) {
+					terminal[termidx(pos.x, pos.y)] = glyph_t{ static_cast<uint8_t>(r.ascii_char), 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
+				}
+			});
 		}
 
 		void render_cursors() {

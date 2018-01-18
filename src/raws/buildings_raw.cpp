@@ -5,7 +5,7 @@
 #include "materials.hpp"
 #include "defs/building_def_t.hpp"
 #include "graphviz.hpp"
-
+#include "../bengine/rexspeeder.hpp"
 
 //using namespace rltk;
 
@@ -176,7 +176,7 @@ void read_buildings() noexcept
                         lua_gettable(lua_state, -2);
                         int i = 0;
                         while (lua_next(lua_state, -2) != 0) {
-                            /*rltk::vchar render;
+                            xp::vchar render;
                             lua_pushnumber(lua_state, i);
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
@@ -187,8 +187,7 @@ void read_buildings() noexcept
                                 lua_pop(lua_state, 1);
                             }
                             ++i;
-                            c.glyphs.push_back(render);
-                             */
+                            c.glyphs.push_back(render);                             
                             lua_pop(lua_state, 1);
                         }
                     }
@@ -207,8 +206,7 @@ void read_buildings() noexcept
                         lua_gettable(lua_state, -2);
                         int i = 0;
                         while (lua_next(lua_state, -2) != 0) {
-                            /*
-                            rltk::vchar render;
+                            xp::vchar render;
                             lua_pushnumber(lua_state, i);
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
@@ -219,7 +217,7 @@ void read_buildings() noexcept
                                 lua_pop(lua_state, 1);
                             }
                             ++i;
-                            c.glyphs_ascii.push_back(render);*/
+                            c.glyphs_ascii.push_back(render);
                             lua_pop(lua_state, 1);
                         }
                     }
