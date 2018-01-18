@@ -25,11 +25,13 @@ namespace chunks {
 	}
 
     void mark_chunk_dirty(const int &idx) {
+		if (!chunks_initialized) return;
         //std::lock_guard<std::mutex> lock(dirty_mutex);
         dirty[idx] = true;
     }
 
     void mark_chunk_clean(const int &idx) {
+		if (!chunks_initialized) return;
         //std::lock_guard<std::mutex> lock(dirty_mutex);
         dirty[idx] = false;
     }

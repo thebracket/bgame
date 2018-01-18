@@ -14,6 +14,9 @@
 #include "../components/renderable.hpp"
 #include "../components/building.hpp"
 #include "../components/renderable_composite.hpp"
+#include "../systems/mouse.hpp"
+#include "../global_assets/game_mode.hpp"
+#include "../global_assets/game_designations.hpp"
 #include <array>
 
 namespace render {
@@ -279,18 +282,13 @@ namespace render {
 						std::cout << "WARNING: Building [" << b.tag << "] is lacking ASCII render data.\n";
 						return;
 					}
-					if (b.width == 1 && b.height == 1) {
-						terminal[termidx(pos.x, pos.y)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[0].glyph), b.glyphs_ascii[0].foreground.r, b.glyphs_ascii[0].foreground.g, b.glyphs_ascii[0].foreground.b, b.glyphs_ascii[0].background.r, b.glyphs_ascii[0].background.g, b.glyphs_ascii[0].background.b };
-					}
-					else {
-						int i = 0;
-						int offX = b.width == 3 ? -1 : 0;
-						int offY = b.height == 3 ? -1 : 0;
-						for (int y = 0; y < b.height; ++y) {
-							for (int x = 0; x < b.width; ++x) {
-								terminal[termidx(pos.x + x + offX, pos.y + y + offY)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), b.glyphs_ascii[i].foreground.r, b.glyphs_ascii[i].foreground.g, b.glyphs_ascii[i].foreground.b, b.glyphs_ascii[i].background.r, b.glyphs_ascii[i].background.g, b.glyphs_ascii[i].background.b };
-								++i;
-							}
+					int i = 0;
+					int offX = b.width == 3 ? -1 : 0;
+					int offY = b.height == 3 ? -1 : 0;
+					for (int y = 0; y < b.height; ++y) {
+						for (int x = 0; x < b.width; ++x) {
+							terminal[termidx(pos.x + x + offX, pos.y + y + offY)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), b.glyphs_ascii[i].foreground.r, b.glyphs_ascii[i].foreground.g, b.glyphs_ascii[i].foreground.b, b.glyphs_ascii[i].background.r, b.glyphs_ascii[i].background.g, b.glyphs_ascii[i].background.b };
+							++i;
 						}
 					}
 				}
@@ -310,7 +308,93 @@ namespace render {
 		}
 
 		void render_cursors() {
+			// Highlight the mouse position in yellow background
+			terminal[termidx(systems::mouse_wx, systems::mouse_wy)].br = 1.0f;
+			terminal[termidx(systems::mouse_wx, systems::mouse_wy)].bg = 1.0f;
+			terminal[termidx(systems::mouse_wx, systems::mouse_wy)].bb = 0.0f;
 
+			if (game_master_mode == DESIGN) {
+				if (game_design_mode == CHOPPING) {
+					for (size_t i = 0; i < REGION_TILES_COUNT; ++i) {
+						auto tree_id = region::tree_id(i);
+						if (tree_id > 0) {
+							auto[x, y, z] = idxmap(i);
+							if (designations->chopping.find(tree_id) != designations->chopping.end() && z == camera_position->region_z) {
+								terminal[termidx(x, y)].br = 1.0f;
+								terminal[termidx(x, y)].bg = 0.0f;
+								terminal[termidx(x, y)].bb = 0.0f;
+							}
+						}
+					}
+				}
+				else if (game_design_mode == GUARDPOINTS) {
+					for (const auto& gp : designations->guard_points) {
+						if (gp.second.z == camera_position->region_z) {
+							terminal[termidx(gp.second.x, gp.second.y)].br = 1.0f;
+							terminal[termidx(gp.second.x, gp.second.y)].bg = 0.0f;
+							terminal[termidx(gp.second.x, gp.second.y)].bb = 0.0f;
+						}
+					}
+				}
+				else if (game_design_mode == HARVEST) {
+					for (const auto& gp : designations->harvest) {
+						if (gp.second.z == camera_position->region_z) {
+							terminal[termidx(gp.second.x, gp.second.y)].br = 1.0f;
+							terminal[termidx(gp.second.x, gp.second.y)].bg = 0.0f;
+							terminal[termidx(gp.second.x, gp.second.y)].bb = 0.0f;
+						}
+					}
+				}
+				else if (game_design_mode == STOCKPILES) {
+					for (size_t i = 0; i < REGION_TILES_COUNT; ++i) {
+						auto stockpile_id = region::stockpile_id(i);
+						if (stockpile_id > 0 && stockpile_id == current_stockpile) {
+							auto[x, y, z] = idxmap(i);
+							if (z == camera_position->region_z) {
+								terminal[termidx(x, y)].br = 1.0f;
+								terminal[termidx(x, y)].bg = 0.0f;
+								terminal[termidx(x, y)].bb = 0.0f;
+							}
+						}
+					}
+				}
+				else if (game_design_mode == ARCHITECTURE) {
+					for (const auto &arch : designations->architecture) {
+						auto[x, y, z] = idxmap(arch.first);
+						uint8_t glyph = 1;
+						switch (arch.second) {
+						case 0: glyph = 219; break; // Wall
+						case 1: glyph = '+'; break; // Floor
+						case 2: glyph = '<'; break; // Up
+						case 3: glyph = '>'; break; // Down
+						case 4: glyph = 'X'; break; // Up-Down
+						case 5: glyph = 30; break; // Ramp
+						case 6: glyph = '#'; break; // Bridge
+						}
+						terminal[termidx(x, y)] = glyph_t{ glyph, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f};
+					}
+				}
+				else if (game_design_mode == DIGGING) {
+					for (const auto &mine : designations->mining) {
+						if (mine.first < 1 || mine.first > REGION_TILES_COUNT) break;
+						auto[x, y, z] = idxmap(mine.first);
+						if (z == camera_position->region_z) {
+							uint8_t glyph = 1;
+							switch (mine.second) {
+							case 1: glyph = 176; break; // Dig
+							case 2: glyph = 31; break; // Channel
+							case 3: glyph = 30; break; // Ramp
+							case 4: glyph = '<'; break; // Up
+							case 5: glyph = '>'; break; // Down
+							case 6: glyph = 'X'; break; // Up-Down
+							default: std::cout << "Warning: Unknown mining type: " << mine.second << "\n";
+							}
+
+							terminal[termidx(x, y)] = glyph_t{ glyph, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f };
+						}
+					}
+				}
+			}
 		}
 
 		void render_ascii()
