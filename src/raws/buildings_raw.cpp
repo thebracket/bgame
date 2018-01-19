@@ -231,8 +231,9 @@ void read_buildings() noexcept
                 c.height = sprite.get_height();
                 for (int y=0; y<c.height; ++y) {
                     for (int x=0; x<c.width; ++x) {
-                        c.glyphs.push_back(*sprite.get_tile(0,x,y));
-                        c.glyphs_ascii.push_back(*sprite.get_tile(0,x,y));
+						xp::vchar tmp = *sprite.get_tile(0, x, y);
+                        c.glyphs.push_back(tmp);
+                        c.glyphs_ascii.push_back(tmp);
                     }
                 }
                 std::cout << "Loaded REX file: " << filename << ", " << c.width << " x " << c.height << "\n";

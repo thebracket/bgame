@@ -61,6 +61,12 @@ namespace xp {
 //===========================================================================================================//
 //    Loading an xp file                                                                                     //
 //===========================================================================================================//
+	struct tile_reader_t {
+		uint16_t glyph;
+		uint8_t br, bg, bb;
+		uint8_t r, g, b;
+	};
+
 	rex_sprite::rex_sprite(std::string const & filename)
 	{
 		typedef void* vp;
@@ -82,8 +88,18 @@ namespace xp {
 				layers[i] = rex_layer(width, height);
 
 			for (int layer_index = 0; layer_index < num_layers; layer_index++) {
-				for (int i = 0; i < width*height; ++i)
-					s_gzread(gz, get_tile(layer_index, i), tileLen);
+				for (int i = 0; i < width*height; ++i) {
+					tile_reader_t tmp;
+					s_gzread(gz, &tmp, tileLen);
+					//s_gzread(gz, get_tile(layer_index, i), tileLen);
+					get_tile(layer_index, i)->glyph = tmp.glyph;
+					get_tile(layer_index, i)->foreground.r = static_cast<float>(tmp.r) / 256.0f;
+					get_tile(layer_index, i)->foreground.g = static_cast<float>(tmp.g) / 256.0f;
+					get_tile(layer_index, i)->foreground.b = static_cast<float>(tmp.b) / 256.0f;
+					get_tile(layer_index, i)->background.r = static_cast<float>(tmp.br) / 256.0f;
+					get_tile(layer_index, i)->background.g = static_cast<float>(tmp.bg) / 256.0f;
+					get_tile(layer_index, i)->background.b = static_cast<float>(tmp.bb) / 256.0f;
+				}
 
 				//The layer and height information is repeated.
 				//This is expected to read off the end after the last layer.
