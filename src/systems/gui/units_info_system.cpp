@@ -96,45 +96,40 @@ namespace systems {
 				
 				ImGui::NextColumn();
 				ImGui::Separator();
-			});
-
-			ImGui::Columns(1);
-			ImGui::SameLine();
-			if (ImGui::Button(btn_close.c_str())) {
-				game_master_mode = PLAY;
-			}
+			});						
 		}
 
 		void render_creatures() {
 			using namespace bengine;
 
-			std::vector<std::pair<std::size_t, std::string>> critters;
-			each<grazer_ai, name_t>([&critters](entity_t &e, grazer_ai &ai, name_t &name) {
-				critters.emplace_back(std::make_pair(e.id, name.first_name + std::string(" ") + name.last_name));
-			});
-			std::vector<const char *> creature_listbox_items;
-			creature_listbox_items.resize(critters.size());
-			for (int i = 0; i<critters.size(); ++i) {
-				creature_listbox_items[i] = critters[i].second.c_str();
-			}
-			//ImGui::Begin(win_wildlife_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-			ImGui::PushItemWidth(-1);
-			ImGui::ListBox("## Critters", &current_critter, &creature_listbox_items[0], critters.size(), 10);
-			if (ImGui::Button(btn_goto_creature.c_str())) {
-				auto selected_critter = critters[current_settler].first;
-				auto the_critter = entity(selected_critter);
-				if (the_critter) {
-					auto pos = the_critter->component<position_t>();
+			ImGui::Columns(2, "critter_list_grid");
+			ImGui::Separator();
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Creature"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
+			ImGui::Separator();
+
+			each<grazer_ai, name_t>([](entity_t &e, grazer_ai &ai, name_t &name) {
+				const std::string critter_name = name.first_name + std::string(" ") + name.last_name;
+				ImGui::Text("%s", critter_name.c_str());
+				ImGui::NextColumn();
+				ImGui::Separator();
+
+				const std::string critter_goto = btn_goto_creature + std::string("##") + std::to_string(e.id);
+				if (ImGui::Button(critter_goto.c_str())) {
+					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
 					camera_position->region_y = pos->y;
 					camera_position->region_z = pos->z;
+					game_master_mode = PLAY;
+					render::camera_moved = true;
+					render::models_changed = true;
 				}
-				game_master_mode = PLAY;
-			}
-			ImGui::SameLine();
-			if (ImGui::Button(btn_close.c_str())) {
-				game_master_mode = PLAY;
-			}
+				ImGui::NextColumn();
+				ImGui::Separator();
+			});
+
+			ImGui::Columns(1);
 		}
 
 		void render_natives() {
@@ -170,6 +165,11 @@ namespace systems {
 
 		void run(const double &duration_ms) {
 			ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
+
+			ImGui::SameLine();
+			if (ImGui::Button(btn_close.c_str())) {
+				game_master_mode = PLAY;
+			}
 
 			ImGui::BeginTabBar("Units#left_tab_bar");
 			ImGui::DrawTabsBackground();
