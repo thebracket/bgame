@@ -2,6 +2,7 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
+#include "../../bengine/imgui_tabs.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/name.hpp"
 #include "../../components/game_stats.hpp"
@@ -10,6 +11,8 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_camera.hpp"
+#include "../../render_engine/camera.hpp"
+#include "../../render_engine/vox/renderables.hpp"
 #include "../../stdafx.h"
 
 namespace systems {
@@ -18,11 +21,11 @@ namespace systems {
 		const std::string win_units = std::string(ICON_FA_USERS) + " Units";
 		const std::string win_settler_list = std::string(ICON_FA_USERS) + " Settlers";
 		const std::string win_wildlife_list = std::string(ICON_FA_PAW) + " Wildlife";
-		const std::string win_natives_list = std::string(ICON_FA_USER_SECRET) + " Natives";
+		const std::string win_natives_list = std::string(ICON_FA_USER_SECRET) + " Other Sentients";
 		const std::string btn_goto = std::string(ICON_FA_MAP_MARKER) + " Go To";
 		const std::string btn_goto_creature = std::string(ICON_FA_MAP_MARKER) + " Go To Creature";
 		const std::string btn_goto_native = std::string(ICON_FA_MAP_MARKER) + " Go To NPC";
-		const std::string btn_rogue = std::string(ICON_FA_USER) + " Control (Rogue Mode)";
+		const std::string btn_rogue = std::string(ICON_FA_USER) + " Control";
 		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
 		int selected_settler = 0;
@@ -33,59 +36,69 @@ namespace systems {
 		void render_settlers() {
 			using namespace bengine;
 
-			// Build settler data structures
-			std::vector<std::pair<std::size_t, std::string>> settlers;
-			each<settler_ai_t, name_t, game_stats_t, species_t>([&settlers](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species) {
-				const std::string gender = (species.gender == MALE) ? std::string(ICON_FA_MALE) : std::string(ICON_FA_FEMALE);
-				const std::string display = gender + std::string(" ") + name.first_name + std::string(" ") + name.last_name + std::string(" (") + stats.profession_tag + std::string(") : ") + ai.job_status;
-				settlers.emplace_back(std::make_pair(e.id, display));
-			});
-			std::vector<const char *> settler_listbox_items;
-			settler_listbox_items.resize(settlers.size());
-			for (int i = 0; i<settlers.size(); ++i) {
-				settler_listbox_items[i] = settlers[i].second.c_str();
-			}
+			ImGui::Columns(4, "settler_list_grid");
+			ImGui::Separator();
 
-			// Render the settlers window
-			//ImGui::Begin(win_settler_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-			ImGui::PushItemWidth(-1);
-			ImGui::ListBox("## Settlers", &current_settler, &settler_listbox_items[0], settlers.size(), 10);
-			const std::string btn_view = std::string(ICON_FA_USER_CIRCLE) + " View";
-			if (ImGui::Button(btn_view.c_str())) {
-				game_master_mode = SETTLER;
-				selected_settler = static_cast<int>(settlers[current_settler].first);
-			}
-			ImGui::SameLine();
-			if (ImGui::Button(btn_goto.c_str())) {
-				selected_settler = static_cast<int>(settlers[current_settler].first);
-				auto the_settler = entity(selected_settler);
-				if (the_settler) {
-					auto pos = the_settler->component<position_t>();
+			ImGui::TextColored(ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ), "%s", "Settler Name"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Profession"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Task"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
+			ImGui::Separator();
+
+			each<settler_ai_t, name_t, game_stats_t, species_t>([](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species) {
+				const std::string gender = (species.gender == MALE) ? std::string(ICON_FA_MALE) : std::string(ICON_FA_FEMALE);
+				const std::string dname = name.first_name + std::string(" ") + name.last_name;
+				const std::string profession = stats.profession_tag;
+				const std::string task = ai.job_status;
+
+				ImGui::Text("%s %s", gender.c_str(), dname.c_str());
+				ImGui::NextColumn();
+				ImGui::Text("%s", profession.c_str());
+				ImGui::NextColumn();
+				ImGui::Text("%s", task.c_str());
+				ImGui::NextColumn();
+
+				const std::string btn_view = std::string(ICON_FA_USER_CIRCLE) + " View##" + std::to_string(e.id);
+				if (ImGui::Button(btn_view.c_str())) {
+					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
 					camera_position->region_y = pos->y;
 					camera_position->region_z = pos->z;
+					game_master_mode = PLAY;
+					render::camera_moved = true;
+					render::models_changed = true;
 				}
-				game_master_mode = PLAY;
-			}
-			ImGui::SameLine();
-			if (ImGui::Button(btn_rogue.c_str())) {
-				selected_settler = static_cast<int>(settlers[current_settler].first);
-				auto the_settler = entity(selected_settler);
-				if (the_settler) {
-					auto pos = the_settler->component<position_t>();
+
+				ImGui::SameLine();
+				const std::string btn_roguemode = btn_rogue + std::string("##") + std::to_string(e.id);
+				if (ImGui::Button(btn_roguemode.c_str())) {
+					auto pos = e.component<position_t>();
 					if (pos) {
 						camera_position->region_x = pos->x;
 						camera_position->region_y = pos->y;
 						camera_position->region_z = pos->z;
 					}
 
-					auto ai = the_settler->component<settler_ai_t>();
+					auto ai = e.component<settler_ai_t>();
 					if (ai) {
 						ai->job_type_major = JOB_IDLE;
 					}
+					game_master_mode = ROGUE;
+					selected_settler = e.id;
 				}
-				game_master_mode = ROGUE;
-			}
+
+				ImGui::SameLine();
+				const std::string btn_viewmode = btn_view + std::string("##") + std::to_string(e.id);
+				if (ImGui::Button(btn_viewmode.c_str())) {
+					game_master_mode = SETTLER;
+					selected_settler = e.id;
+				}
+				
+				ImGui::NextColumn();
+				ImGui::Separator();
+			});
+
+			ImGui::Columns(1);
 			ImGui::SameLine();
 			if (ImGui::Button(btn_close.c_str())) {
 				game_master_mode = PLAY;
@@ -156,16 +169,21 @@ namespace systems {
 		}
 
 		void run(const double &duration_ms) {
-			ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
-			if (ImGui::CollapsingHeader(win_settler_list.c_str()), ImGuiTreeNodeFlags_DefaultOpen) {
+			ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
+
+			ImGui::BeginTabBar("Units#left_tab_bar");
+			ImGui::DrawTabsBackground();
+			if (ImGui::AddTab(win_settler_list.c_str())) {
 				render_settlers();
 			}
-			if (ImGui::CollapsingHeader(win_wildlife_list.c_str())) {
+			if (ImGui::AddTab(win_wildlife_list.c_str())) {
 				render_creatures();
 			}
-			if (ImGui::CollapsingHeader(win_natives_list.c_str())) {
+			if (ImGui::AddTab(win_natives_list.c_str())) {
 				render_natives();
 			}
+			ImGui::EndTabBar();
+
 			ImGui::End();
 		}
 	}

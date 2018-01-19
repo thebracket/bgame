@@ -717,6 +717,9 @@
     <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp">
       <Filter>Source Files\ascii_engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bengine\imgui_tabs.cpp">
+      <Filter>Source Files\bengine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1567,6 +1570,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp">
       <Filter>Header Files\ascii_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bengine\imgui_tabs.hpp">
+      <Filter>Header Files\bengine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
