@@ -33,6 +33,7 @@ namespace systems {
         const std::string menu_units_workflow = std::string(ICON_FA_WRENCH) + " Workflow Management";
         const std::string menu_units_civs = std::string(ICON_FA_HOME) + " Other Civilizations";
         const std::string menu_units_standing_orders = std::string(ICON_FA_LIST) + " Standing Orders";
+		const std::string menu_display = std::string(ICON_FA_CAMERA) + " Display";
 
         void run(const double &duration_ms) {
             // Display cash
@@ -55,7 +56,7 @@ namespace systems {
                     emit_deferred(recalculate_mining_message{});
                     world_changed=true;*/
                 }
-                if (ImGui::BeginMenu("Display")) {
+                if (ImGui::BeginMenu(menu_display.c_str())) {
                     if (ImGui::MenuItem("Top-Down")) {
                         camera->camera_mode = TOP_DOWN;
                         render::camera_moved = true;
