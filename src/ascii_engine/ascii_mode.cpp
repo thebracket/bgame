@@ -21,6 +21,7 @@
 #include "../raws/buildings.hpp"
 #include "../raws/defs/building_def_t.hpp"
 #include "../systems/ai/inventory_system.hpp"
+#include "../render_engine/chunks/chunks.hpp"
 #include <array>
 
 namespace render {
@@ -375,6 +376,8 @@ namespace render {
 		}
 
 		void render_cursors() {
+			if (systems::mouse_wx < 1 || systems::mouse_wx > REGION_WIDTH || systems::mouse_wy < 1 || systems::mouse_wy > REGION_HEIGHT) return;
+
 			// Highlight the mouse position in yellow background
 			if (game_master_mode != DESIGN) {
 				terminal[termidx(systems::mouse_wx, systems::mouse_wy)].br = 1.0f;
@@ -538,6 +541,13 @@ namespace render {
 	void ascii_render(const double &duration_ms) {
 		// If necessary, build the ASCII grid buffers
 		if (ascii::ascii_vao == 0) ascii::build_buffers();
+
+		// Chunks
+		if (!chunks::chunks_initialized) {
+			chunks::initialize_chunks();
+		}
+		chunks::update_dirty_chunks();
+		chunks::update_buffers();
 
 		// Compile the ASCII render data
 		ascii::ascii_camera();
