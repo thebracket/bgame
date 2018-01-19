@@ -134,33 +134,33 @@ namespace systems {
 
 		void render_natives() {
 			using namespace bengine;
-			std::vector<std::pair<std::size_t, std::string>> natives;
-			each<sentient_ai, name_t>([&natives](entity_t &e, sentient_ai &ai, name_t &name) {
-				natives.emplace_back(std::make_pair(e.id, name.first_name + std::string(" ") + name.last_name + std::string(" #") + std::to_string(e.id)));
-			});
-			std::vector<const char *> native_listbox_items;
-			native_listbox_items.resize(natives.size());
-			for (int i = 0; i<natives.size(); ++i) {
-				native_listbox_items[i] = natives[i].second.c_str();
-			}
-			//ImGui::Begin(win_natives_list.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-			ImGui::PushItemWidth(-1);
-			ImGui::ListBox("## Natives", &current_native, &native_listbox_items[0], natives.size(), 10);
-			if (ImGui::Button(std::string(btn_goto_native + std::string(" ")).c_str())) {
-				auto selected_critter = natives[current_native].first;
-				auto the_critter = entity(selected_critter);
-				if (the_critter) {
-					auto pos = the_critter->component<position_t>();
+
+			ImGui::Columns(2, "npc_list_grid");
+			ImGui::Separator();
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Sentient"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
+			ImGui::Separator();
+
+			each<sentient_ai, name_t>([](entity_t &e, sentient_ai &ai, name_t &name) {
+				const std::string critter_name = name.first_name + std::string(" ") + name.last_name;
+				ImGui::Text("%s", critter_name.c_str());
+				ImGui::NextColumn();
+				ImGui::Separator();
+
+				const std::string critter_goto = btn_goto_creature + std::string("##") + std::to_string(e.id);
+				if (ImGui::Button(critter_goto.c_str())) {
+					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
 					camera_position->region_y = pos->y;
 					camera_position->region_z = pos->z;
+					game_master_mode = PLAY;
+					render::camera_moved = true;
+					render::models_changed = true;
 				}
-				game_master_mode = PLAY;
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Close")) {
-				game_master_mode = PLAY;
-			}
+				ImGui::NextColumn();
+				ImGui::Separator();
+			});
 		}
 
 		void run(const double &duration_ms) {
