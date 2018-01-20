@@ -24,10 +24,10 @@
 
 namespace play_game {
 
-    std::atomic<bool> loaded(false);
-    std::unique_ptr<std::thread> loader_thread = nullptr;
+    static std::atomic<bool> loaded(false);
+    static std::unique_ptr<std::thread> loader_thread = nullptr;
 
-    void do_load_game() {
+    static void do_load_game() {
         using namespace bengine;
 
         call_home("menu", "playgame");

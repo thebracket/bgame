@@ -23,21 +23,21 @@ using namespace bengine;
 using namespace assets;
 
 namespace splash_screen {
-    double run_time = 0.0;
-    float scale = 0.0f;
-    float angle = 6.28319f / 2.0f;
-    constexpr float angle_step = 0.0174533f * 5.0f;
-    float darken = 0.0f;
+    static double run_time = 0.0;
+    static float scale = 0.0f;
+    static float angle = 6.28319f / 2.0f;
+    static constexpr float angle_step = 0.0174533f * 5.0f;
+    static float darken = 0.0f;
 
-    bool initialized_thread_pool = false;
-    std::atomic<bool> initialized_raws{false};
-    std::atomic<bool> raw_load_started{false};
-    bool loaded_textures = false;
-    bool started_telemetry = false;
-    bool sent_telemetry = false;
-    bool loaded_worldgen = false;
-    bool loaded_chunk = false;
-    int tex_idx = 0;
+    static bool initialized_thread_pool = false;
+    static std::atomic<bool> initialized_raws{false};
+    static std::atomic<bool> raw_load_started{false};
+    static bool loaded_textures = false;
+    static bool started_telemetry = false;
+    static bool sent_telemetry = false;
+    static bool loaded_worldgen = false;
+    static bool loaded_chunk = false;
+    static int tex_idx = 0;
 
     /* Loads enough to get things started. */
     void init() {
@@ -62,14 +62,14 @@ namespace splash_screen {
 		ascii_shader = load_shaders("game_assets/ascii_vertex.glsl", "game_assets/ascii_fragment.glsl");
     }
 
-    void init_raws(int id) {
+    static inline void init_raws(int id) {
         std::cout << "RAW INIT - Seen thread " << id << "\n";
         load_raws();
         initialized_raws.store(true);
         std::cout << "RAW INIT DONE\n";
     }
 
-    void load_worldgen_textures() {
+    static inline void load_worldgen_textures() {
         glGenTextures(1, &assets::worldgen_texture_array);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::worldgen_texture_array);
@@ -110,7 +110,7 @@ namespace splash_screen {
     constexpr int TEX_SIZE = 256; // This is probably too high
     constexpr int CURSOR_SIZE = 128;
 
-    std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string filename) {
+    static inline std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string filename) {
         int width, height, bpp;
         stbi_set_flip_vertically_on_load(true);
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb);
@@ -120,7 +120,7 @@ namespace splash_screen {
         return std::make_tuple(image_data, width, height, bpp);
     }
 
-    std::tuple<unsigned char *, int, int, int> load_cursor_texture_to_ram(const std::string filename) {
+	static inline std::tuple<unsigned char *, int, int, int> load_cursor_texture_to_ram(const std::string filename) {
         int width, height, bpp;
         stbi_set_flip_vertically_on_load(true);
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
@@ -130,7 +130,7 @@ namespace splash_screen {
         return std::make_tuple(image_data, width, height, bpp);
     }
 
-    void load_chunk_textures() {
+	static inline void load_chunk_textures() {
         const int num_actual_textures = static_cast<int>(material_textures.size() * 3);
         std::cout << "# Textures in array: " << num_actual_textures << "\n";
 
@@ -218,7 +218,7 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
-    void load_cursor_textures() {
+	static inline void load_cursor_textures() {
         std::vector<std::string> cursor_textures{ "base_cursor.png", "chop_cursor.png", "tree_cursor.png", "farm_cursor.png", "guard_cursor.png",
                                                   "dig_cursor.png", "channel_cursor.png", "ramp_cursor.png", "downstairs_cursor.png", "upstairs_cursor.png", "updownstairs_cursor.png",
                                                   "wall_cursor.png", "floor_cursor.png", "bridge_cursor.png"};
@@ -267,7 +267,7 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
-    void load_voxel_models() {
+	static inline void load_voxel_models() {
 
         for (const auto &vm : voxel_models_to_load) {
             vox::load_vox(vm.second, vm.first);
