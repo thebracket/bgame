@@ -239,6 +239,65 @@ namespace render {
 			return get_material_glyph(idx, glyph);
 		}
 
+		glyph_t get_dive_tile(const int &idx) {
+			glyph_t result = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
+			int dive_depth = 1;
+			constexpr int MAX_DIVE = 3;
+			int check_idx = idx - (REGION_WIDTH * REGION_HEIGHT);
+			bool done = false;
+			while (check_idx > 0 && dive_depth < MAX_DIVE && !done) {
+				if (region::revealed(check_idx)) {
+					const uint8_t ttype = region::tile_type(check_idx);
+					switch (ttype) {
+					case tile_type::SEMI_MOLTEN_ROCK: result = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
+					case tile_type::SOLID: result = get_material_glyph(check_idx); break;
+					case tile_type::WALL: result = get_wall_tile(check_idx); break;
+					case tile_type::RAMP: result = get_material_glyph(check_idx, 30); break;
+					case tile_type::STAIRS_UP: result = get_material_glyph(check_idx, '<'); break;
+					case tile_type::STAIRS_DOWN: result = get_material_glyph(check_idx, '>'); break;
+					case tile_type::STAIRS_UPDOWN: result = get_material_glyph(check_idx, 'X'); break;
+					case tile_type::FLOOR: result = get_floor_tile(check_idx); break;
+					case tile_type::TREE_TRUNK: result = glyph_t{ 186, 1.0f, 1.0f, 0.5f, 0, 0, 0 }; break;
+					case tile_type::TREE_LEAF: result = glyph_t{ 5, 0.0f, 1.0f, 0, 0, 0, 0 }; break;
+					case tile_type::WINDOW: result = get_material_glyph(check_idx, 176); break;
+					case tile_type::CLOSED_DOOR: result = get_material_glyph(check_idx, '+'); break;
+					default: result = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
+					}
+
+					// Add water - TODO: Add some variance
+					switch (region::water_level(check_idx)) {
+					case 1: result = glyph_t{ '1', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 2: result = glyph_t{ '2', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 3: result = glyph_t{ '3', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 4: result = glyph_t{ '4', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 5: result = glyph_t{ '5', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 6: result = glyph_t{ '6', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 7: result = glyph_t{ '7', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 8: result = glyph_t{ '8', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 9: result = glyph_t{ '9', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					case 10: result = glyph_t{ '0', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+					}
+				}
+
+				if (result.glyph != ' ') {
+					done = true;
+					const float darken = 1.0f - (static_cast<float>(dive_depth) * 0.3f);
+					result.r *= darken;
+					result.g *= darken;
+					result.b *= darken;
+					result.br *= darken;
+					result.bb *= darken;
+					result.bg *= darken;
+				}
+				else {
+					++dive_depth;
+					check_idx -= (REGION_WIDTH * REGION_HEIGHT);
+				}
+			}
+
+			return result;
+		}
+
 		void populate_ascii() {
 			const int z = camera_position->region_z;
 
@@ -264,7 +323,7 @@ namespace render {
 						case tile_type::TREE_LEAF: terminal[tidx] = glyph_t{ 5, 0.0f, 1.0f, 0, 0, 0, 0 }; break;
 						case tile_type::WINDOW: terminal[tidx] = get_material_glyph(idx, 176); break;
 						case tile_type::CLOSED_DOOR: terminal[tidx] = get_material_glyph(idx, '+'); break;
-						case tile_type::OPEN_SPACE: terminal[tidx] = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 }; break; // TODO: Add deep-diving
+						case tile_type::OPEN_SPACE: terminal[tidx] = get_dive_tile(idx); break; // TODO: Add deep-diving
 						default: terminal[tidx] = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 						}
 
