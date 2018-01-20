@@ -190,7 +190,7 @@ namespace systems {
 				game_master_mode = PLAY;
 			}
 
-			ImGui::BeginTabBar("Units#left_tab_bar");
+			ImGui::BeginTabBar("##Units#left_tab_bar");
 			ImGui::DrawTabsBackground();
 			if (ImGui::AddTab(win_settler_list.c_str())) {
 				render_settlers();
