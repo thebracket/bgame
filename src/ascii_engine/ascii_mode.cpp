@@ -62,7 +62,7 @@ namespace render {
 		glm::mat4 camera_projection_matrix;
 		glm::mat4 camera_modelview_matrix;
 
-		void build_buffers() {
+		static void build_buffers() {
 			int width, height;
 			glfwGetWindowSize(bengine::main_window, &width, &height);
 
@@ -126,7 +126,7 @@ namespace render {
 			glCheckError();
 		}
 
-		void ascii_camera() {
+		static void ascii_camera() {
 			int screen_w, screen_h;
 			glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 			camera_projection_matrix = glm::perspective(glm::radians(90.0f), (float)screen_w / (float)screen_h, 1.0f, 300.0f);
@@ -137,11 +137,11 @@ namespace render {
 			camera_modelview_matrix = glm::lookAt(camera_position_v, target, up);
 		}
 
-		constexpr int termidx(const int x, const int y) {
+		static constexpr int termidx(const int x, const int y) {
 			return (y * REGION_HEIGHT) + x;
 		}
 
-		inline glyph_t get_material_glyph(const int &idx, uint8_t glyph_override = 0, bool kill_background = false) {
+		static inline glyph_t get_material_glyph(const int &idx, uint8_t glyph_override = 0, bool kill_background = false) {
 			const std::size_t material_index = region::material(idx);
 			const auto mat = get_material(material_index);
 			glyph_t result;
@@ -159,7 +159,7 @@ namespace render {
 			return result;
 		}
 
-		glyph_t get_floor_tile(const int &idx) {
+		static inline glyph_t get_floor_tile(const int &idx) {
 			if (region::flag(idx, CONSTRUCTION)) {
 				auto glyph = get_material_glyph(idx, '+');
 				glyph.bb = 0.0;
@@ -181,7 +181,7 @@ namespace render {
 			}
 		}
 
-		glyph_t get_wall_tile(const int &idx) {
+		static inline glyph_t get_wall_tile(const int &idx) {
 			uint8_t wall_mask = 0;
 			if (region::tile_type(idx - 1) == tile_type::WALL) wall_mask += 1;
 			if (region::tile_type(idx + 1) == tile_type::WALL) wall_mask += 2;
@@ -246,7 +246,7 @@ namespace render {
 			return get_material_glyph(idx, glyph);
 		}
 
-		glyph_t get_dive_tile(const int &idx) {
+		static inline glyph_t get_dive_tile(const int &idx) {
 			glyph_t result = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 			int dive_depth = 1;
 			constexpr int MAX_DIVE = 3;
@@ -305,7 +305,7 @@ namespace render {
 			return result;
 		}
 
-		void populate_ascii() {
+		static inline void populate_ascii() {
 			const int z = camera_position->region_z;
 
 			// Add terrain
@@ -449,7 +449,7 @@ namespace render {
 			});
 		}
 
-		void render_cursors() {
+		static inline void render_cursors() {
 			if (systems::mouse_wx < 1 || systems::mouse_wx > REGION_WIDTH || systems::mouse_wy < 1 || systems::mouse_wy > REGION_HEIGHT) return;
 
 			// Highlight the mouse position in yellow background
@@ -543,7 +543,7 @@ namespace render {
 			}
 		}
 
-		void render_ascii()
+		static inline void render_ascii()
 		{
 			constexpr float glyph_width_texture_space = 1.0f / 16.0f;
 
@@ -592,7 +592,7 @@ namespace render {
 			glCheckError();
 		}
 
-		void present() {
+		static inline void present() {
 			glDisable(GL_DEPTH_TEST);
 			glBindFramebuffer(GL_FRAMEBUFFER, ascii_fbo);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
