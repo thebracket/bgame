@@ -141,15 +141,22 @@ namespace render {
 			return (y * REGION_HEIGHT) + x;
 		}
 
-		inline glyph_t get_material_glyph(const int &idx, uint8_t glyph_override = 0) {
+		inline glyph_t get_material_glyph(const int &idx, uint8_t glyph_override = 0, bool kill_background = false) {
 			const std::size_t material_index = region::material(idx);
 			const auto mat = get_material(material_index);
+			glyph_t result;
 			if (mat) {
-				return glyph_t{ glyph_override > 0 ? glyph_override : static_cast<uint8_t>(mat->glyph), mat->fg.r, mat->fg.g, mat->fg.b, mat->bg.r, mat->bg.g, mat->bg.b };
+				result = glyph_t{ glyph_override > 0 ? glyph_override : static_cast<uint8_t>(mat->glyph), mat->fg.r, mat->fg.g, mat->fg.b, mat->bg.r, mat->bg.g, mat->bg.b };
 			}
 			else {
-				return glyph_t{ glyph_override, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
+				result = glyph_t{ glyph_override, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
 			}
+			if (kill_background) {
+				result.br = 0.0f;
+				result.bb = 0.0f;
+				result.bg = 0.0f;
+			}
+			return result;
 		}
 
 		glyph_t get_floor_tile(const int &idx) {
@@ -252,7 +259,7 @@ namespace render {
 					case tile_type::SEMI_MOLTEN_ROCK: result = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
 					case tile_type::SOLID: result = get_material_glyph(check_idx); break;
 					case tile_type::WALL: result = get_wall_tile(check_idx); break;
-					case tile_type::RAMP: result = get_material_glyph(check_idx, 30); break;
+					case tile_type::RAMP: result = get_material_glyph(check_idx, 30, true); break;
 					case tile_type::STAIRS_UP: result = get_material_glyph(check_idx, '<'); break;
 					case tile_type::STAIRS_DOWN: result = get_material_glyph(check_idx, '>'); break;
 					case tile_type::STAIRS_UPDOWN: result = get_material_glyph(check_idx, 'X'); break;
@@ -314,7 +321,7 @@ namespace render {
 						case tile_type::SEMI_MOLTEN_ROCK: terminal[tidx] = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
 						case tile_type::SOLID: terminal[tidx] = get_material_glyph(idx); break;
 						case tile_type::WALL: terminal[tidx] = get_wall_tile(idx); break;
-						case tile_type::RAMP: terminal[tidx] = get_material_glyph(idx, 30); break;
+						case tile_type::RAMP: terminal[tidx] = get_material_glyph(idx, 30, true); break;
 						case tile_type::STAIRS_UP: terminal[tidx] = get_material_glyph(idx, '<'); break;
 						case tile_type::STAIRS_DOWN: terminal[tidx] = get_material_glyph(idx, '>'); break;
 						case tile_type::STAIRS_UPDOWN: terminal[tidx] = get_material_glyph(idx, 'X'); break;
