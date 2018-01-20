@@ -323,7 +323,7 @@ namespace render {
 						case tile_type::TREE_LEAF: terminal[tidx] = glyph_t{ 5, 0.0f, 1.0f, 0, 0, 0, 0 }; break;
 						case tile_type::WINDOW: terminal[tidx] = get_material_glyph(idx, 176); break;
 						case tile_type::CLOSED_DOOR: terminal[tidx] = get_material_glyph(idx, '+'); break;
-						case tile_type::OPEN_SPACE: terminal[tidx] = get_dive_tile(idx); break; // TODO: Add deep-diving
+						case tile_type::OPEN_SPACE: terminal[tidx] = get_dive_tile(idx); break;
 						default: terminal[tidx] = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 						}
 
