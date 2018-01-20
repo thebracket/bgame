@@ -154,14 +154,22 @@ namespace render {
 
 		glyph_t get_floor_tile(const int &idx) {
 			if (region::flag(idx, CONSTRUCTION)) {
-				return get_material_glyph(idx, '+');
+				auto glyph = get_material_glyph(idx, '+');
+				glyph.bb = 0.0;
+				glyph.bg = 0.0;
+				glyph.br = 0.0;
+				return glyph;
 			}
 			else {
 				if (region::veg_type(idx) > 0) {
 					return glyph_t{ '"', 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 				}
 				else {
-					return get_material_glyph(idx, '.');
+					auto glyph = get_material_glyph(idx, '.');
+					glyph.bb = 0.0;
+					glyph.bg = 0.0;
+					glyph.br = 0.0;
+					return glyph;
 				}
 			}
 		}
