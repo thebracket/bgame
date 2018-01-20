@@ -60,9 +60,18 @@ namespace systems {
 
             if (is_key_down(GLFW_KEY_TAB)) {
                 switch (camera->camera_mode) {
-                    case DIAGONAL : camera->camera_mode = FRONT; break;
-                    case FRONT : camera->camera_mode = TOP_DOWN; break;
-                    case TOP_DOWN : camera->camera_mode = DIAGONAL; break;
+				case DIAGONAL: {
+					camera->camera_mode = FRONT;
+					bengine::analytics::on_event("game", "camera_mode", "Front");
+				}break;
+				case FRONT: { 
+					camera->camera_mode = TOP_DOWN; 
+					bengine::analytics::on_event("game", "camera_mode", "Top-Down");
+				} break;
+				case TOP_DOWN: { 
+					camera->camera_mode = DIAGONAL; 
+					bengine::analytics::on_event("game", "camera_mode", "Diagonal");
+				} break;
                 }
                 render::camera_moved = true;
                 render::models_changed = true;

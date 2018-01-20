@@ -13,6 +13,7 @@
 #include "../keydamper.hpp"
 #include "../../stdafx.h"
 #include "../../render_engine/design_render.hpp"
+#include "../../bengine/analytics.hpp"
 
 namespace systems {
     namespace hud {
@@ -61,19 +62,25 @@ namespace systems {
                         camera->camera_mode = TOP_DOWN;
                         render::camera_moved = true;
                         render::models_changed = true;
+						bengine::analytics::on_event("game", "camera_mode", "Top-Down");
                     }
                     if (ImGui::MenuItem("Front")) {
                         camera->camera_mode = FRONT;
                         render::camera_moved = true;
                         render::models_changed = true;
+						bengine::analytics::on_event("game", "camera_mode", "Front");
                     }
                     if (ImGui::MenuItem("Diagonal")) {
                         camera->camera_mode = DIAGONAL;
                         render::camera_moved = true;
                         render::models_changed = true;
+						bengine::analytics::on_event("game", "camera_mode", "Diagonal");
                     }
                     if (ImGui::MenuItem("Toggle ASCII")) {
                         camera->ascii_mode = !camera->ascii_mode;
+						bengine::analytics::on_event("game", "renderMode", camera->ascii_mode ? "ASCII" : "3D");
+						render::camera_moved = true;
+						render::models_changed = true;
                     }
                     ImGui::EndMenu();
                 }
