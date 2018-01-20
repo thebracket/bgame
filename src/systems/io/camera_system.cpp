@@ -8,6 +8,7 @@
 #include "../keydamper.hpp"
 #include "../mouse.hpp"
 #include "../../render_engine/design_render.hpp"
+#include "../../bengine/analytics.hpp"
 
 namespace systems {
     namespace camerasys {
@@ -71,6 +72,7 @@ namespace systems {
 				camera->ascii_mode = !camera->ascii_mode;
 				render::camera_moved = true;
 				render::models_changed = true;
+				bengine::analytics::on_event("game", "renderMode", camera->ascii_mode ? "ASCII" : "3D");
 			}
 
             if (is_key_down(GLFW_KEY_PAGE_UP, false) || wheel_up) {
