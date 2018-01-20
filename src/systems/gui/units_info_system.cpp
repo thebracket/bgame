@@ -13,6 +13,7 @@
 #include "../../global_assets/game_camera.hpp"
 #include "../../render_engine/camera.hpp"
 #include "../../render_engine/vox/renderables.hpp"
+#include "../../components/health.hpp"
 #include "../../stdafx.h"
 
 namespace systems {
@@ -33,32 +34,50 @@ namespace systems {
 		int current_critter = 0;
 		int current_native = 0;
 
-		void render_settlers() {
+		static inline void render_settlers() {
 			using namespace bengine;
 
-			ImGui::Columns(4, "settler_list_grid");
+			ImGui::Columns(5, "settler_list_grid");
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ), "%s", "Settler Name"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Profession"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Status"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Task"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
 			ImGui::Separator();
 
-			each<settler_ai_t, name_t, game_stats_t, species_t>([](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species) {
+			each<settler_ai_t, name_t, game_stats_t, species_t, health_t>([](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species, health_t &h) {
 				const std::string gender = (species.gender == MALE) ? std::string(ICON_FA_MALE) : std::string(ICON_FA_FEMALE);
 				const std::string dname = name.first_name + std::string(" ") + name.last_name;
 				const std::string profession = stats.profession_tag;
 				const std::string task = ai.job_status;
+				std::string hp = std::string("HP:") + std::to_string(h.current_hitpoints) + std::string("/") + std::to_string(h.max_hitpoints);
+				if (h.blind) hp += std::string(" Blind.");
+				if (h.no_grasp) hp += std::string(" Cannot grasp.");
+				if (h.slow) hp += std::string(" Slow.");
+				if (h.unconscious) hp += std::string(" Unsconscious.");
+				const float hp_percent = static_cast<float>(h.current_hitpoints) / static_cast<float>(h.max_hitpoints);
+				ImVec4 health_color{ 0.0f, 1.0f, 0.0f, 1.0f };
+				if (hp_percent < 0.2f) {
+					health_color.x = 1.0f;
+					health_color.y = 0.0f;
+				}
+				else if (hp_percent < 0.75f) {
+					health_color.x = 1.0f;
+					health_color.y = 1.0f;
+				}
 
 				ImGui::Text("%s %s", gender.c_str(), dname.c_str());
 				ImGui::NextColumn();
 				ImGui::Text("%s", profession.c_str());
 				ImGui::NextColumn();
+				ImGui::TextColored(health_color, "%s", hp);
+				ImGui::NextColumn();
 				ImGui::Text("%s", task.c_str());
 				ImGui::NextColumn();
 
-				const std::string btn_view = std::string(ICON_FA_USER_CIRCLE) + " View##" + std::to_string(e.id);
+				const std::string btn_view = std::string(ICON_FA_CAMERA) + " Go To##" + std::to_string(e.id);
 				if (ImGui::Button(btn_view.c_str())) {
 					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
@@ -88,7 +107,7 @@ namespace systems {
 				}
 
 				ImGui::SameLine();
-				const std::string btn_viewmode = btn_view + std::string("##") + std::to_string(e.id);
+				const std::string btn_viewmode = std::string(ICON_FA_USER_CIRCLE) + std::string(" View##") + std::to_string(e.id);
 				if (ImGui::Button(btn_viewmode.c_str())) {
 					game_master_mode = SETTLER;
 					selected_settler = e.id;
@@ -99,7 +118,7 @@ namespace systems {
 			});						
 		}
 
-		void render_creatures() {
+		static inline void render_creatures() {
 			using namespace bengine;
 
 			ImGui::Columns(2, "critter_list_grid");
@@ -132,7 +151,7 @@ namespace systems {
 			ImGui::Columns(1);
 		}
 
-		void render_natives() {
+		static inline void render_natives() {
 			using namespace bengine;
 
 			ImGui::Columns(2, "npc_list_grid");
