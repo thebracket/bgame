@@ -24,6 +24,8 @@
 #include "../../components/items/item_carried.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../bengine/telemetry.hpp"
+#include "../../components/items/item_quality.hpp"
+#include "../../components/items/item_wear.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;
@@ -132,7 +134,10 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
             item_t clothing{cs[0]};
             clothing.material = get_material_by_tag(cs[1]);
             clothing.item_name = material_name(clothing.material) + std::string(" ") + clothing.item_name;
-            bengine::create_entity()->assign(std::move(clothing))->assign(item_carried_t{position, sentient->id});
+			bengine::create_entity()->assign(std::move(clothing))
+				->assign(item_carried_t{ position, sentient->id })
+				->assign(item_quality_t{ item_quality::AVERAGE })
+				->assign(item_wear_t{ 100 });
         }
     }
 

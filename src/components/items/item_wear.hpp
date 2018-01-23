@@ -7,6 +7,7 @@
 struct item_wear_t {
 
 	item_wear_t() {}
+	item_wear_t(const uint8_t w) : wear(w) {}
 	uint8_t wear = 100;
 
 	template<class Archive>

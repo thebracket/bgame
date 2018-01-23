@@ -17,6 +17,7 @@ namespace item_quality {
 struct item_quality_t {
 
 	item_quality_t() {}
+	item_quality_t(const uint8_t q) : quality(q) {}
 	uint8_t quality = 3;
 
 	template<class Archive>

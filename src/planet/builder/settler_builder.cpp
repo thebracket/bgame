@@ -20,6 +20,8 @@
 #include "../../components/items/item_carried.hpp"
 #include "../../raws/defs/profession_t.hpp"
 #include "../../raws/defs/civilization_t.hpp"
+#include "../../components/items/item_quality.hpp"
+#include "../../components/items/item_wear.hpp"
 
 std::vector<std::string> get_event_candidates(const int &age, const std::vector<std::string> &past) {
 	std::vector<std::string> result;
@@ -287,12 +289,12 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 			if (slot_name == "shoes") position = FEET;
 			item_t item{item_name};
 			item.material = get_material_by_tag("cloth");
-			bengine::create_entity()->assign(std::move(item))->assign(item_carried_t{position, settler->id});
+			bengine::create_entity()->assign(std::move(item))->assign(item_carried_t{ position, settler->id })->assign(item_quality_t{ item_quality::GREAT })->assign(item_wear_t{ 100 });
 		}
 	}
 
 	// Add a raygun and energey cells
 	auto plasteel = get_material_by_tag("plasteel");
-	spawn_item_carried(settler->id, "ray_pistol", plasteel, EQUIP_RANGED);
-	spawn_item_carried(settler->id, "small_energy_cell", plasteel, EQUIP_AMMO);
+	spawn_item_carried(settler->id, "ray_pistol", plasteel, EQUIP_RANGED, item_quality::GREAT);
+	spawn_item_carried(settler->id, "small_energy_cell", plasteel, EQUIP_AMMO, item_quality::GREAT);
 }
