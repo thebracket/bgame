@@ -28,16 +28,16 @@ namespace inventory {
 
 	int blocks_available() {
 		int result = 0;
-		each<item_t>([&result](bengine::entity_t &e, item_t &i) {
-			if (i.item_tag == "block" && e.component<claimed_t>() == nullptr) ++result;
+		each_without<claimed_t, item_t>([&result](bengine::entity_t &e, item_t &i) {
+			if (i.item_tag == "block") ++result;
 		});
 		return result;
 	}
 
 	bool is_ammo_available(const std::string &ammo_type) {
 		int result = 0;
-		each<item_t, item_ammo_t>([&result, &ammo_type](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
-			if (e.component<claimed_t>() == nullptr && get_item_def(i.item_tag)->ammo == ammo_type) ++result;
+		each_without<claimed_t, item_t, item_ammo_t>([&result, &ammo_type](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
+			if (get_item_def(i.item_tag)->ammo == ammo_type) ++result;
 		});
 		return (result > 0);
 	}
@@ -46,8 +46,8 @@ namespace inventory {
 		// We're taking advantage of map being sorted to find the closest here
 		std::map<float, std::size_t> distance_sorted;
 
-		each<item_t, item_ammo_t>([&distance_sorted, &category, &pos, &ammo_type, &range](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
-			if (e.component<claimed_t>() == nullptr && get_item_def(i.item_tag)->ammo == ammo_type) {
+		each_without<claimed_t, item_t, item_ammo_t>([&distance_sorted, &category, &pos, &ammo_type, &range](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
+			if (get_item_def(i.item_tag)->ammo == ammo_type) {
 				auto p = get_item_location(e.id);
 				if (p) {
 					const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
@@ -198,8 +198,8 @@ namespace inventory {
 
 	int available_items_by_tag(const std::string &tag) {
 		int result = 0;
-		each<item_t>([&result, &tag](bengine::entity_t &e, item_t &i) {
-			if (i.item_tag == tag && e.component<claimed_t>() == nullptr) ++result;
+		each_without<claimed_t, item_t>([&result, &tag](bengine::entity_t &e, item_t &i) {
+			if (i.item_tag == tag) ++result;
 		});
 		return result;
 	}
@@ -238,8 +238,8 @@ namespace inventory {
 
 	std::size_t claim_item_by_tag(const std::string &tag) {
 		std::size_t result = 0;
-		each<item_t>([&result, &tag](bengine::entity_t &e, item_t &i) {
-			if (i.item_tag == tag && e.component<claimed_t>() == nullptr) result = e.id;
+		each_without<claimed_t, item_t>([&result, &tag](bengine::entity_t &e, item_t &i) {
+			if (i.item_tag == tag) result = e.id;
 		});
 		if (result != 0) {
 			systems::inventory_system::claim_item(result, true );
@@ -249,8 +249,8 @@ namespace inventory {
 
 	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim) {
 		std::size_t result = 0;
-		each<item_t>([&result, &input](bengine::entity_t &e, item_t &i) {
-			if ((input.tag == "any" || i.item_tag == input.tag) && e.component<claimed_t>() == nullptr) {
+		each_without<claimed_t, item_t>([&result, &input](bengine::entity_t &e, item_t &i) {
+			if ((input.tag == "any" || i.item_tag == input.tag)) {
 				bool ok = true;
 				if (input.required_material != 0) {
 					if (i.material != input.required_material) ok = false;
@@ -309,16 +309,16 @@ namespace inventory {
 		});
 
 		// Loop over all items on the ground
-		each<item_t, position_t>([&result, &ac_by_loc, &my_pos, &range](bengine::entity_t &e, item_t &i, position_t &pos) {
-			if (e.component<claimed_t>() == nullptr && i.type == CLOTHING) {
+		each_without<claimed_t, item_t, position_t>([&result, &ac_by_loc, &my_pos, &range](bengine::entity_t &e, item_t &i, position_t &pos) {
+			if (i.type == CLOTHING) {
 				if (is_better_armor(i.item_tag, ac_by_loc) && (range == -1 || distance3d(my_pos->x, my_pos->y, my_pos->z, pos.x, pos.y, pos.z) < range)) result = e.id;
 			}
 		});
 
 		// ditto for all items in containers
 		if (!result) {
-			each<item_t, item_stored_t>([&result, &ac_by_loc, &my_pos, &range](bengine::entity_t &e, item_t &i, item_stored_t &pos) {
-				if (e.component<claimed_t>() == nullptr && i.type == CLOTHING) {
+			each_without<claimed_t, item_t, item_stored_t>([&result, &ac_by_loc, &my_pos, &range](bengine::entity_t &e, item_t &i, item_stored_t &pos) {
+				if (i.type == CLOTHING) {
 					auto POS = e.component<position_t>();
 					if (is_better_armor(i.item_tag, ac_by_loc) && (range == -1 || (POS && distance3d(my_pos->x, my_pos->y, my_pos->z, POS->x, POS->y, POS->z) < range))) result = e.id;
 				}

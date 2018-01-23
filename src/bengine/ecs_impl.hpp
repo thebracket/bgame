@@ -16,7 +16,6 @@ namespace bengine {
     // Forward declarations
     class ecs;
     struct entity_t;
-    struct base_system;
     extern ecs default_ecs;
 
     namespace impl {
@@ -30,21 +29,12 @@ namespace bengine {
         inline void unset_component_mask(ecs &ECS, const std::size_t id, const std::size_t family_id, bool delete_if_empty=false);
     }
 
-    /*
-     * Base class from which all messages must derive.
-     */
-    struct base_message_t {
-        static std::size_t type_counter;
-    };
-
     /* Class for storing profile data */
     struct system_profiling_t {
         double last = 0.0;
         double best = 1000000.0;
         double worst = 0.0;
     };
-
-    struct base_system;
 
     namespace impl {
 
@@ -160,76 +150,6 @@ namespace bengine {
 
         };
 
-        /*
-         * Handle class for messages
-         */
-        template<class C>
-        struct message_t : public base_message_t {
-            message_t() {
-                C empty;
-                data = empty;
-                family();
-            }
-            message_t(C comp) : data(comp) {
-                family();
-            }
-            std::size_t family_id;
-            C data;
-
-            inline void family() {
-                static std::size_t family_id_tmp = base_message_t::type_counter++;
-                family_id = family_id_tmp;
-            }
-        };
-
-        /*
-         * Base class for storing subscriptions to messages
-         */
-        struct subscription_base_t {
-            virtual void deliver_messages()=0;
-        };
-
-        /* Base class for subscription mailboxes */
-        struct subscription_mailbox_t {
-        };
-
-        /* Implementation class for mailbox subscriptions; stores a queue */
-        template <class C>
-        struct mailbox_t : subscription_mailbox_t {
-            std::queue<C> messages;
-        };
-
-        /*
-         * Class that holds subscriptions, and determines delivery mechanism.
-         */
-        template <class C>
-        struct subscription_holder_t : subscription_base_t {
-            std::queue<C> delivery_queue;
-            std::mutex delivery_mutex;
-            std::vector<std::tuple<bool,std::function<void(C& message)>,base_system *>> subscriptions;
-
-            virtual void deliver_messages() override {
-                std::lock_guard<std::mutex> guard(delivery_mutex);
-                while (!delivery_queue.empty()) {
-                    C message = delivery_queue.front();
-                    delivery_queue.pop();
-                    message_t<C> handle(message);
-
-                    for (auto &func : subscriptions) {
-                        if (std::get<0>(func) && std::get<1>(func)) {
-                            std::get<1>(func)(message);
-                        } else {
-                            // It is destined for the system's mailbox queue.
-                            auto finder = std::get<2>(func)->mailboxes.find(handle.family_id);
-                            if (finder != std::get<2>(func)->mailboxes.end()) {
-                                static_cast<mailbox_t<C> *>(finder->second.get())->messages.push(message);
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
     } // End impl namespace
 
     /*
@@ -313,76 +233,6 @@ namespace bengine {
         {
             archive( component_mask, id, deleted ); // serialize things by passing them to the archive
         }
-    };
-
-    /*
-     * Systems should inherit from this class.
-     */
-    struct base_system {
-        virtual void configure() {}
-        virtual void update(const double duration_ms)=0;
-        std::string system_name = "Unnamed System";
-        std::map<std::size_t, std::unique_ptr<impl::subscription_mailbox_t>> mailboxes;
-
-        template<class MSG>
-        void subscribe(ecs &ECS, std::function<void(MSG &message)> destination) {
-            impl::subscribe<MSG>(ECS, *this, destination);
-        }
-
-        template<class MSG>
-        void subscribe(std::function<void(MSG &message)> destination) {
-            subscribe<MSG>(default_ecs, destination);
-        }
-
-        template<class MSG>
-        void subscribe_mbox(ecs &ECS) {
-            impl::subscribe_mbox<MSG>(ECS, *this);
-        }
-
-        template<class MSG>
-        void subscribe_mbox() {
-            subscribe_mbox<MSG>(default_ecs);
-        }
-
-        template<class MSG>
-        std::queue<MSG> * mbox() {
-            impl::message_t<MSG> handle(MSG{});
-            auto finder = mailboxes.find(handle.family_id);
-            if (finder != mailboxes.end()) {
-                return &static_cast<impl::mailbox_t<MSG> *>(finder->second.get())->messages;
-            } else {
-                return nullptr;
-            }
-        }
-
-        template<class MSG>
-        void each_mbox(const std::function<void(const MSG&)> &func) {
-            std::queue<MSG> * mailbox = mbox<MSG>();
-            while (!mailbox->empty()) {
-                MSG msg = mailbox->front();
-                mailbox->pop();
-                func(msg);
-            }
-        }
-    };
-
-    /* A pre-implemented simple system for systems that only handle messages. */
-    template <class MSG>
-    struct mailbox_system : public base_system {
-        virtual void configure() override final {
-            subscribe_mbox<MSG>();
-        }
-
-        virtual void update(const double duration_ms) override final {
-            std::queue<MSG> * mailbox = base_system::mbox<MSG>();
-            while (!mailbox->empty()) {
-                MSG msg = mailbox->front();
-                mailbox->pop();
-                on_message(msg);
-            }
-        }
-
-        virtual void on_message(const MSG &msg)=0;
     };
 
     /*
@@ -520,6 +370,34 @@ namespace bengine {
             }
         }
 
+		/*
+		* Variadic each, with an additional NOT check for the first type parameter. 
+		* Use this to call a function for all entities having a discrete set of components. For example,
+		* each_without<notme, position, ai>([] (entity_t &e, position &pos, ai &brain) { ... code ... });
+		*/
+		template <typename EXCLUDE, typename... Cs, typename F>
+		inline void each_without(F callback) {
+			std::array<size_t, sizeof...(Cs)> family_ids{ { impl::component_t<Cs>{}.family_id... } };
+			auto excluder = impl::component_t<EXCLUDE>{}.family_id;
+			for (auto it = entity_store.begin(); it != entity_store.end(); ++it) {
+				if (!it->second.deleted) {
+					if (!it->second.component_mask.test(excluder)) {
+						bool matches = true;
+						for (const std::size_t &compare : family_ids) {
+							if (!it->second.component_mask.test(compare)) {
+								matches = false;
+								break;
+							}
+						}
+						if (matches) {
+							// Call the functor
+							callback(it->second, *it->second.component<Cs>()...);
+						}
+					}
+				}
+			}
+		}
+
         /*
          * Variadic each_if. Use this to call a function for all entities having a discrete set of components. For example,
          * each<position, ai>([] (entity_t &e, position &pos, ai &brain) { ... code returns true if needs processing ... },
@@ -581,12 +459,6 @@ namespace bengine {
 
         // The ECS entity store
         std::map<std::size_t, entity_t> entity_store;
-
-        // Storage of systems
-        std::vector<std::unique_ptr<base_system>> system_store;
-
-        // Profile data storage
-        std::vector<system_profiling_t> system_profiling;
 
         // Helpers
         inline void unset_component_mask(const std::size_t id, const std::size_t family_id, bool delete_if_empty) {

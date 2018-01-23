@@ -5,7 +5,6 @@
 #include "../../raws/health_factory.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
-#include "../../messages/log_message.hpp"
 #include "../../components/logger.hpp"
 #include "../../bengine/string_utils.hpp"
 #include "../../components/sentient_ai.hpp"

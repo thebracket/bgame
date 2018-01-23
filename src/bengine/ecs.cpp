@@ -6,7 +6,6 @@
 namespace bengine {
 
 std::size_t impl::base_component_t::type_counter = 1;
-std::size_t base_message_t::type_counter = 1;
 std::size_t entity_t::entity_counter{1}; // Not using zero since it is used as null so often
 ecs default_ecs;
 
@@ -59,21 +58,6 @@ void ecs::ecs_load(std::unique_ptr<std::ifstream> &lbfile) {
     cereal::XMLInputArchive iarchive(*lbfile);
     iarchive(*this);
     std::cout << "Loaded " << entity_store.size() << " entities, and " << component_store.size() << " component types.\n";
-}
-
-std::string ecs::ecs_profile_dump() {
-	std::stringstream ss;
-	ss.precision(3);
-	ss << std::fixed;
-	ss << "SYSTEMS PERFORMANCE IN MICROSECONDS:\n";
-	ss << std::setw(20) << "System" << std::setw(20) << "Last" << std::setw(20) << "Best" << std::setw(20) << "Worst\n";
-	for (std::size_t i=0; i<system_profiling.size(); ++i) {
-		ss << std::setw(20) << system_store[i]->system_name 
-			<< std::setw(20) << system_profiling[i].last 
-			<< std::setw(20) << system_profiling[i].best 
-			<< std::setw(20) << system_profiling[i].worst << "\n";
-	}
-	return ss.str();
 }
 
 }

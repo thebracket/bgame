@@ -108,11 +108,8 @@ namespace systems {
 
 		void update_bed_map() {
 			std::vector<int> beds;
-			each<construct_provides_sleep_t, position_t>([&beds](entity_t &e, construct_provides_sleep_t &bed, position_t &pos) {
-				auto claimed = e.component<claimed_t>();
-				if (claimed == nullptr) {
-					beds.emplace_back(mapidx(pos));
-				}
+			each_without<claimed_t, construct_provides_sleep_t, position_t>([&beds](entity_t &e, construct_provides_sleep_t &bed, position_t &pos) {
+				beds.emplace_back(mapidx(pos));
 			});
 			bed_map.update(beds);
 		}

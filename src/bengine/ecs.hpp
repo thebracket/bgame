@@ -97,6 +97,16 @@ namespace bengine {
         each<Cs...>(default_ecs, callback);
     }
 
+	template <typename EXCLUDE, typename... Cs, typename F>
+	inline void each_without(ecs &ECS, F callback) {
+		ECS.each_without<EXCLUDE, Cs...>(callback);
+	}
+
+	template <typename EXCLUDE, typename... Cs, typename F>
+	inline void each_without(F callback) {
+		each_without<EXCLUDE, Cs...>(default_ecs, callback);
+	}
+
     template <typename... Cs, typename P, typename F>
     inline void each_if(ecs &ECS, P&& predicate, F callback) {
         ECS.each_if<Cs...>(predicate, callback);

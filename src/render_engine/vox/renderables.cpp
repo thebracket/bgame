@@ -235,21 +235,19 @@ namespace render {
 		});
 
 		// Render sentients who don't have a composite component
-		bengine::each<position_t, sentient_ai, species_t>([](bengine::entity_t &e, position_t &pos, sentient_ai &g, species_t &species) {
-			if (e.component<renderable_composite_t>() == nullptr) {
-				auto def = get_species_def(species.tag);
-				if (def == nullptr) return;
+		bengine::each_without<renderable_composite_t, position_t, sentient_ai, species_t>([](bengine::entity_t &e, position_t &pos, sentient_ai &g, species_t &species) {
+			auto def = get_species_def(species.tag);
+			if (def == nullptr) return;
 
-				if (def->voxel_model != 0) {
-					//std::cout << "Found critter " << r.vox << "\n";
-					auto finder = models_to_render->find(def->voxel_model);
-					vox::instance_t render_model{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(render_model);
-					}
-					else {
-						models_to_render->insert(std::make_pair(def->voxel_model, std::vector<vox::instance_t>{ render_model }));
-					}
+			if (def->voxel_model != 0) {
+				//std::cout << "Found critter " << r.vox << "\n";
+				auto finder = models_to_render->find(def->voxel_model);
+				vox::instance_t render_model{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+				if (finder != models_to_render->end()) {
+					finder->second.push_back(render_model);
+				}
+				else {
+					models_to_render->insert(std::make_pair(def->voxel_model, std::vector<vox::instance_t>{ render_model }));
 				}
 			}
 		});
