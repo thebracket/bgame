@@ -10,6 +10,8 @@
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../../bengine/telemetry.hpp"
+#include "../../../components/item_tags/item_food_t.hpp"
+#include "../../../components/item_tags/item_spice_t.hpp"
 
 namespace systems {
 	namespace ai_harvest {

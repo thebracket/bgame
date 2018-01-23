@@ -23,6 +23,18 @@
 #include "defs/material_def_t.hpp"
 #include "items.hpp"
 #include "../render_engine/vox/renderables.hpp"
+#include "../components/item_tags/item_ammo_t.hpp"
+#include "../components/item_tags/item_bone_t.hpp"
+#include "../components/item_tags/item_chopping_t.hpp"
+#include "../components/item_tags/item_digging_t.hpp"
+#include "../components/item_tags/item_drink_t.hpp"
+#include "../components/item_tags/item_food_t.hpp"
+#include "../components/item_tags/item_hide_t.hpp"
+#include "../components/item_tags/item_leather_t.hpp"
+#include "../components/item_tags/item_melee_t.hpp"
+#include "../components/item_tags/item_ranged_t.hpp"
+#include "../components/item_tags/item_skull_t.hpp"
+#include "../components/item_tags/item_spice_t.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -121,10 +133,26 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     auto entity = bengine::create_entity()
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
+        ->assign(item_t{tag, finder->name, material, finder->stack_size});
+
     //std::cout << "Spawned item on ground: " << entity->id << ", " << entity->component<item_t>()->item_tag << "\n";
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 	render::models_changed = true;
+}
+
+void decorate_item_categories(bengine::entity_t &item, std::bitset<NUMBER_OF_ITEM_CATEGORIES> &categories) {
+	if (categories.test(TOOL_CHOPPING)) item.assign(item_chopping_t{});
+	if (categories.test(TOOL_DIGGING)) item.assign(item_digging_t{});
+	if (categories.test(WEAPON_MELEE)) item.assign(item_melee_t{});
+	if (categories.test(WEAPON_RANGED)) item.assign(item_ranged_t{});
+	if (categories.test(WEAPON_AMMO)) item.assign(item_ammo_t{});
+	if (categories.test(ITEM_FOOD)) item.assign(item_food_t{});
+	if (categories.test(ITEM_SPICE)) item.assign(item_spice_t{});
+	if (categories.test(ITEM_DRINK)) item.assign(item_drink_t{});
+	if (categories.test(ITEM_HIDE)) item.assign(item_hide_t{});
+	if (categories.test(ITEM_BONE)) item.assign(item_bone_t{});
+	if (categories.test(ITEM_SKULL)) item.assign(item_skull_t{});
+	if (categories.test(ITEM_LEATHER)) item.assign(item_leather_t{});
 }
 
 bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material) {
@@ -137,7 +165,8 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
     auto entity = bengine::create_entity()
             ->assign(position_t{ x,y,z })
             ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
-            ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
+            ->assign(item_t{tag, finder->name, material, finder->stack_size});
+	decorate_item_categories(*entity, finder->categories);
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 	render::models_changed = true;
     return entity;
@@ -151,10 +180,11 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     std::cout << "Spawning [" << tag << "], glyph " << +finder->glyph << "\n";
 
-    bengine::create_entity()
+    auto entity = bengine::create_entity()
         ->assign(item_stored_t{ container_id })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
+        ->assign(item_t{tag, finder->name, material, finder->stack_size});
+	decorate_item_categories(*entity, finder->categories);
 }
 
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc) {
@@ -163,8 +193,9 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 
     auto mat = get_material(material);
 
-    bengine::create_entity()
+    auto entity = bengine::create_entity()
         ->assign(item_carried_t{ loc, holder_id })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->name, finder->categories, material, finder->stack_size});
+        ->assign(item_t{tag, finder->name, material, finder->stack_size});
+	decorate_item_categories(*entity, finder->categories);
 }

@@ -19,19 +19,12 @@
 #include "../../raws/defs/clothing_t.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "../ai/inventory_system.hpp"
+#include "../../components/item_tags/item_ammo_t.hpp"
 
 using namespace bengine;
 using namespace buildings;
 
 namespace inventory {
-
-	int item_category_available(const int &category) {
-		int result = 0;
-		each<item_t>([&result, &category](bengine::entity_t &e, item_t &i) {
-			if (i.category.test(category) && e.component<claimed_t>() == nullptr) ++result;
-		});
-		return result;
-	}
 
 	int blocks_available() {
 		int result = 0;
@@ -41,46 +34,20 @@ namespace inventory {
 		return result;
 	}
 
-	bool is_item_category_available(const int &category) {
-		return (item_category_available(category)>0);
-	}
-
 	bool is_ammo_available(const std::string &ammo_type) {
 		int result = 0;
-		each<item_t>([&result, &ammo_type](bengine::entity_t &e, item_t &i) {
-			if (i.category.test(WEAPON_AMMO) && e.component<claimed_t>() == nullptr && get_item_def(i.item_tag)->ammo == ammo_type) ++result;
+		each<item_t, item_ammo_t>([&result, &ammo_type](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
+			if (e.component<claimed_t>() == nullptr && get_item_def(i.item_tag)->ammo == ammo_type) ++result;
 		});
 		return (result > 0);
-	}
-
-	std::size_t claim_closest_item_by_category(const int &category, position_t &pos, const int range) {
-		// We're taking advantage of map being sorted to find the closest here
-		std::map<float, std::size_t> distance_sorted;
-
-		each<item_t>([&distance_sorted, &category, &pos, &range](bengine::entity_t &e, item_t &i) {
-			if (i.category.test(category) && e.component<claimed_t>() == nullptr) {
-				auto p = get_item_location(e.id);
-				if (p) {
-					const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
-					if (range == -1 || distance < range) distance_sorted[distance] = e.id;
-				}
-			}
-		});
-
-		if (distance_sorted.empty()) return 0;
-
-		std::size_t closest_matching_id = distance_sorted.begin()->second;
-		systems::inventory_system::claim_item(closest_matching_id, true );
-
-		return closest_matching_id;
 	}
 
 	std::size_t claim_closest_ammo(const int &category, position_t &pos, const std::string &ammo_type, const int range) {
 		// We're taking advantage of map being sorted to find the closest here
 		std::map<float, std::size_t> distance_sorted;
 
-		each<item_t>([&distance_sorted, &category, &pos, &ammo_type, &range](bengine::entity_t &e, item_t &i) {
-			if (i.category.test(category) && e.component<claimed_t>() == nullptr && get_item_def(i.item_tag)->ammo == ammo_type) {
+		each<item_t, item_ammo_t>([&distance_sorted, &category, &pos, &ammo_type, &range](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
+			if (e.component<claimed_t>() == nullptr && get_item_def(i.item_tag)->ammo == ammo_type) {
 				auto p = get_item_location(e.id);
 				if (p) {
 					const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);

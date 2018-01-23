@@ -14,6 +14,8 @@
 #include "../helpers/inventory_assistant.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/items.hpp"
+#include "../../components/item_tags/item_chopping_t.hpp"
+#include "../../components/item_tags/item_digging_t.hpp"
 
 namespace systems {
 	namespace distance_map {
@@ -166,8 +168,7 @@ namespace systems {
 
 		void update_axe_map() {
 			std::vector<int> targets;
-			each<item_t>([&targets](entity_t &e, item_t &item) {
-				if (!item.category.test(TOOL_CHOPPING)) return; // Not an axe!
+			each<item_t, item_chopping_t>([&targets](entity_t &e, item_t &item, item_chopping_t &choppa) {
 				if (e.component<claimed_t>() != nullptr) return; // Don't touch claimed items
 
 				auto pos = e.component<position_t>();
@@ -190,8 +191,7 @@ namespace systems {
 
 		void update_pick_map() {
 			std::vector<int> targets;
-			each<item_t>([&targets](entity_t &e, item_t &item) {
-				if (!item.category.test(TOOL_DIGGING)) return; // Not an axe!
+			each<item_t, item_digging_t>([&targets](entity_t &e, item_t &item, item_digging_t &digger) {
 				if (e.component<claimed_t>() != nullptr) return; // Don't touch claimed items
 
 				auto pos = e.component<position_t>();

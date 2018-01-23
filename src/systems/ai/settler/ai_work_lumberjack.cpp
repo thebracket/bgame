@@ -11,6 +11,7 @@
 #include "../../damage/damage_system.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../../gui/particle_system.hpp"
+#include "../../../components/item_tags/item_chopping_t.hpp"
 
 using namespace bengine;
 using namespace jobs_board;
@@ -67,7 +68,7 @@ namespace systems {
 						return;
 					}, [&e, &pos, &lj, &work] {
 						// On success
-						work.pickup_tool(e, pos, TOOL_CHOPPING, lj.current_axe, [&e, &lj]() {
+						work.pickup_tool<item_chopping_t>(e, pos, lj.current_axe, [&e, &lj]() {
 							// On cancel
 							//std::cout << "LJ: Pickup Tool - cancel\n";
 							delete_component<ai_tag_work_lumberjack>(e.id);

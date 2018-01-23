@@ -45,15 +45,8 @@ item_t::item_t(const std::string name) : item_tag(name), type(CLOTHING) {
     }
 }
 
-item_t::item_t(const std::string tag, const std::string name, const std::bitset<NUMBER_OF_ITEM_CATEGORIES> cats,
-               const std::size_t mat, int stack) :
-        item_name(name), item_tag(tag), category(cats), type(ITEM), material(mat), stack_size(stack)
+item_t::item_t(const std::string tag, const std::string name, const std::size_t mat, int stack) :
+        item_name(name), item_tag(tag), type(ITEM), material(mat), stack_size(stack)
 {
-    if (!cats.test(ITEM_FOOD) && !cats.test(ITEM_SPICE) &&
-        !cats.test(ITEM_DRINK) && !cats.test(ITEM_SKULL) &&
-        !cats.test(ITEM_BONE) && !cats.test(ITEM_HIDE) &&
-        !cats.test(ITEM_LEATHER))
-    {
-        item_name = material_name(mat) + std::string(" ") + item_name;
-    }
+    item_name = material_name(mat) + std::string(" ") + item_name;
 }

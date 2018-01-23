@@ -65,12 +65,10 @@ public:
 		}
 	}
 
-	template <typename CANCEL, typename SUCCESS>
-	void pickup_tool(const bengine::entity_t &e, position_t &pos, const int &category, std::size_t &out_tool, const CANCEL &cancel, const SUCCESS &success) const {
+	template < typename ITEM_TYPE, typename CANCEL, typename SUCCESS >
+	void pickup_tool(const bengine::entity_t &e, position_t &pos, std::size_t &out_tool, const CANCEL &cancel, const SUCCESS &success) const {
 		std::size_t tool_id = 0;
-		bengine::each<item_t>([&tool_id, &pos, &category](bengine::entity_t &tool, item_t &item) {
-			if (!item.category.test(category)) return; // Not an axe
-
+		bengine::each<item_t, ITEM_TYPE>([&tool_id, &pos](bengine::entity_t &tool, item_t &item, ITEM_TYPE &t) {
 			auto tool_pos = tool.component<position_t>();
 			if (tool_pos != nullptr && *tool_pos == pos) {
 				tool_id = tool.id;

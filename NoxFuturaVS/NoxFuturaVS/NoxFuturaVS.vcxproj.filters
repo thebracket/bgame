@@ -181,6 +181,9 @@
     <Filter Include="Source Files\ascii_engine">
       <UniqueIdentifier>{45274e9d-f981-4510-852e-898e69a00be6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\components\item_tags">
+      <UniqueIdentifier>{3042033d-a2b2-4ecf-97f6-4ee30d44dcfc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -1573,6 +1576,42 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\imgui_tabs.hpp">
       <Filter>Header Files\bengine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_chopping_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_ammo_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_bone_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_digging_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_drink_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_food_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_hide_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_leather_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_melee_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_ranged_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_skull_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_spice_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -147,7 +147,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = bengine::create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_MELEE, sentient->id});
         weapon->component<item_t>()->stack_size = finder->stack_size;
-        weapon->component<item_t>()->category = finder->categories;
+		decorate_item_categories(*weapon, finder->categories);
 		weapon->assign(claimed_t{});
     }
     if (unit.equipment.ranged != "") {
@@ -160,7 +160,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto weapon = bengine::create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_RANGED, sentient->id});
         weapon->component<item_t>()->stack_size = finder->stack_size;
-        weapon->component<item_t>()->category = finder->categories;
+		decorate_item_categories(*weapon, finder->categories);
 		weapon->assign(claimed_t{});
 	}
     if (unit.equipment.ammo != "") {
@@ -173,7 +173,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
         w.item_name = material_name(w.material) + std::string(" ") + w.item_name;
         auto ammo = bengine::create_entity()->assign(std::move(w))->assign(item_carried_t{EQUIP_AMMO, sentient->id});
         ammo->component<item_t>()->stack_size = finder->stack_size;
-        ammo->component<item_t>()->category = finder->categories;
+		decorate_item_categories(*ammo, finder->categories);
 		ammo->assign(claimed_t{});
     }
     if (unit.equipment.mount != "") {

@@ -9,6 +9,7 @@
 #include "../../physics/topology_system.hpp"
 #include "../inventory_system.hpp"
 #include "../../damage/damage_system.hpp"
+#include "../../../components/item_tags/item_digging_t.hpp"
 
 namespace systems {
 	namespace ai_mining {
@@ -68,7 +69,7 @@ namespace systems {
 					}, [&e, &pos, &m, &work] {
 						// On success
 						std::cout << "GET PICK - SUCCESS\n";
-						work.pickup_tool(e, pos, TOOL_DIGGING, m.current_pick, [&e, &work]() {
+						work.pickup_tool<item_digging_t>(e, pos, m.current_pick, [&e, &work]() {
 							// On cancel
 							work.cancel_work_tag(e);
 							return;
