@@ -14,6 +14,8 @@
 #include "../../components/items/item.hpp"
 #include "../../components/construct_container.hpp"
 #include "../../components/items/item_stored.hpp"
+#include "../../components/items/item_quality.hpp"
+#include "../../components/items/item_wear.hpp"
 #include "../../components/building.hpp"
 #include "../../components/bridge.hpp"
 #include "../../components/claimed_t.hpp"
@@ -113,7 +115,15 @@ namespace systems {
 						if (finder == items.end()) {
 							std::string claimed = "";
 							if (entity.component<claimed_t>() != nullptr) claimed = " (c)";
-							items[item.item_name + claimed] = 1;
+							std::string quality = "";
+							std::string wear = "";
+
+							auto qual = entity.component<item_quality_t>();
+							auto wr = entity.component<item_wear_t>();
+							if (qual) quality = std::string(" (") + qual->get_quality_text() + std::string(" quality)");
+							if (wr) wear = std::string(" (") + wr->get_wear_text();
+
+							items[item.item_name + claimed + quality + wear] = 1;
 						}
 						else {
 							++finder->second;
