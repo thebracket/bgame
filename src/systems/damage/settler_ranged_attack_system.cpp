@@ -14,6 +14,7 @@
 #include "../../global_assets/rng.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
+#include "../../components/items/item_quality.hpp"
 
 namespace systems {
 	namespace settler_ranged_attack {
@@ -47,6 +48,7 @@ namespace systems {
 				int weapon_n = 1;
 				int weapon_d = 4;
 				int weapon_mod = 0;
+				int weapon_quality = 0;
 				if (weapon_id != 0) {
 					auto weapon_component = entity(weapon_id)->component<item_t>();
 					if (weapon_component) {
@@ -54,6 +56,9 @@ namespace systems {
 						if (weapon_finder != nullptr) {
 							weapon_name = weapon_finder->name;
 						}
+						auto q = entity(weapon_id)->component<item_quality_t>();
+						if (q && q->quality > 3) ++weapon_quality;
+						if (q && q->quality == 7) ++weapon_quality;
 					}
 				}
 				if (ammo_id != 0) {
@@ -74,10 +79,10 @@ namespace systems {
 				LOG ss;
 				ss.settler_name(msg.attacker)->text(" attacks ")->other_name(msg.victim)->text(" with their ")->col(color_t{ 1.0f, 1.0f, 0.0f })->text(weapon_name + std::string(". "))->col(color_t{ 1.0f, 1.0f, 1.0f });
 				const int skill_modifier = get_skill_modifier(*attacker_stats, "Ranged Attacks");
-				const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->dexterity + skill_modifier);
+				const int die_roll = rng.roll_dice(1, 20) + stat_modifier(attacker_stats->dexterity + skill_modifier) + weapon_quality;
 				const int armor_class = calculate_armor_class(*defender);
 				if (die_roll > armor_class) {
-					const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier);
+					const int damage = std::max(1, rng.roll_dice(weapon_n, weapon_d) + weapon_mod + stat_modifier(attacker_stats->strength) + skill_modifier) + weapon_quality;
 					ss.text("The attack hits for " + std::to_string(damage) + " points of damage.");
 					damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.victim, damage, weapon_name });
 					gain_skill_from_success(msg.attacker, *attacker_stats, "Ranged Attacks", armor_class, rng);
