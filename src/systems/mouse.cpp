@@ -4,6 +4,7 @@
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../bengine/main_window.hpp"
 #include "../render_engine/render_engine.hpp"
+#include "../render_engine/renderbuffers.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../ascii_engine/ascii_mode.hpp"
 #include "../planet/region/region.hpp"
@@ -49,7 +50,12 @@ namespace systems {
 			mouse_wz = static_cast<int>(pixels[1] + 0.6f);
 			mouse_wy = static_cast<int>(pixels[2] + 0.5f);
 
-			//std::cout << mouse_wx << " / " << mouse_wy << " / " << mouse_wz << "\n";
+			if (mouse_wx < 1) mouse_wx = 1;
+			if (mouse_wx > REGION_WIDTH - 1) mouse_wx = REGION_WIDTH - 1;
+			if (mouse_wy < 1) mouse_wy = 1;
+			if (mouse_wy > REGION_HEIGHT - 1) mouse_wy = REGION_HEIGHT - 1;
+			if (mouse_wz < 1) mouse_wz = 1;
+			if (mouse_wz > REGION_DEPTH - 1) mouse_wz = REGION_DEPTH - 1;
 		}
 	}
 

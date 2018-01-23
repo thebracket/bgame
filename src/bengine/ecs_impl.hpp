@@ -2,7 +2,7 @@
 
 #include "cereal_include.hpp"
 #include <cereal/types/memory.hpp>
-#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/map.hpp>
 #include <cereal/types/bitset.hpp>
 #include <cereal/types/vector.hpp>
 #include <queue>
@@ -26,12 +26,6 @@ namespace bengine {
 
         template <class C>
         inline C * component(ecs &ECS, entity_t &E) noexcept;
-
-        template<class MSG>
-        inline void subscribe(ecs &ECS, base_system &B, std::function<void(MSG &message)> destination);
-
-        template<class MSG>
-        inline void subscribe_mbox(ecs &ECS, base_system &B);
 
         inline void unset_component_mask(ecs &ECS, const std::size_t id, const std::size_t family_id, bool delete_if_empty=false);
     }
@@ -328,7 +322,7 @@ namespace bengine {
         virtual void configure() {}
         virtual void update(const double duration_ms)=0;
         std::string system_name = "Unnamed System";
-        std::unordered_map<std::size_t, std::unique_ptr<impl::subscription_mailbox_t>> mailboxes;
+        std::map<std::size_t, std::unique_ptr<impl::subscription_mailbox_t>> mailboxes;
 
         template<class MSG>
         void subscribe(ecs &ECS, std::function<void(MSG &message)> destination) {
@@ -555,7 +549,7 @@ namespace bengine {
          * This should be called periodically to actually erase all entities and components that are marked as deleted.
          */
         inline void ecs_garbage_collect() {
-            std::unordered_set<std::size_t> entities_to_delete;
+            std::set<std::size_t> entities_to_delete;
 
             // Ensure that components are marked as deleted, and list out entities for erasure
             for (auto it=entity_store.begin(); it!=entity_store.end(); ++it) {
@@ -586,10 +580,7 @@ namespace bengine {
         std::vector<std::unique_ptr<impl::base_component_store>> component_store;
 
         // The ECS entity store
-        std::unordered_map<std::size_t, entity_t> entity_store;
-
-        // Mailbox system
-        std::vector<std::unique_ptr<impl::subscription_base_t>> pubsub_holder;
+        std::map<std::size_t, entity_t> entity_store;
 
         // Storage of systems
         std::vector<std::unique_ptr<base_system>> system_store;

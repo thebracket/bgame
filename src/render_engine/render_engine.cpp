@@ -153,6 +153,7 @@ namespace render {
 		if (!ssao_setup) {
 			setup_ssao();
 		}
+		swap_buffers(); // Cheap double-buffering to speed up glRead back speed.
 
 		// Handle building all of our GL buffers
 		update_buffers();
@@ -166,7 +167,7 @@ namespace render {
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
         glCheckError();
-		render_voxel_models(gbuffer.get(), camera_projection_matrix, camera_modelview_matrix);
+		render_voxel_models(gbuffer, camera_projection_matrix, camera_modelview_matrix);
 		glCheckError();
 		render_water(camera_projection_matrix, camera_modelview_matrix);
 

@@ -39,7 +39,7 @@ namespace render {
 	static unsigned int glyph_vao = 0;
 	static unsigned int glyph_vbo = 0;
 
-	static void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue, float angle=0.0f, float x_rot=0.0f, float y_rot=0.0f, float z_rot=0.0f) {
+	static inline void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue, float angle=0.0f, float x_rot=0.0f, float y_rot=0.0f, float z_rot=0.0f) {
 		auto finder = models_to_render->find(model);
 		if (finder != models_to_render->end()) {
 			finder->second.push_back(vox::instance_t{x, y, z, angle, x_rot, y_rot, z_rot, red, green, blue});
