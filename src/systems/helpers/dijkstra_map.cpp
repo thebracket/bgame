@@ -2,6 +2,7 @@
 #include "dijkstra_map.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/threadpool.h"
+#include <stack>
 
 namespace systems {
 	namespace dijkstra {
@@ -16,11 +17,11 @@ namespace systems {
 			return distance_map[idx];
 		}
 
-		inline void dm_add_candidate(std::deque<std::pair<int, int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
+		inline void dm_add_candidate(std::stack<std::pair<int, int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
 			using namespace region;
 			const int idx = mapidx(x, y, z);
 			if (water_level(idx) < 4) {
-				open_nodes.emplace_back(std::make_pair(idx, distance));
+				open_nodes.push(std::make_pair(idx, distance));
 			}
 		}
 
@@ -44,15 +45,15 @@ namespace systems {
 			std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
 
 			// Populate the open list with starting points
-			std::deque<std::pair<int, int>> open_nodes(REGION_TILES_COUNT*2);
+			std::stack<std::pair<int, int>> open_nodes;
 			for (const int &sp : starting_points) {
-				open_nodes.emplace_back(std::make_pair(sp, 0));
+				open_nodes.push(std::make_pair(sp, 0));
 			}
 
 			// Iterate open nodes list
 			while (!open_nodes.empty()) {
-				const std::pair<int, int> open_node = open_nodes.front();
-				open_nodes.pop_front();
+				const std::pair<int, int> open_node = open_nodes.top();
+				open_nodes.pop();
 
 				if (new_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
 				{
@@ -93,16 +94,15 @@ namespace systems {
 			std::fill(new_map.begin(), new_map.end(), MAX_DIJSTRA_DISTANCE);
 
 			// Populate the open list with starting points
-			std::deque<std::pair<int, int>> open_nodes;
-			open_nodes.resize(REGION_TILES_COUNT);
+			std::stack<std::pair<int, int>> open_nodes;
 			for (const int &sp : starting_points) {
-				open_nodes.emplace_back(std::make_pair(sp, 0));
+				open_nodes.push(std::make_pair(sp, 0));
 			}
 
 			// Iterate open nodes list
 			while (!open_nodes.empty()) {
-				const std::pair<int, int> open_node = open_nodes.front();
-				open_nodes.pop_front();
+				const std::pair<int, int> open_node = open_nodes.top();
+				open_nodes.pop();
 
 				if (new_map[open_node.first] > open_node.second && open_node.second < MAX_DIJSTRA_DISTANCE)
 				{
