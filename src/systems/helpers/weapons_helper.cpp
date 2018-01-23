@@ -15,6 +15,7 @@
 #include "../../raws/clothing.hpp"
 #include "../../raws/defs/clothing_t.hpp"
 #include "../ai/inventory_system.hpp"
+#include "../../components/items/item_quality.hpp"
 
 namespace weapons {
 
@@ -104,6 +105,11 @@ namespace weapons {
 				auto finder = get_clothing_by_tag(i.item_tag);
 				if (finder) {
 					ac += finder->armor_class + get_material(i.material)->ac_bonus;
+				}
+				auto quality = e.component<item_quality_t>();
+				if (quality) {
+					if (quality->quality > 3) ++ac;
+					if (quality->quality == 7) ++ac; // Extra bonus for masterwork
 				}
 			}
 		});
