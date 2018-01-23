@@ -184,6 +184,12 @@
     <Filter Include="Header Files\components\item_tags">
       <UniqueIdentifier>{3042033d-a2b2-4ecf-97f6-4ee30d44dcfc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\components\items">
+      <UniqueIdentifier>{6b814140-3401-4e60-bf75-8367983df04b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\items">
+      <UniqueIdentifier>{1c3713cb-6a5f-4615-83b0-b726116fbffb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -247,9 +253,6 @@
       <Filter>Source Files\components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\components\game_stats.cpp">
-      <Filter>Source Files\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\components\item.cpp">
       <Filter>Source Files\components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\components\logger.cpp">
@@ -723,6 +726,9 @@
     <ClCompile Include="..\..\src\bengine\imgui_tabs.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\components\items\item.cpp">
+      <Filter>Source Files\components\items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -885,15 +891,6 @@
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\initiative.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\item.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\item_carried.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\item_stored.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\lever.hpp">
@@ -1612,6 +1609,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\item_tags\item_spice_t.hpp">
       <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\items\item.hpp">
+      <Filter>Header Files\components\items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\items\item_carried.hpp">
+      <Filter>Header Files\components\items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\items\item_stored.hpp">
+      <Filter>Header Files\components\items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

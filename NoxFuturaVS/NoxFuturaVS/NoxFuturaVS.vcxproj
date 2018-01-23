@@ -157,7 +157,7 @@
     <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
     <ClCompile Include="..\..\src\components\calendar.cpp" />
     <ClCompile Include="..\..\src\components\game_stats.cpp" />
-    <ClCompile Include="..\..\src\components\item.cpp" />
+    <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />
     <ClCompile Include="..\..\src\components\species.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_building.cpp" />
@@ -396,9 +396,9 @@
     <ClInclude Include="..\..\src\components\helpers\standing_orders.hpp" />
     <ClInclude Include="..\..\src\components\helpers\unbuild_t.hpp" />
     <ClInclude Include="..\..\src\components\initiative.hpp" />
-    <ClInclude Include="..\..\src\components\item.hpp" />
-    <ClInclude Include="..\..\src\components\item_carried.hpp" />
-    <ClInclude Include="..\..\src\components\item_stored.hpp" />
+    <ClInclude Include="..\..\src\components\items\item.hpp" />
+    <ClInclude Include="..\..\src\components\items\item_carried.hpp" />
+    <ClInclude Include="..\..\src\components\items\item_stored.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_ammo_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_bone_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_chopping_t.hpp" />

@@ -2,7 +2,7 @@
 #include "door_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../components/item.hpp"
+#include "../../components/items/item.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"

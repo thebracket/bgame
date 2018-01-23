@@ -7,7 +7,7 @@
 #include "../helpers/weapons_helper.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/natural_attacks_t.hpp"
-#include "../../components/item.hpp"
+#include "../../components/items/item.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"

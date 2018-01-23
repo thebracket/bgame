@@ -6,7 +6,7 @@
 #include "../../physics/movement_system.hpp"
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../distance_map_system.hpp"
-#include "../../../components/item.hpp"
+#include "../../../components/items/item.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/game_stats.hpp"
 #include "../../../raws/raws.hpp"
@@ -17,8 +17,8 @@
 #include "../../../global_assets/rng.hpp"
 #include "../../../bengine/path_finding.hpp"
 #include "../../helpers/pathfinding.hpp"
-#include "../../../components/item_stored.hpp"
-#include "../../../components/item_carried.hpp"
+#include "../../../components/items/item_stored.hpp"
+#include "../../../components/items/item_carried.hpp"
 #include "../inventory_system.hpp"
 
 template<typename TAG>

@@ -4,7 +4,7 @@
 #include "../../components/game_stats.hpp"
 #include "../../components/position.hpp"
 #include "../helpers/weapons_helper.hpp"
-#include "../../components/item.hpp"
+#include "../../components/items/item.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"

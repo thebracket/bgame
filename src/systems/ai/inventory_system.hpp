@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "../../components/item.hpp"
-#include "../../components/item_carried.hpp"
+#include "../../components/items/item.hpp"
+#include "../../components/items/item_carried.hpp"
 #include "../../global_assets/game_building.hpp"
 
 namespace systems {

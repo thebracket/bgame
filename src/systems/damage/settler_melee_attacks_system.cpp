@@ -5,7 +5,7 @@
 #include "../helpers/weapons_helper.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
-#include "../../components/item.hpp"
+#include "../../components/items/item.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "../../components/logger.hpp"

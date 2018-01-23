@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../stdafx.h"
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
+#include "../../bengine/ecs_impl.hpp"
 
 enum item_location_t { INVENTORY, HEAD, TORSO, LEGS, FEET, EQUIP_TOOL, EQUIP_MELEE, EQUIP_RANGED, EQUIP_AMMO, EQUIP_SHIELD };
 

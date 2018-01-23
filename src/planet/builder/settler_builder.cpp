@@ -5,7 +5,7 @@
 #include "../../components/name.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../components/renderable_composite.hpp"
-#include "../../components/item.hpp"
+#include "../../components/items/item.hpp"
 #include "../../bengine/string_utils.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/health_factory.hpp"
@@ -17,7 +17,7 @@
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../components/sleep_clock_t.hpp"
-#include "../../components/item_carried.hpp"
+#include "../../components/items/item_carried.hpp"
 #include "../../raws/defs/profession_t.hpp"
 #include "../../raws/defs/civilization_t.hpp"
 

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../stdafx.h"
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "../raws/items.hpp"
-#include "../bengine/color_t.hpp"
-#include "../bengine/ecs_impl.hpp"
+#include "../../raws/items.hpp"
+#include "../../bengine/color_t.hpp"
+#include "../../bengine/ecs_impl.hpp"
 
 enum item_type_t {CLOTHING,ITEM};
 

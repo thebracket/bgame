@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "item.hpp"
-#include "../raws/clothing.hpp"
-#include "../raws/defs/clothing_t.hpp"
-#include "../raws/defs/item_def_t.hpp"
-#include "../raws/raws.hpp"
-#include "../raws/materials.hpp"
-#include "../global_assets/rng.hpp"
+#include "../../raws/clothing.hpp"
+#include "../../raws/defs/clothing_t.hpp"
+#include "../../raws/defs/item_def_t.hpp"
+#include "../../raws/raws.hpp"
+#include "../../raws/materials.hpp"
+#include "../../global_assets/rng.hpp"
 
 bengine::color_t colname_to_col(const std::string &col)
 {

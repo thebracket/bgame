@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../stdafx.h"
-#include "../components/item_carried.hpp"
+#include "../components/items/item_carried.hpp"
 #include "defs/item_def_t.hpp"
 
 // Initializer

@@ -9,7 +9,7 @@
 #include "../../bengine/string_utils.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/game_stats.hpp"
-#include "../../components/item.hpp"
+#include "../../components/items/item.hpp"
 #include "../../components/renderable.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../components/initiative.hpp"
@@ -21,7 +21,7 @@
 #include "../../raws/defs/raw_creature_t.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../components/riding_t.hpp"
-#include "../../components/item_carried.hpp"
+#include "../../components/items/item_carried.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../bengine/telemetry.hpp"
 

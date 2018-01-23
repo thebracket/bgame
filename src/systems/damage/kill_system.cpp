@@ -2,7 +2,7 @@
 #include "kill_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/position.hpp"
-#include "../../components/item_carried.hpp"
+#include "../../components/items/item_carried.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/name.hpp"
 #include "../../components/renderable.hpp"

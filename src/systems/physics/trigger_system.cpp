@@ -17,7 +17,7 @@
 #include "../../components/grazer_ai.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/name.hpp"
-#include "../../components/item_stored.hpp"
+#include "../../components/items/item_stored.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
