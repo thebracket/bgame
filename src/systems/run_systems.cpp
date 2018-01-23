@@ -47,6 +47,7 @@
 #include "overworld/settler_spawner_system.hpp"
 #include "physics/gravity_system.hpp"
 #include "physics/door_system.hpp"
+#include "physics/item_wear_system.hpp"
 #include "damage/settler_ranged_attack_system.hpp"
 #include "damage/settler_melee_attacks_system.hpp"
 #include "damage/sentient_attacks_system.hpp"
@@ -142,6 +143,7 @@ namespace systems {
 	constexpr int DESIGN_MINING_SYSTEM = 64;
 	constexpr int DESIGN_STOCKPILES_SYSTEM = 65;
 	constexpr int WORKFLOW_UI_SYSTEM = 66;
+	constexpr int ITEM_WEAR_SYSTEM = 67;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -231,6 +233,7 @@ namespace systems {
 		system_names[DESIGN_MINING_SYSTEM] = "Design - Mining";
 		system_names[DESIGN_STOCKPILES_SYSTEM] = "Design - Stockpiles";
 		system_names[WORKFLOW_UI_SYSTEM] = "Workflow UI";
+		system_names[ITEM_WEAR_SYSTEM] = "Item Wear System";
 		game_master_mode = PLAY;
     }
 
@@ -309,7 +312,8 @@ namespace systems {
 			if (hour_elapsed) run_system(healing_system::run, duration_ms, HEALING_SYSTEM);
 			run_system(topology::run, duration_ms, TOPOLOGY_SYSTEM);
 			run_system(visibility::run, duration_ms, VISIBILITY_SYSTEM);
-			run_system(vegetation::run, duration_ms, VEGETATION_SYSTEM);			
+			run_system(vegetation::run, duration_ms, VEGETATION_SYSTEM);
+			if (day_elapsed) run_system(item_wear::run, duration_ms, ITEM_WEAR_SYSTEM);
         }
 		run_system(design_mode::run, duration_ms, DESIGN_MODE_SYSTEM);
 		if (game_master_mode == DESIGN) {

@@ -729,6 +729,9 @@
     <ClCompile Include="..\..\src\components\items\item.cpp">
       <Filter>Source Files\components\items</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\physics\item_wear_system.cpp">
+      <Filter>Source Files\systems\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1618,6 +1621,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\items\item_stored.hpp">
       <Filter>Header Files\components\items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\items\item_quality.hpp">
+      <Filter>Header Files\components\items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\items\item_wear.hpp">
+      <Filter>Header Files\components\items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\physics\item_wear_system.hpp">
+      <Filter>Header Files\systems\physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

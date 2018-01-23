@@ -303,6 +303,7 @@
     <ClCompile Include="..\..\src\systems\physics\explosive_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\fluid_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\gravity_system.cpp" />
+    <ClCompile Include="..\..\src\systems\physics\item_wear_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\movement_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\topology_system.cpp" />
     <ClCompile Include="..\..\src\systems\physics\trigger_system.cpp" />
@@ -398,7 +399,9 @@
     <ClInclude Include="..\..\src\components\initiative.hpp" />
     <ClInclude Include="..\..\src\components\items\item.hpp" />
     <ClInclude Include="..\..\src\components\items\item_carried.hpp" />
+    <ClInclude Include="..\..\src\components\items\item_quality.hpp" />
     <ClInclude Include="..\..\src\components\items\item_stored.hpp" />
+    <ClInclude Include="..\..\src\components\items\item_wear.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_ammo_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_bone_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_chopping_t.hpp" />
@@ -599,6 +602,7 @@
     <ClInclude Include="..\..\src\systems\physics\explosive_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\fluid_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\gravity_system.hpp" />
+    <ClInclude Include="..\..\src\systems\physics\item_wear_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\movement_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\topology_system.hpp" />
     <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp" />
