@@ -121,17 +121,16 @@ namespace render {
 	}
 
 	static void build_voxel_items() {
-		bengine::each<item_t, position_t>([](bengine::entity_t &e, item_t &i, position_t &pos) {
-			auto item_def = get_item_def(i.item_tag);
-			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z && item_def) {
-				if (item_def->voxel_model > 0) {
+		bengine::each<renderable_t, position_t>([](bengine::entity_t &e, renderable_t &r, position_t &pos) {
+			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
+				if (r.vox > 0) {
 					auto x = (float)pos.x;
 					const auto y = (float)pos.z;
 					auto z = (float)pos.y;
-					add_voxel_model(item_def->voxel_model, x, y, z, 1.0f, 1.0f, 1.0f);
+					add_voxel_model(r.vox, x, y, z, 1.0f, 1.0f, 1.0f);
 				}
-				else if (item_def->glyph > 0) {
-					glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, item_def->fg, item_def->glyph_ascii });
+				else if (r.glyph_ascii > 0) {
+					glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, r.foreground, r.glyph });
 				}
 			}
 		});

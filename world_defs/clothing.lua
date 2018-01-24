@@ -6,8 +6,9 @@ clothing = {
 		colors = {"black", "blue"},
 		description = "A black helmet with bat-ear protrusions and a face-mask. Be the hero Cordex needs!",
 		ac = 0.5,
-		glyph = 368,
-		layer = voxelId("clothes_batman_hat")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_batman_hat"),
+		vox = voxelId("ground_helmet")
 	},
 	police_hat = {
 		name = "Police Hat",
@@ -15,8 +16,9 @@ clothing = {
 		colors = {"black", "blue"},
 		description = "A black, flat hat. Typically part of a uniform.",
 		ac = 0.5,
-		glyph = 369,
-		layer = voxelId("clothes_police_hat")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_police_hat"),
+		vox = voxelId("ground_helmet")
 	},
 	cat_ears = {
 		name = "Cat Ears",
@@ -24,8 +26,9 @@ clothing = {
 		colors = {"black"},
 		description = "Clip on, prosthetic cat ears (not made from a real cat).",
 		ac = 0.5,
-		glyph = 370,
-		layer = voxelId("clothes_cat_ears")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_cat_ears"),
+		vox = voxelId("ground_helmet")
 	},
 	tiara = {
 		name = "Tiara",
@@ -33,8 +36,9 @@ clothing = {
 		colors = {"white"},
 		description = "Plastic tiara, perfect for your wannabe princess.",
 		ac = 0.5,
-		glyph = 371,
-		layer = voxelId("clothes_tiara")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_tiara"),
+		vox = voxelId("ground_helmet")
 	},
 
 	-- Torso wear
@@ -44,8 +48,9 @@ clothing = {
 		colors = {"white"},
 		description = "A nice shirt with a collar and button-up cuffs. Ideal for the office.",
 		ac = 0.5,
-		glyph = 372,
-		layer = voxelId("clothes_formal_shirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_formal_shirt"),
+		vox = voxelId("ground_shirt")
 	},
 	formal_blouse = {
 		name = "Formal Blouse",
@@ -53,8 +58,9 @@ clothing = {
 		colors = {"white"},
 		description = "A nice blouse with a collar and button-up cuffs. Ideal for the office.",
 		ac = 0.5,
-		glyph = 373,
-		layer = voxelId("clothes_formal_shirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_formal_shirt"),
+		vox = voxelId("ground_shirt")
 	},
 	bathrobe = {
 		name = "Bathrobe",
@@ -62,8 +68,9 @@ clothing = {
 		colors = {"red", "blue", "yellow"},
 		description = "A comfortable, silk bath-robe. Ideal for running a sleazy mansion, pretending to be a wizard, or taking a bath.",
 		ac = 0.5,
-		glyph = 374,
-		layer = voxelId("clothes_bathrobe")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_bathrobe"),
+		vox = voxelId("ground_shirt")
 	},
 	spandex_shirt = {
 		name = "Spandex Shirt",
@@ -71,8 +78,9 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green"},
 		description = "A tight, spandex shirt. Ideal for the gymnasium, or unleashing your inner super-hero.",
 		ac = 0.5,
-		glyph = 375,
-		layer = voxelId("clothes_spandex_shirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_spandex_shirt"),
+		vox = voxelId("ground_shirt")
 	},
 	spandex_blouse = {
 		name = "Spandex Blouse",
@@ -80,8 +88,9 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green"},
 		description = "A tight, spandex blouse. Ideal for the gymnasium, or unleashing your inner super-hero.",
 		ac = 0.5,
-		glyph = 376,
-		layer = voxelId("clothes_spandex_shirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_spandex_shirt"),
+		vox = voxelId("ground_shirt")
 	},
 	sports_shirt = {
 		name = "Sports Shirt",
@@ -89,8 +98,9 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "yellow"},
 		description = "A sporting shirt, showing the colors of your favorite team.",
 		ac = 0.5,
-		glyph = 377,
-		layer = voxelId("clothes_sports_shirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_sports_shirt"),
+		vox = voxelId("ground_shirt")
 	},
 	t_shirt = {
 		name = "T-Shirt",
@@ -98,8 +108,9 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "yellow"},
 		description = "A sleeveless T-shirt, with a witty message on it.",
 		ac = 0.5,
-		glyph = 378,
-		layer = voxelId("clothes_tshirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_tshirt"),
+		vox = voxelId("ground_shirt")
 	},
 
 	-- Legwear
@@ -109,8 +120,9 @@ clothing = {
 		colors = {"grey", "khaki", "blue", "navy", "black"},
 		description = "A pair of sturdy trousers, featuring many pockets. Practical and comfortable, and who knows what will be found in the pockets?",
 		ac = 0.5,
-		glyph = 379,
-		layer = voxelId("clothes_cargopants")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_cargopants"),
+		vox = voxelId("ground_pants")
 	},
 	long_skirt = {
 		name = "Long Skirt",
@@ -118,8 +130,9 @@ clothing = {
 		colors = {"grey", "khaki", "blue", "navy", "black"},
 		description = "A formal skirt, covering from waist to knees.",
 		ac = 0.5,
-		glyph = 380,
-		layer = voxelId("clothes_longskirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_longskirt"),
+		vox = voxelId("ground_pants")
 	},
 	hawaiian_shorts = {
 		name = "Hawaiian Shorts",
@@ -127,8 +140,9 @@ clothing = {
 		colors = {"red", "yellow", "blue", "green", "pink"},
 		description = "A pair of silky shorts, colored to ensure visibility even from orbit. Never lose your waist again.",
 		ac = 0.5,
-		glyph = 381,
-		layer = voxelId("clothes_hawaiian_shorts")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_hawaiian_shorts"),
+		vox = voxelId("ground_pants")
 	},
 	sports_shorts = {
 		name = "Sports Shorts",
@@ -136,8 +150,9 @@ clothing = {
 		colors = {"red", "yellow", "blue", "green", "pink"},
 		description = "A pair of sporting shorts, ideal for exercise, running away, or following your favorite team.",
 		ac = 0.5,
-		glyph = 381,
-		layer = voxelId("clothes_hawaiian_shorts")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_hawaiian_shorts"),
+		vox = voxelId("ground_pants")
 	},
 	spandex_pants = {
 		name = "Spandex Pants",
@@ -145,8 +160,9 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green"},
 		description = "Tight, spandex pants. Show off your legs, or horrify your neighbors.",
 		ac = 0.5,
-		glyph = 383,
-		layer = voxelId("clothes_spandex_pants")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_spandex_pants"),
+		vox = voxelId("ground_pants")
 	},
 	miniskirt = {
 		name = "Miniskirt",
@@ -154,8 +170,9 @@ clothing = {
 		colors = {"red", "blue", "yellow", "grey", "green", "grey", "black", "white"},
 		description = "A short skirt, leaving little to the imagination.",
 		ac = 0.5,
-		glyph = 382,
-		layer = voxelId("clothes_miniskirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_miniskirt"),
+		vox = voxelId("ground_pants")
 	},
 
 	-- Footwear
@@ -165,8 +182,9 @@ clothing = {
 		colors = {"brown", "black"},
 		description = "A pair of sturdy leather shoes. Very boring, and very practical.",
 		ac = 1.0,
-		glyph = 384,
-		layer = voxelId("clothes_shoes")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_shoes"),
+		vox = voxelId("ground_shoes")
 	},
 	sandals = {
 		name = "Sandals",
@@ -174,8 +192,9 @@ clothing = {
 		colors = {"brown", "black"},
 		description = "A pair of sandals, offering minimal protection to the feet and freeing the wearer from the tyranny of shoelaces.",
 		ac = 0.5,
-		glyph = 384,
-		layer = voxelId("clothes_shoes")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_shoes"),
+		vox = voxelId("ground_shoes")
 	},
 	combat_boots = {
 		name = "Combat Boots",
@@ -183,8 +202,9 @@ clothing = {
 		colors = {"brown", "black"},
 		description = "Practical leather boots, with reinforced ankles. Kick some butt. Available in a wide range of TactiCool(TM) designs.",
 		ac = 1.0,
-		glyph = 384,
-		layer = voxelId("clothes_boots")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_boots"),
+		vox = voxelId("ground_shoes")
 	},
 	high_boots = {
 		name = "High Boots",
@@ -192,8 +212,9 @@ clothing = {
 		colors = {"brown", "black", "red", "green", "yellow"},
 		description = "Leather boots that come up over the knee. Great for fishing, looking good, or kicking some butt.",
 		ac = 1.0,
-		glyph = 384,
-		layer = voxelId("clothes_boots")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_boots"),
+		vox = voxelId("ground_shoes")
 	},
 	sneakers = {
 		name = "Sneakers",
@@ -201,8 +222,9 @@ clothing = {
 		colors = {"brown", "black", "red", "green", "yellow"},
 		description = "Comfortable running shoes, complete with oxygenated layer to protect your feet and a patented No-Stink technology.",
 		ac = 0.5,
-		glyph = 384,
-		layer = voxelId("clothes_shoes")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_shoes"),
+		vox = voxelId("ground_shoes")
 	},
 
 	-- Stone-age clothing
@@ -211,8 +233,9 @@ clothing = {
 		slot = "torso",
 		colors = {"brown", "black", "grey"},
 		description = "A simple tunic.",
-		ac = 1.0, glyph = 378,
-		layer = voxelId("clothes_simple_tunic")
+		ac = 1.0, glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_simple_tunic"),
+		vox = voxelId("ground_shirt")
 	},
 	britches = {
 		name = "Britches",
@@ -220,8 +243,9 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A simple pair of pants.",
 		ac = 1.0,
-		glyph = 379,
-		layer = voxelId("clothes_britches_simple")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_britches_simple"),
+		vox = voxelId("ground_pants")
 	},
 	skirt_simple = {
 		name = "Simple Skirt",
@@ -229,8 +253,10 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A simple skirt.",
 		ac = 1.0,
-		glyph = 382,
-		layer = voxelId("clothes_longskirt")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_longskirt"),
+		vox = voxelId("ground_shirt"),
+		vox = voxelId("ground_pants")
 	},
 	sandals = {
 		name = "Sandals",
@@ -238,8 +264,9 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "A simple pair of sandals.",
 		ac = 1.0,
-		glyph = 384,
-		layer = voxelId("clothes_shoes")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_shoes"),
+		vox = voxelId("ground_shoes")
 	},
 	cap = {
 		name = "Armored Cap",
@@ -247,7 +274,9 @@ clothing = {
 		colors = {"brown", "black", "grey"},
 		description = "An armored cap, offering minimal head protection.",
 		ac = 1.5,
-		layer = voxelId("clothes_cap_simple")
+		glyph = glyphs['left_square_bracket'],
+		layer = voxelId("clothes_cap_simple"),
+		vox = voxelId("ground_helmet")
 	},
 
 	-- Bronze age clothing
@@ -256,21 +285,27 @@ clothing = {
 		slot = "torso",
 		colors = {"brown", "black", "grey", "red", "blue", "green"},
 		description = "A leather tunic with rings of metal attached for protection.",
-		ac = 2.0
+		glyph = glyphs['left_square_bracket'],
+		ac = 2.0,
+		vox = voxelId("ground_shirt")
 	},
 	helm = {
 		name = "Helm",
 		slot = "head",
 		colors = {"brown", "black", "yellow"},
 		description = "A full-face helmet.",
-		ac = 2.5
+		ac = 2.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_helmet")
 	},
 	breastplate = {
 		name = "Breastplate",
 		slot = "torso",
 		colors = {"yellow"},
 		description = "A hard metal breastplate, backed by hardened leather.",
-		ac = 2.5
+		ac = 2.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
 	},
 
 	ringmail_leggings = {
@@ -278,7 +313,9 @@ clothing = {
 		slot = "legs",
 		colors = {"brown", "yellow"},
 		description = "Leggings, covered in metal rings for added protection.",
-		ac = 2.0
+		ac = 2.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
 	},
 
 	-- Early Iron-age clothing
@@ -288,7 +325,9 @@ clothing = {
         colors = {"red", "blue", "yellow"},
         description = "A simple cloth wrap. Strangely popular at parties.",
         ac = 0.5,
-        glyph = 374
+		glyph = 374,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     leg_wraps = {
@@ -297,7 +336,8 @@ clothing = {
         colors = {"grey", "khaki", "blue", "navy", "black"},
         description = "Strips of cloth, wrapped around the legs for warmth and protection.",
         ac = 0.5,
-        glyph = 379
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
     helm_roman_galea = {
@@ -305,7 +345,9 @@ clothing = {
         slot = "head",
         colors = {"brown", "black", "yellow"},
         description = "A helmet featuring layered metal and cheek protection.",
-        ac = 3.0
+		ac = 3.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_helmet")
     },
 
     banded_armor = {
@@ -313,7 +355,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Strips of metal, bent around the torso and layered for extra protection.",
-        ac = 3.5
+		ac = 3.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     scalemail_armor = {
@@ -321,7 +365,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Fish-scale shaped pieces of metal, sewn together on a leather backing.",
-        ac = 3.0
+		ac = 3.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     scalemail_leggings = {
@@ -329,7 +375,9 @@ clothing = {
         slot = "legs",
         colors = {"yellow", "grey"},
         description = "Fish-scale shaped pieces of metal, sewn together on a leather backing.",
-        ac = 3.0
+		ac = 3.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
     chainmail_shirt = {
@@ -337,7 +385,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Interlocking loops of metal, meshed into armor.",
-        ac = 3.5
+		ac = 3.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     chainmail_leggings = {
@@ -345,7 +395,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Interlocking loops of metal, meshed into leggings.",
-        ac = 3.5
+		ac = 3.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
     chainmail_skirt = {
@@ -353,7 +405,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Interlocking loops of metal, meshed into a skirt.",
-        ac = 3.2
+		ac = 3.2,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
     chainmail_bikini = {
@@ -361,7 +415,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Interlocking loops of metal, meshed into a bikini. Ideal for ren-fests, not actually practical - and it pinches!",
-        ac = 1.5
+		ac = 1.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     -- Medieval Clothing/Armor
@@ -371,7 +427,8 @@ clothing = {
         colors = {"red", "blue", "yellow"},
         description = "A cloth coat with sleeves",
         ac = 0.5,
-        glyph = 374
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     nightcap = {
@@ -380,7 +437,8 @@ clothing = {
         colors = {"red", "blue", "yellow"},
         description = "A long cloth hat for keeping the head warm at night. Associated with Father Christmas.",
         ac = 0.5,
-        glyph = 374
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_helmet")
     },
     brocade_shirt = {
         name = "Brocade Shirt",
@@ -388,7 +446,8 @@ clothing = {
         colors = {"white"},
         description = "A loose-fitting shirt with puffy arms and decorative trimmings.",
         ac = 0.5,
-        glyph = 372
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
     brocade_blouse = {
         name = "Brocade Blouse",
@@ -396,7 +455,8 @@ clothing = {
         colors = {"white"},
         description = "A loose-fitting blouse with puffy arms and decorative trimmings.",
         ac = 0.5,
-        glyph = 373
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
     peasant_shirt = {
         name = "Peasant Shirt",
@@ -404,7 +464,8 @@ clothing = {
         colors = {"white"},
         description = "A tight-fitting shirt that shows off one's chest.",
         ac = 0.5,
-        glyph = 372
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
     peasant_blouse = {
         name = "Peasant Blouse",
@@ -412,7 +473,8 @@ clothing = {
         colors = {"white"},
         description = "A tight-fitting blouse that shows off one's chest while remaining somewhat decent. Peasents rarely actually wore this, but it's great for conventions.",
         ac = 0.5,
-        glyph = 373
+        glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     helm_bassinet = {
@@ -420,7 +482,9 @@ clothing = {
         slot = "head",
         colors = {"brown", "black", "yellow"},
         description = "A full face metal helm, with limited visibility.",
-        ac = 3.5
+		ac = 3.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_helmet")
     },
 
     great_helm = {
@@ -428,7 +492,9 @@ clothing = {
         slot = "head",
         colors = {"brown", "black", "yellow"},
         description = "A huge metal helmet, made of layered steel. The only drawback is seeing where you are going.",
-        ac = 4.0
+		ac = 4.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_helmet")
     },
 
     plate_and_chain_mail = {
@@ -436,7 +502,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Chainmail backing with metal plates over all of the strategic areas. A good compromise between being able to move and survival on the field.",
-        ac = 4.5
+		ac = 4.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     plate_and_chain_leggings = {
@@ -444,7 +512,9 @@ clothing = {
         slot = "legs",
         colors = {"yellow", "grey"},
         description = "Chainmail backing with metal plates over all of the strategic areas. A good compromise between being able to move and survival on the field.",
-        ac = 4.5
+		ac = 4.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
     plate_and_chain_swimwear = {
@@ -452,7 +522,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Chainmail backing with metal plates, but in a bikini! Look amazing at conventions, and block arrows if they happen to hit the tiny areas actually covered in metal.",
-        ac = 2.5
+		ac = 2.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     field_plate_mail = {
@@ -460,7 +532,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Interlocking metal, covering the whole body but still maintaining the ability to move.",
-        ac = 5.0
+		ac = 5.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     field_plate_mail_legs = {
@@ -468,7 +542,9 @@ clothing = {
         slot = "legs",
         colors = {"yellow", "grey"},
         description = "Interlocking metal, covering the whole body but still maintaining the ability to move.",
-        ac = 5.0
+		ac = 5.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
     full_plate_mail = {
@@ -476,7 +552,9 @@ clothing = {
         slot = "torso",
         colors = {"yellow", "grey"},
         description = "Interlocking metal, covering the upper body. Ever wanted to look like a metal turtle?",
-        ac = 5.5
+		ac = 5.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 
     full_plate_mail_legs = {
@@ -484,14 +562,18 @@ clothing = {
         slot = "legs",
         colors = {"yellow", "grey"},
         description = "Interlocking metal, covering the lower body. For the tortoise lover.",
-        ac = 5.5
+		ac = 5.5,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_pants")
     },
 
-    make_cuirass = {
+    cuirass = {
         name = "Cuirass",
         slot = "torso",
         colors = {"yellow"},
         description = "An extra-thick hard metal breastplate, backed by hardened leather.",
-        ac = 4.0
+		ac = 4.0,
+		glyph = glyphs['left_square_bracket'],
+		vox = voxelId("ground_shirt")
     },
 }

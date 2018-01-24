@@ -77,6 +77,11 @@ voxel_models = {
     clothes_simple_tunic = { model=vfn("clothes_simple_tunic"), id=72 },
     clothes_britches_simple = { model=vfn("clothes_britches_simple"), id=73 },
     clothes_cap_simple = { model=vfn("clothes_cap_simple"), id=74 },
+
+    ground_helmet = { model=vfn("ground_helmet"), id=75 },
+    ground_shirt = { model=vfn("ground_shirt"), id=76 },
+    ground_pants = { model=vfn("ground_pants"), id=77 },
+    ground_shoes = { model=vfn("ground_shoes"), id=78 },
     
 }
 
