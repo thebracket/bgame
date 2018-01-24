@@ -12,7 +12,8 @@ items["atlatl"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=0, damage_stat="str", range=6, ammo="dart", initiative_penalty = 6,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("atlatl")
 };
 
 items["blowgun"] = {
@@ -24,7 +25,8 @@ items["blowgun"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=0, damage_stat="str", range=4, ammo="dart", initiative_penalty = 6,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("pointystick")
 };
 
 items["sling"] = {
@@ -36,7 +38,8 @@ items["sling"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=0, damage_stat="str", range=4, ammo="dart", initiative_penalty = 6,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("pointystick")
 };
 
 items["dart"] = {
@@ -48,7 +51,8 @@ items["dart"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="dart",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("arrow")
 };
 
 items["sling_bullet"] = {
@@ -60,7 +64,8 @@ items["sling_bullet"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="sling_bullet",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("pointystick")
 };
 
 -- Bows
@@ -74,7 +79,8 @@ items["shortbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=0, damage_stat="dex", range=4, ammo="arrow", initiative_penalty = 4,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("bow")
 };
 
 items["composite_shortbow"] = {
@@ -86,7 +92,8 @@ items["composite_shortbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=6, ammo="arrow", initiative_penalty = 4,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("bow")
 };
 
 items["arrow"] = {
@@ -98,7 +105,8 @@ items["arrow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="arrow",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("arrow")
 };
 
 items["longbow"] = {
@@ -110,7 +118,8 @@ items["longbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=4, damage_stat="dex", range=8, ammo="arrow", initiative_penalty = 4,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("bow")
 };
 
 items["composite_longbow"] = {
@@ -122,7 +131,8 @@ items["composite_longbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=6, damage_stat="dex", range=10, ammo="arrow", initiative_penalty = 4,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("bow")
 };
 
 -- Crossbows
@@ -136,7 +146,8 @@ items["heavy_crossbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=4, damage_stat="dex", range=10, ammo="quarrel", initiative_penalty = 10,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("crossbow")
 };
 
 items["light_crossbow"] = {
@@ -148,7 +159,8 @@ items["light_crossbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=8, ammo="quarrel", initiative_penalty = 7,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("crossbow")
 };
 
 items["repeating_crossbow"] = {
@@ -160,7 +172,8 @@ items["repeating_crossbow"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=8, ammo="quarrel", initiative_penalty = 2,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("crossbow")
 };
 
 items["quarrel"] = {
@@ -172,7 +185,8 @@ items["quarrel"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, stack_size=20, ammo="quarrel",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("arrow")
 };
 
 -- Primitive Firearms
@@ -186,7 +200,8 @@ items["firelance_tube"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=8, ammo="firelance_spike", initiative_penalty = 20,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["firelance_spike"] = {
@@ -198,7 +213,8 @@ items["firelance_spike"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=2, damage_d=8, damage_mod=0, stack_size=20, ammo="firelance_spike",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("pointystick")
 };
 
 items["handcannon"] = {
@@ -210,7 +226,8 @@ items["handcannon"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=8, ammo="shot_wadding", initiative_penalty = 20,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["musket"] = {
@@ -222,7 +239,8 @@ items["musket"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=4, damage_stat="dex", range=8, ammo="shot_wadding", initiative_penalty = 10,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["flintlock_pistol"] = {
@@ -234,7 +252,8 @@ items["flintlock_pistol"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=6, ammo="shot_wadding", initiative_penalty = 8,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["wheel_lock_pistol"] = {
@@ -246,7 +265,8 @@ items["wheel_lock_pistol"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=2, damage_stat="dex", range=6, ammo="shot_wadding", initiative_penalty = 4,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["flintlock_shotgun"] = {
@@ -258,7 +278,8 @@ items["flintlock_shotgun"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=20, damage_stat="dex", range=4, ammo="shot_wadding", initiative_penalty = 8,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["blunderbuss"] = {
@@ -270,7 +291,8 @@ items["blunderbuss"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=20, damage_stat="dex", range=3, ammo="shot_wadding", initiative_penalty = 8,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["shot_wadding"] = {
@@ -282,7 +304,8 @@ items["shot_wadding"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_n=2, damage_d=8, damage_mod=0, stack_size=20, ammo="shot_wadding",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("pointystick")
 };
 
 -- Future Ranged Weapons
@@ -296,7 +319,8 @@ items["ray_pistol"] = {
     foreground = colors['wood_brown'],
     background = colors['black'],
     damage_mod=0, damage_stat="dex", range=4, ammo="smallcell", initiative_penalty = 4,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["small_energy_cell"] = {
@@ -308,5 +332,6 @@ items["small_energy_cell"] = {
     foreground = colors['red'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, stack_size=20, ammo="smallcell",
-    stockpile = stockpiles['ammo'].id
+    stockpile = stockpiles['ammo'].id,
+    vox = voxelId("pointystick")
 };

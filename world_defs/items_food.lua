@@ -43,7 +43,8 @@ items["meat"] = {
     glyph_ascii = glyphs['double_pillar'],
     foreground = colors['red'],
     background = colors['black'],
-    stockpile = stockpiles['food'].id
+    stockpile = stockpiles['food'].id,
+    vox = voxelId("meat")
 };
 
 -- Cooked Food
@@ -53,7 +54,8 @@ items["roast_simple"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['brown'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("foodplate")
 };
 
 items["wine"] = {
@@ -62,7 +64,8 @@ items["wine"] = {
     itemtype = { "drink" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("liquid")
 };
 
 ------------- Raw herb and veg
@@ -73,7 +76,8 @@ items["artichoke_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["asparagus_veg"] = {
@@ -82,7 +86,8 @@ items["asparagus_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["string_bean_veg"] = {
@@ -91,7 +96,8 @@ items["string_bean_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["broad_bean_veg"] = {
@@ -100,7 +106,8 @@ items["broad_bean_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["beetroot_veg"] = {
@@ -109,7 +116,8 @@ items["beetroot_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['purple'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["goya_veg"] = {
@@ -118,7 +126,8 @@ items["goya_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["cabbage_veg"] = {
@@ -127,7 +136,8 @@ items["cabbage_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["caper_veg"] = {
@@ -136,7 +146,8 @@ items["caper_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["carrot_veg"] = {
@@ -145,7 +156,8 @@ items["carrot_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['orange'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["cassava_veg"] = {
@@ -154,7 +166,8 @@ items["cassava_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["celery_veg"] = {
@@ -163,7 +176,8 @@ items["celery_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["chickpea_veg"] = {
@@ -172,7 +186,8 @@ items["chickpea_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["cowpea_veg"] = {
@@ -181,7 +196,8 @@ items["cowpea_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["cucumber_veg"] = {
@@ -190,7 +206,8 @@ items["cucumber_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["eggplant_veg"] = {
@@ -199,7 +216,8 @@ items["eggplant_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["cress_veg"] = {
@@ -208,7 +226,8 @@ items["cress_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["melon_veg"] = {
@@ -217,7 +236,8 @@ items["melon_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["leek_veg"] = {
@@ -226,7 +246,8 @@ items["leek_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["lentil_veg"] = {
@@ -235,7 +256,8 @@ items["lentil_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["lettuce_veg"] = {
@@ -244,7 +266,8 @@ items["lettuce_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["mung_bean_veg"] = {
@@ -253,7 +276,8 @@ items["mung_bean_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["onion_veg"] = {
@@ -262,7 +286,8 @@ items["onion_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["parsnip_veg"] = {
@@ -271,7 +296,8 @@ items["parsnip_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["pea_veg"] = {
@@ -280,7 +306,8 @@ items["pea_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["pepper_veg"] = {
@@ -289,7 +316,8 @@ items["pepper_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["potato_veg"] = {
@@ -298,7 +326,8 @@ items["potato_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["radish_veg"] = {
@@ -307,7 +336,8 @@ items["radish_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["red_bean_veg"] = {
@@ -316,7 +346,8 @@ items["red_bean_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["spinach_veg"] = {
@@ -325,7 +356,8 @@ items["spinach_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["soybean_veg"] = {
@@ -334,7 +366,8 @@ items["soybean_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["squash_veg"] = {
@@ -343,7 +376,8 @@ items["squash_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["sweet_potato_veg"] = {
@@ -352,7 +386,8 @@ items["sweet_potato_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['orange'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["tomato_veg"] = {
@@ -361,7 +396,8 @@ items["tomato_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['red'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["tomatillo_veg"] = {
@@ -370,7 +406,8 @@ items["tomatillo_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["turnip_veg"] = {
@@ -379,7 +416,8 @@ items["turnip_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["watermelon_veg"] = {
@@ -388,7 +426,8 @@ items["watermelon_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["yam_veg"] = {
@@ -397,7 +436,8 @@ items["yam_veg"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['yellow'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["strawberry_fruit"] = {
@@ -406,7 +446,8 @@ items["strawberry_fruit"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['red'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["bambara_nut"] = {
@@ -415,7 +456,8 @@ items["bambara_nut"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['red'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["peanut_nut"] = {
@@ -424,7 +466,8 @@ items["peanut_nut"] = {
     itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['brown'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["chickory_herb"] = {
@@ -433,7 +476,8 @@ items["chickory_herb"] = {
     itemtype = { "spice" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['brown'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["garlic_herb"] = {
@@ -442,7 +486,8 @@ items["garlic_herb"] = {
     itemtype = { "spice" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['brown'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["rhubarb_herb"] = {
@@ -451,7 +496,8 @@ items["rhubarb_herb"] = {
     itemtype = { "spice" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['brown'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["lavendar_herb"] = {
@@ -460,7 +506,8 @@ items["lavendar_herb"] = {
     itemtype = { "spice" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['purple'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };
 
 items["sage_herb"] = {
@@ -469,5 +516,6 @@ items["sage_herb"] = {
     itemtype = { "spice" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['green'], background=colors['black'],
-    stockpile=stockpiles['food']
+    stockpile=stockpiles['food'],
+    vox = voxelId("veggie")
 };

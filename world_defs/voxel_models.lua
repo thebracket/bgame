@@ -82,7 +82,40 @@ voxel_models = {
     ground_shirt = { model=vfn("ground_shirt"), id=76 },
     ground_pants = { model=vfn("ground_pants"), id=77 },
     ground_shoes = { model=vfn("ground_shoes"), id=78 },
-    
+
+    meat = { model=vfn("meat"), id=79 },
+    foodplate = { model=vfn("foodplate"), id=80 },
+    liquid = { model=vfn("liquid"), id=81 },
+    veggie = { model=vfn("veggie"), id=82 },
+
+    table = { model=vfn("table"), id=83 },
+    chair = { model=vfn("chair"), id=84 },
+    door_ground = { model=vfn("door_ground"), id=85 },
+    bed = { model=vfn("bed"), id=86 },
+    axeblade = { model=vfn("axeblade"), id=87 },
+    lathe = { model=vfn("lathe"), id=88 },
+    hay = { model=vfn("hay"), id=89 },
+    thread = { model=vfn("thread"), id=90 },
+    cloth = { model=vfn("cloth"), id=91 },
+    paper = { model=vfn("paper"), id=92 },
+    dung = { model=vfn("dung"), id=93 },
+    mechanism = { model=vfn("mechanism"), id=94 },
+    circuit = { model=vfn("circuit"), id=95 },
+    bone = { model=vfn("bone"), id=96 },
+    hide = { model=vfn("hide"), id=97 },
+    skull = { model=vfn("skull"), id=98 },
+    cage = { model=vfn("cage"), id=99 },
+    club = { model=vfn("club"), id=100 },
+    club_spiked = { model=vfn("club_spiked"), id=101 },
+    pointystick = { model=vfn("pointystick"), id=102 },
+    hammer = { model=vfn("hammer"), id=103 },
+    sword = { model=vfn("sword"), id=104 },
+    knife = { model=vfn("knife"), id=105 },
+    atlatl = { model=vfn("atlatl"), id=106 },
+    bow = { model=vfn("bow"), id=107 },
+    arrow = { model=vfn("arrow"), id=108 },
+    crossbow = { model=vfn("crossbow"), id=109 },
+
 }
 
 function voxelId(name)

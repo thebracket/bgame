@@ -10,7 +10,8 @@ items["mechanism"] = {
     glyph_ascii = glyphs['sigma'],
     foreground = colors['green'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("mechanism")
 };
 
 -- Circuits are the basis of a lot of electronic items.
@@ -22,5 +23,6 @@ items["circuit"] = {
     glyph_ascii = glyphs['sigma'],
     foreground = colors['yellow'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("circuit")
 };

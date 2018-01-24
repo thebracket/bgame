@@ -9,7 +9,8 @@ items["axe_blade"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("axeblade")
 };
 
 items["simple_lathe"] = {
@@ -20,7 +21,8 @@ items["simple_lathe"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("lathe")
 };
 
 items["precision_tools"] = {
@@ -33,7 +35,8 @@ items["precision_tools"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("lathe")
 };
 
 
@@ -45,7 +48,8 @@ items["smart_fabrication_controller"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("lathe")
 };
 
 items["oil_separation_tank"] = {
@@ -56,7 +60,8 @@ items["oil_separation_tank"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["hay"] = {
@@ -65,7 +70,8 @@ items["hay"] = {
     itemtype = { "feed" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['yellow'], background=colors['black'],
-    stockpile=stockpiles['fodder']
+    stockpile=stockpiles['fodder'],
+    vox = voxelId("hay")
 };
 
 items["reed_thread"] = {
@@ -74,7 +80,8 @@ items["reed_thread"] = {
     itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("thread")
 };
 
 items["burlap_thread"] = {
@@ -83,7 +90,8 @@ items["burlap_thread"] = {
     itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("thread")
 };
 
 items["hemp_thread"] = {
@@ -92,7 +100,8 @@ items["hemp_thread"] = {
     itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("thread")
 };
 
 items["ramie_thread"] = {
@@ -101,7 +110,8 @@ items["ramie_thread"] = {
     itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("thread")
 };
 
 items["kenaf_thread"] = {
@@ -110,7 +120,8 @@ items["kenaf_thread"] = {
     itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("thread")
 };
 
 items["cloth"] = {
@@ -119,7 +130,8 @@ items["cloth"] = {
     itemtype = { "cloth" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("cloth")
 };
 
 items["reed_paper"] = {
@@ -128,7 +140,8 @@ items["reed_paper"] = {
     itemtype = { "thread" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['white'], background=colors['black'],
-    stockpile=stockpiles['thread']
+    stockpile=stockpiles['thread'],
+    vox = voxelId("paper")
 };
 
 items["liquified_petroleum_gas"] = {
@@ -139,7 +152,8 @@ items["liquified_petroleum_gas"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["gasolene_fuel"] = {
@@ -150,7 +164,8 @@ items["gasolene_fuel"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["naptha"] = {
@@ -161,7 +176,8 @@ items["naptha"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["lubricating_oil"] = {
@@ -172,7 +188,8 @@ items["lubricating_oil"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["paraffin_wax"] = {
@@ -183,7 +200,8 @@ items["paraffin_wax"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["tar"] = {
@@ -194,7 +212,8 @@ items["tar"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["black_powder"] = {
@@ -205,7 +224,8 @@ items["black_powder"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("powder")
 };
 
 items["nitric_acid"] = {
@@ -216,7 +236,8 @@ items["nitric_acid"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["dynamite_raw"] = {
@@ -227,7 +248,8 @@ items["dynamite_raw"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("liquid")
 };
 
 items["musket_cast"] = {
@@ -238,7 +260,8 @@ items["musket_cast"] = {
     glyph_ascii = glyphs['less_than_equal'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['component'].id
+    stockpile = stockpiles['component'].id,
+    vox = voxelId("lathe")
 };
 
 items["dung"] = {
@@ -249,5 +272,6 @@ items["dung"] = {
     glyph_ascii = glyphs['circle'],
     foreground = colors['earth_brown'],
     background = colors['black'],
-    stockpile = stockpiles['manure'].id
+    stockpile = stockpiles['manure'].id,
+    vox = voxelId("dung")
 };

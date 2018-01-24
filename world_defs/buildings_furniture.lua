@@ -68,7 +68,8 @@ buildings["table"] = {
         width=1, height=1, tiles= {
             {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
         }
-    }
+    },
+    vox=voxelId("table")
 };
 
 buildings["chair"] = {
@@ -85,7 +86,8 @@ buildings["chair"] = {
         width=1, height=1, tiles= {
             {glyph= glyphs['chair'], foreground = colors['white'], background = colors['black']}
         }
-    }
+    },
+    vox=voxelId("chair")
 };
 
 buildings["door"] = {
@@ -136,5 +138,6 @@ buildings["bed_simple"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['eight'], foreground = colors['brown'], background = colors['black']}
         }
-    }
+    },
+    vox=voxelId("bed")
 };

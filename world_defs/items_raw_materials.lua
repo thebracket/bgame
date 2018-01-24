@@ -144,7 +144,8 @@ items["ash"] = {
     glyph_ascii = glyphs['one_quarter_solid'],
     foreground = colors['grey'],
     background = colors['black'],
-    stockpile = stockpiles['powder'].id
+    stockpile = stockpiles['powder'].id,
+    vox = voxelId("powder")
 };
 
 -- Raw class is made by heating sand.
@@ -156,7 +157,8 @@ items["raw_glass"] = {
     glyph_ascii = glyphs['inset_square'],
     foreground = colors['green'],
     background = colors['black'],
-    stockpile = stockpiles['glass'].id
+    stockpile = stockpiles['glass'].id,
+    vox = voxelId("powder")
 };
 
 -- Raw silicon is also made from sand.
@@ -168,7 +170,8 @@ items["raw_silicon"] = {
     glyph_ascii = glyphs['inset_square'],
     foreground = colors['green'],
     background = colors['black'],
-    stockpile = stockpiles['silicon'].id
+    stockpile = stockpiles['silicon'].id,
+    vox = voxelId("powder")
 };
 
 -- Wood waste is a byproduct of cutting wood into blocks, and is used to make fuel.
@@ -206,7 +209,8 @@ items["bone"] = {
     glyph_ascii = glyphs['single_wall_ew'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['bone'].id
+    stockpile = stockpiles['bone'].id,
+    vox = voxelId("bone")
 };
 
 -- Animal hides
@@ -218,7 +222,8 @@ items["hide"] = {
     glyph_ascii = glyphs['single_wall_ew'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['leather'].id
+    stockpile = stockpiles['leather'].id,
+    vox = voxelId("hide")
 };
 
 -- Animal skulls
@@ -230,7 +235,8 @@ items["skull"] = {
     glyph_ascii = glyphs['happy_face'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['bone'].id
+    stockpile = stockpiles['bone'].id,
+    vox = voxelId("skull")
 };
 
 -- Tanned leather
@@ -242,5 +248,6 @@ items["leather"] = {
     glyph_ascii = glyphs['single_wall_ew'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['leather'].id
+    stockpile = stockpiles['leather'].id,
+    vox = voxelId("hide")
 };

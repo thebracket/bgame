@@ -10,7 +10,8 @@ items["cage"] = {
     glyph_ascii = glyphs['cage_ascii'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("cage")
 };
 
 -- Trap blades - used for blade traps, oddly enough.
@@ -22,7 +23,8 @@ items["trap_blade"] = {
     glyph_ascii = glyphs['clubs'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("axe_blade")
 };
 
 -- Spikes, used for everyone's favorite mincing machines
@@ -34,5 +36,6 @@ items["retractable_spike"] = {
     glyph_ascii = glyphs['three_bar'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("axe_blade")
 };

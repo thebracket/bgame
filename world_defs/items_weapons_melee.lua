@@ -12,7 +12,8 @@ items["club"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 items["spiked_club"] = {
@@ -24,7 +25,8 @@ items["spiked_club"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=2, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club_spiked")
 };
 
 items["greatclub"] = {
@@ -36,7 +38,8 @@ items["greatclub"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 -- Maces and flails - basically refined clubs
@@ -50,7 +53,8 @@ items["mace_light"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 items["mace_heavy"] = {
@@ -62,7 +66,8 @@ items["mace_heavy"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 items["morningstar"] = {
@@ -74,7 +79,8 @@ items["morningstar"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 items["flail_light"] = {
@@ -86,7 +92,8 @@ items["flail_light"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 items["flail_heavy"] = {
@@ -98,7 +105,8 @@ items["flail_heavy"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("club")
 };
 
 -- Spear types
@@ -112,7 +120,8 @@ items["pointy_stick"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["quarterstaff"] = {
@@ -124,7 +133,8 @@ items["quarterstaff"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["short_spear"] = {
@@ -136,7 +146,8 @@ items["short_spear"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["long_spear"] = {
@@ -148,7 +159,8 @@ items["long_spear"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["boar_spear"] = {
@@ -160,7 +172,8 @@ items["boar_spear"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=2, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 items["trident"] = {
@@ -172,7 +185,8 @@ items["trident"] = {
     foreground = colors['white'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("pointystick")
 };
 
 -- Hammertime
@@ -186,7 +200,8 @@ items["light_warhammer"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("hammer")
 };
 
 items["warhammer"] = {
@@ -198,7 +213,8 @@ items["warhammer"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("hammer")
 };
 
 items["hooked_warhammer"] = {
@@ -210,7 +226,8 @@ items["hooked_warhammer"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str",
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("hammer")
 };
 
 -- Axe variants for chopping in various ways
@@ -224,7 +241,8 @@ items["battleaxe"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("axe")
 };
 
 items["greataxe"] = {
@@ -236,7 +254,8 @@ items["greataxe"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("axe")
 };
 
 items["double_axe"] = {
@@ -248,7 +267,8 @@ items["double_axe"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=10, damage_mod=2, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("axe")
 };
 
 items["handaxe"] = {
@@ -260,7 +280,8 @@ items["handaxe"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("axe")
 };
 
 -- Swords
@@ -274,7 +295,8 @@ items["shortsword"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["sickle"] = {
@@ -286,7 +308,8 @@ items["sickle"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=1, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["longsword"] = {
@@ -298,7 +321,8 @@ items["longsword"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=6, damage_mod=0, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["scimitar"] = {
@@ -310,7 +334,8 @@ items["scimitar"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["rapier"] = {
@@ -322,7 +347,8 @@ items["rapier"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["sabre"] = {
@@ -334,7 +360,8 @@ items["sabre"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=0, damage_stat="str", initiative_penalty = 2,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["cutlass"] = {
@@ -346,7 +373,8 @@ items["cutlass"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=2, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["falchion"] = {
@@ -358,7 +386,8 @@ items["falchion"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=2, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["bastard_sword"] = {
@@ -370,7 +399,8 @@ items["bastard_sword"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=8, damage_mod=2, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 items["greatsword"] = {
@@ -382,7 +412,8 @@ items["greatsword"] = {
     foreground = colors['bismuth_yellow'],
     background = colors['black'],
     damage_n=1, damage_d=10, damage_mod=2, damage_stat="str", initiative_penalty = 7,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("sword")
 };
 
 -- Knives and Daggers
@@ -396,7 +427,8 @@ items["knife"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=3, damage_mod=0, damage_stat="str", initiative_penalty = 2,
-    stockpile = stockpiles['weapon'].id
+    stockpile = stockpiles['weapon'].id,
+    vox = voxelId("knife")
 };
 
 items["dagger"] = {
@@ -408,7 +440,8 @@ items["dagger"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 2,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("knife")
 };
 
 items["punching_dagger"] = {
@@ -420,7 +453,8 @@ items["punching_dagger"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=2, damage_stat="str", initiative_penalty = 2,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("knife")
 };
 
 items["kukri"] = {
@@ -432,7 +466,8 @@ items["kukri"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=4, damage_mod=1, damage_stat="str", initiative_penalty = 2,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("knife")
 };
 
 -- Polearms
@@ -446,7 +481,8 @@ items["glaive"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=10, damage_mod=1, damage_stat="str", initiative_penalty = 5,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("pointystick")
 };
 
 items["guisarm"] = {
@@ -458,7 +494,8 @@ items["guisarm"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=2, damage_d=4, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("pointystick")
 };
 
 items["halberd"] = {
@@ -470,7 +507,8 @@ items["halberd"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("pointystick")
 };
 
 items["pike"] = {
@@ -482,5 +520,6 @@ items["pike"] = {
     foreground = colors['grey'],
     background = colors['black'],
     damage_n=1, damage_d=10, damage_mod=0, damage_stat="str", initiative_penalty = 6,
-    stockpile = stockpiles['weapon']
+    stockpile = stockpiles['weapon'],
+    vox = voxelId("pointystick")
 };

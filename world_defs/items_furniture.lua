@@ -10,7 +10,8 @@ items["table"] = {
     glyph_ascii = glyphs['table'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("table")
 };
 
 -- Basic chair
@@ -22,7 +23,8 @@ items["chair"] = {
     glyph_ascii = glyphs['chair'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("chair")
 };
 
 -- Basic door
@@ -34,7 +36,8 @@ items["door"] = {
     glyph_ascii = glyphs['door'],
     foreground = colors['wood_brown'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("door_ground")
 };
 
 -- Basic bed
@@ -46,5 +49,6 @@ items["bed_item"] = {
     glyph_ascii = glyphs['eight'],
     foreground = colors['white'],
     background = colors['black'],
-    stockpile = stockpiles['furniture'].id
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("bed")
 };
