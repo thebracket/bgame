@@ -37,7 +37,7 @@ void read_clothing() noexcept
                            {"ac",          [&c] () { c.armor_class = lua_float(); }},
                            {"glyph",       [&c] () { c.clothing_glyph = lua_int(); }},
 						   {"layer",       [&c]()  { c.clothing_layer = lua_int(); }},
-						   {"vox",       [&c]()    { c.voxel_model = lua_int(); } },
+						   {"vox",         [&c]()  { c.voxel_model = lua_int(); } },
 				           {"colors",      [&c] () {
                                read_lua_table_inner( "colors", [&c] (auto col) { c.colors.push_back(col); });
                            }}
