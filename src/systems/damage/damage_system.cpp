@@ -9,6 +9,10 @@
 #include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
 #include "kill_system.hpp"
+#include "../../components/items/item_carried.hpp"
+#include "../../components/items/item.hpp"
+#include "../../components/items/item_wear.hpp"
+#include "../helpers/inventory_assistant.hpp"
 
 namespace systems {
 	namespace damage_system {
@@ -75,19 +79,50 @@ namespace systems {
 						}
 					}
 
-					// Serious damage affects body parts too
-					if (rng.roll_dice(1, 20) + msg.damage_amount > 15) {
-						health_part_t * hit_part = nullptr;
-						int hit_location_roll = rng.roll_dice(1, total_size);
-						for (health_part_t &p : h->parts) {
-							if (hit_location_roll < p.size) {
-								hit_part = &p;
-								break;
-							}
-							hit_location_roll -= p.size;
+					// Where was hit?
+					health_part_t * hit_part = nullptr;
+					int hit_location_roll = rng.roll_dice(1, total_size);
+					for (health_part_t &p : h->parts) {
+						if (hit_location_roll < p.size) {
+							hit_part = &p;
+							break;
 						}
-						if (hit_part == nullptr) hit_part = &(h->parts[h->parts.size() - 1]);
+						hit_location_roll -= p.size;
+					}
+					if (hit_part == nullptr) hit_part = &(h->parts[h->parts.size() - 1]);
 
+					// Damage clothing/armor in the affected area
+					item_location_t affected = TORSO;
+					if (hit_part->part == "head") {
+						affected = HEAD;
+					}
+					else if (hit_part->part == "left_leg" || hit_part->part == "right_leg") {
+						affected = LEGS;
+					}
+					else if (hit_part->part == "left_foot" || hit_part->part == "right_foot") {
+						affected = FEET;
+					}
+					std::vector<std::size_t> items_to_destroy;
+					bengine::each<item_t, item_carried_t, item_wear_t>([&msg, &affected, &items_to_destroy](bengine::entity_t &e, item_t &i, item_carried_t &l, item_wear_t &wear) {
+						if (l.carried_by == msg.victim && l.location == affected) {
+							if (wear.wear > msg.damage_amount) {
+								wear.wear -= msg.damage_amount;
+								logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text("'s ")->text(i.item_name)->text(" is damaged by the blow.")->chars };
+								logging::log(lmsg);
+							}
+							else {
+								logging::log_message lmsg{ LOG{}.other_name(msg.victim)->text("'s ")->text(i.item_name)->text(" is destroyed!")->chars };
+								logging::log(lmsg);
+								items_to_destroy.push_back(e.id);
+							}
+						}
+					});
+					for (const auto item_id : items_to_destroy) {
+						inventory::delete_item(item_id);
+					}
+
+					// Serious damage affects body parts too
+					if (rng.roll_dice(1, 20) + msg.damage_amount > 15) {						
 						hit_part->current_hitpoints -= msg.damage_amount;
 						if (hit_part->current_hitpoints < 0) {
 							if (hit_part->part == "head" && hit_part->current_hitpoints > -10) {

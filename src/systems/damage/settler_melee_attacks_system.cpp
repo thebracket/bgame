@@ -14,6 +14,8 @@
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../components/items/item_quality.hpp"
+#include "../../components/items/item_wear.hpp"
+#include "../helpers/inventory_assistant.hpp"
 
 namespace systems {
 	namespace settler_melee_attack {
@@ -62,6 +64,19 @@ namespace systems {
 						auto q = entity(weapon_id)->component<item_quality_t>();
 						if (q && q->quality > 3) ++weapon_quality;
 						if (q && q->quality == 7) ++weapon_quality;
+						auto wear = entity(weapon_id)->component<item_wear_t>();
+						if (wear) {
+							if (wear->wear > 0) {
+								--wear->wear;
+							}
+							else {
+								LOG logger;
+								logger.text(weapon_name + std::string(" has broken!"));
+								logging::log_message lmsg{ logger.chars };
+								logging::log(lmsg);
+								inventory::delete_item(weapon_id);
+							}
+						}
 					}
 				}
 
