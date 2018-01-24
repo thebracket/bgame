@@ -305,8 +305,13 @@ namespace render {
 			return result;
 		}
 
+		static float ascii_frame_counter = 0.0f;
+
 		static inline void populate_ascii() {
 			const int z = camera_position->region_z;
+			ascii_frame_counter += 0.01f;
+			const float water_variance = std::sin(ascii_frame_counter);
+
 
 			// Add terrain
 			for (int y = 0; y < REGION_HEIGHT; ++y) {
@@ -334,18 +339,25 @@ namespace render {
 						default: terminal[tidx] = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 						}
 
-						// Add water - TODO: Add some variance
+						// Add water
 						switch (region::water_level(idx)) {
-						case 1: terminal[tidx] = glyph_t{ '1', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 2: terminal[tidx] = glyph_t{ '2', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 3: terminal[tidx] = glyph_t{ '3', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 4: terminal[tidx] = glyph_t{ '4', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 5: terminal[tidx] = glyph_t{ '5', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 6: terminal[tidx] = glyph_t{ '6', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 7: terminal[tidx] = glyph_t{ '7', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 8: terminal[tidx] = glyph_t{ '8', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 9: terminal[tidx] = glyph_t{ '9', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
-						case 10: terminal[tidx] = glyph_t{ '0', 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }; break;
+						case 1: terminal[tidx] = glyph_t{ '1', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 2: terminal[tidx] = glyph_t{ '2', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 3: terminal[tidx] = glyph_t{ '3', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 4: terminal[tidx] = glyph_t{ '4', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 5: terminal[tidx] = glyph_t{ '5', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 6: terminal[tidx] = glyph_t{ '6', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 7: terminal[tidx] = glyph_t{ '7', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 8: terminal[tidx] = glyph_t{ '8', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 9: terminal[tidx] = glyph_t{ '9', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						case 10: terminal[tidx] = glyph_t{ '0', 0.0f, 0.0f, 1.0f - water_variance, 0.0f, 0.0f, 0.0f }; break;
+						}
+
+						// Blood stains
+						if (region::blood_stain(idx)) {
+							terminal[tidx].br = 0.7f;
+							terminal[tidx].bg = 0.0f;
+							terminal[tidx].bb = 0.0f;
 						}
 					}
 					else {
