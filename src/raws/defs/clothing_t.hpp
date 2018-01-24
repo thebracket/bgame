@@ -13,4 +13,5 @@ struct clothing_t {
     float armor_class = 0.0F;
     uint16_t clothing_glyph = 0;
 	int clothing_layer = 0;
+	int voxel_model = 0;
 };

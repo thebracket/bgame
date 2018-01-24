@@ -21,6 +21,7 @@
 #include "../global_assets/game_config.hpp"
 #include "defs/item_def_t.hpp"
 #include "defs/material_def_t.hpp"
+#include "defs/clothing_t.hpp"
 #include "items.hpp"
 #include "../render_engine/vox/renderables.hpp"
 #include "../components/item_tags/item_ammo_t.hpp"
@@ -134,7 +135,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 
     auto entity = bengine::create_entity()
         ->assign(position_t{ x,y,z })
-        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
         ->assign(item_t{tag, finder->name, material, finder->stack_size})
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear });
@@ -168,7 +169,7 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
 
     auto entity = bengine::create_entity()
         ->assign(position_t{ x,y,z })
-        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
         ->assign(item_t{tag, finder->name, material, finder->stack_size})
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear });
@@ -188,7 +189,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 
     auto entity = bengine::create_entity()
         ->assign(item_stored_t{ container_id })
-        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
+        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
         ->assign(item_t{tag, finder->name, material, finder->stack_size})
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear });
@@ -196,16 +197,28 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 }
 
 void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc, uint8_t quality, uint8_t wear) {
-    auto finder = get_item_def(tag);
-    if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
-    auto mat = get_material(material);
+	auto mat = get_material(material);
+	auto clothing_finder = get_clothing_by_tag(tag);
+	if (clothing_finder) {
+		// Clothing needs to be handled differently
+		auto entity = bengine::create_entity()
+			->assign(item_carried_t{ loc, holder_id })
+			->assign(renderable_t{ clothing_finder->clothing_glyph, clothing_finder->clothing_glyph, mat->fg, mat->bg, clothing_finder->voxel_model })
+			->assign(item_t{ tag })
+			->assign(item_quality_t{ quality })
+			->assign(item_wear_t{ wear });
+		entity->component<item_t>()->material = material;
+	} else {
+		auto finder = get_item_def(tag);
+		if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
 
-    auto entity = bengine::create_entity()
-        ->assign(item_carried_t{ loc, holder_id })
-        ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg })
-        ->assign(item_t{tag, finder->name, material, finder->stack_size})
-		->assign(item_quality_t{ quality })
-		->assign(item_wear_t{ wear });
-	decorate_item_categories(*entity, finder->categories);
+		auto entity = bengine::create_entity()
+			->assign(item_carried_t{ loc, holder_id })
+			->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
+			->assign(item_t{ tag, finder->name, material, finder->stack_size })
+			->assign(item_quality_t{ quality })
+			->assign(item_wear_t{ wear });
+		decorate_item_categories(*entity, finder->categories);
+	}
 }

@@ -131,13 +131,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
             if (slot_name == "legs") position = LEGS;
             if (slot_name == "shoes") position = FEET;
             std::cout << "Created " << item_name << "\n";
-            item_t clothing{cs[0]};
-            clothing.material = get_material_by_tag(cs[1]);
-            clothing.item_name = material_name(clothing.material) + std::string(" ") + clothing.item_name;
-			bengine::create_entity()->assign(std::move(clothing))
-				->assign(item_carried_t{ position, sentient->id })
-				->assign(item_quality_t{ item_quality::AVERAGE })
-				->assign(item_wear_t{ 100 });
+			spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), position, item_quality::AVERAGE, 100);
         }
     }
 

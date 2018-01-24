@@ -287,9 +287,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 			if (slot_name == "torso") position = TORSO;
 			if (slot_name == "legs") position = LEGS;
 			if (slot_name == "shoes") position = FEET;
-			item_t item{item_name};
-			item.material = get_material_by_tag("cloth");
-			bengine::create_entity()->assign(std::move(item))->assign(item_carried_t{ position, settler->id })->assign(item_quality_t{ item_quality::GREAT })->assign(item_wear_t{ 100 });
+			spawn_item_carried(settler->id, item_name, get_material_by_tag("cloth"), position, item_quality::GREAT, 100);
 		}
 	}
 
