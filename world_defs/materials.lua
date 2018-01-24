@@ -72,6 +72,9 @@ registerTerrainTexture("cement", "cement")
 registerTerrainTexture("oakfloor", "oakfloor")
 registerTerrainTexture("plasteelfloor", "plasteelfloor")
 
+-- Blight
+registerTerrainTexture("blight", "blight")
+
 function chunkTex(name)
     if terrain_textures[name] ~= nil then
         texidx = terrain_textures[name].index
@@ -659,7 +662,9 @@ materials = {
     },
     brick = { name = "Brick", type="synthetic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['black'],
-        hit_points = 100
+        hit_points = 100,
+        texture = chunkTex("greypocked"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("cavefloor"), floor_constructed=chunkTex("cobbles"),
     },
     organic = { name = "Organic", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
@@ -667,7 +672,9 @@ materials = {
     },
     blight = { name = "Blight", type="blight",
         glyph = glyphs['blight'], fg=colors['brown'], bg=colors['black'],
-        hit_points = 10
+        hit_points = 10,
+        texture = chunkTex("blight"), constructed = chunkTex("blight"),
+        floor = chunkTex("blight"), constructed = chunkTex("blight")
     },
     food = { name = "Food:", type="food", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
