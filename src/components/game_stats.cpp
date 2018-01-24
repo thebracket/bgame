@@ -169,3 +169,31 @@ skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats
 		return FAIL;
 	}
 }
+
+std::tuple<skill_roll_result_t, int, int> skill_roll_ext(const std::size_t settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty) {
+	const int luck_component = rng.roll_dice(1, 20);
+	const int natural_ability = get_attribute_modifier_for_skill(stats, skill_name);
+	const int8_t person_skill = get_skill_modifier(stats, skill_name);
+	const int total = luck_component + natural_ability + person_skill;
+	std::tuple<skill_roll_result_t, int, int> result;
+	std::get<1>(result) = luck_component;
+	std::get<2>(result) = difficulty - total;
+
+	std::cout << skill_name << " roll, difficulty " << difficulty << ". 1d20 = " << luck_component << ", +" << natural_ability << " (ability) + " << +person_skill << " (skill) = " << total << "\n";
+
+	if (luck_component == 1) {
+		std::get<0>(result) = CRITICAL_FAIL;
+	}
+	else if (luck_component == 20) {
+		gain_skill_from_success(settler_id, stats, skill_name, difficulty, rng);
+		std::get<0>(result) = CRITICAL_SUCCESS;
+	}
+	else if (total >= difficulty) {
+		gain_skill_from_success(settler_id, stats, skill_name, difficulty, rng);
+		std::get<0>(result) = SUCCESS;
+	}
+	else {
+		std::get<0>(result) = FAIL;
+	}
+	return result;
+}

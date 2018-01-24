@@ -6,6 +6,7 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/polymorphic.hpp>
+#include <tuple>
 #include "helpers/skill_t.hpp"
 #include "../bengine/ecs_impl.hpp"
 #include "../bengine/random_number_generator.hpp"
@@ -86,5 +87,6 @@ int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::strin
 int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill);
 void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, const std::string &skill, const int &difficulty, bengine::random_number_generator &rng);
 skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty);
+std::tuple<skill_roll_result_t, int, int> skill_roll_ext(const std::size_t settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty);
 
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<game_stats_t>>)

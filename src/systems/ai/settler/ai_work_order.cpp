@@ -169,9 +169,40 @@ namespace systems {
 					// Skill check, destroy inputs, create outputs
 					auto stats = e.component<game_stats_t>();
 					auto finder = get_reaction_def(w.reaction_target.reaction_tag);
-					auto skill_check = skill_roll(e.id, *stats, rng, finder->skill, finder->difficulty);
+					auto [skill_check, roll, difference] = skill_roll_ext(e.id, *stats, rng, finder->skill, finder->difficulty);
 
 					if (skill_check >= SUCCESS) {
+						// Quality and wear
+						uint8_t wear = 100;
+						uint8_t quality = 3;
+
+						if (roll == 20) {
+							quality = 7; // Masterwork on a natural 20
+						}
+						else {
+							if (difference < 1) {
+								quality = 1;
+							}
+							else if (difference < 2) {
+								quality = 2;
+							}
+							else if (difference < 3) {
+								quality = 3;
+							}
+							else if (difference < 4) {
+								quality = 4;
+							}
+							else if (difference < 5) {
+								quality = 5;
+							}
+							else if (difference < 6) {
+								quality = 6;
+							}
+							else {
+								quality = 7;
+							}
+						}
+
 						// Delete components
 						std::size_t material = get_material_by_tag("plasteel");
 						std::string mat_names = "";
@@ -198,7 +229,7 @@ namespace systems {
 									// This is more complicated, we have to make a special item from the components.
 									// The idea is to get something like Roast Asparagus
 									std::cout << "Cooking Reaction - spawning " << output.first << "/" << material << "\n";
-									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material);
+									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material, quality, wear);
 									auto item = new_item->component<item_t>();
 									item->item_name = mat_names + item->item_name;
 									done = true;
@@ -208,7 +239,7 @@ namespace systems {
 									// This is more complicated, we have to make a special item from the components.
 									// The idea is to get something like Roast Asparagus
 									std::cout << "Tanning Reaction - spawning " << output.first << "/" << material << "\n";
-									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material);
+									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material, quality, wear);
 									auto item = new_item->component<item_t>();
 									item->item_name = mat_names + item->item_name;
 									done = true;
@@ -216,7 +247,7 @@ namespace systems {
 
 								if (!done) {
 									std::cout << "Reaction - spawning " << output.first << "/" << material << "\n";
-									spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material);
+									spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material, quality, wear);
 									done = true;
 								}
 							}
