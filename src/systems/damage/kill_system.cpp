@@ -14,6 +14,7 @@
 #include "../../global_assets/spatial_db.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../../global_assets/game_planet.hpp"
 
 namespace systems {
 	namespace kill_system {
@@ -44,23 +45,22 @@ namespace systems {
 					auto name = victim->component<name_t>();
 					create_entity()
 						->assign(position_t{ pos->x, pos->y, pos->z })
-						->assign(renderable_t{ 2, 2, color_t{1.0f, 1.0f, 0.0f}, color_t{1.0f, 0.0f, 0.0f} })
+						->assign(renderable_t{ 2, 2, color_t{1.0f, 1.0f, 0.0f}, color_t{1.0f, 0.0f, 0.0f}, 110 })
 						->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
 						->assign(corpse_settler{ msg.cause_of_death });
 					call_home("combat", "settler_death");
 				}
 				else if (victim->component<sentient_ai>()) {
-					// It's a dead native
-					/*
-					planet.civs.population[victim->component<sentient_ai>()->person_id].deceased = true;
+					// It's a dead native					
+					//planet.civs.civs[ [victim->component<sentient_ai>()->person_id].deceased = true;
 					auto name = victim->component<name_t>();
 					auto renderable = victim->component<renderable_t>();
 					auto corpse = create_entity()
-					->assign(position_t{ pos->x, pos->y, pos->z })
-					->assign(renderable_t{ renderable->glyph, rltk::colors::YELLOW, rltk::colors::RED })
-					->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
-					->assign(corpse_settler{msg.cause_of_death});
-					call_home("sentient_death", name->first_name);*/
+						->assign(position_t{ pos->x, pos->y, pos->z })
+						->assign(renderable_t{ 2, 2, color_t{ 1.0f, 1.0f, 0.0f }, color_t{ 1.0f, 0.0f, 0.0f}, 110 })
+						->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") })
+						->assign(corpse_settler{msg.cause_of_death});
+					call_home("sentient_death", name->first_name);
 				}
 				else {
 					// It's something else that died.
@@ -72,7 +72,7 @@ namespace systems {
 					if (old_render && tag != "") {
 						create_entity()
 							->assign(position_t{ pos->x, pos->y, pos->z })
-							->assign(renderable_t{ old_render->glyph, old_render->glyph_ascii, color_t{0.5f, 0.5f, 0.5f}, color_t{0.f, 0.f, 0.f} })
+							->assign(renderable_t{ old_render->glyph, old_render->glyph_ascii, color_t{0.5f, 0.5f, 0.5f}, color_t{0.f, 0.f, 0.f}, 110 })
 							->assign(corpse_harvestable{ tag })
 							->assign(name_t{ name->first_name, name->last_name + std::string("'s corpse") });
 						distance_map::refresh_butcherables_map();

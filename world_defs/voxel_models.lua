@@ -116,6 +116,8 @@ voxel_models = {
     arrow = { model=vfn("arrow"), id=108 },
     crossbow = { model=vfn("crossbow"), id=109 },
 
+    corpse = { model=vfn("corpse"), id=110 },
+
 }
 
 function voxelId(name)
