@@ -16,6 +16,8 @@
 #include "../../raws/life_events.hpp"
 #include "../../raws/defs/life_event_template.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../../components/items/item_quality.hpp"
+#include "../../components/items/item_wear.hpp"
 
 namespace systems {
 	namespace settler_ui {
@@ -139,10 +141,12 @@ namespace systems {
 		static inline void render_inventory(std::size_t selected_settler) {
 			using namespace bengine;
 
-			ImGui::Columns(2, "inventory_grid");
+			ImGui::Columns(4, "inventory_grid");
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Item"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Quality"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Condition"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Location"); ImGui::NextColumn();
 			ImGui::Separator();
 
@@ -152,6 +156,18 @@ namespace systems {
 			},
 				[](entity_t &e, item_t &item, item_carried_t &carried) {
 				ImGui::Text("%s", item.item_name.c_str());
+				ImGui::NextColumn();
+
+				std::string qual = "";
+				auto qc = e.component<item_quality_t>();
+				if (qc) qual = qc->get_quality_text();
+				ImGui::Text("%s", qual);
+				ImGui::NextColumn();
+
+				float wear = 1.0f;
+				auto wc = e.component<item_wear_t>();
+				if (wc) wear = static_cast<float>(wc->wear) / 100.0f;
+				ImGui::ProgressBar(wear);
 				ImGui::NextColumn();
 
 				std::string ci = item_loc_name(carried.location);
