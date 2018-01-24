@@ -121,7 +121,7 @@ namespace systems {
 							auto qual = entity.component<item_quality_t>();
 							auto wr = entity.component<item_wear_t>();
 							if (qual) quality = std::string(" (") + qual->get_quality_text() + std::string(" quality)");
-							if (wr) wear = std::string(" (") + wr->get_wear_text();
+							if (wr) wear = std::string(" (") + wr->get_wear_text() + std::string(")");
 
 							items[item.item_name + claimed + quality + wear] = 1;
 						}
@@ -177,7 +177,17 @@ namespace systems {
 								if (stored.stored_in == building_entity.id) {
 									auto finder = items.find(item.item_name);
 									if (finder == items.end()) {
-										items[item.item_name] = 1;
+										std::string claimed = "";
+										if (entity.component<claimed_t>() != nullptr) claimed = " (c)";
+										std::string quality = "";
+										std::string wear = "";
+
+										auto qual = entity.component<item_quality_t>();
+										auto wr = entity.component<item_wear_t>();
+										if (qual) quality = std::string(" (") + qual->get_quality_text() + std::string(" quality)");
+										if (wr) wear = std::string(" (") + wr->get_wear_text() + std::string(")");
+
+										items[item.item_name + claimed + quality + wear] = 1;
 									}
 									else {
 										++finder->second;
