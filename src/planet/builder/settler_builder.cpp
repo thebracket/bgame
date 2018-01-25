@@ -287,12 +287,12 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 			if (slot_name == "torso") position = TORSO;
 			if (slot_name == "legs") position = LEGS;
 			if (slot_name == "shoes") position = FEET;
-			spawn_item_carried(settler->id, item_name, get_material_by_tag("cloth"), position, item_quality::GREAT, 100);
+			spawn_item_carried(settler->id, item_name, get_material_by_tag("cloth"), position, item_quality::GREAT, 100, 0, "Eden Acme Corp");
 		}
 	}
 
 	// Add a raygun and energey cells
 	auto plasteel = get_material_by_tag("plasteel");
-	spawn_item_carried(settler->id, "ray_pistol", plasteel, EQUIP_RANGED, item_quality::GREAT);
-	spawn_item_carried(settler->id, "small_energy_cell", plasteel, EQUIP_AMMO, item_quality::GREAT);
+	spawn_item_carried(settler->id, "ray_pistol", plasteel, EQUIP_RANGED, item_quality::GREAT, 100, 0, "Eden Acme Corp");
+	spawn_item_carried(settler->id, "small_energy_cell", plasteel, EQUIP_AMMO, item_quality::GREAT, 100, 0, "Eden Acme Corp");
 }

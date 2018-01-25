@@ -42,12 +42,12 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     }
 
     if (tag == "storage_locker") {
-        spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"));
-		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"));
+        spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
+		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
+		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
+		spawn_item_in_container(new_building->id, "camp_fire_kit", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
+		spawn_item_in_container(new_building->id, "fire_axe", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
+		spawn_item_in_container(new_building->id, "pickaxe", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
     } else if (tag == "cordex") {
 		new_building->assign(viewshed_t{ 16, false });
     }  else if (tag == "lamp") {

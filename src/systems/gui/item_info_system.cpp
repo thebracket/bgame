@@ -29,8 +29,13 @@
 #include "../../components/items/item_stored.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
+#include "../../components/items/item_creator.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/name.hpp"
+#include "../../raws/reactions.hpp"
+#include "../../raws/defs/reaction_t.hpp"
+#include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 #include "units_info_system.hpp"
 #include <sstream>
 
@@ -60,6 +65,7 @@ namespace systems {
 			auto item_quality = item_entity->component<item_quality_t>();
 			auto item_wear = item_entity->component<item_wear_t>();
 			auto item_mat = get_material(item_c->material);
+			auto item_creator = item_entity->component<item_creator_t>();
 
 			if (selected_item == 0 || item_entity == nullptr || item_c == nullptr) {
 				game_master_mode = PLAY;
@@ -95,6 +101,10 @@ namespace systems {
 			std::string item_name_str = item_name.str();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", item_name_str.c_str());
+
+			if (item_creator) {
+				ImGui::Text("Created by: %s", item_creator->creator_name);
+			}
 
 			std::string tag_str = tags.str();
 			if (tag_str != "") {
@@ -190,6 +200,40 @@ namespace systems {
 			}
 			if (item_skull) ImGui::Text("This is an unprocessed skull, and may be used at a bonecarver.");
 			if (item_spice) ImGui::Text("This is a spice, used to improve flavor in cooking.");
+
+			// Poll the reactions system
+			std::vector<std::string> sources;
+			std::vector<std::string> uses;
+			each_reaction([&item_c, &sources, &uses](std::string reaction_tag, reaction_t * reaction) {
+				// Check for inclusion in an input
+				for (const auto input : reaction->inputs) {
+					if (input.tag == item_c->item_tag) {
+						uses.push_back(std::string("Can be used at a ") + get_building_def(reaction->workshop)->name + std::string(" to ") + reaction->name);
+					}
+				}
+
+				for (const auto output : reaction->outputs) {
+					if (output.first == item_c->item_tag) {
+						// Add to list
+						sources.push_back(std::string("Can be made at a ") + get_building_def(reaction->workshop)->name);
+					}
+				}
+			});
+
+			// Poll the buildings system
+			std::vector<std::string> buildings;
+			each_building_def([&item_c, &buildings](building_def_t *b) {
+				for (const auto input : b->components) {
+					if (input.tag == item_c->item_tag) {
+						// Add to list
+						buildings.push_back(std::string("Can be used to construct a ") + b->name);
+					}
+				}
+			});
+
+			for (const auto &use : uses) ImGui::Text(use.c_str());
+			for (const auto &source : sources) ImGui::Text(source.c_str());
+			for (const auto &b : buildings) ImGui::Text(b.c_str());
 
 			ImGui::End();
 		}

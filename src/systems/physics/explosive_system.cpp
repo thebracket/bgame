@@ -128,9 +128,7 @@ namespace systems {
 													const int idx = mapidx(X, Y, Z);
 													if (tree_id(idx) == tid) {
 														make_open_space(idx);
-														if (rng.roll_dice(1, 4) > 2) spawn_item_on_ground(X, Y, Z, "wood_log",
-															get_material_by_tag(
-																"wood"));
+														if (rng.roll_dice(1, 4) > 2) spawn_item_on_ground(X, Y, Z, "wood_log", get_material_by_tag("wood"), 3, 50, 0, "Explosives");
 													}
 												}
 											}

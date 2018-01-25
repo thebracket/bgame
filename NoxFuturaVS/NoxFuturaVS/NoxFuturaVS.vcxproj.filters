@@ -1637,6 +1637,9 @@
     <ClInclude Include="..\..\src\systems\gui\item_info_system.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\items\item_creator.hpp">
+      <Filter>Header Files\components\items</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset8.hpp">

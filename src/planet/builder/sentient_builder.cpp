@@ -131,24 +131,24 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
             if (slot_name == "legs") position = LEGS;
             if (slot_name == "shoes") position = FEET;
             std::cout << "Created " << item_name << "\n";
-			spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), position, item_quality::AVERAGE, 100);
+			spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), position, item_quality::AVERAGE, 100, 0, planet.civs.civs[civ_id].name);
         }
     }
 
     if (unit.equipment.melee != "") {
         auto cs = split(unit.equipment.melee, '/');
         const std::string item_name = cs[0];
-		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_MELEE, 3, 100);
+		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_MELEE, 3, 100, 0, planet.civs.civs[civ_id].name);
     }
     if (unit.equipment.ranged != "") {
         auto cs = split(unit.equipment.ranged, '/');
         const std::string item_name = cs[0];
-		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_RANGED, 3, 100);
+		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_RANGED, 3, 100, 0, planet.civs.civs[civ_id].name);
 	}
     if (unit.equipment.ammo != "") {
         auto cs = split(unit.equipment.ammo, '/');
         const std::string item_name = cs[0];
-		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_AMMO, 3, 100);
+		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_AMMO, 3, 100, 0, planet.civs.civs[civ_id].name);
     }
     if (unit.equipment.mount != "") {
         std::cout << "Spawning a mount: " << unit.equipment.mount << "\n";

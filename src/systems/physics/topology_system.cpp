@@ -123,11 +123,11 @@ namespace systems {
 				if (tag == "ore") {
 					for (const std::string &metal : get_material(mat)->ore_materials) {
 						const auto metal_finder = get_material_by_tag(metal);
-						spawn_item_on_ground(X, Y, Z, tag, metal_finder);
+						spawn_item_on_ground(X, Y, Z, tag, metal_finder, 3, 100, 0, "Mining");
 					}
 				}
 				else {
-					spawn_item_on_ground(X, Y, Z, tag, mat);
+					spawn_item_on_ground(X, Y, Z, tag, mat, 3, 100, 0, "Mining");
 				}
 			}
 			else {

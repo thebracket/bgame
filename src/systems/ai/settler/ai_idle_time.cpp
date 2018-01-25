@@ -15,6 +15,7 @@
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../physics/vegetation_system.hpp"
+#include "../../../components/name.hpp"
 
 namespace systems {
 	namespace ai_idle_time {
@@ -43,7 +44,10 @@ namespace systems {
 
 			const int poop_chance = rng.roll_dice(1, 100);
 			if (poop_chance == 100) {
-				spawn_item_on_ground(pos->x, pos->y, pos->z, "dung", get_material_by_tag("organic"));
+				std::string cname = "";
+				auto name = e.component<name_t>();
+				if (name) cname = name->first_name + std::string(" ") + name->last_name;
+				spawn_item_on_ground(pos->x, pos->y, pos->z, "dung", get_material_by_tag("organic"), 3, 100, e.id, cname);
 			}
 
 			delete_component<ai_tag_my_turn_t>(e.id);

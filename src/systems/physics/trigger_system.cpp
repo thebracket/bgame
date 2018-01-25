@@ -228,7 +228,7 @@ namespace systems {
 									auto building = trigger_entity->component<building_t>();
 									std::size_t material = get_material_by_tag(building->built_with[0].first);
 									const auto &[x,y,z] = idxmap(tile_index);
-									auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material);
+									auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material, 3, 100);
 
 									// Add a stored component
 									target_entity->assign<item_stored_t>(new_cage->id);

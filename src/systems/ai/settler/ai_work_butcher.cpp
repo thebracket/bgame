@@ -8,6 +8,7 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/creatures.hpp"
 #include "../../../raws/defs/raw_creature_t.hpp"
+#include "../../../components/name.hpp"
 
 namespace systems {
 	namespace ai_butcher {
@@ -101,9 +102,12 @@ namespace systems {
 					const auto food_idx = get_material_by_tag("food");
 
 					auto finder = get_creature_def(corpse->creature_tag);
+					std::string cname = "";
+					auto name = e.component<name_t>();
+					if (name) cname = name->first_name + std::string(" ") + name->last_name;
 					// Spawn bones
 					for (int i = 0; i<finder->yield_bone; ++i) {
-						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "bone", food_idx);
+						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "bone", food_idx, 3, 100, e.id, cname);
 						const std::string corpse_type = corpse->creature_tag;
 						if (corpse_type != "") {
 							auto creature_def = get_creature_def(corpse_type);
@@ -116,7 +120,7 @@ namespace systems {
 
 					// Spawn hide
 					for (int i = 0; i<finder->yield_hide; ++i) {
-						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "hide", food_idx);
+						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "hide", food_idx, 3, 100, e.id, cname);
 						const std::string corpse_type = corpse->creature_tag;
 						if (corpse_type != "") {
 							auto creature_def = get_creature_def(corpse_type);
@@ -129,7 +133,7 @@ namespace systems {
 
 					// Spawn meat
 					for (int i = 0; i<finder->yield_meat; ++i) {
-						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "meat", food_idx);
+						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "meat", food_idx, 3, 100, e.id, cname);
 						const std::string corpse_type = corpse->creature_tag;
 						if (corpse_type != "") {
 							auto creature_def = get_creature_def(corpse_type);
@@ -142,7 +146,7 @@ namespace systems {
 
 					// Spawn skulls
 					for (int i = 0; i<finder->yield_skull; ++i) {
-						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "skull", food_idx);
+						auto new_entity = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "skull", food_idx, 3, 100, e.id, cname);
 						const std::string corpse_type = corpse->creature_tag;
 						if (corpse_type != "") {
 							auto creature_def = get_creature_def(corpse_type);

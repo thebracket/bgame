@@ -12,6 +12,7 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../components/item_tags/item_food_t.hpp"
 #include "../../../components/item_tags/item_spice_t.hpp"
+#include "../../../components/name.hpp"
 
 namespace systems {
 	namespace ai_harvest {
@@ -79,7 +80,10 @@ namespace systems {
 							if (item_finder->categories.test(ITEM_FOOD)) mat_type = "food";
 							if (item_finder->categories.test(ITEM_SPICE)) mat_type = "spice";
 						}
-						auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type));
+						std::string cname = "";
+						auto name = e.component<name_t>();
+						if (name) cname = name->first_name + std::string(" ") + name->last_name;
+						auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type), 3, 100, e.id, cname);
 						item->component<item_t>()->item_name = plant->name;
 					}
 

@@ -12,6 +12,7 @@
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../../gui/particle_system.hpp"
 #include "../../../components/item_tags/item_chopping_t.hpp"
+#include "../../../components/name.hpp"
 
 using namespace bengine;
 using namespace jobs_board;
@@ -234,7 +235,10 @@ namespace systems {
 						number_of_logs = (number_of_logs / 20) + 1;
 						for (int i = 0; i<number_of_logs; ++i) {
 							std::cout << "Spawning wood\n";
-							spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"));
+							std::string cname = "";
+							auto name = e.component<name_t>();
+							if (name) cname = name->first_name + std::string(" ") + name->last_name;
+							spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"), 3, 100, e.id, cname);
 						}
 
 						// Update pathing

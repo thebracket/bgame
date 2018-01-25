@@ -400,6 +400,7 @@
     <ClInclude Include="..\..\src\components\initiative.hpp" />
     <ClInclude Include="..\..\src\components\items\item.hpp" />
     <ClInclude Include="..\..\src\components\items\item_carried.hpp" />
+    <ClInclude Include="..\..\src\components\items\item_creator.hpp" />
     <ClInclude Include="..\..\src\components\items\item_quality.hpp" />
     <ClInclude Include="..\..\src\components\items\item_stored.hpp" />
     <ClInclude Include="..\..\src\components\items\item_wear.hpp" />
