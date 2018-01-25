@@ -46,6 +46,14 @@ namespace systems {
 		const static std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
 		void run(const double &duration_ms) {
+			const std::string tab_summary = std::string(ICON_FA_INFO_CIRCLE) + " Description";
+			const std::string tab_ammo = std::string(ICON_FA_INFO_CIRCLE) + " Ammo Info";
+			const std::string tab_melee = std::string(ICON_FA_INFO_CIRCLE) + " Melee Info";
+			const std::string tab_ranged = std::string(ICON_FA_INFO_CIRCLE) + " Ranged Info";
+			const std::string tab_sources = std::string(ICON_FA_INFO_CIRCLE) + " Source Info";
+			const std::string tab_uses = std::string(ICON_FA_INFO_CIRCLE) + " Usage Info";
+			const std::string tab_buildings = std::string(ICON_FA_INFO_CIRCLE) + " Construction Info";
+
 			auto item_entity = bengine::entity(selected_item);
 			auto item_c = item_entity->component<item_t>();
 			auto item_ammo = item_entity->component<item_ammo_t>();
@@ -66,6 +74,7 @@ namespace systems {
 			auto item_wear = item_entity->component<item_wear_t>();
 			auto item_mat = get_material(item_c->material);
 			auto item_creator = item_entity->component<item_creator_t>();
+			auto item_def = get_item_def(item_c->item_tag);
 
 			if (selected_item == 0 || item_entity == nullptr || item_c == nullptr) {
 				game_master_mode = PLAY;
@@ -142,29 +151,37 @@ namespace systems {
 				// TODO: More Information
 			}
 
+			const std::string tab_bar_name = std::string("##Item#info_bar") + std::to_string(selected_item);
+			ImGui::BeginTabBar(tab_bar_name.c_str());
+			ImGui::DrawTabsBackground();
 
-			auto item_def = get_item_def(item_c->item_tag);
-			if (item_def) {
-				ImGui::Text("%s", item_def->description.c_str());
-			}
-			else {
-				auto cloth_def = get_clothing_by_tag(item_c->item_tag.c_str());
-				if (cloth_def) {
-					ImGui::Text("%s", cloth_def->description.c_str());
-					ImGui::Text("It provides an armor bonus of %f", cloth_def->armor_class);
-					if (item_mat) {
-						ImGui::Text("That material provides an additional armor bonus of %f", item_mat->ac_bonus);
-					}
+			if (ImGui::AddTab(tab_summary.c_str())) {
+				if (item_def) {
+					ImGui::Text("%s", item_def->description.c_str());
 				}
 				else {
-					ImGui::Text("WARNING, definition for %s did not load.", item_c->item_tag.c_str());
+					auto cloth_def = get_clothing_by_tag(item_c->item_tag.c_str());
+					if (cloth_def) {
+						ImGui::Text("%s", cloth_def->description.c_str());
+						ImGui::Text("It provides an armor bonus of %f", cloth_def->armor_class);
+						if (item_mat) {
+							ImGui::Text("That material provides an additional armor bonus of %f", item_mat->ac_bonus);
+							if (item_quality && item_quality->quality > 3) ImGui::Text("It gains an extra +1 for being of high quality.");
+							if (item_quality && item_quality->quality > 6) ImGui::Text("It gains an extra +1 for being of masterwork quality.");
+						}
+					}
+					else {
+						ImGui::Text("WARNING, definition for %s did not load.", item_c->item_tag.c_str());
+					}
 				}
 			}
 
 			if (item_ammo) {
-				ImGui::Text("This item is used as ammunition (type: %s).", item_def->ammo);
-				if (item_def) {
-					ImGui::Text("It inflicts %dd%d+%d damage.", item_def->damage_n, item_def->damage_d, item_def->damage_mod);
+				if (ImGui::AddTab(tab_ammo.c_str())) {
+					ImGui::Text("This item is used as ammunition (type: %s).", item_def->ammo);
+					if (item_def) {
+						ImGui::Text("It inflicts %dd%d+%d damage.", item_def->damage_n, item_def->damage_d, item_def->damage_mod);
+					}
 				}
 			}
 			if (item_bone) ImGui::Text("This item is an unprocessed bone. Take it to a bonecarver.");
@@ -176,25 +193,29 @@ namespace systems {
 			if (item_leather) ImGui::Text("This item is processed leather, and can be turned into something useful by a leatherworker.");
 			if (item_melee) {
 				if (item_def) {
-					ImGui::Text("It inflicts %dd%d+%d damage, modified by %s.", item_def->damage_n, item_def->damage_d, item_def->damage_mod, item_def->damage_stat.c_str());
-					if (item_quality && item_quality->quality > 3) ImGui::Text("It gains an extra +1 for being of high quality.");
-					if (item_quality && item_quality->quality > 6) ImGui::Text("It gains an extra +1 for being of masterwork quality.");
-					if (item_mat) {
-						ImGui::Text("%s material provides an additional %d damage modifier.", item_mat->name.c_str(), item_mat->damage_bonus);
+					if (ImGui::AddTab(tab_melee.c_str())) {
+						ImGui::Text("It inflicts %dd%d+%d damage, modified by %s.", item_def->damage_n, item_def->damage_d, item_def->damage_mod, item_def->damage_stat.c_str());
+						if (item_quality && item_quality->quality > 3) ImGui::Text("It gains an extra +1 for being of high quality.");
+						if (item_quality && item_quality->quality > 6) ImGui::Text("It gains an extra +1 for being of masterwork quality.");
+						if (item_mat) {
+							ImGui::Text("%s material provides an additional %d damage modifier.", item_mat->name.c_str(), item_mat->damage_bonus);
+						}
 					}
 				}
 
 			}
 			if (item_ranged) {
 				if (item_def) {
-					ImGui::Text("It has a range of %d tiles.", item_def->range);
-					ImGui::Text("It provides an ammunition damage bonus of %d", item_def->damage_mod);
-					ImGui::Text("It's initiative penalty (mitigated by Dexterity) is %d", item_def->initiative_penalty);
-					ImGui::Text("It requires ammunition of type: %s", item_def->ammo.c_str());
-					if (item_quality && item_quality->quality > 3) ImGui::Text("It gains an extra +1 for being of high quality.");
-					if (item_quality && item_quality->quality > 6) ImGui::Text("It gains an extra +1 for being of masterwork quality.");
-					if (item_mat) {
-						ImGui::Text("%s material provides an additional %d damage modifier.", item_mat->name.c_str(), item_mat->damage_bonus);
+					if (ImGui::AddTab(tab_ranged.c_str())) {
+						ImGui::Text("It has a range of %d tiles.", item_def->range);
+						ImGui::Text("It provides an ammunition damage bonus of %d", item_def->damage_mod);
+						ImGui::Text("It's initiative penalty (mitigated by Dexterity) is %d", item_def->initiative_penalty);
+						ImGui::Text("It requires ammunition of type: %s", item_def->ammo.c_str());
+						if (item_quality && item_quality->quality > 3) ImGui::Text("It gains an extra +1 for being of high quality.");
+						if (item_quality && item_quality->quality > 6) ImGui::Text("It gains an extra +1 for being of masterwork quality.");
+						if (item_mat) {
+							ImGui::Text("%s material provides an additional %d damage modifier.", item_mat->name.c_str(), item_mat->damage_bonus);
+						}
 					}
 				}
 			}
@@ -231,10 +252,25 @@ namespace systems {
 				}
 			});
 
-			for (const auto &use : uses) ImGui::Text(use.c_str());
-			for (const auto &source : sources) ImGui::Text(source.c_str());
-			for (const auto &b : buildings) ImGui::Text(b.c_str());
+			if (!uses.empty()) {
+				if (ImGui::AddTab(tab_uses.c_str())) {
+					for (const auto &use : uses) ImGui::Text(use.c_str());
+				}
+			}
 
+			if (!sources.empty()) {
+				if (ImGui::AddTab(tab_sources.c_str())) {
+					for (const auto &source : sources) ImGui::Text(source.c_str());
+				}
+			}
+
+			if (!buildings.empty()) {
+				if (ImGui::AddTab(tab_buildings.c_str())) {
+					for (const auto &b : buildings) ImGui::Text(b.c_str());
+				}
+			}
+
+			ImGui::EndTabBar();
 			ImGui::End();
 		}
 	}
