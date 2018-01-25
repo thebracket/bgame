@@ -732,6 +732,9 @@
     <ClCompile Include="..\..\src\systems\physics\item_wear_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\item_info_system.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1630,6 +1633,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\physics\item_wear_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\item_info_system.hpp">
+      <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

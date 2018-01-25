@@ -19,15 +19,15 @@
 namespace systems {
 	namespace units_ui {
 
-		const std::string win_units = std::string(ICON_FA_USERS) + " Units";
-		const std::string win_settler_list = std::string(ICON_FA_USERS) + " Settlers";
-		const std::string win_wildlife_list = std::string(ICON_FA_PAW) + " Wildlife";
-		const std::string win_natives_list = std::string(ICON_FA_USER_SECRET) + " Other Sentients";
-		const std::string btn_goto = std::string(ICON_FA_MAP_MARKER) + " Go To";
-		const std::string btn_goto_creature = std::string(ICON_FA_MAP_MARKER) + " Go To Creature";
-		const std::string btn_goto_native = std::string(ICON_FA_MAP_MARKER) + " Go To NPC";
-		const std::string btn_rogue = std::string(ICON_FA_USER) + " Control";
-		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
+		const static std::string win_units = std::string(ICON_FA_USERS) + " Units";
+		const static std::string win_settler_list = std::string(ICON_FA_USERS) + " Settlers";
+		const static std::string win_wildlife_list = std::string(ICON_FA_PAW) + " Wildlife";
+		const static std::string win_natives_list = std::string(ICON_FA_USER_SECRET) + " Other Sentients";
+		const static std::string btn_goto = std::string(ICON_FA_MAP_MARKER) + " Go To";
+		const static std::string btn_goto_creature = std::string(ICON_FA_MAP_MARKER) + " Go To Creature";
+		const static std::string btn_goto_native = std::string(ICON_FA_MAP_MARKER) + " Go To NPC";
+		const static std::string btn_rogue = std::string(ICON_FA_USER) + " Control";
+		const static std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
 		int selected_settler = 0;
 		int current_settler = 0;

@@ -18,6 +18,7 @@
 #include "../../global_assets/game_mode.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
+#include "item_info_system.hpp"
 
 namespace systems {
 	namespace settler_ui {
@@ -141,13 +142,14 @@ namespace systems {
 		static inline void render_inventory(std::size_t selected_settler) {
 			using namespace bengine;
 
-			ImGui::Columns(4, "inventory_grid");
+			ImGui::Columns(5, "inventory_grid");
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Item"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Quality"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Condition"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Location"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
 			ImGui::Separator();
 
 			each_if<item_t, item_carried_t>(
@@ -172,6 +174,13 @@ namespace systems {
 
 				std::string ci = item_loc_name(carried.location);
 				ImGui::Text("%s", ci.c_str());
+				ImGui::NextColumn();
+
+				const std::string btn_view = std::string(ICON_FA_CAMERA) + " View##" + std::to_string(e.id);
+				if (ImGui::Button(btn_view.c_str())) {
+					game_master_mode = ITEM_INFO;
+					item_ui::selected_item = e.id;
+				}
 				ImGui::NextColumn();
 
 				ImGui::Separator();
