@@ -52,7 +52,7 @@ namespace systems {
 			const std::string tab_ranged = std::string(ICON_FA_INFO_CIRCLE) + " Ranged Info";
 			const std::string tab_sources = std::string(ICON_FA_INFO_CIRCLE) + " Source Info";
 			const std::string tab_uses = std::string(ICON_FA_INFO_CIRCLE) + " Usage Info";
-			const std::string tab_buildings = std::string(ICON_FA_INFO_CIRCLE) + " Construction Info";
+			const std::string tab_construction = std::string(ICON_FA_INFO_CIRCLE) + " Construction Info";
 
 			auto item_entity = bengine::entity(selected_item);
 			auto item_c = item_entity->component<item_t>();
@@ -243,30 +243,30 @@ namespace systems {
 
 			// Poll the buildings system
 			std::vector<std::string> buildings;
-			each_building_def([&item_c, &buildings](building_def_t *b) {
-				for (const auto input : b->components) {
+			each_building_def([&item_c, &buildings](building_def_t *building_def) {
+				for (const auto input : building_def->components) {
 					if (input.tag == item_c->item_tag) {
 						// Add to list
-						buildings.push_back(std::string("Can be used to construct a ") + b->name);
+						buildings.push_back(std::string("Can be used to construct a ") + building_def->name);
 					}
 				}
 			});
 
 			if (!uses.empty()) {
 				if (ImGui::AddTab(tab_uses.c_str())) {
-					for (const auto &use : uses) ImGui::Text(use.c_str());
+					for (const auto &use : uses) ImGui::Text("%s", use.c_str());
 				}
 			}
 
 			if (!sources.empty()) {
 				if (ImGui::AddTab(tab_sources.c_str())) {
-					for (const auto &source : sources) ImGui::Text(source.c_str());
+					for (const auto &source : sources) ImGui::Text("%s", source.c_str());
 				}
 			}
 
 			if (!buildings.empty()) {
-				if (ImGui::AddTab(tab_buildings.c_str())) {
-					for (const auto &b : buildings) ImGui::Text(b.c_str());
+				if (ImGui::AddTab(tab_construction.c_str())) {
+					for (const auto &bld : buildings) ImGui::Text("%s", bld.c_str());
 				}
 			}
 
