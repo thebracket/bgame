@@ -25,6 +25,7 @@
 #include "../systems/gui/particle_system.hpp"
 #include "../render_engine/pointlights.hpp"
 #include "../render_engine/render_engine.hpp"
+#include "../render_engine/vox/renderables.hpp"
 #include <array>
 
 namespace render {
@@ -53,6 +54,7 @@ namespace render {
 		unsigned int ascii_fbo = 0;
 		unsigned int ascii_position_tex = 0;
 		static unsigned int albedo_tex = 0;
+		static bool first_run = true;
 
 		struct glyph_t {
 			uint8_t glyph;
@@ -674,7 +676,12 @@ namespace render {
 
 		// Compile the ASCII render data
 		ascii::ascii_camera();
-		ascii::populate_renderables();
+		if (ascii::first_run || render::models_changed || render::camera_moved) {
+			ascii::populate_renderables();
+			ascii::first_run = false;
+			render::models_changed = false;
+			render::camera_moved = false;
+		}
 		ascii::populate_ascii();
 
 		// Cursor handling
