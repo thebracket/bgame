@@ -3,6 +3,7 @@
 
 namespace render {
 	gbuffer_t * gbuffer;
+	gbuffer_t * gbuffer_alternate;
 	bool use_gbuffer1 = true;
 
 	std::unique_ptr<gbuffer_t> gbuffer1;
@@ -23,5 +24,6 @@ namespace render {
 	void swap_buffers() {
 		use_gbuffer1 = !use_gbuffer1;
 		gbuffer = use_gbuffer1 ? gbuffer1.get() : gbuffer2.get();
+		gbuffer_alternate = use_gbuffer1 ? gbuffer2.get() : gbuffer1.get();
 	}
 }

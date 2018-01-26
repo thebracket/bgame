@@ -41,7 +41,7 @@ namespace systems {
 			mouse_wz = camera_position->region_z;
 		}
 		else {
-			glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer->fbo_id);
+			glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer_alternate->fbo_id);
 			float pixels[3];
 			glReadPixels(mouse_x, screen_height - mouse_y, 1, 1, GL_RGB, GL_FLOAT, &pixels[0]);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
