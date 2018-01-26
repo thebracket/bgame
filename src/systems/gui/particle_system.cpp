@@ -16,17 +16,6 @@ namespace systems {
 		unsigned int vao = 0;
 		unsigned int vbo = 0;
 
-		struct particle_t {
-			particle_t() {}
-			particle_t(float X, float Y, float Z, float R, float G, float B, float SZ, uint8_t M, float A) : x(X), y(Y), z(Z), r(R), g(G), b(B), size(SZ), pmode(M), age(A) {}
-
-			float x, y, z;
-			float r, g, b;
-			float size;
-			uint8_t pmode;
-			float age;
-		};
-
 		std::vector<particle_t> positions;
 
 		void emit_particle(float x, float y, float z, float r, float g, float b, float size, uint8_t mode) {

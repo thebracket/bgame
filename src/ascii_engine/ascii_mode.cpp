@@ -22,6 +22,7 @@
 #include "../raws/defs/building_def_t.hpp"
 #include "../systems/ai/inventory_system.hpp"
 #include "../render_engine/chunks/chunks.hpp"
+#include "../systems/gui/particle_system.hpp"
 #include <array>
 
 namespace render {
@@ -61,6 +62,11 @@ namespace render {
 		std::array<vertex_t, REGION_WIDTH * REGION_HEIGHT * 6> buffer;
 		glm::mat4 camera_projection_matrix;
 		glm::mat4 camera_modelview_matrix;
+
+		static std::map<int, std::vector<glyph_t>> renderables;
+		uint8_t cycle = 0;
+		double cycle_timer = 0.0;
+		constexpr double CYCLE_TIME = 500.0;
 
 		static void build_buffers() {
 			int width, height;
@@ -246,14 +252,67 @@ namespace render {
 			return get_material_glyph(idx, glyph);
 		}
 
+		static inline void populate_renderables() {
+			renderables.clear();
+
+			// Add buildings
+			bengine::each<building_t, position_t>([](bengine::entity_t &e, building_t &b, position_t &pos) {
+				if (b.glyphs_ascii.empty()) {
+					std::cout << "WARNING: Building [" << b.tag << "] is lacking ASCII render data.\n";
+					return;
+				}
+				int i = 0;
+				int offX = b.width == 3 ? -1 : 0;
+				int offY = b.height == 3 ? -1 : 0;
+				for (int y = 0; y < b.height; ++y) {
+					for (int x = 0; x < b.width; ++x) {
+						const float R = b.complete ? b.glyphs_ascii[i].foreground.r : 0.3f;
+						const float G = b.complete ? b.glyphs_ascii[i].foreground.g : 0.3f;
+						const float B = b.complete ? b.glyphs_ascii[i].foreground.b : 0.3f;
+						const float BR = b.complete ? b.glyphs_ascii[i].background.r : 0.0f;
+						const float BG = b.complete ? b.glyphs_ascii[i].background.g : 0.0f;
+						const float BB = b.complete ? b.glyphs_ascii[i].background.b : 0.0f;
+						const int idx = mapidx(pos.x + x + offX, pos.y + y + offY, pos.z);
+						renderables[idx].push_back(glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), R, G, B, BR, BG, BB });
+						++i;
+					}
+				}
+			});
+
+			// Add renderables
+			bengine::each<renderable_t, position_t>([](bengine::entity_t &e, renderable_t &r, position_t &pos) {
+				const int idx = mapidx(pos.x, pos.y, pos.z);
+				renderables[idx].push_back(glyph_t{ static_cast<uint8_t>(r.glyph_ascii), r.foreground.r, r.foreground.g, r.foreground.b, r.background.r, r.background.g, r.background.b });
+			});
+			bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
+				const int idx = mapidx(pos.x, pos.y, pos.z);
+				renderables[idx].push_back(glyph_t{ static_cast<uint8_t>(r.ascii_char), 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f });
+			});
+
+			// Add particles
+			for (const auto &p : systems::particles::positions) {
+				const int x = static_cast<int>(p.x);
+				const int y = static_cast<int>(p.z);
+				const int z = static_cast<int>(p.y);
+				const int idx = mapidx(x, y, z);
+				renderables[idx].push_back(glyph_t{ '*', p.r, p.g, p.b, 0.0f, 0.0f, 0.0f });
+			}
+		}
+
 		static inline glyph_t get_dive_tile(const int &idx) {
 			glyph_t result = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 			int dive_depth = 1;
-			constexpr int MAX_DIVE = 3;
+			constexpr int MAX_DIVE = 7;
 			int check_idx = idx - (REGION_WIDTH * REGION_HEIGHT);
 			bool done = false;
 			while (check_idx > 0 && dive_depth < MAX_DIVE && !done) {
-				if (region::revealed(check_idx)) {
+				if (!renderables[check_idx].empty()) {
+					const std::vector<glyph_t> * element = &renderables[check_idx];
+					const auto n_renderables = element->size();
+					std::size_t element_idx = cycle % n_renderables;
+					result = element->at(element_idx);
+				}
+				else if (region::revealed(check_idx)) {
 					const uint8_t ttype = region::tile_type(check_idx);
 					switch (ttype) {
 					case tile_type::SEMI_MOLTEN_ROCK: result = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
@@ -320,7 +379,12 @@ namespace render {
 					const int idx = mapidx(x, y, z);
 
 					// Put in terrain
-					if (region::revealed(idx)) {
+					if (!renderables[idx].empty()) {
+						const auto n_renderables = renderables[idx].size();
+						std::size_t element_idx = cycle % n_renderables;
+						terminal[tidx] = renderables[idx][element_idx];
+					} 
+					else if (region::revealed(idx)) {
 						const uint8_t ttype = region::tile_type(idx);
 						switch (ttype) {
 						case tile_type::SEMI_MOLTEN_ROCK: terminal[tidx] = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
@@ -364,32 +428,7 @@ namespace render {
 						terminal[tidx] = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 					}
 				}
-			}
-
-			// Add buildings
-			bengine::each<building_t, position_t>([](bengine::entity_t &e, building_t &b, position_t &pos) {
-				if (pos.z == camera_position->region_z) {
-					if (b.glyphs_ascii.empty()) {
-						std::cout << "WARNING: Building [" << b.tag << "] is lacking ASCII render data.\n";
-						return;
-					}
-					int i = 0;
-					int offX = b.width == 3 ? -1 : 0;
-					int offY = b.height == 3 ? -1 : 0;
-					for (int y = 0; y < b.height; ++y) {
-						for (int x = 0; x < b.width; ++x) {
-							const float R = b.complete ? b.glyphs_ascii[i].foreground.r : 0.3f;
-							const float G = b.complete ? b.glyphs_ascii[i].foreground.g : 0.3f;
-							const float B = b.complete ? b.glyphs_ascii[i].foreground.b : 0.3f;
-							const float BR = b.complete ? b.glyphs_ascii[i].background.r : 0.0f;
-							const float BG = b.complete ? b.glyphs_ascii[i].background.g : 0.0f;
-							const float BB = b.complete ? b.glyphs_ascii[i].background.b : 0.0f;
-							terminal[termidx(pos.x + x + offX, pos.y + y + offY)] = glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), R, G, B, BR, BG, BB };
-							++i;
-						}
-					}
-				}
-			});
+			}			
 
 			if (game_master_mode == DESIGN && game_design_mode == BUILDING && buildings::has_build_mode_building) {
 				// We have a building selected; determine if it can be built and show it
@@ -446,19 +485,7 @@ namespace render {
 						}
 					}
 				}
-			}
-
-			// Add renderables
-			bengine::each<renderable_t, position_t>([](bengine::entity_t &e, renderable_t &r, position_t &pos) {
-				if (pos.z == camera_position->region_z) {
-					terminal[termidx(pos.x, pos.y)] = glyph_t{ static_cast<uint8_t>(r.glyph_ascii), r.foreground.r, r.foreground.g, r.foreground.b, r.background.r, r.background.g, r.background.b };
-				}
-			});
-			bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
-				if (pos.z == camera_position->region_z) {
-					terminal[termidx(pos.x, pos.y)] = glyph_t{ static_cast<uint8_t>(r.ascii_char), 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
-				}
-			});
+			}			
 		}
 
 		static inline void render_cursors() {
@@ -624,7 +651,14 @@ namespace render {
 		}
 	}
 
-	void ascii_render(const double &duration_ms) {
+	void ascii_render(const double &duration_ms) 
+	{
+		ascii::cycle_timer += duration_ms;
+		if (ascii::cycle_timer > ascii::CYCLE_TIME) {
+			ascii::cycle_timer = 0.0;
+			++ascii::cycle;
+		}
+
 		// If necessary, build the ASCII grid buffers
 		if (ascii::ascii_vao == 0) ascii::build_buffers();
 
@@ -637,6 +671,7 @@ namespace render {
 
 		// Compile the ASCII render data
 		ascii::ascii_camera();
+		ascii::populate_renderables();
 		ascii::populate_ascii();
 
 		// Cursor handling
