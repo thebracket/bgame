@@ -12,7 +12,7 @@ namespace render {
 		glGenTextures(1, &depth_cubemap);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cubemap);
 		for (unsigned int i = 0; i < 6; ++i) {
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, w, w, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT32F, w, w, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		}
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
