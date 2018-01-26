@@ -60,7 +60,8 @@ namespace splash_screen {
         lighter_shader = load_shaders("game_assets/lighter_vertex.glsl", "game_assets/lighter_fragment.glsl");
 		pointlight_shader = load_shaders("game_assets/pointlight_vertex.glsl", "game_assets/pointlight_fragment.glsl", "game_assets/pointlight_geometry.glsl");
 		ascii_shader = load_shaders("game_assets/ascii_vertex.glsl", "game_assets/ascii_fragment.glsl");
-    }
+		ascii_light_shader = load_shaders("game_assets/ascii_light_vertex.glsl", "game_assets/ascii_light_fragment.glsl");
+	}
 
     static inline void init_raws(int id) {
         std::cout << "RAW INIT - Seen thread " << id << "\n";

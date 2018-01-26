@@ -18,4 +18,5 @@ namespace assets {
 	unsigned int pointlight_shader;
 	unsigned int lighter_shader;
 	unsigned int ascii_shader;
+	unsigned int ascii_light_shader;
 }

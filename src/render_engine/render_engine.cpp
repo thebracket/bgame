@@ -128,7 +128,7 @@ namespace render {
         render_buffer_quad();
     }
 
-	static void update_buffers() {
+	void update_buffers() {
 		chunk_maintenance();
 
 		build_water_geometry();

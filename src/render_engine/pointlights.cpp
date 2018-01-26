@@ -191,4 +191,34 @@ namespace render {
 			l.second.render_light();
 		}
 	}
+
+	void render_ascii_pointlights(unsigned int &ascii_fbo, unsigned int &ascii_vao, unsigned int &texture_id, std::size_t buffer_size, glm::mat4 &ascii_projection_matrix, glm::mat4 &ascii_modelview_matrix) {
+		for (auto &l : pointlights) {
+			if (l.first == std::numeric_limits<std::size_t>::max() && (calendar->hour < 7 || calendar->hour > 17)) break;
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			glDisable(GL_DEPTH_TEST);
+			glBindFramebuffer(GL_FRAMEBUFFER, ascii_fbo);
+			glCheckError();
+			glUseProgram(assets::ascii_light_shader);
+			glCheckError();
+			glBindVertexArray(ascii_vao);
+			glCheckError();
+			glUniformMatrix4fv(glGetUniformLocation(assets::ascii_light_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(ascii_projection_matrix));
+			glUniformMatrix4fv(glGetUniformLocation(assets::ascii_light_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(ascii_modelview_matrix));
+			glUniform1i(glGetUniformLocation(assets::ascii_light_shader, "ascii_tex"), 0);
+			glUniform3f(glGetUniformLocation(assets::ascii_light_shader, "light_position"), l.second.light_pos.x, l.second.light_pos.y, l.second.light_pos.z);
+			glUniform1f(glGetUniformLocation(assets::ascii_light_shader, "far_plane"), l.second.radius);
+			glUniform1i(glGetUniformLocation(assets::ascii_light_shader, "depthMap"), 1);
+			glUniform3f(glGetUniformLocation(assets::ascii_light_shader, "light_color"), l.second.light_col.r, l.second.light_col.g, l.second.light_col.b);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture_id);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, l.second.buffer->depth_cubemap);
+			glDrawArrays(GL_TRIANGLES, 0, buffer_size);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glDisable(GL_BLEND);
+		}
+	}
 }

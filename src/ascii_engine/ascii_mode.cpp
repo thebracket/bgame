@@ -23,6 +23,8 @@
 #include "../systems/ai/inventory_system.hpp"
 #include "../render_engine/chunks/chunks.hpp"
 #include "../systems/gui/particle_system.hpp"
+#include "../render_engine/pointlights.hpp"
+#include "../render_engine/render_engine.hpp"
 #include <array>
 
 namespace render {
@@ -44,13 +46,13 @@ namespace render {
 			float g;
 			float b;
 		};
-		constexpr int N_VERTICES = 13;
+		static constexpr int N_VERTICES = 13;
 
-		unsigned int ascii_vao = 0;
-		unsigned int ascii_vbo = 0;
+		static unsigned int ascii_vao = 0;
+		static unsigned int ascii_vbo = 0;
 		unsigned int ascii_fbo = 0;
 		unsigned int ascii_position_tex = 0;
-		unsigned int albedo_tex = 0;
+		static unsigned int albedo_tex = 0;
 
 		struct glyph_t {
 			uint8_t glyph;
@@ -58,15 +60,15 @@ namespace render {
 			float br, bg, bb;
 		};
 
-		std::array<glyph_t, REGION_WIDTH * REGION_HEIGHT> terminal;
-		std::array<vertex_t, REGION_WIDTH * REGION_HEIGHT * 6> buffer;
-		glm::mat4 camera_projection_matrix;
-		glm::mat4 camera_modelview_matrix;
+		static std::array<glyph_t, REGION_WIDTH * REGION_HEIGHT> terminal;
+		static std::array<vertex_t, REGION_WIDTH * REGION_HEIGHT * 6> buffer;
+		static glm::mat4 camera_projection_matrix;
+		static glm::mat4 camera_modelview_matrix;
 
 		static std::map<int, std::vector<glyph_t>> renderables;
-		uint8_t cycle = 0;
-		double cycle_timer = 0.0;
-		constexpr double CYCLE_TIME = 500.0;
+		static uint8_t cycle = 0;
+		static double cycle_timer = 0.0;
+		static constexpr double CYCLE_TIME = 500.0;
 
 		static void build_buffers() {
 			int width, height;
@@ -582,7 +584,7 @@ namespace render {
 			}
 		}
 
-		static inline void render_ascii()
+		static inline void render_ascii_ambient()
 		{
 			constexpr float glyph_width_texture_space = 1.0f / 16.0f;
 
@@ -605,12 +607,12 @@ namespace render {
 					const float TY0 = (terminal[tidx].glyph / 16) * glyph_width_texture_space;
 					const float TW = TX0 + glyph_width_texture_space;
 					const float TH = TY0 + glyph_width_texture_space;
-					const float R = terminal[tidx].r;
-					const float G = terminal[tidx].g;
-					const float B = terminal[tidx].b;
-					const float BR = terminal[tidx].br;
-					const float BG = terminal[tidx].bg;
-					const float BB = terminal[tidx].bb;
+					const float R = terminal[tidx].r * 0.25f;
+					const float G = terminal[tidx].g * 0.25f;
+					const float B = terminal[tidx].b * 0.25f;
+					const float BR = terminal[tidx].br * 0.25f;
+					const float BG = terminal[tidx].bg * 0.25f;
+					const float BB = terminal[tidx].bb * 0.25f;
 
 					buffer[buffer_idx] =   vertex_t{ x1, z1, wx, wy, wz, TW, TH, R, G, B, BR, BG, BB};
 					buffer[buffer_idx +1] = vertex_t{ x1, z0, wx, wy, wz, TW, TY0, R, G, B, BR, BG, BB };
@@ -625,7 +627,7 @@ namespace render {
 
 
 			// Map the data
-			glInvalidateBufferData(ascii_vbo);
+			//glInvalidateBufferData(ascii_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, ascii_vbo);
 			glBufferData(GL_ARRAY_BUFFER, buffer.size() * N_VERTICES * sizeof(float), &buffer[0], GL_DYNAMIC_DRAW);
 			glCheckError();
@@ -668,6 +670,7 @@ namespace render {
 		}
 		chunks::update_dirty_chunks();
 		chunks::update_buffers();
+		render::update_buffers();
 
 		// Compile the ASCII render data
 		ascii::ascii_camera();
@@ -678,10 +681,14 @@ namespace render {
 		ascii::render_cursors();
 
 		// Draw it
-		ascii::render_ascii();
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		render::update_pointlights();
+		ascii::render_ascii_ambient();
+		ascii::present();
+		render::render_ascii_pointlights(ascii::ascii_fbo, ascii::ascii_vao, assets::ascii_texture->texture_id, ascii::buffer.size(), ascii::camera_projection_matrix, ascii::camera_modelview_matrix);
 
 		// Present the FBO to the screen
-		ascii::present();
 		render_test_quad(ascii::albedo_tex);
 	}
 }
