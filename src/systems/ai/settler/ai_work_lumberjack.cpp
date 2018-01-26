@@ -94,7 +94,7 @@ namespace systems {
 					}
 
 					// Find a tree position
-					std::set<int> claimed_trees;
+					std::set<std::size_t> claimed_trees;
 					each<ai_tag_work_lumberjack>([&claimed_trees, &e](entity_t &E, ai_tag_work_lumberjack &LJ) {
 						if (e.id != E.id && LJ.target_tree > 0) claimed_trees.insert(E.id);
 					});

@@ -17,9 +17,9 @@
 
 struct designations_t {
 
-	std::unordered_map<int, uint8_t> mining;
-	std::unordered_map<int, uint8_t> architecture;
-	std::unordered_map<int, position_t> chopping;
+	std::unordered_map<std::size_t, uint8_t> mining;
+	std::unordered_map<std::size_t, uint8_t> architecture;
+	std::unordered_map<std::size_t, position_t> chopping;
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	std::vector<std::pair<bool, position_t>> guard_points;

@@ -206,7 +206,7 @@ namespace systems {
 					// is implemented it's a good idea not to run away from your target.
 					auto mounted = e.component<riding_t>();
 
-					const float range = weapons::shooting_range(e, pos);
+					const float range = static_cast<float>(weapons::shooting_range(e, pos));
 					if (hostile.terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						sentient_attacks::request_attack(sentient_attacks::sentient_attack_message{ e.id, hostile.closest_fear });
