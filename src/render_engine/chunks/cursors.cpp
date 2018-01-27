@@ -146,7 +146,7 @@ namespace render {
 				}
 			}
 			else if (game_design_mode == DIGGING) {
-				for (const auto &mine : designations->mining) {
+				/*for (const auto &mine : designations->mining) {
 					if (mine.first < 1 || mine.first > REGION_TILES_COUNT) break;
 					auto[x, y, z] = idxmap(mine.first);
 					if (z < camera_position->region_z+2 && z > camera_position->region_z - 2) {
@@ -163,7 +163,7 @@ namespace render {
 
 						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
 					}
-				}
+				}*/
 			}
 		}
 

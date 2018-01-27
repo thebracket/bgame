@@ -170,6 +170,7 @@
     <ClCompile Include="..\..\src\global_assets\game_config.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_designations.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_logger.cpp" />
+    <ClCompile Include="..\..\src\global_assets\game_mining.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_mode.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_pause.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_planet.cpp" />
@@ -423,6 +424,7 @@
     <ClInclude Include="..\..\src\components\lever.hpp" />
     <ClInclude Include="..\..\src\components\lightsource.hpp" />
     <ClInclude Include="..\..\src\components\logger.hpp" />
+    <ClInclude Include="..\..\src\components\mining\mining_designations.hpp" />
     <ClInclude Include="..\..\src\components\name.hpp" />
     <ClInclude Include="..\..\src\components\natural_attacks_t.hpp" />
     <ClInclude Include="..\..\src\components\position.hpp" />
@@ -449,6 +451,7 @@
     <ClInclude Include="..\..\src\global_assets\game_config.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_designations.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_logger.hpp" />
+    <ClInclude Include="..\..\src\global_assets\game_mining.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_mode.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_pause.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_planet.hpp" />

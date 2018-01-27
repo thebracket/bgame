@@ -31,6 +31,7 @@ namespace systems {
 		}
 
 		void make_mining_map() {
+			/*
 			// Start by setting all cells to -1
 			std::fill(mining_map.begin(), mining_map.end(), std::numeric_limits<uint8_t>::max());
 			std::fill(mining_targets.begin(), mining_targets.end(), std::numeric_limits<int>::max());
@@ -105,6 +106,7 @@ namespace systems {
 			for (auto &loc : starting_points) {
 				walk_mining_map(std::get<0>(loc), std::get<1>(loc), std::get<2>(loc), 0, std::get<3>(loc));
 			}
+			*/
 		}
 
 		bool first_run = true;

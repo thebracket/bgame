@@ -12,6 +12,7 @@
 #include "../components/world_position.hpp"
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
+#include "../components/mining/mining_designations.hpp"
 #include "../components/logger.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../systems/run_systems.hpp"
@@ -20,6 +21,7 @@
 #include "../global_assets/game_logger.hpp"
 #include "../global_assets/game_mode.hpp"
 #include "../global_assets/game_pause.hpp"
+#include "../global_assets/game_mining.hpp"
 #include "../ascii_engine/ascii_mode.hpp"
 
 namespace play_game {
@@ -47,9 +49,10 @@ namespace play_game {
         std::cout << "Storing important entity handles\n";
 
         int region_x, region_y;
-        each<world_position_t, calendar_t, designations_t, logger_t, camera_options_t>([&region_x, &region_y]
-                                                                                               (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design,
-                                                                                                logger_t &log, camera_options_t &camera_prefs) {
+        each<world_position_t, calendar_t, designations_t, logger_t, camera_options_t, mining_designations_t>(
+			[&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design,
+                                    logger_t &log, camera_options_t &camera_prefs, mining_designations_t &mining) 
+		{
             camera_entity = entity.id;
             region_x = pos.world_x;
             region_y = pos.world_y;
@@ -58,6 +61,7 @@ namespace play_game {
             designations = &design;
             logger = &log;
             camera = &camera_prefs;
+			mining_designations = &mining;
         });
 
          // Loading the region

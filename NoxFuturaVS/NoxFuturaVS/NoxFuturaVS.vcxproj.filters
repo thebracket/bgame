@@ -190,6 +190,9 @@
     <Filter Include="Source Files\components\items">
       <UniqueIdentifier>{1c3713cb-6a5f-4615-83b0-b726116fbffb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\components\mining">
+      <UniqueIdentifier>{541b25cd-eda9-44fe-bfe7-8e9e4649ce10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -734,6 +737,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\item_info_system.cpp">
       <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_mining.cpp">
+      <Filter>Source Files\global_assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1639,6 +1645,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\items\item_creator.hpp">
       <Filter>Header Files\components\items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\mining\mining_designations.hpp">
+      <Filter>Header Files\components\mining</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_mining.hpp">
+      <Filter>Header Files\global_assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

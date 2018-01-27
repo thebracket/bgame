@@ -23,6 +23,7 @@ namespace systems {
 
 		namespace jobs_board {
 			void evaluate_mining(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
+				/*
 				if (designations->mining.empty()) return; // No mining to do
 
 				auto pick_distance = pick_map.get(mapidx(pos));
@@ -33,6 +34,7 @@ namespace systems {
 				const int distance = mining_map[idx] + pick_distance;
 
 				board.insert(std::make_pair(distance, jt));
+				*/
 			}
 		}
 
@@ -44,6 +46,7 @@ namespace systems {
 				register_job_offer<ai_tag_work_miner>(jobs_board::evaluate_mining);
 			}
 
+			/*
 			ai_work_template<ai_tag_work_miner> work;
 
 			work.do_ai([&work](entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
@@ -193,6 +196,7 @@ namespace systems {
 					return;
 				}
 			});
+			*/
 		}
 	}
 }

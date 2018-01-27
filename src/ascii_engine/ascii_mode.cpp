@@ -564,7 +564,7 @@ namespace render {
 					}
 				}
 				else if (game_design_mode == DIGGING) {
-					for (const auto &mine : designations->mining) {
+					/*for (const auto &mine : designations->mining) {
 						if (mine.first < 1 || mine.first > REGION_TILES_COUNT) break;
 						auto[x, y, z] = idxmap(mine.first);
 						if (z == camera_position->region_z) {
@@ -581,7 +581,7 @@ namespace render {
 
 							terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 						}
-					}
+					}*/
 				}
 			}
 		}

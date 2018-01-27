@@ -37,6 +37,7 @@ namespace systems {
 			if (is_key_down(GLFW_KEY_X)) game_mining_mode = MINING_DELETE;
 
 			if (left_click) {
+				/*
 				const auto idx = mapidx(mouse_wx, mouse_wy, mouse_wz);
 				if (is_mining_designation_valid(mouse_wx, mouse_wy, mouse_wz, game_mining_mode)) {
 					switch (game_mining_mode) {
@@ -51,6 +52,7 @@ namespace systems {
 					//std::cout << "Added mining designation\n";
 					mining_system::mining_map_changed();
 				}
+				*/
 			}
 
 			ImGui::Begin(win_mining.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);

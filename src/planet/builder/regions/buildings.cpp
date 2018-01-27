@@ -20,6 +20,7 @@
 #include "../../../components/turret_t.hpp"
 #include "../../../components/initiative.hpp"
 #include "../../../components/construct_container.hpp"
+#include "../../../components/mining/mining_designations.hpp"
 #include "../../../bengine/geometry.hpp"
 
 using namespace region;
@@ -208,7 +209,8 @@ void build_game_components(const int crash_x, const int crash_y, const int crash
 		->assign(std::move(calendar))
 		->assign(designations_t{})
         ->assign(logger_t{})
-        ->assign(camera_options_t{TOP_DOWN, ascii_mode, 12});
+        ->assign(camera_options_t{TOP_DOWN, ascii_mode, 12})
+		->assign(mining_designations_t{});
 }
 
 int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {
