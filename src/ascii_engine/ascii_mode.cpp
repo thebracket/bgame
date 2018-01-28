@@ -26,6 +26,8 @@
 #include "../render_engine/pointlights.hpp"
 #include "../render_engine/render_engine.hpp"
 #include "../render_engine/vox/renderables.hpp"
+#include "../global_assets/game_mining.hpp"
+#include "../systems/gui/design_mining.hpp"
 #include <array>
 
 namespace render {
@@ -564,24 +566,39 @@ namespace render {
 					}
 				}
 				else if (game_design_mode == DIGGING) {
-					/*for (const auto &mine : designations->mining) {
-						if (mine.first < 1 || mine.first > REGION_TILES_COUNT) break;
-						auto[x, y, z] = idxmap(mine.first);
+					// Add the "hot" list
+					for (const auto &idx : systems::design_mining::mining_cursor_list) {
+						auto[x, y, z] = idxmap(idx.first);
 						if (z == camera_position->region_z) {
 							uint8_t glyph = 1;
-							switch (mine.second) {
-							case 1: glyph = 176; break; // Dig
-							case 2: glyph = 31; break; // Channel
-							case 3: glyph = 30; break; // Ramp
-							case 4: glyph = '<'; break; // Up
-							case 5: glyph = '>'; break; // Down
-							case 6: glyph = 'X'; break; // Up-Down
-							default: std::cout << "Warning: Unknown mining type: " << mine.second << "\n";
+							switch (idx.second) {
+							case MINE_DIG: glyph = 176; break;
+							case MINE_CHANNEL: glyph = 31; break;
+							case MINE_RAMP: glyph = 30; break;
+							case MINE_STAIRS_UP: glyph = '<'; break;
+							case MINE_STAIRS_DOWN: glyph = '>'; break;
+							case MINE_STAIRS_UPDOWN: glyph = 'X'; break;
 							}
-
 							terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 						}
-					}*/
+					}
+
+					// Actual designations
+					for (const auto &idx : mining_designations->mining_targets) {
+						auto[x, y, z] = idxmap(idx.first);
+						if (z == camera_position->region_z) {
+							uint8_t glyph = 1;
+							switch (idx.second) {
+							case MINE_DIG: glyph = 176; break;
+							case MINE_CHANNEL: glyph = 31; break;
+							case MINE_RAMP: glyph = 30; break;
+							case MINE_STAIRS_UP: glyph = '<'; break;
+							case MINE_STAIRS_DOWN: glyph = '>'; break;
+							case MINE_STAIRS_UPDOWN: glyph = 'X'; break;
+							}
+							terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+						}
+					}
 				}
 			}
 		}

@@ -593,6 +593,7 @@
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\item_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\mining_template.hpp" />
     <ClInclude Include="..\..\src\systems\gui\particle_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\settler_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\tooltip_system.hpp" />

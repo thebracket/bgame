@@ -1652,6 +1652,9 @@
     <ClInclude Include="..\..\src\global_assets\game_mining.hpp">
       <Filter>Header Files\global_assets</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\mining_template.hpp">
+      <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset8.hpp">

@@ -8,6 +8,8 @@
 #include "../../global_assets/game_designations.hpp"
 #include "../../systems/gui/particle_system.hpp"
 #include "../../global_assets/game_camera.hpp"
+#include "../../global_assets/game_mining.hpp"
+#include "../../systems/gui/design_mining.hpp"
 
 namespace render {
 	static unsigned int cursors_vao = 0;
@@ -146,24 +148,39 @@ namespace render {
 				}
 			}
 			else if (game_design_mode == DIGGING) {
-				/*for (const auto &mine : designations->mining) {
-					if (mine.first < 1 || mine.first > REGION_TILES_COUNT) break;
-					auto[x, y, z] = idxmap(mine.first);
-					if (z < camera_position->region_z+2 && z > camera_position->region_z - 2) {
+				// Add the "hot" list
+				for (const auto &idx : systems::design_mining::mining_cursor_list) {
+					auto[x, y, z] = idxmap(idx.first);
+					if (z == camera_position->region_z) {
 						int glyph = 1;
-						switch (mine.second) {
-						case 1: glyph = 5; break; // Dig
-						case 2: glyph = 6; break; // Channel
-						case 3: glyph = 7; break; // Ramp
-						case 4: glyph = 8; break; // Up
-						case 5: glyph = 9; break; // Down
-						case 6: glyph = 10; break; // Up-Down
-						default: std::cout << "Warning: Unknown mining type: " << mine.second << "\n";
+						switch (idx.second) {
+						case MINE_DIG: glyph = 5; break;
+						case MINE_CHANNEL: glyph = 6; break;
+						case MINE_RAMP: glyph = 7; break;
+						case MINE_STAIRS_UP: glyph = 8; break;
+						case MINE_STAIRS_DOWN: glyph = 9; break;
+						case MINE_STAIRS_UPDOWN: glyph = 10; break;
 						}
-
 						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
 					}
-				}*/
+				}
+
+				// Actual designations
+				for (const auto &idx : mining_designations->mining_targets) {
+						auto[x, y, z] = idxmap(idx.first);
+						if (z == camera_position->region_z) {
+							int glyph = 1;
+							switch (idx.second) {
+							case MINE_DIG: glyph = 5; break;
+							case MINE_CHANNEL: glyph = 6; break;
+							case MINE_RAMP: glyph = 7; break;
+							case MINE_STAIRS_UP: glyph = 8; break;
+							case MINE_STAIRS_DOWN: glyph = 9; break;
+							case MINE_STAIRS_UPDOWN: glyph = 10; break;
+							}
+							add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
+					}
+				}
 			}
 		}
 
