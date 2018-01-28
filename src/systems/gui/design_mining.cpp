@@ -61,6 +61,35 @@ namespace systems {
 				}
 			}
 			else {
+				if (mining_designations->mine_mode == MINE_DELETE) {
+					if (mining_designations->brush_type == 0) {
+						// Box mode delete
+						for (int y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
+							for (int x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
+								const int idx = mapidx(x, y, mouse_wz);
+								mining_cursor_list.erase(
+									std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
+									mining_cursor_list.end()
+								);
+							}
+						}
+					}
+					else if (mining_designations->brush_type == 1) {
+						// Circle mode delete
+						for (int y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
+							for (int x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
+								const float distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
+								if (distance < (static_cast<float>(mining_designations->radius))) {
+									const int idx = mapidx(x, y, mouse_wz);
+									mining_cursor_list.erase(
+										std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
+										mining_cursor_list.end()
+									);
+								}
+							}
+						}
+					}
+				} else 
 				if (mining_designations->mine_mode != MINE_STAIRS_DOWN && mining_designations->mine_mode != MINE_STAIRS_UP && mining_designations->mine_mode != MINE_STAIRS_UPDOWN) {
 					if (mining_designations->brush_type == 0) {
 						// Box mode
