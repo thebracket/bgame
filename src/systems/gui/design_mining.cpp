@@ -218,9 +218,11 @@ namespace systems {
 			if (!showing_save_template) {
 				ImGui::Begin(win_mining.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
 
-				ImGui::Text("Mining Mode:");
-				ImGui::SameLine();
-				ImGui::Combo("##minemode", &mining_designations->mine_mode, dig_modes);
+				if (mining_designations->brush_type != 2) {
+					ImGui::Text("Mining Mode:");
+					ImGui::SameLine();
+					ImGui::Combo("##minemode", &mining_designations->mine_mode, dig_modes);
+				}
 
 				if (mining_designations->mine_mode != MINE_STAIRS_DOWN && mining_designations->mine_mode != MINE_STAIRS_UP && mining_designations->mine_mode != MINE_STAIRS_UPDOWN) {
 					// We're in digging mode
