@@ -314,6 +314,7 @@ namespace systems {
 					for (const auto &idx : mining_cursor_list) {
 						mining_designations->mining_targets[idx.first] = idx.second;
 					}
+					mining_system::mining_map_changed();
 				}
 			}
 			else {

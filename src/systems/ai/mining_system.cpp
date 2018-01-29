@@ -1,7 +1,8 @@
 #include "stdafx.h"
+#include "mining_system.hpp"
 #include "ai_status_effects.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../global_assets/game_designations.hpp"
+#include "../../global_assets/game_mining.hpp"
 
 namespace systems {
 	namespace mining_system {
@@ -9,115 +10,98 @@ namespace systems {
 		using namespace bengine;
 		using namespace region;
 
-		std::vector<uint8_t> mining_map;
-		std::vector<int> mining_targets;
+		std::array<mine_map_entry_t, REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH> mining_map;
 		bool dirty = true;
 
-		void walk_mining_map(const int x, const int y, const int z, const int distance, const int IDX) {
-			if (distance > 250) return;
+		static void walk_mining_map(const int x, const int y, const int z, const int target, const int distance) {
+			if (distance > 253) return; // bail out because we've gone too far
+			if (x < 1 || x > REGION_WIDTH - 1 || y < 1 || y > REGION_HEIGHT - 1 || z < 1 || z > REGION_DEPTH - 1) return; // Bounds check
 			const auto idx = mapidx(x, y, z);
-			if (mining_map[idx] > distance) {
-				if (!flag(idx, CAN_STAND_HERE)) return;
-				mining_map[idx] = distance;
-				mining_targets[idx] = IDX;
+			if (!flag(idx, CAN_STAND_HERE)) return; // bail out, because you can't go here
+			if (mining_map[idx].distance > distance) { // Ignore any cases in which the tile already has a better option
+				mining_map[idx].distance = distance;
+				mining_map[idx].target = target;
 
-				if (flag(idx, CAN_GO_NORTH)) { walk_mining_map(x, y - 1, z, distance + 1, IDX); }
-				if (flag(idx, CAN_GO_SOUTH)) { walk_mining_map(x, y + 1, z, distance + 1, IDX); }
-				if (flag(idx, CAN_GO_EAST)) { walk_mining_map(x + 1, y, z, distance + 1, IDX); }
-				if (flag(idx, CAN_GO_WEST)) { walk_mining_map(x - 1, y, z, distance + 1, IDX); }
-				if (flag(idx, CAN_GO_UP)) { walk_mining_map(x, y, z + 1, distance + 1, IDX); }
-				if (flag(idx, CAN_GO_DOWN)) { walk_mining_map(x, y, z - 1, distance + 1, IDX); }
+				if (flag(idx, CAN_GO_NORTH)) walk_mining_map(x, y - 1, z, target, distance + 1);
+				if (flag(idx, CAN_GO_SOUTH)) walk_mining_map(x, y + 1, z, target, distance + 1);
+				if (flag(idx, CAN_GO_EAST)) walk_mining_map(x + 1, y, z, target, distance + 1);
+				if (flag(idx, CAN_GO_WEST)) walk_mining_map(x - 1, y - 1, z, target, distance + 1);
+				if (flag(idx, CAN_GO_UP)) walk_mining_map(x, y, z + 1, target, distance + 1);
+				if (flag(idx, CAN_GO_DOWN)) walk_mining_map(x, y, z - 1, target, distance + 1);
 			}
 		}
 
-		void make_mining_map() {
-			/*
-			// Start by setting all cells to -1
-			std::fill(mining_map.begin(), mining_map.end(), std::numeric_limits<uint8_t>::max());
-			std::fill(mining_targets.begin(), mining_targets.end(), std::numeric_limits<int>::max());
+		static void make_mining_map() {
+			// This builds a map of available mining opportunities, using what is basically a Dijkstra map (flow map).
+			auto filler = mine_map_entry_t{ std::numeric_limits<uint8_t>::max(), -1 };
+			std::fill(mining_map.begin(), mining_map.end(), filler);
 
-			// Now we iterate the designations, and build a list of starting points
-			std::vector<std::tuple<int, int, int, int>> starting_points;
-			for (int z = 1; z<REGION_DEPTH - 2; ++z) {
-				for (int y = 1; y<REGION_HEIGHT - 2; ++y) {
-					for (int x = 1; x<REGION_WIDTH - 2; ++x) {
-						const auto idx = mapidx(x, y, z);
-						auto mf = designations->mining.find(idx);
-						if (mf != designations->mining.end()) {
-							if (mf->second == 1) {
-								// Regular digging - can stand on a neighboring square horizontally
-								starting_points.push_back(std::make_tuple(x - 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x + 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y - 1, z, idx));
-								starting_points.push_back(std::make_tuple(x, y + 1, z, idx));
-							}
-							else if (mf->second == 2) {
-								// Channeling - can stand on the square or the square below or a spot neighboring the top
-								starting_points.push_back(std::make_tuple(x, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y, z - 1, idx));
-								starting_points.push_back(std::make_tuple(x - 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x + 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y - 1, z, idx));
-								starting_points.push_back(std::make_tuple(x, y + 1, z, idx));
-							}
-							else if (mf->second == 3) {
-								// Ramping - can stand on the square or the square above or a spot neighboring the bottom
-								starting_points.push_back(std::make_tuple(x, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y, z + 1, idx));
-								starting_points.push_back(std::make_tuple(x - 1, y, z - 1, idx));
-								starting_points.push_back(std::make_tuple(x + 1, y, z - 1, idx));
-								starting_points.push_back(std::make_tuple(x, y - 1, z - 1, idx));
-								starting_points.push_back(std::make_tuple(x, y + 1, z - 1, idx));
-							}
-							else if (mf->second == 4) {
-								// Up stairs - can stand on the square or the square above
-								starting_points.push_back(std::make_tuple(x, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y, z + 1, idx));
-								starting_points.push_back(std::make_tuple(x - 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x + 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y - 1, z, idx));
-								starting_points.push_back(std::make_tuple(x, y + 1, z, idx));
-							}
-							else if (mf->second == 5) {
-								// Down stairs - can stand on the square or the square below, or adjacent to the top
-								starting_points.push_back(std::make_tuple(x, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y, z - 1, idx));
-								starting_points.push_back(std::make_tuple(x - 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x + 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y - 1, z, idx));
-								starting_points.push_back(std::make_tuple(x, y + 1, z, idx));
-							}
-							else if (mf->second == 6) {
-								// Up/down Stairs - can stand on the square or above/below
-								starting_points.push_back(std::make_tuple(x, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y, z - 1, idx));
-								starting_points.push_back(std::make_tuple(x, y, z + 1, idx));
-								starting_points.push_back(std::make_tuple(x - 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x + 1, y, z, idx));
-								starting_points.push_back(std::make_tuple(x, y - 1, z, idx));
-								starting_points.push_back(std::make_tuple(x, y + 1, z, idx));
-							}
-						}
-					}
+			std::vector<std::tuple<int, int, int, int>> starting_points; // x,y,z,operation
+			for (const auto &operation : mining_designations->mining_targets) {
+				const int idx = operation.first;
+				const uint8_t type = operation.second;
+				auto[x, y, z] = idxmap(idx);
+
+				if (type == MINE_DIG) {
+					// Digging can happen on any adjacent tile.
+					starting_points.emplace_back( std::make_tuple(x - 1, y, z, idx ));
+					starting_points.emplace_back( std::make_tuple(x + 1, y, z, idx ));
+					starting_points.emplace_back( std::make_tuple(x, y - 1, z, idx ));
+					starting_points.emplace_back( std::make_tuple(x, y + 1, z, idx ));
+				}
+				else if (type == MINE_CHANNEL) {
+					// Channeling - can stand on the square, the square below, or a spot neighboring the top
+					starting_points.emplace_back(std::make_tuple(x, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y, z-1, idx));
+					starting_points.emplace_back(std::make_tuple(x - 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x + 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y - 1, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y + 1, z, idx));
+				}
+				else if (type == MINE_RAMP) {
+					// Ramps - can stand on the square, the square above, or a spot neighboring the bottom
+					starting_points.emplace_back(std::make_tuple(x, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y, z + 1, idx));
+					starting_points.emplace_back(std::make_tuple(x - 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x + 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y - 1, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y + 1, z, idx));
+				}
+				else if (type == MINE_STAIRS_UP) {
+					// Up stairs - stand on square or square above
+					starting_points.emplace_back(std::make_tuple(x, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y, z + 1, idx));
+					starting_points.emplace_back(std::make_tuple(x - 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x + 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y - 1, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y + 1, z, idx));
+				}
+				else if (type == MINE_STAIRS_DOWN) {
+					// Up stairs - stand on square or square below
+					starting_points.emplace_back(std::make_tuple(x, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y, z - 1, idx));
+					starting_points.emplace_back(std::make_tuple(x - 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x + 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y - 1, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y + 1, z, idx));
+				}
+				else if (type == MINE_STAIRS_UPDOWN) {
+					starting_points.emplace_back(std::make_tuple(x, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y, z - 1, idx));
+					starting_points.emplace_back(std::make_tuple(x, y, z + 1, idx));
+					starting_points.emplace_back(std::make_tuple(x - 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x + 1, y, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y - 1, z, idx));
+					starting_points.emplace_back(std::make_tuple(x, y + 1, z, idx));
 				}
 			}
 
-			// Now we iterate through each point, and update the distance map
-			for (auto &loc : starting_points) {
-				walk_mining_map(std::get<0>(loc), std::get<1>(loc), std::get<2>(loc), 0, std::get<3>(loc));
+			for (const auto &loc : starting_points) {
+				walk_mining_map(std::get<0>(loc), std::get<1>(loc), std::get<2>(loc), std::get<3>(loc), 0);
 			}
-			*/
 		}
 
-		bool first_run = true;
-
 		void run(const double &duration_ms) {
-			if (first_run) {
-				first_run = false;
-				mining_map.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
-				mining_targets.resize(REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH);
-			}
-
 			if (dirty) {
 				make_mining_map();
 			}
@@ -125,7 +109,8 @@ namespace systems {
 		}
 
 		void mining_map_changed() {
-			dirty = true;
+			make_mining_map();
+			dirty = false;
 		}
 	}
 }

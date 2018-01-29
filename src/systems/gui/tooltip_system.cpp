@@ -21,6 +21,7 @@
 #include "../../components/claimed_t.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../global_assets/game_config.hpp"
+#include "../ai/mining_system.hpp"
 #include "../../stdafx.h"
 
 namespace systems {
@@ -54,7 +55,8 @@ namespace systems {
 					lines.push_back(ss.str());
 				}
 
-				if (water_level(tile_idx)>0) lines.push_back(std::string("Water level: " + std::to_string(water_level(tile_idx))));
+				if (water_level(tile_idx) > 0) lines.push_back(std::string("Water level: " + std::to_string(water_level(tile_idx))));
+				lines.push_back("Mining distance: " + std::to_string(mining_system::mining_map[tile_idx].distance));
 
 				{ // Base tile type
 					std::stringstream ss;

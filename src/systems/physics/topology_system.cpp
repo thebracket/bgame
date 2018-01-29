@@ -18,6 +18,7 @@
 #include "../gui/particle_system.hpp"
 #include "../ai/mining_system.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../../components/mining/mining_designations.hpp"
 
 using namespace bengine;
 
@@ -250,12 +251,12 @@ namespace systems {
 		void run(const double &duration_ms) {
 			mining.process_all([](const perform_mining_message &e) {
 				switch (e.operation) {
-				case 1: dig(e); break;
-				case 2: channel(e); break;
-				case 3: ramp(e); break;
-				case 4: stairs_up(e); break;
-				case 5: stairs_down(e); break;
-				case 6: stairs_updown(e); break;
+				case MINE_DIG: dig(e); break;
+				case MINE_CHANNEL: channel(e); break;
+				case MINE_RAMP: ramp(e); break;
+				case MINE_STAIRS_UP: stairs_up(e); break;
+				case MINE_STAIRS_DOWN: stairs_down(e); break;
+				case MINE_STAIRS_UPDOWN: stairs_updown(e); break;
 				default: throw std::runtime_error("Unknown mining operation: " + std::to_string(e.operation));
 				}
 				spawn_mining_result(e);
