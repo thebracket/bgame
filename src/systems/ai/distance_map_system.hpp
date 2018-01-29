@@ -14,7 +14,6 @@ namespace systems {
 		extern dijkstra::dijkstra_map blocks_map;
 		extern dijkstra::dijkstra_map levers_map;
 		extern dijkstra::dijkstra_map axe_map;
-		extern dijkstra::dijkstra_map pick_map;
 		extern dijkstra::dijkstra_map harvest_map;
 
 		void refresh_bed_map();
@@ -23,7 +22,6 @@ namespace systems {
 		void refresh_blocks_map();
 		void refresh_architecture_map();
 		void refresh_butcherables_map();
-		void refresh_pick_map();
 		void refresh_harvest_map();
 		void refresh_all_distance_maps();
 	}

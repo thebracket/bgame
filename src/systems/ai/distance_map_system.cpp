@@ -30,7 +30,6 @@ namespace systems {
 		dijkstra_map blocks_map;
 		dijkstra_map levers_map;
 		dijkstra_map axe_map;
-		dijkstra_map pick_map;
 		dijkstra_map harvest_map;
 		bool dijkstra_debug = false;
 
@@ -42,7 +41,6 @@ namespace systems {
 		bool blocks_dirty = true;
 		bool levers_dirty = true;
 		bool axes_dirty = true;
-		bool picks_dirty = true;
 		bool harvest_dirty = true;
 
 		using namespace bengine;
@@ -71,10 +69,6 @@ namespace systems {
 			butcherables_dirty = true;
 		}
 
-		void refresh_pick_map() {
-			picks_dirty = true;
-		}
-
 		void refresh_harvest_map() {
 			harvest_dirty = true;
 		}
@@ -86,7 +80,6 @@ namespace systems {
 			blocks_dirty = true;
 			architecture_dirty = true;
 			butcherables_dirty = true;
-			picks_dirty = true;
 			harvest_dirty = true;
 		}
 
@@ -186,30 +179,6 @@ namespace systems {
 			axe_map.update(targets);
 		}
 
-		void update_pick_map() {
-			std::vector<int> targets;
-			each<item_t, item_digging_t>([&targets](entity_t &e, item_t &item, item_digging_t &digger) {
-				if (e.component<claimed_t>() != nullptr) return; // Don't touch claimed items
-
-				auto pos = e.component<position_t>();
-				if (pos != nullptr) {
-					targets.emplace_back(mapidx(*pos));
-				}
-				else {
-					auto store = e.component<item_stored_t>();
-					if (store != nullptr) {
-						auto storage_entity = entity(store->stored_in);
-						if (storage_entity) {
-							auto spos = storage_entity->component<position_t>();
-							targets.emplace_back(mapidx(*spos));
-						}
-					}
-				}
-			});
-			std::cout << "Updating pick map - " << targets.size() << " candidates.\n";
-			pick_map.update(targets);
-		}
-
 		void update_harvest_map() {
 			std::vector<int> targets;
 			for (auto it = designations->harvest.begin(); it != designations->harvest.end(); ++it) {
@@ -257,11 +226,6 @@ namespace systems {
 			if (axes_dirty) {
 				axes_dirty = false;
 				update_axe_map();
-			}
-
-			if (picks_dirty) {
-				update_pick_map();
-				picks_dirty = false;
 			}
 
 			if (harvest_dirty) {
