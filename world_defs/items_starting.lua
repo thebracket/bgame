@@ -50,5 +50,6 @@ items["pickaxe"] = {
     foreground = colors['white'],
     background = colors['black'],
     stockpile = stockpiles['tool'].id,
-    vox = voxelId("pick")
+    vox = voxelId("pick"),
+    clothing_layer = voxelId("pick_held")
 };

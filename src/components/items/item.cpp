@@ -45,8 +45,9 @@ item_t::item_t(const std::string name) : item_tag(name), type(CLOTHING) {
     }
 }
 
-item_t::item_t(const std::string tag, const std::string name, const std::size_t mat, int stack) :
+item_t::item_t(const std::string tag, const std::string name, const std::size_t mat, int stack, int clothing) :
         item_name(name), item_tag(tag), type(ITEM), material(mat), stack_size(stack)
 {
     item_name = material_name(mat) + std::string(" ") + item_name;
+	clothing_layer = clothing;
 }

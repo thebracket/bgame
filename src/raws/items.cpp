@@ -66,7 +66,8 @@ void read_items() noexcept
                            { "ammo", [&c] ()           { c.ammo = lua_str(); }},
                            { "range", [&c] ()          { c.range = lua_int(); }},
 						   { "vox", [&c]()             { c.voxel_model = lua_int(); }},
-                           { "stack_size", [&c] ()     { c.stack_size = lua_int(); }},
+		                   { "clothing_layer", [&c]()  { c.clothing_layer = lua_int(); } },
+						   { "stack_size", [&c] ()     { c.stack_size = lua_int(); }},
                            { "initiative_penalty", [&c] ()    { c.initiative_penalty = lua_int(); }},
                            { "stockpile", [&c] ()      { c.stockpile_idx = lua_int(); }},
                            { "itemtype", [&c] () {

@@ -137,7 +137,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
     auto entity = bengine::create_entity()
         ->assign(position_t{ x,y,z })
         ->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
-        ->assign(item_t{tag, finder->name, material, finder->stack_size})
+        ->assign(item_t{tag, finder->name, material, finder->stack_size, finder->clothing_layer})
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear })
 		->assign(item_creator_t{ creator_id, creator_name });
@@ -172,7 +172,7 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
 	auto entity = bengine::create_entity()
 		->assign(position_t{ x,y,z })
 		->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
-		->assign(item_t{ tag, finder->name, material, finder->stack_size })
+		->assign(item_t{ tag, finder->name, material, finder->stack_size, finder->clothing_layer })
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear })
 		->assign(item_creator_t{ creator_id, creator_name });
@@ -193,7 +193,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 	auto entity = bengine::create_entity()
 		->assign(item_stored_t{ container_id })
 		->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
-		->assign(item_t{ tag, finder->name, material, finder->stack_size })
+		->assign(item_t{ tag, finder->name, material, finder->stack_size, finder->clothing_layer })
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear })
 		->assign(item_creator_t{ creator_id, creator_name });
@@ -221,7 +221,7 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 		auto entity = bengine::create_entity()
 			->assign(item_carried_t{ loc, holder_id })
 			->assign(renderable_t{ finder->glyph, finder->glyph_ascii, mat->fg, mat->bg, finder->voxel_model })
-			->assign(item_t{ tag, finder->name, material, finder->stack_size })
+			->assign(item_t{ tag, finder->name, material, finder->stack_size, finder->clothing_layer })
 			->assign(item_quality_t{ quality })
 			->assign(item_wear_t{ wear })
 			->assign(item_creator_t{ creator_id, creator_name });

@@ -22,7 +22,7 @@ struct item_t {
 
 	item_t() {}
 	item_t(const std::string name);
-	item_t(const std::string tag, const std::string name, const std::size_t mat, int stack=1);
+	item_t(const std::string tag, const std::string name, const std::size_t mat, int stack=1, int clothing=0);
 
 	template<class Archive>
 	void serialize(Archive & archive)

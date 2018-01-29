@@ -118,6 +118,7 @@ voxel_models = {
 
     corpse = { model=vfn("corpse"), id=110 },
 
+    pick_held = { model=vfn("simplepick_held"), id=111 },
 }
 
 function voxelId(name)

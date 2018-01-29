@@ -42,4 +42,5 @@ struct item_def_t {
     std::string damage_stat = "";
     int stockpile_idx = 0;
 	int voxel_model = 0;
+	int clothing_layer = 0;
 };
