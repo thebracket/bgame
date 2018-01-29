@@ -13,11 +13,9 @@ namespace systems {
 		extern dijkstra::dijkstra_map architecure_map;
 		extern dijkstra::dijkstra_map blocks_map;
 		extern dijkstra::dijkstra_map levers_map;
-		extern dijkstra::dijkstra_map axe_map;
 		extern dijkstra::dijkstra_map harvest_map;
 
 		void refresh_bed_map();
-		void refresh_axe_map();
 		void refresh_hunting_map();
 		void refresh_blocks_map();
 		void refresh_architecture_map();
