@@ -8,11 +8,11 @@
 
 struct ai_tag_work_lumberjack {
 
-    enum lumberjack_steps { GET_AXE, FIND_TREE, GOTO_TREE, CHOP, DROP_TOOLS };
+    enum lumberjack_steps { GET_AXE, FETCH_AXE, FIND_TREE, GOTO_TREE, CHOP };
 
     ai_tag_work_lumberjack() {}
     lumberjack_steps step = GET_AXE;
-    std::size_t current_axe = 0;
+    std::size_t axe_id = 0;
     std::size_t target_tree = 0;
     int target_x, target_y, target_z;
 
@@ -22,7 +22,7 @@ struct ai_tag_work_lumberjack {
     void serialize(Archive & archive)
     {
         // Nothing to save
-        archive( step, current_axe, target_tree, target_x, target_y, target_z );
+        archive( step, axe_id, target_tree, target_x, target_y, target_z );
     }
 };
 

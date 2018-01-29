@@ -37,7 +37,8 @@ items["fire_axe"] = {
     foreground = colors['white'],
     background = colors['black'],
     stockpile = stockpiles['tool'].id,
-    vox = voxelId("axe")
+    vox = voxelId("axe"),
+    clothing_layer = voxelId("axe_held")
 };
 
 -- Pickaxe (to allow digging at the start)

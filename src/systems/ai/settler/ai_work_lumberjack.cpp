@@ -13,6 +13,9 @@
 #include "../../gui/particle_system.hpp"
 #include "../../../components/item_tags/item_chopping_t.hpp"
 #include "../../../components/name.hpp"
+#include "../../../components/designated_lumberjack.hpp"
+#include "../../../components/claimed_t.hpp"
+#include "../../helpers/inventory_assistant.hpp"
 
 using namespace bengine;
 using namespace jobs_board;
@@ -29,10 +32,9 @@ namespace systems {
 			void evaluate_lumberjacking(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 				if (designations->chopping.empty()) return; // Nothing to cut down
 
-				auto axe_distance = axe_map.get(mapidx(pos));
-				if (axe_distance > MAX_DIJSTRA_DISTANCE - 1) return; // No axe available
+				if (e.component<designated_lumberjack_t>() == nullptr) return; // Not a lumberjack
 
-																	 // Evaluate the closest tree to chop
+				// Evaluate the closest tree to chop
 				std::size_t i = 0;
 				float distance = std::numeric_limits<float>().max();
 				std::size_t selected = 0;
@@ -45,7 +47,7 @@ namespace systems {
 					++i;
 				}
 
-				board.insert(std::make_pair(distance + axe_distance, jt));
+				board.insert(std::make_pair(distance, jt));
 			}
 		}
 
@@ -61,25 +63,62 @@ namespace systems {
 			work.do_ai([&work](entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
 				work.set_status(e, "Lumberjacking");
 				if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
-					//std::cout << "LJ: Get Axe\n";
-					work.folllow_path(axe_map, pos, e, [&e]() {
-						// On cancel
-						//std::cout << "LJ: Cancel Get Axe\n";
-						delete_component<ai_tag_work_lumberjack>(e.id);
-						return;
-					}, [&e, &pos, &lj, &work] {
-						// On success
-						work.pickup_tool<item_chopping_t>(e, pos, lj.current_axe, [&e, &lj]() {
-							// On cancel
-							//std::cout << "LJ: Pickup Tool - cancel\n";
-							delete_component<ai_tag_work_lumberjack>(e.id);
-							return;
-						}, [&lj]() {
-							// On success
-							//std::cout << "LJ: Pickup Tool - success\n";
-							lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
-						});
+					// Do I already have an axe?
+					bool have_pick = false;
+					each<item_t, item_carried_t, claimed_t, item_chopping_t>([&e, &have_pick](entity_t &E, item_t &i, item_carried_t &ic, claimed_t &claimed, item_chopping_t &chop) {
+						if (ic.carried_by == e.id) have_pick = true;
 					});
+					if (have_pick) {
+						std::cout << "Skipping get axe - we already have one!\n";
+						lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+						return;
+					}
+					else {
+						// We need to fetch the axe
+						std::size_t axe_id = -1;
+						each<item_t, claimed_t, item_chopping_t>([&e, &axe_id](entity_t &E, item_t &i, claimed_t &claimed, item_chopping_t &chop) {
+							if (claimed.claimed_by == e.id) axe_id = E.id;
+						});
+						if (axe_id == -1) {
+							std::cout << "Unable to find claimed axe. Bug!\n";
+							work.cancel_work_tag(e);
+							return;
+						}
+
+						lj.axe_id = axe_id;
+						auto axe_pos = inventory::get_item_location(axe_id);
+						if (axe_pos) {
+							lj.current_path = find_path(pos, *axe_pos);
+							if (lj.current_path->success) {
+								lj.step = ai_tag_work_lumberjack::lumberjack_steps::FETCH_AXE;
+								return;
+							}
+							else {
+								work.cancel_work_tag(e);
+								return;
+							}
+						}
+						else {
+							work.cancel_work_tag(e);
+							return;
+						}
+					}
+				}
+				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::FETCH_AXE) {
+					work.follow_path(lj, pos, e, [&lj]() {
+						// Cancel
+						lj.current_path.reset();
+						lj.step = ai_tag_work_lumberjack::lumberjack_steps::GET_AXE;
+						return;
+					}, [&lj, &e]() {
+						// Success
+						lj.current_path.reset();
+						lj.step = ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE;
+
+						inventory_system::pickup_item(lj.axe_id, e.id);
+						return;
+					});
+					return;
 				}
 				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::FIND_TREE) {
 					//std::cout << "LJ: Find Tree\n";
@@ -87,9 +126,7 @@ namespace systems {
 					if (designations->chopping.empty()) {
 						// There is no tree - cancel
 						//std::cout << "LJ: Give up - drop axe\n";
-						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
-						distance_map::refresh_axe_map();
-						delete_component<ai_tag_work_lumberjack>(e.id);
+						work.cancel_work_tag(e);
 						return;
 					}
 
@@ -114,8 +151,6 @@ namespace systems {
 
 					if (tree_id == 0) {
 						//std::cout << "No tree - cancel\n";
-						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
-						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
 						return;
 					}
@@ -147,8 +182,6 @@ namespace systems {
 					if (!lj.current_path) {
 						// There is no path - cancel
 						//std::cout << "No path - cancel\n";
-						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
-						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
 						return;
 					}
@@ -193,8 +226,6 @@ namespace systems {
 
 					auto stats = e.component<game_stats_t>();
 					if (!stats) {
-						inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
-						distance_map::refresh_axe_map();
 						work.cancel_work_tag(e);
 						return;
 					}
@@ -255,19 +286,14 @@ namespace systems {
 						designations->chopping.erase(lj.target_tree);
 
 						// Change status to drop axe or continue
-						lj.step = ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS;
+						work.cancel_work_tag(e);
+						return;
 
 					}
 					else if (skill_check == CRITICAL_FAIL) {
 						// Damage yourself
 						damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, 1, "Lumberjacking Accident" });
 					}
-					return;
-				}
-				else if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::DROP_TOOLS) {
-					inventory_system::drop_item(lj.current_axe, pos.x, pos.y, pos.z );
-					distance_map::refresh_axe_map();
-					work.cancel_work_tag(e);
 					return;
 				}
 			});

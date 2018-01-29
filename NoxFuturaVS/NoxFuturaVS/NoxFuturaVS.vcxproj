@@ -389,6 +389,7 @@
     <ClInclude Include="..\..\src\components\construct_provides_sleep.hpp" />
     <ClInclude Include="..\..\src\components\corpse_harvestable.hpp" />
     <ClInclude Include="..\..\src\components\corpse_settler.hpp" />
+    <ClInclude Include="..\..\src\components\designated_lumberjack.hpp" />
     <ClInclude Include="..\..\src\components\designations.hpp" />
     <ClInclude Include="..\..\src\components\entry_trigger.hpp" />
     <ClInclude Include="..\..\src\components\explosion_t.hpp" />

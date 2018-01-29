@@ -1664,6 +1664,9 @@
     <ClInclude Include="..\..\src\systems\gui\job_center_ui.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\designated_lumberjack.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset8.hpp">
