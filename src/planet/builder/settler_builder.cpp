@@ -178,6 +178,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	// Profession
 	const auto starting_profession = get_random_profession(rng);
 	stats.profession_tag = starting_profession->name;
+	stats.original_profession = starting_profession->name;
 
 	// Stats
 	stats.strength = rng.roll_dice(3,6) + starting_profession->strength;

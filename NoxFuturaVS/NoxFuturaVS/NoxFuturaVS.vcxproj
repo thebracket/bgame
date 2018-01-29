@@ -424,6 +424,7 @@
     <ClInclude Include="..\..\src\components\lever.hpp" />
     <ClInclude Include="..\..\src\components\lightsource.hpp" />
     <ClInclude Include="..\..\src\components\logger.hpp" />
+    <ClInclude Include="..\..\src\components\mining\designated_miner.hpp" />
     <ClInclude Include="..\..\src\components\mining\mining_designations.hpp" />
     <ClInclude Include="..\..\src\components\name.hpp" />
     <ClInclude Include="..\..\src\components\natural_attacks_t.hpp" />

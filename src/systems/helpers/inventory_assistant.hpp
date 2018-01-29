@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../components/position.hpp"
+#include "../../components/claimed_t.hpp"
+#include "../../components/items/item.hpp"
 #include "../../raws/defs/building_def_t.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../../bengine/ecs.hpp"
@@ -10,8 +12,8 @@ namespace inventory {
 	template <class C>
 	inline int item_category_available() {
 		int result = 0;
-		each<item_t, C>([&result](bengine::entity_t &e, item_t &i, C &cat) {
-			if (e.component<claimed_t>() == nullptr) ++result;
+		bengine::each_without<claimed_t, item_t, C>([&result](bengine::entity_t &e, item_t &i, C &cat) {
+			++result;
 		});
 		return result;
 	}
@@ -19,6 +21,28 @@ namespace inventory {
 	template<class C>
 	inline bool is_item_category_available() {
 		return (item_category_available<C>()>0);
+	}
+
+	template <class ITEM_TYPE>
+	std::size_t find_closest_unclaimed_item_by_category_and_claim_it_immediately(std::size_t &claimer_id, position_t &pos) {
+		using namespace bengine;
+
+		// We're taking advantage of map being sorted to find the closest here
+		std::map<float, std::size_t> distance_sorted;
+
+		// Search items
+		each_without<claimed_t, item_t, ITEM_TYPE>([&distance_sorted, &pos](entity_t &e, item_t &i, ITEM_TYPE &type) {
+			auto p = get_item_location(e.id);
+			if (p) {
+				const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
+				distance_sorted[distance] = e.id;
+			}
+		});
+
+		if (distance_sorted.empty()) return 0;
+		std::size_t closest_matching_id = distance_sorted.begin()->second;
+		entity(closest_matching_id)->assign(claimed_t{ claimer_id });
+		return closest_matching_id;
 	}
 
 	template <class ITEM_TYPE>

@@ -15,6 +15,11 @@
 #include "../../render_engine/vox/renderables.hpp"
 #include "../../components/health.hpp"
 #include "../../stdafx.h"
+#include "../helpers/inventory_assistant.hpp"
+#include "../../components/item_tags/item_digging_t.hpp"
+#include "../../components/mining/designated_miner.hpp"
+#include "../../components/items/item_carried.hpp"
+#include "../ai/inventory_system.hpp"
 
 namespace systems {
 	namespace units_ui {
@@ -112,7 +117,48 @@ namespace systems {
 					game_master_mode = SETTLER;
 					selected_settler = e.id;
 				}
-				
+
+				auto miner_designation = e.component<designated_miner_t>();
+				if (!miner_designation) {
+					if (inventory::is_item_category_available<item_digging_t>()) {
+						ImGui::SameLine();
+						const std::string btn_makeminer = std::string(ICON_FA_DIAMOND) + std::string(" Make Miner##") + std::to_string(e.id);
+						if (ImGui::Button(btn_makeminer.c_str())) {
+							// TODO: Add happyness
+							auto pos = e.component<position_t>();
+							stats.profession_tag = "Miner";
+							inventory::find_closest_unclaimed_item_by_category_and_claim_it_immediately<item_digging_t>(e.id, *pos);
+							e.assign(designated_miner_t{});
+						}
+					}
+				}
+				else {
+					ImGui::SameLine();
+					const std::string btn_fireminer = std::string(ICON_FA_TIMES) + std::string(" Fire Miner##") + std::to_string(e.id);
+					if (ImGui::Button(btn_fireminer.c_str())) {
+						// TODO: Add unhappiness
+						stats.profession_tag = stats.original_profession;
+						delete_component<designated_miner_t>(e.id);
+
+						// Drop miner items
+						auto pos = e.component<position_t>();
+						each<item_digging_t, item_carried_t>([&e, &pos](entity_t &E, item_digging_t &dig, item_carried_t &carried) {
+							if (carried.carried_by == e.id) {
+								systems::inventory_system::drop_item(E.id, pos->x, pos->y, pos->z);
+							}
+						});
+
+						// Clear any claims
+						std::vector<std::size_t> to_unclaim;
+						each<item_digging_t, claimed_t>([&e, &to_unclaim](entity_t &E, item_digging_t &dig, claimed_t &claim) {
+							if (claim.claimed_by == e.id) to_unclaim.push_back(E.id);
+						});
+						for (const auto &id : to_unclaim) {
+							delete_component<claimed_t>(id);
+						}
+					}
+				}
+
 				ImGui::NextColumn();
 				ImGui::Separator();
 			});						

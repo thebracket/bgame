@@ -20,6 +20,7 @@ inline short stat_modifier(const short &stat)
 
 struct game_stats_t {
 
+	std::string original_profession;
 	std::string profession_tag;
 	short strength;
 	short dexterity;
@@ -46,7 +47,7 @@ struct game_stats_t {
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma,
+		archive( original_profession, profession_tag, strength, dexterity, constitution, intelligence, wisdom, charisma,
             comeliness, ethics, age, skills); // serialize things by passing them to the archive
 	}
 };
