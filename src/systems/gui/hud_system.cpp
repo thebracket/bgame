@@ -31,7 +31,8 @@ namespace systems {
         const std::string menu_design_architecture = std::string(ICON_FA_BUILDING) + " Architecture";
         const std::string menu_units = std::string(ICON_FA_USERS) + " Units";
         const std::string menu_units_units = std::string(ICON_FA_USERS) + " Units";
-        const std::string menu_units_workflow = std::string(ICON_FA_WRENCH) + " Workflow Management";
+		const std::string menu_units_jobcenter = std::string(ICON_FA_BRIEFCASE) + " Job Assignment";
+		const std::string menu_units_workflow = std::string(ICON_FA_WRENCH) + " Workflow Management";
         const std::string menu_units_civs = std::string(ICON_FA_HOME) + " Other Civilizations";
         const std::string menu_units_standing_orders = std::string(ICON_FA_LIST) + " Standing Orders";
 		const std::string menu_display = std::string(ICON_FA_CAMERA) + " Display";
@@ -151,6 +152,10 @@ namespace systems {
                     pause_mode = PAUSED;
                     emit_deferred(map_dirty_message{});*/
                 }
+				if (ImGui::MenuItem(menu_units_jobcenter.c_str())) {
+					game_master_mode = JOB_CENTER_MODE;
+					pause_mode = PAUSED;
+				}
                 ImGui::EndMenu();
             }
 
@@ -164,6 +169,7 @@ namespace systems {
 				if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
 				if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
 				if (is_key_down(GLFW_KEY_W, false)) game_master_mode = WORKFLOW;
+				if (is_key_down(GLFW_KEY_J, false)) game_master_mode = JOB_CENTER_MODE;
 				if (is_key_down(GLFW_KEY_APOSTROPHE)) render::depth_test_render = !render::depth_test_render;
 			}
 		}

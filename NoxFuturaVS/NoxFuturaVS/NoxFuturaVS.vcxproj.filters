@@ -741,6 +741,9 @@
     <ClCompile Include="..\..\src\global_assets\game_mining.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\job_center_ui.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1657,6 +1660,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\mining\designated_miner.hpp">
       <Filter>Header Files\components\mining</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\job_center_ui.hpp">
+      <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

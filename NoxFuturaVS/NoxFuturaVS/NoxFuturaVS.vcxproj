@@ -289,6 +289,7 @@
     <ClCompile Include="..\..\src\systems\gui\design_stockpiles.cpp" />
     <ClCompile Include="..\..\src\systems\gui\hud_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\item_info_system.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\job_center_ui.cpp" />
     <ClCompile Include="..\..\src\systems\gui\log_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\particle_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp" />
@@ -593,6 +594,7 @@
     <ClInclude Include="..\..\src\systems\gui\design_stockpiles.hpp" />
     <ClInclude Include="..\..\src\systems\gui\hud_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\item_info_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\job_center_ui.hpp" />
     <ClInclude Include="..\..\src\systems\gui\log_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\mining_template.hpp" />
     <ClInclude Include="..\..\src\systems\gui\particle_system.hpp" />
