@@ -16,7 +16,7 @@ If you see something you like, feel free to use it (subject to the GPL license).
 
 *Unstable Builds*
 
-I'm still getting the machinery together to post unstable builds. Right now, there is a repeatable - scripted - build setup, but it requires that I remember to run it on three different platforms! These are just starting to come together, so for now I can't make any promises that these will work at all... but you can download periodic builds [here](http://bfnightly.bracketproductions.com/)
+I'm still getting the machinery together to post unstable builds. Right now, there is a repeatable - scripted - build setup, but it requires that I remember to run it on three different platforms! These are just starting to come together, so for now I can't make any promises that these will work at all... but you can download periodic builds [from itch.io](https://thebracket.itch.io/nox-futura)
 
 *Windows Builds*
 
