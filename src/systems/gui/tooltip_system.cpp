@@ -97,7 +97,7 @@ namespace systems {
 							}
 							if (!plant->provides.empty()) {
 								const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
-								if (harvest_to != "none") ss << " - " << harvest_to;
+								if (harvest_to != "none") ss << " - provides: " << harvest_to;
 							}
 							ss << ")";
 							lines.push_back(ss.str());
