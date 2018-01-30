@@ -111,7 +111,7 @@ add_executable(noxfutura
 
 		components/calendar.cpp
 		components/game_stats.cpp
-		components/item.cpp
+		components/items/item.cpp
 		components/logger.cpp
 		components/species.cpp
 
