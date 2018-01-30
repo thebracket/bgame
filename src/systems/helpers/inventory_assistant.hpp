@@ -6,6 +6,8 @@
 #include "../../raws/defs/building_def_t.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../ai/inventory_system.hpp"
+#include "../../bengine/geometry.hpp"
 #include "../../stdafx.h"
 
 namespace inventory {
@@ -67,11 +69,11 @@ namespace inventory {
 		// We're taking advantage of map being sorted to find the closest here
 		std::map<float, std::size_t> distance_sorted;
 
-		each<item_t, ITEM_TYPE>([&distance_sorted, &category, &pos, &range](bengine::entity_t &e, item_t &i, ITEM_TYPE &type) {
+		bengine::each<item_t, ITEM_TYPE>([&distance_sorted, &pos, &range](bengine::entity_t &e, item_t &i, ITEM_TYPE &type) {
 			if (e.component<claimed_t>() == nullptr) {
 				auto p = get_item_location(e.id);
 				if (p) {
-					const float distance = distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
+					const float distance = bengine::distance3d_squared(pos.x, pos.y, pos.z, p->x, p->y, p->z);
 					if (range == -1 || distance < range) distance_sorted[distance] = e.id;
 				}
 			}

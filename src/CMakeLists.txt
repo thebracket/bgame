@@ -94,6 +94,7 @@ add_executable(noxfutura
 		bengine/imgui.cpp
 		bengine/imgui_draw.cpp
 		bengine/imgui_impl_glfw_gl3.cpp
+		bengine/imgui_tabs.cpp
 		bengine/main_window.cpp
 		bengine/octree.cpp
 		bengine/pcg_basic.cpp
@@ -121,6 +122,7 @@ add_executable(noxfutura
 		global_assets/game_config.cpp
 		global_assets/game_designations.cpp
 		global_assets/game_logger.cpp
+		global_assets/game_mining.cpp
 		global_assets/game_mode.cpp
 		global_assets/game_pause.cpp
 		global_assets/game_planet.cpp
