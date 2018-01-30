@@ -693,12 +693,10 @@ namespace render {
 
 		// Compile the ASCII render data
 		ascii::ascii_camera();
-		if (ascii::first_run || render::models_changed || render::camera_moved) {
-			ascii::populate_renderables();
-			ascii::first_run = false;
-			render::models_changed = false;
-			render::camera_moved = false;
-		}
+		ascii::populate_renderables();
+		ascii::first_run = false;
+		render::models_changed = false;
+		render::camera_moved = false;
 		ascii::populate_ascii();
 
 		// Cursor handling
