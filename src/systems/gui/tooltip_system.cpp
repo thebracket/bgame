@@ -82,7 +82,7 @@ namespace systems {
 					lines.push_back(ss.str());
 				}
 				// TODO: Fix me!
-				/*if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
+				if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
 					if (veg_type(tile_idx) > 0) {
 						std::stringstream ss;
 						auto plant = get_plant_def(veg_type(tile_idx));
@@ -95,13 +95,15 @@ namespace systems {
 							case 3: ss << "Flowering"; break;
 							default: ss << "Unknown - error!";
 							}
-							const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
-							if (harvest_to != "none") ss << " - " << harvest_to;
+							if (!plant->provides.empty()) {
+								const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
+								if (harvest_to != "none") ss << " - " << harvest_to;
+							}
 							ss << ")";
 							lines.push_back(ss.str());
 						}
 					}
-				}*/
+				}
 
 				// Named entities in the location
 				each<name_t, position_t>([&lines, &world_x, &world_y](entity_t &entity, name_t &name, position_t &pos) {
