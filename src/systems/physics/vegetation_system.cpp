@@ -49,18 +49,24 @@ namespace systems {
 								uint16_t current_tick = veg_ticker(idx) + 1;
 								uint8_t current_cycle = veg_lifecycle(idx);
 								auto plant = get_plant_def(veg_type(idx));
-								const int return_val = plant->lifecycle[4];
+								if (plant) {
+									if (!plant->lifecycle.empty()) {
+										std::cout << "Plant lifecycle ticked\n";
+										int return_val = plant->lifecycle[4];
+										if (return_val > 3 || return_val < 0) return_val = 0;
 
-								//if (current_tick > plant->lifecycle[current_cycle]) {
-								//	++current_cycle;
-								//	current_tick = 0;
-								//	if (current_cycle > 3) current_cycle = return_val;
-								//	calc_render(idx);
-									// TODO: emit(map_dirty_message{});
-								//}
+										if (current_tick > plant->lifecycle[current_cycle]) {
+											++current_cycle;
+											current_tick = 0;
+											if (current_cycle > 3) current_cycle = return_val;
+											calc_render(idx);
+											// TODO: emit(map_dirty_message{});
+										}
 
-								set_veg_ticker(idx, current_tick);
-								set_veg_lifecycle(idx, current_cycle);
+										set_veg_ticker(idx, current_tick);
+										set_veg_lifecycle(idx, current_cycle);
+									}
+								}
 							}
 						}
 					}
