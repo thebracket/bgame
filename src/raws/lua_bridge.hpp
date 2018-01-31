@@ -1,11 +1,7 @@
 #pragma once
 
 #include "../stdafx.h"
-extern "C" {
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-}
+#include <lua.hpp>
 #include "../bengine/color_t.hpp"
 
 extern lua_State* lua_state;

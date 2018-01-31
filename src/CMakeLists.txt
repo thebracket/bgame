@@ -5,12 +5,6 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 include(cotire)
 #set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED on)
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
-	message("Using ccache")
-	set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-	set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-endif(CCACHE_FOUND)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR -Wno-deprecated-declarations -O3 -march=core2 -g -fopenmp -ffast-math -funroll-loops -msse2 -mfpmath=sse")
 #set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -flto")
 
@@ -19,13 +13,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -D_LIBCPP_ENABLE_CXX17_REMOVE
 # Require CURL (for telemetry)
 find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
-
-# Require Lua
-if(NOT MINGW)
-	find_package(Lua 5.3 REQUIRED)
-	include_directories(${LUA_INCLUDE_DIR})
-	#message("Lua libraries detected (should be both liblua and liblualib): " ${LUA_LIBRARIES} ${LUA_LIBRARY})
-endif(NOT MINGW)
 
 # Require GLEW
 find_package(GLEW REQUIRED)
@@ -65,13 +52,13 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 find_package(GLM REQUIRED)
 include_directories(${GLM_INCLUDE_DIR})
 
+#Lua
+find_package(Lua 5.3 REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
+message(${LUA_INCLUDE_DIR})
+
 # Include the main src folder, to keep stdafx happy
 include_directories(${PROJECT_SOURCE_DIR})
-
-if(MINGW)
-add_subdirectory(lua)
-include_directories(${PROJECT_SOURCE_DIR}/lua/src)
-endif(MINGW)
 
 add_library(bengine STATIC
                 bengine/analytics.cpp
@@ -188,6 +175,10 @@ add_library(planet STATIC
                 planet/region/region.cpp
 )
 
+add_library(luabridge STATIC 
+		raws/lua_bridge.cpp
+)
+
 add_library(raws STATIC
 		raws/biomes.cpp
                 raws/buildings_raw.cpp
@@ -196,7 +187,6 @@ add_library(raws STATIC
                 raws/health_factory.cpp
                 raws/items.cpp
                 raws/life_events.cpp
-                raws/lua_bridge.cpp
                 raws/materials.cpp
                 raws/plants.cpp
                 raws/profession.cpp
@@ -312,7 +302,7 @@ add_executable(noxfutura
 
 
 target_link_libraries(globals bengine)
-target_link_libraries(raws bengine components)
+target_link_libraries(raws bengine components luabridge)
 target_link_libraries(render planet)
 target_link_libraries(systemsdamage systemsai)
 target_link_libraries(systemsgui globals bengine components raws render systemsai planet systems)
@@ -332,16 +322,14 @@ target_link_libraries(noxfutura
 	systemsgui
 )
 target_link_libraries(noxfutura ${CURL_LIBRARIES})
-target_link_libraries(noxfutura ${LUA_LIBRARIES})
 target_link_libraries(noxfutura ${GLEW_LIBRARIES})
 target_link_libraries(noxfutura ${GLFW3_LIBRARIES})
 target_link_libraries(noxfutura ${OPENGL_LIBRARIES})
 target_link_libraries(noxfutura ${Boost_LIBRARIES})
 target_link_libraries(noxfutura ${ZLIB_LIBRARIES})
 target_link_libraries(noxfutura ${GLM_LIBRARIES})
-target_link_libraries(planet ${ZLIB_LIBRARIES})
-target_link_libraries(raws ${LUA_LIBRARIES})
 target_link_libraries(noxfutura glfw)
+target_link_libraries(raws ${LUA_LIBRARIES})
 cotire(noxfutura)
 cotire(bengine)
 cotire(render)
@@ -352,7 +340,7 @@ cotire(raws)
 cotire(mainloops)
 cotire(systems)
 cotire(systemsai)
-cotire(systemssettler)
+cotire(systemsaisettler)
 cotire(systemsdamage)
 cotire(systemsgui)
 
