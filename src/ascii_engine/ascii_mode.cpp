@@ -28,6 +28,8 @@
 #include "../render_engine/vox/renderables.hpp"
 #include "../global_assets/game_mining.hpp"
 #include "../systems/gui/design_mining.hpp"
+#include "../raws/plants.hpp"
+#include "../raws/defs/plant_t.hpp"
 #include <array>
 
 namespace render {
@@ -180,7 +182,18 @@ namespace render {
 				return glyph;
 			}
 			else {
-				if (region::veg_type(idx) > 0) {
+				size_t veg = region::veg_type(idx);
+				if (veg > 0) {
+					uint8_t lifecycle = region::veg_lifecycle(idx);
+					if (lifecycle < 4) {
+						auto plant = get_plant_def(veg);
+						if (plant) {
+							if (!plant->glyphs_ascii.empty()) {
+								return glyph_t{ static_cast<uint8_t>(plant->glyphs_ascii[lifecycle].glyph), plant->glyphs_ascii[lifecycle].foreground.r, plant->glyphs_ascii[lifecycle].foreground.g, plant->glyphs_ascii[lifecycle].foreground.b,
+									plant->glyphs_ascii[lifecycle].background.r, plant->glyphs_ascii[lifecycle].background.g, plant->glyphs_ascii[lifecycle].background.b };
+							}
+						}
+					}
 					return glyph_t{ '"', 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 				}
 				else {

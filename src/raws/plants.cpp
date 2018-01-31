@@ -20,7 +20,6 @@ std::size_t get_plant_idx(const std::string &tag) noexcept
 
 plant_t * get_plant_def(const std::size_t &index) noexcept
 {
-	if (index < 0) return nullptr;
 	if (index > plant_defs.size()) return nullptr;
     return &plant_defs[index];
 }
@@ -50,14 +49,14 @@ void read_plant_types() noexcept
                                read_lua_table_inner("glyphs", [&p](auto g) { p.glyphs.push_back(std::stoi(g)); });
                            }},
                            {"glyphs_ascii",  [&p]() {
-                               /*rltk::vchar ap; // ascii-plant
+                               xp::vchar ap; // ascii-plant
 
                                lua_pushstring(lua_state, "glyphs_ascii");
                                lua_gettable(lua_state, -2);
                                while(lua_next(lua_state, -2) != 0)
                                {
                                    const std::string n = lua_tostring(lua_state, -2);
-                                   rltk::vchar ap;
+                                   xp::vchar ap;
                                    lua_pushstring(lua_state, n.c_str());
                                    lua_gettable(lua_state, -2);
                                    while(lua_next(lua_state, -2) != 0)
@@ -70,7 +69,7 @@ void read_plant_types() noexcept
 
                                    p.glyphs_ascii.push_back(ap);
                                    lua_pop(lua_state, 1);
-                               }*/
+                               }
                            }},
                            {"harvest", [&p]() {
                                read_lua_table_inner("harvest", [&p](auto h) { p.provides.push_back(h); });

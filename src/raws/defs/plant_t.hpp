@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../stdafx.h"
+#include "../../bengine/rexspeeder.hpp"
 
 constexpr int PLANT_SPREADS = 0;
 constexpr int PLANT_ANNUAL = 1;
@@ -13,7 +14,7 @@ struct plant_t {
     std::string name = "";
     std::vector<int> lifecycle;
     std::vector<uint16_t> glyphs;
-    //std::vector<rltk::vchar> glyphs_ascii;
+    std::vector<xp::vchar> glyphs_ascii;
     std::vector<std::string> provides;
     std::bitset<2> tags;
 };
