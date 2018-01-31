@@ -9,7 +9,7 @@
 @md %bundleDir%\game_assets\vox > nul 2> nul
 @md %bundleDir%\game_assets\worldgen > nul 2> nul
 @md %bundleDir%\world_defs > nul 2> nul
-@SET exeDirectory=NoxFuturaVS\x64\Release\
+@SET exeDirectory=NoxFuturaVS\x64\Publish\
 @copy %exeDirectory%*.dll %bundleDir% > nul 2> nul
 @copy %exeDirectory%NoxFuturaVS.exe %bundleDir%\NoxFutura.exe > nul 2> nul
 @copy game_assets\*.* %bundleDir%\game_assets > nul 2> nul
