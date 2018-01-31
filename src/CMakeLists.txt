@@ -356,3 +356,11 @@ cotire(systemssettler)
 cotire(systemsdamage)
 cotire(systemsgui)
 
+## Install targets
+install(TARGETS noxfutura DESTINATION /opt/noxfutura)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/../world_defs DESTINATION /opt/noxfutura/world_defs)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/../game_assets DESTINATION /opt/noxfutura/game_assets)
+install(FILES ${PROJECT_SOURCE_DIR}/../README.md DESTINATION /opt/noxfutura)
+install(FILES ${PROJECT_SOURCE_DIR}/../LICENSE DESTINATION /opt/noxfutura)
+
+
