@@ -77,7 +77,7 @@ namespace systems {
 				ImGui::NextColumn();
 				ImGui::Text("%s", profession.c_str());
 				ImGui::NextColumn();
-				ImGui::TextColored(health_color, "%s", hp);
+				ImGui::TextColored(health_color, "%s", hp.c_str());
 				ImGui::NextColumn();
 				ImGui::Text("%s", task.c_str());
 				ImGui::NextColumn();

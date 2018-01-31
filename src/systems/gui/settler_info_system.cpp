@@ -76,7 +76,7 @@ namespace systems {
 			ImGui::Separator();
 
 			for (const auto &skill : stats->skills) {
-				ImGui::Text("%s", skill.first);
+				ImGui::Text("%s", skill.first.c_str());
 				ImGui::NextColumn();
 
 				ImGui::ProgressBar(static_cast<float>(skill.second.skill_level) / 10.0f);
@@ -127,10 +127,10 @@ namespace systems {
 				if (part.current_hitpoints < -9 && part.current_hitpoints > -20) part_state = "BROKEN";
 				if (part.current_hitpoints < -19) part_state = "GONE";
 
-				ImGui::Text("%s", part.part);
+				ImGui::Text("%s", part.part.c_str());
 				ImGui::NextColumn();
 
-				ImGui::Text("%s", part_state);
+				ImGui::Text("%s", part_state.c_str());
 				ImGui::NextColumn();
 
 				ImGui::Separator();
@@ -163,7 +163,7 @@ namespace systems {
 				std::string qual = "";
 				auto qc = e.component<item_quality_t>();
 				if (qc) qual = qc->get_quality_text();
-				ImGui::Text("%s", qual);
+				ImGui::Text("%s", qual.c_str());
 				ImGui::NextColumn();
 
 				float wear = 1.0f;
@@ -201,7 +201,7 @@ namespace systems {
 					const std::string year = std::to_string(le.year);
 					std::string event = finder->description + std::string(" ");
 
-					ImGui::Text("%s", year);
+					ImGui::Text("%s", year.c_str());
 					ImGui::NextColumn();
 
 					ImGui::Text("%s", event.c_str());

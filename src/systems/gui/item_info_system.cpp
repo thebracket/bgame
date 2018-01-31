@@ -112,7 +112,7 @@ namespace systems {
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", item_name_str.c_str());
 
 			if (item_creator) {
-				ImGui::Text("Created by: %s", item_creator->creator_name);
+				ImGui::Text("Created by: %s", item_creator->creator_name.c_str());
 			}
 
 			std::string tag_str = tags.str();
@@ -178,7 +178,7 @@ namespace systems {
 
 			if (item_ammo) {
 				if (ImGui::AddTab(tab_ammo.c_str())) {
-					ImGui::Text("This item is used as ammunition (type: %s).", item_def->ammo);
+					ImGui::Text("This item is used as ammunition (type: %s).", item_def->ammo.c_str());
 					if (item_def) {
 						ImGui::Text("It inflicts %dd%d+%d damage.", item_def->damage_n, item_def->damage_d, item_def->damage_mod);
 					}
