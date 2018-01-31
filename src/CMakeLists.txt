@@ -22,7 +22,7 @@ include_directories(${CURL_INCLUDE_DIRS})
 
 # Require Lua
 if(NOT MINGW)
-	find_package(Lua 5.1 REQUIRED)
+	find_package(Lua 5.3 REQUIRED)
 	include_directories(${LUA_INCLUDE_DIR})
 	#message("Lua libraries detected (should be both liblua and liblualib): " ${LUA_LIBRARIES} ${LUA_LIBRARY})
 endif(NOT MINGW)
@@ -363,4 +363,10 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/../game_assets DESTINATION /opt/noxfutur
 install(FILES ${PROJECT_SOURCE_DIR}/../README.md DESTINATION /opt/noxfutura)
 install(FILES ${PROJECT_SOURCE_DIR}/../LICENSE DESTINATION /opt/noxfutura)
 
+## Packaging with CPack
+include (InstallRequiredSystemLibraries)
+set (CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/../LICENSE")
+set (CPACK_PACKAGE_VERSION_MAJOR "0")
+set (CPACK_PACKAGE_VERSION_MINOR "1")
+include(CPack)
 
