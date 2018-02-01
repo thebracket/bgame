@@ -102,6 +102,9 @@ namespace systems {
 							ss << ")";
 							lines.push_back(ss.str());
 						}
+						else {
+							lines.push_back("Unknown plant. Oops.");
+						}
 					}
 				}
 

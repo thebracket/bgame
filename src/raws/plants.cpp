@@ -42,17 +42,29 @@ void read_plant_types() noexcept
                    lua_parser{
                            {"name",    [&p]() { p.name = lua_str(); std::cout << "Plant: " << p.name << "\n"; }},
                            {"cycles",  [&p]() {
-                               read_lua_table_inner("cycles",
-                                                    [&p](auto cycle) { p.lifecycle.push_back(std::stoi(cycle)); });
-                           }},
-                           {"glyphs",  [&p]() {
-                               read_lua_table_inner("glyphs", [&p](auto g) { p.glyphs.push_back(std::stoi(g)); });
+								p.lifecycle.resize(5);
+								lua_pushstring(lua_state, "cycles");
+								lua_gettable(lua_state, -2);
+								while (lua_next(lua_state, -2) != 0)
+								{
+									const std::string n = lua_tostring(lua_state, -2);
+									int days = 0;
+									days = lua_tonumber(lua_state, -1);
+
+									if (n == "A") p.lifecycle[0] = days;
+									if (n == "B") p.lifecycle[1] = days;
+									if (n == "C") p.lifecycle[2] = days;
+									if (n == "D") p.lifecycle[3] = days;
+									if (n == "E") p.lifecycle[4] = days;
+									lua_pop(lua_state, 1);
+								}
                            }},
                            {"glyphs_ascii",  [&p]() {
                                xp::vchar ap; // ascii-plant
 
                                lua_pushstring(lua_state, "glyphs_ascii");
                                lua_gettable(lua_state, -2);
+							   p.glyphs_ascii.resize(4);
                                while(lua_next(lua_state, -2) != 0)
                                {
                                    const std::string n = lua_tostring(lua_state, -2);
@@ -67,8 +79,11 @@ void read_plant_types() noexcept
                                        lua_pop(lua_state, 1);
                                    }
 
-                                   p.glyphs_ascii.push_back(ap);
-                                   lua_pop(lua_state, 1);
+								   if (n == "A") p.glyphs_ascii[0] = ap;
+								   if (n == "B") p.glyphs_ascii[1] = ap;
+								   if (n == "C") p.glyphs_ascii[2] = ap;
+								   if (n == "D") p.glyphs_ascii[3] = ap;
+								   lua_pop(lua_state, 1);
                                }
                            }},
                            {"harvest", [&p]() {
@@ -83,7 +98,7 @@ void read_plant_types() noexcept
                    }
     );
 
-    lua_getglobal(lua_state, "vegetation");
+    /*lua_getglobal(lua_state, "vegetation");
     lua_pushnil(lua_state);
 
     while(lua_next(lua_state, -2) != 0)
@@ -110,7 +125,7 @@ void read_plant_types() noexcept
             //tech_tree_file << key << " -> farming -> item_" << p.provides << "\n";
         }
         lua_pop(lua_state, 1);
-    }
+    }*/
 
     std::sort(plant_defs.begin(), plant_defs.end(), [] (plant_t a, plant_t b) { return a.tag < b.tag; });
     for (std::size_t i=0; i<plant_defs.size(); ++i) {

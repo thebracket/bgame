@@ -120,6 +120,7 @@ voxel_models = {
 
     pick_held = { model=vfn("simplepick_held"), id=111 },
     axe_held = { model=vfn("simpleaxe_held"), id=112 },
+
 }
 
 function voxelId(name)

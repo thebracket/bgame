@@ -60,12 +60,6 @@ namespace render {
 		static unsigned int albedo_tex = 0;
 		static bool first_run = true;
 
-		struct glyph_t {
-			uint8_t glyph;
-			float r, g, b;
-			float br, bg, bb;
-		};
-
 		static std::array<glyph_t, REGION_WIDTH * REGION_HEIGHT> terminal;
 		static std::array<vertex_t, REGION_WIDTH * REGION_HEIGHT * 6> buffer;
 		static glm::mat4 camera_projection_matrix;
@@ -182,19 +176,9 @@ namespace render {
 				return glyph;
 			}
 			else {
-				size_t veg = region::veg_type(idx);
-				if (veg > 0) {
-					uint8_t lifecycle = region::veg_lifecycle(idx);
-					if (lifecycle < 4) {
-						auto plant = get_plant_def(veg);
-						if (plant) {
-							if (!plant->glyphs_ascii.empty()) {
-								return glyph_t{ static_cast<uint8_t>(plant->glyphs_ascii[lifecycle].glyph), plant->glyphs_ascii[lifecycle].foreground.r, plant->glyphs_ascii[lifecycle].foreground.g, plant->glyphs_ascii[lifecycle].foreground.b,
-									plant->glyphs_ascii[lifecycle].background.r, plant->glyphs_ascii[lifecycle].background.g, plant->glyphs_ascii[lifecycle].background.b };
-							}
-						}
-					}
-					return glyph_t{ '"', 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+				size_t vegtype = region::veg_type(idx);
+				if (vegtype > 0) {
+					return region::veg_ascii_cache(idx);
 				}
 				else {
 					auto glyph = get_material_glyph(idx, '.');

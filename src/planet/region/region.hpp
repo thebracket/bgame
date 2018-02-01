@@ -8,6 +8,7 @@
 #include "../constants.hpp"
 #include "../../components/position.hpp"
 #include "../indices.hpp"
+#include "../../ascii_engine/ascii_mode.hpp"
 #include <functional>
 
 /*
@@ -165,6 +166,9 @@ namespace region {
 
     /* Apply damage to a tile's vegetation. */
     void damage_vegetation(const int idx, const uint8_t damage);
+
+	/* Retrieve cached ASCII rendering for speed */
+	render::ascii::glyph_t veg_ascii_cache(const int idx);
 
     /*************************************
      * Stockpiles

@@ -33,6 +33,7 @@ namespace region {
 			blood_stains.resize(REGION_TILES_COUNT);
 			stockpile_id.resize(REGION_TILES_COUNT);
 			bridge_id.resize(REGION_TILES_COUNT);
+			veg_render_cache_ascii.resize(REGION_TILES_COUNT);
 		}
 
 		int region_x, region_y, biome_idx;
@@ -57,6 +58,7 @@ namespace region {
 		std::vector<uint8_t> water_level;
 		std::vector<char> above_ground;
 		std::vector<char> blood_stains;
+		std::vector<render::ascii::glyph_t> veg_render_cache_ascii;
 
 		void tile_recalc_all();
 
@@ -126,7 +128,8 @@ namespace region {
 
     uint16_t veg_ticker(const int idx) { return current_region->tile_vegetation_ticker[idx]; }
     uint8_t  veg_lifecycle(const int idx) { return current_region->tile_vegetation_lifecycle[idx]; }
-
+	render::ascii::glyph_t veg_ascii_cache(const int idx) { return current_region->veg_render_cache_ascii[idx]; }
+	
     int region_x() { return current_region->region_x; }
     int region_y() { return current_region->region_y; }
     std::size_t next_tree_id() { return current_region->next_tree_id; }
@@ -557,247 +560,27 @@ namespace region {
 		}
 	}
 
-	void region_t::calc_render(const int &idx) {
-		/*
-		if (camera == nullptr) {
-			each<camera_options_t>([](entity_t &e, camera_options_t &cam) {
-				camera = &cam;
-			});
-		}
+	void region_t::calc_render(const int &idx) {		
+		// Vegetation cache
+		using namespace render::ascii;
+		glyph_t ascii_vegetation{ '"', 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+		int voxel_vegetation = 0;
 
-		uint16_t glyph;
-		color_t fg;
-		color_t bg = rltk::colors::BLACK;
-		veg_cache[idx] = rltk::vchar{0, rltk::colors::BLACK, rltk::colors::BLACK};
-
-		if (stockpile_id[idx] > 0) {
-			// Stockpiles are always grey floors
-			glyph = 256;
-			render_cache[idx] = vchar{glyph, rltk::colors::DARK_GREY, rltk::colors::BLACK};
-			return;
-		}
-
-		// Start with the basic tile_type; this hard-sets some glyphs.
-		switch (tile_type[idx]) {
-			case tile_type::SEMI_MOLTEN_ROCK : {
-				glyph = 178;
-				fg = rltk::colors::RED;
-				bg = rltk::colors::YELLOW;
-			}
-				break;
-			case tile_type::SOLID : {
-				auto mat = get_material(tile_material[idx]);
-				glyph = camera->ascii_mode ? 219 : 257;
-				if (idx < tile_material.size()) {
-					fg = mat->fg;
-					bg = mat->bg;
-				} else {
-					//std::cout << "Warning - material not found (" << idx << ")!\n";
-					tile_material[idx] = 1;
-					fg = mat->fg;
-					bg = mat->bg;
-				}
-			}
-				break;
-			case tile_type::OPEN_SPACE : {
-				glyph = ' ';
-				fg = rltk::colors::BLACK;
-			}
-				break;
-			case tile_type::WALL : {
-				if (camera->ascii_mode) {
-					uint8_t wall_mask = 0;
-					if (tile_type[idx - 1] == tile_type::WALL) wall_mask += 1;
-					if (tile_type[idx + 1] == tile_type::WALL) wall_mask += 2;
-					if (tile_type[idx - REGION_WIDTH] == tile_type::WALL) wall_mask += 4;
-					if (tile_type[idx + REGION_WIDTH] == tile_type::WALL) wall_mask += 8;
-
-					switch (wall_mask) {
-						case 0 :
-							glyph = 79;
-							break; // Isolated
-						case 1 :
-							glyph = 181;
-							break; // West only
-						case 2 :
-							glyph = 198;
-							break; // East only
-						case 3 :
-							glyph = 205;
-							break; // East and West
-						case 4 :
-							glyph = 208;
-							break; // North only
-						case 5 :
-							glyph = 188;
-							break; // North and west
-						case 6 :
-							glyph = 200;
-							break; // North and east
-						case 7 :
-							glyph = 202;
-							break; // North and east/west
-						case 8 :
-							glyph = 210;
-							break; // South only
-						case 9 :
-							glyph = 187;
-							break; // South and west
-						case 10 :
-							glyph = 201;
-							break; // South and east
-						case 11 :
-							glyph = 203;
-							break; // South east/west
-						case 12 :
-							glyph = 186;
-							break; // North and South
-						case 13 :
-							glyph = 185;
-							break; // North/South/West
-						case 14 :
-							glyph = 204;
-							break; // North/South/East
-						case 15 :
-							glyph = 206;
-							break; // All
-						default : {
-							std::cout << "WARNING: Wall calculator hit a case of " << +wall_mask << "\n";
-							glyph = 79;
-						}
+		size_t vegtype = tile_vegetation_type[idx];
+		if (vegtype > 0) {
+			//std::cout << vegtype << "\n";
+			uint8_t lifecycle = tile_vegetation_lifecycle[idx];
+			if (lifecycle < 4) {
+				auto plant = get_plant_def(vegtype);
+				if (plant) {
+					if (!plant->glyphs_ascii.empty()) {
+						ascii_vegetation = glyph_t{ static_cast<uint8_t>(plant->glyphs_ascii[lifecycle].glyph), plant->glyphs_ascii[lifecycle].foreground.r, plant->glyphs_ascii[lifecycle].foreground.g, plant->glyphs_ascii[lifecycle].foreground.b,
+							plant->glyphs_ascii[lifecycle].background.r, plant->glyphs_ascii[lifecycle].background.g, plant->glyphs_ascii[lifecycle].background.b };
 					}
-					fg = get_material(tile_material[idx])->fg;
-				} else {
-					glyph = 257;
-					fg = get_material(tile_material[idx])->fg;
-					//bg = material_defs[tile_material[idx]].bg;
 				}
 			}
-				break;
-			case tile_type::WINDOW : {
-				glyph = camera->ascii_mode ? 176 : 257;
-				fg = rltk::colors::CYAN;
-			}
-				break;
-			case tile_type::RAMP : {
-				glyph = camera->ascii_mode ? 30 : 257;
-				if (tile_material[idx] > 0) {
-					fg = get_material(tile_material[idx])->fg;
-				} else {
-					fg = rltk::colors::GREY;
-				}
-
-			}
-				break;
-			case tile_type::STAIRS_UP : {
-				glyph = '<';
-				fg = get_material(tile_material[idx])->fg;
-			}
-				break;
-			case tile_type::STAIRS_DOWN : {
-				glyph = '>';
-				fg = get_material(tile_material[idx])->fg;
-			}
-				break;
-			case tile_type::STAIRS_UPDOWN : {
-				glyph = 'X';
-				fg = get_material(tile_material[idx])->fg;
-			}
-				break;
-			case tile_type::FLOOR: {
-
-				if (get_material(tile_material[idx])->spawn_type == sand) {
-					glyph = camera->ascii_mode ? 126 : 258;
-				} else if (get_material(tile_material[idx])->spawn_type == blight) {
-					glyph = camera->ascii_mode ? 247 : 265;
-				} else if (tile_flags[idx].test(CONSTRUCTION)) {
-					glyph = camera->ascii_mode ? '.' : 256;
-				} else {
-					glyph = camera->ascii_mode ? '`' : 257;
-				}
-
-				fg = get_material(tile_material[idx])->fg;
-
-				if (tile_vegetation_type[idx] > 0) {
-					//std::cout << plant_defs[tile_vegetation_type[idx]].name << "\n";
-					const auto plant = get_plant_def(tile_vegetation_type[idx]);
-					const uint8_t lifecycle = tile_vegetation_lifecycle[idx];
-					rltk::vchar plant_render;
-					plant_render.glyph = camera->ascii_mode ? plant->glyphs_ascii[lifecycle].glyph
-															: plant->glyphs[lifecycle];
-					if (camera->ascii_mode) {
-						plant_render.foreground = plant->glyphs_ascii[lifecycle].foreground;
-					} else {
-						plant_render.foreground = colors::WHITE;
-					}
-					veg_cache[idx] = plant_render;
-				}
-			}
-				break;
-			case tile_type::CLOSED_DOOR : {
-				glyph = camera->ascii_mode ? 197 : 329;
-				fg = get_material(tile_material[idx])->fg;
-
-			}
-				break;
-			case tile_type::TREE_TRUNK : {
-				glyph = camera->ascii_mode ? 180 : 259;
-				fg = get_material(tile_material[idx])->fg;
-				bg = rltk::colors::Black;
-				render_cache[idx] = camera->ascii_mode ? vchar{180, rltk::colors::Brown, rltk::colors::BLACK} : vchar{
-						glyph, rltk::colors::Brown, bg};
-			}
-				break;
-			case tile_type::TREE_LEAF : {
-				glyph = camera->ascii_mode ? 177 : 278;
-				fg = camera->ascii_mode ? rltk::colors::GREEN : rltk::colors::White;
-				bg = rltk::colors::Black;
-			}
-				break;
 		}
 
-		if (water_level[idx] > 0) {
-			switch (water_level[idx]) {
-				case 1 :
-					glyph = '1';
-					break;
-				case 2 :
-					glyph = '2';
-					break;
-				case 3 :
-					glyph = '3';
-					break;
-				case 4 :
-					glyph = '4';
-					break;
-				case 5 :
-					glyph = '5';
-					break;
-				case 6 :
-					glyph = '6';
-					break;
-				case 7 :
-					glyph = '7';
-					break;
-				case 8 :
-					glyph = '8';
-					break;
-				case 9 :
-					glyph = '9';
-					break;
-				case 10 :
-					glyph = '0';
-					break;
-				default :
-					glyph = '~';
-			}
-			fg = rltk::colors::Blue;
-			bg = rltk::colors::DarkBlue;
-		}
-
-		// Apply it
-		render_cache[idx] = vchar{glyph, fg, bg};
-		 */
-
+		veg_render_cache_ascii[idx] = ascii_vegetation;
 	}
 }

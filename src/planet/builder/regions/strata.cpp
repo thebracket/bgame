@@ -4,6 +4,7 @@
 #include "../../../components/water_spawner.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/plants.hpp"
+#include "../../../raws/defs/plant_t.hpp"
 #include "../../region/region.hpp"
 #include "../../../raws/materials.hpp"
 
@@ -178,19 +179,18 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                 } else {
 
                     set_water_level(mapidx(x,y,z-1), 0);
-
-                    /*
+                    
                     // Soil/sand
                     int roll = rng.roll_dice(1,100);
                     if (roll < biome.second.soil_pct) {
                         const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
                         //std::cout << material_name(soils[soil_idx]) << "\n";
-                        region.tile_material[mapidx(x,y,z-1)] = soils[soil_idx];
+						set_tile_material(mapidx(x,y,z-1), soils[soil_idx]);
                     } else {
                         const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
                         //std::cout << material_name(sands[sand_idx]) << "\n";
-                        region.tile_material[mapidx(x,y,z-1)] = sands[sand_idx];
-                    }*/
+                        set_tile_material(mapidx(x,y,z-1), sands[sand_idx]);
+                    }
 
                     // Surface coverage
                     std::string veg_type = "";
@@ -209,7 +209,7 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                         set_veg_type(mapidx(x,y,z-1), finder);
                         set_veg_hp(mapidx(x,y,z-1), 10);
                         set_veg_ticker(mapidx(x,y,z-1), 1);
-                        set_veg_lifecycle(mapidx(x,y,z-1), rng.roll_dice(1,4)-1);
+                        set_veg_lifecycle(mapidx(x,y,z-1), get_plant_def(finder)->lifecycle[4] - 1);
                     }
                 }
             }

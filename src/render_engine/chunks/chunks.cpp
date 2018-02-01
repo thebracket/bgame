@@ -101,11 +101,9 @@ namespace chunks {
                         if (region::revealed(idx)) {
 							if (tiletype == tile_type::WINDOW) {
 								// TODO: Windows go into transparency buffer
-								//layers[chunk_z].n_elements += add_cube_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 15);
-								//layer_requires_transparency.set(chunk_z);
 								cubes[idx] = 15;
 							} else if (tiletype == tile_type::FLOOR) {
-                                floors[idx] = get_floor_tex(idx);
+                                floors[idx] = get_floor_tex(idx);								
                             } else if (is_cube(tiletype)) {
                                 cubes[idx] = get_cube_tex(idx);
 							} else if (tiletype == tile_type::RAMP) {
@@ -118,24 +116,16 @@ namespace chunks {
 								layers[chunk_z].n_elements += add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
 							}
 							else if (tiletype == tile_type::STAIRS_DOWN) {
-								static_voxel_models.insert(std::make_pair(24, std::make_tuple(region_x, region_y, region_z)));
+								static_voxel_models[24].push_back(std::make_tuple(region_x, region_y, region_z));
 							}
 							else if (tiletype == tile_type::STAIRS_UP) {
-								static_voxel_models.insert(std::make_pair(23, std::make_tuple(region_x, region_y, region_z)));
+								static_voxel_models[23].push_back(std::make_tuple(region_x, region_y, region_z));
 							}
 							else if (tiletype == tile_type::STAIRS_UPDOWN) {
-								static_voxel_models.insert(std::make_pair(25, std::make_tuple(region_x, region_y, region_z)));
+								static_voxel_models[25].push_back(std::make_tuple(region_x, region_y, region_z));
 							}
 						}
-						/*else {
-							// Allows for mining and rendering of solids
-							cubes[idx] = 3;
-						}*/
                     }
-					/*if (region::water_level(idx) > 0) {
-						layers[chunk_z].n_trans += add_water_geometry(layers[chunk_z].trans, static_cast<float>(region_x), static_cast<float>(region_y), static_cast<float>(region_z), 1.0f, 1.0f, 12, region::water_level(idx));
-						layer_requires_transparency.set(chunk_z);
-					}*/
                 }
             }
 

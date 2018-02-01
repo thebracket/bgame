@@ -25,16 +25,13 @@ namespace chunks {
             base_x = x;
             base_y = y;
             base_z = z;
-            //for (auto &layer : layers) {
-            //    layer.v.reserve(54756);
-            //}
         }
 
         int index = 0;
         int base_x=0, base_y=0, base_z=0;
         std::bitset<CHUNK_SIZE> layer_requires_render{};
 		std::array<layer_t, CHUNK_SIZE> layers;
-		boost::container::flat_map<int, std::tuple<int, int, int>> static_voxel_models;
+		boost::container::flat_map<int, std::vector<std::tuple<int, int, int>>> static_voxel_models;
         bool has_geometry = false;
 		bool has_transparency = false;
 

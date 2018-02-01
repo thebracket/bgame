@@ -24,6 +24,9 @@ registerTerrainTexture("bark", "bark")
 registerTerrainTexture("leaf", "leaf")
 registerTerrainTexture("water", "water")
 registerTerrainTexture("window", "window")
+registerTerrainTexture("germinating", "germinating")
+registerTerrainTexture("sprouting", "sprouting")
+registerTerrainTexture("flowering", "flowering")
 
 --[ These textures are all references by the materials system, and are dynamically assigned.
 --  They get baked into save games, so if you change them - generate a new world.
@@ -544,112 +547,112 @@ materials = {
         glyph = glyphs['solid_square'], fg=colors['red'], bg=colors['black'],
         hit_points = 20, mines_to="clay",
         texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     clay_loam = { name="Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
         hit_points = 20, mines_to="clay",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     loam = { name="Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     loamy_sand = { name="Loamy Sand", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     peat = { name="Peat", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
         texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("blight"), constructed = chunkTex("cobbles"),
         description = ""
     },
     sandy_clay = { name="Sandy Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['wood_brown'], bg=colors['red'],
         hit_points = 15, mines_to="clay",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     sandy_clay_loam = { name="Sandy Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['yellow'],
         hit_points = 15, mines_to="topsoil", mines_to_also="clay",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     silt = { name="Silt", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['black'],
         hit_points = 15, mines_to="topsoil",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     silty_clay = { name="Silty Clay", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
         hit_points = 15, mines_to="clay",
         texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     silty_clay_loam = { name="Silty Clay Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
         texture = chunkTex("dry_brown_dirt"), constructed = chunkTex("dry_brown_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_brown_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     silt_loam = { name="Silt Loam", type="soil",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['grey'],
         hit_points = 15, mines_to="topsoil",
         texture = chunkTex("dry_dirt"), constructed = chunkTex("dry_dirt"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("dry_dirt"), constructed = chunkTex("cobbles"),
         description = ""
     },
     sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow'], bg=colors['red'],
         hit_points = 10, mines_to="sand",
         texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("sandy_soil"), constructed = chunkTex("cobbles"),
         description = ""
     },
     black_sand = { name="Black Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['grey'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
         texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("sandy_soil"), constructed = chunkTex("cobbles"),
         description = ""
     },
     red_sand = { name="Red Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['red_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
         texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("sandy_soil"), constructed = chunkTex("cobbles"),
         description = ""
     },
     white_sand = { name="Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['white_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
         texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("sandy_soil"), constructed = chunkTex("cobbles"),
         description = ""
     },
     yellow_sand = { name="Yellow Sand", type="sand",
         glyph = glyphs['one_quarter_solid'], fg=colors['yellow_sand'], bg=colors['black'],
         hit_points = 10, mines_to="sand",
         texture = chunkTex("sandy_soil"), constructed = chunkTex("sandy_soil"),
-        floor = chunkTex("cement"), constructed = chunkTex("cobbles"),
+        floor = chunkTex("sandy_soil"), constructed = chunkTex("cobbles"),
         description = ""
     },
 

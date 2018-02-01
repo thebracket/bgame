@@ -13,7 +13,6 @@ struct plant_t {
     std::string tag = "";
     std::string name = "";
     std::vector<int> lifecycle;
-    std::vector<uint16_t> glyphs;
     std::vector<xp::vchar> glyphs_ascii;
     std::vector<std::string> provides;
     std::bitset<2> tags;

@@ -6,7 +6,16 @@
 
 namespace chunks {
 	unsigned int get_floor_tex(const int &idx) {
-		if (region::veg_type(idx) > 0) return 0; // Grass is determined to be index 0
+		// We no longer hard-code grass.
+		if (region::veg_type(idx) > 0 && !region::flag(idx, CONSTRUCTION)) {
+			switch (region::veg_lifecycle(idx)) {
+			case 0: return 18; // Germination
+			case 1: return 21; // Sprouting
+			case 2: return 0; // Growing (grass is material 0)
+			case 3: return 24; // Flowering
+			}
+			return 0; // Grass is determined to be index 0
+		}
 		auto material_idx = region::material(idx);
 		auto material = get_material(material_idx);
 		if (!material) return 3;

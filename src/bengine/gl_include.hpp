@@ -23,4 +23,5 @@ inline GLenum glCheckError_(const char *file, int line)
     }
     return errorCode;
 }
-#define glCheckError() glCheckError_(__FILE__, __LINE__)
+//#define glCheckError() glCheckError_(__FILE__, __LINE__)
+#define glCheckError()

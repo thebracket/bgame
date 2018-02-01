@@ -51,7 +51,7 @@ namespace systems {
 								auto plant = get_plant_def(veg_type(idx));
 								if (plant) {
 									if (!plant->lifecycle.empty()) {
-										std::cout << "Plant lifecycle ticked\n";
+										//std::cout << "Plant lifecycle ticked\n";
 										int return_val = plant->lifecycle[4];
 										if (return_val > 3 || return_val < 0) return_val = 0;
 
@@ -60,6 +60,7 @@ namespace systems {
 											current_tick = 0;
 											if (current_cycle > 3) current_cycle = return_val;
 											calc_render(idx);
+											chunks::mark_chunk_dirty_by_tileidx(idx);
 											// TODO: emit(map_dirty_message{});
 										}
 

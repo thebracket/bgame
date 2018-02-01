@@ -247,7 +247,7 @@ colors = {
 	light_green = {r=128, g=255, b=128},
 	yellow = { r=255, g=255, b=0 },
 	dark_yellow = { r=128, g=128, b=0 },
-	earth_brown = { r=91, g=84, b=74 },
+	earth_brown = { r=204, g=102, b=74 },
 	yellow_sand = { r=239, g=221, b=111 },
 	red_sand = { r=236, g=197, b=168 },
 	white_sand = { r=245, g=245, b=245 },

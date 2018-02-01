@@ -199,15 +199,12 @@ namespace render {
 			chunks::chunk_t * target = &chunks::chunks[idx];
 			if (!target->static_voxel_models.empty()) {
 				for (auto &model : target->static_voxel_models) {
-					if (std::get<2>(model.second) <= camera_position->region_z) {
-						auto finder = models_to_render->find(model.first);
-						const auto &[a, c, b] = model.second;
-						vox::instance_t render_model{ static_cast<float>(a), static_cast<float>(b), static_cast<float>(c), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
-						if (finder != models_to_render->end()) {
-							finder->second.push_back(render_model);
-						}
-						else {
-							models_to_render->insert(std::make_pair(model.first, std::vector<vox::instance_t>{ render_model }));
+					for (auto &pos : model.second) {
+						if (std::get<2>(pos) <= camera_position->region_z) {
+							//std::cout << model.first << "\n";
+							auto finder = models_to_render->find(model.first);
+							const auto &[a, c, b] = pos;
+							add_voxel_model(model.first, static_cast<float>(a), static_cast<float>(b), static_cast<float>(c), 1.0f, 1.0f, 1.0f);
 						}
 					}
 				}
@@ -356,9 +353,9 @@ namespace render {
 		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
 		glUniformMatrix4fv(assets::voxel_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
 		glUniformMatrix4fv(assets::voxel_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-		glCheckError();
+		//glCheckError();
 		glUniform1f(assets::voxel_shader->texSize, 32.0f);
-		glCheckError();
+		//glCheckError();
 
 		for (const auto &m : model_buffers) {
 			m->model->render_instances(*m);
