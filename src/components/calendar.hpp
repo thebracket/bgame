@@ -23,9 +23,9 @@ struct calendar_t {
 	float moon_x = 0.0f;
 	float moon_y = 0.0f;
 	float moon_z = 0.0f;
-	float moon_r = 68.0f / 255.0f;
-	float moon_g = 128.0f / 255.0f;
-	float moon_b = 178.0f / 255.0f;
+	float moon_r = 138.0f / 255.0f;
+	float moon_g = 178.0f / 255.0f;
+	float moon_b = 238.0f / 255.0f;
 
 	std::vector<shift_t> defined_shifts;
 
