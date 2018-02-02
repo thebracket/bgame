@@ -29,7 +29,6 @@ namespace systems {
 		dijkstra_map architecure_map;
 		dijkstra_map blocks_map;
 		dijkstra_map levers_map;
-		dijkstra_map harvest_map;
 		bool dijkstra_debug = false;
 
 		bool huntables_dirty = true;
@@ -39,7 +38,6 @@ namespace systems {
 		bool architecture_dirty = true;
 		bool blocks_dirty = true;
 		bool levers_dirty = true;
-		bool harvest_dirty = true;
 
 		using namespace bengine;
 
@@ -63,17 +61,12 @@ namespace systems {
 			butcherables_dirty = true;
 		}
 
-		void refresh_harvest_map() {
-			harvest_dirty = true;
-		}
-
 		void refresh_all_distance_maps() {
 			beds_dirty = true;
 			huntables_dirty = true;
 			blocks_dirty = true;
 			architecture_dirty = true;
 			butcherables_dirty = true;
-			harvest_dirty = true;
 		}
 
 		void update_hunting_map() {
@@ -149,14 +142,6 @@ namespace systems {
 			levers_map.update(targets);
 		}
 
-		void update_harvest_map() {
-			std::vector<int> targets;
-			for (auto it = designations->harvest.begin(); it != designations->harvest.end(); ++it) {
-				targets.emplace_back(mapidx(it->second));
-			}
-			harvest_map.update(targets);
-		}
-
 		void run(const double &duration_ms) {
 			if (huntables_dirty) {
 				update_hunting_map();
@@ -191,11 +176,6 @@ namespace systems {
 			if (levers_dirty) {
 				update_levers_map();
 				levers_dirty = false;
-			}
-
-			if (harvest_dirty) {
-				update_harvest_map();
-				harvest_dirty = false;
 			}
 		}
 	}

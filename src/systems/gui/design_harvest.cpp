@@ -54,7 +54,6 @@ namespace systems {
 					}
 					if (!found) {
 						designations->harvest.push_back(std::make_pair(false, position_t{ world_x, world_y, world_z }));
-						distance_map::refresh_harvest_map();
 					}
 				}
 				else if (right_click) {
@@ -64,7 +63,6 @@ namespace systems {
 						[&idx](std::pair<bool, position_t> p) { return idx == mapidx(p.second); }
 					),
 						designations->harvest.end());
-					distance_map::refresh_harvest_map();
 				}
 			}
 
