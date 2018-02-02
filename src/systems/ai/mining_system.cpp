@@ -25,7 +25,7 @@ namespace systems {
 				if (flag(idx, CAN_GO_NORTH)) walk_mining_map(x, y - 1, z, target, distance + 1);
 				if (flag(idx, CAN_GO_SOUTH)) walk_mining_map(x, y + 1, z, target, distance + 1);
 				if (flag(idx, CAN_GO_EAST)) walk_mining_map(x + 1, y, z, target, distance + 1);
-				if (flag(idx, CAN_GO_WEST)) walk_mining_map(x - 1, y - 1, z, target, distance + 1);
+				if (flag(idx, CAN_GO_WEST)) walk_mining_map(x - 1, y, z, target, distance + 1);
 				if (flag(idx, CAN_GO_UP)) walk_mining_map(x, y, z + 1, target, distance + 1);
 				if (flag(idx, CAN_GO_DOWN)) walk_mining_map(x, y, z - 1, target, distance + 1);
 			}
