@@ -23,6 +23,7 @@
 #include "../../global_assets/game_config.hpp"
 #include "../ai/mining_system.hpp"
 #include "../../global_assets/debug_flags.hpp"
+#include "../../raws/defs/item_def_t.hpp"
 
 namespace systems {
 	namespace tooltips {
@@ -104,7 +105,15 @@ namespace systems {
 							}
 							if (!plant->provides.empty()) {
 								const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
-								if (harvest_to != "none") ss << " - provides: " << harvest_to;
+								if (harvest_to != "none") {
+									auto harvest_result = get_item_def(harvest_to);
+									if (harvest_result) {
+										ss << " - provides: " << harvest_result->name;
+									}
+									else {
+										ss << " - provides: " << harvest_to << "; WARNING - RAW TAG";
+									}
+								}
 							}
 							ss << ")";
 							lines.push_back(ss.str());
