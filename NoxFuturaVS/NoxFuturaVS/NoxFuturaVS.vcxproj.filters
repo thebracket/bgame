@@ -744,6 +744,12 @@
     <ClCompile Include="..\..\src\systems\gui\job_center_ui.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\debug_flags.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\wish_mode.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1666,6 +1672,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\designated_lumberjack.hpp">
       <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\debug_flags.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\wish_mode.hpp">
+      <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -140,6 +140,7 @@ add_library(globals STATIC
                 global_assets/shader_storage.cpp
                 global_assets/spatial_db.cpp
                 global_assets/texture_storage.cpp
+                global_assets/debug_flags.cpp
 )
 
 add_library(mainloops STATIC
@@ -293,6 +294,7 @@ add_library(systemsgui STATIC
                 systems/gui/tooltip_system.cpp
                 systems/gui/units_info_system.cpp
                 systems/gui/workflow_ui_system.cpp
+                systems/gui/wish_mode.cpp
 )
 
 add_executable(noxfutura

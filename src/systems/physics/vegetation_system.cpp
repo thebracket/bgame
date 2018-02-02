@@ -6,6 +6,7 @@
 #include "../../raws/plants.hpp"
 #include "../../raws/defs/plant_t.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
+#include "../ai/mining_system.hpp"
 
 using namespace bengine;
 using namespace region;
@@ -41,6 +42,7 @@ namespace systems {
 			});
 
 			if (day_elapsed) {
+				mining_system::mining_map_changed();
 				for (int z = 0; z<REGION_DEPTH - 1; ++z) {
 					for (int y = 0; y<REGION_HEIGHT - 1; ++y) {
 						for (int x = 0; x<REGION_WIDTH - 1; ++x) {

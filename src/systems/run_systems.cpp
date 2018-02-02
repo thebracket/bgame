@@ -71,6 +71,7 @@
 #include "gui/workflow_ui_system.hpp"
 #include "gui/item_info_system.hpp"
 #include "gui/job_center_ui.hpp"
+#include "gui/wish_mode.hpp"
 #include "../stdafx.h"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
@@ -148,6 +149,7 @@ namespace systems {
 	constexpr int ITEM_WEAR_SYSTEM = 67;
 	constexpr int ITEM_UI_SYSTEM = 68;
 	constexpr int JOB_CENTER_SYSTEM = 69;
+	constexpr int WISH_MODE_SYSTEM = 70;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -240,6 +242,7 @@ namespace systems {
 		system_names[ITEM_WEAR_SYSTEM] = "Item Wear System";
 		system_names[ITEM_UI_SYSTEM] = "Item UI";
 		system_names[JOB_CENTER_SYSTEM] = "Job Center UI";
+		system_names[WISH_MODE_SYSTEM] = "Wish Mode UI";
 		game_master_mode = PLAY;
     }
 
@@ -273,6 +276,9 @@ namespace systems {
 		}
 		else if (game_master_mode == JOB_CENTER_MODE) {
 			run_system(job_center_ui::run, duration_ms, JOB_CENTER_SYSTEM);
+		}
+		else if (game_master_mode == WISHMODE) {
+			run_system(wishmode::run, duration_ms, WISH_MODE_SYSTEM);
 		}
 
         // Items that only run if the simulation has ticked

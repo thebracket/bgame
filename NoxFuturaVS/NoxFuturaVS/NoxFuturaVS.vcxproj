@@ -243,6 +243,7 @@
     <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />
     <ClCompile Include="..\..\src\components\species.cpp" />
+    <ClCompile Include="..\..\src\global_assets\debug_flags.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_building.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_calendar.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_camera.cpp" />
@@ -375,6 +376,7 @@
     <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\tooltip_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\units_info_system.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\wish_mode.cpp" />
     <ClCompile Include="..\..\src\systems\gui\workflow_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\dijkstra_map.cpp" />
     <ClCompile Include="..\..\src\systems\helpers\inventory_assistant.cpp" />
@@ -528,6 +530,7 @@
     <ClInclude Include="..\..\src\components\wildlife_group.hpp" />
     <ClInclude Include="..\..\src\components\world_position.hpp" />
     <ClInclude Include="..\..\src\global_assets\constants.hpp" />
+    <ClInclude Include="..\..\src\global_assets\debug_flags.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_building.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_calendar.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_camera.hpp" />
@@ -682,6 +685,7 @@
     <ClInclude Include="..\..\src\systems\gui\settler_info_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\tooltip_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\units_info_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\wish_mode.hpp" />
     <ClInclude Include="..\..\src\systems\gui\workflow_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\dijkstra_map.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\inventory_assistant.hpp" />

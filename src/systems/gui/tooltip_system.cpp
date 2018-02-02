@@ -22,7 +22,7 @@
 #include "../../global_assets/game_camera.hpp"
 #include "../../global_assets/game_config.hpp"
 #include "../ai/mining_system.hpp"
-#include "../../stdafx.h"
+#include "../../global_assets/debug_flags.hpp"
 
 namespace systems {
 	namespace tooltips {
@@ -41,6 +41,7 @@ namespace systems {
 				std::vector<std::string> lines;
 
 				// Debug flags
+				if (debug::show_flags)
 				{
 					std::stringstream ss;
 					if (solid(tile_idx)) ss << "Solid-";
@@ -56,7 +57,10 @@ namespace systems {
 				}
 
 				if (water_level(tile_idx) > 0) lines.push_back(std::string("Water level: " + std::to_string(water_level(tile_idx))));
-				lines.push_back("Mining distance: " + std::to_string(mining_system::mining_map[tile_idx].distance));
+
+				if (debug::show_dijkstra) {
+					lines.push_back("Mining distance: " + std::to_string(mining_system::mining_map[tile_idx].distance));
+				}
 
 				{ // Base tile type
 					std::stringstream ss;
@@ -94,6 +98,9 @@ namespace systems {
 							case 2: ss << "Growing"; break;
 							case 3: ss << "Flowering"; break;
 							default: ss << "Unknown - error!";
+							}
+							if (debug::show_flags) {
+								ss << " " << veg_ticker(tile_idx) << "/" << plant->lifecycle[veg_lifecycle(tile_idx)];
 							}
 							if (!plant->provides.empty()) {
 								const std::string harvest_to = plant->provides[veg_lifecycle(tile_idx)];
