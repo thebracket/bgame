@@ -54,3 +54,17 @@ items["pickaxe"] = {
     vox = voxelId("pick"),
     clothing_layer = voxelId("pick_held")
 };
+
+-- Hoe (to allow farming)
+items["hoe"] = {
+    name = "Hoe",
+    description = "A garden hoe, used for clearing soil ready for planting.",
+    itemtype = {"tool-farming"},
+    glyph = glyphs['axe_pickaxe'],
+    glyph_ascii = glyphs['paragraph'],
+    foreground = colors['white'],
+    background = colors['black'],
+    stockpile = stockpiles['tool'].id,
+    vox = voxelId("hoe"),
+    clothing_layer = voxelId("hoe_held")
+};

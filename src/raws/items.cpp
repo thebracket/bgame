@@ -85,6 +85,7 @@ void read_items() noexcept
                                    if (type == "bone") c.categories.set(ITEM_BONE);
                                    if (type == "skull") c.categories.set(ITEM_SKULL);
                                    if (type == "leather") c.categories.set(ITEM_LEATHER);
+								   if (type == "tool-farming") c.categories.set(ITEM_FARMING);
                                });
                            }}
                    }

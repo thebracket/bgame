@@ -25,6 +25,7 @@
 #include "../../components/item_tags/item_ranged_t.hpp"
 #include "../../components/item_tags/item_skull_t.hpp"
 #include "../../components/item_tags/item_spice_t.hpp"
+#include "../../components/item_tags/item_farming.hpp"
 #include "../../components/items/item_carried.hpp"
 #include "../../components/items/item_stored.hpp"
 #include "../../components/items/item_quality.hpp"
@@ -70,6 +71,7 @@ namespace systems {
 			auto item_spice = item_entity->component<item_spice_t>();
 			auto item_carried = item_entity->component<item_carried_t>();
 			auto item_stored = item_entity->component<item_stored_t>();
+			auto item_farming = item_entity->component<item_farming_t>();
 			auto item_quality = item_entity->component<item_quality_t>();
 			auto item_wear = item_entity->component<item_wear_t>();
 			auto item_mat = get_material(item_c->material);
@@ -94,6 +96,7 @@ namespace systems {
 			if (item_ranged) tags << "RANGED ";
 			if (item_skull) tags << "SKULL ";
 			if (item_spice) tags << "SPICE ";
+			if (item_farming) tags << "FARMING ";
 
 			ImGui::Begin(win_item_info.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
 
@@ -221,6 +224,7 @@ namespace systems {
 			}
 			if (item_skull) ImGui::Text("This is an unprocessed skull, and may be used at a bonecarver.");
 			if (item_spice) ImGui::Text("This is a spice, used to improve flavor in cooking.");
+			if (item_farming) ImGui::Text("This is used for farming.");
 
 			// Poll the reactions system
 			std::vector<std::string> sources;

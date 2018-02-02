@@ -476,6 +476,7 @@
     <ClInclude Include="..\..\src\components\entry_trigger.hpp" />
     <ClInclude Include="..\..\src\components\explosion_t.hpp" />
     <ClInclude Include="..\..\src\components\falling.hpp" />
+    <ClInclude Include="..\..\src\components\farming\designated_farmer.hpp" />
     <ClInclude Include="..\..\src\components\game_stats.hpp" />
     <ClInclude Include="..\..\src\components\grazer_ai.hpp" />
     <ClInclude Include="..\..\src\components\health.hpp" />
@@ -498,6 +499,7 @@
     <ClInclude Include="..\..\src\components\item_tags\item_chopping_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_digging_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_drink_t.hpp" />
+    <ClInclude Include="..\..\src\components\item_tags\item_farming.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_food_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_hide_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_leather_t.hpp" />

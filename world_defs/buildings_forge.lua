@@ -157,6 +157,16 @@ reactions["make_metal_pickaxe"] = {
     automatic = false
 };
 
+reactions["make_hoe"] = {
+    name = "Make Hoe",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=1, material="wood" }, { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="hoe", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 10,
+    automatic = false
+};
+
 reactions["make_metal_dagger"] = {
     name = "Make Metal Dagger",
     workshop = "primitive_forge",

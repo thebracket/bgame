@@ -39,6 +39,7 @@
 #include "../components/items/item_quality.hpp"
 #include "../components/items/item_wear.hpp"
 #include "../components/items/item_creator.hpp"
+#include "../components/item_tags/item_farming.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -127,6 +128,22 @@ void load_raws() {
 	load_game_tables();
 }
 
+void decorate_item_categories(bengine::entity_t &item, std::bitset<NUMBER_OF_ITEM_CATEGORIES> &categories) {
+	if (categories.test(TOOL_CHOPPING)) item.assign(item_chopping_t{});
+	if (categories.test(TOOL_DIGGING)) item.assign(item_digging_t{});
+	if (categories.test(WEAPON_MELEE)) item.assign(item_melee_t{});
+	if (categories.test(WEAPON_RANGED)) item.assign(item_ranged_t{});
+	if (categories.test(WEAPON_AMMO)) item.assign(item_ammo_t{});
+	if (categories.test(ITEM_FOOD)) item.assign(item_food_t{});
+	if (categories.test(ITEM_SPICE)) item.assign(item_spice_t{});
+	if (categories.test(ITEM_DRINK)) item.assign(item_drink_t{});
+	if (categories.test(ITEM_HIDE)) item.assign(item_hide_t{});
+	if (categories.test(ITEM_BONE)) item.assign(item_bone_t{});
+	if (categories.test(ITEM_SKULL)) item.assign(item_skull_t{});
+	if (categories.test(ITEM_LEATHER)) item.assign(item_leather_t{});
+	if (categories.test(ITEM_FARMING)) item.assign(item_farming_t{});
+}
+
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) {
     auto finder = get_item_def(tag);
     if (finder == nullptr) throw std::runtime_error(std::string("Unknown item tag: ") + tag);
@@ -141,25 +158,11 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 		->assign(item_quality_t{ quality })
 		->assign(item_wear_t{ wear })
 		->assign(item_creator_t{ creator_id, creator_name });
+	decorate_item_categories(*entity, finder->categories);
 
     //std::cout << "Spawned item on ground: " << entity->id << ", " << entity->component<item_t>()->item_tag << "\n";
     entity_octree.add_node(octree_location_t{x,y,z,entity->id});
 	render::models_changed = true;
-}
-
-void decorate_item_categories(bengine::entity_t &item, std::bitset<NUMBER_OF_ITEM_CATEGORIES> &categories) {
-	if (categories.test(TOOL_CHOPPING)) item.assign(item_chopping_t{});
-	if (categories.test(TOOL_DIGGING)) item.assign(item_digging_t{});
-	if (categories.test(WEAPON_MELEE)) item.assign(item_melee_t{});
-	if (categories.test(WEAPON_RANGED)) item.assign(item_ranged_t{});
-	if (categories.test(WEAPON_AMMO)) item.assign(item_ammo_t{});
-	if (categories.test(ITEM_FOOD)) item.assign(item_food_t{});
-	if (categories.test(ITEM_SPICE)) item.assign(item_spice_t{});
-	if (categories.test(ITEM_DRINK)) item.assign(item_drink_t{});
-	if (categories.test(ITEM_HIDE)) item.assign(item_hide_t{});
-	if (categories.test(ITEM_BONE)) item.assign(item_bone_t{});
-	if (categories.test(ITEM_SKULL)) item.assign(item_skull_t{});
-	if (categories.test(ITEM_LEATHER)) item.assign(item_leather_t{});
 }
 
 bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) {

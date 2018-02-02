@@ -193,6 +193,9 @@
     <Filter Include="Header Files\components\mining">
       <UniqueIdentifier>{541b25cd-eda9-44fe-bfe7-8e9e4649ce10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\components\farming">
+      <UniqueIdentifier>{9b213e2d-1f70-4177-b499-ab69a5896f6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -1678,6 +1681,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\wish_mode.hpp">
       <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\farming\designated_farmer.hpp">
+      <Filter>Header Files\components\farming</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_farming.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
