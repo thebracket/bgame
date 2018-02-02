@@ -1,6 +1,37 @@
 -- Workshops that mostly just convert raw materials into other materials
 
 ------------------------------------------------------------------------------------------------------------------------
+-- Dungheaps turn dung into manure
+------------------------------------------------------------------------------------------------------------------------
+
+buildings["dung_heap"] = {
+    name = "Dung Heap",
+    components = { { item="block", qty=1, mat_type="wood" } },
+    skill = { name="Construction", difficulty=12 },
+    render = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['white'], background = colors['black']}
+        }
+    },
+    render_ascii = {
+        width=1, height=1, tiles= {
+            {glyph= glyphs['arch'], foreground = colors['earth_brown'], background = colors['black']}
+        }
+    },
+    vox = voxelId("dung_heap")
+};
+
+reactions["make-manure"] = {
+    name = "Make Manure",
+    workshop = "dung_heap",
+    inputs = { { item="dung", qty=1 }, {item="hay", qty=1} },
+    outputs = { { item="manure", qty=1 } },
+    skill = "Farming",
+    difficulty = 10,
+    automatic = false
+ };
+
+------------------------------------------------------------------------------------------------------------------------
 -- Sawmills are used for converting wood into blocks, and offcuts.
 ------------------------------------------------------------------------------------------------------------------------
 

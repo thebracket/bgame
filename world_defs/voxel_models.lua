@@ -122,6 +122,8 @@ voxel_models = {
     axe_held = { model=vfn("simpleaxe_held"), id=112 },
     hoe = { model=vfn("hoe"), id=113 },
     hoe_held = { model=vfn("hoe_held"), id=113 },
+
+    dung_heap = { model=vfn("dung_heap"), id=114 },
 }
 
 function voxelId(name)

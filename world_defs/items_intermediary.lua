@@ -275,3 +275,15 @@ items["dung"] = {
     stockpile = stockpiles['manure'].id,
     vox = voxelId("dung")
 };
+
+items["manure"] = {
+    name = "Manure",
+    description = "Smelly animal excrement and grass, aged to perfection. It smells terrible, but is good for plant growth.",
+    itemtype = {"component"},
+    glyph = glyphs['circle'],
+    glyph_ascii = glyphs['circle'],
+    foreground = colors['earth_brown'],
+    background = colors['black'],
+    stockpile = stockpiles['manure'].id,
+    vox = voxelId("dung")
+};
