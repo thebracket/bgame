@@ -52,7 +52,14 @@ namespace systems {
 
 			ai_work_template<ai_tag_work_order> work;
 			work.do_ai([&work](entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Fulfilling Work Orders");
+				auto reaction_info = get_reaction_def(w.reaction_target.reaction_tag);
+				if (reaction_info) {
+					const std::string status = reaction_info->name;
+					work.set_status(e, std::move(status));
+				}
+				else {
+					work.set_status(e, "Fulfilling Work Orders");
+				}
 				if (w.step == ai_tag_work_order::work_steps::FIND_JOB) {
 					//std::cout << "Finding work\n";
 					std::unique_ptr<reaction_task_t> autojob;
