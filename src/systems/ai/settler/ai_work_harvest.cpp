@@ -4,7 +4,6 @@
 #include "ai_work_template.hpp"
 #include "../../../components/position.hpp"
 #include "../../../components/ai_tags/ai_tag_work_harvest.hpp"
-#include "../../../global_assets/game_designations.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../../../raws/plants.hpp"
@@ -20,6 +19,7 @@
 #include "../../../bengine/geometry.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../../damage/damage_system.hpp"
+#include "../../../global_assets/farming_designations.hpp"
 
 namespace systems {
 	namespace ai_harvest {
@@ -33,9 +33,9 @@ namespace systems {
 		namespace jobs_board {
 			void evaluate_harvest(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 				if (e.component<designated_farmer_t>() == nullptr) return; // Not a farmer
-				if (designations->harvest.empty()) return; // Nothing to harvest
+				if (farm_designations->harvest.empty()) return; // Nothing to harvest
 
-				board.insert(std::make_pair((int)bengine::distance3d(pos.x, pos.y, pos.z, designations->harvest.begin()->second.x, designations->harvest.begin()->second.y, designations->harvest.begin()->second.z), jt));
+				board.insert(std::make_pair((int)bengine::distance3d(pos.x, pos.y, pos.z, farm_designations->harvest.begin()->second.x, farm_designations->harvest.begin()->second.y, farm_designations->harvest.begin()->second.z), jt));
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace systems {
 				}
 				if (h.step == ai_tag_work_harvest::harvest_steps::FIND_HARVEST) {
 					std::map<int, position_t> harvest_targets;
-					for (const auto ht : designations->harvest) {
+					for (const auto ht : farm_designations->harvest) {
 						const float distance = bengine::distance3d(pos.x, pos.y, pos.z, ht.second.x, ht.second.y, ht.second.z);
 						harvest_targets.insert(std::make_pair(static_cast<int>(distance), ht.second));
 					}
@@ -149,12 +149,12 @@ namespace systems {
 				}
 				else if (h.step == ai_tag_work_harvest::harvest_steps::DO_HARVEST) {
 					const int idx = mapidx(pos);
-					designations->harvest.erase(std::remove_if(
-						designations->harvest.begin(),
-						designations->harvest.end(),
+					farm_designations->harvest.erase(std::remove_if(
+						farm_designations->harvest.begin(),
+						farm_designations->harvest.end(),
 						[&idx](std::pair<bool, position_t> p) { return idx == mapidx(p.second); }
 					),
-						designations->harvest.end());
+						farm_designations->harvest.end());
 
 					auto stats = e.component<game_stats_t>();
 					if (!stats) {

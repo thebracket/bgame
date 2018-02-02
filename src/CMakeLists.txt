@@ -141,6 +141,7 @@ add_library(globals STATIC
                 global_assets/spatial_db.cpp
                 global_assets/texture_storage.cpp
                 global_assets/debug_flags.cpp
+                global_assets/farming_designations.cpp
 )
 
 add_library(mainloops STATIC

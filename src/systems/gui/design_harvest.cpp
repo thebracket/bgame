@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "design_harvest.hpp"
-#include "../../global_assets/game_designations.hpp"
+#include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
@@ -49,20 +49,20 @@ namespace systems {
 			if (ok && flag(idx, CAN_STAND_HERE)) {
 				if (left_click) {
 					bool found = false;
-					for (const auto &g : designations->harvest) {
+					for (const auto &g : farm_designations->harvest) {
 						if (mapidx(g.second) == idx) found = true;
 					}
 					if (!found) {
-						designations->harvest.push_back(std::make_pair(false, position_t{ world_x, world_y, world_z }));
+						farm_designations->harvest.push_back(std::make_pair(false, position_t{ world_x, world_y, world_z }));
 					}
 				}
 				else if (right_click) {
-					designations->harvest.erase(std::remove_if(
-						designations->harvest.begin(),
-						designations->harvest.end(),
+					farm_designations->harvest.erase(std::remove_if(
+						farm_designations->harvest.begin(),
+						farm_designations->harvest.end(),
 						[&idx](std::pair<bool, position_t> p) { return idx == mapidx(p.second); }
 					),
-						designations->harvest.end());
+						farm_designations->harvest.end());
 				}
 			}
 

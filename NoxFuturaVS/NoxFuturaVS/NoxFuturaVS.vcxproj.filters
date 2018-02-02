@@ -753,6 +753,9 @@
     <ClCompile Include="..\..\src\systems\gui\wish_mode.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\farming_designations.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1687,6 +1690,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\item_tags\item_farming.hpp">
       <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\farming_designations.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\farming\farm_designs.hpp">
+      <Filter>Header Files\components\farming</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

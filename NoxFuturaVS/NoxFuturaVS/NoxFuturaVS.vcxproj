@@ -244,6 +244,7 @@
     <ClCompile Include="..\..\src\components\logger.cpp" />
     <ClCompile Include="..\..\src\components\species.cpp" />
     <ClCompile Include="..\..\src\global_assets\debug_flags.cpp" />
+    <ClCompile Include="..\..\src\global_assets\farming_designations.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_building.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_calendar.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_camera.cpp" />
@@ -477,6 +478,7 @@
     <ClInclude Include="..\..\src\components\explosion_t.hpp" />
     <ClInclude Include="..\..\src\components\falling.hpp" />
     <ClInclude Include="..\..\src\components\farming\designated_farmer.hpp" />
+    <ClInclude Include="..\..\src\components\farming\farm_designs.hpp" />
     <ClInclude Include="..\..\src\components\game_stats.hpp" />
     <ClInclude Include="..\..\src\components\grazer_ai.hpp" />
     <ClInclude Include="..\..\src\components\health.hpp" />
@@ -533,6 +535,7 @@
     <ClInclude Include="..\..\src\components\world_position.hpp" />
     <ClInclude Include="..\..\src\global_assets\constants.hpp" />
     <ClInclude Include="..\..\src\global_assets\debug_flags.hpp" />
+    <ClInclude Include="..\..\src\global_assets\farming_designations.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_building.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_calendar.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_camera.hpp" />

@@ -23,7 +23,6 @@ struct designations_t {
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 	std::vector<std::pair<bool, position_t>> guard_points;
 	std::vector<unbuild_t> deconstructions;
-	std::vector<std::pair<bool, position_t>> harvest;
 	std::vector<std::size_t> levers_to_pull;
 	int current_power = 10;
 	uint64_t current_cash = 100;
@@ -43,7 +42,7 @@ struct designations_t {
 	void serialize(Archive & archive)
 	{
 		archive( architecture, chopping, buildings, build_orders, guard_points, deconstructions,
-			harvest, levers_to_pull, current_power, current_cash, standing_order_idle_move, standing_order_wildlife_treatment,
+			levers_to_pull, current_power, current_cash, standing_order_idle_move, standing_order_wildlife_treatment,
             standing_order_upgrade); // serialize things by passing them to the archive
 	}
 };
