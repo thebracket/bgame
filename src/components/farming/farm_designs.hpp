@@ -7,16 +7,28 @@
 #include <cereal/types/utility.hpp>
 #include "../position.hpp"
 
+struct farm_cycle_t {
+	uint8_t state = 0;
+	std::string seed_type = "";
+
+	template<class Archive>
+	void serialize(Archive & archive)
+	{
+		archive(state, seed_type);
+	}
+};
+
 struct farming_designations_t {
 
 	farming_designations_t() {}
 
 	std::vector<std::pair<bool, position_t>> harvest;
+	std::map<int, farm_cycle_t> farms;
 
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive(harvest);
+		archive(harvest, farms);
 	}
 };
 

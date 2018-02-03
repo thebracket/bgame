@@ -20,6 +20,7 @@
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../../damage/damage_system.hpp"
 #include "../../../global_assets/farming_designations.hpp"
+#include "../../../components/item_tags/item_seed_t.hpp"
 
 namespace systems {
 	namespace ai_harvest {
@@ -171,6 +172,9 @@ namespace systems {
 							work.cancel_work_tag(e);
 							return;
 						}
+						std::string cname = "";
+						auto name = e.component<name_t>();
+						if (name) cname = name->first_name + std::string(" ") + name->last_name;
 						const auto plant = get_plant_def(veg_type(idx));
 						const std::string result = plant->provides[veg_lifecycle(idx)];
 						if (result != "none") {
@@ -180,11 +184,16 @@ namespace systems {
 								if (item_finder->categories.test(ITEM_FOOD)) mat_type = "food";
 								if (item_finder->categories.test(ITEM_SPICE)) mat_type = "spice";
 							}
-							std::string cname = "";
-							auto name = e.component<name_t>();
-							if (name) cname = name->first_name + std::string(" ") + name->last_name;
 							auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type), 3, 100, e.id, cname);
 							item->component<item_t>()->item_name = plant->name;
+						}
+
+						// Spawn seeds
+						const int n_seeds = rng.roll_dice(1, 4)+1;
+						for (int i = 0; i < n_seeds; ++i) {
+							auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, "seed", get_material_by_tag("organic"), 3, 100, e.id, cname);
+							item->component<item_t>()->item_name = plant->name + std::string(" Seed");
+							item->component<item_seed_t>()->grows_into = plant->tag;
 						}
 
 						// Knock tile back to germination

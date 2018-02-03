@@ -519,3 +519,13 @@ items["sage_herb"] = {
     stockpile=stockpiles['food'],
     vox = voxelId("veggie")
 };
+
+items["seed"] = {
+    name="Seeds",
+    description = "Seeds that when tended properly will grow into a lovely plant",
+    itemtype = { "seed" }, glyph = glyphs["inv_exclaim"],
+    glyph_ascii = glyphs['colon'],
+    foreground=colors['green'], background=colors['black'],
+    stockpile=stockpiles['seeds'],
+    vox = voxelId("seed")
+};

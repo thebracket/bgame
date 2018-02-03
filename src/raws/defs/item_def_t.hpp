@@ -19,6 +19,7 @@ constexpr int ITEM_BONE = 10;
 constexpr int ITEM_SKULL = 11;
 constexpr int ITEM_LEATHER = 12;
 constexpr int ITEM_FARMING = 13;
+constexpr int ITEM_SEED = 14;
 
 struct stockpile_def_t {
     int index = 0;

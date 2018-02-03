@@ -124,6 +124,7 @@ voxel_models = {
     hoe_held = { model=vfn("hoe_held"), id=113 },
 
     dung_heap = { model=vfn("dung_heap"), id=114 },
+    seed = { model=vfn("seed"), id=115 }
 }
 
 function voxelId(name)

@@ -507,6 +507,7 @@
     <ClInclude Include="..\..\src\components\item_tags\item_leather_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_melee_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_ranged_t.hpp" />
+    <ClInclude Include="..\..\src\components\item_tags\item_seed_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_skull_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_spice_t.hpp" />
     <ClInclude Include="..\..\src\components\lever.hpp" />

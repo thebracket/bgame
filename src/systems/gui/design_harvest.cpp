@@ -4,6 +4,7 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
+#include "../../bengine/imgui_tabs.hpp"
 #include "../mouse.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../raws/plants.hpp"
@@ -16,7 +17,7 @@ namespace systems {
 	namespace design_harvest {
 		const std::string win_harvest = std::string(ICON_FA_SHOPPING_BASKET) + " Harvesting";
 
-		void run(const double &duration_ms) {
+		static void display_harvest() {
 			using namespace region;
 
 			std::string harvest_name = "";
@@ -66,13 +67,36 @@ namespace systems {
 				}
 			}
 
-			ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+			
 			ImGui::TextColored(ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f }, "%s", "Click a tile to harvest it, right click to remove harvest status.");
 			if (!harvest_name.empty()) {
 				ImGui::TextColored(ImVec4{ 0.0f, 1.0f, 0.0f, 1.0f }, "%s", "Current tile will provide: ");
 				ImGui::SameLine();
 				ImGui::Text("%s", harvest_name.c_str());
 			}
+			
+		}
+
+		static void display_farms() {
+
+		}
+
+		static std::string harvest_tab = std::string(ICON_FA_LEAF) + " Harvest";
+		static std::string farms_tab = std::string(ICON_FA_TASKS) + " Farms";
+
+		void run(const double &duration_ms) {
+			ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
+			ImGui::BeginTabBar("##farming#tabs");
+			ImGui::DrawTabsBackground();
+
+			if (ImGui::AddTab(harvest_tab.c_str())) {
+				display_harvest();
+			}
+			if (ImGui::AddTab(farms_tab.c_str())) {
+				display_farms();
+			}
+
+			ImGui::EndTabBar();
 			ImGui::End();
 		}
 	}
