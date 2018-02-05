@@ -83,6 +83,12 @@ namespace systems {
 											++current_cycle;
 											current_tick = 0;
 											if (current_cycle > 3) current_cycle = return_val;
+
+											if (farm != farm_designations->farms.end() && plant->provides[veg_lifecycle(idx)] != "none") {
+												auto[x, y, z] = idxmap(idx);
+												farm_designations->harvest.push_back(std::make_pair(false, position_t{ x,y,z }));
+											}
+
 											calc_render(idx);
 											chunks::mark_chunk_dirty_by_tileidx(idx);
 											// TODO: emit(map_dirty_message{});
@@ -103,12 +109,7 @@ namespace systems {
 										}
 
 										set_veg_ticker(idx, current_tick);
-										set_veg_lifecycle(idx, current_cycle);
-										
-										if (farm != farm_designations->farms.end() && plant->provides[veg_lifecycle(idx)] != "none") {
-											auto[x, y, z] = idxmap(idx);
-											farm_designations->harvest.push_back(std::make_pair(false, position_t{ x,y,z }));
-										}
+										set_veg_lifecycle(idx, current_cycle);																			
 									}
 								}
 							}

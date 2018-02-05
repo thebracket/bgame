@@ -165,6 +165,7 @@ namespace systems {
 
 					auto skill_check = skill_roll(e.id, *stats, rng, "Farming", DIFFICULTY_EASY);
 					if (skill_check >= SUCCESS) {
+						auto farm_finder = farm_designations->farms.find(idx);
 
 						// Create the harvesting result
 						if (veg_type(idx) == 0) {
@@ -183,8 +184,18 @@ namespace systems {
 								if (item_finder->categories.test(ITEM_FOOD)) mat_type = "food";
 								if (item_finder->categories.test(ITEM_SPICE)) mat_type = "spice";
 							}
-							auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type), 3, 100, e.id, cname);
-							item->component<item_t>()->item_name = plant->name;
+							int n_spawn = 1;
+							if (farm_finder != farm_designations->farms.end()) {
+								const int n = farm_finder->second.fertilized ? 4 : 2;
+								n_spawn = rng.roll_dice(n, 4);
+								farm_finder->second.state = farm_steps::GROWING;
+								farm_finder->second.fertilized = false;
+
+							}
+							for (int i = 0; i < n_spawn; ++i) {
+								auto item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, result, get_material_by_tag(mat_type), 3, 100, e.id, cname);
+								item->component<item_t>()->item_name = plant->name;
+							}
 						}
 
 						// Spawn seeds
