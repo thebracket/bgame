@@ -198,6 +198,7 @@ namespace systems {
 					if (!stats) {
 						std::cout << "Cancelled because of missing stats.\n";
 						work.cancel_work_tag(e);
+						inventory_system::drop_item(h.soil_id, pos.x, pos.y, pos.z);
 						return;
 					}
 
@@ -205,6 +206,7 @@ namespace systems {
 					if (farm_finder == farm_designations->farms.end() || farm_finder->second.state != farm_steps::FIX_SOIL) {
 						std::cout << "Bailing out - not relevant anymore!";
 						work.cancel_work_tag(e);
+						inventory_system::drop_item(h.soil_id, pos.x, pos.y, pos.z);
 						return;
 					}
 

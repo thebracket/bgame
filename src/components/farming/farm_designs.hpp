@@ -15,16 +15,19 @@ namespace farm_steps {
 }
 
 struct farm_cycle_t {
+	farm_cycle_t() {}
+	farm_cycle_t(uint8_t st, std::string t, ::size_t seed) : state(st), seed_type(t), seed_id(seed) {}
 	uint8_t state = 0;
 	std::string seed_type = "";
 	int days_since_weeded = 0;
 	int days_since_watered = 0;
 	bool fertilized = false;
+	std::size_t seed_id = 0;
 
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive(state, seed_type, days_since_weeded, days_since_watered, fertilized);
+		archive(state, seed_type, days_since_weeded, days_since_watered, fertilized, seed_id);
 	}
 };
 

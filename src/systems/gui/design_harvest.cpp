@@ -133,14 +133,16 @@ namespace systems {
 						auto farm = farm_designations->farms.find(idx);
 						if (farm == farm_designations->farms.end()) {
 							bool found = false;
-							each_without<claimed_t, item_seed_t>([&found](entity_t &e, item_seed_t &seed) {
+							std::size_t seed_id = 0;
+							each_without<claimed_t, item_seed_t>([&found, &seed_id](entity_t &seed_entity, item_seed_t &seed) {
 								if (!found) {
 									found = true;
-									e.assign(claimed_t{ 0 });
+									seed_entity.assign(claimed_t{ 0 });
+									seed_id = seed_entity.id;
 								}
 							});
 							if (found) {
-								farm_designations->farms[idx] = farm_cycle_t{ 0, seed_options[selected_seed] };
+								farm_designations->farms[idx] = farm_cycle_t{ 0, seed_options[selected_seed], seed_id };
 							}
 						}
 					}

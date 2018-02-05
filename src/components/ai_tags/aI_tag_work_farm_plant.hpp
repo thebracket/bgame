@@ -12,13 +12,15 @@ struct ai_tag_work_farm_plant {
 	ai_tag_work_farm_plant() {}
 	plant_steps step = FIND_HOE;
 	std::size_t tool_id = 0;
+	std::size_t seed_id = 0;
+	position_t farm_position;
 	std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
 
     template<class Archive>
     void serialize(Archive & archive)
     {
         // Nothing to save
-        archive( step, tool_id );
+        archive( step, tool_id, seed_id, farm_position );
     }
 };
 
