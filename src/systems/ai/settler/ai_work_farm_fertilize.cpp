@@ -102,7 +102,7 @@ namespace systems {
 					}, [&h, &e]() {
 						// Success
 						h.current_path.reset();
-						h.step = ai_tag_work_farm_fertilize::fertilize_steps::FIND_TARGET;
+						h.step = ai_tag_work_farm_fertilize::fertilize_steps::FIND_FERTILZER;
 
 						inventory_system::pickup_item(h.tool_id, e.id);
 						return;
@@ -145,7 +145,7 @@ namespace systems {
 				else if (h.step == ai_tag_work_farm_fertilize::fertilize_steps::FIND_TARGET) {
 					std::map<int, std::pair<position_t, const farm_cycle_t *>> plant_targets;
 					for (const auto &f : farm_designations->farms) {
-						if (f.second.state == farm_steps::PLANT_SEEDS) {
+						if (f.second.state == farm_steps::GROWING && f.second.fertilized == false) {
 							auto[X, Y, Z] = idxmap(f.first);
 							const float distance = bengine::distance3d(pos.x, pos.y, pos.z, X, Y, Z);
 							plant_targets.insert(std::make_pair(static_cast<int>(distance), std::make_pair(position_t{ X, Y, Z }, &f.second)));

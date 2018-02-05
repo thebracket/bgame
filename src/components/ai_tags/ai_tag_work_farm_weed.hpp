@@ -7,7 +7,7 @@
 
 struct ai_tag_work_farm_weed {
 
-    enum weed_steps { FIND_HOE, FETCH_HOE, FIND_SEED, FETCH_SEED, FIND_TARGET, FETCH_TARGET, WEED };
+    enum weed_steps { FIND_HOE, FETCH_HOE, FIND_TARGET, FETCH_TARGET, WEED };
 
 	ai_tag_work_farm_weed() {}
 	weed_steps step = FIND_HOE;
