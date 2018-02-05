@@ -45,6 +45,7 @@ namespace systems {
 				if (debug::show_flags)
 				{
 					std::stringstream ss;
+					if (above_ground(tile_idx)) ss << "Outside-";
 					if (solid(tile_idx)) ss << "Solid-";
 					if (opaque(tile_idx)) ss << "Opaque-";
 					if (flag(tile_idx, CAN_GO_DOWN)) ss << "Down-";

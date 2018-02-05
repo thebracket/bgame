@@ -12,9 +12,14 @@
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../../bengine/ecs.hpp"
+#include "../../components/claimed_t.hpp"
+#include "../../components/item_tags/item_seed_t.hpp"
+#include "../../components/items/item.hpp"
 
 namespace systems {
 	namespace design_harvest {
+		std::set<int> cursors;
 		const std::string win_harvest = std::string(ICON_FA_SHOPPING_BASKET) + " Harvesting";
 
 		static void display_harvest() {
@@ -75,16 +80,86 @@ namespace systems {
 				ImGui::Text("%s", harvest_name.c_str());
 			}
 			
+			for (const auto &cursor : farm_designations->harvest) {
+				cursors.insert(mapidx(cursor.second));
+			}
 		}
 
-		static void display_farms() {
+		static int selected_seed = 0;
 
+		static void display_farms() {
+			using namespace bengine;
+			using namespace region;
+
+			ImGui::Text("Plant type:");
+			ImGui::SameLine();
+
+			std::map<std::string, std::pair<int, std::string>> available_seeds;
+			each_without<claimed_t, item_seed_t, item_t>([&available_seeds](entity_t &e, item_seed_t &seed, item_t &item) {
+				auto plant_finder = get_plant_def(get_plant_idx(seed.grows_into));
+				if (plant_finder) {
+					const std::string name = plant_finder->name;
+					auto finder = available_seeds.find(name);
+					if (finder == available_seeds.end()) {
+						available_seeds[name] = std::make_pair(1, seed.grows_into);
+					}
+					else {
+						int tmp = available_seeds[name].first;
+						available_seeds[name].first = tmp + 1;
+					}
+				}
+			});
+
+			std::vector<std::string> seed_options;
+			std::string seed_list = "";
+			for (const auto &seed : available_seeds) {
+				seed_list += seed.first + std::string(" (") + std::to_string(seed.second.first) + std::string(")") + (char)0;
+				seed_options.push_back(seed.first);
+				//std::cout << seed.first << " - " << seed.second.first << "\n";
+			}
+			seed_list += "\0";
+
+			ImGui::Combo("##SeedSelector", &selected_seed, seed_list.c_str());
+			ImGui::Text("Select tiles to designate as farms for this seed type, or right-click to remove status.");
+
+			if (available_seeds.size() > 0) {
+				const int world_x = mouse_wx;
+				const int world_y = mouse_wy;
+				const int world_z = mouse_wz;
+
+				const auto idx = mapidx(world_x, world_y, world_z);
+				if (flag(idx, CAN_STAND_HERE) && !flag(idx, CONSTRUCTION)) {
+					if (left_click) {
+						auto farm = farm_designations->farms.find(idx);
+						if (farm == farm_designations->farms.end()) {
+							bool found = false;
+							each_without<claimed_t, item_seed_t>([&found](entity_t &e, item_seed_t &seed) {
+								if (!found) {
+									found = true;
+									e.assign(claimed_t{ 0 });
+								}
+							});
+							if (found) {
+								farm_designations->farms[idx] = farm_cycle_t{ 0, seed_options[selected_seed] };
+							}
+						}
+					}
+					else if (right_click) {
+						farm_designations->farms.erase(idx);
+					}
+				}
+			}
+
+			for (const auto &farm : farm_designations->farms) {
+				cursors.insert(farm.first);
+			}
 		}
 
 		static std::string harvest_tab = std::string(ICON_FA_LEAF) + " Harvest";
 		static std::string farms_tab = std::string(ICON_FA_TASKS) + " Farms";
 
 		void run(const double &duration_ms) {
+			cursors.clear();
 			ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
 			ImGui::BeginTabBar("##farming#tabs");
 			ImGui::DrawTabsBackground();

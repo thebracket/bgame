@@ -40,6 +40,12 @@
 #include "ai/settler/ai_work_architect.hpp"
 #include "ai/settler/ai_work_hunt.hpp"
 #include "ai/settler/ai_idle_time.hpp"
+#include "ai/settler/ai_work_farm_clear.hpp"
+#include "ai/settler/ai_work_farm_plant.hpp"
+#include "ai/settler/ai_work_farm_fertilize.hpp"
+#include "ai/settler/ai_work_farm_fixsoil.hpp"
+#include "ai/settler/ai_work_farm_water.hpp"
+#include "ai/settler/ai_work_farm_weed.hpp"
 #include "physics/trigger_system.hpp"
 #include "physics/movement_system.hpp"
 #include "physics/explosive_system.hpp"
@@ -150,6 +156,12 @@ namespace systems {
 	constexpr int ITEM_UI_SYSTEM = 68;
 	constexpr int JOB_CENTER_SYSTEM = 69;
 	constexpr int WISH_MODE_SYSTEM = 70;
+	constexpr int AI_FARM_CLEAR = 71;
+	constexpr int AI_FARM_FIXSOIL = 72;
+	constexpr int AI_FARM_FERTILIZE = 73;
+	constexpr int AI_FARM_PLANT = 74;
+	constexpr int AI_FARM_WATER = 75;
+	constexpr int AI_FARM_WEED = 76;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -243,6 +255,12 @@ namespace systems {
 		system_names[ITEM_UI_SYSTEM] = "Item UI";
 		system_names[JOB_CENTER_SYSTEM] = "Job Center UI";
 		system_names[WISH_MODE_SYSTEM] = "Wish Mode UI";
+		system_names[AI_FARM_CLEAR] = "Farm - Clear";
+		system_names[AI_FARM_FERTILIZE] = "Farm - Fertilize";
+		system_names[AI_FARM_FIXSOIL] = "Farm - Fix Soil";
+		system_names[AI_FARM_PLANT] = "Farm - Plant";
+		system_names[AI_FARM_WATER] = "Farm - Water";
+		system_names[AI_FARM_WEED] = "Farm - Weed";
 		game_master_mode = PLAY;
     }
 
@@ -312,6 +330,12 @@ namespace systems {
 			run_system(ai_mining::run, duration_ms, AI_WORK_MINING);
 			run_system(ai_guard::run, duration_ms, AI_WORK_GUARD);
 			run_system(ai_harvest::run, duration_ms, AI_WORK_HARVEST);
+			run_system(ai_farm_plant::run, duration_ms, AI_FARM_PLANT);
+			run_system(ai_farm_fertilize::run, duration_ms, AI_FARM_FERTILIZE);
+			run_system(ai_farm_clear::run, duration_ms, AI_FARM_CLEAR);
+			run_system(ai_farm_fixsoil::run, duration_ms, AI_FARM_FIXSOIL);
+			run_system(ai_farm_water::run, duration_ms, AI_FARM_WATER);
+			run_system(ai_farm_weed::run, duration_ms, AI_FARM_WEED);
 			run_system(ai_lever::run, duration_ms, AI_WORK_LEVER_PULL);
 			run_system(ai_building::run, duration_ms, AI_WORK_BUILDING);
 			run_system(ai_workorder::run, duration_ms, AI_WORK_ORDER);

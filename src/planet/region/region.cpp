@@ -69,6 +69,8 @@ namespace region {
 		void calc_render(const int &idx);
 
 		int next_tree_id = 1;
+
+		void above_ground_calculation();
 	};
 
 	std::unique_ptr<region_t> current_region;
@@ -390,6 +392,10 @@ namespace region {
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
+	void update_outdoor_calculation() {
+		current_region->above_ground_calculation();
+	}
+
 	void save_current_region() {
 		std::string region_filename =
 				get_save_path() + std::string("/region_") + std::to_string(current_region->region_x) + "_" +
@@ -582,5 +588,24 @@ namespace region {
 		}
 
 		veg_render_cache_ascii[idx] = ascii_vegetation;
+	}
+
+	void region_t::above_ground_calculation() {
+		std::fill(above_ground.begin(), above_ground.end(), false);
+		for (int y = 0; y < REGION_HEIGHT; ++y) {
+			for (int x = 0; x < REGION_WIDTH; ++x) {
+				for (int z = REGION_DEPTH - 1; z > 0; --z) {
+					const int idx = mapidx(x, y, z);
+					above_ground[idx] = true;
+					const auto tt = tile_type[idx];
+					const bool hit_ground = (tt == tile_type::SOLID || tt == tile_type::FLOOR || tt == tile_type::WALL);
+					if (hit_ground) goto escape_from_dive;
+				}
+
+			escape_from_dive: {
+
+				}
+			}
+		}
 	}
 }

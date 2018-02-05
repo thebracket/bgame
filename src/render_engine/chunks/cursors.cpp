@@ -10,7 +10,7 @@
 #include "../../global_assets/game_camera.hpp"
 #include "../../global_assets/game_mining.hpp"
 #include "../../systems/gui/design_mining.hpp"
-#include "../../global_assets/farming_designations.hpp"
+#include "../../systems/gui/design_harvest.hpp"
 
 namespace render {
 	static unsigned int cursors_vao = 0;
@@ -119,8 +119,9 @@ namespace render {
 				}
 			}
 			else if (game_design_mode == HARVEST) {
-				for (const auto& gp : farm_designations->harvest) {
-					add_cube_geometry(data, n_elements_cursor_elements, gp.second.x, gp.second.y, gp.second.z, 1, 1, 3);
+				for (const auto &idx : systems::design_harvest::cursors) {
+					auto[x, y, z] = idxmap(idx);
+					add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, 3);
 				}
 			}
 			else if (game_design_mode == STOCKPILES) {

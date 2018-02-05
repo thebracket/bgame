@@ -7,6 +7,8 @@
 #include "../../raws/defs/plant_t.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../ai/mining_system.hpp"
+#include "../../global_assets/farming_designations.hpp"
+#include "../../global_assets/rng.hpp"
 
 using namespace bengine;
 using namespace region;
@@ -42,13 +44,23 @@ namespace systems {
 			});
 
 			if (day_elapsed) {
-				mining_system::mining_map_changed();
+				region::update_outdoor_calculation();
 				for (int z = 0; z<REGION_DEPTH - 1; ++z) {
 					for (int y = 0; y<REGION_HEIGHT - 1; ++y) {
 						for (int x = 0; x<REGION_WIDTH - 1; ++x) {
 							const int idx = mapidx(x, y, z);
+
+							auto farm = farm_designations->farms.find(idx);
+
+							int tick_increase = 1;
+							if (farm != farm_designations->farms.end()) {
+								if (farm->second.fertilized) tick_increase = 2; // Fertilized plants grow faster
+								++farm->second.days_since_watered;
+								++farm->second.days_since_weeded;
+							}
+
 							if (veg_type(idx) > 0) {
-								uint16_t current_tick = veg_ticker(idx) + 1;
+								uint16_t current_tick = veg_ticker(idx) + tick_increase;
 								uint8_t current_cycle = veg_lifecycle(idx);
 								auto plant = get_plant_def(veg_type(idx));
 								if (plant) {
@@ -64,6 +76,20 @@ namespace systems {
 											calc_render(idx);
 											chunks::mark_chunk_dirty_by_tileidx(idx);
 											// TODO: emit(map_dirty_message{});
+										}
+
+										// Punish people who don't tend their crops!
+										if (farm != farm_designations->farms.end()) {
+											if (current_cycle > 0 && farm->second.days_since_watered > 2 && rng.roll_dice(1, 50) <= farm->second.days_since_watered) {
+												--current_cycle;
+												calc_render(idx);
+												chunks::mark_chunk_dirty_by_tileidx(idx);
+											}
+											if (current_cycle > 0 && farm->second.days_since_weeded > 2 && rng.roll_dice(1, 50) <= farm->second.days_since_weeded) {
+												--current_cycle;
+												calc_render(idx);
+												chunks::mark_chunk_dirty_by_tileidx(idx);
+											}
 										}
 
 										set_veg_ticker(idx, current_tick);

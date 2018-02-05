@@ -756,6 +756,24 @@
     <ClCompile Include="..\..\src\global_assets\farming_designations.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_clear.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_fertilize.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_fixsoil.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_plant.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_water.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_weed.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1699,6 +1717,42 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\item_tags\item_seed_t.hpp">
       <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_clear.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_fixsoil.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_plant.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_fertilize.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_clear.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_fertilize.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_fixsoil.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_plant.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_farm_water.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_farm_weed.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_water.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_weed.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

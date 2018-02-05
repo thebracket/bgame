@@ -27,8 +27,8 @@
 #include "../render_engine/render_engine.hpp"
 #include "../render_engine/vox/renderables.hpp"
 #include "../global_assets/game_mining.hpp"
-#include "../global_assets/farming_designations.hpp"
 #include "../systems/gui/design_mining.hpp"
+#include "../systems/gui/design_harvest.hpp"
 #include "../raws/plants.hpp"
 #include "../raws/defs/plant_t.hpp"
 #include <array>
@@ -526,11 +526,12 @@ namespace render {
 					}
 				}
 				else if (game_design_mode == HARVEST) {
-					for (const auto& gp : farm_designations->harvest) {
-						if (gp.second.z == camera_position->region_z) {
-							terminal[termidx(gp.second.x, gp.second.y)].br = 1.0f;
-							terminal[termidx(gp.second.x, gp.second.y)].bg = 0.0f;
-							terminal[termidx(gp.second.x, gp.second.y)].bb = 0.0f;
+					for (const auto &idx : systems::design_harvest::cursors) {
+						auto[x, y, z] = idxmap(idx);
+						if (z == camera_position->region_z) {
+							terminal[termidx(x, y)].br = 1.0f;
+							terminal[termidx(x, y)].bg = 1.0f;
+							terminal[termidx(x, y)].bb = 0.0f;
 						}
 					}
 				}

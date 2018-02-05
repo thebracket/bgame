@@ -261,4 +261,7 @@ namespace region {
     void for_all_tiles(const std::function<void(int)> &func);
 
 	int ground_z(const int x, const int y);
+
+	/* Calculate outdoors */
+	void update_outdoor_calculation();
 }
