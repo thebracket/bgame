@@ -24,6 +24,7 @@
 #include "../ai/mining_system.hpp"
 #include "../../global_assets/debug_flags.hpp"
 #include "../../raws/defs/item_def_t.hpp"
+#include "../../global_assets/farming_designations.hpp"
 
 namespace systems {
 	namespace tooltips {
@@ -87,6 +88,23 @@ namespace systems {
 					}
 					lines.push_back(ss.str());
 				}
+
+				{
+					// Farming
+					auto farm_finder = farm_designations->farms.find(tile_idx);
+					if (farm_finder != farm_designations->farms.end()) {
+						std::stringstream ss;
+						ss << "Farm - " << farm_finder->second.seed_type << " - ";
+						switch (farm_finder->second.state) {
+						case farm_steps::CLEAR: ss << "Plough"; break;
+						case farm_steps::FIX_SOIL: ss << "Fix Soil"; break;
+						case farm_steps::PLANT_SEEDS: ss << "Plant Seeds"; break;
+						case farm_steps::GROWING: ss << "Growing"; break;
+						}
+						lines.push_back(ss.str());
+					}
+				}
+
 				// TODO: Fix me!
 				if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
 					if (veg_type(tile_idx) > 0) {
