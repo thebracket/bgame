@@ -90,12 +90,12 @@ namespace systems {
 
 										// Punish people who don't tend their crops!
 										if (farm != farm_designations->farms.end()) {
-											if (current_cycle > 0 && farm->second.days_since_watered > 2 && rng.roll_dice(1, 50) <= farm->second.days_since_watered) {
+											if (current_cycle > 0 && farm->second.days_since_watered > 4 && rng.roll_dice(1, 50) <= farm->second.days_since_watered) {
 												--current_cycle;
 												calc_render(idx);
 												chunks::mark_chunk_dirty_by_tileidx(idx);
 											}
-											if (current_cycle > 0 && farm->second.days_since_weeded > 2 && rng.roll_dice(1, 50) <= farm->second.days_since_weeded) {
+											if (current_cycle > 0 && farm->second.days_since_weeded > 4 && rng.roll_dice(1, 50) <= farm->second.days_since_weeded) {
 												--current_cycle;
 												calc_render(idx);
 												chunks::mark_chunk_dirty_by_tileidx(idx);
@@ -104,6 +104,11 @@ namespace systems {
 
 										set_veg_ticker(idx, current_tick);
 										set_veg_lifecycle(idx, current_cycle);
+										
+										if (farm != farm_designations->farms.end() && plant->provides[veg_lifecycle(idx)] != "none") {
+											auto[x, y, z] = idxmap(idx);
+											farm_designations->harvest.push_back(std::make_pair(false, position_t{ x,y,z }));
+										}
 									}
 								}
 							}

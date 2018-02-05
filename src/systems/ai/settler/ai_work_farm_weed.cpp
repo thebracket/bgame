@@ -108,7 +108,7 @@ namespace systems {
 				else if (h.step == ai_tag_work_farm_weed::weed_steps::FIND_TARGET) {
 					std::map<int, std::pair<position_t, const farm_cycle_t *>> plant_targets;
 					for (const auto &f : farm_designations->farms) {
-						if (f.second.state == farm_steps::PLANT_SEEDS) {
+						if (f.second.state == farm_steps::GROWING && f.second.days_since_weeded > 0) {
 							auto[X, Y, Z] = idxmap(f.first);
 							const float distance = bengine::distance3d(pos.x, pos.y, pos.z, X, Y, Z);
 							plant_targets.insert(std::make_pair(static_cast<int>(distance), std::make_pair(position_t{ X, Y, Z }, &f.second)));
@@ -120,8 +120,7 @@ namespace systems {
 					}
 
 					h.current_path.reset();
-					auto[X, Y, Z] = idxmap(plant_targets.begin()->first);
-					h.current_path = find_path(pos, position_t{ X, Y, Z });
+					h.current_path = find_path(pos, plant_targets.begin()->second.first);
 					if (!h.current_path->success) {
 						work.cancel_work_tag(e);
 						return;

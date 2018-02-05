@@ -6,6 +6,7 @@
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "geometry_helper.hpp"
+#include "../../global_assets/farming_designations.hpp"
 
 namespace chunks {
     std::array<chunk_t, CHUNKS_TOTAL> chunks;
@@ -103,7 +104,10 @@ namespace chunks {
 								// TODO: Windows go into transparency buffer
 								cubes[idx] = 15;
 							} else if (tiletype == tile_type::FLOOR) {
-                                floors[idx] = get_floor_tex(idx);								
+                                floors[idx] = get_floor_tex(idx);
+								if (farm_designations->farms.find(idx) != farm_designations->farms.end()) {
+									static_voxel_models[116].push_back(std::make_tuple(region_x, region_y, region_z));
+								}
                             } else if (is_cube(tiletype)) {
                                 cubes[idx] = get_cube_tex(idx);
 							} else if (tiletype == tile_type::RAMP) {

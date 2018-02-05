@@ -31,6 +31,7 @@
 #include "../systems/gui/design_harvest.hpp"
 #include "../raws/plants.hpp"
 #include "../raws/defs/plant_t.hpp"
+#include "../global_assets/farming_designations.hpp"
 #include <array>
 
 namespace render {
@@ -179,7 +180,13 @@ namespace render {
 			else {
 				size_t vegtype = region::veg_type(idx);
 				if (vegtype > 0) {
-					return region::veg_ascii_cache(idx);
+					auto cache = region::veg_ascii_cache(idx);
+					if (farm_designations->farms.find(idx) != farm_designations->farms.end()) {
+						cache.br = 0.75f;
+						cache.bg = 0.6f;
+						cache.bb = 0.6f;
+					}
+					return cache;
 				}
 				else {
 					auto glyph = get_material_glyph(idx, '.');

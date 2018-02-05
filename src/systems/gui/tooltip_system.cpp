@@ -101,6 +101,7 @@ namespace systems {
 						case farm_steps::PLANT_SEEDS: ss << "Plant Seeds"; break;
 						case farm_steps::GROWING: ss << "Growing"; break;
 						}
+						ss << ". Weeded/Watered " << farm_finder->second.days_since_weeded << "/" << farm_finder->second.days_since_watered << " days ago.";
 						lines.push_back(ss.str());
 					}
 				}
