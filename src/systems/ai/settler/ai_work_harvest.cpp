@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "ai_sleep_time.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/position.hpp"
@@ -107,8 +106,8 @@ namespace systems {
 						return;
 					});
 					return;
-				}
-				if (h.step == ai_tag_work_harvest::harvest_steps::FIND_HARVEST) {
+				} 
+				else if (h.step == ai_tag_work_harvest::harvest_steps::FIND_HARVEST) {
 					std::map<int, position_t> harvest_targets;
 					for (const auto ht : farm_designations->harvest) {
 						const float distance = bengine::distance3d(pos.x, pos.y, pos.z, ht.second.x, ht.second.y, ht.second.z);

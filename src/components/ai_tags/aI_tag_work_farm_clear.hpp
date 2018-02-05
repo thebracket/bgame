@@ -7,7 +7,7 @@
 
 struct ai_tag_work_farm_clear {
 
-    enum clear_steps { FIND_HOE, FETCH_HOE, FIND_TARGET, CLEAR_TARGET };
+    enum clear_steps { FIND_HOE, FETCH_HOE, FIND_TARGET, GOTO_TARGET, CLEAR_TARGET };
 
 	ai_tag_work_farm_clear() {}
 	clear_steps step = FIND_HOE;
