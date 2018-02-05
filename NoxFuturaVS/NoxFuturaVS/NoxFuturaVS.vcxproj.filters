@@ -1754,6 +1754,9 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_farm_weed.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\item_tags\item_topsoil_t.hpp">
+      <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset8.hpp">

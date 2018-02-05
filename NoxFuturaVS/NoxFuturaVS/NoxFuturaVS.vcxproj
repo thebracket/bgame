@@ -522,6 +522,7 @@
     <ClInclude Include="..\..\src\components\item_tags\item_seed_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_skull_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_spice_t.hpp" />
+    <ClInclude Include="..\..\src\components\item_tags\item_topsoil_t.hpp" />
     <ClInclude Include="..\..\src\components\lever.hpp" />
     <ClInclude Include="..\..\src\components\lightsource.hpp" />
     <ClInclude Include="..\..\src\components\logger.hpp" />

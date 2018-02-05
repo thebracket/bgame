@@ -116,7 +116,7 @@ items["clay"] = {
 -- Topsoil will be used in farming
 items["topsoil"] = {
     name = "Topsoil", description = "A lump of rich topsoil",
-    itemtype = {"component"}, glyph = glyphs['double_wave'], foreground = colors['brown'], background = colors['black'],
+    itemtype = {"topsoil"}, glyph = glyphs['double_wave'], foreground = colors['brown'], background = colors['black'],
     glyph_ascii = glyphs['double_wave'],
     stockpile = stockpiles['soil'].id,
     vox = voxelId("powder")

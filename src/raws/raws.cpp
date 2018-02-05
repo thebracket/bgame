@@ -41,6 +41,7 @@
 #include "../components/items/item_wear.hpp"
 #include "../components/items/item_creator.hpp"
 #include "../components/item_tags/item_farming.hpp"
+#include "../components/item_tags/item_topsoil_t.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 
@@ -144,6 +145,7 @@ void decorate_item_categories(bengine::entity_t &item, std::bitset<NUMBER_OF_ITE
 	if (categories.test(ITEM_LEATHER)) item.assign(item_leather_t{});
 	if (categories.test(ITEM_FARMING)) item.assign(item_farming_t{});
 	if (categories.test(ITEM_SEED)) item.assign(item_seed_t{});
+	if (categories.test(ITEM_TOPSOIL)) item.assign(item_topsoil_t{});
 }
 
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) {
