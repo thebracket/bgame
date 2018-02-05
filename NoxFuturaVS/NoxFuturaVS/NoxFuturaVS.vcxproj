@@ -514,6 +514,7 @@
     <ClInclude Include="..\..\src\components\item_tags\item_digging_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_drink_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_farming.hpp" />
+    <ClInclude Include="..\..\src\components\item_tags\item_fertilizer_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_food_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_hide_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_leather_t.hpp" />

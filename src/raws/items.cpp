@@ -88,6 +88,7 @@ void read_items() noexcept
 								   if (type == "tool-farming") c.categories.set(ITEM_FARMING);
 								   if (type == "seed") c.categories.set(ITEM_SEED);
 								   if (type == "topsoil") c.categories.set(ITEM_TOPSOIL);
+								   if (type == "fertilizer") c.categories.set(ITEM_FERTILIZER);
                                });
                            }}
                    }
