@@ -64,6 +64,16 @@ namespace systems {
 								uint8_t current_cycle = veg_lifecycle(idx);
 								auto plant = get_plant_def(veg_type(idx));
 								if (plant) {
+									// Photosynthesizeing plants die in the darkness
+									if (plant->requires_light && !region::above_ground(idx)) {
+										if (veg_ticker(idx) > 0) {
+											current_tick = veg_ticker(idx) - 1;
+										}
+										else {
+											set_veg_type(idx, 0);
+											goto escape_loop;
+										}
+									}
 									if (!plant->lifecycle.empty()) {
 										//std::cout << "Plant lifecycle ticked\n";
 										int return_val = plant->lifecycle[4];
@@ -97,6 +107,8 @@ namespace systems {
 									}
 								}
 							}
+
+							escape_loop: {}
 						}
 					}
 				}

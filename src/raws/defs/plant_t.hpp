@@ -16,5 +16,6 @@ struct plant_t {
     std::vector<xp::vchar> glyphs_ascii;
     std::vector<std::string> provides;
     std::bitset<2> tags;
+	bool requires_light = true;
 };
 
