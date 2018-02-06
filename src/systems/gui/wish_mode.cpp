@@ -3,12 +3,17 @@
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../../global_assets/game_mode.hpp"
-#include "../../global_assets/debug_flags.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../components/position.hpp"
 #include "../../components/explosion_t.hpp"
+
+#ifdef _MSC_VER
+import debug_flags;
+#else
+#include "../../global_assets/debug_flags.hpp"
+#endif
 
 namespace systems {
 	namespace wishmode {

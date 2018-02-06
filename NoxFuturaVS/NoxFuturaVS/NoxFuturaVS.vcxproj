@@ -243,7 +243,6 @@
     <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />
     <ClCompile Include="..\..\src\components\species.cpp" />
-    <ClCompile Include="..\..\src\global_assets\debug_flags.cpp" />
     <ClCompile Include="..\..\src\global_assets\farming_designations.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_building.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_calendar.cpp" />
@@ -545,7 +544,6 @@
     <ClInclude Include="..\..\src\components\wildlife_group.hpp" />
     <ClInclude Include="..\..\src\components\world_position.hpp" />
     <ClInclude Include="..\..\src\global_assets\constants.hpp" />
-    <ClInclude Include="..\..\src\global_assets\debug_flags.hpp" />
     <ClInclude Include="..\..\src\global_assets\farming_designations.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_building.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_calendar.hpp" />
@@ -740,6 +738,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset8.hpp" />
+    <ClCompile Include="..\..\src\global_assets\debug_flags.ixx">
+      <FileType>Document</FileType>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

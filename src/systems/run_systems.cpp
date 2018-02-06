@@ -82,8 +82,13 @@
 #include "keydamper.hpp"
 #include "mouse.hpp"
 #include "../global_assets/game_mode.hpp"
-#include "../global_assets/debug_flags.hpp"
 #include <boost/container/flat_map.hpp>
+
+#ifdef _MSC_VER
+import debug_flags;
+#else
+#include "../global_assets/debug_flags.hpp"
+#endif
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
