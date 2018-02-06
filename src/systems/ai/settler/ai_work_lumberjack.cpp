@@ -60,8 +60,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_lumberjack> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Lumberjacking");
+			work.do_ai("Lumberjacking", [&work](entity_t &e, ai_tag_work_lumberjack &lj, ai_tag_my_turn_t &t, position_t &pos) {
 				if (lj.step == ai_tag_work_lumberjack::lumberjack_steps::GET_AXE) {
 					// Do I already have an axe?
 					bool have_pick = false;

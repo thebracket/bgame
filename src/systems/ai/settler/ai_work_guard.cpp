@@ -36,8 +36,7 @@ namespace systems {
 
 			ai_work_template<ai_tag_work_guarding> work;
 
-			work.do_ai([&work](entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Guard Duty");
+			work.do_ai("Guard Duty", [&work](entity_t &e, ai_tag_work_guarding &g, ai_tag_my_turn_t &t, position_t &pos) {
 				if (g.step == ai_tag_work_guarding::GOTO_POST) {
 					if (!g.has_post) {
 						//std::cout << "Selecting a post\n";

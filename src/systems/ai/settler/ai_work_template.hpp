@@ -26,12 +26,20 @@ class ai_work_template {
 public:
 	ai_work_template() { }
 
+	inline void set_status(bengine::entity_t &e, const std::string &&status) {
+		auto ai = e.component<settler_ai_t>();
+		if (ai) {
+			ai->job_status = status;
+		}
+	}
+
 	template <typename F>
-	void do_ai(const F &&f)
+	void do_ai(const char * new_status, const F &&f)
 	{
-		bengine::each<TAG, ai_tag_my_turn_t, position_t>([&f](bengine::entity_t &e, TAG &tag, ai_tag_my_turn_t &turn, position_t &pos) {
+		bengine::each<TAG, ai_tag_my_turn_t, position_t, settler_ai_t>([&f, &new_status](bengine::entity_t &e, TAG &tag, ai_tag_my_turn_t &turn, position_t &pos, settler_ai_t &ai) {
 			bengine::delete_component<ai_tag_my_turn_t>(e.id); // It's not my turn anymore
 
+			ai.job_status = std::string(new_status);
 			f(e, tag, turn, pos);
 
 			// If not tagged for this work type, go idle
@@ -124,13 +132,6 @@ public:
 	inline void cancel_work_tag(bengine::entity_t &e) {
 		bengine::delete_component<TAG>(e.id);
 		set_status(e, "Idle");
-	}
-
-	inline void set_status(bengine::entity_t &e, const std::string &&status) {
-		auto ai = e.component<settler_ai_t>();
-		if (ai) {
-			ai->job_status = status;
-		}
 	}
 private:
 };

@@ -47,8 +47,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_farm_plant> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_farm_plant &h, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Planting");
+			work.do_ai("Planting", [&work](entity_t &e, ai_tag_work_farm_plant &h, ai_tag_my_turn_t &t, position_t &pos) {
 				if (h.step == ai_tag_work_farm_plant::plant_steps::FIND_HOE) {
 					// Do I already have a pick?
 					bool have_tool = false;

@@ -41,8 +41,7 @@ namespace systems {
 
 			ai_work_template<ai_tag_work_hunting> work;
 
-			work.do_ai([&work](entity_t &e, ai_tag_work_hunting &h, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Hunting");
+			work.do_ai("Hunting", [&work](entity_t &e, ai_tag_work_hunting &h, ai_tag_my_turn_t &t, position_t &pos) {
 				const auto distance = huntables_map.get(mapidx(pos));
 				if (distance > MAX_DIJSTRA_DISTANCE - 1) {
 					work.cancel_work_tag(e);

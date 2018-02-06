@@ -44,8 +44,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_farm_fixsoil> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_farm_fixsoil &h, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Fixing Soil");
+			work.do_ai("Fixing Soil", [&work](entity_t &e, ai_tag_work_farm_fixsoil &h, ai_tag_my_turn_t &t, position_t &pos) {
 				if (h.step == ai_tag_work_farm_fixsoil::fix_steps::FIND_HOE) {
 					// Do I already have a pick?
 					bool have_tool = false;

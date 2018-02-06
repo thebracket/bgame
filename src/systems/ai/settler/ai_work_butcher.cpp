@@ -37,8 +37,7 @@ namespace systems {
 
 			ai_work_template<ai_tag_work_butcher> work;
 
-			work.do_ai([&work](entity_t &e, ai_tag_work_butcher &b, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Butchering");
+			work.do_ai("Butchering", [&work](entity_t &e, ai_tag_work_butcher &b, ai_tag_my_turn_t &t, position_t &pos) {
 				if (b.step == ai_tag_work_butcher::butcher_steps::FIND_CORPSE) {
 					if (butcherables_map.get(mapidx(pos)) > MAX_DIJSTRA_DISTANCE - 1) {
 						work.cancel_work_tag(e);

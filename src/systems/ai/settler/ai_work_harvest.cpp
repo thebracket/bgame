@@ -48,8 +48,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_harvest> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_harvest &h, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Harvesting");
+			work.do_ai("Harvesting", [&work](entity_t &e, ai_tag_work_harvest &h, ai_tag_my_turn_t &t, position_t &pos) {
 				if (h.step == ai_tag_work_harvest::harvest_steps::FIND_HOE) {
 					// Do I already have a pick?
 					bool have_tool = false;

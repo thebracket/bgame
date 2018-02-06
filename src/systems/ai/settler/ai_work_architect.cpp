@@ -42,8 +42,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_architect> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Architecture");
+			work.do_ai("Architecture", [&work](entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
 				if (a.step == ai_tag_work_architect::architect_steps::GOTO_BLOCK) {
 					work.folllow_path(blocks_map, pos, e, [&e, &work]() {
 						// Cancel

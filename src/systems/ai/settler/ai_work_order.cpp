@@ -51,7 +51,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_order> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) {
+			work.do_ai("Fulfilling Work Orders", [&work](entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) {
 				auto reaction_info = get_reaction_def(w.reaction_target.reaction_tag);
 				if (reaction_info) {
 					const std::string status = reaction_info->name;

@@ -34,8 +34,7 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_pull_lever> work;
-			work.do_ai([&work](entity_t &e, ai_tag_work_pull_lever &l, ai_tag_my_turn_t &t, position_t &pos) {
-				work.set_status(e, "Lever Operation");
+			work.do_ai("Lever Operation", [&work](entity_t &e, ai_tag_work_pull_lever &l, ai_tag_my_turn_t &t, position_t &pos) {
 				if (l.step == ai_tag_work_pull_lever::lever_steps::FIND) {
 					// Path towards the harvest
 					work.folllow_path(levers_map, pos, e, [&e, &work]() {
