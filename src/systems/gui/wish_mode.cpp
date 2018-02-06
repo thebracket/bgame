@@ -50,6 +50,9 @@ namespace systems {
 				create_entity()
 					->assign(position_t{ x, y, z })
 					->assign(explosion_t{ 10, 30, 10, 200 });
+			}},
+			wish_t{ "profile", [] {
+				debug::show_profiler = !debug::show_profiler;
 			}}
 		};
 

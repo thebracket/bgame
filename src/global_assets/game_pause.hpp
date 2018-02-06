@@ -7,4 +7,3 @@ extern bool major_tick;
 extern bool slow_tick;
 extern bool day_elapsed;
 extern bool hour_elapsed;
-extern bool show_profiler;

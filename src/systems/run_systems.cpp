@@ -84,6 +84,7 @@
 #include "keydamper.hpp"
 #include "mouse.hpp"
 #include "../global_assets/game_mode.hpp"
+#include "../global_assets/debug_flags.hpp"
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
@@ -265,9 +266,6 @@ namespace systems {
     }
 
 	void run(const double &duration_ms) {
-		if (ImGui::IsKeyDown(GLFW_KEY_P)) {
-			show_profiler = !show_profiler;
-		}
 
 		add_time(duration_ms); // Add time to the key damper
 		poll_mouse();
@@ -374,7 +372,7 @@ namespace systems {
 		run_system(logging::run, duration_ms, LOG_SYSTEM);
 
         // Profiler
-        if (show_profiler) {
+        if (debug::show_profiler) {
             ImGui::Begin("Systems Profile");
             ImGui::Text("Frame time: %f", duration_ms);
             for (auto sys_finder=run_time.begin(); sys_finder != run_time.end(); ++sys_finder) {

@@ -111,6 +111,7 @@ namespace play_game {
             //ImGui::End();
 
             systems::run(duration_ms);
+			bengine::ecs_garbage_collect();
         }
 
         ImGui::Render();
