@@ -1,8 +1,13 @@
 #pragma once
 
-#include "../../bengine/color_t.hpp"
 #include <vector>
 #include <string>
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "../../bengine/color_t.hpp"
+#endif
 
 /*
  * Defines a region biome type.

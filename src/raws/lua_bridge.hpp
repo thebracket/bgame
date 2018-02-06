@@ -1,9 +1,14 @@
 #pragma once
 
 #include <lua.hpp>
-#include "../bengine/color_t.hpp"
 #include <string>
 #include <functional>
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "../../bengine/color_t.hpp"
+#endif
 
 extern lua_State* lua_state;
 

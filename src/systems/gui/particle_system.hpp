@@ -2,13 +2,18 @@
 
 #include <cstdint>
 #include "../../components/position.hpp"
-#include "../../bengine/color_t.hpp"
 #include <glm/glm.hpp>
 #include <glm/detail/type_mat.hpp>
 #include <glm/detail/type_mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "../../bengine/color_t.hpp"
+#endif
 
 namespace systems {
 	namespace particles {

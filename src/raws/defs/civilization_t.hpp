@@ -1,10 +1,15 @@
 #pragma once
 
-#include "../../bengine/color_t.hpp"
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <utility>
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "../../bengine/color_t.hpp"
+#endif
 
 /*
  * Defines species dietary preferences

@@ -9,7 +9,6 @@
 #include "../../global_assets/rng.hpp"
 #include "../../components/renderable.hpp"
 #include "../../components/name.hpp"
-#include "../../bengine/color_t.hpp"
 #include "../../components/health.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/grazer_ai.hpp"
@@ -19,6 +18,12 @@
 #include "../../raws/health_factory.hpp"
 #include "../../bengine/telemetry.hpp"
 #include "distance_map_system.hpp"
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "../../bengine/color_t.hpp"
+#endif
 
 namespace systems {
 	namespace wildlife_population {

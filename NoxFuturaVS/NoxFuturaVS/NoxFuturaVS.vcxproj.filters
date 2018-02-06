@@ -771,6 +771,9 @@
     <ClCompile Include="..\..\src\global_assets\debug_flags.ixx">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bengine\color_t.ixx">
+      <Filter>Source Files\bengine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -780,9 +783,6 @@
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\color_t.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\ctpl.h">

@@ -1,7 +1,12 @@
 #pragma once
 
 #include <zlib.h>
+
+#ifdef _MSC_VER
+import color_t;
+#else
 #include "color_t.hpp"
+#endif
 
 namespace serial {
 

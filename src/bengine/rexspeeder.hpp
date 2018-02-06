@@ -8,10 +8,15 @@
 
 /*For version 1.02 of REXPaint*/
 #include <stdint.h>
-#include "color_t.hpp"
 #include <string>
 #include <vector>
 #include <array>
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "color_t.hpp"
+#endif
 
 namespace xp {
 

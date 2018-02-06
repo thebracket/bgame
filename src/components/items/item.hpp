@@ -3,8 +3,13 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../../raws/items.hpp"
-#include "../../bengine/color_t.hpp"
 #include "../../bengine/ecs_impl.hpp"
+
+#ifdef _MSC_VER
+import color_t;
+#else
+#include "../../bengine/color_t.hpp"
+#endif
 
 enum item_type_t {CLOTHING,ITEM};
 
