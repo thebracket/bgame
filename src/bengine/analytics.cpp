@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "analytics.hpp"
 
 #include <stdarg.h>

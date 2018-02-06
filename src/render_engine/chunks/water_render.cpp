@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "water_render.hpp"
 #include "geometry_helper.hpp"
 #include "../../planet/region/region.hpp"

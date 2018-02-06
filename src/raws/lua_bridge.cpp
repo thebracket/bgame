@@ -1,6 +1,5 @@
-#include "stdafx.h"
 #include "lua_bridge.hpp"
-#include "../stdafx.h"
+#include <iostream>
 
 lua_State* lua_state;
 

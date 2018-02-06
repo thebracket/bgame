@@ -47,7 +47,6 @@ public:
 				e.assign(ai_mode_idle_t{});
 			}
 		});
-
 	}
 
 	void move_to(const std::size_t &entity_id, const position_t &destination) const {

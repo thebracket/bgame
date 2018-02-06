@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "play_game.hpp"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
@@ -24,6 +23,7 @@
 #include "../global_assets/game_mining.hpp"
 #include "../global_assets/farming_designations.hpp"
 #include "../ascii_engine/ascii_mode.hpp"
+#include <atomic>
 
 namespace play_game {
 

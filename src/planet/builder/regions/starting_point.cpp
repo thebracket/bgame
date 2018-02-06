@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "starting_point.hpp"
 
 

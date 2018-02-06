@@ -1,5 +1,4 @@
 #include "job_center_ui.hpp"
-#include "stdafx.h"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
@@ -15,7 +14,6 @@
 #include "../../render_engine/camera.hpp"
 #include "../../render_engine/vox/renderables.hpp"
 #include "../../components/health.hpp"
-#include "../../stdafx.h"
 #include "../helpers/inventory_assistant.hpp"
 #include "../../components/item_tags/item_digging_t.hpp"
 #include "../../components/mining/designated_miner.hpp"

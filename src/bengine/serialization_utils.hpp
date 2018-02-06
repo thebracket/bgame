@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../stdafx.h"
 #include <zlib.h>
 #include "color_t.hpp"
 

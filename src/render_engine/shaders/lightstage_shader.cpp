@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "lightstage_shader.hpp"
 
 lightstage_shader_t::lightstage_shader_t() {

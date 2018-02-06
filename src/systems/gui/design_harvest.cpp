@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "design_harvest.hpp"
 #include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"

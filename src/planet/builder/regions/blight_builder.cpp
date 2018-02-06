@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "blight_builder.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../raws/materials.hpp"

@@ -1,7 +1,9 @@
 #pragma once
 
-#include "../../stdafx.h"
 #include "../../bengine/rexspeeder.hpp"
+#include <string>
+#include <vector>
+#include <bitset>
 
 constexpr int PLANT_SPREADS = 0;
 constexpr int PLANT_ANNUAL = 1;

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "camera_system.hpp"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
@@ -9,6 +8,7 @@
 #include "../mouse.hpp"
 #include "../../render_engine/design_render.hpp"
 #include "../../bengine/analytics.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace systems {
     namespace camerasys {

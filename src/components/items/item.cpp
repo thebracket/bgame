@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "item.hpp"
 #include "../../raws/clothing.hpp"
 #include "../../raws/defs/clothing_t.hpp"

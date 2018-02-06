@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "sentient_builder.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"

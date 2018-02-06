@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "hud_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
@@ -11,7 +10,6 @@
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../keydamper.hpp"
-#include "../../stdafx.h"
 #include "../../render_engine/design_render.hpp"
 #include "../../bengine/analytics.hpp"
 

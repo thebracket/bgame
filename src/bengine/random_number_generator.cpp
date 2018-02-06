@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "random_number_generator.hpp"
 #include "pcg_basic.h"
 #include <ctime>

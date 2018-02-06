@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ascii_mode.hpp"
 #include "../bengine/main_window.hpp"
 #include "../planet/region/region.hpp"

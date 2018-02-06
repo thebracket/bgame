@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "textures.hpp"
 #include "stb_image.h"
 #include "filesystem.hpp"

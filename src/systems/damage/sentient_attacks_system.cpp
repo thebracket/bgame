@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "sentient_attacks_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../gui/log_system.hpp"

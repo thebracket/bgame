@@ -168,7 +168,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
@@ -321,10 +321,6 @@
     <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp" />
     <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
-    <ClCompile Include="..\..\src\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Publish|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\src\systems\ai\ai_status_effects.cpp" />
     <ClCompile Include="..\..\src\systems\ai\ai_stuck.cpp" />
     <ClCompile Include="..\..\src\systems\ai\distance_map_system.cpp" />
@@ -649,7 +645,6 @@
     <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp" />
     <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
-    <ClInclude Include="..\..\src\stdafx.h" />
     <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp" />
     <ClInclude Include="..\..\src\systems\ai\ai_stuck.hpp" />
     <ClInclude Include="..\..\src\systems\ai\distance_map_system.hpp" />
@@ -682,6 +677,7 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_template.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\jobs_board.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\templated_work_steps_t.hpp" />
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
     <ClInclude Include="..\..\src\systems\ai\workflow_system.hpp" />

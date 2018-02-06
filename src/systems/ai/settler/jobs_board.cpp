@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "jobs_board.hpp"
 
 namespace jobs_board {

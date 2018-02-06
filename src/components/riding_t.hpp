@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../stdafx.h"
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../bengine/ecs_impl.hpp"

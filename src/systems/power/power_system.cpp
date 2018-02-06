@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "power_system.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/game_calendar.hpp"

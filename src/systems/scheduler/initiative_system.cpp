@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "initiative_system.hpp"
 #include "../../components/position.hpp"
 #include "../../components/slidemove.hpp"

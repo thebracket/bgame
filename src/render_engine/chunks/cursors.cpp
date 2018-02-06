@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "cursors.hpp"
 #include "../../systems/mouse.hpp"
 #include "../../global_assets/texture_storage.hpp"
@@ -11,6 +10,7 @@
 #include "../../global_assets/game_mining.hpp"
 #include "../../systems/gui/design_mining.hpp"
 #include "../../systems/gui/design_harvest.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace render {
 	static unsigned int cursors_vao = 0;

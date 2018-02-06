@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "buildings.hpp"
 #include "../../../components/building.hpp"
 #include "../../../components/viewshed.hpp"

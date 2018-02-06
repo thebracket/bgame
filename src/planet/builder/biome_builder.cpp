@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "biome_builder.hpp"
 #include "../planet_builder.hpp"
 #include "../../raws/biomes.hpp"

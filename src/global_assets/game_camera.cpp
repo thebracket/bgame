@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "game_camera.hpp"
 
 std::size_t camera_entity;

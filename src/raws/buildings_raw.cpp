@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "buildings.hpp"
 #include "lua_bridge.hpp"
 #include "items.hpp"
@@ -6,6 +5,7 @@
 #include "defs/building_def_t.hpp"
 #include "graphviz.hpp"
 #include "../bengine/rexspeeder.hpp"
+#include <boost/container/flat_map.hpp>
 
 //using namespace rltk;
 

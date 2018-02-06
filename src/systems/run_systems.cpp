@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <ctime>
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
@@ -78,13 +77,13 @@
 #include "gui/item_info_system.hpp"
 #include "gui/job_center_ui.hpp"
 #include "gui/wish_mode.hpp"
-#include "../stdafx.h"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "keydamper.hpp"
 #include "mouse.hpp"
 #include "../global_assets/game_mode.hpp"
 #include "../global_assets/debug_flags.hpp"
+#include <boost/container/flat_map.hpp>
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;

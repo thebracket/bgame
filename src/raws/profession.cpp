@@ -1,9 +1,9 @@
-#include "stdafx.h"
 #include "profession.hpp"
 #include "lua_bridge.hpp"
 #include "clothing.hpp"
 #include "defs/profession_t.hpp"
-#include "../stdafx.h"
+#include <vector>
+#include <iostream>
 
 std::vector<profession_t> starting_professions;
 

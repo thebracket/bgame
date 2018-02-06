@@ -1,4 +1,3 @@
-#include "stdafx.h"
 /* **************************************************************************************
 *    Author: Scott Mudge
 *    MAIL@SCOTTMUDGE.COM
@@ -32,6 +31,8 @@
 
 #define IMGUI_DEFINE_MATH_OPERATORS 1
 #include "imgui_tabs.hpp"
+#include <iostream>
+#include <string>
 
 ImGui::ImGuiUserStyle::ImGuiUserStyle() {
 	Colors[ImGuiUserCol_TabNormal] = ImVec4(0.05f, 0.65f, 0.05f, 1.00f);

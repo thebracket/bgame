@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "reaction_input.hpp"
 #include "graphviz.hpp"
 

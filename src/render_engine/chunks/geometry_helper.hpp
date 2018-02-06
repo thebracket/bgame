@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace chunks {
 	unsigned int get_floor_tex(const int &idx);
 	unsigned int get_cube_tex(const int &idx);

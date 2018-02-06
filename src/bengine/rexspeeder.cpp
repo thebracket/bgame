@@ -1,9 +1,7 @@
-#include "stdafx.h"
 #include "rexspeeder.hpp"
 extern "C" {
 #include <zlib.h>
 }
-#include "../stdafx.h"
 
 //===========================================================================================================//
 //    Safe I/O (where "safe" means "will throw errors")                                                      //

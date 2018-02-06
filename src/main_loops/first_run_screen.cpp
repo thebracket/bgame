@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "first_run_screen.hpp"
 #include "../bengine/filesystem.hpp"
 #include "splash_screen.hpp"
@@ -6,6 +5,8 @@
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
 #include "../global_assets/game_config.hpp"
+#include <fstream>
+#include <string>
 
 namespace first_run_screen {
 	bool first_run_done = false;

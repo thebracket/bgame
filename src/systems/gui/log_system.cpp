@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "log_system.hpp"
 #include "../../global_assets/game_logger.hpp"
 #include "../../bengine/IconsFontAwesome.h"

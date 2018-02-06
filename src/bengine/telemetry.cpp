@@ -1,15 +1,15 @@
-#include "stdafx.h"
 #include "telemetry.hpp"
 #include "threadsafequeue.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../global_assets/constants.hpp"
-#include "../stdafx.h"
 #include "analytics.hpp"
 #include "filesystem.hpp"
 #include <boost/optional.hpp>
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#include <iostream>
+#include <fstream>
 
 static const char * tracking_id = "UA-44498023-6";
 

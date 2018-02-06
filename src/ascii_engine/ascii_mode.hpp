@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace render {
 	void ascii_render(const double &duration_ms);
 	namespace ascii {

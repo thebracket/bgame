@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "renderables.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../components/position.hpp"

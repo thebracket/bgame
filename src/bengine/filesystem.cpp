@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "filesystem.hpp"
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 bool directory_exists(const char *path) {
 	return boost::filesystem::exists(path);

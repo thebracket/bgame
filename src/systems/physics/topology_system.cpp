@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "door_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../planet/region/region.hpp"

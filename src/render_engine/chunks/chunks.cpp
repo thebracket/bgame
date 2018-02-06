@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "chunks.hpp"
 //#include "../../bengine/threadpool.h"
 #include "../../planet/indices.hpp"
@@ -7,6 +6,7 @@
 #include "../../raws/defs/material_def_t.hpp"
 #include "geometry_helper.hpp"
 #include "../../global_assets/farming_designations.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace chunks {
     std::array<chunk_t, CHUNKS_TOTAL> chunks;

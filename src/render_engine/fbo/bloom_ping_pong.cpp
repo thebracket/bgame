@@ -1,5 +1,6 @@
-#include "stdafx.h"
 #include "bloom_ping_pong.hpp"
+#include "../../bengine/gl_include.hpp"
+#include <iostream>
 
 namespace render {
     bloom_pingpong_t::bloom_pingpong_t(const int &w, const int &h) {
@@ -17,7 +18,7 @@ namespace render {
         // color buffer
         glGenTextures(1, &blur_tex1);
         glBindTexture(GL_TEXTURE_2D, blur_tex1);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_tex1, 0);
@@ -45,7 +46,7 @@ namespace render {
         // color buffer
         glGenTextures(1, &blur_tex2);
         glBindTexture(GL_TEXTURE_2D, blur_tex2);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_tex2, 0);

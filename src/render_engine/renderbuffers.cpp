@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "renderbuffers.hpp"
 
 namespace render {

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../../stdafx.h"
 #include "../../bengine/color_t.hpp"
+#include <vector>
+#include <string>
 
 /*
  * Defines a region biome type.

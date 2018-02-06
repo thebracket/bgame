@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "particle_system.hpp"
 #include "../../components/smoke_emitter.hpp"
 #include "../../global_assets/game_pause.hpp"

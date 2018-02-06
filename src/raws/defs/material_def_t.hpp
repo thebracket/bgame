@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../../stdafx.h"
 #include "../../bengine/color_t.hpp"
+#include <string>
+#include <vector>
 
 /*
  * Defines a material type. Used by just about everything.

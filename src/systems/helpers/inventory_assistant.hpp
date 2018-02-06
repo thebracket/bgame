@@ -8,7 +8,6 @@
 #include "../../bengine/ecs.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../../bengine/geometry.hpp"
-#include "../../stdafx.h"
 
 namespace inventory {
 	bool is_ammo_available(const std::string &ammo_type);

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "stockpile_system.hpp"
 #include "../helpers/workflow_assistant.hpp"
 #include "../../components/building.hpp"

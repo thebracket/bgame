@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "species.hpp"
-#include "../stdafx.h"
+#include <cctype>
+#include <clocale>
 
 std::string species_t::gender_str() {
     switch (gender) {

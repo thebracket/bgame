@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../stdafx.h"
+#include <string>
 
 namespace bengine {
 	struct base_shader_t {

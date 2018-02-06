@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "buffertest.hpp"
 #include "../../global_assets/shader_storage.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace render {
 

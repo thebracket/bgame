@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../stdafx.h"
+#include <string>
 
 namespace telemetry {
 	void on_tick();

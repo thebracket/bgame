@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "workflow_assistant.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"

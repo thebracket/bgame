@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "frustrum.hpp"
+#include <boost/container/flat_set.hpp>
+#include <functional>
 
 namespace render {
 	extern bool camera_moved;

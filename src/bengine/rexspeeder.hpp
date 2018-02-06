@@ -9,6 +9,9 @@
 /*For version 1.02 of REXPaint*/
 #include <stdint.h>
 #include "color_t.hpp"
+#include <string>
+#include <vector>
+#include <array>
 
 namespace xp {
 

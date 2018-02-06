@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ssao.hpp"
 #include <random>
 #include "../global_assets/shader_storage.hpp"

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "kill_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/position.hpp"

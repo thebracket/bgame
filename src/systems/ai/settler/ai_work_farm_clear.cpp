@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_work_farm_clear.hpp"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"

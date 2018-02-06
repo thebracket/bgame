@@ -1,8 +1,8 @@
-#include "stdafx.h"
 #include "items.hpp"
 #include "lua_bridge.hpp"
 #include "defs/item_def_t.hpp"
-#include "../stdafx.h"
+#include <boost/container/flat_map.hpp>
+#include <iostream>
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<int, stockpile_def_t> stockpile_defs;

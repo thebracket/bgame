@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../stdafx.h"
-//#include <rltk.hpp>
 #include "../../bengine/color_t.hpp"
+#include <string>
+#include <bitset>
 
 constexpr int NUMBER_OF_ITEM_CATEGORIES = 64;
 constexpr int COMPONENT = 0;

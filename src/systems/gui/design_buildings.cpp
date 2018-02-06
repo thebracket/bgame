@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "design_buildings.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
@@ -8,7 +7,6 @@
 #include "../../global_assets/game_building.hpp"
 #include "../helpers/inventory_assistant.hpp"
 #include "../../render_engine/vox/renderables.hpp"
-#include "../../stdafx.h"
 
 namespace systems {
 	namespace design_buildings {

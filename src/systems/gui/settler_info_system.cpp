@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "settler_info_system.hpp"
 #include "units_info_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"

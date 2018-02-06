@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_status_effects.hpp"
 #include "../../components/wildlife_group.hpp"
 #include "../../global_assets/game_planet.hpp"

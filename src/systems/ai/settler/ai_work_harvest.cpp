@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/position.hpp"

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "mining_system.hpp"
 #include "ai_status_effects.hpp"
 #include "../../planet/region/region.hpp"

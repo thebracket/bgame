@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "creature_attacks_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/species.hpp"

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "explosive_system.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../planet/region/region.hpp"

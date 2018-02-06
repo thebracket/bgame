@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "history_builder.hpp"
 #include "../planet_builder.hpp"
 #include "../../raws/species.hpp"

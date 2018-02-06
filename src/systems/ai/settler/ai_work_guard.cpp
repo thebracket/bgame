@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "jobs_board.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "../../helpers/weapons_helper.hpp"

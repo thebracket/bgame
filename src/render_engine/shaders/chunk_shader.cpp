@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "chunk_shader.hpp"
 
 chunk_shader_t::chunk_shader_t() {

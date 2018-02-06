@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "tooltip_system.hpp"
 #include "../mouse.hpp"
 #include "../../planet/region/region.hpp"

@@ -1,7 +1,7 @@
-#include "stdafx.h"
 #include "life_events.hpp"
 #include "lua_bridge.hpp"
 #include "defs/life_event_template.hpp"
+#include <boost/container/flat_map.hpp>
 
 boost::container::flat_map<std::string, life_event_template> life_event_defs;
 

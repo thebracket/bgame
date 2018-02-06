@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "../components/items/item_carried.hpp"
 #include "defs/item_def_t.hpp"
 

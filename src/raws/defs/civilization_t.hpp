@@ -1,7 +1,10 @@
 #pragma once
 
-#include "../../stdafx.h"
 #include "../../bengine/color_t.hpp"
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <utility>
 
 /*
  * Defines species dietary preferences

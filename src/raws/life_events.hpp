@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../stdafx.h"
+#include <functional>
+#include <string>
 
 struct life_event_template; // Forward
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "constants.hpp"
 #include "civilizations.hpp"
 #include "history.hpp"

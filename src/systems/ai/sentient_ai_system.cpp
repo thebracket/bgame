@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_status_effects.hpp"
 #include "../../components/sentient_ai.hpp"
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "fbo/base_lit_buffer.hpp"
 #include "fbo/gbuffer.hpp"
 #include "fbo/bloom_ping_pong.hpp"
 #include "fbo/hdr_buffer.hpp"
 #include "fbo/point_light_buffer.hpp"
+#include <memory>
 
 namespace render {
 	extern gbuffer_t * gbuffer;

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_visibility_scan.hpp"
 #include "../../../components/ai_tags/ai_settler_new_arrival.hpp"
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"

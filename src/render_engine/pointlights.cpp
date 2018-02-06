@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "pointlights.hpp"
 #include "../components/lightsource.hpp"
 #include "../components/position.hpp"

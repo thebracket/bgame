@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "planet_builder.hpp"
 #include "builder/map_builder.hpp"
 #include "builder/biome_builder.hpp"
@@ -8,6 +7,7 @@
 #include "../raws/biomes.hpp"
 #include "../raws/defs/biome_type_t.hpp"
 #include "../global_assets/game_planet.hpp"
+#include <atomic>
 
 std::atomic<bool> planet_build_done;
 std::mutex planet_builder_lock;

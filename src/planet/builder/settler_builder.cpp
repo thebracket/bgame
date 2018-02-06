@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "settler_builder.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/game_stats.hpp"

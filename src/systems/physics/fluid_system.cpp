@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "fluid_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_planet.hpp"

@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "string_table.hpp"
-#include "../stdafx.h"
+#include <unordered_map>
+#include <fstream>
 
 namespace string_tables {
 

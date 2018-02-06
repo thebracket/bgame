@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "geometry_helper.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../raws/materials.hpp"

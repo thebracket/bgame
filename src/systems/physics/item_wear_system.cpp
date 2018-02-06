@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "item_wear_system.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../components/items/item.hpp"

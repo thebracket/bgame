@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "civ_ui_system.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_planet.hpp"
@@ -6,7 +5,6 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../stdafx.h"
 
 namespace systems {
 	namespace civ_ui {

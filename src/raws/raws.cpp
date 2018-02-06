@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "raws.hpp"
 #include "lua_bridge.hpp"
 #include "../components/position.hpp"

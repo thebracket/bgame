@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "weapons_helper.hpp"
 #include "../../components/items/item_carried.hpp"
 #include "../../components/items/item.hpp"

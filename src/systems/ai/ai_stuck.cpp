@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_stuck.hpp"
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../components/position.hpp"

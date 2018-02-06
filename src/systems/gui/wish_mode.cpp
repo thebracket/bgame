@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "wish_mode.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"

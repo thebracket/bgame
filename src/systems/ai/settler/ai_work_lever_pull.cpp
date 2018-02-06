@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../global_assets/game_designations.hpp"

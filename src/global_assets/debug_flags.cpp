@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "debug_flags.hpp"
 
 namespace debug {

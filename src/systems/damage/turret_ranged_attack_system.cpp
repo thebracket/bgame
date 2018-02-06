@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "turret_ranged_attack_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/turret_t.hpp"

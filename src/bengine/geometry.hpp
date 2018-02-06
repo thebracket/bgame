@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../stdafx.h"
-#include <math.h>
+#include <cmath>
+#include <utility>
+#include <functional>
 
 namespace bengine {
     /*

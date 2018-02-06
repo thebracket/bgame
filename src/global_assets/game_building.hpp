@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../raws/reaction_input.hpp"
-#include "../stdafx.h"
 #include "../bengine/rexspeeder.hpp"
 
 namespace buildings {

@@ -1,8 +1,10 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "region/region.hpp"
 #include "planet.hpp"
+#include <memory>
+#include <mutex>
+#include <string>
 
 struct worldgen_display_t {
     int texture_id = 0;

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "mouse.hpp"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"

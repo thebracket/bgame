@@ -3,6 +3,9 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../../bengine/ecs.hpp"
+#include <memory>
+#include "../position.hpp"
+#include "../../bengine/path_finding.hpp"
 
 struct ai_tag_work_miner {
 
@@ -10,7 +13,7 @@ struct ai_tag_work_miner {
 
     ai_tag_work_miner() {}
     mining_steps step = GET_PICK;
-	std::size_t pick_id = 0;
+	std::size_t tool_id = 0;
 
 	std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
 
@@ -18,7 +21,7 @@ struct ai_tag_work_miner {
     void serialize(Archive & archive)
     {
         // Nothing to save
-        archive( step, pick_id );
+        archive( step, tool_id );
     }
 };
 

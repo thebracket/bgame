@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "design_lumberjack.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
@@ -9,6 +8,7 @@
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../keydamper.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace systems {
 	namespace design_lumberjack {

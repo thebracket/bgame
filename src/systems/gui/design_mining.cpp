@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
@@ -16,6 +15,7 @@
 #include "mining_template.hpp"
 #include "../../bengine/filesystem.hpp"
 #include "boost/filesystem.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace systems {
 	namespace design_mining {

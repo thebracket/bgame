@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "distance_map_system.hpp"
 #include "../../components/position.hpp"
 #include "../../global_assets/game_planet.hpp"

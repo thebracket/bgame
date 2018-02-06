@@ -663,9 +663,6 @@
     <ClCompile Include="..\..\src\systems\gui\design_buildings.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bengine\pcg_basic.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
@@ -1547,9 +1544,6 @@
     <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\render_engine\camera.hpp">
       <Filter>Header Files\render_engine</Filter>
     </ClInclude>
@@ -1759,6 +1753,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\item_tags\item_fertilizer_t.hpp">
       <Filter>Header Files\components\item_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\templated_work_steps_t.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

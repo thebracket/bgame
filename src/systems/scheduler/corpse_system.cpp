@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "corpse_system.hpp"
 #include "../../components/corpse_settler.hpp"
 #include "../../components/corpse_harvestable.hpp"

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "shader_storage.hpp"
 
 namespace assets {

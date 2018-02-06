@@ -12,7 +12,7 @@ struct ai_tag_work_lumberjack {
 
     ai_tag_work_lumberjack() {}
     lumberjack_steps step = GET_AXE;
-    std::size_t axe_id = 0;
+    std::size_t tool_id = 0;
     std::size_t target_tree = 0;
     int target_x, target_y, target_z;
 
@@ -22,7 +22,7 @@ struct ai_tag_work_lumberjack {
     void serialize(Archive & archive)
     {
         // Nothing to save
-        archive( step, axe_id, target_tree, target_x, target_y, target_z );
+        archive( step, tool_id, target_tree, target_x, target_y, target_z );
     }
 };
 

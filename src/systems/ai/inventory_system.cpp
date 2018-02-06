@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_status_effects.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/items/item_carried.hpp"

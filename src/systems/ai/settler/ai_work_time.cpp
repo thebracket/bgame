@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_work_time.hpp"
 #include "jobs_board.hpp"
 #include "../../../components/settler_ai.hpp"

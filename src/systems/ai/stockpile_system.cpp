@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "stockpile_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../components/stockpile.hpp"

@@ -1,8 +1,7 @@
-#include "stdafx.h"
 #include "voxel_model.hpp"
 #include <unordered_map>
-#include "../../stdafx.h"
 #include <assert.h>
+#include <map>
 
 namespace vox {
 

@@ -1,7 +1,10 @@
 #pragma once
 
 // This provides a header to include GL/GLEW/GLFW3 in the right order.
-#include "../stdafx.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <string>
+#include <iostream>
 
 inline GLenum glCheckError_(const char *file, int line)
 {

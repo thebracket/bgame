@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../stdafx.h"
+#include <vector>
+#include <functional>
 
 struct biome_type_t;
 extern std::vector<std::string> biome_textures;

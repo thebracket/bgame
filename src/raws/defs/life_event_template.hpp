@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../stdafx.h"
+#include <vector>
+#include <string>
 
 /*
  * Defines a template for events that can happen to a settler during character generation.

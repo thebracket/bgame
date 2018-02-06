@@ -1,6 +1,13 @@
 #pragma once
 
 #include "../../bengine/shaders.hpp"
+#include <glm/glm.hpp>
+#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <string>
+#include "../../bengine/gl_include.hpp"
 
 struct lightstage_shader_t : public bengine::base_shader_t {
 	lightstage_shader_t();

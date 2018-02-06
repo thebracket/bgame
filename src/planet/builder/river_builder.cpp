@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "river_builder.hpp"
 #include "../planet_builder.hpp"
 

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ai_idle_time.hpp"
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../../components/grazer_ai.hpp"

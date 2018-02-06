@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "inventory_assistant.hpp"
 #include "../../components/items/item.hpp"
 #include "../../components/building.hpp"

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "render_engine.hpp"
 #include "chunks/chunks.hpp"
 #include "../global_assets/game_camera.hpp"

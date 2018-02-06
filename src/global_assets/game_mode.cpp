@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "game_mode.hpp"
 
 game_master_mode_t game_master_mode = PLAY;

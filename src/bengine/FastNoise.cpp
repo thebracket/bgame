@@ -1,4 +1,3 @@
-#include "stdafx.h"
 // FastNoise.cpp
 //
 // MIT License

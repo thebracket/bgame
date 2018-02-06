@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "../distance_map_system.hpp"
 #include "../../gui/log_system.hpp"
 #include "../../../components/logger.hpp"

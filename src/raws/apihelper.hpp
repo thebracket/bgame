@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../stdafx.h"
+#include <unordered_map>
+#include <string>
 
 template <typename T>
 const T * api_search(const std::unordered_map<std::string, T> &map, const std::string &key) noexcept {

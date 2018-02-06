@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../stdafx.h"
+#include <functional>
 
 struct building_def_t; // Forward declaration
 struct graphviz_t; // Forward

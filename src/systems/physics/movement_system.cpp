@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "movement_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/rng.hpp"

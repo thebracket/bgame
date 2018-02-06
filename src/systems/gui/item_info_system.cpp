@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "item_info_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"

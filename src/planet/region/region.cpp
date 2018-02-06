@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "region.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"

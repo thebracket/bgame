@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../stdafx.h"
+#include <string>
+#include <vector>
 
 /*
  * Defines template for clothes. These need to be merged into items eventually.

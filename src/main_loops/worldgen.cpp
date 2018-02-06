@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "worldgen.hpp"
 #include "../bengine/IconsFontAwesome.h"
 #include "../bengine/imgui.h"
@@ -13,8 +12,12 @@
 #include "../global_assets/game_planet.hpp"
 #include "../global_assets/shader_storage.hpp"
 #include "../global_assets/rng.hpp"
-#include "../stdafx.h"
 #include "main_menu.hpp"
+#include <glm/glm.hpp>
+#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace worldgen {
     enum world_gen_mode_t { WG_MENU, WG_RUNNING, WG_MAP };

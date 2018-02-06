@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../stdafx.h"
 #include "voxel_model.hpp"
+#include <string>
 
 namespace vox {
 	void load_vox(const std::string &filename, const std::string &tag);

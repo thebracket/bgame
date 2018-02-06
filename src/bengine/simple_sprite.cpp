@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "simple_sprite.hpp"
 #include "gl_include.hpp"
 #include "../global_assets/shader_storage.hpp"
