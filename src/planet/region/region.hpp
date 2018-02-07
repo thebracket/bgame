@@ -183,6 +183,13 @@ namespace region {
     /* Erase a stockpile by ID #. */
     void delete_stockpile(const std::size_t stockpile_id);
 
+	/*************************************
+	* Buildings
+	*/
+	std::size_t get_building_id(const int idx);
+	void set_building_id(const int idx, const std::size_t id);
+	void delete_building(const std::size_t building_id);
+
     /*************************************
      * Bridges
      */

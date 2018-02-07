@@ -33,6 +33,7 @@ namespace region {
 			stockpile_id.resize(REGION_TILES_COUNT);
 			bridge_id.resize(REGION_TILES_COUNT);
 			veg_render_cache_ascii.resize(REGION_TILES_COUNT);
+			building_id.resize(REGION_TILES_COUNT);
 		}
 
 		int region_x, region_y, biome_idx;
@@ -126,6 +127,20 @@ namespace region {
     uint16_t tile_hit_points(const int idx) { return current_region->hit_points[idx]; }
     std::size_t stockpile_id(const int idx) { return current_region->stockpile_id[idx]; }
     std::size_t bridge_id(const int idx) { return current_region->bridge_id[idx]; }
+
+	std::size_t get_building_id(const int idx) {
+		return current_region->building_id[idx];
+	}
+
+	void set_building_id(const int idx, const std::size_t id) {
+		current_region->building_id[idx] = id;
+	}
+
+	void delete_building(const std::size_t building_id) {
+		for (auto &bid : current_region->building_id) {
+			if (bid == building_id) bid = 0;
+		}
+	}
 
     uint16_t veg_ticker(const int idx) { return current_region->tile_vegetation_ticker[idx]; }
     uint8_t  veg_lifecycle(const int idx) { return current_region->tile_vegetation_lifecycle[idx]; }
