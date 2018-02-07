@@ -47,11 +47,10 @@ buildings["sawmill"] = {
         }
     },
     render_ascii = {
-        width=2, height=2, tiles= {
+        width=3, height=1, tiles= {
             {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']}
+            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
+            {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']}
         }
     },
     vox=voxelId("sawmill")
