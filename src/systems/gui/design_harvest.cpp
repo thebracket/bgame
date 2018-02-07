@@ -113,7 +113,7 @@ namespace systems {
 			std::string seed_list = "";
 			for (const auto &seed : available_seeds) {
 				seed_list += seed.first + std::string(" (") + std::to_string(seed.second.first) + std::string(")") + (char)0;
-				seed_options.push_back(seed.first);
+				seed_options.push_back(seed.second.second);
 				//std::cout << seed.first << " - " << seed.second.first << "\n";
 			}
 			seed_list += "\0";
@@ -133,8 +133,9 @@ namespace systems {
 						if (farm == farm_designations->farms.end()) {
 							bool found = false;
 							std::size_t seed_id = 0;
-							each_without<claimed_t, item_seed_t>([&found, &seed_id](entity_t &seed_entity, item_seed_t &seed) {
-								if (!found) {
+							each_without<claimed_t, item_seed_t>([&found, &seed_id, &seed_options](entity_t &seed_entity, item_seed_t &seed) {
+								//std::cout << seed.grows_into << " / " << seed_options[selected_seed] << "\n";
+								if (!found && seed.grows_into == seed_options[selected_seed]) {
 									found = true;
 									seed_entity.assign(claimed_t{ 0 });
 									seed_id = seed_entity.id;
