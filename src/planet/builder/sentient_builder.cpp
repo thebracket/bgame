@@ -203,7 +203,7 @@ void create_sentient(planet_t &planet, bengine::random_number_generator &rng, st
 void create_sentient_unit(planet_t &planet, bengine::random_number_generator &rng, std::size_t civ_id,
                           const std::string &unit_tag,
                           std::vector<std::tuple<int,int,int>> &starting_points, int &spawn_counter,
-                          const bool announce)
+                          const bool announce, int crash_x, int crash_y, int crash_z)
 {
     const std::string species_tag = planet.civs.civs[civ_id].species_tag;
     auto civ_f = get_civ_def(species_tag);
@@ -219,9 +219,17 @@ void create_sentient_unit(planet_t &planet, bengine::random_number_generator &rn
             if (starting_points.size() < spawn_counter) {
                 sp = starting_points[spawn_counter];
             } else {
-                std::get<0>(sp) = rng.roll_dice(1,REGION_WIDTH-1);
-                std::get<1>(sp) = rng.roll_dice(1,REGION_HEIGHT-1);
-                std::get<2>(sp) = region::ground_z(std::get<0>(sp), std::get<1>(sp));
+				bool ok = false;
+				while (!ok) {
+					std::get<0>(sp) = rng.roll_dice(1, REGION_WIDTH - 1);
+					std::get<1>(sp) = rng.roll_dice(1, REGION_HEIGHT - 1);
+					std::get<2>(sp) = region::ground_z(std::get<0>(sp), std::get<1>(sp));
+
+					const int sidx = mapidx(std::get<0>(sp), std::get<1>(sp), std::get<2>(sp));
+
+					const auto distance = bengine::distance3d(std::get<0>(sp), std::get<1>(sp), std::get<2>(sp), crash_x, crash_y, crash_z);
+					if (region::water_level(sidx) < 1 && region::tree_id(sidx) == 0 && distance > 8.0f) ok = true;
+				}
             }
             create_sentient(planet, rng, sp, unit, species_tag, civ_id, announce);
 

@@ -109,13 +109,13 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
         }
         std::cout << "Free Garrison of " << planet.civs.civs[planet.civs.region_info[pidx].owner_civ].name << "\n";
         create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, "garrison", spawn_points,
-                            spawn_counter);
+                            spawn_counter, false, crash_x, crash_y, crash_z);
     }
     for (const auto &unit : planet.civs.units) {
         if (unit.world_y == region::region_y() && unit.world_x == region::region_x()) {
             std::cout << "Spawn a unit: " << unit.unit_type << "\n";
             create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
-                                spawn_counter);
+                                spawn_counter, false, crash_x, crash_y, crash_z);
         }
     }
 
