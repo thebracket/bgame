@@ -57,9 +57,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     build_ramps();
     build_beaches();
 
-    // Plant trees
-    set_worldgen_status("Planting trees");     
-
     // Determine crash site
     set_worldgen_status("Crashing the ship");
     const int crash_x = REGION_WIDTH / 2;
@@ -68,6 +65,18 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     
     // Add game components
     build_game_components(crash_x, crash_y, crash_z, ascii_mode);
+
+	// Trees and blight
+	set_worldgen_status("Planting trees");
+	int blight_level = 0;
+	const int pidx = planet.idx(region::region_x(), region::region_y());
+	blight_level = planet.civs.region_info[pidx].blight_level;
+	if (blight_level < 100) {
+		build_trees(biome, rng);
+	}
+	else {
+		just_add_blight(rng);
+	}
 
     // Trail of debris
     build_debris_trail(crash_x, crash_y);
@@ -94,10 +103,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     }
 
     // Add features
-    int blight_level = 0;
-
-    const int pidx = planet.idx(region::region_x(), region::region_y());
-    blight_level = planet.civs.region_info[pidx].blight_level;
     std::vector<std::tuple<int,int,int>> spawn_points;
     int spawn_counter = 0;
     if (planet.civs.region_info[pidx].settlement_size > 0) {
@@ -117,13 +122,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
             create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
                                 spawn_counter, false, crash_x, crash_y, crash_z);
         }
-    }
-
-    // Trees and blight
-    if (blight_level < 100) {
-        build_trees(biome, rng);
-    } else {
-        just_add_blight(rng);
     }
 
     // Build connectivity graphs
