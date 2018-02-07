@@ -1,6 +1,7 @@
 #include "tooltip_system.hpp"
 #include "../mouse.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../../raws/materials.hpp"
@@ -29,8 +30,6 @@ import debug_flags;
 #else
 #include "../../global_assets/debug_flags.hpp"
 #endif
-
-
 
 namespace systems {
 	namespace tooltips {
@@ -142,7 +141,7 @@ namespace systems {
 								}
 							}
 							ss << ")";
-							lines.push_back(ss.str());
+							lines.push_back(std::string(ICON_FA_LEAF) + std::string(" ") + ss.str());
 						}
 						else {
 							lines.push_back("Unknown plant. Oops.");
@@ -185,7 +184,63 @@ namespace systems {
 				}
 
 				// Buildings
-				each<building_t, position_t>([&lines, &world_x, &world_y, &items](entity_t &building_entity, building_t &building, position_t &pos) {
+				auto building_on_tile = get_building_id(tile_idx);
+				if (building_on_tile > 0) {
+					if (debug::show_flags) {
+						lines.push_back(std::string("Building #") + std::to_string(building_on_tile));
+					}
+					auto building_entity = entity(building_on_tile);
+					if (building_entity) {
+						auto building = building_entity->component<building_t>();
+						std::string building_name = "Unknown Building";
+						if (building) {
+							auto finder = get_building_def(building->tag);
+							if (finder) {
+								if (building->complete) {
+									building_name = finder->name + std::string(" (") + std::to_string(building->hit_points)
+										+ std::string("/") + std::to_string(building->max_hit_points) + std::string(")");
+								}
+								else {
+									building_name = std::string("(") + finder->name + std::string(") - Incomplete");
+								}
+							}
+							lines.push_back(std::string(ICON_FA_BUILDING) + std::string(" ") + building_name);
+
+							auto container = building_entity->component<construct_container_t>();
+							if (container) {
+								//std::cout << "It's a container\n";
+								items.clear();
+								each<item_t, item_stored_t>([&items, &world_x, &world_y, &building_entity](entity_t &entity, item_t &item, item_stored_t &stored) {
+									if (stored.stored_in == building_entity->id) {
+										auto finder = items.find(item.item_name);
+										if (finder == items.end()) {
+											std::string claimed = "";
+											if (entity.component<claimed_t>() != nullptr) claimed = " (c)";
+											std::string quality = "";
+											std::string wear = "";
+
+											auto qual = entity.component<item_quality_t>();
+											auto wr = entity.component<item_wear_t>();
+											if (qual) quality = std::string(" (") + qual->get_quality_text() + std::string(" quality)");
+											if (wr) wear = std::string(" (") + wr->get_wear_text() + std::string(")");
+
+											items[item.item_name + claimed + quality + wear] = 1;
+										}
+										else {
+											++finder->second;
+										}
+									}
+								});
+
+								for (auto it = items.begin(); it != items.end(); ++it) {
+									std::string n = std::to_string(it->second);
+									lines.push_back(std::string(ICON_FA_BRIEFCASE) + std::string(" ") + n + std::string("x ") + it->first);
+								}
+							}
+						}
+					}
+				}
+				/*each<building_t, position_t>([&lines, &world_x, &world_y, &items](entity_t &building_entity, building_t &building, position_t &pos) {
 					bool on_building = false;
 
 					if (pos.z == camera_position->region_z) {
@@ -250,7 +305,8 @@ namespace systems {
 							}
 						}
 					}
-				});
+				});*/
+
 				if (stockpile_id(mapidx(world_x, world_y, camera_position->region_z))>0) {
 					lines.push_back(std::string("Stockpile #") + std::to_string(stockpile_id(mapidx(world_x, world_y, camera_position->region_z))));
 				}

@@ -42,6 +42,15 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 		if (provides.provides == provides_storage) new_building->assign(construct_container_t{});
     }
 
+	const int offX = building->width == 3 ? -1 : 0;
+	const int offY = building->height == 3 ? -1 : 0;
+	for (int Y = y + offY; Y < y + building->height + offY; ++Y) {
+		for (int X = x + offX; X < x + building->width + offX; ++X) {
+			const int idx = mapidx(X, Y, z);
+			region::set_building_id(idx, new_building->id);
+		}
+	}
+
     if (tag == "storage_locker") {
         spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");
 		spawn_item_in_container(new_building->id, "personal_survival_shelter_kit", get_material_by_tag("plasteel"), 6, 100, 0, "Eden Acme Corp");

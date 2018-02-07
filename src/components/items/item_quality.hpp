@@ -30,6 +30,7 @@ struct item_quality_t {
 		case 5: return std::string("good");
 		case 6: return std::string("great");
 		case 7: return std::string("masterwork");
+		default: return "Unknown";
 		}
 	}
 
