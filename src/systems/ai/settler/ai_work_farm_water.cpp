@@ -1,5 +1,5 @@
-#include "jobs_board.hpp"
-#include "ai_work_template.hpp"
+#include "ai_work_farm_water.hpp"
+#include "templated_work_steps_t.hpp"
 #include "../../../components/ai_tags/ai_tag_work_farm_water.hpp"
 #include "../../../components/farming/designated_farmer.hpp"
 #include "../../../global_assets/farming_designations.hpp"
@@ -16,12 +16,10 @@ namespace systems {
 	namespace ai_farm_water {
 		using namespace bengine;
 		using namespace jobs_board;
-		using namespace distance_map;
-		using namespace dijkstra;
 		using namespace region;
 
 		namespace jobs_board {
-			void evaluate_farm_fertilizing(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
+			void evaluate_farm_watering(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 				if (e.component<designated_farmer_t>() == nullptr) return; // Not a farmer
 				if (farm_designations->farms.empty()) return; // There are no farms
 
@@ -34,138 +32,102 @@ namespace systems {
 			}
 		}
 
-		static bool first_run = true;
+		static const char * job_tag = "Farm - Water Crops";
+		static work::templated_work_steps_t<ai_tag_work_farm_water> work;
 
-		void run(const double &duration_ms) {
-			if (first_run) {
-				first_run = false;
-				register_job_offer<ai_tag_work_farm_water>(jobs_board::evaluate_farm_fertilizing);
+		inline void find_hoe(entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
+			work::get_tool<item_farming_t, designated_farmer_t, ai_tag_work_farm_water>(e, work, h, pos,
+				[&h]() {
+				// On we have it
+				h.step = ai_tag_work_farm_water::water_steps::FIND_TARGET;
+			},
+				[&h]() {
+				// On need to find it
+				h.step = ai_tag_work_farm_water::water_steps::FETCH_HOE;
+			});
+		}
+
+		inline void fetch_hoe(entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
+			work.follow_path(h, pos, e, [&h]() {
+				// Cancel
+				h.current_path.reset();
+				h.step = ai_tag_work_farm_water::water_steps::FIND_HOE;
+				return;
+			}, [&h, &e]() {
+				// Success
+				h.current_path.reset();
+				h.step = ai_tag_work_farm_water::water_steps::FIND_TARGET;
+
+				inventory_system::pickup_item(h.tool_id, e.id);
+				return;
+			});
+		}
+
+		inline void find_target(entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
+			std::map<int, std::pair<position_t, const farm_cycle_t *>> plant_targets;
+			for (const auto &f : farm_designations->farms) {
+				if (f.second.state == farm_steps::GROWING && f.second.days_since_watered > 0) {
+					auto[X, Y, Z] = idxmap(f.first);
+					std::cout << X << "/" << Y << "/" << Z << "\n";
+					const float distance = bengine::distance3d(pos.x, pos.y, pos.z, X, Y, Z);
+					plant_targets.insert(std::make_pair(static_cast<int>(distance), std::make_pair(position_t{ X, Y, Z }, &f.second)));
+				}
+			}
+			if (plant_targets.empty()) {
+				work.cancel_work_tag(e);
+				return;
 			}
 
-			ai_work_template<ai_tag_work_farm_water> work;
+			h.current_path.reset();
+			h.current_path = find_path(pos, plant_targets.begin()->second.first);
+			if (!h.current_path->success) {
+				work.cancel_work_tag(e);
+				return;
+			}
+			h.step = ai_tag_work_farm_water::water_steps::FETCH_TARGET;
+		}
 
-			work.do_ai("Watering", [&work](entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
-				if (h.step == ai_tag_work_farm_water::water_steps::FIND_HOE) {
-					// Do I already have a pick?
-					bool have_tool = false;
-					each<item_t, item_carried_t, claimed_t, item_farming_t>([&e, &have_tool](entity_t &E, item_t &i, item_carried_t &ic, claimed_t &claimed, item_farming_t &farm) {
-						if (ic.carried_by == e.id) have_tool = true;
-					});
-					if (have_tool) {
-						std::cout << "Skipping get hoe - we already have one!\n";
-						h.step = ai_tag_work_farm_water::water_steps::FIND_TARGET;
-						return;
-					}
-					else {
-						// We need to fetch the pick
-						std::size_t tool_id = -1;
-						each<item_t, claimed_t, item_farming_t>([&e, &tool_id](entity_t &E, item_t &i, claimed_t &claimed, item_farming_t &farm) {
-							if (claimed.claimed_by == e.id) tool_id = E.id;
-						});
-						if (tool_id == -1) {
-							std::cout << "Unable to find claimed tool. Bug!\n";
-							work.cancel_work_tag(e);
-							return;
-						}
-
-						h.tool_id = tool_id;
-						auto tool_pos = inventory::get_item_location(tool_id);
-						if (tool_pos) {
-							h.current_path = find_path(pos, *tool_pos);
-							if (h.current_path->success) {
-								h.step = ai_tag_work_farm_water::water_steps::FETCH_HOE;
-							}
-							else {
-								work.cancel_work_tag(e);
-								return;
-							}
-						}
-						else {
-							work.cancel_work_tag(e);
-							return;
-						}
-					}
-				}
-				else if (h.step == ai_tag_work_farm_water::water_steps::FETCH_HOE) {
-					work.follow_path(h, pos, e, [&h]() {
-						// Cancel
-						h.current_path.reset();
-						h.step = ai_tag_work_farm_water::water_steps::FIND_HOE;
-						return;
-					}, [&h, &e]() {
-						// Success
-						h.current_path.reset();
-						h.step = ai_tag_work_farm_water::water_steps::FIND_TARGET;
-
-						inventory_system::pickup_item(h.tool_id, e.id);
-						return;
-					});
-					return;
-				}
-				else if (h.step == ai_tag_work_farm_water::water_steps::FIND_TARGET) {
-					std::map<int, std::pair<position_t, const farm_cycle_t *>> plant_targets;
-					for (const auto &f : farm_designations->farms) {
-						if (f.second.state == farm_steps::GROWING && f.second.days_since_watered > 0) {
-							auto[X, Y, Z] = idxmap(f.first);
-							std::cout << X << "/" << Y << "/" << Z << "\n";
-							const float distance = bengine::distance3d(pos.x, pos.y, pos.z, X, Y, Z);
-							plant_targets.insert(std::make_pair(static_cast<int>(distance), std::make_pair(position_t{ X, Y, Z }, &f.second)));
-						}
-					}
-					if (plant_targets.empty()) {
-						work.cancel_work_tag(e);
-						return;
-					}
-
-					h.current_path.reset();
-					h.current_path = find_path(pos, plant_targets.begin()->second.first);
-					if (!h.current_path->success) {
-						work.cancel_work_tag(e);
-						return;
-					}
-					h.step = ai_tag_work_farm_water::water_steps::FETCH_TARGET;
-					return;
-				}
-				else if (h.step == ai_tag_work_farm_water::water_steps::FETCH_TARGET) {
-					work.follow_path(h, pos, e, [&h]() {
-						// Cancel
-						h.current_path.reset();
-						h.step = ai_tag_work_farm_water::water_steps::FIND_HOE;
-						return;
-					}, [&h, &e]() {
-						// Success
-						h.current_path.reset();
-						h.step = ai_tag_work_farm_water::water_steps::WATER;
-						return;
-					});
-					return;
-				}
-				else if (h.step == ai_tag_work_farm_water::water_steps::WATER) {
-					const int idx = mapidx(pos);
-					auto stats = e.component<game_stats_t>();
-					if (!stats) {
-						std::cout << "Cancelled because of missing stats.\n";
-						work.cancel_work_tag(e);
-						return;
-					}
-
-					auto farm_finder = farm_designations->farms.find(idx);
-					if (farm_finder == farm_designations->farms.end() || farm_finder->second.state != farm_steps::GROWING || farm_finder->second.days_since_watered == 0) {
-						std::cout << "Bailing out - not relevant anymore!";
-						work.cancel_work_tag(e);
-						return;
-					}
-
-					auto skill_check = skill_roll(e.id, *stats, rng, "Farming", DIFFICULTY_AVERAGE);
-					if (skill_check >= SUCCESS) {
-						farm_finder->second.days_since_watered = 0;
-					}
-					else {
-						if (skill_check == CRITICAL_FAIL) damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, 1, "Farming Accident" });
-						return;
-					}
-				}
+		inline void fetch_target(entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
+			work.follow_path(h, pos, e, [&h]() {
+				// Cancel
+				h.current_path.reset();
+				h.step = ai_tag_work_farm_water::water_steps::FIND_HOE;
+				return;
+			}, [&h, &e]() {
+				// Success
+				h.current_path.reset();
+				h.step = ai_tag_work_farm_water::water_steps::WATER;
+				return;
 			});
+		}
+
+		inline void water(entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
+			const int idx = mapidx(pos);
+
+			auto farm_finder = farm_designations->farms.find(idx);
+			if (farm_finder == farm_designations->farms.end() || farm_finder->second.state != farm_steps::GROWING || farm_finder->second.days_since_watered == 0) {
+				std::cout << "Bailing out - not relevant anymore!";
+				work.cancel_work_tag(e);
+				return;
+			}
+
+			if (work::skill_check_or_damage(e, "Farming", DIFFICULTY_AVERAGE, work, 1, "Farming Accident")) {
+				farm_finder->second.days_since_watered = 0;
+			}
+		}
+
+		void dispatch(entity_t &e, ai_tag_work_farm_water &h, ai_tag_my_turn_t &t, position_t &pos) {
+			switch (h.step) {
+			case ai_tag_work_farm_water::water_steps::FIND_HOE : find_hoe(e, h, t, pos); break;
+			case ai_tag_work_farm_water::water_steps::FETCH_HOE: fetch_hoe(e, h, t, pos); break;
+			case ai_tag_work_farm_water::water_steps::FIND_TARGET: find_target(e, h, t, pos); break;
+			case ai_tag_work_farm_water::water_steps::FETCH_TARGET: fetch_target(e, h, t, pos); break;
+			case ai_tag_work_farm_water::water_steps::WATER: water(e, h, t, pos); break;
+			}
+		}
+
+		void run(const double &duration_ms) {
+			work.do_work(jobs_board::evaluate_farm_watering, dispatch, job_tag);
 		}
 	}
 }
