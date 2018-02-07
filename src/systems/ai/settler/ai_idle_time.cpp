@@ -61,6 +61,15 @@ namespace systems {
 				if (!mount) {
 					delete_component<riding_t>(e.id);
 				}
+				else if (rng.roll_dice(1, 100) == 100) {
+					auto mount_entity = entity(mounted->riding);
+					if (mount_entity) {
+						std::string cname = "";
+						auto name = mount_entity->component<name_t>();
+						if (name) cname = name->first_name + std::string(" ") + name->last_name;
+						spawn_item_on_ground(pos->x, pos->y, pos->z, "dung", get_material_by_tag("organic"), 3, 100, e.id, cname);
+					}
+				}
 			}
 
 			int feelings = planet.civs.civs[sentient.civ_id].cordex_feelings;
