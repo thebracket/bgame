@@ -1,7 +1,7 @@
 buildings = {
 	cordex = {
 		name = "Cordex",
-		description = "This is you, the ship-borne AI trying to keep the squishy meat-bag settlers from your ship alive.",
+		description = "This is you, the ship-borne AI trying to keep the motley crew of meat-bag morons from your ship alive.",
 		components = { { item="cordex_core", qty=1} },
 		skill = { name="Construction", difficulty=25 },
 		render_rex = "cordex.xp",
@@ -20,7 +20,7 @@ buildings = {
 	ship_defense_turret = {
 		name = "Ship Defense Turret",
 		description = "An automated ship defense turret, designed to deter critters and blackguards from entering the ship without permission. It has an angry personality.",
-	    component = { { item="ship_turret_kit", qty=1 } },
+	    components = { { item="ship_turret_kit", qty=1 } },
 	    skill = { name="Construction", difficulty=25 },
 	    render = { width=1, height=1, tiles={ {glyph=glyphs['greater_than_equal'], foreground = colors['red'], background = colors['black']} } },
 		render_ascii = { width=1, height=1, tiles={ {glyph=glyphs['greater_than_equal'], foreground = colors['red'], background = colors['black'] } } },
