@@ -6,12 +6,7 @@
 #include <cereal/types/polymorphic.hpp>
 #include "../bengine/ecs_impl.hpp"
 #include "../bengine/rexspeeder.hpp"
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../bengine/color_t.hpp"
-#endif
 
 struct log_line_t {
     log_line_t() {}

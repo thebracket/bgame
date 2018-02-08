@@ -4,12 +4,7 @@
 #include "../../components/construct_power.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/lightsource.hpp"
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../../bengine/color_t.hpp"
-#endif
 
 namespace systems {
 	namespace power {

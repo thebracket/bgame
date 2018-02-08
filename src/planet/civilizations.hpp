@@ -6,12 +6,7 @@
 #include <array>
 #include "constants.hpp"
 #include "../components/species.hpp"
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../bengine/color_t.hpp"
-#endif
 
 struct civ_t {
     std::string species_tag = "";

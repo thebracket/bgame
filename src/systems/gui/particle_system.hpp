@@ -8,12 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../../bengine/color_t.hpp"
-#endif
 
 namespace systems {
 	namespace particles {

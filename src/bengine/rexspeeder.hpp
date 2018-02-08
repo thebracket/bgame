@@ -11,12 +11,7 @@
 #include <string>
 #include <vector>
 #include <array>
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "color_t.hpp"
-#endif
 
 namespace xp {
 

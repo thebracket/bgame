@@ -2,12 +2,7 @@
 
 #include <string>
 #include <bitset>
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../../bengine/color_t.hpp"
-#endif
 
 constexpr int NUMBER_OF_ITEM_CATEGORIES = 64;
 constexpr int COMPONENT = 0;

@@ -3,12 +3,7 @@
 #include <lua.hpp>
 #include <string>
 #include <functional>
-
-#ifdef _MSC_VER
-import color_t;
-#else
-#include "../../bengine/color_t.hpp"
-#endif
+#include "../bengine/color_t.hpp"
 
 extern lua_State* lua_state;
 

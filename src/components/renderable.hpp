@@ -3,12 +3,7 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include "../bengine/ecs_impl.hpp"
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../bengine/color_t.hpp"
-#endif
 
 struct renderable_t {
 	uint16_t glyph;

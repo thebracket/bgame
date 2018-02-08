@@ -24,12 +24,7 @@
 #include "../ai/mining_system.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../global_assets/farming_designations.hpp"
-
-#ifdef _MSC_VER
-import debug_flags;
-#else
 #include "../../global_assets/debug_flags.hpp"
-#endif
 
 namespace systems {
 	namespace tooltips {

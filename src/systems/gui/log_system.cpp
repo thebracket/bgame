@@ -6,12 +6,7 @@
 #include "../../global_assets/game_mode.hpp"
 #include "../../bengine/rexspeeder.hpp"
 #include "../../bengine/main_window.hpp"
-
-#ifdef _MSC_VER
-import color_t;
-#else
 #include "../../bengine/color_t.hpp"
-#endif
 
 namespace systems {
 	namespace logging {

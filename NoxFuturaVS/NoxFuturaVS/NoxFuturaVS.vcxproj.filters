@@ -768,11 +768,8 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_farm_weed.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\global_assets\debug_flags.ixx">
+    <ClCompile Include="..\..\src\global_assets\debug_flags.cpp">
       <Filter>Source Files\global_assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\color_t.ixx">
-      <Filter>Source Files\bengine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1753,6 +1750,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\settler\templated_work_steps_t.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\debug_flags.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bengine\color_t.hpp">
+      <Filter>Header Files\bengine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
