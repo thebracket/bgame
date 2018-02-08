@@ -70,6 +70,9 @@ namespace render {
 							static_design_voxel_models.insert(std::make_pair(25, std::make_tuple(x, y, camera_position->region_z)));
 						}
 					}
+				} else
+				{
+					n_elements += chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 3, DESIGN_DEPTH);
 				}
 			}
 		}

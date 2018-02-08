@@ -409,7 +409,15 @@ namespace render {
 						case tile_type::TREE_LEAF: terminal[tidx] = glyph_t{ 5, 0.0f, 1.0f, 0, 0, 0, 0 }; break;
 						case tile_type::WINDOW: terminal[tidx] = get_material_glyph(idx, 176); break;
 						case tile_type::CLOSED_DOOR: terminal[tidx] = get_material_glyph(idx, '+'); break;
-						case tile_type::OPEN_SPACE: terminal[tidx] = get_dive_tile(idx); break;
+						case tile_type::OPEN_SPACE: {
+								if (game_master_mode == DESIGN)
+								{
+									terminal[tidx] = glyph_t{ 176, 0.0f, 1.0f, 1.0f, 0, 0, 0 };
+								}
+								else {
+									terminal[tidx] = get_dive_tile(idx);
+								}
+						} break;
 						default: terminal[tidx] = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 						}
 
@@ -456,7 +464,13 @@ namespace render {
 					for (auto inner_y = by; inner_y < by + building_def->height; ++inner_y) {
 						for (auto inner_x = bx; inner_x < bx + building_def->width; ++inner_x) {
 							const auto idx = mapidx(inner_x, inner_y, bz);
-							if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
+							if (!region::flag(idx, CAN_STAND_HERE))
+							{
+								if (tag != "floor" || tag != "wall")
+								{
+									can_build = false;
+								}
+							}
 							if (region::get_building_id(idx) > 0) can_build = false;
 							target_tiles.emplace_back(idx);
 						}

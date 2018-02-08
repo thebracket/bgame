@@ -159,6 +159,7 @@ namespace systems {
 
 				if (provides.provides == provides_wall) {
 					set_tile_type(index, tile_type::WALL);
+					set_tile_material(index, e.material);
 					// Relocate anything stuck in the new wall
 					each<position_t>([index](entity_t &E, position_t &P) {
 						if (mapidx(P.x, P.y, P.z) == index) {
@@ -180,18 +181,23 @@ namespace systems {
 				}
 				else if (provides.provides == provides_floor) {
 					set_tile_type(index, tile_type::FLOOR);
+					set_tile_material(index, e.material);
 				}
 				else if (provides.provides == provides_stairs_up) {
 					set_tile_type(index, tile_type::STAIRS_UP);
+					set_tile_material(index, e.material);
 				}
 				else if (provides.provides == provides_stairs_down) {
 					set_tile_type(index, tile_type::STAIRS_DOWN);
+					set_tile_material(index, e.material);
 				}
 				else if (provides.provides == provides_stairs_updown) {
 					set_tile_type(index, tile_type::STAIRS_UPDOWN);
+					set_tile_material(index, e.material);
 				}
 				else if (provides.provides == provides_ramp) {
 					set_tile_type(index, tile_type::RAMP);
+					set_tile_material(index, e.material);
 				}
 				else if (provides.provides == provides_cage_trap) {
 					// Create a new entity for the trap
@@ -225,7 +231,6 @@ namespace systems {
 					entity_should_be_deleted = false;
 				}
 			}
-			//set_tile_material(index, e.material); // I don't know why this was here.
 
 			tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
 			for (int Z = -2; Z<3; ++Z) {

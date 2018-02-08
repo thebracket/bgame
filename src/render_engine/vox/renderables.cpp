@@ -93,7 +93,13 @@ namespace render {
 				for (auto y = by; y < by + building_def->height; ++y) {
 					for (auto x = bx; x < bx + building_def->width; ++x) {
 						const auto idx = mapidx(x, y, bz);
-						if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
+						if (!region::flag(idx, CAN_STAND_HERE))
+						{
+							if (tag != "floor" || tag != "wall")
+							{
+								can_build = false;
+							}
+						}
 						if (region::get_building_id(idx) > 0) can_build = false;
 						target_tiles.emplace_back(idx);
 					}
