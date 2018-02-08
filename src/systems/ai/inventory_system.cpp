@@ -208,8 +208,6 @@ namespace systems {
 
 				int sx = designate.x;
 				int sy = designate.y;
-				if (designate.width == 3) --sx;
-				if (designate.height == 3) --sy;
 
 				for (int x = sx; x < sx + designate.width; ++x) {
 					for (int y = sy; y < sy + designate.height; ++y) {
