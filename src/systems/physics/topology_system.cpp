@@ -225,7 +225,7 @@ namespace systems {
 					entity_should_be_deleted = false;
 				}
 			}
-			set_tile_material(index, e.material);
+			//set_tile_material(index, e.material); // I don't know why this was here.
 
 			tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
 			for (int Z = -2; Z<3; ++Z) {

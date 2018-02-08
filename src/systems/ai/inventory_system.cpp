@@ -184,7 +184,7 @@ namespace systems {
 				for (const auto &requested_component : building.components) {
 					const std::size_t component_id = inventory::claim_item_by_reaction_input(requested_component);
 					std::cout << "Component [" << requested_component.tag << "] #" << component_id << "\n";
-					designate.component_ids.push_back(std::make_pair(component_id, false));
+					designate.component_ids.emplace_back(std::make_pair(component_id, false));
 				}
 
 				auto building_def = get_building_def(designate.tag);
@@ -197,8 +197,10 @@ namespace systems {
 				designate.building_entity = building_template->id;
 				for (int y = msg.y; y<msg.y + designate.height; ++y) {
 					for (int x = msg.x; x < msg.x + designate.width; ++x) {
-						entity_octree.add_node(octree_location_t{ x,y,msg.z,building_template->id });
-						chunks::mark_chunk_dirty_by_tileidx( mapidx(x, y, msg.z) );
+						const auto idx = mapidx(x, y, msg.z);
+						region::set_building_id(idx, building_template->id);
+						entity_octree.add_node(octree_location_t{ x, y, msg.z, building_template->id });
+						chunks::mark_chunk_dirty_by_tileidx( idx );
 					}
 				}
 
@@ -212,9 +214,9 @@ namespace systems {
 				for (int x = sx; x < sx + designate.width; ++x) {
 					for (int y = sy; y < sy + designate.height; ++y) {
 						const auto idx = mapidx(x, y, camera_position->region_z);
-						region::set_flag(idx, CONSTRUCTION);
 						region::set_veg_type(idx, 0);
 						region::calc_render(idx);
+						region::set_building_id(idx, building_template->id);
 					}
 				}
 

@@ -446,39 +446,41 @@ namespace render {
 				auto building_def = get_building_def(tag);
 				if (building_def) {
 					// We have the model and the definition; see if its possible to build
-					bool can_build = true;
+					auto can_build = true;
+
+					const auto bx = systems::mouse_wx + building_def->width == 3 ? -1 : 0;
+					const auto by = systems::mouse_wy + building_def->height == 3 ? -1 : 0;
+					const auto bz = camera_position->region_z;
 
 					std::vector<int> target_tiles;
-					for (int y = systems::mouse_wy; y < systems::mouse_wy + building_def->height; ++y) {
-						for (int x = systems::mouse_wx; x < systems::mouse_wx + building_def->width; ++x) {
-							const auto idx = mapidx(x, y, camera_position->region_z);
+					for (auto inner_y = by; inner_y < by + building_def->height; ++inner_y) {
+						for (auto inner_x = bx; inner_x < bx + building_def->width; ++inner_x) {
+							const auto idx = mapidx(inner_x, inner_y, bz);
 							if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
-							if (region::flag(idx, CONSTRUCTION)) can_build = false;
+							if (region::get_building_id(idx) > 0) can_build = false;
 							target_tiles.emplace_back(idx);
 						}
 					}
-
-					auto x = (float)systems::mouse_wx;
-					const auto z = (float)camera_position->region_z;
-					auto y = (float)systems::mouse_wy;
 
 					if (building_def->glyphs_ascii.empty()) {
 						std::cout << "WARNING: Building [" << building_def->tag << "] has no ASCII data.\n";
 					}
 					else {
 
-						int i = 0;
-						int offX = building_def->width == 3 ? -1 : 0;
-						int offY = building_def->height == 3 ? -1 : 0;
-						for (int Y = 0; Y < building_def->height; ++Y) {
-							for (int X = 0; X < building_def->width; ++X) {
-								const float R = can_build ? building_def->glyphs_ascii[i].foreground.r : 1.0f;
-								const float G = can_build ? building_def->glyphs_ascii[i].foreground.g : 0.3f;
-								const float B = can_build ? building_def->glyphs_ascii[i].foreground.b : 0.3f;
-								const float BR = can_build ? building_def->glyphs_ascii[i].background.r : 0.0f;
-								const float BG = can_build ? building_def->glyphs_ascii[i].background.g : 0.0f;
-								const float BB = can_build ? building_def->glyphs_ascii[i].background.b : 0.0f;
-								terminal[termidx(x + X + offX, Y + y + offY)] = glyph_t{ static_cast<uint8_t>(building_def->glyphs_ascii[i].glyph), R, G, B, BR, BG, BB };
+						auto i = 0;
+						for (auto inner_y = 0; inner_y < building_def->height; ++inner_y) {
+							for (auto inner_x = 0; inner_x < building_def->width; ++inner_x) {
+								const float red = can_build ? building_def->glyphs_ascii[i].foreground.r : 1.0f;
+								const float green = can_build ? building_def->glyphs_ascii[i].foreground.g : 0.3f;
+								const float blue = can_build ? building_def->glyphs_ascii[i].foreground.b : 0.3f;
+								const float background_red = can_build ? building_def->glyphs_ascii[i].background.r : 0.0f;
+								const float background_green = can_build ? building_def->glyphs_ascii[i].background.g : 0.0f;
+								const float background_blue = can_build ? building_def->glyphs_ascii[i].background.b : 0.0f;
+								terminal[termidx(bx + inner_x, inner_y + by)] = glyph_t{ 
+									static_cast<uint8_t>(building_def->glyphs_ascii[i].glyph), 
+									red, green, blue, 
+									background_red, background_green, background_blue 
+								};
 								++i;
 							}
 						}
@@ -486,11 +488,8 @@ namespace render {
 						if (can_build) {
 							if (systems::left_click) {
 								// Perform the building
-								systems::inventory_system::building_request(systems::mouse_wx, systems::mouse_wy, systems::mouse_wz, buildings::build_mode_building);
+								systems::inventory_system::building_request(bx, by, bz, buildings::build_mode_building);
 								buildings::has_build_mode_building = false;
-								for (const auto &idx : target_tiles) {
-									region::set_flag(idx, CONSTRUCTION);
-								}
 							}
 						}
 					}

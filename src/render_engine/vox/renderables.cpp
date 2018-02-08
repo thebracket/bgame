@@ -80,40 +80,37 @@ namespace render {
 		if (game_master_mode == DESIGN && game_design_mode == BUILDING && buildings::has_build_mode_building) {
 			// We have a building selected; determine if it can be built and show it
 			const auto tag = buildings::build_mode_building.tag;
-			auto building_def = get_building_def(tag);
+			const auto building_def = get_building_def(tag);
 			if (building_def && building_def->vox_model > 0) {
 				// We have the model and the definition; see if its possible to build
-				bool can_build = true;
+				auto can_build = true;
+
+				const auto bx = systems::mouse_wx + (building_def->width == 3 ? -1 : 0);
+				const auto by = systems::mouse_wy + (building_def->height == 3 ? -1 : 0);
+				const auto bz = systems::mouse_wz;
 
 				std::vector<int> target_tiles;
-				for (int y = systems::mouse_wy; y < systems::mouse_wy + building_def->height; ++y) {
-					for (int x = systems::mouse_wx; x < systems::mouse_wx + building_def->width; ++x) {
-						const auto idx = mapidx(x, y, systems::mouse_wz);
+				for (auto y = by; y < by + building_def->height; ++y) {
+					for (auto x = bx; x < bx + building_def->width; ++x) {
+						const auto idx = mapidx(x, y, bz);
 						if (!region::flag(idx, CAN_STAND_HERE)) can_build = false;
-						if (region::flag(idx, CONSTRUCTION)) can_build = false;
+						if (region::get_building_id(idx) > 0) can_build = false;
 						target_tiles.emplace_back(idx);
 					}
 				}
 
-				auto x = (float)systems::mouse_wx;
-				const auto y = (float)systems::mouse_wz;
-				auto z = (float)systems::mouse_wy;
-
 				if (can_build) {					
 
-					add_voxel_model(building_def->vox_model, x, y, z, 1.0f, 1.0f, 1.0f);
+					add_voxel_model(building_def->vox_model, static_cast<float>(bx), static_cast<float>(bz), static_cast<float>(by), 1.0f, 1.0f, 1.0f);
 
 					if (systems::left_click) {
 						// Perform the building
-						systems::inventory_system::building_request(systems::mouse_wx, systems::mouse_wy, systems::mouse_wz, buildings::build_mode_building);
-						buildings::has_build_mode_building = false;
-						for (const auto &idx : target_tiles) {
-							region::set_flag(idx, CONSTRUCTION);
-						}
+						systems::inventory_system::building_request(bx, by, bz, buildings::build_mode_building);
+						buildings::has_build_mode_building = false;						
 					}
 				}
 				else {
-					add_voxel_model(building_def->vox_model, x, y, z, 1.0f, 0.0f, 0.0f);
+					add_voxel_model(building_def->vox_model, static_cast<float>(bx), static_cast<float>(bz), static_cast<float>(by), 1.0f, 0.0f, 0.0f);
 				}
 			}
 		}
