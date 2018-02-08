@@ -5,16 +5,7 @@ buildings["solar_panel"] = {
     components = { { item="solar_panel_kit", qty=1} },
     skill = { name="Construction", difficulty=15 },
     provides = { generator={energy_cost=10} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['solar_panel'], foreground = colors['cyan'], background = colors['white']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['hash'], foreground = colors['cyan'], background = colors['white']}
-        }
-    },
+    render_rex = "solar_panel.xp",
     vox=voxelId("solar_panel")
 };
 
@@ -23,16 +14,7 @@ buildings["battery"] = {
     components = { { item="battery_kit", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { power_storage={energy_cost=20} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['battery'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['plus_minus'], foreground = colors['red'], background = colors['black']}
-        }
-    },
+    render_rex = "battery.xp",
     vox=voxelId("battery")
 };
 
@@ -41,15 +23,6 @@ buildings["rtg"] = {
     components = { {item="refined_plutonium", qty=1} },
     skill = { name="Construction", difficulty=15 },
     provides = { storage={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['rtg'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['plus_minus'], foreground = colors['green'], background = colors['black']}
-        }
-    },
+    render_rex = "rtg.xp",
     vox=voxelId("rtg")
 };

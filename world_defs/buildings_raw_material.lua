@@ -8,16 +8,7 @@ buildings["dung_heap"] = {
     name = "Dung Heap",
     components = { { item="block", qty=1, mat_type="wood" } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['earth_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "dungheap.xp",
     vox = voxelId("dung_heap")
 };
 
@@ -39,20 +30,7 @@ buildings["sawmill"] = {
     name = "Sawmill",
     components = { { item="wood_log", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=3, height=1, tiles= {
-            {glyph= glyphs['sawmill_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sawmill_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sawmill_3'], foreground = colors['white'], background = colors['black']},
-        }
-    },
-    render_ascii = {
-        width=3, height=1, tiles= {
-            {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['sun'], foreground = colors['cyan'], background = colors['black']},
-            {glyph= glyphs['three_bar'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "sawmill.xp",
     vox=voxelId("sawmill")
 };
 
@@ -74,22 +52,7 @@ buildings["tanner"] = {
     name = "Tanner",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['tanner_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['tanner_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['tanner_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['tanner_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['double_wall_nse'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['double_wall_nsw'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "tanner.xp",
     vox = voxelId("tanner")
 };
 
@@ -110,22 +73,7 @@ buildings["stonecutter"] = {
     name = "Stonecutters",
     components = { { item="stone_boulder", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['stonecutter_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']}
-        }
-    },
+    render_rex = "stonecutter.xp",
     vox = voxelId("stonecutter")
 };
 
@@ -147,16 +95,7 @@ buildings["charcoal_hut"] = {
     name = "Charcoal Burner",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['charcoal_hut'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "charcoal_hut.xp",
     vox = voxelId("charcoal_hut")
 };
 
@@ -179,16 +118,7 @@ buildings["smelter"] = {
     name = "Smelter",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
-        }
-    },
+    render_rex = "smelter.xp",
     vox = voxelId("smelter")
 };
 
@@ -210,16 +140,8 @@ buildings["blast_smelter"] = {
     name = "Blast Smelter",
     components = { { item="block", qty=1, mat_type="rock" }, { item="tool_and_die", qty=1 }, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
-        }
-    },
+    render_rex = "smelter.xp",
+    vox = voxelId("smelter")
 };
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -230,36 +152,8 @@ buildings["crude_refinery"] = {
     name = "Simple Oil Refinery",
     components = { { item="block", qty=1, mat_type="rock" }, { item="tool_and_die", qty=1 }, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
-        }
-    },
-};
-
-------------------------------------------------------------------------------------------------------------------------
--- Chemistry workshops transform various powders into useful items
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["chemistry_workshop"] = {
-    name = "Chemistry Workshop",
-    components = { { item="block", qty=1, mat_type="rock" }, { item="mechanism", qty=2 } },
-    skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['smelter'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['red'], background = colors['black']}
-        }
-    },
+    render_rex = "refinery.xp",
+    vox = voxelId("refinery")
 };
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -269,16 +163,7 @@ buildings["glass_furnace"] = {
     name = "Glass Furnace",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['glass_furnace'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['light_green'], background = colors['black']}
-        }
-    },
+    render_rex = "glass_furnace.xp",
     vox = voxelId("glass_furnace")
 };
 
@@ -300,16 +185,8 @@ buildings["silicon_refinery"] = {
     name = "Silicon Refinery",
     components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['silicon_refinery'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['cyan'], background = colors['black']}
-        }
-    },
+    render_rex = "glass_furnace.xp",
+    vox = voxelId("glass_furnace")
 };
 
 reactions["make_raw_silicon"] = {
@@ -330,16 +207,7 @@ buildings["kiln"] = {
     name = "Kiln",
     components = { { item="clay", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['kiln'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
-        }
-    },
+    render_rex = "kiln.xp",
     vox = voxelId("kiln")
 };
 
@@ -361,16 +229,7 @@ buildings["loom"] = {
     name = "Loom",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['arch'], foreground = colors['orange'], background = colors['black']}
-        }
-    },
+    render_rex = "loom.xp",
     vox = voxelId("loom")
 };
 
@@ -431,22 +290,8 @@ buildings["oil_refinery"] = {
     name = "Oil Refinery",
     components = { { item="block", qty=1 }, { item="tool_and_die", qty=1 }, { item="oil_separation_tank", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['stonecutter_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['stonecutter_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['sun'], foreground = colors['white'], background = colors['black']}
-        }
-    },
+    render_rex = "refinery.xp",
+    vox = voxelId("refinery")
 };
 
 reactions["refine_oil"] = {

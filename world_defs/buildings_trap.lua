@@ -5,16 +5,8 @@ buildings["cage_trap"] = {
     components = { { item="cage", qty=1}, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { cage_trap={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['cage'], foreground = colors['green'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['cage_ascii'], foreground = colors['green'], background = colors['black']}
-        }
-    }
+    render_rex = "cagetrap.xp",
+    vox = voxelId("cage")
 };
 
 buildings["stonefall_trap"] = {
@@ -22,16 +14,8 @@ buildings["stonefall_trap"] = {
     components = { { item="stone_boulder", qty=1}, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { stonefall_trap={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['small_circle'], foreground = colors['red'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['small_circle'], foreground = colors['red'], background = colors['black']}
-        }
-    }
+    render_rex = "cagetrap.xp",
+    vox = voxelId("cage")
 };
 
 buildings["weapon_trap"] = {
@@ -39,16 +23,8 @@ buildings["weapon_trap"] = {
     components = { { item="trap_blade", qty=1}, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { blade_trap={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['clubs'], foreground = colors['red'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['clubs'], foreground = colors['red'], background = colors['black']}
-        }
-    }
+    render_rex = "cagetrap.xp",
+    vox = voxelId("cage")
 };
 
 buildings["spike_trap"] = {
@@ -56,16 +32,8 @@ buildings["spike_trap"] = {
     components = { { item="retractable_spike", qty=1}, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     provides = { spike_trap={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['spikes_retracted'], foreground = colors['red'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['o'], foreground = colors['red'], background = colors['black']}
-        }
-    }
+    render_rex = "cagetrap.xp",
+    vox = voxelId("cage")
 };
 
 buildings["lever"] = {

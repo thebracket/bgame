@@ -211,7 +211,7 @@ void read_buildings() noexcept
                             lua_pushnumber(lua_state, i);
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
-                                std::string tiletag = lua_tostring(lua_state, -2);
+                                const auto tiletag = std::string(lua_tostring(lua_state, -2));
                                 if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
                                 if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
                                 if (tiletag == "background") render.background = read_lua_color("background");
@@ -226,7 +226,7 @@ void read_buildings() noexcept
                 }
             }
             if (field == "render_rex") {
-                std::string filename = "game_assets/rex/" + std::string(lua_tostring(lua_state, -1));
+                const auto filename = std::string("game_assets/rex/") + std::string(lua_tostring(lua_state, -1));
                 xp::rex_sprite sprite(filename);
                 c.width = sprite.get_width();
                 c.height = sprite.get_height();

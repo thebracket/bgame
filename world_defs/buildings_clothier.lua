@@ -7,22 +7,7 @@ buildings["tailor"] = {
     name = "Tailoring Workshop",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['carpenter_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['carpenter_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['carpenter_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['carpenter_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "tailor.xp",
     vox=voxelId("tailor")
 };
 

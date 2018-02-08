@@ -6,16 +6,7 @@ buildings["cryo_bed"] = {
     components = { { item="cryo_bed_kit", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { sleep={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['cryo_bed'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['eight'], foreground = colors['white'], background = colors['black']}
-        }
-    },
+    render_rex = "cryobed.xp",
     vox=voxelId("cryobed")
 };
 
@@ -25,17 +16,8 @@ buildings["storage_locker"] = {
     components = { { item="storage_locker", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { storage={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['storage_locker'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['cabinet'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    vox=4
+    render_rex = "cabinet.xp",
+    vox=voxelId("cabinet")
 };
 
 buildings["personal_survival_shelter"] = {
@@ -44,16 +26,7 @@ buildings["personal_survival_shelter"] = {
     components = { { item="personal_survival_shelter_kit", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { sleep={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['tent'], foreground = colors['green'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['arch'], foreground = colors['green'], background = colors['black']}
-        }
-    },
+    render_rex = "tent.xp",
     vox=voxelId("tent")
 };
 
@@ -62,16 +35,7 @@ buildings["table"] = {
     components = { { item="table", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { table={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
-        }
-    },
+    render_rex = "table.xp",
     vox=voxelId("table")
 };
 
@@ -80,16 +44,7 @@ buildings["chair"] = {
     components = { { item="chair", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { table={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['chair'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['chair'], foreground = colors['white'], background = colors['black']}
-        }
-    },
+    render_rex = "chair.xp",
     vox=voxelId("chair")
 };
 
@@ -98,16 +53,8 @@ buildings["door"] = {
     components = { { item="door", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { door={energy_cost=0}, signal={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['door_open'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['door'], foreground = colors['white'], background = colors['black']}
-        }
-    }
+    render_rex = "door.xp",
+    vox=voxelId("door_ground")
 };
 
 buildings["energy_door"] = {
@@ -115,16 +62,8 @@ buildings["energy_door"] = {
     components = { { item="door", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { door={energy_cost=10} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['door_open'], foreground = colors['cyan'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['door'], foreground = colors['cyan'], background = colors['black']}
-        }
-    }
+    render_rex = "door.xp",
+    vox=voxelId("door_ground")
 };
 
 buildings["bed_simple"] = {
@@ -132,15 +71,6 @@ buildings["bed_simple"] = {
     components = { { item="bed_item", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { sleep={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['cryo_bed'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['eight'], foreground = colors['brown'], background = colors['black']}
-        }
-    },
+    render_rex = "cryobed.xp",
     vox=voxelId("bed")
 };

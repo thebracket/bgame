@@ -8,22 +8,8 @@ buildings["leatherworker"] = {
     name = "Leatherworker",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['leatherworker_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['leatherworker_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['leatherworker_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['leatherworker_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['chair'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['cabinet'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "leatherworker.xp",
+    vox = voxelId("leatherworker")
 };
 
 reactions["make_hide_tunic"] = {

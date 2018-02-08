@@ -9,16 +9,7 @@ buildings["small_replicator"] = {
     components = { { item="replicator_unit", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { storage={energy_cost=0} },
-    render = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['replicator_small'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles={
-            {glyph=glyphs['square_root'], foreground = colors['cyan'], background = colors['black']}
-        }
-    },
+    render_rex = "smallreplicator.xp",
     vox=voxelId("replicator_small")
 };
 
@@ -64,16 +55,7 @@ buildings["fake_camp_fire"] = {
     components = { { item="camp_fire_kit", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { light={radius=5, color = colors['yellow']} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
-        }
-    },
+    render_rex = "campfire.xp",
     emits_smoke = true,
     vox = voxelId("fakefire")
 };

@@ -7,22 +7,7 @@ buildings["mason"] = {
     name = "Masonry",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['mason_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['mason_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['mason_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['mason_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['white'], background = colors['black']}
-        }
-    },
+    render_rex = "mason.xp",
     vox = voxelId("mason")
 };
 

@@ -126,6 +126,13 @@ voxel_models = {
     dung_heap = { model=vfn("dung_heap"), id=114 },
     seed = { model=vfn("seed"), id=115 },
     raised_flower_bed = { model=vfn("raised_flower_bed"), id=116 },
+    wall = { model=vfn("wall"), id=117 },
+    floor = { model=vfn("floor"), id=118 },
+    ramp = { model=vfn("ramp"), id=119 },
+    carpenter_intermediate = { model=vfn("carpenter_intermediate"), id=120 },
+    nitrogen_extractor = { model=vfn("nitrogen_extractor"), id=121 },
+    leatherworker = { model=vfn("leatherworker"), id=122 },
+    refinery = { model=vfn("refinery"), id=123 },
 }
 
 function voxelId(name)

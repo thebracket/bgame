@@ -8,16 +8,8 @@ buildings["camp_fire"] = {
     components = { { item="wood_log", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { light={radius=5, color = colors['yellow']} },
-    render = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['campfire'], foreground = colors['firelight'], background = colors['yellow']}
-        }
-    },
-    render_ascii = {
-        width=1, height=1, tiles= {
-            {glyph= glyphs['sun'], foreground = colors['yellow'], background = colors['yellow']}
-        }
-    },
+    render_rex = "campfire.xp",
+    vox = voxelId("fakefire")
     emits_smoke = true
 };
 
@@ -59,22 +51,7 @@ buildings["still"] = {
     name = "Distillery",
     components = { { item="block", qty=2 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['still_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['still_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['still_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['still_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['wood_brown'], background = colors['black']},
-            {glyph= glyphs['kit'], foreground = colors['wood_brown'], background = colors['black']}
-        }
-    },
+    render_rex = "still.xp",
     vox = voxelId("still")
 };
 
@@ -93,25 +70,6 @@ buildings["butcher"] = {
     name = "Butcher",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    render = {
-        width=3, height=3, tiles= {
-            {glyph= glyphs['butcher_1'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_2'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_3'], foreground = colors['white'], background = colors['black']},
-            {glyph= glyphs['butcher_4'], foreground = colors['white'], background = colors['black']}
-        }
-    },
-    render_ascii = {
-        width=2, height=2, tiles= {
-            {glyph= glyphs['cabinet'], foreground = colors['red'], background = colors['black']},
-            {glyph= glyphs['kit'], foreground = colors['red'], background = colors['black']},
-            {glyph= glyphs['table'], foreground = colors['red'], background = colors['black']},
-            {glyph= glyphs['paragraph'], foreground = colors['red'], background = colors['black']}
-        }
-    },
+    render_rex = "butcher.xp",
     vox=voxelId("butcher")
 };
