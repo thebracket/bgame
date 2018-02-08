@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["small_replicator"] = {
     name = "A small replicator",
+    description = "A portable device that can convert energy into matter, according to pre-programmed recipes. This model is designed for field-trips and can make tea and sandwiches.",
     components = { { item="replicator_unit", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { storage={energy_cost=0} },
@@ -59,6 +60,7 @@ reactions["replicate_small_energy_cell"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["fake_camp_fire"] = {
     name = "Nuclear Camp Fire",
+    description = "A portable camp fire, for the lazy camper. Combining a nuclear battery, fake fire effects and a marshmallow dispenser it is ideal for a camping trip.",
     components = { { item="camp_fire_kit", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { light={radius=5, color = colors['yellow']} },

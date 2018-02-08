@@ -17,6 +17,7 @@ struct building_provides_t {
 
 struct building_def_t {
     std::string tag = "";
+	std::string description = "";
     std::string name = "";
     std::vector<reaction_input_t> components;
     std::pair<std::string, int> skill;

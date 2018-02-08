@@ -2,6 +2,7 @@
 
 buildings["cryo_bed"] = {
     name = "Cryogenic Bed",
+    description = "An uncomfortable cryogenic bed, designed for long trips through the stars. It can double as a regular bed if you don't want to freeze anyone.",
     components = { { item="cryo_bed_kit", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { sleep={energy_cost=0} },
@@ -20,6 +21,7 @@ buildings["cryo_bed"] = {
 
 buildings["storage_locker"] = {
     name = "A storage locker",
+    description = "A ship-mounted storage locker, pre-shipped with enough to survive settling a new world.",
     components = { { item="storage_locker", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { storage={energy_cost=0} },
@@ -38,6 +40,7 @@ buildings["storage_locker"] = {
 
 buildings["personal_survival_shelter"] = {
     name = "Tent",
+    description = "A tent, conveniently packaged in a crate. It is self-assembling.",
     components = { { item="personal_survival_shelter_kit", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { sleep={energy_cost=0} },

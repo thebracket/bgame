@@ -1,6 +1,7 @@
 buildings = {
 	cordex = {
 		name = "Cordex",
+		description = "This is you, the ship-borne AI trying to keep the squishy meat-bag settlers from your ship alive.",
 		components = { { item="cordex_core", qty=1} },
 		skill = { name="Construction", difficulty=25 },
 		render_rex = "cordex.xp",
@@ -8,6 +9,7 @@ buildings = {
 	},
 	lamp = {
 		name = "Lamp",
+		description = "A simple lamp, designed to provide light.",
 		components = { { item="lamp_kit", qty=1} },
 		skill = { name="Construction", difficulty=25 },
 		render = { width=1, height=1, tiles={ {glyph=glyphs['sun'], foreground = colors['yellow'], background = colors['black']} } },
@@ -16,7 +18,8 @@ buildings = {
         vox=voxelId("floorlight")
 	},
 	ship_defense_turret = {
-	    name = "Ship Defense Turret",
+		name = "Ship Defense Turret",
+		description = "An automated ship defense turret, designed to deter critters and blackguards from entering the ship without permission. It has an angry personality.",
 	    component = { { item="ship_turret_kit", qty=1 } },
 	    skill = { name="Construction", difficulty=25 },
 	    render = { width=1, height=1, tiles={ {glyph=glyphs['greater_than_equal'], foreground = colors['red'], background = colors['black']} } },

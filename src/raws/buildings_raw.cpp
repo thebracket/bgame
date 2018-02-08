@@ -57,6 +57,7 @@ void read_buildings() noexcept
             std::string field = lua_tostring(lua_state, -2);
 
             if (field == "name") c.name = lua_tostring(lua_state, -1);
+			if (field == "description") c.description = lua_tostring(lua_state, -1);
             if (field == "vox") c.vox_model = static_cast<int>(lua_tonumber(lua_state, -1));
             if (field == "structure") c.structure = true;
             if (field == "emits_smoke") c.emits_smoke = lua_toboolean(lua_state, -1);
