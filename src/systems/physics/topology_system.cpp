@@ -32,18 +32,18 @@ namespace systems {
 			perform_construction_message(const std::size_t &entity, const std::string &t, const std::size_t &mat)
 				: entity_id(entity), tag(t), material(mat) {}
 
-			std::size_t entity_id;
+			std::size_t entity_id = 0;
 			std::string tag;
-			std::size_t material;
+			std::size_t material = 0;
 		};
 
 		struct perform_mining_message {
 			perform_mining_message() {}
 			perform_mining_message(const int idx, const uint8_t op, int X, int Y, int Z) : target_idx(idx),
 				operation(op), x(X), y(Y), z(Z) {}
-			int target_idx;
-			uint8_t operation;
-			int x, y, z;
+			int target_idx = 0;
+			uint8_t operation = 0;
+			int x=0, y=0, z=0;
 		};
 
 		thread_safe_message_queue<perform_construction_message> construction;
