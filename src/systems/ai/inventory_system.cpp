@@ -166,7 +166,7 @@ namespace systems {
 
 			building_requests.process_all([](build_request_message &msg) {
 				// Claim components, create the designations
-				buildings::available_building_t &building = msg.building;
+				auto &building = msg.building;
 
 				// Build designation
 				building_designation_t designate;
@@ -182,7 +182,8 @@ namespace systems {
 				designate.glyphs_ascii = building.glyphs_ascii;
 
 				for (const auto &requested_component : building.components) {
-					const std::size_t component_id = inventory::claim_item_by_reaction_input(requested_component);
+					const auto component_id = inventory::claim_item_by_reaction_input(requested_component);
+					bengine::entity(component_id)->assign(claimed_t{});
 					std::cout << "Component [" << requested_component.tag << "] #" << component_id << "\n";
 					designate.component_ids.emplace_back(std::make_pair(component_id, false));
 				}
