@@ -272,8 +272,6 @@ namespace render {
 					return;
 				}
 				int i = 0;
-				int offX = b.width == 3 ? -1 : 0;
-				int offY = b.height == 3 ? -1 : 0;
 				for (int y = 0; y < b.height; ++y) {
 					for (int x = 0; x < b.width; ++x) {
 						const float R = b.complete ? b.glyphs_ascii[i].foreground.r : 0.3f;
@@ -282,7 +280,7 @@ namespace render {
 						const float BR = b.complete ? b.glyphs_ascii[i].background.r : 0.0f;
 						const float BG = b.complete ? b.glyphs_ascii[i].background.g : 0.0f;
 						const float BB = b.complete ? b.glyphs_ascii[i].background.b : 0.0f;
-						const int idx = mapidx(pos.x + x + offX, pos.y + y + offY, pos.z);
+						const int idx = mapidx(pos.x + x, pos.y + y, pos.z);
 						renderables[idx].push_back(glyph_t{ static_cast<uint8_t>(b.glyphs_ascii[i].glyph), R, G, B, BR, BG, BB });
 						++i;
 					}
@@ -466,7 +464,7 @@ namespace render {
 							const auto idx = mapidx(inner_x, inner_y, bz);
 							if (!region::flag(idx, CAN_STAND_HERE))
 							{
-								if (tag != "floor" || tag != "wall")
+								if (!(tag == "floor" || tag == "wall"))
 								{
 									can_build = false;
 								}

@@ -29,14 +29,15 @@ namespace systems {
 			void evaluate_building(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 				if (designations->buildings.empty()) return; // Nothing to do
 
-				const auto &designation = designations->buildings.back();
-				auto building_id = designation.building_entity;
-				const auto building = entity(building_id);
-				if (building != nullptr) {
-					auto bpos = building->component<position_t>();
-					if (bpos != nullptr) {
-						const float distance = distance3d(pos.x, pos.y, pos.z, bpos->x, bpos->y, bpos->z);
-						board.insert(std::make_pair(distance, jt));
+				for (const auto &designation : designations->buildings) {
+					const auto building_id = designation.building_entity;
+					const auto building = entity(building_id);
+					if (building != nullptr) {
+						const auto bpos = building->component<position_t>();
+						if (bpos != nullptr) {
+							const auto distance = distance3d(pos.x, pos.y, pos.z, bpos->x, bpos->y, bpos->z);
+							board.insert(std::make_pair(distance, jt));
+						}
 					}
 				}
 			}

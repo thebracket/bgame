@@ -72,7 +72,7 @@ namespace render {
 					}
 				} else
 				{
-					n_elements += chunks::add_cube_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 3, DESIGN_DEPTH);
+					n_elements += chunks::add_floor_geometry(design_geometry, x, y, camera_position->region_z, 1.0f, 1.0f, 3);
 				}
 			}
 		}

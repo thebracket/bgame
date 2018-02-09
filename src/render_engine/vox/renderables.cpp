@@ -59,8 +59,6 @@ namespace render {
 					auto z = (float)pos.y;
 
 					//std::cout << b.width << " x " << b.height << "\n";
-					if (b.width == 3) x -= 1.0f;
-					if (b.height == 3) z -= 1.0f;
 
 					float red = 1.0f;
 					float green = 1.0f;
@@ -95,7 +93,8 @@ namespace render {
 						const auto idx = mapidx(x, y, bz);
 						if (!region::flag(idx, CAN_STAND_HERE))
 						{
-							if (tag != "floor" || tag != "wall")
+							// TODO: Check or open space and allow that for some tags.
+							if (!( tag == "floor" || tag == "wall"))
 							{
 								can_build = false;
 							}

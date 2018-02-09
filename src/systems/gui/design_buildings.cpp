@@ -110,6 +110,7 @@ namespace systems {
 			ImGui::DrawTabsBackground();
 
 			if (ImGui::AddTab("Available Buildings")) {
+				if (selected_building > building_listbox_items.size() - 1) selected_building = 0;
 				ImGui::BeginChild("build_list", ImVec2(300, 300));
 				ImGui::ListBox("", &selected_building, &building_listbox_items.at(0), buildings.size(), 10);
 				ImGui::EndChild();
