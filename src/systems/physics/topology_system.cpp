@@ -1,4 +1,4 @@
-#include "door_system.hpp"
+#include "topology_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../components/items/item.hpp"
@@ -12,7 +12,6 @@
 #include "../../components/entry_trigger.hpp"
 #include "../../components/receives_signal.hpp"
 #include "../../render_engine/vox/renderables.hpp"
-#include "trigger_system.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../gui/particle_system.hpp"
 #include "../ai/mining_system.hpp"
@@ -28,7 +27,7 @@ namespace systems {
 		using namespace region;
 
 		struct perform_construction_message {
-			perform_construction_message() {}
+			perform_construction_message() = default;
 			perform_construction_message(const std::size_t &entity, const std::string &t, const std::size_t &mat)
 				: entity_id(entity), tag(t), material(mat) {}
 
@@ -38,7 +37,7 @@ namespace systems {
 		};
 
 		struct perform_mining_message {
-			perform_mining_message() {}
+			perform_mining_message() = default;
 			perform_mining_message(const int idx, const uint8_t op, int X, int Y, int Z) : target_idx(idx),
 				operation(op), x(X), y(Y), z(Z) {}
 			int target_idx = 0;
@@ -46,58 +45,56 @@ namespace systems {
 			int x=0, y=0, z=0;
 		};
 
-		thread_safe_message_queue<perform_construction_message> construction;
-		thread_safe_message_queue<perform_mining_message> mining;
+		static thread_safe_message_queue<perform_construction_message> construction;
+		static thread_safe_message_queue<perform_mining_message> mining;
 
-		void perform_mining(const int idx, const int op, int X, int Y, int Z) {
-			mining.enqueue(perform_mining_message{ idx, static_cast<uint8_t>(op), X, Y, Z });
+		void perform_mining(const int idx, const int op, const int x, const int y, const int z) {
+			mining.enqueue(perform_mining_message{ idx, static_cast<uint8_t>(op), x, y, z });
 		}
 
 		void perform_construction(const size_t &entity, const std::string &t, const std::size_t &mat) {
 			construction.enqueue(perform_construction_message{ entity, t, mat });
 		}
 
-		void dig(const perform_mining_message &e) {
+		static void dig(const perform_mining_message &e) {
 			make_floor(e.target_idx);
 			//auto &[x,y,z] = idxmap(e.target_idx);
 			// TODO: emit_deferred(tile_removed_message{ x,y,z });
 		}
 
-		void channel(const perform_mining_message &e) {
+		static void channel(const perform_mining_message &e) {
 			make_open_space(e.target_idx);
-			//auto &[x,y,z] = idxmap(e.target_idx);
-			// TODO: emit_deferred(tile_removed_message{ x,y,z });
 
 			// Add ramp
-			const int below = e.target_idx - (REGION_WIDTH * REGION_HEIGHT);
+			const auto below = e.target_idx - (REGION_WIDTH * REGION_HEIGHT);
 			if (solid(below)) {
 				make_ramp(below);
 			}
 		}
 
-		void ramp(const perform_mining_message &e) {
+		static void ramp(const perform_mining_message &e) {
 			make_ramp(e.target_idx);
 
-			const int above = e.target_idx + (REGION_WIDTH * REGION_HEIGHT);
+			const auto above = e.target_idx + (REGION_WIDTH * REGION_HEIGHT);
 			if (solid(above)) {
 				make_open_space(above);
 				set_flag(above, CAN_STAND_HERE);
 			}
 		}
 
-		void stairs_up(const perform_mining_message &e) {
+		static void stairs_up(const perform_mining_message &e) {
 			make_stairs_up(e.target_idx);
 		}
 
-		void stairs_down(const perform_mining_message &e) {
+		static void stairs_down(const perform_mining_message &e) {
 			make_stairs_down(e.target_idx);
 		}
 
-		void stairs_updown(const perform_mining_message &e) {
+		static void stairs_updown(const perform_mining_message &e) {
 			make_stairs_updown(e.target_idx);
 		}
 
-		void recalculate(const perform_mining_message &e) {
+		static void recalculate(const perform_mining_message &e) {
 			for (int Z = -2; Z<3; ++Z) {
 				for (int Y = -2; Y<3; ++Y) {
 					for (int X = -2; X<3; ++X) {
@@ -111,17 +108,16 @@ namespace systems {
 			}
 		}
 
-		void spawn_mining_result_impl(const perform_mining_message &e, std::string tag) {
-			if (tag == "") return;
+		static void spawn_mining_result_impl(const perform_mining_message &e, const std::string &tag) {
+			if (tag.empty()) return;
 
 			auto [X,Y,Z] = idxmap(e.target_idx);
 
-			auto finder = get_item_def(tag);
+			const auto finder = get_item_def(tag);
 			if (finder != nullptr) {
-				//std::cout << "Topology system - producing a [" << tag << "]";
-				auto mat = material(e.target_idx);
+				const auto mat = material(e.target_idx);
 				if (tag == "ore") {
-					for (const std::string &metal : get_material(mat)->ore_materials) {
+					for (const auto &metal : get_material(mat)->ore_materials) {
 						const auto metal_finder = get_material_by_tag(metal);
 						spawn_item_on_ground(X, Y, Z, tag, metal_finder, 3, 100, 0, "Mining");
 					}
@@ -135,27 +131,20 @@ namespace systems {
 			}
 		}
 
-		void spawn_mining_result(const perform_mining_message &e) {
-			const std::string mining_result = get_material(material(e.target_idx))->mines_to_tag;
-			const std::string mining_result2 = get_material(material(e.target_idx))->mines_to_tag_second;
-
-			//std::cout << "Topology - mines to [" << mining_result << "], [" << mining_result2 << "]";
+		static void spawn_mining_result(const perform_mining_message &e) {
+			const auto mining_result = get_material(material(e.target_idx))->mines_to_tag;
+			const auto mining_result2 = get_material(material(e.target_idx))->mines_to_tag_second;
 
 			spawn_mining_result_impl(e, mining_result);
 			spawn_mining_result_impl(e, mining_result2);
 		}
 
-		void build_construction(const perform_construction_message &e) {
-			std::cout << "Received a build construction message\n";
-			std::cout << "Entity ID: " << e.entity_id << "\n";
-			std::cout << "Tag: " << e.tag << "\n";
-			std::cout << "Material: " << e.material << "\n";
-
-			bool entity_should_be_deleted = true;
-			auto construction_pos = entity(e.entity_id)->component<position_t>();
-			const int index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
+		static void build_construction(const perform_construction_message &e) {
+			auto entity_should_be_deleted = true;
+			const auto construction_pos = entity(e.entity_id)->component<position_t>();
+			const auto index = mapidx(construction_pos->x, construction_pos->y, construction_pos->z);
 			auto finder = get_building_def(e.tag);
-			for (const building_provides_t &provides : finder->provides) {
+			for (const auto &provides : finder->provides) {
 
 				if (provides.provides == provides_wall) {
 					set_tile_type(index, tile_type::WALL);
@@ -204,7 +193,6 @@ namespace systems {
 					// Add an entry_trigger and a position to it
 					const auto [x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_cage });
-					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
 				}
 				else if (provides.provides == provides_stonefall_trap) {
@@ -212,7 +200,6 @@ namespace systems {
 					// Add an entry_trigger and a position to it
 					const auto &[x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_stonefall });
-					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
 				}
 				else if (provides.provides == provides_blades_trap) {
@@ -220,7 +207,6 @@ namespace systems {
 					// Add an entry_trigger and a position to it
 					const auto &[x,y,z] = idxmap(index);
 					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_blade });
-					// TODO: emit_deferred(triggers_changes_message{});
 					entity_should_be_deleted = false;
 				}
 				else if (provides.provides == provides_spikes) {
@@ -233,10 +219,10 @@ namespace systems {
 			}
 
 			tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
-			for (int Z = -2; Z<3; ++Z) {
-				for (int Y = -2; Y<3; ++Y) {
-					for (int X = -2; X<3; ++X) {
-						tile_calculate(construction_pos->x + X, construction_pos->y + Y, construction_pos->z + Z);
+			for (auto inner_z = -2; inner_z<3; ++inner_z) {
+				for (auto inner_y = -2; inner_y<3; ++inner_y) {
+					for (auto inner_x = -2; inner_x<3; ++inner_x) {
+						tile_calculate(construction_pos->x + inner_x, construction_pos->y + inner_y, construction_pos->z + inner_z);
 					}
 				}
 			}
@@ -246,10 +232,8 @@ namespace systems {
 				delete_entity(e.entity_id);
 				std::cout << "Deleted entity\n";
 			}
-			// TODO: emit(renderables_changed_message{});
 			render::models_changed = true;
 			chunks::mark_chunk_dirty_by_tileidx(index);
-			// TODO: emit(map_changed_message{});
 		}
 
 		void run(const double &duration_ms) {
