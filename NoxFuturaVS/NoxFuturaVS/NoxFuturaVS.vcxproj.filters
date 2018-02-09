@@ -771,6 +771,9 @@
     <ClCompile Include="..\..\src\global_assets\debug_flags.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bengine\color_t.cpp">
+      <Filter>Source Files\bengine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">

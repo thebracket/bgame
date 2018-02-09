@@ -1,3 +1,4 @@
+#include "../../bengine/color_t.hpp"
 #include "design_buildings.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
