@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["mason"] = {
     name = "Masonry",
+    description = "A workshop consisting of hammers, chisels, measuring devices - all designed for shaping rock into useful (but uncomfortable) items.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "mason.xp",

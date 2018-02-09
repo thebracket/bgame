@@ -26,42 +26,49 @@ buildings = {
 	},
 	wall = {
 		name = "Wall", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
+		description = "A solid wall.",
 		provides = { wall={energy_cost=0} },
 		render_rex = "wall.xp",
 		vox = voxelId("wall")
 	},
 	floor = {
 		name = "Floor", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
+		description = "A solid floor.",
 		provides = { floor={energy_cost=0} },
 		render_rex = "floor.xp",
 		vox = voxelId("floor")
 	},
 	stairs_up = {
-		name = "Up Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
+		name = "Up Ladder", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
+		description = "A ladder going up",
 		provides = { stairs_up={energy_cost=0} },
 		render_rex = "up_stairs.xp",
 		vox=voxelId("stairs_up")		
 	},
 	stairs_down = {
-		name = "Down Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
+		name = "Down Ladder", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
+		description = "A ladder going down",
 		provides = { stairs_down={energy_cost=0} },
 		render_rex = "down_stairs.xp",
 		vox=voxelId("stairs_down")
 	},
 	stairs_updown = {
-		name = "Spiral Stairs", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
+		name = "Up/Down Ladder", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 },
+		description = "A ladder going both up and down.",
 		provides = { stairs_updown={energy_cost=0} },
 		render_rex = "updown_stairs.xp",
 		vox=voxelId("stairs_updown")
 	},
 	ramp = {
 		name = "Ramp", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
+		description = "An upwards ramp",
 		provides = { ramp={energy_cost=0} },
 		render_rex = "ramp.xp",
 		vox=voxelId("ramp")
 	},
 	bridge = {
 		name = "Bridge", components = { { item="block", qty=1 } }, skill = { name="Construction", difficulty=10 }, structure=true,
+		description = "A bridge that can be linked to an input to retract.",
 		provides = { ramp={energy_cost=0} },
 		render_rex = "floor.xp",
 		vox=voxelId("floor")

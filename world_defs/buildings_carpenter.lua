@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["carpenter"] = {
     name = "Carpentry Workshop",
+    description = "A simple carpentry workshop, designed for the production of basic wooden goods. Includes all the tools you need to damage your hands.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "carpenter.xp",
@@ -146,6 +147,7 @@ reactions["make_wood_dart"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["intermediate_carpenter"] = {
     name = "Intermediate Carpentry Workshop",
+    description = "A more advanced carpentry workshop, including a lathe and complex wood shaping machinery.",
     components = { { item="block", qty=1 }, {item="simple_lathe", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "carpenter_intermediate.xp"

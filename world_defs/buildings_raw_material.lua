@@ -6,6 +6,7 @@
 
 buildings["dung_heap"] = {
     name = "Dung Heap",
+    description = "A smelly pile of manure.",
     components = { { item="block", qty=1, mat_type="wood" } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "dungheap.xp",
@@ -28,6 +29,7 @@ reactions["make-manure"] = {
 
 buildings["sawmill"] = {
     name = "Sawmill",
+    description = "Two tables and a large cutting saw, designed for turning wooden logs into usable planks.",
     components = { { item="wood_log", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "sawmill.xp",
@@ -50,6 +52,7 @@ reactions["cut_wooden_planks"] = {
 
 buildings["tanner"] = {
     name = "Tanner",
+    description = "A series of racks for hanging hide, applying tannin and turning it into good leather. Smells AWFUL.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "tanner.xp",
@@ -71,6 +74,7 @@ reactions["tan_leather"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["stonecutter"] = {
     name = "Stonecutters",
+    description = "A workshop designed to turn stone into usable blocks. Basically a guy with a hammer and chisel.",
     components = { { item="stone_boulder", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "stonecutter.xp",
@@ -93,6 +97,7 @@ reactions["cut_stone"] = {
 
 buildings["charcoal_hut"] = {
     name = "Charcoal Burner",
+    description = "A hut designed to slowly burn waste wood, until it is blackened charcoal - a very high temperature heat source when burned (and useful for drawing on sidewalks).",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "charcoal_hut.xp",
@@ -116,6 +121,7 @@ reactions["charcoal_waste"] = {
 
 buildings["smelter"] = {
     name = "Smelter",
+    description = "Smelters heat rock until metal elements inside melt and flow out.",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "smelter.xp",
@@ -138,6 +144,7 @@ reactions["smelt_ore"] = {
 
 buildings["blast_smelter"] = {
     name = "Blast Smelter",
+    description = "A high-efficiency smelter that super-heats by containing small explosions inside the building.",
     components = { { item="block", qty=1, mat_type="rock" }, { item="tool_and_die", qty=1 }, { item="mechanism", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "smelter.xp",
@@ -145,22 +152,11 @@ buildings["blast_smelter"] = {
 };
 
 ------------------------------------------------------------------------------------------------------------------------
--- Crude Oil Refinery is used to turn oil into usable substances.
-------------------------------------------------------------------------------------------------------------------------
-
-buildings["crude_refinery"] = {
-    name = "Simple Oil Refinery",
-    components = { { item="block", qty=1, mat_type="rock" }, { item="tool_and_die", qty=1 }, { item="mechanism", qty=1 } },
-    skill = { name="Construction", difficulty=12 },
-    render_rex = "refinery.xp",
-    vox = voxelId("refinery")
-};
-
-------------------------------------------------------------------------------------------------------------------------
 -- Glass furnaces heat up sand to make raw glass.
 ------------------------------------------------------------------------------------------------------------------------
 buildings["glass_furnace"] = {
     name = "Glass Furnace",
+    description = "A specialized furnace for heating sand, and melting it into glass.",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "glass_furnace.xp",
@@ -183,6 +179,7 @@ reactions["make_raw_glass"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["silicon_refinery"] = {
     name = "Silicon Refinery",
+    description = "Once processed into glass, silicon can be extracted in a pure form at a refinery. It heats the glass again, and removes impurities.",
     components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "glass_furnace.xp",
@@ -205,6 +202,7 @@ reactions["make_raw_silicon"] = {
 
 buildings["kiln"] = {
     name = "Kiln",
+    description = "An oven for baking clay.",
     components = { { item="clay", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "kiln.xp",
@@ -227,6 +225,7 @@ reactions["bake_bricks"] = {
 
 buildings["loom"] = {
     name = "Loom",
+    description = "A wooden frame for spinning thread, and then knitting thread together into cloth.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "loom.xp",
@@ -288,6 +287,7 @@ reactions["weave_thread_kenaf"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["oil_refinery"] = {
     name = "Oil Refinery",
+    description = "An oil tank, in which oil settles by molecular weight. Different products are then extracted from different depths.",
     components = { { item="block", qty=1 }, { item="tool_and_die", qty=1 }, { item="oil_separation_tank", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "refinery.xp",
@@ -311,5 +311,5 @@ reactions["refine_oil"] = {
     skill = "Weaving",
     difficulty = 10,
     automatic = true,
-    power_drain = 20
+    power_drain = 20,
 };

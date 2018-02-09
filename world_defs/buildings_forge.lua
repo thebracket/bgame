@@ -6,6 +6,7 @@
 
 buildings["primitive_forge"] = {
     name = "Primitive Forge",
+    description = "A simple forge - hammer, anvil, heat source and water. Everything you need for primitive metal equipment.",
     components = { { item="block", qty=1, mat_type="rock" } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "forge.xp",
@@ -218,6 +219,7 @@ reactions["make_metal_sickle"] = {
 
 buildings["intermediate_forge"] = {
     name = "Intermediate Forge",
+    description = "A more advanced forge, suitable for making early renaissance equipment. It includes advanced metal shaping machinery.",
     components = { { item="block", qty=1, mat_type="rock" }, { item="simple_lathe", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "forge.xp",
@@ -230,6 +232,7 @@ buildings["intermediate_forge"] = {
 
 buildings["advanced_forge"] = {
     name = "Advanced Forge",
+    description = "A renaissance-era forge, capable of milling precise tools.",
     components = { { item="block", qty=4, mat_type="rock" }, { item="precision_tools", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "forge.xp",
@@ -464,6 +467,7 @@ reactions["make_musket_cast"] = {
 
 buildings["foundry"] = {
     name = "Foundry",
+    description = "A semi-automated forge, designed for mass production of goods from templates. It can produce items up to the early-modern era.",
     components = { { item="block", qty=1, mat_type="rock" }, { item="simple_lathe", qty=1 }, { item="tool_and_die", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "forge.xp",

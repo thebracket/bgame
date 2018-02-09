@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["mechanic"] = {
     name = "Mechanic Workshop",
+    description = "A workshop dedicated to the production of mechanical devices and circuitry.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "mechanic.xp",
@@ -36,6 +37,7 @@ reactions["make_simple_circuit"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["machine_shop"] = {
     name = "Machine Shop",
+    description = "An advanced mechanic shop, capable of working on the most complex of machines.",
     components = { { item="block", qty=1 }, { item="simple_lathe", qty=1 }, { item="tool_and_die", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "mechanic.xp",

@@ -32,6 +32,7 @@ buildings["personal_survival_shelter"] = {
 
 buildings["table"] = {
     name = "Table",
+    description = "A simple table",
     components = { { item="table", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { table={energy_cost=0} },
@@ -41,6 +42,7 @@ buildings["table"] = {
 
 buildings["chair"] = {
     name = "Chair",
+    description = "A simple char",
     components = { { item="chair", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { table={energy_cost=0} },
@@ -50,6 +52,7 @@ buildings["chair"] = {
 
 buildings["door"] = {
     name = "Door",
+    description = "A simple door",
     components = { { item="door", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { door={energy_cost=0}, signal={energy_cost=0} },
@@ -59,6 +62,7 @@ buildings["door"] = {
 
 buildings["energy_door"] = {
     name = "Force Door",
+    description = "A force-field door, ideal for keeping out bad guys",
     components = { { item="door", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { door={energy_cost=10} },
@@ -68,6 +72,7 @@ buildings["energy_door"] = {
 
 buildings["bed_simple"] = {
     name = "Simple Bed",
+    description = "A simple bed frame with straw matress. Not very comfortable, and prone to weevils.",
     components = { { item="bed_item", qty=1} },
     skill = { name="Construction", difficulty=10 },
     provides = { sleep={energy_cost=0} },

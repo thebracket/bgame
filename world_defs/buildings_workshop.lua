@@ -6,6 +6,7 @@
 
 buildings["primitive_workshop"] = {
     name = "Primitive Workshop",
+    description = "A general construction workshop, used to assemble items from components.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "mechanic.xp",
@@ -348,6 +349,7 @@ reactions["make_composite_shortbow"] = {
 
 buildings["intermediate_workshop"] = {
     name = "Intermediate Workshop",
+    description = "A more advanced assembly workshop, capable of intricate assembly up to the renaissance era.",
     components = { { item="block", qty=1 }, { item="simple_lathe", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "mechanic.xp",
@@ -510,6 +512,7 @@ reactions["make_shot_wadding"] = {
 
 buildings["factory"] = {
     name = "Factory",
+    description = "A modern assembly plant, capable of constructing quite advanced items.",
     components = { { item="block", qty=1 }, { item="simple_lathe", qty=1 }, { item="tool_and_die", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "mechanic.xp",
@@ -532,6 +535,7 @@ reactions["make_fabrication_controller"] = {
 
 buildings["fabricator"] = {
     name = "Fabrication Plant",
+    description = "An automated replication system, capable of fabricating the most advanced devices.",
     components = { { item="block", qty=1 }, { item="smart_fabrication_controller", qty=1 }, { item="tool_and_die", qty=1 } },
     skill = { name="Construction", difficulty=15 },
     render_rex = "mechanic.xp",

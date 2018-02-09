@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["camp_fire"] = {
     name = "Camp Fire",
+    description = "Who doesn't like telling stories around a campfire? This is basically some wood, on fire. Surprisingly useful.",
     components = { { item="wood_log", qty=1 } },
     skill = { name="Construction", difficulty=5 },
     provides = { light={radius=5, color = colors['yellow']} },
@@ -49,6 +50,7 @@ reactions["roast_lavish_meal_on_real_fire"] = {
 
 buildings["still"] = {
     name = "Distillery",
+    description = "A set of tanks and water, designed to ferment plants into alcoholic beverages.",
     components = { { item="block", qty=2 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "still.xp",
@@ -68,6 +70,7 @@ reactions["make_booze"] = {
 
 buildings["butcher"] = {
     name = "Butcher",
+    description = "A workshop dedicated to cutting up animals into bone, meat, hide and fat. Quite disgusting. Note that building this enables hunting.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "butcher.xp",

@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["simple_chemist"] = {
     name = "Simple Chemistry Workshop",
+    description = "My first chemistry kit, nicely assembled in a room for simple Chemistry. Ideal for making explosives.",
     components = { { item="block", qty=1 }, { item="raw_glass", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "chemist.xp",
@@ -67,6 +68,7 @@ reactions["make_raw_dynamite"] = {
 ------------------------------------------------------------------------------------------------------------------------
 buildings["nitrogen_extractor"] = {
     name = "Nitrogen Extractor",
+    description = "A contraption that implements the Birkeland-Eyde process to extract nitrogen from the atmosphere. Much cleaner than using excrement.",
     components = { { item="block", qty=2 }, { item="circuit", qty=1 } },
     skill = { name="Construction", difficulty=17 },
     render_rex = "nitrogen_extractor.xp",

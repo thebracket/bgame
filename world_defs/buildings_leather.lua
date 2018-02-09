@@ -6,6 +6,7 @@
 
 buildings["leatherworker"] = {
     name = "Leatherworker",
+    description = "A workshop with all you need to create leather goods, whether practical or kinky.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "leatherworker.xp",

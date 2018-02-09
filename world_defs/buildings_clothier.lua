@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 buildings["tailor"] = {
     name = "Tailoring Workshop",
+    description = "A simple tailoring workshop, with everything you need to make basic clothing. Includes band-aids for needle accidents.",
     components = { { item="block", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "tailor.xp",
