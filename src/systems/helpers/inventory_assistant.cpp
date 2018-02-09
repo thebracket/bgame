@@ -12,7 +12,6 @@
 #include "../../raws/reactions.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/building_def_t.hpp"
-#include "../../raws/reactions.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "../../raws/clothing.hpp"
 #include "../../raws/defs/clothing_t.hpp"
@@ -26,15 +25,15 @@ using namespace buildings;
 namespace inventory {
 
 	int blocks_available() {
-		int result = 0;
-		each_without<claimed_t, item_t>([&result](bengine::entity_t &e, item_t &i) {
+		auto result = 0;
+		each_without<claimed_t, item_t>([&result](entity_t &e, item_t &i) {
 			if (i.item_tag == "block") ++result;
 		});
 		return result;
 	}
 
 	bool is_ammo_available(const std::string &ammo_type) {
-		int result = 0;
+		auto result = 0;
 		each_without<claimed_t, item_t, item_ammo_t>([&result, &ammo_type](bengine::entity_t &e, item_t &i, item_ammo_t &ammo) {
 			if (get_item_def(i.item_tag)->ammo == ammo_type) ++result;
 		});
@@ -57,7 +56,7 @@ namespace inventory {
 
 		if (distance_sorted.empty()) return 0;
 
-		std::size_t closest_matching_id = distance_sorted.begin()->second;
+		const auto closest_matching_id = distance_sorted.begin()->second;
 		systems::inventory_system::claim_item(closest_matching_id, true );
 
 		return closest_matching_id;
@@ -122,15 +121,14 @@ namespace inventory {
 	std::vector<std::pair<std::string, std::string>> get_available_reactions() {
 		std::vector<std::pair<std::string, std::string>> result;
 
-		each_reaction([&result](std::string rtag, reaction_t * it) {
-			const std::string tag = rtag;
-			const std::string workshop = it->workshop;
-			const std::string name = it->name;
+		each_reaction([&result](const std::string &rtag, const reaction_t * it) {
+			const auto workshop = it->workshop;
+			const auto name = it->name;
 
 			if (!it->automatic) {
-				bool possible = false;
+				auto possible = false;
 				// Does a workshop exist?
-				each<building_t>([&possible, &workshop](bengine::entity_t &e, building_t &b) {
+				each<building_t>([&possible, &workshop](entity_t &e, building_t &b) {
 					if (b.complete && workshop == b.tag) possible = true;
 				});
 
@@ -151,7 +149,7 @@ namespace inventory {
 					}
 
 					if (possible) {
-						result.push_back(std::make_pair(tag, name));
+						result.push_back(std::make_pair(rtag, name));
 					}
 				}
 			}
@@ -165,10 +163,10 @@ namespace inventory {
 		auto e = bengine::entity(id);
 		if (!e) return nullptr;
 
-		auto pos = e->component<position_t>();
+		const auto pos = e->component<position_t>();
 		if (!pos)
 		{
-			auto stored = e->component<item_stored_t>();
+			const auto stored = e->component<item_stored_t>();
 			if (stored) {
 				auto container = bengine::entity(stored->stored_in);
 				if (container) {
@@ -176,7 +174,7 @@ namespace inventory {
 				}
 			}
 			else {
-				auto carried = e->component<item_carried_t>();
+				const auto carried = e->component<item_carried_t>();
 				if (carried) {
 					auto holder = bengine::entity(carried->carried_by);
 					if (holder) {
@@ -197,7 +195,7 @@ namespace inventory {
 
 	int available_items_by_tag(const std::string &tag) {
 		int result = 0;
-		each_without<claimed_t, item_t>([&result, &tag](bengine::entity_t &e, item_t &i) {
+		each_without<claimed_t, item_t>([&result, &tag](entity_t &e, item_t &i) {
 			if (i.item_tag == tag) ++result;
 		});
 		return result;
@@ -206,7 +204,7 @@ namespace inventory {
 	int available_items_by_reaction_input(const reaction_input_t &input) {
 		int result = 0;
 		//std::cout << "Looking for item type: " << input.tag << "\n";
-		each_without<claimed_t, item_t>([&result, &input](bengine::entity_t &e, item_t &i) {
+		each_without<claimed_t, item_t>([&result, &input](entity_t &e, item_t &i) {
 			//std::cout << "Evaluating " << i.item_tag << "\n";
 			if ((input.tag == "any" || i.item_tag == input.tag)) {
 				//std::cout << "Available items tag hit - " << input.tag << "\n";
@@ -232,7 +230,7 @@ namespace inventory {
 
 	std::size_t claim_item_by_tag(const std::string &tag) {
 		std::size_t result = 0;
-		each_without<claimed_t, item_t>([&result, &tag](bengine::entity_t &e, item_t &i) {
+		each_without<claimed_t, item_t>([&result, &tag](entity_t &e, item_t &i) {
 			if (i.item_tag == tag) result = e.id;
 		});
 		if (result != 0) {
@@ -243,7 +241,7 @@ namespace inventory {
 
 	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim) {
 		std::size_t result = 0;
-		each_without<claimed_t, item_t>([&result, &input](bengine::entity_t &e, item_t &i) {
+		each_without<claimed_t, item_t>([&result, &input](entity_t &e, item_t &i) {
 			if ((input.tag == "any" || i.item_tag == input.tag)) {
 				auto ok = true;
 				if (input.required_material != 0) {
@@ -266,17 +264,17 @@ namespace inventory {
 	}
 
 	bool is_better_armor(const std::string &item_tag, std::unordered_map<int, float> &ac_by_loc) {
-		auto finder = get_clothing_by_tag(item_tag);
+		const auto finder = get_clothing_by_tag(item_tag);
 		if (!finder) return false;
 
-		const float item_ac = finder->armor_class;
-		item_location_t loc = INVENTORY;
+		const auto item_ac = finder->armor_class;
+		auto loc = INVENTORY;
 		if (finder->slot == "head") loc = HEAD;
 		if (finder->slot == "torso") loc = TORSO;
 		if (finder->slot == "legs") loc = LEGS;
 		if (finder->slot == "shoes") loc = FEET;
 
-		auto tester = ac_by_loc.find(loc);
+		const auto tester = ac_by_loc.find(loc);
 		if (tester == ac_by_loc.end()) {
 			return true;
 		}
