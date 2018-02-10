@@ -117,7 +117,7 @@ namespace systems {
 					}
 					a.current_path.reset();
 					inventory_system::pickup_item(a.current_tool, e.id);
-					inventory_system::claim_item(a.current_tool, false);
+					//inventory_system::claim_item(a.current_tool, false);
 					a.step = ai_tag_work_architect::architect_steps::GOTO_SITE;
 					return;
 				}
