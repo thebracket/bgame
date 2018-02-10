@@ -11,6 +11,7 @@
 #include "../mining_system.hpp"
 #include "../../helpers/inventory_assistant.hpp"
 #include "templated_work_steps_t.hpp"
+#include "../architecture_system.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -25,8 +26,9 @@ namespace systems {
 		namespace jobs_board {
 			void evaluate_architecture(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 
-				const auto build_distance = architecure_map.get(mapidx(pos));
-				if (build_distance > MAX_DIJSTRA_DISTANCE - 1) return; // Nothing to build
+				if (designations->architecture.empty()) return;
+				const auto build_distance = architecture_system::architecture_map[mapidx(pos)].distance;
+				if (build_distance == std::numeric_limits<uint8_t>::max()) return; // Nothing to build
 
 				if (inventory::blocks_available() == 0) return; // No blocks
 
@@ -37,6 +39,8 @@ namespace systems {
 		static bool first_run = true;
 
 		void run(const double &duration_ms) {
+			using namespace architecture_system;
+
 			if (first_run) {
 				first_run = false;
 				register_job_offer<ai_tag_work_architect>(jobs_board::evaluate_architecture);
@@ -107,33 +111,73 @@ namespace systems {
 					return;
 				}
 				else if (a.step == ai_tag_work_architect::architect_steps::GOTO_SITE) {
-					const int idx = mapidx(pos);
-					const auto distance = architecure_map.get(idx);
-					if (distance >= MAX_DIJSTRA_DISTANCE) {
-						if (a.current_tool > 0) {
-							inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
-							inventory_system::claim_item(a.current_tool, false);
-						}
-						work.cancel_work_tag(e);
-						return;
-					}
-					if (distance < 2) {
+					const auto idx = mapidx(pos.x, pos.y, pos.z);
+					if (architecture_map[idx].distance == 0) {
+						// We're at a minable site
 						a.step = ai_tag_work_architect::architect_steps::BUILD;
 						return;
 					}
-					position_t destination = architecure_map.find_destination(pos);
-					move_to(e.id, destination);
+					else if (architecture_map[idx].distance == std::numeric_limits<uint8_t>::max()) {
+						// There's nothing to do - someone else must have done it.
+						std::cout << "Cancelling because of lack of architecture tasks\n";
+						inventory_system::pickup_item(a.current_tool, e.id);
+						inventory_system::claim_item(a.current_tool, false);
+						work.cancel_work_tag(e);
+						return;
+					}
+					else {
+						// Path towards the work
+						int current_direction = 0;
+						uint8_t min_value = std::numeric_limits<uint8_t>::max();
+						if (architecture_map[mapidx(pos.x, pos.y - 1, pos.z)].distance < min_value && flag(idx, CAN_GO_NORTH)) {
+							min_value = architecture_map[mapidx(pos.x, pos.y - 1, pos.z)].distance;
+							current_direction = 1;
+						}
+						if (architecture_map[mapidx(pos.x, pos.y + 1, pos.z)].distance < min_value && flag(idx, CAN_GO_SOUTH)) {
+							min_value = architecture_map[mapidx(pos.x, pos.y + 1, pos.z)].distance;
+							current_direction = 2;
+						}
+						if (architecture_map[mapidx(pos.x - 1, pos.y, pos.z)].distance < min_value && flag(idx, CAN_GO_WEST)) {
+							min_value = architecture_map[mapidx(pos.x - 1, pos.y, pos.z)].distance;
+							current_direction = 3;
+						}
+						if (architecture_map[mapidx(pos.x + 1, pos.y, pos.z)].distance < min_value && flag(idx, CAN_GO_EAST)) {
+							min_value = architecture_map[mapidx(pos.x + 1, pos.y, pos.z)].distance;
+							current_direction = 4;
+						}
+						if (architecture_map[mapidx(pos.x, pos.y, pos.z - 1)].distance < min_value && flag(idx, CAN_GO_DOWN)) {
+							min_value = architecture_map[mapidx(pos.x, pos.y, pos.z - 1)].distance;
+							current_direction = 5;
+						}
+						if (architecture_map[mapidx(pos.x, pos.y, pos.z + 1)].distance < min_value && flag(idx, CAN_GO_UP)) {
+							min_value = architecture_map[mapidx(pos.x, pos.y, pos.z + 1)].distance;
+							current_direction = 6;
+						}
+
+						if (current_direction == 0) {
+							std::cout << "Direction 0 - drop tools\n";
+							work.cancel_work_tag(e);
+							return;
+						}
+
+						std::cout << "Direction: " << current_direction << "\n";
+						position_t destination = pos;
+						switch (current_direction) {
+						case 1: --destination.y; break;
+						case 2: ++destination.y; break;
+						case 3: --destination.x; break;
+						case 4: ++destination.x; break;
+						case 5: --destination.z; break;
+						case 6: ++destination.z; break;
+						}
+						movement::move_to(e.id, destination);
+						std::cout << "Emitted entity movement - " << e.id << "\n";
+					}
 					return;
 				}
 				else if (a.step == ai_tag_work_architect::architect_steps::BUILD) {
-					int bidx = 0;
-
-					// Are we standing on the build site, adjacent to it?
-					if (designations->architecture.find(mapidx(pos)) != designations->architecture.end()) bidx = mapidx(pos);
-					if (bidx == 0 && designations->architecture.find(mapidx(pos.x - 1, pos.y, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x - 1, pos.y, pos.z);
-					if (bidx == 0 && designations->architecture.find(mapidx(pos.x + 1, pos.y, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x + 1, pos.y, pos.z);
-					if (bidx == 0 && designations->architecture.find(mapidx(pos.x, pos.y - 1, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x, pos.y - 1, pos.z);
-					if (bidx == 0 && designations->architecture.find(mapidx(pos.x, pos.y + 1, pos.z)) != designations->architecture.end()) bidx = mapidx(pos.x, pos.y + 1, pos.z);
+					const int idx = mapidx(pos);
+					int bidx = architecture_map[idx].target;
 
 					auto finder = designations->architecture.find(bidx);
 					if (finder != designations->architecture.end()) {
@@ -216,6 +260,7 @@ namespace systems {
 
 						designations->architecture.erase(bidx);
 						mining_system::mining_map_changed();
+						architecture_map_changed();
 						distance_map::refresh_all_distance_maps();
 						render::models_changed = true;
 						// TODO: emit(map_changed_message{});

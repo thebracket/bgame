@@ -10,7 +10,7 @@ namespace systems {
 		using namespace region;
 
 		std::array<mine_map_entry_t, REGION_WIDTH * REGION_HEIGHT * REGION_DEPTH> mining_map;
-		bool dirty = true;
+		static bool dirty = true;
 
 		static void walk_mining_map(const int x, const int y, const int z, const int target, const int distance) {
 			if (distance > 253) return; // bail out because we've gone too far
@@ -32,13 +32,13 @@ namespace systems {
 
 		static void make_mining_map() {
 			// This builds a map of available mining opportunities, using what is basically a Dijkstra map (flow map).
-			auto filler = mine_map_entry_t{ std::numeric_limits<uint8_t>::max(), -1 };
+			const auto filler = mine_map_entry_t{ std::numeric_limits<uint8_t>::max(), -1 };
 			std::fill(mining_map.begin(), mining_map.end(), filler);
 
 			std::vector<std::tuple<int, int, int, int>> starting_points; // x,y,z,operation
 			for (const auto &operation : mining_designations->mining_targets) {
-				const int idx = operation.first;
-				const uint8_t type = operation.second;
+				const auto idx = operation.first;
+				const auto type = operation.second;
 				auto[x, y, z] = idxmap(idx);
 
 				if (type == MINE_DIG) {

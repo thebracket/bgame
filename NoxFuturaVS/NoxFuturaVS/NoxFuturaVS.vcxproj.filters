@@ -780,6 +780,9 @@
     <ClCompile Include="..\..\src\global_assets\building_designations.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\architecture_system.cpp">
+      <Filter>Source Files\systems\ai</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1771,6 +1774,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\global_assets\building_designations.hpp">
       <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\architecture_system.hpp">
+      <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,12 +12,12 @@
 #include "../../components/name.hpp"
 #include "../../components/position.hpp"
 #include "../../components/items/item.hpp"
-#include "../../components/construct_container.hpp"
+#include "../../components/buildings/construct_container.hpp"
 #include "../../components/items/item_stored.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
-#include "../../components/building.hpp"
-#include "../../components/bridge.hpp"
+#include "../../components/buildings/building.hpp"
+#include "../../components/buildings/bridge.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../global_assets/game_config.hpp"
@@ -26,6 +26,7 @@
 #include "../../global_assets/farming_designations.hpp"
 #include "../../global_assets/debug_flags.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../ai/architecture_system.hpp"
 
 namespace systems {
 	namespace tooltips {
@@ -77,7 +78,7 @@ namespace systems {
 
 				if (debug::show_dijkstra) {
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Mining distance: " + std::to_string(mining_system::mining_map[tile_idx].distance), color_yellow));
-					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Architecture distance: " + std::to_string(distance_map::architecure_map.get(tile_idx)), color_yellow));
+					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Architecture distance: " + std::to_string(architecture_system::architecture_map[tile_idx].distance), color_yellow));
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Hunting distance: " + std::to_string(distance_map::huntables_map.get(tile_idx)), color_yellow));
 				}
 

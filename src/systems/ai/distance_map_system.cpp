@@ -7,8 +7,6 @@
 #include "../../components/buildings/construct_provides_sleep.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../components/items/item.hpp"
-#include "../helpers/inventory_assistant.hpp"
 
 namespace systems {
 	namespace distance_map {
@@ -19,7 +17,6 @@ namespace systems {
 		dijkstra_map butcherables_map;
 		dijkstra_map bed_map;
 		dijkstra_map settler_map;
-		dijkstra_map architecure_map;
 		dijkstra_map levers_map;
 		bool dijkstra_debug = false;
 
@@ -27,7 +24,6 @@ namespace systems {
 		static bool butcherables_dirty = true;
 		static bool beds_dirty = true;
 		static bool settlers_dirty = true;
-		static bool architecture_dirty = true;
 		static bool levers_dirty = true;
 
 		using namespace bengine;
@@ -40,10 +36,6 @@ namespace systems {
 			huntables_dirty = true;
 		}
 
-		void refresh_architecture_map() {
-			architecture_dirty = true;
-		}
-
 		void refresh_butcherables_map() {
 			butcherables_dirty = true;
 		}
@@ -51,7 +43,6 @@ namespace systems {
 		void refresh_all_distance_maps() {
 			beds_dirty = true;
 			huntables_dirty = true;
-			architecture_dirty = true;
 			butcherables_dirty = true;
 		}
 
@@ -87,14 +78,6 @@ namespace systems {
 			settler_map.update(settlers);
 		}
 
-		void update_architecure_map() {
-			std::vector<int> targets;
-			for (auto &it : designations->architecture) {
-				targets.emplace_back(it.first);
-			}
-			architecure_map.update_architecture(targets);
-		}		
-
 		void update_levers_map() {
 			std::vector<int> targets;
 			for (auto it = designations->levers_to_pull.begin(); it != designations->levers_to_pull.end(); ++it) {
@@ -127,11 +110,6 @@ namespace systems {
 			if (settlers_dirty) {
 				update_settler_map();
 				settlers_dirty = false;
-			}
-
-			if (architecture_dirty) {
-				update_architecure_map();
-				architecture_dirty = false;
 			}
 
 			if (levers_dirty) {

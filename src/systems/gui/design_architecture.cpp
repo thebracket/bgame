@@ -6,6 +6,7 @@
 #include "../../components/buildings/bridge.hpp"
 #include "../../planet/region/region.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../ai/architecture_system.hpp"
 
 namespace systems {
 	namespace design_architecture {
@@ -94,7 +95,7 @@ namespace systems {
 							designations->architecture[idx] = architecture_mode;
 							if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
 							//emit(map_dirty_message{});
-							distance_map::refresh_architecture_map();
+							architecture_system::architecture_map_changed();
 						}
 						else {
 							bool interior = false;
@@ -107,7 +108,7 @@ namespace systems {
 								const int idx = mapidx(x, y, mouse_wz);
 								designations->architecture[idx] = architecture_mode;
 								if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
-								distance_map::refresh_architecture_map();
+								architecture_system::architecture_map_changed();
 							}
 						}
 					}
@@ -131,7 +132,7 @@ namespace systems {
 						}
 					}
 					designations->architecture.erase(idx);
-					distance_map::refresh_architecture_map();
+					architecture_system::architecture_map_changed();
 				}
 			}
 

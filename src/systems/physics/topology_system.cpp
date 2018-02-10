@@ -17,6 +17,7 @@
 #include "../ai/mining_system.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../components/mining/mining_designations.hpp"
+#include "../ai/architecture_system.hpp"
 
 using namespace bengine;
 
@@ -274,6 +275,7 @@ namespace systems {
 				}
 				mining_system::mining_map_changed();
 				distance_map::refresh_all_distance_maps();
+				architecture_system::architecture_map_changed();
 			});
 
 			construction.process_all(build_construction);

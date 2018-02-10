@@ -12,6 +12,7 @@
 #include "../../helpers/inventory_assistant.hpp"
 #include "templated_work_steps_t.hpp"
 #include "../../../global_assets/rng.hpp"
+#include "../architecture_system.hpp"
 
 namespace systems {
 	namespace ai_mining {
@@ -23,7 +24,7 @@ namespace systems {
 
 		namespace jobs_board {
 			void evaluate_mining(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-				auto designation = e.component<designated_miner_t>();
+				const auto designation = e.component<designated_miner_t>();
 				if (!designation) return; // Not a miner - so no jobs for you!
 
 				const auto idx = mapidx(pos);
@@ -124,8 +125,6 @@ namespace systems {
 				}
 				movement::move_to(e.id, destination);
 				std::cout << "Emitted entity movement - " << e.id << "\n";
-
-				return;
 			}
 		}
 
@@ -149,6 +148,7 @@ namespace systems {
 				topology::perform_mining(target_idx, target_operation, static_cast<int>(pos.x), static_cast<int>(pos.y), pos.z);
 				mining_designations->mining_targets.erase(target_idx);
 				mining_system::mining_map_changed();
+				architecture_system::architecture_map_changed();
 				work.cancel_work_tag(e);
 			}
 		}

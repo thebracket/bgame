@@ -20,6 +20,7 @@
 #include "ai/wildlife_population.hpp"
 #include "ai/sentient_ai_system.hpp"
 #include "ai/mining_system.hpp"
+#include "ai/architecture_system.hpp"
 #include "ai/inventory_system.hpp"
 #include "ai/stockpile_system.hpp"
 #include "ai/workflow_system.hpp"
@@ -83,12 +84,7 @@
 #include "mouse.hpp"
 #include "../global_assets/game_mode.hpp"
 #include <boost/container/flat_map.hpp>
-
-#ifdef _MSC_VER
-import debug_flags;
-#else
 #include "../global_assets/debug_flags.hpp"
-#endif
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
@@ -167,6 +163,7 @@ namespace systems {
 	constexpr int AI_FARM_PLANT = 74;
 	constexpr int AI_FARM_WATER = 75;
 	constexpr int AI_FARM_WEED = 76;
+	constexpr int ARCHITECTURE_SYSTEM = 77;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -266,6 +263,7 @@ namespace systems {
 		system_names[AI_FARM_PLANT] = "Farm - Plant";
 		system_names[AI_FARM_WATER] = "Farm - Water";
 		system_names[AI_FARM_WEED] = "Farm - Weed";
+		system_names[ARCHITECTURE_SYSTEM] = "Architecture System";
 		game_master_mode = PLAY;
     }
 
@@ -317,6 +315,7 @@ namespace systems {
 			if (day_elapsed) run_system(sentient_ai_system::run, duration_ms, SENTIENT_AI_SYSTEM);
 			run_system(corpse_system::run, duration_ms, CORPSE_SYSTEM);
 			run_system(mining_system::run, duration_ms, MINING_SYSTEM);
+			run_system(architecture_system::run, duration_ms, ARCHITECTURE_SYSTEM);
 			run_system(stockpile_system::run, duration_ms, STOCKPILE_SYSTEM);
 			run_system(power::run, duration_ms, POWER_SYSTEM);
 			run_system(workflow_system::run, duration_ms, WORKFLOW_SYSTEM);
