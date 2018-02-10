@@ -268,6 +268,7 @@ namespace systems {
 					}
 					else {
 						inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z );
+						inventory_system::claim_item(a.current_tool, false);
 						work.cancel_work_tag(e);
 						return;
 					}
