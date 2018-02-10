@@ -1,11 +1,9 @@
-#include "stockpile_system.hpp"
 #include "../helpers/workflow_assistant.hpp"
-#include "../../components/building.hpp"
+#include "../../components/buildings/building.hpp"
 #include "../../raws/buildings.hpp"
-#include "../../raws/defs/building_def_t.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
-#include "../../global_assets/game_designations.hpp"
+#include "../../global_assets/building_designations.hpp"
 
 namespace systems {
 	namespace workflow_system {
@@ -50,11 +48,11 @@ namespace systems {
 				});
 
 				// Erase all completed jobs
-				designations->build_orders.erase(
-					std::remove_if(designations->build_orders.begin(),
-						designations->build_orders.end(),
+				building_designations->build_orders.erase(
+					std::remove_if(building_designations->build_orders.begin(),
+						building_designations->build_orders.end(),
 						[](auto order_pair) { return order_pair.first == 0; }),
-					designations->build_orders.end());
+					building_designations->build_orders.end());
 
 				// Not dirty anymore!
 				dirty = false;

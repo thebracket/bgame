@@ -5,7 +5,7 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/utility.hpp>
-#include "../bengine/ecs_impl.hpp"
+#include "../../bengine/ecs_impl.hpp"
 
 struct construct_container_t {
 	construct_container_t() {}

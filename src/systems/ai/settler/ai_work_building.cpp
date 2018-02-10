@@ -1,22 +1,22 @@
 #include "ai_work_building.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../global_assets/game_designations.hpp"
 #include "../../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../helpers/inventory_assistant.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/buildings.hpp"
 #include "../../../raws/defs/building_def_t.hpp"
-#include "../../../components/building.hpp"
-#include "../../../components/construct_provides_sleep.hpp"
+#include "../../../components/buildings/building.hpp"
+#include "../../../components/buildings/construct_provides_sleep.hpp"
 #include "../../../components/lightsource.hpp"
-#include "../../../components/construct_provides_door.hpp"
+#include "../../../components/buildings/construct_provides_door.hpp"
 #include "../../../components/lever.hpp"
-#include "../../../components/receives_signal.hpp"
-#include "../../../components/smoke_emitter.hpp"
+#include "../../../components/buildings/receives_signal.hpp"
+#include "../../../components/buildings/smoke_emitter.hpp"
 #include "../../physics/visibility_system.hpp"
 #include "../workflow_system.hpp"
 #include "../../physics/topology_system.hpp"
 #include "../../gui/particle_system.hpp"
+#include "../../../global_assets/building_designations.hpp"
 
 namespace systems {
 	namespace ai_building {
@@ -27,9 +27,9 @@ namespace systems {
 
 		namespace jobs_board {
 			void evaluate_building(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-				if (designations->buildings.empty()) return; // Nothing to do
+				if (building_designations->buildings.empty()) return; // Nothing to do
 
-				for (const auto &designation : designations->buildings) {
+				for (const auto &designation : building_designations->buildings) {
 					const auto building_id = designation.building_entity;
 					const auto building = entity(building_id);
 					if (building != nullptr && building->component<claimed_t>() == nullptr) {
@@ -75,27 +75,27 @@ namespace systems {
 			else
 			{
 				// Building doesn't exist - bail out and remove it.
-				designations->buildings.pop_back();
+				building_designations->buildings.pop_back();
 				work.cancel_work_tag(e);
 			}
 		}
 
 		inline void select_building(entity_t &e, ai_tag_work_building &b, ai_tag_my_turn_t &t, position_t &pos) {
 			// Select the building
-			if (designations->buildings.empty()) {
+			if (building_designations->buildings.empty()) {
 				// If there are no buildings - bail out.
 				work.cancel_work_tag(e);
 			}
-			else if (designations->buildings.size() == 1)
+			else if (building_designations->buildings.size() == 1)
 			{
 				// There's only one building, so we select it
-				b.building_target = designations->buildings.back();
+				b.building_target = building_designations->buildings.back();
 				evaluate_candidate_building(e, b, t, pos);
 			} else
 			{
 				// Select a random building from the list; this is to prevent getting stuck in loops for buildings we can't get to
-				const auto roll = rng.roll_dice(1, designations->buildings.size()) - 1;
-				b.building_target = designations->buildings[roll];
+				const auto roll = rng.roll_dice(1, building_designations->buildings.size()) - 1;
+				b.building_target = building_designations->buildings[roll];
 				evaluate_candidate_building(e, b, t, pos);
 			}
 		}
@@ -271,11 +271,11 @@ namespace systems {
 				// Become idle
 				work.cancel_work_tag(e);
 
-				designations->buildings.erase(
-					std::remove_if(designations->buildings.begin(),
-						designations->buildings.end(),
+				building_designations->buildings.erase(
+					std::remove_if(building_designations->buildings.begin(),
+						building_designations->buildings.end(),
 						[&b](building_designation_t &bt) { return bt.building_entity == b.building_target.building_entity; }),
-					designations->buildings.end()
+					building_designations->buildings.end()
 				);
 			}
 		}

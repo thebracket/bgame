@@ -5,7 +5,7 @@
 #include "../../components/sentient_ai.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/riding_t.hpp"
-#include "../../components/turret_t.hpp"
+#include "../../components/buildings/turret_t.hpp"
 #include "../../components/initiative.hpp"
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../components/game_stats.hpp"

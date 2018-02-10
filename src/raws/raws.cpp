@@ -17,7 +17,6 @@
 #include "materials.hpp"
 #include "../global_assets/spatial_db.hpp"
 #include "graphviz.hpp"
-#include "../global_assets/game_config.hpp"
 #include "defs/item_def_t.hpp"
 #include "defs/material_def_t.hpp"
 #include "defs/clothing_t.hpp"

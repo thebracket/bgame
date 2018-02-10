@@ -4,10 +4,11 @@
 #include "position.hpp"
 #include "designations.hpp"
 #include <cereal/types/polymorphic.hpp>
+#include <cereal/types/vector.hpp>
 #include <cereal/types/array.hpp>
 #include "../bengine/ecs_impl.hpp"
-#include "../components/position.hpp"
 #include "../bengine/path_finding.hpp"
+#include "../components/helpers/reaction_task_t.hpp"
 
 constexpr int NUMBER_OF_JOB_CATEGORIES = 10;
 constexpr int JOB_MINING = 0;

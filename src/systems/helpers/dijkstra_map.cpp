@@ -36,7 +36,7 @@ namespace systems {
 			});
 		}
 
-		void dijkstra_map::update_async(int thread_id, const std::vector<int> &starting_points)
+		void dijkstra_map::update_async(int thread_id, const std::vector<int> starting_points)
 		{
 			using namespace region;
 			std::vector<int16_t> new_map;
@@ -85,7 +85,7 @@ namespace systems {
 			distance_map = new_map;
 		}
 
-		void dijkstra_map::update_architecture_async(const std::vector<int> &starting_points)
+		void dijkstra_map::update_architecture_async(const std::vector<int> starting_points)
 		{
 			using namespace region;
 			std::vector<int16_t> new_map;

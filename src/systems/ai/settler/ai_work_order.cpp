@@ -1,6 +1,5 @@
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
-#include "../../../global_assets/game_designations.hpp"
 #include "../../../components/ai_tags/ai_tag_work_order.hpp"
 #include "../../helpers/workflow_assistant.hpp"
 #include "../../helpers/inventory_assistant.hpp"
@@ -9,6 +8,8 @@
 #include "../../gui/particle_system.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../components/name.hpp"
+#include "../../../global_assets/building_designations.hpp"
+#include "../../../components/helpers/reaction_task_t.hpp"
 
 namespace systems {
 	namespace ai_workorder {
@@ -21,7 +22,7 @@ namespace systems {
 		namespace jobs_board {
 			void evaluate_work_orders(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 				// Check for available queued reactions
-				if (!designations->build_orders.empty()) {
+				if (!building_designations->build_orders.empty()) {
 					board.insert(std::make_pair(10, jt));
 					//std::cout << "Offering queued build order\n";
 					return;
@@ -63,7 +64,7 @@ namespace systems {
 					//std::cout << "Finding work\n";
 					std::unique_ptr<reaction_task_t> autojob;
 
-					if (!designations->build_orders.empty()) {
+					if (!building_designations->build_orders.empty()) {
 						autojob = find_queued_reaction_task(w);
 						//if (autojob) std::cout << "Queued reaction added\n";
 					}
@@ -278,7 +279,6 @@ namespace systems {
 						free_workshop(w.reaction_target.building_id);
 						render::models_changed = true;
 						inventory_system::inventory_has_changed();
-						distance_map::refresh_blocks_map();
 						particles::block_destruction_effect(pos.x, pos.y, pos.z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_LUMBERJACK);
 
 						// Become idle

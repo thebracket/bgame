@@ -7,7 +7,7 @@
 #include "../../../components/sleep_clock_t.hpp"
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../../components/construct_provides_sleep.hpp"
+#include "../../../components/buildings/construct_provides_sleep.hpp"
 #include "../../../components/claimed_t.hpp"
 #include "../../../components/ai_tags/ai_tag_sleep_shift.hpp"
 

@@ -196,6 +196,9 @@
     <Filter Include="Header Files\components\farming">
       <UniqueIdentifier>{9b213e2d-1f70-4177-b499-ab69a5896f6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\components\buildings">
+      <UniqueIdentifier>{ea6c77e5-178b-4cd7-8a88-3f6278a13d3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -774,6 +777,9 @@
     <ClCompile Include="..\..\src\bengine\color_t.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\building_designations.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -878,12 +884,6 @@
     <ClInclude Include="..\..\src\bengine\threadsafequeue.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\components\bridge.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\building.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\components\calendar.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
@@ -893,18 +893,6 @@
     <ClInclude Include="..\..\src\components\claimed_t.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\components\construct_container.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\construct_power.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\construct_provides_door.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\construct_provides_sleep.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\components\corpse_harvestable.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
@@ -912,9 +900,6 @@
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\designations.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\entry_trigger.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\explosion_t.hpp">
@@ -953,9 +938,6 @@
     <ClInclude Include="..\..\src\components\position.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\components\receives_signal.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\components\renderable.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
@@ -977,16 +959,10 @@
     <ClInclude Include="..\..\src\components\slidemove.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\components\smoke_emitter.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\components\species.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\stockpile.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\turret_t.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\viewshed.hpp">
@@ -1759,6 +1735,42 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\color_t.hpp">
       <Filter>Header Files\bengine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\building.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\bridge.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\construct_container.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\construct_power.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\construct_provides_door.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\construct_provides_sleep.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\entry_trigger.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\receives_signal.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\smoke_emitter.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\turret_t.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\building_designations_t.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\building_designations.hpp">
+      <Filter>Header Files\global_assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

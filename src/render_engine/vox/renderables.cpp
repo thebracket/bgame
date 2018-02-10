@@ -1,7 +1,7 @@
 #include "renderables.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../components/position.hpp"
-#include "../../components/building.hpp"
+#include "../../components/buildings/building.hpp"
 #include "../../components/renderable_composite.hpp"
 #include "../../components/species.hpp"
 #include "../../components/items/item.hpp"

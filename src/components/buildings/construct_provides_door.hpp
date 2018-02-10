@@ -2,7 +2,7 @@
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
+#include "../../bengine/ecs_impl.hpp"
 
 struct construct_door_t {
 	bool locked = false;

@@ -1,10 +1,9 @@
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../mouse.hpp"
 #include "../helpers/inventory_assistant.hpp"
-#include "../../components/bridge.hpp"
+#include "../../components/buildings/bridge.hpp"
 #include "../../planet/region/region.hpp"
 #include "../ai/distance_map_system.hpp"
 
@@ -35,10 +34,9 @@ namespace systems {
 			using namespace region;
 
 			const int available_blocks = blocks_available() - designations->architecture.size();
-			const int required_blocks = calc_required_blocks(arch_width, arch_height, arch_filled);
-			const bool materials_available = (required_blocks <= available_blocks);
-			const std::string block_availability = std::string("Available building blocks: ") + std::to_string(available_blocks) +
-				std::string(" (Required: ") + std::to_string(required_blocks) + std::string(")");
+			const auto required_blocks = calc_required_blocks(arch_width, arch_height, arch_filled);
+			const auto materials_available = (required_blocks <= available_blocks);
+			const auto block_availability = std::string("Available building blocks: ") + std::to_string(available_blocks) +	std::string(" (Required: ") + std::to_string(required_blocks) + std::string(")");
 
 			ImGui::Begin(win_architect.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
 			if (materials_available) {
@@ -85,7 +83,7 @@ namespace systems {
 				// Build!
 				std::size_t bridge_id = 0;
 				if (architecture_mode == 6) {
-					auto new_bridge = create_entity()->assign(bridge_t{});
+					const auto new_bridge = create_entity()->assign(bridge_t{});
 					bridge_id = new_bridge->id;
 				}
 
@@ -117,8 +115,8 @@ namespace systems {
 			}
 			if (right_click) {
 				// Erase
-				const int idx = mapidx(world_x, world_y, mouse_wz);
-				auto finder = designations->architecture.find(idx);
+				const auto idx = mapidx(world_x, world_y, mouse_wz);
+				const auto finder = designations->architecture.find(idx);
 				if (finder != designations->architecture.end()) {
 					if (finder->second == 6) {
 						// Bridge - remove all of it

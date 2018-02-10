@@ -2,7 +2,7 @@
 #include "../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../components/position.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../components/construct_provides_sleep.hpp"
+#include "../../components/buildings/construct_provides_sleep.hpp"
 #include "../../components/logger.hpp"
 #include "../gui/log_system.hpp"
 #include "../physics/movement_system.hpp"

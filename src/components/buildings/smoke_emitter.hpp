@@ -2,7 +2,7 @@
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
+#include "../../bengine/ecs_impl.hpp"
 
 struct smoke_emitter_t {
 	smoke_emitter_t() {}

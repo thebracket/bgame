@@ -2,6 +2,7 @@
 
 #include "../../components/settler_ai.hpp"
 #include "../../components/ai_tags/ai_tag_work_order.hpp"
+#include "../../components/helpers/reaction_task_t.hpp"
 #include <memory>
 
 namespace workflow {

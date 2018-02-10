@@ -6,8 +6,8 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/utility.hpp>
-#include "../bengine/ecs_impl.hpp"
-#include "../bengine/rexspeeder.hpp"
+#include "../../bengine/ecs_impl.hpp"
+#include "../../bengine/rexspeeder.hpp"
 
 struct building_t {
     building_t(const std::string ntag, const int w, const int h, const std::vector<xp::vchar> &g,

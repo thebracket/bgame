@@ -2,7 +2,7 @@
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs.hpp"
+#include "../../bengine/ecs.hpp"
 
 enum trigger_type { trigger_cage, trigger_stonefall, trigger_blade };
 

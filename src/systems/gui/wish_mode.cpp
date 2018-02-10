@@ -8,12 +8,7 @@
 #include "../../bengine/ecs.hpp"
 #include "../../components/position.hpp"
 #include "../../components/explosion_t.hpp"
-
-#ifdef _MSC_VER
-import debug_flags;
-#else
 #include "../../global_assets/debug_flags.hpp"
-#endif
 
 namespace systems {
 	namespace wishmode {
@@ -24,7 +19,7 @@ namespace systems {
 			std::function<void()> func;
 		};
 
-		static std::vector<wish_t> wishes{
+		static std::vector<wish_t> wishes {
 			wish_t{ "show flags", []() { debug::show_flags = !debug::show_flags; } },
 			wish_t{ "show distance", []() { debug::show_dijkstra = !debug::show_dijkstra; }},
 			wish_t{ "sploosh", []() {

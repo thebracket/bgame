@@ -3,7 +3,7 @@
 #include "ai_work_hunt.hpp"
 #include "../../../components/ai_tags/ai_tag_work_butcher.hpp"
 #include "../../../components/corpse_harvestable.hpp"
-#include "../../../components/building.hpp"
+#include "../../../components/buildings/building.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/creatures.hpp"
 #include "../../../raws/defs/raw_creature_t.hpp"

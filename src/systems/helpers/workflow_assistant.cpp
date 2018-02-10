@@ -2,9 +2,9 @@
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "inventory_assistant.hpp"
-#include "../../global_assets/game_designations.hpp"
-#include "../../components/building.hpp"
+#include "../../components/buildings/building.hpp"
 #include "../ai/workflow_system.hpp"
+#include "../../global_assets/building_designations.hpp"
 
 namespace workflow {
 	std::unordered_map<std::size_t, std::vector<std::string>> automatic_reactions;
@@ -93,12 +93,12 @@ namespace workflow {
 	}
 
 	std::unique_ptr<reaction_task_t> find_queued_reaction_task(const ai_tag_work_order &ai) {
-		if (designations->build_orders.empty()) return std::unique_ptr<reaction_task_t>();
+		if (building_designations->build_orders.empty()) return std::unique_ptr<reaction_task_t>();
 
 		std::unique_ptr<reaction_task_t> result;
 
 		// Iterate through queued jobs
-		for (std::pair<uint8_t, std::string> &order : designations->build_orders) {
+		for (std::pair<uint8_t, std::string> &order : building_designations->build_orders) {
 			auto reaction = get_reaction_def(order.second);
 
 			// Is there an available workshop of the right type?

@@ -22,6 +22,7 @@
 #include "../global_assets/game_pause.hpp"
 #include "../global_assets/game_mining.hpp"
 #include "../global_assets/farming_designations.hpp"
+#include "../global_assets/building_designations.hpp"
 #include "../ascii_engine/ascii_mode.hpp"
 #include <atomic>
 
@@ -50,10 +51,10 @@ namespace play_game {
         std::cout << "Storing important entity handles\n";
 
         int region_x, region_y;
-        each<world_position_t, calendar_t, designations_t, logger_t, camera_options_t, mining_designations_t, farming_designations_t>(
+        each<world_position_t, calendar_t, designations_t, logger_t, camera_options_t, mining_designations_t, farming_designations_t, building_designations_t>(
 			[&region_x, &region_y] (entity_t &entity, world_position_t &pos, calendar_t &cal, designations_t &design,
                                     logger_t &log, camera_options_t &camera_prefs, mining_designations_t &mining,
-									farming_designations_t &farming) 
+									farming_designations_t &farming, building_designations_t &building) 
 		{
             camera_entity = entity.id;
             region_x = pos.world_x;
@@ -65,6 +66,7 @@ namespace play_game {
             camera = &camera_prefs;
 			mining_designations = &mining;
 			farm_designations = &farming;
+			building_designations = &building;
         });
 
          // Loading the region

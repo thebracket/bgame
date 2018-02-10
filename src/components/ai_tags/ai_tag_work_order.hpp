@@ -6,7 +6,7 @@
 #include "../designations.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../bengine/path_finding.hpp"
-
+#include "../../components/helpers/reaction_task_t.hpp"
 
 struct ai_tag_work_order {
 

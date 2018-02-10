@@ -1,11 +1,11 @@
 #include "buildings.hpp"
-#include "../../../components/building.hpp"
+#include "../../../components/buildings/building.hpp"
 #include "../../../components/viewshed.hpp"
 #include "../../../components/lightsource.hpp"
-#include "../../../components/construct_power.hpp"
-#include "../../../components/construct_provides_sleep.hpp"
-#include "../../../components/construct_provides_door.hpp"
-#include "../../../components/smoke_emitter.hpp"
+#include "../../../components/buildings/construct_power.hpp"
+#include "../../../components/buildings/construct_provides_sleep.hpp"
+#include "../../../components/buildings/construct_provides_door.hpp"
+#include "../../../components/buildings/smoke_emitter.hpp"
 #include "../../../components/calendar.hpp"
 #include "../../../components/world_position.hpp"
 #include "../../../components/logger.hpp"
@@ -14,13 +14,14 @@
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
 #include "../../../raws/defs/building_def_t.hpp"
-#include "../../../components/receives_signal.hpp"
+#include "../../../components/buildings/receives_signal.hpp"
 #include "../../../components/camera_options.hpp"
-#include "../../../components/turret_t.hpp"
+#include "../../../components/buildings/turret_t.hpp"
 #include "../../../components/initiative.hpp"
-#include "../../../components/construct_container.hpp"
+#include "../../../components/buildings/construct_container.hpp"
 #include "../../../components/mining/mining_designations.hpp"
 #include "../../../components/farming/farm_designs.hpp"
+#include "../../../components/buildings/building_designations_t.hpp"
 #include "../../../bengine/geometry.hpp"
 
 using namespace region;
@@ -221,7 +222,8 @@ void build_game_components(const int crash_x, const int crash_y, const int crash
         ->assign(logger_t{})
         ->assign(camera_options_t{TOP_DOWN, ascii_mode, 12})
 		->assign(mining_designations_t{})
-		->assign(farming_designations_t{});
+		->assign(farming_designations_t{})
+		->assign(building_designations_t{});
 }
 
 int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {

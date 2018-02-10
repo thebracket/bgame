@@ -1,5 +1,5 @@
 #include "particle_system.hpp"
-#include "../../components/smoke_emitter.hpp"
+#include "../../components/buildings/smoke_emitter.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"

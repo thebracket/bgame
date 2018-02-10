@@ -4,11 +4,13 @@
 #include "../../../components/ai_tags/ai_tag_work_architect.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "../../../bengine/telemetry.hpp"
-#include "../../../components/bridge.hpp"
-#include "../../../components/receives_signal.hpp"
+#include "../../../components/buildings/bridge.hpp"
+#include "../../../components/buildings/receives_signal.hpp"
 #include "../../../components/claimed_t.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../mining_system.hpp"
+#include "../../helpers/inventory_assistant.hpp"
+#include "templated_work_steps_t.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -22,13 +24,13 @@ namespace systems {
 
 		namespace jobs_board {
 			void evaluate_architecture(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-				auto blocks_distance = blocks_map.get(mapidx(pos));
-				if (blocks_distance > MAX_DIJSTRA_DISTANCE - 1) return; // Nothing to harvest
 
-				auto build_distance = architecure_map.get(mapidx(pos));
-				if (build_distance > MAX_DIJSTRA_DISTANCE - 1) return; // Nothing to harvest
+				const auto build_distance = architecure_map.get(mapidx(pos));
+				if (build_distance > MAX_DIJSTRA_DISTANCE - 1) return; // Nothing to build
 
-				board.insert(std::make_pair(blocks_distance + build_distance, jt));
+				if (inventory::blocks_available() == 0) return; // No blocks
+
+				board.insert(std::make_pair(build_distance, jt));
 			}
 		}
 
@@ -43,32 +45,64 @@ namespace systems {
 			ai_work_template<ai_tag_work_architect> work;
 			work.do_ai("Architecture", [&work](entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
 				if (a.step == ai_tag_work_architect::architect_steps::GOTO_BLOCK) {
-					work.folllow_path(blocks_map, pos, e, [&e, &work]() {
+					if (!a.current_path) {
+						// Find the closest block
+						std::map<int, size_t> block_distances;
+						each_without<claimed_t, item_t>([&pos, &block_distances](entity_t &item_entity, item_t &item)
+						{
+							if (item.item_tag == "block") {
+								auto item_loc = inventory::get_item_location(item_entity.id);
+								if (item_loc) {
+									block_distances.insert(std::make_pair(static_cast<int>(distance3d(pos.x, pos.y, pos.z, item_loc->x, item_loc->y, item_loc->z)), item_entity.id));
+								}
+							}
+						});
+
+						// Claim it
+						if (block_distances.empty())
+						{
+							work.cancel_work_tag(e);
+							return;
+						}
+						const auto item_entity = entity(block_distances.begin()->second);
+						if (!item_entity)
+						{
+							work.cancel_work_tag(e);
+							return;
+						}
+						item_entity->assign(claimed_t{ e.id });
+						a.current_tool = item_entity->id;
+
+						// Path to it
+						a.current_path = find_path(pos, *inventory::get_item_location(item_entity->id));
+						if (!a.current_path || !a.current_path->success)
+						{
+							a.current_path.reset();
+							work.cancel_work_tag(e);
+							return;
+						}
+					}
+
+					work.follow_path(a, pos, e, [&work, &e, &pos, &a]()
+					{
 						// Cancel
+						a.current_path.reset();
+						if (a.current_tool > 0) {
+							inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
+							inventory_system::claim_item(a.current_tool, false);
+						}
 						work.cancel_work_tag(e);
-					}, [&a]() {
+					}, [&a]()
+					{
 						// Success
 						a.step = ai_tag_work_architect::architect_steps::COLLECT_BLOCK;
 					});
 					return;
 				}
 				else if (a.step == ai_tag_work_architect::architect_steps::COLLECT_BLOCK) {
-					std::size_t block_id = 0;
-					each<item_t, position_t>([&pos, &block_id](entity_t &E, item_t &i, position_t &block) {
-						auto is_claimed = E.component<claimed_t>();
-						if (block == pos && !is_claimed && i.item_tag == "block") {
-							block_id = E.id;
-						}
-					});
-					if (block_id == 0) {
-						work.cancel_work_tag(e);
-						return;
-					}
-					std::cout << "Collected block\n";
-					inventory_system::claim_item(block_id, true);
-					inventory_system::pickup_item(block_id, e.id);
-					distance_map::refresh_blocks_map();
-					a.current_tool = block_id;
+					a.current_path.reset();
+					inventory_system::pickup_item(a.current_tool, e.id);
+					inventory_system::claim_item(a.current_tool, false);
 					a.step = ai_tag_work_architect::architect_steps::GOTO_SITE;
 					return;
 				}
@@ -76,7 +110,10 @@ namespace systems {
 					const int idx = mapidx(pos);
 					const auto distance = architecure_map.get(idx);
 					if (distance >= MAX_DIJSTRA_DISTANCE) {
-						inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
+						if (a.current_tool > 0) {
+							inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
+							inventory_system::claim_item(a.current_tool, false);
+						}
 						work.cancel_work_tag(e);
 						return;
 					}

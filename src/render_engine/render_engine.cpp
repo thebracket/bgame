@@ -8,7 +8,7 @@
 #include "vox/voxreader.hpp"
 #include "vox/voxel_model.hpp"
 #include "../components/position.hpp"
-#include "../components/building.hpp"
+#include "../components/buildings/building.hpp"
 #include "../components/renderable_composite.hpp"
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"

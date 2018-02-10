@@ -1,4 +1,3 @@
-#include "ai_status_effects.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/items/item_carried.hpp"
 #include "../../components/items/item.hpp"
@@ -7,9 +6,8 @@
 #include "../../components/items/item_stored.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../global_assets/game_building.hpp"
-#include "../../global_assets/game_designations.hpp"
 #include "../helpers/inventory_assistant.hpp"
-#include "../../components/building.hpp"
+#include "../../components/buildings/building.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../render_engine/vox/renderables.hpp"
 #include "../../raws/buildings.hpp"
@@ -17,6 +15,7 @@
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../../planet/region/region.hpp"
 #include "distance_map_system.hpp"
+#include "../../global_assets/building_designations.hpp"
 
 namespace systems {
 	namespace inventory_system {
@@ -117,7 +116,6 @@ namespace systems {
 				entity(msg.id)->assign(position_t{ msg.x, msg.y, msg.z });
 				entity_octree.add_node(octree_location_t{ msg.x,msg.y,msg.z,msg.id });
 				dirty = true;
-				distance_map::refresh_blocks_map();
 				render::models_changed = true;
 			});
 
@@ -133,7 +131,6 @@ namespace systems {
 				if (entity(msg.id)->component<claimed_t>() == nullptr) entity(msg.id)->assign(claimed_t{ msg.collector });
 				dirty = true;
 				render::models_changed = true;
-				distance_map::refresh_blocks_map();
 			});
 
 			destroy_items.process_all([](destroy_item_message &msg) {
@@ -145,7 +142,6 @@ namespace systems {
 				}
 
 				delete_entity(msg.id);
-				distance_map::refresh_blocks_map();
 			});
 
 			claimed_items.process_all([](item_claimed_message &msg) {
@@ -161,7 +157,6 @@ namespace systems {
 						}
 					}
 				}
-				distance_map::refresh_blocks_map();
 			});
 
 			building_requests.process_all([](build_request_message &msg) {
@@ -205,7 +200,7 @@ namespace systems {
 					}
 				}
 
-				designations->buildings.push_back(designate);
+				building_designations->buildings.push_back(designate);
 
 				int sx = designate.x;
 				int sy = designate.y;

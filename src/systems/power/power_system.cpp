@@ -1,7 +1,7 @@
 #include "power_system.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/game_calendar.hpp"
-#include "../../components/construct_power.hpp"
+#include "../../components/buildings/construct_power.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/lightsource.hpp"
 #include "../../bengine/color_t.hpp"

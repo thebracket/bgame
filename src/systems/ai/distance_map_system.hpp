@@ -11,12 +11,10 @@ namespace systems {
 		extern dijkstra::dijkstra_map bed_map;
 		extern dijkstra::dijkstra_map settler_map;
 		extern dijkstra::dijkstra_map architecure_map;
-		extern dijkstra::dijkstra_map blocks_map;
 		extern dijkstra::dijkstra_map levers_map;
 
 		void refresh_bed_map();
 		void refresh_hunting_map();
-		void refresh_blocks_map();
 		void refresh_architecture_map();
 		void refresh_butcherables_map();
 		void refresh_all_distance_maps();

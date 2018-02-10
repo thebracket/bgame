@@ -1,12 +1,11 @@
 #include "workflow_ui_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../global_assets/game_designations.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "../helpers/inventory_assistant.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../../global_assets/building_designations.hpp"
 
 namespace systems {
 	namespace workflow_ui {
@@ -18,7 +17,7 @@ namespace systems {
 
 		void run(const double &duration_ms) {
 			std::vector<std::string> worklist;
-			for (const std::pair<uint8_t, std::string> &order : designations->build_orders) {
+			for (const std::pair<uint8_t, std::string> &order : building_designations->build_orders) {
 				auto finder = get_reaction_def(order.second);
 				if (finder != nullptr) {
 					worklist.emplace_back(std::to_string(order.first) + std::string(" ") + finder->name);
@@ -46,13 +45,13 @@ namespace systems {
 			if (ImGui::Button(btn_build.c_str())) {
 				const std::string tag = available_reactions[selected_build_item].first;
 				bool found = false;
-				for (auto &order : designations->build_orders) {
+				for (auto &order : building_designations->build_orders) {
 					if (order.second == tag) {
 						++order.first;
 						found = true;
 					}
 				}
-				if (!found) designations->build_orders.push_back(std::make_pair(1, tag));
+				if (!found) building_designations->build_orders.push_back(std::make_pair(1, tag));
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(btn_close.c_str())) {

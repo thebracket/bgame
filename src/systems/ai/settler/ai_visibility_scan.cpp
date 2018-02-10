@@ -7,7 +7,7 @@
 #include "../../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "../../../components/viewshed.hpp"
 #include "../../../components/initiative.hpp"
-#include "../../../components/turret_t.hpp"
+#include "../../../components/buildings/turret_t.hpp"
 #include "../../../components/health.hpp"
 #include "../../physics/movement_system.hpp"
 #include "../../../components/riding_t.hpp"
@@ -18,6 +18,7 @@
 #include "../../damage/settler_melee_attacks_system.hpp"
 #include "../../damage/settler_ranged_attack_system.hpp"
 #include "../../damage/turret_ranged_attack_system.hpp"
+#include "../../../components/helpers/standing_orders.hpp"
 
 namespace systems {
 	namespace ai_visibility_scan {

@@ -11,7 +11,7 @@
 #include "../raws/plants.hpp"
 #include "../raws/defs/plant_t.hpp"
 #include "../components/renderable.hpp"
-#include "../components/building.hpp"
+#include "../components/buildings/building.hpp"
 #include "../components/renderable_composite.hpp"
 #include "../systems/mouse.hpp"
 #include "../global_assets/game_mode.hpp"

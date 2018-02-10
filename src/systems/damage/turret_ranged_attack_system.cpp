@@ -1,6 +1,6 @@
 #include "turret_ranged_attack_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/turret_t.hpp"
+#include "../../components/buildings/turret_t.hpp"
 #include "../../components/position.hpp"
 #include "../gui/log_system.hpp"
 #include "../../components/logger.hpp"
