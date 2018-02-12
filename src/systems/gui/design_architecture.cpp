@@ -132,7 +132,6 @@ namespace systems {
 							designations->architecture[idx] = architecture_mode;
 							if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
 							//emit(map_dirty_message{});
-							architecture_system::architecture_map_changed();
 						}
 						else {
 							bool interior = false;
@@ -145,11 +144,11 @@ namespace systems {
 								const int idx = mapidx(x, y, mouse_wz);
 								designations->architecture[idx] = architecture_mode;
 								if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
-								architecture_system::architecture_map_changed();
 							}
 						}
 					}
 				}
+				architecture_system::architecture_map_changed();
 			}
 			if (right_click) {
 				// Erase
