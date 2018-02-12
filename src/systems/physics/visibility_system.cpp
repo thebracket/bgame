@@ -2,11 +2,11 @@
 #include "../../components/viewshed.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/geometry.hpp"
-#include "../../components/building.hpp"
+#include "../../components/buildings/building.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/sentient_ai.hpp"
 #include "../../components/settler_ai.hpp"
-#include "../../components/turret_t.hpp"
+#include "../../components/buildings/turret_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
 
 using namespace bengine;

@@ -150,6 +150,7 @@ namespace render {
 						case 5: glyph = 7; break; // Ramp
 						case 6: glyph = 13; break; // Bridge
 						}
+
 						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
 					}
 				}

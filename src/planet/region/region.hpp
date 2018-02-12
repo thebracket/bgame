@@ -247,19 +247,19 @@ namespace region {
     void make_open_space(const int idx);
 
     /* Mark a cell as a floor. */
-    void make_floor(const int idx);
+    void make_floor(const int idx, const std::size_t mat=0);
 
     /* Mark a cell as a ramp. */
-    void make_ramp(const int idx);
+    void make_ramp(const int idx, const std::size_t mat = 0);
 
     /* Mark a cell as an up staircase. */
-    void make_stairs_up(const int idx);
+    void make_stairs_up(const int idx, const std::size_t mat = 0);
 
     /* Mark a cell as a down staircase. */
-    void make_stairs_down(const int idx);
+    void make_stairs_down(const int idx, const std::size_t mat = 0);
 
     /* Mark a cell as an updown staircase. */
-    void make_stairs_updown(const int idx);
+    void make_stairs_updown(const int idx, const std::size_t mat = 0);
 
     /* Mark a cell as a wall. */
     void make_wall(const int idx, const std::size_t mat);

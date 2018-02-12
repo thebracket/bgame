@@ -3,7 +3,7 @@
 #include "../../global_assets/game_planet.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../components/position.hpp"
-#include "../../components/construct_provides_door.hpp"
+#include "../../components/buildings/construct_provides_door.hpp"
 
 using namespace bengine;
 using namespace region;

@@ -219,31 +219,32 @@ namespace systems {
 				}
 				else if (build_type == 1) {
 					// Floor
-					make_floor(bidx);
+					make_floor(bidx, material);
 					call_home("AI", "Architecture", "Floor");
+					region::reset_flag(bidx, CONSTRUCTION); // Mark it as a constructed floor
 				}
 				else if (build_type == 2) {
 					// Up
-					make_stairs_up(bidx);
+					make_stairs_up(bidx, material);
 					call_home("AI", "Architecture", "Up");
 				}
 				else if (build_type == 3) {
 					// Down
-					make_stairs_down(bidx);
+					make_stairs_down(bidx, material);
 					call_home("AI", "Architecture", "Down");
 				}
 				else if (build_type == 4) {
 					// UpDown
-					make_stairs_updown(bidx);
+					make_stairs_updown(bidx, material);
 					call_home("AI", "Architecture", "UpDown");
 				}
 				else if (build_type == 5) {
 					// Ramp
-					make_ramp(bidx);
+					make_ramp(bidx, material);
 					call_home("AI", "Architecture", "Ramp");
 				}
 				else if (build_type == 6) {
-					make_floor(bidx);
+					make_floor(bidx, material);
 
 					// We need to iterate through the bridge tiles and see if it is done yet.
 					const auto bid = bridge_id(bidx);

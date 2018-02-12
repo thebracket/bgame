@@ -350,48 +350,53 @@ namespace region {
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
-    void make_floor(const int idx) {
+    void make_floor(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::FLOOR;
         current_region->solid[idx] = false;
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		if (mat > 0) set_tile_material(idx, mat);
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
-    void make_ramp(const int idx) {
+    void make_ramp(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::RAMP;
         current_region->solid[idx] = false;
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		if (mat > 0) set_tile_material(idx, mat);
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
-    void make_stairs_up(const int idx) {
+    void make_stairs_up(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::STAIRS_UP;
         current_region->solid[idx] = false;
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		if (mat > 0) set_tile_material(idx, mat);
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
-    void make_stairs_down(const int idx) {
+    void make_stairs_down(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::STAIRS_DOWN;
         current_region->solid[idx] = false;
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		if (mat > 0) set_tile_material(idx, mat);
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
-    void make_stairs_updown(const int idx) {
+    void make_stairs_updown(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::STAIRS_UPDOWN;
         current_region->solid[idx] = false;
         current_region->opaque[idx] = false;
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
+		if (mat > 0) set_tile_material(idx, mat);
 		chunks::mark_chunk_dirty_by_tileidx(idx);
     }
 
