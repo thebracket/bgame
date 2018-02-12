@@ -38,7 +38,7 @@ namespace render {
 	static unsigned int glyph_vao = 0;
 	static unsigned int glyph_vbo = 0;
 
-	static inline void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue, float angle=0.0f, float x_rot=0.0f, float y_rot=0.0f, float z_rot=0.0f) {
+	static inline void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue, const float angle=0.0f, const float x_rot=0.0f, const float y_rot=0.0f, const float z_rot=0.0f) {
 		auto finder = models_to_render->find(model);
 		if (finder != models_to_render->end()) {
 			finder->second.push_back(vox::instance_t{x, y, z, angle, x_rot, y_rot, z_rot, red, green, blue});
@@ -54,15 +54,15 @@ namespace render {
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				if (b.vox_model > 0) {
 					//std::cout << "Found model #" << b.vox_model << "\n";
-					auto x = (float)pos.x;
-					const auto y = (float)pos.z;
-					auto z = (float)pos.y;
+					auto x = static_cast<float>(pos.x);
+					const auto y = static_cast<float>(pos.z);
+					auto z = static_cast<float>(pos.y);
 
 					//std::cout << b.width << " x " << b.height << "\n";
 
-					float red = 1.0f;
-					float green = 1.0f;
-					float blue = 1.0f;
+					auto red = 1.0f;
+					auto green = 1.0f;
+					auto blue = 1.0f;
 
 					if (!b.complete) {
 						red = 0.1f;
@@ -125,31 +125,31 @@ namespace render {
 		bengine::each<renderable_t, position_t>([](bengine::entity_t &e, renderable_t &r, position_t &pos) {
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				if (r.vox > 0) {
-					auto x = (float)pos.x;
-					const auto y = (float)pos.z;
-					auto z = (float)pos.y;
+					auto x = static_cast<float>(pos.x);
+					const auto y = static_cast<float>(pos.z);
+					auto z = static_cast<float>(pos.y);
 					add_voxel_model(r.vox, x, y, z, 1.0f, 1.0f, 1.0f);
 				}
 				else if (r.glyph_ascii > 0) {
-					glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, r.foreground, r.glyph });
+					glyphs.emplace_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, r.foreground, r.glyph });
 				}
 			}
 		});
 	}
 
 	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
-		auto species = e.component<species_t>();
+		const auto species = e.component<species_t>();
 		if (!species) return;
 
 		// For now, everything uses voxel 49!
 		if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
-			const float X = static_cast<float>(pos.x);
-			const float Y = static_cast<float>(pos.z);
-			const float Z = static_cast<float>(pos.y);
-			const float rotation = (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f;
+			const auto inner_x = static_cast<float>(pos.x);
+			const auto inner_y = static_cast<float>(pos.z);
+			const auto inner_z = static_cast<float>(pos.y);
+			const auto rotation = (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f;
 
 			// Clip check passed - add the model
-			add_voxel_model(49, X, Y, Z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
+			add_voxel_model(49, inner_x, inner_y, inner_z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
 
 			// Add hair
 			int hair_vox;
@@ -163,14 +163,14 @@ namespace render {
 				default : hair_vox = 0;
 			}
 			if (hair_vox > 0) {
-				add_voxel_model(hair_vox, X, Y, Z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
+				add_voxel_model(hair_vox, inner_x, inner_y, inner_z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
 			}
 
 			// Add items
 			using namespace bengine;
-			each<item_t, item_carried_t>([&pos, &e, &X, &Y, &Z, &rotation](entity_t &E, item_t &item, item_carried_t &carried) {
+			each<item_t, item_carried_t>([&pos, &e, &inner_x, &inner_y, &inner_z, &rotation](entity_t &E, item_t &item, item_carried_t &carried) {
 				if (carried.carried_by == e.id && item.clothing_layer > 0) {
-					add_voxel_model(item.clothing_layer, X, Y, Z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, 0.0f, 1.0f, 0.0f);
+					add_voxel_model(item.clothing_layer, inner_x, inner_y, inner_z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, 0.0f, 1.0f, 0.0f);
 				}
 			});
 		}
@@ -195,9 +195,9 @@ namespace render {
 		});
 	}
 
-	static void build_chunk_models(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
+	static void build_chunk_models(const boost::container::flat_set<int, std::greater<>> &visible_chunks) {
 		for (const auto &idx : visible_chunks) {
-			chunks::chunk_t * target = &chunks::chunks[idx];
+			const auto * target = &chunks::chunks[idx];
 			if (!target->static_voxel_models.empty()) {
 				for (auto &model : target->static_voxel_models) {
 					for (auto &pos : model.second) {
@@ -227,7 +227,7 @@ namespace render {
 				}
 			}
 			else {
-				glyphs.push_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), r.foreground, r.glyph_ascii });
+				glyphs.emplace_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), r.foreground, r.glyph_ascii });
 			}
 		});
 
@@ -250,7 +250,7 @@ namespace render {
 		});
 	}
 
-	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<int>> &visible_chunks) {
+	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<>> &visible_chunks) {
 		if (sprite_vao == 0) glGenVertexArrays(1, &sprite_vao);
 		if (sprite_vbo == 0) glGenBuffers(1, &sprite_vbo);
 		if (glyph_vao == 0) glGenVertexArrays(1, &glyph_vao);
@@ -363,7 +363,7 @@ namespace render {
 		}
 	}
 
-	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int textureId) {
+	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int texture_id) {
 		assets::voxel_shadow_shader->use();
 		//glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
 		for (int i = 0; i < 6; ++i) {
@@ -371,12 +371,12 @@ namespace render {
 			glUniform1f(assets::voxel_shadow_shader->texSize, 32.0f);
 			glUniform1f(assets::voxel_shadow_shader->far_plane, radius);
 			glUniform3f(assets::voxel_shadow_shader->lightPos, light_pos.x, light_pos.y, light_pos.z);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, textureId, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_id, 0);
 
 			for (const auto &m : model_buffers) {
 				m->model->render_instances(*m);
 			}
 		}
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureId, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture_id, 0);
 	}
 }

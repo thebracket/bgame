@@ -12,7 +12,7 @@ namespace render {
 	glm::mat4 camera_modelview_matrix;
 	glm::mat4 camera_proj_model_view_matrix;
 	Frustrum frustrum;
-	boost::container::flat_set<int, std::greater<int>> visible_chunks;
+	boost::container::flat_set<int, std::greater<>> visible_chunks;
 
 	constexpr float NINETY_DEGREES = 1.5708f;
 
