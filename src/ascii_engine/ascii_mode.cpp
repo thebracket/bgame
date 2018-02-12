@@ -26,6 +26,7 @@
 #include "../systems/gui/design_mining.hpp"
 #include "../systems/gui/design_harvest.hpp"
 #include "../global_assets/farming_designations.hpp"
+#include "../systems/gui/design_architecture.hpp"
 #include <array>
 
 namespace render {
@@ -559,7 +560,8 @@ namespace render {
 					}
 				}
 				else if (game_design_mode == ARCHITECTURE) {
-					for (const auto &arch : designations->architecture) {
+					for (const auto & arch : systems::design_architecture::architecture_cursors)
+					{
 						auto[x, y, z] = idxmap(arch.first);
 						uint8_t glyph = 1;
 						switch (arch.second) {
@@ -571,7 +573,7 @@ namespace render {
 						case 5: glyph = 30; break; // Ramp
 						case 6: glyph = '#'; break; // Bridge
 						}
-						terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+						terminal[termidx(x, y)] = glyph_t{ glyph, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 					}
 				}
 				else if (game_design_mode == DIGGING) {

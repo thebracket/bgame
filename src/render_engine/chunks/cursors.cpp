@@ -11,6 +11,7 @@
 #include "../../systems/gui/design_mining.hpp"
 #include "../../systems/gui/design_harvest.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../systems/gui/design_architecture.hpp"
 
 namespace render {
 	static unsigned int cursors_vao = 0;
@@ -136,7 +137,7 @@ namespace render {
 				}
 			}
 			else if (game_design_mode == ARCHITECTURE) {
-				for (const auto &arch : designations->architecture) {
+				for (const auto &arch : systems::design_architecture::architecture_cursors) {
 					auto[x, y, z] = idxmap(arch.first);
 					if (z == camera_position->region_z) {
 						int glyph = 1;

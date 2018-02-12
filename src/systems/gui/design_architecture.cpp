@@ -1,3 +1,4 @@
+#include "design_architecture.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
@@ -7,9 +8,12 @@
 #include "../../planet/region/region.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../ai/architecture_system.hpp"
+#include "../../global_assets/game_camera.hpp"
 
 namespace systems {
 	namespace design_architecture {
+		std::map<int, uint8_t> architecture_cursors; // int = mapidx, uint8_t cursor type.
+
 		static int architecture_mode = 0;
 		static int arch_width = 1;
 		static int arch_height = 1;
@@ -34,6 +38,39 @@ namespace systems {
 			using namespace bengine;
 			using namespace region;
 
+			// Populate the cursors
+			architecture_cursors.clear();
+			for (const auto &a : designations->architecture)
+			{
+				const auto[x, y, z] = idxmap(a.first);
+				if (z == camera_position->region_z)
+				{
+					architecture_cursors[a.first] = a.second;
+				}
+			}
+
+			if (architecture_mode == 0 || architecture_mode == 1 || architecture_mode == 6)
+			{
+				for (auto ay = 0; ay < arch_height; ++ay) {
+					for (auto ax = 0; ax < arch_width; ++ax)
+					{
+						if (arch_filled) {
+							architecture_cursors[mapidx(mouse_wx + ax, mouse_wy + ay, mouse_wz)] = architecture_mode;
+						} else
+						{
+							if (ay ==0 || ay == arch_height-1 || ax == 0 || ax == arch_width-1)
+							{
+								architecture_cursors[mapidx(mouse_wx + ax, mouse_wy + ay, mouse_wz)] = architecture_mode;
+							}
+						}
+					}
+				}
+			} else
+			{
+				architecture_cursors[mapidx(mouse_wx, mouse_wy, mouse_wz)] = architecture_mode;
+			}
+
+			// GUI
 			const int available_blocks = blocks_available() - designations->architecture.size();
 			const auto required_blocks = calc_required_blocks(arch_width, arch_height, arch_filled);
 			const auto materials_available = (required_blocks <= available_blocks);
