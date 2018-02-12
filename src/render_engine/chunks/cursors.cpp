@@ -138,17 +138,19 @@ namespace render {
 			else if (game_design_mode == ARCHITECTURE) {
 				for (const auto &arch : designations->architecture) {
 					auto[x, y, z] = idxmap(arch.first);
-					int glyph = 1;
-					switch (arch.second) {
-					case 0: glyph = 11; break; // Wall
-					case 1: glyph = 12; break; // Floor
-					case 2: glyph = 8; break; // Up
-					case 3: glyph = 9; break; // Down
-					case 4: glyph = 10; break; // Up-Down
-					case 5: glyph = 7; break; // Ramp
-					case 6: glyph = 13; break; // Bridge
+					if (z == camera_position->region_z) {
+						int glyph = 1;
+						switch (arch.second) {
+						case 0: glyph = 11; break; // Wall
+						case 1: glyph = 12; break; // Floor
+						case 2: glyph = 8; break; // Up
+						case 3: glyph = 9; break; // Down
+						case 4: glyph = 10; break; // Up-Down
+						case 5: glyph = 7; break; // Ramp
+						case 6: glyph = 13; break; // Bridge
+						}
+						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
 					}
-					add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
 				}
 			}
 			else if (game_design_mode == DIGGING) {
