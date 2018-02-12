@@ -2,7 +2,7 @@
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
 #include "../../../components/ai_tags/ai_tag_work_architect.hpp"
-#include "../../../global_assets/game_designations.hpp"
+#include "../../../global_assets/architecture_designations.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../components/buildings/bridge.hpp"
 #include "../../../components/buildings/receives_signal.hpp"
@@ -26,7 +26,7 @@ namespace systems {
 		namespace jobs_board {
 			void evaluate_architecture(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 
-				if (designations->architecture.empty()) return;
+				if (architecture_designations->architecture.empty()) return;
 				const auto build_distance = architecture_system::architecture_map[mapidx(pos)].distance;
 				if (build_distance == std::numeric_limits<uint8_t>::max()) return; // Nothing to build
 
@@ -192,8 +192,8 @@ namespace systems {
 					const int idx = mapidx(pos);
 					int bidx = architecture_map[idx].target;
 
-					auto finder = designations->architecture.find(bidx);
-					if (finder != designations->architecture.end()) {
+					auto finder = architecture_designations->architecture.find(bidx);
+					if (finder != architecture_designations->architecture.end()) {
 						uint8_t build_type = finder->second;
 
 						std::size_t material = 0;
@@ -258,7 +258,7 @@ namespace systems {
 							bool complete = true;
 							int bridge_idx = 0;
 							each_bridge([&bridge_idx, &bid, &bidx, &complete](std::size_t id) {
-								if (id == bid && bridge_idx != bidx && designations->architecture.find(bridge_idx) != designations->architecture.end()) {
+								if (id == bid && bridge_idx != bidx && architecture_designations->architecture.find(bridge_idx) != architecture_designations->architecture.end()) {
 									complete = false;
 								}
 								++bridge_idx;
@@ -281,7 +281,7 @@ namespace systems {
 						}
 						chunks::mark_chunk_dirty_by_tileidx(bidx);
 
-						designations->architecture.erase(bidx);
+						architecture_designations->architecture.erase(bidx);
 						mining_system::mining_map_changed();
 						architecture_map_changed();
 						distance_map::refresh_all_distance_maps();

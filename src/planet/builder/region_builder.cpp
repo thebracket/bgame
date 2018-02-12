@@ -12,6 +12,7 @@
 #include "regions/blight_builder.hpp"
 #include "../../bengine/filesystem.hpp"
 #include "../region/region.hpp"
+#include "regions/game_objects.hpp"
 
 inline std::pair<biome_t, biome_type_t> get_biome_for_region(planet_t &planet, const std::pair<int,int> &region) {
     const int idx = planet.idx(region.first, region.second);

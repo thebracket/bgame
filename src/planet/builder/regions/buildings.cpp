@@ -7,21 +7,15 @@
 #include "../../../components/buildings/construct_provides_door.hpp"
 #include "../../../components/buildings/smoke_emitter.hpp"
 #include "../../../components/calendar.hpp"
-#include "../../../components/world_position.hpp"
-#include "../../../components/logger.hpp"
 #include "../../../components/designations.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
 #include "../../../raws/defs/building_def_t.hpp"
 #include "../../../components/buildings/receives_signal.hpp"
-#include "../../../components/camera_options.hpp"
 #include "../../../components/buildings/turret_t.hpp"
 #include "../../../components/initiative.hpp"
 #include "../../../components/buildings/construct_container.hpp"
-#include "../../../components/mining/mining_designations.hpp"
-#include "../../../components/farming/farm_designs.hpp"
-#include "../../../components/buildings/building_designations_t.hpp"
 #include "../../../bengine/geometry.hpp"
 
 using namespace region;
@@ -201,29 +195,6 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
         }
         ++z;
     }
-}
-
-void build_game_components(const int crash_x, const int crash_y, const int crash_z, const bool &ascii_mode) {
-    calendar_t calendar;
-	calendar.defined_shifts.push_back(shift_t{"Early Shift", {
-		WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT }
-	});
-	calendar.defined_shifts.push_back(shift_t{"Day Shift", {
-		SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT,	WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT }
-	});
-	calendar.defined_shifts.push_back(shift_t{"Late Shift", {
-		LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT,	WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT }
-	});
-    
-    bengine::create_entity()
-		->assign(world_position_t{region_x(), region_y(), crash_x, crash_y, crash_z+1})
-		->assign(std::move(calendar))
-		->assign(designations_t{})
-        ->assign(logger_t{})
-        ->assign(camera_options_t{TOP_DOWN, ascii_mode, 12})
-		->assign(mining_designations_t{})
-		->assign(farming_designations_t{})
-		->assign(building_designations_t{});
 }
 
 int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {

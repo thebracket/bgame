@@ -1,5 +1,6 @@
 #include "architecture_system.hpp"
 #include "../../global_assets/game_designations.hpp"
+#include "../../global_assets/architecture_designations.hpp"
 
 namespace systems {
 	namespace architecture_system {
@@ -89,7 +90,7 @@ namespace systems {
 			std::fill(architecture_map.begin(), architecture_map.end(), filler);
 
 			std::vector<std::tuple<int, int, int, int>> starting_points;
-			for (const auto &operation : designations->architecture)
+			for (const auto &operation : architecture_designations->architecture)
 			{
 				const auto idx = operation.first;
 				const auto type = operation.second;

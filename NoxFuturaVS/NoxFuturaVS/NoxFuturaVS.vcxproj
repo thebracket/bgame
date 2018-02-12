@@ -244,6 +244,7 @@
     <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />
     <ClCompile Include="..\..\src\components\species.cpp" />
+    <ClCompile Include="..\..\src\global_assets\architecture_designations.cpp" />
     <ClCompile Include="..\..\src\global_assets\building_designations.cpp" />
     <ClCompile Include="..\..\src\global_assets\debug_flags.cpp" />
     <ClCompile Include="..\..\src\global_assets\farming_designations.cpp" />
@@ -273,6 +274,7 @@
     <ClCompile Include="..\..\src\planet\builder\regions\blight_builder.cpp" />
     <ClCompile Include="..\..\src\planet\builder\regions\buildings.cpp" />
     <ClCompile Include="..\..\src\planet\builder\regions\decorators.cpp" />
+    <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp" />
     <ClCompile Include="..\..\src\planet\builder\regions\heightmap.cpp" />
     <ClCompile Include="..\..\src\planet\builder\regions\starting_point.cpp" />
     <ClCompile Include="..\..\src\planet\builder\regions\strata.cpp" />
@@ -472,6 +474,7 @@
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_order.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_pull_lever.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_shift.hpp" />
+    <ClInclude Include="..\..\src\components\buildings\architecture_designations_t.hpp" />
     <ClInclude Include="..\..\src\components\buildings\bridge.hpp" />
     <ClInclude Include="..\..\src\components\buildings\building.hpp" />
     <ClInclude Include="..\..\src\components\buildings\building_designations_t.hpp" />
@@ -548,6 +551,7 @@
     <ClInclude Include="..\..\src\components\water_spawner.hpp" />
     <ClInclude Include="..\..\src\components\wildlife_group.hpp" />
     <ClInclude Include="..\..\src\components\world_position.hpp" />
+    <ClInclude Include="..\..\src\global_assets\architecture_designations.hpp" />
     <ClInclude Include="..\..\src\global_assets\building_designations.hpp" />
     <ClInclude Include="..\..\src\global_assets\constants.hpp" />
     <ClInclude Include="..\..\src\global_assets\debug_flags.hpp" />
@@ -579,6 +583,7 @@
     <ClInclude Include="..\..\src\planet\builder\regions\blight_builder.hpp" />
     <ClInclude Include="..\..\src\planet\builder\regions\buildings.hpp" />
     <ClInclude Include="..\..\src\planet\builder\regions\decorators.hpp" />
+    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp" />
     <ClInclude Include="..\..\src\planet\builder\regions\heightmap.hpp" />
     <ClInclude Include="..\..\src\planet\builder\regions\starting_point.hpp" />
     <ClInclude Include="..\..\src\planet\builder\regions\strata.hpp" />

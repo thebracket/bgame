@@ -13,7 +13,6 @@
 
 struct designations_t {
 
-	std::unordered_map<std::size_t, uint8_t> architecture;
 	std::unordered_map<std::size_t, position_t> chopping;
 	std::vector<std::pair<bool, position_t>> guard_points;
 	std::vector<unbuild_t> deconstructions;
@@ -34,7 +33,7 @@ struct designations_t {
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
-		archive( architecture, chopping, guard_points, deconstructions,
+		archive( chopping, guard_points, deconstructions,
 			levers_to_pull, current_power, current_cash, standing_order_idle_move, standing_order_wildlife_treatment,
             standing_order_upgrade); // serialize things by passing them to the archive
 	}

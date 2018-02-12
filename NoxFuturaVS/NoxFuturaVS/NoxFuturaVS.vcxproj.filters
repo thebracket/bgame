@@ -783,6 +783,12 @@
     <ClCompile Include="..\..\src\systems\ai\architecture_system.cpp">
       <Filter>Source Files\systems\ai</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\architecture_designations.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp">
+      <Filter>Source Files\planet\builder\regions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1777,6 +1783,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\architecture_system.hpp">
       <Filter>Header Files\systems\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\architecture_designations_t.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\architecture_designations.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
+      <Filter>Header Files\components\buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

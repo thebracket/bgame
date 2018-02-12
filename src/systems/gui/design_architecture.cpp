@@ -1,5 +1,5 @@
 #include "design_architecture.hpp"
-#include "../../global_assets/game_designations.hpp"
+#include "../../global_assets/architecture_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../mouse.hpp"
@@ -9,6 +9,7 @@
 #include "../ai/distance_map_system.hpp"
 #include "../ai/architecture_system.hpp"
 #include "../../global_assets/game_camera.hpp"
+#include "../../global_assets/game_designations.hpp"
 
 namespace systems {
 	namespace design_architecture {
@@ -40,7 +41,7 @@ namespace systems {
 
 			// Populate the cursors
 			architecture_cursors.clear();
-			for (const auto &a : designations->architecture)
+			for (const auto &a : architecture_designations->architecture)
 			{
 				const auto[x, y, z] = idxmap(a.first);
 				if (z == camera_position->region_z)
@@ -71,7 +72,7 @@ namespace systems {
 			}
 
 			// GUI
-			const int available_blocks = blocks_available() - designations->architecture.size();
+			const int available_blocks = blocks_available() - architecture_designations->architecture.size();
 			const auto required_blocks = calc_required_blocks(arch_width, arch_height, arch_filled);
 			const auto materials_available = (required_blocks <= available_blocks);
 			const auto block_availability = std::string("Available building blocks: ") + std::to_string(available_blocks) +	std::string(" (Required: ") + std::to_string(required_blocks) + std::string(")");
@@ -129,7 +130,7 @@ namespace systems {
 					for (int x = world_x; x < world_x + arch_width; ++x) {
 						if (arch_filled) {
 							const int idx = mapidx(x, y, mouse_wz);
-							designations->architecture[idx] = architecture_mode;
+							architecture_designations->architecture[idx] = architecture_mode;
 							if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
 							//emit(map_dirty_message{});
 						}
@@ -142,7 +143,7 @@ namespace systems {
 							if (y == world_y + arch_height - 1) interior = false;
 							if (!interior) {
 								const int idx = mapidx(x, y, mouse_wz);
-								designations->architecture[idx] = architecture_mode;
+								architecture_designations->architecture[idx] = architecture_mode;
 								if (architecture_mode == 6) set_bridge_id(idx, bridge_id);
 							}
 						}
@@ -153,21 +154,21 @@ namespace systems {
 			if (right_click) {
 				// Erase
 				const auto idx = mapidx(world_x, world_y, mouse_wz);
-				const auto finder = designations->architecture.find(idx);
-				if (finder != designations->architecture.end()) {
+				const auto finder = architecture_designations->architecture.find(idx);
+				if (finder != architecture_designations->architecture.end()) {
 					if (finder->second == 6) {
 						// Bridge - remove all of it
 						const std::size_t bid = bridge_id(idx);
 						if (bid > 0) {
 							delete_bridge(bid);
 						}
-						for (auto it = designations->architecture.begin(); it != designations->architecture.end(); ++it) {
+						for (auto it = architecture_designations->architecture.begin(); it != architecture_designations->architecture.end(); ++it) {
 							if (it->second == 6 && bridge_id(it->first) == bid) {
-								designations->architecture.erase(it->first);
+								architecture_designations->architecture.erase(it->first);
 							}
 						}
 					}
-					designations->architecture.erase(idx);
+					architecture_designations->architecture.erase(idx);
 					architecture_system::architecture_map_changed();
 				}
 			}
