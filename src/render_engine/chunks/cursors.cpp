@@ -18,12 +18,12 @@ namespace render {
 	static unsigned int cursors_vbo = 0;
 
 	static void add_cube_geometry(std::vector<float> &v, int &n_elements, const float &x, const float &y, const float &z,
-		const float &width, const float &height, const float &texture_id)
+		const float &width, const float &height, const float &texture_id, const float depth = 0.98f)
 	{
 		const float x0 = -0.5f + x;
 		const float x1 = x0 + width;
 		const float y0 = -0.5f + z;
-		const float y1 = y0 + 0.98f;
+		const float y1 = y0 + depth;
 		const float z0 = -0.5f + y;
 		const float z1 = z0 + height;
 		const float TI = texture_id;
@@ -151,7 +151,13 @@ namespace render {
 						case 6: glyph = 13; break; // Bridge
 						}
 
-						add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
+						if (glyph == 12)
+						{
+							add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph, 0.25f);
+						}
+						else {
+							add_cube_geometry(data, n_elements_cursor_elements, x, y, z, 1, 1, glyph);
+						}
 					}
 				}
 			}
