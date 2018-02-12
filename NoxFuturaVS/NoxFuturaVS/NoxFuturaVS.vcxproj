@@ -700,6 +700,7 @@
     <ClInclude Include="..\..\src\systems\damage\settler_melee_attacks_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\settler_ranged_attack_system.hpp" />
     <ClInclude Include="..\..\src\systems\damage\turret_ranged_attack_system.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\architecture_template.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\design_architecture.hpp" />
     <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp" />
