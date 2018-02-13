@@ -1,11 +1,7 @@
 #pragma once
 
-#include <sstream>
 #include <iomanip>
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include <cereal/types/utility.hpp>
-#include "../bengine/ecs_impl.hpp"
+#include <string>
 #include "../bengine/color_t.hpp"
 
 enum gender_t { MALE, FEMALE };
@@ -34,13 +30,6 @@ struct species_t {
 	std::string weight_lbs();
 	std::string ethnicity();
 	std::string hair_color_str();
-	std::string hair_style_str();
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( tag, gender, sexuality, hair_color, hair_style, skin_color, height_cm, weight_kg, bearded, index, base_male_glyph, base_female_glyph ); // serialize things by passing them to the archive
-	}
+	std::string hair_style_str();	
 };
 
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<species_t>>)

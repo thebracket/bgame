@@ -1,10 +1,7 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../../raws/items.hpp"
-#include "../../bengine/ecs_impl.hpp"
 #include "../../bengine/color_t.hpp"
+#include <string>
 
 enum item_type_t {CLOTHING,ITEM};
 
@@ -24,11 +21,4 @@ struct item_t {
 	explicit item_t(const std::string name) noexcept;
 	item_t(const std::string tag, const std::string name, const std::size_t mat, int stack=1, int clothing=0) noexcept;
 
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( item_name, item_tag, type, material, stack_size, clothing_glyph, clothing_color, clothing_layer ); // serialize things by passing them to the archive
-	}
 };
-
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<item_t>>)

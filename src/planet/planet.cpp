@@ -1,5 +1,16 @@
-#include "planet.hpp"
 #include <cereal/archives/binary.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/unordered_set.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/utility.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/array.hpp>
+
+#include "planet.hpp"
 #include "../bengine/filesystem.hpp"
 
 const std::string planet_filename = get_save_path() + std::string("/planet.dat");

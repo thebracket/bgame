@@ -1,6 +1,7 @@
 #include "game_stats.hpp"
 #include "../components/logger.hpp"
 #include "../systems/gui/log_system.hpp"
+#include <iostream>
 
 std::string game_stats_t::strength_str() {
     if (strength < 5) return "is very weak.";

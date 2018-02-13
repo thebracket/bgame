@@ -7,6 +7,8 @@
 #include "../../bengine/rexspeeder.hpp"
 #include "../../bengine/main_window.hpp"
 #include "../../bengine/color_t.hpp"
+#include <mutex>
+#include <queue>
 
 namespace systems {
 	namespace logging {

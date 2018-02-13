@@ -174,7 +174,7 @@
       <EnableModules>true</EnableModules>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <AdditionalOptions>/await</AdditionalOptions>
+      <AdditionalOptions>/await /bigobj</AdditionalOptions>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
@@ -241,6 +241,8 @@
     <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
     <ClCompile Include="..\..\src\components\calendar.cpp" />
     <ClCompile Include="..\..\src\components\cerealizer.cpp" />
+    <ClCompile Include="..\..\src\components\cerealizer2.cpp" />
+    <ClCompile Include="..\..\src\components\cerealizer3.cpp" />
     <ClCompile Include="..\..\src\components\game_stats.cpp" />
     <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />

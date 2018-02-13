@@ -19,6 +19,7 @@
 #include "../../bengine/telemetry.hpp"
 #include "distance_map_system.hpp"
 #include "../../bengine/color_t.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace wildlife_population {

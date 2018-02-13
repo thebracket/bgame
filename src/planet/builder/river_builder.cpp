@@ -1,5 +1,7 @@
 #include "river_builder.hpp"
 #include "../planet_builder.hpp"
+#include <map>
+#include <set>
 
 void planet_rivers(planet_t &planet, bengine::random_number_generator &rng) {
 	set_worldgen_status("Running rivers and lakes");

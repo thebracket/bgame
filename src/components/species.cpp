@@ -1,6 +1,7 @@
 #include "species.hpp"
 #include <cctype>
 #include <clocale>
+#include <sstream>
 
 std::string species_t::gender_str() {
     switch (gender) {

@@ -12,6 +12,7 @@
 #include "../keydamper.hpp"
 #include "../../render_engine/design_render.hpp"
 #include "../../bengine/analytics.hpp"
+#include <sstream>
 
 namespace systems {
     namespace hud {

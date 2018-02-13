@@ -5,6 +5,7 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
 #include "../../global_assets/rng.hpp"
+#include "../../raws/items.hpp"
 
 bengine::color_t colname_to_col(const std::string &col)
 {

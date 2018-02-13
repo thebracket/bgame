@@ -2,6 +2,7 @@
 #include "ai_status_effects.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_mining.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace mining_system {

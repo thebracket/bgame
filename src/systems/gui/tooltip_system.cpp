@@ -27,6 +27,9 @@
 #include "../../global_assets/debug_flags.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../ai/architecture_system.hpp"
+#include <sstream>
+#include "../../raws/items.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace tooltips {

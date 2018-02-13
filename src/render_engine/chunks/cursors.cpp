@@ -2,7 +2,6 @@
 #include "../../systems/mouse.hpp"
 #include "../../global_assets/texture_storage.hpp"
 #include "../../global_assets/shader_storage.hpp"
-#include "../fbo/base_lit_buffer.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../systems/gui/particle_system.hpp"
@@ -12,6 +11,7 @@
 #include "../../systems/gui/design_harvest.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../systems/gui/design_architecture.hpp"
+#include "../../planet/region/region.hpp"
 
 namespace render {
 	static unsigned int cursors_vao = 0;

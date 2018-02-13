@@ -14,6 +14,7 @@
 #include "../ai/inventory_system.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../global_assets/game_planet.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace kill_system {

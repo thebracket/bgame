@@ -1,10 +1,7 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/vector.hpp>
-#include <cereal/types/polymorphic.hpp>
 #include "helpers/shift.hpp"
-#include "../bengine/ecs_impl.hpp"
+#include <vector>
 
 struct calendar_t {
 	uint16_t year = 2525;
@@ -29,13 +26,5 @@ struct calendar_t {
 	std::vector<shift_t> defined_shifts;
 
 	std::string get_date_time() const;
-	void next_minute();
-
-    template<class Archive>
-    void serialize(Archive & archive)
-    {
-        archive( year, month, day, hour, minute, second, defined_shifts ); // serialize things by passing them to the archive
-    }
+	void next_minute();    
 };
-
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<calendar_t>>)

@@ -8,6 +8,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace design_stockpiles {

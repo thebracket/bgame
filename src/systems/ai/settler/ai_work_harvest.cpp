@@ -23,6 +23,7 @@
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/defs/material_def_t.hpp"
+#include "../../../raws/items.hpp"
 
 namespace systems {
 	namespace ai_harvest {

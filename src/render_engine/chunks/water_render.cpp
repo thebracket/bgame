@@ -6,6 +6,7 @@
 #include "../renderbuffers.hpp"
 #include "../../bengine/FastNoise.h"
 #include "../../global_assets/game_camera.hpp"
+#include <array>
 
 namespace render {
 	static unsigned int water_vao = 0;

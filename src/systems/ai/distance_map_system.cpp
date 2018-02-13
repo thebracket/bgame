@@ -7,6 +7,7 @@
 #include "../../components/buildings/construct_provides_sleep.hpp"
 #include "../../components/claimed_t.hpp"
 #include "../../components/settler_ai.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace distance_map {

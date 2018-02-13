@@ -1,6 +1,7 @@
 #include "map_builder.hpp"
 #include "../planet_builder.hpp"
 #include "noise_helper.hpp"
+#include <sstream>
 
 void planet_zero_fill(planet_t &planet) {
 	set_worldgen_status("Building initial ball of mud");

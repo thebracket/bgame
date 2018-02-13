@@ -18,6 +18,7 @@
 #include "../ai/distance_map_system.hpp"
 #include "../../components/mining/mining_designations.hpp"
 #include "../ai/architecture_system.hpp"
+#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 
@@ -193,21 +194,21 @@ namespace systems {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
 					const auto [x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_cage });
+					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ TRIGGER_CAGE });
 					entity_should_be_deleted = false;
 				}
 				else if (provides.provides == provides_stonefall_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
 					const auto &[x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_stonefall });
+					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ TRIGGER_STONEFALL });
 					entity_should_be_deleted = false;
 				}
 				else if (provides.provides == provides_blades_trap) {
 					// Create a new entity for the trap
 					// Add an entry_trigger and a position to it
 					const auto &[x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ trigger_blade });
+					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ TRIGGER_BLADE });
 					entity_should_be_deleted = false;
 				}
 				else if (provides.provides == provides_spikes) {

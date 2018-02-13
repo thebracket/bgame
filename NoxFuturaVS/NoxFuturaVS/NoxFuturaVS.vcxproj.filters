@@ -792,6 +792,12 @@
     <ClCompile Include="..\..\src\components\cerealizer.cpp">
       <Filter>Source Files\components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\components\cerealizer2.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\cerealizer3.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">

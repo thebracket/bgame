@@ -1,36 +1,21 @@
 #pragma once
 
 #include "name.hpp"
-#include <cereal/cereal.hpp>
-#include <cereal/types/vector.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
 #include "../bengine/rexspeeder.hpp"
 #include "../bengine/color_t.hpp"
+#include <vector>
 
 struct log_line_t {
 	log_line_t() = default;
     explicit log_line_t(const std::vector<xp::vchar> new_chars) : chars(new_chars) {}
 
     int age = 0;
-    std::vector<xp::vchar> chars;
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( age, chars ); // serialize things by passing them to the archive
-	}
+    std::vector<xp::vchar> chars;	
 };
 
 struct logger_t {
-	logger_t() {}
-    std::vector<log_line_t> lines;
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( lines ); // serialize things by passing them to the archive
-	}
+	logger_t() = default;
+    std::vector<log_line_t> lines;	
 };
 
 struct LOG {
@@ -45,5 +30,3 @@ struct LOG {
     LOG * other_name(const std::size_t &entity_id);
     LOG * civ_name(const std::size_t &civ_id);
 };
-
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<logger_t>>)

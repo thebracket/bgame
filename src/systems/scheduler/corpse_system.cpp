@@ -3,6 +3,7 @@
 #include "../../components/corpse_harvestable.hpp"
 #include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
     namespace corpse_system {

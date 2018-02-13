@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../../bengine/ecs_impl.hpp"
 #include <string>
 
 struct item_wear_t {
@@ -18,13 +15,5 @@ struct item_wear_t {
 		if (wear < 75) return std::string("lightly used");
 		return std::string("pristine");
 	}
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		// Nothing to save
-		archive(wear);
-	}
 };
 
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<item_wear_t>>)

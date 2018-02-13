@@ -1,9 +1,6 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include <cereal/types/unordered_set.hpp>
-#include "../bengine/ecs_impl.hpp"
+#include <unordered_set>
 
 struct explosion_t {
 	explosion_t() = default;
@@ -17,13 +14,5 @@ struct explosion_t {
     uint16_t fuse_timer = 254;
     uint8_t damage_dice = 1;
     uint16_t damage_dice_type = 6;
-    std::unordered_set<int> tiles_hit;
-
-    template<class Archive>
-    void serialize(Archive & archive)
-    {
-        archive( blast_radius, blast_timer, fuse_timer, damage_dice, damage_dice_type, tiles_hit ); // serialize things by passing them to the archive
-    }
+    std::unordered_set<int> tiles_hit;    
 };
-
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<explosion_t>>)

@@ -2,6 +2,7 @@
 
 #include "../components/items/item_carried.hpp"
 #include "defs/item_def_t.hpp"
+#include "../bengine/ecs_impl.hpp"
 
 // Initializer
 void load_raws();

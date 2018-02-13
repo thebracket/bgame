@@ -6,6 +6,8 @@
 #include "../../components/claimed_t.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/items.hpp"
+#include "../../bengine/ecs_impl.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace stockpile_system {

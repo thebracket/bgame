@@ -3,6 +3,7 @@
 #include "creatures.hpp"
 #include "defs/raw_creature_t.hpp"
 #include "defs/civilization_t.hpp"
+#include <iostream>
 
 health_t create_health_component_sentient(const raw_species_t * species, const int base_hp)
 {

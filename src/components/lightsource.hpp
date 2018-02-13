@@ -1,9 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
 #include "../bengine/color_t.hpp"
 
 struct lightsource_t {
@@ -17,12 +14,4 @@ struct lightsource_t {
 
 	// Non-persistent
 	std::vector<int> lit_cache;
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( radius, color, alert_status ); // serialize things by passing them to the archive
-	}
 };
-
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<lightsource_t>>)

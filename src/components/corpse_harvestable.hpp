@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs.hpp"
+#include <string>
 
 struct corpse_harvestable {
 	corpse_harvestable() = default;
@@ -11,11 +9,4 @@ struct corpse_harvestable {
     std::string creature_tag = "";
 	bool claimed = false;
 
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( ticks_since_death, creature_tag, claimed ); // serialize things by passing them to the archive
-	}
 };
-
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<corpse_harvestable>>)

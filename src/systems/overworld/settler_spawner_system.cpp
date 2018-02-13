@@ -7,6 +7,7 @@
 #include "../../components/logger.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../global_assets/game_pause.hpp"
+#include <sstream>
 
 namespace systems {
 	namespace settler_spawner {

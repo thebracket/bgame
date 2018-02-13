@@ -25,6 +25,7 @@
 #include "../../bengine/telemetry.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
+#include "../../bengine/ecs.hpp"
 
 int sentient_get_stat_mod(const std::string stat, const raw_species_t * species) {
     if (!species) return 0;

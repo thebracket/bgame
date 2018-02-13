@@ -1,5 +1,6 @@
 #include "calendar.hpp"
 #include <iomanip>
+#include <sstream>
 
 std::string calendar_t::get_date_time() const {
     std::stringstream result;

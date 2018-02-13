@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../../bengine/ecs_impl.hpp"
 #include <string>
 
 namespace item_quality {
@@ -33,13 +30,5 @@ struct item_quality_t {
 		default: return "Unknown";
 		}
 	}
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		// Nothing to save
-		archive( quality );
-	}
 };
 
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<item_quality_t>>)

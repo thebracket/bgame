@@ -3,6 +3,7 @@
 #include "../../raws/biomes.hpp"
 #include "../../raws/defs/biome_type_t.hpp"
 #include "../../bengine/geometry.hpp"
+#include <sstream>
 
 std::unordered_map<uint8_t, double> biome_membership(planet_t &planet, const std::size_t &idx) {
 	std::unordered_map<uint8_t, double> percents;

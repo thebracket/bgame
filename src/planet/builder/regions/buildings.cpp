@@ -7,7 +7,6 @@
 #include "../../../components/buildings/construct_provides_door.hpp"
 #include "../../../components/buildings/smoke_emitter.hpp"
 #include "../../../components/calendar.hpp"
-#include "../../../components/designations.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/buildings.hpp"
@@ -17,6 +16,8 @@
 #include "../../../components/initiative.hpp"
 #include "../../../components/buildings/construct_container.hpp"
 #include "../../../bengine/geometry.hpp"
+#include "../../../bengine/ecs.hpp"
+#include "../../../planet/region/region.hpp"
 
 using namespace region;
 

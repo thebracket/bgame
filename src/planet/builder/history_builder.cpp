@@ -6,6 +6,8 @@
 #include "../../components/game_stats.hpp"
 #include "../../raws/lua_bridge.hpp"
 #include "../../raws/defs/civilization_t.hpp"
+#include <map>
+#include <set>
 
 constexpr int n_civs = WORLD_WIDTH;
 

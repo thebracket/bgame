@@ -212,7 +212,7 @@ namespace systems {
 								//if (settler) std::cout << "Target a settler - probably ignored\n";
 
 								// Cages only affect hostiles and beasts
-								if (trigger_def->type == trigger_cage && (grazer || (sentient && sentient->hostile))) {
+								if (trigger_def->type == TRIGGER_CAGE && (grazer || (sentient && sentient->hostile))) {
 									//std::cout << "Cage triggered\n";
 									auto name = target_entity->component<name_t>();
 									if (name) {
@@ -239,7 +239,7 @@ namespace systems {
 									delete_entity(finder->second);
 									triggers_changed.enqueue(triggers_changed_message{});
 								}
-								else if (trigger_def->type == trigger_stonefall && (grazer || (sentient && sentient->hostile))) {
+								else if (trigger_def->type == TRIGGER_STONEFALL && (grazer || (sentient && sentient->hostile))) {
 									//std::cout << "Stonefall triggered\n";
 									// Stonefalls only affect hostiles
 									auto name = target_entity->component<name_t>();
@@ -258,7 +258,7 @@ namespace systems {
 									delete_entity(finder->second);
 									triggers_changed.enqueue(triggers_changed_message{});
 								}
-								else if (trigger_def->type == trigger_blade && (grazer || (sentient && sentient->hostile))) {
+								else if (trigger_def->type == TRIGGER_BLADE && (grazer || (sentient && sentient->hostile))) {
 									//std::cout << "Blade trap triggered\n";
 									// Blades only affect hostiles, and don't auto-destruct
 									auto name = target_entity->component<name_t>();
