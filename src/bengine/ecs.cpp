@@ -3,6 +3,8 @@
 #include <cereal/archives/xml.hpp>
 #include <fstream>
 
+/* Actual Implementation */
+
 namespace bengine {
 
 std::size_t impl::base_component_t::type_counter = 1;
@@ -38,7 +40,7 @@ entity_t * ecs_t::create_entity(const std::size_t new_id) noexcept {
 	return entity(new_entity.id);
 }
 
-void ecs_t::each(std::function<void(entity_t &)> &&func) {
+void ecs_t::each(std::function<void(entity_t &)> &&func) noexcept {
 	for (auto &it : entity_store) {
 		if (!it.second.deleted) {
 			func(it.second);
@@ -46,12 +48,12 @@ void ecs_t::each(std::function<void(entity_t &)> &&func) {
 	}
 }
 
-void ecs_t::ecs_save(std::unique_ptr<std::ofstream> &lbfile) {
+void ecs_t::ecs_save(std::unique_ptr<std::ofstream> &lbfile) noexcept {
     cereal::XMLOutputArchive oarchive(*lbfile);
     oarchive(*this);
 }
 
-void ecs_t::ecs_load(std::unique_ptr<std::ifstream> &lbfile) {
+void ecs_t::ecs_load(std::unique_ptr<std::ifstream> &lbfile) noexcept {
 	entity_store.clear();
 	component_store.clear();
     cereal::XMLInputArchive iarchive(*lbfile);
