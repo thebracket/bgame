@@ -8,8 +8,6 @@
 
 struct stockpile_t {
 
-    stockpile_t() {}
-
     std::bitset<128> category;
 
     template<class Archive>

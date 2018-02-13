@@ -6,8 +6,6 @@
 
 struct designated_farmer_t {
 
-	designated_farmer_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

@@ -8,8 +8,6 @@
 #include "../../bengine/ecs_impl.hpp"
 
 struct construct_container_t {
-	construct_container_t() {}
-
     template<class Archive>
     void serialize(Archive & archive)
     {

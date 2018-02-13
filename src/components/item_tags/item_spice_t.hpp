@@ -6,8 +6,6 @@
 
 struct item_spice_t {
 
-	item_spice_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

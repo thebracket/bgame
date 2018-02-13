@@ -27,8 +27,6 @@ struct species_t {
     uint16_t base_male_glyph;
     uint16_t base_female_glyph;
 
-	species_t() {}
-
 	std::string gender_str();
 	std::string gender_pronoun();
 	std::string sexuality_str();

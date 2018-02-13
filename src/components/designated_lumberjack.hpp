@@ -6,8 +6,6 @@
 
 struct designated_lumberjack_t {
 
-	designated_lumberjack_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

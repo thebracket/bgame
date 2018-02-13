@@ -9,10 +9,8 @@ struct ai_tag_work_architect {
 
     enum architect_steps { GOTO_BLOCK, COLLECT_BLOCK, GOTO_SITE, BUILD };
 
-    ai_tag_work_architect() {}
     architect_steps step = GOTO_BLOCK;
     std::size_t current_tool = 0;
-
     std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
 
     template<class Archive>

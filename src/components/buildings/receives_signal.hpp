@@ -5,8 +5,6 @@
 #include "../../bengine/ecs_impl.hpp"
 
 struct receives_signal_t {
-    receives_signal_t() {}
-
     bool active = false;
 
     template<class Archive>

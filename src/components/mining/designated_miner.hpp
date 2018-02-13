@@ -6,8 +6,6 @@
 
 struct designated_miner_t {
 
-	designated_miner_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

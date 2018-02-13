@@ -6,8 +6,6 @@
 
 struct item_skull_t {
 
-	item_skull_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

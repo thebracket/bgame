@@ -8,8 +8,8 @@
 #include "../bengine/ecs_impl.hpp"
 
 struct viewshed_t {
-	viewshed_t() {}
-	viewshed_t(const int radius, const bool pen, const bool good_guy=true) : viewshed_radius(radius), penetrating(pen), good_guy_visibility(good_guy) {}
+	viewshed_t() = default;
+	viewshed_t(const int radius, const bool pen, const bool good_guy=true) noexcept : viewshed_radius(radius), penetrating(pen), good_guy_visibility(good_guy) {}
 
 	int viewshed_radius = 0;
 	bool penetrating = false;

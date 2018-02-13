@@ -7,8 +7,8 @@
 #include "../bengine/ecs_impl.hpp"
 
 struct natural_attack_t {
-    natural_attack_t() {}
-    natural_attack_t(const civ_unit_natural_attack_t &na) {
+	natural_attack_t() = default;
+    natural_attack_t(const civ_unit_natural_attack_t &na) noexcept {
         type = na.type;
         hit_bonus = na.hit_bonus;
         n_dice = na.n_dice;

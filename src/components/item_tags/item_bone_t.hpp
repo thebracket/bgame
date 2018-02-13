@@ -6,8 +6,6 @@
 
 struct item_bone_t {
 
-	item_bone_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

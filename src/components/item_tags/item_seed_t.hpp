@@ -6,8 +6,8 @@
 
 struct item_seed_t {
 
-	item_seed_t() {}
-	item_seed_t(std::string target) : grows_into(target) {}
+	item_seed_t() = default;
+	item_seed_t(std::string target) noexcept : grows_into(target) {}
 	std::string grows_into = "";
 
 	template<class Archive>

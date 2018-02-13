@@ -10,7 +10,6 @@ struct ai_tag_work_hunting {
 
     enum hunting_steps { FIND_TARGET, HUNT };
 
-    ai_tag_work_hunting() {}
     hunting_steps step = FIND_TARGET;
 
     std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized

@@ -17,8 +17,6 @@ struct health_t {
 	bool no_grasp = false;
 	std::vector<health_part_t> parts;
 
-	health_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

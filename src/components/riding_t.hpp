@@ -6,8 +6,8 @@
 
 struct riding_t {
     std::size_t riding;
-    riding_t() {}
-    riding_t(const std::size_t carrier) : riding(carrier) {}
+	riding_t() = default;
+    explicit riding_t(const std::size_t carrier) noexcept : riding(carrier) {}
 
     template<class Archive>
     void serialize(Archive & archive)

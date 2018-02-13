@@ -7,8 +7,6 @@
 struct construct_door_t {
 	bool locked = false;
 
-	construct_door_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

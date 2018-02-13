@@ -1,14 +1,13 @@
 #pragma once
 
-#include <rltk.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
+#include "../bengine/ecs_impl.hpp"
 
-using namespace rltk;
 
 struct falling_t {
-	falling_t() {}
-    falling_t(const int &d) : distance(d) {}
+	falling_t() = default;
+    explicit falling_t(const int &d) noexcept : distance(d) {}
     int distance = 0;
 
 	template<class Archive>
@@ -18,4 +17,4 @@ struct falling_t {
 	}
 };
 
-CEREAL_REGISTER_TYPE(rltk::impl::component_store_t<rltk::impl::component_t<falling_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<falling_t>>)

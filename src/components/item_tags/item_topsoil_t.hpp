@@ -6,8 +6,6 @@
 
 struct item_topsoil_t {
 
-	item_topsoil_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

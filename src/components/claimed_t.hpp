@@ -6,8 +6,8 @@
 
 struct claimed_t {
 
-    claimed_t() {}
-    claimed_t(const std::size_t &id) : claimed_by(id) {}
+	claimed_t() = default;
+    explicit claimed_t(const std::size_t &id) noexcept : claimed_by(id) {}
     std::size_t claimed_by = 0;
 
     template<class Archive>

@@ -6,8 +6,6 @@
 #include <cereal/types/polymorphic.hpp>
 
 struct grazer_ai {
-	grazer_ai() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

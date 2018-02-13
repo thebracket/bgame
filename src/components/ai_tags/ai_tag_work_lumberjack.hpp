@@ -10,7 +10,6 @@ struct ai_tag_work_lumberjack {
 
     enum lumberjack_steps { GET_AXE, FETCH_AXE, FIND_TREE, GOTO_TREE, CHOP };
 
-    ai_tag_work_lumberjack() {}
     lumberjack_steps step = GET_AXE;
     std::size_t tool_id = 0;
     std::size_t target_tree = 0;

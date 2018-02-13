@@ -6,8 +6,6 @@
 
 struct ai_mode_idle_t {
 
-    ai_mode_idle_t() {}
-
     template<class Archive>
     void serialize(Archive & archive)
     {

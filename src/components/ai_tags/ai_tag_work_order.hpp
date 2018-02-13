@@ -12,7 +12,6 @@ struct ai_tag_work_order {
 
     enum work_steps { FIND_JOB, SELECT_INPUT, GO_TO_INPUT, COLLECT_INPUT, GO_TO_WORKSHOP, DROP_INPUT, REACT };
 
-    ai_tag_work_order() {}
     work_steps step = FIND_JOB;
     reaction_task_t reaction_target;
     std::size_t current_tool;

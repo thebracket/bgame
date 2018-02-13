@@ -6,8 +6,6 @@
 #include "../bengine/ecs.hpp"
 
 struct lever_t {
-    lever_t() {}
-
     bool active = false;
     std::vector<std::size_t> targets;
 

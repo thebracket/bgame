@@ -13,8 +13,6 @@ struct building_designations_t {
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
 
-	building_designations_t() = default;
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

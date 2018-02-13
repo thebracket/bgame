@@ -5,8 +5,6 @@
 #include "../../bengine/ecs_impl.hpp"
 
 struct construct_provides_sleep_t {
-	construct_provides_sleep_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

@@ -6,8 +6,8 @@
 #include "../../bengine/ecs_impl.hpp"
 
 struct turret_t {
-    turret_t() {}
-    turret_t(const int rng, const int hb, const int n, const int d, const int bonus, const std::size_t civ) : range(rng), hit_bonus(hb),
+	turret_t() = default;
+    turret_t(const int rng, const int hb, const int n, const int d, const int bonus, const std::size_t civ) noexcept : range(rng), hit_bonus(hb),
                                                                                        damage_dice(n),
                                                                                        damage_die(d),
                                                                                        damage_bonus(bonus),

@@ -1,6 +1,6 @@
 #include "inventory_assistant.hpp"
 #include "../../components/items/item.hpp"
-#include "../../components/building.hpp"
+#include "../../components/buildings/building.hpp"
 #include "../../components/items/item_stored.hpp"
 #include "../../components/items/item_carried.hpp"
 #include "../../components/position.hpp"

@@ -6,8 +6,6 @@
 
 struct ai_tag_leisure_shift_t {
 
-    ai_tag_leisure_shift_t() {}
-
     template<class Archive>
     void serialize(Archive & archive)
     {

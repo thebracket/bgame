@@ -5,8 +5,8 @@
 #include "../bengine/ecs.hpp"
 
 struct wildlife_group {
-	wildlife_group() {}
-	wildlife_group(uint8_t &id) : group_id(id) {}
+	wildlife_group() = default;
+	explicit wildlife_group(uint8_t &id) noexcept : group_id(id) {}
     uint8_t group_id;
 
 	template<class Archive>

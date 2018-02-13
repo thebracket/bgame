@@ -28,8 +28,6 @@ struct designations_t {
 	bengine::color_t alert_color{1.0f, 1.0f, 1.0f};
 	int total_capacity = 10;
 
-	designations_t() = default;
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

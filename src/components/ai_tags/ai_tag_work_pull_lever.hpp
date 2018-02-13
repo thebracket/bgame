@@ -9,7 +9,6 @@ struct ai_tag_work_pull_lever {
 
     enum lever_steps { FIND, PULL };
 
-    ai_tag_work_pull_lever() {}
     lever_steps step = FIND;
 
     template<class Archive>

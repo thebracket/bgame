@@ -10,8 +10,6 @@
 
 struct architecture_designations_t {
 
-	architecture_designations_t() = default;
-
 	std::unordered_map<std::size_t, uint8_t> architecture;
 
 	template<class Archive>

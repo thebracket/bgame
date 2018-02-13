@@ -6,8 +6,6 @@
 
 struct item_ranged_t {
 
-	item_ranged_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

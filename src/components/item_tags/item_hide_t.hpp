@@ -6,8 +6,6 @@
 
 struct item_hide_t {
 
-	item_hide_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

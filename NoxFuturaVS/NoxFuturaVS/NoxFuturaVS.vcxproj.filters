@@ -1475,9 +1475,6 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_butcher.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp">
-      <Filter>Header Files\components\ai_tags</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\systems\physics\trigger_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
     </ClInclude>
@@ -1790,11 +1787,14 @@
     <ClInclude Include="..\..\src\global_assets\architecture_designations.hpp">
       <Filter>Header Files\global_assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
-      <Filter>Header Files\components\buildings</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\architecture_template.hpp">
       <Filter>Header Files\systems\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp">
+      <Filter>Header Files\systems\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
+      <Filter>Header Files\planet\builder\regions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

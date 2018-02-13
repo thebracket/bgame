@@ -6,8 +6,6 @@
 
 struct item_ammo_t {
 
-	item_ammo_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

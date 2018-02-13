@@ -6,8 +6,6 @@
 
 struct item_chopping_t {
 
-	item_chopping_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

@@ -9,8 +9,8 @@
 #include "../bengine/color_t.hpp"
 
 struct log_line_t {
-    log_line_t() {}
-    log_line_t(std::vector<xp::vchar> new_chars) : chars(new_chars) {}
+	log_line_t() = default;
+    explicit log_line_t(const std::vector<xp::vchar> new_chars) : chars(new_chars) {}
 
     int age = 0;
     std::vector<xp::vchar> chars;

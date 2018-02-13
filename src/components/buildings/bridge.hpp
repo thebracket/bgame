@@ -11,8 +11,6 @@ struct bridge_t {
     bool complete = false;
     bool retracted = false;
 
-    bridge_t() {}
-
     template<class Archive>
     void serialize(Archive & archive)
     {

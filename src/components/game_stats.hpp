@@ -33,8 +33,6 @@ struct game_stats_t {
 	int age;
 	std::unordered_map<std::string, skill_t> skills;
 
-	game_stats_t() {}
-
 	std::string strength_str();
 	std::string dexterity_str();
 	std::string constitution_str();

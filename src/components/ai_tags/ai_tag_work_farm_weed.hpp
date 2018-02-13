@@ -9,7 +9,6 @@ struct ai_tag_work_farm_weed {
 
     enum weed_steps { FIND_HOE, FETCH_HOE, FIND_TARGET, FETCH_TARGET, WEED };
 
-	ai_tag_work_farm_weed() {}
 	weed_steps step = FIND_HOE;
 	std::size_t tool_id = 0;
 	std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized

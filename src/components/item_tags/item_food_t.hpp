@@ -6,8 +6,6 @@
 
 struct item_food_t {
 
-	item_food_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

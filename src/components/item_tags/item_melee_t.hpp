@@ -6,8 +6,6 @@
 
 struct item_melee_t {
 
-	item_melee_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

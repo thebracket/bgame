@@ -6,8 +6,6 @@
 
 struct ai_tag_my_turn_t {
 
-    ai_tag_my_turn_t() {}
-
     template<class Archive>
     void serialize(Archive & archive)
     {

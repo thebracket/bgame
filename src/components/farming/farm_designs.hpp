@@ -15,8 +15,8 @@ namespace farm_steps {
 }
 
 struct farm_cycle_t {
-	farm_cycle_t() {}
-	farm_cycle_t(uint8_t st, std::string t, ::size_t seed) : state(st), seed_type(t), seed_id(seed) {}
+	farm_cycle_t() = default;
+	farm_cycle_t(uint8_t st, std::string t, ::size_t seed) noexcept : state(st), seed_type(t), seed_id(seed) {}
 	uint8_t state = 0;
 	std::string seed_type = "";
 	int days_since_weeded = 0;
@@ -32,8 +32,6 @@ struct farm_cycle_t {
 };
 
 struct farming_designations_t {
-
-	farming_designations_t() {}
 
 	std::vector<std::pair<bool, position_t>> harvest;
 	std::map<int, farm_cycle_t> farms;

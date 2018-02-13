@@ -6,8 +6,6 @@
 
 struct item_farming_t {
 
-	item_farming_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

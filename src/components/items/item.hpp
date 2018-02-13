@@ -20,9 +20,9 @@ struct item_t {
     bengine::color_t clothing_color;
 	int clothing_layer = 0;
 
-	item_t() {}
-	item_t(const std::string name);
-	item_t(const std::string tag, const std::string name, const std::size_t mat, int stack=1, int clothing=0);
+	item_t() = default;
+	explicit item_t(const std::string name) noexcept;
+	item_t(const std::string tag, const std::string name, const std::size_t mat, int stack=1, int clothing=0) noexcept;
 
 	template<class Archive>
 	void serialize(Archive & archive)

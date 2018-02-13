@@ -6,8 +6,6 @@
 
 struct item_drink_t {
 
-	item_drink_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

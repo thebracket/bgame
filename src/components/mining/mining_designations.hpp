@@ -9,8 +9,6 @@ enum mining_type_t { MINE_DIG, MINE_CHANNEL, MINE_RAMP, MINE_STAIRS_UP, MINE_STA
 
 struct mining_designations_t {
 
-	mining_designations_t() = default;
-
 	std::map<int, uint8_t> mining_targets;
 	int brush_type = 0;
 	int brush_size_x = 1;

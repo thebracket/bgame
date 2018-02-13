@@ -5,8 +5,6 @@
 #include "../../bengine/ecs_impl.hpp"
 
 struct smoke_emitter_t {
-	smoke_emitter_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{

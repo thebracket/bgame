@@ -6,9 +6,9 @@
 #include "../bengine/ecs_impl.hpp"
 
 struct explosion_t {
-    explosion_t() {}
+	explosion_t() = default;
     explosion_t(const uint16_t fuse, const uint16_t radius,
-                const uint8_t n, const uint16_t d) : blast_radius(radius), fuse_timer(fuse), damage_dice(n),
+                const uint8_t n, const uint16_t d) noexcept : blast_radius(radius), fuse_timer(fuse), damage_dice(n),
                                                      damage_dice_type(d)
     {}
 

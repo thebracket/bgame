@@ -23,7 +23,7 @@ bengine::color_t colname_to_col(const std::string &col)
     return bengine::color_t((uint8_t )250,250,250);
 }
 
-item_t::item_t(const std::string name) : item_tag(name), type(CLOTHING) {
+item_t::item_t(const std::string name) noexcept : item_tag(name), type(CLOTHING) {
     //std::cout << "[" << item_tag << "]\n";
     auto finder = get_item_def(item_tag);
     if (finder != nullptr) {
@@ -44,7 +44,7 @@ item_t::item_t(const std::string name) : item_tag(name), type(CLOTHING) {
     }
 }
 
-item_t::item_t(const std::string tag, const std::string name, const std::size_t mat, int stack, int clothing) :
+item_t::item_t(const std::string tag, const std::string name, const std::size_t mat, int stack, int clothing) noexcept :
         item_name(name), item_tag(tag), type(ITEM), material(mat), stack_size(stack)
 {
     item_name = material_name(mat) + std::string(" ") + item_name;

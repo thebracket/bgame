@@ -25,7 +25,7 @@ inline std::string item_loc_name(const item_location_t &loc) {
 struct item_carried_t {
 	item_location_t location = INVENTORY;
 	std::size_t carried_by;
-	item_carried_t() {}
+	item_carried_t() = default;
 	item_carried_t(const item_location_t loc, const std::size_t carrier) : location(loc), carried_by(carrier) {}
 
 	template<class Archive>

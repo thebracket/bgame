@@ -10,7 +10,6 @@ struct ai_tag_work_guarding {
 
     enum guard_steps { GOTO_POST, GUARD };
 
-    ai_tag_work_guarding() {}
     guard_steps step = GOTO_POST;
     bool has_post = false;
     position_t guard_post;

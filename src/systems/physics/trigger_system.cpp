@@ -230,7 +230,7 @@ namespace systems {
 									auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material, 3, 100);
 
 									// Add a stored component
-									target_entity->assign<item_stored_t>(new_cage->id);
+									target_entity->assign(item_stored_t{ new_cage->id });
 
 									// Remove the position component
 									delete_component<position_t>(msg.entity_id);

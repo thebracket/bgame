@@ -6,8 +6,6 @@
 
 struct item_digging_t {
 
-	item_digging_t() {}
-
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
