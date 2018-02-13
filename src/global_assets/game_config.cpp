@@ -6,7 +6,7 @@ namespace config {
 
     config_t game_config;
 
-    void read_config() {
+    void read_config() noexcept {
         std::ifstream f("world_defs/config.txt");
         std::string line;
         while (getline(f, line))
@@ -32,7 +32,7 @@ namespace config {
         }
     }
 
-    void config_t::save() {
+    void config_t::save() const noexcept {
         std::ofstream f("world_defs/config.txt");
         f << "window_width=" << window_width << "\n";
         f << "window_height=" << window_height << "\n";

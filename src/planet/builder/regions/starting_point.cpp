@@ -1,33 +1,40 @@
 #include "starting_point.hpp"
 
-
-bool has_civilization(planet_t &planet, const int &x, const int &y) {
-    const int pidx = planet.idx(x,y);
-    if (planet.civs.region_info[pidx].settlement_size > 0) return true;
-    return false;
+static bool has_civilization(planet_t &planet, const int &x, const int &y) {
+    const auto pidx = planet.idx(x,y);
+	if (planet.civs.region_info[pidx].settlement_size > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
-bool has_river(planet_t &planet, const int &x, const int &y) {
-    for (const river_t &river : planet.rivers) {
+static bool has_river(planet_t &planet, const int &x, const int &y) {
+    for (const auto &river : planet.rivers) {
         if (river.start_x == x && river.start_y == y) return true;
-        for (const river_step_t &s : river.steps) {
+        for (const auto &s : river.steps) {
             if (s.x == x && s.y == y) return true;
         }
     }
     return false;
 }
 
-bool blighted(planet_t &planet, const int &x, const int &y) {
-    const int pidx = planet.idx(x,y);
-    if (planet.civs.region_info[pidx].blight_level > 0) return true;
-    return false;
+static bool blighted(planet_t &planet, const int &x, const int &y) {
+    const auto pidx = planet.idx(x,y);
+	if (planet.civs.region_info[pidx].blight_level > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 
-std::pair<int,int> builder_select_starting_region(planet_t &planet) {
-    std::pair<int,int> coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
+std::pair<int,int> builder_select_starting_region(planet_t &planet) noexcept {
+    auto coords = std::make_pair(WORLD_WIDTH/2, WORLD_HEIGHT/2);
 
-    bool ok = false;
+    auto ok = false;
     while (!ok) {
         ok = true;
         if (planet.landblocks[planet.idx(coords.first, coords.second)].type == block_type::WATER) ok = false;

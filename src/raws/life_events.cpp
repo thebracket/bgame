@@ -5,21 +5,21 @@
 
 boost::container::flat_map<std::string, life_event_template> life_event_defs;
 
-life_event_template * get_life_event(const std::string tag) {
+life_event_template * get_life_event(const std::string tag) noexcept {
     auto finder = life_event_defs.find(tag);
     if (finder == life_event_defs.end()) return nullptr;
     return &finder->second;
 }
 
-void each_life_event(const std::function<void(std::string tag, life_event_template *)> func) {
-    for (auto it=life_event_defs.begin(); it != life_event_defs.end(); ++it) {
-        func(it->first, &it->second);
+void each_life_event(const std::function<void(std::string tag, life_event_template *)> &func) noexcept {
+	for (auto &it : life_event_defs) {
+        func(it.first, &it.second);
     }
 }
 
 void read_life_events() noexcept
 {
-    std::string tag = "";
+    std::string tag;
     life_event_template le;
     read_lua_table("life_events",
                    [&le, &tag] (const auto &key) { tag = key; le = life_event_template{}; },

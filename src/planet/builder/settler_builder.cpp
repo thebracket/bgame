@@ -4,7 +4,6 @@
 #include "../../components/name.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../components/renderable_composite.hpp"
-#include "../../components/items/item.hpp"
 #include "../../bengine/string_utils.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/health_factory.hpp"
@@ -20,23 +19,22 @@
 #include "../../raws/defs/profession_t.hpp"
 #include "../../raws/defs/civilization_t.hpp"
 #include "../../components/items/item_quality.hpp"
-#include "../../components/items/item_wear.hpp"
 #include "../../bengine/ecs.hpp"
 
-std::vector<std::string> get_event_candidates(const int &age, const std::vector<std::string> &past) {
+static std::vector<std::string> get_event_candidates(const int &age, const std::vector<std::string> &past) noexcept {
 	std::vector<std::string> result;
 
 	std::set<std::string> unavailable;
-	for (const std::string &le : past) {
+	for (const auto &le : past) {
 		auto lefinder = get_life_event(le);
-		for (const std::string &no : lefinder->precludes_event) {
+		for (const auto &no : lefinder->precludes_event) {
 			unavailable.insert(no);
 		}
 	}
 
     each_life_event([&unavailable, &result, &age, &past] (std::string tag, life_event_template * it) {
         if (age >= it->min_age && age <= it->max_age) {
-            bool available = true;
+			auto available = true;
 
             auto nope_check = unavailable.find(tag);
             if (nope_check != unavailable.end()) {
@@ -53,7 +51,7 @@ std::vector<std::string> get_event_candidates(const int &age, const std::vector<
             }
 
             if (available) {
-                for (int i=0; i<it->weight; ++i) {
+                for (auto i=0; i<it->weight; ++i) {
                     result.push_back(tag);
                 }
             }
@@ -64,22 +62,22 @@ std::vector<std::string> get_event_candidates(const int &age, const std::vector<
 	return result;
 }
 
-void create_settler(planet_t &planet, const int x, const int y, const int z, bengine::random_number_generator &rng, int shift_id) {
+void create_settler(planet_t &planet, const int x, const int y, const int z, bengine::random_number_generator &rng, int shift_id) noexcept {
 	species_t species;
 	game_stats_t stats;
-    auto species_def = get_species_def("human");
+    const auto species_def = get_species_def("human");
 
 	species.tag = "human";
 
 	// Gender
-	int gender_roll = rng.roll_dice(1, 20);
+	const auto gender_roll = rng.roll_dice(1, 20);
 	if (gender_roll < 11) {
 		species.gender = MALE;
 	} else {
 		species.gender = FEMALE;
 	}
 	// Sexuality
-	int sex_roll = rng.roll_dice(1,10);
+	const auto sex_roll = rng.roll_dice(1,10);
 	if (sex_roll < 9) {
 		species.sexuality = HETEROSEXUAL;
 	} else  {
@@ -106,7 +104,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	species.bearded = false;
 	if (species.gender == MALE)
 	{
-		const int beard_roll = rng.roll_dice(1, 20);
+		const auto beard_roll = rng.roll_dice(1, 20);
 		if (beard_roll < 7)
 		{
 			species.bearded = true;
@@ -122,7 +120,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	species.hair_style = BALD;
 	if (species.gender == MALE)
 	{
-		const int style_roll = rng.roll_dice(1, 5);
+		const auto style_roll = rng.roll_dice(1, 5);
 		switch (style_roll)
 		{
 		case 1:
@@ -144,7 +142,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	}
 	else
 	{
-		const int style_roll = rng.roll_dice(1, 4);
+		const auto style_roll = rng.roll_dice(1, 4);
 		switch (style_roll)
 		{
 		case 1:
@@ -173,7 +171,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 		first_name = to_proper_noun_case(string_table(FIRST_NAMES_MALE)->random_entry(rng));
 	}
 
-	const std::string last_name = to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng));
+	const auto last_name = to_proper_noun_case(string_table(LAST_NAMES)->random_entry(rng));
 
 	// Profession
 	const auto starting_profession = get_random_profession(rng);
@@ -194,19 +192,19 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	auto settler = bengine::create_entity();
 
 	// Life events
-	int year = 2525 - stats.age;
-	int age = 0;
+	auto year = 2525 - stats.age;
+	auto age = 0;
 	std::vector<std::string> event_buffer;
 
 	while (year < 2522) {
-		std::vector<std::string> candidates = get_event_candidates(age, event_buffer);
+		auto candidates = get_event_candidates(age, event_buffer);
 		if (!candidates.empty()) {
 			const std::size_t idx = rng.roll_dice(1, candidates.size())-1;
-			const std::string event_name = candidates[idx];
+			const auto event_name = candidates[idx];
 			event_buffer.push_back(event_name);
 			auto ledef = get_life_event(event_name);
 
-			bool has_effect = false;
+			auto has_effect = false;
 			if (ledef->strength != 0) has_effect = true;
 			if (ledef->dexterity != 0) has_effect = true;
 			if (ledef->constitution != 0) has_effect = true;
@@ -218,7 +216,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 			if (!ledef->skills.empty()) has_effect = true;
 
 			if (age==0 || has_effect) {
-				auto finder = planet.history.settler_life_events.find(settler->id);
+				const auto finder = planet.history.settler_life_events.find(settler->id);
 				const life_event_t event{ year, event_name };
 				if (finder == planet.history.settler_life_events.end()) {
 					planet.history.settler_life_events[settler->id] = std::vector<life_event_t>{ event };
@@ -235,9 +233,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 					stats.comeliness += ledef->comeliness;
 					stats.ethics += ledef->ethics;
 				}
-				for (const std::string &skill : ledef->skills) {
+				for (const auto &skill : ledef->skills) {
                     if (rng.roll_dice(1,10)>7) {
-                        auto skillfinder = stats.skills.find(skill);
+                        const auto skillfinder = stats.skills.find(skill);
                         if (skillfinder == stats.skills.end()) {
                             stats.skills[skill] = skill_t{1, 0};
                         } else {
@@ -257,14 +255,14 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	planet.history.settler_life_events[settler->id].push_back(life_event_t{2524, "ark_b"});
 	planet.history.settler_life_events[settler->id].push_back(life_event_t{2525, "planetfall"});
 
-	int base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
+	auto base_hp = rng.roll_dice(1,10) + stat_modifier(stats.constitution);
 	if (base_hp < 1) base_hp = 1;
-	health_t health = create_health_component_settler("human", base_hp);
+	auto health = create_health_component_settler("human", base_hp);
 
 	settler_ai_t ai;
 	ai.shift_id = shift_id;
 
-	int angle = 0;
+	const auto angle = 0;
 	settler->assign(position_t{ x,y,z,angle })
 		->assign(renderable_composite_t{ RENDER_SETTLER, 2 })
 		->assign(name_t{ first_name, last_name })
@@ -281,9 +279,9 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	//std::cout << settler->id << "\n";
 	for (auto item : starting_profession->starting_clothes) {
 		if (std::get<0>(item) == 0 || (std::get<0>(item)==1 && species.gender == MALE) || (std::get<0>(item)==2 && species.gender == FEMALE) ) {
-			std::string item_name = std::get<2>(item);
-			std::string slot_name = std::get<1>(item);
-			item_location_t position = INVENTORY;
+			const auto item_name = std::get<2>(item);
+			const auto slot_name = std::get<1>(item);
+			auto position = INVENTORY;
 			if (slot_name == "head") position = HEAD;
 			if (slot_name == "torso") position = TORSO;
 			if (slot_name == "legs") position = LEGS;
@@ -293,7 +291,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 	}
 
 	// Add a raygun and energey cells
-	auto plasteel = get_material_by_tag("plasteel");
+	const auto plasteel = get_material_by_tag("plasteel");
 	spawn_item_carried(settler->id, "ray_pistol", plasteel, EQUIP_RANGED, item_quality::GREAT, 100, 0, "Eden Acme Corp");
 	spawn_item_carried(settler->id, "small_energy_cell", plasteel, EQUIP_AMMO, item_quality::GREAT, 100, 0, "Eden Acme Corp");
 }

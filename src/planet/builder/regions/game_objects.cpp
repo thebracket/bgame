@@ -11,7 +11,7 @@
 #include "../../../components/buildings/building_designations_t.hpp"
 #include "../../../components/buildings/architecture_designations_t.hpp"
 
-void build_game_components(const int crash_x, const int crash_y, const int crash_z, const bool &ascii_mode) {
+void build_game_components(const int crash_x, const int crash_y, const int crash_z, const bool &ascii_mode) noexcept {
 	calendar_t calendar;
 	calendar.defined_shifts.push_back(shift_t{ "Early Shift",{
 		WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, WORK_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, LEISURE_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT, SLEEP_SHIFT }

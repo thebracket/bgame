@@ -1,6 +1,6 @@
 #pragma once
 
 namespace splash_screen {
-    void init();
-    void tick(const double &duration_ms);
+    void init() noexcept;
+    void tick(const double &duration_ms) noexcept;
 }

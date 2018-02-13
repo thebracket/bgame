@@ -53,7 +53,7 @@ void read_creature_types() noexcept
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
                     std::string subfield = lua_tostring(lua_state, -2);
-                    int value = static_cast<int>(lua_tonumber(lua_state, -1));
+                    auto value = static_cast<int>(lua_tonumber(lua_state, -1));
                     s.stats.insert(std::make_pair(subfield, value));
                     lua_pop(lua_state, 1);
                 }
@@ -68,7 +68,7 @@ void read_creature_types() noexcept
                     lua_pushstring(lua_state, part_name.c_str());
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
-                        std::string part_field = lua_tostring(lua_state, -2);
+                        const std::string part_field = lua_tostring(lua_state, -2);
                         if (part_field == "qty") std::get<1>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (part_field == "size") std::get<2>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
                         lua_pop(lua_state, 1);
@@ -93,7 +93,7 @@ void read_creature_types() noexcept
                             lua_gettable(lua_state, -2);
                             creature_attack_t attack;
                             while (lua_next(lua_state, -2) != 0) {
-                                std::string attack_field = lua_tostring(lua_state, -2);
+                                const std::string attack_field = lua_tostring(lua_state, -2);
                                 if (attack_field == "type") attack.type = lua_tostring(lua_state, -1);
                                 if (attack_field == "hit_bonus") attack.hit_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
                                 if (attack_field == "n_dice") attack.damage_n_dice = static_cast<int>(lua_tonumber(lua_state, -1));
@@ -114,8 +114,8 @@ void read_creature_types() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string yield_type = lua_tostring(lua_state, -2);
-                    int value = static_cast<int>(lua_tonumber(lua_state, -1));
+                    const std::string yield_type = lua_tostring(lua_state, -2);
+                    const auto value = static_cast<int>(lua_tonumber(lua_state, -1));
                     if (yield_type == "meat") s.yield_meat = value;
                     if (yield_type == "hide") s.yield_hide = value;
                     if (yield_type == "bone") s.yield_bone = value;
@@ -124,7 +124,7 @@ void read_creature_types() noexcept
                 }
             }
             if (field == "ai") {
-                std::string ai_type = lua_tostring(lua_state, -1);
+                const std::string ai_type = lua_tostring(lua_state, -1);
                 if (ai_type == "grazer") s.ai = creature_grazer;
             }
             if (field == "glyph") s.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));

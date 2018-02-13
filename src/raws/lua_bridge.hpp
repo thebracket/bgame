@@ -23,16 +23,16 @@ struct lua_lifecycle {
 
 using lua_parser = std::unordered_map<std::string, const std::function<void()>>; 
 
-void read_lua_table(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser);
-void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &functor);
-void read_lua_table_inner_p(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser);
-inline std::string lua_str() { return lua_tostring(lua_state, -1); }
-inline int lua_int() { return static_cast<int>(lua_tonumber(lua_state, -1)); }
-inline float lua_float() { return static_cast<float>(lua_tonumber(lua_state, -1)); }
-bengine::color_t read_lua_color(std::string field);
+void read_lua_table(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser) noexcept;
+void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &functor) noexcept;
+void read_lua_table_inner_p(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser) noexcept;
+inline std::string lua_str() noexcept { return lua_tostring(lua_state, -1); }
+inline int lua_int() noexcept { return static_cast<int>(lua_tonumber(lua_state, -1)); }
+inline float lua_float() noexcept { return static_cast<float>(lua_tonumber(lua_state, -1)); }
+bengine::color_t read_lua_color(std::string field) noexcept;
 
 template<class T>
-void read_stat_modifiers(const std::string &table, T &obj) {
+void read_stat_modifiers(const std::string &table, T &obj) noexcept {
     read_lua_table_inner( "modifiers", [&obj] (auto stat) {
         if (stat == "str") obj.strength = lua_int();
         if (stat == "dex") obj.dexterity = lua_int();
@@ -45,4 +45,4 @@ void read_stat_modifiers(const std::string &table, T &obj) {
     });
 }
 
-std::string lua_str_func(const std::string &func_name, const int &n);
+std::string lua_str_func(const std::string &func_name, const int &n) noexcept;

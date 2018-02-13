@@ -12,13 +12,13 @@
 std::atomic<bool> planet_build_done;
 std::mutex planet_builder_lock;
 std::unique_ptr<std::vector<worldgen_display_t>> planet_builder_display;
-std::string planet_builder_status = "";
+std::string planet_builder_status;
 
-bool is_planet_build_complete() {
+bool is_planet_build_complete() noexcept {
 	return planet_build_done.load();
 }
 
-void setup_build_planet() {
+void setup_build_planet() noexcept {
 	planet_builder_display = std::make_unique<std::vector<worldgen_display_t>>();
 	planet_builder_display->resize(WORLD_TILES_COUNT+1);
 	std::fill(planet_builder_display->begin(), planet_builder_display->end(), worldgen_display_t{});
@@ -28,34 +28,34 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
     using namespace bengine;
 
     // Set the altitude component
-    (*planet_builder_display.get())[idx].altitude = planet.landblocks[block_idx].height / 3;
+    (*planet_builder_display)[idx].altitude = planet.landblocks[block_idx].height / 3;
 
     // Display base layer
     switch (planet.landblocks[block_idx].type) {
-        case block_type::NONE : (*planet_builder_display.get())[idx].texture_id = 0; break;
-        case block_type::WATER : (*planet_builder_display.get())[idx].texture_id = 0; break;
-        case block_type::PLAINS : (*planet_builder_display.get())[idx].texture_id = 2; break;
-        case block_type::HILLS : (*planet_builder_display.get())[idx].texture_id = 4; break;
-        case block_type::MARSH : (*planet_builder_display.get())[idx].texture_id = 6; break;
-        case block_type::PLATEAU : (*planet_builder_display.get())[idx].texture_id = 8; break;
-        case block_type::HIGHLANDS : (*planet_builder_display.get())[idx].texture_id = 10; break;
-        case block_type::COASTAL : (*planet_builder_display.get())[idx].texture_id = 2; break;
-        case block_type::SALT_MARSH : (*planet_builder_display.get())[idx].texture_id = 6; break;
-        case block_type::MOUNTAINS : (*planet_builder_display.get())[idx].texture_id = 12; break;
+        case block_type::NONE : (*planet_builder_display)[idx].texture_id = 0; break;
+        case block_type::WATER : (*planet_builder_display)[idx].texture_id = 0; break;
+        case block_type::PLAINS : (*planet_builder_display)[idx].texture_id = 2; break;
+        case block_type::HILLS : (*planet_builder_display)[idx].texture_id = 4; break;
+        case block_type::MARSH : (*planet_builder_display)[idx].texture_id = 6; break;
+        case block_type::PLATEAU : (*planet_builder_display)[idx].texture_id = 8; break;
+        case block_type::HIGHLANDS : (*planet_builder_display)[idx].texture_id = 10; break;
+        case block_type::COASTAL : (*planet_builder_display)[idx].texture_id = 2; break;
+        case block_type::SALT_MARSH : (*planet_builder_display)[idx].texture_id = 6; break;
+        case block_type::MOUNTAINS : (*planet_builder_display)[idx].texture_id = 12; break;
         default : {
             std::cout << "Default texture for block type " << +planet.landblocks[block_idx].type << "\n";
-            (*planet_builder_display.get())[idx].texture_id = 0;
+            (*planet_builder_display)[idx].texture_id = 0;
         } break;
     }
 
     // Display rivers
-    for (const river_t &r : planet.rivers) {
+    for (const auto &r : planet.rivers) {
         if (planet.idx(r.start_x, r.start_y) == block_idx) {
-            (*planet_builder_display.get())[idx].rivers = true;
+            (*planet_builder_display)[idx].rivers = true;
         }
-        for (const river_step_t &s : r.steps) {
+        for (const auto &s : r.steps) {
             if (planet.idx(s.x, s.y) == block_idx) {
-                (*planet_builder_display.get())[idx].rivers = true;
+                (*planet_builder_display)[idx].rivers = true;
             }
         }
     }
@@ -65,13 +65,13 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
     if (biome_idx > 0 && !planet.biomes.empty() && biome_idx <planet.biomes.size() && planet.biomes[biome_idx].type > 0) {
         const auto biome_def = get_biome_def(planet.biomes[biome_idx].type);
         //std::cout << "Biome detected: " << biome_def->name << "\n";
-        if (biome_def->worldgen_texture_index > 0) (*planet_builder_display.get())[idx].texture_id = biome_def->worldgen_texture_index;
+        if (biome_def->worldgen_texture_index > 0) (*planet_builder_display)[idx].texture_id = biome_def->worldgen_texture_index;
     }
 
     // Display blight
     if (!planet.civs.region_info.empty()) {
         if (planet.civs.region_info[block_idx].blight_level > 0) {
-            (*planet_builder_display.get())[idx].texture_id = 14;
+            (*planet_builder_display)[idx].texture_id = 14;
         }
     }
 
@@ -144,27 +144,27 @@ inline void set_planet_display_char(const int &block_idx, const int &idx, planet
     }*/
 }
 
-void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y) {
+void planet_display_update_zoomed(planet_t &planet, const int world_x, const int world_y) noexcept {
 	planet_builder_lock.lock();
-    for (int y=0; y<WORLD_HEIGHT; ++y) {
-        for (int x = 0; x < WORLD_WIDTH; ++x) {
+    for (auto y=0; y<WORLD_HEIGHT; ++y) {
+        for (auto x = 0; x < WORLD_WIDTH; ++x) {
             set_planet_display_char(planet.idx(x,y), planet.idx(x,y), planet);
         }
     }
 	planet_builder_lock.unlock();
 }
 
-void planet_display_update_altitude(planet_t &planet) {
+void planet_display_update_altitude(planet_t &planet) noexcept {
     planet_builder_lock.lock();
-    for (int y=0; y<WORLD_HEIGHT; ++y) {
-        for (int x = 0; x < WORLD_WIDTH; ++x) {
+    for (auto y=0; y<WORLD_HEIGHT; ++y) {
+        for (auto x = 0; x < WORLD_WIDTH; ++x) {
             set_planet_display_char(planet.idx(x,y), planet.idx(x,y), planet);
         }
     }
     planet_builder_lock.unlock();
 }
 
-void set_worldgen_status(const std::string &status) {
+void set_worldgen_status(const std::string &status) noexcept {
 	planet_builder_lock.lock();
 	planet_builder_status = status;
 	planet_builder_lock.unlock();
@@ -179,13 +179,13 @@ void builder_save_planet(planet_t &planet) {
 }
 
 void build_planet(const int &seed, const int &water_divisor, const int &plains_divisor, const int &starting_settlers,
-    const bool &strict_beamdown, const bool &ascii_mode)
+    const bool &strict_beamdown, const bool &ascii_mode) noexcept
 {
 	planet_build_done.store(false);
 
 	bengine::random_number_generator rng(seed);
 	planet.rng_seed = seed;
-	const int perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
+	const auto perlin_seed = rng.roll_dice(1, std::numeric_limits<int>::max());
 	planet.perlin_seed = perlin_seed;
     planet.water_divisor = water_divisor;
     planet.plains_divisor = plains_divisor;

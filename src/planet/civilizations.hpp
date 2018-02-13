@@ -1,10 +1,6 @@
 #pragma once
-#include <fstream>
 #include <vector>
 #include <unordered_map>
-#include <algorithm>
-#include <array>
-#include "constants.hpp"
 #include "../components/species.hpp"
 #include "../bengine/color_t.hpp"
 

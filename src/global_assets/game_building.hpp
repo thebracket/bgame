@@ -5,8 +5,8 @@
 
 namespace buildings {
 	struct available_building_t {
-		available_building_t() {}
-		available_building_t(const std::string &n, const std::string &t) : name(n), tag(t) {}
+		available_building_t() = default;
+		available_building_t(const std::string &n, const std::string &t) noexcept : name(n), tag(t) {}
 
 		std::string name = "";
 		std::string tag = "";

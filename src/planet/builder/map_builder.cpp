@@ -3,7 +3,7 @@
 #include "noise_helper.hpp"
 #include <sstream>
 
-void planet_zero_fill(planet_t &planet) {
+void planet_zero_fill(planet_t &planet) noexcept {
 	set_worldgen_status("Building initial ball of mud");
 
 	planet.landblocks.resize(WORLD_HEIGHT * WORLD_WIDTH);
@@ -13,7 +13,7 @@ void planet_zero_fill(planet_t &planet) {
 	planet.civs.region_info.resize(WORLD_TILES_COUNT);
 }
 
-FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
+FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) noexcept {
 	
 	set_worldgen_status("Dividing the heavens from the earth: starting");
 	FastNoise noise(perlin_seed);
@@ -23,29 +23,29 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 	noise.SetFractalGain(persistence);
 	noise.SetFractalLacunarity(frequency);
 
-	constexpr float max_temperature = 56.7F;
-	constexpr float min_temperature = -55.2F;
-	constexpr float temperature_range = max_temperature - min_temperature;
-	constexpr float half_planet_height = WORLD_HEIGHT / 2.0F;
+	constexpr auto max_temperature = 56.7F;
+	constexpr auto min_temperature = -55.2F;
+	constexpr auto temperature_range = max_temperature - min_temperature;
+	constexpr auto half_planet_height = WORLD_HEIGHT / 2.0F;
 
 	// Determine height of the region block as an average of the containing tiles
 	#pragma omp parallel for
-	for (int y=0; y<WORLD_HEIGHT; ++y) {
-		const int distance_from_equator = std::abs((WORLD_HEIGHT/2)-y);
-		const float temp_range_pct = 1.0F - ((float)distance_from_equator / half_planet_height);
-		const float base_temp_by_latitude = ((temp_range_pct * temperature_range) + min_temperature);
+	for (auto y=0; y<WORLD_HEIGHT; ++y) {
+		const auto distance_from_equator = std::abs((WORLD_HEIGHT/2)-y);
+		const auto temp_range_pct = 1.0F - (static_cast<float>(distance_from_equator) / half_planet_height);
+		const auto base_temp_by_latitude = ((temp_range_pct * temperature_range) + min_temperature);
 		//std::cout << y << "/" << distance_from_equator << "/" << temp_range_pct << "/" << base_temp_by_latitude << "\n";			
-		for (int x=0; x<WORLD_WIDTH; ++x) {
-			long total_height = 0L;
+		for (auto x=0; x<WORLD_WIDTH; ++x) {
+			auto total_height = 0L;
 
 			uint8_t max = 0;
-			uint8_t min = std::numeric_limits<uint8_t>::max();
-			int n_tiles = 0;
-			for (int y1=0; y1<REGION_HEIGHT/REGION_FRACTION_TO_CONSIDER; ++y1) {
-				for (int x1=0; x1<REGION_WIDTH/REGION_FRACTION_TO_CONSIDER; ++x1) {
-					const float nh = noise.GetNoise ( noise_x(x,x1*REGION_FRACTION_TO_CONSIDER), noise_y(y,y1*REGION_FRACTION_TO_CONSIDER) );
+			auto min = std::numeric_limits<uint8_t>::max();
+			auto n_tiles = 0;
+			for (auto y1=0; y1<REGION_HEIGHT/REGION_FRACTION_TO_CONSIDER; ++y1) {
+				for (auto x1=0; x1<REGION_WIDTH/REGION_FRACTION_TO_CONSIDER; ++x1) {
+					const auto nh = noise.GetNoise ( noise_x(x,x1*REGION_FRACTION_TO_CONSIDER), noise_y(y,y1*REGION_FRACTION_TO_CONSIDER) );
 					//std::cout << nh << "\n";
-					const uint8_t n = noise_to_planet_height(nh);
+					const auto n = noise_to_planet_height(nh);
 					if (n < min) min = n;
 					if (n > max) max = n;
 					total_height += n;
@@ -55,14 +55,14 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 			planet.landblocks[planet.idx(x,y)].height = static_cast<uint8_t>(total_height / n_tiles);
 			planet.landblocks[planet.idx(x,y)].type = 0;
 			planet.landblocks[planet.idx(x,y)].variance = max - min;
-			const float altitude_deduction = std::abs(planet.landblocks[planet.idx(x,y)].height-planet.water_height) / 10.0F;
+			const auto altitude_deduction = std::abs(planet.landblocks[planet.idx(x,y)].height-planet.water_height) / 10.0F;
 			planet.landblocks[planet.idx(x,y)].temperature_c = static_cast<int8_t>(base_temp_by_latitude - altitude_deduction);
             if (planet.landblocks[planet.idx(x,y)].temperature_c < -55) planet.landblocks[planet.idx(x,y)].temperature_c = -55;
             if (planet.landblocks[planet.idx(x,y)].temperature_c > 55) planet.landblocks[planet.idx(x,y)].temperature_c = 55;
 
 		}
 		std::stringstream ss;
-		double percent = (double)y / (double)WORLD_HEIGHT;
+		const auto percent = static_cast<double>(y) / static_cast<double>(WORLD_HEIGHT);
 		ss << "Dividing heavens from the earth: " << (percent*100) << "%";
 		set_worldgen_status(ss.str());
 		planet_display_update_altitude(planet);
@@ -71,10 +71,10 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) {
 	return noise;
 }
 
-int planet_determine_proportion(planet_t &planet, int &candidate, int target) {
-	int count = 0;
+int planet_determine_proportion(planet_t &planet, int &candidate, int target) noexcept {
+	auto count = 0;
 	while (count < target) {
-		const int count = std::count_if(planet.landblocks.begin(), planet.landblocks.end(), [candidate] (const block_t &block) {
+		count = std::count_if(planet.landblocks.begin(), planet.landblocks.end(), [candidate] (const block_t &block) {
 			return block.height <= candidate;
 		});
 		if (count >= target) {
@@ -86,7 +86,7 @@ int planet_determine_proportion(planet_t &planet, int &candidate, int target) {
 	throw std::runtime_error("Messed up landblocks!");
 }
 
-void planet_base_type_allocation(planet_t &planet) {
+void planet_base_type_allocation(planet_t &planet) noexcept {
 	set_worldgen_status("Dividing the waters from the earth");
 
 	int candidate = 0;
@@ -132,7 +132,7 @@ void planet_base_type_allocation(planet_t &planet) {
 	}
 }
 
-void planet_mark_coastlines(planet_t &planet) {
+void planet_mark_coastlines(planet_t &planet) noexcept {
 	set_worldgen_status("Crinkling the coastlines");
 	#pragma omp parallel for
 	for (int y=1; y<WORLD_HEIGHT-1; ++y) {
@@ -157,7 +157,7 @@ void planet_mark_coastlines(planet_t &planet) {
 	}
 }
 
-void planet_rainfall(planet_t &planet) {
+void planet_rainfall(planet_t &planet) noexcept {
 	set_worldgen_status("Adjusting rain map");
 	#pragma omp parallel for
 	for (int y=0; y<WORLD_HEIGHT; ++y) {

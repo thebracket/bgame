@@ -8,38 +8,38 @@ boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
 int clothing_stockpile = 0;
 
-int get_clothing_stockpile() {
+int get_clothing_stockpile() noexcept {
     return clothing_stockpile;
 }
 
-void set_clothing_stockpile(const int n) {
+void set_clothing_stockpile(const int n) noexcept {
     clothing_stockpile = n;
 }
 
-item_def_t * get_item_def(const std::string tag) {
+item_def_t * get_item_def(const std::string &tag) noexcept {
     auto finder = item_defs.find(tag);
     if (finder == item_defs.end()) return nullptr;
     return &finder->second;
 }
 
-stockpile_def_t * get_stockpile_def(const int tag) {
+stockpile_def_t * get_stockpile_def(const int tag) noexcept {
     auto finder = stockpile_defs.find(tag);
     if (finder == stockpile_defs.end()) return nullptr;
     return &finder->second;
 }
 
-void each_stockpile(const std::function<void(stockpile_def_t *)> func) {
-    for (auto it = stockpile_defs.begin(); it != stockpile_defs.end(); ++it) {
-        func(&it->second);
+void each_stockpile(const std::function<void(stockpile_def_t *)> &func) noexcept {
+	for (auto &it : stockpile_defs) {
+        func(&it.second);
     }
 }
 
 void sanity_check_items() noexcept
 {
-    for (auto it=item_defs.begin(); it!=item_defs.end(); ++it) {
-        if (it->first.empty()) std::cout << "WARNING: Item has no name\n";
-        if (it->second.tag.empty()) std::cout << "WARNING: Empty item tag\n";
-        if (it->second.name.empty()) std::cout << "WARNING: Empty item name, tag: " << it->second.tag << "\n";
+	for (auto &it : item_defs) {
+        if (it.first.empty()) std::cout << "WARNING: Item has no name\n";
+        if (it.second.tag.empty()) std::cout << "WARNING: Empty item tag\n";
+        if (it.second.name.empty()) std::cout << "WARNING: Empty item name, tag: " << it.second.tag << "\n";
     }
 }
 
@@ -102,8 +102,8 @@ void read_stockpiles() noexcept
     stockpile_def_t c;
 
     read_lua_table("stockpiles",
-                   [&tag, &name, &c] (const auto &key) { tag=key; c=stockpile_def_t{}; c.tag = key; },
-                   [&tag, &name, &c] (const auto &key) { stockpile_defs[c.index] = c; if (c.tag == "clothing") clothing_stockpile = c.index; },
+                   [&tag, &c] (const auto &key) { tag=key; c=stockpile_def_t{}; c.tag = key; },
+                   [&c] (const auto &key) { stockpile_defs[c.index] = c; if (c.tag == "clothing") clothing_stockpile = c.index; },
                    lua_parser{
                            { "name", [&c] ()         { c.name = lua_str(); }},
                            { "id", [&c] ()           { c.index = lua_int(); }}

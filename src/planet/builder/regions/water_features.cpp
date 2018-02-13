@@ -6,26 +6,26 @@
 using namespace region;
 
 void add_dig_target(int X, int Y, int radius, int depth, std::unordered_map<int, region_water_feature_tile> &dig_targets,
-    std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap) {
+    std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap) noexcept {
 
-    int min_altitude = REGION_DEPTH;
-    for (int y=0-radius; y<radius; ++y) {
-        for (int x = 0 - radius; x < radius; ++x) {
-            const int actual_x = X + x;
-            const int actual_y = Y + y;
-            const int idx = (actual_y * REGION_WIDTH) + actual_x;
+    auto min_altitude = REGION_DEPTH;
+    for (auto y=0-radius; y<radius; ++y) {
+        for (auto x = 0 - radius; x < radius; ++x) {
+            const auto actual_x = X + x;
+            const auto actual_y = Y + y;
+            const auto idx = (actual_y * REGION_WIDTH) + actual_x;
             if (idx > 0 && heightmap[idx] < min_altitude) min_altitude = heightmap[idx];
         }
     }
 
-    for (int y=0-radius; y<radius; ++y) {
-        for (int x=0-radius; x<radius; ++x) {
-            const int actual_x = X+x;
-            const int actual_y = Y+y;
+    for (auto y=0-radius; y<radius; ++y) {
+        for (auto x=0-radius; x<radius; ++x) {
+            const auto actual_x = X+x;
+            const auto actual_y = Y+y;
             if (actual_x > -1 && actual_x < REGION_WIDTH && actual_y > -1 && actual_y < REGION_HEIGHT) {
-                const int idx = (actual_y * REGION_WIDTH) + actual_x;                
+                const auto idx = (actual_y * REGION_WIDTH) + actual_x;
                 if (dig_targets.find(idx) == dig_targets.end()) {
-                    const bool has_water = pooled_water[idx] > 0;
+                    const auto has_water = pooled_water[idx] > 0;
                     dig_targets[idx] = region_water_feature_tile{ idx, has_water, depth, heightmap[idx] };
                 }
             }
@@ -34,28 +34,28 @@ void add_dig_target(int X, int Y, int radius, int depth, std::unordered_map<int,
 }
 
 
-void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, bengine::random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) {
+void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, bengine::random_number_generator &rng, FastNoise &noise, std::vector<std::pair<int, uint8_t>> &water_spawners) noexcept {
     set_worldgen_status("Just add water...");
 
-    bool river_starts_here = false;
-    bool river_terminates_here = false;
-    bool has_river = false;
+	auto river_starts_here = false;
+	auto river_terminates_here = false;
+	auto has_river = false;
 
-    std::array<int, 4> river_entry;
-    int river_exit = 0;
+    std::array<int, 4> river_entry{};
+	auto river_exit = 0;
     std::fill(river_entry.begin(), river_entry.end(), 0);
 
-    for (const river_t &river : planet.rivers) {
+    for (const auto &river : planet.rivers) {
         if (river.start_x == region_x() && river.start_y == region_y()) {
             river_starts_here = true;
             has_river = true;
         }
 
-        int last_x = river.start_x;
-        int last_y = river.start_y;
+		auto last_x = river.start_x;
+		auto last_y = river.start_y;
 
         std::size_t i=0;
-        for (const river_step_t &s : river.steps) {
+        for (const auto &s : river.steps) {
             if (s.x == region_x() && s.y == region_y()) {
                 has_river = true;
 
@@ -65,8 +65,8 @@ void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::v
                 if (last_y > s.y) { ++river_entry[3]; }
 
                 if (i+1 < river.steps.size()) {
-                    const int next_x = river.steps[i+1].x;
-                    const int next_y = river.steps[i+1].y;
+                    const auto next_x = river.steps[i+1].x;
+                    const auto next_y = river.steps[i+1].y;
 
                     if (next_x < s.x) { river_exit = 1; }
                     if (next_x > s.x) { river_exit = 2; }
@@ -85,28 +85,28 @@ void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::v
     if (!has_river) return;
 
     // Determine a confluence point - mid-point for the rivers
-    bool mid_ok = false;
+	auto mid_ok = false;
     int midpoint_x, midpoint_y;
     while (!mid_ok) {
         midpoint_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4;
         midpoint_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4;
-        const float d = bengine::distance2d(midpoint_x, midpoint_y, REGION_WIDTH/2, REGION_HEIGHT/2);
+        const auto d = bengine::distance2d(midpoint_x, midpoint_y, REGION_WIDTH/2, REGION_HEIGHT/2);
         if (d > 15.0f) mid_ok = true;
     }
 
     // Run rivers to the confluence
     std::unordered_map<int, region_water_feature_tile> dig_targets;
 
-    auto dig_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
+    const auto dig_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
         add_dig_target(X, Y, 2, 2, dig_targets, pooled_water, heightmap);
     };
-    auto dig_exit_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
+    const auto dig_exit_river = [&heightmap, &pooled_water, &dig_targets] (int X, int Y) {
         add_dig_target(X, Y, 2, 2, dig_targets, pooled_water, heightmap);
     };
 
-    for (int i=0; i<river_entry[0]; ++i) {
-        int start_x = 0;
-        int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4 -1;
+    for (auto i=0; i<river_entry[0]; ++i) {
+		auto start_x = 0;
+		auto start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4 -1;
         bengine::line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
         water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
     }

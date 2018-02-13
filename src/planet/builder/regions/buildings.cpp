@@ -21,7 +21,7 @@
 
 using namespace region;
 
-void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) {
+void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) noexcept {
     auto building = get_building_def(tag);
     if (building == nullptr) {
         throw std::runtime_error("Warning: do not know how to build: " + tag);
@@ -78,7 +78,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     }
 }
 
-void add_construction(const int x, const int y, const int z, const std::string type, bool solid, const std::size_t &civ_owner) {
+void add_construction(const int x, const int y, const int z, const std::string type, bool solid, const std::size_t &civ_owner) noexcept {
 
     const auto idx = mapidx(x,y,z);
     const auto plasteel = get_material_by_tag("plasteel");
@@ -138,7 +138,7 @@ void add_construction(const int x, const int y, const int z, const std::string t
     }
 }
 
-void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
+void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) noexcept {
     xp::rex_sprite ship("game_assets/rex/spaceship.xp");
     int z=-2+crash_z;
     for (int layer = 0; layer<5; ++layer) {
@@ -198,7 +198,7 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
     }
 }
 
-int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) {
+int build_building(xp::rex_sprite &sprite, const int x, const int y, const int z, std::vector<std::tuple<int,int,int>> &spawn_points, const bool active, const std::size_t &civ_id) noexcept {
     int n_spawn = 0;
     for (int layer = 0; layer < sprite.get_num_layers(); ++layer) {
         for (int Y=0; Y < sprite.get_height(); ++Y) {
@@ -256,7 +256,7 @@ xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet,
 }
 
 void build_buildings(bengine::random_number_generator &rng, const int n_buildings, const bool active,
-    std::vector<std::tuple<int,int,int>> &spawn_points, const std::size_t &civ_id, planet_t &planet) 
+    std::vector<std::tuple<int,int,int>> &spawn_points, const std::size_t &civ_id, planet_t &planet)  noexcept
 {
     std::cout << "Civ ID#: " << civ_id << "\n";
     int i=0;

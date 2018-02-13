@@ -42,7 +42,7 @@ inline void call_functor_key(const lua_parser &parser, const std::string &field,
     }    
 }
 
-void read_lua_table(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser)    
+void read_lua_table(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser) noexcept   
 {
     lua_getglobal(lua_state, table.c_str());
     lua_pushnil(lua_state);
@@ -64,7 +64,7 @@ void read_lua_table(const std::string &table, const std::function<void(std::stri
     }
 }
 
-void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &functor) 
+void read_lua_table_inner(const std::string &table, const std::function<void(std::string)> &functor)  noexcept
 {
     lua_pushstring(lua_state, table.c_str());
     lua_gettable(lua_state, -2);
@@ -75,7 +75,7 @@ void read_lua_table_inner(const std::string &table, const std::function<void(std
     }
 }
 
-void read_lua_table_inner_p(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser)
+void read_lua_table_inner_p(const std::string &table, const std::function<void(std::string)> &on_start, const std::function<void(std::string)> &on_end, const lua_parser &parser) noexcept
 {
     lua_pushstring(lua_state, table.c_str());
     lua_gettable(lua_state, -2);
@@ -96,12 +96,12 @@ void read_lua_table_inner_p(const std::string &table, const std::function<void(s
     }
 }
 
-bengine::color_t read_lua_color(std::string field) {
+bengine::color_t read_lua_color(std::string field) noexcept {
     bengine::color_t col;
     lua_pushstring(lua_state, field.c_str());
     lua_gettable(lua_state, -2);
     while (lua_next(lua_state, -2) != 0) {
-        std::string subfield = lua_tostring(lua_state, -2);
+        const std::string subfield = lua_tostring(lua_state, -2);
         if (subfield == "r") col.r = static_cast<float>(lua_tonumber(lua_state, -1)) / 255.0f;
         if (subfield == "g") col.g = static_cast<float>(lua_tonumber(lua_state, -1)) / 255.0f;
         if (subfield == "b") col.b = static_cast<float>(lua_tonumber(lua_state, -1)) / 255.0f;
@@ -110,13 +110,13 @@ bengine::color_t read_lua_color(std::string field) {
     return col;
 }
 
-std::string lua_str_func(const std::string &func_name, const int &n) {
-    std::string result = "";
+std::string lua_str_func(const std::string &func_name, const int &n) noexcept {
+    std::string result;
 
     lua_getglobal(lua_state, func_name.c_str());
     lua_pushnumber(lua_state, n);
     if (lua_pcall(lua_state, 1, 1, 0) != 0) {
-        throw std::runtime_error(std::string("Error calling Lua function: ") + func_name + std::string(" ") + std::string(lua_tostring(lua_state, -1)));
+        //throw std::runtime_error(std::string("Error calling Lua function: ") + func_name + std::string(" ") + std::string(lua_tostring(lua_state, -1)));
     } else {
         result = lua_tostring(lua_state, -1);
     }

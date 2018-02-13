@@ -6,7 +6,7 @@
 
 using namespace region;
 
-void build_ramps() {
+void build_ramps() noexcept {
     for (int y=1; y<REGION_HEIGHT-1; ++y) {
         for (int x=1; x<REGION_WIDTH-1; ++x) {
             const int z = ground_z(x,y);
@@ -45,7 +45,7 @@ void build_ramps() {
     }
 }
 
-void build_debris_trail(const int crash_x, const int crash_y) {
+void build_debris_trail(const int crash_x, const int crash_y) noexcept {
     set_worldgen_status("Crashing the ship");
     for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
 		for (int y=crash_y - 3; y<crash_y+4; ++y) {
@@ -91,7 +91,7 @@ void build_debris_trail(const int crash_x, const int crash_y) {
 	}
 }
 
-void build_beaches() {
+void build_beaches() noexcept {
     const auto sand = get_material_by_tag("yellow_sand");
     for (int y=1; y<WORLD_HEIGHT-1; ++y) {
         for (int x=1; x<WORLD_WIDTH; ++x) {

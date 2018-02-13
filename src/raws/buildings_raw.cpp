@@ -11,28 +11,28 @@
 
 boost::container::flat_map<std::string, building_def_t> building_defs;
 
-building_def_t * get_building_def(const std::string tag) {
+building_def_t * get_building_def(const std::string &tag) noexcept {
     auto finder = building_defs.find(tag);
     if (finder == building_defs.end()) return nullptr;
     return &finder->second;
 }
 
-void each_building_def(const std::function<void(building_def_t *)> func) {
-    for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
-        func(&it->second);
+void each_building_def(const std::function<void(building_def_t *)> &func) noexcept {
+	for (auto &it : building_defs) {
+        func(&it.second);
     }
 }
 
 void sanity_check_buildings() noexcept
 {
-    for (auto it=building_defs.begin(); it!=building_defs.end(); ++it) {
-        if (it->first.empty()) std::cout << "WARNING: Empty building tag\n";
-        if (it->second.name.empty()) std::cout << "WARNING: Building " << it->first << " has no name.\n";
-        for (const reaction_input_t &comp : it->second.components) {
-            if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it->first << "\n";
-            auto finder = get_item_def(comp.tag);
+	for (auto &it : building_defs) {
+        if (it.first.empty()) std::cout << "WARNING: Empty building tag\n";
+        if (it.second.name.empty()) std::cout << "WARNING: Building " << it.first << " has no name.\n";
+        for (const auto &comp : it.second.components) {
+            if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it.first << "\n";
+            const auto finder = get_item_def(comp.tag);
             if (finder == nullptr) {
-                std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it->first << "\n";
+                std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it.first << "\n";
             }
         }
         //if (it->second.glyphs_ascii.size() != it->second.glyphs.size()) std::cout << "WARNING: Building " << it->first << " has invalid ASCII render data.\n";
@@ -78,8 +78,8 @@ void read_buildings() noexcept
                         if (f == "item") comp.tag = lua_tostring(lua_state, -1);
                         if (f == "qty") comp.quantity = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (f == "material") {
-                            std::string mat_name = lua_tostring(lua_state, -1);
-                            auto matfinder = get_material_by_tag(mat_name);
+                            const std::string mat_name = lua_tostring(lua_state, -1);
+                            const auto matfinder = get_material_by_tag(mat_name);
                             if (matfinder == 0) {
                                 std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
                             } else {
@@ -87,7 +87,7 @@ void read_buildings() noexcept
                             }
                         }
                         if (f == "mat_type") {
-                            std::string type_s = lua_tostring(lua_state, -1);
+                            const std::string type_s = lua_tostring(lua_state, -1);
                             if (type_s == "cluster_rock") {
                                 comp.required_material_type = cluster_rock;
                             } else if (type_s == "rock") {
@@ -119,7 +119,7 @@ void read_buildings() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string type = lua_tostring(lua_state, -2);
+                    const std::string type = lua_tostring(lua_state, -2);
                     if (type == "name") c.skill.first = lua_tostring(lua_state, -1);
                     if (type == "difficulty") c.skill.second = static_cast<int>(lua_tonumber(lua_state, -1));
                     lua_pop(lua_state, 1);
@@ -154,7 +154,7 @@ void read_buildings() noexcept
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
-                        std::string inner_type = lua_tostring(lua_state, -2);
+                        const std::string inner_type = lua_tostring(lua_state, -2);
                         if (inner_type == "energy_cost") provisions.energy_cost = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (inner_type == "radius") provisions.radius = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (inner_type == "color") provisions.color = read_lua_color("color");
@@ -175,13 +175,13 @@ void read_buildings() noexcept
                     if (type == "tiles") {
                         lua_pushstring(lua_state, type.c_str());
                         lua_gettable(lua_state, -2);
-                        int i = 0;
+                        auto i = 0;
                         while (lua_next(lua_state, -2) != 0) {
                             xp::vchar render;
                             lua_pushnumber(lua_state, i);
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
-                                std::string tiletag = lua_tostring(lua_state, -2);
+                                const std::string tiletag = lua_tostring(lua_state, -2);
                                 if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
                                 if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
                                 if (tiletag == "background") render.background = read_lua_color("background");
@@ -230,9 +230,9 @@ void read_buildings() noexcept
                 xp::rex_sprite sprite(filename);
                 c.width = sprite.get_width();
                 c.height = sprite.get_height();
-                for (int y=0; y<c.height; ++y) {
-                    for (int x=0; x<c.width; ++x) {
-						xp::vchar tmp = *sprite.get_tile(0, x, y);
+                for (auto y=0; y<c.height; ++y) {
+                    for (auto x=0; x<c.width; ++x) {
+						const auto tmp = *sprite.get_tile(0, x, y);
                         c.glyphs.push_back(tmp);
                         c.glyphs_ascii.push_back(tmp);
                     }

@@ -11,8 +11,8 @@
 namespace first_run_screen {
 	bool first_run_done = false;
 
-	bool is_first_run() {
-		std::string path = get_save_path() + "/firstrun.txt";
+	bool is_first_run() noexcept {
+		const auto path = get_save_path() + "/firstrun.txt";
 		if (exists(path)) return false;
 
 		std::ofstream f(path);
@@ -21,7 +21,7 @@ namespace first_run_screen {
 		return true;
 	}
 
-	void tick(const double &duration_ms) {
+	void tick(const double &duration_ms) noexcept {
 		using namespace config;
 
 		ImGui_ImplGlfwGL3_NewFrame();

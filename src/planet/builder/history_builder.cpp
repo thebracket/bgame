@@ -9,29 +9,29 @@
 #include <map>
 #include <set>
 
-constexpr int n_civs = WORLD_WIDTH;
+constexpr int N_CIVS = WORLD_WIDTH;
 
-std::string get_random_species(bengine::random_number_generator &rng, const int tech_level=0) {
+static std::string get_random_species(bengine::random_number_generator &rng, const int tech_level=0) noexcept {
     std::vector<std::string> eligible;
 
     each_civilization_def([&eligible, &tech_level] (std::string ctag, civilization_t * it) {
         if (it->tech_level == tech_level) eligible.push_back(ctag);
     });
 
-    if (eligible.empty()) throw std::runtime_error("No suitable civs available!");
+    //if (eligible.empty()) throw std::runtime_error("No suitable civs available!");
     return eligible[rng.roll_dice(1, static_cast<int>(eligible.size()))-1];
 }
 
-void planet_build_initial_civs(planet_t &planet, bengine::random_number_generator &rng) {
+void planet_build_initial_civs(planet_t &planet, bengine::random_number_generator &rng) noexcept {
     set_worldgen_status("Initializing starting settlements");
 
-    for (int i=1; i<n_civs; ++i) {
+    for (auto i=1; i<N_CIVS; ++i) {
         civ_t civ;
 
         start_over:
-        int wx = rng.roll_dice(1, WORLD_WIDTH-1);
-        int wy = rng.roll_dice(1, WORLD_HEIGHT-1);
-        int pidx = planet.idx(wx, wy);
+		const auto wx = rng.roll_dice(1, WORLD_WIDTH-1);
+		const auto wy = rng.roll_dice(1, WORLD_HEIGHT-1);
+		const auto pidx = planet.idx(wx, wy);
         if (planet.landblocks[pidx].type == block_type::WATER) goto start_over;
         if (planet.civs.region_info[pidx].owner_civ > 0) goto start_over;
 
@@ -48,9 +48,9 @@ void planet_build_initial_civs(planet_t &planet, bengine::random_number_generato
 
         // Name generation
         using namespace string_tables;
-        auto civ_finder = get_civ_def(civ.species_tag);
-        const std::string civ_name_func = "civ_name_gen_" + civ_finder->name_generator;
-        const std::string civ_leader_func = "leader_name_gen_" + civ_finder->name_generator;
+        const auto civ_finder = get_civ_def(civ.species_tag);
+        const auto civ_name_func = "civ_name_gen_" + civ_finder->name_generator;
+        const auto civ_leader_func = "leader_name_gen_" + civ_finder->name_generator;
         civ.name = lua_str_func(civ_name_func, rng.roll_dice(1,1000)) + std::string(" of the ") + loc_name;
         if (str_contains(civ.name, "{LASTNAME}")) {
             civ.name = str_replace(civ.name, "{LASTNAME}", string_table(LAST_NAMES)->random_entry(rng));
@@ -110,30 +110,30 @@ void planet_build_initial_civs(planet_t &planet, bengine::random_number_generato
 
         planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
     }
-    std::cout << "Created " << n_civs << " civs\n";
+    std::cout << "Created " << N_CIVS << " civs\n";
 }
 
-std::string random_unit_type(const civilization_t &civ, bengine::random_number_generator &rng) {
+static std::string random_unit_type(const civilization_t &civ, bengine::random_number_generator &rng) noexcept {
     std::vector<std::string> available;
-    for (auto it=civ.units.begin(); it!=civ.units.end(); ++it) {
-        if (it->second.tag != "garrison") available.push_back(it->first);
+	for (auto &it : civ.units) {
+        if (it.second.tag != "garrison") available.push_back(it.first);
     }
 
-    int roll = rng.roll_dice(1, static_cast<int>(available.size()))-1;
+    const auto roll = rng.roll_dice(1, static_cast<int>(available.size()))-1;
     return available[roll];
 }
 
-void planet_build_civ_year(const int year, planet_t &planet, bengine::random_number_generator &rng, civ_t &civ, const std::size_t &id) {
+static void planet_build_civ_year(const int year, planet_t &planet, bengine::random_number_generator &rng, civ_t &civ, const std::size_t &id) noexcept {
     //std::cout << year << ", " << civ.name << "\n";
 
     auto civ_f = get_civ_def(civ.species_tag);
     auto species_f = get_species_def(civ_f->species_tag);
 
     // Total build points, find settlements
-    int bp = 0;
+	auto bp = 0;
     std::set<std::size_t> towns;
     std::size_t i=0;
-    int unit_count = 0;
+	auto unit_count = 0;
     for (const auto &settlement : planet.civs.region_info) {
         if (settlement.owner_civ == id) {
             bp += settlement.settlement_size*10;
@@ -143,9 +143,9 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
     }
     for (auto &unit : planet.civs.units) {
         if (unit.owner_civ == id) {
-            auto unit_finder = civ_f->units.find(unit.unit_type);
+            const auto unit_finder = civ_f->units.find(unit.unit_type);
             if (unit_finder == civ_f->units.end()) {
-                throw std::runtime_error(std::string("Unable to find: ") + civ.species_tag + std::string("/") + unit.unit_type);
+                //throw std::runtime_error(std::string("Unable to find: ") + civ.species_tag + std::string("/") + unit.unit_type);
             } else {
                 if (unit_finder->second.bp_per_turn > 0) bp += unit_finder->second.bp_per_turn;
                 ++unit_count;
@@ -178,7 +178,7 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
         for (auto &pidx : towns) {
             if (bp > 9) {
                 for (auto &build : civ_f->can_build) {
-                    bool has_one = false;
+					auto has_one = false;
                     for (const auto &i : planet.civs.region_info[pidx].improvements) {
                         if (i == build) has_one = true;
                     }
@@ -204,10 +204,10 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
         // Evolve!
         bp = 0;
         ++civ.tech_level;
-        int roll = rng.roll_dice(1, static_cast<int>(civ_f->evolves_into.size()))-1;
+        const auto roll = rng.roll_dice(1, static_cast<int>(civ_f->evolves_into.size()))-1;
         civ.species_tag = civ_f->evolves_into[roll];
-        auto civ2_f = get_civ_def(civ.species_tag);
-        const std::string civ_name_func = "civ_name_gen_" + civ2_f->name_generator;
+        const auto civ2_f = get_civ_def(civ.species_tag);
+        const auto civ_name_func = "civ_name_gen_" + civ2_f->name_generator;
         std::cout << civ.name << " evolves to tech level " << +civ.tech_level << " and takes the name: " << civ.name << "\n";
         civ.name = lua_str_func( civ_name_func, rng.roll_dice(1, 1000) ) + std::string(" of the ") + civ.origin;
         civ_f = civ2_f;
@@ -216,7 +216,7 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
     }
 
     // Consider new units
-    const int unit_cap = static_cast<int>(towns.size()) + civ.tech_level + 1;
+    const auto unit_cap = static_cast<int>(towns.size()) + civ.tech_level + 1;
     //std::cout << "Unit count: " << unit_count << ", cap " << unit_cap << "\n";
     while (bp > 5 && unit_count < unit_cap) {
         unit_t unit;
@@ -261,7 +261,7 @@ void planet_build_civ_year(const int year, planet_t &planet, bengine::random_num
     }
 }
 
-void planet_build_run_year(const int year, planet_t &planet, bengine::random_number_generator &rng) {
+static void planet_build_run_year(const int year, planet_t &planet, bengine::random_number_generator &rng) noexcept {
     // All civs get a turn
     std::size_t i=0;
     for (auto &civ : planet.civs.civs) {
@@ -274,10 +274,10 @@ void planet_build_run_year(const int year, planet_t &planet, bengine::random_num
     // Unit combat - units in the same region but of different civs kill one another
     //std::cout << "Considering combat\n";
 
-    int killed = 0;
-    for (int y=0; y<WORLD_HEIGHT-1; ++y) {
-        for (int x=0; x<WORLD_WIDTH-1; ++x) {
-            const int pidx = planet.idx(x,y);
+	auto killed = 0;
+    for (auto y=0; y<WORLD_HEIGHT-1; ++y) {
+        for (auto x=0; x<WORLD_WIDTH-1; ++x) {
+            const auto pidx = planet.idx(x,y);
             std::map<std::size_t, std::vector<std::size_t>> occupants;
 
             std::size_t i=0;
@@ -290,10 +290,10 @@ void planet_build_run_year(const int year, planet_t &planet, bengine::random_num
             if (occupants.size()>1) {
                 // Fight!
                 std::map<std::size_t, int> strengths;
-                for (auto cit = occupants.begin(); cit != occupants.end(); ++cit) {
-                    int str = 0;
+				for (auto &cit : occupants) {
+					auto str = 0;
                     // Defense bonus
-                    if (planet.civs.region_info[pidx].owner_civ == cit->first) {
+                    if (planet.civs.region_info[pidx].owner_civ == cit.first) {
                         str += 1; // Minimal bonus for home ground
                         for (auto &imp : planet.civs.region_info[pidx].improvements) {
                             if (imp == "ant_mound") str += 2;
@@ -303,10 +303,10 @@ void planet_build_run_year(const int year, planet_t &planet, bengine::random_num
                         }
                     }
 
-                    for (auto &uid : cit->second) {
-						if (planet.civs.civs.size() < cit->first) {
+                    for (auto &uid : cit.second) {
+						if (planet.civs.civs.size() < cit.first) {
 							const std::string ut = planet.civs.units[uid].unit_type;
-							const std::string st = planet.civs.civs[cit->first].species_tag;
+							const std::string st = planet.civs.civs[cit.first].species_tag;
 							//std::cout << st << ":" << ut << "\n";
 							auto civ_f = get_civ_def(st);
 							if (civ_f != nullptr) {
@@ -317,21 +317,21 @@ void planet_build_run_year(const int year, planet_t &planet, bengine::random_num
 							}
 						}
                     }
-                    strengths[cit->first] = str + rng.roll_dice(2, 6);
+                    strengths[cit.first] = str + rng.roll_dice(2, 6);
                 }
 
-                int max = 0; std::size_t winner = 0;
-                for (auto it = strengths.begin(); it != strengths.end(); ++it) {
-                    if (it->second > max) {
-                        max = it->second;
-                        winner = it->first;
+				auto max = 0; std::size_t winner = 0;
+				for (auto &it : strengths) {
+                    if (it.second > max) {
+                        max = it.second;
+                        winner = it.first;
                     }
                 }
                 //std::cout << "Fight!\n";
 
-                for (auto it=occupants.begin(); it!=occupants.end(); ++it) {
-                    if (it->first != winner) {
-                        for (auto &uid : it->second) {
+				for (auto &it : occupants) {
+                    if (it.first != winner) {
+                        for (auto &uid : it.second) {
                             planet.civs.units[uid].dead = true;
                             ++killed;
                         }
@@ -389,7 +389,7 @@ void planet_build_run_year(const int year, planet_t &planet, bengine::random_num
     }
 }
 
-void planet_build_initial_history(planet_t &planet, bengine::random_number_generator &rng) {
+void planet_build_initial_history(planet_t &planet, bengine::random_number_generator &rng) noexcept {
     constexpr int STARTING_YEAR = 2425;
     for (int year=STARTING_YEAR; year<2525; ++year) {
         set_worldgen_status(std::string("Running year ") + std::to_string(year));

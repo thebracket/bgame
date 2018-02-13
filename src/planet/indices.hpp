@@ -2,7 +2,6 @@
 
 #include "../components/position.hpp"
 #include <tuple>
-#include <assert.h>
 #include "constants.hpp"
 #include <iostream>
 

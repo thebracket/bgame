@@ -6,27 +6,28 @@
 
 using namespace region;
 
-std::vector<uint8_t> create_empty_heightmap() {
+std::vector<uint8_t> create_empty_heightmap() noexcept {
     std::vector<uint8_t> heightmap;
     heightmap.resize(REGION_HEIGHT * REGION_WIDTH);
     std::fill(heightmap.begin(), heightmap.end(), (uint8_t)0);
     return heightmap;
 }
 
-void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &noise, std::vector<uint8_t> &heightmap, planet_t &planet) {
-    for (int y=0; y<REGION_HEIGHT; ++y) {
-        for (int x=0; x<REGION_WIDTH; ++x) {
-            const double nx = noise_x(target.first, x);
-            const double ny = noise_y(target.second, y);
-            const float nh = noise.GetNoise ( nx, ny );
-            const uint8_t altitude = noise_to_planet_height(nh);
-            const int cell_idx = (y * REGION_WIDTH) + x;
+void build_heightmap_from_noise(std::pair<int,int> &target, FastNoise &noise, std::vector<uint8_t> &heightmap, planet_t &planet) noexcept {
+    for (auto y=0; y<REGION_HEIGHT; ++y) {
+        for (auto x=0; x<REGION_WIDTH; ++x) {
+            const auto nx = noise_x(target.first, x);
+            const auto ny = noise_y(target.second, y);
+            const auto nh = noise.GetNoise ( nx, ny );
+            const auto altitude = noise_to_planet_height(nh);
+            const auto cell_idx = (y * REGION_WIDTH) + x;
             heightmap[cell_idx] = altitude - planet.water_height + 5;
         }
     }
 }
 
-std::vector<int> create_subregions(planet_t &planet, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, bengine::random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, uint8_t>> &water_spawners) {
+std::vector<int> create_subregions(planet_t &planet, std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t> &biome, bengine::random_number_generator &rng, std::vector<uint8_t> &pooled_water, std::vector<std::pair<int, uint8_t>> &water_spawners) noexcept
+{
     const int region_variance = planet.landblocks[planet.idx(region_x(), region_y())].variance;
     const int n_subregions = 64 + rng.roll_dice(1,20) + (region_variance * 4);
 

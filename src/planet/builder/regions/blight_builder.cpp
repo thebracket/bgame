@@ -4,10 +4,12 @@
 #include "../../region/region.hpp"
 #include "../../../raws/defs/material_def_t.hpp"
 #include "../../../bengine/geometry.hpp"
+#include "../../constants.hpp"
+#include "../../region/region.hpp"
 
 using namespace region;
 
-void build_ant_mound(bengine::random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) {
+void build_ant_mound(bengine::random_number_generator &rng, std::vector<std::tuple<int,int,int>> &spawn_points) noexcept {
     // Build nests and move the creatures into them
     auto blight_mat = get_material_by_tag("blight");
     const int mound_height = rng.roll_dice(3,6);
@@ -35,7 +37,7 @@ void build_ant_mound(bengine::random_number_generator &rng, std::vector<std::tup
             for (int Y = y-i; Y<y+i; ++Y) {
                 if (bengine::distance2d(X,Y,x,y) < (i+2.0f)/2.0f) {
                     set_tile_type(mapidx(X, Y, sz), tile_type::FLOOR);
-                    spawn_points.push_back(std::make_tuple(X,Y,sz));
+                    spawn_points.emplace_back(std::make_tuple(X,Y,sz));
                 }
             }
         }
@@ -70,7 +72,7 @@ void build_ant_mound(bengine::random_number_generator &rng, std::vector<std::tup
     }
 }
 
-void just_add_blight(bengine::random_number_generator &rng) {
+void just_add_blight(bengine::random_number_generator &rng) noexcept {
     auto red_mushroom = get_plant_idx("deathcap");
     auto green_mushroom = get_plant_idx("blightcap");
     auto blight_mat = get_material_by_tag("blight");

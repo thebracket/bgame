@@ -12,7 +12,6 @@
 #include "../components/calendar.hpp"
 #include "../components/designations.hpp"
 #include "../components/mining/mining_designations.hpp"
-#include "../components/logger.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../systems/run_systems.hpp"
 #include "../global_assets/game_calendar.hpp"
@@ -34,7 +33,7 @@ namespace play_game {
     static std::atomic<bool> loaded(false);
     static std::unique_ptr<std::thread> loader_thread = nullptr;
 
-    static void do_load_game() {
+    static void do_load_game() noexcept {
         using namespace bengine;
 
         call_home("menu", "playgame");
@@ -93,7 +92,7 @@ namespace play_game {
         loaded = true;
     }
 
-    void tick(const double &duration_ms) {
+    void tick(const double &duration_ms) noexcept {
         if (!loader_thread) {
             loader_thread = std::make_unique<std::thread>(do_load_game);
         }

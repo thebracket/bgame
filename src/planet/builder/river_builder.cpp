@@ -3,7 +3,7 @@
 #include <map>
 #include <set>
 
-void planet_rivers(planet_t &planet, bengine::random_number_generator &rng) {
+void planet_rivers(planet_t &planet, bengine::random_number_generator &rng) noexcept {
 	set_worldgen_status("Running rivers and lakes");
 	const int n_rivers = WORLD_WIDTH/2;
 	std::set<int> used_starts;

@@ -38,7 +38,7 @@ namespace splash_screen {
     static int tex_idx = 0;
 
     /* Loads enough to get things started. */
-    void init() {
+    void init() noexcept {
         init_simple_sprite();
         bracket_logo = std::make_unique<texture_t>("game_assets/bracket-logo.jpg");
         ascii_texture = std::make_unique<texture_t>("game_assets/hack_square_64x64.jpg", false);
@@ -61,7 +61,7 @@ namespace splash_screen {
 		ascii_light_shader = load_shaders("game_assets/ascii_light_vertex.glsl", "game_assets/ascii_light_fragment.glsl");
 	}
 
-    static inline void init_raws(int id) {
+    static inline void init_raws(const int id) {
         std::cout << "RAW INIT - Seen thread " << id << "\n";
         load_raws();
         initialized_raws.store(true);
@@ -109,7 +109,7 @@ namespace splash_screen {
     constexpr int TEX_SIZE = 256; // This is probably too high
     constexpr int CURSOR_SIZE = 128;
 
-    static inline std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string filename) {
+    static inline std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string &filename) {
         int width, height, bpp;
         stbi_set_flip_vertically_on_load(true);
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb);
@@ -119,7 +119,7 @@ namespace splash_screen {
         return std::make_tuple(image_data, width, height, bpp);
     }
 
-	static inline std::tuple<unsigned char *, int, int, int> load_cursor_texture_to_ram(const std::string filename) {
+	static inline std::tuple<unsigned char *, int, int, int> load_cursor_texture_to_ram(const std::string &filename) {
         int width, height, bpp;
         stbi_set_flip_vertically_on_load(true);
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
@@ -144,14 +144,14 @@ namespace splash_screen {
                         num_actual_textures
         );
 
-        int load_index = 0;
+        auto load_index = 0;
         for (std::size_t i=0; i<material_textures.size(); ++i) {
-            const std::string stem = material_textures[i];
-            const std::string albedo = stem + "-t.jpg";
-            const std::string normal = stem + "-n.jpg";
-            const std::string occlusion = stem + "-ao.jpg";
-            const std::string metal = stem + "-m.jpg";
-            const std::string rough = stem + "-r.jpg";
+            const auto stem = material_textures[i];
+            const auto albedo = stem + "-t.jpg";
+            const auto normal = stem + "-n.jpg";
+            const auto occlusion = stem + "-ao.jpg";
+            const auto metal = stem + "-m.jpg";
+            const auto rough = stem + "-r.jpg";
 
             auto albedo_tex = load_texture_to_ram(albedo);
             auto normal_tex = load_texture_to_ram(normal);
@@ -221,7 +221,7 @@ namespace splash_screen {
         std::vector<std::string> cursor_textures{ "base_cursor.png", "chop_cursor.png", "tree_cursor.png", "farm_cursor.png", "guard_cursor.png",
                                                   "dig_cursor.png", "channel_cursor.png", "ramp_cursor.png", "downstairs_cursor.png", "upstairs_cursor.png", "updownstairs_cursor.png",
                                                   "wall_cursor.png", "floor_cursor.png", "bridge_cursor.png"};
-        const int num_actual_textures = static_cast<int>(cursor_textures.size());
+        const auto num_actual_textures = static_cast<int>(cursor_textures.size());
         std::cout << "# CursorTextures in array: " << num_actual_textures << "\n";
 
         glGenTextures(1, &assets::cursor_texture_array);
@@ -235,10 +235,10 @@ namespace splash_screen {
                        num_actual_textures
         );
 
-        int load_index = 0;
+        auto load_index = 0;
         for (std::size_t i = 0; i<cursor_textures.size(); ++i) {
-            const std::string stem = cursor_textures[i];
-            const std::string albedo = "game_assets/cursors/" + stem;
+            const auto stem = cursor_textures[i];
+            const auto albedo = "game_assets/cursors/" + stem;
 
             auto albedo_tex = load_cursor_texture_to_ram(albedo);
 
@@ -273,7 +273,7 @@ namespace splash_screen {
         }
     }
 
-    void tick(const double &duration_ms) {
+    void tick(const double &duration_ms) noexcept {
         run_time += duration_ms;
         if (run_time > 0.1 && run_time < 500.0f) {
             scale = std::min(0.5f, scale + 0.01f);

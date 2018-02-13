@@ -22,10 +22,10 @@ namespace config {
 		bool show_entity_ids = true;
 		bool build_tech_trees = false;
 
-		void save();
+		void save() const noexcept;
 	};
 
 	extern config_t game_config;
-	void read_config();
+	void read_config() noexcept;
 
 }

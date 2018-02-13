@@ -3,10 +3,8 @@
  */
 #pragma once
 
-#include <vector>
 #include "../tile.hpp"
 #include "../constants.hpp"
-#include "../../components/position.hpp"
 #include "../indices.hpp"
 #include "../../ascii_engine/ascii_mode.hpp"
 #include <functional>

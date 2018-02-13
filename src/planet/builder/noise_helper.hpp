@@ -9,15 +9,15 @@ inline uint8_t noise_to_planet_height(const float &n) {
 	return static_cast<uint8_t>((n + 1.0F) * 150.0F);
 }
 
-constexpr double NOISE_SIZE = 384.0F;
+constexpr float NOISE_SIZE = 384.0F;
 
 inline float noise_x(const int world_x, const int region_x) {
-	const float big_x = (world_x * WORLD_WIDTH) + region_x;
-	return (big_x / ((float)WORLD_WIDTH * (float)REGION_WIDTH)) * NOISE_SIZE;
+	const auto big_x = static_cast<float>((world_x * WORLD_WIDTH) + region_x);
+	return (big_x / (static_cast<float>(WORLD_WIDTH) * static_cast<float>(REGION_WIDTH))) * NOISE_SIZE;
 }
 
 inline float noise_y(const int world_y, const int region_y) {
-	const float big_y = (world_y * WORLD_HEIGHT) + region_y;
-	return (big_y / ((float)WORLD_HEIGHT * (float)REGION_HEIGHT)) * NOISE_SIZE;
+	const auto big_y = static_cast<float>((world_y * WORLD_HEIGHT) + region_y);
+	return (big_y / (static_cast<float>(WORLD_HEIGHT) * static_cast<float>(REGION_HEIGHT))) * NOISE_SIZE;
 }
 

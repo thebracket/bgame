@@ -28,16 +28,16 @@ namespace main_menu {
     const std::string menu_opts = std::string(ICON_FA_WRENCH) + " Options";
     const std::string menu_quit = std::string(ICON_FA_TIMES) + " Quit the Game";
 
-    static std::string online_username = "";
+    static std::string online_username;
 
     static std::string get_descriptive_noun() {
         using namespace string_tables;
 
-        bengine::random_number_generator rng;
+        const bengine::random_number_generator rng;
         return string_table(MENU_SUBTITLES)->random_entry(rng);
     }
 
-	void check_world_exists() {
+	void check_world_exists() noexcept {
 		if (exists(get_save_path() + std::string("/savegame.dat"))) {
 			world_exists = true;
 		}
@@ -58,8 +58,8 @@ namespace main_menu {
             case 8 : tagline = "Stories "; break;
         }
 
-        auto first_noun = get_descriptive_noun();
-        std::string second_noun = first_noun;
+        const auto first_noun = get_descriptive_noun();
+        auto second_noun = first_noun;
         while (second_noun == first_noun) {
             second_noun = get_descriptive_noun();
         }
@@ -77,11 +77,11 @@ namespace main_menu {
 		return window_width / 2.0f - text_width / 2.0f;
 	}
 
-    void tick(const double &duration_ms) {
+    void tick(const double &duration_ms) noexcept {
         if (!initialized) init();
 
-        ImVec4 red{1.0f, 0.0f, 0.0f, 1.0f};
-        ImVec4 yellow{1.0f, 1.0f, 0.0f, 1.0f};
+        const ImVec4 red{1.0f, 0.0f, 0.0f, 1.0f};
+        const ImVec4 yellow{1.0f, 1.0f, 0.0f, 1.0f};
         const std::string kylah = "To Kylah of the West and Jakie Monster - The Bravest Little Warriors of Them All.";
 
         int screen_w, screen_h;
@@ -109,20 +109,21 @@ namespace main_menu {
 
         // Main Menu Buttons
         if (!show_options) {
-			constexpr int BUTTON_ADD = 20;
+			constexpr auto button_add = 20;
 			const auto tagline_size = ImGui::CalcTextSize(tagline.c_str());
-			const auto kylah_size = ImGui::CalcTextSize(kylah.c_str());
-			const float window_width = std::max(tagline_size.x, kylah_size.x);
-			const float play_size = ImGui::CalcTextSize(menu_play.c_str()).x + BUTTON_ADD;
-			const float gen_size = ImGui::CalcTextSize(menu_gen.c_str()).x + BUTTON_ADD;
-			const float opts_size = ImGui::CalcTextSize(menu_opts.c_str()).x + BUTTON_ADD;
-			const float quit_size = ImGui::CalcTextSize(menu_quit.c_str()).x + BUTTON_ADD;
-			const float tagline_indent = calc_indent(window_width, tagline_size.x);
-			const float play_indent = calc_indent(window_width, play_size);
-			const float gen_indent = calc_indent(window_width, gen_size);
-			const float opts_indent = calc_indent(window_width, opts_size);
-			const float quit_indent = calc_indent(window_width, quit_size);
-			const float kylah_indent = calc_indent(window_width, kylah_size.x);
+			auto kylah_size = ImGui::CalcTextSize(kylah.c_str());
+			kylah_size.x += 50;
+			const auto window_width = std::max(tagline_size.x, kylah_size.x);
+			const auto play_size = ImGui::CalcTextSize(menu_play.c_str()).x + button_add;
+			const auto gen_size = ImGui::CalcTextSize(menu_gen.c_str()).x + button_add;
+			const auto opts_size = ImGui::CalcTextSize(menu_opts.c_str()).x + button_add;
+			const auto quit_size = ImGui::CalcTextSize(menu_quit.c_str()).x + button_add;
+			const auto tagline_indent = calc_indent(window_width, tagline_size.x);
+			const auto play_indent = calc_indent(window_width, play_size);
+			const auto gen_indent = calc_indent(window_width, gen_size);
+			const auto opts_indent = calc_indent(window_width, opts_size);
+			const auto quit_indent = calc_indent(window_width, quit_size);
+			const auto kylah_indent = calc_indent(window_width, kylah_size.x);
 
 			ImGui::SetNextWindowPosCenter();
             ImGui::Begin("MainMenu", nullptr, ImVec2{window_width, 400}, 0.0f,

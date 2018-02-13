@@ -44,7 +44,7 @@ namespace worldgen {
 
     float world_spin = 0.0f;
 
-    void init() {
+    static void init() {
         call_home("WorldGen", "Opened");
         initialized = true;
         seed = rng.roll_dice(1, std::numeric_limits<int>::max());
@@ -53,11 +53,11 @@ namespace worldgen {
         if (vao == 0) glGenVertexArrays(1, &vao);
     }
 
-    void start_thread() {
+    static void start_thread() {
         setup_build_planet();
 
         assert(assets::worldgenshader != 0);
-        projection_matrix = glm::perspective(90.0, (double)screen_w/(double)screen_h, 1.0, 300.0);
+        projection_matrix = glm::perspective(90.0, static_cast<double>(screen_w)/static_cast<double>(screen_h), 1.0, 300.0);
         view_matrix = glm::lookAt(glm::vec3(1.0f, 100.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::mat4(); // Identity
         projloc = glGetUniformLocation(assets::worldgenshader, "projection_mat");
@@ -69,7 +69,7 @@ namespace worldgen {
         world_thread = std::make_unique<std::thread>(build_planet, seed, water, plains, starting_settlers, strict_beamdown, ascii_mode);
     }
 
-    void render_menu() {
+    static void render_menu() {
         bengine::display_sprite(assets::background_image->texture_id, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
         ImGui::Begin("World Generation", nullptr, ImVec2{600,125}, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
 
@@ -98,16 +98,16 @@ namespace worldgen {
     constexpr float ALTITUDE_DIVISOR = 3.0f;
     constexpr float ALTITUDE_BASE = 60.0f;
 
-    void lerp_vertex(std::vector<float> &vertices, const int &world_x, const int &world_y, const int idx, const float &a, const float &b, const bool &rivers, const float &texture_id, const float &tx, const float &ty, const float &amount) {
+    static void lerp_vertex(std::vector<float> &vertices, const int &world_x, const int &world_y, const int idx, const float &a, const float &b, const bool &rivers, const float &texture_id, const float &tx, const float &ty, const float &amount) {
 		const int idx_real = planet.idx(world_x, world_y);
-        const float altitude = ALTITUDE_BASE + ((*planet_builder_display.get())[idx_real].altitude/ALTITUDE_DIVISOR);
+        const float altitude = ALTITUDE_BASE + ((*planet_builder_display)[idx_real].altitude/ALTITUDE_DIVISOR);
         const float x_sphere = altitude * cos(b);
         const float y_sphere = altitude * cos(a) * sin(b);
         const float z_sphere = altitude * sin(a) * sin(b);
 
         const float x_map = 90.0f - altitude;
-        const float z_map = ((float)world_x + tx - (WORLD_WIDTH/2.0f)) * 1.5f;
-        const float y_map = ((float)world_y + ty - (WORLD_HEIGHT/2.0f)) * 1.5f;
+        const float z_map = (static_cast<float>(world_x) + tx - (WORLD_WIDTH/2.0f)) * 1.5f;
+        const float y_map = (static_cast<float>(world_y) + ty - (WORLD_HEIGHT/2.0f)) * 1.5f;
 
         const float xdiff = x_map - x_sphere;
         const float ydiff = y_map - y_sphere;
@@ -122,10 +122,10 @@ namespace worldgen {
         vertices.emplace_back(rivers);
     }
 
-    void lerp_world_tile(std::vector<float> &vertices, const float &amount, const int &x, const int &y, const float &a, const float &b) {
-        const int idx = planet.idx(x,y);
-        const float texture_id = (*planet_builder_display.get())[idx].texture_id;
-        const float rivers = (*planet_builder_display.get())[idx].rivers ? 1.0f : 0.0f;
+    static void lerp_world_tile(std::vector<float> &vertices, const float &amount, const int &x, const int &y, const float &a, const float &b) {
+        const auto idx = planet.idx(x,y);
+        const auto texture_id = static_cast<float>((*planet_builder_display)[idx].texture_id);
+        const auto rivers = (*planet_builder_display)[idx].rivers ? 1.0f : 0.0f;
 
         lerp_vertex(vertices, x, y, idx, a, b, rivers, texture_id, 0.0f, 0.0f, amount);
         lerp_vertex(vertices, x, y, planet.idx(x, y+1), a, b+latitude_per_tile, rivers, texture_id, 0.0f, 1.0f, amount);
@@ -136,16 +136,16 @@ namespace worldgen {
         lerp_vertex(vertices, x, y, idx, a, b, rivers, texture_id, 0.0f, 0.0f, amount);
     }
 
-    void build_globe_buffer() {
+    static void build_globe_buffer() {
         planet_builder_lock.lock();
 
         std::vector<float> vertices;
         vertices.reserve(589824);
 
-        int y = 0;
-        for (float b=0.0f; b<=ONE_EIGHTY_RAD; b+=latitude_per_tile) {
-            int x = 0;
-            for (float a=0.0f; a<=THREE_SIXY_RAD; a+=longitude_per_tile) {
+        auto y = 0;
+        for (auto b=0.0f; b<=ONE_EIGHTY_RAD; b+=latitude_per_tile) {
+            auto x = 0;
+            for (auto a=0.0f; a<=THREE_SIXY_RAD; a+=longitude_per_tile) {
                 lerp_world_tile(vertices, world_flatten_lerp, x, y, a, b);
 
                 ++x;
@@ -178,7 +178,7 @@ namespace worldgen {
         n_vertices = (int)vertices.size();
     }
 
-    void render_globe() {
+    static void render_globe() {
         bengine::display_sprite(assets::starfield->texture_id, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f - world_flatten_lerp);
 
         model_matrix = glm::mat4();
@@ -203,7 +203,7 @@ namespace worldgen {
 
     double run_time = 0.0f;
 
-    void tick(const double &duration_ms) {
+    void tick(const double &duration_ms) noexcept {
         if (!initialized) init();
 
         ImGui_ImplGlfwGL3_NewFrame();
