@@ -149,9 +149,10 @@ namespace systems {
 
 		void run(const double &duration_ms) {
 
-			for (std::size_t i = 0; i<REGION_TILES_COUNT; ++i) {
+			// This is too slow
+			/*for (std::size_t i = 0; i<REGION_TILES_COUNT; ++i) {
 				if (water_stable[i] && water_level(i) == 1 && rng.roll_dice(1, 6) == 6) set_water_level(i, 0);
-			}
+			}*/
 
 			each<position_t>([](entity_t &e, position_t &pos) {
 				if (water_level(mapidx(pos)) > 7) {
