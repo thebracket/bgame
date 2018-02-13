@@ -85,9 +85,11 @@ namespace systems {
 				current_template = architecture_templates[0];
 				template_list = "";
 				for (const auto &t : architecture_templates) {
-					template_list += t.title + "\0";
+					template_list += t.title;
+					template_list += '\0';
 				}
-				template_list += std::string("\0\0");
+				template_list += '\0';
+				template_list += '\0';
 			}
 		}
 
