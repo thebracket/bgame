@@ -1,8 +1,6 @@
 #include "region.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"
-//#include "../../systems/physics/fluid_system.hpp"
-//#include "../../main/game_camera.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "../../raws/defs/plant_t.hpp"
 #include "../../bengine/serialization_utils.hpp"
@@ -162,7 +160,7 @@ namespace region {
 
     void set_tile_material(const int idx, const std::size_t material) {
         current_region->tile_material[idx] = material;
-        auto mat = get_material(material);
+        const auto mat = get_material(material);
         if (mat) current_region->hit_points[idx] = mat->hit_points;
     }
 
@@ -416,7 +414,7 @@ namespace region {
 	}
 
 	void save_current_region() {
-		std::string region_filename =
+		const auto region_filename =
 				get_save_path() + std::string("/region_") + std::to_string(current_region->region_x) + "_" +
 				std::to_string(current_region->region_y) + ".dat";
 		serial::gzip_file deflate(region_filename, "wb");
@@ -447,7 +445,7 @@ namespace region {
 	}
 
 	void load_current_region(const int region_x, const int region_y) {
-		std::string region_filename =
+		const auto region_filename =
 				get_save_path() + std::string("/region_") + std::to_string(region_x) + "_" + std::to_string(region_y) +
 				".dat";
 		serial::gzip_file inflate(region_filename, "rb");
@@ -594,7 +592,7 @@ namespace region {
 		size_t vegtype = tile_vegetation_type[idx];
 		if (vegtype > 0) {
 			//std::cout << vegtype << "\n";
-			uint8_t lifecycle = tile_vegetation_lifecycle[idx];
+			const auto lifecycle = tile_vegetation_lifecycle[idx];
 			if (lifecycle < 4) {
 				auto plant = get_plant_def(vegtype);
 				if (plant) {
