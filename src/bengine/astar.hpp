@@ -32,6 +32,7 @@
 
 // stl includes
 #include <cfloat>
+#include <vector>
 
 using std::vector;
 

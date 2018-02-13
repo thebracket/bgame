@@ -4,6 +4,7 @@
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "../../global_assets/building_designations.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace workflow_system {

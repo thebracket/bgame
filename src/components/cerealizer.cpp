@@ -11,6 +11,26 @@
 #include "farming/farm_designs.hpp"
 #include "ai_tags/aI_tag_work_farm_plant.hpp"
 #include "ai_tags/ai_tag_work_guarding.hpp"
+#include "ai_tags/ai_mode_idle.hpp"
+#include "ai_tags/ai_settler_new_arrival.hpp"
+#include "ai_tags/ai_tag_leisure_shift.hpp"
+#include "ai_tags/ai_tag_my_turn.hpp"
+#include "ai_tags/ai_tag_sleep_shift.hpp"
+#include "ai_tags/ai_tag_work_architect.hpp"
+#include "ai_tags/ai_tag_work_building.hpp"
+#include "ai_tags/ai_tag_work_butcher.hpp"
+#include "ai_tags/aI_tag_work_farm_clear.hpp"
+#include "ai_tags/aI_tag_work_farm_fertilize.hpp"
+#include "ai_tags/aI_tag_work_farm_fixsoil.hpp"
+#include "ai_tags/ai_tag_work_farm_water.hpp"
+#include "ai_tags/ai_tag_work_farm_weed.hpp"
+#include "ai_tags/ai_tag_work_harvest.hpp"
+#include "ai_tags/ai_tag_work_hunting.hpp"
+#include "ai_tags/ai_tag_work_lumberjack.hpp"
+#include "ai_tags/ai_tag_work_mining.hpp"
+#include "ai_tags/ai_tag_work_order.hpp"
+#include "ai_tags/ai_tag_work_pull_lever.hpp"
+#include "ai_tags/ai_tag_work_shift.hpp"
 #include "designations.hpp"
 #include "position.hpp"
 
@@ -19,6 +39,26 @@ CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<farming_designations_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_farm_plant>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_guarding>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_mode_idle_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_settler_new_arrival_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_leisure_shift_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_my_turn_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_sleep_shift_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_architect>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_building>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_butcher>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_farm_clear>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_farm_fertilize>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_farm_fixsoil>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_farm_water>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_farm_weed>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_harvest>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_hunting>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_lumberjack>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_miner>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_order>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_pull_lever>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<ai_tag_work_shift_t>>)
 
 template<class Archive>
 void serialize(Archive & archive, position_t &p)
@@ -58,4 +98,159 @@ void serialize(Archive & archive, ai_tag_work_guarding &g)
 {
 	// Nothing to save
 	archive(g.step, g.has_post, g.guard_post);
+}
+
+template<class Archive>
+void serialize(Archive & archive, ai_mode_idle_t &tag)
+{
+	// Nothing to save
+	//archive( );
+}
+
+template<class Archive>
+void serialize(Archive & archive, ai_settler_new_arrival_t &s)
+{
+	archive(s.turns_since_arrival);
+}
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_leisure_shift_t &tag)
+{
+	// Nothing to save
+	//archive( );
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_my_turn_t &tag)
+{
+	// Nothing to save
+	//archive( );
+}
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_sleep_shift_t &tag)
+{
+	// Nothing to save
+	//archive( );
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_architect &a)
+{
+	// Nothing to save
+	archive(a.step, a.current_tool);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_building &b)
+{
+	// Nothing to save
+	archive(b.step, b.building_target, b.current_tool);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_butcher &b)
+{
+	// Nothing to save
+	archive(b.step, b.target_corpse);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_farm_clear &f)
+{
+	// Nothing to save
+	archive(f.step, f.tool_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_farm_fertilize &f)
+{
+	// Nothing to save
+	archive(f.step, f.tool_id, f.fertilizer_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_farm_fixsoil &f)
+{
+	// Nothing to save
+	archive(f.step, f.tool_id, f.soil_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_farm_water &f)
+{
+	// Nothing to save
+	archive(f.step, f.tool_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_farm_weed &tag)
+{
+	// Nothing to save
+	archive(tag.step, tag.tool_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_harvest &f)
+{
+	// Nothing to save
+	archive(f.step, f.tool_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_hunting &h)
+{
+	// Nothing to save
+	archive(h.step);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_lumberjack &l)
+{
+	// Nothing to save
+	archive(l.step, l.tool_id, l.target_tree, l.target_x, l.target_y, l.target_z);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_miner &m)
+{
+	// Nothing to save
+	archive(m.step, m.tool_id);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_order & o)
+{
+	// Nothing to save
+	archive(o.step, o.reaction_target, o.current_tool);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_pull_lever &l)
+{
+	// Nothing to save
+	archive(l.step);
+}
+
+
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_shift_t &tag)
+{
+	// Nothing to save
+	//archive( );
 }
