@@ -14,19 +14,19 @@
 namespace bengine {
 
     // Forward declarations
-    class ecs;
+    class ecs_t;
     struct entity_t;
-    extern ecs default_ecs;
+    extern ecs_t default_ecs;
 
     namespace impl {
 
         template<class C>
-        inline void assign(ecs &ECS, entity_t &E, C component);
+        inline void assign(ecs_t &ECS, entity_t &E, C component);
 
         template <class C>
-        inline C * component(ecs &ECS, entity_t &E) noexcept;
+        inline C * component(ecs_t &ECS, entity_t &E) noexcept;
 
-        inline void unset_component_mask(ecs &ECS, const std::size_t id, const std::size_t family_id, bool delete_if_empty=false);
+        inline void unset_component_mask(ecs_t &ECS, const std::size_t id, const std::size_t family_id, const bool delete_if_empty=false) noexcept;
     }
 
     /* Class for storing profile data */
@@ -75,11 +75,11 @@ namespace bengine {
          */
         template<class C>
         struct component_t : public base_component_t {
-            component_t() {
+            component_t() noexcept {
                 data = C{};
                 family();
             }
-            component_t(C comp) : data(comp) {
+            explicit component_t(C comp) noexcept: data(comp) {
                 family();
             }
             std::size_t family_id;
@@ -101,7 +101,7 @@ namespace bengine {
          * Base class for the component store. Concrete component stores derive from this.
          */
         struct base_component_store {
-            virtual void erase_by_entity_id(ecs &ECS, const std::size_t &id)=0;
+            virtual void erase_by_entity_id(ecs_t &ECS, const std::size_t &id)=0;
             virtual void really_delete()=0;
             virtual std::size_t size()=0;
 
@@ -123,7 +123,7 @@ namespace bengine {
         struct component_store_t : public base_component_store {
             std::vector<C> components;
 
-            virtual void erase_by_entity_id(ecs &ECS, const std::size_t &id) override final {
+            virtual void erase_by_entity_id(ecs_t &ECS, const std::size_t &id) override final {
                 for (auto &item : components) {
                     if (item.entity_id == id) {
                         item.deleted=true;
@@ -204,7 +204,7 @@ namespace bengine {
          * component store.
          */
         template<class C>
-        inline entity_t * assign(ecs &ECS, C component) {
+        inline entity_t * assign(ecs_t &ECS, C component) {
             if (deleted) throw std::runtime_error("Cannot assign to a deleted entity");
             impl::assign<C>(ECS, *this, component);
             return this;
@@ -219,7 +219,7 @@ namespace bengine {
          * Find a component of the specified type that belongs to the entity.
          */
         template <class C>
-        inline C * component(ecs &ECS) noexcept {
+        inline C * component(ecs_t &ECS) noexcept {
             return impl::component<C>(ECS, *this);
         }
 
@@ -238,7 +238,7 @@ namespace bengine {
     /*
  * Class that holds an entity-component-system. This was moved to a class to allow for multiple instances.
  */
-    class ecs {
+    class ecs_t {
     public:
         /*
          * entity(ID) is used to reference an entity. So you can, for example, do:
@@ -250,12 +250,12 @@ namespace bengine {
          * Creates an entity with a new ID #. Returns a pointer to the entity, to enable
          * call chaining. For example create_entity()->assign(foo)->assign(bar)
          */
-        entity_t * create_entity();
+        entity_t * create_entity() noexcept;
 
         /*
          * Creates an entity with a specified ID #. You generally only do this during loading.
          */
-        entity_t * create_entity(const std::size_t new_id);
+        entity_t * create_entity(const std::size_t new_id) noexcept;
 
         /*
          * Marks an entity (specified by ID#) as deleted.
@@ -281,8 +281,8 @@ namespace bengine {
          * Deletes all entities
          */
         inline void delete_all_entities() noexcept  {
-            for (auto it=entity_store.begin(); it!=entity_store.end(); ++it) {
-                delete_entity(it->first);
+			for (auto &it : entity_store) {
+                delete_entity(it.first);
             }
         }
 
@@ -291,11 +291,10 @@ namespace bengine {
          */
         template<class C>
         inline void delete_component(const std::size_t entity_id, bool delete_entity_if_empty=false) noexcept {
-            auto eptr = entity(entity_id);
+            const auto eptr = entity(entity_id);
             if (!eptr) return;
-            entity_t e = *entity(entity_id);
-            C empty_component;
-            impl::component_t<C> temp(empty_component);
+            const  auto e = *entity(entity_id);
+            impl::component_t<C> temp(C{});
             if (!e.component_mask.test(temp.family_id)) return;
             for (impl::component_t<C> &component : static_cast<impl::component_store_t<impl::component_t<C>> *>(component_store[temp.family_id].get())->components) {
                 if (component.entity_id == entity_id) {
@@ -311,9 +310,8 @@ namespace bengine {
          */
         template<class C>
         inline std::vector<entity_t *> entities_with_component() {
-            C empty_component;
             std::vector<entity_t *> result;
-            impl::component_t<C> temp(empty_component);
+            impl::component_t<C> temp(C{});
             for (auto it=entity_store.begin(); it!=entity_store.end(); ++it) {
                 if (!it->second.deleted && it->second.component_mask.test(temp.family_id)) {
                     result.push_back(&it->second);
@@ -330,8 +328,7 @@ namespace bengine {
          */
         template <class C>
         inline void all_components(typename std::function<void(entity_t &, C &)> func) {
-            C empty_component;
-            impl::component_t<C> temp(empty_component);
+            impl::component_t<C> temp(C{});
             for (impl::component_t<C> &component : static_cast<impl::component_store_t<impl::component_t<C>> *>(component_store[temp.family_id].get())->components) {
                 entity_t e = *entity(component.entity_id);
                 if (!e.deleted && !component.deleted) {
@@ -430,20 +427,20 @@ namespace bengine {
             std::set<std::size_t> entities_to_delete;
 
             // Ensure that components are marked as deleted, and list out entities for erasure
-            for (auto it=entity_store.begin(); it!=entity_store.end(); ++it) {
-                if (it->second.deleted) {
-                    for (std::unique_ptr<impl::base_component_store> &store : component_store) {
-                        if (store) store->erase_by_entity_id(*this, it->second.id);
+			for (auto &it : entity_store) {
+                if (it.second.deleted) {
+                    for (auto &store : component_store) {
+                        if (store) store->erase_by_entity_id(*this, it.second.id);
                     }
-                    entities_to_delete.insert(it->second.id);
+                    entities_to_delete.insert(it.second.id);
                 }
             }
 
             // Actually delete entities
-            for (const std::size_t &id : entities_to_delete) entity_store.erase(id);
+            for (const auto &id : entities_to_delete) entity_store.erase(id);
 
             // Now we erase components
-            for (std::unique_ptr<impl::base_component_store> &store : component_store) {
+            for (auto &store : component_store) {
                 if (store) store->really_delete();
             }
         }
@@ -452,8 +449,6 @@ namespace bengine {
 
         void ecs_load(std::unique_ptr<std::ifstream> &lbfile);
 
-        std::string ecs_profile_dump();
-
         // The ECS component store
         std::vector<std::unique_ptr<impl::base_component_store>> component_store;
 
@@ -461,7 +456,7 @@ namespace bengine {
         std::map<std::size_t, entity_t> entity_store;
 
         // Helpers
-        inline void unset_component_mask(const std::size_t id, const std::size_t family_id, bool delete_if_empty) {
+        void unset_component_mask(const std::size_t id, const std::size_t family_id, const bool delete_if_empty) noexcept {
             auto finder = entity_store.find(id);
             if (finder != entity_store.end()) {
                 finder->second.component_mask.reset(family_id);
@@ -481,7 +476,7 @@ namespace bengine {
 
     namespace impl {
         template <class C>
-        inline void assign(ecs &ECS, entity_t &E, C component) {
+        inline void assign(ecs_t &ECS, entity_t &E, C component) {
             impl::component_t<C> temp(component);
             temp.entity_id = E.id;
             if (ECS.component_store.size() < temp.family_id+1) {
@@ -494,12 +489,11 @@ namespace bengine {
         }
 
         template <class C>
-        inline C * component(ecs &ECS, entity_t &E) noexcept {
+        inline C * component(ecs_t &ECS, entity_t &E) noexcept {
             C * result = nullptr;
             if (E.deleted) return result;
 
-            C empty_component;
-            impl::component_t<C> temp(empty_component);
+            impl::component_t<C> temp(C{});
             if (!E.component_mask.test(temp.family_id)) return result;
             for (impl::component_t<C> &component : static_cast<impl::component_store_t<impl::component_t<C>> *>(ECS.component_store[temp.family_id].get())->components) {
                 if (component.entity_id == E.id) {
@@ -510,11 +504,11 @@ namespace bengine {
             return result;
         }
 
-        inline void unset_component_mask(ecs &ECS, const std::size_t id, const std::size_t family_id, bool delete_if_empty) {
+        inline void unset_component_mask(ecs_t &ECS, const std::size_t id, const std::size_t family_id, bool delete_if_empty) noexcept {
             ECS.unset_component_mask(id, family_id, delete_if_empty);
         }
     }
 
 } // End RLTK namespace
 
-CEREAL_REGISTER_ARCHIVE(bengine::ecs)
+CEREAL_REGISTER_ARCHIVE(bengine::ecs_t)

@@ -1,15 +1,12 @@
 #pragma once
 
-#include "cereal_include.hpp"
 #include "ecs_impl.hpp"
 
 namespace bengine {
 
     /* Public interface to allow existing calls to continue to work */
 
-    extern ecs default_ecs;
-
-    inline entity_t * entity(ecs &ECS, const std::size_t id) noexcept {
+    inline entity_t * entity(ecs_t &ECS, const std::size_t id) noexcept {
         return ECS.entity(id);
     }
 
@@ -17,7 +14,7 @@ namespace bengine {
         return entity(default_ecs, id);
     }
 
-    inline entity_t * create_entity(ecs &ECS) {
+    inline entity_t * create_entity(ecs_t &ECS) {
         return ECS.create_entity();
     }
 
@@ -25,7 +22,7 @@ namespace bengine {
         return create_entity(default_ecs);
     }
 
-    inline entity_t * create_entity(ecs &ECS, const std::size_t new_id) {
+    inline entity_t * create_entity(ecs_t &ECS, const std::size_t new_id) {
         return ECS.create_entity(new_id);
     }
 
@@ -33,7 +30,7 @@ namespace bengine {
         return create_entity(default_ecs, new_id);
     }
 
-    inline void delete_entity(ecs &ECS, const std::size_t id) noexcept {
+    inline void delete_entity(ecs_t &ECS, const std::size_t id) noexcept {
         ECS.delete_entity(id);
     }
 
@@ -41,7 +38,7 @@ namespace bengine {
         delete_entity(default_ecs, id);
     }
 
-    inline void delete_entity(ecs &ECS, entity_t &e) noexcept {
+    inline void delete_entity(ecs_t &ECS, entity_t &e) noexcept {
         ECS.delete_entity(e);
     }
 
@@ -49,7 +46,7 @@ namespace bengine {
         delete_entity(default_ecs, e);
     }
 
-    inline void delete_all_entities(ecs &ECS) noexcept {
+    inline void delete_all_entities(ecs_t &ECS) noexcept {
         ECS.delete_all_entities();
     }
 
@@ -58,7 +55,7 @@ namespace bengine {
     }
 
     template<class C>
-    inline void delete_component(ecs &ECS, const std::size_t entity_id, bool delete_entity_if_empty=false) noexcept {
+    inline void delete_component(ecs_t &ECS, const std::size_t entity_id, bool delete_entity_if_empty=false) noexcept {
         ECS.delete_component<C>(entity_id, delete_entity_if_empty);
     }
 
@@ -68,7 +65,7 @@ namespace bengine {
     }
 
     template<class C>
-    inline std::vector<entity_t *> entities_with_component(ecs &ECS) {
+    inline std::vector<entity_t *> entities_with_component(ecs_t &ECS) {
         return ECS.entities_with_component<C>();
     }
 
@@ -78,7 +75,7 @@ namespace bengine {
     }
 
     template <class C>
-    inline void all_components(ecs &ECS, typename std::function<void(entity_t &, C &)> func) {
+    inline void all_components(ecs_t &ECS, typename std::function<void(entity_t &, C &)> func) {
         ECS.all_components<C>(func);
     }
 
@@ -88,7 +85,7 @@ namespace bengine {
     }
 
     template <typename... Cs, typename F>
-    inline void each(ecs &ECS, F callback) {
+    inline void each(ecs_t &ECS, F callback) {
         ECS.each<Cs...>(callback);
     }
 
@@ -98,7 +95,7 @@ namespace bengine {
     }
 
 	template <typename EXCLUDE, typename... Cs, typename F>
-	inline void each_without(ecs &ECS, F callback) {
+	inline void each_without(ecs_t &ECS, F callback) {
 		ECS.each_without<EXCLUDE, Cs...>(callback);
 	}
 
@@ -108,7 +105,7 @@ namespace bengine {
 	}
 
     template <typename... Cs, typename P, typename F>
-    inline void each_if(ecs &ECS, P&& predicate, F callback) {
+    inline void each_if(ecs_t &ECS, P&& predicate, F callback) {
         ECS.each_if<Cs...>(predicate, callback);
     }
 
@@ -117,7 +114,7 @@ namespace bengine {
         each_if<Cs...>(default_ecs, predicate, callback);
     }
 
-    inline void ecs_garbage_collect(ecs &ECS) {
+    inline void ecs_garbage_collect(ecs_t &ECS) {
         ECS.ecs_garbage_collect();
     }
 
@@ -125,7 +122,7 @@ namespace bengine {
         ecs_garbage_collect(default_ecs);
     }
 
-    inline void ecs_save(ecs &ECS, std::unique_ptr<std::ofstream> &lbfile) {
+    inline void ecs_save(ecs_t &ECS, std::unique_ptr<std::ofstream> &lbfile) {
         ECS.ecs_save(lbfile);
     }
 
@@ -133,19 +130,11 @@ namespace bengine {
         ecs_save(default_ecs, lbfile);
     }
 
-    inline void ecs_load(ecs &ECS, std::unique_ptr<std::ifstream> &lbfile) {
+    inline void ecs_load(ecs_t &ECS, std::unique_ptr<std::ifstream> &lbfile) {
         ECS.ecs_load(lbfile);
     }
 
     inline void ecs_load(std::unique_ptr<std::ifstream> &lbfile) {
         ecs_load(default_ecs, lbfile);
-    }
-
-    inline std::string ecs_profile_dump(ecs &ECS) {
-        return ECS.ecs_profile_dump();
-    }
-
-    inline std::string ecs_profile_dump() {
-        return ecs_profile_dump(default_ecs);
     }
 }
