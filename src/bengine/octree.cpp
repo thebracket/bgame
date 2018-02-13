@@ -1,4 +1,5 @@
 #include "octree.hpp"
+#include <algorithm>
 
 void octree_t::add_node(const octree_location_t loc) {
     const int idx = mapidx(loc.x, loc.y, loc.z);

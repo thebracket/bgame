@@ -11,6 +11,7 @@
 #include "../global_assets/game_camera.hpp"
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
+#include "../bengine/ecs.hpp"
 
 namespace render {
 	static constexpr int size = 128;

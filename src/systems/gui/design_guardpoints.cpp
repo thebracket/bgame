@@ -5,6 +5,7 @@
 #include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../mouse.hpp"
 #include "../../planet/region/region.hpp"
+#include <algorithm>
 
 namespace systems {
 	namespace design_guardpoints {

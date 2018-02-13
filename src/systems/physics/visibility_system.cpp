@@ -8,6 +8,7 @@
 #include "../../components/settler_ai.hpp"
 #include "../../components/buildings/turret_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
+#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 

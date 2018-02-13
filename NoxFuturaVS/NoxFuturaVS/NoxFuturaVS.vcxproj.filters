@@ -789,6 +789,9 @@
     <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp">
       <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\components\cerealizer.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1795,6 +1798,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
       <Filter>Header Files\planet\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\cerealizer.hpp">
+      <Filter>Header Files\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <zlib.h>
+#include <sstream>
 #include "color_t.hpp"
 
 namespace serial {

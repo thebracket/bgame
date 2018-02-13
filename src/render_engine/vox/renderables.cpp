@@ -25,6 +25,7 @@
 #include "../../systems/ai/inventory_system.hpp"
 #include "../chunks/chunks.hpp"
 #include "../renderbuffers.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace render {
 

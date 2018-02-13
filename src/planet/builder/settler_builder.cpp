@@ -21,6 +21,7 @@
 #include "../../raws/defs/civilization_t.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
+#include "../../bengine/ecs.hpp"
 
 std::vector<std::string> get_event_candidates(const int &age, const std::vector<std::string> &past) {
 	std::vector<std::string> result;

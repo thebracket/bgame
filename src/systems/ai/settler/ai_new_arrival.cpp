@@ -7,6 +7,7 @@
 #include "../../../raws/string_table.hpp"
 #include "../../gui/log_system.hpp"
 #include "../../../components/logger.hpp"
+#include "../../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace ai_new_arrival {

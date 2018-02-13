@@ -9,6 +9,7 @@
 #include "../bengine/ecs_impl.hpp"
 #include "../bengine/path_finding.hpp"
 #include "../components/helpers/reaction_task_t.hpp"
+#include "../components/helpers/building_designation_t.hpp"
 
 constexpr int NUMBER_OF_JOB_CATEGORIES = 10;
 constexpr int JOB_MINING = 0;

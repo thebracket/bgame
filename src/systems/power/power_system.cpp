@@ -5,6 +5,7 @@
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/lightsource.hpp"
 #include "../../bengine/color_t.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace power {

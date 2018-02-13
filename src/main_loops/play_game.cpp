@@ -27,6 +27,7 @@
 #include <atomic>
 #include "../components/buildings/architecture_designations_t.hpp"
 #include "../global_assets/architecture_designations.hpp"
+#include "../bengine/ecs.hpp"
 
 namespace play_game {
 

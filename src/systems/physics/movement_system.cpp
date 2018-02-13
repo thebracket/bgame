@@ -169,9 +169,9 @@ namespace systems {
 				epos->x = msg.destination.x;
 				epos->y = msg.destination.y;
 				epos->z = msg.destination.z;
-				epos->offsetX = 0.0F - (float)dX;
-				epos->offsetY = 0.0F - (float)dY;
-				epos->offsetZ = 0.0F - (float)dZ;
+				epos->offset_x = 0.0F - (float)dX;
+				epos->offset_y = 0.0F - (float)dY;
+				epos->offset_z = 0.0F - (float)dZ;
 
 				// Do vegetation damage
 				const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
@@ -185,9 +185,9 @@ namespace systems {
 					mount_pos->x = epos->x;
 					mount_pos->y = epos->y;
 					mount_pos->z = epos->z;
-					mount_pos->offsetX = epos->offsetX;
-					mount_pos->offsetY = epos->offsetY;
-					mount_pos->offsetZ = epos->offsetZ;
+					mount_pos->offset_x = epos->offset_x;
+					mount_pos->offset_y = epos->offset_y;
+					mount_pos->offset_z = epos->offset_z;
 				}
 
 				move_completions.enqueue(entity_moved_message{ msg.entity_id, origin, msg.destination });

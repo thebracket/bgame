@@ -2,6 +2,7 @@
 #include "../../planet/region/region.hpp"
 #include "../../bengine/threadpool.h"
 #include <stack>
+#include <map>
 
 namespace systems {
 	namespace dijkstra {

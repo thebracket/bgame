@@ -240,6 +240,7 @@
     <ClCompile Include="..\..\src\bengine\textures.cpp" />
     <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
     <ClCompile Include="..\..\src\components\calendar.cpp" />
+    <ClCompile Include="..\..\src\components\cerealizer.cpp" />
     <ClCompile Include="..\..\src\components\game_stats.cpp" />
     <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />
@@ -480,6 +481,7 @@
     <ClInclude Include="..\..\src\components\buildings\building_designations_t.hpp" />
     <ClInclude Include="..\..\src\components\calendar.hpp" />
     <ClInclude Include="..\..\src\components\camera_options.hpp" />
+    <ClInclude Include="..\..\src\components\cerealizer.hpp" />
     <ClInclude Include="..\..\src\components\claimed_t.hpp" />
     <ClInclude Include="..\..\src\components\buildings\construct_container.hpp" />
     <ClInclude Include="..\..\src\components\buildings\construct_power.hpp" />

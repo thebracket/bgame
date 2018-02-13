@@ -6,6 +6,7 @@
 #include "../../components/logger.hpp"
 #include "../gui/log_system.hpp"
 #include "../physics/movement_system.hpp"
+#include "../../planet/region/region.hpp"
 
 namespace systems {
 	namespace ai_stuck {

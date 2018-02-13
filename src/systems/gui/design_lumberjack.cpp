@@ -9,6 +9,7 @@
 #include "../../global_assets/game_mode.hpp"
 #include "../keydamper.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../planet/region/region.hpp"
 
 namespace systems {
 	namespace design_lumberjack {

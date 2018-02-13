@@ -41,6 +41,7 @@
 #include "../components/item_tags/item_farming.hpp"
 #include "../components/item_tags/item_topsoil_t.hpp"
 #include "../components/item_tags/item_fertilizer_t.hpp"
+#include "../bengine/ecs.hpp"
 
 std::unique_ptr<lua_lifecycle> lua_handle;
 

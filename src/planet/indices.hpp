@@ -4,6 +4,7 @@
 #include <tuple>
 #include <assert.h>
 #include "constants.hpp"
+#include <iostream>
 
 #define BOUNDS_CHECKING 1
 

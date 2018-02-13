@@ -7,6 +7,7 @@
 #include "../../components/health.hpp"
 #include "../../components/water_spawner.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
+#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 using namespace region;

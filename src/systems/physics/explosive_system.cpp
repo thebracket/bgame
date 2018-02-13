@@ -15,6 +15,7 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
+#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 using namespace region;

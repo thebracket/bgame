@@ -10,6 +10,7 @@
 #include "../../../components/buildings/construct_provides_sleep.hpp"
 #include "../../../components/claimed_t.hpp"
 #include "../../../components/ai_tags/ai_tag_sleep_shift.hpp"
+#include "../../../planet/indices.hpp"
 
 namespace systems {
 	namespace ai_sleep_time {

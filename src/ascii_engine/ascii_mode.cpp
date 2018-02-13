@@ -28,6 +28,7 @@
 #include "../global_assets/farming_designations.hpp"
 #include "../systems/gui/design_architecture.hpp"
 #include <array>
+#include "../bengine/ecs.hpp"
 
 namespace render {
 

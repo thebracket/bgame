@@ -6,6 +6,7 @@
 #include "../../global_assets/shader_storage.hpp"
 #include "../../render_engine/fbo/gbuffer.hpp"
 #include "../../bengine/geometry.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace particles {

@@ -4,6 +4,7 @@
 #include "../../global_assets/rng.hpp"
 #include "../../components/position.hpp"
 #include "../../components/buildings/construct_provides_door.hpp"
+#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 using namespace region;

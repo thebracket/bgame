@@ -6,6 +6,7 @@
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../region/region.hpp"
 #include "../../../raws/materials.hpp"
+#include "../../../bengine/ecs.hpp"
 
 using namespace region;
 

@@ -18,6 +18,7 @@
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
 #include "item_info_system.hpp"
+#include "../../bengine/ecs.hpp"
 
 namespace systems {
 	namespace settler_ui {

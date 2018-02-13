@@ -1,15 +1,9 @@
 #pragma once
 
 #include <unordered_map>
-#include "../planet/region/region.hpp"
+#include "../bengine/color_t.hpp"
 #include "position.hpp"
-#include "helpers/building_designation_t.hpp"
 #include "helpers/unbuild_t.hpp"
-#include <cereal/cereal.hpp>
-#include <cereal/types/utility.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../bengine/ecs_impl.hpp"
-#include <boost/container/flat_map.hpp>
 
 struct designations_t {
 
@@ -26,15 +20,6 @@ struct designations_t {
 
 	// Not serialized
 	bengine::color_t alert_color{1.0f, 1.0f, 1.0f};
-	int total_capacity = 10;
-
-	template<class Archive>
-	void serialize(Archive & archive)
-	{
-		archive( chopping, guard_points, deconstructions,
-			levers_to_pull, current_power, current_cash, standing_order_idle_move, standing_order_wildlife_treatment,
-            standing_order_upgrade); // serialize things by passing them to the archive
-	}
+	int total_capacity = 10;	
 };
 
-CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<designations_t>>)
