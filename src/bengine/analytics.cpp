@@ -41,7 +41,7 @@ namespace bengine {
 			return (result == CURLM_OK);
 		}
 
-		bool init(const char* trackingId, const char* uniqueClientId)
+		bool init(const char* trackingId, const char* uniqueClientId) noexcept
 		{
 			curl_global_init(CURL_GLOBAL_ALL);
 			curl_multi_handle = curl_multi_init();
@@ -52,7 +52,7 @@ namespace bengine {
 			return true;
 		}
 
-		void shutdown()
+		void shutdown() noexcept
 		{
 			if (!curl_multi_handle)
 				return;
@@ -62,22 +62,22 @@ namespace bengine {
 			curl_multi_handle = NULL;
 		}
 
-		void on_event(const char* category, const char* action, const char* label, unsigned int value)
+		void on_event(const char* category, const char* action, const char* label, const unsigned int value) noexcept
 		{
 			execute_curl_url("%s&t=event&ec=%s&ea=%s&el=%s&ev=%u&z=%d", analytics_url, category, action, label, value, rand());
 		}
 
-		void on_event(const char* category, const char* action, const char* label)
+		void on_event(const char* category, const char* action, const char* label) noexcept
 		{
 			execute_curl_url("%s&t=event&ec=%s&ea=%s&el=%s&z=%d", analytics_url, category, action, label, rand());
 		}
 
-		void on_event(const char* category, const char* action)
+		void on_event(const char* category, const char* action) noexcept
 		{
 			execute_curl_url("%s&t=event&ec=%s&ea=%s&z=%d", analytics_url, category, action, rand());
 		}
 
-		void update_tick()
+		void update_tick() noexcept
 		{
 			if (!curl_multi_handle)
 				return;
