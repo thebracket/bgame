@@ -14,8 +14,6 @@
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
 
-#pragma once
-
 namespace systems {
 	namespace ai_farm_plant {
 		using namespace bengine;
