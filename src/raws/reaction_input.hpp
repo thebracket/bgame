@@ -1,16 +1,13 @@
 #pragma once
 
-#include <istream>
-#include <ostream>
-//#include <rltk.hpp>
 #include <cereal/cereal.hpp>
 
-enum material_def_spawn_type_t { no_spawn_type, cluster_rock, rock, soil, sand, metal, synthetic, organic, leather, food, spice, blight };
+enum material_def_spawn_type_t { NO_SPAWN_TYPE, CLUSTER_ROCK, ROCK, SOIL, SAND, METAL, SYNTHETIC, ORGANIC, LEATHER, FOOD, SPICE, BLIGHT };
 
 struct reaction_input_t {
 	std::string tag = "";
 	std::size_t required_material = 0;
-	material_def_spawn_type_t required_material_type = no_spawn_type;
+	material_def_spawn_type_t required_material_type = NO_SPAWN_TYPE;
 	int quantity = 0;
 
 	template<class Archive>

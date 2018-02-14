@@ -8,7 +8,7 @@ std::vector<plant_t> plant_defs;
 
 std::size_t get_plant_idx(const std::string &tag) noexcept
 {
-    auto finder = plant_defs_idx.find(tag);
+    const auto finder = plant_defs_idx.find(tag);
     if (finder != plant_defs_idx.end()) {
         return finder->second;
     } else {
@@ -37,7 +37,7 @@ void read_plant_types() noexcept
 
     read_lua_table("vegetation",
                    [&p, &tag] (const auto &key) { tag=key; p=plant_t{}; p.tag = tag; },
-                   [&p, &tag] (const auto &key) { plant_defs.push_back(p); },
+                   [&p] (const auto &key) { plant_defs.push_back(p); },
                    lua_parser{
                            {"name",    [&p]() { p.name = lua_str(); std::cout << "Plant: " << p.name << "\n"; }},
                            {"cycles",  [&p]() {
@@ -59,8 +59,6 @@ void read_plant_types() noexcept
 								}
                            }},
                            {"glyphs_ascii",  [&p]() {
-                               xp::vchar ap; // ascii-plant
-
                                lua_pushstring(lua_state, "glyphs_ascii");
                                lua_gettable(lua_state, -2);
 							   p.glyphs_ascii.resize(4);

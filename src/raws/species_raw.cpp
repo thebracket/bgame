@@ -16,15 +16,15 @@ const raw_species_t * get_species_def(const std::string &tag) noexcept
     return &finder->second;
 }
 
-civilization_t * get_civ_def(const std::string tag) {
+civilization_t * get_civ_def(const std::string &tag) noexcept {
     auto finder = civ_defs.find(tag);
     if (finder == civ_defs.end()) return nullptr;
     return &finder->second;
 }
 
-void each_civilization_def(std::function<void(std::string, civilization_t *)> func) {
-    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
-        func(it->first, &it->second);
+void each_civilization_def(const std::function<void(std::string, civilization_t *)> &func) noexcept {
+	for (auto &it : civ_defs) {
+        func(it.first, &it.second);
     }
 }
 
@@ -35,20 +35,20 @@ std::size_t get_species_defs_size() noexcept
 
 std::string get_species_nth_tag(const int &roll) noexcept {
     auto it = species_defs.begin();
-    for (int i=0; i<roll; ++i) ++it;
+    for (auto i=0; i<roll; ++i) ++it;
     return it->first;
 }
 
 void sanity_check_species() noexcept
 {
-    for (auto s = species_defs.begin(); s!=species_defs.end(); ++s) {
-        if (s->first.empty()) std::cout << "WARNING: Species with no tag.\n";
-        if (s->second.name.empty()) std::cout << "WARNING: Species has no name: " << s->second.tag << "\n";
-        if (s->second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s->second.tag << "\n";
-        if (s->second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s->second.tag << "\n";
-        if (s->second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s->second.tag << "\n";
-        if (s->second.stat_mods.empty()) std::cout << "WARNING: Species has no stat modifiers: " << s->second.tag << "\n";
-        if (s->second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s->second.tag << "\n";
+	for (auto &s : species_defs) {
+        if (s.first.empty()) std::cout << "WARNING: Species with no tag.\n";
+        if (s.second.name.empty()) std::cout << "WARNING: Species has no name: " << s.second.tag << "\n";
+        if (s.second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s.second.tag << "\n";
+        if (s.second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s.second.tag << "\n";
+        if (s.second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s.second.tag << "\n";
+        if (s.second.stat_mods.empty()) std::cout << "WARNING: Species has no stat modifiers: " << s.second.tag << "\n";
+        if (s.second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s.second.tag << "\n";
     }
 }
 
@@ -115,7 +115,7 @@ void read_civ_types() noexcept
                                         lua_pushstring(lua_state, sfield.c_str());
                                         lua_gettable(lua_state, -2);
                                         while (lua_next(lua_state, -2) != 0) {
-                                            std::string afield = lua_tostring(lua_state, -2);
+                                            const std::string afield = lua_tostring(lua_state, -2);
                                             if (afield == "type") nattack.type = lua_tostring(lua_state, -1);
                                             if (afield == "hit_bonus") nattack.hit_bonus = static_cast<int>(lua_tonumber(lua_state, -1));
                                             if (afield == "n_dice") nattack.n_dice = static_cast<int>(lua_tonumber(lua_state, -1));
@@ -146,7 +146,7 @@ void read_civ_types() noexcept
                                                     int gender_tag = 0;
                                                     if (afield == "male") gender_tag = 1;
                                                     if (afield == "female") gender_tag = 2;
-                                                    equip.starting_clothes.push_back(std::make_tuple( gender_tag, slot, item ));
+                                                    equip.starting_clothes.emplace_back(std::make_tuple( gender_tag, slot, item ));
 
                                                     lua_pop(lua_state, 1);
                                                 }
@@ -175,7 +175,7 @@ void read_civ_types() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string target = lua_tostring(lua_state, -1);
+                    const std::string target = lua_tostring(lua_state, -1);
                     civ.evolves_into.push_back(target);
                     lua_pop(lua_state, 1);
                 }
@@ -184,7 +184,7 @@ void read_civ_types() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string target = lua_tostring(lua_state, -1);
+                    const std::string target = lua_tostring(lua_state, -1);
                     civ.can_build.push_back(target);
                     lua_pop(lua_state, 1);
                 }
@@ -235,15 +235,15 @@ void read_species_types() noexcept
                 lua_pushstring(lua_state, field.c_str());
                 lua_gettable(lua_state, -2);
                 while (lua_next(lua_state, -2) != 0) {
-                    std::string subfield = lua_tostring(lua_state, -2);
+                    const std::string subfield = lua_tostring(lua_state, -2);
                     if (subfield == "diet") {
-                        std::string diet_type = lua_tostring(lua_state, -1);
+                        const std::string diet_type = lua_tostring(lua_state, -1);
                         if (diet_type == "omnivore") s.diet = diet_omnivore;
                         if (diet_type == "herbivore") s.diet = diet_herbivore;
                         if (diet_type == "carnivore") s.diet = diet_carnivore;
                     }
                     if (subfield == "alignment") {
-                        std::string alignment_type = lua_tostring(lua_state, -1);
+                        const std::string alignment_type = lua_tostring(lua_state, -1);
                         if (alignment_type == "good") s.alignment = align_good;
                         if (alignment_type == "neutral") s.alignment = align_neutral;
                         if (alignment_type == "evil") s.alignment = align_evil;
@@ -263,7 +263,7 @@ void read_species_types() noexcept
                     lua_pushstring(lua_state, part_name.c_str());
                     lua_gettable(lua_state, -2);
                     while (lua_next(lua_state, -2) != 0) {
-                        std::string part_field = lua_tostring(lua_state, -2);
+                        const std::string part_field = lua_tostring(lua_state, -2);
                         if (part_field == "qty") std::get<1>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (part_field == "size") std::get<2>(part) = static_cast<int>(lua_tonumber(lua_state, -1));
                         lua_pop(lua_state, 1);
@@ -316,21 +316,21 @@ void read_species_types() noexcept
 }
 
 void make_civ_tree(graphviz_t * tree) {
-    for (auto it=civ_defs.begin(); it!=civ_defs.end(); ++it) {
-        const auto species = species_defs.find(it->second.species_tag);
+	for (const auto &it : civ_defs) {
+        const auto species = species_defs.find(it.second.species_tag);
         const auto species_name = species->second.tag;
 
         // Evolutionary options
-        for (const auto &evolve : it->second.evolves_into) {
+        for (const auto &evolve : it.second.evolves_into) {
             tree->add_node(species_name, evolve);
         }
 
         // Units
-        for (const auto &unit : it->second.units) {
+        for (const auto &unit : it.second.units) {
             tree->add_node(species_name, unit.second.tag, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
         }
 
-        for (const auto &build : it->second.can_build) {
+        for (const auto &build : it.second.can_build) {
             tree->add_node(species_name, build, graphviz_t::graphviz_shape_t::HOUSE);
         }
     }

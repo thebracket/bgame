@@ -215,7 +215,7 @@ namespace inventory {
 						ok = false;
 					}
 				}
-				if (input.required_material_type != no_spawn_type) {
+				if (input.required_material_type != NO_SPAWN_TYPE) {
 					if (get_material(i.material)->spawn_type != input.required_material_type) {
 						//std::cout << "Reject item by spawn type\n";
 						ok = false;
@@ -247,7 +247,7 @@ namespace inventory {
 				if (input.required_material != 0) {
 					if (i.material != input.required_material) ok = false;
 				}
-				if (input.required_material_type != no_spawn_type) {
+				if (input.required_material_type != NO_SPAWN_TYPE) {
 					if (get_material(i.material)->spawn_type != input.required_material_type) ok = false;
 				}
 				if (ok) result = e.id;

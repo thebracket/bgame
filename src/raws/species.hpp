@@ -15,12 +15,12 @@ const raw_species_t * get_species_def(const std::string &tag) noexcept;
 /*
  * Iterate civilization types
  */
-void each_civilization_def(std::function<void(std::string, civilization_t *)> func);
+void each_civilization_def(const std::function<void(std::string, civilization_t *)> &func) noexcept;
 
 /*
  * Retrieve a civilization definition
  */
-civilization_t * get_civ_def(const std::string tag);
+civilization_t * get_civ_def(const std::string &tag) noexcept;
 
 /*
  * Retrieve the size of the species list.

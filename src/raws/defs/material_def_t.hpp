@@ -10,7 +10,7 @@
 struct material_def_t {
     std::string tag = "";
     std::string name = "";
-    material_def_spawn_type_t spawn_type = rock;
+    material_def_spawn_type_t spawn_type = ROCK;
     std::string parent_material_tag = "";
     uint16_t glyph;
     bengine::color_t fg;

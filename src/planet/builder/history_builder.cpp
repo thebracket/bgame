@@ -14,7 +14,7 @@ constexpr int N_CIVS = WORLD_WIDTH;
 static std::string get_random_species(bengine::random_number_generator &rng, const int tech_level=0) noexcept {
     std::vector<std::string> eligible;
 
-    each_civilization_def([&eligible, &tech_level] (std::string ctag, civilization_t * it) {
+    each_civilization_def([&eligible, &tech_level] (const std::string ctag, const civilization_t * it) {
         if (it->tech_level == tech_level) eligible.push_back(ctag);
     });
 

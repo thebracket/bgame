@@ -47,5 +47,5 @@ void read_material_types() noexcept;
 void build_material_tech_tree(graphviz_t * tree);
 void build_material_acquisition_tech_tree(graphviz_t * tree);
 
-void read_material_textures();
-void read_voxel_models();
+void read_material_textures() noexcept;
+void read_voxel_models() noexcept;

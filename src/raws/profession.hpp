@@ -4,7 +4,7 @@
 
 struct profession_t; // Forward
 
-profession_t * get_random_profession(bengine::random_number_generator &rng);
+profession_t * get_random_profession(bengine::random_number_generator &rng) noexcept;
 
 /*
  * Lua reader

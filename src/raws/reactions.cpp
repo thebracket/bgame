@@ -12,21 +12,21 @@
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
 
-reaction_t * get_reaction_def(const std::string tag) {
+reaction_t * get_reaction_def(const std::string &tag) noexcept {
     auto finder = reaction_defs.find(tag);
     if (finder == reaction_defs.end()) return nullptr;
     return &finder->second;
 }
 
-std::vector<std::string> get_reactions_for_building(const std::string tag) {
-    auto result = reaction_building_defs.find(tag);
+std::vector<std::string> get_reactions_for_building(const std::string &tag) noexcept {
+    const auto result = reaction_building_defs.find(tag);
     if (result == reaction_building_defs.end()) return std::vector<std::string>();
     return result->second;
 }
 
-void each_reaction(const std::function<void(std::string, reaction_t *)> func) {
-    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
-        func(it->first, &it->second);
+void each_reaction(const std::function<void(std::string, reaction_t *)> &func) noexcept {
+	for (auto &it : reaction_defs) {
+        func(it.first, &it.second);
     }
 }
 
@@ -62,14 +62,14 @@ void read_reactions() noexcept
 
                     reaction_input_t input;
                     input.required_material = 0;
-                    input.required_material_type = no_spawn_type;
+                    input.required_material_type = NO_SPAWN_TYPE;
                     while (lua_next(lua_state, -2) != 0) {
-                        std::string f = lua_tostring(lua_state, -2);
+                        const std::string f = lua_tostring(lua_state, -2);
                         if (f == "item") input.tag = lua_tostring(lua_state, -1);
                         if (f == "qty") input.quantity = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (f == "material") {
-                            std::string mat_name = lua_tostring(lua_state, -1);
-                            auto matfinder = get_material_by_tag(mat_name);
+                            const std::string mat_name = lua_tostring(lua_state, -1);
+                            const auto matfinder = get_material_by_tag(mat_name);
                             if (matfinder == 0) {
                                 std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
                             } else {
@@ -77,27 +77,27 @@ void read_reactions() noexcept
                             }
                         }
                         if (f == "mat_type") {
-                            std::string type_s = lua_tostring(lua_state, -1);
+                            const std::string type_s = lua_tostring(lua_state, -1);
                             if (type_s == "cluster_rock") {
-                                input.required_material_type = cluster_rock;
+                                input.required_material_type = CLUSTER_ROCK;
                             } else if (type_s == "rock") {
-                                input.required_material_type = rock;
+                                input.required_material_type = ROCK;
                             } else if (type_s == "soil") {
-                                input.required_material_type = soil;
+                                input.required_material_type = SOIL;
                             } else if (type_s == "sand") {
-                                input.required_material_type = sand;
+                                input.required_material_type = SAND;
                             } else if (type_s == "metal") {
-                                input.required_material_type = metal;
+                                input.required_material_type = METAL;
                             } else if (type_s == "synthetic") {
-                                input.required_material_type = synthetic;
+                                input.required_material_type = SYNTHETIC;
                             } else if (type_s == "organic") {
-                                input.required_material_type = organic;
+                                input.required_material_type = ORGANIC;
                             } else if (type_s == "leather") {
-                                input.required_material_type = leather;
+                                input.required_material_type = LEATHER;
                             } else if (type_s == "food") {
-                                input.required_material_type = food;
+                                input.required_material_type = FOOD;
                             } else if (type_s == "spice") {
-                                input.required_material_type = spice;
+                                input.required_material_type = SPICE;
                             } else {
                                 std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                             }
@@ -117,7 +117,7 @@ void read_reactions() noexcept
                     lua_gettable(lua_state, -2);
                     std::pair<std::string, int> comp;
                     while (lua_next(lua_state, -2) != 0) {
-                        std::string f = lua_tostring(lua_state, -2);
+                        const std::string f = lua_tostring(lua_state, -2);
                         if (f == "item") comp.first = lua_tostring(lua_state, -1);
                         if (f == "qty") comp.second = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (f == "special") {
@@ -147,33 +147,33 @@ void read_reactions() noexcept
 
 void sanity_check_reactions() noexcept
 {
-    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
-        if (it->first.empty()) std::cout << "WARNING: Empty reaction name\n";
-        if (it->second.tag.empty()) std::cout << "WARNING: Empty reaction tag\n";
-        if (it->second.name.empty()) std::cout << "WARNING: Empty reaction name, tag: " << it->first << "\n";
-        if (it->second.workshop.empty()) std::cout << "WARNING: Empty workshop name, tag: " << it->first << "\n";
-        auto bf = get_building_def(it->second.workshop);
-        if (bf == nullptr) std::cout << "WARNING: Undefined workshop, tag: " << it->first << "\n";
-        for (const auto &input : it->second.inputs) {
-            auto finder = get_item_def(input.tag);
-            if (finder == nullptr) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it->first << "\n";
+	for (auto &it : reaction_defs) {
+        if (it.first.empty()) std::cout << "WARNING: Empty reaction name\n";
+        if (it.second.tag.empty()) std::cout << "WARNING: Empty reaction tag\n";
+        if (it.second.name.empty()) std::cout << "WARNING: Empty reaction name, tag: " << it.first << "\n";
+        if (it.second.workshop.empty()) std::cout << "WARNING: Empty workshop name, tag: " << it.first << "\n";
+        const auto bf = get_building_def(it.second.workshop);
+        if (bf == nullptr) std::cout << "WARNING: Undefined workshop, tag: " << it.first << "\n";
+        for (const auto &input : it.second.inputs) {
+            const auto finder = get_item_def(input.tag);
+            if (finder == nullptr) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it.first << "\n";
         }
-        for (const auto &output : it->second.outputs) {
-            auto finder = get_item_def(output.first);
-            auto finder2 = get_clothing_by_tag(output.first);
-            if (finder == nullptr && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it->first << "\n";
+        for (const auto &output : it.second.outputs) {
+            const auto finder = get_item_def(output.first);
+            const auto finder2 = get_clothing_by_tag(output.first);
+            if (finder == nullptr && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it.first << "\n";
         }
     }
 }
 
 void build_reaction_tree(graphviz_t * tree) {
-    for (auto it=reaction_defs.begin(); it!=reaction_defs.end(); ++it) {
-        tree->add_node(std::string("building_") + it->second.workshop, it->second.tag, graphviz_t::graphviz_shape_t::HOUSE);
-        for (const auto &input : it->second.inputs) {
-            tree->add_node(std::string("item_") + input.tag, it->second.tag);
+	for (const auto &it : reaction_defs) {
+        tree->add_node(std::string("building_") + it.second.workshop, it.second.tag, graphviz_t::graphviz_shape_t::HOUSE);
+        for (const auto &input : it.second.inputs) {
+            tree->add_node(std::string("item_") + input.tag, it.second.tag);
         }
-        for (const auto &output : it->second.outputs) {
-            tree->add_node(it->second.tag, std::string("item_") + output.first, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
+        for (const auto &output : it.second.outputs) {
+            tree->add_node(it.second.tag, std::string("item_") + output.first, graphviz_t::graphviz_shape_t::PARALLELOGRAM);
         }
     }
 }

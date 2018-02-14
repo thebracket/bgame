@@ -71,7 +71,7 @@ void read_buildings() noexcept
 
                     reaction_input_t comp;
                     comp.required_material = 0;
-                    comp.required_material_type = no_spawn_type;
+                    comp.required_material_type = NO_SPAWN_TYPE;
                     while (lua_next(lua_state, -2) != 0) {
                         std::string f = lua_tostring(lua_state, -2);
 
@@ -89,21 +89,21 @@ void read_buildings() noexcept
                         if (f == "mat_type") {
                             const std::string type_s = lua_tostring(lua_state, -1);
                             if (type_s == "cluster_rock") {
-                                comp.required_material_type = cluster_rock;
+                                comp.required_material_type = CLUSTER_ROCK;
                             } else if (type_s == "rock") {
-                                comp.required_material_type = rock;
+                                comp.required_material_type = ROCK;
                             } else if (type_s == "soil") {
-                                comp.required_material_type = soil;
+                                comp.required_material_type = SOIL;
                             } else if (type_s == "sand") {
-                                comp.required_material_type = sand;
+                                comp.required_material_type = SAND;
                             } else if (type_s == "metal") {
-                                comp.required_material_type = metal;
+                                comp.required_material_type = METAL;
                             } else if (type_s == "synthetic") {
-                                comp.required_material_type = synthetic;
+                                comp.required_material_type = SYNTHETIC;
                             } else if (type_s == "organic") {
-                                comp.required_material_type = organic;
+                                comp.required_material_type = ORGANIC;
                             } else if (type_s == "leather") {
-                                comp.required_material_type = leather;
+                                comp.required_material_type = LEATHER;
                             } else {
                                 std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                             }

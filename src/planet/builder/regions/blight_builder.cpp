@@ -93,7 +93,7 @@ void just_add_blight(bengine::random_number_generator &rng) noexcept {
         auto m = material(idx);
         if (m > 0) {
             auto mat = get_material(m);
-            if (mat->spawn_type == soil || mat->spawn_type == sand) m = blight_mat;
+            if (mat->spawn_type == SOIL || mat->spawn_type == SAND) m = blight_mat;
         }
     });
 }

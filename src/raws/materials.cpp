@@ -35,7 +35,7 @@ std::string material_name(const std::size_t &id) noexcept {
  * Retrieve a material by tag
  */
 std::size_t get_material_by_tag(const std::string &tag) noexcept {
-    auto finder = material_defs_idx.find(tag);
+    const auto finder = material_defs_idx.find(tag);
     if (finder != material_defs_idx.end()) {
         return finder->second;
     }
@@ -49,11 +49,11 @@ void get_strata_materials(std::vector<std::size_t> &soils, std::vector<std::size
                           std::vector<std::size_t> &igneouses, std::vector<std::size_t> &sands) noexcept
 {
     std::size_t i = 0;
-    for (auto it=material_defs.begin(); it != material_defs.end(); ++it) {
-        if (it->spawn_type == soil) soils.push_back(i);
-        if (it->spawn_type == sand) sands.push_back(i);
-        if (it->spawn_type == rock && it->layer == "sedimentary") sedimentaries.push_back(i);
-        if (it->spawn_type == rock && it->layer == "igneous") igneouses.push_back(i);
+	for (auto &it : material_defs) {
+        if (it.spawn_type == SOIL) soils.push_back(i);
+        if (it.spawn_type == SAND) sands.push_back(i);
+        if (it.spawn_type == ROCK && it.layer == "sedimentary") sedimentaries.push_back(i);
+        if (it.spawn_type == ROCK && it.layer == "igneous") igneouses.push_back(i);
         ++i;
     }
 }
@@ -63,8 +63,12 @@ void get_strata_materials(std::vector<std::size_t> &soils, std::vector<std::size
  */
 bool is_material_idx_valid(const std::size_t &id) noexcept
 {
-    if (id > material_defs.size()) return false;
-    return true;
+	if (id > material_defs.size()) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 /*
@@ -84,8 +88,8 @@ void sanity_check_materials() noexcept
             if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag_second << ", tag: " << mat.tag << "\n";
         }*/
         if (!mat.ore_materials.empty()) {
-            for (const std::string &metal : mat.ore_materials) {
-                auto finder = material_defs_idx.find(metal);
+            for (const auto &metal : mat.ore_materials) {
+                const auto finder = material_defs_idx.find(metal);
                 if (finder == material_defs_idx.end()) {
                     std::cout << "WARNING: Substance " << mat.tag << " produces a non-existent ore: " << metal << "\n";
                 }
@@ -116,29 +120,29 @@ void read_material_types() noexcept
 
             if (field == "name") m.name = lua_tostring(lua_state, -1);
             if (field == "type") {
-                std::string type_s = lua_tostring(lua_state, -1);
+                const std::string type_s = lua_tostring(lua_state, -1);
                 if (type_s == "cluster_rock") {
-                    m.spawn_type = cluster_rock;
+                    m.spawn_type = CLUSTER_ROCK;
                 } else if (type_s == "rock") {
-                    m.spawn_type = rock;
+                    m.spawn_type = ROCK;
                 } else if (type_s == "soil") {
-                    m.spawn_type = soil;
+                    m.spawn_type = SOIL;
                 } else if (type_s == "sand") {
-                    m.spawn_type = sand;
+                    m.spawn_type = SAND;
                 } else if (type_s == "metal") {
-                    m.spawn_type = metal;
+                    m.spawn_type = METAL;
                 } else if (type_s == "synthetic") {
-                    m.spawn_type = synthetic;
+                    m.spawn_type = SYNTHETIC;
                 } else if (type_s == "organic") {
-                    m.spawn_type = organic;
+                    m.spawn_type = ORGANIC;
                 } else if (type_s == "leather") {
-                    m.spawn_type = leather;
+                    m.spawn_type = LEATHER;
                 } else if (type_s == "food") {
-                    m.spawn_type = food;
+                    m.spawn_type = FOOD;
                 } else if (type_s == "spice") {
-                    m.spawn_type = spice;
+                    m.spawn_type = SPICE;
                 } else if (type_s == "blight") {
-                    m.spawn_type = blight;
+                    m.spawn_type = BLIGHT;
                 } else {
                     std::cout << "WARNING: Unknown material type: " << type_s << "\n";
                 }
@@ -187,18 +191,18 @@ void build_material_acquisition_tech_tree(graphviz_t *tree) {
 	tree->add_trees();
 	for (const auto &mat : material_defs) {
 		switch (mat.spawn_type) {
-		case no_spawn_type: tree->add_node("None", mat.tag); break;
-		case cluster_rock: tree->add_node("Cluster Rock", mat.tag); break;
-		case rock: tree->add_node("Rock", mat.tag); break;
-		case soil: tree->add_node("Soil", mat.tag); break;
-		case sand: tree->add_node("Sand", mat.tag); break;
-		case metal: tree->add_node("Metal", mat.tag); break;
-		case synthetic: tree->add_node("Synthetic", mat.tag); break;
-		case organic: tree->add_node("Organic", mat.tag); break;
-		case leather: tree->add_node("Leather", mat.tag); break;
-		case food: tree->add_node("Food", mat.tag); break;
-		case spice: tree->add_node("Spice", mat.tag); break;
-		case blight: tree->add_node("Blight", mat.tag); break;
+		case NO_SPAWN_TYPE: tree->add_node("None", mat.tag); break;
+		case CLUSTER_ROCK: tree->add_node("Cluster Rock", mat.tag); break;
+		case ROCK: tree->add_node("Rock", mat.tag); break;
+		case SOIL: tree->add_node("Soil", mat.tag); break;
+		case SAND: tree->add_node("Sand", mat.tag); break;
+		case METAL: tree->add_node("Metal", mat.tag); break;
+		case SYNTHETIC: tree->add_node("Synthetic", mat.tag); break;
+		case ORGANIC: tree->add_node("Organic", mat.tag); break;
+		case LEATHER: tree->add_node("Leather", mat.tag); break;
+		case FOOD: tree->add_node("Food", mat.tag); break;
+		case SPICE: tree->add_node("Spice", mat.tag); break;
+		case BLIGHT: tree->add_node("Blight", mat.tag); break;
 		}
 	}
 }
@@ -214,7 +218,7 @@ void build_material_tech_tree(graphviz_t *tree) {
 	}*/
 }
 
-void read_material_textures() {
+void read_material_textures() noexcept {
 	std::map<int, std::string> tmp_tex;
 
 	lua_getglobal(lua_state, "terrain_textures");
@@ -224,16 +228,16 @@ void read_material_textures() {
 		std::string key = lua_tostring(lua_state, -2);
 		//std::cout << "Material texture key: " << key << "\n";
 
-		int idx = 0;
+		auto idx = 0;
 		std::string tex;
 
 		lua_pushstring(lua_state, key.c_str());
 		lua_gettable(lua_state, -2);
 		while (lua_next(lua_state, -2) != 0) {
-			std::string field = lua_tostring(lua_state, -2);
+			const std::string field = lua_tostring(lua_state, -2);
 			//std::cout << field << "\n";
 
-			if (field == "index") idx = (int)lua_tonumber(lua_state, -1);
+			if (field == "index") idx = static_cast<int>(lua_tonumber(lua_state, -1));
 			if (field == "texture") tex = lua_tostring(lua_state, -1);
 
 			lua_pop(lua_state, 1);
@@ -250,7 +254,7 @@ void read_material_textures() {
 	}
 }
 
-void read_voxel_models() {
+void read_voxel_models() noexcept {
 	lua_getglobal(lua_state, "voxel_models");
 	lua_pushnil(lua_state);
 
@@ -260,13 +264,13 @@ void read_voxel_models() {
 		std::string key = lua_tostring(lua_state, -2);
 		std::cout << key << "\n";
 
-		int idx = 0;
-		std::string modelfile{ "" };
+		auto idx = 0;
+		std::string modelfile;
 
 		lua_pushstring(lua_state, key.c_str());
 		lua_gettable(lua_state, -2);
 		while (lua_next(lua_state, -2) != 0) {
-			std::string field = lua_tostring(lua_state, -2);
+			const std::string field = lua_tostring(lua_state, -2);
 			std::cout << field << "\n";
 
 			if (field == "model") modelfile = lua_tostring(lua_state, -1);
@@ -279,8 +283,8 @@ void read_voxel_models() {
 		lua_pop(lua_state, 1);
 
 		voxel_models_to_load.clear();
-		for (auto it = vox.begin(); it != vox.end(); ++it) {
-			voxel_models_to_load.emplace_back(it->second);
+		for (auto &it : vox) {
+			voxel_models_to_load.emplace_back(it.second);
 		}
 	}
 }

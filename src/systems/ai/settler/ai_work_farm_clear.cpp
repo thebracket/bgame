@@ -161,7 +161,7 @@ namespace systems {
 				chunks::mark_chunk_dirty_by_tileidx(idx);
 
 				auto tm = get_material(region::material(idx));
-				if (tm && (tm->spawn_type == soil || tm->spawn_type == sand)) {
+				if (tm && (tm->spawn_type == SOIL || tm->spawn_type == SAND)) {
 					farm_finder->second.state = farm_steps::PLANT_SEEDS;
 				}
 				else {
