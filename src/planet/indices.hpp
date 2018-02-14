@@ -11,12 +11,6 @@
  * Calculate the array index of an x/y/z position.
  */
 inline int mapidx(const int &x, const int &y, const int &z) noexcept {
-#ifdef BOUNDS_CHECKING
-    if (x < 0 || x > REGION_WIDTH-1 || y < 0 || y>REGION_HEIGHT-1 || z<0 || z>REGION_DEPTH+1) {
-		glog(log_target::GAME, log_severity::ERROR, "MapIdx bounds check fail: %d/%d/%d", x, y, z);
-		//throw std::runtime_error("MapIdx Bounds Check Fail");
-    }
-#endif
     return (z * REGION_HEIGHT * REGION_WIDTH) + (y * REGION_WIDTH) + x;
 }
 
@@ -39,11 +33,5 @@ inline std::tuple<int,int,int> idxmap(int idx) noexcept {
 
     int x = idx;
 
-#ifdef BOUNDS_CHECKING
-    if (x < 0 || x > REGION_WIDTH-1 || y < 0 || y>REGION_HEIGHT-1 || z<0 || z>REGION_DEPTH+1) {
-		glog(log_target::GAME, log_severity::ERROR, "MapIdx bounds check fail: %d/%d/%d", x, y, z);
-		//throw std::runtime_error("MapIdx Bounds Check Fail");
-    }
-#endif
     return std::make_tuple(x,y,z);
 }

@@ -155,10 +155,12 @@ namespace region {
     bool blood_stain(const int idx) { return current_region->blood_stains[idx]; }
 
     void set_tile_type(const int idx, const uint8_t type) {
+		if (idx < 0 || idx > REGION_TILES_COUNT) return;
         current_region->tile_type[idx] = type;
     }
 
     void set_tile_material(const int idx, const std::size_t material) {
+		if (idx < 0 || idx > REGION_TILES_COUNT) return;
         current_region->tile_material[idx] = material;
         const auto mat = get_material(material);
         if (mat) current_region->hit_points[idx] = mat->hit_points;
@@ -201,6 +203,7 @@ namespace region {
     }
 
     void reveal(const int idx) {
+		if (idx < 0 || idx > REGION_TILES_COUNT) return;
         current_region->revealed[idx] = true;
     }
 

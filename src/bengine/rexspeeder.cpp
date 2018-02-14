@@ -120,7 +120,7 @@ namespace xp {
 		const int tileLen = 10; 
 
 		try {
-			gzFile gz = s_gzopen(filename.c_str(), "wb");
+			gzFile gz = s_gzopen(filename, "wb");
 
 			s_gzwrite(gz, (vp)&version, sizeof(version));
 			s_gzwrite(gz, (vp)&num_layers, sizeof(num_layers));

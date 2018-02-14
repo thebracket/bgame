@@ -22,7 +22,7 @@ std::vector<std::size_t> octree_t::find_by_loc(const octree_location_t &loc) {
     std::vector<std::size_t> result;
     const int idx = mapidx(loc.x, loc.y, loc.z);
     for (const auto &loc : contents[idx]) {
-        result.emplace_back(loc);
+        result.push_back(loc);
     }
     return result;
 }

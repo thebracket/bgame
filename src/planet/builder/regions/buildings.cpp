@@ -138,10 +138,13 @@ void add_construction(const int x, const int y, const int z, const std::string t
     }
 }
 
-void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) noexcept {
-    xp::rex_sprite ship("game_assets/rex/spaceship.xp");
-    int z=-2+crash_z;
-    for (int layer = 0; layer<5; ++layer) {
+void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
+	std::cout << crash_z << "\n";
+	int z = crash_z - 2;
+	std::cout << crash_z << "\n";
+	xp::rex_sprite ship("game_assets/rex/spaceship.xp");
+	std::cout << crash_z << "\n";
+	for (int layer = 0; layer<5; ++layer) {
         for (int Y=0; Y<ship.get_height(); ++Y) {
             for (int X=0; X<ship.get_width(); ++X) {
                 const int x = X-5+crash_x;
@@ -194,6 +197,7 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) n
             }
         }
         ++z;
+		std::cout << z << "\n";
     }
 }
 
