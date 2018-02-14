@@ -156,7 +156,7 @@ namespace systems {
 			const int idx = mapidx(pos);
 			auto farm_finder = farm_designations->farms.find(idx);
 			if (farm_finder == farm_designations->farms.end() || farm_finder->second.state != farm_steps::FIX_SOIL) {
-				std::cout << "Bailing out - not relevant anymore!";
+				//std::cout << "Bailing out - not relevant anymore!";
 				work.cancel_work_tag(e);
 				inventory_system::drop_item(h.soil_id, pos.x, pos.y, pos.z);
 				return;

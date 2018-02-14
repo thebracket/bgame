@@ -1,6 +1,5 @@
 #include "base_lit_buffer.hpp"
 #include "../../bengine/gl_include.hpp"
-#include <iostream>
 
 namespace render {
     base_lit_buffer_t::base_lit_buffer_t(const int &w, const int &h) {
@@ -45,8 +44,9 @@ namespace render {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
 
         // finally check if framebuffer is complete
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer baselight not complete!" << std::endl;
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			glog(log_target::LOADER, log_severity::WARNING, "Framebuffer baselight not complete!");
+		}
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }

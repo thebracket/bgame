@@ -415,6 +415,7 @@
     <ClCompile Include="..\..\src\systems\scheduler\corpse_system.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\initiative_system.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\tick_system.cpp" />
+    <ClCompile Include="..\..\src\utils\system_log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp" />
@@ -751,7 +752,7 @@
     <ClInclude Include="..\..\src\systems\scheduler\corpse_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\initiative_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\tick_system.hpp" />
-    <ClInclude Include="..\..\src\utils\coroutine_generator.hpp" />
+    <ClInclude Include="..\..\src\utils\system_log.hpp" />
     <ClInclude Include="..\..\src\utils\thread_safe_message_queue.hpp" />
   </ItemGroup>
   <ItemGroup>

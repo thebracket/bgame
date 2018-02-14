@@ -6,6 +6,7 @@
 #include "graphviz.hpp"
 #include "../bengine/rexspeeder.hpp"
 #include <boost/container/flat_map.hpp>
+#include "../utils/system_log.hpp"
 
 //using namespace rltk;
 
@@ -26,13 +27,13 @@ void each_building_def(const std::function<void(building_def_t *)> &func) noexce
 void sanity_check_buildings() noexcept
 {
 	for (auto &it : building_defs) {
-        if (it.first.empty()) std::cout << "WARNING: Empty building tag\n";
-        if (it.second.name.empty()) std::cout << "WARNING: Building " << it.first << " has no name.\n";
+        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty building tag");
+        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Building %s has no name.\n", it.first);
         for (const auto &comp : it.second.components) {
-            if (comp.tag.empty()) std::cout << "WARNING: Empty component for building: " << it.first << "\n";
+            if (comp.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty component for building: %s", it.first);
             const auto finder = get_item_def(comp.tag);
             if (finder == nullptr) {
-                std::cout << "WARNING: No item definition for component " << comp.tag << ", for building: " << it.first << "\n";
+				glog(log_target::LOADER, log_severity::WARNING, "WARNING: No item definition for component %s, for building %s", comp.tag, it.first);
             }
         }
         //if (it->second.glyphs_ascii.size() != it->second.glyphs.size()) std::cout << "WARNING: Building " << it->first << " has invalid ASCII render data.\n";
@@ -81,7 +82,7 @@ void read_buildings() noexcept
                             const std::string mat_name = lua_tostring(lua_state, -1);
                             const auto matfinder = get_material_by_tag(mat_name);
                             if (matfinder == 0) {
-                                std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
+								glog(log_target::LOADER, log_severity::WARNING, "WARNING: Reaction %s references unknown material %s", c.name, mat_name);
                             } else {
                                 comp.required_material = matfinder;
                             }
@@ -105,7 +106,7 @@ void read_buildings() noexcept
                             } else if (type_s == "leather") {
                                 comp.required_material_type = LEATHER;
                             } else {
-                                std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+								glog(log_target::LOADER, log_severity::WARNING, "Unknown material type %s", type_s);
                             }
                         }
                         lua_pop(lua_state, 1);
@@ -237,13 +238,13 @@ void read_buildings() noexcept
                         c.glyphs_ascii.push_back(tmp);
                     }
                 }
-                std::cout << "Loaded REX file: " << filename << ", " << c.width << " x " << c.height << "\n";
+                //std::cout << "Loaded REX file: " << filename << ", " << c.width << " x " << c.height << "\n";
             }
 
             lua_pop(lua_state, 1);
         }
         building_defs[key] = c;
-        std::cout << "Read schematics for building: " << key << " (VOX " << building_defs[key].vox_model << ")\n";
+        //std::cout << "Read schematics for building: " << key << " (VOX " << building_defs[key].vox_model << ")\n";
         lua_pop(lua_state, 1);
     }
 }

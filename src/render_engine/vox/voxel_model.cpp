@@ -20,7 +20,6 @@ namespace vox {
 			const int idx = voxidx(width, depth, height, cube.x, cube.z, cube.y);
 			cubes[idx] = cube;
 		}
-		std::cout << "Starting with " << cubes.size() << " cubes (" << cubes.size() * 36 << " triangles).\n";
 
 		// Perform greedy voxels on it
 		int cube_count = 0;
@@ -98,7 +97,6 @@ namespace vox {
 			add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
 			++cube_count;
 		}
-		std::cout << "Reduced to " << cube_count << " cubes, " << geometry.size() << " triangles.\n";
 
 		// Build VAO/VBO and associate geometry with it
 		build_vbo(geometry);
@@ -167,7 +165,6 @@ namespace vox {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), &v[0], GL_STATIC_DRAW);
 		n_elements = (int)v.size() / 6;
-		std::cout << "Bound as VBO #" << vbo_id << "\n";
 	}
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)

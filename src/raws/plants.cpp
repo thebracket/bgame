@@ -1,7 +1,7 @@
 #include "plants.hpp"
 #include "lua_bridge.hpp"
 #include "defs/plant_t.hpp"
-#include <iostream>
+#include "../utils/system_log.hpp"
 
 std::unordered_map<std::string, std::size_t> plant_defs_idx;
 std::vector<plant_t> plant_defs;
@@ -12,7 +12,7 @@ std::size_t get_plant_idx(const std::string &tag) noexcept
     if (finder != plant_defs_idx.end()) {
         return finder->second;
     } else {
-        std::cout << "WARNING: Cannot find plant - " << tag << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "WARNING: Cannot find plant - %s", tag);
     }
     return 0;
 }
@@ -26,7 +26,7 @@ plant_t * get_plant_def(const std::size_t &index) noexcept
 void sanity_check_plants() noexcept
 {
     for (const auto &p : plant_defs) {
-        if (p.name.empty()) std::cout << "WARNING: No plant name\n";
+        if (p.name.empty()) glog(log_target::GAME, log_severity::WARNING, "WARNING: No plant name");
     }
 }
 
@@ -39,7 +39,7 @@ void read_plant_types() noexcept
                    [&p, &tag] (const auto &key) { tag=key; p=plant_t{}; p.tag = tag; },
                    [&p] (const auto &key) { plant_defs.push_back(p); },
                    lua_parser{
-                           {"name",    [&p]() { p.name = lua_str(); std::cout << "Plant: " << p.name << "\n"; }},
+                           {"name",    [&p]() { p.name = lua_str(); }},
                            {"cycles",  [&p]() {
 								p.lifecycle.resize(5);
 								lua_pushstring(lua_state, "cycles");

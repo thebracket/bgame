@@ -2,8 +2,8 @@
 #include "lua_bridge.hpp"
 #include "creatures.hpp"
 #include "defs/biome_type_t.hpp"
-#include <iostream>
 #include <map>
+#include "../utils/system_log.hpp"
 
 std::vector<biome_type_t> biome_defs;
 std::vector<std::string> biome_textures;
@@ -21,12 +21,12 @@ void each_biome(const std::function<void(biome_type_t *)> &func) noexcept {
 void sanity_check_biomes() noexcept
 {
     for (const auto &b : biome_defs) {
-        if (b.name.empty()) std::cout << "WARNING: Empty biome name\n";
-        if (b.occurs.empty()) std::cout << "WARNING: Biome " << b.name << " has no occurences!\n";
+        if (b.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty biome name");
+		if (b.occurs.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has no occurences! ", b.name);
         for (const auto &o : b.occurs) {
-            if (o <1 || o > 10)  std::cout << "WARNING: Biome " << b.name << " has invalid occurs\n";
+            if (o <1 || o > 10)  glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has invalid occurences! ", b.name);
         }
-        if (b.plants.empty()) std::cout << "WARNING: Biome " << b.name << " has no plants!\n";
+        if (b.plants.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has no plants! ", b.name);
         for (const auto &p : b.plants) {
             if (p.first == "none") break;
             /*auto finder = plant_defs_idx.find(p.first);
@@ -36,9 +36,9 @@ void sanity_check_biomes() noexcept
                 if (finder->second > plant_defs.size()) std::cout << "WARNING: Biome " << b.name << " has invalid plant: " << p.first << "\n";
             }*/
         }
-        if (b.wildlife.empty()) std::cout << "WARNING: Biome " << b.name << " has no wildlife.\n";
+        if (b.wildlife.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has no wildlife! ", b.name);
         for (const auto &w : b.wildlife) {
-            if (!get_creature_def(w)) std::cout << "WARNING: Biome " << b.name << " has invalid wildlife: " << w << "\n";
+			if (!get_creature_def(w)) glog(log_target::LOADER, log_severity::INFO, "WARNING: Biome %s has invalid wildlife %s", b.name, w);
         }
     }
 }
@@ -143,7 +143,7 @@ void read_biome_textures() noexcept {
 
     while(lua_next(lua_state, -2) != 0) {
         std::string key = lua_tostring(lua_state, -2);
-        std::cout << key << "\n";
+        //std::cout << key << "\n";
 
         auto idx = 0;
         std::string tex;

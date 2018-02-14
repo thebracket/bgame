@@ -165,7 +165,7 @@ namespace systems {
 				}
 				else if (w.step == ai_tag_work_order::work_steps::DROP_INPUT) {
 					//std::cout << "Drop input\n";
-					if (w.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
+					//if (w.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
 					inventory_system::drop_item(w.current_tool, pos.x, pos.y, pos.z );
 					w.current_tool = 0;
 					w.step = ai_tag_work_order::work_steps::SELECT_INPUT;
@@ -240,7 +240,7 @@ namespace systems {
 								if (!done && finder->specials.test(special_reaction_cooking)) {
 									// This is more complicated, we have to make a special item from the components.
 									// The idea is to get something like Roast Asparagus
-									std::cout << "Cooking Reaction - spawning " << output.first << "/" << material << "\n";
+									//std::cout << "Cooking Reaction - spawning " << output.first << "/" << material << "\n";
 									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material, quality, wear, e.id, cname);
 									auto item = new_item->component<item_t>();
 									item->item_name = mat_names + item->item_name;
@@ -250,7 +250,7 @@ namespace systems {
 								if (!done && finder->specials.test(special_reaction_tanning)) {
 									// This is more complicated, we have to make a special item from the components.
 									// The idea is to get something like Roast Asparagus
-									std::cout << "Tanning Reaction - spawning " << output.first << "/" << material << "\n";
+									//std::cout << "Tanning Reaction - spawning " << output.first << "/" << material << "\n";
 									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material, quality, wear, e.id, cname);
 									auto item = new_item->component<item_t>();
 									item->item_name = mat_names + item->item_name;
@@ -258,7 +258,7 @@ namespace systems {
 								}
 
 								if (!done) {
-									std::cout << "Reaction - spawning " << output.first << "/" << material << "\n";
+									//std::cout << "Reaction - spawning " << output.first << "/" << material << "\n";
 									std::string cname = "";
 									auto name = e.component<name_t>();
 									if (name) cname = name->first_name + std::string(" ") + name->last_name;

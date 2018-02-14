@@ -81,15 +81,15 @@ namespace systems {
 
 		void manage_triggers() {
 			triggers_changed.process_all([](triggers_changed_message &msg) {
-				std::cout << "Received trigger notification\n";
+				//std::cout << "Received trigger notification\n";
 				dirty = true;
 			});
 
 			if (dirty) {
-				std::cout << "Rebuilding trigger list\n";
+				//std::cout << "Rebuilding trigger list\n";
 				triggers.clear();
 				each<entry_trigger_t, position_t>([](entity_t &e, entry_trigger_t &trigger, position_t &pos) {
-					std::cout << "Found a trigger!\n";
+					//std::cout << "Found a trigger!\n";
 					triggers.insert(std::make_pair(mapidx(pos), e.id));
 				});
 				dirty = false;
@@ -282,13 +282,13 @@ namespace systems {
 
 		void pulled_levers() {
 			lever_pulled.process_all([](const lever_pulled_message &msg) {
-				std::cout << "Lever pulled: " << msg.lever_id << "\n";
+				//std::cout << "Lever pulled: " << msg.lever_id << "\n";
 				auto lever_entity = entity(msg.lever_id);
 				if (!lever_entity) return;
 				auto lever_component = lever_entity->component<lever_t>();
 				if (!lever_component) return;
 				auto renderable = lever_entity->component<renderable_t>();
-				std::cout << "All good on lever\n";
+				//std::cout << "All good on lever\n";
 
 				lever_component->active = !lever_component->active;
 				if (renderable) {

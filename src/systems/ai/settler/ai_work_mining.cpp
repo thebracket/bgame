@@ -74,7 +74,7 @@ namespace systems {
 			}
 			else if (mining_map[idx].distance == std::numeric_limits<uint8_t>::max()) {
 				// There's nothing to do - someone else must have done it.
-				std::cout << "Cancelling because of lack of mining tasks\n";
+				//std::cout << "Cancelling because of lack of mining tasks\n";
 				work.cancel_work_tag(e);
 				return;
 			}
@@ -108,12 +108,12 @@ namespace systems {
 				}
 
 				if (current_direction == 0) {
-					std::cout << "Direction 0 - drop tools\n";
+					//std::cout << "Direction 0 - drop tools\n";
 					work.cancel_work_tag(e);
 					return;
 				}
 
-				std::cout << "Direction: " << current_direction << "\n";
+				//std::cout << "Direction: " << current_direction << "\n";
 				position_t destination = pos;
 				switch (current_direction) {
 				case 1: --destination.y; break;
@@ -124,12 +124,12 @@ namespace systems {
 				case 6: ++destination.z; break;
 				}
 				movement::move_to(e.id, destination);
-				std::cout << "Emitted entity movement - " << e.id << "\n";
+				//std::cout << "Emitted entity movement - " << e.id << "\n";
 			}
 		}
 
 		inline void dig(entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
-			std::cout << "Dig !\n";
+			//std::cout << "Dig !\n";
 			const auto idx = mapidx(pos.x, pos.y, pos.z);
 			if (mining_map[idx].distance != 0) {
 				m.step = ai_tag_work_miner::mining_steps::GOTO_SITE;

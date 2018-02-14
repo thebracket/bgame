@@ -3,7 +3,7 @@
 #include "../components/position.hpp"
 #include <tuple>
 #include "constants.hpp"
-#include <iostream>
+#include "../utils/system_log.hpp"
 
 #define BOUNDS_CHECKING 1
 
@@ -13,7 +13,7 @@
 inline int mapidx(const int &x, const int &y, const int &z) noexcept {
 #ifdef BOUNDS_CHECKING
     if (x < 0 || x > REGION_WIDTH-1 || y < 0 || y>REGION_HEIGHT-1 || z<0 || z>REGION_DEPTH+1) {
-        std::cout << "MapIdx bounds check fail: " << x << "/" << y << "/" << z << "\n";
+		glog(log_target::GAME, log_severity::ERROR, "MapIdx bounds check fail: %d/%d/%d", x, y, z);
 		//throw std::runtime_error("MapIdx Bounds Check Fail");
     }
 #endif
@@ -41,7 +41,7 @@ inline std::tuple<int,int,int> idxmap(int idx) noexcept {
 
 #ifdef BOUNDS_CHECKING
     if (x < 0 || x > REGION_WIDTH-1 || y < 0 || y>REGION_HEIGHT-1 || z<0 || z>REGION_DEPTH+1) {
-        std::cout << "MapIdx bounds check fail: " << x << "/" << y << "/" << z << "\n";
+		glog(log_target::GAME, log_severity::ERROR, "MapIdx bounds check fail: %d/%d/%d", x, y, z);
 		//throw std::runtime_error("MapIdx Bounds Check Fail");
     }
 #endif

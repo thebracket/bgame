@@ -62,7 +62,7 @@ namespace systems {
 					b.step = ai_tag_work_building::building_steps::SELECT_COMPONENT;
 					const auto building_component = target_entity->component<building_t>();
 					if (building_component) {
-						std::stringstream ss;
+						fmt::MemoryWriter ss;
 						ss << "Building " << get_building_def(building_component->tag)->name;
 						work.set_status(e, ss.str().c_str());
 						target_entity->assign(claimed_t{ e.id });

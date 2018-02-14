@@ -159,7 +159,7 @@ namespace render {
 				if (pos.y != finder->second.light_pos.z) { changed = true; finder->second.light_pos.z = (float)pos.y; }
 				if (pos.z != finder->second.light_pos.y) { changed = true; finder->second.light_pos.y = (float)pos.z; }
 				if (changed) {
-					std::cout << "Light updated!\n";
+					//std::cout << "Light updated!\n";
 					finder->second.make_mats();
 				}
 				if (l.color.r != finder->second.light_col.r) finder->second.light_col.r = l.color.r;

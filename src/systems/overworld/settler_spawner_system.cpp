@@ -36,7 +36,7 @@ namespace systems {
 					planet.migrant_counter = 0;
 					const int new_settler_count = std::min(planet.remaining_settlers, rng.roll_dice(1, 6));
 					planet.remaining_settlers -= new_settler_count;
-					std::stringstream ss;
+					fmt::MemoryWriter ss;
 					ss << "Ark auto-repair has managed to make the teleporter work! " << new_settler_count << " settlers have beamed down.";
 					logging::log_message lmsg{ LOG{}.text(ss.str())->chars };
 					logging::log(lmsg);

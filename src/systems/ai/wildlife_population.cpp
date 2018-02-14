@@ -117,7 +117,7 @@ namespace systems {
 								->assign(wildlife_group{ i })
 								->assign(initiative_t{})
 								->assign(ai_mode_idle_t{});
-							std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
+							//std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
 							call_home("Spawn", "Creature", critter_tag);
 						}
 						distance_map::refresh_hunting_map();

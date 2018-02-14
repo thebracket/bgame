@@ -93,3 +93,4 @@ I use [MacPorts](https://www.macports.org/install.php) to provide the build envi
 * `ln -s ../game_assets .`
 * You can now launch the game with `./noxfutura`
 
+Note: It now also requires the "fmt" library.

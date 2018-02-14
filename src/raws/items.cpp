@@ -2,7 +2,7 @@
 #include "lua_bridge.hpp"
 #include "defs/item_def_t.hpp"
 #include <boost/container/flat_map.hpp>
-#include <iostream>
+#include "../utils/system_log.hpp"
 
 boost::container::flat_map<std::string, item_def_t> item_defs;
 boost::container::flat_map<int, stockpile_def_t> stockpile_defs;
@@ -37,9 +37,9 @@ void each_stockpile(const std::function<void(stockpile_def_t *)> &func) noexcept
 void sanity_check_items() noexcept
 {
 	for (auto &it : item_defs) {
-        if (it.first.empty()) std::cout << "WARNING: Item has no name\n";
-        if (it.second.tag.empty()) std::cout << "WARNING: Empty item tag\n";
-        if (it.second.name.empty()) std::cout << "WARNING: Empty item name, tag: " << it.second.tag << "\n";
+        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Item has no name");
+        if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty item tag");
+        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty item name, tag: %s", it.second.tag);
     }
 }
 

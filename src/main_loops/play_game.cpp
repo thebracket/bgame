@@ -38,11 +38,11 @@ namespace play_game {
 
         call_home("menu", "playgame");
         // Load the game
-        std::cout << "Loading the planet\n";
+		glog(log_target::GAME, log_severity::INFO, "Loading the planet");
         planet = load_planet();
 
         // Load the ECS
-        std::cout << "Loading game state\n";
+		glog(log_target::GAME, log_severity::INFO, "Loading game state");
         {
             const std::string save_filename = get_save_path() + std::string("/savegame.dat");
             std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
@@ -50,7 +50,7 @@ namespace play_game {
         }
 
         // Load the current region - check the camera for the world position
-        std::cout << "Storing important entity handles\n";
+		glog(log_target::GAME, log_severity::INFO, "Storing important entity handles");
 
         int region_x, region_y;
         each<world_position_t, calendar_t, designations_t, logger_t, camera_options_t, mining_designations_t, farming_designations_t, building_designations_t, architecture_designations_t>(
@@ -74,17 +74,17 @@ namespace play_game {
         });
 
          // Loading the region
-        std::cout << "Loading the region\n";
+		glog(log_target::GAME, log_severity::INFO, "Loading the region");
         region::load_current_region(region_x, region_y);
         region::tile_recalc_all();
 		region::update_outdoor_calculation();
 
         // Setup systems
-        std::cout << "Setting up systems\n";
+		glog(log_target::GAME, log_severity::INFO, "Setting up systems");
         //add_systems_to_ecs();
         systems::init();
 
-        std::cout << "Go!\n";
+		glog(log_target::GAME, log_severity::INFO, "Go!");
 
 		game_master_mode = PLAY;
 		pause_mode = ONE_STEP;

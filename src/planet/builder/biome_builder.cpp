@@ -3,7 +3,7 @@
 #include "../../raws/biomes.hpp"
 #include "../../raws/defs/biome_type_t.hpp"
 #include "../../bengine/geometry.hpp"
-#include <sstream>
+#include "../../utils/system_log.hpp"
 
 static std::unordered_map<uint8_t, double> biome_membership(planet_t &planet, const std::size_t &idx) noexcept {
 	std::unordered_map<uint8_t, double> percents;
@@ -278,7 +278,7 @@ static std::string name_biome(planet_t &planet, bengine::random_number_generator
 	std::string noun;
 	const auto bt = get_biome_def(biome.type);
 	if (bt->nouns.empty()) {
-		std::cout << "Warning: no nouns defined for " << bt->name << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "No nouns defined for %s", bt->name);
 	} else {
 		noun = bt->nouns[rng.roll_dice(1, bt->nouns.size())-1];
 	}
@@ -368,7 +368,7 @@ void build_biomes(planet_t &planet, bengine::random_number_generator &rng) noexc
 
 		// Update the status
 		const auto pct = static_cast<double>(count) / planet.biomes.size() * 100.0;
-		std::stringstream ss;
+		fmt::MemoryWriter ss;
 		ss << "Biome design: " << pct << "%";
 		set_worldgen_status(ss.str());
 		++count;

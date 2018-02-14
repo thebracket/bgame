@@ -9,6 +9,7 @@
 #include "../../components/position.hpp"
 #include "../../components/explosion_t.hpp"
 #include "../../global_assets/debug_flags.hpp"
+#include "../../utils/system_log.hpp"
 
 namespace systems {
 	namespace wishmode {
@@ -63,9 +64,16 @@ namespace systems {
 
 		void run(const double &duration_ms) {
 			ImGui::Begin("Make A Wish - Debug Command", nullptr, ImVec2{ 400, 100 }, ImGuiWindowFlags_AlwaysAutoResize);
+
+			const auto logs = ten_most_recent_log_entries(1);
+			for (const auto &s : logs)
+			{
+				ImGui::TextWrapped("%s", s.c_str());
+			}
+
 			ImGui::InputText("Wish Command", wish_command, 255);
 			if (ImGui::Button("Wish!")) {
-				std::string wishstring(wish_command);
+				const std::string wishstring(wish_command);
 				make_wish(wishstring);
 			}
 			ImGui::SameLine();

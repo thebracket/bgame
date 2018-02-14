@@ -237,7 +237,7 @@ namespace systems {
 					}
 				}
 			}
-			std::stringstream yields;
+			fmt::MemoryWriter yields;
 			for (const auto &y : yield_map) {
 				yields << y.first << " x " << y.second << ". ";
 			}
@@ -338,7 +338,7 @@ namespace systems {
 					const std::string fn(filename);
 					//const std::string filename = home + std::string(filename) + std::string(".mine-template");
 					const std::string filename = home + std::string("/") + fn + std::string(".mine-template");
-					std::cout << "Saving template as: " << filename << "\n";
+					//std::cout << "Saving template as: " << filename << "\n";
 
 					int min_x = 1000;
 					int min_y = 1000;

@@ -38,6 +38,7 @@
 #include "../../raws/defs/building_def_t.hpp"
 #include "units_info_system.hpp"
 #include <sstream>
+#include <fmt/format.h>
 
 namespace systems {
 	namespace item_ui {
@@ -82,7 +83,7 @@ namespace systems {
 				return;
 			}
 
-			std::stringstream tags;
+			fmt::MemoryWriter tags;
 			if (item_ammo) tags << "AMMO ";
 			if (item_bone) tags << "BONE ";
 			if (item_chopping) tags << "CHOPPING ";
@@ -103,7 +104,7 @@ namespace systems {
 				game_master_mode = PLAY;
 			}
 
-			std::stringstream item_name;
+			fmt::MemoryWriter item_name;
 			item_name << item_c->item_name;
 			if (item_mat) item_name << ", made of " << item_mat->name;
 			if (item_quality) item_name << ", of " << item_quality->get_quality_text() << " quality";

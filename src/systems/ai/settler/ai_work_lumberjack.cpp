@@ -223,7 +223,7 @@ namespace systems {
 				// Spawn wooden logs
 				number_of_logs = (number_of_logs / 20) + 1;
 				for (int i = 0; i<number_of_logs; ++i) {
-					std::cout << "Spawning wood\n";
+					//std::cout << "Spawning wood\n";
 					std::string cname = "";
 					auto name = e.component<name_t>();
 					if (name) cname = name->first_name + std::string(" ") + name->last_name;

@@ -6,6 +6,7 @@
 #include "../../raws/materials.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../raws/items.hpp"
+#include "../../utils/system_log.hpp"
 
 bengine::color_t colname_to_col(const std::string &col)
 {
@@ -20,7 +21,7 @@ bengine::color_t colname_to_col(const std::string &col)
     if (col == "pink") return bengine::color_t((uint8_t )250,105,180);
     if (col == "brown") return bengine::color_t((uint8_t )98, 74, 46);
     if (col == "khaki") return bengine::color_t((uint8_t )240, 230, 140);
-    std::cout << "WARNING: Unknown clothing color: " << col << "\n";
+	glog(log_target::LOADER, log_severity::WARNING, "Unknown clothing color: %s", col);
     return bengine::color_t((uint8_t )250,250,250);
 }
 
@@ -40,7 +41,7 @@ item_t::item_t(const std::string name) noexcept : item_tag(name), type(CLOTHING)
             }
         } else {
             item_name = "ERROR";
-            std::cout << item_tag << " not found!\n";
+			glog(log_target::LOADER, log_severity::ERROR, "%s not found", item_tag);
         }
     }
 }

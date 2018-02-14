@@ -51,13 +51,13 @@ namespace systems {
 									idx = i;
 								}
 								else {
-									std::cout << "Guardpost already claimed\n";
+									//std::cout << "Guardpost already claimed\n";
 								}
 							}
 							++i;
 						}
 
-						std::cout << "Picked: " << idx << "\n";
+						//std::cout << "Picked: " << idx << "\n";
 
 						if (idx == std::numeric_limits<std::size_t>().max()) {
 							work.cancel_work_tag(e);

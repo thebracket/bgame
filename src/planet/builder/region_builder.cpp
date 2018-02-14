@@ -28,7 +28,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     // Lookup the biome
     set_worldgen_status("Looking up biome");
     auto biome = get_biome_for_region(planet, target_region);
-    std::cout << biome.second.name << ", variance " << +planet.landblocks[planet.idx(target_region.first, target_region.second)].variance << "\n";
+    //std::cout << biome.second.name << ", variance " << +planet.landblocks[planet.idx(target_region.first, target_region.second)].variance << "\n";
 
     // Build height map based on region noise
     set_worldgen_status("Establishing ground altitude");
@@ -108,19 +108,19 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     std::vector<std::tuple<int,int,int>> spawn_points;
     int spawn_counter = 0;
     if (planet.civs.region_info[pidx].settlement_size > 0) {
-        std::cout << "There is a settlement of size " << planet.civs.region_info[pidx].settlement_size << " here.\n";
+        //std::cout << "There is a settlement of size " << planet.civs.region_info[pidx].settlement_size << " here.\n";
         for (const auto &i : planet.civs.region_info[pidx].improvements) {
             std::cout << "Build a: " << i << "\n";
             // Spawn it
             if (i == "ant_mound") build_ant_mound(rng, spawn_points);
         }
-        std::cout << "Free Garrison of " << planet.civs.civs[planet.civs.region_info[pidx].owner_civ].name << "\n";
+        //std::cout << "Free Garrison of " << planet.civs.civs[planet.civs.region_info[pidx].owner_civ].name << "\n";
         create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, "garrison", spawn_points,
                             spawn_counter, false, crash_x, crash_y, crash_z);
     }
     for (const auto &unit : planet.civs.units) {
         if (unit.world_y == region::region_y() && unit.world_x == region::region_x()) {
-            std::cout << "Spawn a unit: " << unit.unit_type << "\n";
+            //std::cout << "Spawn a unit: " << unit.unit_type << "\n";
             create_sentient_unit(planet, rng, planet.civs.region_info[pidx].owner_civ, unit.unit_type, spawn_points,
                                 spawn_counter, false, crash_x, crash_y, crash_z);
         }

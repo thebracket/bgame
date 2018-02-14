@@ -1,6 +1,5 @@
 #include "bloom_ping_pong.hpp"
 #include "../../bengine/gl_include.hpp"
-#include <iostream>
 
 namespace render {
     bloom_pingpong_t::bloom_pingpong_t(const int &w, const int &h) {
@@ -34,8 +33,9 @@ namespace render {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo1_id);
 
         // finally check if framebuffer is complete
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer blur1 not complete!" << std::endl;
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			glog(log_target::LOADER, log_severity::WARNING, "Framebuffer blur1 not complete!");
+		}
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -62,8 +62,9 @@ namespace render {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo2_id);
 
         // finally check if framebuffer is complete
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer blur2 not complete!" << std::endl;
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			glog(log_target::LOADER, log_severity::WARNING, "Framebuffer blur2 not complete!");
+		}
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }

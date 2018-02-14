@@ -97,7 +97,7 @@ strata_t build_strata(std::vector<uint8_t> &heightmap, bengine::random_number_ge
             result.material_idx[i] = 1;
         }
     }
-    std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
+    //std::cout << count_used << " strata detected, " << n_strata - count_used << " unused.\n";
 
     return result;
 }
@@ -144,10 +144,10 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                         material_idx = strata.material_idx[strata_idx];
                     } else {
                         material_idx = 1;
-                        std::cout << "Warning - exceeded strata_material size\n";
+                        glog(log_target::GAME, log_severity::WARNING, "Warning - exceeded strata_material size");
                     }
                 } else {
-                    std::cout << "Warning - exceeded strata_map size (" << strata.strata_map.size() << ")\n";
+					glog(log_target::GAME, log_severity::WARNING, "Warning - exceeded strata_map size (%d)", strata.strata_map.size());
                     material_idx = 1;
                 }
                 set_tile_material(mapidx(x,y,z), material_idx);

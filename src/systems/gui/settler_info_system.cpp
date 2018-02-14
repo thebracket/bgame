@@ -19,6 +19,7 @@
 #include "../../components/items/item_wear.hpp"
 #include "item_info_system.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../utils/system_log.hpp"
 
 namespace systems {
 	namespace settler_ui {
@@ -90,15 +91,15 @@ namespace systems {
 		}
 
 		static inline void render_summary(name_t * name, game_stats_t * stats, species_t * species, settler_ai_t * ai, health_t * health) {
-			std::stringstream header;
+			fmt::MemoryWriter header;
 			header << " " << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ") ";
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), header.str().c_str());
 
-			std::stringstream header2;
+			fmt::MemoryWriter header2;
 			header2 << species->gender_str() << ", " << species->sexuality_str() << ", " << stats->age << " years old. " << species->height_feet() << ", " << species->weight_lbs();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), header2.str().c_str());
 
-			std::stringstream profile;
+			fmt::MemoryWriter profile;
 			profile << species->gender_pronoun() << std::string(" has ") << species->ethnicity() << std::string(" colored skin. ");
 			profile << species->gender_pronoun() << std::string(" has ") << species->hair_color_str() << std::string(" hair, ") << species->hair_style_str() << ".";
 			ImGui::Text("%s", profile.str().c_str());
@@ -210,7 +211,7 @@ namespace systems {
 					ImGui::Separator();
 				}
 				else {
-					std::cout << "Warning: " << le.type << " life event not found\n";
+					glog(log_target::GAME, log_severity::WARNING, "Warning: %s life event not found", le.type);
 				}
 			}
 		}

@@ -29,6 +29,7 @@
 #include "../systems/gui/design_architecture.hpp"
 #include <array>
 #include "../bengine/ecs.hpp"
+#include "../utils/system_log.hpp"
 
 namespace render {
 
@@ -95,8 +96,9 @@ namespace render {
 			unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 			glDrawBuffers(2, attachments);
 
-			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-				std::cout << "Framebuffer not complete!" << std::endl;
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+				glog(log_target::LOADER, log_severity::ERROR, "Framebuffer ASCII not complete.");
+			}
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 			// Make the VBO and VAO combination
@@ -251,7 +253,7 @@ namespace render {
 				glyph = 206;
 				break; // All
 			default: {
-				std::cout << "WARNING: Wall calculator hit a case of " << +wall_mask << "\n";
+				glog(log_target::GAME, log_severity::WARNING, "Wall calculator hit a case of %d", wall_mask);
 				glyph = 79;
 			}
 			}
@@ -264,7 +266,7 @@ namespace render {
 			// Add buildings
 			bengine::each<building_t, position_t>([](bengine::entity_t &e, building_t &b, position_t &pos) {
 				if (b.glyphs_ascii.empty()) {
-					std::cout << "WARNING: Building [" << b.tag << "] is lacking ASCII render data.\n";
+					glog(log_target::GAME, log_severity::WARNING, "Building [%s] is lacking ASCII render data.", b.tag);
 					return;
 				}
 				int i = 0;
@@ -470,7 +472,7 @@ namespace render {
 					}
 
 					if (building_def->glyphs_ascii.empty()) {
-						std::cout << "WARNING: Building [" << building_def->tag << "] has no ASCII data.\n";
+						glog(log_target::GAME, log_severity::WARNING, "Building [%s] has no ASCII data.", building_def->tag);
 					}
 					else {
 

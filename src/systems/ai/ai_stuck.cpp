@@ -29,7 +29,7 @@ namespace systems {
 				if (is_stuck_or_invalid(pos)) {
 					logging::log_message msg{ LOG{}.text("Warning - settler is stuck; activating emergency teleport to bed!")->chars };
 					logging::log(msg);
-					std::cout << "Warning - stuck settler!\n";
+					//std::cout << "Warning - stuck settler!\n";
 					bool done = false;
 					each<position_t, construct_provides_sleep_t>([&e, &pos, &done](entity_t &E, position_t &P, construct_provides_sleep_t &S) {
 						if (!done) {

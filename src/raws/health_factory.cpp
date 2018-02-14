@@ -3,7 +3,6 @@
 #include "creatures.hpp"
 #include "defs/raw_creature_t.hpp"
 #include "defs/civilization_t.hpp"
-#include <iostream>
 
 health_t create_health_component_sentient(const raw_species_t * species, const int base_hp) noexcept
 {
@@ -34,7 +33,7 @@ health_t create_health_component_settler(const std::string &tag, const int base_
     result.max_hitpoints = base_hp;
     result.current_hitpoints = base_hp;
 
-    std::cout << "Finding parts for " << tag << "\n";
+    //std::cout << "Finding parts for " << tag << "\n";
     auto species = *get_species_def(tag);
     for (const auto &part : species.body_parts) {
         const auto n_parts = std::get<1>(part);

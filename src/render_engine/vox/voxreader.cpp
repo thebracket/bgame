@@ -125,7 +125,7 @@ namespace vox {
                 /* Store the amount of models */
                 const pack_chunk *pack = (pack_chunk *) chunk;
                 numModels = pack->numModels;
-                printf("Found %i models\n", numModels);
+                //printf("Found %i models\n", numModels);
             }
             else if (id == size_id) {
                 /* Create an array of SizeChunks if we don't have one already */
@@ -151,7 +151,7 @@ namespace vox {
                 /* Store the palette */
                 palette_chunk *pal = (palette_chunk *) chunk;
                 palette = &pal->colors[0];
-                puts("Found a palette");
+                //puts("Found a palette");
             }
 
             /* Step to the next chunk */
@@ -203,7 +203,6 @@ namespace vox {
         auto finder = voxel_index.find(tag);
         if (finder != voxel_index.end()) return; // Do not load duplicates
 
-        std::cout << "Loading VOX model: " << filename << "\n";
         char *voxBuffer;
         std::size_t voxLength;
         read_file(filename.c_str(), &voxLength, &voxBuffer);
@@ -213,7 +212,6 @@ namespace vox {
         voxel_model model;
         for (uint32_t i=0; i<parsed.numModels; ++i) {
             current_size = parsed.sizeChunks[i];
-            std::cout << "Model size: " << current_size->x << " x " << current_size->y << " x " << current_size->z << "\n";
             model.width = current_size->x;
             model.height = current_size->y;
             model.depth = current_size->z;
@@ -251,14 +249,12 @@ namespace vox {
 
         free_parsed_vox(parsed);
         free(voxBuffer);
-        std::cout << "Loaded VOX model as tag " << tag << ", index " << index << ".\n";
-
     }
 
     std::size_t model_index(const std::string tag) {
         auto finder = voxel_index.find(tag);
         if (finder == voxel_index.end()) {
-            std::cout << "Model not found: " << tag << "\n";
+			glog(log_target::LOADER, log_severity::ERROR, "Model not found: %s", tag);
             return 0;
         } else {
             return finder->second;

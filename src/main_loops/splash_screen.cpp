@@ -62,10 +62,10 @@ namespace splash_screen {
 	}
 
     static inline void init_raws(const int id) {
-        std::cout << "RAW INIT - Seen thread " << id << "\n";
+        //std::cout << "RAW INIT - Seen thread " << id << "\n";
         load_raws();
         initialized_raws.store(true);
-        std::cout << "RAW INIT DONE\n";
+        //std::cout << "RAW INIT DONE\n";
     }
 
     static inline void load_worldgen_textures() {
@@ -114,7 +114,7 @@ namespace splash_screen {
         stbi_set_flip_vertically_on_load(true);
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + filename);
-        std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
+        //std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
         assert(width == TEX_SIZE && height == TEX_SIZE);
         return std::make_tuple(image_data, width, height, bpp);
     }
@@ -124,14 +124,14 @@ namespace splash_screen {
         stbi_set_flip_vertically_on_load(true);
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + filename);
-        std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
+        //std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
         assert(width == CURSOR_SIZE && height == CURSOR_SIZE);
         return std::make_tuple(image_data, width, height, bpp);
     }
 
 	static inline void load_chunk_textures() {
         const int num_actual_textures = static_cast<int>(material_textures.size() * 3);
-        std::cout << "# Textures in array: " << num_actual_textures << "\n";
+        //std::cout << "# Textures in array: " << num_actual_textures << "\n";
 
         glGenTextures(1, &assets::chunk_texture_array);
         glActiveTexture(GL_TEXTURE0);
@@ -169,7 +169,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(albedo_tex) // Color data
             );
-            std::cout << albedo << " = " << load_index << "\n";
+            //std::cout << albedo << " = " << load_index << "\n";
             glTexSubImage3D(
                     GL_TEXTURE_2D_ARRAY,
                     0, // Mipmap number
@@ -179,7 +179,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(normal_tex) // Color data
             );
-            std::cout << normal << " = " << load_index+1 << "\n";
+            //std::cout << normal << " = " << load_index+1 << "\n";
 
             // We need to combine occlusion, metal and rough into one texture
             std::vector<uint8_t> texbytes;
@@ -199,7 +199,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     &texbytes[0] // Color data
             );
-            std::cout << "Combined = " << load_index+2 << "\n";
+            //std::cout << "Combined = " << load_index+2 << "\n";
 
             stbi_image_free(std::get<0>(albedo_tex));
             stbi_image_free(std::get<0>(normal_tex));
@@ -222,7 +222,7 @@ namespace splash_screen {
                                                   "dig_cursor.png", "channel_cursor.png", "ramp_cursor.png", "downstairs_cursor.png", "upstairs_cursor.png", "updownstairs_cursor.png",
                                                   "wall_cursor.png", "floor_cursor.png", "bridge_cursor.png"};
         const auto num_actual_textures = static_cast<int>(cursor_textures.size());
-        std::cout << "# CursorTextures in array: " << num_actual_textures << "\n";
+        //std::cout << "# CursorTextures in array: " << num_actual_textures << "\n";
 
         glGenTextures(1, &assets::cursor_texture_array);
         glActiveTexture(GL_TEXTURE0);
@@ -252,7 +252,7 @@ namespace splash_screen {
                     GL_UNSIGNED_BYTE, // type
                     std::get<0>(albedo_tex) // Color data
             );
-            std::cout << albedo << " = " << load_index << "\n";
+            //std::cout << albedo << " = " << load_index << "\n";
 
             stbi_image_free(std::get<0>(albedo_tex));
 

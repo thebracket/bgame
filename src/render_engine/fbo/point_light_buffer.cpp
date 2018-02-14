@@ -26,14 +26,14 @@ namespace render {
 		glReadBuffer(GL_NONE);
 
 		// finally check if framebuffer is complete
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "Framebuffer pointlight not complete!" << std::endl;
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			glog(log_target::LOADER, log_severity::ERROR, "Framebuffer pointlight not complete!");
+		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	point_light_buffer_t::~point_light_buffer_t() {
-		std::cout << "Deleting point light buffer\n";
 		if (fbo_id > 0) {
 			glDeleteFramebuffers(1, &fbo_id);
 		}

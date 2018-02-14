@@ -1,6 +1,5 @@
 #include "filesystem.hpp"
 #include <boost/filesystem.hpp>
-#include <iostream>
 
 bool directory_exists(const char *path) {
 	return boost::filesystem::exists(path);
@@ -36,7 +35,7 @@ std::string get_save_path()
     if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, path))) {
     	const std::wstring p(path);
 		const std::string ps = std::string(p.begin(), p.end()) + std::string("/noxfutura");
-		std::cout << ps << "\n";
+		//std::cout << ps << "\n";
 		if (!directory_exists(ps.c_str())) {
 			CreateDirectory(ps.c_str(), nullptr);
 		}

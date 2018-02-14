@@ -2,6 +2,7 @@
 #include "../planet_builder.hpp"
 #include "noise_helper.hpp"
 #include <sstream>
+#include <fmt/format.h>
 
 void planet_zero_fill(planet_t &planet) noexcept {
 	set_worldgen_status("Building initial ball of mud");
@@ -61,7 +62,7 @@ FastNoise planet_noise_map(planet_t &planet, const int &perlin_seed) noexcept {
             if (planet.landblocks[planet.idx(x,y)].temperature_c > 55) planet.landblocks[planet.idx(x,y)].temperature_c = 55;
 
 		}
-		std::stringstream ss;
+		fmt::MemoryWriter ss;
 		const auto percent = static_cast<double>(y) / static_cast<double>(WORLD_HEIGHT);
 		ss << "Dividing heavens from the earth: " << (percent*100) << "%";
 		set_worldgen_status(ss.str());
@@ -100,7 +101,7 @@ void planet_base_type_allocation(planet_t &planet) noexcept {
 	planet.plains_height = planet_determine_proportion(planet, candidate, n_cells_plains);
 	planet.hills_height = planet_determine_proportion(planet, candidate, n_cells_hills);
 
-	std::cout << "Heights (water/plains/hills): " << +planet.water_height << " / " << +planet.plains_height << " / " << +planet.hills_height << "\n";
+	//std::cout << "Heights (water/plains/hills): " << +planet.water_height << " / " << +planet.plains_height << " / " << +planet.hills_height << "\n";
 
 	#pragma omp parallel for
 	for (auto i=0; i<planet.landblocks.size(); ++i) {

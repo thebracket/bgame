@@ -57,7 +57,7 @@ static void create_sentient(planet_t &planet, bengine::random_number_generator &
         species.gender = MALE;
     }
     const auto species_finder = get_species_def(species_tag);
-    if (species_finder == nullptr) std::cout << "WARNING: Unable to find info for " << species_tag << "\n";
+    if (species_finder == nullptr) glog(log_target::GAME, log_severity::WARNING, "Unable to find info for %s", species_tag);
     if (species_finder->render_composite) {
         // We need to define skin color, hair
         species.base_male_glyph = species_finder->base_male_glyph;
@@ -130,7 +130,7 @@ static void create_sentient(planet_t &planet, bengine::random_number_generator &
             if (slot_name == "torso") position = TORSO;
             if (slot_name == "legs") position = LEGS;
             if (slot_name == "shoes") position = FEET;
-            std::cout << "Created " << item_name << "\n";
+            //std::cout << "Created " << item_name << "\n";
 			spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), position, item_quality::AVERAGE, 100, 0, planet.civs.civs[civ_id].name);
         }
     }
@@ -151,7 +151,7 @@ static void create_sentient(planet_t &planet, bengine::random_number_generator &
 		spawn_item_carried(sentient->id, cs[0], get_material_by_tag(cs[1]), EQUIP_AMMO, 3, 100, 0, planet.civs.civs[civ_id].name);
     }
     if (!unit.equipment.mount.empty()) {
-        std::cout << "Spawning a mount: " << unit.equipment.mount << "\n";
+        //std::cout << "Spawning a mount: " << unit.equipment.mount << "\n";
         // Spawn a mount at the same location, with a riding_t tag on the sentient
         const auto critter_def = get_creature_def( unit.equipment.mount );
 
@@ -210,7 +210,7 @@ void create_sentient_unit(planet_t &planet, bengine::random_number_generator &rn
     auto civ_f = get_civ_def(species_tag);
     auto unit_f = civ_f->units.find(unit_tag);
     if (unit_f == civ_f->units.end()) {
-        std::cout << "Error loading " << unit_tag << "\n";
+		glog(log_target::GAME, log_severity::ERROR, "Error loading unit: %s", unit_tag);
         return;
     }
 

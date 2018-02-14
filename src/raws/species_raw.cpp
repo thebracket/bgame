@@ -3,8 +3,8 @@
 #include "apihelper.hpp"
 #include "defs/civilization_t.hpp"
 #include "graphviz.hpp"
-#include <iostream>
 #include <boost/container/flat_map.hpp>
+#include "../utils/system_log.hpp"
 
 boost::container::flat_map<std::string, raw_species_t> species_defs;
 boost::container::flat_map<std::string, civilization_t> civ_defs;
@@ -42,13 +42,13 @@ std::string get_species_nth_tag(const int &roll) noexcept {
 void sanity_check_species() noexcept
 {
 	for (auto &s : species_defs) {
-        if (s.first.empty()) std::cout << "WARNING: Species with no tag.\n";
-        if (s.second.name.empty()) std::cout << "WARNING: Species has no name: " << s.second.tag << "\n";
-        if (s.second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s.second.tag << "\n";
-        if (s.second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s.second.tag << "\n";
-        if (s.second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s.second.tag << "\n";
-        if (s.second.stat_mods.empty()) std::cout << "WARNING: Species has no stat modifiers: " << s.second.tag << "\n";
-        if (s.second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s.second.tag << "\n";
+        if (s.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no tag.");
+        if (s.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no name: %s", s.second.tag);
+        if (s.second.male_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no male name: %s",s.second.tag);
+        if (s.second.female_name.empty())glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no female name: %s", s.second.tag);
+        if (s.second.collective_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no collective name: %s", s.second.tag);
+        if (s.second.stat_mods.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no stat modifiers: %s", s.second.tag);
+        if (s.second.body_parts.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no body parts: %s", s.second.tag);
     }
 }
 
@@ -194,7 +194,7 @@ void read_civ_types() noexcept
         }
 
         civ_defs[key] = civ;
-        std::cout << "Loaded civ: " << key << "\n";
+        //std::cout << "Loaded civ: " << key << "\n";
 
         lua_pop(lua_state, 1);
     }

@@ -89,10 +89,10 @@ namespace systems {
 			else {
 				// Find a seed for this farm
 				const auto seed_type = plant_targets.begin()->second.second->seed_type;
-				std::cout << seed_type << "\n";
+				//std::cout << seed_type << "\n";
 				std::size_t seed_id = 0;
 				each<claimed_t, item_seed_t>([&seed_type, &seed_id](entity_t &se, claimed_t &claim, item_seed_t &seed) {
-					std::cout << seed.grows_into << "\n";
+					//std::cout << seed.grows_into << "\n";
 					if (seed.grows_into == seed_type) seed_id = se.id;
 				});
 				if (seed_id == 0) {
@@ -156,7 +156,7 @@ namespace systems {
 
 			auto farm_finder = farm_designations->farms.find(idx);
 			if (farm_finder == farm_designations->farms.end() || farm_finder->second.state != farm_steps::PLANT_SEEDS) {
-				std::cout << "Bailing out - not relevant anymore!";
+				//std::cout << "Bailing out - not relevant anymore!";
 				inventory_system::drop_item(h.seed_id, pos.x, pos.y, pos.z);
 				work.cancel_work_tag(e);
 				return;

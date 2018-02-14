@@ -10,6 +10,7 @@
 #include "../../global_assets/rng.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
+#include "../../utils/system_log.hpp"
 
 namespace systems {
 	namespace creature_attacks {
@@ -30,12 +31,12 @@ namespace systems {
 				if (!attacker) return;
 				auto attack_species = attacker->component<species_t>();
 				if (!attack_species) {
-					std::cout << "WARNING: Attacker has no species\n";
+					glog(log_target::GAME, log_severity::WARNING, "WARNING: Attacker has no species");
 					return;
 				}
 				auto creaturefinder = get_creature_def(attack_species->tag);
 				if (!creaturefinder) {
-					std::cout << "Unable to find creature: " << attack_species->tag << "\n";
+					glog(log_target::GAME, log_severity::WARNING, "Unable to find creature: %s", attack_species->tag);
 					return;
 				}
 				auto creature = *creaturefinder;

@@ -15,6 +15,7 @@
 #include "../../raws/defs/clothing_t.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../../components/items/item_quality.hpp"
+#include "../../utils/system_log.hpp"
 
 namespace weapons {
 
@@ -90,7 +91,7 @@ namespace weapons {
 			if (species) {
 				auto finder = get_creature_def(species->tag);
 				if (!finder) {
-					std::cout << "WARNING: Unable to find species AC " << species->tag << "\n";
+					glog(log_target::GAME, log_severity::WARNING, "WARNING: Unable to find species AC %s", species->tag);
 				}
 				else {
 					return finder->armor_class;

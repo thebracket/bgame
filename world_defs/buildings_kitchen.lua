@@ -10,7 +10,7 @@ buildings["camp_fire"] = {
     skill = { name="Construction", difficulty=5 },
     provides = { light={radius=5, color = colors['yellow']} },
     render_rex = "campfire.xp",
-    vox = voxelId("fakefire")
+    vox = voxelId("fakefire"),
     emits_smoke = true
 };
 

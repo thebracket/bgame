@@ -27,8 +27,9 @@ namespace render {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
 
         // finally check if framebuffer is complete
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer hdr not complete!" << std::endl;
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			glog(log_target::LOADER, log_severity::ERROR, "Framebuffer hdr not complete!");
+		}
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }

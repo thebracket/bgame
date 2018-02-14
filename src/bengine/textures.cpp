@@ -9,7 +9,6 @@ namespace bengine {
         int width, height, bpp;
         GLuint texture_id;
         stbi_set_flip_vertically_on_load(invert);
-        std::cout << "Loading: " << filename << "\n";
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + std::string(filename));
 

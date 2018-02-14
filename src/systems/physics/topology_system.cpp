@@ -129,7 +129,7 @@ namespace systems {
 				}
 			}
 			else {
-				std::cout << "Topology system - don't know how to spawn a [" << tag << "]\n";
+				glog(log_target::GAME, log_severity::WARNING, "Topology system - don't know how to spawn a [%s]", tag);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace systems {
 
 			if (entity_should_be_deleted) {
 				delete_entity(e.entity_id);
-				std::cout << "Deleted entity\n";
+				//std::cout << "Deleted entity\n";
 			}
 			render::models_changed = true;
 			chunks::mark_chunk_dirty_by_tileidx(index);

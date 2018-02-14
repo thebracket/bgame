@@ -31,7 +31,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
         ->assign(position_t{x, y, z})
         ->assign(building_t{ tag, building->width, building->height, building->glyphs,
                              building->glyphs_ascii, true, civ_owner, 10, 10, building->vox_model });
-    std::cout << tag << " : " << building->vox_model << "\n";
+    //std::cout << tag << " : " << building->vox_model << "\n";
 
     for (const building_provides_t &provides : building->provides) {
         if (provides.provides == provides_sleep) new_building->assign(construct_provides_sleep_t{});
@@ -71,7 +71,7 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     } else if (tag == "energy_door" || tag == "door") {
         new_building->assign(construct_door_t{})->assign(receives_signal_t{});
     } else if (tag == "ship_defense_turret") {
-        std::cout << "Turret created\n";
+        //std::cout << "Turret created\n";
         new_building->assign(viewshed_t{8, false});
         new_building->assign(turret_t{8, 2, 3, 8, 3, civ_owner}); 
         new_building->assign(initiative_t{});
@@ -134,7 +134,7 @@ void add_construction(const int x, const int y, const int z, const std::string t
         //std::cout << "Door owner: " << civ_owner << "\n";
         add_building("door", x, y, z, civ_owner);
     } else {
-        std::cout << "Don't know how to build a " << type << "\n";
+		glog(log_target::LOADER, log_severity::ERROR, "Don't know how to build a %s", type);
     }
 }
 
@@ -177,7 +177,6 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) n
                     } else if (output->glyph == 'C') {
                         add_construction(x, y, z, "cordex", false, 0);
                     } else if (output->glyph == 243) {
-                        std::cout << "Turret detected and built\n";
                         add_construction(x, y, z, "ship_defense_turret", false, 0);
                     } else if (output->glyph == 251) {
                         add_construction(x, y, z, "small_replicator", false, 0);
@@ -188,8 +187,8 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) n
                     } else if (output->glyph == 'L') {
                             add_construction(x, y, z, "ship_lamp", false, 0);
                     } else {
-                        if (output->glyph != 32)
-                            std::cout << "Warning: No handler for " << (char)output->glyph << " (" << +output->glyph << ")\n";
+						if (output->glyph != 32)
+							glog(log_target::LOADER, log_severity::WARNING, "No handler for %d (%s)", (char)output->glyph, output->glyph);
                     }
                 }
             }
@@ -251,14 +250,14 @@ xp::rex_sprite get_building_template(const std::size_t civ_id, planet_t &planet,
 
     const int roll = rng.roll_dice(1, available_buildings.size())-1;
     const std::string building_template = available_buildings[roll];
-    std::cout << "Building: " << building_template << "\n";
+    //std::cout << "Building: " << building_template << "\n";
     return xp::rex_sprite(building_template);
 }
 
 void build_buildings(bengine::random_number_generator &rng, const int n_buildings, const bool active,
     std::vector<std::tuple<int,int,int>> &spawn_points, const std::size_t &civ_id, planet_t &planet)  noexcept
 {
-    std::cout << "Civ ID#: " << civ_id << "\n";
+    //std::cout << "Civ ID#: " << civ_id << "\n";
     int i=0;
     while (i<n_buildings) {
         auto hut = get_building_template(civ_id, planet, rng);
@@ -301,7 +300,7 @@ void build_buildings(bengine::random_number_generator &rng, const int n_building
 
         // Spawn the hut
         if (tries < 51) {
-            std::cout << "Building passing civ_id: " << civ_id << "\n";
+            //std::cout << "Building passing civ_id: " << civ_id << "\n";
             const int n_spawn = build_building(*building, x, y, z, spawn_points, active, civ_id);
             i += (n_spawn -1);
         }

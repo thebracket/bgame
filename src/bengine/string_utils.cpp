@@ -1,8 +1,6 @@
 #include "string_utils.hpp"
-#include <iostream>
 #include <sstream>
 #include <cctype>
-#include <clocale>
 
 std::vector<std::string> split ( const std::string &str, const char &delimiter )
 {
@@ -39,7 +37,11 @@ std::string str_replace(std::string &s, const std::string &toReplace, const std:
 }
 
 bool str_contains(const std::string &s, const std::string &search_for) {
-    auto finder = s.find(search_for);
-    if (finder == std::string::npos) return false;
-    return true;
+    const auto finder = s.find(search_for);
+	if (finder == std::string::npos) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }

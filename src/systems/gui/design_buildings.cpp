@@ -16,6 +16,7 @@
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include <sstream>
+#include <fmt/format.h>
 
 namespace systems {
 	namespace design_buildings {
@@ -40,7 +41,7 @@ namespace systems {
 				ImGui::SameLine();
 				ImGui::TextWrapped(" Constructing this building uses the %s skill, with a difficulty of %d.", building_def->skill.first.c_str(), building_def->skill.second);
 				{
-					std::stringstream ss;
+					fmt::MemoryWriter ss;
 					for (const auto &comp : building_def->components)
 					{
 						ss << comp.quantity << "x";
@@ -64,7 +65,7 @@ namespace systems {
 
 				{
 					auto found_one = false;
-					std::stringstream ss;
+					fmt::MemoryWriter ss;
 					each_reaction([&ss, &building_def, &found_one](const std::string &rtag, const reaction_t * reaction)
 					{
 						if (rtag == building_def->tag) {

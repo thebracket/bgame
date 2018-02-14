@@ -61,7 +61,7 @@ namespace systems {
 				// Debug flags
 				if (debug::show_flags)
 				{
-					std::stringstream ss;
+					fmt::MemoryWriter ss;
 					if (above_ground(tile_idx)) ss << "Outside-";
 					if (solid(tile_idx)) ss << "Solid-";
 					if (opaque(tile_idx)) ss << "Opaque-";
@@ -86,7 +86,7 @@ namespace systems {
 				}
 
 				{ // Base tile type
-					std::stringstream ss;
+					fmt::MemoryWriter ss;
 					switch (region::tile_type(tile_idx)) {
 					case tile_type::SEMI_MOLTEN_ROCK: ss << "Magma"; break;
 					case tile_type::SOLID: ss << "Solid Rock (" << material_name(material(tile_idx)) << ")"; break;
@@ -113,7 +113,7 @@ namespace systems {
 					// Farming
 					const auto farm_finder = farm_designations->farms.find(tile_idx);
 					if (farm_finder != farm_designations->farms.end()) {
-						std::stringstream ss;
+						fmt::MemoryWriter ss;
 						ss << ICON_FA_LEAF << " Farm: " << farm_finder->second.seed_type << " - ";
 						switch (farm_finder->second.state) {
 						case farm_steps::CLEAR: ss << "Plough"; break;
@@ -129,7 +129,7 @@ namespace systems {
 				// Plants
 				if (region::tile_type(tile_idx) == tile_type::FLOOR && !flag(tile_idx, CONSTRUCTION)) {
 					if (veg_type(tile_idx) > 0) {
-						std::stringstream ss;
+						fmt::MemoryWriter ss;
 						ss << ICON_FA_LEAF << " ";
 						auto plant = get_plant_def(veg_type(tile_idx));
 						if (plant != nullptr) {

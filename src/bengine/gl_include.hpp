@@ -3,8 +3,7 @@
 // This provides a header to include GL/GLEW/GLFW3 in the right order.
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <string>
-#include <iostream>
+#include "../utils/system_log.hpp"
 
 inline GLenum glCheckError_(const char *file, int line)
 {
@@ -22,7 +21,7 @@ inline GLenum glCheckError_(const char *file, int line)
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
-        std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+		glog(log_target::GAME, log_severity::ERROR, "%s | %s | %d", error, file, line);
     }
     return errorCode;
 }

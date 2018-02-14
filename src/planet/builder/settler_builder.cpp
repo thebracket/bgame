@@ -20,6 +20,7 @@
 #include "../../raws/defs/civilization_t.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../utils/system_log.hpp"
 
 static std::vector<std::string> get_event_candidates(const int &age, const std::vector<std::string> &past) noexcept {
 	std::vector<std::string> result;
@@ -241,7 +242,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
                         } else {
                             if (stats.skills[skill].skill_level < 3) {
                                 ++stats.skills[skill].skill_level;
-                                std::cout << "Raised skill in " << skill << " to " << +stats.skills[skill].skill_level << "\n";
+								glog(log_target::GAME, log_severity::INFO, "Raised skill in %s to %d", skill, +stats.skills[skill].skill_level);
                             }
                         }
                     }

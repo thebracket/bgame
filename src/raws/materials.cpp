@@ -5,6 +5,7 @@
 #include <map>
 #include <boost/container/flat_map.hpp>
 #include <algorithm>
+#include "../utils/system_log.hpp"
 
 //using namespace rltk;
 
@@ -77,8 +78,8 @@ bool is_material_idx_valid(const std::size_t &id) noexcept
 void sanity_check_materials() noexcept
 {
     for (const auto &mat : material_defs) {
-        if (mat.tag.empty()) std::cout << "WARNING: Empty material tag\n";
-        if (mat.name.empty()) std::cout << "WARNING: Empty material name, tag: " << mat.tag << "\n";
+        if (mat.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty material tag");
+        if (mat.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty material name, tag: %s", mat.tag);
         /*if (!mat.mines_to_tag.empty()) {
             auto finder = item_defs.find(mat.mines_to_tag);
             if (finder == item_defs.end()) std::cout << "WARNING: Unknown mining result " << mat.mines_to_tag << ", tag: " << mat.tag << "\n";
@@ -91,7 +92,7 @@ void sanity_check_materials() noexcept
             for (const auto &metal : mat.ore_materials) {
                 const auto finder = material_defs_idx.find(metal);
                 if (finder == material_defs_idx.end()) {
-                    std::cout << "WARNING: Substance " << mat.tag << " produces a non-existent ore: " << metal << "\n";
+					glog(log_target::LOADER, log_severity::WARNING, "WARNING: Substance %s produces a non-existent ore: %s", mat.tag, metal);
                 }
             }
         }
@@ -144,7 +145,7 @@ void read_material_types() noexcept
                 } else if (type_s == "blight") {
                     m.spawn_type = BLIGHT;
                 } else {
-                    std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+					glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown material type: %s", type_s);
                 }
 
             }
@@ -262,7 +263,7 @@ void read_voxel_models() noexcept {
 
 	while (lua_next(lua_state, -2) != 0) {
 		std::string key = lua_tostring(lua_state, -2);
-		std::cout << key << "\n";
+		//std::cout << key << "\n";
 
 		auto idx = 0;
 		std::string modelfile;
@@ -271,7 +272,7 @@ void read_voxel_models() noexcept {
 		lua_gettable(lua_state, -2);
 		while (lua_next(lua_state, -2) != 0) {
 			const std::string field = lua_tostring(lua_state, -2);
-			std::cout << field << "\n";
+			//std::cout << field << "\n";
 
 			if (field == "model") modelfile = lua_tostring(lua_state, -1);
 			if (field == "id") idx = static_cast<int>(lua_tonumber(lua_state, -1));

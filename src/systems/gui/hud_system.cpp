@@ -38,11 +38,11 @@ namespace systems {
 
         void run(const double &duration_ms) {
             // Display cash
-            std::stringstream cash_ss;
+			fmt::MemoryWriter cash_ss;
             cash_ss << " Cash: " << designations->current_cash << " Mcr";
-            std::stringstream power_ss;
+			fmt::MemoryWriter power_ss;
             power_ss << " Power: " << designations->current_power << "/" << designations->total_capacity << " ";
-            std::stringstream pause_ss;
+			fmt::MemoryWriter pause_ss;
             if (pause_mode) {
                 pause_ss << "*PAUSED* (SPACE to unpause, . for single-step) ";
             }

@@ -78,7 +78,7 @@ namespace systems {
 
 			if (entity(a.current_tool) == nullptr)
 			{
-				std::cout << "WARNING: Item became null!\n";
+				//std::cout << "WARNING: Item became null!\n";
 				work.cancel_work_tag(e);
 			}
 
@@ -101,7 +101,7 @@ namespace systems {
 		inline void collect_block(entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
 			if (a.current_tool == 0)
 			{
-				std::cout << "Warning: no block selected\n";
+				//std::cout << "Warning: no block selected\n";
 			}
 			a.current_path.reset();
 			inventory_system::pickup_item(a.current_tool, e.id);
@@ -120,7 +120,7 @@ namespace systems {
 			}
 			else if (architecture_map[idx].distance == std::numeric_limits<uint8_t>::max()) {
 				// There's nothing to do - someone else must have done it.
-				std::cout << "Cancelling because of lack of architecture tasks\n";
+				//std::cout << "Cancelling because of lack of architecture tasks\n";
 				inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
 				inventory_system::claim_item(a.current_tool, false);
 				work.cancel_work_tag(e);
@@ -156,14 +156,14 @@ namespace systems {
 				}
 
 				if (current_direction == 0) {
-					std::cout << "Direction 0 - drop tools\n";
+					//std::cout << "Direction 0 - drop tools\n";
 					work.cancel_work_tag(e);
 					inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
 					inventory_system::claim_item(a.current_tool, false);
 					return;
 				}
 
-				std::cout << "Direction: " << current_direction << "\n";
+				//std::cout << "Direction: " << current_direction << "\n";
 				position_t destination = pos;
 				switch (current_direction) {
 				case 1: --destination.y; break;
@@ -174,7 +174,7 @@ namespace systems {
 				case 6: ++destination.z; break;
 				}
 				movement::move_to(e.id, destination);
-				std::cout << "Emitted entity movement - " << e.id << "\n";
+				//std::cout << "Emitted entity movement - " << e.id << "\n";
 			}
 		}
 
@@ -196,7 +196,7 @@ namespace systems {
 					}
 					else
 					{
-						std::cout << "Warning: Item does not exist\n";
+						//std::cout << "Warning: Item does not exist\n";
 						work.cancel_work_tag(e);
 						inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
 						inventory_system::claim_item(a.current_tool, false);
@@ -204,7 +204,7 @@ namespace systems {
 				}
 				if (material == 0)
 				{
-					std::cout << "Warning: material is invalid\n";
+					//std::cout << "Warning: material is invalid\n";
 				}
 				inventory_system::destroy_item(a.current_tool);
 				a.current_tool = 0;

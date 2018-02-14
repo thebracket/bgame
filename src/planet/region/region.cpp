@@ -475,7 +475,7 @@ namespace region {
 		inflate.deserialize(current_region->stockpile_id);
 		inflate.deserialize(current_region->bridge_id);
 
-		std::cout << "Recalculating region paths\n";
+		//std::cout << "Recalculating region paths\n";
 		current_region->tile_recalc_all();
 	}
 

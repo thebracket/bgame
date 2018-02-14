@@ -2,7 +2,7 @@
 #include "lua_bridge.hpp"
 #include "apihelper.hpp"
 #include "defs/raw_creature_t.hpp"
-#include <iostream>
+#include "../utils/system_log.hpp"
 
 std::unordered_map<std::string, raw_creature_t> creature_defs;
 
@@ -14,15 +14,15 @@ const raw_creature_t * get_creature_def(const std::string &tag) noexcept
 void sanity_check_creatures() noexcept
 {
     for (auto s = creature_defs.begin(); s!=creature_defs.end(); ++s) {
-        if (s->first.empty()) std::cout << "WARNING: Species with no tag.\n";
-        if (s->second.name.empty()) std::cout << "WARNING: Species has no name: " << s->second.tag << "\n";
-        if (s->second.male_name.empty()) std::cout << "WARNING: Species has no male name: " << s->second.tag << "\n";
-        if (s->second.female_name.empty()) std::cout << "WARNING: Species has no female name: " << s->second.tag << "\n";
-        if (s->second.collective_name.empty()) std::cout << "WARNING: Species has no collective name: " << s->second.tag << "\n";
-        if (s->second.body_parts.empty()) std::cout << "WARNING: Species with no body parts: " << s->second.tag << "\n";
-        if (s->second.attacks.empty()) std::cout << "WARNING: Species has no attacks: " << s->second.tag << "\n";
+        if (s->first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no tag.");
+        if (s->second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no name: %s", s->second.tag);
+        if (s->second.male_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no male name: %s", s->second.tag);
+        if (s->second.female_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no female name: %s", s->second.tag);
+        if (s->second.collective_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no collective name: %s", s->second.tag);
+        if (s->second.body_parts.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no body parts: %s", s->second.tag);
+        if (s->second.attacks.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no attacks: %s", s->second.tag);
         for (const auto &a : s->second.attacks) {
-            if (a.type.empty()) std::cout << "WARNING: Species attack with no name: " << s->second.tag << "\n";
+            if (a.type.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species attack with no name: %s", s->second.tag);
         }
     }
 }

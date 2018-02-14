@@ -179,7 +179,7 @@ namespace systems {
 				for (const auto &requested_component : building.components) {
 					const auto component_id = inventory::claim_item_by_reaction_input(requested_component);
 					bengine::entity(component_id)->assign(claimed_t{});
-					std::cout << "Component [" << requested_component.tag << "] #" << component_id << "\n";
+					//std::cout << "Component [" << requested_component.tag << "] #" << component_id << "\n";
 					designate.component_ids.emplace_back(std::make_pair(component_id, false));
 				}
 

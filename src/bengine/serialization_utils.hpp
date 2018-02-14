@@ -1,7 +1,7 @@
 #pragma once
 
 #include <zlib.h>
-#include <sstream>
+#include <fmt/ostream.h>
 #include "color_t.hpp"
 
 namespace serial {
@@ -9,13 +9,13 @@ namespace serial {
 // Final render to string
 template <class T>
 inline std::string to_string(T val) {
-	std::stringstream ss;
+	fmt::MemoryWriter ss;
 	ss << val;
 	return ss.str();
 }
 template <>
 inline std::string to_string(uint8_t val) {
-	std::stringstream ss;
+	fmt::MemoryWriter ss;
 	ss << static_cast<int>(val);
 	return ss.str();
 }

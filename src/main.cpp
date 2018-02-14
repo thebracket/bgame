@@ -7,6 +7,7 @@
 #include "bengine/filesystem.hpp"
 #include "global_assets/game_config.hpp"
 #include "main_loops/first_run_screen.hpp"
+#include "utils/system_log.hpp"
 
 using namespace bengine;
 
@@ -33,7 +34,7 @@ int main() {
 
     remove_from_path(executable_path, std::string("/"));
 
-    std::cout << executable_path << "\n";
+    //std::cout << executable_path << "\n";
     chdir(executable_path.c_str());
 
 #endif // apple
@@ -50,7 +51,7 @@ int main() {
 	if (first_run) {
 		main_func = first_run_screen::tick;
 		if (first_run_screen::first_run_done) first_run = false;
-		std::cout << "Launching first run screen\n";
+		gamelog(log_target::LOADER, log_severity::INFO, "Launching first run screen");
 	}
 	else {
 		splash_screen::init();

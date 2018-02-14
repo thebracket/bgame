@@ -199,6 +199,9 @@
     <Filter Include="Header Files\components\buildings">
       <UniqueIdentifier>{ea6c77e5-178b-4cd7-8a88-3f6278a13d3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{ede68fdd-5816-4fbc-b7d8-f568ad396951}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -797,6 +800,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\components\cerealizer3.cpp">
       <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\system_log.cpp">
+      <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1583,9 +1589,6 @@
     <ClInclude Include="..\..\src\main_loops\asset_loader.hpp">
       <Filter>Header Files\main_loops</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\coroutine_generator.hpp">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp">
       <Filter>Header Files\render_engine\fbo</Filter>
     </ClInclude>
@@ -1807,6 +1810,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\cerealizer.hpp">
       <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\system_log.hpp">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

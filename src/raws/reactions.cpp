@@ -8,6 +8,7 @@
 #include "graphviz.hpp"
 #include "defs/reaction_t.hpp"
 #include <boost/container/flat_map.hpp>
+#include "../utils/system_log.hpp"
 
 boost::container::flat_map<std::string, reaction_t> reaction_defs;
 boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
@@ -71,7 +72,7 @@ void read_reactions() noexcept
                             const std::string mat_name = lua_tostring(lua_state, -1);
                             const auto matfinder = get_material_by_tag(mat_name);
                             if (matfinder == 0) {
-                                std::cout << "WARNING: Reaction " << c.name << " references unknown material " << mat_name << "\n";
+								glog(log_target::LOADER, log_severity::WARNING, "Reaction %s references unkown material %s", c.name, mat_name);
                             } else {
                                 input.required_material = matfinder;
                             }
@@ -99,7 +100,7 @@ void read_reactions() noexcept
                             } else if (type_s == "spice") {
                                 input.required_material_type = SPICE;
                             } else {
-                                std::cout << "WARNING: Unknown material type: " << type_s << "\n";
+								glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown material type: %s", type_s);
                             }
                         }
                         lua_pop(lua_state, 1);
@@ -148,20 +149,20 @@ void read_reactions() noexcept
 void sanity_check_reactions() noexcept
 {
 	for (auto &it : reaction_defs) {
-        if (it.first.empty()) std::cout << "WARNING: Empty reaction name\n";
-        if (it.second.tag.empty()) std::cout << "WARNING: Empty reaction tag\n";
-        if (it.second.name.empty()) std::cout << "WARNING: Empty reaction name, tag: " << it.first << "\n";
-        if (it.second.workshop.empty()) std::cout << "WARNING: Empty workshop name, tag: " << it.first << "\n";
+        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction name");
+        if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction tag");
+        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction name, tag: %s", it.first);
+        if (it.second.workshop.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty workshop name, tag: %s", it.first);
         const auto bf = get_building_def(it.second.workshop);
-        if (bf == nullptr) std::cout << "WARNING: Undefined workshop, tag: " << it.first << "\n";
+        if (bf == nullptr) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Undefined workshop, tag: %s", it.first);
         for (const auto &input : it.second.inputs) {
             const auto finder = get_item_def(input.tag);
-            if (finder == nullptr) std::cout << "WARNING: Unknown item tag in input: " << input.tag << ", reaction tag: " << it.first << "\n";
+            if (finder == nullptr) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown item tag in input: %s, reaction tag %s", input.tag, it.first);
         }
         for (const auto &output : it.second.outputs) {
             const auto finder = get_item_def(output.first);
             const auto finder2 = get_clothing_by_tag(output.first);
-            if (finder == nullptr && !finder2) std::cout << "WARNING: Unknown item tag in output: " << output.first << ", reaction tag: " << it.first << "\n";
+            if (finder == nullptr && !finder2) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown item tag in output: %s, reaction tag %s", output.first, it.first);
         }
     }
 }

@@ -31,7 +31,6 @@
 
 #define IMGUI_DEFINE_MATH_OPERATORS 1
 #include "imgui_tabs.hpp"
-#include <iostream>
 #include <string>
 
 ImGui::ImGuiUserStyle::ImGuiUserStyle() {
@@ -302,7 +301,7 @@ void ImGui::TabBar::_setTabCount() {
 
 ImGui::TabBar* ImGui::TabBarStack::getCurrentTabBar() {
 	if (CurrentTabBar > TabBarCount) {
-		std::cerr << "TabBar (Error @getCurrentTabBar()) -- CurrentTabBar > TabBarCount" << std::endl;
+		//std::cerr << "TabBar (Error @getCurrentTabBar()) -- CurrentTabBar > TabBarCount" << std::endl;
 		return NULL;
 	}
 	return &TabBars[CurrentTabBar];

@@ -102,7 +102,7 @@ void load_raws() noexcept {
 	for (const auto &filename : string_table(-1)->strings) {
 		load_lua_script("world_defs/" + filename);
 	}
-	std::cout << "Loading tables\n";
+	//std::cout << "Loading tables\n";
 
 	// Extract game tables
 	load_game_tables();
@@ -132,12 +132,12 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
-		std::cout << "Unknown item tag: " << tag << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
 	}
 
     const auto mat = get_material(material);
 	if (!mat) {
-		std::cout << "Unknown material tag: " << material << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "Unknown material tag %s", material);
 	}
 
     const auto entity = bengine::create_entity()
@@ -158,12 +158,12 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
-		std::cout << "Unknown item tag: " << tag << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
 	}
 
     const auto mat = get_material(material);
 	if (!mat) {
-		std::cout << "Unknown material tag: " << material << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "Unknown material tag %s", material);
 	}
 
 	const auto entity = bengine::create_entity()
@@ -183,12 +183,12 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
-		std::cout << "Unknown item tag: " << tag << "\n";
+		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
 	}
 
     const auto mat = get_material(material);
 
-    std::cout << "Spawning [" << tag << "], glyph " << +finder->glyph << "\n";
+    //std::cout << "Spawning [" << tag << "], glyph " << +finder->glyph << "\n";
 
 	const auto entity = bengine::create_entity()
 		->assign(item_stored_t{ container_id })
@@ -217,7 +217,7 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 	} else {
 		auto finder = get_item_def(tag);
 		if (finder == nullptr) {
-			std::cout << "Unknown item tag: " << tag << "\n";
+			glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
 		}
 
 		const auto entity = bengine::create_entity()

@@ -121,7 +121,7 @@ namespace systems {
 
 			auto farm_finder = farm_designations->farms.find(idx);
 			if (farm_finder == farm_designations->farms.end() || farm_finder->second.state != farm_steps::CLEAR) {
-				std::cout << "Bailing out - not relevant anymore!";
+				//std::cout << "Bailing out - not relevant anymore!";
 				work.cancel_work_tag(e);
 				return;
 			}

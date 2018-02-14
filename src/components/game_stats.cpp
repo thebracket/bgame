@@ -1,7 +1,7 @@
 #include "game_stats.hpp"
 #include "../components/logger.hpp"
 #include "../systems/gui/log_system.hpp"
-#include <iostream>
+#include "../utils/system_log.hpp"
 
 std::string game_stats_t::strength_str() {
     if (strength < 5) return "is very weak.";
@@ -89,7 +89,7 @@ int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::strin
 			default: return 0;
 		}
 	} else {
-		std::cout << "Warning: unknown skill [" << skill << "]\n";
+		glog(log_target::GAME, log_severity::ERROR, "Unknown skill: %s", skill);
 		return 0;
 	}
 }
@@ -155,7 +155,7 @@ skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats
 	const int8_t person_skill = get_skill_modifier(stats, skill_name);
 	const int total = luck_component + natural_ability + person_skill;
 
-	std::cout << skill_name << " roll, difficulty " << difficulty << ". 1d20 = " << luck_component << ", +" << natural_ability << " (ability) + " << +person_skill << " (skill) = " << total << "\n";
+	glog(log_target::GAME, log_severity::INFO, "%s roll, difficulty %d. 1d20 = %d, + %d (ability) + %d (skill) = %d", skill_name, difficulty, luck_component, natural_ability, person_skill, total);
 
 	if (luck_component == 1) {
 		return CRITICAL_FAIL;
@@ -179,7 +179,7 @@ std::tuple<skill_roll_result_t, int, int> skill_roll_ext(const std::size_t settl
 	std::get<1>(result) = luck_component;
 	std::get<2>(result) = difficulty - total;
 
-	std::cout << skill_name << " roll, difficulty " << difficulty << ". 1d20 = " << luck_component << ", +" << natural_ability << " (ability) + " << +person_skill << " (skill) = " << total << "\n";
+	glog(log_target::GAME, log_severity::INFO, "%s roll, difficulty %d. 1d20 = %d, + %d (ability) + %d (skill) = %d", skill_name, difficulty, luck_component, natural_ability, person_skill, total);
 
 	if (luck_component == 1) {
 		std::get<0>(result) = CRITICAL_FAIL;

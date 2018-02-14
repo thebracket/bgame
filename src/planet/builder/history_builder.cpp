@@ -8,6 +8,7 @@
 #include "../../raws/defs/civilization_t.hpp"
 #include <map>
 #include <set>
+#include "../../utils/system_log.hpp"
 
 constexpr int N_CIVS = WORLD_WIDTH;
 
@@ -66,7 +67,7 @@ void planet_build_initial_civs(planet_t &planet, bengine::random_number_generato
             civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_F}", to_proper_noun_case(string_table(FIRST_NAMES_FEMALE)->random_entry(rng)));
         }
         civ.origin = loc_name;
-        std::cout << "Welcome: " << civ.name << ", lead by " << civ.leader_name << "\n";
+		glog(log_target::GAME, log_severity::INFO, "Welcome: %s, lead by %s", civ.name, civ.leader_name);
         civ.glyph = get_species_def(civ_finder->species_tag)->worldgen_glyph;
 
         // Appearance
@@ -110,7 +111,7 @@ void planet_build_initial_civs(planet_t &planet, bengine::random_number_generato
 
         planet_display_update_zoomed(planet, WORLD_WIDTH/2, WORLD_HEIGHT/2);
     }
-    std::cout << "Created " << N_CIVS << " civs\n";
+    //std::cout << "Created " << N_CIVS << " civs\n";
 }
 
 static std::string random_unit_type(const civilization_t &civ, bengine::random_number_generator &rng) noexcept {
@@ -208,7 +209,7 @@ static void planet_build_civ_year(const int year, planet_t &planet, bengine::ran
         civ.species_tag = civ_f->evolves_into[roll];
         const auto civ2_f = get_civ_def(civ.species_tag);
         const auto civ_name_func = "civ_name_gen_" + civ2_f->name_generator;
-        std::cout << civ.name << " evolves to tech level " << +civ.tech_level << " and takes the name: " << civ.name << "\n";
+        //std::cout << civ.name << " evolves to tech level " << +civ.tech_level << " and takes the name: " << civ.name << "\n";
         civ.name = lua_str_func( civ_name_func, rng.roll_dice(1, 1000) ) + std::string(" of the ") + civ.origin;
         civ_f = civ2_f;
         species_f = get_species_def(civ_f->species_tag);
@@ -378,7 +379,7 @@ static void planet_build_run_year(const int year, planet_t &planet, bengine::ran
                 if (u.owner_civ == I) found = true;
             }
             if (!found) {
-                std::cout << "Removing extinct civ\n";
+                //std::cout << "Removing extinct civ\n";
                 civ.extinct = true;
                 for (auto &t : planet.civs.region_info) {
                     if (t.owner_civ == I) t.owner_civ = 0;

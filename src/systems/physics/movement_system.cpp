@@ -105,17 +105,17 @@ namespace systems {
 			using namespace region;
 			move_requests.process_all([](entity_wants_to_move_message msg) {
 				if (!entity(msg.entity_id)) {
-					std::cout << "Oops - move request for entity " << msg.entity_id << ", but entity does not exist\n";
+					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity %d, but entity does not exist!", msg.entity_id);
 					return;
 				}
 				auto epos = entity(msg.entity_id)->component<position_t>();
 				if (!epos) {
-					std::cout << "Oops - move request for entity " << msg.entity_id << ", but entity does not have a position!\n";
+					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity %d, but entity does not have a position!", msg.entity_id);
 					return;
 				}
 				position_t origin{ epos->x, epos->y, epos->z };
 				if (origin == msg.destination) {
-					std::cout << "Oops - Moving to same tile, entity " << msg.entity_id << "\n";
+					glog(log_target::GAME, log_severity::WARNING, "Oops - Moving to same tile, entity %d", msg.entity_id);
 					return;
 				}
 

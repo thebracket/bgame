@@ -2,6 +2,7 @@
 #include <cctype>
 #include <clocale>
 #include <sstream>
+#include <fmt/format.h>
 
 std::string species_t::gender_str() {
     switch (gender) {
@@ -32,7 +33,7 @@ std::string species_t::height_feet() {
     const float height_inches = height_cm/2.5F;
     const int height_feet = (int)height_inches/12;
     const int height_additional_inches = height_feet % 12;
-    std::stringstream result;
+    fmt::MemoryWriter result;
     result << height_feet << "'" << height_additional_inches << "\"";
     return result.str();
 }

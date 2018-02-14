@@ -39,7 +39,7 @@ namespace chunks {
         //std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
         dirty_buffers.insert(idx);
 		mark_chunk_clean(idx);
-		std::cout << "Enqueued buffer update\n";
+		//std::cout << "Enqueued buffer update\n";
     }
 
     void initialize_chunks() {
@@ -316,7 +316,7 @@ namespace chunks {
 			dirty_buffers.erase(idx);
 			chunks[idx].update_buffer();
 			//chunks[idx].ready.store(true);
-			std::cout << "Buffer Updated\n";
+			//std::cout << "Buffer Updated\n";
 		}
     }
 
