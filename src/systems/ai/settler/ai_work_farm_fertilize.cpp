@@ -15,8 +15,6 @@
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../../components/item_tags/item_fertilizer_t.hpp"
 
-#pragma once
-
 namespace systems {
 	namespace ai_farm_fertilize {
 		using namespace bengine;
