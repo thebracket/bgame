@@ -57,6 +57,12 @@ find_package(Lua 5.3 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 message(${LUA_INCLUDE_DIR})
 
+#FMT
+find_package(Fmt REQUIRED)
+include_directories(${FMT_INCLUDE_DIR})
+link_libraries(${FMT_LIBRARIES})
+message("Fmt found")
+
 # Include the main src folder, to keep stdafx happy
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -123,9 +129,16 @@ add_library(components STATIC
                 components/items/item.cpp
                 components/logger.cpp
                 components/species.cpp
+		components/cerealizer.cpp
+		components/cerealizer2.cpp
+		components/cerealizer3.cpp
 )
 
 add_library(globals STATIC
+		global_assets/architecture_designations.cpp
+		global_assets/building_designations.cpp
+		global_assets/debug_flags.cpp
+		global_assets/farming_designations.cpp
 		global_assets/game_building.cpp
                 global_assets/game_calendar.cpp
                 global_assets/game_camera.cpp
@@ -140,8 +153,6 @@ add_library(globals STATIC
                 global_assets/shader_storage.cpp
                 global_assets/spatial_db.cpp
                 global_assets/texture_storage.cpp
-                global_assets/debug_flags.cpp
-                global_assets/farming_designations.cpp
 )
 
 add_library(mainloops STATIC
@@ -173,6 +184,7 @@ add_library(planet STATIC
                 planet/builder/regions/trees.cpp
                 planet/builder/regions/buildings.cpp
                 planet/builder/regions/blight_builder.cpp
+		planet/builder/regions/game_objects.cpp
 
                 planet/region/region.cpp
 )
@@ -236,6 +248,7 @@ add_library(systems STATIC
 add_library(systemsai STATIC 
 		systems/ai/ai_status_effects.cpp
                 systems/ai/ai_stuck.cpp
+		systems/ai/architecture_system.cpp
                 systems/ai/distance_map_system.cpp
                 systems/ai/inventory_system.cpp
                 systems/ai/mining_system.cpp
@@ -255,6 +268,12 @@ add_library(systemsaisettler STATIC
                 systems/ai/settler/ai_work_architect.cpp
                 systems/ai/settler/ai_work_building.cpp
                 systems/ai/settler/ai_work_butcher.cpp
+		systems/ai/settler/ai_work_farm_clear.cpp
+		systems/ai/settler/ai_work_farm_fertilize.cpp
+		systems/ai/settler/ai_work_farm_fixsoil.cpp
+		systems/ai/settler/ai_work_farm_plant.cpp
+		systems/ai/settler/ai_work_farm_water.cpp
+		systems/ai/settler/ai_work_farm_weed.cpp
                 systems/ai/settler/ai_work_guard.cpp
                 systems/ai/settler/ai_work_harvest.cpp
                 systems/ai/settler/ai_work_hunt.cpp
@@ -299,8 +318,8 @@ add_library(systemsgui STATIC
 )
 
 add_executable(noxfutura
-        stdafx.cpp
         main.cpp
+	utils/system_log.cpp
 )
 
 
@@ -344,9 +363,9 @@ cotire(raws)
 cotire(mainloops)
 cotire(systems)
 cotire(systemsai)
-cotire(systemsaisettler)
 cotire(systemsdamage)
 cotire(systemsgui)
+##cotire(systemsaisettler)
 
 ## Install targets
 install(TARGETS noxfutura DESTINATION /opt/noxfutura)

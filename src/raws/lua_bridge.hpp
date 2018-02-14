@@ -3,6 +3,7 @@
 #include <lua.hpp>
 #include <string>
 #include <functional>
+#include <unordered_map>
 #include "../bengine/color_t.hpp"
 
 extern lua_State* lua_state;

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <utility>
+#include <string>
 
 struct reaction_task_t {
 	reaction_task_t() = default;

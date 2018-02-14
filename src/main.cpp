@@ -25,8 +25,8 @@ int main() {
     pid = getpid();
     ret = proc_pidpath (pid, pathbuf, sizeof(pathbuf));
     if ( ret <= 0 ) {
-        fprintf(stderr, "PID %d: proc_pidpath ();\n", pid);
-        fprintf(stderr, "    %s\n", strerror(errno));
+        //fprintf(stderr, "PID %d: proc_pidpath ();\n", pid);
+        //fprintf(stderr, "    %s\n", strerror(errno));
     } else {
         //printf("proc %d: %s\n", pid, pathbuf);
         executable_path = pathbuf;
