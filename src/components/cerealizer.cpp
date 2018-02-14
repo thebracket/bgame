@@ -48,6 +48,11 @@
 #include "farming/designated_farmer.hpp"
 #include "designations.hpp"
 #include "position.hpp"
+#include <iostream>
+
+void dummy_init1() {
+	std::cout << "1\n";
+}
 
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<position_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<designations_t>>)
@@ -379,3 +384,6 @@ void serialize(Archive & archive, building_designation_t &b)
 {
 	archive(b.x, b.y, b.z, b.component_ids, b.name, b.tag, b.components, b.width, b.height, b.glyphs, b.building_entity, b.glyphs_ascii); // serialize things by passing them to the archive
 }
+
+CEREAL_REGISTER_DYNAMIC_INIT(cerealizer1)
+

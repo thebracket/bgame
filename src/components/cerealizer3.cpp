@@ -35,6 +35,11 @@
 #include "mining/designated_miner.hpp"
 #include "mining/mining_designations.hpp"
 #include "helpers/reaction_task_t.hpp"
+#include <iostream>
+
+void dummy_init3() {
+	std::cout << "3\n";
+}
 
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<item_ammo_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<item_bone_t>>)
@@ -226,4 +231,6 @@ void serialize(Archive & archive, mining_designations_t &m)
 {
 	archive(m.mining_targets, m.brush_type, m.brush_size_x, m.brush_size_y, m.mine_mode, m.radius, m.stairs_helper, m.stairs_depth);
 }
+
+CEREAL_REGISTER_DYNAMIC_INIT(cerealizer3)
 

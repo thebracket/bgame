@@ -46,7 +46,11 @@
 #include "helpers/shift.hpp"
 #include "helpers/health_part_t.hpp"
 #include "helpers/skill_t.hpp"
+#include <iostream>
 
+void dummy_init2() {
+	std::cout << "2\n";
+}
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<calendar_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<camera_options_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<claimed_t>>)
@@ -291,3 +295,6 @@ void serialize(Archive & archive, world_position_t &w)
 {
 	archive(w.world_x, w.world_y, w.region_x, w.region_y, w.region_z); // serialize things by passing them to the archive
 }
+
+CEREAL_REGISTER_DYNAMIC_INIT(cerealizer2)
+

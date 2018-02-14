@@ -24,7 +24,7 @@ namespace render {
 			glGenVertexArrays(1, &design_vao);
 		}
 
-		glInvalidateBufferData(design_vbo); // Invalidate the buffer
+		//glInvalidateBufferData(design_vbo); // Invalidate the buffer
 		design_geometry.clear();
 		n_elements = 0;
 
@@ -78,7 +78,7 @@ namespace render {
 		}
 
 		glBindVertexArray(design_vao);
-		glInvalidateBufferData(design_vbo);
+		//glInvalidateBufferData(design_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, design_vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * design_geometry.size(), &design_geometry[0], GL_STATIC_DRAW);
 

@@ -174,7 +174,7 @@ namespace vox {
 
 		// Build the instance buffer
 		if (instance_vbo_id < 1) glGenBuffers(1, &instance_vbo_id);
-		glInvalidateBufferData(instance_vbo_id);
+		//glInvalidateBufferData(instance_vbo_id);
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 		glBufferData(GL_ARRAY_BUFFER, instance_t_size_bytes * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
 		//glCheckError();

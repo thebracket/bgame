@@ -15,6 +15,10 @@
 #include "regions/game_objects.hpp"
 #include "../../bengine/ecs.hpp"
 
+CEREAL_FORCE_DYNAMIC_INIT(cerealizer1)
+CEREAL_FORCE_DYNAMIC_INIT(cerealizer2)
+CEREAL_FORCE_DYNAMIC_INIT(cerealizer3)
+
 inline std::pair<biome_t, biome_type_t> get_biome_for_region(planet_t &planet, const std::pair<int,int> &region) {
     const int idx = planet.idx(region.first, region.second);
     const int biome_idx = planet.landblocks[idx].biome_idx;

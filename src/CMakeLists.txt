@@ -6,7 +6,7 @@ include(cotire)
 #set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR -Wno-deprecated-declarations -O3 -march=core2 -g -fopenmp -ffast-math -funroll-loops -msse2 -mfpmath=sse")
-#set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -flto")
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -all_load")
 
 #find_package(PkgConfig REQUIRED)
 
@@ -328,6 +328,7 @@ target_link_libraries(raws bengine components luabridge)
 target_link_libraries(render planet)
 target_link_libraries(systemsdamage systemsai)
 target_link_libraries(systemsgui globals bengine components raws render systemsai planet systems)
+target_link_libraries(planet components)
 
 target_link_libraries(noxfutura
 	bengine 
