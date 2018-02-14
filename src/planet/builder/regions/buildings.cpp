@@ -24,7 +24,7 @@ using namespace region;
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) noexcept {
     auto building = get_building_def(tag);
     if (building == nullptr) {
-        throw std::runtime_error("Warning: do not know how to build: " + tag);
+		glog(log_target::LOADER, log_severity::ERROR, "Warning: do not know how to build: %s", tag);
     }
 
     auto new_building = bengine::create_entity()
