@@ -20,17 +20,21 @@ namespace main_menu {
     static bool world_exists = false;
     static std::string tagline = "";
     static bool show_options = false;
-    const std::string win_options = std::string(ICON_FA_WRENCH) + " Options";
-    const std::string btn_save = std::string(ICON_FA_FLOPPY_O) + " Save Changes";
-    const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
-    const std::string menu_play = std::string(ICON_FA_PLAY) + " Play the Game";
-    const std::string menu_gen = std::string(ICON_FA_MAP) + " Generate the World";
-    const std::string menu_opts = std::string(ICON_FA_WRENCH) + " Options";
-    const std::string menu_quit = std::string(ICON_FA_TIMES) + " Quit the Game";
+	static const std::string win_options = std::string(ICON_FA_WRENCH) + " Options";
+	static const std::string btn_save = std::string(ICON_FA_FLOPPY_O) + " Save Changes";
+	static const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
+	static const std::string menu_play = std::string(ICON_FA_PLAY) + " Play the Game";
+	static const std::string menu_gen = std::string(ICON_FA_MAP) + " Generate the World";
+	static const std::string menu_opts = std::string(ICON_FA_WRENCH) + " Options";
+	static const std::string menu_quit = std::string(ICON_FA_TIMES) + " Quit the Game";
+
+	static const char * texture_size_items = "Tiny (128x128)\0Small (256x256)\0Medium (512x512)\0Large (1024x1024)\0Huge (2048x2048)\0Enormous (4096x4096)\0Maximum (8096x8096)\0\0";
+	static const char * shadowmap_size_items = "Tiny (32x32)\0Small (64x64)\0Medium (128x128)\0Large (256x256)\0Huge (512x512)\0\0";
 
     static std::string online_username;
 
 	static int selected_texture_size = 0;
+	static int selected_shadowmap_size = 0;
 
     static std::string get_descriptive_noun() {
         using namespace string_tables;
@@ -80,6 +84,15 @@ namespace main_menu {
 		case 4096: selected_texture_size = 5; break;
 		case 8096: selected_texture_size = 6; break;
 		default: selected_texture_size = 0;
+		}
+
+		switch (config::game_config.shadow_map_size)
+		{
+		case 32: selected_shadowmap_size = 0; break;
+		case 64: selected_shadowmap_size = 1; break;
+		case 128: selected_shadowmap_size = 2; break;
+		case 256: selected_shadowmap_size = 3; break;
+		case 512: selected_shadowmap_size = 4; break;
 		}
 
         call_home("MainMenu", "Opened");
@@ -203,10 +216,13 @@ namespace main_menu {
             ImGui::SameLine();
             ImGui::Checkbox("## Entity ID", &game_config.show_entity_ids);
 
-			const char * texture_size_items = "Tiny (128x128)\0Small (256x256)\0Medium (512x512)\0Large (1024x1024)\0Huge (2048x2048)\0Enormous (4096x4096)\0Maximum (8096x8096)\0\0";
 			ImGui::Text("Texture Size");
 			ImGui::SameLine();
 			ImGui::Combo("## TexSize", &selected_texture_size, texture_size_items);
+
+			ImGui::Text("Shadow Map Size");
+			ImGui::SameLine();
+			ImGui::Combo("## ShadowSize", &selected_shadowmap_size, shadowmap_size_items);
 
 			ImGui::Text("Mip Levels (0 = automatic, square root of texture size)");
 			ImGui::SameLine();
@@ -231,6 +247,15 @@ namespace main_menu {
 				case 5: game_config.texture_size = 4096; break;
 				case 6: game_config.texture_size = 8192; break;
 				default: game_config.texture_size = 512;
+				}
+
+				switch (selected_shadowmap_size)
+				{
+				case 0: game_config.shadow_map_size = 32; break;
+				case 1: game_config.shadow_map_size = 64; break;
+				case 2: game_config.shadow_map_size = 128; break;
+				case 3: game_config.shadow_map_size = 256; break;
+				case 4: game_config.shadow_map_size = 512; break;
 				}
 
                 game_config.online_username = std::string(online_username);

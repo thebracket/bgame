@@ -25,6 +25,7 @@ namespace config {
 		int mip_levels = 0;
 		bool render_ascii_light = true;
 		int num_ascii_levels_below = 2;
+		int shadow_map_size = 128;
 
 		void save() const noexcept;
 	};
