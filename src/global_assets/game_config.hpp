@@ -31,6 +31,8 @@ namespace config {
 		bool disable_lighting = false;
 		bool disable_hdr = false;
 		bool disable_ssao = false;
+		float ticks_per_ms = 33.0f;
+		bool vsync = true;
 
 		void save() const noexcept;
 	};

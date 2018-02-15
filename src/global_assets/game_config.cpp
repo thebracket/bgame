@@ -51,6 +51,9 @@ namespace config {
 			if (split_line[0] == "disable_hdr" && split_line[1] == "no") game_config.disable_hdr = false;
 			if (split_line[0] == "disable_ssao" && split_line[1] == "yes") game_config.disable_ssao = true;
 			if (split_line[0] == "disable_ssao" && split_line[1] == "no") game_config.disable_ssao = false;
+			if (split_line[0] == "ticks_per_ms") game_config.ticks_per_ms = std::stof(split_line[1]);
+			if (split_line[0] == "vsync" && split_line[1] == "yes") game_config.vsync = true;
+			if (split_line[0] == "vsync" && split_line[1] == "no") game_config.vsync = false;
 		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
@@ -140,6 +143,16 @@ namespace config {
 		}
 		f << "disable_ssao=";
 		if (disable_ssao)
+		{
+			f << "yes\n";
+		}
+		else
+		{
+			f << "no\n";
+		}
+		f << "ticks_per_ms=" << ticks_per_ms << "\n";
+		f << "vsync=";
+		if (vsync)
 		{
 			f << "yes\n";
 		}

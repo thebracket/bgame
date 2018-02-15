@@ -7,6 +7,7 @@
 #include "filesystem.hpp"
 #include "imgui_style.hpp"
 #include <chrono>
+#include "../global_assets/game_config.hpp"
 
 namespace bengine {
 
@@ -32,7 +33,8 @@ namespace bengine {
         glfwMakeContextCurrent(main_window);
         glewExperimental = GL_TRUE;
         glewInit();
-        glfwSwapInterval(1);
+		if (config::game_config.vsync)
+			glfwSwapInterval(1);
     }
 
 	ImFontConfig config;

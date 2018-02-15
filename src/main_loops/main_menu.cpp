@@ -258,6 +258,14 @@ namespace main_menu {
 			ImGui::InputInt("##shadowdiv", &game_config.shadow_divisor, 1, 1);
 			if (game_config.shadow_divisor < 1) game_config.shadow_divisor = 1;
 
+			ImGui::Text("Ticks per ms. Recommended at 33.");
+			ImGui::SameLine();
+			ImGui::InputFloat("##ticksperms", &game_config.ticks_per_ms, 1, 1);
+
+			ImGui::Text("Vsync");
+			ImGui::SameLine();
+			ImGui::Checkbox("## vsync", &game_config.vsync);
+
             if (ImGui::Button(btn_save.c_str())) {
 				switch (selected_texture_size)
 				{

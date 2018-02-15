@@ -4,10 +4,11 @@
 #include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../keydamper.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../global_assets/game_config.hpp"
 
 namespace systems {
     namespace tick {
-        constexpr double MS_PER_TICK = 33.0;
+		const double MS_PER_TICK = config::game_config.ticks_per_ms;
         double time_count = 0.0;
         int slow_tick_count = 0;
 
