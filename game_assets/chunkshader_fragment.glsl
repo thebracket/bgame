@@ -5,6 +5,7 @@ uniform sampler2DArray textureArray;
 in vec3 tex_pos;
 in vec3 world_pos;
 in vec3 base_normal;
+in mat3 TBN;
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
@@ -20,6 +21,7 @@ void main() {
 
     vec3 norm = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+1)).rgb;
     norm = normalize(norm);
+    norm = normalize(TBN * norm);
     gNormal = norm;
 
     gAmbientOcclusion.r = texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r;
