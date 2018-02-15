@@ -24,6 +24,7 @@
 #include "../systems/mouse.hpp"
 #include "pointlights.hpp"
 #include "chunks/water_render.hpp"
+#include "../global_assets/game_config.hpp"
 
 namespace render {
 
@@ -92,10 +93,23 @@ namespace render {
         glUniform1i(lightstage_shader->position_tex, 2);
         glUniform1i(lightstage_shader->ao_tex, 3);
         glUniform3f(lightstage_shader->camera_position, (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
-		glUniform3f(lightstage_shader->moon_color, calendar->moon_r, calendar->moon_g, calendar->moon_b);
+		if (config::game_config.disable_lighting)
+		{
+			glUniform3f(lightstage_shader->moon_color, 1.0f, 1.0f, 1.0f);
+		}
+		else {
+			glUniform3f(lightstage_shader->moon_color, calendar->moon_r, calendar->moon_g, calendar->moon_b);
+		}
 		glUniform1i(lightstage_shader->noise_tex, 4);
 		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix * camera_modelview_matrix));
 		glUniform1i(lightstage_shader->gbuffer_depth_tex, 5);
+		if (config::game_config.disable_ssao)
+		{
+			glUniform1f(lightstage_shader->useSSAO, 0);
+		}
+		else {
+			glUniform1f(lightstage_shader->useSSAO, 1);
+		}
 		send_samples_to_shader();
 
 		glActiveTexture(GL_TEXTURE0);
@@ -161,13 +175,15 @@ namespace render {
 		glDepthFunc(GL_LEQUAL);
 
 		//update_light_buffers(screen_w, screen_h, camera_projection_matrix, camera_modelview_matrix);
-		update_pointlights();
+		if (!config::game_config.disable_lighting) {
+			update_pointlights();
+		}
 
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
-        glCheckError();
+        //glCheckError();
 		render_voxel_models(gbuffer, camera_projection_matrix, camera_modelview_matrix);
-		glCheckError();
+		//glCheckError();
 		render_water(camera_projection_matrix, camera_modelview_matrix);
 
 		// Stop writing to the gbuffer and depth-testing
@@ -175,7 +191,9 @@ namespace render {
 
         // Render the combined light buffer
         render_to_light_buffer();
-		render_pointlights();
+		if (!config::game_config.disable_lighting) {
+			render_pointlights();
+		}
 
 		// Add in translucent cursors
 		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
@@ -185,12 +203,21 @@ namespace render {
 		// TODO: Downsample buffers here
 
         // Tone mapping
-        tone_map_scene();
+		if (!config::game_config.disable_hdr) {
+			tone_map_scene();
+		}
 
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        render_test_quad(hdr_buffer->color_tex);
+		if (!config::game_config.disable_hdr) {
+			render_test_quad(hdr_buffer->color_tex);
+		} else
+		{
+			glEnable(GL_FRAMEBUFFER_SRGB);
+			render_test_quad(light_stage_buffer->color_tex);
+			glDisable(GL_FRAMEBUFFER_SRGB);
+		}
 
 		if (depth_test_render) render_test_quad(light_stage_buffer->shiny_tex);
 

@@ -89,6 +89,7 @@ add_library(bengine STATIC
                 bengine/shaders.cpp
                 bengine/simple_sprite.cpp
                 bengine/stb_image.cpp
+                bengine/stb_iamge_resize.cpp
                 bengine/string_utils.cpp
                 bengine/telemetry.cpp
                 bengine/textures.cpp

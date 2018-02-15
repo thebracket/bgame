@@ -14,6 +14,7 @@
 #include "../bengine/telemetry.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../bengine/stb_image.h"
+#include "../bengine/stb_image_resize.h"
 #include "../raws/materials.hpp"
 #include "../render_engine/vox/voxreader.hpp"
 
@@ -106,7 +107,6 @@ namespace splash_screen {
         glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     }
 
-    constexpr int TEX_SIZE = 256; // This is probably too high
     constexpr int CURSOR_SIZE = 128;
 
     static inline std::tuple<unsigned char *, int, int, int> load_texture_to_ram(const std::string &filename) {
@@ -115,7 +115,17 @@ namespace splash_screen {
         unsigned char *image_data = stbi_load(filename.c_str(), &width, &height, &bpp, STBI_rgb);
         if (image_data == nullptr) throw std::runtime_error(std::string("Cannot open: ") + filename);
         //std::cout << "Loaded " << filename << ", " << width << ", " << height << ", " << bpp << "\n";
-        assert(width == TEX_SIZE && height == TEX_SIZE);
+        //assert(width == TEX_SIZE && height == TEX_SIZE);
+
+		if (width != config::game_config.texture_size || height != config::game_config.texture_size)
+		{
+			// Resize the image
+			unsigned char * new_image_data = (unsigned char *)malloc(config::game_config.texture_size * config::game_config.texture_size * 3);
+			stbir_resize(image_data, width, height, 0, new_image_data, config::game_config.texture_size, config::game_config.texture_size, 0, STBIR_TYPE_UINT8, 3, 0, 0, STBIR_EDGE_ZERO, STBIR_EDGE_ZERO, STBIR_FILTER_CUBICBSPLINE, STBIR_FILTER_CUBICBSPLINE, STBIR_COLORSPACE_SRGB, nullptr);
+			stbi_image_free(image_data);
+			image_data = new_image_data;
+		}
+
         return std::make_tuple(image_data, width, height, bpp);
     }
 
@@ -137,11 +147,14 @@ namespace splash_screen {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
 
+		const auto max_mip_levels = std::min(static_cast<int>(1 + std::floor(std::log2(config::game_config.texture_size))), GL_TEXTURE_MAX_LEVEL-1);
+		const auto n_mip_levels = config::game_config.mip_levels == 0 ? max_mip_levels : config::game_config.mip_levels;
+
         glTexStorage3D( GL_TEXTURE_2D_ARRAY,
-                        2, // 4-levels of mipmap
-                        GL_RGB8, // Internal format
-                        TEX_SIZE, TEX_SIZE, // Width and height
-                        num_actual_textures
+			n_mip_levels, // 4-levels of mipmap
+            GL_RGB8, // Internal format
+			config::game_config.texture_size, config::game_config.texture_size, // Width and height
+            num_actual_textures
         );
 
         auto load_index = 0;
@@ -161,29 +174,29 @@ namespace splash_screen {
 
             // Albedo and normal are stored directly as idx+0, idx+1
             glTexSubImage3D(
-                    GL_TEXTURE_2D_ARRAY,
-                    0, // Mipmap number
-                    0, 0, load_index, // x/y/z offsets
-                    TEX_SIZE, TEX_SIZE, 1, // width, height, depth
-                    GL_RGB, // format
-                    GL_UNSIGNED_BYTE, // type
-                    std::get<0>(albedo_tex) // Color data
+                GL_TEXTURE_2D_ARRAY,
+                0, // Mipmap number
+                0, 0, load_index, // x/y/z offsets
+				config::game_config.texture_size, config::game_config.texture_size, 1, // width, height, depth
+                GL_RGB, // format
+                GL_UNSIGNED_BYTE, // type
+                std::get<0>(albedo_tex) // Color data
             );
             //std::cout << albedo << " = " << load_index << "\n";
             glTexSubImage3D(
-                    GL_TEXTURE_2D_ARRAY,
-                    0, // Mipmap number
-                    0, 0, load_index+1, // x/y/z offsets
-                    TEX_SIZE, TEX_SIZE, 1, // width, height, depth
-                    GL_RGB, // format
-                    GL_UNSIGNED_BYTE, // type
-                    std::get<0>(normal_tex) // Color data
+                GL_TEXTURE_2D_ARRAY,
+                0, // Mipmap number
+                0, 0, load_index+1, // x/y/z offsets
+				config::game_config.texture_size, config::game_config.texture_size, 1, // width, height, depth
+                GL_RGB, // format
+                GL_UNSIGNED_BYTE, // type
+                std::get<0>(normal_tex) // Color data
             );
             //std::cout << normal << " = " << load_index+1 << "\n";
 
             // We need to combine occlusion, metal and rough into one texture
             std::vector<uint8_t> texbytes;
-            constexpr int num_bytes = TEX_SIZE * TEX_SIZE * 3;
+            const int num_bytes = config::game_config.texture_size * config::game_config.texture_size * 3;
             texbytes.resize(num_bytes);
             for (int i=0; i<num_bytes; i+=3) {
                 texbytes[i] = std::get<0>(occlusion_tex)[i];
@@ -191,13 +204,13 @@ namespace splash_screen {
                 texbytes[i+2] = std::get<0>(rough_tex)[i];
             }
             glTexSubImage3D(
-                    GL_TEXTURE_2D_ARRAY,
-                    0, // Mipmap number
-                    0, 0, load_index+2, // x/y/z offsets
-                    TEX_SIZE, TEX_SIZE, 1, // width, height, depth
-                    GL_RGB, // format
-                    GL_UNSIGNED_BYTE, // type
-                    &texbytes[0] // Color data
+                GL_TEXTURE_2D_ARRAY,
+                0, // Mipmap number
+                0, 0, load_index+2, // x/y/z offsets
+				config::game_config.texture_size, config::game_config.texture_size, 1, // width, height, depth
+                GL_RGB, // format
+                GL_UNSIGNED_BYTE, // type
+                &texbytes[0] // Color data
             );
             //std::cout << "Combined = " << load_index+2 << "\n";
 

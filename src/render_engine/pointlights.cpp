@@ -12,6 +12,7 @@
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
 #include "../bengine/ecs.hpp"
+#include "../global_assets/game_config.hpp"
 
 namespace render {
 	static constexpr int size = 128;
@@ -140,7 +141,7 @@ namespace render {
 			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
 			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
 			pointlights[id].radius = 512.0f;
-			pointlights[id].cycle_tick = id % 20;
+			pointlights[id].cycle_tick = id % config::game_config.shadow_divisor;
 			pointlights[id].make_mats();
 			pointlights[id].make_buffer();
 			first_run = false;
@@ -169,7 +170,7 @@ namespace render {
 		});
 
 		for (auto &l : pointlights) {
-			if (l.second.new_light || l.second.cycle_tick == cycle) {
+			if (config::game_config.always_update_shadows || l.second.new_light || l.second.cycle_tick == cycle) {
 				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {
 					l.second.light_pos.x = calendar->sun_x;
 					l.second.light_pos.y = calendar->sun_y;
@@ -182,7 +183,7 @@ namespace render {
 		}
 
 		++cycle;
-		if (cycle > 20) cycle = 0;
+		if (cycle > config::game_config.shadow_divisor) cycle = 0;
 	}
 
 	void render_pointlights() {

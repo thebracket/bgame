@@ -235,6 +235,7 @@
     <ClCompile Include="..\..\src\bengine\shaders.cpp" />
     <ClCompile Include="..\..\src\bengine\simple_sprite.cpp" />
     <ClCompile Include="..\..\src\bengine\stb_image.cpp" />
+    <ClCompile Include="..\..\src\bengine\stb_image_resize.cpp" />
     <ClCompile Include="..\..\src\bengine\string_utils.cpp" />
     <ClCompile Include="..\..\src\bengine\telemetry.cpp" />
     <ClCompile Include="..\..\src\bengine\textures.cpp" />
@@ -448,6 +449,7 @@
     <ClInclude Include="..\..\src\bengine\shaders.hpp" />
     <ClInclude Include="..\..\src\bengine\simple_sprite.hpp" />
     <ClInclude Include="..\..\src\bengine\stb_image.h" />
+    <ClInclude Include="..\..\src\bengine\stb_image_resize.h" />
     <ClInclude Include="..\..\src\bengine\stb_rect_pack.h" />
     <ClInclude Include="..\..\src\bengine\stb_textedit.h" />
     <ClInclude Include="..\..\src\bengine\stb_truetype.h" />

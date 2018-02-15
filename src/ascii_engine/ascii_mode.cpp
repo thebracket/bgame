@@ -30,6 +30,7 @@
 #include <array>
 #include "../bengine/ecs.hpp"
 #include "../utils/system_log.hpp"
+#include "../global_assets/game_config.hpp"
 
 namespace render {
 
@@ -308,7 +309,8 @@ namespace render {
 		static inline glyph_t get_dive_tile(const int &idx) {
 			glyph_t result = glyph_t{ ' ', 0, 0, 0, 0, 0, 0 };
 			int dive_depth = 1;
-			constexpr int MAX_DIVE = 7;
+			const int MAX_DIVE = config::game_config.num_ascii_levels_below;
+			if (MAX_DIVE == 0) return result;
 			int check_idx = idx - (REGION_WIDTH * REGION_HEIGHT);
 			bool done = false;
 			while (check_idx > 0 && dive_depth < MAX_DIVE && !done) {
@@ -666,16 +668,65 @@ namespace render {
 			glCheckError();
 		}
 
+		static inline void render_ascii_fullbright()
+		{
+			constexpr auto glyph_width_texture_space = 1.0f / 16.0f;
+
+			const auto wz = static_cast<float>(camera_position->region_z);
+			constexpr auto width = 1.0f;
+			constexpr auto height = 1.0f;
+			std::size_t buffer_idx = 0;
+			for (auto y = 0; y < REGION_HEIGHT; ++y) {
+				for (auto x = 0; x < REGION_WIDTH; ++x) {
+					const auto tidx = termidx(x, y);
+					const auto wx = static_cast<float>(x);
+					const auto wy = static_cast<float>(y);
+
+					const auto x0 = -0.5f + wx;
+					const auto x1 = x0 + width;
+					const auto z0 = -0.5f + wy;
+					const auto z1 = z0 + height;
+
+					const auto TX0 = static_cast<float>(terminal[tidx].glyph % 16) * glyph_width_texture_space;
+					const auto TY0 = (terminal[tidx].glyph / 16) * glyph_width_texture_space;
+					const auto TW = TX0 + glyph_width_texture_space;
+					const auto TH = TY0 + glyph_width_texture_space;
+					const auto R = terminal[tidx].r;
+					const auto G = terminal[tidx].g;
+					const auto B = terminal[tidx].b;
+					const auto BR = terminal[tidx].br;
+					const auto BG = terminal[tidx].bg;
+					const auto BB = terminal[tidx].bb;
+
+					buffer[buffer_idx] = vertex_t{ x1, z1, wx, wy, wz, TW, TH, R, G, B, BR, BG, BB };
+					buffer[buffer_idx + 1] = vertex_t{ x1, z0, wx, wy, wz, TW, TY0, R, G, B, BR, BG, BB };
+					buffer[buffer_idx + 2] = vertex_t{ x0, z0, wx, wy, wz, TX0, TY0, R, G, B, BR, BG, BB };
+					buffer[buffer_idx + 3] = vertex_t{ x0, z0, wx, wy, wz, TX0, TY0, R, G, B, BR, BG, BB };
+					buffer[buffer_idx + 4] = vertex_t{ x0, z1, wx, wy, wz, TX0, TH, R, G, B, BR, BG, BB };
+					buffer[buffer_idx + 5] = vertex_t{ x1, z1, wx, wy, wz, TW, TH, R, G, B, BR, BG, BB };
+
+					buffer_idx += 6;
+				}
+			}
+
+
+			// Map the data
+			//glInvalidateBufferData(ascii_vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, ascii_vbo);
+			glBufferData(GL_ARRAY_BUFFER, buffer.size() * N_VERTICES * sizeof(float), &buffer[0], GL_DYNAMIC_DRAW);
+			glCheckError();
+		}
+
 		static inline void present() {
 			glDisable(GL_DEPTH_TEST);
 			glBindFramebuffer(GL_FRAMEBUFFER, ascii_fbo);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			glCheckError();
+			//glCheckError();
 			glUseProgram(assets::ascii_shader);
-			glCheckError();
+			//glCheckError();
 			glBindVertexArray(ascii_vao);
-			glCheckError();
+			//glCheckError();
 			glUniformMatrix4fv(glGetUniformLocation(assets::ascii_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
 			glUniformMatrix4fv(glGetUniformLocation(assets::ascii_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
 			glUniform1i(glGetUniformLocation(assets::ascii_shader, "ascii_tex"), 0);
@@ -701,9 +752,9 @@ namespace render {
 		if (!chunks::chunks_initialized) {
 			chunks::initialize_chunks();
 		}
-		chunks::update_dirty_chunks();
-		chunks::update_buffers();
-		render::update_buffers();
+		//chunks::update_dirty_chunks();
+		//chunks::update_buffers();
+		//render::update_buffers();
 
 		// Compile the ASCII render data
 		ascii::ascii_camera();
@@ -719,10 +770,16 @@ namespace render {
 		// Draw it
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		render::update_pointlights();
-		ascii::render_ascii_ambient();
-		ascii::present();
-		render::render_ascii_pointlights(ascii::ascii_fbo, ascii::ascii_vao, assets::ascii_texture->texture_id, ascii::buffer.size(), ascii::camera_projection_matrix, ascii::camera_modelview_matrix);
+		if (config::game_config.render_ascii_light) {
+			render::update_pointlights();
+			ascii::render_ascii_ambient();
+			ascii::present();
+			render::render_ascii_pointlights(ascii::ascii_fbo, ascii::ascii_vao, assets::ascii_texture->texture_id, ascii::buffer.size(), ascii::camera_projection_matrix, ascii::camera_modelview_matrix);
+		} else
+		{
+			ascii::render_ascii_fullbright();
+			ascii::present();
+		}
 
 		// Present the FBO to the screen
 		render_test_quad(ascii::albedo_tex);

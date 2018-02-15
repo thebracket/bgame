@@ -1,10 +1,11 @@
 #include "point_light_buffer.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../global_assets/game_config.hpp"
 
 namespace render {
 	point_light_buffer_t::point_light_buffer_t(const int &w, const int &h) {
-		width = 128;
-		height = 128;
+		width = config::game_config.shadow_map_size;
+		height = width;
 
 		glGenFramebuffers(1, &fbo_id);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);

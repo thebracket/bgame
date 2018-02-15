@@ -17,6 +17,7 @@ uniform vec3 moon_color;
 
 uniform mat4 projection;
 uniform vec3 samples[64];
+uniform float useSSAO;
 
 #define PI 3.1415926
 
@@ -46,21 +47,24 @@ void main()
     Shininess = vec3(1.0 - roughness);
 
     // SSAO & Ambient
-    const float kernelSize = 16.0;
-    const float radius = 0.02;
-
     vec3 ambient_color = albedo;
-    vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
-    float occlusion = 0;
-    for (int i=0; i<kernelSize; ++i) {
-        vec2 sample = FragPos.xy + (samples[i].xy * radius);
-        float sampleDepth = texture(gbuffer_depth_tex, sample).r;
-        vec3 sampleColor = texture(albedo_tex, sample).rgb;
-        occlusion += sampleDepth <= FragPos.z ? 0.75 : 0.0;
-        ambient_color += sampleDepth <= FragPos.z ? sampleColor : albedo;
+    float SSAO = 1.0;
+    if (useSSAO > 0) {
+        const float kernelSize = 16.0;
+        const float radius = 0.02;
+
+        vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
+        float occlusion = 0;
+        for (int i=0; i<kernelSize; ++i) {
+            vec2 sample = FragPos.xy + (samples[i].xy * radius);
+            float sampleDepth = texture(gbuffer_depth_tex, sample).r;
+            vec3 sampleColor = texture(albedo_tex, sample).rgb;
+            occlusion += sampleDepth <= FragPos.z ? 0.75 : 0.0;
+            ambient_color += sampleDepth <= FragPos.z ? sampleColor : albedo;
+        }
+        SSAO = clamp(1.0 - (occlusion / kernelSize), 0.0, 1.0);    
+        ambient_color /= kernelSize+5.0;
     }
-    float SSAO = clamp(1.0 - (occlusion / kernelSize), 0.0, 1.0);    
-    ambient_color /= kernelSize+5.0;
     ambient_color *= moon_color;
 
     // Final color
