@@ -29,7 +29,7 @@ namespace main_menu {
 	static const std::string menu_quit = std::string(ICON_FA_TIMES) + " Quit the Game";
 
 	static const char * texture_size_items = "Tiny (128x128)\0Small (256x256)\0Medium (512x512)\0Large (1024x1024)\0Huge (2048x2048)\0Enormous (4096x4096)\0Maximum (8096x8096)\0\0";
-	static const char * shadowmap_size_items = "Tiny (32x32)\0Small (64x64)\0Medium (128x128)\0Large (256x256)\0Huge (512x512)\0\0";
+	static const char * shadowmap_size_items = "Tiny (32x32)\0Small (64x64)\0Medium (128x128)\0Large (256x256)\0Huge (512x512)\0Maximum (1024x1024)\0\0";
 
     static std::string online_username;
 
@@ -93,6 +93,7 @@ namespace main_menu {
 		case 128: selected_shadowmap_size = 2; break;
 		case 256: selected_shadowmap_size = 3; break;
 		case 512: selected_shadowmap_size = 4; break;
+		case 1024: selected_shadowmap_size = 5; break;
 		}
 
         call_home("MainMenu", "Opened");
@@ -256,6 +257,7 @@ namespace main_menu {
 				case 2: game_config.shadow_map_size = 128; break;
 				case 3: game_config.shadow_map_size = 256; break;
 				case 4: game_config.shadow_map_size = 512; break;
+				case 5: game_config.shadow_map_size = 1024; break;
 				}
 
                 game_config.online_username = std::string(online_username);
