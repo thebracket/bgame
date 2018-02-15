@@ -196,12 +196,21 @@ namespace render {
 		// TODO: Downsample buffers here
 
         // Tone mapping
-        tone_map_scene();
+		if (!config::game_config.disable_hdr) {
+			tone_map_scene();
+		}
 
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        render_test_quad(hdr_buffer->color_tex);
+		if (!config::game_config.disable_hdr) {
+			render_test_quad(hdr_buffer->color_tex);
+		} else
+		{
+			glEnable(GL_FRAMEBUFFER_SRGB);
+			render_test_quad(light_stage_buffer->color_tex);
+			glDisable(GL_FRAMEBUFFER_SRGB);
+		}
 
 		if (depth_test_render) render_test_quad(light_stage_buffer->shiny_tex);
 

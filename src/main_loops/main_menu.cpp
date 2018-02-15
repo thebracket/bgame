@@ -241,6 +241,10 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::Checkbox("## 3D lighting", &game_config.disable_lighting);
 
+			ImGui::Text("Disable HDR");
+			ImGui::SameLine();
+			ImGui::Checkbox("## HDR", &game_config.disable_hdr);
+
 			ImGui::Text("ASCII mode - number of levels down to look (0 disables)");
 			ImGui::SameLine();
 			ImGui::InputInt("##asciidive", &game_config.num_ascii_levels_below, 1, 1);

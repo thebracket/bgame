@@ -29,6 +29,7 @@ namespace config {
 		bool always_update_shadows = false;
 		int shadow_divisor = 20;
 		bool disable_lighting = false;
+		bool disable_hdr = false;
 
 		void save() const noexcept;
 	};

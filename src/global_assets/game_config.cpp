@@ -47,6 +47,8 @@ namespace config {
 			if (split_line[0] == "shadow_divisor") game_config.shadow_divisor = std::stoi(split_line[1]);
 			if (split_line[0] == "disable_lighting" && split_line[1] == "yes") game_config.disable_lighting = true;
 			if (split_line[0] == "disable_lighting" && split_line[1] == "no") game_config.disable_lighting = false;
+			if (split_line[0] == "disable_hdr" && split_line[1] == "yes") game_config.disable_hdr = true;
+			if (split_line[0] == "disable_hdr" && split_line[1] == "no") game_config.disable_hdr = false;
 		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
@@ -118,6 +120,15 @@ namespace config {
 		f << "shadow_divisor=" << shadow_divisor << "\n";
 		f << "disable_lighting=";
 		if (disable_lighting)
+		{
+			f << "yes\n";
+		}
+		else
+		{
+			f << "no\n";
+		}
+		f << "disable_hdr=";
+		if (disable_hdr)
 		{
 			f << "yes\n";
 		}
