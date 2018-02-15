@@ -93,11 +93,11 @@ namespace systems {
 		static inline void render_summary(name_t * name, game_stats_t * stats, species_t * species, settler_ai_t * ai, health_t * health) {
 			fmt::MemoryWriter header;
 			header << " " << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ") ";
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), header.str().c_str());
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", header.str().c_str());
 
 			fmt::MemoryWriter header2;
 			header2 << species->gender_str() << ", " << species->sexuality_str() << ", " << stats->age << " years old. " << species->height_feet() << ", " << species->weight_lbs();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), header2.str().c_str());
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", header2.str().c_str());
 
 			fmt::MemoryWriter profile;
 			profile << species->gender_pronoun() << std::string(" has ") << species->ethnicity() << std::string(" colored skin. ");
