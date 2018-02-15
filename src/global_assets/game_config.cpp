@@ -45,6 +45,8 @@ namespace config {
 			if (split_line[0] == "always_update_shadows" && split_line[1] == "yes") game_config.always_update_shadows = true;
 			if (split_line[0] == "always_update_shadows" && split_line[1] == "no") game_config.always_update_shadows = false;
 			if (split_line[0] == "shadow_divisor") game_config.shadow_divisor = std::stoi(split_line[1]);
+			if (split_line[0] == "disable_lighting" && split_line[1] == "yes") game_config.disable_lighting = true;
+			if (split_line[0] == "disable_lighting" && split_line[1] == "no") game_config.disable_lighting = false;
 		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
@@ -114,6 +116,15 @@ namespace config {
 			f << "no\n";
 		}
 		f << "shadow_divisor=" << shadow_divisor << "\n";
+		f << "disable_lighting=";
+		if (disable_lighting)
+		{
+			f << "yes\n";
+		}
+		else
+		{
+			f << "no\n";
+		}
     }
 
 }

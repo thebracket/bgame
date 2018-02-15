@@ -237,6 +237,10 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::Checkbox("## ASCII lighting", &game_config.render_ascii_light);
 
+			ImGui::Text("Disable 3D lighting");
+			ImGui::SameLine();
+			ImGui::Checkbox("## 3D lighting", &game_config.disable_lighting);
+
 			ImGui::Text("ASCII mode - number of levels down to look (0 disables)");
 			ImGui::SameLine();
 			ImGui::InputInt("##asciidive", &game_config.num_ascii_levels_below, 1, 1);

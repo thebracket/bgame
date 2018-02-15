@@ -17,6 +17,7 @@ uniform vec3 moon_color;
 
 uniform mat4 projection;
 uniform vec3 samples[64];
+uniform float ambient_level;
 
 #define PI 3.1415926
 

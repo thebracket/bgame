@@ -28,6 +28,7 @@ namespace config {
 		int shadow_map_size = 128;
 		bool always_update_shadows = false;
 		int shadow_divisor = 20;
+		bool disable_lighting = false;
 
 		void save() const noexcept;
 	};
