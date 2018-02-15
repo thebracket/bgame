@@ -19,8 +19,6 @@
 #include "../../../raws/defs/item_def_t.hpp"
 #include "../../../raws/raws.hpp"
 
-#pragma once
-
 namespace systems {
 	namespace ai_farm_clear {
 

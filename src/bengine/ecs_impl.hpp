@@ -10,6 +10,7 @@
 #include <mutex>
 #include <algorithm>
 #include <array>
+#include <set>
 
 namespace bengine {
 

@@ -95,7 +95,8 @@ namespace systems {
 			{
 				const auto idx = operation.first;
 				const auto type = operation.second;
-				auto[x, y, z] = idxmap(idx);
+				int x,y,z;
+				std::tie(x,y,z) = idxmap(idx);
 
 				switch (type)
 				{
