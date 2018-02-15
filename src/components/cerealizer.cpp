@@ -11,7 +11,7 @@
 
 // All components; yes, this a mess - but the compilation speed-up is worth it!
 #include "farming/farm_designs.hpp"
-#include "ai_tags/aI_tag_work_farm_plant.hpp"
+#include "ai_tags/ai_tag_work_farm_plant.hpp"
 #include "ai_tags/ai_tag_work_guarding.hpp"
 #include "ai_tags/ai_mode_idle.hpp"
 #include "ai_tags/ai_settler_new_arrival.hpp"
@@ -21,9 +21,9 @@
 #include "ai_tags/ai_tag_work_architect.hpp"
 #include "ai_tags/ai_tag_work_building.hpp"
 #include "ai_tags/ai_tag_work_butcher.hpp"
-#include "ai_tags/aI_tag_work_farm_clear.hpp"
-#include "ai_tags/aI_tag_work_farm_fertilize.hpp"
-#include "ai_tags/aI_tag_work_farm_fixsoil.hpp"
+#include "ai_tags/ai_tag_work_farm_clear.hpp"
+#include "ai_tags/ai_tag_work_farm_fertilize.hpp"
+#include "ai_tags/ai_tag_work_farm_fixsoil.hpp"
 #include "ai_tags/ai_tag_work_farm_water.hpp"
 #include "ai_tags/ai_tag_work_farm_weed.hpp"
 #include "ai_tags/ai_tag_work_harvest.hpp"
