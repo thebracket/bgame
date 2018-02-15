@@ -6,7 +6,9 @@ include(cotire)
 #set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR -Wno-deprecated-declarations -O3 -march=core2 -g -fopenmp -ffast-math -funroll-loops -msse2 -mfpmath=sse")
+if(APPLE)
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -all_load")
+endif(APPLE)
 
 #find_package(PkgConfig REQUIRED)
 
@@ -58,10 +60,12 @@ include_directories(${LUA_INCLUDE_DIR})
 message(${LUA_INCLUDE_DIR})
 
 #FMT
-find_package(Fmt REQUIRED)
+find_package(FMT 4.1 REQUIRED)
+if (${FMT_FOUND})
 include_directories(${FMT_INCLUDE_DIR})
 link_libraries(${FMT_LIBRARIES})
-message("Fmt found")
+message("Fmt found", ${FMT_LIBRARIES})
+endif (${FMT_FOUND})
 
 # Include the main src folder, to keep stdafx happy
 include_directories(${PROJECT_SOURCE_DIR})
@@ -85,7 +89,7 @@ add_library(bengine STATIC
                 bengine/shaders.cpp
                 bengine/simple_sprite.cpp
                 bengine/stb_image.cpp
-                bengine/stb_iamge_resize.cpp
+                bengine/stb_image_resize.cpp
                 bengine/string_utils.cpp
                 bengine/telemetry.cpp
                 bengine/textures.cpp
@@ -355,6 +359,8 @@ target_link_libraries(noxfutura ${GLM_LIBRARIES})
 target_link_libraries(noxfutura glfw)
 target_link_libraries(raws ${LUA_LIBRARIES})
 target_link_libraries(planet ${ZLIB_LIBRARIES})
+target_link_libraries(noxfutura ${FMT_LIBRARIES})
+target_link_libraries(components ${FMT_LIBRARIES})
 cotire(noxfutura)
 cotire(bengine)
 cotire(render)
