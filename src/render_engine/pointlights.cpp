@@ -141,7 +141,7 @@ namespace render {
 			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
 			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
 			pointlights[id].radius = 512.0f;
-			pointlights[id].cycle_tick = id % 20;
+			pointlights[id].cycle_tick = id % config::game_config.shadow_divisor;
 			pointlights[id].make_mats();
 			pointlights[id].make_buffer();
 			first_run = false;
@@ -183,7 +183,7 @@ namespace render {
 		}
 
 		++cycle;
-		if (cycle > 20) cycle = 0;
+		if (cycle > config::game_config.shadow_divisor) cycle = 0;
 	}
 
 	void render_pointlights() {

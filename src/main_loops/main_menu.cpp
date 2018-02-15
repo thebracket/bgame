@@ -241,6 +241,11 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::InputInt("##asciidive", &game_config.num_ascii_levels_below, 1, 1);
 
+			ImGui::Text("Shadow divisor; higher is less-frequent shadow updates");
+			ImGui::SameLine();
+			ImGui::InputInt("##shadowdiv", &game_config.shadow_divisor, 1, 1);
+			if (game_config.shadow_divisor < 1) game_config.shadow_divisor = 1;
+
             if (ImGui::Button(btn_save.c_str())) {
 				switch (selected_texture_size)
 				{
