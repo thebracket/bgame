@@ -37,7 +37,8 @@ namespace config {
             if (split_line[0] == "show_entity_ids" && split_line[1]!="yes") game_config.show_entity_ids = false;
             if (split_line[0] == "build_tech_trees" && split_line[1]=="yes") game_config.build_tech_trees = true;
 			if (split_line[0] == "texture_size") game_config.texture_size = std::stoi(split_line[1]);
-        }
+			if (split_line[0] == "mip_levels") game_config.mip_levels = std::stoi(split_line[1]);
+		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
 			game_config.texture_size = 512; // Restore to default because it isn't a power of 2!
@@ -85,6 +86,7 @@ namespace config {
             f << "no\n";
         }
 		f << "texture_size=" << texture_size << "\n";
+		f << "mip_levels=" << mip_levels << "\n";
     }
 
 }

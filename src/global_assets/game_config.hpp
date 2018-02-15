@@ -22,6 +22,7 @@ namespace config {
 		bool show_entity_ids = true;
 		bool build_tech_trees = false;
 		int texture_size = 512;
+		int mip_levels = 0;
 
 		void save() const noexcept;
 	};
