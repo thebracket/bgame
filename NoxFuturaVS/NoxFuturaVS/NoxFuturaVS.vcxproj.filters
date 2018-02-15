@@ -804,6 +804,9 @@
     <ClCompile Include="..\..\src\utils\system_log.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bengine\stb_image_resize.cpp">
+      <Filter>Source Files\bengine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\path_finding.hpp">
@@ -1813,6 +1816,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\utils\system_log.hpp">
       <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bengine\stb_image_resize.h">
+      <Filter>Header Files\bengine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
