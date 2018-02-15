@@ -23,6 +23,8 @@ namespace config {
 		bool build_tech_trees = false;
 		int texture_size = 512;
 		int mip_levels = 0;
+		bool render_ascii_light = true;
+		int num_ascii_levels_below = 2;
 
 		void save() const noexcept;
 	};

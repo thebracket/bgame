@@ -212,6 +212,14 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::InputInt("##MIP", &game_config.mip_levels, 1, 1);
 
+			ImGui::Text("Render ASCII lighting");
+			ImGui::SameLine();
+			ImGui::Checkbox("## ASCII lighting", &game_config.render_ascii_light);
+
+			ImGui::Text("ASCII mode - number of levels down to look (0 disables)");
+			ImGui::SameLine();
+			ImGui::InputInt("##asciidive", &game_config.num_ascii_levels_below, 1, 1);
+
             if (ImGui::Button(btn_save.c_str())) {
 				switch (selected_texture_size)
 				{
