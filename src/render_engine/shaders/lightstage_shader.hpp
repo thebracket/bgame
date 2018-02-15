@@ -18,6 +18,7 @@ struct lightstage_shader_t : public bengine::base_shader_t {
 	unsigned int ao_tex;
 	unsigned int noise_tex;
 	unsigned int gbuffer_depth_tex;
+	unsigned int useSSAO;
 
 	unsigned int camera_position;
 	unsigned int moon_color;

@@ -49,6 +49,8 @@ namespace config {
 			if (split_line[0] == "disable_lighting" && split_line[1] == "no") game_config.disable_lighting = false;
 			if (split_line[0] == "disable_hdr" && split_line[1] == "yes") game_config.disable_hdr = true;
 			if (split_line[0] == "disable_hdr" && split_line[1] == "no") game_config.disable_hdr = false;
+			if (split_line[0] == "disable_ssao" && split_line[1] == "yes") game_config.disable_ssao = true;
+			if (split_line[0] == "disable_ssao" && split_line[1] == "no") game_config.disable_ssao = false;
 		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
@@ -129,6 +131,15 @@ namespace config {
 		}
 		f << "disable_hdr=";
 		if (disable_hdr)
+		{
+			f << "yes\n";
+		}
+		else
+		{
+			f << "no\n";
+		}
+		f << "disable_ssao=";
+		if (disable_ssao)
 		{
 			f << "yes\n";
 		}

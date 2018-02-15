@@ -9,6 +9,7 @@ lightstage_shader_t::lightstage_shader_t() {
 	ao_tex = get_uniform("ao_tex");
 	noise_tex = get_uniform("noise_tex");
 	gbuffer_depth_tex = get_uniform("gbuffer_depth_tex");
+	useSSAO = get_uniform("useSSAO");
 
 	camera_position = get_uniform("camera_position");
 	moon_color = get_uniform("moon_color");

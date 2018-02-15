@@ -245,6 +245,10 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::Checkbox("## HDR", &game_config.disable_hdr);
 
+			ImGui::Text("Disable Screen Space Ambient Occlusion");
+			ImGui::SameLine();
+			ImGui::Checkbox("## SSAO", &game_config.disable_ssao);
+
 			ImGui::Text("ASCII mode - number of levels down to look (0 disables)");
 			ImGui::SameLine();
 			ImGui::InputInt("##asciidive", &game_config.num_ascii_levels_below, 1, 1);

@@ -103,6 +103,13 @@ namespace render {
 		glUniform1i(lightstage_shader->noise_tex, 4);
 		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix * camera_modelview_matrix));
 		glUniform1i(lightstage_shader->gbuffer_depth_tex, 5);
+		if (config::game_config.disable_ssao)
+		{
+			glUniform1f(lightstage_shader->useSSAO, 0);
+		}
+		else {
+			glUniform1f(lightstage_shader->useSSAO, 1);
+		}
 		send_samples_to_shader();
 
 		glActiveTexture(GL_TEXTURE0);

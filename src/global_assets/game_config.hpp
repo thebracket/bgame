@@ -30,6 +30,7 @@ namespace config {
 		int shadow_divisor = 20;
 		bool disable_lighting = false;
 		bool disable_hdr = false;
+		bool disable_ssao = false;
 
 		void save() const noexcept;
 	};
