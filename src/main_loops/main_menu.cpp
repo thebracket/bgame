@@ -225,6 +225,10 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::Combo("## ShadowSize", &selected_shadowmap_size, shadowmap_size_items);
 
+			ImGui::Text("Always update shadows (slower)");
+			ImGui::SameLine();
+			ImGui::Checkbox("## Always shadow", &game_config.always_update_shadows);
+
 			ImGui::Text("Mip Levels (0 = automatic, square root of texture size)");
 			ImGui::SameLine();
 			ImGui::InputInt("##MIP", &game_config.mip_levels, 1, 1);

@@ -26,6 +26,7 @@ namespace config {
 		bool render_ascii_light = true;
 		int num_ascii_levels_below = 2;
 		int shadow_map_size = 128;
+		bool always_update_shadows = false;
 
 		void save() const noexcept;
 	};

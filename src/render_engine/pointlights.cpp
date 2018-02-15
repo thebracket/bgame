@@ -12,6 +12,7 @@
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
 #include "../bengine/ecs.hpp"
+#include "../global_assets/game_config.hpp"
 
 namespace render {
 	static constexpr int size = 128;
@@ -169,7 +170,7 @@ namespace render {
 		});
 
 		for (auto &l : pointlights) {
-			if (l.second.new_light || l.second.cycle_tick == cycle) {
+			if (config::game_config.always_update_shadows || l.second.new_light || l.second.cycle_tick == cycle) {
 				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {
 					l.second.light_pos.x = calendar->sun_x;
 					l.second.light_pos.y = calendar->sun_y;

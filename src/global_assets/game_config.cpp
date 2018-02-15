@@ -42,6 +42,8 @@ namespace config {
 			if (split_line[0] == "render_ascii_light" && split_line[1] == "no") game_config.render_ascii_light = false;
 			if (split_line[0] == "num_ascii_levels_below") game_config.num_ascii_levels_below = std::stoi(split_line[1]);
 			if (split_line[0] == "shadow_map_size") game_config.shadow_map_size = std::stoi(split_line[1]);
+			if (split_line[0] == "always_update_shadows" && split_line[1] == "yes") game_config.always_update_shadows = true;
+			if (split_line[0] == "always_update_shadows" && split_line[1] == "no") game_config.always_update_shadows = false;
 		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
@@ -101,6 +103,15 @@ namespace config {
 		}
 		f << "num_ascii_levels_below=" << num_ascii_levels_below << "\n";
 		f << "shadow_map_size=" << shadow_map_size << "\n";
+		f << "always_update_shadows=";
+		if (always_update_shadows)
+		{
+			f << "yes\n";
+		}
+		else
+		{
+			f << "no\n";
+		}
     }
 
 }
