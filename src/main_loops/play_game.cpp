@@ -112,9 +112,9 @@ namespace play_game {
 				render::render_gl(duration_ms);
 			}
 
-            //ImGui::Begin("Please wait - not written yet");
-            //ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
-            //ImGui::End();
+            ImGui::Begin("FPS");
+            ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
+            ImGui::End();
 
             systems::run(duration_ms);
 			bengine::ecs_garbage_collect();

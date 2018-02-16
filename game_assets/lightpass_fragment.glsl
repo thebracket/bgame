@@ -67,9 +67,8 @@ void main()
     }
     ambient_color *= moon_color;
 
-    vec3 dir = normalize(vec3(1.0, 1.0, 1.0));
-    vec3 N = vec3(normal.x, normal.y, normal.z);
-    float lambert = max(dot(N, dir), 0.0);
+    vec3 dir = normalize(camera_position);
+    float lambert = max(dot(normal, dir), 0.0);
 
     // Final color
     vec3 ambient = ambient_color * ambient_occlusion;
