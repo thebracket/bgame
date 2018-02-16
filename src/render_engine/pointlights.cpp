@@ -38,7 +38,7 @@ namespace render {
 		}
 
 		void make_buffer() {
-			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(size, size);
+			if (!buffer) buffer = std::make_unique<point_light_buffer_t>(config::game_config.shadow_map_size, config::game_config.shadow_map_size);
 		}
 
 		void draw_depth_buffer() {
@@ -46,7 +46,6 @@ namespace render {
 			glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, buffer->fbo_id);
-			glUseProgram(assets::pointlight_shader);
 			glUniform3f(glGetUniformLocation(assets::pointlight_shader, "lightPos"), light_pos.x, light_pos.y, light_pos.z);
 			glUniform1f(glGetUniformLocation(assets::pointlight_shader, "far_plane"), radius);
 			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[0]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
@@ -57,7 +56,7 @@ namespace render {
 			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
 
 			// Render everything to it - chunks
-			glViewport(0, 0, size, size);
+			glViewport(0, 0, config::game_config.shadow_map_size, config::game_config.shadow_map_size);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for (const auto &idx : visible_chunks) {
 				chunks::chunk_t * target = &chunks::chunks[idx.chunk_id];
@@ -74,12 +73,12 @@ namespace render {
 					}
 				}
 			}
-			render_voxel_models_shadow(radius, light_pos, shadowTransforms, buffer->depth_cubemap);
+			//render_voxel_models_shadow(radius, light_pos, shadowTransforms, buffer->depth_cubemap);
 			glViewport(0, 0, screen_w, screen_h);
 			new_light = false;
 		}
 
-		void render_light() {
+		void render_light() const {
 			glUseProgram(assets::lighter_shader);
 			glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
 
@@ -170,6 +169,7 @@ namespace render {
 			}
 		});
 
+		glUseProgram(assets::pointlight_shader);
 		for (auto &l : pointlights) {
 			if (config::game_config.always_update_shadows || l.second.new_light || l.second.cycle_tick == cycle) {
 				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {

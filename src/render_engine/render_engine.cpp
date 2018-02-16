@@ -220,11 +220,11 @@ namespace render {
 			first_time = false;
 			tick = true;
 		}
-		if (!camera_moved && !models_changed && !systems::mouse_moved)
-		{
+		//if (!camera_moved && !models_changed && !systems::mouse_moved)
+		//{
 			// If nothing changed, why bother rendering?
-			tick = false;
-		}
+		//	tick = false;
+		//}
 		if (!tick) {
 			if (!config::game_config.disable_hdr) {
 				render_test_quad(hdr_buffer->color_tex);
@@ -253,12 +253,16 @@ namespace render {
 		update_buffers();
 
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_LESS);
 
 		//update_light_buffers(screen_w, screen_h, camera_projection_matrix, camera_modelview_matrix);
 		if (!config::game_config.disable_lighting) {
+			glColorMaski(0, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 			update_pointlights();
+			glColorMaski(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		}
+
+		glDepthFunc(GL_LEQUAL);
 
 		// perform a depth pre-pass
 		render_depth_prepass();

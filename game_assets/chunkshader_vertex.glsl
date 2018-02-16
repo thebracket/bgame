@@ -10,23 +10,10 @@ uniform mat3 normalMatrix;
 
 out vec3 tex_pos;
 out vec3 world_pos;
-out vec3 TangentViewPos;
-out vec3 TangentFragPos;
 
 void main()
 {
     tex_pos = texture_info;
     world_pos = aPos;
-    vec3 aTangent = aNormal.x == 0.0 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
-
-    vec3 T = normalize(normalMatrix * aTangent);
-    vec3 N = normalize(normalMatrix * aNormal);
-    T = normalize(T - dot(T, N) * N);
-    vec3 B = cross(N, T);
-
-    mat3 TBN = transpose(mat3(T, B, N));
-    TangentViewPos = TBN * camera_position;
-    TangentFragPos = TBN * aPos;
-
     gl_Position = projection_matrix * view_matrix * vec4(aPos, 1.0);
 }
