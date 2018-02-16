@@ -2,7 +2,7 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 texture_info;
 layout (location = 2) in vec3 aNormal;
-layout (location = 3) in vec3 aTangent;
+//layout (location = 3) in vec3 aTangent;
 
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
@@ -18,6 +18,7 @@ void main()
 {
     tex_pos = texture_info;
     world_pos = aPos;
+    vec3 aTangent = aNormal.x == 0.0 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
 
     vec3 T = normalize(normalMatrix * aTangent);
     vec3 N = normalize(normalMatrix * aNormal);
