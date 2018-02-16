@@ -5,6 +5,4 @@ chunk_depth_shader_t::chunk_depth_shader_t() {
 
 	view_matrix = get_uniform("view_matrix");
 	projection_matrix = get_uniform("projection_matrix");
-	camera_position = get_uniform("camera_position");
-	normal_matrix = get_uniform("normalMatrix");
 }

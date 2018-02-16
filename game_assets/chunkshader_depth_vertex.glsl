@@ -5,7 +5,6 @@ layout (location = 2) in vec3 aNormal;
 
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
-uniform vec3 camera_position;
 uniform mat3 normalMatrix;
 
 void main()

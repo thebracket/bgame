@@ -1,5 +1,10 @@
 #version 330 core
 
+layout (location = 0) out vec3 gPosition;
+layout (location = 1) out vec3 gNormal;
+layout (location = 2) out vec3 gAlbedo;
+layout (location = 3) out vec3 gAmbientOcclusion;
+
 void main() {
-    // Do we need to do anything to write to the depth map only?
+    gAlbedo = vec3(0.0, 0.0, 0.0);
 }

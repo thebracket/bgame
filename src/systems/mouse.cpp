@@ -11,11 +11,14 @@
 namespace systems {
 	int mouse_x = 0;
 	int mouse_y = 0;
+	static int last_mouse_x = 0;
+	static int last_mouse_y = 0;
 	bool left_click = false;
 	bool right_click = false;
 	bool middle_click = false;
 	bool wheel_up = false;
 	bool wheel_down = false;
+	bool mouse_moved = true;
 
 	int mouse_wx = 0;
 	int mouse_wy = 0;
@@ -40,7 +43,7 @@ namespace systems {
 			mouse_wz = camera_position->region_z;
 		}
 		else {
-			glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer_alternate->fbo_id);
+			glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer->fbo_id);
 			float pixels[3];
 			glReadPixels(mouse_x, screen_height - mouse_y, 1, 1, GL_RGB, GL_FLOAT, &pixels[0]);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -64,17 +67,23 @@ namespace systems {
 
 		ImGuiIO& io = ImGui::GetIO();
 		if (!io.WantCaptureMouse) {
+			mouse_moved = false;
 			mouse_x = static_cast<int>(io.MousePos.x);
 			mouse_y = static_cast<int>(io.MousePos.y);
 			left_click = io.MouseDown[0];
 			right_click = io.MouseDown[1];
 			middle_click = io.MouseDown[2];
-			auto wheel = io.MouseWheel;
+			const auto wheel = io.MouseWheel;
 			wheel_up = false;
 			wheel_down = false;
 			if (wheel < 0) wheel_up = true;
 			if (wheel > 0) wheel_down = true;
-			read_gl_position(screen_h);
+			if (last_mouse_x != mouse_x || last_mouse_y != mouse_y) {
+				read_gl_position(screen_h);
+				last_mouse_x = mouse_x;
+				last_mouse_y = mouse_y;
+				mouse_moved = true;
+			}
 		}
 		else {
 			left_click = false;

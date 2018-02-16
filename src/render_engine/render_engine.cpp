@@ -60,6 +60,7 @@ namespace render {
 	static const glm::mat3 normal_matrix = glm::transpose(glm::inverse(identity_matrix));
 
     static void render_chunks() {
+		glDepthMask(GL_FALSE);
         // Use the program
 		assets::chunkshader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
@@ -92,21 +93,30 @@ namespace render {
 		else {
 			do_chunk_render();
 		}
+		glDepthMask(GL_TRUE);
     }
 
 	static void render_depth_prepass()
     {
+		glDepthMask(GL_TRUE);
+		glCheckError();
+
 		// Use the program
 		assets::chunkdepthshader->use();
+		glCheckError();
 		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
+		glCheckError();
 		//glClearDepth(0.0f); // We're using an inverted Z-buffer
 		glClear(GL_DEPTH_BUFFER_BIT);
+		glCheckError();
 
 		// Assign the uniforms
 		glUniformMatrix4fv(assets::chunkdepthshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
 		glUniformMatrix4fv(assets::chunkdepthshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-		glUniformMatrix3fv(assets::chunkdepthshader->normal_matrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
-		glUniform3f(assets::chunkdepthshader->camera_position, camera_position->region_x, camera_position->region_z, camera_position->region_y);
+		glCheckError();
+
+		glColorMaski(0, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glCheckError();
 
 		if (game_master_mode == DESIGN) {
 			// Render single layer
@@ -115,13 +125,17 @@ namespace render {
 		else {
 			do_chunk_render();
 		}
+		glCheckError();
+
+		glColorMaski(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glCheckError();
     }
 
     static void render_to_light_buffer() {
 		using assets::lightstage_shader;
 		lightstage_shader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
-        //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT);
 
         glUniform1i(lightstage_shader->albedo_tex, 0);
         glUniform1i(lightstage_shader->normal_tex, 1);
@@ -206,6 +220,11 @@ namespace render {
 			first_time = false;
 			tick = true;
 		}
+		if (!camera_moved && !models_changed && !systems::mouse_moved)
+		{
+			// If nothing changed, why bother rendering?
+			tick = false;
+		}
 		if (!tick) {
 			if (!config::game_config.disable_hdr) {
 				render_test_quad(hdr_buffer->color_tex);
@@ -229,24 +248,22 @@ namespace render {
 		if (!ssao_setup) {
 			setup_ssao();
 		}
-		swap_buffers(); // Cheap double-buffering to speed up glRead back speed.
 
 		// Handle building all of our GL buffers
 		update_buffers();
 
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-
-		// perform a depth pre-pass
-		render_depth_prepass();
+		glDepthFunc(GL_LEQUAL);
 
 		//update_light_buffers(screen_w, screen_h, camera_projection_matrix, camera_modelview_matrix);
 		if (!config::game_config.disable_lighting) {
 			update_pointlights();
 		}
 
-		glDepthFunc(GL_LEQUAL);
-        // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
+		// perform a depth pre-pass
+		render_depth_prepass();
+		
+		// Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
         //glCheckError();
 		render_voxel_models(gbuffer, camera_projection_matrix, camera_modelview_matrix);

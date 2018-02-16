@@ -21,7 +21,7 @@ void gamelog(const log_target target, const log_severity severity, const std::st
 {
 	std::lock_guard<std::mutex> lock(system_log::write_lock);
 	system_log::logs[static_cast<int>(target)].emplace_back(system_log::log_entry_t{ severity, entry });
-	std::cout << entry << "\n";
+	//std::cout << entry << "\n";
 }
 
 std::vector<std::string> ten_most_recent_log_entries(const int n) noexcept

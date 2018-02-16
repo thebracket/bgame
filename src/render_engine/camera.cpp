@@ -59,10 +59,11 @@ namespace render {
 
 		frustrum.update(camera_proj_model_view_matrix);
 		visible_chunks.clear();
-		for (const auto &chunk : chunks::chunks) {
-			if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE * 2))
+		for (std::size_t i = chunks::chunks.size(); i-- > 0; ) {
+			const auto chunk = &chunks::chunks[i];
+			if (frustrum.checkSphere(glm::vec3(chunk->base_x, chunk->base_y, chunk->base_z), chunks::CHUNK_SIZE * 2))
 			{
-				visible_chunks.insert(chunk.index);
+				visible_chunks.insert(chunk->index);
 			}
 		}
 
