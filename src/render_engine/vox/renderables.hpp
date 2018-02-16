@@ -9,7 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace render {
-	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<>> &visible_chunks);
+	void build_voxel_render_list();
 	void render_voxel_models(gbuffer_t * gbuffer, glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix);
 	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int texture_id);
 

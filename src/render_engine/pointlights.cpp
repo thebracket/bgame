@@ -60,7 +60,7 @@ namespace render {
 			glViewport(0, 0, size, size);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for (const auto &idx : visible_chunks) {
-				chunks::chunk_t * target = &chunks::chunks[idx];
+				chunks::chunk_t * target = &chunks::chunks[idx.chunk_id];
 				if (target->has_geometry) {
 					size_t n_elements = 0;
 					for (int z = 0; z<chunks::CHUNK_SIZE; ++z) {
@@ -137,13 +137,14 @@ namespace render {
 		using namespace bengine;
 
 		if (first_run) {
-			const std::size_t id = std::numeric_limits<std::size_t>::max();
+			// For now, we're turning off the sun.
+			/*const std::size_t id = std::numeric_limits<std::size_t>::max();
 			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
 			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
 			pointlights[id].radius = 512.0f;
 			pointlights[id].cycle_tick = id % config::game_config.shadow_divisor;
 			pointlights[id].make_mats();
-			pointlights[id].make_buffer();
+			pointlights[id].make_buffer();*/ 
 			first_run = false;
 		}
 

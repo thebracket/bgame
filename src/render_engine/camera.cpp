@@ -4,6 +4,7 @@
 #include "chunks/chunks.hpp"
 #include "../systems/mouse.hpp"
 #include "../bengine/main_window.hpp"
+#include "../bengine/geometry.hpp"
 
 namespace render {
 	bool camera_moved = true;
@@ -12,7 +13,8 @@ namespace render {
 	glm::mat4 camera_modelview_matrix;
 	glm::mat4 camera_proj_model_view_matrix;
 	Frustrum frustrum;
-	boost::container::flat_set<int, std::greater<>> visible_chunks;
+
+	std::vector<visible_chunk_t> visible_chunks;
 
 	constexpr float NINETY_DEGREES = 1.5708f;
 
@@ -59,13 +61,13 @@ namespace render {
 
 		frustrum.update(camera_proj_model_view_matrix);
 		visible_chunks.clear();
-		for (std::size_t i = chunks::chunks.size(); i-- > 0; ) {
-			const auto chunk = &chunks::chunks[i];
-			if (frustrum.checkSphere(glm::vec3(chunk->base_x, chunk->base_y, chunk->base_z), chunks::CHUNK_SIZE * 2))
+		for (const auto &chunk : chunks::chunks ) {
+			if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE * 2))
 			{
-				visible_chunks.insert(chunk->index);
+				visible_chunks.emplace_back(visible_chunk_t{ bengine::distance3d_squared(chunk.base_x, chunk.base_y, chunk.base_z, camera_position->region_x, camera_position->region_y, camera_position->region_z), chunk.index });
 			}
 		}
+		std::sort(visible_chunks.begin(), visible_chunks.end(), [](const visible_chunk_t &a, const visible_chunk_t &b) { return a.distance_from_camera < b.distance_from_camera; });
 
 		camera_moved = false;
 	}

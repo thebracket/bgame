@@ -38,7 +38,7 @@ namespace render {
 
     static void do_chunk_render() {
         for (const auto &idx : visible_chunks) {
-            chunks::chunk_t * target = &chunks::chunks[idx];
+            chunks::chunk_t * target = &chunks::chunks[idx.chunk_id];
             if (target->has_geometry) {
                 size_t n_elements = 0;
                 for (int z=0; z<chunks::CHUNK_SIZE; ++z) {
@@ -195,7 +195,7 @@ namespace render {
 
 		build_water_geometry();
 		if (camera_moved) update_camera();
-		build_voxel_render_list(visible_chunks);
+		build_voxel_render_list();
 		build_cursor_geometry();
 		systems::particles::build_buffers();
 		if (game_master_mode == DESIGN) update_design_buffers();

@@ -11,7 +11,14 @@ namespace render {
 	extern glm::mat4 camera_modelview_matrix;
 	extern glm::mat4 camera_proj_model_view_matrix;
 	extern Frustrum frustrum;
-	extern boost::container::flat_set<int, std::greater<>> visible_chunks;
+
+	struct visible_chunk_t
+	{
+		float distance_from_camera;
+		int chunk_id;
+	};
+
+	extern std::vector<visible_chunk_t> visible_chunks;
 
 	void update_camera();
 }

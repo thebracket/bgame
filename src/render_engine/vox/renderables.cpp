@@ -26,6 +26,7 @@
 #include "../chunks/chunks.hpp"
 #include "../renderbuffers.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../camera.hpp"
 
 namespace render {
 
@@ -196,9 +197,9 @@ namespace render {
 		});
 	}
 
-	static void build_chunk_models(const boost::container::flat_set<int, std::greater<>> &visible_chunks) {
+	static void build_chunk_models() {
 		for (const auto &idx : visible_chunks) {
-			const auto * target = &chunks::chunks[idx];
+			const auto * target = &chunks::chunks[idx.chunk_id];
 			if (!target->static_voxel_models.empty()) {
 				for (auto &model : target->static_voxel_models) {
 					for (auto &pos : model.second) {
@@ -251,7 +252,7 @@ namespace render {
 		});
 	}
 
-	void build_voxel_render_list(const boost::container::flat_set<int, std::greater<>> &visible_chunks) {
+	void build_voxel_render_list() {
 		if (sprite_vao == 0) glGenVertexArrays(1, &sprite_vao);
 		if (sprite_vbo == 0) glGenBuffers(1, &sprite_vbo);
 		if (glyph_vao == 0) glGenVertexArrays(1, &glyph_vao);
@@ -266,7 +267,7 @@ namespace render {
 			model_buffers.clear();
 			glyphs.clear();
 
-			build_chunk_models(visible_chunks);
+			build_chunk_models();
 			build_voxel_buildings();
 			build_voxel_items();
 			build_creature_models();
