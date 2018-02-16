@@ -5,7 +5,6 @@ uniform float useParallax;
 
 in vec3 tex_pos;
 in vec3 world_pos;
-in vec3 base_normal;
 in vec3 TangentViewPos;
 in vec3 TangentFragPos;
 

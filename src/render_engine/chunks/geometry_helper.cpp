@@ -73,7 +73,7 @@ namespace chunks {
 		}
 	}
 
-	static std::tuple<glm::vec3, glm::vec3> calculate_tangent_binormal(
+	static glm::vec3 calculate_tangent(
 		const float x0, const float y0, const float z0, const float tx0, const float ty0,
 		const float x1, const float y1, const float z1, const float tx1, const float ty1,
 		const float x2, const float y2, const float z2, const float tx2, const float ty2,
@@ -101,12 +101,7 @@ namespace chunks {
 		tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
 		tangent1 = glm::normalize(tangent1);
 
-		bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-		bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-		bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-		bitangent1 = glm::normalize(bitangent1);
-
-		return std::make_tuple(tangent1, bitangent1);
+		return tangent1;
 	}
 
 	int add_floor_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
@@ -124,7 +119,7 @@ namespace chunks {
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
 
-		const auto[tangent1, bitangent1] = calculate_tangent_binormal(
+		const auto tangent1 = calculate_tangent(
 			x1, y0, z1, TW, TH,
 			x1, y0, z0, TW, T0,
 			x0, y0, z0, T0, T0,
@@ -133,12 +128,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
+			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
+			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z
 		});
 		return 6;
 	}
@@ -157,42 +152,42 @@ namespace chunks {
 		const float TW = width;
 		const float TH = height;
 
-		const auto[back_tan, back_bi] = calculate_tangent_binormal(
+		const auto back_tan = calculate_tangent(
 			x0, y0, z0, T0, T0,
 			x1, y0, z0, TW, T0,
 			x1, y1, z0, TW, TH,
 			0.0f, 0.0f, -1.0f
 		);
 
-		const auto[front_tan, front_bi] = calculate_tangent_binormal(
+		const auto front_tan = calculate_tangent(
 			x0, y0, z1, T0, T0,
 			x1, y0, z1, TW, T0,
 			x1, y1, z1, TW, TH,
 			0.0f, 0.0f, 1.0f
 		);
 
-		const auto[left_tan, left_bi] = calculate_tangent_binormal(
+		const auto left_tan = calculate_tangent(
 			x0, y1, z1, TW, TH, 
 			x0, y1, z0, TW, T0, 
 			x0, y0, z0, T0, T0, 
 			-1.0f, 0.0f, 0.0f
 		);
 
-		const auto[right_tan, right_bi] = calculate_tangent_binormal(
+		const auto right_tan = calculate_tangent(
 			x1, y1, z1, TW, TH, 
 			x1, y1, z0, TW, T0, 
 			x1, y0, z0, T0, T0, 
 			1.0f, 0.0f, 0.0f
 		);
 
-		const auto[bot_tan, bot_bi] = calculate_tangent_binormal(
+		const auto bot_tan = calculate_tangent(
 			x0, y0, z0, T0, T0, 
 			x1, y0, z0, TW, T0, 
 			x1, y0, z1, TW, TH, 
 			0.0f, -1.0f, 0.0f
 		);
 
-		const auto[top_tan, top_bi] = calculate_tangent_binormal(
+		const auto top_tan = calculate_tangent(
 			x0, y1, z0, T0, T0, 
 			x1, y1, z0, TW, T0, 
 			x1, y1, z1, TW, TH, 
@@ -201,52 +196,52 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Back side
-			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, back_bi.x, back_bi.y, back_bi.z,
-			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, back_bi.x, back_bi.y, back_bi.z,
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, back_bi.x, back_bi.y, back_bi.z,
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, back_bi.x, back_bi.y, back_bi.z,
-			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, back_bi.x, back_bi.y, back_bi.z,
-			x0, y0, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, back_bi.x, back_bi.y, back_bi.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
+			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
+			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
+			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
+			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
+			x0, y0, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
 
 			// Front side
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, front_bi.x, front_bi.y, front_bi.z,
-			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, front_bi.x, front_bi.y, front_bi.z,
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, front_bi.x, front_bi.y, front_bi.z,
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, front_bi.x, front_bi.y, front_bi.z,
-			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, front_bi.x, front_bi.y, front_bi.z,
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, front_bi.x, front_bi.y, front_bi.z,
+			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
+			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
+			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
+			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
 
 			// Left side
-			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, left_bi.x, left_bi.y, left_bi.z,
-			x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, left_bi.x, left_bi.y, left_bi.z,
-			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, left_bi.x, left_bi.y, left_bi.z,
-			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, left_bi.x, left_bi.y, left_bi.z,
-			x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, left_bi.x, left_bi.y, left_bi.z,
-			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, left_bi.x, left_bi.y, left_bi.z,
+			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
+			x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
+			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
+			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
+			x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
+			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
 
 			// Right side
-			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, right_bi.x, right_bi.y, right_bi.z,
-			x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, right_bi.x, right_bi.y, right_bi.z,
-			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, right_bi.x, right_bi.y, right_bi.z,
-			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, right_bi.x, right_bi.y, right_bi.z,
-			x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, right_bi.x, right_bi.y, right_bi.z,
-			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, right_bi.x, right_bi.y, right_bi.z,
+			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
+			x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
+			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
+			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
+			x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
+			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
 
 			// Underside
-			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, bot_bi.x, bot_bi.y, bot_bi.z,
-			x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, bot_bi.x, bot_bi.y, bot_bi.z,
-			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, bot_bi.x, bot_bi.y, bot_bi.z,
-			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, bot_bi.x, bot_bi.y, bot_bi.z,
-			x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, bot_bi.x, bot_bi.y, bot_bi.z,
-			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, bot_bi.x, bot_bi.y, bot_bi.z,
+			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
+			x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
+			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
+			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
+			x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
+			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
 
 			// Top
-			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, top_bi.x, top_bi.y, top_bi.z,
-			x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, top_bi.x, top_bi.y, top_bi.z,
-			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, top_bi.x, top_bi.y, top_bi.z,
-			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, top_bi.x, top_bi.y, top_bi.z,
-			x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, top_bi.x, top_bi.y, top_bi.z,
-			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, top_bi.x, top_bi.y, top_bi.z
+			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
+			x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
+			x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
+			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z
 		});
 		return 36;
 	}
@@ -267,7 +262,7 @@ namespace chunks {
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
 
-		const auto[tangent1, bitangent1] = calculate_tangent_binormal(
+		const auto tangent1 = calculate_tangent(
 			x1, y0, z1, TW, TH,
 			x1, y0, z0, TW, T0,
 			x0, y0, z0, T0, T0,
@@ -276,12 +271,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z 
 		});
 		return 6;
 	}
@@ -301,7 +296,7 @@ namespace chunks {
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
 
-		const auto[tangent1, bitangent1] = calculate_tangent_binormal(
+		const auto tangent1 = calculate_tangent(
 			x1, y0, z1, TW, TH,
 			x1, y0, z0, TW, T0,
 			x0, y0, z0, T0, T0,
@@ -310,12 +305,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z, // NE
-			x1, y0 + se, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z, // SE
-			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z, // SW
-			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z, // SW
-			x0, y0 + nw, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z, // NW
-			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z  // NE
+			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x1, y0 + se, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x0, y0 + nw, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
+			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z 
 		});
 		return 6;
 	}
