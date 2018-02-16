@@ -15,6 +15,7 @@ namespace render {
 	Frustrum frustrum;
 
 	std::vector<visible_chunk_t> visible_chunks;
+	std::set<int> visible_chunk_set;
 
 	constexpr float NINETY_DEGREES = 1.5708f;
 
@@ -65,6 +66,7 @@ namespace render {
 			if (frustrum.checkSphere(glm::vec3(chunk.base_x, chunk.base_y, chunk.base_z), chunks::CHUNK_SIZE * 2))
 			{
 				visible_chunks.emplace_back(visible_chunk_t{ bengine::distance3d_squared(chunk.base_x, chunk.base_y, chunk.base_z, camera_position->region_x, camera_position->region_y, camera_position->region_z), chunk.index });
+				visible_chunk_set.insert(chunk.index);
 			}
 		}
 		std::sort(visible_chunks.begin(), visible_chunks.end(), [](const visible_chunk_t &a, const visible_chunk_t &b) { return a.distance_from_camera < b.distance_from_camera; });

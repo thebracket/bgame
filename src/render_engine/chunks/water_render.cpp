@@ -7,6 +7,8 @@
 #include "../../bengine/FastNoise.h"
 #include "../../global_assets/game_camera.hpp"
 #include <array>
+#include "chunks.hpp"
+#include "../camera.hpp"
 
 namespace render {
 	static unsigned int water_vao = 0;
@@ -56,6 +58,8 @@ namespace render {
 		for (int z = camera_position->region_z - 10; z < camera_position->region_z; ++z) {
 			for (int y = 0; y < REGION_HEIGHT; ++y) {
 				for (int x = 0; x < REGION_WIDTH; ++x) {
+					const int chunkidx = chunks::chunk_id_by_world_pos(x, y, z);
+					if (visible_chunk_set.find(chunkidx) == visible_chunk_set.end()) break;
 					const int idx = mapidx(x, y, z);
 					const uint8_t waterlvl = region::water_level(idx);
 					if (waterlvl > 0) {

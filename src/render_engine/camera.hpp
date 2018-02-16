@@ -1,8 +1,8 @@
 #pragma once
 
 #include "frustrum.hpp"
-#include <boost/container/flat_set.hpp>
 #include <functional>
+#include <set>
 
 namespace render {
 	extern bool camera_moved;
@@ -19,6 +19,7 @@ namespace render {
 	};
 
 	extern std::vector<visible_chunk_t> visible_chunks;
+	extern std::set<int> visible_chunk_set;
 
 	void update_camera();
 }
