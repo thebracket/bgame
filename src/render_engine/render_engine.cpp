@@ -207,7 +207,7 @@ namespace render {
 		update_buffers();
 
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_LESS);
 
 		// perform a depth pre-pass
 		render_depth_prepass();
@@ -217,6 +217,7 @@ namespace render {
 			update_pointlights();
 		}
 
+		glDepthFunc(GL_LEQUAL);
         // Render a pre-pass to put color, normal, etc. into the gbuffer. Also puts sunlight in place.
         render_chunks();
         //glCheckError();
