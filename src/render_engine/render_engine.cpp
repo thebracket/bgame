@@ -67,6 +67,13 @@ namespace render {
         glUniformMatrix4fv(assets::chunkshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(assets::chunkshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
 		glUniform3f(assets::chunkshader->camera_position, camera_position->region_x, camera_position->region_z, camera_position->region_y);
+		if (config::game_config.parallax)
+		{
+			glUniform1f(assets::chunkshader->use_parallax, 1.0f);
+		} else
+		{
+			glUniform1f(assets::chunkshader->use_parallax, 0.0f);
+		}
 
         // Assign the texture array
         glActiveTexture(GL_TEXTURE0);

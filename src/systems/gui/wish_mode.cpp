@@ -10,6 +10,7 @@
 #include "../../components/explosion_t.hpp"
 #include "../../global_assets/debug_flags.hpp"
 #include "../../utils/system_log.hpp"
+#include "../../global_assets/game_config.hpp"
 
 namespace systems {
 	namespace wishmode {
@@ -53,7 +54,8 @@ namespace systems {
 			}},
 			wish_t{ "profile", [] {
 				debug::show_profiler = !debug::show_profiler;
-			}}
+			}},
+			wish_t{ "parallax", [] { config::game_config.parallax = !config::game_config.parallax; }}
 		};
 
 		static void make_wish(const std::string &wish) {

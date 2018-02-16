@@ -54,6 +54,8 @@ namespace config {
 			if (split_line[0] == "ticks_per_ms") game_config.ticks_per_ms = std::stof(split_line[1]);
 			if (split_line[0] == "vsync" && split_line[1] == "yes") game_config.vsync = true;
 			if (split_line[0] == "vsync" && split_line[1] == "no") game_config.vsync = false;
+			if (split_line[0] == "parallax" && split_line[1] == "yes") game_config.parallax = true;
+			if (split_line[0] == "parallax" && split_line[1] == "no") game_config.parallax = false;
 		}
 		if (game_config.texture_size == 0 || (game_config.texture_size & (game_config.texture_size - 1)) != 0)
 		{
@@ -153,6 +155,15 @@ namespace config {
 		f << "ticks_per_ms=" << ticks_per_ms << "\n";
 		f << "vsync=";
 		if (vsync)
+		{
+			f << "yes\n";
+		}
+		else
+		{
+			f << "no\n";
+		}
+		f << "parallax=";
+		if (parallax)
 		{
 			f << "yes\n";
 		}

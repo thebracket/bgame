@@ -2,6 +2,7 @@
 
 uniform sampler2DArray textureArray;
 uniform vec3 camera_position;
+uniform float useParallax;
 
 in vec3 tex_pos;
 in vec3 world_pos;
@@ -26,7 +27,12 @@ void main() {
     vec3 view_tangent = world_pos * TBN;
     vec3 camera_tangent = camera_position * TBN;
     vec3 tangent_dir = normalize(view_tangent - camera_tangent);
-    vec2 TexCoords = ParallaxMapping(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r, tex_pos.xy, tangent_dir);
+    vec2 TexCoords;
+    if (useParallax > 0.0) {
+        TexCoords = ParallaxMapping(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r, tex_pos.xy, tangent_dir);
+    } else {
+        TexCoords = vec2(tex_pos.x, tex_pos.y);
+    }
 
     vec3 base_color = texture(textureArray, vec3(TexCoords.x, TexCoords.y, tex_pos.z)).rgb;
     gAlbedo = base_color;

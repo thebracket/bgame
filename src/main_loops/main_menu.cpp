@@ -266,6 +266,10 @@ namespace main_menu {
 			ImGui::SameLine();
 			ImGui::Checkbox("## vsync", &game_config.vsync);
 
+			ImGui::Text("Parallax");
+			ImGui::SameLine();
+			ImGui::Checkbox("## parallax", &game_config.parallax);
+
             if (ImGui::Button(btn_save.c_str())) {
 				switch (selected_texture_size)
 				{
