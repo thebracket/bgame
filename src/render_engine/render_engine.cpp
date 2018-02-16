@@ -121,7 +121,7 @@ namespace render {
 		using assets::lightstage_shader;
 		lightstage_shader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         glUniform1i(lightstage_shader->albedo_tex, 0);
         glUniform1i(lightstage_shader->normal_tex, 1);
@@ -166,7 +166,7 @@ namespace render {
         glUseProgram(assets::tonemap_shader);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
         // Setup uniforms
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUniform1i(glGetUniformLocation(assets::tonemap_shader, "hdr_tex"), 0);
         //glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
         glActiveTexture(GL_TEXTURE0);

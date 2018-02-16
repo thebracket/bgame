@@ -55,7 +55,8 @@ namespace systems {
 			wish_t{ "profile", [] {
 				debug::show_profiler = !debug::show_profiler;
 			}},
-			wish_t{ "parallax", [] { config::game_config.parallax = !config::game_config.parallax; }}
+			wish_t{ "parallax", [] { config::game_config.parallax = !config::game_config.parallax; }},
+			wish_t{ "lighting", [] { config::game_config.disable_lighting = !config::game_config.disable_lighting; } }
 		};
 
 		static void make_wish(const std::string &wish) {
