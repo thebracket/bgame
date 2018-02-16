@@ -29,7 +29,7 @@ void main()
 {
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
-    vec3 position = texture(position_tex, TexCoords).rgb;
+    vec3 position = texture(position_tex, TexCoords).rgb ;
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;
@@ -67,8 +67,13 @@ void main()
     }
     ambient_color *= moon_color;
 
+    vec3 dir = normalize(vec3(1.0, 1.0, 1.0));
+    vec3 N = vec3(normal.x, normal.y, normal.z);
+    float lambert = max(dot(N, dir), 0.0);
+
     // Final color
     vec3 ambient = ambient_color * ambient_occlusion;
     FragColor = ambient; // Remove Lo because we're just doing ambient
     FragColor *= SSAO;
+    FragColor *= lambert;
 }

@@ -143,7 +143,7 @@ void main()
 
     // Lighting
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
-    highp vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
+    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;
@@ -154,13 +154,13 @@ void main()
 
     // Use https://learnopengl.com/code_viewer_gh.php?code=src/6.pbr/1.2.lighting_textured/1.2.pbr.fs
     vec3 albedo = base_color;
-    highp vec3 N = normal;
+    vec3 N = normal;
     vec3 V = normalize(camera_position - position);
     vec3 F0 = vec3(0.04); 
     F0 = mix(F0, albedo, metallic);
 
     vec3 Lo = vec3(0.0); // Light Output
-    Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz + vec3(0.0, 0.5, 0.0), position.xyz, light_color.rgb) * 4.0;
+    Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz + vec3(0.0, 0.5, 0.0), position.xyz, light_color.rgb);
 
     FragColor = Lo * shadowFactor;
     //FragColor = shadowFactor;

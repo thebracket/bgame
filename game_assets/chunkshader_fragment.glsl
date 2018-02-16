@@ -32,7 +32,7 @@ void main() {
     gAlbedo = base_color;
     gPosition = vec3(world_pos);
 
-    vec3 norm = texture(textureArray, vec3(TexCoords.x, TexCoords.y, tex_pos.z+1)).rgb;
+    vec3 norm = texture(textureArray, vec3(TexCoords.x, TexCoords.y, tex_pos.z+1)).rgb *0.5 + 0.5;
     norm = normalize(norm);
     norm = normalize(TBN * norm);
     gNormal = norm;
