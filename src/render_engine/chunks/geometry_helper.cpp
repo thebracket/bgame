@@ -104,6 +104,10 @@ namespace chunks {
 		return tangent1;
 	}
 
+	struct tmp_vec_3 { float x; float y; float z; };
+	constexpr tmp_vec_3 FLOOR_TANGENT{ 1.0f, 0.0f, 0.0f };
+	constexpr tmp_vec_3 WALL_TANGENT{ 0.0f, 1.0f, 0.0f };
+
 	int add_floor_geometry(std::vector<float> &v, const float &x, const float &y, const float &z,
 		const float &width, const float &height, const float &texture_id)
 	{
@@ -119,21 +123,24 @@ namespace chunks {
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
 
+		/*
+		 * Removing this, because a floor tangent is always going to calculate to 1,0,0
 		const auto tangent1 = calculate_tangent(
 			x1, y0, z1, TW, TH,
 			x1, y0, z0, TW, T0,
 			x0, y0, z0, T0, T0,
 			0.0f, 1.0f, 0.0f
 		);
+		*/		
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
-			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
-			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z,
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z
 		});
 		return 6;
 	}
@@ -152,96 +159,54 @@ namespace chunks {
 		const float TW = width;
 		const float TH = height;
 
-		const auto back_tan = calculate_tangent(
-			x0, y0, z0, T0, T0,
-			x1, y0, z0, TW, T0,
-			x1, y1, z0, TW, TH,
-			0.0f, 0.0f, -1.0f
-		);
-
-		const auto front_tan = calculate_tangent(
-			x0, y0, z1, T0, T0,
-			x1, y0, z1, TW, T0,
-			x1, y1, z1, TW, TH,
-			0.0f, 0.0f, 1.0f
-		);
-
-		const auto left_tan = calculate_tangent(
-			x0, y1, z1, TW, TH, 
-			x0, y1, z0, TW, T0, 
-			x0, y0, z0, T0, T0, 
-			-1.0f, 0.0f, 0.0f
-		);
-
-		const auto right_tan = calculate_tangent(
-			x1, y1, z1, TW, TH, 
-			x1, y1, z0, TW, T0, 
-			x1, y0, z0, T0, T0, 
-			1.0f, 0.0f, 0.0f
-		);
-
-		const auto bot_tan = calculate_tangent(
-			x0, y0, z0, T0, T0, 
-			x1, y0, z0, TW, T0, 
-			x1, y0, z1, TW, TH, 
-			0.0f, -1.0f, 0.0f
-		);
-
-		const auto top_tan = calculate_tangent(
-			x0, y1, z0, T0, T0, 
-			x1, y1, z0, TW, T0, 
-			x1, y1, z1, TW, TH, 
-			0.0f, 1.0f, 0.0f
-		);
-
 		v.insert(v.end(), {
 			// Back side
-			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
-			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
-			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
-			x0, y0, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, back_tan.x, back_tan.y, back_tan.z, 
+			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y0, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
 
 			// Front side
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
-			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
-			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, front_tan.x, front_tan.y, front_tan.z, 
+			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
 
 			// Left side
-			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
-			x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
-			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
-			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
-			x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
-			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, left_tan.x, left_tan.y, left_tan.z, 
+			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
 
 			// Right side
-			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
-			x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
-			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
-			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
-			x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
-			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, right_tan.x, right_tan.y, right_tan.z, 
+			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
+			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, WALL_TANGENT.x, WALL_TANGENT.y, WALL_TANGENT.z, 
 
 			// Underside
-			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
-			x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
-			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
-			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
-			x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
-			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, bot_tan.x, bot_tan.y, bot_tan.z, 
+			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
 
 			// Top
-			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
-			x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
-			x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z, 
-			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, top_tan.x, top_tan.y, top_tan.z
+			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z, 
+			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z
 		});
 		return 36;
 	}
@@ -262,21 +227,14 @@ namespace chunks {
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
 
-		const auto tangent1 = calculate_tangent(
-			x1, y0, z1, TW, TH,
-			x1, y0, z0, TW, T0,
-			x0, y0, z0, T0, T0,
-			0.0f, 1.0f, 0.0f
-		);
-
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
-			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
-			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z, 
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, tangent1.x, tangent1.y, tangent1.z 
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z,
+			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, FLOOR_TANGENT.x, FLOOR_TANGENT.y, FLOOR_TANGENT.z
 		});
 		return 6;
 	}
