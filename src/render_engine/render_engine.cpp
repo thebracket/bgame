@@ -190,7 +190,35 @@ namespace render {
 
 	bool depth_test_render = false;	
 
+	const static double MS_PER_RENDERTICK = 33.0;
+	static double time_count = 0.0;
+	static bool first_time = true;
+
     void render_gl(const double &duration_ms) {
+		bool tick = false;
+		time_count += duration_ms;
+		if (time_count > MS_PER_RENDERTICK) {
+			time_count = 0.0;
+			tick = true;
+		}
+		if (first_time)
+		{
+			first_time = false;
+			tick = true;
+		}
+		if (!tick) {
+			if (!config::game_config.disable_hdr) {
+				render_test_quad(hdr_buffer->color_tex);
+			}
+			else
+			{
+				glEnable(GL_FRAMEBUFFER_SRGB);
+				render_test_quad(light_stage_buffer->color_tex);
+				glDisable(GL_FRAMEBUFFER_SRGB);
+			}
+			return;
+		}
+
         glCheckError();
         int screen_w, screen_h;
         glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
@@ -248,7 +276,7 @@ namespace render {
 
         // Render some test results
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		if (!config::game_config.disable_hdr) {
 			render_test_quad(hdr_buffer->color_tex);
 		} else
