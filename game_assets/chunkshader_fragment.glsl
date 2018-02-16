@@ -24,21 +24,12 @@ vec2 ParallaxMapping(float height, vec2 texCoords, vec3 viewDir) {
 
 void main() {
     vec3 tangent_dir = normalize(TangentFragPos - TangentViewPos);
-    vec2 TexCoords;
-    if (useParallax > 0.0) {
-        TexCoords = ParallaxMapping(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r, tex_pos.xy, tangent_dir);
-    } else {
-        TexCoords = vec2(tex_pos.x, tex_pos.y);
-    }
+    vec2 TexCoords = useParallax == 0.0 ? vec2(tex_pos.x, tex_pos.y) : ParallaxMapping(texture(textureArray, vec3(tex_pos.x, tex_pos.y, tex_pos.z+2)).r, tex_pos.xy, tangent_dir);
 
     vec3 base_color = texture(textureArray, vec3(TexCoords.x, TexCoords.y, tex_pos.z)).rgb;
     gAlbedo = base_color;
     gPosition = vec3(world_pos);
 
-    /*vec3 norm = texture(textureArray, vec3(TexCoords.x, TexCoords.y, tex_pos.z+1)).rgb *0.5 + 0.5;
-    norm = normalize(norm);
-    norm = normalize(TBN * norm);
-    gNormal = norm;*/
     vec3 normal = texture(textureArray, vec3(TexCoords.x, TexCoords.y, tex_pos.z+1)).rgb;
     normal = normalize(normal * 2.0 - 1.0);
     gNormal = normal;
