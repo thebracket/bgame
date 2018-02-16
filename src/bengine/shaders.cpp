@@ -50,7 +50,7 @@ namespace bengine {
         if ( InfoLogLength > 0 ){
             std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
             glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &VertexShaderErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &VertexShaderErrorMessage[0]);
         }
 
 
@@ -67,7 +67,7 @@ namespace bengine {
         if ( InfoLogLength > 0 ){
             std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
             glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &FragmentShaderErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &FragmentShaderErrorMessage[0]);
         }
 
         // Link the program

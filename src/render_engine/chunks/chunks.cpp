@@ -293,14 +293,20 @@ namespace chunks {
 		if (reset_vao) {
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
 			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
 			glEnableVertexAttribArray(2); // 2 = Normals
+
+			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 9 * sizeof(float));
+			glEnableVertexAttribArray(3); // 3 = Tangent
+
+			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 12 * sizeof(float));
+			glEnableVertexAttribArray(4); // 4 = Binormal
 
 			glBindVertexArray(0);
 			glCheckError();

@@ -6,4 +6,5 @@ chunk_shader_t::chunk_shader_t() {
 	view_matrix = get_uniform("view_matrix");
 	projection_matrix = get_uniform("projection_matrix");
 	textureArray = get_uniform("textureArray");
+	camera_position = get_uniform("camera_position");
 }
