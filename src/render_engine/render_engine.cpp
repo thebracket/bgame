@@ -64,7 +64,7 @@ namespace render {
 		assets::chunkshader->use();
         glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
 		//glClearDepth(0.0f); // We're using an inverted Z-buffer
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         // Assign the uniforms
         glUniformMatrix4fv(assets::chunkshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
@@ -84,6 +84,29 @@ namespace render {
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
 
         glUniform1i(assets::chunkshader->textureArray, 0);
+
+		if (game_master_mode == DESIGN) {
+			// Render single layer
+			do_design_render();
+		}
+		else {
+			do_chunk_render();
+		}
+    }
+
+	static void render_depth_prepass()
+    {
+		// Use the program
+		assets::chunkdepthshader->use();
+		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
+		//glClearDepth(0.0f); // We're using an inverted Z-buffer
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		// Assign the uniforms
+		glUniformMatrix4fv(assets::chunkdepthshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+		glUniformMatrix4fv(assets::chunkdepthshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+		glUniformMatrix3fv(assets::chunkdepthshader->normal_matrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
+		glUniform3f(assets::chunkdepthshader->camera_position, camera_position->region_x, camera_position->region_z, camera_position->region_y);
 
 		if (game_master_mode == DESIGN) {
 			// Render single layer
@@ -185,6 +208,9 @@ namespace render {
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+
+		// perform a depth pre-pass
+		render_depth_prepass();
 
 		//update_light_buffers(screen_w, screen_h, camera_projection_matrix, camera_modelview_matrix);
 		if (!config::game_config.disable_lighting) {

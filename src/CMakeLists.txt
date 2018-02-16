@@ -119,6 +119,7 @@ add_library(render STATIC
                 render_engine/fbo/point_light_buffer.cpp
 
                 render_engine/shaders/chunk_shader.cpp
+                render_engine/shaders/chunk_depth_shader.cpp
                 render_engine/shaders/lightstage_shader.cpp
                 render_engine/shaders/voxel_shader.cpp
                 render_engine/shaders/voxel_shadow_shader.cpp

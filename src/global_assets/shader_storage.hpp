@@ -5,12 +5,14 @@
 #include "../render_engine/shaders/voxel_shadow_shader.hpp"
 #include "../render_engine/shaders/lightstage_shader.hpp"
 #include <memory>
+#include "../render_engine/shaders/chunk_depth_shader.hpp"
 
 namespace assets {
     extern unsigned int spriteshader;
     extern unsigned int worldgenshader;
     extern std::unique_ptr<chunk_shader_t> chunkshader;
-    extern unsigned int depthquad_shader;
+	extern std::unique_ptr<chunk_depth_shader_t> chunkdepthshader;
+	extern unsigned int depthquad_shader;
 	extern std::unique_ptr<lightstage_shader_t> lightstage_shader;
     extern unsigned int tonemap_shader;
     extern unsigned int bloom_shader;

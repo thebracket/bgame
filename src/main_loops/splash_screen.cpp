@@ -46,6 +46,7 @@ namespace splash_screen {
         spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
         worldgenshader = load_shaders("game_assets/worldgenshader_vertex.glsl", "game_assets/worldgenshader_fragment.glsl");
         chunkshader = std::make_unique<chunk_shader_t>();
+		chunkdepthshader = std::make_unique<chunk_depth_shader_t>();
         depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
         lightstage_shader = std::make_unique<lightstage_shader_t>();
         tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");

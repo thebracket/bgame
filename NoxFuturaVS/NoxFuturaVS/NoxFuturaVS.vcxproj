@@ -321,6 +321,7 @@
     <ClCompile Include="..\..\src\render_engine\pointlights.cpp" />
     <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp" />
     <ClCompile Include="..\..\src\render_engine\render_engine.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp" />
@@ -654,6 +655,7 @@
     <ClInclude Include="..\..\src\render_engine\pointlights.hpp" />
     <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp" />
     <ClInclude Include="..\..\src\render_engine\render_engine.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp" />
