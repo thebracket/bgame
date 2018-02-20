@@ -47,26 +47,26 @@ namespace work {
 			});
 		}
 
-		void set_status(bengine::entity_t &e, const char * status) {
+		static void set_status(bengine::entity_t &e, const char * status) {
 			auto ai = e.component<settler_ai_t>();
 			if (ai) {
 				ai->job_status = std::string(status);
 			}
 		}
 
-		void cancel_work_tag(bengine::entity_t &e) {
+		static void cancel_work_tag(bengine::entity_t &e) {
 			bengine::delete_component<WORK_TAG>(e.id);
 			set_status(e, "Idle");
 		}
 
-		void move_to(const std::size_t &entity_id, const position_t &destination) const {
-			systems::movement::move_to(entity_id, destination);
+		void move_to(const std::size_t &entity_id, const position_t &start, const position_t &destination) const {
+			systems::movement::move_to(*bengine::entity(entity_id), start, destination);
 			//emit_deferred(entity_wants_to_move_message{ entity_id, destination });
 		}
 
 		template <typename CANCEL, typename ARRIVED>
 		void follow_path(WORK_TAG &tag, position_t &pos, bengine::entity_t &e, const CANCEL &&cancel, const ARRIVED &&arrived) {
-			if (!tag.current_path || tag.current_path->success == false) {
+			if (!tag.current_path || !tag.current_path->success) {
 				cancel();
 				return;
 			}
@@ -81,7 +81,7 @@ namespace work {
 				next_step.y < REGION_HEIGHT && next_step.z > 0 && next_step.z < REGION_DEPTH
 				&& region::flag(mapidx(next_step), CAN_STAND_HERE))
 			{
-				move_to(e.id, next_step);
+				move_to(e.id, pos, next_step);
 			}
 			else {
 				// We couldn't get there

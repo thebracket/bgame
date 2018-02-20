@@ -179,7 +179,7 @@ template<class Archive>
 void serialize(Archive & archive, ai_tag_work_architect &a)
 {
 	// Nothing to save
-	archive(a.step, a.current_tool);
+	archive(a.step, a.current_tool, a.target_tile);
 }
 
 

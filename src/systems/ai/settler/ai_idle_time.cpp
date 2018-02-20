@@ -87,10 +87,10 @@ namespace systems {
 				sentient.hostile = true;
 				//std::cout << "Sentient kill mode\n";
 				// Close for the kill!
-				const int idx = mapidx(*pos);
+				const auto idx = mapidx(*pos);
 				if (settler_map.get(idx) < MAX_DIJSTRA_DISTANCE - 1) {
-					position_t destination = settler_map.find_destination(*pos);
-					move_to(e.id, destination);
+					const auto destination = settler_map.find_destination(*pos);
+					move_to(e, *pos, destination);
 					render::models_changed = true;
 				}
 				else {

@@ -14,28 +14,28 @@ namespace systems {
 	namespace movement {
 
 		struct entity_wants_to_move_message {
-			entity_wants_to_move_message() {}
-			entity_wants_to_move_message(std::size_t id, const position_t dest) : entity_id(id), destination(dest) { }
+			entity_wants_to_move_message() = default;
+			entity_wants_to_move_message(const std::size_t id, const position_t dest) : entity_id(id), destination(dest) { }
 			std::size_t entity_id;
 			position_t destination;
 		};
 
 		struct entity_wants_to_move_randomly_message {
-			entity_wants_to_move_randomly_message() {}
-			entity_wants_to_move_randomly_message(std::size_t id) : entity_id(id) {}
+			entity_wants_to_move_randomly_message() = default;
+			entity_wants_to_move_randomly_message(const std::size_t id) : entity_id(id) {}
 			std::size_t entity_id;
 		};
 
 		struct entity_wants_to_flee_message {
-			entity_wants_to_flee_message() {}
-			entity_wants_to_flee_message(std::size_t id, std::size_t flee_from) : entity_id(id), flee_from_id(flee_from) {}
+			entity_wants_to_flee_message() = default;
+			entity_wants_to_flee_message(const std::size_t id, const std::size_t flee_from) : entity_id(id), flee_from_id(flee_from) {}
 			std::size_t entity_id;
 			std::size_t flee_from_id;
 		};
 
 		struct entity_wants_to_charge_message {
 			entity_wants_to_charge_message() {}
-			entity_wants_to_charge_message(std::size_t id, std::size_t charge_to) : entity_id(id), charge_to_id(charge_to) {}
+			entity_wants_to_charge_message(const std::size_t id, const std::size_t charge_to) : entity_id(id), charge_to_id(charge_to) {}
 			std::size_t entity_id;
 			std::size_t charge_to_id;
 		};		
@@ -46,12 +46,8 @@ namespace systems {
 		thread_safe_message_queue<entity_wants_to_flee_message> flee_requests;
 		thread_safe_message_queue<entity_moved_message> move_completions;
 
-		void move_to(bengine::entity_t &e, position_t &pos, position_t &dest) {
+		void move_to(bengine::entity_t &e, const position_t &pos, const position_t &dest) {
 			move_requests.enqueue(entity_wants_to_move_message{ e.id, dest });
-		}
-
-		void move_to(const std::size_t id, const position_t &dest) {
-			move_requests.enqueue(entity_wants_to_move_message{ id, dest });
 		}
 
 		void request_move(entity_wants_to_move_message &msg) {

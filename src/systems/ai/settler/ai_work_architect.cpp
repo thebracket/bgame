@@ -11,6 +11,7 @@
 #include "../../helpers/inventory_assistant.hpp"
 #include "../architecture_system.hpp"
 #include "../distance_map_system.hpp"
+#include "../../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace ai_architect {
@@ -24,12 +25,10 @@ namespace systems {
 			void evaluate_architecture(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
 
 				if (architecture_designations->architecture.empty()) return;
-				const auto build_distance = architecture_system::architecture_map[mapidx(pos)].distance;
-				if (build_distance == std::numeric_limits<uint8_t>::max()) return; // Nothing to build
 
 				if (inventory::blocks_available() == 0) return; // No blocks
 
-				board.insert(std::make_pair(build_distance, jt));
+				board.insert(std::make_pair(12, jt));
 			}
 		}
 
@@ -95,6 +94,7 @@ namespace systems {
 			{
 				// Success
 				a.step = ai_tag_work_architect::architect_steps::COLLECT_BLOCK;
+				a.current_path.reset();
 			});
 		}
 
@@ -112,87 +112,70 @@ namespace systems {
 		inline void goto_site(entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
 			using namespace architecture_system;
 
-			const auto idx = mapidx(pos.x, pos.y, pos.z);
-			if (architecture_map[idx].distance == 0) {
-				// We're at a minable site
-				a.step = ai_tag_work_architect::architect_steps::BUILD;
-				return;
-			}
-			else if (architecture_map[idx].distance == std::numeric_limits<uint8_t>::max()) {
-				// There's nothing to do - someone else must have done it.
-				//std::cout << "Cancelling because of lack of architecture tasks\n";
-				inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
-				inventory_system::claim_item(a.current_tool, false);
-				work.cancel_work_tag(e);
-				return;
-			}
-			else {
-				// Path towards the work
-				int current_direction = 0;
-				uint8_t min_value = std::numeric_limits<uint8_t>::max();
-				if (architecture_map[mapidx(pos.x, pos.y - 1, pos.z)].distance < min_value && flag(idx, CAN_GO_NORTH)) {
-					min_value = architecture_map[mapidx(pos.x, pos.y - 1, pos.z)].distance;
-					current_direction = 1;
-				}
-				if (architecture_map[mapidx(pos.x, pos.y + 1, pos.z)].distance < min_value && flag(idx, CAN_GO_SOUTH)) {
-					min_value = architecture_map[mapidx(pos.x, pos.y + 1, pos.z)].distance;
-					current_direction = 2;
-				}
-				if (architecture_map[mapidx(pos.x - 1, pos.y, pos.z)].distance < min_value && flag(idx, CAN_GO_WEST)) {
-					min_value = architecture_map[mapidx(pos.x - 1, pos.y, pos.z)].distance;
-					current_direction = 3;
-				}
-				if (architecture_map[mapidx(pos.x + 1, pos.y, pos.z)].distance < min_value && flag(idx, CAN_GO_EAST)) {
-					min_value = architecture_map[mapidx(pos.x + 1, pos.y, pos.z)].distance;
-					current_direction = 4;
-				}
-				if (architecture_map[mapidx(pos.x, pos.y, pos.z - 1)].distance < min_value && flag(idx, CAN_GO_DOWN)) {
-					min_value = architecture_map[mapidx(pos.x, pos.y, pos.z - 1)].distance;
-					current_direction = 5;
-				}
-				if (architecture_map[mapidx(pos.x, pos.y, pos.z + 1)].distance < min_value && flag(idx, CAN_GO_UP)) {
-					min_value = architecture_map[mapidx(pos.x, pos.y, pos.z + 1)].distance;
-					current_direction = 6;
-				}
-
-				if (current_direction == 0) {
-					//std::cout << "Direction 0 - drop tools\n";
-					work.cancel_work_tag(e);
+			if (a.current_path)
+			{
+				// We have a path - follow it to the target
+				work.follow_path(a, pos, e, [&e, &pos, &a]()
+				{
+					// Cancel
+					a.current_path.reset();
+				}, [&a]()
+				{
+					// Success
+					a.step = ai_tag_work_architect::architect_steps::BUILD;
+					a.current_path.reset();
+				});
+			} else
+			{
+				// Try to find a path to work
+				if (architecture_designations->architecture.empty())
+				{
 					inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
 					inventory_system::claim_item(a.current_tool, false);
+					work.cancel_work_tag(e);
 					return;
 				}
-
-				//std::cout << "Direction: " << current_direction << "\n";
-				position_t destination = pos;
-				switch (current_direction) {
-				case 1: --destination.y; break;
-				case 2: ++destination.y; break;
-				case 3: --destination.x; break;
-				case 4: ++destination.x; break;
-				case 5: --destination.z; break;
-				case 6: ++destination.z; break;
+				const auto finder = architecture_map->find_nearest_reachable_target(pos);
+				if (finder.target == 0)
+				{
+					// Nothing to do
+					inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
+					inventory_system::claim_item(a.current_tool, false);
+					work.cancel_work_tag(e);
+					return;
+				} else
+				{
+					a.current_path = finder.path;
+					a.target_tile = finder.target;
 				}
-				movement::move_to(e.id, destination);
-				//std::cout << "Emitted entity movement - " << e.id << "\n";
 			}
 		}
 
 		inline void build(entity_t &e, ai_tag_work_architect &a, ai_tag_my_turn_t &t, position_t &pos) {
 			using namespace architecture_system;
-			const int idx = mapidx(pos);
-			int bidx = architecture_map[idx].target;
+			const auto idx = mapidx(pos);
+			const auto bidx = a.target_tile;
 
-			auto finder = architecture_designations->architecture.find(bidx);
+			if (!architecture_map->is_target(bidx))
+			{
+				// Nothing to do
+				a.current_path.reset();
+				inventory_system::drop_item(a.current_tool, pos.x, pos.y, pos.z);
+				inventory_system::claim_item(a.current_tool, false);
+				work.cancel_work_tag(e);
+				return;
+			}
+
+			const auto finder = architecture_designations->architecture.find(bidx);
 			if (finder != architecture_designations->architecture.end()) {
-				uint8_t build_type = finder->second;
+				const auto build_type = finder->second;
 
 				std::size_t material = 0;
 				auto block_e = entity(a.current_tool);
 				if (block_e) {
-					auto Item = block_e->component<item_t>();
-					if (Item) {
-						material = Item->material;
+					const auto the_item = block_e->component<item_t>();
+					if (the_item) {
+						material = the_item->material;
 					}
 					else
 					{
@@ -248,8 +231,8 @@ namespace systems {
 
 					// We need to iterate through the bridge tiles and see if it is done yet.
 					const auto bid = bridge_id(bidx);
-					bool complete = true;
-					int bridge_idx = 0;
+					auto complete = true;
+					auto bridge_idx = 0;
 					each_bridge([&bridge_idx, &bid, &bidx, &complete](std::size_t id) {
 						if (id == bid && bridge_idx != bidx && architecture_designations->architecture.find(bridge_idx) != architecture_designations->architecture.end()) {
 							complete = false;

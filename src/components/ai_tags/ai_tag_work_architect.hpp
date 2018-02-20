@@ -10,6 +10,7 @@ struct ai_tag_work_architect {
 
     architect_steps step = GOTO_BLOCK;
     std::size_t current_tool = 0;
+	std::size_t target_tile = 0;
     std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
 };
 
