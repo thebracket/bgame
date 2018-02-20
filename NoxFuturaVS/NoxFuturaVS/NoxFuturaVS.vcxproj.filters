@@ -1826,6 +1826,9 @@
     <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp">
       <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\systems\helpers\targeted_flow_map.hpp">
+      <Filter>Header Files\systems\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset8.hpp">

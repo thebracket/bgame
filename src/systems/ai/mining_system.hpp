@@ -1,16 +1,15 @@
 #pragma once
 
-#include <array>
-#include "../../planet/region/region.hpp"
+#include <memory>
+
+namespace flow_maps
+{
+	class map_t; // Forward
+}
 
 namespace systems {
 	namespace mining_system {
-		struct mine_map_entry_t {
-			uint8_t distance;
-			int target;
-		};
-
-		extern std::array<mine_map_entry_t, REGION_DEPTH * REGION_WIDTH * REGION_HEIGHT> mining_map; // First = distance, second = target cell
+		extern std::unique_ptr<flow_maps::map_t> mining_map;
 
 		void run(const double &duration_ms);
 		void mining_map_changed();

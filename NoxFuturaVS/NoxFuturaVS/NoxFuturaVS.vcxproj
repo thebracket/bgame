@@ -733,6 +733,7 @@
     <ClInclude Include="..\..\src\systems\helpers\dijkstra_map.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\inventory_assistant.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\pathfinding.hpp" />
+    <ClInclude Include="..\..\src\systems\helpers\targeted_flow_map.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\weapons_helper.hpp" />
     <ClInclude Include="..\..\src\systems\helpers\workflow_assistant.hpp" />
     <ClInclude Include="..\..\src\systems\io\camera_system.hpp" />

@@ -5,14 +5,12 @@
 #include "../mining_system.hpp"
 #include "../../physics/topology_system.hpp"
 #include "../inventory_system.hpp"
-#include "../../damage/damage_system.hpp"
 #include "../../../components/item_tags/item_digging_t.hpp"
 #include "../../../components/mining/designated_miner.hpp"
-#include "../../../components/claimed_t.hpp"
 #include "../../helpers/inventory_assistant.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../global_assets/rng.hpp"
 #include "../architecture_system.hpp"
+#include "../../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace ai_mining {
@@ -27,10 +25,7 @@ namespace systems {
 				const auto designation = e.component<designated_miner_t>();
 				if (!designation) return; // Not a miner - so no jobs for you!
 
-				const auto idx = mapidx(pos);
-				if (mining_map[idx].distance == std::numeric_limits<uint8_t>::max()) return; // No mining to do
-
-				board.insert(std::make_pair(static_cast<int>(mining_map[idx].distance), jt));
+				board.insert(std::make_pair(10, jt));
 			}
 		}
 
@@ -66,72 +61,41 @@ namespace systems {
 		}
 
 		inline void goto_site(entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
-			const auto idx = mapidx(pos.x, pos.y, pos.z);
-			if (mining_map[idx].distance == 0) {
-				// We're at a minable site
-				m.step = ai_tag_work_miner::mining_steps::DIG;
-				return;
-			}
-			else if (mining_map[idx].distance == std::numeric_limits<uint8_t>::max()) {
-				// There's nothing to do - someone else must have done it.
-				//std::cout << "Cancelling because of lack of mining tasks\n";
-				work.cancel_work_tag(e);
-				return;
-			}
-			else {
-				// Path towards the work
-				int current_direction = 0;
-				uint8_t min_value = std::numeric_limits<uint8_t>::max();
-				if (mining_map[mapidx(pos.x, pos.y - 1, pos.z)].distance < min_value && flag(idx, CAN_GO_NORTH)) {
-					min_value = mining_map[mapidx(pos.x, pos.y - 1, pos.z)].distance;
-					current_direction = 1;
-				}
-				if (mining_map[mapidx(pos.x, pos.y + 1, pos.z)].distance < min_value && flag(idx, CAN_GO_SOUTH)) {
-					min_value = mining_map[mapidx(pos.x, pos.y + 1, pos.z)].distance;
-					current_direction = 2;
-				}
-				if (mining_map[mapidx(pos.x - 1, pos.y, pos.z)].distance < min_value && flag(idx, CAN_GO_WEST)) {
-					min_value = mining_map[mapidx(pos.x - 1, pos.y, pos.z)].distance;
-					current_direction = 3;
-				}
-				if (mining_map[mapidx(pos.x + 1, pos.y, pos.z)].distance < min_value && flag(idx, CAN_GO_EAST)) {
-					min_value = mining_map[mapidx(pos.x + 1, pos.y, pos.z)].distance;
-					current_direction = 4;
-				}
-				if (mining_map[mapidx(pos.x, pos.y, pos.z - 1)].distance < min_value && flag(idx, CAN_GO_DOWN)) {
-					min_value = mining_map[mapidx(pos.x, pos.y, pos.z - 1)].distance;
-					current_direction = 5;
-				}
-				if (mining_map[mapidx(pos.x, pos.y, pos.z + 1)].distance < min_value && flag(idx, CAN_GO_UP)) {
-					min_value = mining_map[mapidx(pos.x, pos.y, pos.z + 1)].distance;
-					current_direction = 6;
-				}
-
-				if (current_direction == 0) {
-					//std::cout << "Direction 0 - drop tools\n";
-					work.cancel_work_tag(e);
+			if (m.current_path)
+			{
+				// Follow the path
+				work.follow_path(m, pos, e, [&m]() {
+					// Cancel
+					m.current_path.reset();
+					// The current path is no longer valid, so we're going to make a new one.
 					return;
+				}, [&m]() {
+					// Success
+					m.current_path.reset();
+					m.step = ai_tag_work_miner::mining_steps::DIG;
+					return;
+				});
+			} else
+			{
+				// Find one
+				const auto mine_search = mining_map->find_nearest_reachable_target(pos);
+				if (mine_search.target == 0)
+				{
+					// There is no available path.
+					work.cancel_work_tag(e);
+				} else
+				{
+					// We have a path to follow now
+					m.current_path = mine_search.path;
+					m.target_tile = mine_search.target;
 				}
-
-				//std::cout << "Direction: " << current_direction << "\n";
-				position_t destination = pos;
-				switch (current_direction) {
-				case 1: --destination.y; break;
-				case 2: ++destination.y; break;
-				case 3: --destination.x; break;
-				case 4: ++destination.x; break;
-				case 5: --destination.z; break;
-				case 6: ++destination.z; break;
-				}
-				movement::move_to(e.id, destination);
-				//std::cout << "Emitted entity movement - " << e.id << "\n";
 			}
 		}
 
 		inline void dig(entity_t &e, ai_tag_work_miner &m, ai_tag_my_turn_t &t, position_t &pos) {
 			//std::cout << "Dig !\n";
 			const auto idx = mapidx(pos.x, pos.y, pos.z);
-			if (mining_map[idx].distance != 0) {
+			if (!mining_map->is_target(idx) || mining_designations->mining_targets.find(m.target_tile) == mining_designations->mining_targets.end()) {
 				m.step = ai_tag_work_miner::mining_steps::GOTO_SITE;
 				return;
 			}
@@ -140,8 +104,7 @@ namespace systems {
 				// Determine the digging target from here
 				// Make a skill roll, and if successful complete the action
 				// When complete, move to dropping the pick
-				const auto idx = mapidx(pos.x, pos.y, pos.z);
-				const int target_idx = mining_map[idx].target;
+				const int target_idx = m.target_tile;
 				const auto target_operation = mining_designations->mining_targets[target_idx];
 				call_home("AI", "Mining", std::to_string(target_operation));
 

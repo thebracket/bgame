@@ -267,7 +267,7 @@ template<class Archive>
 void serialize(Archive & archive, ai_tag_work_miner &m)
 {
 	// Nothing to save
-	archive(m.step, m.tool_id);
+	archive(m.step, m.tool_id, m.target_tile);
 }
 
 template<class Archive>

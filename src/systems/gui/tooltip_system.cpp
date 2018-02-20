@@ -30,6 +30,7 @@
 #include <sstream>
 #include "../../raws/items.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace tooltips {
@@ -80,7 +81,6 @@ namespace systems {
 				}
 
 				if (debug::show_dijkstra) {
-					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Mining distance: " + std::to_string(mining_system::mining_map[tile_idx].distance), color_yellow));
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Architecture distance: " + std::to_string(architecture_system::architecture_map[tile_idx].distance), color_yellow));
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Hunting distance: " + std::to_string(distance_map::huntables_map.get(tile_idx)), color_yellow));
 				}

@@ -14,6 +14,7 @@
 #include "../../bengine/filesystem.hpp"
 #include "boost/filesystem.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace design_mining {

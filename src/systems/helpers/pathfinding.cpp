@@ -44,7 +44,7 @@ struct navigator_t {
 	}
 
 	static float get_distance_estimate(position_t &pos, position_t &goal) {
-		const float d = bengine::distance3d_squared(pos.x, pos.y, pos.z, goal.x, goal.y, goal.z);
+		const float d = bengine::distance3d_manhattan(pos.x, pos.y, pos.z, goal.x, goal.y, goal.z);
 		return d;
 	}
 
