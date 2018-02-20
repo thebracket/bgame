@@ -70,6 +70,7 @@ namespace bengine {
         }
 
         finalize_glfw();
+		printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
 
         ImGuiIO& io = ImGui::GetIO();
         const std::string font_path = std::string("game_assets/") + gui_font;
