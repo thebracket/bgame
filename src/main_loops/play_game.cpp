@@ -27,6 +27,8 @@
 #include "../components/buildings/architecture_designations_t.hpp"
 #include "../global_assets/architecture_designations.hpp"
 #include "../bengine/ecs.hpp"
+#include "../global_assets/debug_flags.hpp"
+#include "../bengine/IconsFontAwesome.h"
 
 namespace play_game {
 
@@ -92,6 +94,11 @@ namespace play_game {
         loaded = true;
     }
 
+	static constexpr size_t FPS_SLOTS = 256;
+	static std::array<float, FPS_SLOTS> fps{};
+	static size_t fps_counter = 0;
+	static const std::string fps_header = std::string(ICON_FA_CLOCK_O) + std::string(" FPS");
+
     void tick(const double &duration_ms) noexcept {
         if (!loader_thread) {
             loader_thread = std::make_unique<std::thread>(do_load_game);
@@ -112,9 +119,15 @@ namespace play_game {
 				render::render_gl(duration_ms);
 			}
 
-            ImGui::Begin("FPS");
-            ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0/duration_ms);
-            ImGui::End();
+			if (debug::show_fps) {
+				fps[fps_counter] = 1000.0 / duration_ms;
+				++fps_counter;
+				fps_counter = fps_counter % FPS_SLOTS;
+				ImGui::Begin(fps_header.c_str());
+				ImGui::Text("Frame time: %f ms, %f FPS", duration_ms, 1000.0 / duration_ms);
+				ImGui::PlotLines("FPS", &fps[0], FPS_SLOTS);
+				ImGui::End();
+			}
 
             systems::run(duration_ms);
 			bengine::ecs_garbage_collect();
