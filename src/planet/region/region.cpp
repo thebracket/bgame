@@ -30,21 +30,21 @@ namespace region {
 			building_id.resize(REGION_TILES_COUNT);
 		}
 
-		int region_x, region_y, biome_idx;
+		int region_x=0, region_y=0, biome_idx=0;
 
 		// New tile format data
 		std::vector<uint8_t> tile_type;
-		std::vector<std::size_t> tile_material;
+		std::vector<uint16_t> tile_material;
 		std::vector<uint16_t> hit_points;
 		std::vector<uint8_t> veg_hit_points;
-		std::vector<std::size_t> building_id;
-		std::vector<std::size_t> tree_id;
-		std::vector<std::size_t> bridge_id;
-		std::vector<std::size_t> tile_vegetation_type;
+		std::vector<uint32_t> building_id;
+		std::vector<uint32_t> tree_id;
+		std::vector<uint32_t> bridge_id;
+		std::vector<uint16_t> tile_vegetation_type;
 		std::vector<uint16_t> tile_vegetation_ticker;
 		std::vector<uint8_t> tile_vegetation_lifecycle;
-		std::vector<std::size_t> stockpile_id;
-		std::vector<bengine::bitset<uint16_t>> tile_flags;
+		std::vector<uint32_t> stockpile_id;
+		std::vector<bengine::bitset<tile_flag_type>> tile_flags;
 		std::vector<uint8_t> water_level;
 		std::vector<render::ascii::glyph_t> veg_render_cache_ascii;
 
@@ -522,16 +522,22 @@ namespace region {
 		tile_flags[idx].reset(CAN_GO_WEST);
 		tile_flags[idx].reset(CAN_GO_UP);
 		tile_flags[idx].reset(CAN_GO_DOWN);
+		tile_flags[idx].reset(CAN_GO_NORTH_EAST);
+		tile_flags[idx].reset(CAN_GO_NORTH_WEST);
+		tile_flags[idx].reset(CAN_GO_SOUTH_EAST);
+		tile_flags[idx].reset(CAN_GO_SOUTH_WEST);
 
 		if (tile_flags[idx].test(SOLID) || !tile_flags[idx].test(CAN_STAND_HERE)) {
 			// If you can't go there, it doesn't have any exits.
 		} else {
 			if (x > 0 && tile_flags[mapidx(x - 1, y, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_WEST);
-			if (x < REGION_WIDTH - 1 && tile_flags[mapidx(x + 1, y, z)].test(CAN_STAND_HERE))
-				tile_flags[idx].set(CAN_GO_EAST);
+			if (x < REGION_WIDTH - 1 && tile_flags[mapidx(x + 1, y, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_EAST);
 			if (y > 0 && tile_flags[mapidx(x, y - 1, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_NORTH);
-			if (y < REGION_HEIGHT - 1 && tile_flags[mapidx(x, y + 1, z)].test(CAN_STAND_HERE))
-				tile_flags[idx].set(CAN_GO_SOUTH);
+			if (y < REGION_HEIGHT - 1 && tile_flags[mapidx(x, y + 1, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_SOUTH);
+			if (x > 0 && y > 0 && tile_flags[mapidx(x - 1, y - 1, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_NORTH_WEST);
+			if (x < REGION_WIDTH - 1 && y > 0 && tile_flags[mapidx(x + 1, y - 1, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_NORTH_EAST);
+			if (x > 0 && y < REGION_HEIGHT - 1 && tile_flags[mapidx(x - 1, y + 1, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_SOUTH_WEST);
+			if (x < REGION_WIDTH - 1 && y < REGION_HEIGHT - 1 && tile_flags[mapidx(x + 1, y + 1, z)].test(CAN_STAND_HERE)) tile_flags[idx].set(CAN_GO_SOUTH_EAST);
 
 			if (z < REGION_DEPTH - 1 &&
 				(tile_type[idx] == tile_type::RAMP || tile_type[idx] == tile_type::STAIRS_UP ||
@@ -555,9 +561,8 @@ namespace region {
 		// Vegetation cache
 		using namespace render::ascii;
 		glyph_t ascii_vegetation{ '"', 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-		int voxel_vegetation = 0;
 
-		size_t vegtype = tile_vegetation_type[idx];
+		const auto vegtype = tile_vegetation_type[idx];
 		if (vegtype > 0) {
 			//std::cout << vegtype << "\n";
 			const auto lifecycle = tile_vegetation_lifecycle[idx];
@@ -580,13 +585,13 @@ namespace region {
 		{
 			f.reset(ABOVE_GROUND);
 		}
-		for (int y = 0; y < REGION_HEIGHT; ++y) {
-			for (int x = 0; x < REGION_WIDTH; ++x) {
-				for (int z = REGION_DEPTH - 1; z > 0; --z) {
-					const int idx = mapidx(x, y, z);
+		for (auto y = 0; y < REGION_HEIGHT; ++y) {
+			for (auto x = 0; x < REGION_WIDTH; ++x) {
+				for (auto z = REGION_DEPTH - 1; z > 0; --z) {
+					const auto idx = mapidx(x, y, z);
 					tile_flags[idx].set(ABOVE_GROUND);
 					const auto tt = tile_type[idx];
-					const bool hit_ground = (tt == tile_type::SOLID || tt == tile_type::FLOOR || tt == tile_type::WALL);
+					const auto hit_ground = (tt == tile_type::SOLID || tt == tile_type::FLOOR || tt == tile_type::WALL);
 					if (hit_ground) goto escape_from_dive;
 				}
 

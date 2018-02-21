@@ -68,12 +68,16 @@ namespace systems {
 					if (flag(tile_idx, ABOVE_GROUND)) ss << "Outside-";
 					if (flag(tile_idx, SOLID)) ss << "Solid-";
 					if (flag(tile_idx, OPAQUE)) ss << "Opaque-";
-					if (flag(tile_idx, CAN_GO_DOWN)) ss << "Down-";
-					if (flag(tile_idx, CAN_GO_UP)) ss << "Up-";
-					if (flag(tile_idx, CAN_GO_NORTH)) ss << "North-";
-					if (flag(tile_idx, CAN_GO_EAST)) ss << "East-";
-					if (flag(tile_idx, CAN_GO_WEST)) ss << "West-";
-					if (flag(tile_idx, CAN_GO_SOUTH)) ss << "South-";
+					if (flag(tile_idx, CAN_GO_DOWN)) ss << "D-";
+					if (flag(tile_idx, CAN_GO_UP)) ss << "U-";
+					if (flag(tile_idx, CAN_GO_NORTH)) ss << "N-";
+					if (flag(tile_idx, CAN_GO_EAST)) ss << "E-";
+					if (flag(tile_idx, CAN_GO_WEST)) ss << "W-";
+					if (flag(tile_idx, CAN_GO_SOUTH)) ss << "S-";
+					if (flag(tile_idx, CAN_GO_NORTH_EAST)) ss << "NE-";
+					if (flag(tile_idx, CAN_GO_NORTH_WEST)) ss << "NW-";
+					if (flag(tile_idx, CAN_GO_SOUTH_EAST)) ss << "SE-";
+					if (flag(tile_idx, CAN_GO_SOUTH_WEST)) ss << "SW-";
 					if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand";
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + ss.str(), color_cyan));
 				}
