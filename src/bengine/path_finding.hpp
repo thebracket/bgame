@@ -220,6 +220,7 @@ std::shared_ptr<navigation_path<location_t>> find_path(const location_t start, c
 		search_state = a_star_search.SearchStep();
 		++search_steps;
 	} while (search_state == AStarSearch<map_search_node<navigator_t, location_t>>::SEARCH_STATE_SEARCHING);
+	std::cout << search_steps << "\n";
 
 	if (search_state == AStarSearch<map_search_node<navigator_t, location_t>>::SEARCH_STATE_SUCCEEDED) {
 		std::shared_ptr<navigation_path<location_t>> result = std::shared_ptr<navigation_path<location_t>>(new navigation_path<location_t>());

@@ -8,6 +8,8 @@
 #include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/gl_include.hpp"
 
+using namespace tile_flags;
+
 namespace chunks {
     std::array<chunk_t, CHUNKS_TOTAL> chunks;
     bool chunks_initialized = false;
@@ -99,7 +101,7 @@ namespace chunks {
 
                     const auto tiletype = region::tile_type(idx);
                     if (tiletype != tile_type::OPEN_SPACE) {
-                        if (region::revealed(idx)) {
+                        if (region::flag(idx, REVEALED)) {
 							if (tiletype == tile_type::WINDOW) {
 								// TODO: Windows go into transparency buffer
 								cubes[idx] = 15;
@@ -113,10 +115,10 @@ namespace chunks {
 							} else if (tiletype == tile_type::RAMP) {
 								// TODO - write me!
 								float ne = 0.0f, se = 0.0f, sw = 0.0f, nw = 0.0f;
-								if (region::solid(idx - 1)) { sw = 1.0f; nw = 1.0f; }
-								else if (region::solid(idx + 1)) { se = 1.0f; ne = 1.0f; }
-								else if (region::solid(idx + REGION_WIDTH)) { nw = 1.0f; ne = 1.0f; }
-								else if (region::solid(idx - REGION_WIDTH)) { sw = 1.0f; se = 1.0f; }
+								if (region::flag(idx - 1, SOLID)) { sw = 1.0f; nw = 1.0f; }
+								else if (region::flag(idx + 1, SOLID)) { se = 1.0f; ne = 1.0f; }
+								else if (region::flag(idx + REGION_WIDTH, SOLID)) { nw = 1.0f; ne = 1.0f; }
+								else if (region::flag(idx - REGION_WIDTH, SOLID)) { sw = 1.0f; se = 1.0f; }
 								layers[chunk_z].n_elements += add_ramp_geometry(layers[chunk_z].v, region_x, region_y, region_z, 1.0f, 1.0f, get_floor_tex(idx), ne, se, sw, nw);
 							}
 							else if (tiletype == tile_type::STAIRS_DOWN) {

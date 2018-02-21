@@ -4,6 +4,7 @@
 #include "../../bengine/path_finding.hpp"
 
 using namespace region;
+using namespace tile_flags;
 
 std::size_t civ_id = 0;
 
@@ -44,7 +45,7 @@ struct navigator_t {
 	}
 
 	static float get_distance_estimate(position_t &pos, position_t &goal) {
-		const float d = bengine::distance3d_manhattan(pos.x, pos.y, pos.z, goal.x, goal.y, goal.z);
+		const float d = bengine::distance3d(pos.x, pos.y, pos.z, goal.x, goal.y, goal.z);
 		return d;
 	}
 

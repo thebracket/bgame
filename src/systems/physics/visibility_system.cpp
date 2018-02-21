@@ -11,6 +11,7 @@
 #include "../../bengine/ecs.hpp"
 
 using namespace bengine;
+using namespace tile_flags;
 
 namespace systems {
 	namespace visibility {
@@ -63,7 +64,7 @@ namespace systems {
 				}
 				else {
 					const auto idx = mapidx(X, Y, Z);
-					bool blocked = opaque(idx);
+					bool blocked = flag(idx, OPAQUE);
 					if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
 					if (!blocked && last_z != Z) {
 						//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";

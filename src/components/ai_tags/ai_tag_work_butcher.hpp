@@ -6,7 +6,7 @@
 
 struct ai_tag_work_butcher {
 
-    enum butcher_steps { FIND_CORPSE, GO_TO_CORPSE, COLLECT_CORPSE, GO_TO_SHOP, CHOP };
+    enum butcher_steps { FIND_CORPSE, COLLECT_CORPSE, GO_TO_SHOP, CHOP };
 
     butcher_steps step = FIND_CORPSE;
     std::size_t target_corpse = 0;

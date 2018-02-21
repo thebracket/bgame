@@ -1,62 +1,81 @@
-#include "jobs_board.hpp"
-#include "ai_work_template.hpp"
+#include "ai_work_hunt.hpp"
+#include "templated_work_steps_t.hpp"
 #include "../../../components/buildings/building.hpp"
 #include "../../../components/ai_tags/ai_tag_work_hunting.hpp"
+#include "../../../components/farming/designated_hunter.hpp"
+#include "../distance_map_system.hpp"
+#include "../../helpers/targeted_flow_map.hpp"
+#include "../../helpers/weapons_helper.hpp"
+#include "../../../components/name.hpp"
+#include <string>
 
 namespace systems {
 	namespace ai_hunt {
 
 		using namespace bengine;
 		using namespace jobs_board;
-		using namespace dijkstra;
-		using namespace distance_map;
 
 		namespace jobs_board {
-			bool butcher_exist() {
-				bool butcher_exists = false;
-
-				each<building_t>([&butcher_exists](entity_t &e, building_t &b) {
-					if (b.tag == "butcher" && b.complete == true) butcher_exists = true;
-				});
-
-				return butcher_exists;
-			}
 
 			void evaluate_hunting(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-				if (!butcher_exist()) return;
-				const auto distance = huntables_map.get(mapidx(pos));
-				if (distance > MAX_DIJSTRA_DISTANCE - 1) return;
-				board.insert(std::make_pair(distance, jt));
+				if (e.component<designated_hunter_t>() == nullptr) return; // Not a hunter
+				if (distance_map::hunting_map->targets.empty()) return; // Nothing to hunt
+
+				board.insert(std::make_pair(20, jt));
 			}
 		}
 
-		static bool first_run = true;
+		static const char * job_tag = "Hunting";
+		static work::templated_work_steps_t<ai_tag_work_hunting> work;
+
+		inline void check_status(entity_t &e, ai_tag_work_hunting &a, ai_tag_my_turn_t &t, position_t &pos) {
+			if (weapons::shooting_range(e, pos) < 1)
+			{
+				// Cancel the job - no weapon!
+				work.cancel_work_tag(e);
+			}
+			a.step = ai_tag_work_hunting::hunting_steps::FIND_TARGET;
+			a.current_path.reset();
+		}
+
+		inline void find_target(entity_t &e, ai_tag_work_hunting &a, ai_tag_my_turn_t &t, position_t &pos) {
+			const auto finder = distance_map::hunting_map->find_nearest_reachable_target(pos);
+			if (finder.target == 0)
+			{
+				work.cancel_work_tag(e);
+			} else
+			{
+				a.current_path = finder.path;
+				a.step = ai_tag_work_hunting::hunting_steps::HUNT;
+			}
+		}
+
+		inline void hunt(entity_t &e, ai_tag_work_hunting &a, ai_tag_my_turn_t &t, position_t &pos) {
+			work.follow_path(a, pos, e, [&e, &a]()
+			{
+				// Cancel
+				a.current_path.reset();
+				work.cancel_work_tag(e);
+			}, [&a, &e]()
+			{
+				// Success
+				a.current_path.reset();
+				work.cancel_work_tag(e);
+			});
+		}
+
+
+		void dispatch(entity_t &e, ai_tag_work_hunting &h, ai_tag_my_turn_t &t, position_t &pos) {
+			switch (h.step)
+			{
+			case ai_tag_work_hunting::hunting_steps::CHECK_STATUS: check_status(e, h, t, pos); break;
+			case ai_tag_work_hunting::hunting_steps::FIND_TARGET : find_target(e, h, t, pos); break;
+			case ai_tag_work_hunting::hunting_steps::HUNT: hunt(e, h, t, pos); break;
+			}
+		}
 
 		void run(const double &duration_ms) {
-			if (first_run) {
-				first_run = false;
-				register_job_offer<ai_tag_work_hunting>(jobs_board::evaluate_hunting);
-			}
-
-			ai_work_template<ai_tag_work_hunting> work;
-
-			work.do_ai("Hunting", [&work](entity_t &e, ai_tag_work_hunting &h, ai_tag_my_turn_t &t, position_t &pos) {
-				const auto distance = huntables_map.get(mapidx(pos));
-				if (distance > MAX_DIJSTRA_DISTANCE - 1) {
-					work.cancel_work_tag(e);
-					return;
-				}
-
-				work.folllow_path(huntables_map, pos, e, [&e, &work]() {
-					// Cancel
-					work.cancel_work_tag(e);
-					return;
-				}, [&e, &work]() {
-					// At destination - stop hunting
-					work.cancel_work_tag(e);
-					return;
-				});
-			});
+			work.do_work(jobs_board::evaluate_hunting, dispatch, job_tag);
 		}
 	}
 }

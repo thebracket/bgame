@@ -1829,9 +1829,12 @@
     <ClInclude Include="..\..\src\systems\helpers\targeted_flow_map.hpp">
       <Filter>Header Files\systems\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\farming\designated_hunter.hpp">
+      <Filter>Header Files\components\farming</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\bengine\bitset8.hpp">
+    <None Include="..\..\src\bengine\bitset.hpp">
       <Filter>Header Files\bengine</Filter>
     </None>
   </ItemGroup>

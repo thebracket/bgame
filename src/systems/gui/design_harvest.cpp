@@ -16,6 +16,8 @@
 #include "../../components/item_tags/item_seed_t.hpp"
 #include "../../components/items/item.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace design_harvest {
 		std::set<int> cursors;

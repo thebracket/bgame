@@ -13,6 +13,8 @@
 #include "../../components/items/item_wear.hpp"
 #include "../helpers/inventory_assistant.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace damage_system {
 
@@ -148,7 +150,7 @@ namespace systems {
 					}
 					auto pos = entity(msg.victim)->component<position_t>();
 					if (pos) {
-						region::set_bloodstain(mapidx(pos->x, pos->y, pos->z), true);
+						region::set_flag(mapidx(pos->x, pos->y, pos->z), BLOODSTAIN);
 					}
 
 				}

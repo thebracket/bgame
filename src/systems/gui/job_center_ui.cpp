@@ -22,15 +22,17 @@
 #include "../../components/item_tags/item_chopping_t.hpp"
 #include "../../components/farming/designated_farmer.hpp"
 #include "../../components/item_tags/item_farming.hpp"
+#include "../../components/farming/designated_hunter.hpp"
 #include "../ai/inventory_system.hpp"
 
 namespace systems {
 	namespace job_center_ui {
 
-		static std::string win_job_center = std::string(ICON_FA_BRIEFCASE) + " Job Center";;
-		static std::string mining_job_tab = std::string(ICON_FA_DIAMOND) + " Mining";
-		static std::string lumberjacking_job_tab = std::string(ICON_FA_TREE) + " Lumberjacking";
-		static std::string farming_job_tab = std::string(ICON_FA_LEAF) + " Farming";
+		static const std::string win_job_center = std::string(ICON_FA_BRIEFCASE) + " Job Center";;
+		static const std::string mining_job_tab = std::string(ICON_FA_DIAMOND) + " Mining";
+		static const std::string lumberjacking_job_tab = std::string(ICON_FA_TREE) + " Lumberjacking";
+		static const std::string farming_job_tab = std::string(ICON_FA_LEAF) + " Farming";
+		static const std::string hunting_job_tab = std::string(ICON_FA_BULLSEYE) + " Hunting";
 		const static std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
 
 		static inline void render_miners() {
@@ -69,7 +71,7 @@ namespace systems {
 				ImGui::Text("Str: %d, Dex: %d, HP: %d/%d, Skill: %d", stats.strength, stats.dexterity, h.current_hitpoints, h.max_hitpoints, mine_skill);
 				ImGui::NextColumn();
 
-				if (!miner_designation && e.component<designated_lumberjack_t>() == nullptr && e.component<designated_farmer_t>() == nullptr) {
+				if (!miner_designation && e.component<designated_lumberjack_t>() == nullptr && e.component<designated_farmer_t>() == nullptr && e.component<designated_hunter_t>() == nullptr) {
 					if (inventory::is_item_category_available<item_digging_t>()) {
 						const std::string btn_makeminer = std::string(ICON_FA_DIAMOND) + std::string(" Make Miner##") + std::to_string(e.id);
 						if (ImGui::Button(btn_makeminer.c_str())) {
@@ -148,7 +150,7 @@ namespace systems {
 				ImGui::Text("Str: %d, Dex: %d, HP: %d/%d, Skill: %d", stats.strength, stats.dexterity, h.current_hitpoints, h.max_hitpoints, mine_skill);
 				ImGui::NextColumn();
 
-				if (!lj_designation && e.component<designated_miner_t>()==nullptr && e.component<designated_farmer_t>() == nullptr) {
+				if (!lj_designation && e.component<designated_miner_t>()==nullptr && e.component<designated_farmer_t>() == nullptr && e.component<designated_hunter_t>() == nullptr) {
 					if (inventory::is_item_category_available<item_chopping_t>()) {
 						const std::string btn_makeminer = std::string(ICON_FA_TREE) + std::string(" Make Lumberjack##") + std::to_string(e.id);
 						if (ImGui::Button(btn_makeminer.c_str())) {
@@ -227,7 +229,7 @@ namespace systems {
 				ImGui::Text("Dex: %d, Wis: %d, HP: %d/%d, Skill: %d", stats.dexterity, stats.wisdom, h.current_hitpoints, h.max_hitpoints, mine_skill);
 				ImGui::NextColumn();
 
-				if (!farm_designation && e.component<designated_miner_t>() == nullptr && e.component<designated_lumberjack_t>() == nullptr) {
+				if (!farm_designation && e.component<designated_miner_t>() == nullptr && e.component<designated_lumberjack_t>() == nullptr && e.component<designated_hunter_t>() == nullptr) {
 					if (inventory::is_item_category_available<item_farming_t>()) {
 						const std::string btn_makeminer = std::string(ICON_FA_LEAF) + std::string(" Make Farmer##") + std::to_string(e.id);
 						if (ImGui::Button(btn_makeminer.c_str())) {
@@ -270,6 +272,65 @@ namespace systems {
 			});
 		}
 
+		void render_hunters()
+		{
+			using namespace bengine;
+
+			ImGui::Columns(4, "hunter_list_grid");
+			ImGui::Separator();
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Settler Name"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Profession"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Suitability"); ImGui::NextColumn();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
+			ImGui::Separator();
+
+			each<settler_ai_t, name_t, game_stats_t, species_t, health_t>([](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species, health_t &h) {
+				auto hunt_designation = e.component<designated_hunter_t>();
+				const std::string gender = (species.gender == MALE) ? std::string(ICON_FA_MALE) : std::string(ICON_FA_FEMALE);
+				const std::string dname = name.first_name + std::string(" ") + name.last_name;
+				const std::string profession = stats.profession_tag;
+				const std::string task = ai.job_status;
+				int mine_skill = 0;
+				for (const auto & sk : stats.skills) {
+					if (sk.first == "Farming") mine_skill = sk.second.skill_level;
+				}
+
+				if (!hunt_designation) {
+					ImGui::Text("%s %s", gender.c_str(), dname.c_str());
+				}
+				else {
+					ImGui::TextColored(ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f }, "%s %s", gender.c_str(), dname.c_str());
+				}
+				ImGui::NextColumn();
+				ImGui::Text("%s", profession.c_str());
+				ImGui::NextColumn();
+
+				ImGui::Text("Dex: %d, Wis: %d, HP: %d/%d, Skill: %d", stats.dexterity, stats.wisdom, h.current_hitpoints, h.max_hitpoints, mine_skill);
+				ImGui::NextColumn();
+
+				if (!hunt_designation && e.component<designated_miner_t>() == nullptr && e.component<designated_lumberjack_t>() == nullptr && e.component<designated_hunter_t>() == nullptr) {
+					const std::string btn_makeminer = std::string(ICON_FA_BULLSEYE) + std::string(" Make Hunter##") + std::to_string(e.id);
+					if (ImGui::Button(btn_makeminer.c_str())) {
+						// TODO: Add happyness
+						stats.profession_tag = "Hunter";
+						e.assign(designated_hunter_t{});
+					}
+				}
+				else if (hunt_designation) {
+					const std::string btn_fireminer = std::string(ICON_FA_TIMES) + std::string(" Fire Hunter##") + std::to_string(e.id);
+					if (ImGui::Button(btn_fireminer.c_str())) {
+						// TODO: Add unhappiness
+						stats.profession_tag = stats.original_profession;
+						delete_component<designated_hunter_t>(e.id);
+					}
+				}
+
+				ImGui::NextColumn();
+				ImGui::Separator();
+			});
+		}
+
 		void run(const double &duration_ms) {
 			ImGui::Begin(win_job_center.c_str());
 
@@ -289,6 +350,9 @@ namespace systems {
 			}
 			if (ImGui::AddTab(farming_job_tab.c_str())) {
 				render_farmers();
+			}
+			if (ImGui::AddTab(hunting_job_tab.c_str())) {
+				render_hunters();
 			}
 			ImGui::EndTabBar();
 			ImGui::End();

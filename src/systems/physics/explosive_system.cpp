@@ -19,6 +19,7 @@
 
 using namespace bengine;
 using namespace region;
+using namespace tile_flags;
 
 namespace systems {
 	namespace explosives {
@@ -34,7 +35,7 @@ namespace systems {
 				}
 				else {
 					const auto idx = mapidx(X, Y, Z);
-					bool blocked = solid(idx);
+					bool blocked = flag(idx, SOLID);
 					// TODO: if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
 					if (!blocked && last_z != Z) {
 						//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
@@ -111,7 +112,7 @@ namespace systems {
 							// TODO: emit(emit_particles_message{ PARTICLE_SMOKE, x, y, z });
 
 							// Damage to the tile - change it to use the material properties
-							if (solid(boomidx) || region::tile_type(boomidx) == tile_type::FLOOR) {
+							if (flag(boomidx, SOLID) || region::tile_type(boomidx) == tile_type::FLOOR) {
 								// We need to damage the tile
 								const int damage_base = rng.roll_dice(boom.damage_dice, boom.damage_dice_type);
 								const int damage = damage_base / 10;
@@ -182,7 +183,7 @@ namespace systems {
 							if (dest.y > REGION_HEIGHT - 1) dest.y = REGION_HEIGHT - 1;
 							if (dest.z < 1) dest.z = 1;
 							if (dest.z > REGION_DEPTH - 1) dest.z = REGION_DEPTH - 1;
-							const bool dest_solid = solid(mapidx(dest));
+							const bool dest_solid = flag(mapidx(dest), SOLID);
 
 							for (const auto &target : targets) {
 								// TODO: emit(inflict_damage_message{ target,	rng.roll_dice(boom.damage_dice, boom.damage_dice_type),	"explosion" });

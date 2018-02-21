@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+using namespace tile_flags;
+
 namespace chunks {
 	unsigned int get_floor_tex(const int &idx) {
 		// We no longer hard-code grass.

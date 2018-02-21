@@ -32,6 +32,8 @@
 #include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace tooltips {
 		static const ImVec4 color_yellow{ 1.0f, 1.0f, 0.0f, 1.0f };
@@ -55,7 +57,7 @@ namespace systems {
 				const int world_z = mouse_wz;
 				if (world_x < 0 || world_x > REGION_WIDTH - 1 || world_y < 0 || world_y > REGION_HEIGHT - 1) return;
 				const int tile_idx = mapidx(world_x, world_y, world_z);
-				if (!region::revealed(tile_idx)) return;
+				if (!region::flag(tile_idx, REVEALED)) return;
 
 				std::vector<std::pair<std::string, ImVec4>> lines;
 
@@ -63,9 +65,9 @@ namespace systems {
 				if (debug::show_flags)
 				{
 					fmt::MemoryWriter ss;
-					if (above_ground(tile_idx)) ss << "Outside-";
-					if (solid(tile_idx)) ss << "Solid-";
-					if (opaque(tile_idx)) ss << "Opaque-";
+					if (flag(tile_idx, ABOVE_GROUND)) ss << "Outside-";
+					if (flag(tile_idx, SOLID)) ss << "Solid-";
+					if (flag(tile_idx, OPAQUE)) ss << "Opaque-";
 					if (flag(tile_idx, CAN_GO_DOWN)) ss << "Down-";
 					if (flag(tile_idx, CAN_GO_UP)) ss << "Up-";
 					if (flag(tile_idx, CAN_GO_NORTH)) ss << "North-";
@@ -76,12 +78,13 @@ namespace systems {
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + ss.str(), color_cyan));
 				}
 
-				if (water_level(tile_idx) > 0) {
-					lines.emplace_back(color_line(std::string(ICON_FA_SHIP) + std::string(" Water level: " + std::to_string(water_level(tile_idx))), color_cyan));
+				if (debug::show_dijkstra)
+				{
+					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + std::to_string(distance_map::reachable_from_cordex.get(tile_idx))));
 				}
 
-				if (debug::show_dijkstra) {
-					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + "Hunting distance: " + std::to_string(distance_map::huntables_map.get(tile_idx)), color_yellow));
+				if (water_level(tile_idx) > 0) {
+					lines.emplace_back(color_line(std::string(ICON_FA_SHIP) + std::string(" Water level: " + std::to_string(water_level(tile_idx))), color_cyan));
 				}
 
 				{ // Base tile type

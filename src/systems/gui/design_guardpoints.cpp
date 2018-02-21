@@ -7,6 +7,8 @@
 #include "../../planet/region/region.hpp"
 #include <algorithm>
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace design_guardpoints {
 		const std::string win_guard = std::string(ICON_FA_USER_CIRCLE) + " Guard Posts";

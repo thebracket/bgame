@@ -11,6 +11,7 @@
 
 using namespace bengine;
 using namespace region;
+using namespace tile_flags;
 
 namespace systems {
 	namespace fluids {
@@ -24,7 +25,7 @@ namespace systems {
 
 			const auto idx_below = mapidx(x, y, z - 1);
 			// Is there space below? If so, fall
-			if (!solid(idx_below) && water_level(idx_below)<10) {
+			if (!flag(idx_below, SOLID) && water_level(idx_below)<10) {
 				// Move a water cell down
 				add_water(idx_below);
 				remove_water(idx);
@@ -38,7 +39,7 @@ namespace systems {
 				const int idx_east = mapidx(x + 1, y, z);
 				const int idx_north = mapidx(x, y - 1, z);
 				const int idx_south = mapidx(x, y + 1, z);
-				if (x>0 && !solid(idx_west) && water_level(idx_west)<my_water_level && water_level(idx_west)<10) {
+				if (x>0 && !flag(idx_west, SOLID) && water_level(idx_west)<my_water_level && water_level(idx_west)<10) {
 					add_water(idx_west);
 					remove_water(idx);
 					calc_render(idx);
@@ -46,7 +47,7 @@ namespace systems {
 					did_something = true;
 					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
-				else if (x<REGION_WIDTH - 1 && !solid(idx_east) && water_level(idx_east)<my_water_level && water_level(idx_east)<10) {
+				else if (x<REGION_WIDTH - 1 && !flag(idx_east, SOLID) && water_level(idx_east)<my_water_level && water_level(idx_east)<10) {
 					add_water(idx_east);
 					remove_water(idx);
 					calc_render(idx);
@@ -54,7 +55,7 @@ namespace systems {
 					did_something = true;
 					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
-				else if (y>0 && !solid(idx_north) && water_level(idx_north)<my_water_level && water_level(idx_north)<10) {
+				else if (y>0 && !flag(idx_north, SOLID) && water_level(idx_north)<my_water_level && water_level(idx_north)<10) {
 					add_water(idx_north);
 					remove_water(idx);
 					calc_render(idx);
@@ -62,7 +63,7 @@ namespace systems {
 					did_something = true;
 					chunks::mark_chunk_dirty_by_tileidx(idx);
 				}
-				else if (y<REGION_HEIGHT - 1 && !solid(idx_south) && water_level(idx_south)<my_water_level && water_level(idx_south)<10) {
+				else if (y<REGION_HEIGHT - 1 && !flag(idx_south, SOLID) && water_level(idx_south)<my_water_level && water_level(idx_south)<10) {
 					add_water(idx_south);
 					remove_water(idx);
 					calc_render(idx);

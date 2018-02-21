@@ -16,6 +16,8 @@
 #include "../../bengine/gl_include.hpp"
 #include "../helpers/targeted_flow_map.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace design_mining {
 		std::vector<std::pair<int, uint8_t>> mining_cursor_list;
@@ -216,7 +218,7 @@ namespace systems {
 			// Determine yields
 			std::map<std::string, int> yield_map;
 			for (const auto idx : mining_cursor_list) {
-				if (region::revealed(idx.first)) {
+				if (region::flag(idx.first, REVEALED)) {
 					const auto &mat_idx = region::material(idx.first);
 					auto mat = get_material(mat_idx);
 					if (mat) {

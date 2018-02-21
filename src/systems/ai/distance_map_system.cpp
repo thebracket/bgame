@@ -8,17 +8,20 @@
 #include "../../components/claimed_t.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../helpers/targeted_flow_map.hpp"
+#include "../../components/buildings/building.hpp"
 
 namespace systems {
 	namespace distance_map {
 
 		using namespace dijkstra;
 
-		dijkstra_map huntables_map;
-		dijkstra_map butcherables_map;
+		std::unique_ptr<flow_maps::map_t> hunting_map;
+		std::unique_ptr<flow_maps::map_t> butcher_map;
 		dijkstra_map bed_map;
 		dijkstra_map settler_map;
 		dijkstra_map levers_map;
+		dijkstra_map reachable_from_cordex;
 		bool dijkstra_debug = false;
 
 		static bool huntables_dirty = true;
@@ -26,11 +29,12 @@ namespace systems {
 		static bool beds_dirty = true;
 		static bool settlers_dirty = true;
 		static bool levers_dirty = true;
+		static bool cordex_dirty = true;
 
 		using namespace bengine;
 
 		void refresh_bed_map() {
-			beds_dirty = true;
+			//beds_dirty = true;
 		}
 
 		void refresh_hunting_map() {
@@ -42,25 +46,28 @@ namespace systems {
 		}
 
 		void refresh_all_distance_maps() {
-			beds_dirty = true;
+			//beds_dirty = true;
 			huntables_dirty = true;
 			butcherables_dirty = true;
+			cordex_dirty = true;
 		}
 
-		void update_hunting_map() {
-			std::vector<int> huntables;
+		static void update_hunting_map() {
+			std::vector<std::tuple<int,int>> huntables;
 			each<grazer_ai, position_t>([&huntables](entity_t &e, grazer_ai &ai, position_t &pos) {
-				huntables.emplace_back(mapidx(pos));
+				huntables.emplace_back(std::make_tuple( mapidx(pos), mapidx(pos)));
 			});
-			huntables_map.update(huntables);
+			std::cout << "Found " << huntables.size() << " huntable targets\n";
+			hunting_map->fill_map(huntables);
+			std::cout << "There are " << hunting_map->targets.size() << " things to kill\n";
 		}
 
-		void update_butcher_map() {
-			std::vector<int> butcherables;
+		static void update_butcher_map() {
+			std::vector<std::tuple<int, int>> butcherables;
 			each<corpse_harvestable, position_t>([&butcherables](entity_t &e, corpse_harvestable &corpse, position_t &pos) {
-				butcherables.emplace_back(mapidx(pos));
+				butcherables.emplace_back(std::make_tuple(mapidx(pos), mapidx(pos)));
 			});
-			butcherables_map.update(butcherables);
+			butcher_map->fill_map(butcherables);
 		}
 
 		void update_bed_map() {
@@ -92,7 +99,35 @@ namespace systems {
 			levers_map.update(targets);
 		}
 
+		static position_t cordex_pos{ 0,0,0 };
+
+		void update_cordex_map()
+		{
+			if (cordex_pos.x == 0)
+			{
+				bengine::each<building_t, position_t>([] (bengine::entity_t &e, building_t &b, position_t &pos)
+				{
+					if (b.tag == "cordex")
+					{
+						cordex_pos = pos;
+					}
+				});
+			}
+
+			if (cordex_pos.x == 0)
+			{
+				std::cout << "WARNING - failed to find Cordex!\n";
+			}
+
+			const std::vector<int> targets{ mapidx(cordex_pos) };
+			reachable_from_cordex.update(targets);
+			cordex_dirty = false;
+		}
+
 		void run(const double &duration_ms) {
+			if (!hunting_map) hunting_map = std::make_unique<flow_maps::map_t>();
+			if (!butcher_map) butcher_map = std::make_unique<flow_maps::map_t>();
+
 			if (huntables_dirty) {
 				update_hunting_map();
 				huntables_dirty = false;
@@ -116,6 +151,11 @@ namespace systems {
 			if (levers_dirty) {
 				update_levers_map();
 				levers_dirty = false;
+			}
+
+			if (cordex_dirty)
+			{
+				update_cordex_map();
 			}
 		}
 	}

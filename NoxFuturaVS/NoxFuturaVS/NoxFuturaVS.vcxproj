@@ -501,6 +501,7 @@
     <ClInclude Include="..\..\src\components\explosion_t.hpp" />
     <ClInclude Include="..\..\src\components\falling.hpp" />
     <ClInclude Include="..\..\src\components\farming\designated_farmer.hpp" />
+    <ClInclude Include="..\..\src\components\farming\designated_hunter.hpp" />
     <ClInclude Include="..\..\src\components\farming\farm_designs.hpp" />
     <ClInclude Include="..\..\src\components\game_stats.hpp" />
     <ClInclude Include="..\..\src\components\grazer_ai.hpp" />
@@ -761,7 +762,7 @@
     <ClInclude Include="..\..\src\utils\thread_safe_message_queue.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\bengine\bitset8.hpp" />
+    <None Include="..\..\src\bengine\bitset.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

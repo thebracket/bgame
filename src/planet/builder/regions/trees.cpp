@@ -3,13 +3,14 @@
 #include "../../../bengine/geometry.hpp"
 
 using namespace region;
+using namespace tile_flags;
 
 static inline void set_tree_trunk(const int x, const int y, const int z, const int tree_id) noexcept {
 	if (x>0 && y>0 && z>0 && x<REGION_WIDTH-1 && y<REGION_HEIGHT-1 && z<REGION_DEPTH-2) {
 		const auto idx = mapidx(x,y,z);
         set_tile_type(idx, tile_type::TREE_TRUNK);
         set_tree_id(idx, tree_id);
-        set_solid(idx, true);
+		set_flag(idx, SOLID);
 	}
 }
 
@@ -18,7 +19,7 @@ static inline void set_tree_foliage(const int x, const int y, const int z, const
 		const int idx = mapidx(x,y,z);
         set_tile_type(idx, tile_type::TREE_LEAF);
         set_tree_id(idx, tree_id);
-        set_solid(idx, true);
+		set_flag(idx, SOLID);
 	}
 }
 
@@ -67,7 +68,7 @@ static bool can_see_sky(const int &x, const int &y, const int &z) noexcept {
 
 	auto Z = z;
 	while (Z < REGION_DEPTH) {
-		if (solid(mapidx(x,y,Z))) result = false;
+		if (flag(mapidx(x,y,Z), SOLID)) result = false;
 		Z++;
 	}
 	return result;

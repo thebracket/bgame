@@ -32,6 +32,8 @@
 #include "../utils/system_log.hpp"
 #include "../global_assets/game_config.hpp"
 
+using namespace tile_flags;
+
 namespace render {
 
 	namespace ascii {
@@ -320,7 +322,7 @@ namespace render {
 					const auto element_idx = cycle % n_renderables;
 					result = element->at(element_idx);
 				}
-				else if (region::revealed(check_idx)) {
+				else if (region::flag(check_idx, REVEALED)) {
 					const uint8_t ttype = region::tile_type(check_idx);
 					switch (ttype) {
 					case tile_type::SEMI_MOLTEN_ROCK: result = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
@@ -391,7 +393,7 @@ namespace render {
 						const auto element_idx = cycle % n_renderables;
 						terminal[tidx] = renderables[idx][element_idx];
 					} 
-					else if (region::revealed(idx)) {
+					else if (region::flag(idx, REVEALED)) {
 						const auto ttype = region::tile_type(idx);
 						switch (ttype) {
 						case tile_type::SEMI_MOLTEN_ROCK: terminal[tidx] = glyph_t{ 177, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f }; break;
@@ -433,7 +435,7 @@ namespace render {
 						}
 
 						// Blood stains
-						if (region::blood_stain(idx)) {
+						if (region::flag(idx, BLOODSTAIN)) {
 							terminal[tidx].br = 0.7f;
 							terminal[tidx].bg = 0.0f;
 							terminal[tidx].bb = 0.0f;

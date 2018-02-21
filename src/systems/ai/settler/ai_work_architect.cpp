@@ -13,6 +13,8 @@
 #include "../distance_map_system.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace ai_architect {
 
@@ -156,7 +158,7 @@ namespace systems {
 			const auto idx = mapidx(pos);
 			const auto bidx = a.target_tile;
 
-			if (!architecture_map->is_target(bidx))
+			if (!architecture_map->is_target(idx))
 			{
 				// Nothing to do
 				a.current_path.reset();

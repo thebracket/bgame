@@ -20,6 +20,7 @@
 #include "../../../planet/region/region.hpp"
 
 using namespace region;
+using namespace tile_flags;
 
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) noexcept {
     auto building = get_building_def(tag);
@@ -288,7 +289,7 @@ void build_buildings(bengine::random_number_generator &rng, const int n_building
                 for (int X = 0; X < building->get_width(); ++X) {
                     for (int Z = 0; Z < building->get_num_layers(); ++Z) {
                         const auto idx = mapidx(X+x, Y+y, Z+z);
-                        if (solid(idx)) ok = false;
+                        if (flag(idx, SOLID)) ok = false;
                         if (water_level(idx) > 0) ok = false;
                         if (region::tile_type(idx) == tile_type::SOLID) ok = false;
                     }

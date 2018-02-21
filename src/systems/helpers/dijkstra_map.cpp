@@ -4,6 +4,8 @@
 #include <stack>
 #include <map>
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace dijkstra {
 
@@ -20,15 +22,18 @@ namespace systems {
 		inline void dm_add_candidate(std::stack<std::pair<int, int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
 			using namespace region;
 			const int idx = mapidx(x, y, z);
-			if (water_level(idx) < 4) {
+			if (water_level(idx) == 0) {
 				open_nodes.push(std::make_pair(idx, distance));
 			}
 		}
 
-		void dijkstra_map::update(const std::vector<int> starting_points) {
+		void dijkstra_map::update(const std::vector<int> &starting_points) {
+			/*
 			bengine::thread_pool->push([this, starting_points](int id) {
 				this->update_async(id, starting_points);
 			});
+			*/
+			update_async(0, starting_points);
 		}
 
 		void dijkstra_map::update_architecture(const std::vector<int> starting_points) {
@@ -37,7 +42,7 @@ namespace systems {
 			});
 		}
 
-		void dijkstra_map::update_async(int thread_id, const std::vector<int> starting_points)
+		void dijkstra_map::update_async(int thread_id, const std::vector<int> &starting_points)
 		{
 			using namespace region;
 			std::vector<int16_t> new_map;

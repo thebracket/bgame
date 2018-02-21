@@ -21,6 +21,7 @@
 #include "../../bengine/ecs.hpp"
 
 using namespace bengine;
+using namespace tile_flags;
 
 namespace systems {
 	namespace topology {
@@ -69,7 +70,7 @@ namespace systems {
 
 			// Add ramp
 			const auto below = e.target_idx - (REGION_WIDTH * REGION_HEIGHT);
-			if (solid(below)) {
+			if (flag(below, SOLID)) {
 				make_ramp(below);
 			}
 		}
@@ -78,7 +79,7 @@ namespace systems {
 			make_ramp(e.target_idx);
 
 			const auto above = e.target_idx + (REGION_WIDTH * REGION_HEIGHT);
-			if (solid(above)) {
+			if (flag(above, SOLID)) {
 				make_open_space(above);
 				set_flag(above, CAN_STAND_HERE);
 			}
@@ -155,16 +156,16 @@ namespace systems {
 					each<position_t>([index](entity_t &E, position_t &P) {
 						if (mapidx(P.x, P.y, P.z) == index) {
 							// Something needs moving!
-							if (!solid(index + 1)) {
+							if (!flag(index + 1, SOLID)) {
 								std::tie(P.x, P.y, P.z) = idxmap(index + 1);
 							}
-							else if (!solid(index - 1)) {
+							else if (!flag(index - 1, SOLID)) {
 								std::tie(P.x, P.y, P.z) = idxmap(index - 1);
 							}
-							else if (!solid(index + REGION_WIDTH)) {
+							else if (!flag(index + REGION_WIDTH, SOLID)) {
 								std::tie(P.x, P.y, P.z) = idxmap(index + REGION_WIDTH);
 							}
-							else if (!solid(index - REGION_WIDTH)) {
+							else if (!flag(index - REGION_WIDTH, SOLID)) {
 								std::tie(P.x, P.y, P.z) = idxmap(index - REGION_WIDTH);
 							}
 						}

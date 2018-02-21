@@ -46,6 +46,7 @@
 #include "buildings/smoke_emitter.hpp"
 #include "buildings/turret_t.hpp"
 #include "farming/designated_farmer.hpp"
+#include "farming/designated_hunter.hpp"
 #include "designations.hpp"
 #include "position.hpp"
 #include <iostream>
@@ -92,6 +93,7 @@ CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<smoke_emitter_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<turret_t>>)
 CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<designated_farmer_t>>)
+CEREAL_REGISTER_TYPE(bengine::impl::component_store_t<bengine::impl::component_t<designated_hunter_t>>)
 
 template<class Archive>
 void serialize(Archive & archive, position_t &p)
@@ -374,6 +376,13 @@ void serialize(Archive & archive, turret_t &t)
 
 template<class Archive>
 void serialize(Archive & archive, designated_farmer_t &tag)
+{
+	// Nothing to save
+	//archive( );
+}
+
+template<class Archive>
+void serialize(Archive & archive, designated_hunter_t &tag)
 {
 	// Nothing to save
 	//archive( );

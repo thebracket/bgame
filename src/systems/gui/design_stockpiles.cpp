@@ -10,6 +10,8 @@
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../bengine/ecs.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace design_stockpiles {
 		static int selected_stockpile = 0;

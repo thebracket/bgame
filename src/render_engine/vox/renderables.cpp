@@ -28,6 +28,8 @@
 #include "../../bengine/ecs.hpp"
 #include "../camera.hpp"
 
+using namespace tile_flags;
+
 namespace render {
 
 	bool models_changed = true;

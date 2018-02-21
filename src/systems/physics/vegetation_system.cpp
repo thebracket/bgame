@@ -11,6 +11,7 @@
 
 using namespace bengine;
 using namespace region;
+using namespace tile_flags;
 
 namespace systems {
 	namespace vegetation {
@@ -64,7 +65,7 @@ namespace systems {
 								auto plant = get_plant_def(veg_type(idx));
 								if (plant) {
 									// Photosynthesizeing plants die in the darkness
-									if (plant->requires_light && !region::above_ground(idx)) {
+									if (plant->requires_light && !region::flag(idx, ABOVE_GROUND)) {
 										if (veg_ticker(idx) > 0) {
 											current_tick = veg_ticker(idx) - 1;
 										}

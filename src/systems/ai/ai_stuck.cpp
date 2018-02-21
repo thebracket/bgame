@@ -8,11 +8,13 @@
 #include "../physics/movement_system.hpp"
 #include "../../planet/region/region.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace ai_stuck {
 		inline bool is_stuck_or_invalid(const position_t &pos) {
 			const int map_index = mapidx(pos.x, pos.y, pos.z);
-			return ((map_index < 0 || map_index >(REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) || region::solid(map_index) ||
+			return ((map_index < 0 || map_index >(REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) || region::flag(map_index, SOLID) ||
 				(
 					!region::flag(map_index, CAN_GO_NORTH) &&
 					!region::flag(map_index, CAN_GO_SOUTH) &&

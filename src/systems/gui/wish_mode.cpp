@@ -22,9 +22,8 @@ namespace systems {
 		};
 
 		static std::vector<wish_t> wishes {
-			wish_t{ "show flags", []() { debug::show_flags = !debug::show_flags; } },
+			wish_t{ "show flags", []() { debug::show_flags = !debug::show_flags; debug::show_dijkstra = !debug::show_dijkstra; } },
 			wish_t{ "fps", []() { debug::show_fps = !debug::show_fps; } },
-			wish_t{ "show distance", []() { debug::show_dijkstra = !debug::show_dijkstra; }},
 			wish_t{ "sploosh", []() {
 			for (int y = 1; y<REGION_HEIGHT - 1; ++y) {
 				for (int x = 1; x<REGION_WIDTH - 1; ++x) {

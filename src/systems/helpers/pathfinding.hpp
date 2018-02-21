@@ -14,7 +14,7 @@ namespace tasks {
 
 	inline bool can_enter_tile(const position_t &pos) {
 		const auto idx = mapidx(pos);
-		return region::flag(idx, CAN_STAND_HERE);
+		return region::flag(idx, tile_flags::CAN_STAND_HERE);
 	}
 
 	template<class T>
@@ -50,14 +50,14 @@ namespace tasks {
 
 	inline bool is_stuck_or_invalid(const position_t &pos) {
 		const int map_index = mapidx(pos.x, pos.y, pos.z);
-		return ((map_index < 0 || map_index >(REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) || region::solid(map_index) ||
+		return ((map_index < 0 || map_index >(REGION_HEIGHT*REGION_WIDTH*REGION_DEPTH)) || region::flag(map_index, tile_flags::SOLID) ||
 			(
-				!region::flag(map_index, CAN_GO_NORTH) &&
-				!region::flag(map_index, CAN_GO_SOUTH) &&
-				!region::flag(map_index, CAN_GO_EAST) &&
-				!region::flag(map_index, CAN_GO_WEST) &&
-				!region::flag(map_index, CAN_GO_UP) &&
-				!region::flag(map_index, CAN_GO_DOWN)
+				!region::flag(map_index, tile_flags::CAN_GO_NORTH) &&
+				!region::flag(map_index, tile_flags::CAN_GO_SOUTH) &&
+				!region::flag(map_index, tile_flags::CAN_GO_EAST) &&
+				!region::flag(map_index, tile_flags::CAN_GO_WEST) &&
+				!region::flag(map_index, tile_flags::CAN_GO_UP) &&
+				!region::flag(map_index, tile_flags::CAN_GO_DOWN)
 				));
 	}
 

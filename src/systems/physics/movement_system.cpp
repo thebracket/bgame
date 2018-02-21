@@ -10,6 +10,8 @@
 #include "visibility_system.hpp"
 #include "../../render_engine/vox/renderables.hpp"
 
+using namespace tile_flags;
+
 namespace systems {
 	namespace movement {
 
@@ -84,7 +86,7 @@ namespace systems {
 				case 5: if (flag(tile_index, CAN_GO_EAST)) pos.x++; break;
 				case 6: if (flag(tile_index, CAN_GO_WEST)) pos.x--; break;
 				}
-				if (!solid(tile_index)) {
+				if (!flag(tile_index, SOLID)) {
 					bool can_go = true;
 					const int dest = mapidx(pos);
 

@@ -77,22 +77,7 @@ namespace region {
      */
 
     /* Is a flag set for a tile? */
-    bool flag(const int idx, uint8_t flag);
-
-    /* Is a cell solid? */
-    bool solid(const int idx);
-
-    /* Is a cell opaque? */
-    bool opaque(const int idx);
-
-    /* Is a cell revealed (has been visible at some point)? */
-    bool revealed(const int idx);
-
-    /* Is the cell above ground? */
-    bool above_ground(const int idx);
-
-    /* Is there a blood stain here? */
-    bool blood_stain(const int idx);
+    bool flag(const int idx, const tile_flags::tile_flag_type flag);
 
     /* Reveal a cell. */
     void reveal(const int idx);
@@ -100,20 +85,11 @@ namespace region {
     /* Make a cell visible. */
     void make_visible(const int idx);
 
-    /* Set the state of the SOLID flag for a cell. */
-    void set_solid(const int idx, bool val);
-
-    /* Set the state for the OPAQUE flag for a cell. */
-    void set_opaque(const int idx, bool val);
-
     /* Set a flag for the cell. */
-    void set_flag(const int idx, const uint8_t flag);
+    void set_flag(const int idx, const tile_flags::tile_flag_type flag);
 
     /* Unset a flag for the cell. */
-    void reset_flag(const int idx, const uint8_t flag);
-
-    /* Set the bloodstain flag for a cell. */
-    void set_bloodstain(const int idx, const bool val);
+    void reset_flag(const int idx, const tile_flags::tile_flag_type flag);
 
     /* Clear the visibility map. */
     void clear_visibility();
