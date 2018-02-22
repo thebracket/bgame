@@ -4,6 +4,7 @@
 #include "../../../components/ai_tags/ai_tag_work_pull_lever.hpp"
 #include "../../../components/lever.hpp"
 #include "../../../bengine/telemetry.hpp"
+#include "../../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace ai_lever {

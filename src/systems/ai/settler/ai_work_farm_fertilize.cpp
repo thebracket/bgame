@@ -14,6 +14,7 @@
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../../components/item_tags/item_fertilizer_t.hpp"
+#include "../../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace ai_farm_fertilize {

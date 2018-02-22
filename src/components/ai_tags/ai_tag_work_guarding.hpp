@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../position.hpp"
-#include "../../bengine/path_finding.hpp"
 #include <memory>
+#include "../../systems/helpers/pathfinding.hpp"
 
 struct ai_tag_work_guarding {
 
@@ -12,6 +12,6 @@ struct ai_tag_work_guarding {
     bool has_post = false;
     position_t guard_post;
 
-    std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
+    std::shared_ptr<navigation_path_t> current_path; // Not serialized
 };
 

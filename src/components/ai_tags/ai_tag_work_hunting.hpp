@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../position.hpp"
-#include "../../bengine/path_finding.hpp"
 #include <memory>
 
 struct ai_tag_work_hunting {
@@ -10,6 +8,6 @@ struct ai_tag_work_hunting {
 
     hunting_steps step = CHECK_STATUS;
 
-    std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
+    std::shared_ptr<navigation_path_t> current_path; // Not serialized
 
 };

@@ -18,6 +18,7 @@
 #include "../../../raws/items.hpp"
 #include "../../../raws/defs/item_def_t.hpp"
 #include "../../../raws/raws.hpp"
+#include "../../helpers/targeted_flow_map.hpp"
 
 namespace systems {
 	namespace ai_farm_clear {

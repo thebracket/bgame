@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../position.hpp"
-#include "../../bengine/path_finding.hpp"
+#include "../../systems/helpers/pathfinding.hpp"
 #include <memory>
 
 struct ai_tag_work_farm_fixsoil {
@@ -11,6 +10,6 @@ struct ai_tag_work_farm_fixsoil {
 	fix_steps step = FIND_HOE;
 	std::size_t tool_id = 0;
 	std::size_t soil_id = 0;
-	std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
+	std::shared_ptr<navigation_path_t> current_path; // Not serialized
 };
 

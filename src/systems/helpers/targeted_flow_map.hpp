@@ -3,6 +3,9 @@
 #include "../../components/position.hpp"
 #include "pathfinding.hpp"
 #include "../ai/distance_map_system.hpp"
+#include "../../bengine/geometry.hpp"
+#include <iostream>
+#include <map>
 #include <vector>
 #include <tuple>
 
@@ -12,7 +15,7 @@ namespace flow_maps {
 
 	struct path_result_t
 	{
-		std::shared_ptr<bengine::navigation_path<position_t>> path;
+		std::shared_ptr<navigation_path_t> path;
 		int target;
 	};
 
@@ -53,8 +56,8 @@ namespace flow_maps {
 			{
 				const auto[x, y, z] = idxmap(std::get<0>(search.second));
 				std::cout << "Path to " << x << "," << y << "," << z << "\n";
-				const auto path = find_path(pos, position_t{ x,y,z });
-				if (path->success) return path_result_t{ path, std::get<1>(search.second) };
+				auto path = find_path(pos, position_t{ x,y,z });
+				if (path->success) return path_result_t{ std::move(path), std::get<1>(search.second) };
 			}
 			path_result_t result{};
 			result.target = 0;

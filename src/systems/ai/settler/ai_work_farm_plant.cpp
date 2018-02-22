@@ -13,6 +13,7 @@
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
+#include "../../../planet/region/region.hpp"
 
 namespace systems {
 	namespace ai_farm_plant {

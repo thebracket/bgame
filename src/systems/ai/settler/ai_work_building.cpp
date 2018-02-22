@@ -17,6 +17,8 @@
 #include "../../physics/topology_system.hpp"
 #include "../../gui/particle_system.hpp"
 #include "../../../global_assets/building_designations.hpp"
+#include <fmt/ostream.h>
+#include "../../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace ai_building {

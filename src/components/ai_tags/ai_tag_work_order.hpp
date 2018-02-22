@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../position.hpp"
-#include "../../bengine/path_finding.hpp"
 #include "../../components/helpers/reaction_task_t.hpp"
 #include <memory>
 
@@ -13,6 +12,6 @@ struct ai_tag_work_order {
     reaction_task_t reaction_target;
     std::size_t current_tool;
 
-    std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
+    std::shared_ptr<navigation_path_t> current_path; // Not serialized
 };
 

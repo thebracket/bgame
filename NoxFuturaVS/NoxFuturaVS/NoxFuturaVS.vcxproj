@@ -422,7 +422,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp" />
     <ClInclude Include="..\..\src\bengine\analytics.hpp" />
-    <ClInclude Include="..\..\src\bengine\astar.hpp" />
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />
     <ClInclude Include="..\..\src\bengine\color_t.hpp" />
     <ClInclude Include="..\..\src\bengine\ctpl.h" />
@@ -430,7 +429,6 @@
     <ClInclude Include="..\..\src\bengine\ecs_impl.hpp" />
     <ClInclude Include="..\..\src\bengine\FastNoise.h" />
     <ClInclude Include="..\..\src\bengine\filesystem.hpp" />
-    <ClInclude Include="..\..\src\bengine\fsa.hpp" />
     <ClInclude Include="..\..\src\bengine\geometry.hpp" />
     <ClInclude Include="..\..\src\bengine\gl_include.hpp" />
     <ClInclude Include="..\..\src\bengine\IconsFontAwesome.h" />
@@ -442,7 +440,6 @@
     <ClInclude Include="..\..\src\bengine\imgui_tabs.hpp" />
     <ClInclude Include="..\..\src\bengine\main_window.hpp" />
     <ClInclude Include="..\..\src\bengine\octree.hpp" />
-    <ClInclude Include="..\..\src\bengine\path_finding.hpp" />
     <ClInclude Include="..\..\src\bengine\pcg_basic.h" />
     <ClInclude Include="..\..\src\bengine\random_number_generator.hpp" />
     <ClInclude Include="..\..\src\bengine\rexspeeder.hpp" />

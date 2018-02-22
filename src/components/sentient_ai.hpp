@@ -1,8 +1,8 @@
 #pragma once
 
 #include "position.hpp"
-#include "../bengine/path_finding.hpp"
 #include <memory>
+#include "../systems/helpers/pathfinding.hpp"
 
 enum sentient_goal_t { SENTIENT_GOAL_IDLE, SENTIENT_GOAL_FLEE, SENTIENT_GOAL_CHARGE, SENTIENT_GOAL_KILL };
 
@@ -17,6 +17,6 @@ struct sentient_ai {
 	int days_since_arrival = 0;
 
 	// Not serialized
-	std::shared_ptr<bengine::navigation_path<position_t>> current_path;
+	std::shared_ptr<navigation_path_t> current_path;
 	
 };

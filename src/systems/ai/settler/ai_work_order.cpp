@@ -10,6 +10,7 @@
 #include "../../../components/name.hpp"
 #include "../../../global_assets/building_designations.hpp"
 #include "../../../components/helpers/reaction_task_t.hpp"
+#include "../../../render_engine/vox/renderables.hpp"
 
 namespace systems {
 	namespace ai_workorder {

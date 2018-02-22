@@ -2,9 +2,9 @@
 
 #include <array>
 #include "position.hpp"
-#include "../bengine/path_finding.hpp"
 #include "../components/helpers/reaction_task_t.hpp"
 #include "../components/helpers/building_designation_t.hpp"
+#include "../systems/helpers/pathfinding.hpp"
 
 constexpr int NUMBER_OF_JOB_CATEGORIES = 10;
 constexpr int JOB_MINING = 0;
@@ -51,7 +51,7 @@ struct settler_ai_t {
 	std::size_t current_tool = 0;
 
 	// Non-persistent
-	std::shared_ptr<bengine::navigation_path<position_t>> current_path;
+	std::shared_ptr<navigation_path_t> current_path;
 	std::size_t targeted_hostile = 0;
 
 	settler_ai_t() {

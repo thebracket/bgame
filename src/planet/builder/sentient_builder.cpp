@@ -26,6 +26,7 @@
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../bengine/geometry.hpp"
 
 static int sentient_get_stat_mod(const std::string &stat, const raw_species_t * species) noexcept {
     if (!species) return 0;

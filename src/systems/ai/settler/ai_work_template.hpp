@@ -15,11 +15,12 @@
 #include "../../../raws/defs/material_def_t.hpp"
 #include "../../../raws/defs/item_def_t.hpp"
 #include "../../../global_assets/rng.hpp"
-#include "../../../bengine/path_finding.hpp"
 #include "../../helpers/pathfinding.hpp"
 #include "../../../components/items/item_stored.hpp"
 #include "../../../components/items/item_carried.hpp"
 #include "../inventory_system.hpp"
+#include "../../../planet/region/region.hpp"
+#include "../../physics/movement_system.hpp"
 
 template<typename TAG>
 class ai_work_template {

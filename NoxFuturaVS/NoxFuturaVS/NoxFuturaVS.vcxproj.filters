@@ -812,12 +812,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\bengine\path_finding.hpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\astar.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
@@ -834,9 +828,6 @@
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\filesystem.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\fsa.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\geometry.hpp">

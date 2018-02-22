@@ -19,6 +19,7 @@
 #include "../../damage/settler_ranged_attack_system.hpp"
 #include "../../damage/turret_ranged_attack_system.hpp"
 #include "../../../components/helpers/standing_orders.hpp"
+#include "../../../bengine/geometry.hpp"
 
 namespace systems {
 	namespace ai_visibility_scan {

@@ -12,6 +12,8 @@
 #include "../architecture_system.hpp"
 #include "../distance_map_system.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
+#include "../../../render_engine/vox/renderables.hpp"
+#include "../../physics/movement_system.hpp"
 
 using namespace tile_flags;
 

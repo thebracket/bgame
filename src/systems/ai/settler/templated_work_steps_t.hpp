@@ -12,6 +12,8 @@
 #include "../../helpers/pathfinding.hpp"
 #include "../../../global_assets/rng.hpp"
 #include "../../damage/damage_system.hpp"
+#include "../../../planet/region/region.hpp"
+#include "../../physics/movement_system.hpp"
 
 namespace work {
 	

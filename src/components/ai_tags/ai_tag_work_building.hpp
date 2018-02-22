@@ -2,6 +2,7 @@
 
 #include "../position.hpp"
 #include "../helpers/building_designation_t.hpp"
+#include "../../systems/helpers/pathfinding.hpp"
 
 struct ai_tag_work_building {
 
@@ -11,6 +12,6 @@ struct ai_tag_work_building {
     building_designation_t building_target{};
     std::size_t current_tool = 0;
 
-    std::shared_ptr<bengine::navigation_path<position_t>> current_path; // Not serialized
+    std::shared_ptr<navigation_path_t> current_path; // Not serialized
 };
 
