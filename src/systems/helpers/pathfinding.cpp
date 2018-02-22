@@ -10,7 +10,9 @@
 
 namespace impl {
 
-	constexpr float MAX_DIRECT_PATH_CHECK = 24.0f;
+	constexpr static float MAX_DIRECT_PATH_CHECK = 24.0f;
+	constexpr static int Z_WEIGHT = 10;
+	constexpr static int MAX_ASTAR_STEPS = 500;
 
 	struct node_t
 	{
@@ -25,7 +27,6 @@ namespace impl {
 		}
 	};
 
-	constexpr static int Z_WEIGHT = 10;
 
 	class a_star_t
 	{
@@ -115,8 +116,10 @@ namespace impl {
 		{
 			auto result = std::make_shared<navigation_path_t>();
 
-			while (!open_list_.empty())
+			while (!open_list_.empty() && step_counter_ < MAX_ASTAR_STEPS)
 			{
+				++step_counter_;
+
 				// Pop Q off of the list
 				const auto q = open_list_.front();
 				open_list_.erase(open_list_.begin());
@@ -183,6 +186,7 @@ namespace impl {
 		boost::container::flat_map<int, float> closed_list_;
 		boost::container::flat_map<int, int> parents_;
 		position_t end_loc_;
+		int step_counter_ = 0;
 	};
 
 	static std::shared_ptr<navigation_path_t> a_star(const position_t &start, const position_t &end) noexcept
