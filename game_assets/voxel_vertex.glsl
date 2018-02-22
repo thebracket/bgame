@@ -42,12 +42,13 @@ void main()
 {
     vec3 shunk_pos = (aPos - texSize/2.0) / texSize;
     vec4 position = vec4(shunk_pos, 1.0);
+
     mat4 rotation = rotationMatrix(instanceRotation.xyz, instanceRotation.w);
     mat4 translation = translate(instancePos.x, instancePos.y, instancePos.z);
     mat4 model_view_matrix = instanceRotation.w > 0 ? view_matrix * translation * rotation : view_matrix * translation;
     gl_Position = projection_matrix * model_view_matrix * position;
-    world_pos = shunk_pos + instancePos;
-    base_normal = normalize(aNormal);
+    world_pos = shunk_pos + instancePos;    
+    base_normal = instanceRotation.w > 0 ? normalize(rotation * vec4(aNormal, 0.0)).xyz : normalize(aNormal);
     color = aColor;
     tint = instanceTint;
 }
