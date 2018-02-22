@@ -1,4 +1,3 @@
-#include <ctime>
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
 #include "gui/tooltip_system.hpp"
@@ -79,7 +78,6 @@
 #include "gui/job_center_ui.hpp"
 #include "gui/wish_mode.hpp"
 #include "../bengine/imgui.h"
-#include "../bengine/imgui_impl_glfw_gl3.h"
 #include "keydamper.hpp"
 #include "mouse.hpp"
 #include "../global_assets/game_mode.hpp"
@@ -170,9 +168,9 @@ namespace systems {
 
     template <typename F>
     inline void run_system(F &run_func, const double &duration_ms, const int SYSTEM) {
-        auto start_time = std::chrono::high_resolution_clock::now();
+        const auto start_time = std::chrono::high_resolution_clock::now();
         run_func(duration_ms);
-        auto end_time = std::chrono::high_resolution_clock::now();
+        const auto end_time = std::chrono::high_resolution_clock::now();
         const double system_running_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
         auto finder = run_time.find(SYSTEM);
         if (finder == run_time.end()) {
@@ -379,10 +377,10 @@ namespace systems {
             ImGui::Begin("Systems Profile");
             ImGui::Text("Frame time: %f", duration_ms);
             for (auto sys_finder=run_time.begin(); sys_finder != run_time.end(); ++sys_finder) {
-                const int id = sys_finder->first;
-                auto name_finder = system_names.find(id);
+                const auto id = sys_finder->first;
+                const auto name_finder = system_names.find(id);
                 if (name_finder != system_names.end()) {
-                    ImGui::PlotLines(name_finder->second.c_str(), (const float *)&sys_finder->second.second.at(0), 100);
+                    ImGui::PlotLines(name_finder->second.c_str(), static_cast<const float *>(&sys_finder->second.second.at(0)), 100);
                 }
             }
             ImGui::End();
