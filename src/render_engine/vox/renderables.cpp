@@ -78,7 +78,7 @@ namespace render {
 							blue = 0.1f;
 						}
 
-						add_voxel_model(b.vox_model, x, y, z, red, green, blue);
+						add_voxel_model(b.vox_model, x, y, z, red, green, blue, static_cast<float>(pos.rotation) * 3.14159265358979323846f, 0.0f, 1.0f, 0.0f);
 					} // TODO: Add ASCII support
 				}
 			}

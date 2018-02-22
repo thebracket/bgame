@@ -70,7 +70,7 @@ void main()
     vec3 dir = normalize(camera_position);
     float lambert = max(dot(normal, dir), 0.0);
 
-    float y_difference = 1.0 - ((camera_position.y - position.y) * 0.2);
+    float y_difference = 1.0 - ((camera_position.y - position.y) * 0.1);
 
     // Final color
     vec3 ambient = ambient_color * ambient_occlusion;
