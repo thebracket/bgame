@@ -19,7 +19,7 @@ namespace systems {
 
 		std::unique_ptr<flow_maps::map_t> hunting_map;
 		std::unique_ptr<flow_maps::map_t> butcher_map;
-		dijkstra_map bed_map;
+		std::unique_ptr<flow_maps::map_t> bed_map;
 		dijkstra_map settler_map;
 		dijkstra_map levers_map;
 		dijkstra_map reachable_from_cordex;
@@ -50,7 +50,7 @@ namespace systems {
 		static void update_hunting_map() {
 			std::vector<std::tuple<int,int>> huntables;
 			each<grazer_ai, position_t>([&huntables](entity_t &e, grazer_ai &ai, position_t &pos) {
-				huntables.emplace_back(std::make_tuple( mapidx(pos), mapidx(pos)));
+				huntables.emplace_back(std::make_tuple( mapidx(pos), e.id));
 			});
 			hunting_map->fill_map(huntables);
 		}
@@ -58,20 +58,20 @@ namespace systems {
 		static void update_butcher_map() {
 			std::vector<std::tuple<int, int>> butcherables;
 			each<corpse_harvestable, position_t>([&butcherables](entity_t &e, corpse_harvestable &corpse, position_t &pos) {
-				butcherables.emplace_back(std::make_tuple(mapidx(pos), mapidx(pos)));
+				butcherables.emplace_back(std::make_tuple(mapidx(pos), e.id));
 			});
 			butcher_map->fill_map(butcherables);
 		}
 
-		void update_bed_map() {
-			std::vector<int> beds;
+		static void update_bed_map() {
+			std::vector<std::tuple<int,int>> beds;
 			each_without<claimed_t, construct_provides_sleep_t, position_t>([&beds](entity_t &e, construct_provides_sleep_t &bed, position_t &pos) {
-				beds.emplace_back(mapidx(pos));
+				beds.emplace_back(std::make_tuple(mapidx(pos), e.id));
 			});
-			bed_map.update(beds);
+			bed_map->fill_map(beds);
 		}
 
-		void update_settler_map() {
+		static void update_settler_map() {
 			std::vector<int> settlers;
 			each<settler_ai_t, position_t>([&settlers](entity_t &e, settler_ai_t &settler, position_t &pos) {
 				settlers.emplace_back(mapidx(pos));
@@ -80,6 +80,7 @@ namespace systems {
 		}
 
 		void update_levers_map() {
+			/*
 			std::vector<int> targets;
 			for (auto it = designations->levers_to_pull.begin(); it != designations->levers_to_pull.end(); ++it) {
 				auto lever_id = *it;
@@ -90,6 +91,8 @@ namespace systems {
 				targets.emplace_back(mapidx(*lever_pos));
 			}
 			levers_map.update(targets);
+			*/
+			// Removed until we fix this system.
 		}
 
 		static position_t cordex_pos{ 0,0,0 };
@@ -117,9 +120,17 @@ namespace systems {
 			cordex_dirty = false;
 		}
 
+		static bool first_run = true;
+
 		void run(const double &duration_ms) {
 			if (!hunting_map) hunting_map = std::make_unique<flow_maps::map_t>();
 			if (!butcher_map) butcher_map = std::make_unique<flow_maps::map_t>();
+			if (!bed_map) bed_map = std::make_unique<flow_maps::map_t>();
+
+			if (cordex_dirty)
+			{
+				update_cordex_map();
+			}
 
 			if (slow_tick) {
 				update_hunting_map();
@@ -143,12 +154,7 @@ namespace systems {
 			if (levers_dirty) {
 				update_levers_map();
 				levers_dirty = false;
-			}
-
-			if (cordex_dirty)
-			{
-				update_cordex_map();
-			}
+			}			
 		}
 	}
 }

@@ -206,7 +206,7 @@ namespace systems {
 				}
 
 				// Buildings
-				auto building_on_tile = get_building_id(tile_idx);
+				const auto building_on_tile = get_building_id(tile_idx);
 				if (building_on_tile > 0) {
 					if (debug::show_flags) {
 						lines.push_back(color_line(std::string("Building #") + std::to_string(building_on_tile)));
@@ -221,6 +221,8 @@ namespace systems {
 								if (building->complete) {
 									building_name = finder->name + std::string(" (") + std::to_string(building->hit_points)
 										+ std::string("/") + std::to_string(building->max_hit_points) + std::string(")");
+
+									if (building_entity->component<claimed_t>()) building_name += " (c)";
 								}
 								else {
 									building_name = std::string("(") + finder->name + std::string(") - Incomplete");

@@ -36,7 +36,7 @@ namespace systems {
 		};
 
 		struct entity_wants_to_charge_message {
-			entity_wants_to_charge_message() {}
+			entity_wants_to_charge_message() = default;
 			entity_wants_to_charge_message(const std::size_t id, const std::size_t charge_to) : entity_id(id), charge_to_id(charge_to) {}
 			std::size_t entity_id;
 			std::size_t charge_to_id;
@@ -87,8 +87,8 @@ namespace systems {
 				case 6: if (flag(tile_index, CAN_GO_WEST)) pos.x--; break;
 				case 7: if (flag(tile_index, CAN_GO_NORTH_EAST)) { pos.y--; pos.x++; } break;
 				case 8: if (flag(tile_index, CAN_GO_NORTH_WEST)) { pos.y--; pos.x--; } break;
-				case 9: if (flag(tile_index, CAN_GO_SOUTH_EAST)) { pos.y++; pos.x--; } break;
-				case 10: if (flag(tile_index, CAN_GO_SOUTH_WEST)) { pos.y++; pos.x++; } break;
+				case 9: if (flag(tile_index, CAN_GO_SOUTH_EAST)) { pos.y++; pos.x++; } break;
+				case 10: if (flag(tile_index, CAN_GO_SOUTH_WEST)) { pos.y++; pos.x--; } break;
 				}
 				if (!flag(tile_index, SOLID)) {
 					bool can_go = true;

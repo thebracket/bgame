@@ -19,6 +19,7 @@
 #include "../../../global_assets/building_designations.hpp"
 #include <fmt/ostream.h>
 #include "../../../render_engine/vox/renderables.hpp"
+#include "../distance_map_system.hpp"
 
 namespace systems {
 	namespace ai_building {
@@ -234,6 +235,7 @@ namespace systems {
 				for (const auto &provides : finder->provides) {
 					if (provides.provides == provides_sleep) {
 						entity(b.building_target.building_entity)->assign(construct_provides_sleep_t{});
+						distance_map::refresh_bed_map();
 					}
 					else if (provides.provides == provides_light) {
 						entity(b.building_target.building_entity)->assign(lightsource_t{ provides.radius, provides.color });

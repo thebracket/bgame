@@ -66,9 +66,14 @@ namespace impl {
 				// If a node with the same possition as successor is in the open list with a lower f, skip add
 				for (const auto &e : open_list_)
 				{
-					if (e.idx == idx && e.f <= s.f)
+					if (e.f <= s.f) {
+						if (e.idx == idx)
+						{
+							should_add = false;
+							goto skipper;
+						}
+					} else
 					{
-						should_add = false;
 						goto skipper;
 					}
 				}
@@ -105,7 +110,7 @@ namespace impl {
 			{
 				const auto parent = parents_.find(current)->second;
 				auto[x, y, z] = idxmap(parent);
-				result.steps.push_front(position_t{x,y,z});
+				if (parent != start_) result.steps.push_front(position_t{x,y,z});
 				current = parent;
 			}
 
@@ -204,7 +209,7 @@ namespace impl {
 		{
 			const auto idx = mapidx(x, y, start.z);
 			if (seen_nodes.find(idx) == seen_nodes.end()) {
-				result->steps.emplace_back(position_t{ x, y, start.z });
+				if (idx != mapidx(start)) result->steps.emplace_back(position_t{ x, y, start.z });
 				seen_nodes.insert(idx);
 			}
 			if (!region::flag(idx, tile_flags::CAN_STAND_HERE)) blocked = true;

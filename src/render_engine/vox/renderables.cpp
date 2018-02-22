@@ -27,6 +27,8 @@
 #include "../renderbuffers.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../camera.hpp"
+#include "../../components/sleep_clock_t.hpp"
+#include "../../components/health.hpp"
 
 using namespace tile_flags;
 
@@ -147,21 +149,36 @@ namespace render {
 		});
 	}
 
+	static bool is_lying_down(bengine::entity_t &e)
+	{
+		const auto sleepy = e.component<sleep_clock_t>();
+		if (sleepy && sleepy->is_sleeping) return true;
+		const auto health = e.component<health_t>();
+		if (health && health->unconscious) return true;
+		return false;
+	}
+
 	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		const auto species = e.component<species_t>();
 		if (!species) return;
 
 		// For now, everything uses voxel 49!
 		if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
-			const int chunkidx = chunks::chunk_id_by_world_pos(pos.x, pos.y, pos.z);
+			const auto chunkidx = chunks::chunk_id_by_world_pos(pos.x, pos.y, pos.z);
 			if (visible_chunk_set.find(chunkidx) != visible_chunk_set.end()) {
 				const auto inner_x = static_cast<float>(pos.x);
 				const auto inner_y = static_cast<float>(pos.z);
 				const auto inner_z = static_cast<float>(pos.y);
-				const auto rotation = (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f;
+
+				const auto is_upright = !is_lying_down(e);
+
+				const auto rotation = is_upright ? (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f : 1.5707963267948966192313216916398f;
+				const auto rot1 = is_upright ? 0.0f : 1.0f;
+				const auto rot2 = is_upright ? 1.0f : 0.0f;
+				const auto rot3 = 0.0f;
 
 				// Clip check passed - add the model
-				add_voxel_model(49, inner_x, inner_y, inner_z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
+				add_voxel_model(49, inner_x, inner_y, inner_z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b, rotation, rot1, rot2, rot3);
 
 				// Add hair
 				int hair_vox;
@@ -175,14 +192,14 @@ namespace render {
 				default: hair_vox = 0;
 				}
 				if (hair_vox > 0) {
-					add_voxel_model(hair_vox, inner_x, inner_y, inner_z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b, rotation, 0.0f, 1.0f, 0.0f);
+					add_voxel_model(hair_vox, inner_x, inner_y, inner_z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b, rotation, rot1, rot2, rot3);
 				}
 
 				// Add items
 				using namespace bengine;
-				each<item_t, item_carried_t>([&pos, &e, &inner_x, &inner_y, &inner_z, &rotation](entity_t &E, item_t &item, item_carried_t &carried) {
+				each<item_t, item_carried_t>([&pos, &e, &inner_x, &inner_y, &inner_z, &rotation, &rot1, &rot2, &rot3](entity_t &E, item_t &item, item_carried_t &carried) {
 					if (carried.carried_by == e.id && item.clothing_layer > 0) {
-						add_voxel_model(item.clothing_layer, inner_x, inner_y, inner_z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, 0.0f, 1.0f, 0.0f);
+						add_voxel_model(item.clothing_layer, inner_x, inner_y, inner_z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, rot1, rot2, rot3);
 					}
 				});
 			}
