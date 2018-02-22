@@ -12,4 +12,3 @@ struct navigation_path_t
 };
 
 std::shared_ptr<navigation_path_t> find_path(const position_t &start, const position_t &end, const bool find_adjacent = false, const std::size_t civ = 0) noexcept;
-void invalidate_path_cache() noexcept;

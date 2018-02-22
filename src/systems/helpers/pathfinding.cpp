@@ -12,8 +12,6 @@ namespace impl {
 
 	constexpr float MAX_DIRECT_PATH_CHECK = 24.0f;
 
-	std::map<int, std::map<int, navigation_path_t>> cached_paths;
-
 	struct node_t
 	{
 		int idx = 0;
@@ -37,6 +35,10 @@ namespace impl {
 			end_x_ = end_pos.x;
 			end_y_ = end_pos.y;
 			end_z_ = end_pos.z;
+			open_list_.reserve(500);
+			closed_list_.reserve(300);
+			parents_.reserve(600);
+
 			open_list_.emplace_back(node_t{ start_, 0.0f, 0.0f, 0.0f });
 		}
 
@@ -164,6 +166,12 @@ namespace impl {
 			}
 			result->success = false;
 		BAILOUT:
+			/*
+			std::cout << "Usage stats from completed search:\n";
+			std::cout << "Open list size: " << open_list_.size() << "\n";
+			std::cout << "Closed list size: " << closed_list_.size() << "\n";
+			std::cout << "Parents size: " << parents_.size() << "\n";
+			*/
 			return result;
 		}
 
@@ -173,7 +181,7 @@ namespace impl {
 		int end_x_, end_y_, end_z_;
 		std::vector<node_t> open_list_;
 		boost::container::flat_map<int, float> closed_list_;
-		std::map<int, int> parents_;
+		boost::container::flat_map<int, int> parents_;
 		position_t end_loc_;
 	};
 
@@ -202,50 +210,20 @@ namespace impl {
 		return result;
 	}
 	
-	static void cache_path(const int &start_idx, const int &end_idx, navigation_path_t path) noexcept
-	{
-		const auto finder = cached_paths.find(start_idx);
-		if (finder == cached_paths.end())
-		{
-			cached_paths.insert(std::make_pair(start_idx, std::map<int, navigation_path_t>{ {end_idx, path}}));
-		}
-		else
-		{
-			finder->second.insert(std::make_pair(end_idx, path));
-		}
-	}
-
 	static std::shared_ptr<navigation_path_t> find_path(const position_t &start, const position_t &end) noexcept
 	{
-		// Step 1 - return a cached path if we have one
-		const auto start_idx = mapidx(start);
-		const auto end_idx = mapidx(end);
-		/*
-		const auto cache_finder = cached_paths.find(start_idx);
-		if (cache_finder != cached_paths.end())
-		{
-			const auto inner_cache_finder = cache_finder->second.find(end_idx);
-			if (inner_cache_finder != cache_finder->second.end())
-			{
-				return std::make_shared<navigation_path_t>(inner_cache_finder->second);
-			}
-		}
-		*/
-
 		// Step 2 - check for the simple straight line option on short, flat paths
 		const auto distance = bengine::distance3d(start.x, start.y, start.z, end.x, end.y, end.z);
 		if (distance < MAX_DIRECT_PATH_CHECK && start.z == end.z)
 		{
 			auto result = short_direct_line_optimization(start, end);
 			if (result->success) {
-				cache_path(start_idx, end_idx, *result);
 				return result;
 			}
 		}
 
 		// Step 3 - Try A*
 		auto result = a_star(start, end);
-		//if (result->success) cache_path(start_idx, end_idx, *result);
 		return result;
 	}
 
@@ -295,9 +273,4 @@ std::shared_ptr<navigation_path_t> find_path(const position_t &start, const posi
 		}
 	}
 	return result;
-}
-
-void invalidate_path_cache() noexcept
-{
-	impl::cached_paths.clear();
 }
