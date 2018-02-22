@@ -121,7 +121,7 @@ namespace vox {
 				x1, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
 				x1, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
 				x0, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+				x0, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
 
 				x0, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
 				x1, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
@@ -150,13 +150,14 @@ namespace vox {
 				x1, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x0, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x0, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-
+				
 				x0, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x1, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x1, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x1, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x0, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 				x0, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b
+				
 		});
 	}
 
