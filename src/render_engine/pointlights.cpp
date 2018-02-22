@@ -136,10 +136,9 @@ namespace render {
 		using namespace bengine;
 
 		if (first_run) {
-			// For now, we're turning off the sun.
 			const std::size_t id = std::numeric_limits<std::size_t>::max();
 			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
-			pointlights[id].light_col = glm::vec3{ 1.0f, 1.0f, 1.0f };
+			pointlights[id].light_col = glm::vec3{ 4.0f, 4.0f, 4.0f };
 			pointlights[id].radius = 512.0f;
 			pointlights[id].cycle_tick = id % config::game_config.shadow_divisor;
 			pointlights[id].make_mats();
