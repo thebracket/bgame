@@ -278,7 +278,7 @@ static std::string name_biome(planet_t &planet, bengine::random_number_generator
 	std::string noun;
 	const auto bt = get_biome_def(biome.type);
 	if (bt->nouns.empty()) {
-		glog(log_target::GAME, log_severity::WARNING, "No nouns defined for %s", bt->name);
+		glog(log_target::GAME, log_severity::WARNING, "No nouns defined for {0}", bt->name);
 	} else {
 		noun = bt->nouns[rng.roll_dice(1, bt->nouns.size())-1];
 	}

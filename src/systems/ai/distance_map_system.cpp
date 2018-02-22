@@ -10,6 +10,7 @@
 #include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
 #include "../../components/buildings/building.hpp"
+#include "../../global_assets/game_pause.hpp"
 
 namespace systems {
 	namespace distance_map {
@@ -24,7 +25,6 @@ namespace systems {
 		dijkstra_map reachable_from_cordex;
 		bool dijkstra_debug = false;
 
-		static bool huntables_dirty = true;
 		static bool butcherables_dirty = true;
 		static bool beds_dirty = true;
 		static bool settlers_dirty = true;
@@ -37,17 +37,12 @@ namespace systems {
 			//beds_dirty = true;
 		}
 
-		void refresh_hunting_map() {
-			huntables_dirty = true;
-		}
-
 		void refresh_butcherables_map() {
 			butcherables_dirty = true;
 		}
 
 		void refresh_all_distance_maps() {
 			//beds_dirty = true;
-			huntables_dirty = true;
 			butcherables_dirty = true;
 			cordex_dirty = true;
 		}
@@ -57,9 +52,7 @@ namespace systems {
 			each<grazer_ai, position_t>([&huntables](entity_t &e, grazer_ai &ai, position_t &pos) {
 				huntables.emplace_back(std::make_tuple( mapidx(pos), mapidx(pos)));
 			});
-			std::cout << "Found " << huntables.size() << " huntable targets\n";
 			hunting_map->fill_map(huntables);
-			std::cout << "There are " << hunting_map->targets.size() << " things to kill\n";
 		}
 
 		static void update_butcher_map() {
@@ -128,9 +121,8 @@ namespace systems {
 			if (!hunting_map) hunting_map = std::make_unique<flow_maps::map_t>();
 			if (!butcher_map) butcher_map = std::make_unique<flow_maps::map_t>();
 
-			if (huntables_dirty) {
+			if (slow_tick) {
 				update_hunting_map();
-				huntables_dirty = false;
 			}
 
 			if (butcherables_dirty) {

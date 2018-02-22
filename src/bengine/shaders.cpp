@@ -20,7 +20,7 @@ namespace bengine {
                 VertexShaderCode += "\n" + Line;
             VertexShaderStream.close();
         }else{
-            glog(log_target::LOADER, log_severity::ERROR, "Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+            glog(log_target::LOADER, log_severity::ERROR, "Impossible to open {0}. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
             getchar();
             return 0;
         }
@@ -83,7 +83,7 @@ namespace bengine {
         if ( InfoLogLength > 0 ){
             std::vector<char> ProgramErrorMessage(InfoLogLength+1);
             glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &ProgramErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &ProgramErrorMessage[0]);
         }
 
         glDetachShader(ProgramID, VertexShaderID);
@@ -92,7 +92,7 @@ namespace bengine {
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
 
-		glog(log_target::LOADER, log_severity::INFO, "Setup as shader # %d", ProgramID);
+		glog(log_target::LOADER, log_severity::INFO, "Setup as shader # {0}", ProgramID);
 
         return ProgramID;
     }
@@ -114,7 +114,7 @@ namespace bengine {
 			VertexShaderStream.close();
 		}
 		else {
-			glog(log_target::LOADER, log_severity::ERROR, "Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !", vertex_file_path);
+			glog(log_target::LOADER, log_severity::ERROR, "Impossible to open {0}. Are you in the right directory ? Don't forget to read the FAQ !", vertex_file_path);
 			getchar();
 			return 0;
 		}
@@ -155,7 +155,7 @@ namespace bengine {
 		if (InfoLogLength > 0) {
 			std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
 			glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &VertexShaderErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &VertexShaderErrorMessage[0]);
 		}
 
 
@@ -172,7 +172,7 @@ namespace bengine {
 		if (InfoLogLength > 0) {
 			std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
 			glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &FragmentShaderErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &FragmentShaderErrorMessage[0]);
 		}
 
 		// Compile Geometry Shader
@@ -187,7 +187,7 @@ namespace bengine {
 		if (InfoLogLength > 0) {
 			std::vector<char> GeoemetryShaderErrorMessage(InfoLogLength + 1);
 			glGetShaderInfoLog(GeometryShaderID, InfoLogLength, NULL, &GeoemetryShaderErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &GeoemetryShaderErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &GeoemetryShaderErrorMessage[0]);
 		}
 
 		// Link the program
@@ -204,7 +204,7 @@ namespace bengine {
 		if (InfoLogLength > 0) {
 			std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
 			glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-			glog(log_target::LOADER, log_severity::ERROR, "%s", &ProgramErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &ProgramErrorMessage[0]);
 		}
 
 
@@ -231,7 +231,7 @@ namespace bengine {
 
 	int base_shader_t::get_uniform(const std::string name) {
 		int result = glGetUniformLocation(shader_id, name.c_str());
-		glog(log_target::LOADER, log_severity::INFO, "Uniform [%s] assigned to shader %d, slot %d", name, shader_id, result);
+		glog(log_target::LOADER, log_severity::INFO, "Uniform [{0}] assigned to shader {1}, slot {2}", name, shader_id, result);
 		glCheckError();
 		return result;
 	}

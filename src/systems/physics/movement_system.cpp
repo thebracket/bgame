@@ -75,9 +75,9 @@ namespace systems {
 			wander_requests.process_all([](entity_wants_to_move_randomly_message msg) {
 				auto original = entity(msg.entity_id)->component<position_t>();
 
-				position_t pos = *original;
-				const int tile_index = mapidx(pos.x, pos.y, pos.z);
-				const int direction = rng.roll_dice(1, 6);
+				auto pos = *original;
+				const auto tile_index = mapidx(pos.x, pos.y, pos.z);
+				const auto direction = rng.roll_dice(1, 10);
 				switch (direction) {
 				case 1: if (flag(tile_index, CAN_GO_UP)) pos.z++; break;
 				case 2: if (flag(tile_index, CAN_GO_DOWN)) pos.z--; break;
@@ -85,6 +85,10 @@ namespace systems {
 				case 4: if (flag(tile_index, CAN_GO_SOUTH)) pos.y++; break;
 				case 5: if (flag(tile_index, CAN_GO_EAST)) pos.x++; break;
 				case 6: if (flag(tile_index, CAN_GO_WEST)) pos.x--; break;
+				case 7: if (flag(tile_index, CAN_GO_NORTH_EAST)) { pos.y--; pos.x++; } break;
+				case 8: if (flag(tile_index, CAN_GO_NORTH_WEST)) { pos.y--; pos.x--; } break;
+				case 9: if (flag(tile_index, CAN_GO_SOUTH_EAST)) { pos.y++; pos.x--; } break;
+				case 10: if (flag(tile_index, CAN_GO_SOUTH_WEST)) { pos.y++; pos.x++; } break;
 				}
 				if (!flag(tile_index, SOLID)) {
 					bool can_go = true;
@@ -103,17 +107,17 @@ namespace systems {
 			using namespace region;
 			move_requests.process_all([](entity_wants_to_move_message msg) {
 				if (!entity(msg.entity_id)) {
-					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity %d, but entity does not exist!", msg.entity_id);
+					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity {0}, but entity does not exist!", msg.entity_id);
 					return;
 				}
 				auto epos = entity(msg.entity_id)->component<position_t>();
 				if (!epos) {
-					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity %d, but entity does not have a position!", msg.entity_id);
+					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity {0}, but entity does not have a position!", msg.entity_id);
 					return;
 				}
 				position_t origin{ epos->x, epos->y, epos->z };
 				if (origin == msg.destination) {
-					glog(log_target::GAME, log_severity::WARNING, "Oops - Moving to same tile, entity %d", msg.entity_id);
+					glog(log_target::GAME, log_severity::WARNING, "Oops - Moving to same tile, entity {0}", msg.entity_id);
 					return;
 				}
 

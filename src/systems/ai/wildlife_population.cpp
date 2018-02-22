@@ -120,7 +120,6 @@ namespace systems {
 							//std::cout << "Spawning " << critter_tag << " on edge " << edge << "\n";
 							call_home("Spawn", "Creature", critter_tag);
 						}
-						distance_map::refresh_hunting_map();
 					}
 				}
 			}

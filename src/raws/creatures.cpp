@@ -15,14 +15,14 @@ void sanity_check_creatures() noexcept
 {
     for (auto s = creature_defs.begin(); s!=creature_defs.end(); ++s) {
         if (s->first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no tag.");
-        if (s->second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no name: %s", s->second.tag);
-        if (s->second.male_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no male name: %s", s->second.tag);
-        if (s->second.female_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no female name: %s", s->second.tag);
-        if (s->second.collective_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no collective name: %s", s->second.tag);
-        if (s->second.body_parts.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no body parts: %s", s->second.tag);
-        if (s->second.attacks.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no attacks: %s", s->second.tag);
+        if (s->second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no name: {0}", s->second.tag);
+        if (s->second.male_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no male name: {0}", s->second.tag);
+        if (s->second.female_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no female name: {0}", s->second.tag);
+        if (s->second.collective_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no collective name: {0}", s->second.tag);
+        if (s->second.body_parts.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no body parts: {0}", s->second.tag);
+        if (s->second.attacks.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no attacks: {0}", s->second.tag);
         for (const auto &a : s->second.attacks) {
-            if (a.type.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species attack with no name: %s", s->second.tag);
+            if (a.type.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species attack with no name: {0}", s->second.tag);
         }
     }
 }

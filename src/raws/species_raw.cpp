@@ -43,12 +43,12 @@ void sanity_check_species() noexcept
 {
 	for (auto &s : species_defs) {
         if (s.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no tag.");
-        if (s.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no name: %s", s.second.tag);
-        if (s.second.male_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no male name: %s",s.second.tag);
-        if (s.second.female_name.empty())glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no female name: %s", s.second.tag);
-        if (s.second.collective_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no collective name: %s", s.second.tag);
-        if (s.second.stat_mods.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no stat modifiers: %s", s.second.tag);
-        if (s.second.body_parts.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no body parts: %s", s.second.tag);
+        if (s.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no name: {0}", s.second.tag);
+        if (s.second.male_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no male name: {0}",s.second.tag);
+        if (s.second.female_name.empty())glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no female name: {0}", s.second.tag);
+        if (s.second.collective_name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no collective name: {0}", s.second.tag);
+        if (s.second.stat_mods.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species has no stat modifiers: {0}", s.second.tag);
+        if (s.second.body_parts.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Species with no body parts: {0}", s.second.tag);
     }
 }
 

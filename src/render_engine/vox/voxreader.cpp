@@ -254,7 +254,7 @@ namespace vox {
     std::size_t model_index(const std::string tag) {
         auto finder = voxel_index.find(tag);
         if (finder == voxel_index.end()) {
-			glog(log_target::LOADER, log_severity::ERROR, "Model not found: %s", tag);
+			glog(log_target::LOADER, log_severity::ERROR, "Model not found: {0}", tag);
             return 0;
         } else {
             return finder->second;

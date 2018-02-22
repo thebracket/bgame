@@ -38,7 +38,6 @@ namespace systems {
 			}
 			else {
 				request_random_move(e.id);
-				distance_map::refresh_hunting_map();
 			}
 
 			const int poop_chance = rng.roll_dice(1, 100);

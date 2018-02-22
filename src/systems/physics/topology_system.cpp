@@ -130,7 +130,7 @@ namespace systems {
 				}
 			}
 			else {
-				glog(log_target::GAME, log_severity::WARNING, "Topology system - don't know how to spawn a [%s]", tag);
+				glog(log_target::GAME, log_severity::WARNING, "Topology system - don't know how to spawn a [{0}]", tag);
 			}
 		}
 

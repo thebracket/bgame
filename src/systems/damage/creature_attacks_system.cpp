@@ -36,7 +36,7 @@ namespace systems {
 				}
 				auto creaturefinder = get_creature_def(attack_species->tag);
 				if (!creaturefinder) {
-					glog(log_target::GAME, log_severity::WARNING, "Unable to find creature: %s", attack_species->tag);
+					glog(log_target::GAME, log_severity::WARNING, "Unable to find creature: {0}", attack_species->tag);
 					return;
 				}
 				auto creature = *creaturefinder;

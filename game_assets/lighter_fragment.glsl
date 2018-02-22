@@ -30,8 +30,8 @@ float shadow(vec3 fragToLight) {
     float shadow = 0.0;
     const float diskRadius = 0.2;
     const float bias = 0.25;
-    //const int samples = 20;
-    const int samples = 1;
+    const int samples = 20;
+    //const int samples = 1;
     float currentDepth = length(fragToLight);
     for(int i = 0; i < samples; ++i)
     {

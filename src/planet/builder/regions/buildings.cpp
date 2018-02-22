@@ -25,7 +25,7 @@ using namespace tile_flags;
 void add_building(std::string tag, const int x, const int y, const int z, const std::size_t &civ_owner) noexcept {
     auto building = get_building_def(tag);
     if (building == nullptr) {
-		glog(log_target::LOADER, log_severity::ERROR, "Warning: do not know how to build: %s", tag);
+		glog(log_target::LOADER, log_severity::ERROR, "Warning: do not know how to build: {0}", tag);
     }
 
     auto new_building = bengine::create_entity()
@@ -135,16 +135,16 @@ void add_construction(const int x, const int y, const int z, const std::string t
         //std::cout << "Door owner: " << civ_owner << "\n";
         add_building("door", x, y, z, civ_owner);
     } else {
-		glog(log_target::LOADER, log_severity::ERROR, "Don't know how to build a %s", type);
+		glog(log_target::LOADER, log_severity::ERROR, "Don't know how to build a {0}", type);
     }
 }
 
 void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
-	std::cout << crash_z << "\n";
+	//std::cout << crash_z << "\n";
 	int z = crash_z - 2;
-	std::cout << crash_z << "\n";
+	//std::cout << crash_z << "\n";
 	xp::rex_sprite ship("game_assets/rex/spaceship.xp");
-	std::cout << crash_z << "\n";
+	//std::cout << crash_z << "\n";
 	for (int layer = 0; layer<5; ++layer) {
         for (int Y=0; Y<ship.get_height(); ++Y) {
             for (int X=0; X<ship.get_width(); ++X) {
@@ -192,13 +192,13 @@ void build_escape_pod(const int crash_x, const int crash_y, const int crash_z) {
                             add_construction(x, y, z, "ship_lamp", false, 0);
                     } else {
 						if (output->glyph != 32)
-							glog(log_target::LOADER, log_severity::WARNING, "No handler for %d (%s)", (char)output->glyph, output->glyph);
+							glog(log_target::LOADER, log_severity::WARNING, "No handler for {0} ({1})", (char)output->glyph, output->glyph);
                     }
                 }
             }
         }
         ++z;
-		std::cout << z << "\n";
+		//std::cout << z << "\n";
     }
 }
 

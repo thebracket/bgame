@@ -58,7 +58,7 @@ static void create_sentient(planet_t &planet, bengine::random_number_generator &
         species.gender = MALE;
     }
     const auto species_finder = get_species_def(species_tag);
-    if (species_finder == nullptr) glog(log_target::GAME, log_severity::WARNING, "Unable to find info for %s", species_tag);
+    if (species_finder == nullptr) glog(log_target::GAME, log_severity::WARNING, "Unable to find info for {0}", species_tag);
     if (species_finder->render_composite) {
         // We need to define skin color, hair
         species.base_male_glyph = species_finder->base_male_glyph;
@@ -211,7 +211,7 @@ void create_sentient_unit(planet_t &planet, bengine::random_number_generator &rn
     auto civ_f = get_civ_def(species_tag);
     auto unit_f = civ_f->units.find(unit_tag);
     if (unit_f == civ_f->units.end()) {
-		glog(log_target::GAME, log_severity::ERROR, "Error loading unit: %s", unit_tag);
+		glog(log_target::GAME, log_severity::ERROR, "Error loading unit: {0}", unit_tag);
         return;
     }
 

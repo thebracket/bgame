@@ -242,7 +242,7 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
                         } else {
                             if (stats.skills[skill].skill_level < 3) {
                                 ++stats.skills[skill].skill_level;
-								glog(log_target::GAME, log_severity::INFO, "Raised skill in %s to %d", skill, +stats.skills[skill].skill_level);
+								glog(log_target::GAME, log_severity::INFO, "Raised skill in {0} to {1}", skill, +stats.skills[skill].skill_level);
                             }
                         }
                     }

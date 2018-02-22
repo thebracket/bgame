@@ -12,7 +12,7 @@ std::size_t get_plant_idx(const std::string &tag) noexcept
     if (finder != plant_defs_idx.end()) {
         return finder->second;
     } else {
-		glog(log_target::GAME, log_severity::WARNING, "WARNING: Cannot find plant - %s", tag);
+		glog(log_target::GAME, log_severity::WARNING, "WARNING: Cannot find plant - {0}", tag);
     }
     return 0;
 }

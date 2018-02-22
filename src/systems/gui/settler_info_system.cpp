@@ -211,7 +211,7 @@ namespace systems {
 					ImGui::Separator();
 				}
 				else {
-					glog(log_target::GAME, log_severity::WARNING, "Warning: %s life event not found", le.type);
+					glog(log_target::GAME, log_severity::WARNING, "Warning: {0} life event not found", le.type);
 				}
 			}
 		}

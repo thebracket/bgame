@@ -12,6 +12,7 @@
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/defs/material_def_t.hpp"
+#include "../../../components/farming/designated_hunter.hpp"
 
 namespace systems {
 	namespace ai_butcher {
@@ -31,6 +32,7 @@ namespace systems {
 
 		namespace jobs_board {
 			void evaluate_butchering(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
+				if (e.component<designated_hunter_t>() == nullptr) return; // Not a hunter
 				if (!butcher_exist()) return;
 				if (distance_map::butcher_map->targets.empty()) return; // Nothing to butcher
 				board.insert(std::make_pair(15, jt));
@@ -49,7 +51,7 @@ namespace systems {
 					// Cancel
 					b.current_path.reset();
 					work.cancel_work_tag(e);
-				}, [&b, &e]()
+				}, [&b]()
 				{
 					// Success
 					b.current_path.reset();

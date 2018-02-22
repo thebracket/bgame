@@ -132,12 +132,12 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
-		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
+		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag {0}", tag);
 	}
 
     const auto mat = get_material(material);
 	if (!mat) {
-		glog(log_target::GAME, log_severity::WARNING, "Unknown material tag %s", material);
+		glog(log_target::GAME, log_severity::WARNING, "Unknown material tag {0}", material);
 	}
 
     const auto entity = bengine::create_entity()
@@ -158,12 +158,12 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
-		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
+		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag {0}", tag);
 	}
 
     const auto mat = get_material(material);
 	if (!mat) {
-		glog(log_target::GAME, log_severity::WARNING, "Unknown material tag %s", material);
+		glog(log_target::GAME, log_severity::WARNING, "Unknown material tag {0}", material);
 	}
 
 	const auto entity = bengine::create_entity()
@@ -183,7 +183,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
-		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
+		glog(log_target::GAME, log_severity::WARNING, "Unknown item tag {0}", tag);
 	}
 
     const auto mat = get_material(material);
@@ -217,7 +217,7 @@ void spawn_item_carried(const std::size_t holder_id, const std::string &tag, con
 	} else {
 		auto finder = get_item_def(tag);
 		if (finder == nullptr) {
-			glog(log_target::GAME, log_severity::WARNING, "Unknown item tag %s", tag);
+			glog(log_target::GAME, log_severity::WARNING, "Unknown item tag {0}", tag);
 		}
 
 		const auto entity = bengine::create_entity()

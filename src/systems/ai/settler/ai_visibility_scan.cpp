@@ -85,9 +85,7 @@ namespace systems {
 				}
 			}
 
-			if ((other.component<grazer_ai>()) ||
-				(other.component<settler_ai_t>() && ai_visibility::ai->hostile) ||
-				hostile_sentient)
+			if ((other.component<grazer_ai>()) || (other.component<settler_ai_t>() && ai_visibility::ai->hostile) || hostile_sentient)
 			{
 				return true;
 			}
@@ -191,14 +189,12 @@ namespace systems {
 						if (health) {
 							if (!health->unconscious) {
 								creature_attacks::request_attack(creature_attacks::creature_attack_message{ e.id, hostile.closest_fear });
-								distance_map::refresh_hunting_map();
 								delete_component<ai_tag_my_turn_t>(e.id);
 							}
 						}
 					}
 					else {
 						systems::movement::request_flee(e.id, hostile.closest_fear);
-						distance_map::refresh_hunting_map();
 						delete_component<ai_tag_my_turn_t>(e.id);
 					}
 				}
@@ -233,7 +229,8 @@ namespace systems {
 				else if (settler) {
 					// Run away! Eventually, we want the option for combat here based on morale. Also, when hunting
 					// is implemented it's a good idea not to run away from your target.
-					const int range = weapons::shooting_range(e, pos);
+					const auto range = weapons::shooting_range(e, pos);
+					//std::cout << "Range: " << range << "\n";
 					if (hostile.terror_distance < 1.5F) {
 						// Hit it with melee weapon
 						settler_melee_attack::request_melee(settler_melee_attack::settler_attack_message{ e.id, hostile.closest_fear });

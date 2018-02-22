@@ -67,7 +67,7 @@ void planet_build_initial_civs(planet_t &planet, bengine::random_number_generato
             civ.leader_name = str_replace(civ.leader_name, "{FIRSTNAME_F}", to_proper_noun_case(string_table(FIRST_NAMES_FEMALE)->random_entry(rng)));
         }
         civ.origin = loc_name;
-		glog(log_target::GAME, log_severity::INFO, "Welcome: %s, lead by %s", civ.name, civ.leader_name);
+		glog(log_target::GAME, log_severity::INFO, "Welcome: {0}, lead by {1}", civ.name, civ.leader_name);
         civ.glyph = get_species_def(civ_finder->species_tag)->worldgen_glyph;
 
         // Appearance

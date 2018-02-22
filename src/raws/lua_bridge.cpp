@@ -28,7 +28,7 @@ void exit_lua() {
 void load_lua_script(const std::string filename) {
 	//std::cout << "Executing LUA: " << filename << "\n";
 	if (luaL_loadfile(lua_state, filename.c_str())  || lua_pcall(lua_state, 0, 0, 0) ) {
-		glog(log_target::LOADER, log_severity::ERROR, "Lua error (%s): %s", filename, lua_tostring(lua_state, -1));
+		glog(log_target::LOADER, log_severity::ERROR, "Lua error ({0}): {1}", filename, lua_tostring(lua_state, -1));
 	}
 }
 

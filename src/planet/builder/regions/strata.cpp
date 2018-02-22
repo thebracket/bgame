@@ -147,7 +147,7 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                         glog(log_target::GAME, log_severity::WARNING, "Warning - exceeded strata_material size");
                     }
                 } else {
-					glog(log_target::GAME, log_severity::WARNING, "Warning - exceeded strata_map size (%d)", strata.strata_map.size());
+					glog(log_target::GAME, log_severity::WARNING, "Warning - exceeded strata_map size ({0})", strata.strata_map.size());
                     material_idx = 1;
                 }
                 set_tile_material(mapidx(x,y,z), material_idx);

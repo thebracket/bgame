@@ -18,13 +18,13 @@ void sanity_check_professions() noexcept
     for (const auto &prof : starting_professions) {
         if (prof.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Profession with no name");
         for (const auto &cloth : prof.starting_clothes) {
-            if (std::get<0>(cloth) > 3) glog(log_target::LOADER, log_severity::WARNING, "WARNING: %s clothing item has invalid gender tag\n", prof.name);
+            if (std::get<0>(cloth) > 3) glog(log_target::LOADER, log_severity::WARNING, "WARNING: {0} clothing item has invalid gender tag\n", prof.name);
 			if (std::get<1>(cloth) != "head" && std::get<1>(cloth) != "torso" && std::get<1>(cloth) != "legs" && std::get<1>(cloth) != "shoes") {
-				glog(log_target::LOADER, log_severity::WARNING, "WARNING: %s has an invalid slot %s", prof.name, std::get<1>(cloth));
+				glog(log_target::LOADER, log_severity::WARNING, "WARNING: {0} has an invalid slot {1}", prof.name, std::get<1>(cloth));
 			}
             const auto finder = get_clothing_by_tag(std::get<2>(cloth));
 			if (!finder) {
-				glog(log_target::LOADER, log_severity::WARNING, "WARNING: %s has non-existent clothing type: %s", prof.name, std::get<2>(cloth));
+				glog(log_target::LOADER, log_severity::WARNING, "WARNING: {0} has non-existent clothing type: {1}", prof.name, std::get<2>(cloth));
 			}
         }
     }

@@ -256,7 +256,7 @@ namespace render {
 				glyph = 206;
 				break; // All
 			default: {
-				glog(log_target::GAME, log_severity::WARNING, "Wall calculator hit a case of %d", wall_mask);
+				glog(log_target::GAME, log_severity::WARNING, "Wall calculator hit a case of {0}", wall_mask);
 				glyph = 79;
 			}
 			}
@@ -269,7 +269,7 @@ namespace render {
 			// Add buildings
 			bengine::each<building_t, position_t>([](bengine::entity_t &e, building_t &b, position_t &pos) {
 				if (b.glyphs_ascii.empty()) {
-					glog(log_target::GAME, log_severity::WARNING, "Building [%s] is lacking ASCII render data.", b.tag);
+					glog(log_target::GAME, log_severity::WARNING, "Building [{0}] is lacking ASCII render data.", b.tag);
 					return;
 				}
 				int i = 0;
@@ -476,7 +476,7 @@ namespace render {
 					}
 
 					if (building_def->glyphs_ascii.empty()) {
-						glog(log_target::GAME, log_severity::WARNING, "Building [%s] has no ASCII data.", building_def->tag);
+						glog(log_target::GAME, log_severity::WARNING, "Building [{0}] has no ASCII data.", building_def->tag);
 					}
 					else {
 

@@ -22,11 +22,11 @@ void sanity_check_biomes() noexcept
 {
     for (const auto &b : biome_defs) {
         if (b.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty biome name");
-		if (b.occurs.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has no occurences! ", b.name);
+		if (b.occurs.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome {0} has no occurences! ", b.name);
         for (const auto &o : b.occurs) {
-            if (o <1 || o > 10)  glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has invalid occurences! ", b.name);
+            if (o <1 || o > 10)  glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome {0} has invalid occurences! ", b.name);
         }
-        if (b.plants.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has no plants! ", b.name);
+        if (b.plants.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome {0} has no plants! ", b.name);
         for (const auto &p : b.plants) {
             if (p.first == "none") break;
             /*auto finder = plant_defs_idx.find(p.first);
@@ -36,9 +36,9 @@ void sanity_check_biomes() noexcept
                 if (finder->second > plant_defs.size()) std::cout << "WARNING: Biome " << b.name << " has invalid plant: " << p.first << "\n";
             }*/
         }
-        if (b.wildlife.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome %s has no wildlife! ", b.name);
+        if (b.wildlife.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Biome {0} has no wildlife! ", b.name);
         for (const auto &w : b.wildlife) {
-			if (!get_creature_def(w)) glog(log_target::LOADER, log_severity::INFO, "WARNING: Biome %s has invalid wildlife %s", b.name, w);
+			if (!get_creature_def(w)) glog(log_target::LOADER, log_severity::INFO, "WARNING: Biome {0} has invalid wildlife {1}", b.name, w);
         }
     }
 }

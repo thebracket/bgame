@@ -20,7 +20,6 @@ namespace systems {
 		extern dijkstra::dijkstra_map reachable_from_cordex;
 
 		void refresh_bed_map();
-		void refresh_hunting_map();
 		void refresh_butcherables_map();
 		void refresh_all_distance_maps();
 	}
