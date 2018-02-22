@@ -28,8 +28,16 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
 		glog(log_target::LOADER, log_severity::ERROR, "Warning: do not know how to build: {0}", tag);
     }
 
+	int bx = x;
+	int by = y;
+	if (building->width == 3 && building->height ==3)
+	{
+		--bx;
+		--by;
+	}
+
     auto new_building = bengine::create_entity()
-        ->assign(position_t{x, y, z})
+        ->assign(position_t{bx, by, z})
         ->assign(building_t{ tag, building->width, building->height, building->glyphs,
                              building->glyphs_ascii, true, civ_owner, 10, 10, building->vox_model });
     //std::cout << tag << " : " << building->vox_model << "\n";
