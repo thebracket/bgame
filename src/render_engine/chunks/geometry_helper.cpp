@@ -163,12 +163,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Back side
-			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f, 
-			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f, 
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, 
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f, 
-			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f, 
-			x0, y0, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
+			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
+			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
+			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
+			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
 
 			// Front side
 			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, 
