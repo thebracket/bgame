@@ -38,6 +38,7 @@
 #include "ai/settler/ai_work_order.hpp"
 #include "ai/settler/ai_work_architect.hpp"
 #include "ai/settler/ai_work_hunt.hpp"
+#include "ai/settler/ai_work_butcher.hpp"
 #include "ai/settler/ai_idle_time.hpp"
 #include "ai/settler/ai_work_farm_clear.hpp"
 #include "ai/settler/ai_work_farm_plant.hpp"
@@ -162,6 +163,7 @@ namespace systems {
 	constexpr int AI_FARM_WATER = 75;
 	constexpr int AI_FARM_WEED = 76;
 	constexpr int ARCHITECTURE_SYSTEM = 77;
+	constexpr int AI_BUTCHER_SYSTEM = 78;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -262,6 +264,7 @@ namespace systems {
 		system_names[AI_FARM_WATER] = "Farm - Water";
 		system_names[AI_FARM_WEED] = "Farm - Weed";
 		system_names[ARCHITECTURE_SYSTEM] = "Architecture System";
+		system_names[AI_BUTCHER_SYSTEM] = "Butcher System";
 		game_master_mode = PLAY;
     }
 
@@ -340,6 +343,7 @@ namespace systems {
 			run_system(ai_workorder::run, duration_ms, AI_WORK_ORDER);
 			run_system(ai_architect::run, duration_ms, AI_WORK_ARCHITECT);
 			run_system(ai_hunt::run, duration_ms, AI_WORK_HUNT);
+			run_system(ai_butcher::run, duration_ms, AI_BUTCHER_SYSTEM);
 			run_system(ai_idle_time::run, duration_ms, AI_IDLE);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
 			run_system(triggers::run, duration_ms, TRIGGER_SYSTEM);
