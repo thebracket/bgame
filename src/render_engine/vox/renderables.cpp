@@ -47,7 +47,7 @@ namespace render {
 	static inline void add_voxel_model(const int &model, const float &x, const float &y, const float &z, const float &red, const float &green, const float &blue, const float angle=0.0f, const float x_rot=0.0f, const float y_rot=0.0f, const float z_rot=0.0f) {
 		auto finder = models_to_render->find(model);
 		if (finder != models_to_render->end()) {
-			finder->second.push_back(vox::instance_t{x, y, z, angle, x_rot, y_rot, z_rot, red, green, blue});
+			finder->second.push_back(vox::instance_t{x, y, z, x_rot, y_rot, z_rot, angle, red, green, blue});
 		}
 		else {
 			models_to_render->insert(std::make_pair(model, std::vector<vox::instance_t>{vox::instance_t{x, y, z, x_rot, y_rot, z_rot, angle, red, green, blue}}));

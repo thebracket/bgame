@@ -87,6 +87,11 @@ namespace region {
 		return current_region->tile_flags[idx].test(flag);
 	}
 
+	bengine::bitset<tile_flags::tile_flag_type> get_flag_reference(const int idx)
+	{
+		return current_region->tile_flags[idx];
+	}
+
     uint8_t tile_type(const int idx) {
         return current_region->tile_type[idx];
     }

@@ -1,7 +1,6 @@
 #include "distance_map_system.hpp"
 #include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../global_assets/game_designations.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/corpse_harvestable.hpp"
 #include "../../components/buildings/construct_provides_sleep.hpp"
@@ -20,7 +19,7 @@ namespace systems {
 		std::unique_ptr<flow_maps::map_t> hunting_map;
 		std::unique_ptr<flow_maps::map_t> butcher_map;
 		std::unique_ptr<flow_maps::map_t> bed_map;
-		dijkstra_map settler_map;
+		std::unique_ptr<flow_maps::map_t> settler_map;
 		dijkstra_map levers_map;
 		dijkstra_map reachable_from_cordex;
 		bool dijkstra_debug = false;
@@ -34,7 +33,7 @@ namespace systems {
 		using namespace bengine;
 
 		void refresh_bed_map() {
-			//beds_dirty = true;
+			beds_dirty = true;
 		}
 
 		void refresh_butcherables_map() {
@@ -42,7 +41,7 @@ namespace systems {
 		}
 
 		void refresh_all_distance_maps() {
-			//beds_dirty = true;
+			beds_dirty = true;
 			butcherables_dirty = true;
 			cordex_dirty = true;
 		}
@@ -72,11 +71,11 @@ namespace systems {
 		}
 
 		static void update_settler_map() {
-			std::vector<int> settlers;
+			std::vector<std::tuple<int, int>> settlers;
 			each<settler_ai_t, position_t>([&settlers](entity_t &e, settler_ai_t &settler, position_t &pos) {
-				settlers.emplace_back(mapidx(pos));
+				settlers.emplace_back(std::make_tuple(mapidx(pos), e.id));
 			});
-			settler_map.update(settlers);
+			settler_map->fill_map(settlers);
 		}
 
 		void update_levers_map() {
@@ -126,6 +125,7 @@ namespace systems {
 			if (!hunting_map) hunting_map = std::make_unique<flow_maps::map_t>();
 			if (!butcher_map) butcher_map = std::make_unique<flow_maps::map_t>();
 			if (!bed_map) bed_map = std::make_unique<flow_maps::map_t>();
+			if (!settler_map) settler_map = std::make_unique<flow_maps::map_t>();
 
 			if (cordex_dirty)
 			{
@@ -146,15 +146,15 @@ namespace systems {
 				beds_dirty = false;
 			}
 
-			if (settlers_dirty) {
+			if (settlers_dirty && slow_tick) {
 				update_settler_map();
 				settlers_dirty = false;
 			}
 
-			if (levers_dirty) {
-				update_levers_map();
-				levers_dirty = false;
-			}			
+			//if (levers_dirty) {
+			//	update_levers_map();
+			//	levers_dirty = false;
+			//}			
 		}
 	}
 }

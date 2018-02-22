@@ -52,11 +52,11 @@ namespace systems {
 		}
 
 		void idle_sentient(entity_t &e, ai_tag_my_turn_t &t, sentient_ai &sentient) {
-			auto mounted = e.component<riding_t>();
-			auto pos = e.component<position_t>();
+			const auto mounted = e.component<riding_t>();
+			const auto pos = e.component<position_t>();
 
 			if (mounted) {
-				auto mount = entity(mounted->riding);
+				const auto mount = entity(mounted->riding);
 				if (!mount) {
 					delete_component<riding_t>(e.id);
 				}
@@ -64,14 +64,14 @@ namespace systems {
 					auto mount_entity = entity(mounted->riding);
 					if (mount_entity) {
 						std::string cname = "";
-						auto name = mount_entity->component<name_t>();
+						const auto name = mount_entity->component<name_t>();
 						if (name) cname = name->first_name + std::string(" ") + name->last_name;
 						spawn_item_on_ground(pos->x, pos->y, pos->z, "dung", get_material_by_tag("organic"), 3, 100, e.id, cname);
 					}
 				}
 			}
 
-			int feelings = planet.civs.civs[sentient.civ_id].cordex_feelings;
+			const auto feelings = planet.civs.civs[sentient.civ_id].cordex_feelings;
 
 			if (sentient.hostile || feelings < 0) {
 				sentient.goal = SENTIENT_GOAL_KILL;
@@ -87,8 +87,8 @@ namespace systems {
 				//std::cout << "Sentient kill mode\n";
 				// Close for the kill!
 				const auto idx = mapidx(*pos);
-				if (settler_map.get(idx) < MAX_DIJSTRA_DISTANCE - 1) {
-					const auto destination = settler_map.find_destination(*pos);
+				if (reachable_from_cordex.get(idx) < MAX_DIJSTRA_DISTANCE - 1) {
+					const auto destination = reachable_from_cordex.find_destination(*pos);
 					move_to(e, *pos, destination);
 					render::models_changed = true;
 				}

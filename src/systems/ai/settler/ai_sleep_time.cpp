@@ -67,7 +67,7 @@ namespace systems {
 						sleep.is_sleeping = true;
 
 						// Find the bed and claim it
-						each<construct_provides_sleep_t, position_t>([&e, &pos](entity_t &BED, construct_provides_sleep_t &sleep, position_t &bpos) {
+						each<construct_provides_sleep_t, position_t>([&e, &pos](entity_t &BED, construct_provides_sleep_t &SLEEP, position_t &bpos) {
 							if (pos == bpos) {
 								BED.assign(claimed_t{ e.id });
 								distance_map::refresh_bed_map();

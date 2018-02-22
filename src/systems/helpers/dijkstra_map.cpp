@@ -21,9 +21,9 @@ namespace systems {
 		inline void dm_add_candidate(std::stack<std::pair<int, int>> &open_nodes, const int &x, const int &y, const int &z, const int &distance) {
 			using namespace region;
 			const auto idx = mapidx(x, y, z);
-			if (water_level(idx) == 0) {
+			//if (water_level(idx) == 0) {
 				open_nodes.push(std::make_pair(idx, distance));
-			}
+			//}
 		}
 
 		void dijkstra_map::update(const std::vector<int> &starting_points) {
@@ -47,36 +47,38 @@ namespace systems {
 
 					auto [x,y,z] = idxmap(open_node.first);
 
-					if (x < REGION_WIDTH - 1 && flag(open_node.first, CAN_GO_EAST)) {
+					const auto flags = get_flag_reference(open_node.first);
+
+					if (x < REGION_WIDTH - 1 && flags.test(CAN_GO_EAST)) {
 						dm_add_candidate(open_nodes, x + 1, y, z, open_node.second + 1);
 					}
-					if (x > 0 && flag(open_node.first, CAN_GO_WEST)) {
+					if (x > 0 && flags.test(CAN_GO_WEST)) {
 						dm_add_candidate(open_nodes, x - 1, y, z, open_node.second + 1);
 					}
-					if (y < REGION_HEIGHT - 1 && flag(open_node.first, CAN_GO_SOUTH)) {
+					if (y < REGION_HEIGHT - 1 && flags.test(CAN_GO_SOUTH)) {
 						dm_add_candidate(open_nodes, x, y + 1, z, open_node.second + 1);
 					}
-					if (y > 0 && flag(open_node.first, CAN_GO_NORTH)) {
+					if (y > 0 && flags.test(CAN_GO_NORTH)) {
 						dm_add_candidate(open_nodes, x, y - 1, z, open_node.second + 1);
 					}
-					if (z > 0 && flag(open_node.first, CAN_GO_DOWN)) {
+					if (z > 0 && flags.test(CAN_GO_DOWN)) {
 						dm_add_candidate(open_nodes, x, y, z - 1, open_node.second + 1);
 					}
-					if (z < REGION_DEPTH - 1 && flag(open_node.first, CAN_GO_UP)) {
+					if (z < REGION_DEPTH - 1 && flags.test(CAN_GO_UP)) {
 						dm_add_candidate(open_nodes, x, y, z + 1, open_node.second + 1);
 					}
-					if (x < REGION_WIDTH - 1 && y > 0 && flag(open_node.first, CAN_GO_NORTH_EAST)) {
+					/*if (x < REGION_WIDTH - 1 && y > 0 && flags.test(CAN_GO_NORTH_EAST)) {
 						dm_add_candidate(open_nodes, x + 1, y - 1, z, open_node.second + 1);
 					}
-					if (x < REGION_WIDTH - 1 && y < REGION_HEIGHT-1 && flag(open_node.first, CAN_GO_SOUTH_EAST)) {
+					if (x < REGION_WIDTH - 1 && y < REGION_HEIGHT-1 && flags.test(CAN_GO_SOUTH_EAST)) {
 						dm_add_candidate(open_nodes, x + 1, y + 1, z, open_node.second + 1);
 					}
-					if (x > 0 && y > 0 && flag(open_node.first, CAN_GO_NORTH_WEST)) {
+					if (x > 0 && y > 0 && flags.test(CAN_GO_NORTH_WEST)) {
 						dm_add_candidate(open_nodes, x - 1, y - 1, z, open_node.second + 1);
 					}
-					if (x > 0 && y < REGION_HEIGHT-1 && flag(open_node.first, CAN_GO_SOUTH_WEST)) {
+					if (x > 0 && y < REGION_HEIGHT-1 && flags.test(CAN_GO_SOUTH_WEST)) {
 						dm_add_candidate(open_nodes, x - 1, y + 1, z, open_node.second + 1);
-					}
+					}*/
 				}
 			}
 		}

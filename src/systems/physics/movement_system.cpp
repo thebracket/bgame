@@ -52,10 +52,6 @@ namespace systems {
 			move_requests.enqueue(entity_wants_to_move_message{ e.id, dest });
 		}
 
-		void request_move(entity_wants_to_move_message &msg) {
-			move_requests.enqueue(std::move(msg));
-		}
-
 		void request_flee(std::size_t id, std::size_t flee_from) {
 			flee_requests.enqueue(entity_wants_to_flee_message{id, flee_from});
 		}
@@ -73,32 +69,36 @@ namespace systems {
 			using namespace region;
 
 			wander_requests.process_all([](entity_wants_to_move_randomly_message msg) {
-				const auto original = entity(msg.entity_id)->component<position_t>();
+				const auto e = entity(msg.entity_id);
+				const auto original = e->component<position_t>();
 
-				auto pos = position_t(*original); // We want a copy
-				const auto tile_index = mapidx(pos.x, pos.y, pos.z);
+				auto dest = position_t{};
+				dest.x = original->x;
+				dest.y = original->y;
+				dest.z = original->z;
+
+				const auto tile_index = mapidx(dest.x, dest.y, dest.z);
 				const auto direction = rng.roll_dice(1, 10);
 				switch (direction) {
-				case 1: if (flag(tile_index, CAN_GO_UP)) pos.z++; break;
-				case 2: if (flag(tile_index, CAN_GO_DOWN)) pos.z--; break;
-				case 3: if (flag(tile_index, CAN_GO_NORTH)) pos.y--; break;
-				case 4: if (flag(tile_index, CAN_GO_SOUTH)) pos.y++; break;
-				case 5: if (flag(tile_index, CAN_GO_EAST)) pos.x++; break;
-				case 6: if (flag(tile_index, CAN_GO_WEST)) pos.x--; break;
-				case 7: if (flag(tile_index, CAN_GO_NORTH_EAST)) { pos.y--; pos.x++; } break;
-				case 8: if (flag(tile_index, CAN_GO_NORTH_WEST)) { pos.y--; pos.x--; } break;
-				case 9: if (flag(tile_index, CAN_GO_SOUTH_EAST)) { pos.y++; pos.x++; } break;
-				case 10: if (flag(tile_index, CAN_GO_SOUTH_WEST)) { pos.y++; pos.x--; } break;
+				case 1: if (flag(tile_index, CAN_GO_UP)) dest.z++; break;
+				case 2: if (flag(tile_index, CAN_GO_DOWN)) dest.z--; break;
+				case 3: if (flag(tile_index, CAN_GO_NORTH)) dest.y--; break;
+				case 4: if (flag(tile_index, CAN_GO_SOUTH)) dest.y++; break;
+				case 5: if (flag(tile_index, CAN_GO_EAST)) dest.x++; break;
+				case 6: if (flag(tile_index, CAN_GO_WEST)) dest.x--; break;
+				case 7: if (flag(tile_index, CAN_GO_NORTH_EAST)) { dest.y--; dest.x++; } break;
+				case 8: if (flag(tile_index, CAN_GO_NORTH_WEST)) { dest.y--; dest.x--; } break;
+				case 9: if (flag(tile_index, CAN_GO_SOUTH_EAST)) { dest.y++; dest.x++; } break;
+				case 10: if (flag(tile_index, CAN_GO_SOUTH_WEST)) { dest.y++; dest.x--; } break;
 				}
 
-				const auto dest = mapidx(pos);
-				if (flag(dest, CAN_STAND_HERE)) {
+				const auto destidx = mapidx(dest);
+				if (flag(destidx, CAN_STAND_HERE) && destidx != tile_index) {
 					auto can_go = true;
 
-					if (water_level(dest)>2 && water_level(tile_index)<3) can_go = false;
+					if (water_level(destidx)>2 && water_level(tile_index)<3) can_go = false;
 
-					entity_wants_to_move_message wander_msg{ msg.entity_id, pos };
-					if (can_go && !(pos == *original)) request_move(wander_msg);
+					if (can_go) move_to(*e, *original, dest);
 				}
 			});
 		}
