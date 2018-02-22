@@ -256,14 +256,21 @@ namespace chunks {
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
 
+		const glm::vec3 a(x1, y0 + ne, z1);
+		const glm::vec3 b(x1, y0 + se, z0);
+		const glm::vec3 c(x0, y0 + sw, z0);
+		const auto dir = glm::cross(b - a, c - a);
+		const auto normal = glm::normalize(dir);
+		//std::cout << normal.x << "," << normal.y << "," << normal.z << "\n";
+
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y0 + se, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0 + sw, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0 + nw, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y0 + ne, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f 
+			x1, y0 + ne, z1, TW, TH, TI,  normal.x, normal.y, normal.z,
+			x1, y0 + se, z0, TW, T0, TI,  normal.x, normal.y, normal.z,
+			x0, y0 + sw, z0, T0, T0, TI,  normal.x, normal.y, normal.z,
+			x0, y0 + sw, z0, T0, T0, TI,  normal.x, normal.y, normal.z,
+			x0, y0 + nw, z1, T0, TH, TI,  normal.x, normal.y, normal.z,
+			x1, y0 + ne, z1, TW, TH, TI,  normal.x, normal.y, normal.z
 		});
 		return 6;
 	}
