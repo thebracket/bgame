@@ -73,9 +73,9 @@ namespace systems {
 			using namespace region;
 
 			wander_requests.process_all([](entity_wants_to_move_randomly_message msg) {
-				auto original = entity(msg.entity_id)->component<position_t>();
+				const auto original = entity(msg.entity_id)->component<position_t>();
 
-				auto pos = *original;
+				auto pos = position_t(*original); // We want a copy
 				const auto tile_index = mapidx(pos.x, pos.y, pos.z);
 				const auto direction = rng.roll_dice(1, 10);
 				switch (direction) {
@@ -90,9 +90,10 @@ namespace systems {
 				case 9: if (flag(tile_index, CAN_GO_SOUTH_EAST)) { pos.y++; pos.x++; } break;
 				case 10: if (flag(tile_index, CAN_GO_SOUTH_WEST)) { pos.y++; pos.x--; } break;
 				}
-				if (!flag(tile_index, SOLID)) {
-					bool can_go = true;
-					const int dest = mapidx(pos);
+
+				const auto dest = mapidx(pos);
+				if (flag(dest, CAN_STAND_HERE)) {
+					auto can_go = true;
 
 					if (water_level(dest)>2 && water_level(tile_index)<3) can_go = false;
 
@@ -131,30 +132,46 @@ namespace systems {
 				auto slide = entity(msg.entity_id)->component<slidemove_t>();
 				auto initiative = entity(msg.entity_id)->component<initiative_t>();
 
-				const int dX = msg.destination.x - epos->x;
-				const int dY = msg.destination.y - epos->y;
-				const int dZ = msg.destination.z - epos->z;
-				if (dX > 0) {
+				const auto d_x = msg.destination.x - epos->x;
+				const auto d_y = msg.destination.y - epos->y;
+				const auto d_z = msg.destination.z - epos->z;
+				if (d_x > 0 && d_y > 0) {
+					// South-East
+					epos->rotation = 315;
+				}
+				else if (d_x > 0 && d_y < 0) {
+					// North-East
+					epos->rotation = 225;
+				}
+				else if (d_x < 0 && d_y < 0 ) {
+					// North-West
+					epos->rotation = 135;
+				}
+				else if (d_x < 0 && d_y > 0) {
+					// South-West
+					epos->rotation = 45;
+				}
+				else if (d_x > 0) {
 					// East
 					epos->rotation = 270;
 				}
-				else if (dX < 0) {
+				else if (d_x < 0) {
 					// West
 					epos->rotation = 90;
 				}
-				else if (dY < 0) {
+				else if (d_y < 0) {
 					// North
 					epos->rotation = 180;
 				}
-				else if (dY > 0) {
+				else if (d_y > 0) {
 					// South
 					epos->rotation = 0;
 				}
 
 				if (initiative) {
-					const float deltaX = (float)dX / (float)initiative->initiative;
-					const float deltaY = (float)dY / (float)initiative->initiative;
-					const float deltaZ = (float)dZ / (float)initiative->initiative;
+					const auto deltaX = (float)d_x / (float)initiative->initiative;
+					const auto deltaY = (float)d_y / (float)initiative->initiative;
+					const auto deltaZ = (float)d_z / (float)initiative->initiative;
 
 					if (!slide && initiative) {
 						entity(msg.entity_id)->assign(slidemove_t{ deltaX, deltaY, deltaZ, initiative->initiative });
@@ -171,9 +188,9 @@ namespace systems {
 				epos->x = msg.destination.x;
 				epos->y = msg.destination.y;
 				epos->z = msg.destination.z;
-				epos->offset_x = 0.0F - (float)dX;
-				epos->offset_y = 0.0F - (float)dY;
-				epos->offset_z = 0.0F - (float)dZ;
+				epos->offset_x = 0.0F - (float)d_x;
+				epos->offset_y = 0.0F - (float)d_y;
+				epos->offset_z = 0.0F - (float)d_z;
 
 				// Do vegetation damage
 				const auto idx = mapidx(msg.destination.x, msg.destination.y, msg.destination.z);
