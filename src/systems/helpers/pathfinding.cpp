@@ -40,7 +40,6 @@ namespace impl {
 			open_list_.emplace_back(node_t{ start_, 0.0f, 0.0f, 0.0f });
 		}
 
-
 		float distance_to_end(const int &idx) const
 		{
 			const auto[x, y, z] = idxmap(idx);
@@ -49,21 +48,15 @@ namespace impl {
 
 		bool add_successor(const node_t &q, const int &idx)
 		{
-			auto[x, y, z] = idxmap(idx);
-			auto[gx, gy, gz] = idxmap(end_);
-			std::cout << "Testing " << idx << " = " << x << "," << y << "," << z << "\n";
-			std::cout << "Goal remains: " << end_ << " = " << gx << "," << gy << "," << gz << "\n";
 			// Did we reach our goal?
 			if (idx == end_)
 			{
-				std::cout << "It's a goal!\n";
 				parents_.insert(std::make_pair(idx, q.idx));
 				return true;
 			} else
 			{
 				const auto distance = distance_to_end(idx);
 				const node_t s{ idx, distance+1.0f, 1.0f, distance };
-				std::cout << "Made a new node, " << idx << ", " << distance << "\n";
 
 				auto should_add = true;
 
@@ -89,13 +82,9 @@ namespace impl {
 				}
 
 				if (should_add) {
-					std::cout << "Adding\n";
 					open_list_.emplace_back(s);
 					//if (parents_.find(idx) != parents_.end()) parents_.erase(idx);
 					parents_.insert(std::make_pair(idx, q.idx));
-				} else
-				{
-					std::cout << "Not adding\n";
 				}
 			}
 			return false;
@@ -103,7 +92,6 @@ namespace impl {
 
 		navigation_path_t found_it(const int &idx) const noexcept
 		{
-			std::cout << "Goal at " << idx << "\n";
 			auto result = navigation_path_t{};
 			result.success = true;
 			result.destination = end_loc_;
@@ -113,11 +101,9 @@ namespace impl {
 			while (current != start_)
 			{
 				const auto parent = parents_.find(current)->second;
-				std::cout << "Parent is " << parent << "\n";
 				auto[x, y, z] = idxmap(parent);
 				result.steps.push_front(position_t{x,y,z});
 				current = parent;
-				std::cout << "STEP: " << x << "," << y << "," << z << "\n";
 			}
 
 			return result;
@@ -132,49 +118,39 @@ namespace impl {
 				// Pop Q off of the list
 				const auto q = open_list_.front();
 				open_list_.erase(open_list_.begin());
-				std::cout << "Popped a Q! Distance metric is " << q.f << " / " << q.h << "\n";
 				auto[x, y, z] = idxmap(q.idx);
-				std::cout << "We're considering how to leave " << x << "," << y << "," << z << "\n";
 
 				// Generate successors
 				std::vector<int> successors;
 				if (region::flag(q.idx, tile_flags::CAN_GO_NORTH)) {
-					std::cout << "N-";
 					successors.emplace_back(mapidx(x, y - 1, z));
 				}
 				if (region::flag(q.idx, tile_flags::CAN_GO_SOUTH)) {
-					std::cout << "S-";
 					successors.emplace_back(mapidx(x, y + 1, z));
 				}
 				if (region::flag(q.idx, tile_flags::CAN_GO_WEST)) {
-					std::cout << "W-";
 					successors.emplace_back(mapidx(x - 1, y, z));
 				}
 				if (region::flag(q.idx, tile_flags::CAN_GO_EAST)) {
-					std::cout << "E-";
 					successors.emplace_back(mapidx(x + 1, y, z));
 				}
 				if (region::flag(q.idx, tile_flags::CAN_GO_UP)) {
-					std::cout << "U-";
 					successors.emplace_back(mapidx(x, y, z + 1));
 				}
 				if (region::flag(q.idx, tile_flags::CAN_GO_DOWN)) {
-					std::cout << "D-";
 					successors.emplace_back(mapidx(x, y, z - 1));
 				}
 				if (region::flag(q.idx, tile_flags::CAN_GO_NORTH_EAST)) successors.emplace_back(mapidx(x + 1, y - 1, z));
 				if (region::flag(q.idx, tile_flags::CAN_GO_NORTH_WEST)) successors.emplace_back(mapidx(x - 1, y - 1, z));
 				if (region::flag(q.idx, tile_flags::CAN_GO_SOUTH_EAST)) successors.emplace_back(mapidx(x + 1, y + 1, z));
 				if (region::flag(q.idx, tile_flags::CAN_GO_SOUTH_WEST)) successors.emplace_back(mapidx(x - 1, y + 1, z));
-				std::cout << "\n";
 
 				for (const auto &s : successors)
 				{
 					if (add_successor(q, s))
 					{
 						// We found it!
-						auto success = found_it(s);
-						std::cout << "Steps: " << success.steps.size() << "\n";
+						const auto success = found_it(s);
 						result->success = success.success;
 						result->steps = success.steps;
 						result->destination = success.destination;
@@ -210,13 +186,12 @@ namespace impl {
 	static std::shared_ptr<navigation_path_t> short_direct_line_optimization(const position_t &start, const position_t &end) noexcept
 	{
 		auto result = std::make_shared<navigation_path_t>();
-
 		auto blocked = false;
 		std::set<int> seen_nodes;
 		bengine::line_func(start.x, start.y, end.x, end.y, [&blocked, &start, &result, &seen_nodes](const int &x, const int &y)
 		{
 			const auto idx = mapidx(x, y, start.z);
-			if (seen_nodes.find(idx) != seen_nodes.end()) {
+			if (seen_nodes.find(idx) == seen_nodes.end()) {
 				result->steps.emplace_back(position_t{ x, y, start.z });
 				seen_nodes.insert(idx);
 			}
@@ -226,7 +201,7 @@ namespace impl {
 
 		return result;
 	}
-
+	
 	static void cache_path(const int &start_idx, const int &end_idx, navigation_path_t path) noexcept
 	{
 		const auto finder = cached_paths.find(start_idx);
@@ -255,6 +230,7 @@ namespace impl {
 				return std::make_shared<navigation_path_t>(inner_cache_finder->second);
 			}
 		}
+		*/
 
 		// Step 2 - check for the simple straight line option on short, flat paths
 		const auto distance = bengine::distance3d(start.x, start.y, start.z, end.x, end.y, end.z);
@@ -265,7 +241,7 @@ namespace impl {
 				cache_path(start_idx, end_idx, *result);
 				return result;
 			}
-		}*/
+		}
 
 		// Step 3 - Try A*
 		auto result = a_star(start, end);
@@ -284,6 +260,15 @@ std::shared_ptr<navigation_path_t> find_path(const position_t &start, const posi
 		auto fail = std::make_shared<navigation_path_t>();
 		fail->success = false;
 		return fail;
+	}
+
+	if (start == end)
+	{
+		auto stay = std::make_shared<navigation_path_t>();
+		stay->success = true;
+		stay->destination = end;
+		stay->steps.push_front(start);
+		return stay;
 	}
 
 	constexpr auto num_paths = 10;
