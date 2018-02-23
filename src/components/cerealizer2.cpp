@@ -243,9 +243,8 @@ void serialize(Archive & archive, sentient_ai &s)
 template<class Archive>
 void serialize(Archive & archive, settler_ai_t &s)
 {
-	/*archive(s.permitted_work, s.shift_id, s.job_type_major, s.job_type_minor, s.target_x,
+	archive(s.permitted_work, s.shift_id, s.job_type_major, s.job_type_minor, s.target_x,
 		s.target_y, s.target_z, s.target_id, s.current_tool);
-	*/
 }
 
 template<class Archive>

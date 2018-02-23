@@ -3,7 +3,6 @@
 #include "../../bengine/geometry.hpp"
 #include "targeted_flow_map.hpp"
 #include <array>
-#include <map>
 #include <queue>
 #include <boost/container/flat_map.hpp>
 #include <set>
@@ -132,28 +131,17 @@ namespace impl {
 
 				// Generate successors
 				std::vector<int> successors;
-				if (region::flag(q.idx, tile_flags::CAN_GO_NORTH)) {
-					successors.emplace_back(mapidx(x, y - 1, z));
-				}
-				if (region::flag(q.idx, tile_flags::CAN_GO_SOUTH)) {
-					successors.emplace_back(mapidx(x, y + 1, z));
-				}
-				if (region::flag(q.idx, tile_flags::CAN_GO_WEST)) {
-					successors.emplace_back(mapidx(x - 1, y, z));
-				}
-				if (region::flag(q.idx, tile_flags::CAN_GO_EAST)) {
-					successors.emplace_back(mapidx(x + 1, y, z));
-				}
-				if (region::flag(q.idx, tile_flags::CAN_GO_UP)) {
-					successors.emplace_back(mapidx(x, y, z + 1));
-				}
-				if (region::flag(q.idx, tile_flags::CAN_GO_DOWN)) {
-					successors.emplace_back(mapidx(x, y, z - 1));
-				}
-				if (region::flag(q.idx, tile_flags::CAN_GO_NORTH_EAST)) successors.emplace_back(mapidx(x + 1, y - 1, z));
-				if (region::flag(q.idx, tile_flags::CAN_GO_NORTH_WEST)) successors.emplace_back(mapidx(x - 1, y - 1, z));
-				if (region::flag(q.idx, tile_flags::CAN_GO_SOUTH_EAST)) successors.emplace_back(mapidx(x + 1, y + 1, z));
-				if (region::flag(q.idx, tile_flags::CAN_GO_SOUTH_WEST)) successors.emplace_back(mapidx(x - 1, y + 1, z));
+				const auto flags = region::get_flag_reference(q.idx);
+				if (flags.test(tile_flags::CAN_GO_NORTH)) successors.emplace_back(mapidx(x, y - 1, z));
+				if (flags.test(tile_flags::CAN_GO_SOUTH)) successors.emplace_back(mapidx(x, y + 1, z));
+				if (flags.test(tile_flags::CAN_GO_WEST)) successors.emplace_back(mapidx(x - 1, y, z));
+				if (flags.test(tile_flags::CAN_GO_EAST)) successors.emplace_back(mapidx(x + 1, y, z));
+				if (flags.test(tile_flags::CAN_GO_UP)) successors.emplace_back(mapidx(x, y, z + 1));
+				if (flags.test(tile_flags::CAN_GO_DOWN)) successors.emplace_back(mapidx(x, y, z - 1));
+				if (flags.test(tile_flags::CAN_GO_NORTH_EAST)) successors.emplace_back(mapidx(x + 1, y - 1, z));
+				if (flags.test(tile_flags::CAN_GO_NORTH_WEST)) successors.emplace_back(mapidx(x - 1, y - 1, z));
+				if (flags.test(tile_flags::CAN_GO_SOUTH_EAST)) successors.emplace_back(mapidx(x + 1, y + 1, z));
+				if (flags.test(tile_flags::CAN_GO_SOUTH_WEST)) successors.emplace_back(mapidx(x - 1, y + 1, z));
 
 				for (const auto &s : successors)
 				{
