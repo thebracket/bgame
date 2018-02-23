@@ -5,7 +5,8 @@ buildings = {
 		components = { { item="cordex_core", qty=1} },
 		skill = { name="Construction", difficulty=25 },
 		render_rex = "cordex.xp",
-        vox=voxelId("cordex")
+        vox=voxelId("cordex"),
+        blocked="-X-XXX-X-"
 	},
 	lamp = {
 		name = "Lamp",

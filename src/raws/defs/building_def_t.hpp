@@ -29,4 +29,5 @@ struct building_def_t {
     bool emits_smoke = false;
     bool structure = false;
     int vox_model = 0;
+	std::string blocked = "";
 };

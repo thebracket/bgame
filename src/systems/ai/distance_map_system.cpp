@@ -127,9 +127,10 @@ namespace systems {
 			if (!bed_map) bed_map = std::make_unique<flow_maps::map_t>();
 			if (!settler_map) settler_map = std::make_unique<flow_maps::map_t>();
 
-			if (cordex_dirty)
+			if (first_run)
 			{
 				update_cordex_map();
+				first_run = false;
 			}
 
 			if (slow_tick) {

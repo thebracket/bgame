@@ -7,7 +7,6 @@
 #include "../inventory_system.hpp"
 #include "../../../components/item_tags/item_digging_t.hpp"
 #include "../../../components/mining/designated_miner.hpp"
-#include "../../helpers/inventory_assistant.hpp"
 #include "templated_work_steps_t.hpp"
 #include "../architecture_system.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
