@@ -18,6 +18,7 @@
 #include "../../components/items/item_carried.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../../bengine/btabs.hpp"
+#include "../../bengine/main_window.hpp"
 
 namespace systems {
 	namespace units_ui {
@@ -31,6 +32,7 @@ namespace systems {
 		const static std::string btn_goto_native = std::string(ICON_FA_MAP_MARKER) + " Go To NPC";
 		const static std::string btn_rogue = std::string(ICON_FA_USER) + " Control";
 		const static std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
+		static bool show_window = true;
 
 		int selected_settler = 0;
 		int current_settler = 0;
@@ -41,7 +43,6 @@ namespace systems {
 			using namespace bengine;
 
 			ImGui::Columns(5, "settler_list_grid");
-			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ), "%s", "Settler Name"); ImGui::NextColumn();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Profession"); ImGui::NextColumn();
@@ -81,7 +82,7 @@ namespace systems {
 				ImGui::NextColumn();
 
 				const std::string btn_view = std::string(ICON_FA_SEARCH_PLUS) + " Go To##" + std::to_string(e.id);
-				if (ImGui::Button(btn_view.c_str())) {
+				if (ImGui::SmallButton(btn_view.c_str())) {
 					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
 					camera_position->region_y = pos->y;
@@ -93,7 +94,7 @@ namespace systems {
 
 				ImGui::SameLine();
 				const std::string btn_roguemode = btn_rogue + std::string("##") + std::to_string(e.id);
-				if (ImGui::Button(btn_roguemode.c_str())) {
+				if (ImGui::SmallButton(btn_roguemode.c_str())) {
 					auto pos = e.component<position_t>();
 					if (pos) {
 						camera_position->region_x = pos->x;
@@ -111,15 +112,16 @@ namespace systems {
 
 				ImGui::SameLine();
 				const std::string btn_viewmode = std::string(ICON_FA_USER_CIRCLE) + std::string(" View##") + std::to_string(e.id);
-				if (ImGui::Button(btn_viewmode.c_str())) {
+				if (ImGui::SmallButton(btn_viewmode.c_str())) {
 					game_master_mode = SETTLER;
 					selected_settler = e.id;
 				}
 
 				ImGui::SameLine();
 				const std::string btn_followmode = std::string(ICON_FA_VIDEO_CAMERA) + std::string(" Follow##") + std::to_string(e.id);
-				if (ImGui::Button(btn_followmode.c_str())) {
+				if (ImGui::SmallButton(btn_followmode.c_str())) {
 					camera->following = e.id;
+					game_master_mode = PLAY;
 				}
 
 				ImGui::NextColumn();
@@ -185,13 +187,12 @@ namespace systems {
 					game_master_mode = PLAY;
 					render::camera_moved = true;
 					render::models_changed = true;
+					show_window = false;
 				}
 				ImGui::NextColumn();
 				ImGui::Separator();
 			});
 		}
-
-		static bool show_window = true;
 
 		static bengine::btabs_t unit_tabs{
 			{
@@ -202,26 +203,8 @@ namespace systems {
 		};
 
 		void run(const double &duration_ms) {
-			ImGui::Begin(win_units.c_str(), &show_window, ImVec2{750.0f, 550.0f}, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
-
+			bengine::begin_info_window(win_units, &show_window);
 			bengine::render_btab_bar(unit_tabs);
-
-			/*
-
-			//ImGui::BeginTabBar("##Units#left_tab_bar");
-			//ImGui::DrawTabsBackground();
-			if (ImGui::Button(win_settler_list.c_str())) {
-				render_settlers();
-			}
-			if (ImGui::Button(win_wildlife_list.c_str())) {
-				render_creatures();
-			}
-			if (ImGui::Button(win_natives_list.c_str())) {
-				render_natives();
-			}
-			//ImGui::EndTabBar();
-			*/
-
 			ImGui::End();
 
 			if (!show_window) {
