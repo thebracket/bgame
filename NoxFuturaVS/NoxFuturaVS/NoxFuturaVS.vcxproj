@@ -421,6 +421,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp" />
     <ClInclude Include="..\..\src\bengine\analytics.hpp" />
+    <ClInclude Include="..\..\src\bengine\btabs.hpp" />
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />
     <ClInclude Include="..\..\src\bengine\color_t.hpp" />
     <ClInclude Include="..\..\src\bengine\ctpl.h" />

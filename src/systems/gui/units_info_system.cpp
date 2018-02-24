@@ -17,6 +17,7 @@
 #include "../../components/mining/designated_miner.hpp"
 #include "../../components/items/item_carried.hpp"
 #include "../ai/inventory_system.hpp"
+#include "../../bengine/btabs.hpp"
 
 namespace systems {
 	namespace units_ui {
@@ -79,7 +80,7 @@ namespace systems {
 				ImGui::Text("%s", task.c_str());
 				ImGui::NextColumn();
 
-				const std::string btn_view = std::string(ICON_FA_CAMERA) + " Go To##" + std::to_string(e.id);
+				const std::string btn_view = std::string(ICON_FA_SEARCH_PLUS) + " Go To##" + std::to_string(e.id);
 				if (ImGui::Button(btn_view.c_str())) {
 					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
@@ -116,7 +117,7 @@ namespace systems {
 				}
 
 				ImGui::SameLine();
-				const std::string btn_followmode = std::string(ICON_FA_USER_CIRCLE) + std::string(" Follow##") + std::to_string(e.id);
+				const std::string btn_followmode = std::string(ICON_FA_VIDEO_CAMERA) + std::string(" Follow##") + std::to_string(e.id);
 				if (ImGui::Button(btn_followmode.c_str())) {
 					camera->following = e.id;
 				}
@@ -190,13 +191,22 @@ namespace systems {
 			});
 		}
 
-		void run(const double &duration_ms) {
-			ImGui::Begin(win_units.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
+		static bool show_window = true;
 
-			ImGui::SameLine();
-			if (ImGui::Button(btn_close.c_str())) {
-				game_master_mode = PLAY;
-			}
+		static bengine::btabs_t unit_tabs{
+			{
+				bengine::btab_t{ win_settler_list, render_settlers},
+				bengine::btab_t{ win_wildlife_list, render_creatures },
+				bengine::btab_t{ win_natives_list, render_natives },
+			}, 0
+		};
+
+		void run(const double &duration_ms) {
+			ImGui::Begin(win_units.c_str(), &show_window, ImVec2{750.0f, 550.0f}, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+
+			bengine::render_btab_bar(unit_tabs);
+
+			/*
 
 			//ImGui::BeginTabBar("##Units#left_tab_bar");
 			//ImGui::DrawTabsBackground();
@@ -210,8 +220,15 @@ namespace systems {
 				render_natives();
 			}
 			//ImGui::EndTabBar();
+			*/
 
 			ImGui::End();
+
+			if (!show_window) {
+				game_master_mode = PLAY;
+				show_window = true;
+			}
+
 		}
 	}
 }

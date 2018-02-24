@@ -1817,6 +1817,9 @@
     <ClInclude Include="..\..\src\components\farming\designated_hunter.hpp">
       <Filter>Header Files\components\farming</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\bengine\btabs.hpp">
+      <Filter>Header Files\bengine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset.hpp">
