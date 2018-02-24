@@ -239,6 +239,7 @@ namespace systems {
 						}
 					}
 				}
+				distance_map::refresh_all_distance_maps();
 
 				// Remove the tree from the designations list
 				designations->chopping.erase(lj.target_tree);
