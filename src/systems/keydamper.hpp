@@ -1,9 +1,9 @@
 #pragma once
 
 namespace systems {
-	void register_keypress();
-	bool ready_for_keyboard_input();
-	void add_time(double ms);
-	bool ready_for_keyboard_input();
-	bool is_key_down(int key, bool damp=true);
+	void register_keypress() noexcept;
+	bool ready_for_keyboard_input() noexcept;
+	void add_time(double ms) noexcept;
+	bool ready_for_keyboard_input() noexcept;
+	bool is_key_down(const int key, const bool damp=true) noexcept;
 }

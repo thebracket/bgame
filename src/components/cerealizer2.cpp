@@ -97,7 +97,7 @@ void serialize(Archive & archive, calendar_t &c)
 template<class Archive>
 void serialize(Archive & archive, camera_options_t &c)
 {
-	archive(c.camera_mode, c.ascii_mode, c.zoom_level);
+	archive(c.camera_mode, c.ascii_mode, c.zoom_level, c.perspective);
 }
 
 template<class Archive>

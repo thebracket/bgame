@@ -22,15 +22,26 @@ namespace render
 	{
 		int screen_w, screen_h;
 		glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
-		camera_projection_matrix = glm::perspective(glm::radians(90.0f), (float)screen_w / (float)screen_h, 1.0f, 300.0f);
-
 		const auto camera_x = static_cast<float>(camera_position->region_x);
 		const auto camera_y = static_cast<float>(camera_position->region_y);
 		const auto camera_z = static_cast<float>(camera_position->region_z);
 		const auto camera_zoom = static_cast<float>(camera->zoom_level);
+		const auto aspect_ratio = static_cast<float>(screen_w) / static_cast<float>(screen_h);
+
+		if (camera->perspective)
+		{
+			camera_projection_matrix = glm::perspective(glm::radians(90.0f), aspect_ratio , 1.0f, 300.0f);
+		} else
+		{
+			const auto camera_zoom_x = static_cast<float>(camera->zoom_level);
+			const auto x_bounds = (- camera_zoom_x) * aspect_ratio;
+			const auto y_bounds = (camera_zoom_x);
+
+			camera_projection_matrix = glm::ortho(x_bounds, -x_bounds, -y_bounds, y_bounds, 1.0f, 300.0f);
+		}
 
 		const glm::vec3 up{0.0f, 1.0f, 0.0f};
-		const glm::vec3 target{camera_x, camera_z, (float)camera_position->region_y};
+		const glm::vec3 target{camera_x, camera_z, camera_y };
 		glm::vec3 camera_position_v;
 
 		switch (camera->camera_mode)

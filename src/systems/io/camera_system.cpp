@@ -9,6 +9,7 @@
 #include "../../render_engine/design_render.hpp"
 #include "../../bengine/analytics.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../bengine/main_window.hpp"
 
 namespace systems {
     namespace camerasys {
@@ -58,7 +59,12 @@ namespace systems {
 				render::mode_change = true;
             }
 
-            if (is_key_down(GLFW_KEY_TAB)) {
+			const auto pressed_control = glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
+			const auto pressed_shift = glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
+			const auto pressed_tab = glfwGetKey(bengine::main_window, GLFW_KEY_TAB) == GLFW_PRESS;
+
+            if (ready_for_keyboard_input() && pressed_tab && !pressed_control && !pressed_shift) {
+				register_keypress();
                 switch (camera->camera_mode) {
 				case game_camera_mode_t::DIAGONAL_LOOK_NW: {
 					camera->camera_mode = game_camera_mode_t::DIAGONAL_LOOK_NE;
@@ -89,11 +95,18 @@ namespace systems {
                 render::models_changed = true;
             }
 
-			if (is_key_down(GLFW_KEY_GRAVE_ACCENT)) {
+			if (ready_for_keyboard_input() && pressed_tab && pressed_shift && !pressed_control) {
+				register_keypress();
 				camera->ascii_mode = !camera->ascii_mode;
 				render::camera_moved = true;
 				render::models_changed = true;
 				bengine::analytics::on_event("game", "renderMode", camera->ascii_mode ? "ASCII" : "3D");
+			}
+			if (ready_for_keyboard_input() && pressed_tab && !pressed_shift && pressed_control) {
+				register_keypress();
+				camera->perspective = !camera->perspective;
+				render::camera_moved = true;
+				render::models_changed = true;
 			}
 
             if (is_key_down(GLFW_KEY_PAGE_UP, false) || wheel_up) {

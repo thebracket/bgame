@@ -17,24 +17,27 @@
 namespace systems {
     namespace hud {
 
-        const std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
-        const std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
-        const std::string menu_main_quit = std::string(ICON_FA_WINDOW_CLOSE) + " Save and Quit";
-        const std::string menu_design = std::string(ICON_FA_CUBES) + " Design";
-        const std::string menu_design_mining = std::string(ICON_FA_DIAMOND) + " Mining";
-        const std::string menu_design_building = std::string(ICON_FA_HOME) + " Building";
-        const std::string menu_design_tree_cutting = std::string(ICON_FA_TREE) + " Tree Cutting";
-        const std::string menu_design_guard = std::string(ICON_FA_USER_CIRCLE) + " Guard Posts";
-        const std::string menu_design_stockpiles = std::string(ICON_FA_AREA_CHART) + " Stockpiles";
-        const std::string menu_design_harvest = std::string(ICON_FA_SHOPPING_BASKET) + " Harvesting";
-        const std::string menu_design_architecture = std::string(ICON_FA_BUILDING) + " Architecture";
-        const std::string menu_units = std::string(ICON_FA_USERS) + " Units";
-        const std::string menu_units_units = std::string(ICON_FA_USERS) + " Units";
-		const std::string menu_units_jobcenter = std::string(ICON_FA_BRIEFCASE) + " Job Assignment";
-		const std::string menu_units_workflow = std::string(ICON_FA_WRENCH) + " Workflow Management";
-        const std::string menu_units_civs = std::string(ICON_FA_HOME) + " Other Civilizations";
-        const std::string menu_units_standing_orders = std::string(ICON_FA_LIST) + " Standing Orders";
-		const std::string menu_display = std::string(ICON_FA_CAMERA) + " Display";
+        const static std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
+        const static std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
+        const static std::string menu_main_quit = std::string(ICON_FA_WINDOW_CLOSE) + " Save and Quit";
+        const static std::string menu_design = std::string(ICON_FA_CUBES) + " Design";
+        const static std::string menu_design_mining = std::string(ICON_FA_DIAMOND) + " Mining";
+        const static std::string menu_design_building = std::string(ICON_FA_HOME) + " Building";
+        const static std::string menu_design_tree_cutting = std::string(ICON_FA_TREE) + " Tree Cutting";
+        const static std::string menu_design_guard = std::string(ICON_FA_USER_CIRCLE) + " Guard Posts";
+        const static std::string menu_design_stockpiles = std::string(ICON_FA_AREA_CHART) + " Stockpiles";
+        const static std::string menu_design_harvest = std::string(ICON_FA_SHOPPING_BASKET) + " Harvesting";
+        const static std::string menu_design_architecture = std::string(ICON_FA_BUILDING) + " Architecture";
+        const static std::string menu_units = std::string(ICON_FA_USERS) + " Units";
+        const static std::string menu_units_units = std::string(ICON_FA_USERS) + " Units";
+		const static std::string menu_units_jobcenter = std::string(ICON_FA_BRIEFCASE) + " Job Assignment";
+		const static std::string menu_units_workflow = std::string(ICON_FA_WRENCH) + " Workflow Management";
+        const static std::string menu_units_civs = std::string(ICON_FA_HOME) + " Other Civilizations";
+        const static std::string menu_units_standing_orders = std::string(ICON_FA_LIST) + " Standing Orders";
+		const static std::string menu_display = std::string(ICON_FA_CAMERA) + " Display";
+		const static std::string menu_camera_view = std::string(ICON_FA_VIDEO_CAMERA) + " Camera Mode (TAB)";
+		const static std::string menu_camera_perspective = std::string(ICON_FA_CUBE) + " Toggle Perspective (^TAB)";
+		const static std::string menu_camera_ascii = std::string(ICON_FA_FONT) + " Toggle ASCII Mode (Shift+TAB)";
 
 		static void change_camera_view(const game_camera_mode_t new_mode)
 		{
@@ -76,12 +79,20 @@ namespace systems {
                 }
                 if (ImGui::BeginMenu(menu_display.c_str())) {
 					if (!camera->ascii_mode) {
-						if (ImGui::MenuItem("Top-Down")) change_camera_view(game_camera_mode_t::TOP_DOWN);
-						if (ImGui::MenuItem("Front")) change_camera_view(game_camera_mode_t::FRONT);
-						if (ImGui::MenuItem("Diagonal - Look NW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NW);
-						if (ImGui::MenuItem("Diagonal - Look NE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NE);
-						if (ImGui::MenuItem("Diagonal - Look SW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SW);
-						if (ImGui::MenuItem("Diagonal - Look SE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SE);
+						if (ImGui::MenuItem(menu_camera_view.c_str())) {
+							if (ImGui::MenuItem("Top-Down")) change_camera_view(game_camera_mode_t::TOP_DOWN);
+							if (ImGui::MenuItem("Front")) change_camera_view(game_camera_mode_t::FRONT);
+							if (ImGui::MenuItem("Diagonal - Look NW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NW);
+							if (ImGui::MenuItem("Diagonal - Look NE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NE);
+							if (ImGui::MenuItem("Diagonal - Look SW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SW);
+							if (ImGui::MenuItem("Diagonal - Look SE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SE);
+						}
+						if (ImGui::MenuItem(menu_camera_perspective.c_str()))
+						{
+							camera->perspective = !camera->perspective;
+							render::camera_moved = true;
+							render::models_changed = true;
+						}
 					}
 					if (ImGui::MenuItem("Toggle ASCII")) {
                         camera->ascii_mode = !camera->ascii_mode;

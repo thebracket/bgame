@@ -10,5 +10,6 @@ struct camera_options_t {
     game_camera_mode_t camera_mode = game_camera_mode_t::TOP_DOWN;
     bool ascii_mode = false;
     int zoom_level = 12;
+	bool perspective = true;
 };
 
