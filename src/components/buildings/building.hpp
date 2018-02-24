@@ -22,7 +22,7 @@ struct building_t {
 	uint8_t hit_points=10;
     int vox_model = 0;
 
-	building_t() noexcept {}
+	building_t() = default;
 
 };
 

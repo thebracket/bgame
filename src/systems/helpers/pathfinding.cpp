@@ -45,7 +45,7 @@ namespace impl {
 		float distance_to_end(const int &idx) const
 		{
 			const auto[x, y, z] = idxmap(idx);
-			return bengine::distance3d(x, y, z*Z_WEIGHT, end_x_, end_y_, end_z_*Z_WEIGHT); // We're weighting zs because stairs tend to not be where you want them
+			return bengine::distance3d_squared(x, y, z*Z_WEIGHT, end_x_, end_y_, end_z_*Z_WEIGHT); // We're weighting zs because stairs tend to not be where you want them
 		}
 
 		bool add_successor(const node_t &q, const int &idx)
@@ -210,14 +210,14 @@ namespace impl {
 	static std::shared_ptr<navigation_path_t> find_path(const position_t &start, const position_t &end) noexcept
 	{
 		// Step 2 - check for the simple straight line option on short, flat paths
-		const auto distance = bengine::distance3d(start.x, start.y, start.z, end.x, end.y, end.z);
+		/*const auto distance = bengine::distance3d(start.x, start.y, start.z, end.x, end.y, end.z);
 		if (distance < MAX_DIRECT_PATH_CHECK && start.z == end.z)
 		{
 			auto result = short_direct_line_optimization(start, end);
 			if (result->success) {
 				return result;
 			}
-		}
+		}*/
 
 		// Step 3 - Try A*
 		auto result = a_star(start, end);

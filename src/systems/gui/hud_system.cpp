@@ -36,6 +36,23 @@ namespace systems {
         const std::string menu_units_standing_orders = std::string(ICON_FA_LIST) + " Standing Orders";
 		const std::string menu_display = std::string(ICON_FA_CAMERA) + " Display";
 
+		static void change_camera_view(const game_camera_mode_t new_mode)
+		{
+			camera->camera_mode = new_mode;
+			render::camera_moved = true;
+			render::models_changed = true;
+			switch (new_mode)
+			{
+			case game_camera_mode_t::TOP_DOWN: bengine::analytics::on_event("game", "camera_mode", "Top-Down"); break;
+			case game_camera_mode_t::FRONT: bengine::analytics::on_event("game", "camera_mode", "Front"); break;
+			case game_camera_mode_t::DIAGONAL_LOOK_NW: bengine::analytics::on_event("game", "camera_mode", "Diagonal NW"); break;
+			case game_camera_mode_t::DIAGONAL_LOOK_NE: bengine::analytics::on_event("game", "camera_mode", "Diagonal NE"); break;
+			case game_camera_mode_t::DIAGONAL_LOOK_SW: bengine::analytics::on_event("game", "camera_mode", "Diagonal SW"); break;
+			case game_camera_mode_t::DIAGONAL_LOOK_SE: bengine::analytics::on_event("game", "camera_mode", "Diagonal SE"); break;
+			}
+			
+		}
+
         void run(const double &duration_ms) {
             // Display cash
 			fmt::MemoryWriter cash_ss;
@@ -58,25 +75,15 @@ namespace systems {
                     world_changed=true;*/
                 }
                 if (ImGui::BeginMenu(menu_display.c_str())) {
-                    if (ImGui::MenuItem("Top-Down")) {
-                        camera->camera_mode = TOP_DOWN;
-                        render::camera_moved = true;
-                        render::models_changed = true;
-						bengine::analytics::on_event("game", "camera_mode", "Top-Down");
-                    }
-                    if (ImGui::MenuItem("Front")) {
-                        camera->camera_mode = FRONT;
-                        render::camera_moved = true;
-                        render::models_changed = true;
-						bengine::analytics::on_event("game", "camera_mode", "Front");
-                    }
-                    if (ImGui::MenuItem("Diagonal")) {
-                        camera->camera_mode = DIAGONAL;
-                        render::camera_moved = true;
-                        render::models_changed = true;
-						bengine::analytics::on_event("game", "camera_mode", "Diagonal");
-                    }
-                    if (ImGui::MenuItem("Toggle ASCII")) {
+					if (!camera->ascii_mode) {
+						if (ImGui::MenuItem("Top-Down")) change_camera_view(game_camera_mode_t::TOP_DOWN);
+						if (ImGui::MenuItem("Front")) change_camera_view(game_camera_mode_t::FRONT);
+						if (ImGui::MenuItem("Diagonal - Look NW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NW);
+						if (ImGui::MenuItem("Diagonal - Look NE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NE);
+						if (ImGui::MenuItem("Diagonal - Look SW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SW);
+						if (ImGui::MenuItem("Diagonal - Look SE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SE);
+					}
+					if (ImGui::MenuItem("Toggle ASCII")) {
                         camera->ascii_mode = !camera->ascii_mode;
 						bengine::analytics::on_event("game", "renderMode", camera->ascii_mode ? "ASCII" : "3D");
 						render::camera_moved = true;

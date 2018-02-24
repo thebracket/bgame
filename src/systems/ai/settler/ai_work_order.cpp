@@ -35,7 +35,7 @@ namespace systems {
 					//std::cout << "Warning: bailing on null AI\n";
 					return;
 				}
-				if (is_auto_reaction_task_available(*ai)) {
+				if (is_auto_reaction_task_available(e, *ai)) {
 					board.insert(std::make_pair(20, jt));
 					//std::cout << "Offering automatic build order\n";
 					return;
@@ -66,17 +66,17 @@ namespace systems {
 					std::unique_ptr<reaction_task_t> autojob;
 
 					if (!building_designations->build_orders.empty()) {
-						autojob = find_queued_reaction_task(w);
+						autojob = find_queued_reaction_task(e, w);
 						//if (autojob) std::cout << "Queued reaction added\n";
 					}
 					if (!autojob) {
-						autojob = find_automatic_reaction_task(w);
+						autojob = find_automatic_reaction_task(e, w);
 						//if (autojob) std::cout << "Automatic reaction added\n";
 					}
 
 					if (!autojob) {
 						//std::cout << "Bailing out - no available reaction\n";
-						delete_component<ai_tag_work_order>(e.id);
+						work.cancel_work_tag(e);
 					}
 					else {
 						//std::cout << "Setting up workflow\n";
@@ -96,15 +96,20 @@ namespace systems {
 						return;
 					}
 
-					bool has_components = true;
-					for (std::pair<std::size_t, bool> &component : w.reaction_target.components) {
+					auto has_components = true;
+					for (auto &component : w.reaction_target.components) {
 						if (!component.second) {
 							has_components = false;
 							w.current_tool = component.first;
 							auto item_loc = get_item_location(w.current_tool);
 							if (!item_loc) {
 								//std::cout << "Bailing - invalid item\n";
-								delete_component<ai_tag_work_order>(e.id);
+								work.cancel_work_tag(e);
+								delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+								for (const auto &item : w.reaction_target.components)
+								{
+									delete_component<claimed_t>(item.first);
+								}
 								return;
 							}
 							w.current_path = find_path(pos, *item_loc);
@@ -114,7 +119,12 @@ namespace systems {
 							}
 							else {
 								//std::cout << "Bailing - no path to item\n";
-								delete_component<ai_tag_work_order>(e.id);
+								work.cancel_work_tag(e);
+								delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+								for (const auto &item : w.reaction_target.components)
+								{
+									delete_component<claimed_t>(item.first);
+								}
 							}
 							return;
 						}
@@ -127,10 +137,15 @@ namespace systems {
 				}
 				else if (w.step == ai_tag_work_order::work_steps::GO_TO_INPUT) {
 					//std::cout << "Go to input\n";
-					work.follow_path(w, pos, e, [&w, &e]() {
+					work.follow_path(w, pos, e, [&w, &e, &work]() {
 						// Cancel
 						unclaim_by_id(w.current_tool);
-						delete_component<ai_tag_work_order>(e.id);
+						work.cancel_work_tag(e);
+						delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+						for (const auto &item : w.reaction_target.components)
+						{
+							delete_component<claimed_t>(item.first);
+						}
 					}, [&w, &e]() {
 						// Arrived
 						w.current_path.reset();
@@ -151,11 +166,16 @@ namespace systems {
 				}
 				else if (w.step == ai_tag_work_order::work_steps::GO_TO_WORKSHOP) {
 					//std::cout << "Go to workshop\n";
-					work.follow_path(w, pos, e, [&w, &e, &pos]() {
+					work.follow_path(w, pos, e, [&w, &e, &pos, &work]() {
 						// Cancel
 						unclaim_by_id(w.current_tool);
 						inventory_system::drop_item(w.current_tool, pos.x, pos.y, pos.z );
-						delete_component<ai_tag_work_order>(e.id);
+						work.cancel_work_tag(e);
+						delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+						for (const auto &item : w.reaction_target.components)
+						{
+							delete_component<claimed_t>(item.first);
+						}
 						//std::cout << "Bailing - no path to workshop\n";
 					}, [&w, &pos, &e]() {
 						// Arrived

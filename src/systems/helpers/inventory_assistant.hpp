@@ -19,10 +19,10 @@ namespace inventory {
 	std::vector<std::pair<std::string, std::string>> get_available_reactions();
 
 	int available_items_by_tag(const std::string &tag);
-	int available_items_by_reaction_input(const reaction_input_t &input);
+	int available_items_by_reaction_input(const std::size_t worker, const reaction_input_t &input) noexcept;
 	int blocks_available();
 	std::size_t claim_item_by_tag(const std::string &tag);
-	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim = true);
+	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, const std::size_t worker_id, const bool really_claim = true) noexcept;
 	void unclaim_by_id(const std::size_t &id);
 
 	void delete_item(const std::size_t &id);

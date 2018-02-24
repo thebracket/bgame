@@ -1,4 +1,5 @@
 #include "inventory_assistant.hpp"
+#include "../../bengine/ecs.hpp"
 #include "../../components/items/item.hpp"
 #include "../../components/buildings/building.hpp"
 #include "../../components/items/item_stored.hpp"
@@ -18,6 +19,7 @@
 #include "../../raws/defs/reaction_t.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../../components/item_tags/item_ammo_t.hpp"
+#include "targeted_flow_map.hpp"
 
 using namespace bengine;
 using namespace buildings;
@@ -84,7 +86,7 @@ namespace inventory {
 			for (const auto &require : it->components) {
 				auto finder = requirements.find(require.tag);
 				if (finder == requirements.end()) {
-					const int available_item_count = available_items_by_reaction_input(require);
+					const int available_item_count = available_items_by_reaction_input(0, require);
 					requirements[require.tag] = std::make_pair(require.quantity, available_item_count);
 					if (available_item_count < 1) possible = false;
 				}
@@ -138,7 +140,7 @@ namespace inventory {
 					for (const reaction_input_t &require : it->inputs) {
 						auto finder = requirements.find(require.tag);
 						if (finder == requirements.end()) {
-							const int available_components = available_items_by_reaction_input(require);
+							const int available_components = available_items_by_reaction_input(0, require);
 							requirements[require.tag] = std::make_pair(require.quantity, available_components);
 							if (require.quantity > available_components) possible = false;
 						}
@@ -149,7 +151,7 @@ namespace inventory {
 					}
 
 					if (possible) {
-						result.push_back(std::make_pair(rtag, name));
+						result.emplace_back(std::make_pair(rtag, name));
 					}
 				}
 			}
@@ -201,30 +203,46 @@ namespace inventory {
 		return result;
 	}
 
-	int available_items_by_reaction_input(const reaction_input_t &input) {
-		int result = 0;
-		//std::cout << "Looking for item type: " << input.tag << "\n";
-		each_without<claimed_t, item_t>([&result, &input](entity_t &e, item_t &i) {
-			//std::cout << "Evaluating " << i.item_tag << "\n";
+	int available_items_by_reaction_input(const std::size_t worker, const reaction_input_t &input) noexcept {
+		auto result = 0;
+		position_t * pos = nullptr;
+		if (worker != 0)
+		{
+			pos = bengine::entity(worker)->component<position_t>();
+		}
+
+		each_without<claimed_t, item_t>([&result, &input, &worker, &pos](entity_t &e, item_t &i) {
 			if ((input.tag == "any" || i.item_tag == input.tag)) {
-				//std::cout << "Available items tag hit - " << input.tag << "\n";
-				bool ok = true;
+				auto ok = true;
 				if (input.required_material != 0) {
 					if (i.material != input.required_material) {
-						//std::cout << "Reject item by material type\n";
 						ok = false;
 					}
 				}
 				if (input.required_material_type != NO_SPAWN_TYPE) {
 					if (get_material(i.material)->spawn_type != input.required_material_type) {
-						//std::cout << "Reject item by spawn type\n";
 						ok = false;
 					}
+				}
+				const auto item_position = get_item_location(e.id);
+				if (worker == 0)
+				{
+					// No worker - can we reach it?
+					if (item_position)
+					{
+						const auto idx = mapidx(*item_position);
+						if (systems::distance_map::reachable_from_cordex.get(idx) > systems::dijkstra::MAX_DIJSTRA_DISTANCE-2)
+						{
+							ok = false;
+						};
+					}
+				} else
+				{
+					if (!find_path(*pos, *item_position)->success) ok = false;
 				}
 				if (ok) ++result;
 			}
 		});
-		//std::cout << "Returning available item count: " << result << "\n";
 		return result;
 	}
 
@@ -239,9 +257,14 @@ namespace inventory {
 		return result;
 	}
 
-	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, bool really_claim) {
+	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, const std::size_t worker_id, const bool really_claim) noexcept {
 		std::size_t result = 0;
-		each_without<claimed_t, item_t>([&result, &input](entity_t &e, item_t &i) {
+		position_t * pos = nullptr;
+		if (worker_id != 0)
+		{
+			pos = bengine::entity(worker_id)->component<position_t>();
+		}
+		each_without<claimed_t, item_t>([&result, &input, &worker_id, &pos](entity_t &e, item_t &i) {
 			if ((input.tag == "any" || i.item_tag == input.tag)) {
 				auto ok = true;
 				if (input.required_material != 0) {
@@ -250,11 +273,29 @@ namespace inventory {
 				if (input.required_material_type != NO_SPAWN_TYPE) {
 					if (get_material(i.material)->spawn_type != input.required_material_type) ok = false;
 				}
+				const auto item_position = get_item_location(e.id);
+				if (worker_id == 0)
+				{
+					// No worker - can we reach it?
+					if (item_position)
+					{
+						const auto idx = mapidx(*item_position);
+						if (systems::distance_map::reachable_from_cordex.get(idx) > systems::dijkstra::MAX_DIJSTRA_DISTANCE - 2)
+						{
+							ok = false;
+						};
+					}
+				}
+				else
+				{
+					if (!find_path(*pos, *item_position)->success) ok = false;
+				}
+				if (ok) ++result;
 				if (ok) result = e.id;
 			}
 		});
 		if (result != 0 && really_claim) {
-			systems::inventory_system::claim_item(result, true);
+			entity(result)->assign(claimed_t{ worker_id });
 		}
 		return result;
 	}

@@ -60,17 +60,29 @@ namespace systems {
 
             if (is_key_down(GLFW_KEY_TAB)) {
                 switch (camera->camera_mode) {
-				case DIAGONAL: {
-					camera->camera_mode = FRONT;
+				case game_camera_mode_t::DIAGONAL_LOOK_NW: {
+					camera->camera_mode = game_camera_mode_t::DIAGONAL_LOOK_NE;
+					bengine::analytics::on_event("game", "camera_mode", "Diagonal NE");
+				}break;
+				case game_camera_mode_t::DIAGONAL_LOOK_NE: {
+					camera->camera_mode = game_camera_mode_t::DIAGONAL_LOOK_SW;
+					bengine::analytics::on_event("game", "camera_mode", "Diagonal SW");
+				}break;
+				case game_camera_mode_t::DIAGONAL_LOOK_SW: {
+					camera->camera_mode = game_camera_mode_t::DIAGONAL_LOOK_SE;
+					bengine::analytics::on_event("game", "camera_mode", "Diagonal SE");
+				}break;
+				case game_camera_mode_t::DIAGONAL_LOOK_SE: {
+					camera->camera_mode = game_camera_mode_t::FRONT;
 					bengine::analytics::on_event("game", "camera_mode", "Front");
 				}break;
-				case FRONT: { 
-					camera->camera_mode = TOP_DOWN; 
+				case game_camera_mode_t::FRONT: {
+					camera->camera_mode = game_camera_mode_t::TOP_DOWN;
 					bengine::analytics::on_event("game", "camera_mode", "Top-Down");
 				} break;
-				case TOP_DOWN: { 
-					camera->camera_mode = DIAGONAL; 
-					bengine::analytics::on_event("game", "camera_mode", "Diagonal");
+				case game_camera_mode_t::TOP_DOWN: {
+					camera->camera_mode = game_camera_mode_t::DIAGONAL_LOOK_NW;
+					bengine::analytics::on_event("game", "camera_mode", "Diagonal NW");
 				} break;
                 }
                 render::camera_moved = true;
