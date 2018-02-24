@@ -37,7 +37,7 @@ namespace render {
     }
 
     static void do_chunk_render() {
-		const auto camera_ceiling = camera->following>0 && camera->fps ? camera_position->region_z+10 : camera_position->region_z;
+		const auto camera_ceiling = camera->following>0 && camera->fps ? camera_position->region_z+20 : camera_position->region_z;
         for (const auto &idx : visible_chunks) {
             chunks::chunk_t * target = &chunks::chunks[idx.chunk_id];
             if (target->has_geometry) {
