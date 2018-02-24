@@ -3,6 +3,8 @@
 #include "chunks/chunks.hpp"
 #include "../bengine/main_window.hpp"
 #include "../bengine/geometry.hpp"
+#include "../bengine/ecs.hpp"
+#include "../components/position.hpp"
 
 namespace render
 {
@@ -27,63 +29,84 @@ namespace render
 		const auto camera_z = static_cast<float>(camera_position->region_z);
 		const auto camera_zoom = static_cast<float>(camera->zoom_level);
 		const auto aspect_ratio = static_cast<float>(screen_w) / static_cast<float>(screen_h);
+		const auto near = (camera->following > 0 && camera->fps) ? 0.1f : 1.0f;
+		const auto fov = (camera->following > 0 && camera->fps) ? 120.0f : 90.0f;
 
 		if (camera->perspective)
 		{
-			camera_projection_matrix = glm::perspective(glm::radians(90.0f), aspect_ratio , 1.0f, 300.0f);
+			camera_projection_matrix = glm::perspective(glm::radians(fov), aspect_ratio , near, 300.0f);
 		} else
 		{
 			const auto camera_zoom_x = static_cast<float>(camera->zoom_level);
 			const auto x_bounds = (- camera_zoom_x) * aspect_ratio;
 			const auto y_bounds = (camera_zoom_x);
 
-			camera_projection_matrix = glm::ortho(x_bounds, -x_bounds, -y_bounds, y_bounds, 1.0f, 300.0f);
+			camera_projection_matrix = glm::ortho(x_bounds, -x_bounds, -y_bounds, y_bounds, near, 300.0f);
 		}
 
 		const glm::vec3 up{0.0f, 1.0f, 0.0f};
 		const glm::vec3 target{camera_x, camera_z, camera_y };
 		glm::vec3 camera_position_v;
 
-		switch (camera->camera_mode)
+		if (camera->following > 0 && camera->fps)
 		{
-		case game_camera_mode_t::FRONT:
+			const auto following = bengine::entity(camera->following);
+			if (following) {
+				const auto pos = following->component<position_t>();
+				if (pos) {
+					const auto looking_at = bengine::project_angle(0, 0, 10.0, (static_cast<double>(pos->rotation + 90) * 3.14159265358979323846) / 180.0);
+					camera_position_v = { camera_x, camera_z + 0.5f, camera_y };
+					glm::vec3 fps_target = camera_position_v;
+					fps_target.x += looking_at.first;
+					fps_target.z += looking_at.second;
+					camera_modelview_matrix = glm::lookAt(camera_position_v, fps_target, up);
+				}
+			}
+		}
+		else {
+
+			switch (camera->camera_mode)
+			{
+			case game_camera_mode_t::FRONT:
 			{
 				// Nice X-perspective view
-				camera_position_v = {camera_x, (camera_z + camera_zoom), (camera_y) + (camera_zoom / 3.0f)};
+				camera_position_v = { camera_x, (camera_z + camera_zoom), (camera_y)+(camera_zoom / 3.0f) };
 			}
 			break;
-		case game_camera_mode_t::TOP_DOWN:
+			case game_camera_mode_t::TOP_DOWN:
 			{
 				// Top-down
-				camera_position_v = {camera_x, (camera_z) + camera_zoom, (camera_y) + 0.1f};
+				camera_position_v = { camera_x, (camera_z)+camera_zoom, (camera_y)+0.1f };
 			}
 			break;
-		case game_camera_mode_t::DIAGONAL_LOOK_NW:
+			case game_camera_mode_t::DIAGONAL_LOOK_NW:
 			{
 				// Diagonal
-				camera_position_v = {camera_x + camera_zoom, (camera_z) + camera_zoom, (camera_y) + camera_zoom};
+				camera_position_v = { camera_x + camera_zoom, (camera_z)+camera_zoom, (camera_y)+camera_zoom };
 			}
 			break;
-		case game_camera_mode_t::DIAGONAL_LOOK_NE:
+			case game_camera_mode_t::DIAGONAL_LOOK_NE:
 			{
 				// Diagonal
-				camera_position_v = {camera_x - camera_zoom, (camera_z) + camera_zoom, (camera_y) + camera_zoom};
+				camera_position_v = { camera_x - camera_zoom, (camera_z)+camera_zoom, (camera_y)+camera_zoom };
 			}
 			break;
-		case game_camera_mode_t::DIAGONAL_LOOK_SW:
+			case game_camera_mode_t::DIAGONAL_LOOK_SW:
 			{
 				// Diagonal
-				camera_position_v = {camera_x + camera_zoom, (camera_z) + camera_zoom, (camera_y) - camera_zoom};
+				camera_position_v = { camera_x + camera_zoom, (camera_z)+camera_zoom, (camera_y)-camera_zoom };
 			}
 			break;
-		case game_camera_mode_t::DIAGONAL_LOOK_SE:
+			case game_camera_mode_t::DIAGONAL_LOOK_SE:
 			{
 				// Diagonal
-				camera_position_v = {camera_x - camera_zoom, (camera_z) + camera_zoom, (camera_y) - camera_zoom};
+				camera_position_v = { camera_x - camera_zoom, (camera_z)+camera_zoom, (camera_y)-camera_zoom };
 			}
 			break;
+			}
+
+			camera_modelview_matrix = glm::lookAt(camera_position_v, target, up);
 		}
-		camera_modelview_matrix = glm::lookAt(camera_position_v, target, up);
 		camera_proj_model_view_matrix = camera_projection_matrix * camera_modelview_matrix;
 
 		frustrum.update(camera_proj_model_view_matrix);

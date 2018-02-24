@@ -216,6 +216,7 @@ namespace render {
 	static void build_composites() {
 		bengine::each<renderable_composite_t, position_t>([](bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 			//std::cout << r.render_mode << "\n";
+			if (camera->following == e.id && camera->fps) return; // Do not render yourself in FPS mode
 			if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 				switch (r.render_mode) {
 				case RENDER_SETTLER: render_settler(e, r, pos); break;

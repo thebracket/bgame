@@ -116,6 +116,12 @@ namespace systems {
 					selected_settler = e.id;
 				}
 
+				ImGui::SameLine();
+				const std::string btn_followmode = std::string(ICON_FA_USER_CIRCLE) + std::string(" Follow##") + std::to_string(e.id);
+				if (ImGui::Button(btn_followmode.c_str())) {
+					camera->following = e.id;
+				}
+
 				ImGui::NextColumn();
 				ImGui::Separator();
 			});						

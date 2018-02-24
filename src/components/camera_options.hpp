@@ -1,6 +1,6 @@
 #pragma once
 
-enum class game_camera_mode_t { TOP_DOWN, FRONT, DIAGONAL_LOOK_NW, DIAGONAL_LOOK_NE, DIAGONAL_LOOK_SW, DIAGONAL_LOOK_SE };
+enum game_camera_mode_t { TOP_DOWN, FRONT, DIAGONAL_LOOK_NW, DIAGONAL_LOOK_NE, DIAGONAL_LOOK_SW, DIAGONAL_LOOK_SE };
 
 struct camera_options_t {
 
@@ -11,5 +11,7 @@ struct camera_options_t {
     bool ascii_mode = false;
     int zoom_level = 12;
 	bool perspective = true;
+	size_t following = 0;
+	bool fps = false;
 };
 
