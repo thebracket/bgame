@@ -79,13 +79,14 @@ namespace systems {
                 }
                 if (ImGui::BeginMenu(menu_display.c_str())) {
 					if (!camera->ascii_mode) {
-						if (ImGui::MenuItem(menu_camera_view.c_str())) {
+						if (ImGui::BeginMenu(menu_camera_view.c_str())) {
 							if (ImGui::MenuItem("Top-Down")) change_camera_view(game_camera_mode_t::TOP_DOWN);
 							if (ImGui::MenuItem("Front")) change_camera_view(game_camera_mode_t::FRONT);
 							if (ImGui::MenuItem("Diagonal - Look NW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NW);
 							if (ImGui::MenuItem("Diagonal - Look NE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_NE);
 							if (ImGui::MenuItem("Diagonal - Look SW")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SW);
 							if (ImGui::MenuItem("Diagonal - Look SE")) change_camera_view(game_camera_mode_t::DIAGONAL_LOOK_SE);
+							ImGui::EndMenu();
 						}
 						if (ImGui::MenuItem(menu_camera_perspective.c_str()))
 						{
@@ -94,7 +95,7 @@ namespace systems {
 							render::models_changed = true;
 						}
 					}
-					if (ImGui::MenuItem("Toggle ASCII")) {
+					if (ImGui::MenuItem(menu_camera_ascii.c_str())) {
                         camera->ascii_mode = !camera->ascii_mode;
 						bengine::analytics::on_event("game", "renderMode", camera->ascii_mode ? "ASCII" : "3D");
 						render::camera_moved = true;
