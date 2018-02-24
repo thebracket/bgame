@@ -2,7 +2,6 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../bengine/imgui_tabs.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../components/items/item.hpp"
@@ -155,10 +154,10 @@ namespace systems {
 			}
 
 			const std::string tab_bar_name = std::string("##Item#info_bar") + std::to_string(selected_item);
-			ImGui::BeginTabBar(tab_bar_name.c_str());
-			ImGui::DrawTabsBackground();
+			//ImGui::BeginTabBar(tab_bar_name.c_str());
+			//ImGui::DrawTabsBackground();
 
-			if (ImGui::AddTab(tab_summary.c_str())) {
+			if (ImGui::Button(tab_summary.c_str())) {
 				if (item_def) {
 					ImGui::Text("%s", item_def->description.c_str());
 				}
@@ -180,7 +179,7 @@ namespace systems {
 			}
 
 			if (item_ammo) {
-				if (ImGui::AddTab(tab_ammo.c_str())) {
+				if (ImGui::Button(tab_ammo.c_str())) {
 					ImGui::Text("This item is used as ammunition (type: %s).", item_def->ammo.c_str());
 					if (item_def) {
 						ImGui::Text("It inflicts %dd%d+%d damage.", item_def->damage_n, item_def->damage_d, item_def->damage_mod);
@@ -196,7 +195,7 @@ namespace systems {
 			if (item_leather) ImGui::Text("This item is processed leather, and can be turned into something useful by a leatherworker.");
 			if (item_melee) {
 				if (item_def) {
-					if (ImGui::AddTab(tab_melee.c_str())) {
+					if (ImGui::Button(tab_melee.c_str())) {
 						ImGui::Text("It inflicts %dd%d+%d damage, modified by %s.", item_def->damage_n, item_def->damage_d, item_def->damage_mod, item_def->damage_stat.c_str());
 						if (item_quality && item_quality->quality > 3) ImGui::Text("It gains an extra +1 for being of high quality.");
 						if (item_quality && item_quality->quality > 6) ImGui::Text("It gains an extra +1 for being of masterwork quality.");
@@ -209,7 +208,7 @@ namespace systems {
 			}
 			if (item_ranged) {
 				if (item_def) {
-					if (ImGui::AddTab(tab_ranged.c_str())) {
+					if (ImGui::Button(tab_ranged.c_str())) {
 						ImGui::Text("It has a range of %d tiles.", item_def->range);
 						ImGui::Text("It provides an ammunition damage bonus of %d", item_def->damage_mod);
 						ImGui::Text("It's initiative penalty (mitigated by Dexterity) is %d", item_def->initiative_penalty);
@@ -257,24 +256,24 @@ namespace systems {
 			});
 
 			if (!uses.empty()) {
-				if (ImGui::AddTab(tab_uses.c_str())) {
+				if (ImGui::Button(tab_uses.c_str())) {
 					for (const auto &use : uses) ImGui::Text("%s", use.c_str());
 				}
 			}
 
 			if (!sources.empty()) {
-				if (ImGui::AddTab(tab_sources.c_str())) {
+				if (ImGui::Button(tab_sources.c_str())) {
 					for (const auto &source : sources) ImGui::Text("%s", source.c_str());
 				}
 			}
 
 			if (!buildings.empty()) {
-				if (ImGui::AddTab(tab_construction.c_str())) {
+				if (ImGui::Button(tab_construction.c_str())) {
 					for (const auto &bld : buildings) ImGui::Text("%s", bld.c_str());
 				}
 			}
 
-			ImGui::EndTabBar();
+			//ImGui::EndTabBar();
 			ImGui::End();
 		}
 	}

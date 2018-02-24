@@ -3,7 +3,6 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../bengine/imgui_tabs.hpp"
 #include "../../components/name.hpp"
 #include "../../components/game_stats.hpp"
 #include "../../components/species.hpp"
@@ -234,38 +233,38 @@ namespace systems {
 				game_master_mode = PLAY;
 			}
 
-			ImGui::BeginTabBar("##Settler#info_bar");
-			ImGui::DrawTabsBackground();
+			//ImGui::BeginTabBar("##Settler#info_bar");
+			//ImGui::DrawTabsBackground();
 
-			if (ImGui::AddTab(tab_summary.c_str())) {
+			if (ImGui::Button(tab_summary.c_str())) {
 				render_summary(name, stats, species, ai, health);
 			}
-			if (ImGui::AddTab(tab_stats.c_str())) {
+			if (ImGui::Button(tab_stats.c_str())) {
 				render_stats(stats, species);
 			}
-			if (ImGui::AddTab(tab_health.c_str())) {
+			if (ImGui::Button(tab_health.c_str())) {
 				render_health(health);
 			}
-			if (ImGui::AddTab(tab_schedule.c_str())) {
+			if (ImGui::Button(tab_schedule.c_str())) {
 
 			}
-			if (ImGui::AddTab(tab_work.c_str())) {
+			if (ImGui::Button(tab_work.c_str())) {
 
 			}
-			if (ImGui::AddTab(tab_inventory.c_str())) {
+			if (ImGui::Button(tab_inventory.c_str())) {
 				render_inventory(selected_settler);
 			}
-			if (ImGui::AddTab(tab_emotions.c_str())) {
+			if (ImGui::Button(tab_emotions.c_str())) {
 
 			}
-			if (ImGui::AddTab(tab_relations.c_str())) {
+			if (ImGui::Button(tab_relations.c_str())) {
 
 			}
-			if (ImGui::AddTab(tab_history.c_str())) {
+			if (ImGui::Button(tab_history.c_str())) {
 				render_history(selected_settler);
 			}
 
-			ImGui::EndTabBar();
+			//ImGui::EndTabBar();
 									
 			ImGui::End();
 		}

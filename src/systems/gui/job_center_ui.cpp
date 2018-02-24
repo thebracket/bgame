@@ -2,7 +2,6 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../bengine/imgui_tabs.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/name.hpp"
 #include "../../components/game_stats.hpp"
@@ -339,22 +338,22 @@ namespace systems {
 				game_master_mode = PLAY;
 			}
 
-			ImGui::BeginTabBar("##units#jobs_bar");
-			ImGui::DrawTabsBackground();
+			//ImGui::BeginTabBar("##units#jobs_bar");
+			//ImGui::DrawTabsBackground();
 
-			if (ImGui::AddTab(mining_job_tab.c_str())) {
+			if (ImGui::Button(mining_job_tab.c_str())) {
 				render_miners();
 			}
-			if (ImGui::AddTab(lumberjacking_job_tab.c_str())) {
+			if (ImGui::Button(lumberjacking_job_tab.c_str())) {
 				render_lumberjacks();
 			}
-			if (ImGui::AddTab(farming_job_tab.c_str())) {
+			if (ImGui::Button(farming_job_tab.c_str())) {
 				render_farmers();
 			}
-			if (ImGui::AddTab(hunting_job_tab.c_str())) {
+			if (ImGui::Button(hunting_job_tab.c_str())) {
 				render_hunters();
 			}
-			ImGui::EndTabBar();
+			//ImGui::EndTabBar();
 			ImGui::End();
 		}
 	}

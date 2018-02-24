@@ -226,7 +226,6 @@
     <ClCompile Include="..\..\src\bengine\imgui.cpp" />
     <ClCompile Include="..\..\src\bengine\imgui_draw.cpp" />
     <ClCompile Include="..\..\src\bengine\imgui_impl_glfw_gl3.cpp" />
-    <ClCompile Include="..\..\src\bengine\imgui_tabs.cpp" />
     <ClCompile Include="..\..\src\bengine\main_window.cpp" />
     <ClCompile Include="..\..\src\bengine\octree.cpp" />
     <ClCompile Include="..\..\src\bengine\pcg_basic.cpp" />
@@ -437,7 +436,6 @@
     <ClInclude Include="..\..\src\bengine\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="..\..\src\bengine\imgui_internal.h" />
     <ClInclude Include="..\..\src\bengine\imgui_style.hpp" />
-    <ClInclude Include="..\..\src\bengine\imgui_tabs.hpp" />
     <ClInclude Include="..\..\src\bengine\main_window.hpp" />
     <ClInclude Include="..\..\src\bengine\octree.hpp" />
     <ClInclude Include="..\..\src\bengine\pcg_basic.h" />

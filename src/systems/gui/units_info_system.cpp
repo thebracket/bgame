@@ -1,7 +1,6 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../../bengine/imgui_tabs.hpp"
 #include "../../components/settler_ai.hpp"
 #include "../../components/name.hpp"
 #include "../../components/game_stats.hpp"
@@ -199,18 +198,18 @@ namespace systems {
 				game_master_mode = PLAY;
 			}
 
-			ImGui::BeginTabBar("##Units#left_tab_bar");
-			ImGui::DrawTabsBackground();
-			if (ImGui::AddTab(win_settler_list.c_str())) {
+			//ImGui::BeginTabBar("##Units#left_tab_bar");
+			//ImGui::DrawTabsBackground();
+			if (ImGui::Button(win_settler_list.c_str())) {
 				render_settlers();
 			}
-			if (ImGui::AddTab(win_wildlife_list.c_str())) {
+			if (ImGui::Button(win_wildlife_list.c_str())) {
 				render_creatures();
 			}
-			if (ImGui::AddTab(win_natives_list.c_str())) {
+			if (ImGui::Button(win_natives_list.c_str())) {
 				render_natives();
 			}
-			ImGui::EndTabBar();
+			//ImGui::EndTabBar();
 
 			ImGui::End();
 		}

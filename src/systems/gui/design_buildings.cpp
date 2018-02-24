@@ -5,7 +5,6 @@
 #include "../../bengine/imgui.h"
 #include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../mouse.hpp"
-#include "../../bengine/imgui_tabs.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../helpers/inventory_assistant.hpp"
 #include "../../render_engine/vox/renderables.hpp"
@@ -107,10 +106,10 @@ namespace systems {
 			}
 
 			ImGui::Begin(win_building.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
-			ImGui::BeginTabBar("##buildingmaker#tabs");
-			ImGui::DrawTabsBackground();
+			//ImGui::BeginTabBar("##buildingmaker#tabs");
+			//ImGui::DrawTabsBackground();
 
-			if (ImGui::AddTab("Available Buildings")) {
+			if (ImGui::Button("Available Buildings")) {
 				if (selected_building > building_listbox_items.size() - 1) selected_building = 0;
 				ImGui::BeginChild("build_list", ImVec2(300, 300));
 				ImGui::ListBox("", &selected_building, &building_listbox_items.at(0), buildings.size(), 10);
@@ -122,7 +121,7 @@ namespace systems {
 					display_building_info(tag);
 				}
 			}
-			if (ImGui::AddTab("All Buildings"))
+			if (ImGui::Button("All Buildings"))
 			{
 				std::vector<std::pair<std::string, std::string>> all_buildings;
 				each_building_def([&all_buildings] (const building_def_t * bd)
@@ -145,7 +144,7 @@ namespace systems {
 				}
 			}
 
-			ImGui::EndTabBar();
+			//ImGui::EndTabBar();
 			ImGui::End();
 
 			if (!rendered_selected) {

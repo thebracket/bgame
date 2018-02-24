@@ -19,7 +19,7 @@
 // texts, as its performance does not scale and it has limited undo).
 //
 // Non-trivial behaviors are modelled after Windows text controls.
-//
+// 
 //
 // LICENSE
 //
@@ -216,20 +216,20 @@
 //          call this with the mouse x,y on a mouse down; it will update the cursor
 //          and reset the selection start/end to the cursor point. the x,y must
 //          be relative to the text widget, with (0,0) being the top left.
-//
+//     
 //      drag:
 //          call this with the mouse x,y on a mouse drag/up; it will update the
 //          cursor and the selection end point
-//
+//     
 //      cut:
 //          call this to delete the current selection; returns true if there was
 //          one. you should FIRST copy the current selection to the system paste buffer.
 //          (To copy, just copy the current selection out of the string yourself.)
-//
+//     
 //      paste:
 //          call this to paste text at the current cursor point or over the current
 //          selection if there is one.
-//
+//     
 //      key:
 //          call this for keyboard inputs sent to the textfield. you can use it
 //          for "key down" events or for "translated" key events. if you need to
@@ -238,7 +238,7 @@
 //          various definitions like STB_TEXTEDIT_K_LEFT have the is-key-event bit
 //          set, and make STB_TEXTEDIT_KEYTOCHAR check that the is-key-event bit is
 //          clear.
-//
+//     
 //   When rendering, you can read the cursor position and selection state from
 //   the STB_TexteditState.
 //
@@ -295,54 +295,54 @@
 
 typedef struct
 {
-    // private data
-    STB_TEXTEDIT_POSITIONTYPE  where;
-    short           insert_length;
-    short           delete_length;
-    short           char_storage;
+   // private data
+   STB_TEXTEDIT_POSITIONTYPE  where;
+   short           insert_length;
+   short           delete_length;
+   short           char_storage;
 } StbUndoRecord;
 
 typedef struct
 {
-    // private data
-    StbUndoRecord          undo_rec [STB_TEXTEDIT_UNDOSTATECOUNT];
-    STB_TEXTEDIT_CHARTYPE  undo_char[STB_TEXTEDIT_UNDOCHARCOUNT];
-    short undo_point, redo_point;
-    short undo_char_point, redo_char_point;
+   // private data
+   StbUndoRecord          undo_rec [STB_TEXTEDIT_UNDOSTATECOUNT];
+   STB_TEXTEDIT_CHARTYPE  undo_char[STB_TEXTEDIT_UNDOCHARCOUNT];
+   short undo_point, redo_point;
+   short undo_char_point, redo_char_point;
 } StbUndoState;
 
 typedef struct
 {
-    /////////////////////
-    //
-    // public data
-    //
+   /////////////////////
+   //
+   // public data
+   //
 
-    int cursor;
-    // position of the text cursor within the string
+   int cursor;
+   // position of the text cursor within the string
 
-    int select_start;          // selection start point
-    int select_end;
-    // selection start and end point in characters; if equal, no selection.
-    // note that start may be less than or greater than end (e.g. when
-    // dragging the mouse, start is where the initial click was, and you
-    // can drag in either direction)
+   int select_start;          // selection start point
+   int select_end;
+   // selection start and end point in characters; if equal, no selection.
+   // note that start may be less than or greater than end (e.g. when
+   // dragging the mouse, start is where the initial click was, and you
+   // can drag in either direction)
 
-    unsigned char insert_mode;
-    // each textfield keeps its own insert mode state. to keep an app-wide
-    // insert mode, copy this value in/out of the app state
+   unsigned char insert_mode;
+   // each textfield keeps its own insert mode state. to keep an app-wide
+   // insert mode, copy this value in/out of the app state
 
-    /////////////////////
-    //
-    // private data
-    //
-    unsigned char cursor_at_end_of_line; // not implemented yet
-    unsigned char initialized;
-    unsigned char has_preferred_x;
-    unsigned char single_line;
-    unsigned char padding1, padding2, padding3;
-    float preferred_x; // this determines where the cursor up/down tries to seek to along x
-    StbUndoState undostate;
+   /////////////////////
+   //
+   // private data
+   //
+   unsigned char cursor_at_end_of_line; // not implemented yet
+   unsigned char initialized;
+   unsigned char has_preferred_x;
+   unsigned char single_line;
+   unsigned char padding1, padding2, padding3;
+   float preferred_x; // this determines where the cursor up/down tries to seek to along x
+   StbUndoState undostate;
 } STB_TexteditState;
 
 
@@ -356,10 +356,10 @@ typedef struct
 // result of layout query
 typedef struct
 {
-    float x0,x1;             // starting x location, end x location (allows for align=right, etc)
-    float baseline_y_delta;  // position of baseline relative to previous row's baseline
-    float ymin,ymax;         // height of row above and below baseline
-    int num_chars;
+   float x0,x1;             // starting x location, end x location (allows for align=right, etc)
+   float baseline_y_delta;  // position of baseline relative to previous row's baseline
+   float ymin,ymax;         // height of row above and below baseline
+   int num_chars;
 } StbTexteditRow;
 #endif //INCLUDE_STB_TEXTEDIT_H
 
@@ -734,7 +734,7 @@ retry:
          state->insert_mode = !state->insert_mode;
          break;
 #endif
-
+         
       case STB_TEXTEDIT_K_UNDO:
          stb_text_undo(str, state);
          state->has_preferred_x = 0;
@@ -749,7 +749,7 @@ retry:
          // if currently there's a selection, move cursor to start of selection
          if (STB_TEXT_HAS_SELECTION(state))
             stb_textedit_move_to_first(state);
-         else
+         else 
             if (state->cursor > 0)
                --state->cursor;
          state->has_preferred_x = 0;
@@ -798,7 +798,7 @@ retry:
 
 #ifdef STB_TEXTEDIT_MOVEWORDRIGHT
       case STB_TEXTEDIT_K_WORDRIGHT:
-         if (STB_TEXT_HAS_SELECTION(state))
+         if (STB_TEXT_HAS_SELECTION(state)) 
             stb_textedit_move_to_last(str, state);
          else {
             state->cursor = STB_TEXTEDIT_MOVEWORDRIGHT(str, state->cursor);
@@ -876,7 +876,7 @@ retry:
          }
          break;
       }
-
+         
       case STB_TEXTEDIT_K_UP:
       case STB_TEXTEDIT_K_UP | STB_TEXTEDIT_K_SHIFT: {
          StbFindState find;
@@ -953,7 +953,7 @@ retry:
          }
          state->has_preferred_x = 0;
          break;
-
+         
 #ifdef STB_TEXTEDIT_K_TEXTSTART2
       case STB_TEXTEDIT_K_TEXTSTART2:
 #endif
@@ -970,7 +970,7 @@ retry:
          state->select_start = state->select_end = 0;
          state->has_preferred_x = 0;
          break;
-
+        
 #ifdef STB_TEXTEDIT_K_TEXTSTART2
       case STB_TEXTEDIT_K_TEXTSTART2 | STB_TEXTEDIT_K_SHIFT:
 #endif
