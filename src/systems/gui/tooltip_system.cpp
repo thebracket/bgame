@@ -299,7 +299,7 @@ namespace systems {
 					ImGui::SetNextWindowPos({ static_cast<float>(mouse_x) - (longest + 35.0F), static_cast<float>(mouse_y) });
 				}
 				ImGui::Begin("Tooltip", nullptr, ImVec2{ 600, 400 }, 100.0,
-					ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
+					ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoSavedSettings);
 				for (const auto &s : lines) {
 					ImGui::TextColored(s.second, "%s", s.first.c_str());
 				}
