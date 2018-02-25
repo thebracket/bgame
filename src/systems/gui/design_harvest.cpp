@@ -172,7 +172,7 @@ namespace systems {
 		void run(const double &duration_ms) {
 			cursors.clear();
 
-			ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
+			ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
 			bengine::render_btab_bar(harvest_tabs);
 			ImGui::End();
 		}
