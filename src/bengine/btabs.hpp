@@ -34,34 +34,71 @@ namespace bengine
 	/*
 	 * Helper function to help me get consistent tables!
 	 */
-	inline void begin_table(const std::vector<table_heading_t> &headings, const char * id, const bool border = true) noexcept
+	inline void begin_table(bool &first_run, const std::vector<table_heading_t> &headings, const std::string &id, const bool border = true) noexcept
 	{
-		ImGui::BeginChild(id);
-		ImGui::Columns(headings.size(), id, border);
+		const auto header_id = id + std::string("_h");
 
+		const auto header_color = ImColor(0.1f, 0.1f, 0.5f, 1.0f);
+		const auto pos = ImGui::GetCursorScreenPos();
+		const auto w = ImGui::GetWindowWidth();
+		const auto sz = ImVec2{ w, ImGui::GetTextLineHeight() };
+		ImGui::GetWindowDrawList()->AddRectFilled(pos, ImVec2{ pos.x + sz.x, pos.y + sz.y }, header_color);
+
+		ImGui::Columns(headings.size(), header_id.c_str(), border);
 		auto i = 0;
 		auto offset = 0.0f;
 		for (const auto &th : headings)
 		{
-			ImGui::SetColumnOffset(i, offset);
-			if (th.width > -1.0f)
-			{
-				offset += th.width;
-			} else
-			{
-				const auto heading_size = ImGui::CalcTextSize(th.title, nullptr, true);
-				offset += heading_size.x + 20.0f;
+			if (first_run) {
+				ImGui::SetColumnOffset(i, offset);
+				if (th.width > -1.0f)
+				{
+					offset += th.width;
+				}
+				else
+				{
+					const auto heading_size = ImGui::CalcTextSize(th.title, nullptr, true);
+					offset += heading_size.x + 20.0f;
+				}
+				first_run = false;
 			}
-			ImGui::TextColored(ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f }, "%s", th.title);
+
+			ImGui::TextColored(ImVec4{ 0.0f, 1.0f, 1.0f, 1.0f }, "%s", th.title);
 			ImGui::NextColumn();
 			++i;
 		}
 		ImGui::Separator();
 	}
 
+	inline void zebra_row(bool &row_toggler)
+	{
+		row_toggler = !row_toggler;
+	}
+
+	inline void begin_zebra_col(bool &row_toggler)
+	{
+		const auto a_color = ImColor(0.2f, 0.2f, 0.3f, 1.0f);
+		const auto b_color = ImColor(0.15f, 0.15f, 0.25f, 1.0f);
+		const auto pos = ImGui::GetCursorScreenPos();
+		const auto w = ImGui::GetWindowWidth();
+		const auto sz = ImVec2{ w, ImGui::GetTextLineHeightWithSpacing() };
+
+		if (row_toggler) {
+			ImGui::GetWindowDrawList()->AddRectFilled(pos, ImVec2{ pos.x + sz.x, pos.y + sz.y }, a_color);
+		}
+		else
+		{
+			ImGui::GetWindowDrawList()->AddRectFilled(pos, ImVec2{ pos.x + sz.x, pos.y + sz.y }, b_color);
+		}
+	}
+
+	inline void end_zebra_col()
+	{
+		ImGui::NextColumn();
+	}
+
 	inline void end_table()
 	{
-		ImGui::EndChild();
 		ImGui::Columns(1);
 	}
 

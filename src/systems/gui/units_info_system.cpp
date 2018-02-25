@@ -39,19 +39,19 @@ namespace systems {
 		int current_critter = 0;
 		int current_native = 0;
 
+		static bool settler_headings_first_run = true;
+		static std::vector<bengine::table_heading_t> settler_headings{
+			{ "Settler Name", -1.0f }, { "Profession", -1.0f}, {"Status", -1.0f}, {"Task", -1.0f}, { "Options", -1.0f }
+		};
+
 		static inline void render_settlers() {
 			using namespace bengine;
 
-			ImGui::Columns(5, "settler_list_grid");
+			bengine::begin_table(settler_headings_first_run, settler_headings, "settler_list_grid", true);
 
-			ImGui::TextColored(ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ), "%s", "Settler Name"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Profession"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Status"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Task"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
-			ImGui::Separator();
-
-			each<settler_ai_t, name_t, game_stats_t, species_t, health_t>([](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species, health_t &h) {
+			bool zebra = true;
+			each<settler_ai_t, name_t, game_stats_t, species_t, health_t>([&zebra](entity_t &e, settler_ai_t &ai, name_t &name, game_stats_t &stats, species_t &species, health_t &h) {
+				bengine::zebra_row(zebra);
 				const std::string gender = (species.gender == MALE) ? std::string(ICON_FA_MALE) : std::string(ICON_FA_FEMALE);
 				const std::string dname = name.first_name + std::string(" ") + name.last_name;
 				const std::string profession = stats.profession_tag;
@@ -72,14 +72,19 @@ namespace systems {
 					health_color.y = 1.0f;
 				}
 
+				bengine::begin_zebra_col(zebra);
 				ImGui::Text("%s %s", gender.c_str(), dname.c_str());
-				ImGui::NextColumn();
+				bengine::end_zebra_col();
+				bengine::begin_zebra_col(zebra);
 				ImGui::Text("%s", profession.c_str());
-				ImGui::NextColumn();
+				bengine::end_zebra_col();
+				bengine::begin_zebra_col(zebra);
 				ImGui::TextColored(health_color, "%s", hp.c_str());
-				ImGui::NextColumn();
+				bengine::end_zebra_col();
+				bengine::begin_zebra_col(zebra);
 				ImGui::Text("%s", task.c_str());
-				ImGui::NextColumn();
+				bengine::end_zebra_col();
+				bengine::begin_zebra_col(zebra);
 
 				const std::string btn_view = std::string(ICON_FA_SEARCH_PLUS) + " Go To##" + std::to_string(e.id);
 				if (ImGui::SmallButton(btn_view.c_str())) {
@@ -124,29 +129,32 @@ namespace systems {
 					game_master_mode = PLAY;
 				}
 
-				ImGui::NextColumn();
-				ImGui::Separator();
-			});						
+				bengine::end_zebra_col();
+			});
+			bengine::end_table();
 		}
+
+		static bool critter_headings_first_run = true;
+		static std::vector<bengine::table_heading_t> critter_headings{
+			{ "Creature", 150.0f },{ "Options", -1.0f }
+		};
 
 		static inline void render_creatures() {
 			using namespace bengine;
 
-			ImGui::Columns(2, "critter_list_grid");
-			ImGui::Separator();
+			bengine::begin_table(critter_headings_first_run, critter_headings, "critter_list_grid");
 
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Creature"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
-			ImGui::Separator();
-
-			each<grazer_ai, name_t>([](entity_t &e, grazer_ai &ai, name_t &name) {
+			bool zebra = true;
+			each<grazer_ai, name_t>([&zebra](entity_t &e, grazer_ai &ai, name_t &name) {
+				bengine::zebra_row(zebra);
+				bengine::begin_zebra_col(zebra);
 				const std::string critter_name = name.first_name + std::string(" ") + name.last_name;
 				ImGui::Text("%s", critter_name.c_str());
-				ImGui::NextColumn();
-				ImGui::Separator();
+				bengine::end_zebra_col();
 
+				bengine::begin_zebra_col(zebra);
 				const std::string critter_goto = btn_goto_creature + std::string("##") + std::to_string(e.id);
-				if (ImGui::Button(critter_goto.c_str())) {
+				if (ImGui::SmallButton(critter_goto.c_str())) {
 					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
 					camera_position->region_y = pos->y;
@@ -155,29 +163,33 @@ namespace systems {
 					render::camera_moved = true;
 					render::models_changed = true;
 				}
-				ImGui::NextColumn();
-				ImGui::Separator();
+				bengine::end_zebra_col();
 			});
-
-			ImGui::Columns(1);
+			bengine::end_table();
 		}
 
+		static bool native_headings_first_run = true;
 		static std::vector<bengine::table_heading_t> native_headings{
-			{ "Entity Name", -1.0f }, { "Options", -1.0f }
+			{ "NPC Name", 150.0f }, { "Options", -1.0f }
 		};
 
 		static inline void render_natives() {
 			using namespace bengine;
 
-			bengine::begin_table(native_headings, "npc_list_grid");
+			bengine::begin_table(native_headings_first_run, native_headings, "npc_list_grid");
 
-			each<sentient_ai, name_t>([](entity_t &e, sentient_ai &ai, name_t &name) {
+			bool zebra = true;
+			each<sentient_ai, name_t>([&zebra](entity_t &e, sentient_ai &ai, name_t &name) {
+				bengine::zebra_row(zebra);
+
+				bengine::begin_zebra_col(zebra);
 				const std::string npc_name = name.first_name + std::string(" ") + name.last_name;
 				ImGui::Text("%s", npc_name.c_str());
-				ImGui::NextColumn();
+				bengine::end_zebra_col();
 
+				bengine::begin_zebra_col(zebra);
 				const std::string critter_goto = btn_goto_creature + std::string("##") + std::to_string(e.id);
-				if (ImGui::Button(critter_goto.c_str())) {
+				if (ImGui::SmallButton(critter_goto.c_str())) {
 					auto pos = e.component<position_t>();
 					camera_position->region_x = pos->x;
 					camera_position->region_y = pos->y;
@@ -187,8 +199,7 @@ namespace systems {
 					render::models_changed = true;
 					show_window = false;
 				}
-				ImGui::NextColumn();
-				ImGui::Separator();
+				bengine::end_zebra_col();
 			});
 			bengine::end_table();
 		}
