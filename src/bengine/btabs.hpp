@@ -3,6 +3,7 @@
 #include "gl_include.hpp"
 #include "imgui.h"
 #include "main_window.hpp"
+#include "../global_assets/game_pause.hpp"
 #include <vector>
 #include <functional>
 
@@ -16,13 +17,17 @@ namespace bengine
 	 * Helper function to handle the creation of large info windows, to keep them consisent.
 	 * show_window is a locally stored bool (must be true!) that will become false if the close button was clicked. You should then reset it to true.
 	 */
-	inline void begin_info_window(const std::string &title, bool * show_window) noexcept
+	inline void begin_info_window(const std::string &title, bool * show_window, const bool should_pause=true) noexcept
 	{
 		int screen_w, screen_h;
 		glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
 		ImGui::SetNextWindowPos(ImVec2{ 50.0f, 50.0f });
 		ImGui::Begin(title.c_str(), show_window, ImVec2{ screen_w - 100.0f, screen_h - 100.0f }, 0.75f, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_Modal);
+		if (should_pause) pause_mode = PAUSED; // Always pause in an info-window
+		if (glfwGetKey(bengine::main_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+			*show_window = false; // Escape always closes the window
+		}
 	}
 
 	struct table_heading_t
