@@ -43,14 +43,14 @@ namespace systems {
 
 			if (game_master_mode == PLAY) {
 				//std::cout << "Log system render\n";
+				if (logger->lines.empty()) return;
 				if (first_run) {
 					int w, h;
 					glfwGetWindowSize(bengine::main_window, &w, &h);
 					ImGui::SetNextWindowPos(ImVec2(5, h - 150), ImGuiSetCond_Always);
 					first_run = false;
 				}
-				if (logger->lines.empty()) return;
-				ImGui::Begin(win_log.c_str(), nullptr, ImVec2{ 600,125 }, 0.5f, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
+				ImGui::Begin(win_log.c_str(), nullptr, ImVec2{ 600,125 }, 0.5f, ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoSavedSettings);
 				for (const auto &line : logger->lines) {
 					if (!line.chars.empty()) {
 						std::string output;
