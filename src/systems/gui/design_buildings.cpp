@@ -16,6 +16,7 @@
 #include "../../raws/defs/reaction_t.hpp"
 #include <sstream>
 #include <fmt/format.h>
+#include "../../bengine/btabs.hpp"
 
 namespace systems {
 	namespace design_buildings {
@@ -89,62 +90,71 @@ namespace systems {
 
 		static int selected_not_buildable = 0;
 
+		static std::vector<const char *> building_listbox_items;
+		static std::vector<std::pair<std::string, std::string>> buildings;
+
+		static void render_available()
+		{
+			if (selected_building > building_listbox_items.size() - 1) selected_building = 0;
+			ImGui::BeginChild("build_list", ImVec2(300, 300));
+			ImGui::ListBox("", &selected_building, &building_listbox_items.at(0), buildings.size(), 10);
+			ImGui::EndChild();
+
+			if (!building_listbox_items.empty())
+			{
+				const auto tag = buildings[selected_building].first;
+				display_building_info(tag);
+			}
+		}
+
+		static void render_all()
+		{
+			std::vector<std::pair<std::string, std::string>> all_buildings;
+			each_building_def([&all_buildings](const building_def_t * bd)
+			{
+				all_buildings.emplace_back(std::make_pair(bd->tag, bd->name));
+			});
+			std::vector<const char *> all_building_listbox_items(all_buildings.size());
+			for (auto i = 0; i<static_cast<int>(all_buildings.size()); ++i) {
+				all_building_listbox_items[i] = all_buildings[i].second.c_str();
+			}
+
+			ImGui::BeginChild("cant_build_list", ImVec2(300, 300));
+			ImGui::ListBox("##AllBuildings", &selected_not_buildable, &all_building_listbox_items.at(0), all_building_listbox_items.size(), 10);
+			ImGui::EndChild();
+
+			if (!all_building_listbox_items.empty())
+			{
+				const auto tag = all_buildings[selected_not_buildable].first;
+				display_building_info(tag);
+			}
+		}
+
+		static bengine::btabs_t building_tabs{
+			{
+				bengine::btab_t{ "Available Buildings", render_available },
+				bengine::btab_t{ "All Buildings", render_all },
+			}
+		};
+
 		void run(const double &duration_ms) {
 			render::models_changed = true; // Models always change while in design mode - buildings
 
-			std::vector<std::pair<std::string, std::string>> buildings;
-
+			buildings.clear();
 			auto rendered_selected = false;
 			auto available_buildings = inventory::get_available_buildings();
 			for (const auto &building : available_buildings) {
 				if (has_build_mode_building && build_mode_building.tag == building.tag) rendered_selected = true;
 				buildings.emplace_back(std::make_pair(building.tag, building.get_name()));
 			}
-			std::vector<const char *> building_listbox_items(buildings.size());
+			building_listbox_items.clear();
+			building_listbox_items.resize(buildings.size());
 			for (auto i = 0; i<static_cast<int>(buildings.size()); ++i) {
 				building_listbox_items[i] = buildings[i].second.c_str();
 			}
 
 			ImGui::Begin(win_building.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
-			//ImGui::BeginTabBar("##buildingmaker#tabs");
-			//ImGui::DrawTabsBackground();
-
-			if (ImGui::Button("Available Buildings")) {
-				if (selected_building > building_listbox_items.size() - 1) selected_building = 0;
-				ImGui::BeginChild("build_list", ImVec2(300, 300));
-				ImGui::ListBox("", &selected_building, &building_listbox_items.at(0), buildings.size(), 10);
-				ImGui::EndChild();
-
-				if (!building_listbox_items.empty())
-				{
-					const auto tag = buildings[selected_building].first;
-					display_building_info(tag);
-				}
-			}
-			if (ImGui::Button("All Buildings"))
-			{
-				std::vector<std::pair<std::string, std::string>> all_buildings;
-				each_building_def([&all_buildings] (const building_def_t * bd)
-				{
-					all_buildings.emplace_back(std::make_pair( bd->tag, bd->name ));
-				});
-				std::vector<const char *> all_building_listbox_items(all_buildings.size());
-				for (auto i = 0; i<static_cast<int>(all_buildings.size()); ++i) {
-					all_building_listbox_items[i] = all_buildings[i].second.c_str();
-				}
-
-				ImGui::BeginChild("cant_build_list", ImVec2(300, 300));
-				ImGui::ListBox("##AllBuildings", &selected_not_buildable, &all_building_listbox_items.at(0), all_building_listbox_items.size(), 10);
-				ImGui::EndChild();
-
-				if (!all_building_listbox_items.empty())
-				{
-					const auto tag = all_buildings[selected_not_buildable].first;
-					display_building_info(tag);
-				}
-			}
-
-			//ImGui::EndTabBar();
+			bengine::render_btab_bar(building_tabs);
 			ImGui::End();
 
 			if (!rendered_selected) {
