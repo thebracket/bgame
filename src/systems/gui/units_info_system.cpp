@@ -162,21 +162,19 @@ namespace systems {
 			ImGui::Columns(1);
 		}
 
+		static std::vector<bengine::table_heading_t> native_headings{
+			{ "Entity Name", -1.0f }, { "Options", -1.0f }
+		};
+
 		static inline void render_natives() {
 			using namespace bengine;
 
-			ImGui::Columns(2, "npc_list_grid");
-			ImGui::Separator();
-
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Sentient"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
-			ImGui::Separator();
+			bengine::begin_table(native_headings, "npc_list_grid");
 
 			each<sentient_ai, name_t>([](entity_t &e, sentient_ai &ai, name_t &name) {
-				const std::string critter_name = name.first_name + std::string(" ") + name.last_name;
-				ImGui::Text("%s", critter_name.c_str());
+				const std::string npc_name = name.first_name + std::string(" ") + name.last_name;
+				ImGui::Text("%s", npc_name.c_str());
 				ImGui::NextColumn();
-				ImGui::Separator();
 
 				const std::string critter_goto = btn_goto_creature + std::string("##") + std::to_string(e.id);
 				if (ImGui::Button(critter_goto.c_str())) {
@@ -192,6 +190,7 @@ namespace systems {
 				ImGui::NextColumn();
 				ImGui::Separator();
 			});
+			bengine::end_table();
 		}
 
 		static bengine::btabs_t unit_tabs{
@@ -199,7 +198,7 @@ namespace systems {
 				bengine::btab_t{ win_settler_list, render_settlers},
 				bengine::btab_t{ win_wildlife_list, render_creatures },
 				bengine::btab_t{ win_natives_list, render_natives },
-			}, 0
+			}
 		};
 
 		void run(const double &duration_ms) {
