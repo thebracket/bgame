@@ -19,9 +19,16 @@
 #include "item_info_system.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../utils/system_log.hpp"
+#include "../../bengine/btabs.hpp"
 
 namespace systems {
 	namespace settler_ui {
+
+		static name_t * name;
+		static game_stats_t * stats;
+		static species_t * species;
+		static settler_ai_t * ai;
+		static health_t * health;
 
 		static const std::string tab_summary = std::string(ICON_FA_USER) + " Summary";
 		static const std::string tab_stats = std::string(ICON_FA_BAR_CHART) + " Stats";
@@ -46,7 +53,7 @@ namespace systems {
 			ImGui::Separator();
 		}
 
-		static inline void render_stats(game_stats_t * stats, species_t * species) {
+		static inline void render_stats() {
 			ImGui::Columns(3, "stats_grid");
 			ImGui::Separator();
 
@@ -89,7 +96,7 @@ namespace systems {
 			ImGui::Columns(1);
 		}
 
-		static inline void render_summary(name_t * name, game_stats_t * stats, species_t * species, settler_ai_t * ai, health_t * health) {
+		static inline void render_summary() {
 			fmt::MemoryWriter header;
 			header << " " << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ") ";
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", header.str().c_str());
@@ -110,7 +117,7 @@ namespace systems {
 			ImGui::Text("%s: %s", "Current Status:", ai->job_status.c_str());
 		}
 
-		static inline void render_health(health_t * health) {
+		static inline void render_health() {
 			ImGui::Text("Hit Points: "); ImGui::SameLine();
 			ImGui::ProgressBar(static_cast<float>(health->current_hitpoints) / static_cast<float>(health->max_hitpoints));
 
@@ -139,7 +146,7 @@ namespace systems {
 			ImGui::Columns(1);
 		}
 
-		static inline void render_inventory(std::size_t selected_settler) {
+		static inline void render_inventory() {
 			using namespace bengine;
 
 			ImGui::Columns(5, "inventory_grid");
@@ -153,8 +160,8 @@ namespace systems {
 			ImGui::Separator();
 
 			each_if<item_t, item_carried_t>(
-				[&selected_settler](entity_t &e, item_t &item, item_carried_t &carried) {
-				return carried.carried_by == selected_settler;
+				[](entity_t &e, item_t &item, item_carried_t &carried) {
+				return carried.carried_by == units_ui::selected_settler;
 			},
 				[](entity_t &e, item_t &item, item_carried_t &carried) {
 				ImGui::Text("%s", item.item_name.c_str());
@@ -187,7 +194,7 @@ namespace systems {
 			});
 		}
 
-		static inline void render_history(std::size_t selected_settler) {
+		static inline void render_history() {
 			ImGui::Columns(2, "history_grid");
 			ImGui::Separator();
 
@@ -195,7 +202,7 @@ namespace systems {
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Event"); ImGui::NextColumn();
 			ImGui::Separator();
 
-			for (const life_event_t &le : planet.history.settler_life_events[selected_settler]) {
+			for (const life_event_t &le : planet.history.settler_life_events[units_ui::selected_settler]) {
 				auto finder = get_life_event(le.type);
 				if (finder != nullptr) {
 					const std::string year = std::to_string(le.year);
@@ -215,58 +222,46 @@ namespace systems {
 			}
 		}
 
+		static void render_placeholder()
+		{
+			ImGui::Text("Placeholder");
+		}
+
+		static bengine::btabs_t settler_tabs{
+			{
+				bengine::btab_t{ tab_summary, render_summary },
+				bengine::btab_t{ tab_stats, render_stats },
+				bengine::btab_t{ tab_health , render_health },
+				bengine::btab_t{ tab_schedule , render_placeholder },
+				bengine::btab_t{ tab_work , render_placeholder },
+				bengine::btab_t{ tab_inventory , render_inventory },
+				bengine::btab_t{ tab_emotions , render_placeholder },
+				bengine::btab_t{ tab_relations , render_placeholder },
+				bengine::btab_t{ tab_history , render_history },
+			}
+		};
+
+		static bool show_window = true;
+
 		void run(const double &duration_ms) {
 			using namespace bengine;
 			using namespace systems::units_ui;
-			auto name = entity(selected_settler)->component<name_t>();
-			auto stats = entity(selected_settler)->component<game_stats_t>();
-			auto species = entity(selected_settler)->component<species_t>();
-			auto ai = entity(selected_settler)->component<settler_ai_t>();
-			auto health = entity(selected_settler)->component<health_t>();
-
+			name = entity(selected_settler)->component<name_t>();
+			stats = entity(selected_settler)->component<game_stats_t>();
+			species = entity(selected_settler)->component<species_t>();
+			ai = entity(selected_settler)->component<settler_ai_t>();
+			health = entity(selected_settler)->component<health_t>();
 			std::stringstream header;
 			header << std::string(ICON_FA_USER) << " " << name->first_name << " " << name->last_name << " (" << stats->profession_tag << ") ";
 
-			ImGui::Begin(header.str().c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
-
-			if (ImGui::Button("Close")) {
-				game_master_mode = PLAY;
-			}
-
-			//ImGui::BeginTabBar("##Settler#info_bar");
-			//ImGui::DrawTabsBackground();
-
-			if (ImGui::Button(tab_summary.c_str())) {
-				render_summary(name, stats, species, ai, health);
-			}
-			if (ImGui::Button(tab_stats.c_str())) {
-				render_stats(stats, species);
-			}
-			if (ImGui::Button(tab_health.c_str())) {
-				render_health(health);
-			}
-			if (ImGui::Button(tab_schedule.c_str())) {
-
-			}
-			if (ImGui::Button(tab_work.c_str())) {
-
-			}
-			if (ImGui::Button(tab_inventory.c_str())) {
-				render_inventory(selected_settler);
-			}
-			if (ImGui::Button(tab_emotions.c_str())) {
-
-			}
-			if (ImGui::Button(tab_relations.c_str())) {
-
-			}
-			if (ImGui::Button(tab_history.c_str())) {
-				render_history(selected_settler);
-			}
-
-			//ImGui::EndTabBar();
-									
+			bengine::begin_info_window(header.str(), &show_window);
+			bengine::render_btab_bar(settler_tabs);
 			ImGui::End();
+
+			if (!show_window) {
+				game_master_mode = PLAY;
+				show_window = true;
+			}
 		}
 	}
 }
