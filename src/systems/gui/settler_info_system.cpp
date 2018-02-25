@@ -194,27 +194,29 @@ namespace systems {
 			});
 		}
 
+		static std::vector<bengine::table_heading_t> life_headings{
+			{ "Year", 50.0f },{ "Event", -1.0f }
+		};
+		static bool history_headings_first_run = true;
+
 		static inline void render_history() {
-			ImGui::Columns(2, "history_grid");
-			ImGui::Separator();
+			bengine::begin_table(history_headings_first_run, life_headings, "life_history_grid");
 
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Year"); ImGui::NextColumn();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Event"); ImGui::NextColumn();
-			ImGui::Separator();
-
+			bool zebra = true;
 			for (const life_event_t &le : planet.history.settler_life_events[units_ui::selected_settler]) {
-				auto finder = get_life_event(le.type);
+				const auto finder = get_life_event(le.type);
 				if (finder != nullptr) {
+					bengine::zebra_row(zebra);
 					const std::string year = std::to_string(le.year);
 					std::string event = finder->description + std::string(" ");
 
+					bengine::begin_zebra_col(zebra);
 					ImGui::Text("%s", year.c_str());
-					ImGui::NextColumn();
+					bengine::end_zebra_col();
 
+					bengine::begin_zebra_col(zebra);
 					ImGui::Text("%s", event.c_str());
-					ImGui::NextColumn();
-
-					ImGui::Separator();
+					bengine::end_zebra_col();
 				}
 				else {
 					glog(log_target::GAME, log_severity::WARNING, "Warning: {0} life event not found", le.type);
