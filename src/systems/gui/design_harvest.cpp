@@ -14,6 +14,7 @@
 #include "../../components/claimed_t.hpp"
 #include "../../components/item_tags/item_seed_t.hpp"
 #include "../../components/items/item.hpp"
+#include "../../bengine/btabs.hpp"
 
 using namespace tile_flags;
 
@@ -160,21 +161,19 @@ namespace systems {
 
 		static std::string harvest_tab = std::string(ICON_FA_LEAF) + " Harvest";
 		static std::string farms_tab = std::string(ICON_FA_TASKS) + " Farms";
+		
+		static bengine::btabs_t harvest_tabs{
+			{
+				bengine::btab_t{ harvest_tab, display_harvest },
+				bengine::btab_t{ farms_tab, display_farms },
+			}
+		};
 
 		void run(const double &duration_ms) {
 			cursors.clear();
+
 			ImGui::Begin(win_harvest.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
-			//ImGui::BeginTabBar("##farming#tabs");
-			//ImGui::DrawTabsBackground();
-
-			if (ImGui::Button(harvest_tab.c_str())) {
-				display_harvest();
-			}
-			if (ImGui::Button(farms_tab.c_str())) {
-				display_farms();
-			}
-
-			//ImGui::EndTabBar();
+			bengine::render_btab_bar(harvest_tabs);
 			ImGui::End();
 		}
 	}
