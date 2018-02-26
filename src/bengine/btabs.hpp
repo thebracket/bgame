@@ -6,6 +6,7 @@
 #include "../global_assets/game_pause.hpp"
 #include <vector>
 #include <functional>
+#include <optional>
 #include "../systems/keydamper.hpp"
 
 /*
@@ -117,6 +118,7 @@ namespace bengine
 	{
 		std::string title;
 		std::function<void()> on_render;
+		std::optional<std::pair<std::string, int>> shortcut;
 	};
 
 	/* Defines a tab set */
@@ -133,13 +135,15 @@ namespace bengine
 		const auto sz = bt.tabs.size()-1;
 		for (auto &b : bt.tabs)
 		{
+			const auto full_title = b.shortcut ? std::string("(") + b.shortcut->first + std::string(") ") + b.title : b.title;
 			if (i == bt.selected)
 			{
 				ImGui::TextColored(ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f }, "%s", b.title.c_str());
-			} else if (ImGui::Button(b.title.c_str()))
+			} else if (ImGui::Button(full_title.c_str()))
 			{
 				bt.selected = i;
 			}
+			if (b.shortcut && systems::is_key_down(b.shortcut->second)) bt.selected = i;
 			if (i < sz) ImGui::SameLine();
 			++i;
 		}

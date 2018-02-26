@@ -162,8 +162,8 @@ namespace systems {
 		
 		static bengine::btabs_t harvest_tabs{
 			{
-				bengine::btab_t{ harvest_tab, display_harvest },
-				bengine::btab_t{ farms_tab, display_farms },
+				bengine::btab_t{ harvest_tab, display_harvest, {{"H", GLFW_KEY_H}} },
+				bengine::btab_t{ farms_tab, display_farms,{ { "F", GLFW_KEY_F } } },
 			}
 		};
 
