@@ -6,6 +6,7 @@
 #include "../global_assets/game_pause.hpp"
 #include <vector>
 #include <functional>
+#include "../systems/keydamper.hpp"
 
 /*
  * Simple tabs system for ImGui, until a real one exists.
@@ -75,11 +76,13 @@ namespace bengine
 		ImGui::Separator();
 	}
 
+	/* Starts a row */
 	inline void zebra_row(bool &row_toggler)
 	{
 		row_toggler = !row_toggler;
 	}
 
+	/* Starts a column */
 	inline void begin_zebra_col(bool &row_toggler)
 	{
 		const auto a_color = ImColor(0.2f, 0.2f, 0.3f, 1.0f);
@@ -97,28 +100,33 @@ namespace bengine
 		}
 	}
 
+	/* Ends a column */
 	inline void end_zebra_col()
 	{
 		ImGui::NextColumn();
 	}
 
+	/* Ends a table */
 	inline void end_table()
 	{
 		ImGui::Columns(1);
 	}
 
+	/* Defines a tab */
 	struct btab_t
 	{
 		std::string title;
 		std::function<void()> on_render;
 	};
 
+	/* Defines a tab set */
 	struct btabs_t
 	{
 		std::vector<btab_t> tabs;
 		int selected = 0;
 	};
 
+	/* Render a tab bar, send callbacks to active tab */
 	inline void render_btab_bar(btabs_t &bt) noexcept
 	{
 		std::size_t i = 0;
@@ -137,6 +145,34 @@ namespace bengine
 		}
 		ImGui::Separator();
 		bt.tabs[bt.selected].on_render();
+	}
+
+	/* Used for design mode width controls, ensures consistent keyboard support. */
+	inline void render_width_control(int &width, const int min, const int max)
+	{
+		ImGui::Text("Width: %d (O/P)", width);
+		ImGui::SameLine();
+		if (ImGui::SmallButton("+##WP")) --width;
+		ImGui::SameLine();
+		if (ImGui::SmallButton("-##WM")) ++width;
+		if (systems::is_key_down(GLFW_KEY_O)) --width;
+		if (systems::is_key_down(GLFW_KEY_P)) ++width;
+		if (width < 1) width = 1;
+		if (width > 20) width = 20;
+	}
+
+	/* Used for design mode height controls, ensures consistent keyboard support. */
+	inline void render_height_control(int &height, const int min, const int max)
+	{
+		ImGui::Text("Height: %d ([/])", height);
+		ImGui::SameLine();
+		if (ImGui::SmallButton("+##HP")) ++height;
+		ImGui::SameLine();
+		if (ImGui::SmallButton("-##HM")) --height;
+		if (systems::is_key_down(GLFW_KEY_LEFT_BRACKET)) --height;
+		if (systems::is_key_down(GLFW_KEY_RIGHT_BRACKET)) ++height;
+		if (height < 1) height = 1;
+		if (height > 20) height = 20;
 	}
 
 }

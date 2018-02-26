@@ -15,6 +15,7 @@
 #include "boost/filesystem.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../helpers/targeted_flow_map.hpp"
+#include "../../bengine/btabs.hpp"
 
 using namespace tile_flags;
 
@@ -262,12 +263,9 @@ namespace systems {
 					ImGui::Combo("##brushtype", &mining_designations->brush_type, brush_options);
 
 					if (mining_designations->brush_type == 0) {
-						ImGui::Text("Width:");
+						bengine::render_width_control(mining_designations->brush_size_x, 1, 20);
 						ImGui::SameLine();
-						ImGui::InputInt("##width", &mining_designations->brush_size_x, 1, 5);
-						ImGui::Text("Height:");
-						ImGui::SameLine();
-						ImGui::InputInt("##height", &mining_designations->brush_size_y, 1, 5);
+						bengine::render_height_control(mining_designations->brush_size_y, 1, 20);
 					}
 					else if (mining_designations->brush_type == 1) {
 						ImGui::Text("Radius:");

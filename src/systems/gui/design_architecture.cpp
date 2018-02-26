@@ -13,6 +13,7 @@
 #include "boost/filesystem.hpp"
 #include "architecture_template.hpp"
 #include "../keydamper.hpp"
+#include "../../bengine/btabs.hpp"
 
 namespace systems {
 	namespace design_architecture {
@@ -280,27 +281,9 @@ namespace systems {
 					}
 				} 
 				else if (architecture_mode == 0 || architecture_mode == 1 || architecture_mode == 6) {
-					ImGui::Text("Width: %d (O/P)", arch_width); 
+					bengine::render_width_control(arch_width, 1, 20);
 					ImGui::SameLine();
-					if (ImGui::SmallButton("+##WP")) --arch_width;
-					ImGui::SameLine();
-					if (ImGui::SmallButton("-##WM")) ++arch_width;
-					ImGui::SameLine();
-					if (is_key_down(GLFW_KEY_O)) --arch_width;
-					if (is_key_down(GLFW_KEY_P)) ++arch_width;
-					if (arch_width < 1) arch_width = 1;
-					if (arch_width > 20) arch_width = 20;
-
-					ImGui::Text("Height: %d ([/])", arch_height);
-					ImGui::SameLine();
-					if (ImGui::SmallButton("+##HP")) ++arch_height;
-					ImGui::SameLine();
-					if (ImGui::SmallButton("-##HM")) --arch_height;
-					if (is_key_down(GLFW_KEY_LEFT_BRACKET)) --arch_height;
-					if (is_key_down(GLFW_KEY_RIGHT_BRACKET)) ++arch_height;
-					if (arch_height < 1) arch_height = 1;
-					if (arch_height > 20) arch_height = 20;
-
+					bengine::render_height_control(arch_height, 1, 20);
 
 					if (architecture_mode != 6) {
 						ImGui::SameLine();
@@ -327,7 +310,7 @@ namespace systems {
 				if (ImGui::Button(btn_close.c_str())) {
 					showing_save_template = false;
 				}
-				int n_elements = static_cast<int>(architecture_designations->architecture.size());
+				const auto n_elements = static_cast<int>(architecture_designations->architecture.size());
 
 				ImGui::Text("You have %d mining targets in this template.", n_elements);
 				ImGui::Text("Please enter a filename:");
