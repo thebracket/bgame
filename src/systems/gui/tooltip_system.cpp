@@ -121,6 +121,7 @@ namespace systems {
 						case farm_steps::FIX_SOIL: ss << "Fix Soil"; break;
 						case farm_steps::PLANT_SEEDS: ss << "Plant Seeds"; break;
 						case farm_steps::GROWING: ss << "Growing"; break;
+						default: { glog(log_target::GAME, log_severity::ERROR, "Unknown farming state!"); }
 						}
 						ss << ". Weeded/Watered " << farm_finder->second.days_since_weeded << "/" << farm_finder->second.days_since_watered << " days ago.";
 						lines.emplace_back(color_line(ss.str(), color_green));
@@ -229,7 +230,7 @@ namespace systems {
 							if (container) {
 								//std::cout << "It's a container\n";
 								items.clear();
-								each<item_t, item_stored_t>([&items, &world_x, &world_y, &building_entity](entity_t &entity, item_t &item, item_stored_t &stored) {
+								each<item_t, item_stored_t>([&items, &building_entity](entity_t &entity, item_t &item, item_stored_t &stored) {
 									if (stored.stored_in == building_entity->id) {
 										auto finder = items.find(item.item_name);
 										if (finder == items.end()) {
@@ -251,9 +252,9 @@ namespace systems {
 									}
 								});
 
-								for (auto it = items.begin(); it != items.end(); ++it) {
-									std::string n = std::to_string(it->second);
-									lines.push_back(color_line(std::string("     ") + std::string(ICON_FA_BRIEFCASE) + std::string(" ") + n + std::string("x ") + it->first, color_yellow));
+								for (const auto &it : items) {
+									const auto n = std::to_string(it.second);
+									lines.push_back(color_line(std::string("     ") + std::string(ICON_FA_BRIEFCASE) + std::string(" ") + n + std::string("x ") + it.first, color_yellow));
 								}
 							}
 						}
@@ -266,7 +267,7 @@ namespace systems {
 				if (bridge_id(mapidx(world_x, world_y, world_z))>0) {
 					auto be = entity(bridge_id(mapidx(world_x, world_y, world_z)));
 					if (be) {
-						auto bc = be->component<bridge_t>();
+						const auto bc = be->component<bridge_t>();
 						if (bc) {
 							if (bc->complete) {
 								lines.push_back(color_line("Bridge"));
@@ -285,14 +286,14 @@ namespace systems {
 				}
 
 				// TODO - dynamic placement
-				auto right_align = true;
+				//const auto right_align = true;
 
-				if (!right_align) {
-					ImGui::SetNextWindowPos({ static_cast<float>(mouse_x + 35), static_cast<float>(mouse_y) });
-				}
-				else {
+				//if (!right_align) {
+				//	ImGui::SetNextWindowPos({ static_cast<float>(mouse_x + 35), static_cast<float>(mouse_y) });
+				//}
+				//else {
 					ImGui::SetNextWindowPos({ static_cast<float>(mouse_x) - (longest + 35.0F), static_cast<float>(mouse_y) });
-				}
+				//}
 				ImGui::Begin("Tooltip", nullptr, ImVec2{ 600, 400 }, 100.0,
 					ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoSavedSettings);
 				for (const auto &s : lines) {
