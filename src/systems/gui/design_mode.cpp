@@ -9,6 +9,7 @@
 #include "../../bengine/gl_include.hpp"
 #include <string>
 #include "../../bengine/main_window.hpp"
+#include "../mouse.hpp"
 
 namespace systems {
 	namespace design_mode {
@@ -40,6 +41,17 @@ namespace systems {
 				pause_mode = PAUSED; // Always pause while designing
 				
 				if (is_key_down(GLFW_KEY_ESCAPE)) game_master_mode = PLAY;
+
+				const auto shift = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+
+				if (!shift) {
+					if (is_key_down(GLFW_KEY_LEFT)) mouse_wx--;
+					if (is_key_down(GLFW_KEY_RIGHT)) mouse_wx++;
+					if (is_key_down(GLFW_KEY_UP)) mouse_wy--;
+					if (is_key_down(GLFW_KEY_DOWN)) mouse_wy++;
+					if (is_key_down(GLFW_KEY_ENTER)) left_click = true;
+					if (is_key_down(GLFW_KEY_BACKSPACE)) right_click = true;
+				}
 			}
 		}
 	}

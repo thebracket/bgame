@@ -14,6 +14,7 @@
 #include "../../bengine/imgui.h"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../components/name.hpp"
+#include "../../global_assets/game_mode.hpp"
 
 namespace systems {
     namespace camerasys {
@@ -187,7 +188,11 @@ namespace systems {
 			{
 				follow_mode();
 			}
-			normal_keys();
+			const auto shift = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+
+			if (game_master_mode != DESIGN || shift) {
+				normal_keys();
+			}
 		}
     }
 }
