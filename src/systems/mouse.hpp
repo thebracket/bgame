@@ -11,7 +11,6 @@ namespace systems {
 	extern int mouse_wx;
 	extern int mouse_wy;
 	extern int mouse_wz;
-	extern bool mouse_moved;
 
 	void poll_mouse();
 }

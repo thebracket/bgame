@@ -43,14 +43,14 @@ namespace systems {
 		static void add_cursor_candidate(std::vector<std::pair<int, uint8_t>> &result, const int &x, const int &y, const int &z) {
 			if (x > 1 && x < REGION_WIDTH - 1 && y > 1 && y < REGION_HEIGHT - 1 && z > 1 && z < REGION_DEPTH - 1) {
 				// TODO: Determine viability of selection
-				result.push_back(std::make_pair(mapidx(x, y, z), mining_designations->mine_mode));
+				result.emplace_back(std::make_pair(mapidx(x, y, z), mining_designations->mine_mode));
 			}
 		}
 
 		static void add_cursor_candidate(std::vector<std::pair<int, uint8_t>> &result, const int &x, const int &y, const int &z, const uint8_t &mode) {
 			if (x > 1 && x < REGION_WIDTH - 1 && y > 1 && y < REGION_HEIGHT - 1 && z > 1 && z < REGION_DEPTH - 1) {
 				// TODO: Determine viability of selection
-				result.push_back(std::make_pair(mapidx(x, y, z), mode));
+				result.emplace_back(std::make_pair(mapidx(x, y, z), mode));
 			}
 		}
 
@@ -66,9 +66,9 @@ namespace systems {
 				if (mining_designations->mine_mode == MINE_DELETE) {
 					if (mining_designations->brush_type == 0) {
 						// Box mode delete
-						for (int y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
-							for (int x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
-								const int idx = mapidx(x, y, mouse_wz);
+						for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
+							for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
+								const auto idx = mapidx(x, y, mouse_wz);
 								mining_cursor_list.erase(
 									std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
 									mining_cursor_list.end()
@@ -78,11 +78,11 @@ namespace systems {
 					}
 					else if (mining_designations->brush_type == 1) {
 						// Circle mode delete
-						for (int y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
-							for (int x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
-								const float distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
+						for (auto y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
+							for (auto x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
+								const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
 								if (distance < (static_cast<float>(mining_designations->radius))) {
-									const int idx = mapidx(x, y, mouse_wz);
+									const auto idx = mapidx(x, y, mouse_wz);
 									mining_cursor_list.erase(
 										std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
 										mining_cursor_list.end()
@@ -95,17 +95,17 @@ namespace systems {
 				if (mining_designations->mine_mode != MINE_STAIRS_DOWN && mining_designations->mine_mode != MINE_STAIRS_UP && mining_designations->mine_mode != MINE_STAIRS_UPDOWN) {
 					if (mining_designations->brush_type == 0) {
 						// Box mode
-						for (int y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
-							for (int x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
+						for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
+							for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
 								add_cursor_candidate(result, x, y, mouse_wz);
 							}
 						}
 					}
 					else if (mining_designations->brush_type == 1) {
 						// Circle mode
-						for (int y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
-							for (int x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
-								const float distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
+						for (auto y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
+							for (auto x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
+								const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
 								if (distance < (static_cast<float>(mining_designations->radius))) {
 									add_cursor_candidate(result, x, y, mouse_wz);
 								}
@@ -121,25 +121,25 @@ namespace systems {
 					}
 					else {
 						if (mining_designations->mine_mode == MINE_STAIRS_UP) {
-							int x = mouse_wx;
-							int y = mouse_wy;
-							int z = mouse_wz;
+							const auto x = mouse_wx;
+							const auto y = mouse_wy;
+							const auto z = mouse_wz;
 							add_cursor_candidate(result, x, y, z, MINE_STAIRS_UP);
 							add_cursor_candidate(result, x, y, z + mining_designations->stairs_depth, MINE_STAIRS_DOWN);
 							if (mining_designations->stairs_depth > 1) {
-								for (int i = 1; i < mining_designations->stairs_depth; ++i) {
+								for (auto i = 1; i < mining_designations->stairs_depth; ++i) {
 									add_cursor_candidate(result, x, y, z + i, MINE_STAIRS_UPDOWN);
 								}
 							}
 						}
 						else {
-							int x = mouse_wx;
-							int y = mouse_wy;
-							int z = mouse_wz;
+							const auto x = mouse_wx;
+							const auto y = mouse_wy;
+							const auto z = mouse_wz;
 							add_cursor_candidate(result, x, y, z, MINE_STAIRS_DOWN);
 							add_cursor_candidate(result, x, y, z - mining_designations->stairs_depth, MINE_STAIRS_UP);
 							if (mining_designations->stairs_depth > 1) {
-								for (int i = 1; i < mining_designations->stairs_depth; ++i) {
+								for (auto i = 1; i < mining_designations->stairs_depth; ++i) {
 									add_cursor_candidate(result, x, y, z - i, MINE_STAIRS_UPDOWN);
 								}
 							}
@@ -152,7 +152,7 @@ namespace systems {
 		inline static void add_to_yield_map(std::map<std::string, int> &yield_map, const std::string &mine_tag, const std::string &material) {
 			const auto target = get_item_def(mine_tag);
 			if (!target) return;
-			const std::string name = material + std::string(" ") + target->name;
+			const auto name = material + std::string(" ") + target->name;
 			if (target) {
 				auto finder = yield_map.find(name);
 				if (finder != yield_map.end()) {
@@ -164,7 +164,7 @@ namespace systems {
 			}
 		}
 
-		static bool hasEnding(std::string const &fullString, std::string const &ending) {
+		static bool has_ending(std::string const &fullString, std::string const &ending) {
 			if (fullString.length() >= ending.length()) {
 				return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
 			}
@@ -178,17 +178,17 @@ namespace systems {
 
 			mining_templates.clear();
 			loaded_templates = true;
-			const std::string home_directory = get_save_path();
+			const auto home_directory = get_save_path();
 
-			path p(home_directory);
+			const path p(home_directory);
 			directory_iterator end_itr;
 			for (directory_iterator itr(p); itr != end_itr; ++itr)
 			{
 				// If it's not a directory, list it. If you want to list directories too, just remove this check.
 				if (is_regular_file(itr->path())) {
 					// assign current file name to current_file and echo it out to the console.
-					std::string current_file = itr->path().string();
-					if (hasEnding(current_file, ".mine-template")) {
+					const auto current_file = itr->path().string();
+					if (has_ending(current_file, ".mine-template")) {
 						std::ifstream load_file(current_file);
 						cereal::XMLInputArchive iarchive(load_file);
 						iarchive(current_template);
@@ -207,26 +207,18 @@ namespace systems {
 			}
 		}
 
-		static bool showing_save_template = false;
-
-		void run(const double &duration_ms) {
-			if (!loaded_templates) {
-				load_mining_templates();
-			}
-
-			get_cursor_list(mining_cursor_list);
-
-			// Determine yields
+		static std::string calculate_yield()
+		{
 			std::map<std::string, int> yield_map;
 			for (const auto idx : mining_cursor_list) {
 				if (region::flag(idx.first, REVEALED)) {
 					const auto &mat_idx = region::material(idx.first);
-					auto mat = get_material(mat_idx);
+					const auto mat = get_material(mat_idx);
 					if (mat) {
-						if (mat->mines_to_tag.size() > 0) {
+						if (!mat->mines_to_tag.empty()) {
 							add_to_yield_map(yield_map, mat->mines_to_tag, mat->name);
 						}
-						if (mat->mines_to_tag_second.size() > 0) {
+						if (!mat->mines_to_tag_second.empty()) {
 							add_to_yield_map(yield_map, mat->mines_to_tag_second, mat->name);
 						}
 					}
@@ -241,11 +233,27 @@ namespace systems {
 					}
 				}
 			}
+
 			fmt::MemoryWriter yields;
 			for (const auto &y : yield_map) {
 				yields << y.first << " x " << y.second << ". ";
 			}
-			const std::string yield_str = yields.str();
+			const auto yield_str = yields.str();
+			return yield_str;
+		}
+
+
+		static bool showing_save_template = false;
+
+		void run(const double &duration_ms) {
+			if (!loaded_templates) {
+				load_mining_templates();
+			}
+
+			get_cursor_list(mining_cursor_list);
+
+			// Determine yields
+			const auto yields = calculate_yield();
 
 			if (!showing_save_template) {
 				ImGui::Begin(win_mining.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
@@ -294,7 +302,7 @@ namespace systems {
 					ImGui::InputInt("##depth", &mining_designations->stairs_depth, 1, 5);
 				}
 
-				ImGui::Text("Predicted yield: %s", yield_str.c_str());
+				ImGui::Text("Predicted yield: %s", yields.c_str());
 
 				if (ImGui::Button(btn_mining_template.c_str())) {
 					showing_save_template = true;
@@ -322,7 +330,7 @@ namespace systems {
 				if (ImGui::Button(btn_close.c_str())) {
 					showing_save_template = false;
 				}
-				int n_elements = static_cast<int>(mining_designations->mining_targets.size());
+				const auto n_elements = static_cast<int>(mining_designations->mining_targets.size());
 
 				ImGui::Text("You have %d mining targets in this template.", n_elements);
 				ImGui::Text("Please enter a filename:");
@@ -341,9 +349,9 @@ namespace systems {
 					const std::string filename = home + std::string("/") + fn + std::string(".mine-template");
 					//std::cout << "Saving template as: " << filename << "\n";
 
-					int min_x = 1000;
-					int min_y = 1000;
-					int min_z = 1000;
+					auto min_x = 1000;
+					auto min_y = 1000;
+					auto min_z = 1000;
 
 					for (const auto &target : mining_designations->mining_targets) {
 						auto[x, y, z] = idxmap(target.first);
@@ -355,7 +363,7 @@ namespace systems {
 					current_template.targets.clear();
 					for (const auto &target : mining_designations->mining_targets) {
 						auto[x, y, z] = idxmap(target.first);
-						auto mode = target.second;
+						const auto mode = target.second;
 						current_template.targets.push_back(mining_target_t{ x - min_x, y - min_y, z - min_z, mode });
 					}
 
