@@ -68,10 +68,7 @@ namespace systems {
 				for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
 					for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
 						const auto idx = mapidx(x, y, mouse_wz);
-						mining_cursor_list.erase(
-							std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
-							mining_cursor_list.end()
-						);
+						add_cursor_candidate(result, x, y, mouse_wz);
 					}
 				}
 			}
@@ -82,10 +79,7 @@ namespace systems {
 						const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
 						if (distance < (static_cast<float>(mining_designations->radius))) {
 							const auto idx = mapidx(x, y, mouse_wz);
-							mining_cursor_list.erase(
-								std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
-								mining_cursor_list.end()
-							);
+							add_cursor_candidate(result, x, y, mouse_wz);
 						}
 					}
 				}
@@ -340,8 +334,16 @@ namespace systems {
 				if (is_key_down(GLFW_KEY_T)) mining_designations->brush_type = 2;
 
 				if (left_click) {
-					for (const auto &idx : mining_cursor_list) {
-						mining_designations->mining_targets[idx.first] = idx.second;
+					if (mining_designations->mine_mode == MINE_DELETE)
+					{
+						for (const auto &idx : mining_cursor_list) {
+							mining_designations->mining_targets.erase(idx.first);
+						}
+					}
+					else {
+						for (const auto &idx : mining_cursor_list) {
+							mining_designations->mining_targets[idx.first] = idx.second;
+						}
 					}
 					mining_system::mining_map_changed();
 				}
