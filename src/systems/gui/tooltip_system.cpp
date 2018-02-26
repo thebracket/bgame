@@ -3,7 +3,6 @@
 #include "../../planet/region/region.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../../raws/materials.hpp"
 #include "../../raws/plants.hpp"
 #include "../../raws/defs/plant_t.hpp"
@@ -19,15 +18,10 @@
 #include "../../components/buildings/building.hpp"
 #include "../../components/buildings/bridge.hpp"
 #include "../../components/claimed_t.hpp"
-#include "../../global_assets/game_camera.hpp"
-#include "../../global_assets/game_config.hpp"
-#include "../ai/mining_system.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../global_assets/farming_designations.hpp"
 #include "../../global_assets/debug_flags.hpp"
 #include "../ai/distance_map_system.hpp"
-#include "../ai/architecture_system.hpp"
-#include <sstream>
 #include "../../raws/items.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
@@ -78,7 +72,8 @@ namespace systems {
 					if (flag(tile_idx, CAN_GO_NORTH_WEST)) ss << "NW-";
 					if (flag(tile_idx, CAN_GO_SOUTH_EAST)) ss << "SE-";
 					if (flag(tile_idx, CAN_GO_SOUTH_WEST)) ss << "SW-";
-					if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand";
+					if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand-";
+					if (flag(tile_idx, CONSTRUCTION)) ss << "Cons";
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + ss.str(), color_cyan));
 				}
 
@@ -172,15 +167,15 @@ namespace systems {
 				}
 
 				// Named entities in the location
-				each<name_t, position_t>([&lines, &world_x, &world_y](entity_t &entity, name_t &name, position_t &pos) {
-					if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+				each<name_t, position_t>([&lines, &world_x, &world_y, &world_z](entity_t &entity, name_t &name, position_t &pos) {
+					if (pos.x == world_x && pos.y == world_y && pos.z == world_z) {
 						lines.emplace_back(color_line(std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name, color_magenta));
 					}
 				});
 				// Items on the ground
 				std::map<std::string, int> items;
-				each<item_t, position_t>([&world_x, &world_y, &items](entity_t &entity, item_t &item, position_t &pos) {
-					if (pos.x == world_x && pos.y == world_y && pos.z == camera_position->region_z) {
+				each<item_t, position_t>([&world_x, &world_y, &world_z, &items](entity_t &entity, item_t &item, position_t &pos) {
+					if (pos.x == world_x && pos.y == world_y && pos.z == world_z) {
 						auto finder = items.find(item.item_name);
 						if (finder == items.end()) {
 							std::string claimed;
@@ -265,11 +260,11 @@ namespace systems {
 					}
 				}
 
-				if (stockpile_id(mapidx(world_x, world_y, camera_position->region_z))>0) {
-					lines.push_back(color_line(std::string("Stockpile #") + std::to_string(stockpile_id(mapidx(world_x, world_y, camera_position->region_z)))));
+				if (stockpile_id(mapidx(world_x, world_y, world_z))>0) {
+					lines.push_back(color_line(std::string("Stockpile #") + std::to_string(stockpile_id(mapidx(world_x, world_y, world_z)))));
 				}
-				if (bridge_id(mapidx(world_x, world_y, camera_position->region_z))>0) {
-					auto be = entity(bridge_id(mapidx(world_x, world_y, camera_position->region_z)));
+				if (bridge_id(mapidx(world_x, world_y, world_z))>0) {
+					auto be = entity(bridge_id(mapidx(world_x, world_y, world_z)));
 					if (be) {
 						auto bc = be->component<bridge_t>();
 						if (bc) {
