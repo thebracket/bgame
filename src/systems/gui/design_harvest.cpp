@@ -90,7 +90,7 @@ namespace systems {
 			using namespace bengine;
 			using namespace region;
 
-			ImGui::Text("Plant type:");
+			ImGui::Text("Plant type (^ up/ ^ down):");
 			ImGui::SameLine();
 
 			std::map<std::string, std::pair<int, std::string>> available_seeds;
@@ -120,6 +120,20 @@ namespace systems {
 
 			ImGui::Combo("##SeedSelector", &selected_seed, seed_list.c_str());
 			ImGui::Text("Select tiles to designate as farms for this seed type, or right-click to remove status.");
+			const auto control_pressed = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
+			if (control_pressed)
+			{
+				if (is_key_down(GLFW_KEY_UP))
+				{
+					--selected_seed;
+					if (selected_seed < 0) selected_seed = available_seeds.size() - 1;
+				}
+				if (is_key_down(GLFW_KEY_DOWN))
+				{
+					++selected_seed;
+					if (selected_seed > available_seeds.size()-1) selected_seed = 0;
+				}
+			}
 
 			if (!available_seeds.empty()) {
 				const auto world_x = mouse_wx;
