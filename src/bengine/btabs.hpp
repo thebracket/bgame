@@ -157,8 +157,8 @@ namespace bengine
 		if (ImGui::SmallButton("-##WM")) ++width;
 		if (systems::is_key_down(GLFW_KEY_O)) --width;
 		if (systems::is_key_down(GLFW_KEY_P)) ++width;
-		if (width < 1) width = 1;
-		if (width > 20) width = 20;
+		if (width < min) width = min;
+		if (width > max) width = max;
 	}
 
 	/* Used for design mode height controls, ensures consistent keyboard support. */
@@ -171,8 +171,22 @@ namespace bengine
 		if (ImGui::SmallButton("-##HM")) --height;
 		if (systems::is_key_down(GLFW_KEY_LEFT_BRACKET)) --height;
 		if (systems::is_key_down(GLFW_KEY_RIGHT_BRACKET)) ++height;
-		if (height < 1) height = 1;
-		if (height > 20) height = 20;
+		if (height < min) height = min;
+		if (height > max) height = max;
+	}
+
+	/* Used for design mode that needs a radius */
+	inline void render_radius_control(int &radius, const int min, const int max)
+	{
+		ImGui::Text("Radius: %d ([/])", radius);
+		ImGui::SameLine();
+		if (ImGui::SmallButton("+##RP")) ++radius;
+		ImGui::SameLine();
+		if (ImGui::SmallButton("-##RM")) --radius;
+		if (systems::is_key_down(GLFW_KEY_LEFT_BRACKET)) --radius;
+		if (systems::is_key_down(GLFW_KEY_RIGHT_BRACKET)) ++radius;
+		if (radius < min) radius = min;
+		if (radius > max) radius = max;
 	}
 
 }

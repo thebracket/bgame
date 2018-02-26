@@ -28,8 +28,8 @@ namespace systems {
 		static const std::string btn_mining_template = std::string(ICON_FA_FLOPPY_O) + " Save Mining Template##button";
 		static const std::string btn_close = std::string(ICON_FA_TIMES) + " Close without saving";
 
-		static const char * brush_options = "Box\0Circle\0Template\0\0";
-		static const char * dig_modes = "Dig (d)\0Channel (c)\0Ramp (r)\0Up Ladder (u)\0Down Ladder (j)\0Up/Down Ladder (i)\0Clear (x)\0\0";
+		static const char * brush_options = "Box (b)\0Circle (c)\0Template (t)\0\0";
+		static const char * dig_modes = "Dig (d)\0Channel (h)\0Ramp (r)\0Up Ladder (u)\0Down Ladder (j)\0Up/Down Ladder (i)\0Clear (x)\0\0";
 
 		static bool loaded_templates = false;
 		static mining_template_t current_template;
@@ -54,97 +54,117 @@ namespace systems {
 			}
 		}
 
-		static void get_cursor_list(std::vector<std::pair<int, uint8_t>> &result) {
-			result.clear();
+		static void cursors_template(std::vector<std::pair<int, uint8_t>> &result)
+		{
+			for (const auto &b : current_template.targets) {
+				add_cursor_candidate(result, mouse_wx + b.x, mouse_wy + b.y, mouse_wz + b.z, b.mode);
+			}
+		}
 
-			if (mining_designations->brush_type == 2) {
-				for (const auto &b : current_template.targets) {
-					add_cursor_candidate(result, mouse_wx + b.x, mouse_wy + b.y, mouse_wz + b.z, b.mode);
+		static void cursors_delete(std::vector<std::pair<int, uint8_t>> &result)
+		{
+			if (mining_designations->brush_type == 0) {
+				// Box mode delete
+				for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
+					for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
+						const auto idx = mapidx(x, y, mouse_wz);
+						mining_cursor_list.erase(
+							std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
+							mining_cursor_list.end()
+						);
+					}
 				}
 			}
+			else if (mining_designations->brush_type == 1) {
+				// Circle mode delete
+				for (auto y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
+					for (auto x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
+						const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
+						if (distance < (static_cast<float>(mining_designations->radius))) {
+							const auto idx = mapidx(x, y, mouse_wz);
+							mining_cursor_list.erase(
+								std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
+								mining_cursor_list.end()
+							);
+						}
+					}
+				}
+			}
+		}
+
+		static void cursors_blockmode(std::vector<std::pair<int, uint8_t>> &result)
+		{
+			if (mining_designations->brush_type == 0) {
+				// Box mode
+				for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
+					for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
+						add_cursor_candidate(result, x, y, mouse_wz);
+					}
+				}
+			}
+			else if (mining_designations->brush_type == 1) {
+				// Circle mode
+				for (auto y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
+					for (auto x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
+						const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
+						if (distance < (static_cast<float>(mining_designations->radius))) {
+							add_cursor_candidate(result, x, y, mouse_wz);
+						}
+					}
+				}
+			}
+		}
+
+		static void cursors_stairs(std::vector<std::pair<int, uint8_t>> &result)
+		{
+			if (mining_designations->mine_mode == MINE_STAIRS_UPDOWN) {
+				// Up/Down is just a single tile no matter what
+				add_cursor_candidate(result, mouse_wx, mouse_wy, mouse_wz);
+			}
 			else {
-				if (mining_designations->mine_mode == MINE_DELETE) {
-					if (mining_designations->brush_type == 0) {
-						// Box mode delete
-						for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
-							for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
-								const auto idx = mapidx(x, y, mouse_wz);
-								mining_cursor_list.erase(
-									std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
-									mining_cursor_list.end()
-								);
-							}
-						}
-					}
-					else if (mining_designations->brush_type == 1) {
-						// Circle mode delete
-						for (auto y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
-							for (auto x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
-								const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
-								if (distance < (static_cast<float>(mining_designations->radius))) {
-									const auto idx = mapidx(x, y, mouse_wz);
-									mining_cursor_list.erase(
-										std::remove_if(mining_cursor_list.begin(), mining_cursor_list.end(), [&idx](auto &i) { return i.first == idx; }),
-										mining_cursor_list.end()
-									);
-								}
-							}
-						}
-					}
-				} else 
-				if (mining_designations->mine_mode != MINE_STAIRS_DOWN && mining_designations->mine_mode != MINE_STAIRS_UP && mining_designations->mine_mode != MINE_STAIRS_UPDOWN) {
-					if (mining_designations->brush_type == 0) {
-						// Box mode
-						for (auto y = mouse_wy; y < mouse_wy + mining_designations->brush_size_y; ++y) {
-							for (auto x = mouse_wx; x < mouse_wx + mining_designations->brush_size_x; ++x) {
-								add_cursor_candidate(result, x, y, mouse_wz);
-							}
-						}
-					}
-					else if (mining_designations->brush_type == 1) {
-						// Circle mode
-						for (auto y = mouse_wy - mining_designations->radius; y < mouse_wy + mining_designations->radius; ++y) {
-							for (auto x = mouse_wx - mining_designations->radius; x < mouse_wx + mining_designations->radius; ++x) {
-								const auto distance = std::abs(bengine::distance2d(mouse_wx, mouse_wy, x, y)) + 0.5f;
-								if (distance < (static_cast<float>(mining_designations->radius))) {
-									add_cursor_candidate(result, x, y, mouse_wz);
-								}
-							}
+				if (mining_designations->mine_mode == MINE_STAIRS_UP) {
+					const auto x = mouse_wx;
+					const auto y = mouse_wy;
+					const auto z = mouse_wz;
+					add_cursor_candidate(result, x, y, z, MINE_STAIRS_UP);
+					add_cursor_candidate(result, x, y, z + mining_designations->stairs_depth, MINE_STAIRS_DOWN);
+					if (mining_designations->stairs_depth > 1) {
+						for (auto i = 1; i < mining_designations->stairs_depth; ++i) {
+							add_cursor_candidate(result, x, y, z + i, MINE_STAIRS_UPDOWN);
 						}
 					}
 				}
 				else {
+					const auto x = mouse_wx;
+					const auto y = mouse_wy;
+					const auto z = mouse_wz;
+					add_cursor_candidate(result, x, y, z, MINE_STAIRS_DOWN);
+					add_cursor_candidate(result, x, y, z - mining_designations->stairs_depth, MINE_STAIRS_UP);
+					if (mining_designations->stairs_depth > 1) {
+						for (auto i = 1; i < mining_designations->stairs_depth; ++i) {
+							add_cursor_candidate(result, x, y, z - i, MINE_STAIRS_UPDOWN);
+						}
+					}
+				}
+			}
+		}
+
+		static void get_cursor_list(std::vector<std::pair<int, uint8_t>> &result) {
+			result.clear();
+
+			if (mining_designations->brush_type == 2) {
+				cursors_template(result);
+			}
+			else {
+				if (mining_designations->mine_mode == MINE_DELETE) {
+					cursors_delete(result);
+				} else 
+				if (mining_designations->mine_mode != MINE_STAIRS_DOWN && mining_designations->mine_mode != MINE_STAIRS_UP && mining_designations->mine_mode != MINE_STAIRS_UPDOWN) {
+					cursors_blockmode(result);
+				}
+				else {
 					// Stairs mode
-					if (mining_designations->mine_mode == MINE_STAIRS_UPDOWN) {
-						// Up/Down is just a single tile no matter what
-						add_cursor_candidate(result, mouse_wx, mouse_wy, mouse_wz);
-					}
-					else {
-						if (mining_designations->mine_mode == MINE_STAIRS_UP) {
-							const auto x = mouse_wx;
-							const auto y = mouse_wy;
-							const auto z = mouse_wz;
-							add_cursor_candidate(result, x, y, z, MINE_STAIRS_UP);
-							add_cursor_candidate(result, x, y, z + mining_designations->stairs_depth, MINE_STAIRS_DOWN);
-							if (mining_designations->stairs_depth > 1) {
-								for (auto i = 1; i < mining_designations->stairs_depth; ++i) {
-									add_cursor_candidate(result, x, y, z + i, MINE_STAIRS_UPDOWN);
-								}
-							}
-						}
-						else {
-							const auto x = mouse_wx;
-							const auto y = mouse_wy;
-							const auto z = mouse_wz;
-							add_cursor_candidate(result, x, y, z, MINE_STAIRS_DOWN);
-							add_cursor_candidate(result, x, y, z - mining_designations->stairs_depth, MINE_STAIRS_UP);
-							if (mining_designations->stairs_depth > 1) {
-								for (auto i = 1; i < mining_designations->stairs_depth; ++i) {
-									add_cursor_candidate(result, x, y, z - i, MINE_STAIRS_UPDOWN);
-								}
-							}
-						}
-					}
+					cursors_stairs(result);
 				}
 			}
 		}
@@ -276,9 +296,7 @@ namespace systems {
 						bengine::render_height_control(mining_designations->brush_size_y, 1, 20);
 					}
 					else if (mining_designations->brush_type == 1) {
-						ImGui::Text("Radius:");
-						ImGui::SameLine();
-						ImGui::InputInt("##radius", &mining_designations->radius, 1, 5);
+						bengine::render_radius_control(mining_designations->radius, 1, 20);
 					}
 					else if (mining_designations->brush_type == 2) {
 						if (mining_templates.empty()) {
@@ -311,12 +329,15 @@ namespace systems {
 
 				// Keyboard handler			
 				if (is_key_down(GLFW_KEY_D)) mining_designations->mine_mode = MINE_DIG;
-				if (is_key_down(GLFW_KEY_C)) mining_designations->mine_mode = MINE_CHANNEL;
+				if (is_key_down(GLFW_KEY_H)) mining_designations->mine_mode = MINE_CHANNEL;
 				if (is_key_down(GLFW_KEY_R)) mining_designations->mine_mode = MINE_RAMP;
 				if (is_key_down(GLFW_KEY_U)) mining_designations->mine_mode = MINE_STAIRS_UP;
 				if (is_key_down(GLFW_KEY_J)) mining_designations->mine_mode = MINE_STAIRS_DOWN;
 				if (is_key_down(GLFW_KEY_I)) mining_designations->mine_mode = MINE_STAIRS_UPDOWN;
 				if (is_key_down(GLFW_KEY_X)) mining_designations->mine_mode = MINE_DELETE;
+				if (is_key_down(GLFW_KEY_B)) mining_designations->brush_type = 0;
+				if (is_key_down(GLFW_KEY_C)) mining_designations->brush_type = 1;
+				if (is_key_down(GLFW_KEY_T)) mining_designations->brush_type = 2;
 
 				if (left_click) {
 					for (const auto &idx : mining_cursor_list) {
