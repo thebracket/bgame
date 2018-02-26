@@ -30,7 +30,7 @@ namespace flow_maps {
 			for (const auto &t : new_targets)
 			{
 				const auto idx = std::get<0>(t);
-				if (region::flag(idx, tile_flags::CAN_STAND_HERE) && systems::distance_map::reachable_from_cordex.get(idx) < systems::dijkstra::MAX_DIJSTRA_DISTANCE) {
+				if (region::flag(idx, tile_flags::CAN_STAND_HERE)) {
 					targets.emplace_back(t);
 				}
 			}
@@ -41,11 +41,9 @@ namespace flow_maps {
 			std::map<int, std::tuple<int, int>> searcher; // index = range, body = position
 			for (const auto &t : targets)
 			{
-				const auto cordex_reachable = systems::distance_map::reachable_from_cordex.get(std::get<0>(t));
 				const auto[x, y, z] = idxmap(std::get<0>(t));
 				const auto range = static_cast<int>(bengine::distance3d(pos.x, pos.y, pos.z, x, y, z));
-				if (cordex_reachable < systems::dijkstra::MAX_DIJSTRA_DISTANCE-1)
-					searcher.insert(std::make_pair(range, t));
+				searcher.insert(std::make_pair(range, t));
 			}
 
 			for (const auto search : searcher)
