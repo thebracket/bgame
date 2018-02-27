@@ -8,7 +8,7 @@
 #include "../render_engine/shaders/ascii_base_shader.hpp"
 #include "../render_engine/shaders/ascii_light_shader.hpp"
 #include "../render_engine/shaders/worldgen_shader.hpp"
-
+#include "../render_engine/shaders/cursor_shader.hpp"
 
 namespace assets {
     unsigned int spriteshader = 0;
@@ -21,7 +21,7 @@ namespace assets {
 	unsigned int sprite_shader = 0;
 	std::unique_ptr<voxel_shader_t> voxel_shader;
 	std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
-	unsigned int cursor_shader;
+	std::unique_ptr<cursor_shader_t> cursor_shader;
 	unsigned int particle_shader;
 	unsigned int pointlight_shader;
 	unsigned int lighter_shader;
@@ -42,7 +42,7 @@ namespace assets {
 		sprite_shader = load_shaders("game_assets/sprite_shader_vertex.glsl", "game_assets/sprite_shader_fragment.glsl");
 		voxel_shader = std::make_unique<voxel_shader_t>();
 		voxel_shadow_shader = std::make_unique<voxel_shadow_shader_t>();
-		cursor_shader = load_shaders("game_assets/highlight_vertex.glsl", "game_assets/highlight_fragment.glsl");
+		cursor_shader = std::make_unique<cursor_shader_t>();
 		particle_shader = load_shaders("game_assets/particle_vertex.glsl", "game_assets/particle_fragment.glsl");
 		lighter_shader = load_shaders("game_assets/lighter_vertex.glsl", "game_assets/lighter_fragment.glsl");
 		pointlight_shader = load_shaders("game_assets/pointlight_vertex.glsl", "game_assets/pointlight_fragment.glsl", "game_assets/pointlight_geometry.glsl");

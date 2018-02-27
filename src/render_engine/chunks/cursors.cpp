@@ -12,6 +12,7 @@
 #include "../../bengine/gl_include.hpp"
 #include "../../systems/gui/design_architecture.hpp"
 #include "../../planet/region/region.hpp"
+#include "../shaders/cursor_shader.hpp"
 
 namespace render {
 	static unsigned int cursors_vao = 0;
@@ -219,9 +220,10 @@ namespace render {
 
 	void render_cursor(glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix) {
 		// Assign the VAO, texture array, uniforms etc.
-		glUseProgram(assets::cursor_shader);
-		glUniformMatrix4fv(glGetUniformLocation(assets::cursor_shader, "projection_matrix") , 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-		glUniformMatrix4fv(glGetUniformLocation(assets::cursor_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+		glUseProgram(assets::cursor_shader->shader_id);
+		glUniformMatrix4fv(assets::cursor_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+		glUniformMatrix4fv(assets::cursor_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+		glUniform1i(assets::cursor_shader->texture_array, 0);
 		glBindVertexArray(cursors_vao);		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, assets::cursor_texture_array);

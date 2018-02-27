@@ -324,6 +324,7 @@
     <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\cursor_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp" />
@@ -659,6 +660,7 @@
     <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\cursor_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp" />
