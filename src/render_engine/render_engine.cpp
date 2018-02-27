@@ -147,9 +147,8 @@ namespace render {
 		else {
 			glUniform3f(lightstage_shader->moon_color, calendar->moon_r, calendar->moon_g, calendar->moon_b);
 		}
-		glUniform1i(lightstage_shader->noise_tex, 4);
 		glUniformMatrix4fv(lightstage_shader->projection, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix * camera_modelview_matrix));
-		glUniform1i(lightstage_shader->gbuffer_depth_tex, 5);
+		glUniform1i(lightstage_shader->gbuffer_depth_tex, 4);
 		if (config::game_config.disable_ssao)
 		{
 			glUniform1f(lightstage_shader->useSSAO, 0);
@@ -168,8 +167,6 @@ namespace render {
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
 		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, noise_tex);
-		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, gbuffer->depth_tex);
         render_buffer_quad();
     }

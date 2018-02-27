@@ -35,24 +35,6 @@ namespace render {
 			sample *= scale;
 			ssao_kernel.push_back(sample);
 		}
-
-		std::vector<glm::vec3> ssao_noise;
-		for (unsigned int i = 0; i < 16; i++)
-		{
-			const glm::vec3 noise(
-				random_floats(generator) * 2.0 - 1.0,
-				random_floats(generator) * 2.0 - 1.0,
-				0.0f);
-			ssao_noise.push_back(noise);
-		}
-
-		glGenTextures(1, &noise_tex);
-		glBindTexture(GL_TEXTURE_2D, noise_tex);
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB16F, 4, 4);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
 	void send_samples_to_shader() {

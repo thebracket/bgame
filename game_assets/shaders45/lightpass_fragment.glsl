@@ -9,7 +9,6 @@ uniform sampler2D albedo_tex;
 uniform sampler2D normal_tex;
 uniform sampler2D position_tex;
 uniform sampler2D ao_tex;
-uniform sampler2D noise_tex;
 uniform sampler2D gbuffer_depth_tex;
 
 uniform vec3 camera_position;
