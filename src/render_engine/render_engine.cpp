@@ -69,7 +69,6 @@ namespace render {
         // Assign the uniforms
         glUniformMatrix4fv(assets::chunkshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
         glUniformMatrix4fv(assets::chunkshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-		glUniformMatrix3fv(assets::chunkshader->normal_matrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
 		glUniform3f(assets::chunkshader->camera_position, camera_position->region_x, camera_position->region_z, camera_position->region_y);
 		if (config::game_config.parallax)
 		{

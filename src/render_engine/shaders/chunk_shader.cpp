@@ -8,5 +8,4 @@ chunk_shader_t::chunk_shader_t() {
 	textureArray = get_uniform("textureArray");
 	camera_position = get_uniform("camera_position");
 	use_parallax = get_uniform("useParallax");
-	normal_matrix = get_uniform("normalMatrix");
 }
