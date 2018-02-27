@@ -36,7 +36,7 @@ namespace render {
         }
     }
 
-    void render_test_quad(unsigned int &texture) {
+    void render_fullscreen_quad(unsigned int &texture) {
         using namespace testimpl;
         check_quad();
 

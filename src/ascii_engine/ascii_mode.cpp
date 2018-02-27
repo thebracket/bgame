@@ -738,6 +738,6 @@ namespace render {
 		}
 
 		// Present the FBO to the screen
-		render_test_quad(ascii::albedo_tex);
+		render_fullscreen_quad(ascii::albedo_tex);
 	}
 }

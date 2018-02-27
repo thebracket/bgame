@@ -223,12 +223,12 @@ namespace render {
 		//}
 		if (!tick) {
 			if (!config::game_config.disable_hdr) {
-				render_test_quad(hdr_buffer->color_tex);
+				render_fullscreen_quad(hdr_buffer->color_tex);
 			}
 			else
 			{
 				glEnable(GL_FRAMEBUFFER_SRGB);
-				render_test_quad(light_stage_buffer->color_tex);
+				render_fullscreen_quad(light_stage_buffer->color_tex);
 				glDisable(GL_FRAMEBUFFER_SRGB);
 			}
 			return;
@@ -295,15 +295,15 @@ namespace render {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		if (!config::game_config.disable_hdr) {
-			render_test_quad(hdr_buffer->color_tex);
+			render_fullscreen_quad(hdr_buffer->color_tex);
 		} else
 		{
 			glEnable(GL_FRAMEBUFFER_SRGB);
-			render_test_quad(light_stage_buffer->color_tex);
+			render_fullscreen_quad(light_stage_buffer->color_tex);
 			glDisable(GL_FRAMEBUFFER_SRGB);
 		}
 
-		if (depth_test_render) render_test_quad(light_stage_buffer->shiny_tex);
+		if (depth_test_render) render_fullscreen_quad(light_stage_buffer->shiny_tex);
 
         // TODO: Final combination and post-process
 
