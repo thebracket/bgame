@@ -25,7 +25,6 @@ namespace assets {
 	extern std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
 	extern unsigned int cursor_shader;
 	extern unsigned int particle_shader;
-	extern unsigned int dirlight_shader;
 	extern unsigned int pointlight_shader;
 	extern unsigned int lighter_shader;
 	extern std::unique_ptr<ascii_base_shader_t> ascii_shader;
