@@ -2,7 +2,7 @@
 
 namespace assets {
     unsigned int spriteshader = 0;
-    unsigned int worldgenshader = 0;
+	std::unique_ptr<worldgen_shader_t> worldgenshader;
 	std::unique_ptr<chunk_shader_t> chunkshader;
 	std::unique_ptr<chunk_depth_shader_t> chunkdepthshader;
     unsigned int depthquad_shader = 0;

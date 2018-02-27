@@ -7,11 +7,12 @@
 #include "../render_engine/shaders/chunk_depth_shader.hpp"
 #include "../render_engine/shaders/ascii_base_shader.hpp"
 #include "../render_engine/shaders/ascii_light_shader.hpp"
+#include "../render_engine/shaders/worldgen_shader.hpp"
 #include <memory>
 
 namespace assets {
     extern unsigned int spriteshader;
-    extern unsigned int worldgenshader;
+    extern std::unique_ptr<worldgen_shader_t> worldgenshader;
     extern std::unique_ptr<chunk_shader_t> chunkshader;
 	extern std::unique_ptr<chunk_depth_shader_t> chunkdepthshader;
 	extern unsigned int depthquad_shader;

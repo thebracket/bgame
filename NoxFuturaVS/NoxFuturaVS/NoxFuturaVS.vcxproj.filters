@@ -813,6 +813,9 @@
     <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp">
       <Filter>Source Files\render_engine\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\worldgen_shader.cpp">
+      <Filter>Source Files\render_engine\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1830,6 +1833,9 @@
       <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp">
+      <Filter>Header Files\render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\worldgen_shader.hpp">
       <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
   </ItemGroup>

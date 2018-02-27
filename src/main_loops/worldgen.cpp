@@ -56,13 +56,12 @@ namespace worldgen {
     static void start_thread() {
         setup_build_planet();
 
-        assert(assets::worldgenshader != 0);
         projection_matrix = glm::perspective(90.0, static_cast<double>(screen_w)/static_cast<double>(screen_h), 1.0, 300.0);
         view_matrix = glm::lookAt(glm::vec3(1.0f, 100.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::mat4(); // Identity
-        projloc = glGetUniformLocation(assets::worldgenshader, "projection_mat");
-        viewloc = glGetUniformLocation(assets::worldgenshader, "view");
-        modelloc = glGetUniformLocation(assets::worldgenshader, "model");
+		projloc = assets::worldgenshader->projection_matrix;
+		viewloc = assets::worldgenshader->view_matrix;
+		modelloc = assets::worldgenshader->model_matrix;
         assert(projloc != -1);
         assert(viewloc != -1);
 
@@ -184,7 +183,7 @@ namespace worldgen {
         model_matrix = glm::mat4();
         model_matrix = glm::rotate(model_matrix, world_spin, glm::vec3(1.0, 0.0, 0.0));
 
-        glUseProgram(assets::worldgenshader);
+        glUseProgram(assets::worldgenshader->shader_id);
         glBindVertexArray(vao);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::worldgen_texture_array);
