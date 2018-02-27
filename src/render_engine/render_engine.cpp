@@ -36,11 +36,11 @@ namespace render {
     static void do_chunk_render() {
 		const auto camera_ceiling = camera->following>0 && camera->fps ? camera_position->region_z+20 : camera_position->region_z;
         for (const auto &idx : visible_chunks) {
-            chunks::chunk_t * target = &chunks::chunks[idx.chunk_id];
+            const auto * target = &chunks::chunks[idx.chunk_id];
             if (target->has_geometry) {
                 size_t n_elements = 0;
-                for (int z=0; z<chunks::CHUNK_SIZE; ++z) {
-                    const int layer_z = z + target->base_z;
+                for (auto z=0; z<chunks::CHUNK_SIZE; ++z) {
+                    const auto layer_z = z + target->base_z;
                     if (layer_z <= camera_ceiling && layer_z > camera_position->region_z-10) {
                         n_elements += target->layers[z].n_elements;
                     }
@@ -139,7 +139,7 @@ namespace render {
         glUniform1i(lightstage_shader->normal_tex, 1);
         glUniform1i(lightstage_shader->position_tex, 2);
         glUniform1i(lightstage_shader->ao_tex, 3);
-        glUniform3f(lightstage_shader->camera_position, (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
+        glUniform3f(lightstage_shader->camera_position, static_cast<float>(camera_position->region_x), static_cast<float>(camera_position->region_z), static_cast<float>(camera_position->region_y));
 		if (config::game_config.disable_lighting)
 		{
 			glUniform3f(lightstage_shader->moon_color, 1.0f, 1.0f, 1.0f);
