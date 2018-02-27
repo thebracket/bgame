@@ -24,7 +24,6 @@ namespace assets {
 	extern unsigned int depthquad_shader;
 	extern std::unique_ptr<lightstage_shader_t> lightstage_shader;
     extern unsigned int tonemap_shader;
-	extern unsigned int sprite_shader;
     extern std::unique_ptr<voxel_shader_t> voxel_shader;
 	extern std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
 	extern std::unique_ptr<cursor_shader_t> cursor_shader;

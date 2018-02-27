@@ -21,7 +21,6 @@ namespace assets {
     unsigned int depthquad_shader = 0;
 	std::unique_ptr<lightstage_shader_t> lightstage_shader;
     unsigned int tonemap_shader = 0;
-	unsigned int sprite_shader = 0;
 	std::unique_ptr<voxel_shader_t> voxel_shader;
 	std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
 	std::unique_ptr<cursor_shader_t> cursor_shader;
@@ -42,7 +41,6 @@ namespace assets {
 		depthquad_shader = load_shaders("game_assets/shaders45/depthquad_vertex.glsl", "game_assets/shaders45/depthquad_fragment.glsl");
 		lightstage_shader = std::make_unique<lightstage_shader_t>();
 		tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");
-		sprite_shader = load_shaders("game_assets/sprite_shader_vertex.glsl", "game_assets/sprite_shader_fragment.glsl");
 		voxel_shader = std::make_unique<voxel_shader_t>();
 		voxel_shadow_shader = std::make_unique<voxel_shadow_shader_t>();
 		cursor_shader = std::make_unique<cursor_shader_t>();
