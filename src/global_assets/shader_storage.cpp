@@ -37,7 +37,7 @@ namespace assets {
 		worldgenshader = std::make_unique<worldgen_shader_t>();
 		chunkshader = std::make_unique<chunk_shader_t>();
 		chunkdepthshader = std::make_unique<chunk_depth_shader_t>();
-		depthquad_shader = load_shaders("game_assets/depthquad_vertex.glsl", "game_assets/depthquad_fragment.glsl");
+		depthquad_shader = load_shaders("game_assets/shaders45/depthquad_vertex.glsl", "game_assets/shaders45/depthquad_fragment.glsl");
 		lightstage_shader = std::make_unique<lightstage_shader_t>();
 		tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");
 		sprite_shader = load_shaders("game_assets/sprite_shader_vertex.glsl", "game_assets/sprite_shader_fragment.glsl");
