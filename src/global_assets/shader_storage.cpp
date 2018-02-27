@@ -33,7 +33,7 @@ namespace assets {
 	{
 		using namespace bengine;
 
-		spriteshader = load_shaders("game_assets/spriteshader_vertex.glsl", "game_assets/spriteshader_fragment.glsl");
+		spriteshader = load_shaders("game_assets/shaders45/spriteshader_vertex.glsl", "game_assets/shaders45/spriteshader_fragment.glsl");
 		worldgenshader = std::make_unique<worldgen_shader_t>();
 		chunkshader = std::make_unique<chunk_shader_t>();
 		chunkdepthshader = std::make_unique<chunk_depth_shader_t>();
