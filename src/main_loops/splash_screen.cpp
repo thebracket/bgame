@@ -16,6 +16,7 @@
 #include "../bengine/stb_image_resize.h"
 #include "../raws/materials.hpp"
 #include "../render_engine/vox/voxreader.hpp"
+#include <boost/filesystem/operations.hpp>
 
 using namespace bengine;
 using namespace assets;
@@ -152,7 +153,14 @@ namespace splash_screen {
             auto albedo_tex = load_texture_to_ram(albedo);
             auto normal_tex = load_texture_to_ram(normal);
             auto occlusion_tex = load_texture_to_ram(occlusion);
-            auto metal_tex = load_texture_to_ram(metal);
+
+			std::tuple<unsigned char *, int, int, int> metal_tex;
+			if (boost::filesystem::exists(metal)) {
+				metal_tex = load_texture_to_ram(metal);
+			} else
+			{
+				metal_tex = load_texture_to_ram("game_assets/terrain/metal-template.jpg");
+			}
             auto rough_tex = load_texture_to_ram(rough);
 
             // Albedo and normal are stored directly as idx+0, idx+1
