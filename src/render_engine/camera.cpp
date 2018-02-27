@@ -5,6 +5,7 @@
 #include "../bengine/geometry.hpp"
 #include "../bengine/ecs.hpp"
 #include "../components/position.hpp"
+#include "ubo/first_stage_ubo.hpp"
 
 namespace render
 {
@@ -128,6 +129,7 @@ namespace render
 			return a.distance_from_camera < b.distance_from_camera;
 		});
 
+		camera_ubo::set_ubo_camera(camera_projection_matrix, camera_modelview_matrix, camera_proj_model_view_matrix);
 		camera_moved = false;
 	}
 }

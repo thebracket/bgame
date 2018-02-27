@@ -22,6 +22,7 @@
 #include "shaders/chunk_depth_shader.hpp"
 #include "shaders/lightstage_shader.hpp"
 #include "shaders/tonemap_shader.hpp"
+#include "ubo/first_stage_ubo.hpp"
 
 namespace render {
 
@@ -109,8 +110,8 @@ namespace render {
 		glCheckError();
 
 		// Assign the uniforms
-		glUniformMatrix4fv(assets::chunkdepthshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-		glUniformMatrix4fv(assets::chunkdepthshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_ubo::ubo);
+		glUniformBlockBinding(assets::chunkdepthshader->shader_id, 0, assets::chunkdepthshader->camera_block_index);
 		glCheckError();
 
 		glColorMaski(0, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
