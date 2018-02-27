@@ -1,15 +1,14 @@
 #include "voxel_model.hpp"
-#include <unordered_map>
-#include <assert.h>
 #include <map>
+#include <iostream>
 
 namespace vox {
 
-	constexpr int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) {
+	constexpr static int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) {
 		return (w * h * z) + (w * y) + x;
 	}
 
-	bool is_same(const subvoxel &a, const subvoxel &b) {
+	static bool is_same(const subvoxel &a, const subvoxel &b) {
 		return a.r == b.r && a.g == b.g && a.b == b.b;
 	}
 
@@ -17,7 +16,7 @@ namespace vox {
 		// Build a cube map
 		std::map<int, subvoxel> cubes;
 		for (const auto cube : voxels) {
-			const int idx = voxidx(width, depth, height, cube.x, cube.z, cube.y);
+			const auto idx = voxidx(width, depth, height, cube.x, cube.z, cube.y);
 			cubes[idx] = cube;
 		}
 
@@ -43,7 +42,7 @@ namespace vox {
 				++x_coordinate;
 				right_finder = cubes.find(idx_grow_right);
 			}
-
+			
 			if (voxel_info.y < height) {
 				int y_progress = voxel_info.y + 1;
 
@@ -65,34 +64,7 @@ namespace vox {
 
 					++y_progress;
 				}
-			}
-
-			if (voxel_info.z < depth) {
-				int z_progress = voxel_info.z + 1;
-
-				bool possible = true;
-				while (possible && z_progress < depth) {
-					for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
-						for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-							const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
-							auto vfinder = cubes.find(candidate_idx);
-							if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
-							if (!possible) break;
-						}
-					}
-					if (possible) {
-						++D;
-						for (int gy = voxel_info.y; gy < voxel_info.y + height; ++gy) {
-							for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-								const int candidate_idx = voxidx(width, height, depth, gx, gy, z_progress);
-								cubes.erase(candidate_idx);
-							}
-						}
-					}
-
-					++z_progress;
-				}
-			}
+			}			
 
 			add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
 			++cube_count;
