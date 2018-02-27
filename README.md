@@ -2,7 +2,10 @@
 
 An open-source game combining elements of Dwarf Fortress, Civilization, Warhammer, Douglass Adams, and more. It's very much in development, so don't expect miracles - or a finished experience - yet!
 
-Please visit [our website](http://bracketproductions.com/index.php/blackfuture/) for more information, download links, etc.
+Please visit [our website](http://bracketproductions.com/index.php/blackfuture/) 
+for more information, download links, etc.
+
+Note that OS X isn't supported at the present time.
 
 ## Contributions
 
@@ -79,18 +82,3 @@ To build it:
 * `ln -s ../world_defs .`
 * `ln -s ../game_assets .`
 * You can now launch the game with `./noxfutura`
-
-*OS X Builds*
-
-I use [MacPorts](https://www.macports.org/install.php) to provide the build environment on my Mac. You need to get Clang-5.0 (which includes Clang++) installed, as well as: git, cmake, curl, glew, glfw3, glm, Boost, ZLIB, Cereal, Lua and Glew installed. Then it's a matter of:
-
-* Clone the github repo into a folder. `git clone https://github.com/thebracket/bgame`.
-* Enter the bgame folder, `cd bgame`.
-* Make a build folder, `mkdir build`, and enter it with `cd build`.
-* Tell CMake to create a build structure. `cmake -G"Unix Makefiles" ../src`.
-* Build the app with `make -j4` (replace the 4 with how many CPUs you would like to use)
-* `ln -s ../world_defs .`
-* `ln -s ../game_assets .`
-* You can now launch the game with `./noxfutura`
-
-Note: It now also requires the "fmt" library.
