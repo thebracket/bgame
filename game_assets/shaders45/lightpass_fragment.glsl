@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 layout (location = 0) out vec3 FragColor;
 layout (location = 1) out vec3 BrightColor;
 layout (location = 2) out vec3 Shininess;
@@ -56,9 +56,9 @@ void main()
         vec3 FragPos = vec3(TexCoords.x, TexCoords.y, texture(gbuffer_depth_tex, TexCoords).r);
         float occlusion = 0;
         for (int i=0; i<kernelSize; ++i) {
-            vec2 sample = FragPos.xy + (samples[i].xy * radius);
-            float sampleDepth = texture(gbuffer_depth_tex, sample).r;
-            vec3 sampleColor = texture(albedo_tex, sample).rgb;
+            vec2 mysample = FragPos.xy + (samples[i].xy * radius);
+            float sampleDepth = texture(gbuffer_depth_tex, mysample).r;
+            vec3 sampleColor = texture(albedo_tex, mysample).rgb;
             occlusion += sampleDepth <= FragPos.z ? 0.75 : 0.0;
             ambient_color += sampleDepth <= FragPos.z ? sampleColor : albedo;
         }

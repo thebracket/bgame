@@ -1,7 +1,7 @@
 #include "lightstage_shader.hpp"
 
 lightstage_shader_t::lightstage_shader_t() {
-	load_shader("game_assets/lightpass_vertex.glsl", "game_assets/lightpass_fragment.glsl");
+	load_shader("game_assets/shaders45/lightpass_vertex.glsl", "game_assets/shaders45/lightpass_fragment.glsl");
 
 	albedo_tex = get_uniform("albedo_tex");
 	normal_tex = get_uniform("normal_tex");
