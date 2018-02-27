@@ -152,7 +152,7 @@ namespace render {
 		}
 
 		static inline glyph_t get_material_glyph(const int &idx, uint8_t glyph_override = 0, bool kill_background = false) {
-			const std::size_t material_index = region::material(idx);
+			const auto material_index = region::material(idx);
 			const auto mat = get_material(material_index);
 			glyph_t result;
 			if (mat) {
@@ -727,7 +727,9 @@ namespace render {
 			render::update_pointlights();
 			ascii::render_ascii_ambient();
 			ascii::present();
-			render::render_ascii_pointlights(ascii::ascii_fbo, ascii::ascii_vao, assets::ascii_texture->texture_id, ascii::buffer.size(), ascii::camera_projection_matrix, ascii::camera_modelview_matrix);
+			render::render_ascii_pointlights(ascii::ascii_fbo, ascii::ascii_vao, assets::ascii_texture->texture_id,
+			                                 ascii::buffer.size(), ascii::camera_projection_matrix,
+			                                 ascii::camera_modelview_matrix);
 		} else
 		{
 			ascii::render_ascii_ambient(1.0f);
