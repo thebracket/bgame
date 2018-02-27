@@ -9,6 +9,8 @@
 #include <array>
 #include "chunks.hpp"
 #include "../camera.hpp"
+#include "../../bengine/gl_include.hpp"
+#include "../shaders/chunk_shader.hpp"
 
 namespace render {
 	static unsigned int water_vao = 0;

@@ -18,6 +18,9 @@
 #include "pointlights.hpp"
 #include "chunks/water_render.hpp"
 #include "../global_assets/game_config.hpp"
+#include "shaders/chunk_shader.hpp"
+#include "shaders/chunk_depth_shader.hpp"
+#include "shaders/lightstage_shader.hpp"
 
 namespace render {
 

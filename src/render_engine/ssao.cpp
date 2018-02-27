@@ -1,6 +1,13 @@
 #include "ssao.hpp"
 #include <random>
 #include "../global_assets/shader_storage.hpp"
+#include "../bengine/gl_include.hpp"
+#include <glm/glm.hpp>
+#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "shaders/lightstage_shader.hpp"
 
 namespace render {
 	bool ssao_setup = false;

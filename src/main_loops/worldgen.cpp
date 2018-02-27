@@ -18,6 +18,7 @@
 #include <glm/detail/type_mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "../render_engine/shaders/worldgen_shader.hpp"
 
 namespace worldgen {
     enum world_gen_mode_t { WG_MENU, WG_RUNNING, WG_MAP };

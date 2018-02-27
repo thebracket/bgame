@@ -1,5 +1,14 @@
 #include "shader_storage.hpp"
 #include "../bengine/shaders.hpp"
+#include "../render_engine/shaders/chunk_shader.hpp"
+#include "../render_engine/shaders/voxel_shader.hpp"
+#include "../render_engine/shaders/voxel_shadow_shader.hpp"
+#include "../render_engine/shaders/lightstage_shader.hpp"
+#include "../render_engine/shaders/chunk_depth_shader.hpp"
+#include "../render_engine/shaders/ascii_base_shader.hpp"
+#include "../render_engine/shaders/ascii_light_shader.hpp"
+#include "../render_engine/shaders/worldgen_shader.hpp"
+
 
 namespace assets {
     unsigned int spriteshader = 0;

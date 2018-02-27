@@ -1,14 +1,16 @@
 #pragma once
 
-#include "../render_engine/shaders/chunk_shader.hpp"
-#include "../render_engine/shaders/voxel_shader.hpp"
-#include "../render_engine/shaders/voxel_shadow_shader.hpp"
-#include "../render_engine/shaders/lightstage_shader.hpp"
-#include "../render_engine/shaders/chunk_depth_shader.hpp"
-#include "../render_engine/shaders/ascii_base_shader.hpp"
-#include "../render_engine/shaders/ascii_light_shader.hpp"
-#include "../render_engine/shaders/worldgen_shader.hpp"
 #include <memory>
+
+// Forward declarations
+class worldgen_shader_t;
+class chunk_shader_t;
+class chunk_depth_shader_t;
+class lightstage_shader_t;
+class voxel_shader_t;
+class voxel_shadow_shader_t;
+class ascii_base_shader_t;
+class ascii_light_shader_t;
 
 namespace assets {
     extern unsigned int spriteshader;

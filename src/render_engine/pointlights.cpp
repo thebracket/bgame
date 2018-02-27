@@ -13,6 +13,7 @@
 #include "vox/renderables.hpp"
 #include "../bengine/ecs.hpp"
 #include "../global_assets/game_config.hpp"
+#include "shaders/ascii_light_shader.hpp"
 
 namespace render {
 	static constexpr int size = 128;

@@ -29,6 +29,8 @@
 #include "../camera.hpp"
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/health.hpp"
+#include "../shaders/voxel_shader.hpp"
+#include "../shaders/voxel_shadow_shader.hpp"
 
 using namespace tile_flags;
 

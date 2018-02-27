@@ -31,6 +31,7 @@
 #include "../bengine/ecs.hpp"
 #include "../utils/system_log.hpp"
 #include "../global_assets/game_config.hpp"
+#include "../render_engine/shaders/ascii_base_shader.hpp"
 
 using namespace tile_flags;
 

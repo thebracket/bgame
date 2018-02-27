@@ -7,6 +7,7 @@
 #include "../../render_engine/fbo/gbuffer.hpp"
 #include "../../bengine/geometry.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../bengine/gl_include.hpp"
 
 namespace systems {
 	namespace particles {
