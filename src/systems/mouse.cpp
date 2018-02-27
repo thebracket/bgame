@@ -88,8 +88,9 @@ namespace systems {
 				if (is_key_down(GLFW_KEY_ESCAPE)) game_master_mode = PLAY;
 
 				const auto shift = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+				const auto control = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
 
-				if (!shift) {
+				if (!shift && !control) {
 					if (is_key_down(GLFW_KEY_LEFT)) mouse_wx--;
 					if (is_key_down(GLFW_KEY_RIGHT)) mouse_wx++;
 					if (is_key_down(GLFW_KEY_UP)) mouse_wy--;

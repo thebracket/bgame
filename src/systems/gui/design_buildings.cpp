@@ -1,10 +1,6 @@
-#include "../../bengine/color_t.hpp"
 #include "design_buildings.hpp"
-#include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
-#include "../mouse.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../helpers/inventory_assistant.hpp"
 #include "../../render_engine/vox/renderables.hpp"
@@ -14,7 +10,6 @@
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
-#include <sstream>
 #include <fmt/format.h>
 #include "../../bengine/btabs.hpp"
 
@@ -105,6 +100,21 @@ namespace systems {
 				const auto tag = buildings[selected_building].first;
 				display_building_info(tag);
 			}
+
+			const auto control_pressed = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
+			if (control_pressed)
+			{
+				if (is_key_down(GLFW_KEY_UP))
+				{
+					--selected_building;
+					if (selected_building < 0) selected_building = building_listbox_items.size() - 1;
+				}
+				if (is_key_down(GLFW_KEY_DOWN))
+				{
+					++selected_building;
+					if (selected_building > building_listbox_items.size() - 1) selected_building = 0;
+				}
+			}
 		}
 
 		static void render_all()
@@ -132,8 +142,8 @@ namespace systems {
 
 		static bengine::btabs_t building_tabs{
 			{
-				bengine::btab_t{ "Available Buildings", render_available },
-				bengine::btab_t{ "All Buildings", render_all },
+				bengine::btab_t{ "Available Buildings", render_available, {{ "B", GLFW_KEY_B }} },
+				bengine::btab_t{ "All Buildings", render_all,{ { "A", GLFW_KEY_A } } },
 			}
 		};
 
