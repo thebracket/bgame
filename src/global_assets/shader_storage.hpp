@@ -15,6 +15,7 @@ class cursor_shader_t;
 class lighter_shader_t;
 class particle_shader_t;
 class pointlight_shader_t;
+class tonemap_shader_t;
 
 namespace assets {
     extern unsigned int spriteshader;
@@ -23,7 +24,7 @@ namespace assets {
 	extern std::unique_ptr<chunk_depth_shader_t> chunkdepthshader;
 	extern unsigned int depthquad_shader;
 	extern std::unique_ptr<lightstage_shader_t> lightstage_shader;
-    extern unsigned int tonemap_shader;
+    extern std::unique_ptr<tonemap_shader_t> tonemap_shader;
     extern std::unique_ptr<voxel_shader_t> voxel_shader;
 	extern std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
 	extern std::unique_ptr<cursor_shader_t> cursor_shader;

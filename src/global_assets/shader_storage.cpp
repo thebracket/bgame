@@ -12,6 +12,7 @@
 #include "../render_engine/shaders/lighter_shader.hpp"
 #include "../render_engine/shaders/particle_shader.hpp"
 #include "../render_engine/shaders/pointlight_shader.hpp"
+#include "../render_engine/shaders/tonemap_shader.hpp"
 
 namespace assets {
     unsigned int spriteshader = 0;
@@ -20,7 +21,7 @@ namespace assets {
 	std::unique_ptr<chunk_depth_shader_t> chunkdepthshader;
     unsigned int depthquad_shader = 0;
 	std::unique_ptr<lightstage_shader_t> lightstage_shader;
-    unsigned int tonemap_shader = 0;
+    std::unique_ptr<tonemap_shader_t> tonemap_shader;
 	std::unique_ptr<voxel_shader_t> voxel_shader;
 	std::unique_ptr<voxel_shadow_shader_t> voxel_shadow_shader;
 	std::unique_ptr<cursor_shader_t> cursor_shader;
@@ -40,7 +41,7 @@ namespace assets {
 		chunkdepthshader = std::make_unique<chunk_depth_shader_t>();
 		depthquad_shader = load_shaders("game_assets/shaders45/depthquad_vertex.glsl", "game_assets/shaders45/depthquad_fragment.glsl");
 		lightstage_shader = std::make_unique<lightstage_shader_t>();
-		tonemap_shader = load_shaders("game_assets/tonemap_vertex.glsl", "game_assets/tonemap_fragment.glsl");
+		tonemap_shader = std::make_unique<tonemap_shader_t>();
 		voxel_shader = std::make_unique<voxel_shader_t>();
 		voxel_shadow_shader = std::make_unique<voxel_shadow_shader_t>();
 		cursor_shader = std::make_unique<cursor_shader_t>();

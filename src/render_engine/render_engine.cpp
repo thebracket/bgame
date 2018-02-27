@@ -21,6 +21,7 @@
 #include "shaders/chunk_shader.hpp"
 #include "shaders/chunk_depth_shader.hpp"
 #include "shaders/lightstage_shader.hpp"
+#include "shaders/tonemap_shader.hpp"
 
 namespace render {
 
@@ -174,11 +175,11 @@ namespace render {
     }
 
 	static void tone_map_scene() {
-        glUseProgram(assets::tonemap_shader);
+        glUseProgram(assets::tonemap_shader->shader_id);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
         // Setup uniforms
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUniform1i(glGetUniformLocation(assets::tonemap_shader, "hdr_tex"), 0);
+        glUniform1i(assets::tonemap_shader->hdr_tex, 0);
         //glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);

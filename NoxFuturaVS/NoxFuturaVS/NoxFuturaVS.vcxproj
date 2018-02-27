@@ -329,6 +329,7 @@
     <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\particle_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\pointlight_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\tonemap_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp" />
     <ClCompile Include="..\..\src\render_engine\shaders\worldgen_shader.cpp" />
@@ -668,6 +669,7 @@
     <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\particle_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\pointlight_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\tonemap_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp" />
     <ClInclude Include="..\..\src\render_engine\shaders\worldgen_shader.hpp" />
