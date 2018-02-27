@@ -387,9 +387,6 @@
     <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp">
       <Filter>Source Files\render_engine\fbo</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\bloom_ping_pong.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp">
       <Filter>Source Files\render_engine\fbo</Filter>
     </ClCompile>
@@ -1272,9 +1269,6 @@
       <Filter>Header Files\render_engine\chunks</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\bloom_ping_pong.hpp">
       <Filter>Header Files\render_engine\fbo</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp">

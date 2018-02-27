@@ -183,8 +183,6 @@ namespace render {
         //glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, bloom_buffer->blur_tex1);
         render_buffer_quad();
     }
 
