@@ -59,8 +59,8 @@ namespace splash_screen {
         dirlight_shader = load_shaders("game_assets/dirlight_vertex.glsl", "game_assets/dirlight_fragment.glsl");
         lighter_shader = load_shaders("game_assets/lighter_vertex.glsl", "game_assets/lighter_fragment.glsl");
 		pointlight_shader = load_shaders("game_assets/pointlight_vertex.glsl", "game_assets/pointlight_fragment.glsl", "game_assets/pointlight_geometry.glsl");
-		ascii_shader = load_shaders("game_assets/ascii_vertex.glsl", "game_assets/ascii_fragment.glsl");
-		ascii_light_shader = load_shaders("game_assets/ascii_light_vertex.glsl", "game_assets/ascii_light_fragment.glsl");
+		ascii_shader = std::make_unique<ascii_base_shader_t>();
+		ascii_light_shader = std::make_unique<ascii_light_shader_t>();
 	}
 
     static inline void init_raws(const int id) {

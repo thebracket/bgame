@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 
-
 // Forward declarations
 namespace bengine {
     struct texture_t;

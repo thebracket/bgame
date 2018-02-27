@@ -7,10 +7,12 @@ uniform vec3 light_color;
 uniform float far_plane;
 uniform samplerCube depthMap;
 
-in vec3 world_pos;
-in vec2 tex_pos;
-in vec3 fg;
-in vec3 bg;
+in VS_OUT {
+    in vec3 world_pos;
+    in vec2 tex_pos;
+    in vec3 fg;
+    in vec3 bg;
+} vs_in;
 
 // array of offset direction for sampling
 vec3 gridSamplingDisk[20] = vec3[]
@@ -41,7 +43,7 @@ float shadow(vec3 fragToLight) {
 }
 
 void main() {
-    vec3 position = world_pos.xzy;
+    vec3 position = vs_in.world_pos.xzy;
     vec3 fragToLight = position - light_position;
     float currentDepth = length(fragToLight);
 
@@ -56,8 +58,8 @@ void main() {
         discard;
     }
 
-    vec4 pixel_color = texture(ascii_tex, tex_pos);
-    vec3 out_color = pixel_color.r > 0.5 ? fg * pixel_color.rgb : bg;
+    vec4 pixel_color = texture(ascii_tex, vs_in.tex_pos);
+    vec3 out_color = pixel_color.r > 0.5 ? vs_in.fg * pixel_color.rgb : vs_in.bg;
     gAlbedo = out_color * light_color;
     //gAlbedo = vec3(shadowFactor);
 }

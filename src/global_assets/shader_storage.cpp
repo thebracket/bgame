@@ -17,6 +17,6 @@ namespace assets {
 	unsigned int dirlight_shader;
 	unsigned int pointlight_shader;
 	unsigned int lighter_shader;
-	unsigned int ascii_shader;
-	unsigned int ascii_light_shader;
+	std::unique_ptr<ascii_base_shader_t> ascii_shader;
+	std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
 }

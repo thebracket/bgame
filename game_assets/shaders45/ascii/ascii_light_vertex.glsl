@@ -12,16 +12,18 @@ uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
 
 // Send to vertex shader
-out vec3 world_pos;
-out vec2 tex_pos;
-out vec3 fg;
-out vec3 bg;
+out VS_OUT {
+    out vec3 world_pos;
+    out vec2 tex_pos;
+    out vec3 fg;
+    out vec3 bg;
+} vs_out;
 
 void main()
 {
     gl_Position = projection_matrix * ( view_matrix * vec4(aPos.x, wPos.z, aPos.y, 1.0));
-    world_pos = wPos;
-    tex_pos = aTex;
-    fg = aForeground;
-    bg = aBackground;
+    vs_out.world_pos = wPos;
+    vs_out.tex_pos = aTex;
+    vs_out.fg = aForeground;
+    vs_out.bg = aBackground;
 }

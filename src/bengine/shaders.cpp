@@ -7,6 +7,8 @@ namespace bengine {
 
     unsigned int load_shaders(const char * vertex_file_path,const char * fragment_file_path)
     {
+		glog(log_target::LOADER, log_severity::INFO, "Loading shader: {0} {1}", vertex_file_path, fragment_file_path);
+
         // Create the shaders
         GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
         GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);

@@ -807,6 +807,12 @@
     <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp">
       <Filter>Source Files\render_engine\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\ascii_base_shader.cpp">
+      <Filter>Source Files\render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp">
+      <Filter>Source Files\render_engine\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1819,6 +1825,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\btabs.hpp">
       <Filter>Header Files\bengine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\ascii_base_shader.hpp">
+      <Filter>Header Files\render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp">
+      <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

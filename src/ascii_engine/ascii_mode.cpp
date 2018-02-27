@@ -621,7 +621,7 @@ namespace render {
 			}
 		}
 
-		static inline void render_ascii_ambient()
+		static inline void render_ascii_ambient(const float ambient_level = 0.5f)
 		{
 			constexpr auto glyph_width_texture_space = 1.0f / 16.0f;
 
@@ -644,12 +644,12 @@ namespace render {
 					const auto TY0 = (terminal[tidx].glyph / 16) * glyph_width_texture_space;
 					const auto TW = TX0 + glyph_width_texture_space;
 					const auto TH = TY0 + glyph_width_texture_space;
-					const auto R = terminal[tidx].r * 0.25f;
-					const auto G = terminal[tidx].g * 0.25f;
-					const auto B = terminal[tidx].b * 0.25f;
-					const auto BR = terminal[tidx].br * 0.25f;
-					const auto BG = terminal[tidx].bg * 0.25f;
-					const auto BB = terminal[tidx].bb * 0.25f;
+					const auto R = terminal[tidx].r * ambient_level;
+					const auto G = terminal[tidx].g * ambient_level;
+					const auto B = terminal[tidx].b * ambient_level;
+					const auto BR = terminal[tidx].br * ambient_level;
+					const auto BG = terminal[tidx].bg * ambient_level;
+					const auto BB = terminal[tidx].bb * ambient_level;
 
 					buffer[buffer_idx] =   vertex_t{ x1, z1, wx, wy, wz, TW, TH, R, G, B, BR, BG, BB};
 					buffer[buffer_idx +1] = vertex_t{ x1, z0, wx, wy, wz, TW, TY0, R, G, B, BR, BG, BB };
@@ -668,56 +668,7 @@ namespace render {
 			glBindBuffer(GL_ARRAY_BUFFER, ascii_vbo);
 			glBufferData(GL_ARRAY_BUFFER, buffer.size() * N_VERTICES * sizeof(float), &buffer[0], GL_DYNAMIC_DRAW);
 			glCheckError();
-		}
-
-		static inline void render_ascii_fullbright()
-		{
-			constexpr auto glyph_width_texture_space = 1.0f / 16.0f;
-
-			const auto wz = static_cast<float>(camera_position->region_z);
-			constexpr auto width = 1.0f;
-			constexpr auto height = 1.0f;
-			std::size_t buffer_idx = 0;
-			for (auto y = 0; y < REGION_HEIGHT; ++y) {
-				for (auto x = 0; x < REGION_WIDTH; ++x) {
-					const auto tidx = termidx(x, y);
-					const auto wx = static_cast<float>(x);
-					const auto wy = static_cast<float>(y);
-
-					const auto x0 = -0.5f + wx;
-					const auto x1 = x0 + width;
-					const auto z0 = -0.5f + wy;
-					const auto z1 = z0 + height;
-
-					const auto TX0 = static_cast<float>(terminal[tidx].glyph % 16) * glyph_width_texture_space;
-					const auto TY0 = (terminal[tidx].glyph / 16) * glyph_width_texture_space;
-					const auto TW = TX0 + glyph_width_texture_space;
-					const auto TH = TY0 + glyph_width_texture_space;
-					const auto R = terminal[tidx].r;
-					const auto G = terminal[tidx].g;
-					const auto B = terminal[tidx].b;
-					const auto BR = terminal[tidx].br;
-					const auto BG = terminal[tidx].bg;
-					const auto BB = terminal[tidx].bb;
-
-					buffer[buffer_idx] = vertex_t{ x1, z1, wx, wy, wz, TW, TH, R, G, B, BR, BG, BB };
-					buffer[buffer_idx + 1] = vertex_t{ x1, z0, wx, wy, wz, TW, TY0, R, G, B, BR, BG, BB };
-					buffer[buffer_idx + 2] = vertex_t{ x0, z0, wx, wy, wz, TX0, TY0, R, G, B, BR, BG, BB };
-					buffer[buffer_idx + 3] = vertex_t{ x0, z0, wx, wy, wz, TX0, TY0, R, G, B, BR, BG, BB };
-					buffer[buffer_idx + 4] = vertex_t{ x0, z1, wx, wy, wz, TX0, TH, R, G, B, BR, BG, BB };
-					buffer[buffer_idx + 5] = vertex_t{ x1, z1, wx, wy, wz, TW, TH, R, G, B, BR, BG, BB };
-
-					buffer_idx += 6;
-				}
-			}
-
-
-			// Map the data
-			//glInvalidateBufferData(ascii_vbo);
-			glBindBuffer(GL_ARRAY_BUFFER, ascii_vbo);
-			glBufferData(GL_ARRAY_BUFFER, buffer.size() * N_VERTICES * sizeof(float), &buffer[0], GL_DYNAMIC_DRAW);
-			glCheckError();
-		}
+		}		
 
 		static inline void present() {
 			glDisable(GL_DEPTH_TEST);
@@ -725,13 +676,13 @@ namespace render {
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			//glCheckError();
-			glUseProgram(assets::ascii_shader);
+			glUseProgram(assets::ascii_shader->shader_id);
 			//glCheckError();
 			glBindVertexArray(ascii_vao);
 			//glCheckError();
-			glUniformMatrix4fv(glGetUniformLocation(assets::ascii_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-			glUniformMatrix4fv(glGetUniformLocation(assets::ascii_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
-			glUniform1i(glGetUniformLocation(assets::ascii_shader, "ascii_tex"), 0);
+			glUniformMatrix4fv(assets::ascii_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+			glUniformMatrix4fv(assets::ascii_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+			glUniform1i(assets::ascii_shader->ascii_tex, 0);
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, assets::ascii_texture->texture_id);
 			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(buffer.size()));
@@ -779,7 +730,7 @@ namespace render {
 			render::render_ascii_pointlights(ascii::ascii_fbo, ascii::ascii_vao, assets::ascii_texture->texture_id, ascii::buffer.size(), ascii::camera_projection_matrix, ascii::camera_modelview_matrix);
 		} else
 		{
-			ascii::render_ascii_fullbright();
+			ascii::render_ascii_ambient(1.0f);
 			ascii::present();
 		}
 
