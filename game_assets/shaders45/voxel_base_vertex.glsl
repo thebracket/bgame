@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aColor;
@@ -10,11 +10,12 @@ uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
 uniform float texSize;
 
-out vec3 tex_pos;
-out vec3 world_pos;
-out vec3 base_normal;
-out vec3 color;
-out vec3 tint;
+out VS_OUT {
+    vec3 world_pos;
+    vec3 base_normal;
+    vec3 color;
+    vec3 tint;
+} vs_out;
 
 mat4 translate(float x, float y, float z){
     return mat4(
@@ -47,8 +48,8 @@ void main()
     mat4 translation = translate(instancePos.x, instancePos.y, instancePos.z);
     mat4 model_view_matrix = instanceRotation.w > 0 ? view_matrix * translation * rotation : view_matrix * translation;
     gl_Position = projection_matrix * model_view_matrix * position;
-    world_pos = shunk_pos + instancePos;    
-    base_normal = instanceRotation.w > 0 ? normalize(rotation * vec4(aNormal, 0.0)).xyz : normalize(aNormal);
-    color = aColor;
-    tint = instanceTint;
+    vs_out.world_pos = shunk_pos + instancePos;    
+    vs_out.base_normal = instanceRotation.w > 0 ? normalize(rotation * vec4(aNormal, 0.0)).xyz : normalize(aNormal);
+    vs_out.color = aColor;
+    vs_out.tint = instanceTint;
 }

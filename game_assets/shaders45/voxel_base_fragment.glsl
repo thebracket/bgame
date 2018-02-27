@@ -1,10 +1,11 @@
-#version 330 core
+#version 430 core
 
-in vec3 world_pos;
-in vec3 base_normal;
-in vec3 tex_pos;
-in vec3 color;
-in vec3 tint;
+in VS_OUT {
+    vec3 world_pos;
+    vec3 base_normal;
+    vec3 color;
+    vec3 tint;
+} fs_in;
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
@@ -14,14 +15,14 @@ layout (location = 3) out vec3 gAmbientOcclusion;
 out vec4 FragColor;
 
 void main() {
-    vec3 base_color = color * tint;
+    vec3 base_color = fs_in.color * fs_in.tint;
     //vec3 base_color = textureLoc;
     //if (base_color.r < 0.5) base_color.r = 0.5;
     //vec3 base_color = vec3(1.0, 0.0, 0.0);
-    gAlbedo = base_color * tint;
-    gPosition = vec3(world_pos);
+    gAlbedo = base_color * fs_in.tint;
+    gPosition = vec3(fs_in.world_pos);
 
-    gNormal = base_normal;
+    gNormal = fs_in.base_normal;
 
     gAmbientOcclusion.r = 1.0; // No ambient occlusion
     gAmbientOcclusion.g = 0.04; // No metal
