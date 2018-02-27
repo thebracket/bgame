@@ -822,6 +822,9 @@
     <ClCompile Include="..\..\src\render_engine\shaders\lighter_shader.cpp">
       <Filter>Source Files\render_engine\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\particle_shader.cpp">
+      <Filter>Source Files\render_engine\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1848,6 +1851,9 @@
       <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\shaders\lighter_shader.hpp">
+      <Filter>Header Files\render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\particle_shader.hpp">
       <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
   </ItemGroup>

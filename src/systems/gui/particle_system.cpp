@@ -4,10 +4,10 @@
 #include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../global_assets/shader_storage.hpp"
-#include "../../render_engine/fbo/gbuffer.hpp"
 #include "../../bengine/geometry.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../render_engine/shaders/particle_shader.hpp"
 
 namespace systems {
 	namespace particles {
@@ -135,12 +135,12 @@ namespace systems {
 			if (positions.empty()) return;
 
 			// Use the particle shader
-			glUseProgram(assets::particle_shader);
+			glUseProgram(assets::particle_shader->shader_id);
 			glBindVertexArray(vao);
 
 			// Set uniforms
-			glUniformMatrix4fv(glGetUniformLocation(assets::particle_shader, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-			glUniformMatrix4fv(glGetUniformLocation(assets::particle_shader, "view_matrix"), 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+			glUniformMatrix4fv(assets::particle_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
+			glUniformMatrix4fv(assets::particle_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
 			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 			// Splat out particle info
