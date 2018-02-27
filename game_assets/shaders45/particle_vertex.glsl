@@ -5,8 +5,13 @@ layout (location = 2) in float aSize;
 
 out vec3 color;
 
-uniform mat4 projection_matrix;
-uniform mat4 view_matrix;
+layout (std140) uniform camera_data
+{
+    mat4 projection_matrix;
+    mat4 view_matrix;
+    mat4 proj_view_matrix;
+    vec3 camera_position;
+};
 
 void main()
 {

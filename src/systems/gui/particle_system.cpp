@@ -8,6 +8,7 @@
 #include "../../bengine/ecs.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../render_engine/shaders/particle_shader.hpp"
+#include "../../render_engine/ubo/first_stage_ubo.hpp"
 
 namespace systems {
 	namespace particles {
@@ -139,8 +140,9 @@ namespace systems {
 			glBindVertexArray(vao);
 
 			// Set uniforms
-			glUniformMatrix4fv(assets::particle_shader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-			glUniformMatrix4fv(assets::particle_shader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+			glBindBufferBase(GL_UNIFORM_BUFFER, 0, render::camera_ubo::ubo);
+			glUniformBlockBinding(assets::particle_shader->shader_id, 0, assets::particle_shader->camera_block_index);
+			glCheckError();
 			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 			// Splat out particle info
