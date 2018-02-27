@@ -227,12 +227,16 @@ namespace bengine {
 		shader_id = load_shaders(vertex.c_str(), fragment.c_str());
 	}
 
-	void base_shader_t::use() {
+	void base_shader_t::load_shader(const std::string vertex, const std::string fragment, const std::string geometry) {
+		shader_id = load_shaders(vertex.c_str(), fragment.c_str(), geometry.c_str());
+	}
+
+	void base_shader_t::use() const {
 		glUseProgram(shader_id);
 	}
 
-	int base_shader_t::get_uniform(const std::string name) {
-		int result = glGetUniformLocation(shader_id, name.c_str());
+	int base_shader_t::get_uniform(const std::string name) const {
+		const auto result = glGetUniformLocation(shader_id, name.c_str());
 		glog(log_target::LOADER, log_severity::INFO, "Uniform [{0}] assigned to shader {1}, slot {2}", name, shader_id, result);
 		glCheckError();
 		return result;

@@ -15,6 +15,7 @@
 #include "../global_assets/game_config.hpp"
 #include "shaders/ascii_light_shader.hpp"
 #include "shaders/lighter_shader.hpp"
+#include "shaders/pointlight_shader.hpp"
 
 namespace render {
 	static constexpr int size = 128;
@@ -48,14 +49,14 @@ namespace render {
 			glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, buffer->fbo_id);
-			glUniform3f(glGetUniformLocation(assets::pointlight_shader, "lightPos"), light_pos.x, light_pos.y, light_pos.z);
-			glUniform1f(glGetUniformLocation(assets::pointlight_shader, "far_plane"), radius);
-			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[0]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
-			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[1]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[1]));
-			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[2]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[2]));
-			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[3]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[3]));
-			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[4]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[4]));
-			glUniformMatrix4fv(glGetUniformLocation(assets::pointlight_shader, "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
+			glUniform3f(assets::pointlight_shader->light_pos, light_pos.x, light_pos.y, light_pos.z);
+			glUniform1f(assets::pointlight_shader->far_plane, radius);
+			glUniformMatrix4fv(assets::pointlight_shader->shadow_matrices0, 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+			glUniformMatrix4fv(assets::pointlight_shader->shadow_matrices1, 1, GL_FALSE, glm::value_ptr(shadowTransforms[1]));
+			glUniformMatrix4fv(assets::pointlight_shader->shadow_matrices2, 1, GL_FALSE, glm::value_ptr(shadowTransforms[2]));
+			glUniformMatrix4fv(assets::pointlight_shader->shadow_matrices3, 1, GL_FALSE, glm::value_ptr(shadowTransforms[3]));
+			glUniformMatrix4fv(assets::pointlight_shader->shadow_matrices4, 1, GL_FALSE, glm::value_ptr(shadowTransforms[4]));
+			glUniformMatrix4fv(assets::pointlight_shader->shadow_matrices5, 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
 
 			// Render everything to it - chunks
 			glViewport(0, 0, config::game_config.shadow_map_size, config::game_config.shadow_map_size);
@@ -170,7 +171,7 @@ namespace render {
 			}
 		});
 
-		glUseProgram(assets::pointlight_shader);
+		glUseProgram(assets::pointlight_shader->shader_id);
 		for (auto &l : pointlights) {
 			if (config::game_config.always_update_shadows || l.second.new_light || l.second.cycle_tick == cycle) {
 				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {
