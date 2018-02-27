@@ -2,6 +2,7 @@
 #include "../../bengine/gl_include.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "../../global_assets/game_camera.hpp"
 
 namespace render
 {
@@ -14,6 +15,7 @@ namespace render
 			float projection_matrix[16];
 			float view_matrix[16];
 			float proj_view_matrix[16];
+			float camera_position[3];
 		};
 
 		shader_data_t shader_data;		
@@ -41,6 +43,9 @@ namespace render
 			memcpy(shader_data.projection_matrix, glm::value_ptr(camera_projection_matrix), sizeof(shader_data.projection_matrix));
 			memcpy(shader_data.view_matrix, glm::value_ptr(camera_modelview_matrix), sizeof(shader_data.view_matrix));
 			memcpy(shader_data.proj_view_matrix, glm::value_ptr(camera_combined_matrix), sizeof(shader_data.proj_view_matrix));
+			shader_data.camera_position[0] = static_cast<float>(camera_position->region_x);
+			shader_data.camera_position[1] = static_cast<float>(camera_position->region_z);
+			shader_data.camera_position[2] = static_cast<float>(camera_position->region_y);
 
 			// Create/Update
 			if (!made_ubo)

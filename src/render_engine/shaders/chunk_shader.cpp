@@ -3,9 +3,6 @@
 chunk_shader_t::chunk_shader_t() {
 	load_shader("game_assets/shaders45/chunkshader_vertex.glsl", "game_assets/shaders45/chunkshader_fragment.glsl");
 
-	view_matrix = get_uniform("view_matrix");
-	projection_matrix = get_uniform("projection_matrix");
+	camera_block_index = get_block_index("camera_data");
 	textureArray = get_uniform("textureArray");
-	camera_position = get_uniform("camera_position");
-	use_parallax = get_uniform("useParallax");
 }

@@ -11,6 +11,7 @@
 #include "../camera.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../shaders/chunk_shader.hpp"
+#include "../ubo/first_stage_ubo.hpp"
 
 namespace render {
 	static unsigned int water_vao = 0;
@@ -105,8 +106,9 @@ namespace render {
 		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
 
 		// Assign the uniforms
-		glUniformMatrix4fv(assets::chunkshader->projection_matrix, 1, GL_FALSE, glm::value_ptr(camera_projection_matrix));
-		glUniformMatrix4fv(assets::chunkshader->view_matrix, 1, GL_FALSE, glm::value_ptr(camera_modelview_matrix));
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_ubo::ubo);
+		glUniformBlockBinding(assets::chunkshader->shader_id, 0, assets::chunkshader->camera_block_index);
+		glCheckError();
 
 		// Assign the texture array
 		glActiveTexture(GL_TEXTURE0);
