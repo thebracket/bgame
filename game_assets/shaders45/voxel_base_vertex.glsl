@@ -6,8 +6,14 @@ layout (location = 3) in vec3 instancePos;
 layout (location = 4) in vec4 instanceRotation;
 layout (location = 5) in vec3 instanceTint;
 
-uniform mat4 projection_matrix;
-uniform mat4 view_matrix;
+layout (std140) uniform camera_data
+{
+    mat4 projection_matrix;
+    mat4 view_matrix;
+    mat4 proj_view_matrix;
+    vec3 camera_position;
+};
+
 uniform float texSize;
 
 out VS_OUT {
