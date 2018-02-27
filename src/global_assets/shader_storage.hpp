@@ -3,19 +3,19 @@
 #include <memory>
 
 // Forward declarations
-class worldgen_shader_t;
-class chunk_shader_t;
-class chunk_depth_shader_t;
-class lightstage_shader_t;
-class voxel_shader_t;
-class voxel_shadow_shader_t;
-class ascii_base_shader_t;
-class ascii_light_shader_t;
-class cursor_shader_t;
-class lighter_shader_t;
-class particle_shader_t;
-class pointlight_shader_t;
-class tonemap_shader_t;
+struct worldgen_shader_t;
+struct chunk_shader_t;
+struct chunk_depth_shader_t;
+struct lightstage_shader_t;
+struct voxel_shader_t;
+struct voxel_shadow_shader_t;
+struct ascii_base_shader_t;
+struct ascii_light_shader_t;
+struct cursor_shader_t;
+struct lighter_shader_t;
+struct particle_shader_t;
+struct pointlight_shader_t;
+struct tonemap_shader_t;
 
 namespace assets {
     extern unsigned int spriteshader;
