@@ -12,6 +12,7 @@ class voxel_shadow_shader_t;
 class ascii_base_shader_t;
 class ascii_light_shader_t;
 class cursor_shader_t;
+class lighter_shader_t;
 
 namespace assets {
     extern unsigned int spriteshader;
@@ -27,7 +28,7 @@ namespace assets {
 	extern std::unique_ptr<cursor_shader_t> cursor_shader;
 	extern unsigned int particle_shader;
 	extern unsigned int pointlight_shader;
-	extern unsigned int lighter_shader;
+	extern std::unique_ptr<lighter_shader_t> lighter_shader;
 	extern std::unique_ptr<ascii_base_shader_t> ascii_shader;
 	extern std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
 

@@ -14,6 +14,7 @@
 #include "../bengine/ecs.hpp"
 #include "../global_assets/game_config.hpp"
 #include "shaders/ascii_light_shader.hpp"
+#include "shaders/lighter_shader.hpp"
 
 namespace render {
 	static constexpr int size = 128;
@@ -80,19 +81,19 @@ namespace render {
 		}
 
 		void render_light() const {
-			glUseProgram(assets::lighter_shader);
+			glUseProgram(assets::lighter_shader->shader_id);
 			glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
 
 			// Set uniforms
-			glUniform3f(glGetUniformLocation(assets::lighter_shader, "light_position"), light_pos.x, light_pos.y, light_pos.z);
-			glUniform3f(glGetUniformLocation(assets::lighter_shader, "camera_position"), (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
-			glUniform3f(glGetUniformLocation(assets::lighter_shader, "light_color"), light_col.r, light_col.g, light_col.b);
-			glUniform1f(glGetUniformLocation(assets::lighter_shader, "far_plane"), radius);
-			glUniform1i(glGetUniformLocation(assets::lighter_shader, "world_position"), 0);
-			glUniform1i(glGetUniformLocation(assets::lighter_shader, "depthMap"), 1);
-			glUniform1i(glGetUniformLocation(assets::lighter_shader, "albedo_tex"), 2);
-			glUniform1i(glGetUniformLocation(assets::lighter_shader, "normal_tex"), 3);
-			glUniform1i(glGetUniformLocation(assets::lighter_shader, "ao_tex"), 4);
+			glUniform3f(assets::lighter_shader->light_position, light_pos.x, light_pos.y, light_pos.z);
+			glUniform3f(assets::lighter_shader->camera_position, (float)camera_position->region_x, (float)camera_position->region_z, (float)camera_position->region_y);
+			glUniform3f(assets::lighter_shader->light_color, light_col.r, light_col.g, light_col.b);
+			glUniform1f(assets::lighter_shader->far_plane, radius);
+			glUniform1i(assets::lighter_shader->world_position, 0);
+			glUniform1i(assets::lighter_shader->depth_map, 1);
+			glUniform1i(assets::lighter_shader->albedo_tex, 2);
+			glUniform1i(assets::lighter_shader->normal_tex, 3);
+			glUniform1i(assets::lighter_shader->ao_tex, 4);
 
 			// Bind textures
 			glActiveTexture(GL_TEXTURE0);
