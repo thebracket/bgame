@@ -26,14 +26,11 @@ namespace vox {
 		int n_elements = 0;
 
 		void build_model();
-		void render_instances(voxel_render_buffer_t &buffer);
+		void render_instances(voxel_render_buffer_t &buffer) const;
 		void build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render);
 
 	private:
-		std::vector<float> geometry;
-
-		void add_cube_geometry(std::vector<float> &v, const subvoxel &voxel,
-							   const float &width, const float &height, const float &depth, const float &texture_id);
+		std::vector<float> geometry_;
 
 		void build_vbo(std::vector<float> &v);
 	};
@@ -44,19 +41,12 @@ namespace vox {
 
 	struct voxel_render_buffer_t {
 		unsigned int tmp_vao = 0;
-		std::size_t n_instances;
-		voxel_model *model;
+		int n_instances = 0;
+		voxel_model *model = nullptr;
 
 		voxel_render_buffer_t() {
 			glGenVertexArrays(1, &tmp_vao);
 			//std::cout << "Created VAO #" << tmp_vao << "\n";
-		}
-
-		~voxel_render_buffer_t() {
-			if (tmp_vao > 0) {
-				//std::cout << "Deleting VAO #" << tmp_vao << "\n";
-				glDeleteVertexArrays(1, &tmp_vao);
-			}
 		}
 	};
 }

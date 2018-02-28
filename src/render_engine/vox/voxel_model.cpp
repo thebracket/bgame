@@ -1,11 +1,66 @@
 #include "voxel_model.hpp"
 #include <map>
-#include <iostream>
 
 namespace vox {
 
 	constexpr static int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) {
 		return (w * h * z) + (w * y) + x;
+	}
+
+	static void add_cube_geometry(std::vector<float> &v, const subvoxel &voxel, const float &W, const float &H, const float &D, const float &texture_id) {
+		const auto x0 = -0.5f + voxel.x;
+		const auto x1 = x0 + W;
+		const auto y0 = -0.5f + voxel.z;
+		const auto y1 = y0 + D;
+		const auto z0 = -0.5f + voxel.y;
+		const auto z1 = z0 + H;
+
+		//std::cout << "Cube: " << x0 << "-" << y0 << "-" << z0 << " " << W << "x" << H << "\n";
+
+		v.insert(v.end(), {
+			x0, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
+
+			x0, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+
+			x0, y1, z1, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z0, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z0, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z0, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z1, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z1, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+
+			x1, y1, z1, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z0, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z0, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z1, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+
+			x0, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+
+			x0, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b
+
+			});
 	}
 
 	static bool is_same(const subvoxel &a, const subvoxel &b) {
@@ -21,19 +76,19 @@ namespace vox {
 		}
 
 		// Perform greedy voxels on it
-		int cube_count = 0;
+		auto cube_count = 0;
 		while (!cubes.empty()) {
 			const auto first_cube = cubes.begin();
 			const auto base_idx = first_cube->first;
 			const auto voxel_info = first_cube->second;
 
-			int W = 1;
-			int H = 1;
-			int D = 1;
+			auto W = 1;
+			auto H = 1;
+			auto D = 1;
 			cubes.erase(base_idx);
 
-			int idx_grow_right = base_idx + 1;
-			int x_coordinate = voxel_info.x;
+			auto idx_grow_right = base_idx + 1;
+			auto x_coordinate = voxel_info.x;
 			auto right_finder = cubes.find(idx_grow_right);
 			while (x_coordinate < width && right_finder != cubes.end() && is_same(voxel_info, right_finder->second)) {
 				cubes.erase(idx_grow_right);
@@ -44,20 +99,20 @@ namespace vox {
 			}
 			
 			if (voxel_info.y < height) {
-				int y_progress = voxel_info.y + 1;
+				auto y_progress = voxel_info.y + 1;
 
-				bool possible = true;
+				auto possible = true;
 				while (possible && y_progress < height) {
-					for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-						const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
-						auto vfinder = cubes.find(candidate_idx);
+					for (auto gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+						const auto candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
+						const auto vfinder = cubes.find(candidate_idx);
 						if (!(vfinder != cubes.end()) || !is_same(voxel_info, vfinder->second)) possible = false;
 						if (!possible) break;
 					}
 					if (possible) {
 						++H;
-						for (int gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
-							const int candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
+						for (auto gx = voxel_info.x; gx < voxel_info.x + width; ++gx) {
+							const auto candidate_idx = voxidx(width, height, depth, gx, y_progress, voxel_info.z);
 							cubes.erase(candidate_idx);
 						}
 					}
@@ -66,72 +121,15 @@ namespace vox {
 				}
 			}			
 
-			add_cube_geometry(geometry, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
+			add_cube_geometry(geometry_, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D), 3);
 			++cube_count;
 		}
 
 		// Build VAO/VBO and associate geometry with it
-		build_vbo(geometry);
+		build_vbo(geometry_);
 
 		// voxels.clear();
-	}
-
-	void voxel_model::add_cube_geometry(std::vector<float> &v, const subvoxel &voxel,
-										const float &W, const float &H, const float &D, const float &texture_id) {
-		const float x0 = -0.5f + voxel.x;
-		const float x1 = x0 + W;
-		const float y0 = -0.5f + voxel.z;
-		const float y1 = y0 + D;
-		const float z0 = -0.5f + voxel.y;
-		const float z1 = z0 + H;
-
-		//std::cout << "Cube: " << x0 << "-" << y0 << "-" << z0 << " " << W << "x" << H << "\n";
-
-		v.insert(v.end(), {
-				x0, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z0, 0.0f, 0.0f, -1.0f, voxel.r, voxel.g, voxel.b,
-
-				x0, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z1, 0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
-
-				x0, y1, z1, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z0, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z0, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z0, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z1, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z1, -1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-
-				x1, y1, z1, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z0, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z0, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z0, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z1, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z1, 1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-
-				x0, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z1, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y0, z0, 0.0f, -1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				
-				x0, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x1, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z1, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
-				x0, y1, z0, 0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b
-				
-		});
-	}
+	}	
 
 	void voxel_model::build_vbo(std::vector<float> &v) {
 		glGenBuffers(1, &vbo_id);
@@ -142,7 +140,7 @@ namespace vox {
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)
 	{
-		constexpr size_t instance_t_size_bytes = 10 * sizeof(float);
+		constexpr auto instance_t_size_bytes = 10 * sizeof(float);
 		assert(render->tmp_vao > 0);
 
 		// Build the instance buffer
@@ -150,11 +148,9 @@ namespace vox {
 		//glInvalidateBufferData(instance_vbo_id);
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
 		glBufferData(GL_ARRAY_BUFFER, instance_t_size_bytes * instances.size(), &instances[0], GL_DYNAMIC_DRAW);
-		//glCheckError();
 
 		// Create the VAO to hold this data
 		glBindVertexArray(render->tmp_vao);
-		//glCheckError();
 
 		// Bind the consistent elements
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
@@ -163,11 +159,9 @@ namespace vox {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
 		glEnableVertexAttribArray(1); // 1 = Normals
-		//glCheckError();
 
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
 		glEnableVertexAttribArray(2); // 2 = Color
-		//glCheckError();
 
 		// Bind the per-element items
 		glBindBuffer(GL_ARRAY_BUFFER, instance_vbo_id);
@@ -188,11 +182,11 @@ namespace vox {
 		glBindVertexArray(0);
 		glCheckError();
 
-		render->n_instances = instances.size();
+		render->n_instances = static_cast<int>(instances.size());
 		render->model = this;
 	}
 
-	void voxel_model::render_instances(voxel_render_buffer_t &buffer) {
+	void voxel_model::render_instances(voxel_render_buffer_t &buffer) const {
 		glBindVertexArray(buffer.tmp_vao);
 		glDrawArraysInstanced(GL_TRIANGLES, 0, n_elements, (int)buffer.n_instances);
 		glCheckError();
