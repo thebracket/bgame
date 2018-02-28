@@ -128,7 +128,8 @@ namespace vox {
 		// Build VAO/VBO and associate geometry with it
 		build_vbo(geometry_);
 
-		// voxels.clear();
+		voxels.clear();
+		voxels.shrink_to_fit();
 	}	
 
 	void voxel_model::build_vbo(std::vector<float> &v) {
