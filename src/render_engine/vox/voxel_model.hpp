@@ -24,7 +24,6 @@ namespace vox {
 		unsigned int vbo_v_id = 0;
 		unsigned int vbo_n_id = 0;
 		unsigned int vbo_c_id = 0;
-		unsigned int ibo_id = 0;
 		unsigned int ssbo_id = 0;
 		bool created_ssbo = false;
 		int n_elements = 0;
@@ -37,7 +36,6 @@ namespace vox {
 		std::vector<float> vertices_;
 		std::vector<float> normals_;
 		std::vector<float> colors_;
-		std::vector<unsigned int> indices_;
 
 		void build_vbo();
 	};
