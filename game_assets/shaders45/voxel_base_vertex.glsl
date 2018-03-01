@@ -2,9 +2,6 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aColor;
-layout (location = 3) in vec3 instancePos;
-layout (location = 4) in vec4 instanceRotation;
-layout (location = 5) in vec3 instanceTint;
 
 layout (std140) uniform camera_data
 {
@@ -13,6 +10,24 @@ layout (std140) uniform camera_data
     mat4 proj_view_matrix;
     vec3 camera_position;
 };
+
+struct InstanceData {
+    float x;
+    float y;
+    float z;
+    float axis1;
+    float axis2;
+    float axis3; 
+    float rot_angle;
+    float tint_r;
+    float tint_g;
+    float tint_b;
+};
+
+layout (std430, binding=2) buffer instance_data
+{ 
+    InstanceData i[];
+} instancedData;
 
 uniform float texSize;
 
@@ -47,6 +62,11 @@ mat4 rotationMatrix(vec3 axis, float angle)
 
 void main()
 {
+    InstanceData instance = instancedData.i[gl_InstanceID];
+    vec3 instancePos = vec3(instance.x, instance.y, instance.z);
+    vec4 instanceRotation = vec4(instance.axis1, instance.axis2, instance.axis3, instance.rot_angle);
+    vec3 instanceTint = vec3(instance.tint_r, instance.tint_g, instance.tint_b);
+
     vec3 shunk_pos = (aPos - texSize/2.0) / texSize;
     vec4 position = vec4(shunk_pos, 1.0);
 

@@ -249,4 +249,12 @@ namespace bengine {
 		glCheckError();
 		return result;
     }
+
+	unsigned int base_shader_t::get_resource_index(const std::string &name) const
+    {
+		const auto result = glGetProgramResourceIndex(shader_id, GL_SHADER_STORAGE_BLOCK, name.c_str());
+		glog(log_target::LOADER, log_severity::INFO, "Uniform block {0} assigned to index {1}", name, result);
+		glCheckError();
+		return result;
+    }
 }
