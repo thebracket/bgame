@@ -40,10 +40,6 @@ namespace vox {
 		void build_vbo();
 	};
 
-	struct voxel_render_group_t {
-		unsigned int vao = 0;
-	};
-
 	struct voxel_render_buffer_t {
 		unsigned int tmp_vao = 0;
 		int n_instances = 0;
