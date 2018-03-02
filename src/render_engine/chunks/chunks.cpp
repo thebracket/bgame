@@ -3,7 +3,6 @@
 #include "../../planet/indices.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../raws/materials.hpp"
-#include "../../raws/defs/material_def_t.hpp"
 #include "geometry_helper.hpp"
 #include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/gl_include.hpp"
@@ -148,7 +147,7 @@ namespace chunks {
     }
 
     void chunk_t::greedy_floors(boost::container::flat_map<int, unsigned int> &floors, const int &layer) {
-        std::size_t n_floors = floors.size();
+        auto n_floors = floors.size();
 
         //std::cout << floors.size() << " floors to process\n";
 
@@ -158,12 +157,12 @@ namespace chunks {
             const auto texture_id = first_floor->second;
 
 			const auto &[tile_x, tile_y, tile_z] = idxmap(base_region_idx);
-            int width = 1;
-            int height = 1;
+            auto width = 1;
+            auto height = 1;
 
             floors.erase(base_region_idx);
-            int idx_grow_right = base_region_idx+1;
-            int x_coordinate = tile_x;
+            auto idx_grow_right = base_region_idx+1;
+            auto x_coordinate = tile_x;
             auto right_finder = floors.find(idx_grow_right);
             while (x_coordinate < REGION_WIDTH-1 && idx_grow_right < mapidx(std::min(REGION_WIDTH-1, base_x + CHUNK_SIZE), tile_y, tile_z) && right_finder != floors.end() && right_finder->second == texture_id) {
                 floors.erase(idx_grow_right);
@@ -176,19 +175,19 @@ namespace chunks {
             //std::cout << "Merging " << width << " tiles horizontally\n";
 
             if (tile_y < REGION_HEIGHT-1) {
-                int y_progress = tile_y + 1;
+                auto y_progress = tile_y + 1;
 
-                bool possible = true;
+				auto possible = true;
                 while (possible && y_progress < base_y + CHUNK_SIZE && y_progress < REGION_HEIGHT-1) {
-                    for (int gx = tile_x; gx < tile_x + width; ++gx) {
-                        const int candidate_idx = mapidx(gx, y_progress, tile_z);
-                        auto vfinder = floors.find(candidate_idx);
+                    for (auto gx = tile_x; gx < tile_x + width; ++gx) {
+                        const auto candidate_idx = mapidx(gx, y_progress, tile_z);
+                        const auto vfinder = floors.find(candidate_idx);
                         if (vfinder == floors.end() || vfinder->second != texture_id) possible = false;
                     }
                     if (possible) {
                         ++height;
-                        for (int gx = tile_x; gx < tile_x + width; ++gx) {
-                            const int candidate_idx = mapidx(gx, y_progress, tile_z);
+                        for (auto gx = tile_x; gx < tile_x + width; ++gx) {
+                            const auto candidate_idx = mapidx(gx, y_progress, tile_z);
                             floors.erase(candidate_idx);
                         }
                     }
@@ -209,7 +208,7 @@ namespace chunks {
     }
 
     void chunk_t::greedy_cubes(boost::container::flat_map<int, unsigned int> &cubes, const int &layer) {
-        std::size_t n_cubes = cubes.size();
+		auto n_cubes = cubes.size();
 
         while (!cubes.empty()) {
             const auto first_floor = cubes.begin();
@@ -217,12 +216,12 @@ namespace chunks {
             const auto texture_id = first_floor->second;
 
 			const auto &[tile_x, tile_y, tile_z] = idxmap(base_region_idx);
-            int width = 1;
-            int height = 1;
+			auto width = 1;
+			auto height = 1;
 
             cubes.erase(base_region_idx);
-            int idx_grow_right = base_region_idx+1;
-            int x_coordinate = tile_x;
+			auto idx_grow_right = base_region_idx+1;
+			auto x_coordinate = tile_x;
             auto right_finder = cubes.find(idx_grow_right);
             while (x_coordinate < REGION_WIDTH-1 && idx_grow_right < mapidx(std::min(REGION_WIDTH-1, base_x + CHUNK_SIZE), tile_y, tile_z) && right_finder != cubes.end() && right_finder->second == texture_id) {
                 cubes.erase(idx_grow_right);
@@ -235,19 +234,19 @@ namespace chunks {
             //std::cout << "Merging " << width << " tiles horizontally\n";
 
             if (tile_y < REGION_HEIGHT-1) {
-                int y_progress = tile_y + 1;
+				auto y_progress = tile_y + 1;
 
-                bool possible = true;
+				auto possible = true;
                 while (possible && y_progress < base_y + CHUNK_SIZE && y_progress < REGION_HEIGHT-1) {
-                    for (int gx = tile_x; gx < tile_x + width; ++gx) {
-                        const int candidate_idx = mapidx(gx, y_progress, tile_z);
-                        auto vfinder = cubes.find(candidate_idx);
+                    for (auto gx = tile_x; gx < tile_x + width; ++gx) {
+                        const auto candidate_idx = mapidx(gx, y_progress, tile_z);
+                        const auto vfinder = cubes.find(candidate_idx);
                         if (!(vfinder != cubes.end() && vfinder->second == texture_id)) possible = false;
                     }
                     if (possible) {
                         ++height;
                         for (int gx = tile_x; gx < tile_x + width; ++gx) {
-                            const int candidate_idx = mapidx(gx, y_progress, tile_z);
+                            const auto candidate_idx = mapidx(gx, y_progress, tile_z);
                             cubes.erase(candidate_idx);
                         }
                     }
@@ -268,7 +267,7 @@ namespace chunks {
     }       
 	
     void chunk_t::update_buffer() {
-		bool reset_vao = false;
+		auto reset_vao = false;
         if (vao < 1) { 
 			glGenVertexArrays(1, &vao); 
 			glCheckError(); 
