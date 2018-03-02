@@ -3,11 +3,15 @@
 #include <iostream>
 #include "../../global_assets/shader_storage.hpp"
 #include "../shaders/voxel_shader.hpp"
+#include "../ubo/first_stage_ubo.hpp"
+#include "../renderbuffers.hpp"
 
 namespace vox {
 
 	std::vector<float> master_vertices;
 	unsigned int voxel_geometry_vbo;
+	unsigned int voxel_geometry_vao;
+	static bool made_voxel_vao = false;
 
 	constexpr static int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) noexcept
 	{
@@ -162,7 +166,6 @@ namespace vox {
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)
 	{
 		constexpr auto instance_t_size_bytes = 10 * sizeof(float);
-		assert(render->tmp_vao > 0);
 
 		// Upload the instance buffer into an SSBO
 		if (!created_ssbo)
@@ -180,41 +183,55 @@ namespace vox {
 			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 		}
 
-		// Create the VAO to hold this data
-		glBindVertexArray(render->tmp_vao);
+		if (!made_voxel_vao) {
+			// Create the VAO to hold this data
+			glGenVertexArrays(1, &voxel_geometry_vao);
+			glBindVertexArray(voxel_geometry_vao);
 
-		// Bind the consistent elements
-		glBindBuffer(GL_ARRAY_BUFFER, voxel_geometry_vbo);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0); // 0 = Vertex Position
-		glVertexAttribDivisor(0, 0);
+			// Bind the consistent elements
+			glBindBuffer(GL_ARRAY_BUFFER, voxel_geometry_vbo);
 
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-		glEnableVertexAttribArray(1); // 1 = Normals
-		glVertexAttribDivisor(1, 0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0); // 0 = Vertex Position
+			glVertexAttribDivisor(0, 0);
 
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
-		glEnableVertexAttribArray(2); // 2 = Color
-		glVertexAttribDivisor(2, 0);		
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glEnableVertexAttribArray(1); // 1 = Normals
+			glVertexAttribDivisor(1, 0);
 
-		//glCheckError();
-		glBindVertexArray(0);
-		glCheckError();
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+			glEnableVertexAttribArray(2); // 2 = Color
+			glVertexAttribDivisor(2, 0);
+
+			//glCheckError();
+			glBindVertexArray(0);
+			made_voxel_vao = true;
+		}
 
 		render->n_instances = static_cast<int>(instances.size());
 		render->model = this;
 	}
 
 	void voxel_model::render_instances(const voxel_render_buffer_t &buffer) const {
-		glEnable(GL_CULL_FACE);
-		glBindVertexArray(buffer.tmp_vao);
 
 		glShaderStorageBlockBinding(assets::voxel_shader->shader_id, assets::voxel_shader->instance_block_index, 2);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo_id);
 
 		glDrawArraysInstanced(GL_TRIANGLES, start_index/9, n_elements, buffer.n_instances);
-		glCheckError();
+	}
 
+	void bulk_render(const std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> &model_buffers)
+	{
+		assets::voxel_shader->use();
+		glBindFramebuffer(GL_FRAMEBUFFER, render::gbuffer->fbo_id);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, render::camera_ubo::ubo);
+		glUniformBlockBinding(assets::voxel_shader->shader_id, 0, assets::voxel_shader->camera_block_index);
+		glEnable(GL_CULL_FACE);
+
+		glBindVertexArray(vox::voxel_geometry_vao);
+		for (const auto &m : model_buffers) {
+			m->model->render_instances(*m);
+		}
 		glBindVertexArray(0);
 		glDisable(GL_CULL_FACE);
 	}

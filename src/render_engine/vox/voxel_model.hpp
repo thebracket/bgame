@@ -32,15 +32,11 @@ namespace vox {
 	};
 
 	struct voxel_render_buffer_t {
-		unsigned int tmp_vao = 0;
 		int n_instances = 0;
 		voxel_model *model = nullptr;
-
-		voxel_render_buffer_t() {
-			glGenVertexArrays(1, &tmp_vao);
-			//std::cout << "Created VAO #" << tmp_vao << "\n";
-		}
 	};
 
 	void build_master_geometry();
+	void bulk_render(const std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> &model_buffers);
+	extern unsigned int voxel_geometry_vao;
 }

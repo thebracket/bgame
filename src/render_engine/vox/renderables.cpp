@@ -390,6 +390,8 @@ namespace render {
 	}
 
 	void render_voxel_models(gbuffer_t * gbuffer, glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix) {
+		vox::bulk_render(model_buffers);
+		/*
 		assets::voxel_shader->use();
 		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_ubo::ubo);
@@ -399,6 +401,7 @@ namespace render {
 		for (const auto &m : model_buffers) {
 			m->model->render_instances(*m);
 		}
+		*/
 	}
 
 	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int texture_id) {
