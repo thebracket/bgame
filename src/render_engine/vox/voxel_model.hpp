@@ -25,12 +25,11 @@ namespace vox {
 		unsigned int start_index = 0;
 
 		void build_model();
-		void render_instances(const voxel_render_buffer_t &buffer) const;
 		void build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render); // Returns the instance offset
 	};
 
 	struct voxel_render_buffer_t {
-		int n_instances = 0;
+		unsigned int n_instances = 0;
 		voxel_model *model = nullptr;
 		unsigned int instance_offset = 0;
 	};

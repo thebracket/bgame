@@ -203,10 +203,12 @@ namespace vox {
 		render->model = this;
 	}
 
-	void voxel_model::render_instances(const voxel_render_buffer_t &buffer) const {
-		glDrawArraysInstancedBaseInstance(GL_TRIANGLES, start_index / 9, n_elements, buffer.n_instances, buffer.instance_offset);
-		glCheckError();
-	}
+	 struct DrawArraysIndirectCommand {
+		unsigned int count;
+		unsigned int instanceCount;
+		unsigned int first;
+		unsigned int baseInstance;
+	};
 
 	void bulk_render(const std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> &model_buffers)
 	{
@@ -221,8 +223,9 @@ namespace vox {
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, instance_ssbo);
 
 		for (const auto &m : model_buffers) {
-			m->model->render_instances(*m);
+			glDrawArraysInstancedBaseInstance(GL_TRIANGLES, m->model->start_index / 9, m->model->n_elements, m->n_instances, m->instance_offset);
 		}
+
 		glBindVertexArray(0);
 		glDisable(GL_CULL_FACE);
 		glCheckError();
