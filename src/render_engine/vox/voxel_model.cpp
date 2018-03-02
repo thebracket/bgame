@@ -248,7 +248,7 @@ namespace vox {
 		{			
 			glBindBuffer(GL_SHADER_STORAGE_BUFFER, instance_ssbo);
 			glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(instance_t) * instance_buffer.size(), &instance_buffer[0], GL_DYNAMIC_COPY);
-			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 		}
+		glCheckError();
 	}
 }
