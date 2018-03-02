@@ -395,9 +395,6 @@ namespace render {
 		glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_ubo::ubo);
 		glUniformBlockBinding(assets::voxel_shader->shader_id, 0, assets::voxel_shader->camera_block_index);
 		glCheckError();
-		//glCheckError();
-		glUniform1f(assets::voxel_shader->texSize, 32.0f);
-		//glCheckError();
 
 		for (const auto &m : model_buffers) {
 			m->model->render_instances(*m);

@@ -208,11 +208,9 @@ namespace vox {
 	void voxel_model::render_instances(const voxel_render_buffer_t &buffer) const {
 		glEnable(GL_CULL_FACE);
 		glBindVertexArray(buffer.tmp_vao);
-		glCheckError();
+
 		glShaderStorageBlockBinding(assets::voxel_shader->shader_id, assets::voxel_shader->instance_block_index, 2);
-		glCheckError();
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo_id);
-		glCheckError();
 
 		glDrawArraysInstanced(GL_TRIANGLES, start_index/9, n_elements, buffer.n_instances);
 		glCheckError();

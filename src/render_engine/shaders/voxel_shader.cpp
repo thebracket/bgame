@@ -5,5 +5,4 @@ voxel_shader_t::voxel_shader_t() {
 
 	camera_block_index = get_block_index("camera_data");
 	instance_block_index = get_resource_index("instance_data");
-	texSize = get_uniform("texSize");
 }

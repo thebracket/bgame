@@ -1,4 +1,5 @@
 #version 430 core
+
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aColor;
@@ -29,7 +30,7 @@ layout (std430, binding=2) buffer instance_data
     InstanceData i[];
 } instancedData;
 
-uniform float texSize;
+const float texSize = 32.0;
 
 out VS_OUT {
     vec3 world_pos;
