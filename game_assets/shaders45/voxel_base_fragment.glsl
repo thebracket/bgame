@@ -1,4 +1,4 @@
-#version 430 core
+#version 430
 
 in VS_OUT {
     vec3 world_pos;

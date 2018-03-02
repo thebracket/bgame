@@ -12,6 +12,9 @@ namespace vox {
 	unsigned int voxel_geometry_vbo;
 	unsigned int voxel_geometry_vao;
 	static bool made_voxel_vao = false;
+	unsigned int instance_ssbo;
+	static bool made_instance_ssbo = false;
+	std::vector<instance_t> instance_buffer;
 
 	constexpr static int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) noexcept
 	{
@@ -166,22 +169,10 @@ namespace vox {
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)
 	{
 		constexpr auto instance_t_size_bytes = 10 * sizeof(float);
+		render->instance_offset = static_cast<unsigned int>(instance_buffer.size());
 
-		// Upload the instance buffer into an SSBO
-		if (!created_ssbo)
-		{
-			created_ssbo = true;
-			glGenBuffers(1, &ssbo_id);
-			glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo_id);
-			glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(instance_t) * instances.size(), &instances[0], GL_DYNAMIC_COPY);
-			glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-		} else
-		{
-			glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo_id);
-			GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-			memcpy(p, &instances[0], sizeof(instance_t) * instances.size());
-			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-		}
+		// Append to the master instance list
+		instance_buffer.insert(instance_buffer.end(), instances.begin(), instances.end());
 
 		if (!made_voxel_vao) {
 			// Create the VAO to hold this data
@@ -213,11 +204,8 @@ namespace vox {
 	}
 
 	void voxel_model::render_instances(const voxel_render_buffer_t &buffer) const {
-
-		glShaderStorageBlockBinding(assets::voxel_shader->shader_id, assets::voxel_shader->instance_block_index, 2);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo_id);
-
-		glDrawArraysInstanced(GL_TRIANGLES, start_index/9, n_elements, buffer.n_instances);
+		glDrawArraysInstancedBaseInstance(GL_TRIANGLES, start_index / 9, n_elements, buffer.n_instances, buffer.instance_offset);
+		glCheckError();
 	}
 
 	void bulk_render(const std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> &model_buffers)
@@ -229,10 +217,38 @@ namespace vox {
 		glEnable(GL_CULL_FACE);
 
 		glBindVertexArray(vox::voxel_geometry_vao);
+		glShaderStorageBlockBinding(assets::voxel_shader->shader_id, assets::voxel_shader->instance_block_index, 2);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, instance_ssbo);
+
 		for (const auto &m : model_buffers) {
 			m->model->render_instances(*m);
 		}
 		glBindVertexArray(0);
 		glDisable(GL_CULL_FACE);
+		glCheckError();
+	}
+
+	void start_buffer_accumulation()
+	{
+		instance_buffer.clear();
+	}
+
+	void finish_instance_buffers()
+	{
+		if (!made_instance_ssbo)
+		{
+			made_instance_ssbo = true;
+			glGenBuffers(1, &instance_ssbo);
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, instance_ssbo);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(instance_t) * instance_buffer.size(), &instance_buffer[0], GL_DYNAMIC_COPY);
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+			glCheckError();
+		}
+		else
+		{			
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, instance_ssbo);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(instance_t) * instance_buffer.size(), &instance_buffer[0], GL_DYNAMIC_COPY);
+			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+		}
 	}
 }

@@ -1,4 +1,5 @@
-#version 430 core
+#version 430
+#extension GL_ARB_shader_draw_parameters : enable
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
@@ -63,7 +64,7 @@ mat4 rotationMatrix(vec3 axis, float angle)
 
 void main()
 {
-    InstanceData instance = instancedData.i[gl_InstanceID];
+    InstanceData instance = instancedData.i[gl_BaseInstanceARB + gl_InstanceID];
     vec3 instancePos = vec3(instance.x, instance.y, instance.z);
     vec4 instanceRotation = vec4(instance.axis1, instance.axis2, instance.axis3, instance.rot_angle);
     vec3 instanceTint = vec3(instance.tint_r, instance.tint_g, instance.tint_b);

@@ -21,22 +21,23 @@ namespace vox {
 	struct voxel_model {
 		int width, height, depth;
 		std::vector<subvoxel> voxels;
-		unsigned int ssbo_id = 0;
-		bool created_ssbo = false;
 		unsigned int n_elements = 0;
 		unsigned int start_index = 0;
 
 		void build_model();
 		void render_instances(const voxel_render_buffer_t &buffer) const;
-		void build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render);
+		void build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render); // Returns the instance offset
 	};
 
 	struct voxel_render_buffer_t {
 		int n_instances = 0;
 		voxel_model *model = nullptr;
+		unsigned int instance_offset = 0;
 	};
 
 	void build_master_geometry();
+	void start_buffer_accumulation();
+	void finish_instance_buffers();
 	void bulk_render(const std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> &model_buffers);
 	extern unsigned int voxel_geometry_vao;
 }

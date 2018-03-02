@@ -316,14 +316,14 @@ namespace render {
 
 			models_changed = false;
 
-			assets::voxel_shader->use();
+			vox::start_buffer_accumulation();
 			for (auto &m : *models_to_render) {
 				auto model = vox::get_model(m.first);
 				auto mb = std::make_unique<vox::voxel_render_buffer_t>();
 				model->build_buffer(m.second, mb.get());
 				model_buffers.emplace_back(std::move(mb));
 			}
-			glUseProgram(0);
+			vox::finish_instance_buffers();
 		}
 	}
 
