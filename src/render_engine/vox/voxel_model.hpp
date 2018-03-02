@@ -22,8 +22,6 @@ namespace vox {
 		int width, height, depth;
 		std::vector<subvoxel> voxels;
 		unsigned int vbo_v_id = 0;
-		unsigned int vbo_n_id = 0;
-		unsigned int vbo_c_id = 0;
 		unsigned int ssbo_id = 0;
 		bool created_ssbo = false;
 		int n_elements = 0;
@@ -34,8 +32,6 @@ namespace vox {
 
 	private:
 		std::vector<float> vertices_;
-		std::vector<float> normals_;
-		std::vector<float> colors_;
 
 		void build_vbo();
 	};

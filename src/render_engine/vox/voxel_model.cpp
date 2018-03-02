@@ -16,7 +16,7 @@ namespace vox {
 		return static_cast<unsigned int>(n);
 	}
 
-	static void add_cube_geometry(std::vector<float> &v, std::vector<float> &n, std::vector<float> &c, const subvoxel &voxel, const float &W, const float &H, const float &D) noexcept
+	static void add_cube_geometry(std::vector<float> &v, const subvoxel &voxel, const float &W, const float &H, const float &D) noexcept
 	{
 		const auto x0 = -0.5f + voxel.x;
 		const auto x1 = x0 + W;
@@ -26,183 +26,52 @@ namespace vox {
 		const auto z1 = z0 + H;
 
 		const unsigned int base = v.size() / 3;
-		/*
-	-1.0f, -1.0f, -1.0f,	0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-	1.0f, 1.0f, -1.0f,		0.0f, 0.0f, -1.0f, 1.0f, 1.0f, // top-right
-	1.0f, -1.0f, -1.0f,		0.0f, 0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
-	1.0f, 1.0f, -1.0f,		0.0f, 0.0f, -1.0f, 1.0f, 1.0f, // top-right
-	-1.0f, -1.0f, -1.0f,	0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-	-1.0f, 1.0f, -1.0f,		0.0f, 0.0f, -1.0f, 0.0f, 1.0f, // top-left
-														// front face
-	-1.0f, -1.0f, 1.0f,		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-	1.0f, -1.0f, 1.0f,		0.0f, 0.0f, 1.0f, 1.0f, 0.0f, // bottom-right
-	1.0f, 1.0f, 1.0f,		0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top-right
-	1.0f, 1.0f, 1.0f,		 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top-right
-	-1.0f, 1.0f, 1.0f,		0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // top-left
-	-1.0f, -1.0f, 1.0f,		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
-														// left face
-	-1.0f, 1.0f, 1.0f,		-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // top-right
-	-1.0f, 1.0f, -1.0f,		-1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-left
-	-1.0f, -1.0f, -1.0f,	-1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-left
-	-1.0f, -1.0f, -1.0f,	-1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-left
-	-1.0f, -1.0f, 1.0f,		-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // bottom-right
-	-1.0f, 1.0f, 1.0f,		-1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // top-right
-														// right face
-	1.0f, 1.0f, 1.0f,		1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // top-left
-	1.0f, -1.0f, -1.0f,		1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-right
-	1.0f, 1.0f, -1.0f,		1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top-right         
-	1.0f, -1.0f, -1.0f,		1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-right
-	1.0f, 1.0f, 1.0f,		1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // top-left
-	1.0f, -1.0f, 1.0f,		1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // bottom-left     
-														// bottom face
-	-1.0f, -1.0f, -1.0f,	0.0f, -1.0f, 0.0f, 0.0f, 1.0f, // top-right
-	1.0f, -1.0f, -1.0f,		0.0f, -1.0f, 0.0f, 1.0f, 1.0f, // top-left
-	1.0f, -1.0f, 1.0f,		0.0f, -1.0f, 0.0f, 1.0f, 0.0f, // bottom-left
-	1.0f, -1.0f, 1.0f,		0.0f, -1.0f, 0.0f, 1.0f, 0.0f, // bottom-left
-	-1.0f, -1.0f, 1.0f,		0.0f, -1.0f, 0.0f, 0.0f, 0.0f, // bottom-right
-	-1.0f, -1.0f, -1.0f,	0.0f, -1.0f, 0.0f, 0.0f, 1.0f, // top-right
-														// top face
-	-1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top-left
-	1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
-	1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // top-right     
-	1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom-right
-	-1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top-left
-	-1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 0.0f, 0.0f, 0.0f  // bottom-left 
-	*/
-
 
 		v.insert(v.end(), {
 			
-			x0, y0, z0,
-			x1, y1, z0,
-			x1, y0, z0,
-			x1, y1, z0,
-			x0, y0, z0,
-			x0, y1, z0,
+			x0, y0, z0, 0.0f, 0.0f, -1.0f,voxel.r, voxel.g, voxel.b,
+			x1, y1, z0,	0.0f, 0.0f, -1.0f,voxel.r, voxel.g, voxel.b,
+			x1, y0, z0,	0.0f, 0.0f, -1.0f,voxel.r, voxel.g, voxel.b,
+			x1, y1, z0,	0.0f, 0.0f, -1.0f,voxel.r, voxel.g, voxel.b,
+			x0, y0, z0,	0.0f, 0.0f, -1.0f,voxel.r, voxel.g, voxel.b,
+			x0, y1, z0,	0.0f, 0.0f, -1.0f,voxel.r, voxel.g, voxel.b,
 
-			x0, y0, z1,
-			x1, y0, z1,
-			x1, y1, z1,
-			x1, y1, z1,
-			x0, y1, z1,
-			x0, y0, z1,
+			x0, y0, z1,	0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z1,	0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1,	0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1,	0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z1,	0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
+			x0, y0, z1,	0.0f, 0.0f, 1.0f, voxel.r, voxel.g, voxel.b,
 
-			x0, y1, z1,
-			x0, y1, z0,
-			x0, y0, z0,
-			x0, y0, z0,
-			x0, y0, z1,
-			x0, y1, z1,
+			x0, y1, z1,	-1.0f, 0.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y1, z0,	-1.0f, 0.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y0, z0,	-1.0f, 0.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y0, z0,	-1.0f, 0.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y0, z1,	-1.0f, 0.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y1, z1,	-1.0f, 0.0f, 0.0f,voxel.r, voxel.g, voxel.b,
 
-			x1, y1, z1,
-			x1, y0, z0,
-			x1, y1, z0,
-			x1, y1, z0,
-			x1, y1, z1,
-			x1, y0, z1,
+			x1, y1, z1,	1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z0,	1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0,	1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0,	1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1,	1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y0, z1,	1.0f, 0.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 
-			x0, y0, z0,
-			x1, y0, z0,
-			x1, y0, z1,
-			x1, y0, z1,
-			x0, y0, z1,
-			x0, y0, z0,
+			x0, y0, z0,	0.0f, -1.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x1, y0, z0,	0.0f, -1.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x1, y0, z1,	0.0f, -1.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x1, y0, z1,	0.0f, -1.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y0, z1,	0.0f, -1.0f, 0.0f,voxel.r, voxel.g, voxel.b,
+			x0, y0, z0,	0.0f, -1.0f, 0.0f,voxel.r, voxel.g, voxel.b,
 
-			x0, y1, z0,
-			x1, y1, z1,
-			x1, y1, z0,
-			x1, y1, z1,
-			x0, y1, z0,
-			x0, y1, z1,
+			x0, y1, z0,	0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1,	0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z0,	0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x1, y1, z1,	0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z0,	0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
+			x0, y1, z1,	0.0f, 1.0f, 0.0f, voxel.r, voxel.g, voxel.b,
 
 			});
-		n.insert(n.end(), {
-			0.0f, 0.0f, -1.0f,
-			0.0f, 0.0f, -1.0f,
-			0.0f, 0.0f, -1.0f,
-			0.0f, 0.0f, -1.0f,
-			0.0f, 0.0f, -1.0f,
-			0.0f, 0.0f, -1.0f,
-
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-
-			-1.0f, 0.0f, 0.0f,
-			- 1.0f, 0.0f, 0.0f,
-			- 1.0f, 0.0f, 0.0f,
-			- 1.0f, 0.0f, 0.0f,
-			- 1.0f, 0.0f, 0.0f,
-			- 1.0f, 0.0f, 0.0f,
-
-			1.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-
-			0.0f, -1.0f, 0.0f,
-			0.0f, -1.0f, 0.0f,
-			0.0f, -1.0f, 0.0f,
-			0.0f, -1.0f, 0.0f,
-			0.0f, -1.0f, 0.0f,
-			0.0f, -1.0f, 0.0f,
-
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			});
-		c.insert(c.end(), {
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-			voxel.r, voxel.g, voxel.b,
-		});
-
 	}
 
 	static bool is_same(const subvoxel &a, const subvoxel &b) noexcept
@@ -266,7 +135,7 @@ namespace vox {
 				}
 			}	
 
-			add_cube_geometry(vertices_, normals_, colors_, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D));
+			add_cube_geometry(vertices_, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D));
 			++cube_count;
 		}
 		n_elements = vertices_.size() / 3;
@@ -283,18 +152,8 @@ namespace vox {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_v_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), &vertices_[0], GL_STATIC_DRAW);
 
-		glGenBuffers(1, &vbo_n_id);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_n_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals_.size(), &normals_[0], GL_STATIC_DRAW);
-
-		glGenBuffers(1, &vbo_c_id);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_c_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * colors_.size(), &colors_[0], GL_STATIC_DRAW);
-
 		// Clear all the buffers!
 		vertices_.clear();
-		normals_.clear();
-		colors_.clear();
 	}
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)
@@ -323,17 +182,15 @@ namespace vox {
 
 		// Bind the consistent elements
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_v_id);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0); // 0 = Vertex Position
 		glVertexAttribDivisor(0, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_n_id);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
 		glEnableVertexAttribArray(1); // 1 = Normals
 		glVertexAttribDivisor(1, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_c_id);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
 		glEnableVertexAttribArray(2); // 2 = Color
 		glVertexAttribDivisor(2, 0);		
 
