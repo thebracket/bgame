@@ -275,6 +275,7 @@ namespace splash_screen {
         for (const auto &vm : voxel_models_to_load) {
             vox::load_vox(vm.second, vm.first);
         }
+		vox::build_master_geometry();
     }
 
     void tick(const double &duration_ms) noexcept {

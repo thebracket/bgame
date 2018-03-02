@@ -6,6 +6,9 @@
 
 namespace vox {
 
+	std::vector<float> master_vertices;
+	unsigned int voxel_geometry_vbo;
+
 	constexpr static int voxidx(const int &w, const int &h, const int &d, const int &x, const int &y, const int &z) noexcept
 	{
 		return (w * h * z) + (w * y) + x;
@@ -80,6 +83,8 @@ namespace vox {
 	}
 
 	void voxel_model::build_model() {
+		start_index = master_vertices.size();
+
 		// Build a cube map
 		std::map<int, subvoxel> cubes;
 		for (const auto cube : voxels) {
@@ -135,25 +140,23 @@ namespace vox {
 				}
 			}	
 
-			add_cube_geometry(vertices_, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D));
+			add_cube_geometry(master_vertices, voxel_info, static_cast<float>(W), static_cast<float>(H), static_cast<float>(D));
 			++cube_count;
 		}
-		n_elements = vertices_.size() / 3;
-
-		// Build VAO/VBO and associate geometry with it
-		build_vbo();
+		n_elements = (master_vertices.size() - start_index) / 9;
 
 		voxels.clear();
 		voxels.shrink_to_fit();
 	}	
 
-	void voxel_model::build_vbo() {
-		glGenBuffers(1, &vbo_v_id);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_v_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), &vertices_[0], GL_STATIC_DRAW);
+	void build_master_geometry()
+	{
+		glGenBuffers(1, &voxel_geometry_vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, voxel_geometry_vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * master_vertices.size(), &master_vertices[0], GL_STATIC_DRAW);
 
 		// Clear all the buffers!
-		vertices_.clear();
+		master_vertices.clear();
 	}
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)
@@ -181,7 +184,7 @@ namespace vox {
 		glBindVertexArray(render->tmp_vao);
 
 		// Bind the consistent elements
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_v_id);
+		glBindBuffer(GL_ARRAY_BUFFER, voxel_geometry_vbo);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0); // 0 = Vertex Position
 		glVertexAttribDivisor(0, 0);
@@ -211,7 +214,7 @@ namespace vox {
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo_id);
 		glCheckError();
 
-		glDrawArraysInstanced(GL_TRIANGLES, 0, n_elements, buffer.n_instances);
+		glDrawArraysInstanced(GL_TRIANGLES, start_index/9, n_elements, buffer.n_instances);
 		glCheckError();
 
 		glBindVertexArray(0);

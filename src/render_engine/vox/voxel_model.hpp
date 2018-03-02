@@ -21,19 +21,14 @@ namespace vox {
 	struct voxel_model {
 		int width, height, depth;
 		std::vector<subvoxel> voxels;
-		unsigned int vbo_v_id = 0;
 		unsigned int ssbo_id = 0;
 		bool created_ssbo = false;
-		int n_elements = 0;
+		unsigned int n_elements = 0;
+		unsigned int start_index = 0;
 
 		void build_model();
 		void render_instances(const voxel_render_buffer_t &buffer) const;
 		void build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render);
-
-	private:
-		std::vector<float> vertices_;
-
-		void build_vbo();
 	};
 
 	struct voxel_render_buffer_t {
@@ -46,4 +41,6 @@ namespace vox {
 			//std::cout << "Created VAO #" << tmp_vao << "\n";
 		}
 	};
+
+	void build_master_geometry();
 }
