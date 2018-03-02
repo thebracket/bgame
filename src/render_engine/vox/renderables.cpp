@@ -324,84 +324,11 @@ namespace render {
 				model_buffers.emplace_back(std::move(mb));
 			}
 			glUseProgram(0);
-
-			// Build the glyphs buffer
-			/*
-			glyph_buffer.clear();
-			for (const auto &g : glyphs) {
-				// Insert the render info
-				const auto&[x, z, y, color, ch] = g;
-
-				constexpr float width = 1.0f;
-				constexpr float height = 1.0f;
-				const float x0 = -0.5f;
-				const float x1 = x0 + width;
-				const float y0 = -0.5f;
-				const float y1 = y0 + 1.0f; // We don't use y1 for floors
-				const float z0 = -0.5f;
-				const float z1 = z0 + height;
-				constexpr float ceiling_gap = 0.001f;
-
-				const float posx = static_cast<float>(x);
-				const float posy = static_cast<float>(z);
-				const float posz = static_cast<float>(y);
-
-				const float char_x = static_cast<float>(ch % 16) * 1024.0f;
-				const float char_y = static_cast<float>(ch / 16) * 1024.0f;
-				constexpr float char_size_gl = 16.0f / 1024.0f;
-				const float T0 = char_x / 1024.0f;
-				const float T1 = char_y / 1024.0f;
-				const float TW = char_size_gl;
-				const float TH = char_size_gl;
-
-				glyph_buffer.insert(sprite_buffer.end(), {
-					// Upwards facing floor; this will need to change per camera type
-					x0, y0, z1, T0, T1, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-					x1, y0, z1, TW, T1, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-					x1, y1, z1, TW, TH, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-					x1, y1, z1, TW, TH, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-					x0, y1, z1, T0, TH, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz,
-					x0, y0, z1, T0, T1, 0.0f,  0.0f, 1.0f, color.r, color.g, color.b, posx, posy, posz
-				});
-			}
-			glBindVertexArray(glyph_vao);
-			glBindBuffer(GL_ARRAY_BUFFER, glyph_vbo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * glyph_buffer.size(), &glyph_buffer[0], GL_STATIC_DRAW);
-
-			glBindBuffer(GL_ARRAY_BUFFER, glyph_vao);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0); // 0 = Vertex Position
-
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
-			glEnableVertexAttribArray(1); // 1 = TexX/Y
-
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 5 * sizeof(float));
-			glEnableVertexAttribArray(2); // 2 = Normals
-
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 8 * sizeof(float));
-			glEnableVertexAttribArray(3); // 3 = Colors
-
-			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (char *) nullptr + 11 * sizeof(float));
-			glEnableVertexAttribArray(4); // 4 = Translate
-
-			glBindVertexArray(0);*/
-
 		}
 	}
 
 	void render_voxel_models(gbuffer_t * gbuffer, glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix) {
 		vox::bulk_render(model_buffers);
-		/*
-		assets::voxel_shader->use();
-		glBindFramebuffer(GL_FRAMEBUFFER, gbuffer->fbo_id);
-		glBindBufferBase(GL_UNIFORM_BUFFER, 0, camera_ubo::ubo);
-		glUniformBlockBinding(assets::voxel_shader->shader_id, 0, assets::voxel_shader->camera_block_index);
-		glCheckError();
-
-		for (const auto &m : model_buffers) {
-			m->model->render_instances(*m);
-		}
-		*/
 	}
 
 	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int texture_id) {
