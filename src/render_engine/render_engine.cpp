@@ -263,11 +263,18 @@ namespace render {
 		// Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
 
+		// Render some sky
+		glUseProgram(assets::skyshader);
+		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+		const auto sun_pos = glm::normalize(glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z });
+		glUniform3f(glGetUniformLocation(assets::skyshader, "uSunPos"), sun_pos.x, sun_pos.y, sun_pos.z);
+		render_fullscreen_quad_untextured();
+
         // Render the combined light buffer
         render_to_light_buffer();
 		if (!config::game_config.disable_lighting) {
 			render_pointlights();
-		}
+		}		
 
 		// Add in translucent cursors
 		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
@@ -294,6 +301,7 @@ namespace render {
 		}
 
 		if (depth_test_render) render_fullscreen_quad(light_stage_buffer->shiny_tex);
+
 
         // TODO: Final combination and post-process
 

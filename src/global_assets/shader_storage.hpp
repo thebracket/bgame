@@ -33,6 +33,7 @@ namespace assets {
 	extern std::unique_ptr<lighter_shader_t> lighter_shader;
 	extern std::unique_ptr<ascii_base_shader_t> ascii_shader;
 	extern std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
+	extern unsigned int skyshader;
 
 	void initialize_shaders();
 }

@@ -43,10 +43,10 @@ namespace systems {
 			day_elapsed = false;
             if (calendar->hour != hour) hour_elapsed = true;
             if (calendar->day != day) day_elapsed = true;
-			if (hour_elapsed || first_calendar) {
+			//if (hour_elapsed || first_calendar) {
 				calculate_sun_moon();
-				first_calendar = false;
-			}
+			//	first_calendar = false;
+			//}
         }
     }
 }

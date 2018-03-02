@@ -30,6 +30,7 @@ namespace assets {
 	std::unique_ptr<lighter_shader_t> lighter_shader;
 	std::unique_ptr<ascii_base_shader_t> ascii_shader;
 	std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
+	extern unsigned int skyshader = 0;
 
 	void initialize_shaders()
 	{
@@ -50,5 +51,6 @@ namespace assets {
 		pointlight_shader = std::make_unique<pointlight_shader_t>();
 		ascii_shader = std::make_unique<ascii_base_shader_t>();
 		ascii_light_shader = std::make_unique<ascii_light_shader_t>();
+		skyshader = load_shaders("game_assets/shaders45/skyshader_vertex.glsl", "game_assets/shaders45/skyshader_fragment.glsl");
 	}
 }
