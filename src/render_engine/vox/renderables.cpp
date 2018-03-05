@@ -39,7 +39,7 @@ namespace render {
 
 	bool models_changed = true;
 	static std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
-	static std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
+	std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
 	static std::vector<std::tuple<int, int, int, bengine::color_t, uint16_t>> glyphs;
 	static std::vector<float> glyph_buffer;
 	static unsigned int sprite_vao = 0;
@@ -329,24 +329,5 @@ namespace render {
 
 	void render_voxel_models(gbuffer_t * gbuffer, glm::mat4 &camera_projection_matrix, glm::mat4 &camera_modelview_matrix) {
 		vox::bulk_render(model_buffers);
-	}
-
-	void render_voxel_models_shadow(float &radius, glm::vec3 &light_pos, std::vector<glm::mat4> &shadowTransforms, unsigned int texture_id) {
-		/*
-		assets::voxel_shadow_shader->use();
-		//glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
-		for (int i = 0; i < 6; ++i) {
-			glUniformMatrix4fv(assets::voxel_shadow_shader->combined_matrix, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-			glUniform1f(assets::voxel_shadow_shader->texSize, 32.0f);
-			glUniform1f(assets::voxel_shadow_shader->far_plane, radius);
-			glUniform3f(assets::voxel_shadow_shader->lightPos, light_pos.x, light_pos.y, light_pos.z);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_id, 0);
-
-			for (const auto &m : model_buffers) {
-				m->model->render_instances(*m);
-			}
-		}
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture_id, 0);
-		*/
 	}
 }

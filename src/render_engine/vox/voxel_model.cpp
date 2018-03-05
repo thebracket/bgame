@@ -3,8 +3,13 @@
 #include <iostream>
 #include "../../global_assets/shader_storage.hpp"
 #include "../shaders/voxel_shader.hpp"
+#include "../shaders/voxel_shadow_shader.hpp"
 #include "../ubo/first_stage_ubo.hpp"
 #include "../renderbuffers.hpp"
+#include <glm/gtc/type_ptr.hpp>
+#include "../../bengine/main_window.hpp"
+#include "renderables.hpp"
+#include "../../global_assets/game_config.hpp"
 
 namespace vox {
 
@@ -228,6 +233,33 @@ namespace vox {
 
 		glBindVertexArray(0);
 		glDisable(GL_CULL_FACE);
+		glCheckError();
+	}
+
+	void bulk_shadow_render(const float radius, const std::vector<glm::mat4> &shadowTransforms, const glm::vec3 &light_pos, const unsigned int fbo_id)
+	{
+		assets::voxel_shadow_shader->use();
+		glUniform1f(assets::voxel_shadow_shader->far_plane, radius);
+		glUniform3f(assets::voxel_shadow_shader->light_pos, light_pos.x, light_pos.y, light_pos.z);
+		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices0, 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices1, 1, GL_FALSE, glm::value_ptr(shadowTransforms[1]));
+		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices2, 1, GL_FALSE, glm::value_ptr(shadowTransforms[2]));
+		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices3, 1, GL_FALSE, glm::value_ptr(shadowTransforms[3]));
+		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices4, 1, GL_FALSE, glm::value_ptr(shadowTransforms[4]));
+		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices5, 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
+
+		// Shadow rendering goes here
+		glBindVertexArray(vox::voxel_geometry_vao);
+		glShaderStorageBlockBinding(assets::voxel_shadow_shader->shader_id, assets::voxel_shadow_shader->instance_block_index, 2);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, instance_ssbo);
+		//glClear(GL_DEPTH_BUFFER_BIT);
+
+		for (const auto &m : render::model_buffers) {
+			glDrawArraysInstancedBaseInstance(GL_TRIANGLES, m->model->start_index / 9, m->model->n_elements, m->n_instances, m->instance_offset);
+		}
+
+		// Cleanup
+		glBindVertexArray(0);
 		glCheckError();
 	}
 

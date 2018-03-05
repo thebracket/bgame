@@ -2,6 +2,8 @@
 
 #include "../../bengine/gl_include.hpp"
 #include <vector>
+#include <glm/detail/type_vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace vox {
 
@@ -38,5 +40,6 @@ namespace vox {
 	void start_buffer_accumulation();
 	void finish_instance_buffers();
 	void bulk_render(const std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> &model_buffers);
+	void bulk_shadow_render(const float radius, const std::vector<glm::mat4> &shadowTransforms, const glm::vec3 &light_pos, const unsigned int fbo_id);
 	extern unsigned int voxel_geometry_vao;
 }

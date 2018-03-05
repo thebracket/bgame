@@ -16,6 +16,7 @@
 #include "shaders/ascii_light_shader.hpp"
 #include "shaders/lighter_shader.hpp"
 #include "shaders/pointlight_shader.hpp"
+#include "vox/voxreader.hpp"
 
 namespace render {
 	static constexpr int size = 128;
@@ -47,6 +48,7 @@ namespace render {
 		void draw_depth_buffer() {
 			int screen_w, screen_h;
 			glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+			assets::pointlight_shader->use();
 
 			glBindFramebuffer(GL_FRAMEBUFFER, buffer->fbo_id);
 			glUniform3f(assets::pointlight_shader->light_pos, light_pos.x, light_pos.y, light_pos.z);
@@ -76,7 +78,8 @@ namespace render {
 					}
 				}
 			}
-			//render_voxel_models_shadow(radius, light_pos, shadowTransforms, buffer->depth_cubemap);
+			vox::bulk_shadow_render(radius, shadowTransforms, light_pos, buffer->fbo_id);
+
 			glViewport(0, 0, screen_w, screen_h);
 			new_light = false;
 		}
@@ -139,6 +142,7 @@ namespace render {
 		using namespace bengine;
 
 		if (first_run) {
+			/*
 			const std::size_t id = std::numeric_limits<std::size_t>::max();
 			pointlights[id].light_pos = glm::vec3{ calendar->sun_x, calendar->sun_y, calendar->sun_z };
 			pointlights[id].light_col = glm::vec3{ 4.0f, 4.0f, 4.0f };
@@ -147,6 +151,7 @@ namespace render {
 			pointlights[id].make_mats();
 			pointlights[id].make_buffer(); 
 			first_run = false;
+			*/
 		}
 
 		// List current lights
@@ -171,7 +176,7 @@ namespace render {
 			}
 		});
 
-		glUseProgram(assets::pointlight_shader->shader_id);
+		glEnable(GL_CULL_FACE);
 		for (auto &l : pointlights) {
 			if (config::game_config.always_update_shadows || l.second.new_light || l.second.cycle_tick == cycle) {
 				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {
@@ -184,6 +189,7 @@ namespace render {
 				l.second.draw_depth_buffer();
 			}
 		}
+		glDisable(GL_CULL_FACE);
 
 		++cycle;
 		if (cycle > config::game_config.shadow_divisor) cycle = 0;
