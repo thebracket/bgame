@@ -311,13 +311,9 @@ namespace chunks {
     void update_buffers() {
 		while (!dirty_buffers.empty()) {
 			int idx;
-			//std::lock_guard<std::mutex> lock(dirty_buffer_mutex);
 			idx = *dirty_buffers.begin();
-			//chunks[idx].ready.store(false);
 			dirty_buffers.erase(idx);
 			chunks[idx].update_buffer();
-			//chunks[idx].ready.store(true);
-			//std::cout << "Buffer Updated\n";
 		}
     }
 
