@@ -179,38 +179,38 @@ namespace chunks {
 		 
 		const auto tangent1 = calculate_tangent(
 			x0, y0, z0, T0, T0,
-			x1, y0, z0, TW, T0,
-			x1, y1, z0, TW, TH,
+			x1, y1, z0, TW, T0,
+			x1, y0, z0, TW, TH,
 			0.0f, 0.0f, 1.0f
 		);
 		const auto tangent2 = calculate_tangent(
-			x0, y0, z1, T0, T0, 
-			x1, y0, z1, TW, T0, 
-			x1, y1, z1, TW, TH, 
+			x0, y0, z1, T0, T0,
+			x1, y0, z1, TW, T0,
+			x1, y1, z1, TW, TH,
 			0.0f, 0.0f, -1.0f
 		);
 		const auto tangent3 = calculate_tangent(
-			x0, y1, z1, TW, TH, 
-			x0, y1, z0, TW, T0, 
-			x0, y0, z0, T0, T0, 
+			x0, y1, z1, T0, T0,
+			x0, y1, z0, TW, T0,
+			x0, y0, z0, TW, TH,
 			-1.0f, 0.0f, 0.0f
 		);
 		const auto tangent4 = calculate_tangent(
-			x1, y1, z1, TW, TH, 
-			x1, y1, z0, TW, T0, 
-			x1, y0, z0, T0, T0, 
+			x1, y1, z1, T0, T0,
+			x1, y0, z0, TW, TH,
+			x1, y1, z0, TW, T0,
 			1.0f, 0.0f, 0.0f
 		);
 		const auto tangent5 = calculate_tangent(
-			x0, y0, z0, T0, T0, 
-			x1, y0, z0, TW, T0, 
-			x1, y0, z1, TW, TH, 
+			x0, y0, z0, T0, T0,
+			x1, y0, z0, TW, T0,
+			x1, y0, z1, TW, TH,
 			0.0f, -1.0f, 0.0f
 		);
 		const auto tangent6 = calculate_tangent(
 			x0, y1, z0, T0, T0,
-			x1, y1, z0, TW, T0,
-			x1, y1, z1, TW, TH,
+			x1, y1, z1, TW, T0,
+			x1, y1, z0, TW, TH,
 			0.0f, 1.0f, 0.0f
 		);
 		std::cout << "Tangent for a back is equal to: " << tangent1.first.x << ", " << tangent1.first.y << ", " << tangent1.first.z << "\n";
@@ -229,15 +229,13 @@ namespace chunks {
 		*/
 
 		v.insert(v.end(), {
-			// Back side
 			x0, y0, z0, T0, T0, TI,  NORMAL_BACK,
+			x1, y1, z0, TW, TH, TI,  NORMAL_BACK,
 			x1, y0, z0, TW, T0, TI,  NORMAL_BACK,
 			x1, y1, z0, TW, TH, TI,  NORMAL_BACK,
-			x1, y1, z0, TW, TH, TI,  NORMAL_BACK,
-			x0, y1, z0, T0, TH, TI,  NORMAL_BACK,
 			x0, y0, z0, T0, T0, TI,  NORMAL_BACK,
+			x0, y1, z0, T0, TH, TI,  NORMAL_BACK,
 
-			// Front side
 			x0, y0, z1, T0, T0, TI,  NORMAL_FRONT,
 			x1, y0, z1, TW, T0, TI,  NORMAL_FRONT,
 			x1, y1, z1, TW, TH, TI,  NORMAL_FRONT,
@@ -245,7 +243,6 @@ namespace chunks {
 			x0, y1, z1, T0, TH, TI,  NORMAL_FRONT,
 			x0, y0, z1, T0, T0, TI,  NORMAL_FRONT,
 
-			// Left side
 			x0, y1, z1, TW, TH, TI, NORMAL_LEFT,
 			x0, y1, z0, TW, T0, TI, NORMAL_LEFT,
 			x0, y0, z0, T0, T0, TI, NORMAL_LEFT,
@@ -253,29 +250,26 @@ namespace chunks {
 			x0, y0, z1, T0, TH, TI, NORMAL_LEFT,
 			x0, y1, z1, TW, TH, TI, NORMAL_LEFT,
 
-			// Right side
 			x1, y1, z1, TW, TH, TI,  NORMAL_RIGHT,
+			x1, y0, z0, T0, T0, TI,  NORMAL_RIGHT,
 			x1, y1, z0, TW, T0, TI,  NORMAL_RIGHT,
 			x1, y0, z0, T0, T0, TI,  NORMAL_RIGHT,
-			x1, y0, z0, T0, T0, TI,  NORMAL_RIGHT,
-			x1, y0, z1, T0, TH, TI,  NORMAL_RIGHT,
 			x1, y1, z1, TW, TH, TI,  NORMAL_RIGHT,
+			x1, y0, z1, T0, TH, TI,  NORMAL_RIGHT,
 
-			// Underside
-			x0, y0, z0, T0, T0, TI,  NORMAL_BOTTOM,
+			x0, y0, z0, TW, TH, TI,  NORMAL_BOTTOM,
 			x1, y0, z0, TW, T0, TI,  NORMAL_BOTTOM,
-			x1, y0, z1, TW, TH, TI,  NORMAL_BOTTOM,
-			x1, y0, z1, TW, TH, TI,  NORMAL_BOTTOM,
+			x1, y0, z1, T0, T0, TI,  NORMAL_BOTTOM,
+			x1, y0, z1, T0, T0, TI,  NORMAL_BOTTOM,
 			x0, y0, z1, T0, TH, TI,  NORMAL_BOTTOM,
-			x0, y0, z0, T0, T0, TI,  NORMAL_BOTTOM,
+			x0, y0, z0, TW, TH, TI,  NORMAL_BOTTOM,
 
-			// Top
-			x0, y1, z0, T0, T0, TI,  NORMAL_UP,
+			x1, y1, z1, TW, TH, TI,  NORMAL_UP,
 			x1, y1, z0, TW, T0, TI,  NORMAL_UP,
-			x1, y1, z1, TW, TH, TI,  NORMAL_UP,
-			x1, y1, z1, TW, TH, TI,  NORMAL_UP,
-			x0, y1, z1, T0, TH, TI,  NORMAL_UP,
 			x0, y1, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y1, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y1, z1, T0, TH, TI,  NORMAL_UP,
+			x1, y1, z1, TW, TH, TI,  NORMAL_UP,
 		});
 		return 36;
 	}

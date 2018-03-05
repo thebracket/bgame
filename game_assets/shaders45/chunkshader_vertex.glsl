@@ -30,19 +30,19 @@ const vec3 normal_lut[6] = vec3[6](
 
 const vec3 tangent_lut[6] = vec3[6](
         vec3(1.0, 0.0, 0.0), // Top
-        vec3(1.0f,  0.0f, 0.0f), // Back
-        vec3(1.0f,  0.0f, 0.0f), // Front
-        vec3(0.0f,  1.0f,  0.0f), // Left
-        vec3(0.0f,  1.0f,  0.0f), // Right
+        vec3(0.0f,  1.0f, 0.0f), // Back
+        vec3(0.0f,  -1.0f, 0.0f), // Front
+        vec3(0.0f,  0.0f,  -1.0f), // Left
+        vec3(0.0f,  1.0f,  -1.0f), // Right
         vec3(1.0f, 0.0f,  0.0f) // Bottom
     );
 
 const vec3 bitangent_lut[6] = vec3[6](
         vec3(0.0, 0.0, 1.0), // Top
-        vec3(0.0f,  1.0f, 0.0f), // Back
-        vec3(0.0f,  1.0f, 0.0f), // Front
-        vec3(0.0f,  0.0f,  1.0f), // Left
-        vec3(0.0f,  0.0f,  1.0f), // Right
+        vec3(1.0f,  0.0f, 0.0f), // Back
+        vec3(-1.0f,  0.0f, 0.0f), // Front
+        vec3(0.0f,  1.0f,  0.0f), // Left
+        vec3(0.0f,  1.0f,  1.0f), // Right
         vec3(0.0f, 0.0f,  1.0f) // Bottom
     );
 

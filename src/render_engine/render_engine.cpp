@@ -76,7 +76,7 @@ namespace render {
         glBindTexture(GL_TEXTURE_2D_ARRAY, assets::chunk_texture_array);
 
         glUniform1i(assets::chunkshader->textureArray, 0);
-
+		glEnable(GL_CULL_FACE);
 		if (game_master_mode == DESIGN) {
 			// Render single layer
 			do_design_render();
@@ -84,6 +84,7 @@ namespace render {
 		else {
 			do_chunk_render();
 		}
+		glDisable(GL_CULL_FACE);
 		glDepthMask(GL_TRUE);
     }
 
