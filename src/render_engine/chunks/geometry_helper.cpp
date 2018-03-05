@@ -11,6 +11,14 @@
 using namespace tile_flags;
 
 namespace chunks {
+
+	constexpr float NORMAL_UP = 0.0f;
+	constexpr float NORMAL_BACK = 1.0f;
+	constexpr float NORMAL_FRONT = 2.0f;
+	constexpr float NORMAL_LEFT = 3.0f;
+	constexpr float NORMAL_RIGHT = 4.0f;
+	constexpr float NORMAL_BOTTOM = 5.0f;
+
 	unsigned int get_floor_tex(const int &idx) {
 		// We no longer hard-code grass.
 		if (region::veg_type(idx) > 0 && !region::flag(idx, CONSTRUCTION)) {
@@ -137,12 +145,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
+			x1, y0, z1, TW, TH, TI,  NORMAL_UP,
+			x1, y0, z0, TW, T0, TI,  NORMAL_UP,
+			x0, y0, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y0, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y0, z1, T0, TH, TI,  NORMAL_UP,
+			x1, y0, z1, TW, TH, TI,  NORMAL_UP,
 		});
 		return 6;
 	}
@@ -163,52 +171,52 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Back side
-			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
-			x1, y0, z0, TW, T0, TI,  0.0f,  0.0f, -1.0f,
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
-			x1, y1, z0, TW, TH, TI,  0.0f,  0.0f, -1.0f,
-			x0, y1, z0, T0, TH, TI,  0.0f,  0.0f, -1.0f,
-			x0, y0, z0, T0, T0, TI,  0.0f,  0.0f, -1.0f,
+			x0, y0, z0, T0, T0, TI,  NORMAL_BACK,
+			x1, y0, z0, TW, T0, TI,  NORMAL_BACK,
+			x1, y1, z0, TW, TH, TI,  NORMAL_BACK,
+			x1, y1, z0, TW, TH, TI,  NORMAL_BACK,
+			x0, y1, z0, T0, TH, TI,  NORMAL_BACK,
+			x0, y0, z0, T0, T0, TI,  NORMAL_BACK,
 
 			// Front side
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, 
-			x1, y0, z1, TW, T0, TI,  0.0f,  0.0f, 1.0f, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  0.0f, 1.0f, 
-			x0, y1, z1, T0, TH, TI,  0.0f,  0.0f, 1.0f, 
-			x0, y0, z1, T0, T0, TI,  0.0f,  0.0f, 1.0f, 
+			x0, y0, z1, T0, T0, TI,  NORMAL_FRONT,
+			x1, y0, z1, TW, T0, TI,  NORMAL_FRONT,
+			x1, y1, z1, TW, TH, TI,  NORMAL_FRONT,
+			x1, y1, z1, TW, TH, TI,  NORMAL_FRONT,
+			x0, y1, z1, T0, TH, TI,  NORMAL_FRONT,
+			x0, y0, z1, T0, T0, TI,  NORMAL_FRONT,
 
 			// Left side
-			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, 
-			x0, y1, z0, TW, T0, TI, -1.0f,  0.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI, -1.0f,  0.0f,  0.0f, 
-			x0, y0, z1, T0, TH, TI, -1.0f,  0.0f,  0.0f, 
-			x0, y1, z1, TW, TH, TI, -1.0f,  0.0f,  0.0f, 
+			x0, y1, z1, TW, TH, TI, NORMAL_LEFT,
+			x0, y1, z0, TW, T0, TI, NORMAL_LEFT,
+			x0, y0, z0, T0, T0, TI, NORMAL_LEFT,
+			x0, y0, z0, T0, T0, TI, NORMAL_LEFT,
+			x0, y0, z1, T0, TH, TI, NORMAL_LEFT,
+			x0, y1, z1, TW, TH, TI, NORMAL_LEFT,
 
 			// Right side
-			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, 
-			x1, y1, z0, TW, T0, TI,  1.0f,  0.0f,  0.0f, 
-			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, 
-			x1, y0, z0, T0, T0, TI,  1.0f,  0.0f,  0.0f, 
-			x1, y0, z1, T0, TH, TI,  1.0f,  0.0f,  0.0f, 
-			x1, y1, z1, TW, TH, TI,  1.0f,  0.0f,  0.0f, 
+			x1, y1, z1, TW, TH, TI,  NORMAL_RIGHT,
+			x1, y1, z0, TW, T0, TI,  NORMAL_RIGHT,
+			x1, y0, z0, T0, T0, TI,  NORMAL_RIGHT,
+			x1, y0, z0, T0, T0, TI,  NORMAL_RIGHT,
+			x1, y0, z1, T0, TH, TI,  NORMAL_RIGHT,
+			x1, y1, z1, TW, TH, TI,  NORMAL_RIGHT,
 
 			// Underside
-			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, 
-			x1, y0, z0, TW, T0, TI,  0.0f, -1.0f,  0.0f, 
-			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, 
-			x1, y0, z1, TW, TH, TI,  0.0f, -1.0f,  0.0f, 
-			x0, y0, z1, T0, TH, TI,  0.0f, -1.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI,  0.0f, -1.0f,  0.0f, 
+			x0, y0, z0, T0, T0, TI,  NORMAL_BOTTOM,
+			x1, y0, z0, TW, T0, TI,  NORMAL_BOTTOM,
+			x1, y0, z1, TW, TH, TI,  NORMAL_BOTTOM,
+			x1, y0, z1, TW, TH, TI,  NORMAL_BOTTOM,
+			x0, y0, z1, T0, TH, TI,  NORMAL_BOTTOM,
+			x0, y0, z0, T0, T0, TI,  NORMAL_BOTTOM,
 
 			// Top
-			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y1, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y1, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y1, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y1, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f
+			x0, y1, z0, T0, T0, TI,  NORMAL_UP,
+			x1, y1, z0, TW, T0, TI,  NORMAL_UP,
+			x1, y1, z1, TW, TH, TI,  NORMAL_UP,
+			x1, y1, z1, TW, TH, TI,  NORMAL_UP,
+			x0, y1, z1, T0, TH, TI,  NORMAL_UP,
+			x0, y1, z0, T0, T0, TI,  NORMAL_UP,
 		});
 		return 36;
 	}
@@ -231,12 +239,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y0, z0, TW, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0, z0, T0, T0, TI,  0.0f,  1.0f,  0.0f, 
-			x0, y0, z1, T0, TH, TI,  0.0f,  1.0f,  0.0f, 
-			x1, y0, z1, TW, TH, TI,  0.0f,  1.0f,  0.0f
+			x1, y0, z1, TW, TH, TI,  NORMAL_UP,
+			x1, y0, z0, TW, T0, TI,  NORMAL_UP,
+			x0, y0, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y0, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y0, z1, T0, TH, TI,  NORMAL_UP,
+			x1, y0, z1, TW, TH, TI,  NORMAL_UP,
 		});
 		return 6;
 	}
@@ -265,12 +273,12 @@ namespace chunks {
 
 		v.insert(v.end(), {
 			// Upwards facing floor
-			x1, y0 + ne, z1, TW, TH, TI,  normal.x, normal.y, normal.z,
-			x1, y0 + se, z0, TW, T0, TI,  normal.x, normal.y, normal.z,
-			x0, y0 + sw, z0, T0, T0, TI,  normal.x, normal.y, normal.z,
-			x0, y0 + sw, z0, T0, T0, TI,  normal.x, normal.y, normal.z,
-			x0, y0 + nw, z1, T0, TH, TI,  normal.x, normal.y, normal.z,
-			x1, y0 + ne, z1, TW, TH, TI,  normal.x, normal.y, normal.z
+			x1, y0 + ne, z1, TW, TH, TI,  NORMAL_UP,
+			x1, y0 + se, z0, TW, T0, TI,  NORMAL_UP,
+			x0, y0 + sw, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y0 + sw, z0, T0, T0, TI,  NORMAL_UP,
+			x0, y0 + nw, z1, T0, TH, TI,  NORMAL_UP,
+			x1, y0 + ne, z1, TW, TH, TI,  NORMAL_UP,
 		});
 		return 6;
 	}

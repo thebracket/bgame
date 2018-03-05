@@ -258,7 +258,7 @@ namespace render {
         //glCheckError();
 		render_voxel_models(gbuffer, camera_projection_matrix, camera_modelview_matrix);
 		//glCheckError();
-		render_water(camera_projection_matrix, camera_modelview_matrix);
+		//render_water(camera_projection_matrix, camera_modelview_matrix);
 
 		// Stop writing to the gbuffer and depth-testing
         glDisable(GL_DEPTH_TEST);
