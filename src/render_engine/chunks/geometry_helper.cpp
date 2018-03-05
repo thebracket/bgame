@@ -83,7 +83,7 @@ namespace chunks {
 		}
 	}
 
-	static glm::vec3 calculate_tangent(
+	static std::pair<glm::vec3, glm::vec3> calculate_tangent(
 		const float x0, const float y0, const float z0, const float tx0, const float ty0,
 		const float x1, const float y1, const float z1, const float tx1, const float ty1,
 		const float x2, const float y2, const float z2, const float tx2, const float ty2,
@@ -111,7 +111,12 @@ namespace chunks {
 		tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
 		tangent1 = glm::normalize(tangent1);
 
-		return tangent1;
+		bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+		bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+		bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+		bitangent1 = glm::normalize(bitangent1);
+
+		return std::make_pair(tangent1, bitangent1);
 	}
 
 	struct tmp_vec_3 { float x; float y; float z; };
@@ -134,14 +139,14 @@ namespace chunks {
 		constexpr float ceiling_gap = 0.001f;
 
 		/*
-		 * Removing this, because a floor tangent is always going to calculate to 1,0,0
 		const auto tangent1 = calculate_tangent(
 			x1, y0, z1, TW, TH,
 			x1, y0, z0, TW, T0,
 			x0, y0, z0, T0, T0,
 			0.0f, 1.0f, 0.0f
 		);
-		*/		
+		std::cout << "Tangent for a floor is equal to: " << tangent1.x << ", " << tangent1.y << ", " << tangent1.z << "\n";
+		*/
 
 		v.insert(v.end(), {
 			// Upwards facing floor
@@ -168,6 +173,60 @@ namespace chunks {
 		constexpr float T0 = 0.0f;
 		const float TW = width;
 		const float TH = height;
+	
+		/*
+		 * Lookup table data - commented out but kept in case I need the reference again
+		 
+		const auto tangent1 = calculate_tangent(
+			x0, y0, z0, T0, T0,
+			x1, y0, z0, TW, T0,
+			x1, y1, z0, TW, TH,
+			0.0f, 0.0f, 1.0f
+		);
+		const auto tangent2 = calculate_tangent(
+			x0, y0, z1, T0, T0, 
+			x1, y0, z1, TW, T0, 
+			x1, y1, z1, TW, TH, 
+			0.0f, 0.0f, -1.0f
+		);
+		const auto tangent3 = calculate_tangent(
+			x0, y1, z1, TW, TH, 
+			x0, y1, z0, TW, T0, 
+			x0, y0, z0, T0, T0, 
+			-1.0f, 0.0f, 0.0f
+		);
+		const auto tangent4 = calculate_tangent(
+			x1, y1, z1, TW, TH, 
+			x1, y1, z0, TW, T0, 
+			x1, y0, z0, T0, T0, 
+			1.0f, 0.0f, 0.0f
+		);
+		const auto tangent5 = calculate_tangent(
+			x0, y0, z0, T0, T0, 
+			x1, y0, z0, TW, T0, 
+			x1, y0, z1, TW, TH, 
+			0.0f, -1.0f, 0.0f
+		);
+		const auto tangent6 = calculate_tangent(
+			x0, y1, z0, T0, T0,
+			x1, y1, z0, TW, T0,
+			x1, y1, z1, TW, TH,
+			0.0f, 1.0f, 0.0f
+		);
+		std::cout << "Tangent for a back is equal to: " << tangent1.first.x << ", " << tangent1.first.y << ", " << tangent1.first.z << "\n";
+		std::cout << "Tangent for a front is equal to: " << tangent2.first.x << ", " << tangent2.first.y << ", " << tangent2.first.z << "\n";
+		std::cout << "Tangent for a left is equal to: " << tangent3.first.x << ", " << tangent3.first.y << ", " << tangent3.first.z << "\n";
+		std::cout << "Tangent for a right is equal to: " << tangent4.first.x << ", " << tangent4.first.y << ", " << tangent4.first.z << "\n";
+		std::cout << "Tangent for a bottom is equal to: " << tangent5.first.x << ", " << tangent5.first.y << ", " << tangent5.first.z << "\n";
+		std::cout << "Tangent for a top is equal to: " << tangent6.first.x << ", " << tangent6.first.y << ", " << tangent6.first.z << "\n";
+
+		std::cout << "Bitangent for a back is equal to: " << tangent1.second.x << ", " << tangent1.second.y << ", " << tangent1.second.z << "\n";
+		std::cout << "Bitangent for a front is equal to: " << tangent2.second.x << ", " << tangent2.second.y << ", " << tangent2.second.z << "\n";
+		std::cout << "Bitangent for a left is equal to: " << tangent3.second.x << ", " << tangent3.second.y << ", " << tangent3.second.z << "\n";
+		std::cout << "Bitangent for a right is equal to: " << tangent4.second.x << ", " << tangent4.second.y << ", " << tangent4.second.z << "\n";
+		std::cout << "Bitangent for a bottom is equal to: " << tangent5.second.x << ", " << tangent5.second.y << ", " << tangent5.second.z << "\n";
+		std::cout << "Bitangent for a top is equal to: " << tangent6.second.x << ", " << tangent6.second.y << ", " << tangent6.second.z << "\n";
+		*/
 
 		v.insert(v.end(), {
 			// Back side

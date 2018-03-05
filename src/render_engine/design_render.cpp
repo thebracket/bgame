@@ -85,13 +85,13 @@ namespace render {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * design_geometry.size(), &design_geometry[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, design_vbo);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
 		glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+		glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
 		glEnableVertexAttribArray(2); // 2 = Normals
 
 		glBindVertexArray(0);
