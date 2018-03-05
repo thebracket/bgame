@@ -20,7 +20,7 @@ namespace render {
         // normal color buffer
         glGenTextures(1, &normal_tex);
         glBindTexture(GL_TEXTURE_2D, normal_tex);
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB16F, width, height);
+		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, width, height);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normal_tex, 0);

@@ -22,7 +22,7 @@ void main() {
     gAlbedo = base_color * fs_in.tint;
     gPosition = vec3(fs_in.world_pos);
 
-    gNormal = fs_in.base_normal;
+    gNormal = normalize(fs_in.base_normal) * 0.5 + 0.5; // Convert to RGB space
 
     gAmbientOcclusion.r = 1.0; // No ambient occlusion
     gAmbientOcclusion.g = 0.04; // No metal

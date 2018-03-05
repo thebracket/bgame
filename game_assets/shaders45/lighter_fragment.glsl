@@ -144,7 +144,7 @@ void main()
 
     // Lighting
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
-    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
+    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb * 2.0 - 1.0);
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;

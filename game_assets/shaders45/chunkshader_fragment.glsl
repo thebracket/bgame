@@ -21,7 +21,7 @@ void main() {
 
     vec3 normal = texture(textureArray, vec3(fs_in.tex_pos.x, fs_in.tex_pos.y, fs_in.tex_pos.z+1)).rgb;
     normal = normalize(normal * 2.0 - 1.0);
-    gNormal = normal;
+    gNormal = normal * 0.5 + 0.5;
 
     gAmbientOcclusion.r = texture(textureArray, vec3(fs_in.tex_pos.x, fs_in.tex_pos.y, fs_in.tex_pos.z+2)).r;
     gAmbientOcclusion.g = texture(textureArray, vec3(fs_in.tex_pos.x, fs_in.tex_pos.y, fs_in.tex_pos.z+2)).g;

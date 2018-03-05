@@ -28,7 +28,7 @@ void main()
 {
     vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
     if (base_color.r == 0.0 && base_color.g == 0.0 && base_color.b == 0) discard;
-    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
+    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb * 2.0 - 1.0);
     vec3 position = texture(position_tex, TexCoords).rgb ;
 
     // Material definitions

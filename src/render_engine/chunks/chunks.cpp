@@ -306,15 +306,23 @@ namespace chunks {
 			glBindVertexArray(0);
 			glCheckError();
 		}
-    }	
+    }
+
+	static void update_world_buffer()
+	{
+		// Placeholder
+	}
 
     void update_buffers() {
+		bool did_something = false;
 		while (!dirty_buffers.empty()) {
 			int idx;
 			idx = *dirty_buffers.begin();
 			dirty_buffers.erase(idx);
 			chunks[idx].update_buffer();
+			did_something = true;
 		}
+		if (did_something) update_world_buffer();
     }
 
 }
