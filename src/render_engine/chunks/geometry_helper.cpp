@@ -22,8 +22,8 @@ namespace chunks {
 			}
 			return 0; // Grass is determined to be index 0
 		}
-		auto material_idx = region::material(idx);
-		auto material = get_material(material_idx);
+		const auto material_idx = region::material(idx);
+		const auto material = get_material(material_idx);
 		if (!material) return 3;
 
 		unsigned int use_id = 3;
@@ -46,8 +46,8 @@ namespace chunks {
 		if (tt == tile_type::TREE_TRUNK) return 6;
 		if (tt == tile_type::TREE_LEAF) return 9;
 
-		auto material_idx = region::material(idx);
-		auto material = get_material(material_idx);
+		const auto material_idx = region::material(idx);
+		const auto material = get_material(material_idx);
 		if (!material) return 3;
 
 		unsigned int use_id = 3;
