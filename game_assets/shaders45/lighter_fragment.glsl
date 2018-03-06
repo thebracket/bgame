@@ -28,8 +28,8 @@ vec3 gridSamplingDisk[20] = vec3[]
 
 float shadow(vec3 fragToLight) {
     float shadow = 0.0;
-    const float diskRadius = 0.1;
-    const float bias = 0.25;
+    const float diskRadius = 0.2;
+    const float bias = 0.15;
     const int samples = 20;
     //const int samples = 1;
     float currentDepth = length(fragToLight);
