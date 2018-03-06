@@ -219,6 +219,8 @@ namespace render {
     {
 		glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, light_stage_buffer->bright_tex);
+		glGenerateMipmap(GL_TEXTURE_2D);
     }
 
 	static void tone_map_scene() {
@@ -227,9 +229,11 @@ namespace render {
         // Setup uniforms
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUniform1i(assets::tonemap_shader->hdr_tex, 0);
-        //glUniform1i(glGetUniformLocation(assets::tonemap_shader, "blur_tex"), 1);
+        glUniform1i(glGetUniformLocation(assets::tonemap_shader->shader_id, "blur_tex"), 1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, light_stage_buffer->bright_tex);
         render_buffer_quad();
     }
 
