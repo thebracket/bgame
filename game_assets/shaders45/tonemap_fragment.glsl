@@ -18,6 +18,10 @@ vec3 Uncharted2Tonemap(vec3 x)
     return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 }
 
+vec3 expose(vec3 x, float exposure) {
+    return vec3(1.0) - exp(-x * exposure);
+}
+
 void main()
 {
     const float gamma = 2.2;
@@ -27,7 +31,11 @@ void main()
 
     //vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
     //vec3 mapped = Uncharted2Tonemap(hdrColor);
-    vec3 mapped = hdrColor; // Disable tone-mapping
+    vec3 lowest_detail = texture(hdr_tex, vec2(0.5,0.5), 9).rgb;
+    float AverageBrightness = clamp( max(max(lowest_detail.r, lowest_detail.g), lowest_detail.b), 0.3, 0.7 );
+    float exposure = 1.0 / AverageBrightness;
+
+    vec3 mapped = expose(hdrColor, exposure); // Disable tone-mapping
     mapped = pow(mapped, vec3(1.0 / gamma)); // Apply gamma correction
 
     FragColor = vec4(mapped, 1.0);

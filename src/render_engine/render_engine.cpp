@@ -24,6 +24,7 @@
 #include "shaders/tonemap_shader.hpp"
 #include "ubo/first_stage_ubo.hpp"
 #include "shaders/skylight_shader.hpp"
+#include <iostream>
 
 namespace render {
 
@@ -209,6 +210,17 @@ namespace render {
 		glDisable(GL_BLEND);
     }
 
+	static void setup_downsample(const int &w, const int &h)
+    {
+
+    }
+
+	static void downsample(const int &w, const int &h)
+    {
+		glBindTexture(GL_TEXTURE_2D, light_stage_buffer->color_tex);
+		glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
 	static void tone_map_scene() {
         glUseProgram(assets::tonemap_shader->shader_id);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
@@ -240,6 +252,9 @@ namespace render {
 	static bool first_time = true;
 
     void render_gl(const double &duration_ms) {
+		int screen_w, screen_h;
+		glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
 		bool tick = false;
 		time_count += duration_ms;
 		if (time_count > MS_PER_RENDERTICK) {
@@ -250,6 +265,8 @@ namespace render {
 		{
 			first_time = false;
 			tick = true;
+
+			setup_downsample(screen_w, screen_h);
 		}
 		//if (!camera_moved && !models_changed && !systems::mouse_moved)
 		//{
@@ -270,8 +287,7 @@ namespace render {
 		}
 
         glCheckError();
-        int screen_w, screen_h;
-        glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+        
 
         if (!gbuffer) {
 			build_framebuffers(screen_w, screen_h);
@@ -327,10 +343,10 @@ namespace render {
 		render_cursor(camera_projection_matrix, camera_modelview_matrix);
 		systems::particles::render_particles(camera_projection_matrix, camera_modelview_matrix);
 
-		// TODO: Downsample buffers here
 
         // Tone mapping
 		if (!config::game_config.disable_hdr) {
+			downsample(screen_w, screen_h);
 			tone_map_scene();
 		}
 
