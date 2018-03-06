@@ -45,10 +45,6 @@ float shadow(vec3 fragToLight) {
     return shadow;
 }
 
-vec3 degamma(vec3 col) {
-    return pow(col, vec3(2.2));
-}
-
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
     float a = roughness*roughness;
@@ -143,8 +139,8 @@ void main()
     }
 
     // Lighting
-    vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
-    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb * 2.0 - 1.0);
+    vec3 base_color = texture(albedo_tex, TexCoords).rgb;
+    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;

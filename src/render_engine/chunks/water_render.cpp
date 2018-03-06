@@ -85,13 +85,13 @@ namespace render {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], GL_DYNAMIC_DRAW);
 
 		if (reset_wet_vao) {
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0); // 0 = Vertex Position
 
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (char *) nullptr + 4 * sizeof(float));
 			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-			glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+			glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (char *) nullptr + 7 * sizeof(float));
 			glEnableVertexAttribArray(2); // 2 = Normals
 
 			reset_wet_vao = false;

@@ -23,6 +23,7 @@
 #include "shaders/lightstage_shader.hpp"
 #include "shaders/tonemap_shader.hpp"
 #include "ubo/first_stage_ubo.hpp"
+#include "shaders/skylight_shader.hpp"
 
 namespace render {
 
@@ -165,6 +166,49 @@ namespace render {
         render_buffer_quad();
     }
 
+	static void render_sunlight()
+    {
+		using assets::skylight_shader;
+
+		skylight_shader->use();
+		glBindFramebuffer(GL_FRAMEBUFFER, light_stage_buffer->fbo_id);
+
+		glUniform1i(skylight_shader->albedo_tex, 0);
+		glUniform1i(skylight_shader->normal_tex, 1);
+		glUniform1i(skylight_shader->world_position, 2);
+		glUniform1i(skylight_shader->ao_tex, 3);
+		glUniform3f(skylight_shader->camera_position, static_cast<float>(camera_position->region_x), static_cast<float>(camera_position->region_z), static_cast<float>(camera_position->region_y));
+		glUniform3f(skylight_shader->light_position, calendar->sun_x, calendar->sun_y + 128.0f, calendar->sun_z);
+		glUniform3f(skylight_shader->light_color, calendar->sun_r, calendar->sun_g, calendar->sun_b);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->normal_tex);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->position_tex);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, gbuffer->ao_tex);
+
+		glShaderStorageBlockBinding(skylight_shader->shader_id, skylight_shader->terrain_flags_buffer_position, 4);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, chunks::flags_ssbo);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+
+		// Render it as the sun
+		render_buffer_quad();
+		glCheckError();
+
+		// Render it as the moon
+		glUniform3f(skylight_shader->light_position, -calendar->sun_x, -calendar->sun_y, -calendar->sun_z);
+		glUniform3f(skylight_shader->light_color, 0.2f, 0.2f, 0.7f);
+		render_buffer_quad();
+		glCheckError();
+
+		glDisable(GL_BLEND);
+    }
+
 	static void tone_map_scene() {
         glUseProgram(assets::tonemap_shader->shader_id);
         glBindFramebuffer(GL_FRAMEBUFFER, hdr_buffer->fbo_id);
@@ -273,6 +317,7 @@ namespace render {
 
         // Render the combined light buffer
         render_to_light_buffer();
+		render_sunlight();
 		if (!config::game_config.disable_lighting) {
 			render_pointlights();
 		}		

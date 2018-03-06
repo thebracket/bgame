@@ -1,6 +1,6 @@
 #version 430 core
 
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec4 aPos;
 layout (location = 1) in vec3 texture_info;
 layout (location = 2) in float aNormal;
 
@@ -14,7 +14,7 @@ layout (std140) uniform camera_data
 
 out VS_OUT {
     vec3 tex_pos;
-    vec3 world_pos;
+    vec4 world_pos;
     vec3 base_normal;
     mat3 TBN; // Used to transform tangent space to world space for per-pixel normals
 } vs_out;
@@ -62,5 +62,5 @@ void main()
     int normal_idx = int(floor(aNormal));
     vs_out.base_normal = normal_lut[normal_idx];
     vs_out.TBN = TBN[normal_idx];
-    gl_Position = projection_matrix * view_matrix * vec4(aPos, 1.0);
+    gl_Position = projection_matrix * view_matrix * vec4(aPos.xyz, 1.0);
 }

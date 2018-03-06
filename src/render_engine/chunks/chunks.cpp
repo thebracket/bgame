@@ -294,13 +294,13 @@ namespace chunks {
 		if (reset_vao) {
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0); // 0 = Vertex Position
+			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0); // 0 = Vertex Position, using the last vector element to be real Z
 
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 3 * sizeof(float));
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (char *) nullptr + 4 * sizeof(float));
 			glEnableVertexAttribArray(1); // 1 = TexX/Y/ID
 
-			glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (char *) nullptr + 6 * sizeof(float));
+			glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (char *) nullptr + 7 * sizeof(float));
 			glEnableVertexAttribArray(2); // 2 = Normals
 
 			glBindVertexArray(0);
@@ -308,9 +308,18 @@ namespace chunks {
 		}
     }
 
+	bool made_flags_ssbo = false;
+	unsigned int flags_ssbo;
+
 	static void update_world_buffer()
 	{
-		// Placeholder
+		if (!made_flags_ssbo)
+		{
+			glGenBuffers(1, &flags_ssbo);
+		}
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, flags_ssbo);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t) * region::get_tile_flags()->size(), &region::get_tile_flags()->operator[](0), GL_DYNAMIC_COPY);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	}
 
     void update_buffers() {

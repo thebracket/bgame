@@ -233,9 +233,9 @@ namespace vox {
                         current_voxel.x,
                         current_voxel.y,
                         current_voxel.z,
-                        (float)b / 256.0f,
-                        (float)g / 256.0f,
-                        (float)r / 256.0f
+                        std::pow((float)b / 256.0f, 2.2f),
+                        std::pow((float)g / 256.0f, 2.2f),
+                        std::pow((float)r / 256.0f, 2.2f)
                 };
                 //std::cout << v.x << "," << v.y << "," << v.z << "\n";
 

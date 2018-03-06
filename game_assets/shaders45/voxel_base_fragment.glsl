@@ -14,6 +14,10 @@ layout (location = 3) out vec3 gAmbientOcclusion;
 
 out vec4 FragColor;
 
+vec3 degamma(vec3 col) {
+    return pow(col, vec3(2.2));
+}
+
 void main() {
     vec3 base_color = fs_in.color * fs_in.tint;
     //vec3 base_color = textureLoc;

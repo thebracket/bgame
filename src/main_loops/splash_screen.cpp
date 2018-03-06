@@ -136,7 +136,7 @@ namespace splash_screen {
 
         glTexStorage3D( GL_TEXTURE_2D_ARRAY,
 			n_mip_levels, // 4-levels of mipmap
-            GL_RGB8, // Internal format
+            GL_SRGB8, // Internal format
 			config::game_config.texture_size, config::game_config.texture_size, // Width and height
             num_actual_textures
         );

@@ -20,15 +20,11 @@ uniform float useSSAO;
 
 #define PI 3.1415926
 
-vec3 degamma(vec3 col) {
-    return pow(col, vec3(2.2));
-}
-
 void main()
 {
-    vec3 base_color = degamma(texture(albedo_tex, TexCoords).rgb);
+    vec3 base_color = texture(albedo_tex, TexCoords).rgb;
     if (base_color.r == 0.0 && base_color.g == 0.0 && base_color.b == 0) discard;
-    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb * 2.0 - 1.0);
+    vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb ;
 
     // Material definitions
@@ -37,7 +33,7 @@ void main()
     float roughness = material_lookup.b;
 
     // Use https://learnopengl.com/code_viewer_gh.php?code=src/6.pbr/1.2.lighting_textured/1.2.pbr.fs
-    vec3 albedo = degamma(texture(albedo_tex, TexCoords).rgb);
+    vec3 albedo = base_color;
 
     // Output a brightness for blue purposes (bloom)
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));

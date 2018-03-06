@@ -13,6 +13,7 @@
 #include "../render_engine/shaders/particle_shader.hpp"
 #include "../render_engine/shaders/pointlight_shader.hpp"
 #include "../render_engine/shaders/tonemap_shader.hpp"
+#include "../render_engine/shaders/skylight_shader.hpp"
 
 namespace assets {
     unsigned int spriteshader = 0;
@@ -30,6 +31,7 @@ namespace assets {
 	std::unique_ptr<lighter_shader_t> lighter_shader;
 	std::unique_ptr<ascii_base_shader_t> ascii_shader;
 	std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
+	std::unique_ptr<skylight_shader_t> skylight_shader;
 	extern unsigned int skyshader = 0;
 
 	void initialize_shaders()
@@ -52,5 +54,6 @@ namespace assets {
 		ascii_shader = std::make_unique<ascii_base_shader_t>();
 		ascii_light_shader = std::make_unique<ascii_light_shader_t>();
 		skyshader = load_shaders("game_assets/shaders45/skyshader_vertex.glsl", "game_assets/shaders45/skyshader_fragment.glsl");
+		skylight_shader = std::make_unique<skylight_shader_t>();
 	}
 }

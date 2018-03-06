@@ -80,6 +80,7 @@ namespace region {
     /* Is a flag set for a tile? */
     bool flag(const int idx, const tile_flags::tile_flag_type flag);
 	bengine::bitset<tile_flags::tile_flag_type> get_flag_reference(const int idx);
+	std::vector<bengine::bitset<tile_flags::tile_flag_type>> * get_tile_flags();
 
     /* Reveal a cell. */
     void reveal(const int idx);

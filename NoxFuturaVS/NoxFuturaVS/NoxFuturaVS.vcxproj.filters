@@ -840,6 +840,9 @@
     <ClCompile Include="..\..\src\render_engine\ubo\lighting_ubo.cpp">
       <Filter>Source Files\render_engine\ubo</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\skylight_shader.cpp">
+      <Filter>Source Files\render_engine\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1879,6 +1882,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\ubo\lighting_ubo.hpp">
       <Filter>Header Files\render_engine\ubo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\skylight_shader.hpp">
+      <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -63,6 +63,11 @@ namespace region {
 
 	std::unique_ptr<region_t> current_region;
 
+	std::vector<bengine::bitset<tile_flag_type>> * get_tile_flags()
+	{
+		return &current_region->tile_flags;
+	}
+
 	int ground_z(const int x, const int y) {
 		int z = REGION_DEPTH - 1;
 		bool hit_ground = false;

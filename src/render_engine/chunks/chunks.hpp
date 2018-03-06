@@ -56,4 +56,5 @@ namespace chunks {
     void update_dirty_chunks();
     void enqueue_vertex_update(const int &idx);
     void update_buffers();
+	extern unsigned int flags_ssbo;
 }
