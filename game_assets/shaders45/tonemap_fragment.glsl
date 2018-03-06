@@ -26,12 +26,12 @@ void main()
 {
     const float gamma = 2.2;
     vec3 hdrColor = texture(hdr_tex, TexCoords).rgb;
-    vec3 bloomColor = texture(blur_tex, TexCoords, 4).rgb;
+    vec3 bloomColor = texture(blur_tex, TexCoords, 5).rgb;
     hdrColor += bloomColor;
 
     //vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
     //vec3 mapped = Uncharted2Tonemap(hdrColor);
-    vec3 lowest_detail = texture(hdr_tex, vec2(0.5,0.5), 9).rgb;
+    vec3 lowest_detail = texture(hdr_tex, vec2(0.5,0.5), 10).rgb;
     float AverageBrightness = clamp( max(max(lowest_detail.r, lowest_detail.g), lowest_detail.b), 0.3, 0.7 );
     float exposure = 0.5 / AverageBrightness;
 
