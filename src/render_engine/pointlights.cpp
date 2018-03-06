@@ -66,7 +66,7 @@ namespace render {
 			}
 		}
 		glCheckError();
-		vox::bulk_shadow_render(radius, shadow_transforms, light_pos, buffer->fbo_id);
+		vox::bulk_shadow_render(radius, shadow_transforms, light_pos, buffer->fbo_id, ubo_index);
 
 		glViewport(0, 0, screen_w, screen_h);
 		new_light = false;

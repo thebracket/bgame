@@ -1,6 +1,5 @@
 #include "voxel_model.hpp"
 #include <map>
-#include <iostream>
 #include "../../global_assets/shader_storage.hpp"
 #include "../shaders/voxel_shader.hpp"
 #include "../shaders/voxel_shadow_shader.hpp"
@@ -9,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../../bengine/main_window.hpp"
 #include "renderables.hpp"
-#include "../../global_assets/game_config.hpp"
+#include "../ubo/lighting_ubo.hpp"
 
 namespace vox {
 
@@ -236,17 +235,14 @@ namespace vox {
 		glCheckError();
 	}
 
-	void bulk_shadow_render(const float radius, const std::vector<glm::mat4> &shadowTransforms, const glm::vec3 &light_pos, const unsigned int fbo_id)
+	void bulk_shadow_render(const float radius, const std::vector<glm::mat4> &shadowTransforms, const glm::vec3 &light_pos, const unsigned int fbo_id, const unsigned int ubo_index)
 	{
 		assets::voxel_shadow_shader->use();
-		glUniform1f(assets::voxel_shadow_shader->far_plane, radius);
-		glUniform3f(assets::voxel_shadow_shader->light_pos, light_pos.x, light_pos.y, light_pos.z);
-		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices0, 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
-		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices1, 1, GL_FALSE, glm::value_ptr(shadowTransforms[1]));
-		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices2, 1, GL_FALSE, glm::value_ptr(shadowTransforms[2]));
-		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices3, 1, GL_FALSE, glm::value_ptr(shadowTransforms[3]));
-		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices4, 1, GL_FALSE, glm::value_ptr(shadowTransforms[4]));
-		glUniformMatrix4fv(assets::voxel_shadow_shader->shadow_matrices5, 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, render::lighting_ubo::ubo);
+		glUniformBlockBinding(assets::voxel_shadow_shader->shader_id, 0, assets::voxel_shadow_shader->light_block_index);
+		glCheckError();
+		glUniform1ui(assets::voxel_shadow_shader->light_index, ubo_index);
+		glCheckError();
 
 		// Shadow rendering goes here
 		glBindVertexArray(vox::voxel_geometry_vao);
