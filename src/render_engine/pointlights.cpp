@@ -177,8 +177,15 @@ namespace render {
 		});
 
 		glEnable(GL_CULL_FACE);
+		const auto camera_z_minus_4 = camera_position->region_z - 4;
+		const auto camera_z_plus_4 = camera_position->region_z + 4;
 		for (auto &l : pointlights) {
-			if (config::game_config.always_update_shadows || l.second.new_light || l.second.cycle_tick == cycle) {
+			auto visible = true;
+			if (l.second.light_pos.y < camera_z_minus_4) visible = false;
+			if (visible && l.second.light_pos.y > camera_z_plus_4) visible = false;
+			if (visible && !frustrum.checkSphere(glm::vec3(l.second.light_pos.x, l.second.light_pos.y, l.second.light_pos.z), l.second.radius)) visible = false;
+
+			if (l.second.new_light || visible && (config::game_config.always_update_shadows ||l.second.cycle_tick == cycle)) {
 				if (l.first == std::numeric_limits<std::size_t>::max() && render::sun_moved) {
 					l.second.light_pos.x = calendar->sun_x;
 					l.second.light_pos.y = calendar->sun_y;
