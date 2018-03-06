@@ -837,6 +837,9 @@
     <ClCompile Include="..\..\src\render_engine\ubo\first_stage_ubo.cpp">
       <Filter>Source Files\render_engine\ubo</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\ubo\lighting_ubo.cpp">
+      <Filter>Source Files\render_engine\ubo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1872,6 +1875,9 @@
       <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\ubo\first_stage_ubo.hpp">
+      <Filter>Header Files\render_engine\ubo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\ubo\lighting_ubo.hpp">
       <Filter>Header Files\render_engine\ubo</Filter>
     </ClInclude>
   </ItemGroup>
