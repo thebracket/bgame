@@ -184,7 +184,7 @@ void read_buildings() noexcept
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
                                 const std::string tiletag = lua_tostring(lua_state, -2);
-                                if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
+                                if (tiletag == "glyph") render.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
                                 if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
                                 if (tiletag == "background") render.background = read_lua_color("background");
                                 lua_pop(lua_state, 1);
@@ -214,7 +214,7 @@ void read_buildings() noexcept
                             lua_gettable(lua_state, -2);
                             while (lua_next(lua_state, -2) != 0) {
                                 const auto tiletag = std::string(lua_tostring(lua_state, -2));
-                                if (tiletag == "glyph") render.glyph = lua_tonumber(lua_state, -1);
+                                if (tiletag == "glyph") render.glyph = static_cast<uint16_t>(lua_tonumber(lua_state, -1));
                                 if (tiletag == "foreground") render.foreground = read_lua_color("foreground");
                                 if (tiletag == "background") render.background = read_lua_color("background");
                                 lua_pop(lua_state, 1);

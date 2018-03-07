@@ -131,7 +131,7 @@ namespace bengine
 	/* Render a tab bar, send callbacks to active tab */
 	inline void render_btab_bar(btabs_t &bt) noexcept
 	{
-		std::size_t i = 0;
+		auto i = 0;
 		const auto sz = bt.tabs.size()-1;
 		for (auto &b : bt.tabs)
 		{

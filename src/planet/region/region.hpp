@@ -164,8 +164,8 @@ namespace region {
 	* Buildings
 	*/
 	std::size_t get_building_id(const int idx);
-	void set_building_id(const int idx, const std::size_t id);
-	void delete_building(const std::size_t building_id);
+	void set_building_id(const int idx, const int id);
+	void delete_building(const int building_id);
 
     /*************************************
      * Bridges
@@ -194,10 +194,10 @@ namespace region {
     int next_tree_id();
 
     /* Set the tree ID # for a cell. */
-    void set_tree_id(const int idx, const std::size_t tree_id);
+    void set_tree_id(const int idx, const int tree_id);
 
     /* Erase a tree by ID #. */
-    void delete_tree(const std::size_t tree_id);
+    void delete_tree(const int tree_id);
 
     /* Increment the tree counter. */
     void inc_next_tree();

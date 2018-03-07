@@ -25,11 +25,6 @@ namespace vox {
 		return (w * h * z) + (w * y) + x;
 	}
 
-	static unsigned int us(const int &n) noexcept
-	{
-		return static_cast<unsigned int>(n);
-	}
-
 	static void add_cube_geometry(std::vector<float> &v, const subvoxel &voxel, const float &W, const float &H, const float &D) noexcept
 	{
 		const auto x0 = -0.5f + voxel.x;
@@ -38,8 +33,6 @@ namespace vox {
 		const auto y1 = y0 + D;
 		const auto z0 = -0.5f + voxel.y;
 		const auto z1 = z0 + H;
-
-		const unsigned int base = v.size() / 3;
 
 		v.insert(v.end(), {
 			
@@ -172,7 +165,6 @@ namespace vox {
 
 	void voxel_model::build_buffer(std::vector<instance_t> &instances, voxel_render_buffer_t * render)
 	{
-		constexpr auto instance_t_size_bytes = 10 * sizeof(float);
 		render->instance_offset = static_cast<unsigned int>(instance_buffer.size());
 
 		// Append to the master instance list

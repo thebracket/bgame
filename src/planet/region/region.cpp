@@ -121,11 +121,11 @@ namespace region {
 		return current_region->building_id[idx];
 	}
 
-	void set_building_id(const int idx, const std::size_t id) {
+	void set_building_id(const int idx, const int id) {
 		current_region->building_id[idx] = id;
 	}
 
-	void delete_building(const std::size_t building_id) {
+	void delete_building(const int building_id) {
 		for (auto &bid : current_region->building_id) {
 			if (bid == building_id) bid = 0;
 		}
@@ -174,7 +174,7 @@ namespace region {
         current_region->water_level[idx] = level;
     }
 
-    void set_tree_id(const int idx, const std::size_t tree_id) {
+    void set_tree_id(const int idx, const int tree_id) {
         current_region->tree_id[idx] = tree_id;
     }
 
@@ -227,7 +227,7 @@ namespace region {
         }
     }
 
-    void delete_tree(const std::size_t tree_id) {
+    void delete_tree(const int tree_id) {
         for (auto &sid : current_region->tree_id) {
             if (sid == tree_id) sid = 0;
         }
