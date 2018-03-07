@@ -2,13 +2,13 @@
 #include <algorithm>
 
 void octree_t::add_node(const octree_location_t loc) {
-    const int idx = mapidx(loc.x, loc.y, loc.z);
+    const auto idx = mapidx(loc.x, loc.y, loc.z);
     contents[idx].emplace_back(loc.id);
     ++total_nodes;
 }
 
 void octree_t::remove_node(const octree_location_t &loc) {
-    const int idx = mapidx(loc.x, loc.y, loc.z);
+    const auto idx = mapidx(loc.x, loc.y, loc.z);
     contents[idx].erase(
         std::remove_if(
                 contents[idx].begin(),
@@ -20,7 +20,7 @@ void octree_t::remove_node(const octree_location_t &loc) {
 
 std::vector<int> octree_t::find_by_loc(const octree_location_t &loc) {
     std::vector<int> result;
-    const int idx = mapidx(loc.x, loc.y, loc.z);
+    const auto idx = mapidx(loc.x, loc.y, loc.z);
     for (const auto &loc : contents[idx]) {
         result.push_back(loc);
     }
@@ -31,10 +31,10 @@ std::vector<int> octree_t::find_by_region(const int &left, const int &right, con
                                         const int &ztop, const int &zbottom)
 {
     std::vector<int> result;
-    for (int z=zbottom; z<ztop; ++z) {
-        for (int y=top; y<bottom; ++y) {
-            for (int x=left; x<right; ++x) {
-                const int idx = mapidx(x,y,z);
+    for (auto z=zbottom; z<ztop; ++z) {
+        for (auto y=top; y<bottom; ++y) {
+            for (auto x=left; x<right; ++x) {
+                const auto idx = mapidx(x,y,z);
                 for (const auto &loc : contents[idx]) {
                     result.emplace_back(loc);
                 }

@@ -15,7 +15,7 @@ struct octree_t {
         contents.resize(REGION_TILES_COUNT);
     }
 
-    std::vector<std::vector<std::size_t>> contents;
+    std::vector<std::vector<int>> contents;
     std::size_t total_nodes = 0;
 
     void add_node(const octree_location_t loc);
