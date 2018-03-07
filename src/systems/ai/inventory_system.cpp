@@ -16,6 +16,7 @@
 #include "../../planet/region/region.hpp"
 #include "distance_map_system.hpp"
 #include "../../global_assets/building_designations.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace inventory_system {
@@ -27,31 +28,31 @@ namespace systems {
 
 		struct drop_item_message {
 			drop_item_message() {}
-			drop_item_message(const std::size_t &ID, const int &X, const int &Y, const int &Z) : id(ID), x(X), y(Y), z(Z) {}
-			std::size_t id;
+			drop_item_message(const int &ID, const int &X, const int &Y, const int &Z) : id(ID), x(X), y(Y), z(Z) {}
+			int id;
 			int x, y, z;
 		};
 
 		struct item_claimed_message {
 			item_claimed_message() {}
-			item_claimed_message(const std::size_t i, const bool c) : claimed(c), id(i) {}
+			item_claimed_message(const int i, const bool c) : claimed(c), id(i) {}
 			bool claimed;
-			std::size_t id;
+			int id;
 		};
 
 		struct pickup_item_message {
 			pickup_item_message() {}
-			pickup_item_message(const std::size_t &ID, const std::size_t &holder) : id(ID), collector(holder) {}
-			pickup_item_message(const std::size_t &ID, const std::size_t &holder, const item_location_t &LOC) : id(ID), collector(holder), loc(LOC) {}
-			std::size_t id;
-			std::size_t collector;
+			pickup_item_message(const int &ID, const std::size_t &holder) : id(ID), collector(holder) {}
+			pickup_item_message(const int &ID, const std::size_t &holder, const item_location_t &LOC) : id(ID), collector(holder), loc(LOC) {}
+			int id;
+			int collector;
 			item_location_t loc = INVENTORY;
 		};
 
 		struct destroy_item_message {
 			destroy_item_message() {}
-			destroy_item_message(const std::size_t ID) : id(ID) {}
-			std::size_t id;
+			destroy_item_message(const int ID) : id(ID) {}
+			int id;
 		};
 
 		struct build_request_message {
@@ -70,23 +71,23 @@ namespace systems {
 
 		bool dirty = true;
 
-		void claim_item(const std::size_t i, const bool c) {
+		void claim_item(const int i, const bool c) {
 			claimed_items.enqueue(item_claimed_message{ i, c });
 		}
 
-		void drop_item(const std::size_t &ID, const int &X, const int &Y, const int &Z) {
+		void drop_item(const int &ID, const int &X, const int &Y, const int &Z) {
 			dropped_items.enqueue(drop_item_message{ ID, X, Y, Z });
 		}
 
-		void pickup_item(const std::size_t &ID, const std::size_t &holder) {
+		void pickup_item(const int &ID, const std::size_t &holder) {
 			pickup_items.enqueue(pickup_item_message{ ID, holder });
 		}
 
-		void pickup_item(const std::size_t &ID, const std::size_t &holder, const item_location_t &LOC) {
+		void pickup_item(const int &ID, const std::size_t &holder, const item_location_t &LOC) {
 			pickup_items.enqueue(pickup_item_message{ ID, holder, LOC });
 		}
 
-		void destroy_item(const std::size_t ID) {
+		void destroy_item(const int ID) {
 			destroy_items.enqueue(destroy_item_message{ ID });
 		}
 

@@ -4,6 +4,8 @@
 #include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../bengine/ecs.hpp"
+#include <mutex>
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
     namespace corpse_system {

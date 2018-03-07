@@ -14,6 +14,7 @@
 #include "../../components/game_stats.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace sentient_attacks {
@@ -77,7 +78,7 @@ namespace systems {
 				auto ai = sentient_entity->component<sentient_ai>();
 				if (!ai) return;
 
-				std::size_t weapon_id = get_melee_id(msg.attacker);
+				std::size_t weapon_id = get_melee_id(*sentient_entity);
 				if (weapon_id == 0) {
 					// Natural attacks
 					auto * na = sentient_entity->component<natural_attacks_t>();
@@ -118,7 +119,7 @@ namespace systems {
 				// TODO: civ_dislike_attacker(defender);
 
 				// Held Weapons
-				auto [weapon_id, ammo_id] = get_ranged_and_ammo_id(msg.attacker);
+				auto [weapon_id, ammo_id] = get_ranged_and_ammo_id(*attacker);
 				std::string weapon_name = "fists";
 				int weapon_n = 1;
 				int weapon_d = 4;

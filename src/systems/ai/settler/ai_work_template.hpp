@@ -50,7 +50,7 @@ public:
 		});
 	}
 
-	void move_to(const std::size_t &entity_id, const position_t &pos, const position_t &destination) const {
+	void move_to(const int &entity_id, const position_t &pos, const position_t &destination) const {
 		systems::movement::move_to(*bengine::entity(entity_id), pos, destination);
 		//emit_deferred(entity_wants_to_move_message{ entity_id, destination });
 	}

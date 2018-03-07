@@ -8,6 +8,7 @@
 #include "../helpers/weapons_helper.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace turret_attacks {

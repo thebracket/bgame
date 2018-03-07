@@ -4,11 +4,11 @@ namespace systems {
 	namespace settler_ranged_attack {
 
 		struct settler_ranged_attack_message {
-			settler_ranged_attack_message() {}
-			settler_ranged_attack_message(const size_t attack, const size_t defend) : attacker(attack), victim(defend) {}
+			settler_ranged_attack_message() = default;
+			settler_ranged_attack_message(const int attack, const int defend) : attacker(attack), victim(defend) {}
 
-			size_t attacker;
-			size_t victim;
+			int attacker;
+			int victim;
 		};
 
 		void run(const double &duration_ms);

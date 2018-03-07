@@ -11,6 +11,7 @@
 #include "../../components/game_stats.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace initiative {

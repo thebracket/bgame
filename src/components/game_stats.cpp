@@ -94,7 +94,7 @@ int get_attribute_modifier_for_skill(const game_stats_t &stats, const std::strin
 	}
 }
 
-int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill) {
+int16_t get_skill_modifier(const game_stats_t &stats, const std::string &skill) {
 	auto finder = stats.skills.find(skill);
 	if (finder != stats.skills.end()) {
 		return finder->second.skill_level;
@@ -103,7 +103,7 @@ int8_t get_skill_modifier(const game_stats_t &stats, const std::string &skill) {
 	}
 }
 
-void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, const std::string &skill, const int &difficulty, bengine::random_number_generator &rng) {
+void gain_skill_from_success(const int settler_id, game_stats_t &stats, const std::string &skill, const int &difficulty, bengine::random_number_generator &rng) {
 	auto finder = stats.skills.find(skill);
 	if (finder != stats.skills.end()) {
 		finder->second.experience_gained += difficulty;
@@ -149,7 +149,7 @@ void gain_skill_from_success(const std::size_t settler_id, game_stats_t &stats, 
 	}
 }
 
-skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty) {
+skill_roll_result_t skill_roll(const int settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty) {
 	const int luck_component = rng.roll_dice( 1, 20 );
 	const int natural_ability = get_attribute_modifier_for_skill(stats, skill_name);
 	const int8_t person_skill = get_skill_modifier(stats, skill_name);
@@ -170,7 +170,7 @@ skill_roll_result_t skill_roll(const std::size_t settler_id, game_stats_t &stats
 	}
 }
 
-std::tuple<skill_roll_result_t, int, int> skill_roll_ext(const std::size_t settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty) {
+std::tuple<skill_roll_result_t, int, int> skill_roll_ext(const int settler_id, game_stats_t &stats, bengine::random_number_generator &rng, const std::string skill_name, const int difficulty) {
 	const int luck_component = rng.roll_dice(1, 20);
 	const int natural_ability = get_attribute_modifier_for_skill(stats, skill_name);
 	const int8_t person_skill = get_skill_modifier(stats, skill_name);

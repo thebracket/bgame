@@ -11,6 +11,7 @@
 #include "../../global_assets/debug_flags.hpp"
 #include "../../utils/system_log.hpp"
 #include "../../global_assets/game_config.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace wishmode {

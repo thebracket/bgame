@@ -6,8 +6,8 @@
 #include "../../components/claimed_t.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/items.hpp"
-#include "../../bengine/ecs_impl.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace stockpile_system {
@@ -15,8 +15,8 @@ namespace systems {
 		using namespace region;
 		using namespace bengine;
 
-		std::unordered_map<std::size_t, stockpile_info_t> stockpiles;
-		std::unordered_map<int, std::vector<std::size_t>> stockpile_targets;
+		std::unordered_map<int, stockpile_info_t> stockpiles;
+		std::unordered_map<int, std::vector<int>> stockpile_targets;
 		std::vector<storable_item_t> storable_items;
 
 		using namespace bengine;
@@ -37,7 +37,7 @@ namespace systems {
 					if (sp.category.test(i)) {
 						auto finder = stockpile_targets.find(e.id);
 						if (finder == stockpile_targets.end()) {
-							stockpile_targets[i] = std::vector<std::size_t>{ e.id };
+							stockpile_targets[i] = std::vector<int>{ e.id };
 						}
 						else {
 							stockpile_targets[i].push_back(e.id);

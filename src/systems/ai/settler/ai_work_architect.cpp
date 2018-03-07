@@ -14,6 +14,7 @@
 #include "../../helpers/targeted_flow_map.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../physics/movement_system.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

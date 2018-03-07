@@ -19,6 +19,7 @@
 #include "../ai/inventory_system.hpp"
 #include "../../bengine/btabs.hpp"
 #include "../../bengine/main_window.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace units_ui {

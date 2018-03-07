@@ -14,6 +14,8 @@
 #include "architecture_template.hpp"
 #include "../keydamper.hpp"
 #include "../../bengine/btabs.hpp"
+#include <cereal/archives/xml.hpp>
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace design_architecture {

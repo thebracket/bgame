@@ -5,6 +5,7 @@
 #include "../../components/position.hpp"
 #include "../../components/buildings/construct_provides_door.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace bengine;
 using namespace region;

@@ -25,6 +25,7 @@
 #include "../../raws/items.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

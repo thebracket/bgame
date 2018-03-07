@@ -20,6 +20,7 @@
 #include "../../bengine/ecs.hpp"
 #include "../../utils/system_log.hpp"
 #include "../../bengine/btabs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace settler_ui {
@@ -159,39 +160,40 @@ namespace systems {
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", "Options"); ImGui::NextColumn();
 			ImGui::Separator();
 
-			each_if<item_t, item_carried_t>(
-				[](entity_t &e, item_t &item, item_carried_t &carried) {
-				return carried.carried_by == units_ui::selected_settler;
-			},
-				[](entity_t &e, item_t &item, item_carried_t &carried) {
-				ImGui::Text("%s", item.item_name.c_str());
-				ImGui::NextColumn();
+			each_if<item_t, item_carried_t>( 
+				[] (entity_t &e, item_t &item, item_carried_t &carried) {
+					return carried.carried_by == units_ui::selected_settler;
+				},
+				[] (entity_t &e, item_t &item, item_carried_t &carried) {
+					ImGui::Text("%s", item.item_name.c_str());
+					ImGui::NextColumn();
 
-				std::string qual = "";
-				auto qc = e.component<item_quality_t>();
-				if (qc) qual = qc->get_quality_text();
-				ImGui::Text("%s", qual.c_str());
-				ImGui::NextColumn();
+					std::string qual = "";
+					auto qc = e.component<item_quality_t>();
+					if (qc) qual = qc->get_quality_text();
+					ImGui::Text("%s", qual.c_str());
+					ImGui::NextColumn();
 
-				float wear = 1.0f;
-				auto wc = e.component<item_wear_t>();
-				if (wc) wear = static_cast<float>(wc->wear) / 100.0f;
-				ImGui::ProgressBar(wear);
-				ImGui::NextColumn();
+					float wear = 1.0f;
+					auto wc = e.component<item_wear_t>();
+					if (wc) wear = static_cast<float>(wc->wear) / 100.0f;
+					ImGui::ProgressBar(wear);
+					ImGui::NextColumn();
 
-				std::string ci = item_loc_name(carried.location);
-				ImGui::Text("%s", ci.c_str());
-				ImGui::NextColumn();
+					std::string ci = item_loc_name(carried.location);
+					ImGui::Text("%s", ci.c_str());
+					ImGui::NextColumn();
 
-				const std::string btn_view = std::string(ICON_FA_CAMERA) + " View##" + std::to_string(e.id);
-				if (ImGui::Button(btn_view.c_str())) {
-					game_master_mode = ITEM_INFO;
-					item_ui::selected_item = e.id;
+					const std::string btn_view = std::string(ICON_FA_CAMERA) + " View##" + std::to_string(e.id);
+					if (ImGui::Button(btn_view.c_str())) {
+						game_master_mode = ITEM_INFO;
+						item_ui::selected_item = e.id;
+					}
+					ImGui::NextColumn();
+
+					ImGui::Separator();
 				}
-				ImGui::NextColumn();
-
-				ImGui::Separator();
-			});
+			);
 		}
 
 		static std::vector<bengine::table_heading_t> life_headings{

@@ -20,6 +20,7 @@
 #include "../../damage/turret_ranged_attack_system.hpp"
 #include "../../../components/helpers/standing_orders.hpp"
 #include "../../../bengine/geometry.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_visibility_scan {
@@ -29,7 +30,7 @@ namespace systems {
 		struct spotted_hostile_t {
 			bool terrified = false;
 			float terror_distance = std::numeric_limits<float>::max();
-			std::size_t closest_fear = 0;
+			int closest_fear = 0;
 		};
 
 		spotted_hostile_t can_see_hostile(const bengine::entity_t &e, const position_t &pos, const viewshed_t &view, const std::function<bool(bengine::entity_t&)> &test) {
@@ -66,19 +67,17 @@ namespace systems {
 			if (other.component<settler_ai_t>() || other.component<sentient_ai>()) {
 				return true;
 			}
-			else {
-				return false;
-			}
+			return false;			
 		}
 
 		bool sentient_hostile_scan(entity_t &other) {
-			bool hostile_sentient = false;
-			auto other_sentient = other.component<sentient_ai>();
+			auto hostile_sentient = false;
+			const auto other_sentient = other.component<sentient_ai>();
 			if (other_sentient) {
-				const std::size_t my_civ = ai_visibility::ai->civ_id;
-				const std::size_t their_civ = other_sentient->civ_id;
+				const auto my_civ = ai_visibility::ai->civ_id;
+				const auto their_civ = other_sentient->civ_id;
 				if (my_civ != their_civ) {
-					auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
+					const auto civfinder = planet.civs.civs[my_civ].relations.find(their_civ);
 					if (civfinder != planet.civs.civs[my_civ].relations.end()) {
 						if (civfinder->second < 0) hostile_sentient = true;
 					}

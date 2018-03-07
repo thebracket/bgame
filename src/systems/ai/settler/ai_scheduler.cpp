@@ -9,6 +9,7 @@
 #include "../../../components/ai_tags/ai_tag_work_guarding.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "jobs_board.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_scheduler {

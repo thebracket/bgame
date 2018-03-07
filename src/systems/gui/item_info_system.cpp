@@ -37,6 +37,7 @@
 #include "units_info_system.hpp"
 #include <fmt/format.h>
 #include "../../bengine/btabs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace item_ui {

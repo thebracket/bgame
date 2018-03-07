@@ -1,8 +1,7 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/polymorphic.hpp>
-#include "../../bengine/ecs_impl.hpp"
+#include <cereal/archives/xml.hpp>
+#include <cereal/types/vector.hpp>
 #include <string>
 
 struct architecture_target {

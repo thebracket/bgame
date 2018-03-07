@@ -1,5 +1,6 @@
 #include "logger.hpp"
 #include "../bengine/ecs.hpp"
+#include "../global_assets/game_ecs.hpp"
 
 LOG * LOG::text(const std::string &txt) {
     for (std::size_t i=0; i<txt.size(); ++i) {
@@ -8,10 +9,10 @@ LOG * LOG::text(const std::string &txt) {
     return this;
 }
 
-inline name_t * get_name_component(const std::size_t &entity_id) {
+inline name_t * get_name_component(const int &entity_id) {
     auto e = bengine::entity(entity_id);
     if (e) {
-        auto name = e->component<name_t>();
+        const auto name = e->component<name_t>();
         if (name) {
             return name;
         }
@@ -19,15 +20,15 @@ inline name_t * get_name_component(const std::size_t &entity_id) {
     return nullptr;
 }
 
-inline std::string log_display_name(const std::size_t &entity_id) {
-    auto name_comp = get_name_component(entity_id);
+inline std::string log_display_name(const int &entity_id) {
+    const auto name_comp = get_name_component(entity_id);
     if (name_comp) {
         return name_comp->first_name + std::string(" ") + name_comp->last_name;
     }
     return "Nameless Entity";
 }
 
-LOG * LOG::settler_name(const std::size_t &entity_id) {
+LOG * LOG::settler_name(const int &entity_id) {
     col(bengine::color_t{0.0f, 1.0f, 0.0f});
     text(log_display_name(entity_id));
     col(bengine::color_t{1.0f, 1.0f, 1.0f});
@@ -41,14 +42,14 @@ LOG * LOG::settler_name_t(const name_t &name) {
     return this;
 }
 
-LOG * LOG::sentient_name(const std::size_t &entity_id) {
+LOG * LOG::sentient_name(const int &entity_id) {
     col(bengine::color_t{1.0f, 1.0f, 0.0f});
     text(log_display_name(entity_id));
     col(bengine::color_t{1.0f, 1.0f, 1.0f});
     return this;
 }
 
-LOG * LOG::other_name(const std::size_t &entity_id) {
+LOG * LOG::other_name(const int &entity_id) {
     col(bengine::color_t{1.0f, 0.0f, 1.0f});
     text(log_display_name(entity_id));
     col(bengine::color_t{1.0f, 1.0f, 1.0f});

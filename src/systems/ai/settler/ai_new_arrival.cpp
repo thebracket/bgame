@@ -8,6 +8,7 @@
 #include "../../gui/log_system.hpp"
 #include "../../../components/logger.hpp"
 #include "../../../bengine/ecs.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_new_arrival {

@@ -47,22 +47,22 @@ void build_ramps() noexcept {
 
 void build_debris_trail(const int crash_x, const int crash_y) noexcept {
     set_worldgen_status("Crashing the ship");
-    for (int x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
-		for (int y=crash_y - 3; y<crash_y+4; ++y) {
-			int z = ground_z(x, y);
-			const int idx = mapidx(x, y, z);
+    for (auto x=crash_x - (REGION_WIDTH/4); x<crash_x; ++x) {
+		for (auto y=crash_y - 3; y<crash_y+4; ++y) {
+			auto z = ground_z(x, y);
+			const auto idx = mapidx(x, y, z);
 			set_veg_type(idx, 0);
 			if (tree_id(idx) > 0) {
 				// Tree needs destroying
-				const int target_tree = tree_id(idx);
+				const auto target_tree = tree_id(idx);
 
-				int number_of_logs = 0;
-				int tree_idx = 0;
-				int lowest_z = 1000;
+				auto number_of_logs = 0;
+				auto tree_idx = 0;
+				auto lowest_z = 1000;
 
-				for (int Z = 0; Z < REGION_DEPTH; ++Z) {
-					for (int Y = 0; Y < REGION_HEIGHT; ++Y) {
-						for (int X = 0; X < REGION_WIDTH; ++X) {
+				for (auto Z = 0; Z < REGION_DEPTH; ++Z) {
+					for (auto Y = 0; Y < REGION_HEIGHT; ++Y) {
+						for (auto X = 0; X < REGION_WIDTH; ++X) {
 							const auto tidx = mapidx(X, Y, Z);
 							if (tree_id(tidx) == target_tree) {
 								if (Z < lowest_z) {
@@ -81,8 +81,8 @@ void build_debris_trail(const int crash_x, const int crash_y) noexcept {
 				set_tile_type(idx, tile_type::FLOOR);
 				// Spawn wooden logs
 				number_of_logs = (number_of_logs / 20) + 1;
-				for (int i = 0; i<number_of_logs; ++i) {
-					std::string cname = "Crashing Ship";
+				for (auto i = 0; i<number_of_logs; ++i) {
+					const std::string cname = "Crashing Ship";
 					spawn_item_on_ground(x, y, z, "wood_log", get_material_by_tag("wood"), 3, 100, 0, cname);
 				}
 			}

@@ -4,6 +4,7 @@
 #include "../../../components/ai_tags/ai_tag_leisure_shift.hpp"
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../physics/movement_system.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_leisure_time {

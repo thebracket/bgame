@@ -188,10 +188,10 @@ namespace region {
      */
 
     /* Get the ID # of a tree on this cell. */
-    std::size_t tree_id(const int idx);
+    int tree_id(const int idx);
 
     /* Get the next tree ID */
-    std::size_t next_tree_id();
+    int next_tree_id();
 
     /* Set the tree ID # for a cell. */
     void set_tree_id(const int idx, const std::size_t tree_id);

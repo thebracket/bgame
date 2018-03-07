@@ -14,6 +14,7 @@
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../../planet/region/region.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_farm_plant {

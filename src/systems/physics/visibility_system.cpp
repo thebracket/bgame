@@ -1,4 +1,4 @@
-#include "explosive_system.hpp"
+#include "visibility_system.hpp"
 #include "../../components/viewshed.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/geometry.hpp"
@@ -9,6 +9,7 @@
 #include "../../components/buildings/turret_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace bengine;
 using namespace tile_flags;
@@ -25,7 +26,7 @@ namespace systems {
 			opacity_dirty = true;
 		}
 
-		void on_entity_moved(size_t &entity_id) {
+		void on_entity_moved(int &entity_id) {
 			dirty_entities.insert(entity_id);
 			dirty = true;
 		}
@@ -190,7 +191,7 @@ namespace systems {
 					view.visible_entities.clear();
 					for (const int &idx : view.visible_cache) {
 						auto [x,y,z] = idxmap(idx);
-						std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
+						auto visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
 						for (const auto &v : visible_here) {
 							view.visible_entities.insert(v);
 						}

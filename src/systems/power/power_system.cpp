@@ -6,6 +6,7 @@
 #include "../../components/lightsource.hpp"
 #include "../../bengine/color_t.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace power {

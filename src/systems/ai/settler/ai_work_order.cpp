@@ -11,6 +11,7 @@
 #include "../../../global_assets/building_designations.hpp"
 #include "../../../components/helpers/reaction_task_t.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_workorder {
@@ -35,7 +36,7 @@ namespace systems {
 					//std::cout << "Warning: bailing on null AI\n";
 					return;
 				}
-				if (is_auto_reaction_task_available(e, *ai)) {
+				if (is_auto_reaction_task_available(e.id, *ai)) {
 					board.insert(std::make_pair(20, jt));
 					//std::cout << "Offering automatic build order\n";
 					return;
@@ -66,11 +67,11 @@ namespace systems {
 					std::unique_ptr<reaction_task_t> autojob;
 
 					if (!building_designations->build_orders.empty()) {
-						autojob = find_queued_reaction_task(e, w);
+						autojob = find_queued_reaction_task(e.id, w);
 						//if (autojob) std::cout << "Queued reaction added\n";
 					}
 					if (!autojob) {
-						autojob = find_automatic_reaction_task(e, w);
+						autojob = find_automatic_reaction_task(e.id, w);
 						//if (autojob) std::cout << "Automatic reaction added\n";
 					}
 
@@ -297,7 +298,7 @@ namespace systems {
 
 						// Finish
 						call_home("AI", "Work", w.reaction_target.reaction_tag);
-						free_workshop(w.reaction_target.building_id);
+						//free_workshop(w.reaction_target.building_id);
 						render::models_changed = true;
 						inventory_system::inventory_has_changed();
 						particles::block_destruction_effect(pos.x, pos.y, pos.z, 1.0f, 1.0f, 1.0f, particles::PARTICLE_LUMBERJACK);

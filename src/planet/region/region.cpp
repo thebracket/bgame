@@ -137,8 +137,8 @@ namespace region {
 	
     int region_x() { return current_region->region_x; }
     int region_y() { return current_region->region_y; }
-    std::size_t next_tree_id() { return current_region->next_tree_id; }
-    std::size_t tree_id(const int idx) { return current_region->tree_id[idx]; }
+    int next_tree_id() { return current_region->next_tree_id; }
+    int tree_id(const int idx) { return current_region->tree_id[idx]; }
 
     std::size_t get_biome_idx() { return current_region->biome_idx; }
 

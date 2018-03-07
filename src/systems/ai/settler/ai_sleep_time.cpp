@@ -12,6 +12,7 @@
 #include "../../../components/ai_tags/ai_tag_sleep_shift.hpp"
 #include "../../../planet/indices.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_sleep_time {

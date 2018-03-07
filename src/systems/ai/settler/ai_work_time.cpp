@@ -3,6 +3,7 @@
 #include "../../../components/settler_ai.hpp"
 #include "../../../components/ai_tags/ai_tag_work_shift.hpp"
 #include "../../../components/ai_tags/ai_mode_idle.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_work_time {

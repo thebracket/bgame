@@ -15,6 +15,7 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../components/name.hpp"
 #include "../../global_assets/game_mode.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
     namespace camerasys {

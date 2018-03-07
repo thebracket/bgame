@@ -9,9 +9,9 @@ namespace systems {
 	namespace stockpile_system {
 		struct stockpile_info_t {
 			stockpile_info_t() {}
-			stockpile_info_t(const std::size_t &ID, const std::bitset<128> &cat) : id(ID), category(cat) {}
+			stockpile_info_t(const int &ID, const std::bitset<128> &cat) : id(ID), category(cat) {}
 
-			std::size_t id;
+			int id;
 			std::bitset<128> category;
 			int free_capacity = 0;
 			std::unordered_set<int> open_tiles;
@@ -19,14 +19,14 @@ namespace systems {
 
 		struct storable_item_t {
 			storable_item_t() {}
-			storable_item_t(const std::size_t &id, const int &dest) : item_id(id), dest_tile(dest) {}
+			storable_item_t(const int &id, const int &dest) : item_id(id), dest_tile(dest) {}
 
-			std::size_t item_id;
+			int item_id;
 			int dest_tile;
 		};
 
-		extern std::unordered_map<std::size_t, stockpile_info_t> stockpiles;
-		extern std::unordered_map<int, std::vector<std::size_t>> stockpile_targets;
+		extern std::unordered_map<int, stockpile_info_t> stockpiles;
+		extern std::unordered_map<int, std::vector<int>> stockpile_targets;
 		extern std::vector<storable_item_t> storable_items;
 
 		void run(const double &duration_ms);

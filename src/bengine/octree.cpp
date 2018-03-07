@@ -18,8 +18,8 @@ void octree_t::remove_node(const octree_location_t &loc) {
         contents[idx].end());
 }
 
-std::vector<std::size_t> octree_t::find_by_loc(const octree_location_t &loc) {
-    std::vector<std::size_t> result;
+std::vector<int> octree_t::find_by_loc(const octree_location_t &loc) {
+    std::vector<int> result;
     const int idx = mapidx(loc.x, loc.y, loc.z);
     for (const auto &loc : contents[idx]) {
         result.push_back(loc);
@@ -27,10 +27,10 @@ std::vector<std::size_t> octree_t::find_by_loc(const octree_location_t &loc) {
     return result;
 }
 
-std::vector<std::size_t> octree_t::find_by_region(const int &left, const int &right, const int &top, const int &bottom,
+std::vector<int> octree_t::find_by_region(const int &left, const int &right, const int &top, const int &bottom,
                                         const int &ztop, const int &zbottom)
 {
-    std::vector<std::size_t> result;
+    std::vector<int> result;
     for (int z=zbottom; z<ztop; ++z) {
         for (int y=top; y<bottom; ++y) {
             for (int x=left; x<right; ++x) {

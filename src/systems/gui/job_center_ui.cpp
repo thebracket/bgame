@@ -19,6 +19,7 @@
 #include "../../components/farming/designated_hunter.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../../bengine/btabs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace job_center_ui {

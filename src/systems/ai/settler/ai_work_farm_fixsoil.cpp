@@ -11,6 +11,7 @@
 #include "../../../components/item_tags/item_topsoil_t.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_farm_fixsoil {

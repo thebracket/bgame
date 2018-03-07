@@ -8,7 +8,6 @@
 #include "global_assets/game_config.hpp"
 #include "main_loops/first_run_screen.hpp"
 #include "utils/system_log.hpp"
-#include "components/cerealizer.hpp"
 
 using namespace bengine;
 
@@ -39,10 +38,6 @@ int main() {
     chdir(executable_path.c_str());
 
 #endif // apple
-
-	dummy_init1();
-	dummy_init2();
-	dummy_init3();
 
 	bool first_run_checked = false;
 	bool first_run = false;

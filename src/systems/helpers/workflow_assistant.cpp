@@ -5,13 +5,14 @@
 #include "../../components/buildings/building.hpp"
 #include "../ai/workflow_system.hpp"
 #include "../../global_assets/building_designations.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace workflow {
 	std::unordered_map<std::size_t, std::vector<std::string>> automatic_reactions;
 
 	using namespace bengine;
 
-	bool is_auto_reaction_task_available(const bengine::entity_t &worker, const settler_ai_t &ai) noexcept {
+	bool is_auto_reaction_task_available(const int worker_id, const settler_ai_t &ai) noexcept {
 		if (automatic_reactions.empty()) return false;
 
 		for (const auto &outerit : automatic_reactions) {
@@ -29,7 +30,7 @@ namespace workflow {
 							// Are the inputs available?
 							auto available = true;
 							for (auto &input : reaction->inputs) {
-								const auto n_available = inventory::available_items_by_reaction_input(worker.id, input);
+								const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
 								if (n_available < input.quantity) {
 									available = false;
 								};
@@ -48,7 +49,7 @@ namespace workflow {
 		return false;
 	}
 
-	std::unique_ptr<reaction_task_t> find_automatic_reaction_task(const bengine::entity_t &worker, const ai_tag_work_order &ai) noexcept {
+	std::unique_ptr<reaction_task_t> find_automatic_reaction_task(const int worker_id, const ai_tag_work_order &ai) noexcept {
 		if (automatic_reactions.empty()) return std::unique_ptr<reaction_task_t>{};
 
 		std::unique_ptr<reaction_task_t> result;
@@ -68,15 +69,15 @@ namespace workflow {
 						if (reaction != nullptr) {
 							// Are the inputs available?
 							auto available = true;
-							std::vector<std::pair<std::size_t, bool>> components;
+							std::vector<std::pair<int, bool>> components;
 							for (auto &input : reaction->inputs) {
-								const auto n_available = inventory::available_items_by_reaction_input(worker.id, input);
+								const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
 								if (n_available < input.quantity) {
 									available = false;
 								}
 								else {
 									// Claim an item and push its # to the list
-									const auto item_id = inventory::claim_item_by_reaction_input(input, worker.id);
+									const auto item_id = inventory::claim_item_by_reaction_input(input, worker_id);
 									components.emplace_back(std::make_pair(item_id, false));
 								}
 							}
@@ -84,7 +85,7 @@ namespace workflow {
 							if (available) {
 								// Components are available, build job and return it
 								result = std::make_unique<reaction_task_t>(outerit.first, reaction->name, reaction->tag, components);
-								workshop_entity->assign(claimed_t{worker.id});
+								workshop_entity->assign(claimed_t{worker_id});
 								return result;
 							}
 							else {
@@ -101,7 +102,7 @@ namespace workflow {
 		return result;
 	}
 
-	std::unique_ptr<reaction_task_t> find_queued_reaction_task(const bengine::entity_t &worker, const ai_tag_work_order &ai) noexcept {
+	std::unique_ptr<reaction_task_t> find_queued_reaction_task(const int worker_id, const ai_tag_work_order &ai) noexcept {
 		if (building_designations->build_orders.empty()) return std::unique_ptr<reaction_task_t>();
 
 		std::unique_ptr<reaction_task_t> result;
@@ -133,15 +134,15 @@ namespace workflow {
 			}
 			if (target_category > -2) {
 				auto available = true;
-				std::vector<std::pair<std::size_t, bool>> components;
+				std::vector<std::pair<int, bool>> components;
 				for (auto &input : reaction->inputs) {
-					const auto n_available = inventory::available_items_by_reaction_input(worker.id, input);
+					const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
 					if (n_available < input.quantity) {
 						available = false;
 					}
 					else {
 						// Claim an item and push its # to the list
-						auto item_id = inventory::claim_item_by_reaction_input(input, worker.id);
+						auto item_id = inventory::claim_item_by_reaction_input(input, worker_id);
 						components.emplace_back(std::make_pair(item_id, false));
 					}
 				}
@@ -149,7 +150,7 @@ namespace workflow {
 				if (available) {
 					// Components are available, build job and return it
 					result = std::make_unique<reaction_task_t>(workshop_id, reaction->name, reaction->tag, components);
-					entity(workshop_id)->assign(claimed_t{worker.id});
+					entity(workshop_id)->assign(claimed_t{worker_id});
 					--order.first;
 					systems::workflow_system::update_workflow();
 					return result;

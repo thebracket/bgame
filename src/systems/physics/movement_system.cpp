@@ -9,6 +9,7 @@
 #include "trigger_system.hpp"
 #include "visibility_system.hpp"
 #include "../../render_engine/vox/renderables.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 
@@ -17,29 +18,29 @@ namespace systems {
 
 		struct entity_wants_to_move_message {
 			entity_wants_to_move_message() = default;
-			entity_wants_to_move_message(const std::size_t id, const position_t dest) : entity_id(id), destination(dest) { }
-			std::size_t entity_id;
+			entity_wants_to_move_message(const int id, const position_t dest) : entity_id(id), destination(dest) { }
+			int entity_id;
 			position_t destination;
 		};
 
 		struct entity_wants_to_move_randomly_message {
 			entity_wants_to_move_randomly_message() = default;
-			entity_wants_to_move_randomly_message(const std::size_t id) : entity_id(id) {}
-			std::size_t entity_id;
+			entity_wants_to_move_randomly_message(const int id) : entity_id(id) {}
+			int entity_id;
 		};
 
 		struct entity_wants_to_flee_message {
 			entity_wants_to_flee_message() = default;
-			entity_wants_to_flee_message(const std::size_t id, const std::size_t flee_from) : entity_id(id), flee_from_id(flee_from) {}
-			std::size_t entity_id;
-			std::size_t flee_from_id;
+			entity_wants_to_flee_message(const int id, const int flee_from) : entity_id(id), flee_from_id(flee_from) {}
+			int entity_id;
+			int flee_from_id;
 		};
 
 		struct entity_wants_to_charge_message {
 			entity_wants_to_charge_message() = default;
-			entity_wants_to_charge_message(const std::size_t id, const std::size_t charge_to) : entity_id(id), charge_to_id(charge_to) {}
-			std::size_t entity_id;
-			std::size_t charge_to_id;
+			entity_wants_to_charge_message(const int id, const int charge_to) : entity_id(id), charge_to_id(charge_to) {}
+			int entity_id;
+			int charge_to_id;
 		};		
 
 		thread_safe_message_queue<entity_wants_to_move_message> move_requests;
@@ -52,15 +53,15 @@ namespace systems {
 			move_requests.enqueue(entity_wants_to_move_message{ e.id, dest });
 		}
 
-		void request_flee(std::size_t id, std::size_t flee_from) {
+		void request_flee(int id, int flee_from) {
 			flee_requests.enqueue(entity_wants_to_flee_message{id, flee_from});
 		}
 
-		void request_charge(std::size_t id, std::size_t charge_to) {
+		void request_charge(int id, int charge_to) {
 			charge_requests.enqueue(entity_wants_to_charge_message{ id, charge_to });
 		}
 
-		void request_random_move(std::size_t id) {
+		void request_random_move(int id) {
 			wander_requests.enqueue(entity_wants_to_move_randomly_message{ id });
 		}
 

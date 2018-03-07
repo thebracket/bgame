@@ -15,6 +15,7 @@
 #include "../../components/items/item_quality.hpp"
 #include "../../components/items/item_wear.hpp"
 #include "../helpers/inventory_assistant.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace settler_melee_attack {
@@ -44,7 +45,7 @@ namespace systems {
 
 				// TODO: civ_dislike_attacker(defender);
 
-				std::size_t weapon_id = get_melee_id(msg.attacker);
+				std::size_t weapon_id = get_melee_id(*attacker);
 				std::string weapon_name = "fists";
 				int weapon_n = 1;
 				int weapon_d = 4;

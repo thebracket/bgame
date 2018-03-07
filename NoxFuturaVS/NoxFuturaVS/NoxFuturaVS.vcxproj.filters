@@ -213,9 +213,6 @@
     <ClCompile Include="..\..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\bengine\ecs.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bengine\FastNoise.cpp">
       <Filter>Source Files\bengine</Filter>
     </ClCompile>
@@ -792,15 +789,6 @@
     <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp">
       <Filter>Source Files\planet\builder\regions</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\components\cerealizer.cpp">
-      <Filter>Source Files\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\components\cerealizer2.cpp">
-      <Filter>Source Files\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\components\cerealizer3.cpp">
-      <Filter>Source Files\components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils\system_log.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
@@ -843,6 +831,9 @@
     <ClCompile Include="..\..\src\render_engine\shaders\skylight_shader.cpp">
       <Filter>Source Files\render_engine\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\global_assets\game_ecs.cpp">
+      <Filter>Source Files\global_assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -852,9 +843,6 @@
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\ecs.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\ecs_impl.hpp">
       <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bengine\FastNoise.h">
@@ -1832,9 +1820,6 @@
     <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
       <Filter>Header Files\planet\builder\regions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\components\cerealizer.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\system_log.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
@@ -1885,6 +1870,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\render_engine\shaders\skylight_shader.hpp">
       <Filter>Header Files\render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global_assets\game_ecs.hpp">
+      <Filter>Header Files\global_assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\all_components.hpp">
+      <Filter>Header Files\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

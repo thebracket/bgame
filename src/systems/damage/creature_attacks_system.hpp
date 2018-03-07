@@ -5,10 +5,10 @@ namespace systems {
 
 		struct creature_attack_message {
 			creature_attack_message() {}
-			creature_attack_message(const size_t attack, const size_t defend) : attacker(attack), victim(defend) {}
+			creature_attack_message(const int attack, const int defend) : attacker(attack), victim(defend) {}
 
-			size_t attacker;
-			size_t victim;
+			int attacker;
+			int victim;
 		};
 
 		void run(const double &duration_ms);

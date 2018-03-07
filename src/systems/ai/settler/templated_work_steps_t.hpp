@@ -14,6 +14,7 @@
 #include "../../damage/damage_system.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../../physics/movement_system.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace work {
 	
@@ -61,7 +62,7 @@ namespace work {
 			set_status(e, "Idle");
 		}
 
-		void move_to(const std::size_t &entity_id, const position_t &start, const position_t &destination) const {
+		void move_to(const int &entity_id, const position_t &start, const position_t &destination) const {
 			systems::movement::move_to(*bengine::entity(entity_id), start, destination);
 			//emit_deferred(entity_wants_to_move_message{ entity_id, destination });
 		}

@@ -8,6 +8,7 @@
 #include "../../components/water_spawner.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace bengine;
 using namespace region;

@@ -16,6 +16,7 @@
 #include "../ai/inventory_system.hpp"
 #include "../../components/items/item_quality.hpp"
 #include "../../utils/system_log.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace weapons {
 

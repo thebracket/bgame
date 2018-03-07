@@ -4,19 +4,19 @@ namespace systems {
 	namespace sentient_attacks {
 
 		struct sentient_attack_message {
-			sentient_attack_message() {}
-			sentient_attack_message(const size_t attack, const size_t defend) : attacker(attack), victim(defend) {}
+			sentient_attack_message() = default;
+			sentient_attack_message(const int attack, const int defend) : attacker(attack), victim(defend) {}
 
-			size_t attacker;
-			size_t victim;
+			int attacker;
+			int victim;
 		};
 
 		struct sentient_ranged_attack_message {
-			sentient_ranged_attack_message() {}
-			sentient_ranged_attack_message(const size_t attack, const size_t defend) : attacker(attack), victim(defend) {}
+			sentient_ranged_attack_message() = default;
+			sentient_ranged_attack_message(const int attack, const int defend) : attacker(attack), victim(defend) {}
 
-			size_t attacker;
-			size_t victim;
+			int attacker;
+			int victim;
 		};
 
 		void run(const double &duration_ms);

@@ -11,6 +11,7 @@
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../utils/system_log.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace creature_attacks {

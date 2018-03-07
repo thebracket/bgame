@@ -6,7 +6,7 @@
 
 struct octree_location_t {
     int x, y, z;
-    std::size_t id;
+    int id;
 };
 
 // Not really an octree anymore - trying to speed it up
@@ -22,8 +22,8 @@ struct octree_t {
 
     void remove_node(const octree_location_t &loc);
 
-    std::vector<std::size_t> find_by_loc(const octree_location_t &loc);
+    std::vector<int> find_by_loc(const octree_location_t &loc);
 
-    std::vector<std::size_t> find_by_region(const int &left, const int &right, const int &top, const int &bottom,
+    std::vector<int> find_by_region(const int &left, const int &right, const int &top, const int &bottom,
                                             const int &ztop, const int &zbottom);
 };

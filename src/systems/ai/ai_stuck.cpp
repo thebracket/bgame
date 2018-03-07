@@ -7,6 +7,7 @@
 #include "../gui/log_system.hpp"
 #include "../physics/movement_system.hpp"
 #include "../../planet/region/region.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

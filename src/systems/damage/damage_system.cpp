@@ -12,6 +12,7 @@
 #include "../../components/items/item.hpp"
 #include "../../components/items/item_wear.hpp"
 #include "../helpers/inventory_assistant.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

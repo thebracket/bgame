@@ -32,6 +32,7 @@
 #include "../utils/system_log.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../render_engine/shaders/ascii_base_shader.hpp"
+#include "../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

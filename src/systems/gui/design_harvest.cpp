@@ -13,6 +13,7 @@
 #include "../../components/item_tags/item_seed_t.hpp"
 #include "../../components/items/item.hpp"
 #include "../../bengine/btabs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

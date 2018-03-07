@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../position.hpp"
 #include "../helpers/building_designation_t.hpp"
 #include "../../systems/helpers/pathfinding.hpp"
 
@@ -10,7 +9,7 @@ struct ai_tag_work_building {
 
     building_steps step = SELECT_BUILDING;
     building_designation_t building_target{};
-    std::size_t current_tool = 0;
+    int current_tool = 0;
 
     std::shared_ptr<navigation_path_t> current_path; // Not serialized
 };

@@ -344,7 +344,7 @@ namespace systems {
 								renderable->glyph = 325;
 								// Attack everything in the tile
 								const auto &[x,y,z] = idxmap(mapidx(*target_pos));
-								std::vector<std::size_t> visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
+								auto visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
 								for (const auto &v : visible_here) {
 									auto victim_entity = entity(v);
 									if (victim_entity) {

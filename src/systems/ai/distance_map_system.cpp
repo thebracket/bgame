@@ -10,6 +10,7 @@
 #include "../helpers/targeted_flow_map.hpp"
 #include "../../components/buildings/building.hpp"
 #include "../../global_assets/game_pause.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace distance_map {

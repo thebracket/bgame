@@ -126,6 +126,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <CompileAsManaged>false</CompileAsManaged>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -219,7 +220,6 @@
     <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp" />
     <ClCompile Include="..\..\src\bengine\analytics.cpp" />
     <ClCompile Include="..\..\src\bengine\color_t.cpp" />
-    <ClCompile Include="..\..\src\bengine\ecs.cpp" />
     <ClCompile Include="..\..\src\bengine\FastNoise.cpp" />
     <ClCompile Include="..\..\src\bengine\filesystem.cpp" />
     <ClCompile Include="..\..\src\bengine\geometry.cpp" />
@@ -240,9 +240,6 @@
     <ClCompile Include="..\..\src\bengine\textures.cpp" />
     <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
     <ClCompile Include="..\..\src\components\calendar.cpp" />
-    <ClCompile Include="..\..\src\components\cerealizer.cpp" />
-    <ClCompile Include="..\..\src\components\cerealizer2.cpp" />
-    <ClCompile Include="..\..\src\components\cerealizer3.cpp" />
     <ClCompile Include="..\..\src\components\game_stats.cpp" />
     <ClCompile Include="..\..\src\components\items\item.cpp" />
     <ClCompile Include="..\..\src\components\logger.cpp" />
@@ -256,6 +253,7 @@
     <ClCompile Include="..\..\src\global_assets\game_camera.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_config.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_designations.cpp" />
+    <ClCompile Include="..\..\src\global_assets\game_ecs.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_logger.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_mining.cpp" />
     <ClCompile Include="..\..\src\global_assets\game_mode.cpp" />
@@ -436,7 +434,6 @@
     <ClInclude Include="..\..\src\bengine\color_t.hpp" />
     <ClInclude Include="..\..\src\bengine\ctpl.h" />
     <ClInclude Include="..\..\src\bengine\ecs.hpp" />
-    <ClInclude Include="..\..\src\bengine\ecs_impl.hpp" />
     <ClInclude Include="..\..\src\bengine\FastNoise.h" />
     <ClInclude Include="..\..\src\bengine\filesystem.hpp" />
     <ClInclude Include="..\..\src\bengine\geometry.hpp" />
@@ -487,13 +484,13 @@
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_order.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_pull_lever.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_shift.hpp" />
+    <ClInclude Include="..\..\src\components\all_components.hpp" />
     <ClInclude Include="..\..\src\components\buildings\architecture_designations_t.hpp" />
     <ClInclude Include="..\..\src\components\buildings\bridge.hpp" />
     <ClInclude Include="..\..\src\components\buildings\building.hpp" />
     <ClInclude Include="..\..\src\components\buildings\building_designations_t.hpp" />
     <ClInclude Include="..\..\src\components\calendar.hpp" />
     <ClInclude Include="..\..\src\components\camera_options.hpp" />
-    <ClInclude Include="..\..\src\components\cerealizer.hpp" />
     <ClInclude Include="..\..\src\components\claimed_t.hpp" />
     <ClInclude Include="..\..\src\components\buildings\construct_container.hpp" />
     <ClInclude Include="..\..\src\components\buildings\construct_power.hpp" />
@@ -576,6 +573,7 @@
     <ClInclude Include="..\..\src\global_assets\game_camera.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_config.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_designations.hpp" />
+    <ClInclude Include="..\..\src\global_assets\game_ecs.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_logger.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_mining.hpp" />
     <ClInclude Include="..\..\src\global_assets\game_mode.hpp" />

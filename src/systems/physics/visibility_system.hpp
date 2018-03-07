@@ -9,6 +9,6 @@ namespace systems {
 
 		void run(const double &duration_ms);
 		void opacity_is_dirty();
-		void on_entity_moved(size_t &entity_id);
+		void on_entity_moved(int &entity_id);
 	}
 }

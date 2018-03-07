@@ -5,6 +5,7 @@
 #include "../../raws/defs/reaction_t.hpp"
 #include "../../global_assets/building_designations.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace workflow_system {

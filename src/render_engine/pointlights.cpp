@@ -18,6 +18,7 @@
 #include "shaders/pointlight_shader.hpp"
 #include "vox/voxreader.hpp"
 #include "ubo/lighting_ubo.hpp"
+#include "../global_assets/game_ecs.hpp"
 
 namespace render {
 	void pointlight_t::make_mats() {

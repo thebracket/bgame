@@ -84,7 +84,7 @@ int planet_determine_proportion(planet_t &planet, int &candidate, int target) no
 			++candidate;
 		}
 	}
-	throw std::runtime_error("Messed up landblocks!");
+	//throw std::runtime_error("Messed up landblocks!");
 }
 
 void planet_base_type_allocation(planet_t &planet) noexcept {

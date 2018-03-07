@@ -10,6 +10,7 @@
 #include "../../../global_assets/farming_designations.hpp"
 #include "../../../components/buildings/building_designations_t.hpp"
 #include "../../../components/buildings/architecture_designations_t.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 void build_game_components(const int crash_x, const int crash_y, const int crash_z, const bool &ascii_mode) noexcept {
 	calendar_t calendar;

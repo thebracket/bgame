@@ -17,5 +17,5 @@ struct building_designation_t {
     int height;
     std::vector<xp::vchar> glyphs;
 	std::vector<xp::vchar> glyphs_ascii;
-	std::size_t building_entity = 0;
+	int building_entity = 0;
 };

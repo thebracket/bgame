@@ -9,6 +9,7 @@
 #include "../../bengine/gl_include.hpp"
 #include "../../render_engine/shaders/particle_shader.hpp"
 #include "../../render_engine/ubo/first_stage_ubo.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace particles {

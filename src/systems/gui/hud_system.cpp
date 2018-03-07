@@ -13,13 +13,17 @@
 #include "../../render_engine/design_render.hpp"
 #include "../../bengine/analytics.hpp"
 #include <sstream>
+#include "../../bengine/ecs.hpp"
+#include "../../planet/region/region.hpp"
+#include "../ai/settler/ai_work_template.hpp"
+#include "../../main_loops/main_menu.hpp"
 
 namespace systems {
     namespace hud {
 
         const static std::string menu_main = std::string(ICON_FA_ROCKET) + " Nox Futura";
         const static std::string menu_main_play = std::string(ICON_FA_PLAY) + " Play";
-        const static std::string menu_main_quit = std::string(ICON_FA_WINDOW_CLOSE) + " Save and Quit";
+        const static std::string menu_main_quit = std::string(ICON_FA_FLOPPY_O) + " Save and Quit";
         const static std::string menu_design = std::string(ICON_FA_CUBES) + " Design";
         const static std::string menu_design_mining = std::string(ICON_FA_DIAMOND) + " Mining";
         const static std::string menu_design_building = std::string(ICON_FA_HOME) + " Building";
@@ -133,7 +137,11 @@ namespace systems {
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem(menu_main_quit.c_str())) {
-					glfwSetWindowShouldClose(bengine::main_window, true);
+					region::save_current_region();
+					const std::string save_filename = get_save_path() + std::string("/savegame.dat");
+					std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
+					bengine::ecs_save(lbfile);
+					bengine::main_func = main_menu::tick;
 				}
 				ImGui::EndMenu();
 			}

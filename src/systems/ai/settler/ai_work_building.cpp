@@ -20,6 +20,7 @@
 #include <fmt/ostream.h>
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../distance_map_system.hpp"
+#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_building {

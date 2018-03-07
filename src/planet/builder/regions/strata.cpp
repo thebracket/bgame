@@ -73,22 +73,22 @@ strata_t build_strata(std::vector<uint8_t> &heightmap, bengine::random_number_ge
                 // Soil
                 const auto roll = rng.roll_dice(1,100);
                 if (roll < biome.second.soil_pct) {
-                    const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
+                    const auto soil_idx = rng.roll_dice(1, soils.size())-1;
                     //std::cout << material_name(soils[soil_idx]) << "\n";
                     result.material_idx[i] = soils[soil_idx];
                 } else {
-                    const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+                    const auto sand_idx = rng.roll_dice(1, sands.size())-1;
                     //std::cout << material_name(sands[sand_idx]) << "\n";
                     result.material_idx[i] = sands[sand_idx];
                 }
             } else if (z>(altitude_at_center-10)/2) {
                 // Sedimentary
-                const std::size_t sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
+                const int sed_idx = rng.roll_dice(1, sedimintaries.size())-1;
                 //std::cout << material_name(sedimintaries[sed_idx]) << "\n";
                 result.material_idx[i] = sedimintaries[sed_idx];
             } else {
                 // Igneous
-                const std::size_t ig_idx = rng.roll_dice(1, igneouses.size())-1;
+                const int ig_idx = rng.roll_dice(1, igneouses.size())-1;
                 //std::cout << material_name(igneouses[ig_idx]) << "\n";
                 result.material_idx[i] = igneouses[ig_idx];
             }
@@ -183,11 +183,11 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                     // Soil/sand
                     const auto roll = rng.roll_dice(1,100);
                     if (roll < biome.second.soil_pct) {
-                        const std::size_t soil_idx = rng.roll_dice(1, soils.size())-1;
+                        const int soil_idx = rng.roll_dice(1, soils.size())-1;
                         //std::cout << material_name(soils[soil_idx]) << "\n";
 						set_tile_material(mapidx(x,y,z-1), soils[soil_idx]);
                     } else {
-                        const std::size_t sand_idx = rng.roll_dice(1, sands.size())-1;
+                        const int sand_idx = rng.roll_dice(1, sands.size())-1;
                         //std::cout << material_name(sands[sand_idx]) << "\n";
                         set_tile_material(mapidx(x,y,z-1), sands[sand_idx]);
                     }

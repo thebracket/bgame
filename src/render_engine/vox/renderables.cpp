@@ -32,6 +32,7 @@
 #include "../shaders/voxel_shader.hpp"
 #include "../shaders/voxel_shadow_shader.hpp"
 #include "../ubo/first_stage_ubo.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

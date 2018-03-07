@@ -29,6 +29,8 @@
 #include "../bengine/ecs.hpp"
 #include "../global_assets/debug_flags.hpp"
 #include "../bengine/IconsFontAwesome.h"
+#include <thread>
+#include "../global_assets/game_ecs.hpp"
 
 namespace play_game {
 
@@ -130,7 +132,7 @@ namespace play_game {
 			}
 
             systems::run(duration_ms);
-			bengine::ecs_garbage_collect();
+	        bengine::ecs_garbage_collect();
         }
 
         ImGui::Render();

@@ -128,7 +128,7 @@ void decorate_item_categories(bengine::entity_t &item, std::bitset<NUMBER_OF_ITE
 	if (categories.test(ITEM_FERTILIZER)) item.assign(item_fertilizer_t{});
 }
 
-void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) noexcept
+void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, int creator_id, std::string creator_name) noexcept
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
@@ -154,7 +154,7 @@ void spawn_item_on_ground(const int x, const int y, const int z, const std::stri
 	render::models_changed = true;
 }
 
-bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) noexcept
+bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, int creator_id, std::string creator_name) noexcept
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
@@ -179,7 +179,7 @@ bengine::entity_t * spawn_item_on_ground_ret(const int x, const int y, const int
     return entity;
 }
 
-void spawn_item_in_container(const std::size_t container_id, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) noexcept
+void spawn_item_in_container(const int container_id, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, int creator_id, std::string creator_name) noexcept
 {
     auto finder = get_item_def(tag);
 	if (finder == nullptr) {
@@ -200,7 +200,7 @@ void spawn_item_in_container(const std::size_t container_id, const std::string &
 	decorate_item_categories(*entity, finder->categories);
 }
 
-void spawn_item_carried(const std::size_t holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc, uint8_t quality, uint8_t wear, std::size_t creator_id, std::string creator_name) noexcept
+void spawn_item_carried(const int holder_id, const std::string &tag, const std::size_t &material, const item_location_t &loc, uint8_t quality, uint8_t wear, int creator_id, std::string creator_name) noexcept
 {
 	const auto mat = get_material(material);
 	const auto clothing_finder = get_clothing_by_tag(tag);

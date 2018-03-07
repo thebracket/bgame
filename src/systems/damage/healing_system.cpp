@@ -1,6 +1,7 @@
 #include "healing_system.hpp"
 #include "../../components/health.hpp"
 #include "../../bengine/ecs.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace healing_system {

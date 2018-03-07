@@ -6,9 +6,9 @@ namespace systems {
 	namespace damage_system {
 		struct inflict_damage_message {
 			inflict_damage_message() {}
-			inflict_damage_message(std::size_t target, int amount, std::string type) : victim(target), damage_amount(amount), damage_type(type) {}
+			inflict_damage_message(const int target, const int amount, const std::string &type) : victim(target), damage_amount(amount), damage_type(type) {}
 
-			std::size_t victim;
+			int victim;
 			int damage_amount;
 			std::string damage_type;
 		};

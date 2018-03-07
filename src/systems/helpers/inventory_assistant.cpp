@@ -20,6 +20,7 @@
 #include "../ai/inventory_system.hpp"
 #include "../../components/item_tags/item_ammo_t.hpp"
 #include "targeted_flow_map.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace bengine;
 using namespace buildings;
@@ -203,7 +204,7 @@ namespace inventory {
 		return result;
 	}
 
-	int available_items_by_reaction_input(const std::size_t worker, const reaction_input_t &input) noexcept {
+	int available_items_by_reaction_input(const int worker, const reaction_input_t &input) noexcept {
 		auto result = 0;
 		position_t * pos = nullptr;
 		if (worker != 0)
@@ -257,7 +258,7 @@ namespace inventory {
 		return result;
 	}
 
-	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, const std::size_t worker_id, const bool really_claim) noexcept {
+	std::size_t claim_item_by_reaction_input(const reaction_input_t &input, const int worker_id, const bool really_claim) noexcept {
 		std::size_t result = 0;
 		position_t * pos = nullptr;
 		if (worker_id != 0)
