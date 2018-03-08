@@ -5,6 +5,70 @@
 
 namespace bengine {
 
+	unsigned int load_shaders(const char * file_path)
+	{
+		glog(log_target::LOADER, log_severity::INFO, "Loading compute shader: {0}", file_path);
+
+		// Create the shaders
+		GLuint ShaderID = glCreateShader(GL_COMPUTE_SHADER);
+
+		// Read the Vertex Shader code from the file
+		std::string ShaderCode;
+		std::ifstream ShaderStream(file_path, std::ios::in);
+		if (ShaderStream.is_open()) {
+			std::string Line = "";
+			while (getline(ShaderStream, Line))
+				ShaderCode += "\n" + Line;
+			ShaderStream.close();
+		}
+		else {
+			glog(log_target::LOADER, log_severity::ERROR, "Impossible to open {0}. Are you in the right directory ? Don't forget to read the FAQ !\n", file_path);
+			getchar();
+			return 0;
+		}
+
+		GLint Result = GL_FALSE;
+		int InfoLogLength;
+
+
+		// Compile Vertex Shader
+		char const * VertexSourcePointer = ShaderCode.c_str();
+		glShaderSource(ShaderID, 1, &VertexSourcePointer, NULL);
+		glCompileShader(ShaderID);
+
+		// Check Vertex Shader
+		glGetShaderiv(ShaderID, GL_COMPILE_STATUS, &Result);
+		glGetShaderiv(ShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		if (InfoLogLength > 0) {
+			std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+			glGetShaderInfoLog(ShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &VertexShaderErrorMessage[0]);
+		}
+
+		// Link the program
+		//printf("Linking program\n");
+		GLuint ProgramID = glCreateProgram();
+		glAttachShader(ProgramID, ShaderID);
+		glLinkProgram(ProgramID);
+
+		// Check the program
+		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		if (InfoLogLength > 0) {
+			std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+			glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+			glog(log_target::LOADER, log_severity::ERROR, "{0}", &ProgramErrorMessage[0]);
+		}
+
+		glDetachShader(ProgramID, ShaderID);
+		glDeleteShader(ShaderID);
+
+		glog(log_target::LOADER, log_severity::INFO, "Setup as shader # {0}", ProgramID);
+
+		return ProgramID;
+	}
+
+
     unsigned int load_shaders(const char * vertex_file_path,const char * fragment_file_path)
     {
 		glog(log_target::LOADER, log_severity::INFO, "Loading shader: {0} {1}", vertex_file_path, fragment_file_path);
